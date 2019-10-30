@@ -2,125 +2,68 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F73ACA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1599CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18BB320856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:24:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLGuKt96"
+	by mail.kernel.org (Postfix) with ESMTP id B98312087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572441907;
+	bh=DmmVLnO2Nuchx2VqNQqfcDQaXZjO+KlZLc+j/LGWQWM=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=XgcXldwY10EyR2xt201VU5cg8DoXEKx3tNiyDzHJZHEnOmACf/XLUq1unSQWeNqoj
+	 JMOx2JH9vNsE0D4zJ8hRegY1i5lx/fkRjBXylcvsm5uzl7BDoQulWEPGlxqOxYwTKR
+	 HWJjgt7cpNL7cPb5xWRMa3gz+LZuyCExjaPNWzhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfJ3NYZ (ORCPT
+        id S1726472AbfJ3NZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:24:25 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:32880 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbfJ3NYZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:24:25 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y39so3208840qty.0;
-        Wed, 30 Oct 2019 06:24:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=V/wnj6oKKe1Sq8rjaWwuzZNcb4lKIJbQVb556eiBhYE=;
-        b=NLGuKt964rUn6/j7+H4omNIBAjQYO0yoN/MjFMmQ46watXej8J547kVPSNuSb3hVIn
-         zcgk8ODIRiVMFQwbcLoE8L1RN/2BSWpxOE+nlbf1ShU44Hb6hVgT4JTv8eH2/GENjhh3
-         TJozMjddK9Gm4T2CbLx3jAsAvmPEVFTX9Jh6FbGU9ninoH/c6akKRlrxByYGSR9duPIz
-         ZW3n3bo/aSE9E9mOa38k4ScA9yI4Cy2EtpdbFTKvxcvl74hlqYh1U/bewqThxhEp0Szc
-         MoLOdCht8A36pTrSLpSPjEU9BSlVcrSlGtw+dRkEaTyBhEUFhAB5CFYb1muakCSpMFtm
-         Xjxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V/wnj6oKKe1Sq8rjaWwuzZNcb4lKIJbQVb556eiBhYE=;
-        b=biZSs30Nh9xDe3czGRdeHP8KxGVY/1q2MILhgQrOSm2EJ9w2O0XlUzW+q7dOfNiZ6S
-         q5zDxHsmXyx76lmp48hwgFpP9ZZSdIT3ivYzmwysheQCpoRx3BrpS7OKsUGi/mdbU+Em
-         v30wLe18d0/Qq/13AoFIswWoP0K+UUpUADyK1vH97Gg1Nx+RYYZpjv5jx7kgTPljJY2Z
-         Uqa6d877UIP67heS4BZd3cIMAUdGmbdCyh9HIrQQkRUoLCQ+/a6SrI//PEhiM9gW5CYM
-         +LVxygU+BbtkIn2z44jfSeNdVVs80e+NyQBz5/TD7YHjdKIu9jfPUgvdAiBNd43gm4NW
-         P2FA==
-X-Gm-Message-State: APjAAAXQdEHQ+OLGbtGw5X2dA84UFUn9nqws2Ce3XA0GvZ5tKRl4zueQ
-        InzxE8Ft7tfpsRsDEkCGm7sJY42sr8w=
-X-Google-Smtp-Source: APXvYqxXgk9xgikfWwKGihR0Bsg0yVAuHamm2kMo5n7KP0wL+5yKZBf0Fa1JRUR8URHAgHbsXKLTZg==
-X-Received: by 2002:aed:2722:: with SMTP id n31mr8776qtd.98.1572441863901;
-        Wed, 30 Oct 2019 06:24:23 -0700 (PDT)
-Received: from localhost.localdomain ([168.181.48.193])
-        by smtp.gmail.com with ESMTPSA id g83sm6644qke.100.2019.10.30.06.24.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 06:24:23 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 72739C0AD9; Wed, 30 Oct 2019 10:24:20 -0300 (-03)
-Date:   Wed, 30 Oct 2019 10:24:20 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Wally Zhao <wallyzhao@gmail.com>
-Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com, davem@davemloft.net,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wally.zhao@nokia-sbell.com
-Subject: Re: [PATCH] sctp: set ooo_okay properly for Transmit Packet Steering
-Message-ID: <20191030132420.GG4326@localhost.localdomain>
-References: <1572451637-14085-1-git-send-email-wallyzhao@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572451637-14085-1-git-send-email-wallyzhao@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 30 Oct 2019 09:25:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726239AbfJ3NZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:25:06 -0400
+Subject: Re: [git pull] IOMMU Fixes for Linux v5.4-rc5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572441905;
+        bh=DmmVLnO2Nuchx2VqNQqfcDQaXZjO+KlZLc+j/LGWQWM=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=U3qiA9LOdmlhEL7fiTwaa9JI3b9W86IMZcgvOdjUPWk+8ov2+TbcurOUJFDBmj821
+         C/WBIK7gqxh22pTats0caYT0PijkX6KdBiLa5aAyCTPLviO1SwQtY//ltxXS3mbJSg
+         UUwkV2F/1zKz/N3KUK1FkIBVcb4U+Je/asLHcD/w=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20191030130251.GA11315@8bytes.org>
+References: <20191030130251.GA11315@8bytes.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20191030130251.GA11315@8bytes.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
+ tags/iommu-fixes-v5.4-rc5
+X-PR-Tracked-Commit-Id: 160c63f909ffbc797c0bbe23310ac1eaf2349d2f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 320000e72ec0613e164ce9608d865396fb2da278
+Message-Id: <157244190549.19806.13453430741450004166.pr-tracker-bot@kernel.org>
+Date:   Wed, 30 Oct 2019 13:25:05 +0000
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 12:07:17PM -0400, Wally Zhao wrote:
-> Unlike tcp_transmit_skb,
-> sctp_packet_transmit does not set ooo_okay explicitly,
-> causing unwanted Tx queue switching when multiqueue is in use;
+The pull request you sent on Wed, 30 Oct 2019 14:02:57 +0100:
 
-It is initialized to 0 by __alloc_skb() via:
-        memset(skb, 0, offsetof(struct sk_buff, tail));
-and never set to 1 by anyone for SCTP.
+> git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.4-rc5
 
-The patch description seems off. I don't see how the unwanted Tx queue
-switching can happen. IOW, it's not fixing it OOO packets, but
-improving it by allowing switching on the first packet. Am I missing
-something?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/320000e72ec0613e164ce9608d865396fb2da278
 
-> Tx queue switching may cause out-of-order packets.
-> Change sctp_packet_transmit to allow Tx queue switching only for
-> the first in flight packet, to avoid unwanted Tx queue switching.
-> 
-> Signed-off-by: Wally Zhao <wallyzhao@gmail.com>
-> ---
->  net/sctp/output.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/net/sctp/output.c b/net/sctp/output.c
-> index dbda7e7..5ff75cc 100644
-> --- a/net/sctp/output.c
-> +++ b/net/sctp/output.c
-> @@ -626,6 +626,10 @@ int sctp_packet_transmit(struct sctp_packet *packet, gfp_t gfp)
->  	/* neighbour should be confirmed on successful transmission or
->  	 * positive error
->  	 */
-> +
-> +	/* allow switch tx queue only for the first in flight pkt */
-> +	head->ooo_okay = asoc->outqueue.outstanding_bytes == 0;
+Thank you!
 
-Considering we are talking about NIC queues here, we would have a
-better result with tp->flight_size instead. As in, we can switch
-queues if, for this transport, the queue is empty.
-
-> +
->  	if (tp->af_specific->sctp_xmit(head, tp) >= 0 &&
->  	    tp->dst_pending_confirm)
->  		tp->dst_pending_confirm = 0;
-> -- 
-> 1.8.3.1
-> 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
