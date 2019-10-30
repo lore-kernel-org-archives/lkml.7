@@ -7,60 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF528CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF9CCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B092208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE9A217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450793;
-	bh=7skNHl2lfzqMuJ/ZX/CMowiYnncczK5DRh0cTKlhqvU=;
+	s=default; t=1572450800;
+	bh=nd/q3ClEkUlGUFvr5ZowwnzZBh+B2SqzGvQsA+ggPcI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sEWack/Ux/sJY3owBRJlqRzZLh0R3KOgOoSll5HK1sEv87tKcZU+y658CtwaPLFZ3
-	 rzWAA+KivTxcElqr6/SVG12go2e32QwqwXNyb6qEEgk7huZyG4+SiGv56w3pUkyCpb
-	 xi5kT13SDtcqdSefeKzTY1NAjEFrs28wQ4EF6dVM=
+	b=YKd8sErQ3XPiSxeLglXs4NIHlUObxJFL5ine6ai5RACf0OnBCXZZ9WnOyn1Z0P3sg
+	 0joMO44rVvQWYO+R4pc93jDqsL/uEZsQUVn6UXtKyZmJp0n5nSZ4MaoEOR23GKroTb
+	 GuFHzISqJC57+Qy+BQvPWuB2DzzimKewFWQyLFF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbfJ3PxM (ORCPT
+        id S1727294AbfJ3PxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:53:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54364 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:53:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726775AbfJ3PxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:53:10 -0400
+        id S1726775AbfJ3PxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:53:13 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE22E20874;
-        Wed, 30 Oct 2019 15:53:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4302120656;
+        Wed, 30 Oct 2019 15:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450789;
-        bh=7skNHl2lfzqMuJ/ZX/CMowiYnncczK5DRh0cTKlhqvU=;
+        s=default; t=1572450792;
+        bh=nd/q3ClEkUlGUFvr5ZowwnzZBh+B2SqzGvQsA+ggPcI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RYtpGaZCcYZn8782MvwKI/lx6boOnt13iYKftVJc6RUZyfnKJjyVychZUKhsskLYC
-         Dme579Dl0qayvtcVW8WqpUGM17Xnbih2MYn/MOWs+OOEftLpHiWoDJHS4SXR/ccDTz
-         IqJdmTwMWEG+TfZf+glm0qWtWYIbod8BgREatM58=
+        b=ZeHukSVEoGk2PUeu3PTZ8Xbnuhr3MA38TK+bMGb53HjHuDI9LbPDrQenDxz5UfQpM
+         XijpKCFVUzZ7rCNLwGd0aQ2Zq1eqBe22v0/rS+43JGq1+uQthI3fAMmZmx5WTbTSF2
+         0ugQzharyQdNBscMyMKbWEdyVFFgJCR/MuzfntPs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Yunfeng Ye <yeyunfeng@huawei.com>, Jiri Olsa <jolsa@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
         Feilong Lin <linfeilong@huawei.com>,
         Hu Shiyuan <hushiyuan@huawei.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Martin KaFai Lau <kafai@fb.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 49/81] perf tools: Fix resource leak of closedir() on the error paths
-Date:   Wed, 30 Oct 2019 11:48:55 -0400
-Message-Id: <20191030154928.9432-49-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 50/81] perf c2c: Fix memory leak in build_cl_output()
+Date:   Wed, 30 Oct 2019 11:48:56 -0400
+Message-Id: <20191030154928.9432-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -75,73 +67,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit 6080728ff8e9c9116e52e6f840152356ac2fea56 ]
+[ Upstream commit ae199c580da1754a2b051321eeb76d6dacd8707b ]
 
-Both build_mem_topology() and rm_rf_depth_pat() have resource leaks of
-closedir() on the error paths.
+There is a memory leak problem in the failure paths of
+build_cl_output(), so fix it.
 
-Fix this by calling closedir() before function returns.
-
-Fixes: e2091cedd51b ("perf tools: Add MEM_TOPOLOGY feature to perf data file")
-Fixes: cdb6b0235f17 ("perf tools: Add pattern name checking to rm_rf")
 Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
 Cc: Feilong Lin <linfeilong@huawei.com>
 Cc: Hu Shiyuan <hushiyuan@huawei.com>
-Cc: Igor Lubashev <ilubashe@akamai.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: http://lore.kernel.org/lkml/cd5f7cd2-b80d-6add-20a1-32f4f43e0744@huawei.com
+Link: http://lore.kernel.org/lkml/4d3c0178-5482-c313-98e1-f82090d2d456@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/header.c | 4 +++-
- tools/perf/util/util.c   | 6 ++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ tools/perf/builtin-c2c.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index e95a2a26c40a8..277cdf1fc5ac8 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1282,8 +1282,10 @@ static int build_mem_topology(struct memory_node *nodes, u64 size, u64 *cntp)
- 			continue;
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index e3776f5c2e01a..637e181426587 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2627,6 +2627,7 @@ static int build_cl_output(char *cl_sort, bool no_source)
+ 	bool add_sym   = false;
+ 	bool add_dso   = false;
+ 	bool add_src   = false;
++	int ret = 0;
  
- 		if (WARN_ONCE(cnt >= size,
--			      "failed to write MEM_TOPOLOGY, way too many nodes\n"))
-+			"failed to write MEM_TOPOLOGY, way too many nodes\n")) {
-+			closedir(dir);
- 			return -1;
-+		}
- 
- 		ret = memory_node__read(&nodes[cnt++], idx);
+ 	if (!buf)
+ 		return -ENOMEM;
+@@ -2645,7 +2646,8 @@ static int build_cl_output(char *cl_sort, bool no_source)
+ 			add_dso = true;
+ 		} else if (strcmp(tok, "offset")) {
+ 			pr_err("unrecognized sort token: %s\n", tok);
+-			return -EINVAL;
++			ret = -EINVAL;
++			goto err;
+ 		}
  	}
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index a61535cf1bca2..d0930c38e147e 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -176,8 +176,10 @@ static int rm_rf_depth_pat(const char *path, int depth, const char **pat)
- 		if (!strcmp(d->d_name, ".") || !strcmp(d->d_name, ".."))
- 			continue;
  
--		if (!match_pat(d->d_name, pat))
--			return -2;
-+		if (!match_pat(d->d_name, pat)) {
-+			ret =  -2;
-+			break;
-+		}
+@@ -2668,13 +2670,15 @@ static int build_cl_output(char *cl_sort, bool no_source)
+ 		add_sym ? "symbol," : "",
+ 		add_dso ? "dso," : "",
+ 		add_src ? "cl_srcline," : "",
+-		"node") < 0)
+-		return -ENOMEM;
++		"node") < 0) {
++		ret = -ENOMEM;
++		goto err;
++	}
  
- 		scnprintf(namebuf, sizeof(namebuf), "%s/%s",
- 			  path, d->d_name);
+ 	c2c.show_src = add_src;
+-
++err:
+ 	free(buf);
+-	return 0;
++	return ret;
+ }
+ 
+ static int setup_coalesce(const char *coalesce, bool no_source)
 -- 
 2.20.1
 
