@@ -2,69 +2,110 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B82CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5125CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F4C20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74CC12190F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572451303;
+	bh=+7sjtycYthxBbTdXZOuBgjunJxe9qUow+unZqqYmg7A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WjmYcSrALG49NZEMfiRkO1VXk0lXgInfHLyCjkr8Ip3Bi1i4d+SuP4hy/qM0zrTwW
+	 oLdI+r3WXGULruQ/EAJmJcweG8YlUJIrEFT/2+G/ZI/hF9DsEgYmusJQhZKkmffhEP
+	 N1R0uj0RHSdyxqhRzT6rTfoW0aiDqhY/uYrZT/gM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbfJ3Pyg (ORCPT
+        id S1728371AbfJ3Pyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:54:36 -0400
-Received: from outbound-smtp01.blacknight.com ([81.17.249.7]:50861 "EHLO
-        outbound-smtp01.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728347AbfJ3Py3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:54:29 -0400
-Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
-        by outbound-smtp01.blacknight.com (Postfix) with ESMTPS id 4D25E987E2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 15:54:27 +0000 (GMT)
-Received: (qmail 12748 invoked from network); 30 Oct 2019 15:54:27 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.19.210])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 30 Oct 2019 15:54:27 -0000
-Date:   Wed, 30 Oct 2019 15:54:24 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, pauld@redhat.com, valentin.schneider@arm.com,
-        srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
-        dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
-        hdanton@sina.com, parth@linux.ibm.com, riel@surriel.com
-Subject: Re: [PATCH v4 05/11] sched/fair: use rq->nr_running when balancing
- load
-Message-ID: <20191030155424.GK3016@techsingularity.net>
-References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
- <1571405198-27570-6-git-send-email-vincent.guittot@linaro.org>
+        Wed, 30 Oct 2019 11:54:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728337AbfJ3Py0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:54:26 -0400
+Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADD292173E;
+        Wed, 30 Oct 2019 15:54:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572450865;
+        bh=+7sjtycYthxBbTdXZOuBgjunJxe9qUow+unZqqYmg7A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sc6tOfklJkQ49g69zc/LGyWl7BofEcLdRzSErT6X+WMnwEU4bF0ibfqBumZPoOWAa
+         Zs0bcJ9zbd0AXYjWgd7629qcYdG/bf4r6ZSeMuKALyJFPa5kmXhJY1Im30szE5golr
+         R12n6E6oSyxaWEFC4M3/iKqx5y/XefuIrV7Z0EY8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jaska Uimonen <jaska.uimonen@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 07/38] ASoC: rt5682: add NULL handler to set_jack function
+Date:   Wed, 30 Oct 2019 11:53:35 -0400
+Message-Id: <20191030155406.10109-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191030155406.10109-1-sashal@kernel.org>
+References: <20191030155406.10109-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <1571405198-27570-6-git-send-email-vincent.guittot@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 03:26:32PM +0200, Vincent Guittot wrote:
-> cfs load_balance only takes care of CFS tasks whereas CPUs can be used by
-> other scheduling class. Typically, a CFS task preempted by a RT or deadline
-> task will not get a chance to be pulled on another CPU because the
-> load_balance doesn't take into account tasks from other classes.
-> Add sum of nr_running in the statistics and use it to detect such
-> situation.
-> 
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+From: Jaska Uimonen <jaska.uimonen@intel.com>
 
-Patch is ok but it'll be easier in the future to mix up sum_nr_running
-and sum_h_nr_running in the future. Might be best to make sum_nr_running
-sum_any_running and the hierarchy one sum_cfs_running. I don't feel
-strongly either way, because it's almost certainly due to the fact I
-almost never care about non-cfs tasks when thinking about the scheduler.
+[ Upstream commit a315e76fc544f09daf619530a7b2f85865e6b25e ]
 
+Implement NULL handler in set_jack function to disable
+irq's.
+
+Signed-off-by: Jaska Uimonen <jaska.uimonen@intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20190927201408.925-4-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/codecs/rt5682.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
+index 6f5dac09ceded..21e7c430baf7f 100644
+--- a/sound/soc/codecs/rt5682.c
++++ b/sound/soc/codecs/rt5682.c
+@@ -982,6 +982,16 @@ static int rt5682_set_jack_detect(struct snd_soc_component *component,
+ {
+ 	struct rt5682_priv *rt5682 = snd_soc_component_get_drvdata(component);
+ 
++	rt5682->hs_jack = hs_jack;
++
++	if (!hs_jack) {
++		regmap_update_bits(rt5682->regmap, RT5682_IRQ_CTRL_2,
++				   RT5682_JD1_EN_MASK, RT5682_JD1_DIS);
++		regmap_update_bits(rt5682->regmap, RT5682_RC_CLK_CTRL,
++				   RT5682_POW_JDH | RT5682_POW_JDL, 0);
++		return 0;
++	}
++
+ 	switch (rt5682->pdata.jd_src) {
+ 	case RT5682_JD1:
+ 		snd_soc_component_update_bits(component, RT5682_CBJ_CTRL_2,
+@@ -1019,8 +1029,6 @@ static int rt5682_set_jack_detect(struct snd_soc_component *component,
+ 		break;
+ 	}
+ 
+-	rt5682->hs_jack = hs_jack;
+-
+ 	return 0;
+ }
+ 
 -- 
-Mel Gorman
-SUSE Labs
+2.20.1
+
