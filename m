@@ -2,120 +2,141 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EF6CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 565F5CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A6220873
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2721A20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:34:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8p3TGCy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gcodcIUv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfJ3W0Q (ORCPT
+        id S1727191AbfJ3Wey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 18:26:16 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43847 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbfJ3W0Q (ORCPT
+        Wed, 30 Oct 2019 18:34:54 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:52398 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbfJ3Wex (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 18:26:16 -0400
-Received: by mail-lj1-f194.google.com with SMTP id s4so4434703ljj.10;
-        Wed, 30 Oct 2019 15:26:14 -0700 (PDT)
+        Wed, 30 Oct 2019 18:34:53 -0400
+Received: by mail-pg1-f202.google.com with SMTP id e15so2715543pgh.19
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 15:34:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ghyKzMOt9noacqcW8gijvIBX51lIWlQ2FC12YmCxtvQ=;
-        b=P8p3TGCy8MV1WlfFblsWQyXzqgtkUuF8eoQE8T02IWdtjfi22N4gyn720vMo//QKEQ
-         w5kXkpijc3XFD1OQpXnmtxZqQa0kdFqv7Dm0mm1q4wmGYLrwp3V5PEHOTrv/auteZs19
-         fSTD87LuiG0fsjhKpRTC+xcBPKKDoXP9XjuAny8X+1R/aXVir8oBfViVnv01uv94yWcO
-         yx8d2JeqK9utaXL+rSBrE01+y1oxUJ2Mm+zK1DEAOmVvr7Vtzw4h0DvtGNa7ETzEbIJZ
-         gNcb5+BTIwFA+OsVB2qwv7pqduJv0ZvTxyxvP5G8x9/JB1y9JScpVSrnOtRz2hJzXkD8
-         rUWQ==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=SRqw2LSx0YB2BdwYQ6EePHj++2f3aHwtcvmz2x8WsbQ=;
+        b=gcodcIUvslFSwPfERYqecGIMte9yZP43PhQ2Qu2F0DwSy4nX1lyCG88L9b1XI1X+5I
+         90cZ4xb6DDfBB4c3rGWuqDz8/ZuDnttkFXaLS41zGenOuxdev/msOAnwI9zLKNXG5PMm
+         k/5nc5BKy0uwCDpRdGMXE5FtRp0c/Rr69FiBA+uuwwdAR5z1SVcESm+VaTtERF8dplMX
+         cwmci8lP8mY9/PqIxVDQdpIOBNrtTzEmBPGDupEYl1hl9bFDkJfk9b3uSfeoaCjQUe+F
+         0dBqIB9Acr8kyBTr6JmUqBsUoYjHFnH/pLGsgo09O/OmseQoNhxFZj4/xclg3WbcadkG
+         15tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ghyKzMOt9noacqcW8gijvIBX51lIWlQ2FC12YmCxtvQ=;
-        b=qO5yiVGh/W6RC3giileWFs9dr8b8nL8olbC5TgNhQu4PcvjjxDWSiqAy/BILoW0Y35
-         avcdcnmByyaQbzoSC/Obc23wFQnXnFSUpDmMS6kamb+YGLMLBi1C7gdNfXry70w8URRS
-         +S7AiFtuvzeDfYOFuHBT4uW1Y7Ta+F7XBc9HIIqG0FhmWcbrmnvIfEVAyGivyqR6+xVv
-         hUxLFZm7JD8CRtor1vYQbD/n3ehvjIHM+voVfwmkDz9iXFbGS8ngWE7GfexlJ1GHKNf8
-         3ztfT0JNtSImqB13MMN3gQCnYnuoQGW7xN7gWhg8m01kG1gGn4GzzrEAKCpGbT2xu43N
-         pZpg==
-X-Gm-Message-State: APjAAAULExtgXV9J594wbNYoc6Ay1EWnwZgDUgW9TlzZ9NiEFS+/42d2
-        eM93N5Ld2SC9mjp3izBnu9g6k34I
-X-Google-Smtp-Source: APXvYqxKePoldR1zNVEQWFMsbOhcscgsBBrkafCI669vkMg6MuihGz3TFUtR0jB78Klpzab6EvBjiw==
-X-Received: by 2002:a2e:3919:: with SMTP id g25mr1392037lja.232.1572474373677;
-        Wed, 30 Oct 2019 15:26:13 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id y189sm1010882lfc.9.2019.10.30.15.26.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Oct 2019 15:26:12 -0700 (PDT)
-Subject: Re: [PATCH -next] gpu: host1x: Fix compile test failure
-To:     YueHaibing <yuehaibing@huawei.com>, thierry.reding@gmail.com,
-        mperttunen@nvidia.com, arnd@arndb.de, seanpaul@chromium.org
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191030135458.27960-1-yuehaibing@huawei.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <283304d6-bf23-8107-29b6-9f3e7dda943c@gmail.com>
-Date:   Thu, 31 Oct 2019 01:26:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191030135458.27960-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=SRqw2LSx0YB2BdwYQ6EePHj++2f3aHwtcvmz2x8WsbQ=;
+        b=lwqlV0BmFNpWLpcwAdwnFTN5Kvdv3W6g0bqhZ1fwD36kxsA7D+g8uhfPeLzb5SlLkE
+         iRtCFRl8usL790oFPGpq0tTVuGTiyRsA9oJwZ0/vnerm+9qBOBB6qd4HxkZuGbPAsFNo
+         qiFh7iKh/JNouS0WmajaxTDxMs+iPQqRhMlpxfFEXyU/VifAWjPMCLkfw796JcTfmMb2
+         FoBF3wn1iPd+ybo/DGcebKoyiQN0rKQyPDueVPAz0gk6iDRFTXqECh2aeUFQrqsnVilw
+         uY1NXrTLCezCFOT8lO6uWb0f7ebXv86aHJCr3kTqz6gK0I4cXlXtRkzvqQJDGzSpnn3t
+         qLQQ==
+X-Gm-Message-State: APjAAAWGZufwy3FG+YxcA+yphiYDQxwKu5iRAAqRUHjsiqWy1dRuVGwK
+        GNDzXACUtV7KXndcNxDeXz9ZcozgTo+E
+X-Google-Smtp-Source: APXvYqy9Ma/nNUlrb2KjTqrKbpXVkwQKxeJS0X5WWuIRbJghR6jybob5m6FKIPhd8WkYpa5BE2yhCG7IFYJJ
+X-Received: by 2002:a65:588e:: with SMTP id d14mr2063152pgu.56.1572474892551;
+ Wed, 30 Oct 2019 15:34:52 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 15:34:38 -0700
+In-Reply-To: <20191025180827.191916-1-irogers@google.com>
+Message-Id: <20191030223448.12930-1-irogers@google.com>
+Mime-Version: 1.0
+References: <20191025180827.191916-1-irogers@google.com>
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
+Subject: [PATCH v5 00/10] Improvements to memory usage by parse events
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.10.2019 16:54, YueHaibing пишет:
-> If IOMMU_SUPPORT is not set, but IOMMU_IOVA is m and
-> COMPILE_TEST is y, building fails:
-> 
-> drivers/gpu/host1x/dev.o: In function `host1x_remove':
-> dev.c:(.text+0x624): undefined reference to `put_iova_domain'
-> dev.c:(.text+0x624): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `put_iova_domain'
-> dev.c:(.text+0x62c): undefined reference to `iova_cache_put'
-> dev.c:(.text+0x62c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `iova_cache_put'
-> 
-> Select IOMMU_IOVA while COMPILE_TEST is set to fix this.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 52499a6ad2ae ("gpu: host1x: select IOMMU_IOVA")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/gpu/host1x/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/host1x/Kconfig b/drivers/gpu/host1x/Kconfig
-> index cf987a3..354232d 100644
-> --- a/drivers/gpu/host1x/Kconfig
-> +++ b/drivers/gpu/host1x/Kconfig
-> @@ -2,7 +2,7 @@
->  config TEGRA_HOST1X
->  	tristate "NVIDIA Tegra host1x driver"
->  	depends on ARCH_TEGRA || (ARM && COMPILE_TEST)
-> -	select IOMMU_IOVA if IOMMU_SUPPORT
-> +	select IOMMU_IOVA if (IOMMU_SUPPORT || COMPILE_TEST)
->  	help
->  	  Driver for the NVIDIA Tegra host1x hardware.
->  
-> 
+The parse events parser leaks memory for certain expressions as well
+as allowing a char* to reference stack, heap or .rodata. This series
+of patches improves the hygeine and adds free-ing operations to
+reclaim memory in the parser in error and non-error situations.
 
-It should be better to unconditionally select IOMMU_IOVA here.
+The series of patches was generated with LLVM's address sanitizer and
+libFuzzer:
+https://llvm.org/docs/LibFuzzer.html
+called on the parse_events function with randomly generated input. With
+the patches no leaks or memory corruption issues were present.
 
-The same could be done for drivers/staging/media/tegra-vde/ and
-drivers/gpu/host1x/, please see [1].
+The v5 patches add initial error print to the set, as requested by
+Jiri Olsa. They also fix additional 2 missed frees in the patch
+'before yyabort-ing free components' and remove a redundant new_str
+variable from the patch 'add parse events handle error' as spotted by
+Stephane Eranian.
 
-[1] https://lore.kernel.org/linux-iommu/20190829154902.GC19842@ulmo/
+The v4 patches address review comments from Jiri Olsa, turning a long
+error message into a single warning, fixing the data type in a list
+iterator and reordering patches.
+
+The v3 patches address review comments from Jiri Olsa improving commit
+messages, handling ENOMEM errors from strdup better, and removing a
+printed warning if an invalid event is passed.
+
+The v2 patches are preferable to an earlier proposed patch:
+   perf tools: avoid reading out of scope array
+
+Ian Rogers (10):
+  perf tools: add parse events handle error
+  perf tools: move ALLOC_LIST into a function
+  perf tools: avoid a malloc for array events
+  perf tools: splice events onto evlist even on error
+  perf tools: ensure config and str in terms are unique
+  perf tools: add destructors for parse event terms
+  perf tools: before yyabort-ing free components
+  perf tools: if pmu configuration fails free terms
+  perf tools: add a deep delete for parse event terms
+  perf tools: report initial event parsing error
+
+ tools/perf/arch/powerpc/util/kvm-stat.c |   9 +-
+ tools/perf/builtin-stat.c               |   2 +
+ tools/perf/builtin-trace.c              |  16 +-
+ tools/perf/tests/parse-events.c         |   3 +-
+ tools/perf/util/metricgroup.c           |   2 +-
+ tools/perf/util/parse-events.c          | 236 ++++++++++----
+ tools/perf/util/parse-events.h          |   7 +
+ tools/perf/util/parse-events.y          | 390 +++++++++++++++++-------
+ tools/perf/util/pmu.c                   |  32 +-
+ 9 files changed, 509 insertions(+), 188 deletions(-)
+
+-- 
+2.24.0.rc1.363.gb1bccd3e3d-goog
+
