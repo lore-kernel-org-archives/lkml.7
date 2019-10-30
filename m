@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B12CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A8CCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7D6E21925
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5084221835
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451096;
-	bh=iGHn6wtqcL1Csf3+sR5GQHWIShAWQe8Y3G598LkEWoY=;
+	s=default; t=1572451098;
+	bh=FESUteCjHCIC3OUGqfhK24bZ1hYjA2REQ8WFzkI7KM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NHNOEXSL40u6nbhqah83NIeJQ4V9tiHFvV64C0aIjuHd+eYDRqRWe+oyP0gGnRN5J
-	 fGi6V1Nqbj9lVIVCzzS/2BpfW9Lhbuy5iIbiZ7EFojRTW6KjZjitTP6HmHB7mnvPKm
-	 kk5W0aCPkOdVTkK4n0+yLchgUFNwPcdmPCxcxDMc=
+	b=2EXy/bVgbIa96YdnYUF93Tu5k8lPPbRmMhMxix74S3uSXlCcWvRWBBWVfHAgsm4fO
+	 9XRC7roJUXOrKKjxyLyTclZ/ckdEQjjVohDji2TP8+W/yZz4uVVfSXGMjxoBHXESzA
+	 dCsEd6rfZ/FC+aK9ACEfV5jUKUjbVrj5gk7RIg70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729263AbfJ3P6O (ORCPT
+        id S1729276AbfJ3P6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:58:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59976 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbfJ3P6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:58:11 -0400
+        id S1729264AbfJ3P6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:58:14 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67A5521835;
-        Wed, 30 Oct 2019 15:58:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB003217F9;
+        Wed, 30 Oct 2019 15:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572451091;
-        bh=iGHn6wtqcL1Csf3+sR5GQHWIShAWQe8Y3G598LkEWoY=;
+        s=default; t=1572451094;
+        bh=FESUteCjHCIC3OUGqfhK24bZ1hYjA2REQ8WFzkI7KM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TGMUAzD9iEnrz444cROMhrNwhFGpvBpZS/gkZuQNCDnFSiSOzfus1YqTct+RQK9Gx
-         +D+0WjVl5/5qt4ePjXnN/fEb+lpljU2kK7KvQAa5HsNfKJxpAapmlwx6pY9wiWPiTR
-         V1cYv/I/5CpYdO/LpJcV1XbGGLJSXPVNHwwqy1mE=
+        b=0jT/UYzlb/sFmwEwV5e6BP07ynSzG0kvWuPeNyudoa9TqLELJ5ARwm0H6kisF4y2c
+         TYNvUPQtUGEoMxqfI/KR1hCBqwIrRKGvYa7JRWsYPjXBfdlAhhmiTWidPHykQdwOi3
+         iAgBRW3SgmuEJqpj9s01hhhfThbYd0p1q96DqlXU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        legousb-devel@lists.sourceforge.net, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 08/13] USB: legousbtower: fix a signedness bug in tower_probe()
-Date:   Wed, 30 Oct 2019 11:57:46 -0400
-Message-Id: <20191030155751.10960-8-sashal@kernel.org>
+Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Feilong Lin <linfeilong@huawei.com>,
+        Hu Shiyuan <hushiyuan@huawei.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 09/13] perf kmem: Fix memory leak in compact_gfp_flags()
+Date:   Wed, 30 Oct 2019 11:57:47 -0400
+Message-Id: <20191030155751.10960-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155751.10960-1-sashal@kernel.org>
 References: <20191030155751.10960-1-sashal@kernel.org>
@@ -61,37 +66,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit fd47a417e75e2506eb3672ae569b1c87e3774155 ]
+[ Upstream commit 1abecfcaa7bba21c9985e0136fa49836164dd8fd ]
 
-The problem is that sizeof() is unsigned long so negative error codes
-are type promoted to high positive values and the condition becomes
-false.
+The memory @orig_flags is allocated by strdup(), it is freed on the
+normal path, but leak to free on the error path.
 
-Fixes: 1d427be4a39d ("USB: legousbtower: fix slab info leak at probe")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191011141115.GA4521@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix this by adding free(orig_flags) on the error path.
+
+Fixes: 0e11115644b3 ("perf kmem: Print gfp flags in human readable string")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Feilong Lin <linfeilong@huawei.com>
+Cc: Hu Shiyuan <hushiyuan@huawei.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/f9e9f458-96f3-4a97-a1d5-9feec2420e07@huawei.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/legousbtower.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-kmem.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/misc/legousbtower.c b/drivers/usb/misc/legousbtower.c
-index 32b41eb07f00e..8350ecfbcf21a 100644
---- a/drivers/usb/misc/legousbtower.c
-+++ b/drivers/usb/misc/legousbtower.c
-@@ -910,7 +910,7 @@ static int tower_probe (struct usb_interface *interface, const struct usb_device
- 				  get_version_reply,
- 				  sizeof(*get_version_reply),
- 				  1000);
--	if (result < sizeof(*get_version_reply)) {
-+	if (result != sizeof(*get_version_reply)) {
- 		if (result >= 0)
- 			result = -EIO;
- 		dev_err(idev, "get version request failed: %d\n", result);
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index 93ce665f976f6..b62f2f139edf2 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -664,6 +664,7 @@ static char *compact_gfp_flags(char *gfp_flags)
+ 			new = realloc(new_flags, len + strlen(cpt) + 2);
+ 			if (new == NULL) {
+ 				free(new_flags);
++				free(orig_flags);
+ 				return NULL;
+ 			}
+ 
 -- 
 2.20.1
 
