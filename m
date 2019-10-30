@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3138DCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC351CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED31F218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BE42217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450832;
-	bh=MlSn6EG/sX4eezoHVRHjn2g4KK7MWQrmhKBVyLDiuts=;
+	s=default; t=1572450839;
+	bh=9gjFkp5kO1oP3E8xCnnU6ER7abXY5+MJTsp64cWYHpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ykmp5OvfrlwvrwZRq/nsgKMEvwHlT/w1vQD2RyfHE9mYVaUuOb/Wx5RpThbkZF9xz
-	 dcXxB81Okl8zsiYxcqjwwIF3iR2Zm7T1KHWUobpT1k4wnlA68ONw4nVPOcFS404LnB
-	 usM+1QLSFthjl7f5lXLm34pmyYYBaKXhRz81x9SQ=
+	b=u99kEZbW5p3LLgp6CGS3lQMHrhml9Eknd5tEHEtjd9lB7Cq3fRsNkzSs7sztr1/Ab
+	 ENTPx0RQaHA9ruiICjJO6BA9GgAeQXZNMMdF+dehNB+EPv+NdWEv1VG6PxvZUsFlrm
+	 diifW17zDC653VcJoBR0B8mKFZPE9uBNV7AYRXB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfJ3Pxa (ORCPT
+        id S1728257AbfJ3Px6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:53:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54678 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:53:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726902AbfJ3PxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:53:25 -0400
+        id S1728241AbfJ3Pxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:53:53 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A24D21D7C;
-        Wed, 30 Oct 2019 15:53:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D8A2208C0;
+        Wed, 30 Oct 2019 15:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450804;
-        bh=MlSn6EG/sX4eezoHVRHjn2g4KK7MWQrmhKBVyLDiuts=;
+        s=default; t=1572450832;
+        bh=9gjFkp5kO1oP3E8xCnnU6ER7abXY5+MJTsp64cWYHpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hYrnHZLnucQaqDg8+lfcRBGdOQ0yYmtU8ghEReKUFRc30zBPza3+zCucelY1mJDs/
-         Mg8Q5nLyIEydzU1uy/2hMZmfK4E6R2IdmA0IeOx+C+z+dP0C0GWHuMSKJkJ5l2uuKT
-         B3VXAP20xWdCRthAzKK2diRztIYQWJ3ieCRP5cD8=
+        b=htF0YjXcw9yAYM0WWlBWmPOPKksQ3EUulV98sM60y4f8OZYX5XwlCdnvsTkadKDvA
+         sCeBAoZqGXCdxms68/yPzaoYT64JjuYJBd7yAImvjPYHFOhfUJo01APsgsPw8yWNwQ
+         KxyG42j4iuIVArk8C4wG4Oa8sk62YfiXFRxUokN8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 54/81] ARM: davinci: dm365: Fix McBSP dma_slave_map entry
-Date:   Wed, 30 Oct 2019 11:49:00 -0400
-Message-Id: <20191030154928.9432-54-sashal@kernel.org>
+Cc:     Dragos Tarcatu <dragos_tarcatu@mentor.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 60/81] ASoC: SOF: control: return true when kcontrol values change
+Date:   Wed, 30 Oct 2019 11:49:06 -0400
+Message-Id: <20191030154928.9432-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -58,35 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Dragos Tarcatu <dragos_tarcatu@mentor.com>
 
-[ Upstream commit 564b6bb9d42d31fc80c006658cf38940a9b99616 ]
+[ Upstream commit 95a32c98055f664f9b3f34c41e153d4dcedd0eff ]
 
-dm365 have only single McBSP, so the device name is without .0
+All the kcontrol put() functions are currently returning 0 when
+successful. This does not go well with alsamixer as it does
+not seem to get notified on SND_CTL_EVENT_MASK_VALUE callbacks
+when values change for (some of) the sof kcontrols.
+This patch fixes that by returning true for volume, switch
+and enum type kcontrols when values do change in put().
 
-Fixes: 0c750e1fe481d ("ARM: davinci: dm365: Add dma_slave_map to edma")
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Dragos Tarcatu <dragos_tarcatu@mentor.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191018123806.18063-1-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-davinci/dm365.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/sof/control.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/dm365.c b/arch/arm/mach-davinci/dm365.c
-index 2f9ae6431bf54..cebab6af31a2d 100644
---- a/arch/arm/mach-davinci/dm365.c
-+++ b/arch/arm/mach-davinci/dm365.c
-@@ -462,8 +462,8 @@ static s8 dm365_queue_priority_mapping[][2] = {
- };
+diff --git a/sound/soc/sof/control.c b/sound/soc/sof/control.c
+index a4983f90ff5b3..2b8711eda362b 100644
+--- a/sound/soc/sof/control.c
++++ b/sound/soc/sof/control.c
+@@ -60,13 +60,16 @@ int snd_sof_volume_put(struct snd_kcontrol *kcontrol,
+ 	struct snd_sof_dev *sdev = scontrol->sdev;
+ 	struct sof_ipc_ctrl_data *cdata = scontrol->control_data;
+ 	unsigned int i, channels = scontrol->num_channels;
++	bool change = false;
++	u32 value;
  
- static const struct dma_slave_map dm365_edma_map[] = {
--	{ "davinci-mcbsp.0", "tx", EDMA_FILTER_PARAM(0, 2) },
--	{ "davinci-mcbsp.0", "rx", EDMA_FILTER_PARAM(0, 3) },
-+	{ "davinci-mcbsp", "tx", EDMA_FILTER_PARAM(0, 2) },
-+	{ "davinci-mcbsp", "rx", EDMA_FILTER_PARAM(0, 3) },
- 	{ "davinci_voicecodec", "tx", EDMA_FILTER_PARAM(0, 2) },
- 	{ "davinci_voicecodec", "rx", EDMA_FILTER_PARAM(0, 3) },
- 	{ "spi_davinci.2", "tx", EDMA_FILTER_PARAM(0, 10) },
+ 	/* update each channel */
+ 	for (i = 0; i < channels; i++) {
+-		cdata->chanv[i].value =
+-			mixer_to_ipc(ucontrol->value.integer.value[i],
++		value = mixer_to_ipc(ucontrol->value.integer.value[i],
+ 				     scontrol->volume_table, sm->max + 1);
++		change = change || (value != cdata->chanv[i].value);
+ 		cdata->chanv[i].channel = i;
++		cdata->chanv[i].value = value;
+ 	}
+ 
+ 	/* notify DSP of mixer updates */
+@@ -76,8 +79,7 @@ int snd_sof_volume_put(struct snd_kcontrol *kcontrol,
+ 					      SOF_CTRL_TYPE_VALUE_CHAN_GET,
+ 					      SOF_CTRL_CMD_VOLUME,
+ 					      true);
+-
+-	return 0;
++	return change;
+ }
+ 
+ int snd_sof_switch_get(struct snd_kcontrol *kcontrol,
+@@ -105,11 +107,15 @@ int snd_sof_switch_put(struct snd_kcontrol *kcontrol,
+ 	struct snd_sof_dev *sdev = scontrol->sdev;
+ 	struct sof_ipc_ctrl_data *cdata = scontrol->control_data;
+ 	unsigned int i, channels = scontrol->num_channels;
++	bool change = false;
++	u32 value;
+ 
+ 	/* update each channel */
+ 	for (i = 0; i < channels; i++) {
+-		cdata->chanv[i].value = ucontrol->value.integer.value[i];
++		value = ucontrol->value.integer.value[i];
++		change = change || (value != cdata->chanv[i].value);
+ 		cdata->chanv[i].channel = i;
++		cdata->chanv[i].value = value;
+ 	}
+ 
+ 	/* notify DSP of mixer updates */
+@@ -120,7 +126,7 @@ int snd_sof_switch_put(struct snd_kcontrol *kcontrol,
+ 					      SOF_CTRL_CMD_SWITCH,
+ 					      true);
+ 
+-	return 0;
++	return change;
+ }
+ 
+ int snd_sof_enum_get(struct snd_kcontrol *kcontrol,
+@@ -148,11 +154,15 @@ int snd_sof_enum_put(struct snd_kcontrol *kcontrol,
+ 	struct snd_sof_dev *sdev = scontrol->sdev;
+ 	struct sof_ipc_ctrl_data *cdata = scontrol->control_data;
+ 	unsigned int i, channels = scontrol->num_channels;
++	bool change = false;
++	u32 value;
+ 
+ 	/* update each channel */
+ 	for (i = 0; i < channels; i++) {
+-		cdata->chanv[i].value = ucontrol->value.enumerated.item[i];
++		value = ucontrol->value.enumerated.item[i];
++		change = change || (value != cdata->chanv[i].value);
+ 		cdata->chanv[i].channel = i;
++		cdata->chanv[i].value = value;
+ 	}
+ 
+ 	/* notify DSP of enum updates */
+@@ -163,7 +173,7 @@ int snd_sof_enum_put(struct snd_kcontrol *kcontrol,
+ 					      SOF_CTRL_CMD_ENUM,
+ 					      true);
+ 
+-	return 0;
++	return change;
+ }
+ 
+ int snd_sof_bytes_get(struct snd_kcontrol *kcontrol,
 -- 
 2.20.1
 
