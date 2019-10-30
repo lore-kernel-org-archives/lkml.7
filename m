@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D46B3CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA26CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A23072173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CDA8217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450984;
-	bh=iha3b15r24zaUNZ4xERM8q/9md4soFmz8jACeueBba8=;
+	s=default; t=1572450987;
+	bh=E5gqELBNn3Mrz8PD/wFz6BQkHwOrJ6WTw7LuhJX3Xn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tL2B99J9Denytqs6vd1+eV+lXbrFhEHxURf/YvzPOaUmUtAyweVSWe0E4lfZ6Vz3z
-	 /BKACTE7GOPR9mRrdfezlefbBWHIiBrWO18XQO03ASp5FYxcYHZukMK53lLey7FTBD
-	 /quW/48Ccjh6OZi8zNQ1j6Kz92lpyUrto9Z7Vw6Y=
+	b=m2KDjFXVwQrA7sUT4Yc+Dh5aMZRRs4ApIosg6yRaKZNKbE0407gmW86e4jI2TihaS
+	 8MOPyOE/hnBpQ9Qb9isE8SiqKbRv4ebafG7FShbtU4qHchAvIgECesz6EITLd/iQqT
+	 TmI2Kb7xQo1RB3z8l5oATBd7dRGSQcBIDsB07zWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbfJ3P4W (ORCPT
+        id S1728824AbfJ3P40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:56:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57956 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:56:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbfJ3P4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:56:21 -0400
+        id S1727816AbfJ3P4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:56:23 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E1042087E;
-        Wed, 30 Oct 2019 15:56:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4F172087E;
+        Wed, 30 Oct 2019 15:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450979;
-        bh=iha3b15r24zaUNZ4xERM8q/9md4soFmz8jACeueBba8=;
+        s=default; t=1572450983;
+        bh=E5gqELBNn3Mrz8PD/wFz6BQkHwOrJ6WTw7LuhJX3Xn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gz5v8V1RZG/S2U4HK3WvZzZtcS/R8S7mzjW/P1BOTNPvzjL9H3oYegNofPi7VJ6yU
-         v9m8sH8RivTGdIurIqMeuyZlpR3stGvenwpbd95NUR7+Uh5LLwoEqvWY/ot1qsDilH
-         ett/Ue34s2JgqH90sBKmvNUl7ZZsF4u+E6aaoAjM=
+        b=Mn/+PjgpFGJxl9scGOZa4RE8t5ytnLvdyPtcTh7T6VcmlHIpijBJVdZnoNI3iHMpg
+         PJb4sA4IJrSe8jOgfViyj+nr58M/gWA8G9GNAft1Zl38EM0OvQRN6Np8p/7h13C1SK
+         YCkrOwpN8HJWZtPovCNF2a2za1Zzjxp8Zhu5oKTk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hannes Reinecke <hare@suse.com>,
-        Laurence Oberman <loberman@redhat.com>,
-        "Ewan D . Milne" <emilne@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
+Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 09/24] scsi: scsi_dh_alua: handle RTPG sense code correctly during state transitions
-Date:   Wed, 30 Oct 2019 11:55:40 -0400
-Message-Id: <20191030155555.10494-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 11/24] scsi: fix kconfig dependency warning related to 53C700_LE_ON_BE
+Date:   Wed, 30 Oct 2019 11:55:42 -0400
+Message-Id: <20191030155555.10494-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155555.10494-1-sashal@kernel.org>
 References: <20191030155555.10494-1-sashal@kernel.org>
@@ -62,76 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.com>
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-[ Upstream commit b6ce6fb121a655aefe41dccc077141c102145a37 ]
+[ Upstream commit 8cbf0c173aa096dda526d1ccd66fc751c31da346 ]
 
-Some arrays are not capable of returning RTPG data during state
-transitioning, but rather return an 'LUN not accessible, asymmetric access
-state transition' sense code. In these cases we can set the state to
-'transitioning' directly and don't need to evaluate the RTPG data (which we
-won't have anyway).
+When building a kernel with SCSI_SNI_53C710 enabled, Kconfig warns:
 
-Link: https://lore.kernel.org/r/20191007135701.32389-1-hare@suse.de
-Reviewed-by: Laurence Oberman <loberman@redhat.com>
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Hannes Reinecke <hare@suse.com>
+WARNING: unmet direct dependencies detected for 53C700_LE_ON_BE
+  Depends on [n]: SCSI_LOWLEVEL [=y] && SCSI [=y] && SCSI_LASI700 [=n]
+  Selected by [y]:
+  - SCSI_SNI_53C710 [=y] && SCSI_LOWLEVEL [=y] && SNI_RM [=y] && SCSI [=y]
+
+Add the missing depends SCSI_SNI_53C710 to 53C700_LE_ON_BE to fix it.
+
+Link: https://lore.kernel.org/r/20191009151128.32411-1-tbogendoerfer@suse.de
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/device_handler/scsi_dh_alua.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ drivers/scsi/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/device_handler/scsi_dh_alua.c b/drivers/scsi/device_handler/scsi_dh_alua.c
-index 41f5f64101630..135376ee2cbf0 100644
---- a/drivers/scsi/device_handler/scsi_dh_alua.c
-+++ b/drivers/scsi/device_handler/scsi_dh_alua.c
-@@ -523,6 +523,7 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
- 	unsigned int tpg_desc_tbl_off;
- 	unsigned char orig_transition_tmo;
- 	unsigned long flags;
-+	bool transitioning_sense = false;
+diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+index 41366339b9501..881906dc33b83 100644
+--- a/drivers/scsi/Kconfig
++++ b/drivers/scsi/Kconfig
+@@ -966,7 +966,7 @@ config SCSI_SNI_53C710
  
- 	if (!pg->expiry) {
- 		unsigned long transition_tmo = ALUA_FAILOVER_TIMEOUT * HZ;
-@@ -567,13 +568,19 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
- 			goto retry;
- 		}
- 		/*
--		 * Retry on ALUA state transition or if any
--		 * UNIT ATTENTION occurred.
-+		 * If the array returns with 'ALUA state transition'
-+		 * sense code here it cannot return RTPG data during
-+		 * transition. So set the state to 'transitioning' directly.
- 		 */
- 		if (sense_hdr.sense_key == NOT_READY &&
--		    sense_hdr.asc == 0x04 && sense_hdr.ascq == 0x0a)
--			err = SCSI_DH_RETRY;
--		else if (sense_hdr.sense_key == UNIT_ATTENTION)
-+		    sense_hdr.asc == 0x04 && sense_hdr.ascq == 0x0a) {
-+			transitioning_sense = true;
-+			goto skip_rtpg;
-+		}
-+		/*
-+		 * Retry on any other UNIT ATTENTION occurred.
-+		 */
-+		if (sense_hdr.sense_key == UNIT_ATTENTION)
- 			err = SCSI_DH_RETRY;
- 		if (err == SCSI_DH_RETRY &&
- 		    pg->expiry != 0 && time_before(jiffies, pg->expiry)) {
-@@ -661,7 +668,11 @@ static int alua_rtpg(struct scsi_device *sdev, struct alua_port_group *pg)
- 		off = 8 + (desc[7] * 4);
- 	}
+ config 53C700_LE_ON_BE
+ 	bool
+-	depends on SCSI_LASI700
++	depends on SCSI_LASI700 || SCSI_SNI_53C710
+ 	default y
  
-+ skip_rtpg:
- 	spin_lock_irqsave(&pg->lock, flags);
-+	if (transitioning_sense)
-+		pg->state = SCSI_ACCESS_STATE_TRANSITIONING;
-+
- 	sdev_printk(KERN_INFO, sdev,
- 		    "%s: port group %02x state %c %s supports %c%c%c%c%c%c%c\n",
- 		    ALUA_DH_NAME, pg->group_id, print_alua_state(pg->state),
+ config SCSI_STEX
 -- 
 2.20.1
 
