@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B522CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3138DCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 617F0208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED31F218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450829;
-	bh=ytG4s/RVaKqNw7NHfre3fwqfCriOCM4ASbq+qC1JFtI=;
+	s=default; t=1572450832;
+	bh=MlSn6EG/sX4eezoHVRHjn2g4KK7MWQrmhKBVyLDiuts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nap4BuH4axCGmd+utIJ9FRgldF8L3NJVF1W4n/WUGe7vUuJAKzomFM/SRu4Ww+rFs
-	 n+rwbmqf4JoJj7J4ww43RHYpu+6S4HxXIC/sii4TM7GKh1zEXkCxzyoAaq6LwlOVUV
-	 r0bDuvn8Rprv+5ds/f6buGJhC7ED5jUPUabga/vA=
+	b=ykmp5OvfrlwvrwZRq/nsgKMEvwHlT/w1vQD2RyfHE9mYVaUuOb/Wx5RpThbkZF9xz
+	 dcXxB81Okl8zsiYxcqjwwIF3iR2Zm7T1KHWUobpT1k4wnlA68ONw4nVPOcFS404LnB
+	 usM+1QLSFthjl7f5lXLm34pmyYYBaKXhRz81x9SQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfJ3Pxs (ORCPT
+        id S1727646AbfJ3Pxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:53:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55096 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:53:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727637AbfJ3Pxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:53:45 -0400
+        id S1726902AbfJ3PxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:53:25 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0243A20656;
-        Wed, 30 Oct 2019 15:53:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A24D21D7C;
+        Wed, 30 Oct 2019 15:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450825;
-        bh=ytG4s/RVaKqNw7NHfre3fwqfCriOCM4ASbq+qC1JFtI=;
+        s=default; t=1572450804;
+        bh=MlSn6EG/sX4eezoHVRHjn2g4KK7MWQrmhKBVyLDiuts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DVAPbhPfjGF1DGodfbpfOeIei4+bucBiov0kJTn16Q59oLpghC+3A4i7Asa3s9sve
-         BUbXRr2RBnc6oES8QdZmdQt74PGfrC3ywBGTNzMc19QOhEXBl+N2yweWmxsyOdrutb
-         cav8Y4JPCkLJN2zZCodqDq+c58UM/jm4e1HZ506I=
+        b=hYrnHZLnucQaqDg8+lfcRBGdOQ0yYmtU8ghEReKUFRc30zBPza3+zCucelY1mJDs/
+         Mg8Q5nLyIEydzU1uy/2hMZmfK4E6R2IdmA0IeOx+C+z+dP0C0GWHuMSKJkJ5l2uuKT
+         B3VXAP20xWdCRthAzKK2diRztIYQWJ3ieCRP5cD8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 59/81] ASoC: Intel: sof-rt5682: add a check for devm_clk_get
-Date:   Wed, 30 Oct 2019 11:49:05 -0400
-Message-Id: <20191030154928.9432-59-sashal@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 54/81] ARM: davinci: dm365: Fix McBSP dma_slave_map entry
+Date:   Wed, 30 Oct 2019 11:49:00 -0400
+Message-Id: <20191030154928.9432-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -60,42 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-[ Upstream commit e5f0d490fb718254a884453e47fcd48493cd67ea ]
+[ Upstream commit 564b6bb9d42d31fc80c006658cf38940a9b99616 ]
 
-sof_audio_probe misses a check for devm_clk_get and may cause problems.
-Add a check for it to fix the bug.
+dm365 have only single McBSP, so the device name is without .0
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191017025044.31474-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 0c750e1fe481d ("ARM: davinci: dm365: Add dma_slave_map to edma")
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/sof_rt5682.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/mach-davinci/dm365.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/intel/boards/sof_rt5682.c b/sound/soc/intel/boards/sof_rt5682.c
-index 239eef128c2b7..9e59586e03bac 100644
---- a/sound/soc/intel/boards/sof_rt5682.c
-+++ b/sound/soc/intel/boards/sof_rt5682.c
-@@ -573,6 +573,15 @@ static int sof_audio_probe(struct platform_device *pdev)
- 	/* need to get main clock from pmc */
- 	if (sof_rt5682_quirk & SOF_RT5682_MCLK_BYTCHT_EN) {
- 		ctx->mclk = devm_clk_get(&pdev->dev, "pmc_plt_clk_3");
-+		if (IS_ERR(ctx->mclk)) {
-+			ret = PTR_ERR(ctx->mclk);
-+
-+			dev_err(&pdev->dev,
-+				"Failed to get MCLK from pmc_plt_clk_3: %d\n",
-+				ret);
-+			return ret;
-+		}
-+
- 		ret = clk_prepare_enable(ctx->mclk);
- 		if (ret < 0) {
- 			dev_err(&pdev->dev,
+diff --git a/arch/arm/mach-davinci/dm365.c b/arch/arm/mach-davinci/dm365.c
+index 2f9ae6431bf54..cebab6af31a2d 100644
+--- a/arch/arm/mach-davinci/dm365.c
++++ b/arch/arm/mach-davinci/dm365.c
+@@ -462,8 +462,8 @@ static s8 dm365_queue_priority_mapping[][2] = {
+ };
+ 
+ static const struct dma_slave_map dm365_edma_map[] = {
+-	{ "davinci-mcbsp.0", "tx", EDMA_FILTER_PARAM(0, 2) },
+-	{ "davinci-mcbsp.0", "rx", EDMA_FILTER_PARAM(0, 3) },
++	{ "davinci-mcbsp", "tx", EDMA_FILTER_PARAM(0, 2) },
++	{ "davinci-mcbsp", "rx", EDMA_FILTER_PARAM(0, 3) },
+ 	{ "davinci_voicecodec", "tx", EDMA_FILTER_PARAM(0, 2) },
+ 	{ "davinci_voicecodec", "rx", EDMA_FILTER_PARAM(0, 3) },
+ 	{ "spi_davinci.2", "tx", EDMA_FILTER_PARAM(0, 10) },
 -- 
 2.20.1
 
