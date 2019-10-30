@@ -2,160 +2,105 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 910FECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4019CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BD892087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E1292083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:41:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dgwlRKen"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbfJ3EdE (ORCPT
+        id S1727012AbfJ3ElJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 00:33:04 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:47440 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725308AbfJ3EdD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 00:33:03 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tgg3fnq_1572409976;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tgg3fnq_1572409976)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 30 Oct 2019 12:32:59 +0800
-Subject: Re: mbind() breaks its API definition since v5.2 by commit
- d883544515aa (mm: mempolicy: make the behavior consistent when MPOL_MF_MOVE*
- and MPOL_MF_STRICT were specified)
-To:     Li Xinhai <lixinhai.lxh@gmail.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        akpm <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Linux API <linux-api@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        lixinhai_lxh <lixinhai_lxh@126.com>
-References: <2019103010274679257634@gmail.com>
- <dc4864bf-8fa3-f5c8-f68c-57edc68d4662@linux.alibaba.com>
- <2019103011122763779044@gmail.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <da734171-bd69-b56b-2ca9-3038790155dd@linux.alibaba.com>
-Date:   Tue, 29 Oct 2019 21:32:54 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Wed, 30 Oct 2019 00:41:09 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45511 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726156AbfJ3ElJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 00:41:09 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 472wkp0Bbbz9sPK;
+        Wed, 30 Oct 2019 15:41:05 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1572410466;
+        bh=c/GWYbrpwJXaU4bwFu4wiFur1OqI7HoLNJSwazqhhE4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dgwlRKenKCQ89lxYXn2LGV5/fkFugGOVnTrcX2CxI4gvU6Frgv35L1jiokNlDA3Cz
+         53CuAu3ByeAA9P/q69CKQilisIYzKqIUfErEB1/f3eEizYmBvXH/ScYRYVMp9f68QC
+         iwZW7XNAd6qxY1T1l0NgMBx9pUlzPbgZmLK0gNv9xeGTr41VQjMSDlD6OqAv/MHGYA
+         rMac/Q6DThK4K3cUJxjQg8Rlj2nH2tD4qKVdL/jbWMmazoWV0tqs1399T+NcgZ21pH
+         UWCqZm8vnRWK+gnHxjxicjrn8JZVikSDdPIaZagZTqsaPrWhICu0x6ejCiLk2Rq/B1
+         Mbduhx2roXaWg==
+Date:   Wed, 30 Oct 2019 15:41:05 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warning after merge of the rtc tree
+Message-ID: <20191030154105.16a2797f@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <2019103011122763779044@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; boundary="Sig_/8Fm2_jNpvMCIEAIe/1oA4Vz";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/8Fm2_jNpvMCIEAIe/1oA4Vz
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 10/29/19 8:12 PM, Li Xinhai wrote:
-> On 2019-10-30 at 10:50 Yang Shi wrote:
->>
->> On 10/29/19 7:27 PM, Li Xinhai wrote:
->>> One change in do_mbind() of this commit has suspicious usage of return value of
->>> queue_pages_range(), excerpt as below:
->>>
->>> ---
->>> @@ -1243,10 +1265,15 @@ static long do_mbind(unsigned long start, unsigned long len,
->>>     	if (err)
->>>     	goto mpol_out;
->>>    
->>> -	err = queue_pages_range(mm, start, end, nmask,
->>> +	ret = queue_pages_range(mm, start, end, nmask,
->>>     	 flags | MPOL_MF_INVERT, &pagelist);
->>> -	if (!err)
->>> -	err = mbind_range(mm, start, end, new);
->>> +
->>> +	if (ret < 0) {      /////// convert to all possible 'ret' to '-EIO' <<<<
->>> +	err = -EIO;
->>> +	goto up_out;
->>> +	}
->>> +
->>> +	err = mbind_range(mm, start, end, new);
->>>    
->>>     	if (!err) {
->>>     	int nr_failed = 0;
->>> ---
->>>
->>> Note that inside queue_pages_range(), the call to walk_page_range() may return
->>> errors from 'test_walk' of 'struct mm_walk_ops', e.g. -EFAULT. Now, those error
->>> codes are no longer reported to user space application.
->>>
->>>    From user space, the mbind() call need to reported error, with EFAULT, as example:
->>> EFAULT
->>> Part or all of the memory range specified by nodemask and maxnode points
->>> outside your accessible address space. Or, there was an unmapped hole in the
->>> specified memory range specified by addr and len.
->> Thanks for catching this. That commit was aimed to correct the return
->> values for some corner cases in mbind(), but it should not alter the
->> errno for other failure cases, i.e. -EFAULT.
->>
->> Could you please try the below patch (build test only)?
->>
->> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
->> index 4ae967b..99df43a 100644
->> --- a/mm/mempolicy.c
->> +++ b/mm/mempolicy.c
->> @@ -1286,7 +1286,7 @@ static long do_mbind(unsigned long start, unsigned
->> long len,
->>                            flags | MPOL_MF_INVERT, &pagelist);
->>
->>          if (ret < 0) {
->> -               err = -EIO;
->> +               err = ret;
->>                  goto up_out;
->>          }
->>
->>
-> This seems do not work, because the 'pagelist' would have some pages queued
-> into it, need to put back those pages instead of return quickly.
->
-> So, we need to remove this page leak as well. <<<<<<
->
-> In my understanding, revert the changes as I quoted above may solve it, but not sure
-> the details about changes at end of do_mbind(), should keep them at there without
-> further change?
+After merging the rtc tree, today's linux-next build (x86_64 allmodconfig)
+produced this warning:
 
-Thanks for pointing this out. We don't have to revert this commit to 
-handle the non-empty pagelist correctly. The simplest way is to just put 
-those pages back and I'm supposed this is also the preferred way since 
-mbind_range() is not called to really apply the policy so those pages 
-should not be migrated.
+WARNING: unmet direct dependencies detected for FSL_RCPM
+  Depends on [n]: PM_SLEEP [=3Dy] && (ARM || ARM64)
+  Selected by [m]:
+  - RTC_DRV_FSL_FTM_ALARM [=3Dm] && RTC_CLASS [=3Dy] && (ARCH_LAYERSCAPE ||=
+ SOC_LS1021A || COMPILE_TEST [=3Dy])
 
-The below patch should solve this:
+WARNING: unmet direct dependencies detected for FSL_RCPM
+  Depends on [n]: PM_SLEEP [=3Dy] && (ARM || ARM64)
+  Selected by [m]:
+  - RTC_DRV_FSL_FTM_ALARM [=3Dm] && RTC_CLASS [=3Dy] && (ARCH_LAYERSCAPE ||=
+ SOC_LS1021A || COMPILE_TEST [=3Dy])
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 4ae967b..d80025c 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -1286,7 +1286,10 @@ static long do_mbind(unsigned long start, 
-unsigned long len,
-                           flags | MPOL_MF_INVERT, &pagelist);
+WARNING: unmet direct dependencies detected for FSL_RCPM
+  Depends on [n]: PM_SLEEP [=3Dy] && (ARM || ARM64)
+  Selected by [m]:
+  - RTC_DRV_FSL_FTM_ALARM [=3Dm] && RTC_CLASS [=3Dy] && (ARCH_LAYERSCAPE ||=
+ SOC_LS1021A || COMPILE_TEST [=3Dy])
 
-         if (ret < 0) {
--               err = -EIO;
-+               if (!list_empty(&pagelist))
-+                       putback_movable_pages(&pagelist);
-+
-+               err = ret;
-                 goto up_out;
-         }
+Introduced by commit
 
->
-> - Xinhai
->
->>> Please correct me if this is the intended change(and will have updated API
->>> definition), or something was misunderstood.
->>>
->>> -Xinhai
-> >
+  e1c2feb1efa2 ("rtc: fsl-ftm-alarm: allow COMPILE_TEST")
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/8Fm2_jNpvMCIEAIe/1oA4Vz
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl25FGEACgkQAVBC80lX
+0GwW5wf+J+bypPtP+n/HtLbVK+zNcQ+DMVAffnMsbRzDJadjgFBJuU0R7sXGfm8q
+OqA2blzmTCF4HrE90ZmYIVkJErUcKRGhlFjEscqyqbM/0fu9D0IcruKfT++lCfyN
+m9MzYy9DzyPDI/yjPnGiu7KNNfplrHEu06jBrbJ739L1GBg/zv9yJW1AA9QSiKGc
+ihDWElIeNhRvB/KUeHyx/wNuo/iMHxf1QIYeNwGT7km49TIe6u0khcgma37mMxqi
+2dLpwFcAJrX0jsmJAJfmBWak+XZuetvMYfLtpas5k5Flash6V0msWj8cT47IFB+M
+9Pk5NPxuBAqzDTy1TKSM8xfpGDZ45A==
+=9yrS
+-----END PGP SIGNATURE-----
+
+--Sig_/8Fm2_jNpvMCIEAIe/1oA4Vz--
