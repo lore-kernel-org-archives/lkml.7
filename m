@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6B5CA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8349DCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE6220856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5293D208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450595;
-	bh=vEco0Qc5gNZWgnkrLje5461Udlzws/Ff4y+WCVIP6Ug=;
+	s=default; t=1572450597;
+	bh=Zi2pA8zM32y+SK/W1EncEJTDCZ+rY6LFsZ8hoPnHxuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z5UYE7NJ44fekGc3idbDfzACurOUQR8/HvONABtzgIbHGQ/A6YftsB0ZSU5kbAi5I
-	 jl14M6QXyJOEmlcUYizOy3WQUtUzmtMCVCZEwZ4BR0/nqQEYpxr/41IKvuJ35z3P4w
-	 L8VuURYkNiP8znctdD3fEs/+oyn29eHRiupaZQnk=
+	b=ZOlpZQKq12P+doNAbbpPm//rA+wYt3bqcMkfo9yFSMBzDQ6QDi9yXvB2/fsG+0V5x
+	 g+4ZkmPWtJn1bW2u5eHNqQB7pFd5/RcScu5DHB9YlxwmqwRUDXTyYuwzpWxcQN5nPb
+	 5O7MRo1xeNRXrv+tzrYKpSmWGuUAaZ4rXPzRjZTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfJ3Ptx (ORCPT
+        id S1727517AbfJ3Ptw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:49:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50400 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:49:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727504AbfJ3Ptu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:49:50 -0400
+        id S1727485AbfJ3Pts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:49:48 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7853320856;
-        Wed, 30 Oct 2019 15:49:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CECE20874;
+        Wed, 30 Oct 2019 15:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450589;
-        bh=vEco0Qc5gNZWgnkrLje5461Udlzws/Ff4y+WCVIP6Ug=;
+        s=default; t=1572450587;
+        bh=Zi2pA8zM32y+SK/W1EncEJTDCZ+rY6LFsZ8hoPnHxuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PvQ6BtJrvjs6yD24Au8DSlvZV23nbJUTM7ggj/E0jJcFEiLZOY/LDT3/O9IWyETeC
-         eJZ833aiM3MeSaP36F9Tv/68xD0xsFgjiMheI/cIV4sUn0+U5aFiE9JT8gCJm0BKh4
-         iZGYELpQ5iuuR+i5UXg6zOMUS14TVcTgCvYycWyk=
+        b=pQFUHp8cA1E9LijHuuuVrn3AG0+mtoPNuf6VaAT39g5OCzW7WrzQQABhQ1Hv41tyT
+         0xwUesGgX/XdfIvZ/mNvEYoy3aGdCe7m8B7ywJG7L7ut/IuRWz/tWcPDiVl+xE+zO5
+         OvYiQB5JXBq6BB6eQej8kg7KBEMEIdeXx6nIeB4Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Axel Lin <axel.lin@ingics.com>, Nishanth Menon <nm@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 10/81] regulator: ti-abb: Fix timeout in ti_abb_wait_txdone/ti_abb_clear_all_txdone
-Date:   Wed, 30 Oct 2019 11:48:16 -0400
-Message-Id: <20191030154928.9432-10-sashal@kernel.org>
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 09/81] arm64: dts: Fix gpio to pinmux mapping
+Date:   Wed, 30 Oct 2019 11:48:15 -0400
+Message-Id: <20191030154928.9432-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -59,77 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
-[ Upstream commit f64db548799e0330897c3203680c2ee795ade518 ]
+[ Upstream commit 965f6603e3335a953f4f876792074cb36bf65f7f ]
 
-ti_abb_wait_txdone() may return -ETIMEDOUT when ti_abb_check_txdone()
-returns true in the latest iteration of the while loop because the timeout
-value is abb->settling_time + 1. Similarly, ti_abb_clear_all_txdone() may
-return -ETIMEDOUT when ti_abb_check_txdone() returns false in the latest
-iteration of the while loop. Fix it.
+There are total of 151 non-secure gpio (0-150) and four
+pins of pinmux (91, 92, 93 and 94) are not mapped to any
+gpio pin, hence update same in DT.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Acked-by: Nishanth Menon <nm@ti.com>
-Link: https://lore.kernel.org/r/20190929095848.21960-1-axel.lin@ingics.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 8aa428cc1e2e ("arm64: dts: Add pinctrl DT nodes for Stingray SOC")
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/ti-abb-regulator.c | 26 ++++++++------------------
- 1 file changed, 8 insertions(+), 18 deletions(-)
+ arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi | 5 +++--
+ arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi         | 3 +--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/regulator/ti-abb-regulator.c b/drivers/regulator/ti-abb-regulator.c
-index cced1ffb896c1..89b9314d64c9d 100644
---- a/drivers/regulator/ti-abb-regulator.c
-+++ b/drivers/regulator/ti-abb-regulator.c
-@@ -173,19 +173,14 @@ static int ti_abb_wait_txdone(struct device *dev, struct ti_abb *abb)
- 	while (timeout++ <= abb->settling_time) {
- 		status = ti_abb_check_txdone(abb);
- 		if (status)
--			break;
-+			return 0;
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
+index 8a3a770e8f2ce..56789ccf94545 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
+@@ -42,13 +42,14 @@
  
- 		udelay(1);
- 	}
+ 		pinmux: pinmux@14029c {
+ 			compatible = "pinctrl-single";
+-			reg = <0x0014029c 0x250>;
++			reg = <0x0014029c 0x26c>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			pinctrl-single,register-width = <32>;
+ 			pinctrl-single,function-mask = <0xf>;
+ 			pinctrl-single,gpio-range = <
+-				&range 0 154 MODE_GPIO
++				&range 0  91 MODE_GPIO
++				&range 95 60 MODE_GPIO
+ 				>;
+ 			range: gpio-range {
+ 				#pinctrl-single,gpio-range-cells = <3>;
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+index 71e2e34400d40..0098dfdef96c0 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+@@ -464,8 +464,7 @@
+ 					<&pinmux 108 16 27>,
+ 					<&pinmux 135 77 6>,
+ 					<&pinmux 141 67 4>,
+-					<&pinmux 145 149 6>,
+-					<&pinmux 151 91 4>;
++					<&pinmux 145 149 6>;
+ 		};
  
--	if (timeout > abb->settling_time) {
--		dev_warn_ratelimited(dev,
--				     "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
--				     __func__, timeout, readl(abb->int_base));
--		return -ETIMEDOUT;
--	}
--
--	return 0;
-+	dev_warn_ratelimited(dev, "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
-+			     __func__, timeout, readl(abb->int_base));
-+	return -ETIMEDOUT;
- }
- 
- /**
-@@ -205,19 +200,14 @@ static int ti_abb_clear_all_txdone(struct device *dev, const struct ti_abb *abb)
- 
- 		status = ti_abb_check_txdone(abb);
- 		if (!status)
--			break;
-+			return 0;
- 
- 		udelay(1);
- 	}
- 
--	if (timeout > abb->settling_time) {
--		dev_warn_ratelimited(dev,
--				     "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
--				     __func__, timeout, readl(abb->int_base));
--		return -ETIMEDOUT;
--	}
--
--	return 0;
-+	dev_warn_ratelimited(dev, "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
-+			     __func__, timeout, readl(abb->int_base));
-+	return -ETIMEDOUT;
- }
- 
- /**
+ 		i2c1: i2c@e0000 {
 -- 
 2.20.1
 
