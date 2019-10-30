@@ -2,155 +2,390 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C83CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41092CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC4C02067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F23002067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:35:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="jbiHAiws";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="NG9iU9if"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjjMLB1y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfJ3Vfq (ORCPT
+        id S1727413AbfJ3Vf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 17:35:46 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:36802 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727361AbfJ3Vfl (ORCPT
+        Wed, 30 Oct 2019 17:35:56 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46296 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbfJ3Vff (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 17:35:41 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9ULZGdP007608;
-        Wed, 30 Oct 2019 14:35:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=xtn4Gu0q4WTHSoxu3eGVPY1mCW0JtcubVqX6fgIDKzQ=;
- b=jbiHAiwsKFBdmJbKsS6Hpn/DxeRVicwHmvOc3GHKeYqs0ERWG7aZjB0jQjj7P7Quv2//
- ab2o0X1+OEl9G0xWIQBs5ojAm98u/6uJpfUXaMmZC2OF6X3WvnA244u6PcVignR0JM/K
- tLmEVATH2Ekgm3C7j708o36a3gALkRAmgrY= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vxwn6x0kr-12
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 30 Oct 2019 14:35:30 -0700
-Received: from ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) by
- ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 30 Oct 2019 14:35:22 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 30 Oct 2019 14:35:22 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e0W3fpc31fXXzE2PFnYnW2jrpKG1meJNOVYtzwzHxGP9UAmxv2Y3aUjMuWGl/j9MDpzcU8vWzXHmswgTb+m0K1qYOmh+D43wbaoIATsKuyEn2cw8KAQeihTAntW20dhKZQFFPEs8FkZ3LbTF4u2Lk+h80A4U7dDnHmpBUE2HGCSeKBHK7Ra+hsgyNcQjHEnmC4IIufkg6S/+9SPG4X0EgquZ+Tk5CsuwBv1OEcDE7erxv4nuNX2KeVJ1NoSFs0QXvvcyORYRiJPm25ly4/V/poXI1L4vjqFK51YPuRaHbb0J6LzDPN4NAJaqhOse5HgnpE6DO+jg7YMUWkkeEKdnoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xtn4Gu0q4WTHSoxu3eGVPY1mCW0JtcubVqX6fgIDKzQ=;
- b=e3B6DwiTkuBJo2lv8u7K2fzO3dMIFByhCb234hEt7aCpYMfMVvTG/1IB1DdXee1wV34KIlOEDJQBgCOV09THMNP/rwy2qt635okloxDyJ0KSRveNFuNB4JU13BXkie9qTnfNDcn3c1N9cXqkje7F8tcFD78PBEDmuDhktVQvJSKAWAoagkYRLnlMENbJSJoefkYUR5WG4olEbQwll/Dmq9C3CP0etbBot85ULNNVtydryubsZD5lmudQihaNtTMNJzEbKm/XGzUBwz7Ci+xp/+RE/KnFD4nYwdgHXomXBweLIKe/bbGZiRHTX8imm7l7GL8iVr2G+aYg/xqX+FZqTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xtn4Gu0q4WTHSoxu3eGVPY1mCW0JtcubVqX6fgIDKzQ=;
- b=NG9iU9ifkYhrrEb6XHjvsUn0IRYab+QSEktiXyNL2RoyFY7WXbY2Cy4PLFsPMT/ytRQ+lOTHsrnMiIDIi68tM5tXfEhQhbMpZY0tQzICBGOZChu8wqEYTtsans/3NH4GNZSAQZkO2Q9LVVdaSHUpUWECM814w+movuzTB7xn5zQ=
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
- BN8PR15MB3444.namprd15.prod.outlook.com (20.179.76.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.18; Wed, 30 Oct 2019 21:35:20 +0000
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::3056:945b:e60e:e2e0]) by BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::3056:945b:e60e:e2e0%6]) with mapi id 15.20.2387.027; Wed, 30 Oct 2019
- 21:35:20 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>
-Subject: Re: [PATCH] mm: slab: make page_cgroup_ino() to recognize
- non-compound slab pages properly
-Thread-Topic: [PATCH] mm: slab: make page_cgroup_ino() to recognize
- non-compound slab pages properly
-Thread-Index: AQHVi4v82H5KK2bDBUCYEvoLagPlLadzs8sAgAAI8IA=
-Date:   Wed, 30 Oct 2019 21:35:19 +0000
-Message-ID: <20191030213513.GA15706@castle.DHCP.thefacebook.com>
-References: <20191025232710.4081957-1-guro@fb.com>
- <20191030210314.2el7wysojucqypoq@ca-dmjordan1.us.oracle.com>
-In-Reply-To: <20191030210314.2el7wysojucqypoq@ca-dmjordan1.us.oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR2201CA0048.namprd22.prod.outlook.com
- (2603:10b6:301:16::22) To BN8PR15MB2626.namprd15.prod.outlook.com
- (2603:10b6:408:c7::28)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:180::3c87]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9521b0e0-d522-4045-39f6-08d75d811016
-x-ms-traffictypediagnostic: BN8PR15MB3444:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR15MB3444570AE43932CCBF223E4ABE600@BN8PR15MB3444.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02065A9E77
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39860400002)(366004)(136003)(346002)(376002)(189003)(199004)(6246003)(476003)(6486002)(1076003)(11346002)(478600001)(486006)(52116002)(305945005)(6916009)(99286004)(5660300002)(86362001)(102836004)(446003)(46003)(7736002)(6436002)(186003)(6512007)(9686003)(76176011)(6506007)(386003)(4744005)(6116002)(8936002)(54906003)(81156014)(81166006)(8676002)(14444005)(2906002)(71200400001)(256004)(4326008)(229853002)(71190400001)(33656002)(316002)(25786009)(66556008)(66946007)(64756008)(66476007)(66446008)(14454004);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB3444;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: yjR5fqMUHxVzGxQdpylR7bPzLPOizylHsMyl3Xbv6zfsB4OCfH6MBKzT0xQrku9cu9qMjC/ecxZVOMuoehAJsLrPeAxoik2psb7sLFDcEPEb4A+Ny9VOOj5dR+BRnjGjDuxxAONRXx/2LBmpA9gbg8GDVrGnA2ZdRHqtO2cU2FtRuS1Evik/8OFFqQ/YoBPmmjPCHTRE/rLPZ7sUCDgoIClOQWvnYyQtf9oSHV0ISRUxGk59BttIa3wVi7MlaI6OxI6WalFjESNRFnPKjqXZiD1kHxPbMuZg/7S5k/4hrpkV3NWpby6bfc0xpgaZ5ND60hpKVMQ2hY6K09cLpcBFQ+X6WAqZjNdKAaDnOkWZ+aDfDbKJ+uGw2oTBL8mVmqCfeAM+YM1o3YWbHf63d2WvZRS2usGtxWPCKq84wVYN83S2f6PW/6X7qH7MPrJihaQ3
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <93E53AB8895A244C87CBDBD29623B224@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 30 Oct 2019 17:35:35 -0400
+Received: by mail-lf1-f66.google.com with SMTP id t8so2748055lfc.13;
+        Wed, 30 Oct 2019 14:35:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=BK4txBT97LVoKJGJW9u4O6HXGB3uLuHGQDSLu0eTgG0=;
+        b=AjjMLB1yn0XN2SIpPOzLmabSxeW5P+kSNTIDMbkd+BlsaPvuHBntysP0qx6rr9iOrO
+         Le7d8pSNSJeyRqVfvHQGExPeuF6fkqpECsUvebYIoTcJJyXvNbM6wlaNt0LuZPFh5P0N
+         Q9VibrBCGgAw/4o5lMjU4gLXiw2qXHCxvrFDsvkShwIHTmr2ayCeDv5l2jP9lN+bAM3U
+         svV4UkIbyvdoks2Oq+qFunmZH8sCL6m//Dg2bs7ozk4Qoxx0u98c0Ce0p8bJ7ba2FkS5
+         sY2r4S6RwFuakCXOwb4rmr3vF2nxO+Z8m+G6kq9Sr6zzEFhb/5cF8SOkaRZZNkWS0KfN
+         RIsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=BK4txBT97LVoKJGJW9u4O6HXGB3uLuHGQDSLu0eTgG0=;
+        b=Rnv3HEjytnxvbGhCiCIhzK4vrXS1AamtrESQUI7Y8lvYY3rHHC/QtZAPcTJqYJS8E1
+         Rke+jzbx7Ttve+7zBbZxuWjab3R51XQY9empeQnt5KYVMgx6XmoOAdWIZwcoL3qbTDSo
+         zStRgm549/4lWaQyvEkRfD0DVRjtHCHcoYkzakKwPLyYEzlikJBqPXrMrDZvbfqYLKxv
+         TST7itZBvH8b6fJD6FeQA3eRWUdn+wMQLwUayZNeIpSEMfcLXNBEGdS7+aT+voSYJuWc
+         9fhQ9lVTsw0Bmb54KEuRQWAoMqd4J7M4XzD7qQJt2lHjfZJvyR+0He/f56zQAK/nbrax
+         CFwQ==
+X-Gm-Message-State: APjAAAUXZKp2SD5dncvn7Vmm/D3WJSu/MkWgQGuI9a6NreRvItfDRxw0
+        00TniDTbztfeH2fT2hh1YJM=
+X-Google-Smtp-Source: APXvYqxXjXmbrxCRSpG0JbEF5LYxV9IBvh+Qe2Og6Q0b5nYpCJp8gX+irZi2bcxsLAaNRyPRcnVINw==
+X-Received: by 2002:a19:10:: with SMTP id 16mr264773lfa.100.1572471331616;
+        Wed, 30 Oct 2019 14:35:31 -0700 (PDT)
+Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.gmail.com with ESMTPSA id c24sm553812lfm.20.2019.10.30.14.35.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 14:35:31 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 07/10] cpufreq: tegra20: Use generic cpufreq-dt driver (Tegra30 supported now)
+Date:   Thu, 31 Oct 2019 00:33:57 +0300
+Message-Id: <20191030213400.29434-8-digetx@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191030213400.29434-1-digetx@gmail.com>
+References: <20191030213400.29434-1-digetx@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9521b0e0-d522-4045-39f6-08d75d811016
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 21:35:20.0119
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sUnHOaYpEdiBImls1tSq9PvFTr6JBdOa+cua/ApyAy7UCiAdZhjTDDv4+uI7xXxD
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB3444
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-30_09:2019-10-30,2019-10-30 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=766
- mlxscore=0 spamscore=0 clxscore=1011 phishscore=0 impostorscore=0
- bulkscore=0 priorityscore=1501 lowpriorityscore=0 suspectscore=0
- malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1910300189
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 05:03:14PM -0400, Daniel Jordan wrote:
-> Hi Roman,
->=20
-> On Fri, Oct 25, 2019 at 04:27:10PM -0700, Roman Gushchin wrote:
-> > page_cgroup_ino() doesn't return a valid memcg pointer for non-compund
-> > slab pages, because it depends on PgHead AND PgSlab flags to be set
-> > to determine the memory cgroup from the kmem_cache.
-> > It's correct for compound pages, but not for generic small pages. Those
-> > don't have PgHead set, so it ends up returning zero.
-> >=20
-> > Fix this by replacing the condition to PageSlab() && !PageTail().
->=20
-> You may also want to update the comment above memcg_from_slab_page():
->=20
->  * So this function assumes that the page can pass PageHead() and PageSla=
-b()
->  * checks.
+Re-parenting to intermediate clock is supported now by the clock driver
+and thus there is no need in a customized CPUFreq driver, all that code
+is common for both Tegra20 and Tegra30. The available CPU freqs are now
+specified in device-tree in a form of OPPs, all users should update their
+device-trees.
 
-Good catch, thank you! Will send v2 in no time.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/cpufreq/Kconfig.arm          |   6 +-
+ drivers/cpufreq/cpufreq-dt-platdev.c |   2 +
+ drivers/cpufreq/tegra20-cpufreq.c    | 211 +++++++--------------------
+ 3 files changed, 55 insertions(+), 164 deletions(-)
+
+diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+index 3858d86cf409..92a6a5089979 100644
+--- a/drivers/cpufreq/Kconfig.arm
++++ b/drivers/cpufreq/Kconfig.arm
+@@ -295,11 +295,11 @@ config ARM_TANGO_CPUFREQ
+ 	default y
+ 
+ config ARM_TEGRA20_CPUFREQ
+-	tristate "Tegra20 CPUFreq support"
+-	depends on ARCH_TEGRA
++	tristate "Tegra20/30 CPUFreq support"
++	depends on ARCH_TEGRA && CPUFREQ_DT
+ 	default y
+ 	help
+-	  This adds the CPUFreq driver support for Tegra20 SOCs.
++	  This adds the CPUFreq driver support for Tegra20/30 SOCs.
+ 
+ config ARM_TEGRA124_CPUFREQ
+ 	bool "Tegra124 CPUFreq support"
+diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+index f1d170dcf4d3..aba591d57c67 100644
+--- a/drivers/cpufreq/cpufreq-dt-platdev.c
++++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+@@ -121,6 +121,8 @@ static const struct of_device_id blacklist[] __initconst = {
+ 	{ .compatible = "mediatek,mt8176", },
+ 	{ .compatible = "mediatek,mt8183", },
+ 
++	{ .compatible = "nvidia,tegra20", },
++	{ .compatible = "nvidia,tegra30", },
+ 	{ .compatible = "nvidia,tegra124", },
+ 	{ .compatible = "nvidia,tegra210", },
+ 
+diff --git a/drivers/cpufreq/tegra20-cpufreq.c b/drivers/cpufreq/tegra20-cpufreq.c
+index f84ecd22f488..527cd9686220 100644
+--- a/drivers/cpufreq/tegra20-cpufreq.c
++++ b/drivers/cpufreq/tegra20-cpufreq.c
+@@ -7,201 +7,90 @@
+  *	Based on arch/arm/plat-omap/cpu-omap.c, (C) 2005 Nokia Corporation
+  */
+ 
+-#include <linux/clk.h>
+-#include <linux/cpufreq.h>
++#include <linux/bits.h>
+ #include <linux/err.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_opp.h>
+ #include <linux/types.h>
+ 
+-static struct cpufreq_frequency_table freq_table[] = {
+-	{ .frequency = 216000 },
+-	{ .frequency = 312000 },
+-	{ .frequency = 456000 },
+-	{ .frequency = 608000 },
+-	{ .frequency = 760000 },
+-	{ .frequency = 816000 },
+-	{ .frequency = 912000 },
+-	{ .frequency = 1000000 },
+-	{ .frequency = CPUFREQ_TABLE_END },
+-};
+-
+-struct tegra20_cpufreq {
+-	struct device *dev;
+-	struct cpufreq_driver driver;
+-	struct clk *cpu_clk;
+-	struct clk *pll_x_clk;
+-	struct clk *pll_p_clk;
+-	bool pll_x_prepared;
+-};
++#include <soc/tegra/common.h>
++#include <soc/tegra/fuse.h>
+ 
+-static unsigned int tegra_get_intermediate(struct cpufreq_policy *policy,
+-					   unsigned int index)
++static bool cpu0_node_has_opp_v2_prop(void)
+ {
+-	struct tegra20_cpufreq *cpufreq = cpufreq_get_driver_data();
+-	unsigned int ifreq = clk_get_rate(cpufreq->pll_p_clk) / 1000;
+-
+-	/*
+-	 * Don't switch to intermediate freq if:
+-	 * - we are already at it, i.e. policy->cur == ifreq
+-	 * - index corresponds to ifreq
+-	 */
+-	if (freq_table[index].frequency == ifreq || policy->cur == ifreq)
+-		return 0;
+-
+-	return ifreq;
+-}
++	struct device_node *np = of_cpu_device_node_get(0);
++	bool ret = false;
+ 
+-static int tegra_target_intermediate(struct cpufreq_policy *policy,
+-				     unsigned int index)
+-{
+-	struct tegra20_cpufreq *cpufreq = cpufreq_get_driver_data();
+-	int ret;
+-
+-	/*
+-	 * Take an extra reference to the main pll so it doesn't turn
+-	 * off when we move the cpu off of it as enabling it again while we
+-	 * switch to it from tegra_target() would take additional time.
+-	 *
+-	 * When target-freq is equal to intermediate freq we don't need to
+-	 * switch to an intermediate freq and so this routine isn't called.
+-	 * Also, we wouldn't be using pll_x anymore and must not take extra
+-	 * reference to it, as it can be disabled now to save some power.
+-	 */
+-	clk_prepare_enable(cpufreq->pll_x_clk);
+-
+-	ret = clk_set_parent(cpufreq->cpu_clk, cpufreq->pll_p_clk);
+-	if (ret)
+-		clk_disable_unprepare(cpufreq->pll_x_clk);
+-	else
+-		cpufreq->pll_x_prepared = true;
++	if (of_get_property(np, "operating-points-v2", NULL))
++		ret = true;
+ 
++	of_node_put(np);
+ 	return ret;
+ }
+ 
+-static int tegra_target(struct cpufreq_policy *policy, unsigned int index)
+-{
+-	struct tegra20_cpufreq *cpufreq = cpufreq_get_driver_data();
+-	unsigned long rate = freq_table[index].frequency;
+-	unsigned int ifreq = clk_get_rate(cpufreq->pll_p_clk) / 1000;
+-	int ret;
+-
+-	/*
+-	 * target freq == pll_p, don't need to take extra reference to pll_x_clk
+-	 * as it isn't used anymore.
+-	 */
+-	if (rate == ifreq)
+-		return clk_set_parent(cpufreq->cpu_clk, cpufreq->pll_p_clk);
+-
+-	ret = clk_set_rate(cpufreq->pll_x_clk, rate * 1000);
+-	/* Restore to earlier frequency on error, i.e. pll_x */
+-	if (ret)
+-		dev_err(cpufreq->dev, "Failed to change pll_x to %lu\n", rate);
+-
+-	ret = clk_set_parent(cpufreq->cpu_clk, cpufreq->pll_x_clk);
+-	/* This shouldn't fail while changing or restoring */
+-	WARN_ON(ret);
+-
+-	/*
+-	 * Drop count to pll_x clock only if we switched to intermediate freq
+-	 * earlier while transitioning to a target frequency.
+-	 */
+-	if (cpufreq->pll_x_prepared) {
+-		clk_disable_unprepare(cpufreq->pll_x_clk);
+-		cpufreq->pll_x_prepared = false;
+-	}
+-
+-	return ret;
+-}
+-
+-static int tegra_cpu_init(struct cpufreq_policy *policy)
+-{
+-	struct tegra20_cpufreq *cpufreq = cpufreq_get_driver_data();
+-
+-	clk_prepare_enable(cpufreq->cpu_clk);
+-
+-	/* FIXME: what's the actual transition time? */
+-	cpufreq_generic_init(policy, freq_table, 300 * 1000);
+-	policy->clk = cpufreq->cpu_clk;
+-	policy->suspend_freq = freq_table[0].frequency;
+-	return 0;
+-}
+-
+-static int tegra_cpu_exit(struct cpufreq_policy *policy)
+-{
+-	struct tegra20_cpufreq *cpufreq = cpufreq_get_driver_data();
+-
+-	clk_disable_unprepare(cpufreq->cpu_clk);
+-	return 0;
+-}
+-
+ static int tegra20_cpufreq_probe(struct platform_device *pdev)
+ {
+-	struct tegra20_cpufreq *cpufreq;
++	struct platform_device *cpufreq_dt;
++	struct opp_table *opp_table;
++	u32 versions[2];
+ 	int err;
+ 
+-	cpufreq = devm_kzalloc(&pdev->dev, sizeof(*cpufreq), GFP_KERNEL);
+-	if (!cpufreq)
+-		return -ENOMEM;
++	if (!cpu0_node_has_opp_v2_prop()) {
++		dev_err(&pdev->dev, "operating points not found\n");
++		dev_err(&pdev->dev, "please update your device tree\n");
++		return -ENODEV;
++	}
++
++	if (of_machine_is_compatible("nvidia,tegra20")) {
++		versions[0] = BIT(tegra_sku_info.cpu_process_id);
++		versions[1] = BIT(tegra_sku_info.soc_speedo_id);
++	} else {
++		versions[0] = BIT(tegra_sku_info.cpu_process_id);
++		versions[1] = BIT(tegra_sku_info.cpu_speedo_id);
++	}
+ 
+-	cpufreq->cpu_clk = clk_get_sys(NULL, "cclk");
+-	if (IS_ERR(cpufreq->cpu_clk))
+-		return PTR_ERR(cpufreq->cpu_clk);
++	dev_info(&pdev->dev, "hardware version 0x%x 0x%x\n",
++		 versions[0], versions[1]);
+ 
+-	cpufreq->pll_x_clk = clk_get_sys(NULL, "pll_x");
+-	if (IS_ERR(cpufreq->pll_x_clk)) {
+-		err = PTR_ERR(cpufreq->pll_x_clk);
+-		goto put_cpu;
++	opp_table = dev_pm_opp_set_supported_hw(get_cpu_device(0), versions, 2);
++	err = PTR_ERR_OR_ZERO(opp_table);
++	if (err) {
++		dev_err(&pdev->dev, "failed to set supported hw: %d\n", err);
++		return err;
+ 	}
+ 
+-	cpufreq->pll_p_clk = clk_get_sys(NULL, "pll_p");
+-	if (IS_ERR(cpufreq->pll_p_clk)) {
+-		err = PTR_ERR(cpufreq->pll_p_clk);
+-		goto put_pll_x;
++	cpufreq_dt = platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
++	err = PTR_ERR_OR_ZERO(cpufreq_dt);
++	if (err) {
++		dev_err(&pdev->dev,
++			"failed to create cpufreq-dt device: %d\n", err);
++		goto err_put_supported_hw;
+ 	}
+ 
+-	cpufreq->dev = &pdev->dev;
+-	cpufreq->driver.get = cpufreq_generic_get;
+-	cpufreq->driver.attr = cpufreq_generic_attr;
+-	cpufreq->driver.init = tegra_cpu_init;
+-	cpufreq->driver.exit = tegra_cpu_exit;
+-	cpufreq->driver.flags = CPUFREQ_NEED_INITIAL_FREQ_CHECK;
+-	cpufreq->driver.verify = cpufreq_generic_frequency_table_verify;
+-	cpufreq->driver.suspend = cpufreq_generic_suspend;
+-	cpufreq->driver.driver_data = cpufreq;
+-	cpufreq->driver.target_index = tegra_target;
+-	cpufreq->driver.get_intermediate = tegra_get_intermediate;
+-	cpufreq->driver.target_intermediate = tegra_target_intermediate;
+-	snprintf(cpufreq->driver.name, CPUFREQ_NAME_LEN, "tegra");
+-
+-	err = cpufreq_register_driver(&cpufreq->driver);
+-	if (err)
+-		goto put_pll_p;
+-
+-	platform_set_drvdata(pdev, cpufreq);
++	platform_set_drvdata(pdev, cpufreq_dt);
+ 
+ 	return 0;
+ 
+-put_pll_p:
+-	clk_put(cpufreq->pll_p_clk);
+-put_pll_x:
+-	clk_put(cpufreq->pll_x_clk);
+-put_cpu:
+-	clk_put(cpufreq->cpu_clk);
++err_put_supported_hw:
++	dev_pm_opp_put_supported_hw(opp_table);
+ 
+ 	return err;
+ }
+ 
+ static int tegra20_cpufreq_remove(struct platform_device *pdev)
+ {
+-	struct tegra20_cpufreq *cpufreq = platform_get_drvdata(pdev);
++	struct platform_device *cpufreq_dt;
++	struct opp_table *opp_table;
+ 
+-	cpufreq_unregister_driver(&cpufreq->driver);
++	cpufreq_dt = platform_get_drvdata(pdev);
++	platform_device_unregister(cpufreq_dt);
+ 
+-	clk_put(cpufreq->pll_p_clk);
+-	clk_put(cpufreq->pll_x_clk);
+-	clk_put(cpufreq->cpu_clk);
++	opp_table = dev_pm_opp_get_opp_table(get_cpu_device(0));
++	dev_pm_opp_put_supported_hw(opp_table);
++	dev_pm_opp_put_opp_table(opp_table);
+ 
+ 	return 0;
+ }
+-- 
+2.23.0
+
