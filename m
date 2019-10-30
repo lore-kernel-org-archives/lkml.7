@@ -2,159 +2,98 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D09A0CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BD1CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D44218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:11:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="E0YaAQv0"
+	by mail.kernel.org (Postfix) with ESMTP id D572F20578
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbfJ3ILS (ORCPT
+        id S1726413AbfJ3IMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:11:18 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:54232 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726032AbfJ3ILR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:11:17 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id DA8332E154E;
-        Wed, 30 Oct 2019 11:11:13 +0300 (MSK)
-Received: from vla1-5826f599457c.qloud-c.yandex.net (vla1-5826f599457c.qloud-c.yandex.net [2a02:6b8:c0d:35a1:0:640:5826:f599])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id OlQEp3d1hj-BDeW5lL2;
-        Wed, 30 Oct 2019 11:11:13 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1572423073; bh=quyBFSBUxZLyiOh/Pn2ut7NnhKb8kTc5N+3Wo+3KAUE=;
-        h=Message-ID:Date:To:From:Subject;
-        b=E0YaAQv09VZ6bMh3jIKqlt38V6yindX2nS8vnODKXOzEUm8lDewK7liAn69aBYbTB
-         r6oTVNuG3Wtmn8pjYsRL/zpRo1hJpXlA289v39ul140pV9BiZKoa7moJaJtKOCxkeK
-         mY8K0W/FbDqmCUF6vaP7wEEJKjoJ8DkoA4sgORFY=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:148a:8f3:5b61:9f4])
-        by vla1-5826f599457c.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id WammiHiM15-BDVSWk1b;
-        Wed, 30 Oct 2019 11:11:13 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH] fs: keep dio_warn_stale_pagecache() when CONFIG_BLOCK=n
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Date:   Wed, 30 Oct 2019 11:11:13 +0300
-Message-ID: <157242307298.5840.14949889649221596095.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        Wed, 30 Oct 2019 04:12:00 -0400
+Received: from mga18.intel.com ([134.134.136.126]:19158 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfJ3IMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 04:12:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 01:11:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
+   d="scan'208";a="212025078"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga002.jf.intel.com with ESMTP; 30 Oct 2019 01:11:57 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     broonie@kernel.org, vigneshr@ti.com, robh+dt@kernel.org,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v2 0/2] spi: cadence-quadpsi: Add support for the Cadence QSPI controller 
+Date:   Wed, 30 Oct 2019 16:11:53 +0800
+Message-Id: <20191030081155.29947-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This helper prints warning if direct I/O write failed to invalidate cache.
-Direct I/O is supported by non-disk filesystems, for example NFS.
+Add support for the Cadence QSPI controller. This controller is
+present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
+This driver has been tested on the Intel LGM SoCs.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Link: https://lore.kernel.org/lkml/201910300824.UIo56oC7%25lkp@intel.com/
----
- fs/direct-io.c     |   21 ---------------------
- include/linux/fs.h |    6 +++++-
- mm/filemap.c       |   21 +++++++++++++++++++++
- 3 files changed, 26 insertions(+), 22 deletions(-)
+This driver does not support generic SPI and also the implementation
+only supports spi-mem interface to replace the existing driver in
+mtd/spi-nor/cadence-quadspi.c, the existing driver only support SPI-NOR
+flash memory.
 
-diff --git a/fs/direct-io.c b/fs/direct-io.c
-index 9329ced91f1d..0ec4f270139f 100644
---- a/fs/direct-io.c
-+++ b/fs/direct-io.c
-@@ -220,27 +220,6 @@ static inline struct page *dio_get_page(struct dio *dio,
- 	return dio->pages[sdio->head];
- }
+v2 changes from v1:
+  Thank you Mark and Vignesh for the review comments and also shared link to develop 
+cadence-quadspi driver based on spi-mem framework against removal of legacy SPI.
+
+Mark Brown Review comments:
+	If it's different versions of the same IP then everything should be in
+	one driver with the optional features enabled depending on what's in a
+	given system.
+
+Vignesh review comments:
+	Nope, you cannot have two drivers for the same IP (i.e Cadence QSPI)
+	just to support to different types of SPI memories. This is the reason
+	why spi_mem_ops was introduced.
+
+	Please rewrite this driver over to use spi_mem_ops (instead of using
+	generic SPI xfers) so that same driver supports both SPI-NOR and
+	SPI-NAND flashes. Once that's done drivers/mtd/spi-nor/cadence-quadspi.c
+	can be deleted.
+
+	There are few existing examples of spi_mem_ops users in drivers/spi/
+	(git grep spi_mem_ops) and materials here on how to write such a driver:
+	
+	[1] https://bootlin.com/blog/spi-mem-bringing-some-consistency-to-the-spi-memory-ecosystem/
+	[2] https://www.youtube.com/watch?v=PkWbuLM_gmU
+
  
--/*
-- * Warn about a page cache invalidation failure during a direct io write.
-- */
--void dio_warn_stale_pagecache(struct file *filp)
--{
--	static DEFINE_RATELIMIT_STATE(_rs, 86400 * HZ, DEFAULT_RATELIMIT_BURST);
--	char pathname[128];
--	struct inode *inode = file_inode(filp);
--	char *path;
--
--	errseq_set(&inode->i_mapping->wb_err, -EIO);
--	if (__ratelimit(&_rs)) {
--		path = file_path(filp, pathname, sizeof(pathname));
--		if (IS_ERR(path))
--			path = "(unknown)";
--		pr_crit("Page cache invalidation failure on direct I/O.  Possible data corruption due to collision with buffered I/O!\n");
--		pr_crit("File: %s PID: %d Comm: %.20s\n", path, current->pid,
--			current->comm);
--	}
--}
--
- /*
-  * dio_complete() - called when all DIO BIO I/O has been completed
-  *
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index e0d909d35763..b4e4560d1c38 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3153,7 +3153,6 @@ enum {
- };
- 
- void dio_end_io(struct bio *bio);
--void dio_warn_stale_pagecache(struct file *filp);
- 
- ssize_t __blockdev_direct_IO(struct kiocb *iocb, struct inode *inode,
- 			     struct block_device *bdev, struct iov_iter *iter,
-@@ -3198,6 +3197,11 @@ static inline void inode_dio_end(struct inode *inode)
- 		wake_up_bit(&inode->i_state, __I_DIO_WAKEUP);
- }
- 
-+/*
-+ * Warn about a page cache invalidation failure diring a direct I/O write.
-+ */
-+void dio_warn_stale_pagecache(struct file *filp);
-+
- extern void inode_set_flags(struct inode *inode, unsigned int flags,
- 			    unsigned int mask);
- 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index cdb8780a0758..d7394226f5ab 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -3161,6 +3161,27 @@ int pagecache_write_end(struct file *file, struct address_space *mapping,
- }
- EXPORT_SYMBOL(pagecache_write_end);
- 
-+/*
-+ * Warn about a page cache invalidation failure during a direct I/O write.
-+ */
-+void dio_warn_stale_pagecache(struct file *filp)
-+{
-+	static DEFINE_RATELIMIT_STATE(_rs, 86400 * HZ, DEFAULT_RATELIMIT_BURST);
-+	char pathname[128];
-+	struct inode *inode = file_inode(filp);
-+	char *path;
-+
-+	errseq_set(&inode->i_mapping->wb_err, -EIO);
-+	if (__ratelimit(&_rs)) {
-+		path = file_path(filp, pathname, sizeof(pathname));
-+		if (IS_ERR(path))
-+			path = "(unknown)";
-+		pr_crit("Page cache invalidation failure on direct I/O.  Possible data corruption due to collision with buffered I/O!\n");
-+		pr_crit("File: %s PID: %d Comm: %.20s\n", path, current->pid,
-+			current->comm);
-+	}
-+}
-+
- ssize_t
- generic_file_direct_write(struct kiocb *iocb, struct iov_iter *from)
- {
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: spi: Add schema for Cadence QSPI Controller driver
+  spi: cadence-quadpsi: Add support for the Cadence QSPI controller
+
+ .../devicetree/bindings/spi/cadence,qspi.yaml      |   65 +
+ drivers/spi/Kconfig                                |   10 +
+ drivers/spi/Makefile                               |    1 +
+ drivers/spi/spi-cadence-quadspi.c                  | 1290 ++++++++++++++++++++
+ drivers/spi/spi-cadence-quadspi.h                  |  272 +++++
+ 5 files changed, 1638 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/cadence,qspi.yaml
+ create mode 100644 drivers/spi/spi-cadence-quadspi.c
+ create mode 100644 drivers/spi/spi-cadence-quadspi.h
+
+-- 
+2.11.0
 
