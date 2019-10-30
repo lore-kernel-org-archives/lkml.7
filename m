@@ -2,332 +2,95 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AEECA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C50CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1E8B204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:10:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sfX29vsH"
+	by mail.kernel.org (Postfix) with ESMTP id EBD1E204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfJ3TKZ (ORCPT
+        id S1726910AbfJ3TMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 15:10:25 -0400
-Received: from mail-oi1-f170.google.com ([209.85.167.170]:33188 "EHLO
-        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbfJ3TKZ (ORCPT
+        Wed, 30 Oct 2019 15:12:48 -0400
+Received: from dispatchb-us1.ppe-hosted.com ([148.163.129.53]:37330 "EHLO
+        dispatchb-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726259AbfJ3TMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 15:10:25 -0400
-Received: by mail-oi1-f170.google.com with SMTP id m193so2998758oig.0;
-        Wed, 30 Oct 2019 12:10:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=9zBGeuRJAsojTp30lVr3SleNVsHIFJC9n4Zs2QOF5Ic=;
-        b=sfX29vsHuA1eKJmwTZRoNYdUH4pMY2Cn/t5BIxFNf3JvjVAmjSTgyopVxQfBhzYqYR
-         vAGlCgDR/jjIqDPDIzzGHdufNr2j9AzR0DRwxMndRuOzKzf2h0wsD+DERt0Mwp9A7cX8
-         kGd7UjrGjUxqYEM8yDUEIrgMfqYrwUt339HY4bfJDBuu0Zv3OqpOKByVMqTolh2C8aJB
-         uLZomxZ7n4exoNmhZRDSx8R3RGCURor/Ghlc+8nm0+idBXdYssZRAmFNmkxvvI1NlRlC
-         ov8qpCz1MSKNV3t9wUxNFTYCL5e5sFwoHVnGMy4zNvACZQvKz7fvmQ08RSqNVaTFNrub
-         NXew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=9zBGeuRJAsojTp30lVr3SleNVsHIFJC9n4Zs2QOF5Ic=;
-        b=V2RcjtZEOUapbQZQOZz8EQnNBNFLeQcx5eHYd+9Tz8N1KR+cvXDLxX8SUZF3a70olp
-         ZJc1UmZ37pswG35qziOQKLTmNWRno51Acl4IYpvDKjCdOwDZBm6MJVGxIWWMsg4NnXLm
-         vnljOv0Z3dYogVtsz5on7wxZWDhTnqUCYS1O5BVlluwh6GkF7vkSDwlvlAzgumvq7Jxq
-         XUwM42wGQ4bcA4NNZRsbfSlvcWWZqefVdFqotKOhDRksxBTV7VPhhff7oQNuIFri9iyX
-         m8i4JQA26R6BpPt1d96TYzpkvR0BzXm0kWL2Wb4LpbYpwZj7gjyzLzQB4NT8sEIB1HDh
-         uJIQ==
-X-Gm-Message-State: APjAAAWIMH81W8ll7Txra7CbAv7OaEL+vOmnLG3k+QE2IrcIS4QOTuKz
-        AnxDgZDCefrskoX2tG3nQRMOnHk4Bqu/mCTT3tT26/5w
-X-Google-Smtp-Source: APXvYqwaJOu5wK8jhgwKH6DaGOvP7nmFWAgZFOuafCnQXcRhkRfgMHpJwZV74LJ20/RU8SMT1/2eUtaMSbfr8qmNcmA=
-X-Received: by 2002:a54:448b:: with SMTP id v11mr656445oiv.155.1572462623555;
- Wed, 30 Oct 2019 12:10:23 -0700 (PDT)
+        Wed, 30 Oct 2019 15:12:48 -0400
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1-us4.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 732FD4C0096;
+        Wed, 30 Oct 2019 19:12:46 +0000 (UTC)
+Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
+ (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 30 Oct
+ 2019 19:12:39 +0000
+Subject: Re: [PATCH] sfc: should check the return value after allocating
+ memory
+To:     zhong jiang <zhongjiang@huawei.com>, <davem@davemloft.net>
+CC:     <mhabets@solarflare.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1572426765-43211-1-git-send-email-zhongjiang@huawei.com>
+From:   Edward Cree <ecree@solarflare.com>
+Message-ID: <337f8acc-63d0-4a0b-f112-0e7be1a7e51f@solarflare.com>
+Date:   Wed, 30 Oct 2019 19:12:37 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Received: by 2002:a9d:7511:0:0:0:0:0 with HTTP; Wed, 30 Oct 2019 12:10:23
- -0700 (PDT)
-From:   Tom Psyborg <pozega.tomislav@gmail.com>
-Date:   Wed, 30 Oct 2019 20:10:23 +0100
-Message-ID: <CAKR_QVLhy3qNni4Pgvn1Mi6jOM28r-RQ3AZQXXAbbgkm-d56EA@mail.gmail.com>
-Subject: ath3k patch file not found
-To:     linux-wireless <linux-wireless@vger.kernel.org>
-Cc:     linux-firmware <linux-firmware@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1572426765-43211-1-git-send-email-zhongjiang@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.17.20.203]
+X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
+ ukex01.SolarFlarecom.com (10.17.10.4)
+X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1010-25010.003
+X-TM-AS-Result: No-10.147300-8.000000-10
+X-TMASE-MatchedRID: csPTYAMX1+G8rRvefcjeTUPdsiR0fGlp69aS+7/zbj+qvcIF1TcLYJGW
+        qGxfG/4gr/8sDK1kxPZTvVffeIwvQwUcfW/oedmqPwKTD1v8YV5MkOX0UoduuQ26c11hS9dDhYb
+        DU23Mt3nfzLo6YdZ9oal+qkmFWiM7TIunQAI8qaIsIMJqMNlanczzMs2dyeyVnvO/7zfSaU/QDj
+        kgBdHEzeAtk5EGzSDBkZOl7WKIImrvXOvQVlExsFZ0V5tYhzdWxEHRux+uk8h+ICquNi0WJHtBE
+        lp7ch+v0yUsncabz9G5BWEde06qE1QLrVa0g2b3ftwZ3X11IV0=
+X-TM-AS-User-Approved-Sender: Yes
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--10.147300-8.000000
+X-TMASE-Version: SMEX-12.5.0.1300-8.5.1010-25010.003
+X-MDID: 1572462767-cdwbMBp8yqAx
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On 30/10/2019 09:12, zhong jiang wrote:
+> kcalloc may fails to allocate memory, hence if it is in that case,
+> We should drop out in time.
+> 
+> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+> ---
+>  drivers/net/ethernet/sfc/efx.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/sfc/efx.c b/drivers/net/ethernet/sfc/efx.c
+> index 2fef740..712380a 100644
+> --- a/drivers/net/ethernet/sfc/efx.c
+> +++ b/drivers/net/ethernet/sfc/efx.c
+> @@ -3040,6 +3040,8 @@ static int efx_init_struct(struct efx_nic *efx,
+>  	/* Failure to allocate is not fatal, but may degrade ARFS performance */
+>  	efx->rps_hash_table = kcalloc(EFX_ARFS_HASH_TABLE_SIZE,
+>  				      sizeof(*efx->rps_hash_table), GFP_KERNEL);
+> +	if (!efx->rps_hash_table)
+> +		goto fail;
+NAK.
+As per the comment just above the allocation, if this allocation fails we are
+ able to continue (albeit with possibly reduced performance), since the code
+ paths that use efx->rps_hash_table all NULL-check it.
 
-After loading QCA9880 card on my laptop I noticed it has bluetooth
-capabilities, lsusb identifies it as AR3012 BT4.0.
-
-It is unable to start, according to message, due to missing patch file:
-
-Bluetooth: Patch file not found ar3k/AthrBT_0x41010000.dfu
-
-Anyone can tell how to obtain the related patch files, or is there a
-way to modify existing ones to fit this device?
-
-Here is complete lsusb output:
-
-Bus 001 Device 003: ID 0cf3:3004 Atheros Communications, Inc. AR3012
-Bluetooth 4.0
-Device Descriptor:
-  bLength                18
-  bDescriptorType         1
-  bcdUSB               1.10
-  bDeviceClass          224 Wireless
-  bDeviceSubClass         1 Radio Frequency
-  bDeviceProtocol         1 Bluetooth
-  bMaxPacketSize0        64
-  idVendor           0x0cf3 Atheros Communications, Inc.
-  idProduct          0x3004 AR3012 Bluetooth 4.0
-  bcdDevice            0.01
-  iManufacturer           0
-  iProduct                0
-  iSerial                 0
-  bNumConfigurations      1
-  Configuration Descriptor:
-    bLength                 9
-    bDescriptorType         2
-    wTotalLength          177
-    bNumInterfaces          2
-    bConfigurationValue     1
-    iConfiguration          0
-    bmAttributes         0xe0
-      Self Powered
-      Remote Wakeup
-    MaxPower              100mA
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        0
-      bAlternateSetting       0
-      bNumEndpoints           3
-      bInterfaceClass       224 Wireless
-      bInterfaceSubClass      1 Radio Frequency
-      bInterfaceProtocol      1 Bluetooth
-      iInterface              0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x81  EP 1 IN
-        bmAttributes            3
-          Transfer Type            Interrupt
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0010  1x 16 bytes
-        bInterval               1
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x82  EP 2 IN
-        bmAttributes            2
-          Transfer Type            Bulk
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0040  1x 64 bytes
-        bInterval               1
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x02  EP 2 OUT
-        bmAttributes            2
-          Transfer Type            Bulk
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0040  1x 64 bytes
-        bInterval               1
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        1
-      bAlternateSetting       0
-      bNumEndpoints           2
-      bInterfaceClass       224 Wireless
-      bInterfaceSubClass      1 Radio Frequency
-      bInterfaceProtocol      1 Bluetooth
-      iInterface              0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x83  EP 3 IN
-        bmAttributes            1
-          Transfer Type            Isochronous
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0000  1x 0 bytes
-        bInterval               1
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x03  EP 3 OUT
-        bmAttributes            1
-          Transfer Type            Isochronous
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0000  1x 0 bytes
-        bInterval               1
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        1
-      bAlternateSetting       1
-      bNumEndpoints           2
-      bInterfaceClass       224 Wireless
-      bInterfaceSubClass      1 Radio Frequency
-      bInterfaceProtocol      1 Bluetooth
-      iInterface              0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x83  EP 3 IN
-        bmAttributes            1
-          Transfer Type            Isochronous
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0009  1x 9 bytes
-        bInterval               1
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x03  EP 3 OUT
-        bmAttributes            1
-          Transfer Type            Isochronous
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0009  1x 9 bytes
-        bInterval               1
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        1
-      bAlternateSetting       2
-      bNumEndpoints           2
-      bInterfaceClass       224 Wireless
-      bInterfaceSubClass      1 Radio Frequency
-      bInterfaceProtocol      1 Bluetooth
-      iInterface              0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x83  EP 3 IN
-        bmAttributes            1
-          Transfer Type            Isochronous
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0011  1x 17 bytes
-        bInterval               1
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x03  EP 3 OUT
-        bmAttributes            1
-          Transfer Type            Isochronous
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0011  1x 17 bytes
-        bInterval               1
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        1
-      bAlternateSetting       3
-      bNumEndpoints           2
-      bInterfaceClass       224 Wireless
-      bInterfaceSubClass      1 Radio Frequency
-      bInterfaceProtocol      1 Bluetooth
-      iInterface              0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x83  EP 3 IN
-        bmAttributes            1
-          Transfer Type            Isochronous
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0019  1x 25 bytes
-        bInterval               1
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x03  EP 3 OUT
-        bmAttributes            1
-          Transfer Type            Isochronous
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0019  1x 25 bytes
-        bInterval               1
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        1
-      bAlternateSetting       4
-      bNumEndpoints           2
-      bInterfaceClass       224 Wireless
-      bInterfaceSubClass      1 Radio Frequency
-      bInterfaceProtocol      1 Bluetooth
-      iInterface              0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x83  EP 3 IN
-        bmAttributes            1
-          Transfer Type            Isochronous
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0021  1x 33 bytes
-        bInterval               1
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x03  EP 3 OUT
-        bmAttributes            1
-          Transfer Type            Isochronous
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0021  1x 33 bytes
-        bInterval               1
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        1
-      bAlternateSetting       5
-      bNumEndpoints           2
-      bInterfaceClass       224 Wireless
-      bInterfaceSubClass      1 Radio Frequency
-      bInterfaceProtocol      1 Bluetooth
-      iInterface              0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x83  EP 3 IN
-        bmAttributes            1
-          Transfer Type            Isochronous
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0031  1x 49 bytes
-        bInterval               1
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x03  EP 3 OUT
-        bmAttributes            1
-          Transfer Type            Isochronous
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0031  1x 49 bytes
-        bInterval               1
-Device Status:     0x0003
-  Self Powered
-  Remote Wakeup Enabled
+-Ed
+>  #endif
+>  	efx->phy_op = &efx_dummy_phy_operations;
+>  	efx->mdio.dev = net_dev;
+> 
