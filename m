@@ -2,87 +2,116 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F9FCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245B4CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 214F82083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572467446;
-	bh=7S030207/lOki5T8aX6j2Aiz+5BYaIpHjY2GGLIav+U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Ubldx7JOVA6tQZI1SKVzGPuVFL+I24vga+EgK4atsQAbPK92TFR4udNabrsDB4Z7D
-	 UV4xedDsePrybPlQQOC3JV2FMI6/pEGeWW8uzKRMEOPkSeEP2Qu+B7vUZT3Gu64UBT
-	 x4/1zKLcBccXMyje6fnX2rPO+5NrWRa/gAKzEk+w=
+	by mail.kernel.org (Postfix) with ESMTP id EAC49205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:33:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="kVXUCm5X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbfJ3Uap (ORCPT
+        id S1726911AbfJ3UdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 16:30:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726783AbfJ3Uao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 16:30:44 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6211205C9;
-        Wed, 30 Oct 2019 20:30:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572467444;
-        bh=7S030207/lOki5T8aX6j2Aiz+5BYaIpHjY2GGLIav+U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Yi+gyYU/5+OuyQVMs6E8lOV+CkSwzRgsP4mvwaCNJoZfb0QocOhj7h6TvcML8FYsw
-         SSf+N2W9/3cddKdGX9mj5qd7PfPBspOF60E2FFbLYdF5xxgHId4OekX9YLgjts9eGB
-         WYRjcUBQWtOieOlw/l/y4/t65AeB97w45y5gHncM=
-Date:   Wed, 30 Oct 2019 15:30:41 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 3/7] PCI: Export pci_ats_disabled() as a GPL symbol to
- modules
-Message-ID: <20191030203041.GA247194@google.com>
+        Wed, 30 Oct 2019 16:33:10 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46203 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbfJ3UdJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 16:33:09 -0400
+Received: by mail-lj1-f194.google.com with SMTP id w8so4121880lji.13
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 13:33:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PZw4hUcpDDeEECYWt5oKzqEsWCt5if9tCmjtkMvGZZc=;
+        b=kVXUCm5X6CCOwy3PrkvG8ynq72GLC65upZkmDyjLUB02BH0FDQdUbgOtudVOF7kWIU
+         /yYbkuNCFW9ggROV0FS4Q5s91jSFfgDgeUErkMGCEN1ZwREfMy1NCtZTH2euSXS+bXAI
+         +0Pxezte5/LmQNgNAvq/jBGkxT9+cx+7WYa0ZTyeDmyNP47fS+iCQoIgRM9dcOmAoOfB
+         ow38H55a7FOBuTU984DCypUFmnLIxSjK1Uda+b4SYvQqXY5oRtoC2hMOz+Hbrce3JWLS
+         3tXmml2BE/xG70rKxHcQQodoA1dieVC//O/kr9sd8uyOrOR+hPJs9AB9O7oTR39zsD8t
+         GH4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PZw4hUcpDDeEECYWt5oKzqEsWCt5if9tCmjtkMvGZZc=;
+        b=d4gtzGB3QBGbVoZAN8qBQ9i7DtAFu656o6gNwatebqMZXTTYHq4LQV7KjGw+Rg99LV
+         QlE0tV3sL4nnSDkcGmb/ir4LYt3waXuR470dpt/ZtrSqWp8edjW8J9axwTxq75b1SOoQ
+         aJFA60JWMS0+HVsR/OBw3Vx2z/4X5iCOZKcqc3gevAGDCnSG/fUJLLjl8hFq7IyREnVV
+         yIf8Onr03yLrvRjB2EzaMn452TbqKJQu1dc4T931YeH/8yxa1qCooxbu0F/9rHJaWA6T
+         MBHr0By0mJwzuv3Y5sp91jCvWqOlFQEr6J2AGXuQajm+569dQvIJ5VLqrWRa5uqfJelq
+         kHiw==
+X-Gm-Message-State: APjAAAUkBHEVyY6cpOgvxv3Zm5lJIPqwNC2IwBSHHndXwlZo6wEQwGPo
+        0f0V3ZSjNiRO9uNLWVs0TSn5/+683k5SV1lfgNDf
+X-Google-Smtp-Source: APXvYqyiyj85p5hWvRdH63/Hex6oBbr4Qp3fVRiaxpwF74z1TwPKum1fWCiiIky+FvzFDsHURjcemP+RjH0Szm1Yw/g=
+X-Received: by 2002:a2e:8987:: with SMTP id c7mr1107993lji.225.1572467585472;
+ Wed, 30 Oct 2019 13:33:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191030145112.19738-4-will@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1568834524.git.rgb@redhat.com> <16abf1b2aafeb5f1b8dae20b9a4836e54f959ca5.1568834524.git.rgb@redhat.com>
+ <CAHC9VhSRmn46DcazH4Q35vOSxVoEu8PsX79aurkHkFymRoMwag@mail.gmail.com> <20191024220814.pid5ql6kvyr4ianb@madcap2.tricolour.ca>
+In-Reply-To: <20191024220814.pid5ql6kvyr4ianb@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 30 Oct 2019 16:32:54 -0400
+Message-ID: <CAHC9VhTEpVLgKk1FpFqaXH-B1jUvfRyaGffHwFrHbi3MjbRrUA@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V7 14/21] audit: contid check descendancy and nesting
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 02:51:08PM +0000, Will Deacon wrote:
-> Building drivers for ATS-aware IOMMUs as modules requires access to
-> pci_ats_disabled(). Export it as a GPL symbol to get things working.
-> 
-> Signed-off-by: Will Deacon <will@kernel.org>
+On Thu, Oct 24, 2019 at 6:08 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2019-10-10 20:40, Paul Moore wrote:
+> > On Wed, Sep 18, 2019 at 9:26 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > ?fixup! audit: convert to contid list to check for orch/engine ownership
+> >
+> > ?
+> >
+> > > Require the target task to be a descendant of the container
+> > > orchestrator/engine.
+> > >
+> > > You would only change the audit container ID from one set or inherited
+> > > value to another if you were nesting containers.
+> > >
+> > > If changing the contid, the container orchestrator/engine must be a
+> > > descendant and not same orchestrator as the one that set it so it is not
+> > > possible to change the contid of another orchestrator's container.
+> >
+> > Did you mean to say that the container orchestrator must be an
+> > ancestor of the target, and the same orchestrator as the one that set
+> > the target process' audit container ID?
+>
+> Not quite, the first half yes, but the second half: if it was already
+> set by that orchestrator, it can't be set again.  If it is a different
+> orchestrator that is a descendant of the orchestrator that set it, then
+> allow the action.
+>
+> > Or maybe I'm missing something about what you are trying to do?
+>
+> Does that help clarify it?
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+I think so, it's pretty much as you stated originally: "Require the
+target task to be a descendant of the container orchestrator/engine".
+It's possible I misread something in the patch, or got lost in all the
+?fixup! patching.  I'll take a closer look at the next revision of the
+patchset to make sure the code makes sense to me, but the logic seems
+reasonable.
 
-> ---
->  drivers/pci/pci.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index a97e2571a527..4fbe5b576dd8 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -123,6 +123,7 @@ bool pci_ats_disabled(void)
->  {
->  	return pcie_ats_disabled;
->  }
-> +EXPORT_SYMBOL_GPL(pci_ats_disabled);
->  
->  /* Disable bridge_d3 for all PCIe ports */
->  static bool pci_bridge_d3_disable;
-> -- 
-> 2.24.0.rc0.303.g954a862665-goog
-> 
+-- 
+paul moore
+www.paul-moore.com
