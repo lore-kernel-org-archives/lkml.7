@@ -2,83 +2,119 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF58CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0040CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF4012083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572396456;
-	bh=rC4DTyV2zuA+J7bw7dlMjJDABthKcuPGgzmZ5hyLjuk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bh6KMVdNfPhdji3vsqHeQOk7xdkgrROKd7KlD+3k4C+LDD2hzFnlItf6y3PcfJ9TC
-	 UsB0clEvNrCWckvo1EdnvSVGW0+SxpEfWYmkHqarXHEVMNX+NQxqn0/jxDPJ/aBI5E
-	 6gSFQJIlC2aGSSTRVdjcJuFzEOqoAZaySsizQ6jA=
+	by mail.kernel.org (Postfix) with ESMTP id 864232083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 00:49:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M0QnTm66"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbfJ3ArZ (ORCPT
+        id S1726636AbfJ3AtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 29 Oct 2019 20:47:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726076AbfJ3ArY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 29 Oct 2019 20:47:24 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA2EB2083E;
-        Wed, 30 Oct 2019 00:47:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572396444;
-        bh=rC4DTyV2zuA+J7bw7dlMjJDABthKcuPGgzmZ5hyLjuk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DqNmB7cmPEMslfCggeao0xz1kdv2tQhIkyD7Hc8ovAHyXPu3xJlmo9hCCB4yuZF2C
-         Yqf39GHojD759SooL74JvoLuYT7M8J0q4zOVJ8XoFBP4Q/DrCA+/i6JM6+iJH4KCx8
-         s/OLz4DGT94C0Dhpc+xlz1YOg3OoodQ3lsuWTBl0=
-Date:   Tue, 29 Oct 2019 17:47:23 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Greg Thelen <gthelen@google.com>, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzbot+13f93c99c06988391efe@syzkaller.appspotmail.com
-Subject: Re: [PATCH] mm: vmscan: memcontrol: remove
- mem_cgroup_select_victim_node()
-Message-Id: <20191029174723.ceb916ec850e7c88ed00e091@linux-foundation.org>
-In-Reply-To: <20191029234753.224143-1-shakeelb@google.com>
-References: <20191029234753.224143-1-shakeelb@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 29 Oct 2019 20:49:16 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44615 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfJ3AtQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 29 Oct 2019 20:49:16 -0400
+Received: by mail-lj1-f194.google.com with SMTP id c4so624155lja.11;
+        Tue, 29 Oct 2019 17:49:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=69bZQy5CYKyEvBEYx4SZC8ZoPl/aYUUYCjOjLOlQ/ps=;
+        b=M0QnTm66RRRurE++l9qmcU19UXJ1Z01aIb8nt+p2hfCNe8SMGGuF2wHu/t58DIjYLD
+         7Af2EBU2okKDxW/Kr+4ZcYisRHyELZEPOU/WUGp/rD1b5yH3RirFXFzvN3NVElPvoGCi
+         F0DdQo53YYCTgRImYLTw7fdMG7PimSpbbQcberIho8Ys3PJ8et7ZywDA0hsai+phwbIh
+         +6r4GYo5sG/jzO5CjDpuRZyEEEngu2H25ce0SCqwru30hqFcB6EWPOBDLAfy4JI0cxQa
+         rQkhpdOO0vlT3LkrbaNXtNOPGOdmRJjS7hoCUZ/TWKSwt+FFrizfvwnkEGX01jS+ap6m
+         ZCUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=69bZQy5CYKyEvBEYx4SZC8ZoPl/aYUUYCjOjLOlQ/ps=;
+        b=tl6jRAYYylirKHvtjiYD0x7KLWIsBlbuc9si6f6jz552tXO54Syjoxozl3u0gWsVts
+         kp7R39mKLb2+bpfFcGkDrNXBWk3m43JRDXOCA8kTjQsIqPaeODlK5qfZ9Ho0UaOXGuxM
+         MxAJwH0jv37XAALVNsRGuB2Q4vt2U7vnCck+cyyY7wphO81hPc8ScP6bJR/593K0qqd7
+         YW/uDFN0O5ZIp7Xlh27Uu4YFZ+cjnkAvtVDAesZCGBEniDjDFdk5qUAMTUk+g+2x/bLH
+         0LrpNNUMJlgXbvOBJTNre5a+59OgQEJ8eYJgNthQeFl3wEu3MY+MP0vttJYJOQq+LciV
+         UIvg==
+X-Gm-Message-State: APjAAAVa1SaSZ5eF/jeXRgPGTTteVXDnpyeNljs3zPEo/YeH3+AfsLX8
+        aTTEyTyiU4cp4/TSXa0EgYw=
+X-Google-Smtp-Source: APXvYqzxAOLYj4gBBl4CsGTQZOUlu+bzkhdLijeRNR8yohhWU9qLb/0DexNtoSR3EZBFHUs0vqcS4A==
+X-Received: by 2002:a2e:9799:: with SMTP id y25mr4680644lji.228.1572396553396;
+        Tue, 29 Oct 2019 17:49:13 -0700 (PDT)
+Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.gmail.com with ESMTPSA id 87sm202308ljs.23.2019.10.29.17.49.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2019 17:49:12 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] clk: tegra: divider: Check UART's divider enable-bit state on rate's recalculation
+Date:   Wed, 30 Oct 2019 03:48:13 +0300
+Message-Id: <20191030004813.9187-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 16:47:53 -0700 Shakeel Butt <shakeelb@google.com> wrote:
+UART clock is divided using divisor values from DLM/DLL registers when
+enable-bit is unset in clk register and clk's divider configuration isn't
+taken onto account in this case. This doesn't cause any problems, but
+let's add a check for the divider's enable-bit state, for consistency.
 
-> Since commit 1ba6fc9af35b ("mm: vmscan: do not share cgroup iteration
-> between reclaimers"), the memcg reclaim does not bail out earlier based
-> on sc->nr_reclaimed and will traverse all the nodes. All the reclaimable
-> pages of the memcg on all the nodes will be scanned relative to the
-> reclaim priority. So, there is no need to maintain state regarding which
-> node to start the memcg reclaim from. Also KCSAN complains data races in
-> the code maintaining the state.
-> 
-> This patch effectively reverts the commit 889976dbcb12 ("memcg: reclaim
-> memory from nodes in round-robin order") and the commit 453a9bf347f1
-> ("memcg: fix numa scan information update to be triggered by memory
-> event").
-> 
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> Reported-by: <syzbot+13f93c99c06988391efe@syzkaller.appspotmail.com>
+Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
 
-The sysbot report
-(http://lkml.kernel.org/r/00000000000055aba7058af4d378@google.com) was
-for a null pointer deref.  So won't we be needing a Fixes: and cc:stable?
+Changelog:
+
+v2: In the comment to v1 Peter De Schrijver pointed out that UART's DLM/DLL
+    registers configuration is used when enable bit is unset, thus the
+    commit's title and message are changed accordingly.
+
+ drivers/clk/tegra/clk-divider.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/tegra/clk-divider.c b/drivers/clk/tegra/clk-divider.c
+index e76731fb7d69..f33c19045386 100644
+--- a/drivers/clk/tegra/clk-divider.c
++++ b/drivers/clk/tegra/clk-divider.c
+@@ -40,8 +40,13 @@ static unsigned long clk_frac_div_recalc_rate(struct clk_hw *hw,
+ 	int div, mul;
+ 	u64 rate = parent_rate;
+ 
+-	reg = readl_relaxed(divider->reg) >> divider->shift;
+-	div = reg & div_mask(divider);
++	reg = readl_relaxed(divider->reg);
++
++	if ((divider->flags & TEGRA_DIVIDER_UART) &&
++	    !(reg & PERIPH_CLK_UART_DIV_ENB))
++		return rate;
++
++	div = (reg >> divider->shift) & div_mask(divider);
+ 
+ 	mul = get_mul(divider);
+ 	div += mul;
+-- 
+2.23.0
+
