@@ -2,327 +2,92 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAD3CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D46ECA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BEA320874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B41220874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:25:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="nljnVkQa"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="sqZ7uuLJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbfJ3KYN (ORCPT
+        id S1726552AbfJ3KZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 06:24:13 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:27635 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726032AbfJ3KYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 06:24:12 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4734Ld313bz9vC0Y;
-        Wed, 30 Oct 2019 11:24:09 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=nljnVkQa; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id VO0eJu24sHJd; Wed, 30 Oct 2019 11:24:09 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4734Ld1r3Qz9vC0C;
-        Wed, 30 Oct 2019 11:24:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1572431049; bh=ACqajUDrFNpwcC+AioRIkBdQ0r2pymgCUimnqSpGHQg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=nljnVkQa52uPHLLWTFzaQqomoLVUelys6slJi1kyplTKQ9WqNf/IluGEQ3z2q3kTm
-         /Hl8b8knPwTuMVdKX1+NWBlAVUbHmhSFz0ym8cmY+Eg8wu5dM08fyjlyuzGyLt4bx/
-         dVTxTEdrz1lKfrPzahBqILlmdH6Ac7V9AqkbXzoA=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5904B8B7C0;
-        Wed, 30 Oct 2019 11:24:10 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id RF5ZI91XcOtS; Wed, 30 Oct 2019 11:24:10 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B18758B7AF;
-        Wed, 30 Oct 2019 11:24:09 +0100 (CET)
-Subject: Re: [PATCH v2 07/23] soc: fsl: qe: merge qe_ic.h into qe_ic.c
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Scott Wood <oss@buserror.net>,
-        Valentin Longchamp <valentin.longchamp@keymile.com>
-References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
- <20191025124058.22580-1-linux@rasmusvillemoes.dk>
- <20191025124058.22580-8-linux@rasmusvillemoes.dk>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <7837553d-4247-7166-8625-77483bfb641d@c-s.fr>
-Date:   Wed, 30 Oct 2019 11:24:09 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 30 Oct 2019 06:25:28 -0400
+Received: from mail-qt1-f179.google.com ([209.85.160.179]:40182 "EHLO
+        mail-qt1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfJ3KZ1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 06:25:27 -0400
+Received: by mail-qt1-f179.google.com with SMTP id o49so2457075qta.7
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 03:25:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=9hYolxApZ/voYxD7XS53KDc3a6r4YHM/nktkVUKF4bg=;
+        b=sqZ7uuLJqy730ZPYSTR3LHmqWEKUT8SAed5nP4lEaiR0imK6och+z0G4ydgFDSC4R8
+         CNWFzVe4eXEN7/5UJawavpoFt20OD5sT6lGoWKWAzT20pqBI0EspLjYfGQ5u2cjXeyFB
+         mVmfgG41vaTH+sG5M30eJrVnnTYMJ5BtCc7KLg2cLLeR7NaYyqI687dkc/3qWhT1JVt/
+         zQnIy5qKzlC4yAenkBP77ubVrnfVPZltYQ1NTzPNoClZVq9BKJpGdWdgEvtJVyHSi4lX
+         cx2FVaZcsh9EX9lQtuwmVSZ8I6AfgdBoHUU86wXoWPV7D6z743C9IdiQyOoaqLPRqti6
+         lzWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=9hYolxApZ/voYxD7XS53KDc3a6r4YHM/nktkVUKF4bg=;
+        b=aFNl+9MRRyHwtD/MvxbI4A2SWTBFMk1Zh5+fTbiW6GOFf4+Y7AT5XlTrhU19Ni9ul8
+         oI5CejJ5P7Fx8kpEOMM8u9nkd2+eqb0FFxVjcWKB47pZjcsZIP5l4Z7KjzUgko82u6Cm
+         k6UM0FuKxqVIQosnvd9mTPh1NOKrrIiTtGk40uhSYN3HouPDU4nZjvPUYBnAHcCBLbO7
+         LCxwdAw+hDewsuc+7H9eApbA5/jgDEfsH78w6q1Rx/3pkFGFznfFC3aLLAJCZm4IARbU
+         ZSRAzmeiCyE/M1fdHmuzIQLJmyCuN6zhgaBr4hRJfCXL+t1pJpHQjBPJF3A0cxXW2Lc2
+         V/hg==
+X-Gm-Message-State: APjAAAUSOvoAYEfe80V6dCCeIiZYJG0vKhZp2ZhdiQqSG/tQ/SQ7uFo0
+        dRaLPw9JRvu1cLS3IHLKhXfX4TjPXRTTe+2vk/epFw==
+X-Google-Smtp-Source: APXvYqzNfLMLIkciJzW8nsmVfiUh78OIF1sL++gBSs7L09dwfMzhLoANZOYDahvQhclKEA2zZZCa7WDy2c6dLP7Vl2g=
+X-Received: by 2002:a0c:b0fa:: with SMTP id p55mr28866680qvc.239.1572431126096;
+ Wed, 30 Oct 2019 03:25:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191025124058.22580-8-linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+From:   Chris Chiu <chiu@endlessm.com>
+Date:   Wed, 30 Oct 2019 18:25:14 +0800
+Message-ID: <CAB4CAwcMqyOLJFPcVyoGuiXo-ujeyzL2TJkpZ3qAc1HymJ2x7A@mail.gmail.com>
+Subject: Unexpected screen flicker during i915 initialization
+To:     Jani Nikula <jani.nikula@intel.com>,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        David Airlie <airlied@linux.ie>, daniel@ffwll.ch,
+        intel-gfx@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi guys,
+    We have 2 laptops, ASUS Z406MA and Acer TravelMate B118, both
+powered by the same Intel N5000 GemniLake CPU. On the Acer laptop, the
+panel will blink once during boot which never happens on the ASUS
+laptop. It caught my attention and I find the difference between them
+but I need help for more information,
 
+    The major difference happens in bxt_sanitize_cdclk() on the
+following condition check.
+        if (cdctl == expected)
+                /* All well; nothing to sanitize */
+                return;
 
-Le 25/10/2019 à 14:40, Rasmus Villemoes a écrit :
-> The local qe_ic.h header is only used by qe_ic.c, so merge its
-> contents into the .c file. This is preparation for moving the driver
-> to drivers/irqchip/. It also avoids confusion between this header and
-> the one at include/soc/fsl/qe/qe_ic.h, which is included from a number
-> of places (qe_ic.c among others).
-> 
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> ---
->   drivers/soc/fsl/qe/qe_ic.c |  91 ++++++++++++++++++++++++++++++-
->   drivers/soc/fsl/qe/qe_ic.h | 108 -------------------------------------
->   2 files changed, 90 insertions(+), 109 deletions(-)
->   delete mode 100644 drivers/soc/fsl/qe/qe_ic.h
-> 
-> diff --git a/drivers/soc/fsl/qe/qe_ic.c b/drivers/soc/fsl/qe/qe_ic.c
-> index d420492b4c23..7b1870d2866a 100644
-> --- a/drivers/soc/fsl/qe/qe_ic.c
-> +++ b/drivers/soc/fsl/qe/qe_ic.c
-> @@ -26,7 +26,96 @@
->   #include <asm/io.h>
->   #include <soc/fsl/qe/qe_ic.h>
->   
-> -#include "qe_ic.h"
-> +#define NR_QE_IC_INTS		64
-> +
-> +/* QE IC registers offset */
-> +#define QEIC_CICR		0x00
-> +#define QEIC_CIVEC		0x04
-> +#define QEIC_CRIPNR		0x08
-> +#define QEIC_CIPNR		0x0c
-> +#define QEIC_CIPXCC		0x10
-> +#define QEIC_CIPYCC		0x14
-> +#define QEIC_CIPWCC		0x18
-> +#define QEIC_CIPZCC		0x1c
-> +#define QEIC_CIMR		0x20
-> +#define QEIC_CRIMR		0x24
-> +#define QEIC_CICNR		0x28
-> +#define QEIC_CIPRTA		0x30
-> +#define QEIC_CIPRTB		0x34
-> +#define QEIC_CRICR		0x3c
-> +#define QEIC_CHIVEC		0x60
-> +
-> +/* Interrupt priority registers */
-> +#define CIPCC_SHIFT_PRI0	29
-> +#define CIPCC_SHIFT_PRI1	26
-> +#define CIPCC_SHIFT_PRI2	23
-> +#define CIPCC_SHIFT_PRI3	20
-> +#define CIPCC_SHIFT_PRI4	13
-> +#define CIPCC_SHIFT_PRI5	10
-> +#define CIPCC_SHIFT_PRI6	7
-> +#define CIPCC_SHIFT_PRI7	4
+    On the problematic Acer laptop, the value of cdctl is 0x27a while
+the same cdctl is 0x278 on ASUS machine. Due to the 0x27a is not equal
+to the expected value 0x278 so it needs to be sanitized by assigning
+-1 to  dev_priv->cdclk.hw.vco. Then the consequent bxt_set_cdclk()
+will force the full PLL disable and enable. And that's the flicker
+(blink) we observed during boot.
 
-I think you should drop all unused consts and only keep the ones that 
-are used.
+    Although I can't find the definition about the BIT(2) of CDCLK_CTL
+which cause this difference. Can anyone suggest what exactly the
+problem is and how should we deal with it? Thanks.
 
-> +
-> +/* CICR priority modes */
-> +#define CICR_GWCC		0x00040000
-> +#define CICR_GXCC		0x00020000
-> +#define CICR_GYCC		0x00010000
-> +#define CICR_GZCC		0x00080000
-> +#define CICR_GRTA		0x00200000
-> +#define CICR_GRTB		0x00400000
-> +#define CICR_HPIT_SHIFT		8
-> +#define CICR_HPIT_MASK		0x00000300
-> +#define CICR_HP_SHIFT		24
-> +#define CICR_HP_MASK		0x3f000000
-> +
-> +/* CICNR */
-> +#define CICNR_WCC1T_SHIFT	20
-> +#define CICNR_ZCC1T_SHIFT	28
-> +#define CICNR_YCC1T_SHIFT	12
-> +#define CICNR_XCC1T_SHIFT	4
-
-Same here
-
-> +
-> +/* CRICR */
-> +#define CRICR_RTA1T_SHIFT	20
-> +#define CRICR_RTB1T_SHIFT	28
-
-Same
-
-
-> +
-> +/* Signal indicator */
-> +#define SIGNAL_MASK		3
-> +#define SIGNAL_HIGH		2
-> +#define SIGNAL_LOW		0
-
-Only SIGNAL_HIGH seems to be used.
-
-Christophe
-
-> +
-> +struct qe_ic {
-> +	/* Control registers offset */
-> +	u32 __iomem *regs;
-> +
-> +	/* The remapper for this QEIC */
-> +	struct irq_domain *irqhost;
-> +
-> +	/* The "linux" controller struct */
-> +	struct irq_chip hc_irq;
-> +
-> +	/* VIRQ numbers of QE high/low irqs */
-> +	unsigned int virq_high;
-> +	unsigned int virq_low;
-> +};
-> +
-> +/*
-> + * QE interrupt controller internal structure
-> + */
-> +struct qe_ic_info {
-> +	/* Location of this source at the QIMR register */
-> +	u32	mask;
-> +
-> +	/* Mask register offset */
-> +	u32	mask_reg;
-> +
-> +	/*
-> +	 * For grouped interrupts sources - the interrupt code as
-> +	 * appears at the group priority register
-> +	 */
-> +	u8	pri_code;
-> +
-> +	/* Group priority register offset */
-> +	u32	pri_reg;
-> +};
->   
->   static DEFINE_RAW_SPINLOCK(qe_ic_lock);
->   
-> diff --git a/drivers/soc/fsl/qe/qe_ic.h b/drivers/soc/fsl/qe/qe_ic.h
-> deleted file mode 100644
-> index 29b4d768e4a8..000000000000
-> --- a/drivers/soc/fsl/qe/qe_ic.h
-> +++ /dev/null
-> @@ -1,108 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0-or-later */
-> -/*
-> - * drivers/soc/fsl/qe/qe_ic.h
-> - *
-> - * QUICC ENGINE Interrupt Controller Header
-> - *
-> - * Copyright (C) 2006 Freescale Semiconductor, Inc. All rights reserved.
-> - *
-> - * Author: Li Yang <leoli@freescale.com>
-> - * Based on code from Shlomi Gridish <gridish@freescale.com>
-> - */
-> -#ifndef _POWERPC_SYSDEV_QE_IC_H
-> -#define _POWERPC_SYSDEV_QE_IC_H
-> -
-> -#include <soc/fsl/qe/qe_ic.h>
-> -
-> -#define NR_QE_IC_INTS		64
-> -
-> -/* QE IC registers offset */
-> -#define QEIC_CICR		0x00
-> -#define QEIC_CIVEC		0x04
-> -#define QEIC_CRIPNR		0x08
-> -#define QEIC_CIPNR		0x0c
-> -#define QEIC_CIPXCC		0x10
-> -#define QEIC_CIPYCC		0x14
-> -#define QEIC_CIPWCC		0x18
-> -#define QEIC_CIPZCC		0x1c
-> -#define QEIC_CIMR		0x20
-> -#define QEIC_CRIMR		0x24
-> -#define QEIC_CICNR		0x28
-> -#define QEIC_CIPRTA		0x30
-> -#define QEIC_CIPRTB		0x34
-> -#define QEIC_CRICR		0x3c
-> -#define QEIC_CHIVEC		0x60
-> -
-> -/* Interrupt priority registers */
-> -#define CIPCC_SHIFT_PRI0	29
-> -#define CIPCC_SHIFT_PRI1	26
-> -#define CIPCC_SHIFT_PRI2	23
-> -#define CIPCC_SHIFT_PRI3	20
-> -#define CIPCC_SHIFT_PRI4	13
-> -#define CIPCC_SHIFT_PRI5	10
-> -#define CIPCC_SHIFT_PRI6	7
-> -#define CIPCC_SHIFT_PRI7	4
-> -
-> -/* CICR priority modes */
-> -#define CICR_GWCC		0x00040000
-> -#define CICR_GXCC		0x00020000
-> -#define CICR_GYCC		0x00010000
-> -#define CICR_GZCC		0x00080000
-> -#define CICR_GRTA		0x00200000
-> -#define CICR_GRTB		0x00400000
-> -#define CICR_HPIT_SHIFT		8
-> -#define CICR_HPIT_MASK		0x00000300
-> -#define CICR_HP_SHIFT		24
-> -#define CICR_HP_MASK		0x3f000000
-> -
-> -/* CICNR */
-> -#define CICNR_WCC1T_SHIFT	20
-> -#define CICNR_ZCC1T_SHIFT	28
-> -#define CICNR_YCC1T_SHIFT	12
-> -#define CICNR_XCC1T_SHIFT	4
-> -
-> -/* CRICR */
-> -#define CRICR_RTA1T_SHIFT	20
-> -#define CRICR_RTB1T_SHIFT	28
-> -
-> -/* Signal indicator */
-> -#define SIGNAL_MASK		3
-> -#define SIGNAL_HIGH		2
-> -#define SIGNAL_LOW		0
-> -
-> -struct qe_ic {
-> -	/* Control registers offset */
-> -	u32 __iomem *regs;
-> -
-> -	/* The remapper for this QEIC */
-> -	struct irq_domain *irqhost;
-> -
-> -	/* The "linux" controller struct */
-> -	struct irq_chip hc_irq;
-> -
-> -	/* VIRQ numbers of QE high/low irqs */
-> -	unsigned int virq_high;
-> -	unsigned int virq_low;
-> -};
-> -
-> -/*
-> - * QE interrupt controller internal structure
-> - */
-> -struct qe_ic_info {
-> -	/* Location of this source at the QIMR register */
-> -	u32	mask;
-> -
-> -	/* Mask register offset */
-> -	u32	mask_reg;
-> -
-> -	/*
-> -	 * For grouped interrupts sources - the interrupt code as
-> -	 * appears at the group priority register
-> -	 */
-> -	u8	pri_code;
-> -
-> -	/* Group priority register offset */
-> -	u32	pri_reg;
-> -};
-> -
-> -#endif /* _POWERPC_SYSDEV_QE_IC_H */
-> 
+Chris
