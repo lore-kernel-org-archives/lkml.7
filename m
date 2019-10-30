@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5418DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B26FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 212A22087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 261FE208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:06:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfJ3GF6 (ORCPT
+        id S1727390AbfJ3GFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 02:05:58 -0400
+        Wed, 30 Oct 2019 02:05:47 -0400
 Received: from mga05.intel.com ([192.55.52.43]:63903 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727377AbfJ3GF4 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 02:05:56 -0400
+        id S1726108AbfJ3GFp (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 02:05:45 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 23:05:56 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 23:05:44 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
-   d="scan'208";a="225217083"
+   d="scan'208";a="225217052"
 Received: from kbl.sh.intel.com ([10.239.159.163])
-  by fmsmga004.fm.intel.com with ESMTP; 29 Oct 2019 23:05:53 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 29 Oct 2019 23:05:42 -0700
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v5 7/7] perf report: Sort by sampled cycles percent per block for tui
-Date:   Wed, 30 Oct 2019 14:04:30 +0800
-Message-Id: <20191030060430.23558-8-yao.jin@linux.intel.com>
+Subject: [PATCH v5 2/7] perf util: Cleanup and refactor block info functions
+Date:   Wed, 30 Oct 2019 14:04:25 +0800
+Message-Id: <20191030060430.23558-3-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191030060430.23558-1-yao.jin@linux.intel.com>
 References: <20191030060430.23558-1-yao.jin@linux.intel.com>
@@ -45,261 +45,474 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previous patch has implemented a new option "--total-cycles".
-But only stdio mode is supported.
-
-This patch supports the tui mode and support '--percent-limit'.
-
-For example,
-
- perf record -b ./div
- perf report --total-cycles --percent-limit 1
-
- # Samples: 2753248 of event 'cycles'
- Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles                                              [Program Block Range]         Shared Object
-          26.04%            2.8M        0.40%          18                                             [div.c:42 -> div.c:39]                   div
-          15.17%            1.2M        0.16%           7                                 [random_r.c:357 -> random_r.c:380]          libc-2.27.so
-           5.11%          402.0K        0.04%           2                                             [div.c:27 -> div.c:28]                   div
-           4.87%          381.6K        0.04%           2                                     [random.c:288 -> random.c:291]          libc-2.27.so
-           4.53%          381.0K        0.04%           2                                             [div.c:40 -> div.c:40]                   div
-           3.85%          300.9K        0.02%           1                                             [div.c:22 -> div.c:25]                   div
-           3.08%          241.1K        0.02%           1                                           [rand.c:26 -> rand.c:27]          libc-2.27.so
-           3.06%          240.0K        0.02%           1                                     [random.c:291 -> random.c:291]          libc-2.27.so
-           2.78%          215.7K        0.02%           1                                     [random.c:298 -> random.c:298]          libc-2.27.so
-           2.52%          198.3K        0.02%           1                                     [random.c:293 -> random.c:293]          libc-2.27.so
-           2.36%          184.8K        0.02%           1                                           [rand.c:28 -> rand.c:28]          libc-2.27.so
-           2.33%          180.5K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
-           2.28%          176.7K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
-           2.20%          168.8K        0.02%           1                                         [rand@plt+0 -> rand@plt+0]                   div
-           1.98%          158.2K        0.02%           1                                 [random_r.c:388 -> random_r.c:388]          libc-2.27.so
-           1.57%          123.3K        0.02%           1                                             [div.c:42 -> div.c:44]                   div
-           1.44%          116.0K        0.42%          19                                 [random_r.c:357 -> random_r.c:394]          libc-2.27.so
-
- v5:
- ---
- Fix a crash issue when running perf report without
- '--total-cycles'. The issue is because the internal flag
- is renamed from 'total_cycles' to 'total_cycles_mode' in
- previous patch but this patch still uses 'total_cycles'
- to check if the '--total-cycles' option is enabled, which
- causes the code to be inconsistent.
+We have already implemented some block-info related functions.
+Now it's time to do some cleanup, refactoring and move the
+functions and structures to new block-info.h/block-info.c.
 
  v4:
  ---
- Since the block collection is moved out of printing in
- previous patch, this patch is updated accordingly for
- tui supporting.
+ Move code for skipping column length calculation to patch:
+ 'perf diff: Don't use hack to skip column length calculation'
 
  v3:
  ---
- Minor change since the function name is changed:
- block_total_cycles_percent -> block_info__total_cycles_percent
+ 1. Rename the patch title
+ 2. Rename from block.h/block.c to block-info.h/block-info.c
+ 3. Move more common part to block-info, such as
+    block_info__process_sym.
+ 4. Remove the nasty hack for skipping calculation of column
+    length
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/builtin-report.c    | 30 +++++++++++++---
- tools/perf/ui/browsers/hists.c | 62 +++++++++++++++++++++++++++++++++-
- tools/perf/ui/browsers/hists.h |  2 ++
- tools/perf/util/hist.h         | 12 +++++++
- 4 files changed, 100 insertions(+), 6 deletions(-)
+ tools/perf/builtin-diff.c    | 107 +++--------------------------
+ tools/perf/util/Build        |   1 +
+ tools/perf/util/block-info.c | 129 +++++++++++++++++++++++++++++++++++
+ tools/perf/util/block-info.h |  43 ++++++++++++
+ tools/perf/util/hist.c       |   1 +
+ tools/perf/util/symbol.c     |  22 ------
+ tools/perf/util/symbol.h     |  24 -------
+ 7 files changed, 185 insertions(+), 142 deletions(-)
+ create mode 100644 tools/perf/util/block-info.c
+ create mode 100644 tools/perf/util/block-info.h
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 516243715190..4437f4ffae90 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -494,6 +494,25 @@ static int hists__fprintf_all_blocks(struct block_hist *bh, float min_percent)
- 	return 0;
- }
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index faf99a81ad3e..6728568fe5c4 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -24,6 +24,7 @@
+ #include "util/annotate.h"
+ #include "util/map.h"
+ #include "util/spark.h"
++#include "util/block-info.h"
+ #include <linux/err.h>
+ #include <linux/zalloc.h>
+ #include <subcmd/pager.h>
+@@ -98,8 +99,6 @@ static s64 compute_wdiff_w2;
+ static const char		*cpu_list;
+ static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
  
-+static int perf_evlist__tui_block_hists_browse(struct evlist *evlist,
-+					       struct report *rep)
-+{
-+	struct block_hist *bh;
-+	struct evsel *pos;
-+	int i = 0, ret;
-+
-+	evlist__for_each_entry(evlist, pos) {
-+		bh = &rep->block_reports[i++].hist;
-+		symbol_conf.report_individual_block = true;
-+		ret = block_hists_tui_browse(bh, pos, rep->min_percent);
-+		hists__delete_entries(&bh->block_hists);
-+		if (ret != 0)
-+			return ret;
-+	}
-+
-+	return ret;
-+}
-+
- static int perf_evlist__tty_browse_hists(struct evlist *evlist,
- 					 struct report *rep,
- 					 const char *help)
-@@ -605,6 +624,11 @@ static int report__browse_hists(struct report *rep)
- 
- 	switch (use_browser) {
- 	case 1:
-+		if (rep->total_cycles_mode) {
-+			ret = perf_evlist__tui_block_hists_browse(evlist, rep);
-+			break;
-+		}
-+
- 		ret = perf_evlist__tui_browse_hists(evlist, help, NULL,
- 						    rep->min_percent,
- 						    &session->header.env,
-@@ -1408,12 +1432,8 @@ int cmd_report(int argc, const char **argv)
- 	if (report.total_cycles_mode) {
- 		if (sort__mode != SORT_MODE__BRANCH)
- 			report.total_cycles_mode = false;
--		else if (!report.use_stdio) {
--			pr_err("Error: --total-cycles can be only used together with --stdio\n");
--			goto error;
--		} else {
-+		else
- 			sort_order = "sym";
--		}
+-static struct addr_location dummy_al;
+-
+ enum {
+ 	COMPUTE_DELTA,
+ 	COMPUTE_RATIO,
+@@ -537,41 +536,6 @@ static void hists__baseline_only(struct hists *hists)
  	}
- 
- 	if (strcmp(input_name, "-") != 0)
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 7a7187e069b4..04301303c246 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -26,6 +26,7 @@
- #include "../../util/sort.h"
- #include "../../util/top.h"
- #include "../../util/thread.h"
-+#include "../../util/block-info.h"
- #include "../../arch/common.h"
- #include "../../perf.h"
- 
-@@ -1783,7 +1784,11 @@ static unsigned int hist_browser__refresh(struct ui_browser *browser)
- 			continue;
- 		}
- 
--		percent = hist_entry__get_percent_limit(h);
-+		if (symbol_conf.report_individual_block)
-+			percent = block_info__total_cycles_percent(h);
-+		else
-+			percent = hist_entry__get_percent_limit(h);
-+
- 		if (percent < hb->min_pcnt)
- 			continue;
- 
-@@ -3443,3 +3448,58 @@ int perf_evlist__tui_browse_hists(struct evlist *evlist, const char *help,
- 					       warn_lost_event,
- 					       annotation_opts);
  }
+ 
+-static int64_t block_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+-			 struct hist_entry *left, struct hist_entry *right)
+-{
+-	struct block_info *bi_l = left->block_info;
+-	struct block_info *bi_r = right->block_info;
+-	int cmp;
+-
+-	if (!bi_l->sym || !bi_r->sym) {
+-		if (!bi_l->sym && !bi_r->sym)
+-			return 0;
+-		else if (!bi_l->sym)
+-			return -1;
+-		else
+-			return 1;
+-	}
+-
+-	if (bi_l->sym == bi_r->sym) {
+-		if (bi_l->start == bi_r->start) {
+-			if (bi_l->end == bi_r->end)
+-				return 0;
+-			else
+-				return (int64_t)(bi_r->end - bi_l->end);
+-		} else
+-			return (int64_t)(bi_r->start - bi_l->start);
+-	} else {
+-		cmp = strcmp(bi_l->sym->name, bi_r->sym->name);
+-		return cmp;
+-	}
+-
+-	if (bi_l->sym->start != bi_r->sym->start)
+-		return (int64_t)(bi_r->sym->start - bi_l->sym->start);
+-
+-	return (int64_t)(bi_r->sym->end - bi_l->sym->end);
+-}
+-
+ static int64_t block_cycles_diff_cmp(struct hist_entry *left,
+ 				     struct hist_entry *right)
+ {
+@@ -600,67 +564,13 @@ static void init_block_hist(struct block_hist *bh)
+ 
+ 	INIT_LIST_HEAD(&bh->block_fmt.list);
+ 	INIT_LIST_HEAD(&bh->block_fmt.sort_list);
+-	bh->block_fmt.cmp = block_cmp;
++	bh->block_fmt.cmp = block_info__cmp;
+ 	bh->block_fmt.sort = block_sort;
+ 	perf_hpp_list__register_sort_field(&bh->block_list,
+ 					   &bh->block_fmt);
+ 	bh->valid = true;
+ }
+ 
+-static void init_block_info(struct block_info *bi, struct symbol *sym,
+-			    struct cyc_hist *ch, int offset)
+-{
+-	bi->sym = sym;
+-	bi->start = ch->start;
+-	bi->end = offset;
+-	bi->cycles = ch->cycles;
+-	bi->cycles_aggr = ch->cycles_aggr;
+-	bi->num = ch->num;
+-	bi->num_aggr = ch->num_aggr;
+-
+-	memcpy(bi->cycles_spark, ch->cycles_spark,
+-	       NUM_SPARKS * sizeof(u64));
+-}
+-
+-static int process_block_per_sym(struct hist_entry *he)
+-{
+-	struct annotation *notes;
+-	struct cyc_hist *ch;
+-	struct block_hist *bh;
+-
+-	if (!he->ms.map || !he->ms.sym)
+-		return 0;
+-
+-	notes = symbol__annotation(he->ms.sym);
+-	if (!notes || !notes->src || !notes->src->cycles_hist)
+-		return 0;
+-
+-	bh = container_of(he, struct block_hist, he);
+-	init_block_hist(bh);
+-
+-	ch = notes->src->cycles_hist;
+-	for (unsigned int i = 0; i < symbol__size(he->ms.sym); i++) {
+-		if (ch[i].num_aggr) {
+-			struct block_info *bi;
+-			struct hist_entry *he_block;
+-
+-			bi = block_info__new();
+-			if (!bi)
+-				return -1;
+-
+-			init_block_info(bi, he->ms.sym, &ch[i], i);
+-			he_block = hists__add_entry_block(&bh->block_hists,
+-							  &dummy_al, bi);
+-			if (!he_block) {
+-				block_info__put(bi);
+-				return -1;
+-			}
+-		}
+-	}
+-
+-	return 0;
+-}
+-
+ static int block_pair_cmp(struct hist_entry *a, struct hist_entry *b)
+ {
+ 	struct block_info *bi_a = a->block_info;
+@@ -785,8 +695,11 @@ static void hists__precompute(struct hists *hists)
+ 		he   = rb_entry(next, struct hist_entry, rb_node_in);
+ 		next = rb_next(&he->rb_node_in);
+ 
+-		if (compute == COMPUTE_CYCLES)
+-			process_block_per_sym(he);
++		if (compute == COMPUTE_CYCLES) {
++			bh = container_of(he, struct block_hist, he);
++			init_block_hist(bh);
++			block_info__process_sym(he, bh, NULL, 0);
++		}
+ 
+ 		data__for_each_file_new(i, d) {
+ 			pair = get_pair_data(he, d);
+@@ -805,10 +718,12 @@ static void hists__precompute(struct hists *hists)
+ 				compute_wdiff(he, pair);
+ 				break;
+ 			case COMPUTE_CYCLES:
+-				process_block_per_sym(pair);
+-				bh = container_of(he, struct block_hist, he);
+ 				pair_bh = container_of(pair, struct block_hist,
+ 						       he);
++				init_block_hist(pair_bh);
++				block_info__process_sym(pair, pair_bh, NULL, 0);
 +
-+static int block_hists_browser__title(struct hist_browser *browser, char *bf,
-+				      size_t size)
++				bh = container_of(he, struct block_hist, he);
+ 
+ 				if (bh->valid && pair_bh->valid) {
+ 					block_hists_match(&bh->block_hists,
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 39814b1806a6..b8e05a147b2b 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -1,4 +1,5 @@
+ perf-y += annotate.o
++perf-y += block-info.o
+ perf-y += block-range.o
+ perf-y += build-id.o
+ perf-y += cacheline.o
+diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
+new file mode 100644
+index 000000000000..b9954a32b8f4
+--- /dev/null
++++ b/tools/perf/util/block-info.c
+@@ -0,0 +1,129 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <stdlib.h>
++#include <string.h>
++#include <linux/zalloc.h>
++#include "block-info.h"
++#include "sort.h"
++#include "annotate.h"
++#include "symbol.h"
++
++struct block_info *block_info__get(struct block_info *bi)
 +{
-+	struct hists *hists = evsel__hists(browser->block_evsel);
-+	const char *evname = perf_evsel__name(browser->block_evsel);
-+	unsigned long nr_samples = hists->stats.nr_events[PERF_RECORD_SAMPLE];
-+	int ret;
-+
-+	ret = scnprintf(bf, size, "# Samples: %lu", nr_samples);
-+	if (evname)
-+		scnprintf(bf + ret, size -  ret, " of event '%s'", evname);
-+
-+	return 0;
++	if (bi)
++		refcount_inc(&bi->refcnt);
++	return bi;
 +}
 +
-+int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
-+			   float min_percent)
++void block_info__put(struct block_info *bi)
 +{
-+	struct hists *hists = &bh->block_hists;
-+	struct hist_browser *browser;
-+	int key = -1;
-+	static const char help[] =
-+	" q             Quit \n";
++	if (bi && refcount_dec_and_test(&bi->refcnt))
++		free(bi);
++}
 +
-+	browser = hist_browser__new(hists);
-+	if (!browser)
-+		return -1;
++struct block_info *block_info__new(void)
++{
++	struct block_info *bi = zalloc(sizeof(*bi));
 +
-+	browser->block_evsel = evsel;
-+	browser->title = block_hists_browser__title;
-+	browser->min_pcnt = min_percent;
++	if (bi)
++		refcount_set(&bi->refcnt, 1);
++	return bi;
++}
 +
-+	/* reset abort key so that it can get Ctrl-C as a key */
-+	SLang_reset_tty();
-+	SLang_init_tty(0, 0, 0);
++int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
++			struct hist_entry *left, struct hist_entry *right)
++{
++	struct block_info *bi_l = left->block_info;
++	struct block_info *bi_r = right->block_info;
++	int cmp;
 +
-+	while (1) {
-+		key = hist_browser__run(browser, "? - help", true);
++	if (!bi_l->sym || !bi_r->sym) {
++		if (!bi_l->sym && !bi_r->sym)
++			return 0;
++		else if (!bi_l->sym)
++			return -1;
++		else
++			return 1;
++	}
 +
-+		switch (key) {
-+		case 'q':
-+			goto out;
-+		case '?':
-+			ui_browser__help_window(&browser->b, help);
-+			break;
-+		default:
-+			break;
++	if (bi_l->sym == bi_r->sym) {
++		if (bi_l->start == bi_r->start) {
++			if (bi_l->end == bi_r->end)
++				return 0;
++			else
++				return (int64_t)(bi_r->end - bi_l->end);
++		} else
++			return (int64_t)(bi_r->start - bi_l->start);
++	} else {
++		cmp = strcmp(bi_l->sym->name, bi_r->sym->name);
++		return cmp;
++	}
++
++	if (bi_l->sym->start != bi_r->sym->start)
++		return (int64_t)(bi_r->sym->start - bi_l->sym->start);
++
++	return (int64_t)(bi_r->sym->end - bi_l->sym->end);
++}
++
++static void init_block_info(struct block_info *bi, struct symbol *sym,
++			    struct cyc_hist *ch, int offset,
++			    u64 total_cycles)
++{
++	bi->sym = sym;
++	bi->start = ch->start;
++	bi->end = offset;
++	bi->cycles = ch->cycles;
++	bi->cycles_aggr = ch->cycles_aggr;
++	bi->num = ch->num;
++	bi->num_aggr = ch->num_aggr;
++	bi->total_cycles = total_cycles;
++
++	memcpy(bi->cycles_spark, ch->cycles_spark,
++	       NUM_SPARKS * sizeof(u64));
++}
++
++int block_info__process_sym(struct hist_entry *he, struct block_hist *bh,
++			    u64 *block_cycles_aggr, u64 total_cycles)
++{
++	struct annotation *notes;
++	struct cyc_hist *ch;
++	static struct addr_location al;
++	u64 cycles = 0;
++
++	if (!he->ms.map || !he->ms.sym)
++		return 0;
++
++	memset(&al, 0, sizeof(al));
++	al.map = he->ms.map;
++	al.sym = he->ms.sym;
++
++	notes = symbol__annotation(he->ms.sym);
++	if (!notes || !notes->src || !notes->src->cycles_hist)
++		return 0;
++	ch = notes->src->cycles_hist;
++	for (unsigned int i = 0; i < symbol__size(he->ms.sym); i++) {
++		if (ch[i].num_aggr) {
++			struct block_info *bi;
++			struct hist_entry *he_block;
++
++			bi = block_info__new();
++			if (!bi)
++				return -1;
++
++			init_block_info(bi, he->ms.sym, &ch[i], i,
++					total_cycles);
++			cycles += bi->cycles_aggr / bi->num_aggr;
++
++			he_block = hists__add_entry_block(&bh->block_hists,
++							  &al, bi);
++			if (!he_block) {
++				block_info__put(bi);
++				return -1;
++			}
 +		}
 +	}
 +
-+out:
-+	hist_browser__delete(browser);
++	if (block_cycles_aggr)
++		*block_cycles_aggr += cycles;
++
 +	return 0;
 +}
-diff --git a/tools/perf/ui/browsers/hists.h b/tools/perf/ui/browsers/hists.h
-index 91d3e18b50aa..078f2f2c7abd 100644
---- a/tools/perf/ui/browsers/hists.h
-+++ b/tools/perf/ui/browsers/hists.h
-@@ -5,6 +5,7 @@
- #include "ui/browser.h"
- 
- struct annotation_options;
-+struct evsel;
- 
- struct hist_browser {
- 	struct ui_browser   b;
-@@ -15,6 +16,7 @@ struct hist_browser {
- 	struct pstack	    *pstack;
- 	struct perf_env	    *env;
- 	struct annotation_options *annotation_opts;
-+	struct evsel	    *block_evsel;
- 	int		     print_seq;
- 	bool		     show_dso;
- 	bool		     show_headers;
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 4d87c7b4c1b2..f254fa349ad6 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -449,6 +449,8 @@ enum rstype {
- 	A_SOURCE
- };
- 
+diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
+new file mode 100644
+index 000000000000..d55dfc2fda6f
+--- /dev/null
++++ b/tools/perf/util/block-info.h
+@@ -0,0 +1,43 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __PERF_BLOCK_H
++#define __PERF_BLOCK_H
++
++#include <linux/types.h>
++#include <linux/refcount.h>
++#include "util/hist.h"
++#include "util/symbol.h"
++
++struct block_info {
++	struct symbol		*sym;
++	u64			start;
++	u64			end;
++	u64			cycles;
++	u64			cycles_aggr;
++	s64			cycles_spark[NUM_SPARKS];
++	u64			total_cycles;
++	int			num;
++	int			num_aggr;
++	refcount_t		refcnt;
++};
++
 +struct block_hist;
 +
- #ifdef HAVE_SLANG_SUPPORT
- #include "../ui/keysyms.h"
- void attr_to_script(char *buf, struct perf_event_attr *attr);
-@@ -474,6 +476,9 @@ void run_script(char *cmd);
- int res_sample_browse(struct res_sample *res_samples, int num_res,
- 		      struct evsel *evsel, enum rstype rstype);
- void res_sample_init(void);
++struct block_info *block_info__new(void);
++struct block_info *block_info__get(struct block_info *bi);
++void   block_info__put(struct block_info *bi);
 +
-+int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
-+			   float min_percent);
- #else
- static inline
- int perf_evlist__tui_browse_hists(struct evlist *evlist __maybe_unused,
-@@ -516,6 +521,13 @@ static inline int res_sample_browse(struct res_sample *res_samples __maybe_unuse
- 	return 0;
- }
- 
-+static inline int block_hists_tui_browse(struct block_hist *bh __maybe_unused,
-+					 struct evsel *evsel __maybe_unused,
-+					 float min_percent __maybe_unused)
++static inline void __block_info__zput(struct block_info **bi)
 +{
-+	return 0;
++	block_info__put(*bi);
++	*bi = NULL;
 +}
 +
- static inline void res_sample_init(void) {}
++#define block_info__zput(bi) __block_info__zput(&bi)
++
++int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
++			struct hist_entry *left, struct hist_entry *right);
++
++int block_info__process_sym(struct hist_entry *he, struct block_hist *bh,
++			    u64 *block_cycles_aggr, u64 total_cycles);
++
++#endif /* __PERF_BLOCK_H */
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index daa6eef4fde0..a7fa061987e4 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -18,6 +18,7 @@
+ #include "srcline.h"
+ #include "symbol.h"
+ #include "thread.h"
++#include "block-info.h"
+ #include "ui/progress.h"
+ #include <errno.h>
+ #include <math.h>
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index a8f80e427674..fac8887a6759 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -2371,25 +2371,3 @@ struct mem_info *mem_info__new(void)
+ 		refcount_set(&mi->refcnt, 1);
+ 	return mi;
+ }
+-
+-struct block_info *block_info__get(struct block_info *bi)
+-{
+-	if (bi)
+-		refcount_inc(&bi->refcnt);
+-	return bi;
+-}
+-
+-void block_info__put(struct block_info *bi)
+-{
+-	if (bi && refcount_dec_and_test(&bi->refcnt))
+-		free(bi);
+-}
+-
+-struct block_info *block_info__new(void)
+-{
+-	struct block_info *bi = zalloc(sizeof(*bi));
+-
+-	if (bi)
+-		refcount_set(&bi->refcnt, 1);
+-	return bi;
+-}
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index cc2a89b99d3d..c3bd16d75d5d 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -106,18 +106,6 @@ struct ref_reloc_sym {
+ 	u64		unrelocated_addr;
+ };
  
- #define K_LEFT  -1000
+-struct block_info {
+-	struct symbol		*sym;
+-	u64			start;
+-	u64			end;
+-	u64			cycles;
+-	u64			cycles_aggr;
+-	s64			cycles_spark[NUM_SPARKS];
+-	int			num;
+-	int			num_aggr;
+-	refcount_t		refcnt;
+-};
+-
+ struct addr_location {
+ 	struct machine *machine;
+ 	struct thread *thread;
+@@ -291,16 +279,4 @@ static inline void __mem_info__zput(struct mem_info **mi)
+ 
+ #define mem_info__zput(mi) __mem_info__zput(&mi)
+ 
+-struct block_info *block_info__new(void);
+-struct block_info *block_info__get(struct block_info *bi);
+-void   block_info__put(struct block_info *bi);
+-
+-static inline void __block_info__zput(struct block_info **bi)
+-{
+-	block_info__put(*bi);
+-	*bi = NULL;
+-}
+-
+-#define block_info__zput(bi) __block_info__zput(&bi)
+-
+ #endif /* __PERF_SYMBOL */
 -- 
 2.17.1
 
