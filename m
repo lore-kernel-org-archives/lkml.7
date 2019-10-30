@@ -2,131 +2,339 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B10CA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B64CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB3120862
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:42:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SidofrJw"
+	by mail.kernel.org (Postfix) with ESMTP id 27E1320862
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:44:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbfJ3Kmk (ORCPT
+        id S1726825AbfJ3KoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 06:42:40 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:46204 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfJ3Kmj (ORCPT
+        Wed, 30 Oct 2019 06:44:23 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:39063 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726032AbfJ3KoW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 06:42:39 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9UAYOTG136921;
-        Wed, 30 Oct 2019 10:42:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=815j/YhDXDAGFJ0kuShibnrAaDqoW4eFgfJomjo90O8=;
- b=SidofrJwdWQhlAzf1RZSI9aljJMP0+RalQW6KdLntrTTjr0vU4EIpx4gt0hsV06MbSRf
- pLHAwlfVdAuM33XJAEzJb/sNMUk/hPM2B4po67eYYUQ93EOVI34XB23tJvoVRVLAJ0vI
- zbckmhEOAuoJcgcOMwJkRf4SqlKnZFqoh6ErhqLVqmXj374e+qXPJu6JwYeF+buGbI5T
- POH6Dch1rsb2MCFfd2K4Cfd8I5YsIGyqlxVu4DWBarzpb2IqjZ/mDKcgxNjGW1GZKJBs
- ACZR2XHV0IxqsighpcCSkJxCR8/h2ioi5KiN1/GwBFvOmuVdrnc8hPzBrRHddiNghjc7 2g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2vxwhfb3xt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Oct 2019 10:42:30 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9UAcpIo058307;
-        Wed, 30 Oct 2019 10:42:29 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2vxwhvt2qd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Oct 2019 10:42:28 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9UAgRCO020665;
-        Wed, 30 Oct 2019 10:42:27 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 30 Oct 2019 03:42:26 -0700
-Date:   Wed, 30 Oct 2019 13:42:17 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     David Gow <davidgow@google.com>
-Cc:     shuah <shuah@kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH linux-kselftest/test v6] lib/list-test: add a test for
- the 'list' doubly linked list
-Message-ID: <20191030104217.GA18421@kadam>
-References: <20191024224631.118656-1-davidgow@google.com>
- <0cb1d948-0da3-eb0f-c58f-ae3a785dd0dd@kernel.org>
- <CABVgOSmCHbGjZBjeWSbPEZbJw22SaBQnoO77xxNzN_ugAwzNiQ@mail.gmail.com>
+        Wed, 30 Oct 2019 06:44:22 -0400
+Received: from [172.20.50.122] ([91.217.168.176])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id PlSZiZGw0sBskPlSciLuKw; Wed, 30 Oct 2019 11:44:19 +0100
+Subject: Re: [PATCH v3] media: vimc: Make capture devices and subdevices use
+ different link_validates
+To:     =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
+        <nfraprado@protonmail.com>, linux-media@vger.kernel.org
+Cc:     Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+References: <20191030003209.1997739-1-nfraprado@protonmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <cbbfbe59-1692-d669-81f4-b29c44df4bf7@xs4all.nl>
+Date:   Wed, 30 Oct 2019 11:44:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABVgOSmCHbGjZBjeWSbPEZbJw22SaBQnoO77xxNzN_ugAwzNiQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910300106
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910300106
+In-Reply-To: <20191030003209.1997739-1-nfraprado@protonmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfBlKWpOeLzuwxkFlO8N1PzRdib+hyaGlEB2YalgLgFCwBRRDiD3aDbVpXhiktEGl1iG7GRcAYq4iEnm991AaB+k7pxWniqem/puzdcP8+qesNh54fD5b
+ s3uHlAPU7yUBTq3W2aREnEFQolII3J0vAqiPjd8+zvT6f+gf93N8H6jbgg+j5A2q6rEryY2BIuQMUnQ+9yTWPxvvzO1l3mKzO1hpdwT6FSiy5kv+21ickkGM
+ +sAdGpMaKmyewZwVwwWKRc0HyNck0cZSkRls1maBmRAVwj5RMNVa5kj0hbsbi9DxxqLJcDIvcayEzoVtiKqPqjFkugN6jLmlNVn9JHogsmdJ/6y4XL1y7lP3
+ +BeTJVE27xaTbFfLuXmHSpAPSAlcFMDVc1e1nWU27kjHo57Uzc3+oim6oPio5J1wHze8n4oH
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 01:02:11AM -0700, David Gow wrote:
-> > ERROR: that open brace { should be on the previous line
-> > #869: FILE: lib/list-test.c:680:
-> > +static void list_test_list_for_each_entry_reverse(struct kunit *test)
-> > +{
-> >
-> >
-> > I am seeing these error and warns. As per our hallway conversation, the
-> > "for_each*" in the test naming is tripping up checkpatch.pl
-> >
-> > For now you can change the name a bit to not trip checkpatch and maybe
-> > explore fixing checkpatch to differentiate between function names
-> > with "for_each" in them vs. the actual for_each usages in the code.
+On 10/30/19 1:33 AM, Nícolas F. R. A. Prado wrote:
+> Instead of validating the links to capture devices and subdevices with
+> the same function, use the default v4l function for links between
+> subdevices and only use a different function for validating between
+> capture device and subdevice.
+> This change should also ease future work to associate multiple mbus
+> codes for the same pixelformat in vimc_pix_map.
 > 
-> Thanks, Shuah.
+> These changes were tested with
+> v4l2-compliance SHA: 3f806630e2ecbcebe31872b865c5c4b42f111a99, 64 bits
+> and passed all tests:
+> Grand Total for vimc device /dev/media0: 451, Succeeded: 451, Failed: 0, Warnings: 0
 > 
-> Yes, the problem here is that checkpatch.pl believes that anything
-> with "for_each" in its name must be a loop, so expects that the open
-> brace is placed on the same line as for a for loop.
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@protonmail.com>Applying: media: vimc: Make capture devices and subdevices use different link_validates
+
+Hi Nicolas,
+
+Checkpatch gives me this:
+
+CHECK: Logical continuations should be on the previous line
+#116: FILE: drivers/media/platform/vimc/vimc-common.c:265:
++       if (source_fmt.width != sink_fmt.width
++           || source_fmt.height != sink_fmt.height
+
+CHECK: Logical continuations should be on the previous line
+#117: FILE: drivers/media/platform/vimc/vimc-common.c:266:
++           || source_fmt.height != sink_fmt.height
++           || source_fmt.pixelformat != sink_fmt.pixelformat)
+
+CHECK: Logical continuations should be on the previous line
+#138: FILE: drivers/media/platform/vimc/vimc-common.c:283:
++       if (source_fmt.colorspace == V4L2_COLORSPACE_DEFAULT
++           || sink_fmt.colorspace == V4L2_COLORSPACE_DEFAULT)
+
+CHECK: Logical continuations should be on the previous line
+#151: FILE: drivers/media/platform/vimc/vimc-common.c:292:
++       if (source_fmt.ycbcr_enc != V4L2_YCBCR_ENC_DEFAULT
++           && sink_fmt.ycbcr_enc != V4L2_YCBCR_ENC_DEFAULT
+
+CHECK: Logical continuations should be on the previous line
+#152: FILE: drivers/media/platform/vimc/vimc-common.c:293:
++           && sink_fmt.ycbcr_enc != V4L2_YCBCR_ENC_DEFAULT
++           && source_fmt.ycbcr_enc != sink_fmt.ycbcr_enc)
+
+CHECK: Logical continuations should be on the previous line
+#159: FILE: drivers/media/platform/vimc/vimc-common.c:297:
++       if (source_fmt.quantization != V4L2_QUANTIZATION_DEFAULT
++           && sink_fmt.quantization != V4L2_QUANTIZATION_DEFAULT
+
+CHECK: Logical continuations should be on the previous line
+#160: FILE: drivers/media/platform/vimc/vimc-common.c:298:
++           && sink_fmt.quantization != V4L2_QUANTIZATION_DEFAULT
++           && source_fmt.quantization != sink_fmt.quantization)
+
+CHECK: Logical continuations should be on the previous line
+#167: FILE: drivers/media/platform/vimc/vimc-common.c:302:
++       if (source_fmt.xfer_func != V4L2_XFER_FUNC_DEFAULT
++           && sink_fmt.xfer_func != V4L2_XFER_FUNC_DEFAULT
+
+CHECK: Logical continuations should be on the previous line
+#168: FILE: drivers/media/platform/vimc/vimc-common.c:303:
++           && sink_fmt.xfer_func != V4L2_XFER_FUNC_DEFAULT
++           && source_fmt.xfer_func != sink_fmt.xfer_func)
+
+Can you fix this in a v4?
+
+Regards,
+
+	Hans
+
+> ---
+> Changes in v3:
+> - Rebase patch on current media tree
+> - Make vimc_get_pix_format() static
 > 
-> Longer term, I think it'd be nicer, naming-wise, to fix or work around
-> this issue in checkpatch.pl itself, as that'd allow the tests to
-> continue to follow a naming pattern of "list_test_[x]", where [x] is
-> the name of the function/macro being tested. Of course, short of
-> trying to fit a whole C parser in checkpatch.pl, that's going to
-> involve some compromises as well.
-
-Just make it a black list of the 5 most common for_each macros.
-
+> Changes in v2:
+> - Remove blank lines
+> - Rename vimc_cap_link_validate to vimc_vdev_link_validate and move it back to
+>    vimc-common.c
+> - Fix style issue on vimc_get_pix_format header
+> - Remove vimc_get_pix_format declaration from vimc-common.h
 > 
-> In the meantime, I'm sending out v7 which replaces "for_each" with
-> "for__each" (adding the extra underscore), so that checkpatch is
-> happy.
-
-It's better to ignore checkpatch and other scripts when they are wrong.
-(unless the warning message inspires you to make the code more readable
-for humans).
-
-regards,
-dan carpenter
+>   drivers/media/platform/vimc/vimc-capture.c |  2 +-
+>   drivers/media/platform/vimc/vimc-common.c  | 85 +++++++++++-----------
+>   drivers/media/platform/vimc/vimc-common.h  |  4 +-
+>   3 files changed, 46 insertions(+), 45 deletions(-)
+> 
+> diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
+> index a5d79fb25dff..76c015898cfd 100644
+> --- a/drivers/media/platform/vimc/vimc-capture.c
+> +++ b/drivers/media/platform/vimc/vimc-capture.c
+> @@ -322,7 +322,7 @@ static const struct vb2_ops vimc_cap_qops = {
+>   };
+>   
+>   static const struct media_entity_operations vimc_cap_mops = {
+> -	.link_validate		= vimc_link_validate,
+> +	.link_validate		= vimc_vdev_link_validate,
+>   };
+>   
+>   static void vimc_cap_release(struct video_device *vdev)
+> diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
+> index 2a0c40e9ae88..eb1cac0c01d6 100644
+> --- a/drivers/media/platform/vimc/vimc-common.c
+> +++ b/drivers/media/platform/vimc/vimc-common.c
+> @@ -194,35 +194,36 @@ const struct vimc_pix_map *vimc_pix_map_by_pixelformat(u32 pixelformat)
+>   	return NULL;
+>   }
+>   
+> -static int vimc_get_mbus_format(struct media_pad *pad,
+> -				struct v4l2_subdev_format *fmt)
+> +static int vimc_get_pix_format(struct media_pad *pad,
+> +			       struct v4l2_pix_format *fmt)
+>   {
+>   	if (is_media_entity_v4l2_subdev(pad->entity)) {
+>   		struct v4l2_subdev *sd =
+>   			media_entity_to_v4l2_subdev(pad->entity);
+> +		struct v4l2_subdev_format sd_fmt;
+> +		const struct vimc_pix_map *pix_map;
+>   		int ret;
+>   
+> -		fmt->which = V4L2_SUBDEV_FORMAT_ACTIVE;
+> -		fmt->pad = pad->index;
+> +		sd_fmt.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+> +		sd_fmt.pad = pad->index;
+>   
+> -		ret = v4l2_subdev_call(sd, pad, get_fmt, NULL, fmt);
+> +		ret = v4l2_subdev_call(sd, pad, get_fmt, NULL, &sd_fmt);
+>   		if (ret)
+>   			return ret;
+>   
+> +		v4l2_fill_pix_format(fmt, &sd_fmt.format);
+> +		pix_map = vimc_pix_map_by_code(sd_fmt.format.code);
+> +		fmt->pixelformat = pix_map->pixelformat;
+>   	} else if (is_media_entity_v4l2_video_device(pad->entity)) {
+>   		struct video_device *vdev = container_of(pad->entity,
+>   							 struct video_device,
+>   							 entity);
+>   		struct vimc_ent_device *ved = video_get_drvdata(vdev);
+> -		const struct vimc_pix_map *vpix;
+> -		struct v4l2_pix_format vdev_fmt;
+>   
+>   		if (!ved->vdev_get_format)
+>   			return -ENOIOCTLCMD;
+>   
+> -		ved->vdev_get_format(ved, &vdev_fmt);
+> -		vpix = vimc_pix_map_by_pixelformat(vdev_fmt.pixelformat);
+> -		v4l2_fill_mbus_format(&fmt->format, &vdev_fmt, vpix->code);
+> +		ved->vdev_get_format(ved, fmt);
+>   	} else {
+>   		return -EINVAL;
+>   	}
+> @@ -230,16 +231,16 @@ static int vimc_get_mbus_format(struct media_pad *pad,
+>   	return 0;
+>   }
+>   
+> -int vimc_link_validate(struct media_link *link)
+> +int vimc_vdev_link_validate(struct media_link *link)
+>   {
+> -	struct v4l2_subdev_format source_fmt, sink_fmt;
+> +	struct v4l2_pix_format source_fmt, sink_fmt;
+>   	int ret;
+>   
+> -	ret = vimc_get_mbus_format(link->source, &source_fmt);
+> +	ret = vimc_get_pix_format(link->source, &source_fmt);
+>   	if (ret)
+>   		return ret;
+>   
+> -	ret = vimc_get_mbus_format(link->sink, &sink_fmt);
+> +	ret = vimc_get_pix_format(link->sink, &sink_fmt);
+>   	if (ret)
+>   		return ret;
+>   
+> @@ -248,21 +249,21 @@ int vimc_link_validate(struct media_link *link)
+>   		"%s:snk:%dx%d (0x%x, %d, %d, %d, %d)\n",
+>   		/* src */
+>   		link->source->entity->name,
+> -		source_fmt.format.width, source_fmt.format.height,
+> -		source_fmt.format.code, source_fmt.format.colorspace,
+> -		source_fmt.format.quantization, source_fmt.format.xfer_func,
+> -		source_fmt.format.ycbcr_enc,
+> +		source_fmt.width, source_fmt.height,
+> +		source_fmt.pixelformat, source_fmt.colorspace,
+> +		source_fmt.quantization, source_fmt.xfer_func,
+> +		source_fmt.ycbcr_enc,
+>   		/* sink */
+>   		link->sink->entity->name,
+> -		sink_fmt.format.width, sink_fmt.format.height,
+> -		sink_fmt.format.code, sink_fmt.format.colorspace,
+> -		sink_fmt.format.quantization, sink_fmt.format.xfer_func,
+> -		sink_fmt.format.ycbcr_enc);
+> -
+> -	/* The width, height and code must match. */
+> -	if (source_fmt.format.width != sink_fmt.format.width
+> -	    || source_fmt.format.height != sink_fmt.format.height
+> -	    || source_fmt.format.code != sink_fmt.format.code)
+> +		sink_fmt.width, sink_fmt.height,
+> +		sink_fmt.pixelformat, sink_fmt.colorspace,
+> +		sink_fmt.quantization, sink_fmt.xfer_func,
+> +		sink_fmt.ycbcr_enc);
+> +
+> +	/* The width, height and pixelformat must match. */
+> +	if (source_fmt.width != sink_fmt.width
+> +	    || source_fmt.height != sink_fmt.height
+> +	    || source_fmt.pixelformat != sink_fmt.pixelformat)
+>   		return -EPIPE;
+>   
+>   	/*
+> @@ -270,43 +271,43 @@ int vimc_link_validate(struct media_link *link)
+>   	 * to support interlaced hardware connected to bridges that support
+>   	 * progressive formats only.
+>   	 */
+> -	if (source_fmt.format.field != sink_fmt.format.field &&
+> -	    sink_fmt.format.field != V4L2_FIELD_NONE)
+> +	if (source_fmt.field != sink_fmt.field &&
+> +	    sink_fmt.field != V4L2_FIELD_NONE)
+>   		return -EPIPE;
+>   
+>   	/*
+>   	 * If colorspace is DEFAULT, then assume all the colorimetry is also
+>   	 * DEFAULT, return 0 to skip comparing the other colorimetry parameters
+>   	 */
+> -	if (source_fmt.format.colorspace == V4L2_COLORSPACE_DEFAULT
+> -	    || sink_fmt.format.colorspace == V4L2_COLORSPACE_DEFAULT)
+> +	if (source_fmt.colorspace == V4L2_COLORSPACE_DEFAULT
+> +	    || sink_fmt.colorspace == V4L2_COLORSPACE_DEFAULT)
+>   		return 0;
+>   
+>   	/* Colorspace must match. */
+> -	if (source_fmt.format.colorspace != sink_fmt.format.colorspace)
+> +	if (source_fmt.colorspace != sink_fmt.colorspace)
+>   		return -EPIPE;
+>   
+>   	/* Colorimetry must match if they are not set to DEFAULT */
+> -	if (source_fmt.format.ycbcr_enc != V4L2_YCBCR_ENC_DEFAULT
+> -	    && sink_fmt.format.ycbcr_enc != V4L2_YCBCR_ENC_DEFAULT
+> -	    && source_fmt.format.ycbcr_enc != sink_fmt.format.ycbcr_enc)
+> +	if (source_fmt.ycbcr_enc != V4L2_YCBCR_ENC_DEFAULT
+> +	    && sink_fmt.ycbcr_enc != V4L2_YCBCR_ENC_DEFAULT
+> +	    && source_fmt.ycbcr_enc != sink_fmt.ycbcr_enc)
+>   		return -EPIPE;
+>   
+> -	if (source_fmt.format.quantization != V4L2_QUANTIZATION_DEFAULT
+> -	    && sink_fmt.format.quantization != V4L2_QUANTIZATION_DEFAULT
+> -	    && source_fmt.format.quantization != sink_fmt.format.quantization)
+> +	if (source_fmt.quantization != V4L2_QUANTIZATION_DEFAULT
+> +	    && sink_fmt.quantization != V4L2_QUANTIZATION_DEFAULT
+> +	    && source_fmt.quantization != sink_fmt.quantization)
+>   		return -EPIPE;
+>   
+> -	if (source_fmt.format.xfer_func != V4L2_XFER_FUNC_DEFAULT
+> -	    && sink_fmt.format.xfer_func != V4L2_XFER_FUNC_DEFAULT
+> -	    && source_fmt.format.xfer_func != sink_fmt.format.xfer_func)
+> +	if (source_fmt.xfer_func != V4L2_XFER_FUNC_DEFAULT
+> +	    && sink_fmt.xfer_func != V4L2_XFER_FUNC_DEFAULT
+> +	    && source_fmt.xfer_func != sink_fmt.xfer_func)
+>   		return -EPIPE;
+>   
+>   	return 0;
+>   }
+>   
+>   static const struct media_entity_operations vimc_ent_sd_mops = {
+> -	.link_validate = vimc_link_validate,
+> +	.link_validate = v4l2_subdev_link_validate,
+>   };
+>   
+>   int vimc_ent_sd_register(struct vimc_ent_device *ved,
+> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
+> index c75401a36312..bf729fcde6a9 100644
+> --- a/drivers/media/platform/vimc/vimc-common.h
+> +++ b/drivers/media/platform/vimc/vimc-common.h
+> @@ -206,12 +206,12 @@ int vimc_ent_sd_register(struct vimc_ent_device *ved,
+>   			 const struct v4l2_subdev_ops *sd_ops);
+>   
+>   /**
+> - * vimc_link_validate - validates a media link
+> + * vimc_vdev_link_validate - validates a media link
+>    *
+>    * @link: pointer to &struct media_link
+>    *
+>    * This function calls validates if a media link is valid for streaming.
+>    */
+> -int vimc_link_validate(struct media_link *link);
+> +int vimc_vdev_link_validate(struct media_link *link);
+>   
+>   #endif
+> 
 
