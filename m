@@ -2,549 +2,271 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F1CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8F8CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF42020874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A218220874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:51:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V+3CaVge"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v9J4LHWX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbfJ3GvR (ORCPT
+        id S1727653AbfJ3Gvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 02:51:17 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24542 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727170AbfJ3GvQ (ORCPT
+        Wed, 30 Oct 2019 02:51:40 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37661 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727553AbfJ3Gvk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 02:51:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572418274;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7x9JkdTyCcKKn0chueqpkzNgaOG4fsM0eH9MJzehASI=;
-        b=V+3CaVge4q+SMVYF0iZyaj7Ht8/nRPiX1O02G42kbmYjpXzexIYFMkf+GtVAQfMl6VNBMI
-        g1w2iAJ+zI48CkNPCOhQCUxXEs3Raci1+UaTi9kHY9GqqtewgRBPjNN1DPLnk5WwhmyZnj
-        1gFex9AMC3e57pcMm1H1APfK+++RWYM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-254-OLx427cEOP6ghya0Qu0idw-1; Wed, 30 Oct 2019 02:51:11 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3BA46107AD28;
-        Wed, 30 Oct 2019 06:51:07 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-223.pek2.redhat.com [10.72.12.223])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EC86A5D9C3;
-        Wed, 30 Oct 2019 06:49:52 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V6 5/6] virtio: introduce a mdev based transport
-Date:   Wed, 30 Oct 2019 14:44:43 +0800
-Message-Id: <20191030064444.21166-6-jasowang@redhat.com>
-In-Reply-To: <20191030064444.21166-1-jasowang@redhat.com>
-References: <20191030064444.21166-1-jasowang@redhat.com>
+        Wed, 30 Oct 2019 02:51:40 -0400
+Received: by mail-wr1-f68.google.com with SMTP id e11so966084wrv.4
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Oct 2019 23:51:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yn686uGyou8YdPj2afqMy6ILfgVg96dAEC2ecmMx30s=;
+        b=v9J4LHWXdkwDTW1Po5zY2ZJomfGB32z00XvxtzvOvB+77Cq1dQQnN16bfSxC8A3UCR
+         rj+u9dA1jk7csVRPlrQRs3u7ozblbJ0TcV8doPmVNG1TbLQuKGKtLRTa/p2FKdmqi3eY
+         HrtOX3oWAw95ebqhFGgVxeflhD0RDsHOWGWkctksiaOAuJoz4VpXFErTIKujTI6VyxKC
+         jB/RNzPm5i9RE+DsPKSgqZ925QGyHvpxajw0ZR4C+z0PI4rh/7H2D1P+lRxVzRdk1KJU
+         qpthDOkzc92g66xzWpX05uctvD9gzFCb7VbKX5U+wZSKVGCaqAcS02g4U4SvcvuRrBvb
+         BcIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=yn686uGyou8YdPj2afqMy6ILfgVg96dAEC2ecmMx30s=;
+        b=oH47C4x03VgRvkICBDowYXsaWVBYJFVzL9gD4fGLnPiIoRqJ0w9aad8T/uR3Ez2x4b
+         ELi9FcaZbk8KVBFIWAObXMyLyx4KYX3HzcAba6luSuRTq9JwXIquloD0CP8A8AJbaKHS
+         nenKQRHIgTLun9Tr7jGterbAW6ccMxB3otBYrDRY2QUBXPmx/jUnbHS82lpSoQ8avnNM
+         Kw9tsbzxzYluT53chnVb2Xt2D/I1uWj4rbCkanUsY6efsFPw6kcyZURl/fNr2RSMW72l
+         r2l4E2VHzbXorYaNFsxl9DTk8l0zzmpFF3dMUmAEEeDViEMlFAi3BTzfC9FqDM6I/qfg
+         X2OQ==
+X-Gm-Message-State: APjAAAXE5SzMRZ+9QjLGHT0UjtOURZ50UDTr272ifWRbtYe95/x8vda3
+        acRG6GhNj91KyqeXVN+tqGJ/iA==
+X-Google-Smtp-Source: APXvYqySw+R/IguJr0LWo+m0T2yfojfvQBkiF2qJYwoh3I1CcnHCv9NCVr/Qgvbb/cAXrFfbxDcWsw==
+X-Received: by 2002:a5d:4d0f:: with SMTP id z15mr22393695wrt.195.1572418298256;
+        Tue, 29 Oct 2019 23:51:38 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:7037:cc11:eb05:9c6a? ([2a01:e34:ed2f:f020:7037:cc11:eb05:9c6a])
+        by smtp.googlemail.com with ESMTPSA id s5sm1158543wmj.37.2019.10.29.23.51.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 29 Oct 2019 23:51:37 -0700 (PDT)
+Subject: Re: [PATCH] of-thermal: Disable polling when interrupt property is
+ found in DT
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>
+Cc:     linux-pm@vger.kernel.org
+References: <cover.1571181041.git.amit.kucheria@linaro.org>
+ <1b53ef537203e629328285b4597a09e4a586d688.1571181041.git.amit.kucheria@linaro.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ed9ef9e3-a8c3-90bf-4e71-8959b2ff94d2@linaro.org>
+Date:   Wed, 30 Oct 2019 07:51:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: OLx427cEOP6ghya0Qu0idw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1b53ef537203e629328285b4597a09e4a586d688.1571181041.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces a new mdev transport for virtio. This is used to
-use kernel virtio driver to drive the mediated device that is capable
-of populating virtqueue directly.
+On 16/10/2019 01:13, Amit Kucheria wrote:
+> Currently, in order to enable interrupt-only mode, one must set
+> polling-delay-passive and polling-delay properties in the DT to 0,
+> otherwise the thermal framework will continue to setup a periodic timers
+> to monitor the thermal zones.
+> 
+> Change the behaviour, so that on DT-based systems, we no longer have to
+> set the properties to zero if we find an 'interrupt' property in the
+> sensor.
+> 
+> Following data shows the number of times
+> thermal_zone_device_set_polling() is invoked with and without this
+> patch. So the patch achieves the same behaviour as setting the delay
+> properties to 0.
+> 
+> Current behaviour (without setting delay properties to 0):
+>   FUNC                              COUNT
+>   thermal_zone_device_update          302
+>   thermal_zone_device_set_pollin     7911
+> 
+> Current behaviour (with delay properties set to 0):
+>   FUNC                              COUNT
+>   thermal_zone_device_update            3
+>   thermal_zone_device_set_pollin        6
+> 
+> With this patch (without setting delay properties to 0):
+>   FUNC                              COUNT
+>   thermal_zone_device_update            3
+>   thermal_zone_device_set_pollin        6
+> 
+> Suggested-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  drivers/thermal/of-thermal.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+> index dc5093be553e..79ad587462b1 100644
+> --- a/drivers/thermal/of-thermal.c
+> +++ b/drivers/thermal/of-thermal.c
+> @@ -412,7 +412,8 @@ static struct thermal_zone_device_ops of_thermal_ops = {
+>  static struct thermal_zone_device *
+>  thermal_zone_of_add_sensor(struct device_node *zone,
+>  			   struct device_node *sensor, void *data,
+> -			   const struct thermal_zone_of_device_ops *ops)
+> +			   const struct thermal_zone_of_device_ops *ops,
+> +			   bool force_interrupts)
+>  {
+>  	struct thermal_zone_device *tzd;
+>  	struct __thermal_zone *tz;
+> @@ -433,6 +434,11 @@ thermal_zone_of_add_sensor(struct device_node *zone,
+>  	tzd->ops->get_temp = of_thermal_get_temp;
+>  	tzd->ops->get_trend = of_thermal_get_trend;
+>  
+> +	if (force_interrupts) {
+> +		tz->passive_delay = 0;
+> +		tz->polling_delay = 0;
+> +	}
+> +
+>  	/*
+>  	 * The thermal zone core will calculate the window if they have set the
+>  	 * optional set_trips pointer.
+> @@ -486,6 +492,7 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
+>  {
+>  	struct device_node *np, *child, *sensor_np;
+>  	struct thermal_zone_device *tzd = ERR_PTR(-ENODEV);
+> +	bool force_interrupts = false;
+>  
+>  	np = of_find_node_by_name(NULL, "thermal-zones");
+>  	if (!np)
+> @@ -498,6 +505,9 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
+>  
+>  	sensor_np = of_node_get(dev->of_node);
+>  
+> +	if (of_find_property(sensor_np, "interrupts", NULL))
+> +		force_interrupts = true;
+> +
 
-A new virtio-mdev driver will be registered to the mdev bus, when a
-new virtio-mdev device is probed, it will register the device with
-mdev based config ops. This means it is a software transport between
-mdev driver and mdev device. The transport was implemented through
-device specific ops which is a part of mdev_parent_ops now.
+This is hackish. It does cover only DT drivers.
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/virtio/Kconfig       |   7 +
- drivers/virtio/Makefile      |   1 +
- drivers/virtio/virtio_mdev.c | 413 +++++++++++++++++++++++++++++++++++
- 3 files changed, 421 insertions(+)
- create mode 100644 drivers/virtio/virtio_mdev.c
+It would be cleaner to add a specific flag describing the thermal sensor
+driver mode and then in the core code do not start the timers if the
+associated works in interrupt.
 
-diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-index 078615cf2afc..8d18722ab572 100644
---- a/drivers/virtio/Kconfig
-+++ b/drivers/virtio/Kconfig
-@@ -43,6 +43,13 @@ config VIRTIO_PCI_LEGACY
-=20
- =09  If unsure, say Y.
-=20
-+config VIRTIO_MDEV_DEVICE
-+=09tristate "VIRTIO driver for Mediated devices"
-+=09depends on VFIO_MDEV && VIRTIO
-+=09default n
-+=09help
-+=09  VIRTIO based driver for Mediated devices.
-+
- config VIRTIO_PMEM
- =09tristate "Support for virtio pmem driver"
- =09depends on VIRTIO
-diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
-index 3a2b5c5dcf46..ebc7fa15ae82 100644
---- a/drivers/virtio/Makefile
-+++ b/drivers/virtio/Makefile
-@@ -6,3 +6,4 @@ virtio_pci-y :=3D virtio_pci_modern.o virtio_pci_common.o
- virtio_pci-$(CONFIG_VIRTIO_PCI_LEGACY) +=3D virtio_pci_legacy.o
- obj-$(CONFIG_VIRTIO_BALLOON) +=3D virtio_balloon.o
- obj-$(CONFIG_VIRTIO_INPUT) +=3D virtio_input.o
-+obj-$(CONFIG_VIRTIO_MDEV_DEVICE) +=3D virtio_mdev.o
-diff --git a/drivers/virtio/virtio_mdev.c b/drivers/virtio/virtio_mdev.c
-new file mode 100644
-index 000000000000..3d49072b2d3e
---- /dev/null
-+++ b/drivers/virtio/virtio_mdev.c
-@@ -0,0 +1,413 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * VIRTIO based driver for Mediated device
-+ *
-+ * Copyright (c) 2019, Red Hat. All rights reserved.
-+ *     Author: Jason Wang <jasowang@redhat.com>
-+ *
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/uuid.h>
-+#include <linux/mdev.h>
-+#include <linux/virtio_mdev_ops.h>
-+#include <linux/virtio.h>
-+#include <linux/virtio_config.h>
-+#include <linux/virtio_ring.h>
-+
-+#define DRIVER_VERSION  "0.1"
-+#define DRIVER_AUTHOR   "Red Hat Corporation"
-+#define DRIVER_DESC     "VIRTIO based driver for Mediated device"
-+
-+#define to_virtio_mdev_device(dev) \
-+=09container_of(dev, struct virtio_mdev_device, vdev)
-+
-+struct virtio_mdev_device {
-+=09struct virtio_device vdev;
-+=09struct mdev_device *mdev;
-+=09u64 features;
-+
-+=09/* The lock to protect virtqueue list */
-+=09spinlock_t lock;
-+=09/* List of virtio_mdev_vq_info */
-+=09struct list_head virtqueues;
-+};
-+
-+struct virtio_mdev_vq_info {
-+=09/* the actual virtqueue */
-+=09struct virtqueue *vq;
-+
-+=09/* the list node for the virtqueues list */
-+=09struct list_head node;
-+};
-+
-+static struct mdev_device *vm_get_mdev(struct virtio_device *vdev)
-+{
-+=09struct virtio_mdev_device *vm_dev =3D to_virtio_mdev_device(vdev);
-+=09struct mdev_device *mdev =3D vm_dev->mdev;
-+
-+=09return mdev;
-+}
-+
-+static void virtio_mdev_get(struct virtio_device *vdev, unsigned offset,
-+=09=09=09    void *buf, unsigned len)
-+{
-+=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
-+=09const struct virtio_mdev_device_ops *ops =3D mdev_get_virtio_ops(mdev);
-+
-+=09ops->get_config(mdev, offset, buf, len);
-+}
-+
-+static void virtio_mdev_set(struct virtio_device *vdev, unsigned offset,
-+=09=09=09    const void *buf, unsigned len)
-+{
-+=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
-+=09const struct virtio_mdev_device_ops *ops =3D mdev_get_virtio_ops(mdev);
-+
-+=09ops->set_config(mdev, offset, buf, len);
-+}
-+
-+static u32 virtio_mdev_generation(struct virtio_device *vdev)
-+{
-+=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
-+=09const struct virtio_mdev_device_ops *ops =3D mdev_get_virtio_ops(mdev);
-+
-+=09if (ops->get_generation)
-+=09=09return ops->get_generation(mdev);
-+
-+=09return 0;
-+}
-+
-+static u8 virtio_mdev_get_status(struct virtio_device *vdev)
-+{
-+=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
-+=09const struct virtio_mdev_device_ops *ops =3D mdev_get_virtio_ops(mdev);
-+
-+=09return ops->get_status(mdev);
-+}
-+
-+static void virtio_mdev_set_status(struct virtio_device *vdev, u8 status)
-+{
-+=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
-+=09const struct virtio_mdev_device_ops *ops =3D mdev_get_virtio_ops(mdev);
-+
-+=09return ops->set_status(mdev, status);
-+}
-+
-+static void virtio_mdev_reset(struct virtio_device *vdev)
-+{
-+=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
-+=09const struct virtio_mdev_device_ops *ops =3D mdev_get_virtio_ops(mdev);
-+
-+=09return ops->set_status(mdev, 0);
-+}
-+
-+static bool virtio_mdev_notify(struct virtqueue *vq)
-+{
-+=09struct mdev_device *mdev =3D vm_get_mdev(vq->vdev);
-+=09const struct virtio_mdev_device_ops *ops =3D mdev_get_virtio_ops(mdev);
-+
-+=09ops->kick_vq(mdev, vq->index);
-+
-+=09return true;
-+}
-+
-+static irqreturn_t virtio_mdev_config_cb(void *private)
-+{
-+=09struct virtio_mdev_device *vm_dev =3D private;
-+
-+=09virtio_config_changed(&vm_dev->vdev);
-+
-+=09return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t virtio_mdev_virtqueue_cb(void *private)
-+{
-+=09struct virtio_mdev_vq_info *info =3D private;
-+
-+=09return vring_interrupt(0, info->vq);
-+}
-+
-+static struct virtqueue *
-+virtio_mdev_setup_vq(struct virtio_device *vdev, unsigned index,
-+=09=09     void (*callback)(struct virtqueue *vq),
-+=09=09     const char *name, bool ctx)
-+{
-+=09struct virtio_mdev_device *vm_dev =3D to_virtio_mdev_device(vdev);
-+=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
-+=09const struct virtio_mdev_device_ops *ops =3D mdev_get_virtio_ops(mdev);
-+=09struct virtio_mdev_vq_info *info;
-+=09struct virtio_mdev_callback cb;
-+=09struct virtqueue *vq;
-+=09u64 desc_addr, driver_addr, device_addr;
-+=09unsigned long flags;
-+=09u32 align, num;
-+=09int err;
-+
-+=09if (!name)
-+=09=09return NULL;
-+
-+=09/* Queue shouldn't already be set up. */
-+=09if (ops->get_vq_ready(mdev, index))
-+=09=09return ERR_PTR(-ENOENT);
-+
-+=09/* Allocate and fill out our active queue description */
-+=09info =3D kmalloc(sizeof(*info), GFP_KERNEL);
-+=09if (!info)
-+=09=09return ERR_PTR(-ENOMEM);
-+
-+=09num =3D ops->get_vq_num_max(mdev);
-+=09if (num =3D=3D 0) {
-+=09=09err =3D -ENOENT;
-+=09=09goto error_new_virtqueue;
-+=09}
-+
-+=09/* Create the vring */
-+=09align =3D ops->get_vq_align(mdev);
-+=09vq =3D vring_create_virtqueue(index, num, align, vdev,
-+=09=09=09=09    true, true, ctx,
-+=09=09=09=09    virtio_mdev_notify, callback, name);
-+=09if (!vq) {
-+=09=09err =3D -ENOMEM;
-+=09=09goto error_new_virtqueue;
-+=09}
-+
-+=09/* Setup virtqueue callback */
-+=09cb.callback =3D virtio_mdev_virtqueue_cb;
-+=09cb.private =3D info;
-+=09ops->set_vq_cb(mdev, index, &cb);
-+=09ops->set_vq_num(mdev, index, virtqueue_get_vring_size(vq));
-+
-+=09desc_addr =3D virtqueue_get_desc_addr(vq);
-+=09driver_addr =3D virtqueue_get_avail_addr(vq);
-+=09device_addr =3D virtqueue_get_used_addr(vq);
-+
-+=09if (ops->set_vq_address(mdev, index,
-+=09=09=09=09desc_addr, driver_addr,
-+=09=09=09=09device_addr)) {
-+=09=09err =3D -EINVAL;
-+=09=09goto err_vq;
-+=09}
-+
-+=09ops->set_vq_ready(mdev, index, 1);
-+
-+=09vq->priv =3D info;
-+=09info->vq =3D vq;
-+
-+=09spin_lock_irqsave(&vm_dev->lock, flags);
-+=09list_add(&info->node, &vm_dev->virtqueues);
-+=09spin_unlock_irqrestore(&vm_dev->lock, flags);
-+
-+=09return vq;
-+
-+err_vq:
-+=09vring_del_virtqueue(vq);
-+error_new_virtqueue:
-+=09ops->set_vq_ready(mdev, index, 0);
-+=09WARN_ON(ops->get_vq_ready(mdev, index));
-+=09kfree(info);
-+=09return ERR_PTR(err);
-+
-+}
-+
-+static void virtio_mdev_del_vq(struct virtqueue *vq)
-+{
-+=09struct virtio_mdev_device *vm_dev =3D to_virtio_mdev_device(vq->vdev);
-+=09struct mdev_device *mdev =3D vm_dev->mdev;
-+=09const struct virtio_mdev_device_ops *ops =3D mdev_get_virtio_ops(mdev);
-+=09struct virtio_mdev_vq_info *info =3D vq->priv;
-+=09unsigned int index =3D vq->index;
-+=09unsigned long flags;
-+
-+=09spin_lock_irqsave(&vm_dev->lock, flags);
-+=09list_del(&info->node);
-+=09spin_unlock_irqrestore(&vm_dev->lock, flags);
-+
-+=09/* Select and deactivate the queue */
-+=09ops->set_vq_ready(mdev, index, 0);
-+=09WARN_ON(ops->get_vq_ready(mdev, index));
-+
-+=09vring_del_virtqueue(vq);
-+
-+=09kfree(info);
-+}
-+
-+static void virtio_mdev_del_vqs(struct virtio_device *vdev)
-+{
-+=09struct virtqueue *vq, *n;
-+
-+=09list_for_each_entry_safe(vq, n, &vdev->vqs, list)
-+=09=09virtio_mdev_del_vq(vq);
-+}
-+
-+static int virtio_mdev_find_vqs(struct virtio_device *vdev, unsigned nvqs,
-+=09=09=09=09struct virtqueue *vqs[],
-+=09=09=09=09vq_callback_t *callbacks[],
-+=09=09=09=09const char * const names[],
-+=09=09=09=09const bool *ctx,
-+=09=09=09=09struct irq_affinity *desc)
-+{
-+=09struct virtio_mdev_device *vm_dev =3D to_virtio_mdev_device(vdev);
-+=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
-+=09const struct virtio_mdev_device_ops *ops =3D mdev_get_virtio_ops(mdev);
-+=09struct virtio_mdev_callback cb;
-+=09int i, err, queue_idx =3D 0;
-+
-+=09for (i =3D 0; i < nvqs; ++i) {
-+=09=09if (!names[i]) {
-+=09=09=09vqs[i] =3D NULL;
-+=09=09=09continue;
-+=09=09}
-+
-+=09=09vqs[i] =3D virtio_mdev_setup_vq(vdev, queue_idx++,
-+=09=09=09=09=09      callbacks[i], names[i], ctx ?
-+=09=09=09=09=09      ctx[i] : false);
-+=09=09if (IS_ERR(vqs[i])) {
-+=09=09=09err =3D PTR_ERR(vqs[i]);
-+=09=09=09goto err_setup_vq;
-+=09=09}
-+=09}
-+
-+=09cb.callback =3D virtio_mdev_config_cb;
-+=09cb.private =3D vm_dev;
-+=09ops->set_config_cb(mdev, &cb);
-+
-+=09return 0;
-+
-+err_setup_vq:
-+=09virtio_mdev_del_vqs(vdev);
-+=09return err;
-+}
-+
-+static u64 virtio_mdev_get_features(struct virtio_device *vdev)
-+{
-+=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
-+=09const struct virtio_mdev_device_ops *ops =3D mdev_get_virtio_ops(mdev);
-+
-+=09return ops->get_features(mdev);
-+}
-+
-+static int virtio_mdev_finalize_features(struct virtio_device *vdev)
-+{
-+=09struct mdev_device *mdev =3D vm_get_mdev(vdev);
-+=09const struct virtio_mdev_device_ops *ops =3D mdev_get_virtio_ops(mdev);
-+
-+=09/* Give virtio_ring a chance to accept features. */
-+=09vring_transport_features(vdev);
-+
-+=09return ops->set_features(mdev, vdev->features);
-+}
-+
-+static const char *virtio_mdev_bus_name(struct virtio_device *vdev)
-+{
-+=09struct virtio_mdev_device *vm_dev =3D to_virtio_mdev_device(vdev);
-+=09struct mdev_device *mdev =3D vm_dev->mdev;
-+
-+=09return dev_name(mdev_dev(mdev));
-+}
-+
-+static const struct virtio_config_ops virtio_mdev_config_ops =3D {
-+=09.get=09=09=3D virtio_mdev_get,
-+=09.set=09=09=3D virtio_mdev_set,
-+=09.generation=09=3D virtio_mdev_generation,
-+=09.get_status=09=3D virtio_mdev_get_status,
-+=09.set_status=09=3D virtio_mdev_set_status,
-+=09.reset=09=09=3D virtio_mdev_reset,
-+=09.find_vqs=09=3D virtio_mdev_find_vqs,
-+=09.del_vqs=09=3D virtio_mdev_del_vqs,
-+=09.get_features=09=3D virtio_mdev_get_features,
-+=09.finalize_features =3D virtio_mdev_finalize_features,
-+=09.bus_name=09=3D virtio_mdev_bus_name,
-+};
-+
-+static void virtio_mdev_release_dev(struct device *_d)
-+{
-+=09struct virtio_device *vdev =3D
-+=09       container_of(_d, struct virtio_device, dev);
-+=09struct virtio_mdev_device *vm_dev =3D
-+=09       container_of(vdev, struct virtio_mdev_device, vdev);
-+=09struct mdev_device *mdev =3D vm_dev->mdev;
-+
-+=09devm_kfree(mdev_dev(mdev), vm_dev);
-+}
-+
-+static int virtio_mdev_probe(struct device *dev)
-+{
-+=09struct mdev_device *mdev =3D mdev_from_dev(dev);
-+=09const struct virtio_mdev_device_ops *ops =3D mdev_get_virtio_ops(mdev);
-+=09struct virtio_mdev_device *vm_dev;
-+=09int rc;
-+
-+=09vm_dev =3D devm_kzalloc(dev, sizeof(*vm_dev), GFP_KERNEL);
-+=09if (!vm_dev)
-+=09=09return -ENOMEM;
-+
-+=09vm_dev->vdev.dev.parent =3D dev;
-+=09vm_dev->vdev.dev.release =3D virtio_mdev_release_dev;
-+=09vm_dev->vdev.config =3D &virtio_mdev_config_ops;
-+=09vm_dev->mdev =3D mdev;
-+=09INIT_LIST_HEAD(&vm_dev->virtqueues);
-+=09spin_lock_init(&vm_dev->lock);
-+
-+=09vm_dev->features =3D ops->get_mdev_features(mdev);
-+=09if (vm_dev->features !=3D VIRTIO_MDEV_F_VERSION_1) {
-+=09=09dev_err(dev, "VIRTIO_MDEV_F_VERSION_1 is mandatory\n");
-+=09=09return -ENXIO;
-+=09}
-+
-+=09vm_dev->vdev.id.device =3D ops->get_device_id(mdev);
-+=09if (vm_dev->vdev.id.device =3D=3D 0)
-+=09=09return -ENODEV;
-+
-+=09vm_dev->vdev.id.vendor =3D ops->get_vendor_id(mdev);
-+=09rc =3D register_virtio_device(&vm_dev->vdev);
-+=09if (rc)
-+=09=09put_device(dev);
-+=09else
-+=09=09dev_set_drvdata(dev, vm_dev);
-+
-+=09return rc;
-+}
-+
-+static void virtio_mdev_remove(struct device *dev)
-+{
-+=09struct virtio_mdev_device *vm_dev =3D dev_get_drvdata(dev);
-+
-+=09unregister_virtio_device(&vm_dev->vdev);
-+}
-+
-+static const struct mdev_class_id virtio_id_table[] =3D {
-+=09{ MDEV_CLASS_ID_VIRTIO },
-+=09{ 0 },
-+};
-+
-+MODULE_DEVICE_TABLE(mdev, virtio_id_table);
-+
-+static struct mdev_driver virtio_mdev_driver =3D {
-+=09.name=09=3D "virtio_mdev",
-+=09.probe=09=3D virtio_mdev_probe,
-+=09.remove =3D virtio_mdev_remove,
-+=09.id_table =3D virtio_id_table,
-+};
-+
-+static int __init virtio_mdev_init(void)
-+{
-+=09return mdev_register_driver(&virtio_mdev_driver, THIS_MODULE);
-+}
-+
-+static void __exit virtio_mdev_exit(void)
-+{
-+=09mdev_unregister_driver(&virtio_mdev_driver);
-+}
-+
-+module_init(virtio_mdev_init)
-+module_exit(virtio_mdev_exit)
-+
-+MODULE_VERSION(DRIVER_VERSION);
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR(DRIVER_AUTHOR);
-+MODULE_DESCRIPTION(DRIVER_DESC);
---=20
-2.19.1
+Moreover the interrupt mode can be used to activate faster the passive
+delay monitoring after reaching a threshold like the hikey and hikey960.
+So this patch will disable the mitigation on those boards. This is
+another argument to add flags for the thermal sensor mode.
+
+[ ... ]
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
