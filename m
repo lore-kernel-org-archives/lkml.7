@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC264CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 742F8CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACD8A20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4037121882
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450923;
-	bh=OKzxs6Vp36RleM3DGjN+gDcSlMvf+Optl6R2M+moc5A=;
+	s=default; t=1572450927;
+	bh=qXGTM2oCfxyP+vBtLzKiCjtARCt/2w0XbTT/leTHjvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dmI/Ye9ni3IV+jqJJgFoBt24OkvnUk5WI5QbSMJq/MeBFNjx/guVL8nfUKgaZacAT
-	 K6eTPg/h5tbmNXHXTBBdb79oFRq9E0GdxwPFyF/wtcQnniecP9hjCmhwiHDvewFixB
-	 ndc+qKIYyfk4PRPDM+STFYykWn2A1a17CqV7rTDA=
+	b=h828j8dvdkKyuZML4TgyzeP84uJmvFPuJpFtZO9gbb+zK+kvTBEplGnHMduMvxbt1
+	 mGBUbfFzUXKCcvixq5DO3oe33SZ+QHGX6YDsRp51cTt6DCYLyKItsBQD0/yhpqgCU5
+	 MHIdkDuK8Lx06pa+cyAMChBeZqK2cbuTdM0uCuzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbfJ3PzW (ORCPT
+        id S1728585AbfJ3PzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:55:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56882 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:55:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726728AbfJ3PzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:55:18 -0400
+        id S1728570AbfJ3PzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:55:22 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4117D20874;
-        Wed, 30 Oct 2019 15:55:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDAC7217D9;
+        Wed, 30 Oct 2019 15:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450917;
-        bh=OKzxs6Vp36RleM3DGjN+gDcSlMvf+Optl6R2M+moc5A=;
+        s=default; t=1572450922;
+        bh=qXGTM2oCfxyP+vBtLzKiCjtARCt/2w0XbTT/leTHjvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xw8Q+RdV34yn0nURa6PG7bdy2sp6YHCofNE3uUyTBjZ70QwLasbrvEMCr1sS/aGDM
-         xJGotiQcYLG70d3XhwYtK5DofYU0rjUkRfF8jumIc7c/tXpMozjwxMRr+iCdo/tKf6
-         MrRMD1h7OG+cx8nKmT5sRNOqwmwNWi7LyW7ftp+o=
+        b=ilxE5FIfSMgGm6S87C1IiPyJNB3soaK6ITJ3eynX5m6w9fHHntKiV6tgiJznUNjej
+         iIDPUzYA6v8nifsKkbsxjBLZKNFra5SBPgipgzByJfMN61BCIo7p3uUdmfN2hhYEub
+         +nQg/tWuCePTp/llmJS9xxX6o6aMj2OEjeWub+D8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 25/38] drm/amdgpu: fix potential VM faults
-Date:   Wed, 30 Oct 2019 11:53:53 -0400
-Message-Id: <20191030155406.10109-25-sashal@kernel.org>
+Cc:     Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 27/38] tracing: Fix "gfp_t" format for synthetic events
+Date:   Wed, 30 Oct 2019 11:53:55 -0400
+Message-Id: <20191030155406.10109-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155406.10109-1-sashal@kernel.org>
 References: <20191030155406.10109-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,35 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian König <christian.koenig@amd.com>
+From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 
-[ Upstream commit 3122051edc7c27cc08534be730f4c7c180919b8a ]
+[ Upstream commit 9fa8c9c647be624e91b09ecffa7cd97ee0600b40 ]
 
-When we allocate new page tables under memory
-pressure we should not evict old ones.
+In the format of synthetic events, the "gfp_t" is shown as "signed:1",
+but in fact the "gfp_t" is "unsigned", should be shown as "signed:0".
 
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+The issue can be reproduced by the following commands:
+
+echo 'memlatency u64 lat; unsigned int order; gfp_t gfp_flags; int migratetype' > /sys/kernel/debug/tracing/synthetic_events
+cat  /sys/kernel/debug/tracing/events/synthetic/memlatency/format
+
+name: memlatency
+ID: 2233
+format:
+        field:unsigned short common_type;       offset:0;       size:2; signed:0;
+        field:unsigned char common_flags;       offset:2;       size:1; signed:0;
+        field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
+        field:int common_pid;   offset:4;       size:4; signed:1;
+
+        field:u64 lat;  offset:8;       size:8; signed:0;
+        field:unsigned int order;       offset:16;      size:4; signed:0;
+        field:gfp_t gfp_flags;  offset:24;      size:4; signed:1;
+        field:int migratetype;  offset:32;      size:4; signed:1;
+
+print fmt: "lat=%llu, order=%u, gfp_flags=%x, migratetype=%d", REC->lat, REC->order, REC->gfp_flags, REC->migratetype
+
+Link: http://lkml.kernel.org/r/20191018012034.6404-1-zhengjun.xing@linux.intel.com
+
+Reviewed-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_object.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/trace/trace_events_hist.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-index b0e14a3d54efd..b14ce112703f0 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
-@@ -428,7 +428,8 @@ static int amdgpu_bo_do_create(struct amdgpu_device *adev,
- 		.interruptible = (bp->type != ttm_bo_type_kernel),
- 		.no_wait_gpu = false,
- 		.resv = bp->resv,
--		.flags = TTM_OPT_FLAG_ALLOW_RES_EVICT
-+		.flags = bp->type != ttm_bo_type_kernel ?
-+			TTM_OPT_FLAG_ALLOW_RES_EVICT : 0
- 	};
- 	struct amdgpu_bo *bo;
- 	unsigned long page_align, size = bp->size;
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index bdf104596d122..dac518977e7d0 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -448,6 +448,8 @@ static bool synth_field_signed(char *type)
+ {
+ 	if (strncmp(type, "u", 1) == 0)
+ 		return false;
++	if (strcmp(type, "gfp_t") == 0)
++		return false;
+ 
+ 	return true;
+ }
 -- 
 2.20.1
 
