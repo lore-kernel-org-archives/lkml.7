@@ -2,143 +2,71 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81A1CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EA2CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A56DE20866
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20CE520866
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbfJ3EHf convert rfc822-to-8bit (ORCPT
+        id S1726957AbfJ3EMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 00:07:35 -0400
-Received: from mga12.intel.com ([192.55.52.136]:56095 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727197AbfJ3EHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 00:07:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 21:07:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
-   d="scan'208";a="283440445"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga001.jf.intel.com with ESMTP; 29 Oct 2019 21:07:34 -0700
-Received: from fmsmsx113.amr.corp.intel.com (10.18.116.7) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 29 Oct 2019 21:07:33 -0700
-Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
- FMSMSX113.amr.corp.intel.com (10.18.116.7) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 29 Oct 2019 21:07:33 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.127]) by
- SHSMSX108.ccr.corp.intel.com ([169.254.8.41]) with mapi id 14.03.0439.000;
- Wed, 30 Oct 2019 12:07:31 +0800
-From:   "Kang, Luwei" <luwei.kang@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>
-Subject: RE: [PATCH v1 8/8] perf/x86: Add event owner check when PEBS output
- to Intel PT
-Thread-Topic: [PATCH v1 8/8] perf/x86: Add event owner check when PEBS
- output to Intel PT
-Thread-Index: AQHVjLd7YuomyMFGekW7/CerqBL266dxNysAgAFIGiA=
-Date:   Wed, 30 Oct 2019 04:07:31 +0000
-Message-ID: <82D7661F83C1A047AF7DC287873BF1E173835B6A@SHSMSX104.ccr.corp.intel.com>
-References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
- <1572217877-26484-9-git-send-email-luwei.kang@intel.com>
- <20191029151302.GO4097@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191029151302.GO4097@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZTI0ZmI3MGEtYzc4Zi00ZThiLWIzYjEtMDQzODNkZjBhYmNlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibkxlNm5vek1Eb0gyY2d6WUROSE5GeVVwa3BYdlwvQUtSZUxxVUtHSTlLOVwvZ2ZNTzNWdHp4NWdmXC8yNFpOZWFUZiJ9
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Wed, 30 Oct 2019 00:12:01 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:35334 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbfJ3EMA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 00:12:00 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1544B14B7B60B;
+        Tue, 29 Oct 2019 21:11:59 -0700 (PDT)
+Date:   Tue, 29 Oct 2019 21:11:58 -0700 (PDT)
+Message-Id: <20191029.211158.1584843573342050158.davem@davemloft.net>
+To:     poeschel@lemonage.de
+Cc:     kstewart@linuxfoundation.org, tglx@linutronix.de,
+        opensource@jilayne.com, gregkh@linuxfoundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, swinslow@gmail.com,
+        gustavo@embeddedor.com, keescook@chromium.org, allison@lohutok.net,
+        johan@kernel.org, horms@verge.net.au
+Subject: Re: [PATCH v11 0/7] nfc: pn533: add uart phy driver
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191029144320.17718-1-poeschel@lemonage.de>
+References: <20191029144320.17718-1-poeschel@lemonage.de>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 29 Oct 2019 21:11:59 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > For PEBS output to Intel PT, a Intel PT event should be the group
-> > leader of an PEBS counter event in host. For Intel PT virtualization
-> > enabling in KVM guest, the PT facilities will be passthrough to guest
-> > and do not allocate PT event from host perf event framework. This is
-> > different with PMU virtualization.
-> >
-> > Intel new hardware feature that can make PEBS enabled in KVM guest by
-> > output PEBS records to Intel PT buffer. KVM need to allocate a event
-> > counter for this PEBS event without Intel PT event leader.
-> >
-> > This patch add event owner check for PEBS output to PT event that only
-> > non-kernel event need group leader(PT).
-> >
-> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > ---
-> >  arch/x86/events/core.c     | 3 ++-
-> >  include/linux/perf_event.h | 1 +
-> >  kernel/events/core.c       | 2 +-
-> >  3 files changed, 4 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c index
-> > 7b21455..214041a 100644
-> > --- a/arch/x86/events/core.c
-> > +++ b/arch/x86/events/core.c
-> > @@ -1014,7 +1014,8 @@ static int collect_events(struct cpu_hw_events *cpuc, struct perf_event *leader,
-> >  		 * away, the group was broken down and this singleton event
-> >  		 * can't schedule any more.
-> >  		 */
-> > -		if (is_pebs_pt(leader) && !leader->aux_event)
-> > +		if (is_pebs_pt(leader) && !leader->aux_event &&
-> > +					!is_kernel_event(leader))
-> 
-> indent fail, but also, I'm not sure I buy this.
-> 
-> Surely pt-on-kvm has a perf event to claim PT for the vCPU context?
+From: Lars Poeschel <poeschel@lemonage.de>
+Date: Tue, 29 Oct 2019 15:43:13 +0100
 
-Hi Peter,
-    PT on KVM will not allocate perf events from host (this is different from performance counter). The guest PT MSRs value will be load to hardware directly before VM-entry.
-    A PT event is needed by PEBS event as the event group leader in native. In virtualization, we can allocate a counter for PEBS but can't assign a PT event as the leader of this PEBS event.
+> The purpose of this patch series is to add a uart phy driver to the
+> pn533 nfc driver.
+> It first changes the dt strings and docs. The dt compatible strings
+> need to change, because I would add "pn532-uart" to the already
+> existing "pn533-i2c" one. These two are now unified into just
+> "pn532". Then the neccessary changes to the pn533 core driver are
+> made. Then the uart phy is added.
+> As the pn532 chip supports a autopoll, I wanted to use this instead
+> of the software poll loop in the pn533 core driver. It is added and
+> activated by the last to patches.
+> The way to add the autopoll later in seperate patches is chosen, to
+> show, that the uart phy driver can also work with the software poll
+> loop, if someone needs that for some reason.
+> In v11 of this patchseries I address a byte ordering issue reported
+> by kbuild test robot in patch 5/7.
 
-> 
-> Even if not, this is not strictly correct. Not even now is KVM the sole user of perf_event_create_kernel_counter(), so saying any
-> kernel event is excempt from this scheduling constraint is jsut wrong.
-
-KVM is not the sole user of perf_event_create_kernel_counter() but I think KVM is the only user that needs group leader events. I found the kernel event check (63b6da39bb) is from you and hope can get some suggestions on this.
-
-Thanks,
-Luwei Kang
-
-> 
-> >  			return -EINVAL;
-> >
-> >  		/*
+Series applied to net-next.
