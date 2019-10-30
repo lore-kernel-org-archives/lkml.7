@@ -2,1678 +2,4742 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9507CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FB1CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F85520578
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82EFB20578
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfJ3IMJ (ORCPT
+        id S1726585AbfJ3IMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:12:09 -0400
-Received: from mga12.intel.com ([192.55.52.136]:19426 "EHLO mga12.intel.com"
+        Wed, 30 Oct 2019 04:12:42 -0400
+Received: from mga09.intel.com ([134.134.136.24]:49139 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfJ3IMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:12:08 -0400
+        id S1726028AbfJ3IMm (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 04:12:42 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 01:12:07 -0700
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 01:12:31 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
-   d="scan'208";a="374817274"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga005.jf.intel.com with ESMTP; 30 Oct 2019 01:12:03 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     broonie@kernel.org, vigneshr@ti.com, robh+dt@kernel.org,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v2 2/2] spi: cadence-quadpsi: Add support for the Cadence QSPI controller
-Date:   Wed, 30 Oct 2019 16:11:55 +0800
-Message-Id: <20191030081155.29947-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+   d="scan'208";a="283483797"
+Received: from haiyan.sh.intel.com ([10.239.48.70])
+  by orsmga001.jf.intel.com with ESMTP; 30 Oct 2019 01:12:26 -0700
+From:   Haiyan Song <haiyanx.song@intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com, andi.kleen@intel.com,
+        Haiyan Song <haiyanx.song@intel.com>
+Subject: [PATCH 2/2] perf vendor events intel: Update metrics from TMAM 3.6
+Date:   Wed, 30 Oct 2019 16:23:40 +0800
+Message-Id: <20191030082340.10963-1-haiyanx.song@intel.com>
 X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191030081155.29947-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20191030081155.29947-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+Update all the Intel JSON metrics from TMAM 3.6.
 
-Add support for the Cadence QSPI controller. This controller is
-present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
-This driver has been tested on the Intel LGM SoCs.
+New Metrics:
+- DSB_Switches: fraction of cycles CPU was stalled due to switches from DSB to MITE pipeline [all]
+- L2_Evictions_{Silent|NonSilent}_PKI: L2 {silent|non silent} ecivtions rate per Kilo instruction [SKX+]
+- IpFarBranch - Instructions per Far Branch
 
-This driver does not support generic SPI and also the implementation
-only supports spi-mem interface to replace the existing driver in
-mtd/spi-nor/cadence-quadspi.c, the existing driver only support SPI-NOR
-flash memory.
-
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+Other Enhancements & fixes:
+- KBLR/CFL & CLX move to separate columns (no column sharing via if #model)
+- Re-organized/renamed Metric Group
 ---
- drivers/spi/Kconfig               |   10 +
- drivers/spi/Makefile              |    1 +
- drivers/spi/spi-cadence-quadspi.c | 1290 +++++++++++++++++++++++++++++++++++++
- drivers/spi/spi-cadence-quadspi.h |  272 ++++++++
- 4 files changed, 1573 insertions(+)
- create mode 100644 drivers/spi/spi-cadence-quadspi.c
- create mode 100644 drivers/spi/spi-cadence-quadspi.h
+ .../pmu-events/arch/x86/broadwell/bdw-metrics.json | 178 ++++++++---------
+ .../arch/x86/broadwellx/bdx-metrics.json           | 184 +++++++++---------
+ .../arch/x86/cascadelakex/clx-metrics.json         | 210 +++++++++++----------
+ .../pmu-events/arch/x86/haswell/hsw-metrics.json   | 164 ++++++++--------
+ .../pmu-events/arch/x86/haswellx/hsx-metrics.json  | 170 ++++++++---------
+ .../pmu-events/arch/x86/ivybridge/ivb-metrics.json | 170 ++++++++---------
+ .../pmu-events/arch/x86/ivytown/ivt-metrics.json   | 172 ++++++++---------
+ .../pmu-events/arch/x86/jaketown/jkt-metrics.json  | 114 +++++------
+ .../arch/x86/sandybridge/snb-metrics.json          | 112 +++++------
+ .../pmu-events/arch/x86/skylake/skl-metrics.json   | 188 +++++++++---------
+ .../pmu-events/arch/x86/skylakex/skx-metrics.json  | 204 +++++++++++---------
+ 11 files changed, 954 insertions(+), 912 deletions(-)
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 6f7fdcbb9151..ef4d961feb54 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -192,6 +192,16 @@ config SPI_CADENCE
- 	  This selects the Cadence SPI controller master driver
- 	  used by Xilinx Zynq and ZynqMP.
- 
-+config SPI_CADENCE_QUADSPI
-+	tristate "Cadence Quad SPI controller"
-+	depends on OF && (ARM || ARM64 || COMPILE_TEST || X86)
-+	depends on MTD || MTD_SPI_NOR || MTD_SPI_NAND
-+	help
-+	  Cadence QSPI is a specialized controller for connecting an SPI
-+	  Flash over 1/2/4-bit wide bus. This enables support for the Quad SPI
-+	  controller in master mode. This driver does not support generic SPI.
-+	  The implementation only supports spi-mem interface.
-+
- config SPI_CLPS711X
- 	tristate "CLPS711X host SPI controller"
- 	depends on ARCH_CLPS711X || COMPILE_TEST
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index bb49c9e6d0a0..84a59d75a13a 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -29,6 +29,7 @@ obj-$(CONFIG_SPI_BCM_QSPI)		+= spi-iproc-qspi.o spi-brcmstb-qspi.o spi-bcm-qspi.
- obj-$(CONFIG_SPI_BITBANG)		+= spi-bitbang.o
- obj-$(CONFIG_SPI_BUTTERFLY)		+= spi-butterfly.o
- obj-$(CONFIG_SPI_CADENCE)		+= spi-cadence.o
-+obj-$(CONFIG_SPI_CADENCE_QUADSPI)		+= spi-cadence-quadspi.o
- obj-$(CONFIG_SPI_CLPS711X)		+= spi-clps711x.o
- obj-$(CONFIG_SPI_COLDFIRE_QSPI)		+= spi-coldfire-qspi.o
- obj-$(CONFIG_SPI_DAVINCI)		+= spi-davinci.o
-diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
-new file mode 100644
-index 000000000000..bca391bfb58f
---- /dev/null
-+++ b/drivers/spi/spi-cadence-quadspi.c
-@@ -0,0 +1,1290 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for Cadence QSPI Controller
-+ *
-+ * Copyright Altera Corporation (C) 2012-2014. All rights reserved.
-+ * Copyright Intel Corporation (C) 2019. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include <linux/clk.h>
-+#include <linux/completion.h>
-+#include <linux/delay.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/dmaengine.h>
-+#include <linux/errno.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/jiffies.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+#include <linux/spi/spi.h>
-+#include <linux/spi/spi-mem.h>
-+#include <linux/unaligned/be_byteshift.h>
-+
-+#include "spi-cadence-quadspi.h"
-+
-+/* Quirks */
-+#define CQSPI_NEEDS_WR_DELAY		BIT(0)
-+#define CQSPI_DISABLE_DAC_MODE		BIT(1)
-+
-+#define CADENCE_QSPI_NAME                       "cadence-qspi"
-+
-+struct cqspi_driver_platdata {
-+	u32 hwcaps_mask;
-+	u8 quirks;
-+};
-+
-+unsigned int cadence_qspi_init_timeout(const unsigned long timeout_in_ms)
-+{
-+	return jiffies + msecs_to_jiffies(timeout_in_ms);
-+}
-+
-+unsigned int cadence_qspi_check_timeout(const unsigned long timeout)
-+{
-+	return time_before(jiffies, timeout);
-+}
-+
-+static irqreturn_t cadence_qspi_irq_handler(int this_irq, void *dev)
-+{
-+	struct struct_cqspi *cadence_qspi = dev;
-+	u32 irq_status;
-+
-+	/* Read interrupt status */
-+	irq_status = readl(cadence_qspi->iobase + CQSPI_REG_IRQSTATUS);
-+	if (!irq_status)
-+		return IRQ_HANDLED;
-+
-+	cadence_qspi->irq_status = irq_status;
-+
-+	/* Clear interrupt */
-+	writel(irq_status, cadence_qspi->iobase + CQSPI_REG_IRQSTATUS);
-+	if (irq_status)
-+		complete(&cadence_qspi->transfer_complete);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static u32 cadence_qspi_cmd2addr(const unsigned char *addr_buf, u32 addr_width)
-+{
-+	unsigned int addr = 0;
-+	int i;
-+
-+	/* Invalid address return zero. */
-+	if (addr_width > 4)
-+		return 0;
-+
-+	for (i = 0; i < addr_width; i++) {
-+		addr = addr << 8;
-+		addr |= addr_buf[i];
-+	}
-+
-+	return addr;
-+}
-+
-+void enable_qspi_direct_access(void *reg_base, bool enable)
-+{
-+	u32 reg;
-+
-+	reg = readl(reg_base + CQSPI_REG_CONFIG);
-+	if (enable)
-+		reg |= CQSPI_REG_CONFIG_DIRECT_MASK;
-+	else
-+		reg &= ~CQSPI_REG_CONFIG_DIRECT_MASK;
-+
-+	writel(reg, reg_base + CQSPI_REG_CONFIG);
-+}
-+
-+void cadence_qspi_controller_enable(void *reg_base, bool enable)
-+{
-+	unsigned int reg;
-+
-+	reg = readl(reg_base + CQSPI_REG_CONFIG);
-+	if (enable)
-+		reg |= CQSPI_REG_CONFIG_ENABLE_MASK;
-+	else
-+		reg &= ~CQSPI_REG_CONFIG_ENABLE_MASK;
-+
-+	writel(reg, reg_base + CQSPI_REG_CONFIG);
-+}
-+
-+static unsigned int cadence_qspi_wait_idle(void *reg_base)
-+{
-+	u32 timeout, count = 0;
-+
-+	timeout = cadence_qspi_init_timeout(CQSPI_READ_TIMEOUT_MS);
-+	while (cadence_qspi_check_timeout(timeout)) {
-+		if (CQSPI_REG_IS_IDLE(reg_base)) {
-+			count++;
-+			if (count >= CQSPI_POLL_IDLE_RETRY)
-+				return 1;
-+		} else {
-+			count = 0;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void cadence_qspi_readdata_capture(void *reg_base, u32 bypass, u32 delay)
-+{
-+	unsigned int reg;
-+
-+	cadence_qspi_controller_enable(reg_base, 0);
-+
-+	reg = readl(reg_base + CQSPI_REG_READCAPTURE);
-+	if (bypass)
-+		reg |= (1 << CQSPI_REG_READCAPTURE_BYPASS_LSB);
-+	else
-+		reg &= ~(1 << CQSPI_REG_READCAPTURE_BYPASS_LSB);
-+
-+	reg &= ~(CQSPI_REG_READCAPTURE_DELAY_MASK
-+		<< CQSPI_REG_READCAPTURE_DELAY_LSB);
-+	reg |= ((delay & CQSPI_REG_READCAPTURE_DELAY_MASK)
-+		<< CQSPI_REG_READCAPTURE_DELAY_LSB);
-+	writel(reg, reg_base + CQSPI_REG_READCAPTURE);
-+
-+	cadence_qspi_controller_enable(reg_base, 1);
-+}
-+
-+static void cadence_qspi_config_baudrate_div(void *reg_base, u32 ref_clk_hz,
-+					     u32 sclk_hz)
-+{
-+	unsigned int reg, div;
-+
-+	/* Recalculate the baudrate divisor based on QSPI specification. */
-+	div = DIV_ROUND_UP(ref_clk_hz, 2 * sclk_hz) - 1;
-+
-+	reg = readl(reg_base + CQSPI_REG_CONFIG);
-+	reg &= ~(CQSPI_REG_CONFIG_BAUD_MASK << CQSPI_REG_CONFIG_BAUD_LSB);
-+	div = (div & CQSPI_REG_CONFIG_BAUD_MASK) << CQSPI_REG_CONFIG_BAUD_LSB;
-+	writel(reg, reg_base + CQSPI_REG_CONFIG);
-+}
-+
-+static void cadence_qspi_cs(void *reg_base, u32 chip_select, u32 decoder_enable)
-+{
-+	unsigned int reg;
-+
-+	cadence_qspi_controller_enable(reg_base, 0);
-+
-+	reg = readl(reg_base + CQSPI_REG_CONFIG);
-+	/* docoder */
-+	if (decoder_enable) {
-+		reg |= CQSPI_REG_CONFIG_DECODE_MASK;
-+	} else {
-+		reg &= ~CQSPI_REG_CONFIG_DECODE_MASK;
-+		chip_select = 0xF & ~(1 << chip_select);
-+	}
-+	reg &= ~(CQSPI_REG_CONFIG_CHIPSELECT_MASK
-+			<< CQSPI_REG_CONFIG_CHIPSELECT_LSB);
-+	reg |= (chip_select & CQSPI_REG_CONFIG_CHIPSELECT_MASK)
-+			<< CQSPI_REG_CONFIG_CHIPSELECT_LSB;
-+	writel(reg, reg_base + CQSPI_REG_CONFIG);
-+	cadence_qspi_controller_enable(reg_base, 1);
-+}
-+
-+static int cadence_qspi_exec_flash_cmd(void *reg_base, unsigned int reg)
-+{
-+	unsigned int timeout;
-+
-+	writel(reg, reg_base + CQSPI_REG_CMDCTRL);
-+	reg |= CQSPI_REG_CMDCTRL_EXECUTE_MASK;
-+	writel(reg, reg_base + CQSPI_REG_CMDCTRL);
-+
-+	timeout = cadence_qspi_init_timeout(CQSPI_TIMEOUT_MS);
-+	while (cadence_qspi_check_timeout(timeout)) {
-+		reg = readl(reg_base + CQSPI_REG_CMDCTRL) &
-+			CQSPI_REG_CMDCTRL_INPROGRESS_MASK;
-+		if (!reg)
-+			break;
-+	}
-+
-+	if (!cadence_qspi_wait_idle(reg_base) || reg != 0)
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+static int cqspi_command_read(void *reg_base, u32 txlen, const u_char *txbuf,
-+			      u32 addrlen, const u8 *addrbuf, u32 rxlen,
-+			      u8 *rxbuf, u32 flash_type)
-+{
-+	u32 addr_value, read_len, reg;
-+	int ret;
-+
-+	if (!rxlen || rxlen > CQSPI_STIG_DATA_LEN_MAX || !rxbuf)
-+		return -EINVAL;
-+
-+	reg = txbuf[0] << CQSPI_REG_CMDCTRL_OPCODE_LSB;
-+	reg |= BIT(CQSPI_REG_CMDCTRL_RD_EN_LSB);
-+
-+	if (addrlen) {
-+		reg |= BIT(CQSPI_REG_CMDCTRL_ADDR_EN_LSB);
-+		reg |= ((addrlen - 1) & CQSPI_REG_CMDCTRL_ADD_BYTES_MASK)
-+			<< CQSPI_REG_CMDCTRL_ADD_BYTES_LSB;
-+		addr_value = cadence_qspi_cmd2addr(&addrbuf[0], addrlen);
-+		writel(addr_value, reg_base + CQSPI_REG_CMDADDRESS);
-+	}
-+	/* 0 means 1 byte. */
-+	reg |= (((rxlen - 1) & CQSPI_REG_CMDCTRL_RD_BYTES_MASK)
-+		<< CQSPI_REG_CMDCTRL_RD_BYTES_LSB);
-+	ret = cadence_qspi_exec_flash_cmd(reg_base, reg);
-+	if (ret != 0)
-+		return ret;
-+
-+	reg = readl(reg_base + CQSPI_REG_CMDREADDATALOWER);
-+	read_len = (rxlen > 4) ? 4 : rxlen;
-+	memcpy(rxbuf, &reg, read_len);
-+	rxbuf += read_len;
-+
-+	if (rxlen > 4) {
-+		reg = readl(reg_base + CQSPI_REG_CMDREADDATAUPPER);
-+		read_len = rxlen - read_len;
-+		memcpy(rxbuf, &reg, read_len);
-+	}
-+
-+	return 0;
-+}
-+
-+static int cqspi_command_write(void *reg_base, u32 txlen, const u8 *txbuf,
-+			       u32 addrlen, const u8 *addrbuf, u32 datalen,
-+			       const u8 *databuf, u32 flash_type)
-+{
-+	unsigned int addr_value, reg, data = 0;
-+
-+	if (!txlen || !txbuf)
-+		return -EINVAL;
-+
-+	reg = txbuf[0] << CQSPI_REG_CMDCTRL_OPCODE_LSB;
-+	if (datalen != 0) {
-+		reg |= BIT(CQSPI_REG_CMDCTRL_WR_EN_LSB);
-+		reg |= ((datalen - 1) & CQSPI_REG_CMDCTRL_WR_BYTES_MASK)
-+			<< CQSPI_REG_CMDCTRL_WR_BYTES_LSB;
-+		memcpy(&data, databuf, datalen);
-+		writel(data, reg_base + CQSPI_REG_CMDWRITEDATALOWER);
-+	}
-+	if (addrlen) {
-+		reg |= BIT(CQSPI_REG_CMDCTRL_ADDR_EN_LSB);
-+		reg |= ((addrlen - 1) & CQSPI_REG_CMDCTRL_ADD_BYTES_MASK)
-+			<< CQSPI_REG_CMDCTRL_ADD_BYTES_LSB;
-+		addr_value = cadence_qspi_cmd2addr(&addrbuf[0], addrlen);
-+		writel(addr_value, reg_base + CQSPI_REG_CMDADDRESS);
-+	}
-+
-+	return cadence_qspi_exec_flash_cmd(reg_base, reg);
-+}
-+
-+static int cqspi_indirect_read_setup(void *reg_base, u32 txlen, const u8 *txbuf,
-+				     u32 addrlen, const u8 *addrbuf,
-+				     u32 dummy_bytes, u32 flash_type,
-+				     u32 quad_mode)
-+{
-+	unsigned int addr_value, dummy_clk, reg;
-+
-+	if (addrlen) {
-+		addr_value = cadence_qspi_cmd2addr(&addrbuf[0], addrlen);
-+		writel(addr_value, reg_base + CQSPI_REG_INDIRECTRDSTARTADDR);
-+	}
-+
-+	reg = txbuf[0] << CQSPI_REG_RD_INSTR_OPCODE_LSB;
-+	reg |= (quad_mode & CQSPI_REG_RD_INSTR_TYPE_DATA_MASK) <<
-+		CQSPI_REG_RD_INSTR_TYPE_DATA_LSB;
-+
-+	if (dummy_bytes) {
-+		if (dummy_bytes > CQSPI_DUMMY_BYTES_MAX)
-+			dummy_bytes = CQSPI_DUMMY_BYTES_MAX;
-+		reg |= BIT(CQSPI_REG_RD_INSTR_MODE_EN_LSB);
-+		writel(0xFF, reg_base + CQSPI_REG_MODE_BIT);
-+		dummy_clk = dummy_bytes * CQSPI_DUMMY_CLKS_PER_BYTE;
-+		dummy_clk -= CQSPI_DUMMY_CLKS_PER_BYTE;
-+		if (dummy_clk)
-+			reg |= (dummy_clk & CQSPI_REG_RD_INSTR_DUMMY_MASK)
-+				<< CQSPI_REG_RD_INSTR_DUMMY_LSB;
-+	} else if (flash_type == QSPI_FLASH_TYPE_NAND) {
-+		reg |= ((1 * CQSPI_DUMMY_CLKS_PER_BYTE)
-+				<< CQSPI_REG_RD_INSTR_DUMMY_LSB);
-+	}
-+	writel(reg, reg_base + CQSPI_REG_RD_INSTR);
-+	/* Set device size */
-+	reg = readl(reg_base + CQSPI_REG_SIZE);
-+	reg &= ~CQSPI_REG_SIZE_ADDRESS_MASK;
-+	reg |= (addrlen - 1);
-+	writel(reg, reg_base + CQSPI_REG_SIZE);
-+	/* disable auto-polling */
-+	reg = readl(reg_base + CQSPI_REG_WR_COMPLETION_CTRL);
-+	reg |= BIT(CQSPI_REG_WR_COMPLETION_DIS_POLLING_FLD_POS);
-+	writel(reg, reg_base + CQSPI_REG_WR_COMPLETION_CTRL);
-+
-+	return 0;
-+}
-+
-+static void cqspi_request_mmap_dma(struct struct_cqspi *cqspi)
-+{
-+	dma_cap_mask_t mask;
-+
-+	dma_cap_zero(mask);
-+	dma_cap_set(DMA_MEMCPY, mask);
-+
-+	cqspi->rx_chan = dma_request_chan_by_mask(&mask);
-+	if (IS_ERR(cqspi->rx_chan)) {
-+		dev_err(&cqspi->pdev->dev, "No Rx DMA available\n");
-+		cqspi->rx_chan = NULL;
-+	}
-+	init_completion(&cqspi->rx_dma_complete);
-+}
-+
-+static void cqspi_rx_dma_callback(void *param)
-+{
-+	struct struct_cqspi *cqspi = param;
-+
-+	complete(&cqspi->rx_dma_complete);
-+}
-+
-+static int cqspi_direct_read_execute(struct struct_cqspi *cqspi, u8 *buf,
-+				     const u8 *addrbuf, size_t rxlen)
-+{
-+	struct platform_device *pdev = cqspi->pdev;
-+	struct device *dev = &pdev->dev;
-+	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-+	dma_addr_t dma_src = (dma_addr_t)cqspi->mmap_phys_base + addrbuf[0];
-+	void __iomem *ahb_base = cqspi->qspi_ahb_virt;
-+	int ret = 0;
-+	struct dma_async_tx_descriptor *tx;
-+	dma_cookie_t cookie;
-+	dma_addr_t dma_dst;
-+
-+	if (!cqspi->rx_chan || !virt_addr_valid(buf)) {
-+		memcpy_fromio(buf, ahb_base + addrbuf[0], rxlen);
-+		return 0;
-+	}
-+
-+	dma_dst = dma_map_single(dev, buf, rxlen, DMA_FROM_DEVICE);
-+	if (dma_mapping_error(dev, dma_dst)) {
-+		dev_err(dev, "dma mapping failed\n");
-+		return -ENOMEM;
-+	}
-+	tx = dmaengine_prep_dma_memcpy(cqspi->rx_chan, dma_dst, dma_src,
-+				       rxlen, flags);
-+	if (!tx) {
-+		dev_err(dev, "device_prep_dma_memcpy error\n");
-+		ret = -EIO;
-+		goto err_unmap;
-+	}
-+
-+	tx->callback = cqspi_rx_dma_callback;
-+	tx->callback_param = cqspi;
-+	cookie = tx->tx_submit(tx);
-+	reinit_completion(&cqspi->rx_dma_complete);
-+
-+	ret = dma_submit_error(cookie);
-+	if (ret) {
-+		dev_err(dev, "dma_submit_error %d\n", cookie);
-+		ret = -EIO;
-+		goto err_unmap;
-+	}
-+
-+	dma_async_issue_pending(cqspi->rx_chan);
-+	if (!wait_for_completion_timeout(&cqspi->rx_dma_complete,
-+					 msecs_to_jiffies(rxlen))) {
-+		dmaengine_terminate_sync(cqspi->rx_chan);
-+		dev_err(dev, "DMA wait_for_completion_timeout\n");
-+		ret = -ETIMEDOUT;
-+		goto err_unmap;
-+	}
-+
-+err_unmap:
-+	dma_unmap_single(dev, dma_dst, rxlen, DMA_FROM_DEVICE);
-+
-+	return ret;
-+}
-+
-+static int cqspi_indirect_read_execute(struct struct_cqspi *cqspi, u32 rxlen,
-+				       u8 *rxbuf, u32 flash_type)
-+{
-+	struct platform_device *pdev = cqspi->pdev;
-+	struct cqspi_platform_data *pdata = pdev->dev.platform_data;
-+	void *reg_base = cqspi->iobase;
-+	void *ahb_base = cqspi->qspi_ahb_virt;
-+	u8 *rxbuf_end = rxbuf + rxlen;
-+	u32 mod_bytes = rxlen % 4;
-+	u32 bytes_to_read = 0;
-+	int remaining = (int)rxlen;
-+	u32 timeout, reg = 0;
-+	int ret = 0;
-+
-+	writel(0, reg_base + CQSPI_REG_INDIRECTRDWATERMARK);
-+	writel(0xa, reg_base + CQSPI_INDIRECT_TRIGGER_ADDR_RANGE_REG);
-+	writel(remaining, reg_base + CQSPI_REG_INDIRECTRDBYTES);
-+
-+	mb();/* flush previous writes */
-+
-+	writel(pdata->fifo_depth - CQSPI_REG_SRAM_RESV_WORDS,
-+	       reg_base + CQSPI_REG_SRAMPARTITION);
-+	/* Clear all interrupts. */
-+	writel(CQSPI_IRQ_STATUS_MASK, reg_base + CQSPI_REG_IRQSTATUS);
-+	writel(CQSPI_IRQ_MASK_RD, reg_base + CQSPI_REG_IRQMASK);
-+
-+	reinit_completion(&cqspi->transfer_complete);
-+	writel(CQSPI_REG_INDIRECTRD_START_MASK,
-+	       reg_base + CQSPI_REG_INDIRECTRD);
-+
-+	while (remaining > 0) {
-+		bytes_to_read = CQSPI_GET_RD_SRAM_LEVEL(reg_base);
-+
-+		while (bytes_to_read != 0) {
-+			unsigned int word_remain = round_down(remaining, 4);
-+
-+			bytes_to_read *= CQSPI_FIFO_WIDTH;
-+			bytes_to_read = bytes_to_read > remaining ?
-+						remaining : bytes_to_read;
-+			bytes_to_read = round_down(bytes_to_read, 4);
-+			if (bytes_to_read) {
-+				ioread32_rep(ahb_base, rxbuf,
-+					     (bytes_to_read / 4));
-+			} else if (!word_remain && mod_bytes) {
-+				unsigned int temp = ioread32(ahb_base);
-+
-+				bytes_to_read = mod_bytes;
-+				memcpy(rxbuf, &temp, min((unsigned int)
-+				       (rxbuf_end - rxbuf), bytes_to_read));
-+			}
-+
-+			rxbuf += bytes_to_read;
-+			remaining -= bytes_to_read;
-+			bytes_to_read = CQSPI_GET_RD_SRAM_LEVEL(reg_base);
-+		}
-+
-+		if (remaining < 0)
-+			reinit_completion(&cqspi->transfer_complete);
-+	}
-+
-+	/* Check indirect done status */
-+	timeout = cadence_qspi_init_timeout(CQSPI_READ_TIMEOUT_MS);
-+	while (cadence_qspi_check_timeout(timeout)) {
-+		reg = readl(reg_base + CQSPI_REG_INDIRECTRD);
-+		if (reg & CQSPI_REG_INDIRECTRD_DONE_MASK)
-+			break;
-+	}
-+	if (!(reg & CQSPI_REG_INDIRECTRD_DONE_MASK)) {
-+		dev_err(&pdev->dev, "QSPI : Indirect read error %x\n", reg);
-+		ret = -ETIMEDOUT;
-+		goto failrd;
-+	}
-+	/* Disable interrupt */
-+	writel(0, reg_base + CQSPI_REG_IRQMASK);
-+	/* Clear indirect completion status */
-+	writel(CQSPI_REG_INDIRECTRD_DONE_MASK, reg_base + CQSPI_REG_INDIRECTRD);
-+
-+	return 0;
-+failrd:
-+	/* Disable interrupt */
-+	writel(0, reg_base + CQSPI_REG_IRQMASK);
-+	/* Cancel the indirect read */
-+	writel(CQSPI_REG_INDIRECTWR_CANCEL_MASK,
-+	       reg_base + CQSPI_REG_INDIRECTRD);
-+	return ret;
-+}
-+
-+static int cqspi_indirect_write_setup(void *reg_base, u32 txlen,
-+				      const u8 *txbuf, u32 addrlen,
-+				      const u8 *addrbuf, u32 flash_type,
-+				      u32 quad_mode)
-+{
-+	unsigned int reg;
-+
-+	if (!txbuf)
-+		return -EINVAL;
-+
-+	reg = readl(reg_base + CQSPI_REG_CONFIG);
-+	reg &= ~(CQSPI_REG_CONFIG_DIRECT_MASK);
-+	reg &= ~(CQSPI_REG_CONFIG_DMA_MASK);
-+	writel(reg, reg_base + CQSPI_REG_CONFIG);
-+
-+	/* Set opcode. */
-+	reg = txbuf[0] << CQSPI_REG_WR_INSTR_OPCODE_LSB;
-+	reg |= BIT(CQSPI_REG_WR_CONFIG_WEL_DIS_FLD_POS);
-+	if (txbuf[0] == MACRONIX_4PP_CMD && flash_type == QSPI_FLASH_TYPE_NOR &&
-+	    quad_mode == QUAD_QIO) {
-+		/* Configure the quad */
-+		reg |= (quad_mode & CQSPI_REG_WR_INSTR_TYPE_ADDR_MASK) <<
-+		       CQSPI_REG_WR_INSTR_TYPE_ADDR_LSB;
-+	}
-+	/* Configure the quad */
-+	reg |= (quad_mode & CQSPI_REG_WR_INSTR_TYPE_DATA_MASK) <<
-+	       CQSPI_REG_WR_INSTR_TYPE_DATA_LSB;
-+	writel(reg, reg_base + CQSPI_REG_WR_INSTR);
-+	/* Setup write address. */
-+	reg = cadence_qspi_cmd2addr(&addrbuf[0], addrlen);
-+	writel(reg, reg_base + CQSPI_REG_INDIRECTWRSTARTADDR);
-+	reg = readl(reg_base + CQSPI_REG_SIZE);
-+	reg &= ~CQSPI_REG_SIZE_ADDRESS_MASK;
-+	reg |= ((addrlen - 1) & CQSPI_REG_SIZE_ADDRESS_MASK);
-+	writel(reg, reg_base +  CQSPI_REG_SIZE);
-+
-+	/* disable auto-polling */
-+	reg = readl(reg_base + CQSPI_REG_WR_COMPLETION_CTRL);
-+	reg |= BIT(CQSPI_REG_WR_COMPLETION_DIS_POLLING_FLD_POS);
-+	writel(reg, reg_base + CQSPI_REG_WR_COMPLETION_CTRL);
-+
-+	return 0;
-+}
-+
-+static int cqspi_indirect_write_execute(struct struct_cqspi *cqspi, u32 txlen,
-+					const u8 *txbuf, u32 flash_type)
-+{
-+	struct platform_device *pdev = cqspi->pdev;
-+	struct cqspi_platform_data *pdata = pdev->dev.platform_data;
-+	struct cqspi_flash_pdata *f_pdata =
-+			&pdata->f_pdata[cqspi->current_cs];
-+	void *reg_base = cqspi->iobase;
-+	void *ahb_base = cqspi->qspi_ahb_virt;
-+	u32 *irq_status = &cqspi->irq_status;
-+	u32 page_size = f_pdata->page_size;
-+	u32 write_bytes, timeout, reg = 0;
-+	int remaining = (int)txlen;
-+	int ret;
-+
-+	writel(0xa, reg_base + CQSPI_INDIRECT_TRIGGER_ADDR_RANGE_REG);
-+	writel(0x0, reg_base + CQSPI_REG_INDIRECTWRWATERMARK);
-+	reg = readl(reg_base + CQSPI_REG_SIZE);
-+	reg &= ~(CQSPI_REG_SIZE_PAGE_MASK << CQSPI_REG_SIZE_PAGE_LSB);
-+	reg &= ~(CQSPI_REG_SIZE_BLOCK_MASK << CQSPI_REG_SIZE_BLOCK_LSB);
-+	reg |= (f_pdata->page_size << CQSPI_REG_SIZE_PAGE_LSB);
-+	reg |= (f_pdata->block_size << CQSPI_REG_SIZE_BLOCK_LSB);
-+	writel(reg, reg_base +  CQSPI_REG_SIZE);
-+
-+	writel(remaining, reg_base + CQSPI_REG_INDIRECTWRBYTES);
-+	writel(CQSPI_REG_SRAM_PARTITION_WR, reg_base + CQSPI_REG_SRAMPARTITION);
-+	/* Clear all interrupts. */
-+	writel(CQSPI_IRQ_STATUS_MASK, reg_base + CQSPI_REG_IRQSTATUS);
-+	writel(CQSPI_IRQ_MASK_WR, reg_base + CQSPI_REG_IRQMASK);
-+	reinit_completion(&cqspi->transfer_complete);
-+	writel(CQSPI_REG_INDIRECTWR_START_MASK,
-+	       reg_base + CQSPI_REG_INDIRECTWR);
-+
-+	if (cqspi->wr_delay)
-+		ndelay(cqspi->wr_delay);
-+
-+	while (remaining > 0) {
-+		size_t write_words, mod_bytes;
-+
-+		write_bytes = remaining > page_size ? page_size : remaining;
-+		write_words = write_bytes / 4;
-+		mod_bytes = write_bytes % 4;
-+
-+		if (write_words) {
-+			iowrite32_rep(ahb_base, txbuf, write_words);
-+			txbuf += (write_words * 4);
-+		}
-+		if (mod_bytes) {
-+			unsigned int temp = 0xFFFFFFFF;
-+
-+			memcpy(&temp, txbuf, mod_bytes);
-+			iowrite32(temp, ahb_base);
-+			txbuf += mod_bytes;
-+		}
-+		ret = wait_event_interruptible_timeout(cqspi->waitqueue,
-+						       *irq_status &
-+						       CQSPI_IRQ_MASK_WR,
-+						       CQSPI_TIMEOUT_MS);
-+		if (!(ret) & (*irq_status & CQSPI_IRQ_STATUS_ERR)) {
-+			ret = -ETIMEDOUT;
-+			goto failwr;
-+		} else {
-+			ret = 0;
-+		}
-+		remaining -= write_bytes;
-+
-+		if (remaining < 0)
-+			reinit_completion(&cqspi->transfer_complete);
-+	}
-+
-+	/* Check indirect done status */
-+	timeout = cadence_qspi_init_timeout(CQSPI_TIMEOUT_MS);
-+	while (cadence_qspi_check_timeout(timeout)) {
-+		reg = readl(reg_base + CQSPI_REG_INDIRECTWR);
-+		if (reg & CQSPI_REG_INDIRECTWR_DONE_MASK)
-+			break;
-+	}
-+	if (!(reg & CQSPI_REG_INDIRECTWR_DONE_MASK)) {
-+		dev_err(&pdev->dev, "QSPI: Indirect write error %x", reg);
-+		ret = -ETIMEDOUT;
-+		goto failwr;
-+	}
-+
-+	return 0;
-+
-+failwr:
-+	/* Disable interrupt. */
-+	writel(0, reg_base + CQSPI_REG_IRQMASK);
-+	/* Clear indirect completion status */
-+	writel(CQSPI_REG_INDIRECTWR_DONE_MASK, reg_base + CQSPI_REG_INDIRECTWR);
-+
-+	/* Cancel the indirect write */
-+	if (ret)
-+		writel(CQSPI_REG_INDIRECTWR_CANCEL_MASK,
-+		       reg_base + CQSPI_REG_INDIRECTWR);
-+
-+	return ret;
-+}
-+
-+unsigned int cadence_qspi_is_controller_ready(void *reg_base)
-+{
-+	return cadence_qspi_wait_idle(reg_base);
-+}
-+
-+void cadence_qspi_controller_init(struct struct_cqspi *cqspi)
-+{
-+	struct platform_device *pdev = cqspi->pdev;
-+	struct cqspi_platform_data *pdata = pdev->dev.platform_data;
-+
-+	cadence_qspi_controller_enable(cqspi->iobase, 0);
-+
-+	/* Configure the remap address register, no remap */
-+	writel(0, cqspi->iobase + CQSPI_REG_REMAP);
-+	/* Disable all interrupts. */
-+	writel(0, cqspi->iobase + CQSPI_REG_IRQMASK);
-+
-+	/* DAC is disabled for Intel LGM SOC */
-+	if (!cqspi->dac_mode) {
-+		enable_qspi_direct_access(cqspi->iobase, 0);
-+	} else {
-+		enable_qspi_direct_access(cqspi->iobase, 1);
-+		/* TODO: for TI platform to be enabled */
-+		cqspi_request_mmap_dma(cqspi);
-+	}
-+
-+	/* Load indirect trigger address. */
-+	writel(pdata->trigger_address,
-+	       cqspi->iobase + CQSPI_REG_INDIRECTTRIGGER);
-+
-+	cadence_qspi_controller_enable(cqspi->iobase, 1);
-+}
-+
-+unsigned int calculate_ticks_for_ns(u32 ref_clk_hz, u32 ns_val)
-+{
-+	unsigned int ticks;
-+
-+	ticks = ref_clk_hz / 1000;      /* kHz */
-+	ticks = DIV_ROUND_UP(ticks * ns_val, 1000000);
-+
-+	return ticks;
-+}
-+
-+void cadence_qspi_delay(struct struct_cqspi *cqspi, u32 ref_clk, u32 sclk_hz)
-+{
-+	struct platform_device *pdev = cqspi->pdev;
-+	struct cqspi_platform_data *pdata = pdev->dev.platform_data;
-+	struct cqspi_flash_pdata *f_pdata = &pdata->f_pdata[cqspi->current_cs];
-+	void __iomem *iobase = cqspi->iobase;
-+	const unsigned int ref_clk_hz = pdata->master_ref_clk_hz;
-+	unsigned int tshsl, tchsh, tslch, tsd2d;
-+	unsigned int reg;
-+	unsigned int tsclk;
-+
-+	cadence_qspi_controller_enable(cqspi->iobase, 0);
-+	/* calculate the number of ref ticks for one sclk tick */
-+	tsclk = DIV_ROUND_UP(ref_clk_hz, sclk_hz);
-+
-+	/* this particular value must be at least one sclk */
-+	if (tshsl < tsclk)
-+		tshsl = tsclk;
-+
-+	tchsh = calculate_ticks_for_ns(ref_clk_hz, f_pdata->tchsh_ns);
-+	tslch = calculate_ticks_for_ns(ref_clk_hz, f_pdata->tslch_ns);
-+	tsd2d = calculate_ticks_for_ns(ref_clk_hz, f_pdata->tsd2d_ns);
-+
-+	reg = ((tshsl & CQSPI_REG_DELAY_TSHSL_MASK)
-+			<< CQSPI_REG_DELAY_TSHSL_LSB);
-+	reg |= ((tchsh & CQSPI_REG_DELAY_TCHSH_MASK)
-+			<< CQSPI_REG_DELAY_TCHSH_LSB);
-+	reg |= ((tslch & CQSPI_REG_DELAY_TSLCH_MASK)
-+			<< CQSPI_REG_DELAY_TSLCH_LSB);
-+	reg |= ((tsd2d & CQSPI_REG_DELAY_TSD2D_MASK)
-+			<< CQSPI_REG_DELAY_TSD2D_LSB);
-+	writel(reg, iobase + CQSPI_REG_DELAY);
-+	cadence_qspi_controller_enable(cqspi->iobase, 1);
-+}
-+
-+void cadence_qspi_switch_chipselect(struct struct_cqspi *cqspi, u32 cs)
-+{
-+	struct platform_device *pdev = cqspi->pdev;
-+	struct cqspi_platform_data *pdata = pdev->dev.platform_data;
-+	struct cqspi_flash_pdata *f_pdata = &pdata->f_pdata[cs];
-+	void __iomem *iobase = cqspi->iobase;
-+	unsigned int reg;
-+
-+	cadence_qspi_controller_enable(cqspi->iobase, 0);
-+	/* Configure page size and block size. */
-+	reg = readl(iobase + CQSPI_REG_SIZE);
-+	/* clear the previous value */
-+	reg &= ~(CQSPI_REG_SIZE_PAGE_MASK << CQSPI_REG_SIZE_PAGE_LSB);
-+	reg &= ~(CQSPI_REG_SIZE_BLOCK_MASK << CQSPI_REG_SIZE_BLOCK_LSB);
-+	reg |= (f_pdata->page_size << CQSPI_REG_SIZE_PAGE_LSB);
-+	reg |= (f_pdata->block_size << CQSPI_REG_SIZE_BLOCK_LSB);
-+	writel(reg, iobase + CQSPI_REG_SIZE);
-+	/* configure the chip select */
-+	cadence_qspi_cs(iobase, cs, pdata->ext_decoder);
-+	cadence_qspi_controller_enable(cqspi->iobase, 1);
-+}
-+
-+static int cadence_qspi_mem_process(struct struct_cqspi *cqspi,
-+				    struct spi_mem *mem,
-+				    const struct spi_mem_op *op)
-+{
-+	struct platform_device *pdev = cqspi->pdev;
-+	struct cqspi_platform_data *pdata = pdev->dev.platform_data;
-+	unsigned int tmpbufsize, n_trans = 0, totalxferlen = 0;
-+	void __iomem *iobase = cqspi->iobase;
-+	struct spi_mem_op_cadence ops[4] = { };
-+	struct spi_mem_op_cadence *cmd_ops = NULL;
-+	struct spi_mem_op_cadence *data_ops = NULL;
-+	struct spi_mem_op_cadence *dummy_ops = NULL;
-+	struct spi_mem_op_cadence *addr_ops = NULL;
-+	struct cqspi_flash_pdata *f_pdata;
-+	int rdid_length, mode, ret, i;
-+	u8 *tmpbuf;
-+	u32 sclk;
-+
-+	if (cqspi->current_cs != mem->spi->chip_select) {
-+		cqspi->current_cs = mem->spi->chip_select;
-+		cadence_qspi_switch_chipselect(cqspi, mem->spi->chip_select);
-+	}
-+
-+	f_pdata = &pdata->f_pdata[cqspi->current_cs];
-+	if (f_pdata->flash_type == QSPI_FLASH_TYPE_NOR)
-+		rdid_length = 6;
-+	else
-+		rdid_length = 3;
-+
-+	tmpbufsize = sizeof(op->cmd.opcode) + op->addr.nbytes +
-+			op->dummy.nbytes;
-+
-+	tmpbuf = kzalloc(tmpbufsize, GFP_KERNEL | GFP_DMA);
-+	if (!tmpbuf)
-+		return -ENOMEM;
-+
-+	tmpbuf[0] = op->cmd.opcode;
-+	ops[n_trans].tx_buf = tmpbuf;
-+	ops[n_trans].len = sizeof(op->cmd.opcode);
-+	ops[n_trans].tx_nbits = op->cmd.buswidth;
-+
-+	n_trans++;
-+	totalxferlen++;
-+
-+	if (op->addr.nbytes) {
-+		int i;
-+
-+		for (i = 0; i < op->addr.nbytes; i++)
-+			tmpbuf[i + 1] = op->addr.val >>
-+					(8 * (op->addr.nbytes - i - 1));
-+
-+		ops[n_trans].tx_buf = tmpbuf + 1;
-+		ops[n_trans].len = op->addr.nbytes;
-+		ops[n_trans].tx_nbits = op->addr.buswidth;
-+
-+		n_trans++;
-+		totalxferlen += op->addr.nbytes;
-+	}
-+	if (op->dummy.nbytes) {
-+		memset(tmpbuf + op->addr.nbytes + 1, 0xff, op->dummy.nbytes);
-+		ops[n_trans].tx_buf = tmpbuf + op->addr.nbytes + 1;
-+		ops[n_trans].len = op->dummy.nbytes;
-+		ops[n_trans].tx_nbits = op->dummy.buswidth;
-+
-+		n_trans++;
-+		totalxferlen += op->dummy.nbytes;
-+	}
-+	if (op->data.nbytes) {
-+		if (op->data.dir == SPI_MEM_DATA_IN) {
-+			ops[n_trans].rx_buf = op->data.buf.in;
-+			ops[n_trans].rx_nbits = op->data.buswidth;
-+		} else {
-+			ops[n_trans].tx_buf = op->data.buf.out;
-+			ops[n_trans].tx_nbits = op->data.buswidth;
-+		}
-+
-+		ops[n_trans].len = op->data.nbytes;
-+		n_trans++;
-+		totalxferlen += op->data.nbytes;
-+	}
-+
-+	for (i = 0; i < n_trans; i++)
-+		dev_dbg(&pdev->dev, "ops[%d] %d\n", i, ops[i].len);
-+
-+	switch (n_trans) {
-+	case 1:
-+		cmd_ops = &ops[0];
-+		break;
-+	case 2:
-+		cmd_ops = &ops[0];
-+		if (f_pdata->flash_type == QSPI_FLASH_TYPE_NAND) {
-+			if (data_ops->rx_buf)
-+				data_ops = &ops[1];
-+			else
-+				addr_ops = &ops[1];
-+		} else {
-+			data_ops = &ops[1];
-+		}
-+		break;
-+	case 3:
-+		cmd_ops = &ops[0];
-+		addr_ops = &ops[1];
-+		data_ops = &ops[2];
-+		break;
-+	case 4:
-+		cmd_ops = &ops[0];
-+		addr_ops = &ops[1];
-+		dummy_ops = &ops[2];
-+		data_ops = &ops[3];
-+		break;
-+	default:
-+		dev_err(&pdev->dev, "Unsupported n_trans %u\n", n_trans);
-+		return -EINVAL;
-+	}
-+
-+	if (!data_ops)
-+		mode = STIG_WRITE_MODE;
-+	else if (data_ops->len > rdid_length)
-+		mode = data_ops->tx_buf ? IDC_WRITE_MODE : IDC_READ_MODE;
-+	else
-+		mode = data_ops->tx_buf ? STIG_WRITE_MODE : STIG_READ_MODE;
-+
-+	sclk = mem->spi->max_speed_hz;
-+	cadence_qspi_controller_enable(iobase, 0);
-+	cadence_qspi_config_baudrate_div(iobase, pdata->master_ref_clk_hz,
-+					 sclk);
-+	cadence_qspi_delay(cqspi, pdata->master_ref_clk_hz, sclk);
-+	cadence_qspi_readdata_capture(iobase, 1, f_pdata->read_delay);
-+	cadence_qspi_controller_enable(iobase, 1);
-+
-+	/* execute transfer */
-+	switch (mode) {
-+	case STIG_WRITE_MODE:
-+		ret = cqspi_command_write(iobase, cmd_ops->len, cmd_ops->tx_buf,
-+					  addr_ops ? addr_ops->len : 0,
-+					  addr_ops ? addr_ops->tx_buf : NULL,
-+					  data_ops ? data_ops->len : 0,
-+					  data_ops ? data_ops->tx_buf : NULL,
-+					  f_pdata->flash_type);
-+		break;
-+	case STIG_READ_MODE:
-+		ret = cqspi_command_read(iobase, cmd_ops->len, cmd_ops->tx_buf,
-+					 addr_ops ? addr_ops->len : 0,
-+					 addr_ops ? addr_ops->tx_buf : NULL,
-+					 data_ops ? data_ops->len : 0,
-+					 data_ops ? data_ops->rx_buf : NULL,
-+					 f_pdata->flash_type);
-+		break;
-+	case IDC_WRITE_MODE:
-+		ret = cqspi_indirect_write_setup(iobase, cmd_ops->len,
-+						 cmd_ops->tx_buf,
-+						 addr_ops ? addr_ops->len : 0,
-+						 addr_ops ? addr_ops->tx_buf : 0,
-+						 f_pdata->flash_type,
-+						 f_pdata->quad);
-+		ret = cqspi_indirect_write_execute(cqspi, data_ops->len,
-+						   data_ops->tx_buf,
-+						   f_pdata->flash_type);
-+		break;
-+	case IDC_READ_MODE:
-+		ret = cqspi_indirect_read_setup(iobase, cmd_ops->len,
-+						cmd_ops->tx_buf,
-+						addr_ops ? addr_ops->len : 0,
-+						addr_ops ? addr_ops->tx_buf : 0,
-+						dummy_ops ? dummy_ops->len : 0,
-+						f_pdata->flash_type,
-+						f_pdata->quad);
-+		ret = cqspi_indirect_read_execute(cqspi, data_ops->len,
-+						  data_ops->rx_buf,
-+						  f_pdata->flash_type);
-+		/* TODO: for TI DMA + DAC to be enabled */
-+		break;
-+	default:
-+		dev_err(&pdev->dev, "Unsupported mode %u\n", mode);
-+		return -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+int cadence_qspi_exec_mem_op(struct spi_mem *mem, const struct spi_mem_op *op)
-+{
-+	struct struct_cqspi *cqspi = spi_master_get_devdata(mem->spi->master);
-+	int ret;
-+
-+	mutex_lock(&cqspi->lock);
-+	ret = cadence_qspi_mem_process(cqspi, mem, op);
-+	if (ret)
-+		dev_err(&mem->spi->dev, "Error: qspi transfer failed!!!.\n");
-+	mutex_unlock(&cqspi->lock);
-+
-+	return ret;
-+}
-+
-+static const struct spi_controller_mem_ops cadence_qspi_mem_ops = {
-+	.exec_op = cadence_qspi_exec_mem_op,
-+};
-+
-+static int cadence_qspi_setup(struct spi_device *spi)
-+{
-+	if (spi->chip_select > spi->master->num_chipselect) {
-+		dev_err(&spi->dev, "%d CS is out of range\n", spi->chip_select);
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int cadence_qspi_of_get_pdata(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *nc;
-+	struct cqspi_platform_data *pdata = pdev->dev.platform_data;
-+	struct cqspi_flash_pdata *f_pdata;
-+	unsigned int cs;
-+	unsigned int prop;
-+
-+	pdata->is_decoded_cs = of_property_read_bool(np, "cdns,is-decoded-cs");
-+
-+	if (of_property_read_u32(np, "cdns,trigger-address", &prop)) {
-+		dev_err(&pdev->dev, "couldn't determine trigger-address\n");
-+		return -ENXIO;
-+	}
-+	pdata->trigger_address = prop;
-+
-+	pdata->rclk_en = of_property_read_bool(np, "cdns,rclk-en");
-+
-+	if (of_property_read_u32(np, "cdns,qspi-phyaddr", &prop)) {
-+		dev_err(&pdev->dev, "couldn't determine cdns,qspi-phyaddr\n");
-+		return -ENXIO;
-+	}
-+	pdata->qspi_ahb_phy = prop;
-+
-+	if (of_property_read_u32(np, "cdns,qspi-physize", &prop)) {
-+		dev_info(&pdev->dev, "missing cdns,qspi-physize to 128 kB\n");
-+		prop = 128;
-+	}
-+	pdata->qspi_ahb_size = prop * 1024;
-+
-+	if (of_property_read_u32(np, "cdns,qspi-phymask", &prop))
-+		prop = CQSPI_INDIRECTTRIGGER_ADDR_MASK;
-+	pdata->qspi_ahb_mask = prop;
-+
-+	if (of_property_read_u32(np, "bus-num", &prop)) {
-+		dev_err(&pdev->dev, "couldn't determine bus-num\n");
-+		return -ENXIO;
-+	}
-+	pdata->bus_num = prop;
-+
-+	if (of_property_read_u32(np, "num-chipselect", &prop)) {
-+		dev_err(&pdev->dev, "couldn't determine num-chipselect\n");
-+		return -ENXIO;
-+	}
-+	pdata->num_chipselect = prop;
-+
-+	if (of_property_read_u32(np, "cdns,fifo-depth", &prop)) {
-+		dev_err(&pdev->dev, "couldn't determine fifo-depth\n");
-+		return -ENXIO;
-+	}
-+	pdata->fifo_depth = prop;
-+
-+	if (of_property_read_u32(np, "ext-decoder", &prop)) {
-+		dev_err(&pdev->dev, "couldn't determine ext-decoder\n");
-+		return -ENXIO;
-+	}
-+	pdata->ext_decoder = prop;
-+
-+	pdata->enable_dma = of_property_read_bool(np, "dmas");
-+	dev_info(&pdev->dev, "DMA %senabled\n", pdata->enable_dma ? "" : "NOT");
-+
-+	/* Get flash devices platform data */
-+	for_each_child_of_node(np, nc) {
-+		if (!of_device_is_available(nc))
-+			continue;
-+
-+		if (of_property_read_u32(nc, "reg", &cs)) {
-+			dev_err(&pdev->dev, "couldn't determine reg\n");
-+			return -ENXIO;
-+		}
-+		f_pdata = &pdata->f_pdata[cs];
-+
-+		/* use compatible string to determine flash type */
-+		if (of_device_is_compatible(nc, "spinand"))
-+			f_pdata->flash_type = QSPI_FLASH_TYPE_NAND;
-+		else
-+			f_pdata->flash_type = QSPI_FLASH_TYPE_NOR;
-+
-+		if (of_property_read_u32(nc, "spi-rx-bus-width", &prop)) {
-+			dev_err(&pdev->dev, "couldn't determine quad\n");
-+			return -ENXIO;
-+		}
-+		f_pdata->quad = (prop == 4) ? QUAD_QIO : QUAD_SIO;
-+
-+		if (of_property_read_u32(nc, "page-size", &prop)) {
-+			dev_err(&pdev->dev, "couldn't determine page-size\n");
-+			return -ENXIO;
-+		}
-+		f_pdata->page_size = prop;
-+
-+		if (of_property_read_u32(nc, "block-size", &prop)) {
-+			dev_err(&pdev->dev, "couldn't determine block-size\n");
-+			return -ENXIO;
-+		}
-+		f_pdata->block_size = prop;
-+
-+		if (of_property_read_u32(nc, "cdns,read-delay", &prop)) {
-+			dev_err(&pdev->dev, "couldn't determine read-delay\n");
-+			return -ENXIO;
-+		}
-+		f_pdata->read_delay = prop;
-+
-+		if (of_property_read_u32(nc, "cdns,tshsl-ns", &prop)) {
-+			dev_err(&pdev->dev, "couldn't determine tshsl-ns\n");
-+			return -ENXIO;
-+		}
-+		f_pdata->tshsl_ns = prop;
-+
-+		if (of_property_read_u32(nc, "cdns,tsd2d-ns", &prop)) {
-+			dev_err(&pdev->dev, "couldn't determine tsd2d-ns\n");
-+			return -ENXIO;
-+		}
-+		f_pdata->tsd2d_ns = prop;
-+
-+		if (of_property_read_u32(nc, "cdns,tchsh-ns", &prop)) {
-+			dev_err(&pdev->dev, "couldn't determine tchsh-ns\n");
-+			return -ENXIO;
-+		}
-+		f_pdata->tchsh_ns = prop;
-+
-+		if (of_property_read_u32(nc, "cdns,tslch-ns", &prop)) {
-+			dev_err(&pdev->dev, "couldn't determine tslch-ns\n");
-+			return -ENXIO;
-+		}
-+		f_pdata->tslch_ns = prop;
-+	}
-+	return 0;
-+}
-+
-+static int cadence_qspi_probe(struct platform_device *pdev)
-+{
-+	struct cqspi_platform_data *pdata;
-+	struct device *dev = &pdev->dev;
-+	struct struct_cqspi *cqspi;
-+	struct spi_master *master;
-+	struct reset_control *rstc, *rstc_ocp;
-+	const struct cqspi_driver_platdata *ddata;
-+	struct resource *res = NULL;
-+	int ret;
-+
-+	master = spi_alloc_master(&pdev->dev, sizeof(*cqspi));
-+	if (!master) {
-+		dev_err(&pdev->dev, "spi_alloc_master failed\n");
-+		return -ENOMEM;
-+	}
-+	master->mode_bits = SPI_CS_HIGH | SPI_CPOL | SPI_CPHA | SPI_TX_QUAD |
-+				SPI_RX_QUAD | SPI_TX_DUAL | SPI_RX_DUAL;
-+	master->setup = cadence_qspi_setup;
-+	master->mem_ops = &cadence_qspi_mem_ops;
-+	master->dev.of_node = pdev->dev.of_node;
-+	cqspi = spi_master_get_devdata(master);
-+	cqspi->pdev = pdev;
-+
-+	pdata = kmalloc(sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata) {
-+		ret = -ENOMEM;
-+		goto err_pdata;
-+	}
-+	pdev->dev.platform_data = pdata;
-+
-+	cqspi->clk = devm_clk_get(&pdev->dev, "qspi");
-+	if (IS_ERR(cqspi->clk)) {
-+		dev_err(&pdev->dev, "cannot get qspi clk\n");
-+		return PTR_ERR(cqspi->clk);
-+	}
-+	pdata->master_ref_clk_hz = clk_get_rate(cqspi->clk);
-+
-+	ret = clk_prepare_enable(cqspi->clk);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to enable qspi clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = cadence_qspi_of_get_pdata(pdev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Get platform data failed.\n");
-+		return -ENODEV;
-+	}
-+
-+	cqspi->res = res;
-+	/* Obtain and remap controller address. */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	cqspi->iobase = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(cqspi->iobase)) {
-+		dev_err(dev, "Cannot remap controller address.\n");
-+		return PTR_ERR(cqspi->iobase);
-+	}
-+
-+	/* Obtain and remap AHB address. */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	cqspi->qspi_ahb_virt = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(cqspi->qspi_ahb_virt)) {
-+		dev_err(dev, "Cannot remap AHB address.\n");
-+		return PTR_ERR(cqspi->qspi_ahb_virt);
-+	}
-+	cqspi->mmap_phys_base = (dma_addr_t)res->start;
-+	cqspi->ahb_size = resource_size(res);
-+
-+	/* Obtain QSPI reset control */
-+	rstc = devm_reset_control_get_optional_exclusive(dev, "qspi");
-+	if (IS_ERR(rstc)) {
-+		dev_err(dev, "Cannot get QSPI reset.\n");
-+		return PTR_ERR(rstc);
-+	}
-+
-+	rstc_ocp = devm_reset_control_get_optional_exclusive(dev, "qspi-ocp");
-+	if (IS_ERR(rstc_ocp)) {
-+		dev_err(dev, "Cannot get QSPI OCP reset.\n");
-+		return PTR_ERR(rstc_ocp);
-+	}
-+
-+	reset_control_assert(rstc);
-+	reset_control_deassert(rstc);
-+
-+	reset_control_assert(rstc_ocp);
-+	reset_control_deassert(rstc_ocp);
-+
-+	ddata  = of_device_get_match_data(dev);
-+	if (ddata && (ddata->quirks & CQSPI_NEEDS_WR_DELAY))
-+		cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
-+						   pdata->master_ref_clk_hz);
-+
-+	init_completion(&cqspi->transfer_complete);
-+
-+	cqspi->irq = platform_get_irq(pdev, 0);
-+	if (cqspi->irq < 0) {
-+		dev_err(dev, "platform_get_irq failed.\n");
-+		ret = -ENXIO;
-+		goto err_irq;
-+	}
-+	ret = devm_request_irq(dev, cqspi->irq, cadence_qspi_irq_handler, 0,
-+			       pdev->name, cqspi);
-+	if (ret) {
-+		dev_err(dev, "request_irq failed.\n");
-+		goto err_irq;
-+	}
-+
-+	master->bus_num = pdata->bus_num;
-+	master->num_chipselect = pdata->num_chipselect;
-+	mutex_init(&cqspi->lock);
-+	platform_set_drvdata(pdev, master);
-+	cadence_qspi_controller_init(cqspi);
-+	cqspi->current_cs = 0;
-+
-+	ret = devm_spi_register_master(dev, master);
-+	if (ret) {
-+		dev_err(&pdev->dev, "devm_spi_register_master failed.\n");
-+		goto err_of;
-+	}
-+
-+	if (ddata && (ddata->quirks & CQSPI_DISABLE_DAC_MODE))
-+		cqspi->dac_mode = false;
-+
-+	return 0;
-+
-+err_pdata:
-+	kfree(pdata);
-+err_irq:
-+	free_irq(cqspi->irq, cqspi);
-+err_of:
-+	spi_master_put(master);
-+	dev_err(&pdev->dev, "Cadence QSPI controller probe failed\n");
-+	return ret;
-+}
-+
-+static int cadence_qspi_remove(struct platform_device *pdev)
-+{
-+	struct spi_master *master = platform_get_drvdata(pdev);
-+	struct struct_cqspi *cadence_qspi = spi_master_get_devdata(master);
-+
-+	cadence_qspi_controller_enable(cadence_qspi->iobase, 0);
-+	platform_set_drvdata(pdev, NULL);
-+	free_irq(cadence_qspi->irq, cadence_qspi);
-+	iounmap(cadence_qspi->iobase);
-+	iounmap(cadence_qspi->qspi_ahb_virt);
-+	release_mem_region(cadence_qspi->res->start,
-+			   resource_size(cadence_qspi->res));
-+	kfree(pdev->dev.platform_data);
-+	spi_unregister_master(master);
-+	spi_master_put(master);
-+	return 0;
-+}
-+
-+static const struct cqspi_driver_platdata k2g_qspi = {
-+	.quirks = CQSPI_NEEDS_WR_DELAY,
-+};
-+
-+static const struct cqspi_driver_platdata am654_ospi = {
-+	.quirks = CQSPI_NEEDS_WR_DELAY,
-+};
-+
-+static const struct cqspi_driver_platdata intel_lgm_qspi = {
-+	.quirks = CQSPI_DISABLE_DAC_MODE,
-+};
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id cadence_qspi_of_match[] = {
-+	{
-+		.compatible = "cadence,qspi",
-+	},
-+	{
-+		.compatible = "ti,k2g-qspi",
-+		.data = &k2g_qspi,
-+	},
-+	{
-+		.compatible = "ti,am654-ospi",
-+		.data = &am654_ospi,
-+	},
-+	{
-+		.compatible = "intel,lgm-qspi",
-+		.data = &intel_lgm_qspi,
-+	},
-+	{ /* end of table */}
-+};
-+MODULE_DEVICE_TABLE(of, cadence_qspi_of_match);
-+#else
-+#define cadence_qspi_of_match NULL
-+#endif /* CONFIG_OF */
-+
-+static struct platform_driver cadence_qspi_platform_driver = {
-+	.probe          = cadence_qspi_probe,
-+	.remove         = cadence_qspi_remove,
-+	.driver = {
-+		.name   = CADENCE_QSPI_NAME,
-+		.of_match_table = cadence_qspi_of_match,
-+	},
-+};
-+
-+module_platform_driver(cadence_qspi_platform_driver);
-+
-+MODULE_DESCRIPTION("Cadence QSPI Controller Driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:" CADENCE_QSPI_NAME);
-+MODULE_AUTHOR("Ley Foon Tan <lftan@altera.com>");
-+MODULE_AUTHOR("Graham Moore <grmoore@opensource.altera.com>");
-+MODULE_AUTHOR("Vadivel Murugan R <vadivel.muruganx.ramuthevar@intel.com>");
-diff --git a/drivers/spi/spi-cadence-quadspi.h b/drivers/spi/spi-cadence-quadspi.h
-new file mode 100644
-index 000000000000..c78ee9423950
---- /dev/null
-+++ b/drivers/spi/spi-cadence-quadspi.h
-@@ -0,0 +1,272 @@
-+/* SPDX-License-Identifier: BSD-2-Clause */
-+/*
-+ * Driver for Cadence QSPI Controller
-+ *
-+ * Copyright Altera Corporation (C) 2012-2014. All rights reserved.
-+ * Copyright Intel Corporation (C) 2019. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#ifndef __CADENCE_QSPI__H__
-+#define __CADENCE_QSPI__H__
-+#include <linux/reset.h>
-+#include <linux/spi/spi-mem.h>
-+
-+#define CQSPI_MAX_CHIP_SELECT		(16)
-+#define STIG_READ_MODE			1
-+#define STIG_WRITE_MODE			2
-+#define STIG_WRITE_READ_MODE		3
-+#define IDC_READ_MODE			4
-+#define IDC_WRITE_MODE			5
-+
-+#define QSPI_FLASH_TYPE_NOR		0
-+#define QSPI_FLASH_TYPE_NAND		1
-+
-+#define QUAD_SIO			0
-+#define QUAD_DIO			1
-+#define QUAD_QIO			2
-+
-+#define QUAD_LSB			4
-+
-+#define MACRONIX_4PP_CMD		0x38
-+#define MACRONIX_WRSR_CMD		0x01
-+
-+/* Operation timeout value */
-+#define CQSPI_TIMEOUT_MS			5000
-+#define CQSPI_READ_TIMEOUT_MS			10
-+#define CQSPI_POLL_IDLE_RETRY			3
-+#define CQSPI_FIFO_WIDTH			4
-+
-+/* Controller sram size in word */
-+#define CQSPI_REG_SRAM_RESV_WORDS		2
-+#define CQSPI_REG_SRAM_PARTITION_WR		1
-+#define CQSPI_REG_SRAM_THRESHOLD_BYTES		50
-+
-+/* Instruction type */
-+#define CQSPI_INST_TYPE_SINGLE			0
-+#define CQSPI_INST_TYPE_DUAL			1
-+#define CQSPI_INST_TYPE_QUAD			2
-+#define CQSPI_DUMMY_CLKS_PER_BYTE		8
-+#define CQSPI_DUMMY_BYTES_MAX			4
-+#define CQSPI_STIG_DATA_LEN_MAX			8
-+#define CQSPI_INDIRECTTRIGGER_ADDR_MASK		0xFFFFF
-+
-+/* Register map */
-+#define	CQSPI_REG_CONFIG			0x00
-+#define	CQSPI_REG_CONFIG_ENABLE_MASK		BIT(0)
-+#define	CQSPI_REG_CONFIG_DIRECT_MASK		BIT(7)
-+#define	CQSPI_REG_CONFIG_DECODE_MASK		BIT(9)
-+#define	CQSPI_REG_CONFIG_CHIPSELECT_LSB		10
-+#define CQSPI_REG_CONFIG_DMA_MASK		BIT(15)
-+#define	CQSPI_REG_CONFIG_BAUD_LSB		19
-+#define	CQSPI_REG_CONFIG_IDLE_LSB		31
-+#define	CQSPI_REG_CONFIG_CHIPSELECT_MASK	0xF
-+#define	CQSPI_REG_CONFIG_BAUD_MASK		0xF
-+#define	CQSPI_REG_RD_INSTR			0x04
-+#define	CQSPI_REG_RD_INSTR_OPCODE_LSB		0
-+#define	CQSPI_REG_RD_INSTR_TYPE_INSTR_LSB	8
-+#define	CQSPI_REG_RD_INSTR_TYPE_ADDR_LSB	12
-+#define	CQSPI_REG_RD_INSTR_TYPE_DATA_LSB	16
-+#define	CQSPI_REG_RD_INSTR_MODE_EN_LSB		20
-+#define	CQSPI_REG_RD_INSTR_DUMMY_LSB		24
-+#define	CQSPI_REG_RD_INSTR_TYPE_INSTR_MASK	0x3
-+#define	CQSPI_REG_RD_INSTR_TYPE_ADDR_MASK	0x3
-+#define	CQSPI_REG_RD_INSTR_TYPE_DATA_MASK	0x3
-+#define	CQSPI_REG_RD_INSTR_DUMMY_MASK		0x1F
-+#define	CQSPI_REG_WR_INSTR			0x08
-+#define	CQSPI_REG_WR_INSTR_OPCODE_LSB		0
-+#define	CQSPI_REG_WR_INSTR_TYPE_DATA_MASK	0x3
-+#define	CQSPI_REG_WR_INSTR_TYPE_DATA_LSB	16
-+#define	CQSPI_REG_WR_INSTR_TYPE_ADDR_MASK	0x3
-+#define	CQSPI_REG_WR_INSTR_TYPE_ADDR_LSB	12
-+
-+/*! Field WEL_DIS_FLD - wel_dis_fld */
-+#define CQSPI_REG_WR_CONFIG_WEL_DIS_FLD_POS	8
-+#define CQSPI_REG_WR_COMPLETION_CTRL		0x38
-+#define CQSPI_REG_WR_COMPLETION_DIS_POLLING_FLD_POS	14
-+
-+#define	CQSPI_REG_DELAY				0x0C
-+#define	CQSPI_REG_DELAY_TSLCH_LSB		0
-+#define	CQSPI_REG_DELAY_TCHSH_LSB		8
-+#define	CQSPI_REG_DELAY_TSD2D_LSB		16
-+#define	CQSPI_REG_DELAY_TSHSL_LSB		24
-+#define	CQSPI_REG_DELAY_TSLCH_MASK		0xFF
-+#define	CQSPI_REG_DELAY_TCHSH_MASK		0xFF
-+#define	CQSPI_REG_DELAY_TSD2D_MASK		0xFF
-+#define	CQSPI_REG_DELAY_TSHSL_MASK		0xFF
-+#define	CQSPI_REG_READCAPTURE			0x10
-+#define	CQSPI_REG_READCAPTURE_BYPASS_LSB	0
-+#define	CQSPI_REG_READCAPTURE_DELAY_LSB		1
-+#define	CQSPI_REG_READCAPTURE_DELAY_MASK	0xF
-+#define	CQSPI_REG_SIZE				0x14
-+#define	CQSPI_REG_SIZE_ADDRESS_LSB		0
-+#define	CQSPI_REG_SIZE_PAGE_LSB			4
-+#define	CQSPI_REG_SIZE_BLOCK_LSB		16
-+#define	CQSPI_REG_SIZE_ADDRESS_MASK		0xF
-+#define	CQSPI_REG_SIZE_PAGE_MASK		0xFFF
-+#define	CQSPI_REG_SIZE_BLOCK_MASK		0x3F
-+#define	CQSPI_REG_SRAMPARTITION			0x18
-+#define	CQSPI_REG_INDIRECTTRIGGER		0x1C
-+#define	CQSPI_REG_DMA				0x20
-+#define	CQSPI_REG_DMA_SINGLE_LSB		0
-+#define	CQSPI_REG_DMA_BURST_LSB			8
-+#define	CQSPI_REG_DMA_SINGLE_MASK		0xFF
-+#define	CQSPI_REG_DMA_BURST_MASK		0xFF
-+#define	CQSPI_REG_REMAP				0x24
-+#define	CQSPI_REG_MODE_BIT			0x28
-+#define	CQSPI_REG_SDRAMLEVEL			0x2C
-+#define	CQSPI_REG_SDRAMLEVEL_RD_LSB		0
-+#define	CQSPI_REG_SDRAMLEVEL_WR_LSB		16
-+#define	CQSPI_REG_SDRAMLEVEL_RD_MASK		0xFFFF
-+#define	CQSPI_REG_SDRAMLEVEL_WR_MASK		0xFFFF
-+
-+#define	CQSPI_REG_IRQSTATUS			0x40
-+#define	CQSPI_REG_IRQMASK			0x44
-+#define	CQSPI_REG_INDIRECTRD			0x60
-+#define	CQSPI_REG_INDIRECTRD_START_MASK		BIT(0)
-+#define	CQSPI_REG_INDIRECTRD_CANCEL_MASK	BIT(1)
-+#define	CQSPI_REG_INDIRECTRD_DONE_MASK		BIT(5)
-+#define	CQSPI_REG_INDIRECTRDWATERMARK		0x64
-+#define	CQSPI_REG_INDIRECTRDSTARTADDR		0x68
-+#define	CQSPI_REG_INDIRECTRDBYTES		0x6C
-+#define CQSPI_INDIRECT_TRIGGER_ADDR_RANGE_REG	0x80
-+#define	CQSPI_REG_CMDCTRL			0x90
-+#define	CQSPI_REG_CMDCTRL_EXECUTE_MASK		BIT(0)
-+#define	CQSPI_REG_CMDCTRL_INPROGRESS_MASK	BIT(1)
-+#define	CQSPI_REG_CMDCTRL_WR_BYTES_LSB		12
-+#define	CQSPI_REG_CMDCTRL_WR_EN_LSB		15
-+#define	CQSPI_REG_CMDCTRL_ADD_BYTES_LSB		16
-+#define	CQSPI_REG_CMDCTRL_ADDR_EN_LSB		19
-+#define	CQSPI_REG_CMDCTRL_RD_BYTES_LSB		20
-+#define	CQSPI_REG_CMDCTRL_RD_EN_LSB		23
-+#define	CQSPI_REG_CMDCTRL_OPCODE_LSB		24
-+#define	CQSPI_REG_CMDCTRL_WR_BYTES_MASK		0x7
-+#define	CQSPI_REG_CMDCTRL_ADD_BYTES_MASK	0x3
-+#define	CQSPI_REG_CMDCTRL_RD_BYTES_MASK		0x7
-+#define	CQSPI_REG_INDIRECTWR			0x70
-+#define	CQSPI_REG_INDIRECTWR_START_MASK		BIT(0)
-+#define	CQSPI_REG_INDIRECTWR_CANCEL_MASK	BIT(1)
-+#define	CQSPI_REG_INDIRECTWR_DONE_MASK		BIT(5)
-+#define	CQSPI_REG_INDIRECTWRWATERMARK		0x74
-+#define	CQSPI_REG_INDIRECTWRSTARTADDR		0x78
-+#define	CQSPI_REG_INDIRECTWRBYTES		0x7C
-+#define	CQSPI_REG_CMDADDRESS			0x94
-+#define	CQSPI_REG_CMDREADDATALOWER		0xA0
-+#define	CQSPI_REG_CMDREADDATAUPPER		0xA4
-+#define	CQSPI_REG_CMDWRITEDATALOWER		0xA8
-+#define	CQSPI_REG_CMDWRITEDATAUPPER		0xAC
-+
-+/* Interrupt status bits */
-+#define CQSPI_REG_IRQ_MODE_ERR			BIT(0)
-+#define CQSPI_REG_IRQ_UNDERFLOW			BIT(1)
-+#define CQSPI_REG_IRQ_IND_COMP			BIT(2)
-+#define CQSPI_REG_IRQ_IND_RD_REJECT		BIT(3)
-+#define CQSPI_REG_IRQ_WR_PROTECTED_ERR		BIT(4)
-+#define CQSPI_REG_IRQ_ILLEGAL_AHB_ERR		BIT(5)
-+#define CQSPI_REG_IRQ_WATERMARK			BIT(6)
-+#define CQSPI_REG_IRQ_IND_RD_OVERFLOW		BIT(12)
-+#define CQSPI_IRQ_STATUS_ERR		(CQSPI_REG_IRQ_MODE_ERR		| \
-+					 CQSPI_REG_IRQ_IND_RD_REJECT	| \
-+					 CQSPI_REG_IRQ_WR_PROTECTED_ERR	| \
-+					 CQSPI_REG_IRQ_ILLEGAL_AHB_ERR)
-+#define CQSPI_IRQ_MASK_RD		(CQSPI_REG_IRQ_MODE_ERR		| \
-+					 CQSPI_REG_IRQ_IND_RD_REJECT	| \
-+					 CQSPI_REG_IRQ_WATERMARK	| \
-+					 CQSPI_REG_IRQ_IND_RD_OVERFLOW	| \
-+					 CQSPI_REG_IRQ_IND_COMP)
-+#define CQSPI_IRQ_MASK_WR		(CQSPI_REG_IRQ_MODE_ERR		| \
-+					 CQSPI_REG_IRQ_WR_PROTECTED_ERR	| \
-+					 CQSPI_REG_IRQ_IND_COMP		| \
-+					 CQSPI_REG_IRQ_WATERMARK	| \
-+					 CQSPI_REG_IRQ_UNDERFLOW)
-+
-+#define CQSPI_IRQ_STATUS_MASK			(0xFFFFFFFF)
-+#define CQSPI_REG_IS_IDLE(base)					\
-+		((readl(base + CQSPI_REG_CONFIG) >>		\
-+			CQSPI_REG_CONFIG_IDLE_LSB) & 0x1)
-+#define CQSPI_CAL_DELAY(tdelay_ns, tref_ns, tsclk_ns)		\
-+		((((tdelay_ns) - (tsclk_ns)) / (tref_ns)))
-+#define CQSPI_GET_RD_SRAM_LEVEL(reg_basse)			\
-+		(((readl(reg_base + CQSPI_REG_SDRAMLEVEL)) >>	\
-+		CQSPI_REG_SDRAMLEVEL_RD_LSB) & CQSPI_REG_SDRAMLEVEL_RD_MASK)
-+
-+struct cqspi_flash_pdata {
-+	u32	page_size;
-+	u32	block_size;
-+	u32	flash_type;
-+	u32	quad;
-+	u32	read_delay;
-+	u32	tshsl_ns;
-+	u32	tsd2d_ns;
-+	u32	tchsh_ns;
-+	u32	tslch_ns;
-+};
-+
-+struct cqspi_platform_data {
-+	u32	bus_num;
-+	u32	num_chipselect;
-+	u32	qspi_ahb_phy;
-+	u32	qspi_ahb_size;
-+	u32	qspi_ahb_mask;
-+	u32	master_ref_clk_hz;
-+	u32	ext_decoder;
-+	u32	fifo_depth;
-+	u32	enable_dma;
-+	u32	tx_dma_peri_id;
-+	u32	rx_dma_peri_id;
-+	u32	trigger_address;
-+	bool	is_decoded_cs;
-+	bool	rclk_en;
-+	struct cqspi_flash_pdata f_pdata[CQSPI_MAX_CHIP_SELECT];
-+};
-+
-+struct struct_cqspi {
-+	struct platform_device	*pdev;
-+
-+	struct clk		*clk;
-+	struct clk		*fpi_clk;
-+
-+	struct reset_control	*reset;
-+	struct completion	transfer_complete;
-+	struct workqueue_struct	*workqueue;
-+	wait_queue_head_t	waitqueue;
-+	/* mutex lock for synchronization */
-+	struct mutex		lock;
-+
-+	void __iomem		*iobase;
-+	void __iomem		*qspi_ahb_virt;
-+	struct resource		*res;
-+	struct resource		*res_ahb;
-+	resource_size_t		ahb_size;
-+
-+	struct dma_chan		*rx_chan;
-+	struct completion       rx_dma_complete;
-+	dma_addr_t		mmap_phys_base;
-+	int			dma_done;
-+	u32			trigger_address;
-+	u32			wr_delay;
-+	u32			irq_status;
-+	int			current_cs;
-+	int			irq;
-+	bool			dac_mode;
-+};
-+
-+struct spi_mem_op_cadence {
-+	const void	*tx_buf;
-+	void		*rx_buf;
-+	u32		len;
-+	u32		tx_nbits:3;
-+	u32		rx_nbits:3;
-+};
-+
-+#endif /* __CADENCE_QSPI__H__ */
+diff --git a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
+index 212b117a8ffb..bc7151d639d7 100644
+--- a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
+@@ -1,352 +1,352 @@
+ [
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Frontend_Bound"
++        "MetricName": "Frontend_Bound",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound."
+     },
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Frontend_Bound_SMT"
++        "MetricName": "Frontend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Bad_Speculation"
++        "MetricName": "Bad_Speculation",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Bad_Speculation_SMT"
++        "MetricName": "Bad_Speculation_SMT",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Backend_Bound"
++        "MetricName": "Backend_Bound",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Backend_Bound_SMT"
++        "MetricName": "Backend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. ",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Retiring"
++        "MetricName": "Retiring",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. "
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Retiring_SMT"
++        "MetricName": "Retiring_SMT",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
++        "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+         "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Instructions Per Cycle (per logical thread)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "IPC"
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
+         "BriefDescription": "Uops Per Instruction",
+-        "MetricGroup": "Pipeline;Retiring",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
++        "MetricGroup": "Pipeline;Retire",
+         "MetricName": "UPI"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Instruction per taken branch",
+-        "MetricGroup": "Branches;PGO",
++        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
++        "MetricGroup": "Branches;Fetch_BW;PGO",
+         "MetricName": "IpTB"
+     },
+     {
+-        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Branch instructions per taken branch. ",
++        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "MetricGroup": "Branches;PGO",
+         "MetricName": "BpTB"
+     },
+     {
+-        "MetricExpr": "min( 1 , IDQ.MITE_UOPS / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 16 * ( ICACHE.HIT + ICACHE.MISSES ) / 4.0 ) )",
+         "BriefDescription": "Rough Estimation of fraction of fetched lines bytes that were likely (includes speculatively fetches) consumed by program instructions",
+-        "MetricGroup": "PGO",
++        "MetricExpr": "min( 1 , IDQ.MITE_UOPS / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 16 * ( ICACHE.HIT + ICACHE.MISSES ) / 4.0 ) )",
++        "MetricGroup": "PGO;IcMiss",
+         "MetricName": "IFetch_Line_Utilization"
+     },
+     {
+-        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
+         "BriefDescription": "Fraction of Uops delivered by the DSB (aka Decoded ICache; or Uop Cache)",
+-        "MetricGroup": "DSB;Frontend_Bandwidth",
++        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
++        "MetricGroup": "DSB;Fetch_BW",
+         "MetricName": "DSB_Coverage"
+     },
+     {
++        "BriefDescription": "Cycles Per Instruction (per Logical Processor)",
+         "MetricExpr": "1 / (INST_RETIRED.ANY / cycles)",
+-        "BriefDescription": "Cycles Per Instruction (threaded)",
+         "MetricGroup": "Pipeline;Summary",
+         "MetricName": "CPI"
+     },
+     {
++        "BriefDescription": "Per-Logical Processor actual clocks when the Logical Processor is active.",
+         "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Per-thread actual clocks when the logical processor is active.",
+         "MetricGroup": "Summary",
+         "MetricName": "CLKS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * cycles",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "SLOTS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1_SMT",
+         "MetricName": "SLOTS_SMT"
+     },
+     {
++        "BriefDescription": "Instructions per Load (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_UOPS_RETIRED.ALL_LOADS",
+-        "BriefDescription": "Instructions per Load (lower number means loads are more frequent)",
+-        "MetricGroup": "Instruction_Type;L1_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpL"
+     },
+     {
++        "BriefDescription": "Instructions per Store (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_UOPS_RETIRED.ALL_STORES",
+-        "BriefDescription": "Instructions per Store",
+-        "MetricGroup": "Instruction_Type;Store_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpS"
+     },
+     {
++        "BriefDescription": "Instructions per Branch (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Instructions per Branch",
+-        "MetricGroup": "Branches;Instruction_Type;Port_5;Port_6",
++        "MetricGroup": "Branches;Instruction_Type",
+         "MetricName": "IpB"
+     },
+     {
++        "BriefDescription": "Instruction per (near) call (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_CALL",
+-        "BriefDescription": "Instruction per (near) call",
+         "MetricGroup": "Branches",
+         "MetricName": "IpCall"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY",
+         "BriefDescription": "Total number of retired Instructions",
++        "MetricExpr": "INST_RETIRED.ANY",
+         "MetricGroup": "Summary",
+         "MetricName": "Instructions"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC_SMT"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / cycles",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / cycles",
+         "MetricGroup": "FLOPS",
+         "MetricName": "FLOPc"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "FLOPS_SMT",
+         "MetricName": "FLOPc_SMT"
+     },
+     {
+-        "MetricExpr": "UOPS_EXECUTED.THREAD / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else UOPS_EXECUTED.CYCLES_GE_1_UOP_EXEC)",
+         "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
+-        "MetricGroup": "Pipeline;Ports_Utilization",
++        "MetricExpr": "UOPS_EXECUTED.THREAD / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else UOPS_EXECUTED.CYCLES_GE_1_UOP_EXEC)",
++        "MetricGroup": "Pipeline",
+         "MetricName": "ILP"
+     },
+     {
++        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per non-speculative branch misprediction (jeclear)",
+         "MetricExpr": "( ((BR_MISP_RETIRED.ALL_BRANCHES / ( BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT )) * (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles))) + (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * cycles)) * (12 * ( BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT + BACLEARS.ANY ) / cycles) / (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * cycles)) ) * (4 * cycles) / BR_MISP_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per branch misprediction (jeclear and baclear)",
+-        "MetricGroup": "Branch_Mispredicts",
++        "MetricGroup": "BrMispredicts",
+         "MetricName": "Branch_Misprediction_Cost"
+     },
+     {
++        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per non-speculative branch misprediction (jeclear)",
+         "MetricExpr": "( ((BR_MISP_RETIRED.ALL_BRANCHES / ( BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT )) * (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))))) + (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) * (12 * ( BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT + BACLEARS.ANY ) / cycles) / (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) ) * (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) / BR_MISP_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per branch misprediction (jeclear and baclear)",
+-        "MetricGroup": "Branch_Mispredicts_SMT",
++        "MetricGroup": "BrMispredicts_SMT",
+         "MetricName": "Branch_Misprediction_Cost_SMT"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
+         "BriefDescription": "Number of Instructions per non-speculative Branch Misprediction (JEClear)",
+-        "MetricGroup": "Branch_Mispredicts",
++        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
++        "MetricGroup": "BrMispredicts",
+         "MetricName": "IpMispredict"
+     },
+     {
++        "BriefDescription": "Core actual clocks when any Logical Processor is active on the Physical Core",
+         "MetricExpr": "( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )",
+-        "BriefDescription": "Core actual clocks when any thread is active on the physical core",
+         "MetricGroup": "SMT",
+         "MetricName": "CORE_CLKS"
+     },
+     {
+-        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_UOPS_RETIRED.L1_MISS + mem_load_uops_retired.hit_lfb )",
+         "BriefDescription": "Actual Average Latency for L1 data-cache miss demand loads (in core cycles)",
++        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_UOPS_RETIRED.L1_MISS + mem_load_uops_retired.hit_lfb )",
+         "MetricGroup": "Memory_Bound;Memory_Lat",
+         "MetricName": "Load_Miss_Real_Latency"
+     },
+     {
++        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-Logical Processor)",
+         "MetricExpr": "L1D_PEND_MISS.PENDING / L1D_PEND_MISS.PENDING_CYCLES",
+-        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-thread)",
+         "MetricGroup": "Memory_Bound;Memory_BW",
+         "MetricName": "MLP"
+     },
+     {
+-        "MetricExpr": "( cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=1@ + cpu@DTLB_LOAD_MISSES.WALK_DURATION\\,cmask\\=1@ + cpu@DTLB_STORE_MISSES.WALK_DURATION\\,cmask\\=1@ + 7 * ( DTLB_STORE_MISSES.WALK_COMPLETED + DTLB_LOAD_MISSES.WALK_COMPLETED + ITLB_MISSES.WALK_COMPLETED ) ) / cycles",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=1@ + cpu@DTLB_LOAD_MISSES.WALK_DURATION\\,cmask\\=1@ + cpu@DTLB_STORE_MISSES.WALK_DURATION\\,cmask\\=1@ + 7 * ( DTLB_STORE_MISSES.WALK_COMPLETED + DTLB_LOAD_MISSES.WALK_COMPLETED + ITLB_MISSES.WALK_COMPLETED ) ) / cycles",
+         "MetricGroup": "TLB",
+         "MetricName": "Page_Walks_Utilization"
+     },
+     {
+-        "MetricExpr": "( cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=1@ + cpu@DTLB_LOAD_MISSES.WALK_DURATION\\,cmask\\=1@ + cpu@DTLB_STORE_MISSES.WALK_DURATION\\,cmask\\=1@ + 7 * ( DTLB_STORE_MISSES.WALK_COMPLETED + DTLB_LOAD_MISSES.WALK_COMPLETED + ITLB_MISSES.WALK_COMPLETED ) ) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=1@ + cpu@DTLB_LOAD_MISSES.WALK_DURATION\\,cmask\\=1@ + cpu@DTLB_STORE_MISSES.WALK_DURATION\\,cmask\\=1@ + 7 * ( DTLB_STORE_MISSES.WALK_COMPLETED + DTLB_LOAD_MISSES.WALK_COMPLETED + ITLB_MISSES.WALK_COMPLETED ) ) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "TLB_SMT",
+         "MetricName": "Page_Walks_Utilization_SMT"
+     },
+     {
+-        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L1 data cache [GB / sec]",
++        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L1D_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L2 cache [GB / sec]",
++        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L2_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
++        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L3_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L1_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L1 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L1_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L1MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * L2_RQSTS.MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache misses per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * L2_RQSTS.MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * ( L2_RQSTS.REFERENCES - L2_RQSTS.MISS ) / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache hits per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * ( L2_RQSTS.REFERENCES - L2_RQSTS.MISS ) / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2HPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L3_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L3 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L3_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L3MPKI"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "BriefDescription": "Average CPU Utilization",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "MetricGroup": "Summary",
+         "MetricName": "CPU_Utilization"
+     },
+     {
+-        "MetricExpr": "( (( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "BriefDescription": "Giga Floating Point Operations Per Second",
++        "MetricExpr": "( (( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "MetricGroup": "FLOPS;Summary",
+         "MetricName": "GFLOPs"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Average Frequency Utilization relative nominal frequency",
++        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Power",
+         "MetricName": "Turbo_Utilization"
+     },
+     {
++        "BriefDescription": "Fraction of cycles where both hardware Logical Processors were active",
+         "MetricExpr": "1 - CPU_CLK_THREAD_UNHALTED.ONE_THREAD_ACTIVE / ( CPU_CLK_THREAD_UNHALTED.REF_XCLK_ANY / 2 ) if #SMT_on else 0",
+-        "BriefDescription": "Fraction of cycles where both hardware threads were active",
+         "MetricGroup": "SMT;Summary",
+         "MetricName": "SMT_2T_Utilization"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+     {
+-        "MetricExpr": "64 * ( arb@event\\=0x81\\,umask\\=0x1@ + arb@event\\=0x84\\,umask\\=0x1@ ) / 1000000 / duration_time / 1000",
+         "BriefDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]",
++        "MetricExpr": "64 * ( arb@event\\=0x81\\,umask\\=0x1@ + arb@event\\=0x84\\,umask\\=0x1@ ) / 1000000 / duration_time / 1000",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_BW_Use"
+     },
+     {
++        "BriefDescription": "C3 residency percent per core",
+         "MetricExpr": "(cstate_core@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per core",
+         "MetricName": "C3_Core_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per core",
+         "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per core",
+         "MetricName": "C6_Core_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per core",
+         "MetricExpr": "(cstate_core@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per core",
+         "MetricName": "C7_Core_Residency"
+     },
+     {
++        "BriefDescription": "C2 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C2 residency percent per package",
+         "MetricName": "C2_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C3 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per package",
+         "MetricName": "C3_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per package",
+         "MetricName": "C6_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per package",
+         "MetricName": "C7_Pkg_Residency"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
+index c6f9762f32c0..113d19e92678 100644
+--- a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
+@@ -1,370 +1,370 @@
+ [
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Frontend_Bound"
++        "MetricName": "Frontend_Bound",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound."
+     },
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Frontend_Bound_SMT"
++        "MetricName": "Frontend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Bad_Speculation"
++        "MetricName": "Bad_Speculation",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Bad_Speculation_SMT"
++        "MetricName": "Bad_Speculation_SMT",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Backend_Bound"
++        "MetricName": "Backend_Bound",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Backend_Bound_SMT"
++        "MetricName": "Backend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. ",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Retiring"
++        "MetricName": "Retiring",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. "
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Retiring_SMT"
++        "MetricName": "Retiring_SMT",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
++        "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+         "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Instructions Per Cycle (per logical thread)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "IPC"
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
+         "BriefDescription": "Uops Per Instruction",
+-        "MetricGroup": "Pipeline;Retiring",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
++        "MetricGroup": "Pipeline;Retire",
+         "MetricName": "UPI"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Instruction per taken branch",
+-        "MetricGroup": "Branches;PGO",
++        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
++        "MetricGroup": "Branches;Fetch_BW;PGO",
+         "MetricName": "IpTB"
+     },
+     {
+-        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Branch instructions per taken branch. ",
++        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "MetricGroup": "Branches;PGO",
+         "MetricName": "BpTB"
+     },
+     {
+-        "MetricExpr": "min( 1 , IDQ.MITE_UOPS / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 16 * ( ICACHE.HIT + ICACHE.MISSES ) / 4.0 ) )",
+         "BriefDescription": "Rough Estimation of fraction of fetched lines bytes that were likely (includes speculatively fetches) consumed by program instructions",
+-        "MetricGroup": "PGO",
++        "MetricExpr": "min( 1 , IDQ.MITE_UOPS / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 16 * ( ICACHE.HIT + ICACHE.MISSES ) / 4.0 ) )",
++        "MetricGroup": "PGO;IcMiss",
+         "MetricName": "IFetch_Line_Utilization"
+     },
+     {
+-        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
+         "BriefDescription": "Fraction of Uops delivered by the DSB (aka Decoded ICache; or Uop Cache)",
+-        "MetricGroup": "DSB;Frontend_Bandwidth",
++        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
++        "MetricGroup": "DSB;Fetch_BW",
+         "MetricName": "DSB_Coverage"
+     },
+     {
++        "BriefDescription": "Cycles Per Instruction (per Logical Processor)",
+         "MetricExpr": "1 / (INST_RETIRED.ANY / cycles)",
+-        "BriefDescription": "Cycles Per Instruction (threaded)",
+         "MetricGroup": "Pipeline;Summary",
+         "MetricName": "CPI"
+     },
+     {
++        "BriefDescription": "Per-Logical Processor actual clocks when the Logical Processor is active.",
+         "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Per-thread actual clocks when the logical processor is active.",
+         "MetricGroup": "Summary",
+         "MetricName": "CLKS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * cycles",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "SLOTS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1_SMT",
+         "MetricName": "SLOTS_SMT"
+     },
+     {
++        "BriefDescription": "Instructions per Load (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_UOPS_RETIRED.ALL_LOADS",
+-        "BriefDescription": "Instructions per Load (lower number means loads are more frequent)",
+-        "MetricGroup": "Instruction_Type;L1_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpL"
+     },
+     {
++        "BriefDescription": "Instructions per Store (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_UOPS_RETIRED.ALL_STORES",
+-        "BriefDescription": "Instructions per Store",
+-        "MetricGroup": "Instruction_Type;Store_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpS"
+     },
+     {
++        "BriefDescription": "Instructions per Branch (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Instructions per Branch",
+-        "MetricGroup": "Branches;Instruction_Type;Port_5;Port_6",
++        "MetricGroup": "Branches;Instruction_Type",
+         "MetricName": "IpB"
+     },
+     {
++        "BriefDescription": "Instruction per (near) call (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_CALL",
+-        "BriefDescription": "Instruction per (near) call",
+         "MetricGroup": "Branches",
+         "MetricName": "IpCall"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY",
+         "BriefDescription": "Total number of retired Instructions",
++        "MetricExpr": "INST_RETIRED.ANY",
+         "MetricGroup": "Summary",
+         "MetricName": "Instructions"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC_SMT"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / cycles",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / cycles",
+         "MetricGroup": "FLOPS",
+         "MetricName": "FLOPc"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "FLOPS_SMT",
+         "MetricName": "FLOPc_SMT"
+     },
+     {
+-        "MetricExpr": "UOPS_EXECUTED.THREAD / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else UOPS_EXECUTED.CYCLES_GE_1_UOP_EXEC)",
+         "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
+-        "MetricGroup": "Pipeline;Ports_Utilization",
++        "MetricExpr": "UOPS_EXECUTED.THREAD / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else UOPS_EXECUTED.CYCLES_GE_1_UOP_EXEC)",
++        "MetricGroup": "Pipeline",
+         "MetricName": "ILP"
+     },
+     {
++        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per non-speculative branch misprediction (jeclear)",
+         "MetricExpr": "( ((BR_MISP_RETIRED.ALL_BRANCHES / ( BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT )) * (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles))) + (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * cycles)) * (12 * ( BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT + BACLEARS.ANY ) / cycles) / (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * cycles)) ) * (4 * cycles) / BR_MISP_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per branch misprediction (jeclear and baclear)",
+-        "MetricGroup": "Branch_Mispredicts",
++        "MetricGroup": "BrMispredicts",
+         "MetricName": "Branch_Misprediction_Cost"
+     },
+     {
++        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per non-speculative branch misprediction (jeclear)",
+         "MetricExpr": "( ((BR_MISP_RETIRED.ALL_BRANCHES / ( BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT )) * (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))))) + (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) * (12 * ( BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT + BACLEARS.ANY ) / cycles) / (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) ) * (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) / BR_MISP_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per branch misprediction (jeclear and baclear)",
+-        "MetricGroup": "Branch_Mispredicts_SMT",
++        "MetricGroup": "BrMispredicts_SMT",
+         "MetricName": "Branch_Misprediction_Cost_SMT"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
+         "BriefDescription": "Number of Instructions per non-speculative Branch Misprediction (JEClear)",
+-        "MetricGroup": "Branch_Mispredicts",
++        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
++        "MetricGroup": "BrMispredicts",
+         "MetricName": "IpMispredict"
+     },
+     {
++        "BriefDescription": "Core actual clocks when any Logical Processor is active on the Physical Core",
+         "MetricExpr": "( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )",
+-        "BriefDescription": "Core actual clocks when any thread is active on the physical core",
+         "MetricGroup": "SMT",
+         "MetricName": "CORE_CLKS"
+     },
+     {
+-        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_UOPS_RETIRED.L1_MISS + mem_load_uops_retired.hit_lfb )",
+         "BriefDescription": "Actual Average Latency for L1 data-cache miss demand loads (in core cycles)",
++        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_UOPS_RETIRED.L1_MISS + mem_load_uops_retired.hit_lfb )",
+         "MetricGroup": "Memory_Bound;Memory_Lat",
+         "MetricName": "Load_Miss_Real_Latency"
+     },
+     {
++        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-Logical Processor)",
+         "MetricExpr": "L1D_PEND_MISS.PENDING / L1D_PEND_MISS.PENDING_CYCLES",
+-        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-thread)",
+         "MetricGroup": "Memory_Bound;Memory_BW",
+         "MetricName": "MLP"
+     },
+     {
+-        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION + 7 * ( DTLB_STORE_MISSES.WALK_COMPLETED + DTLB_LOAD_MISSES.WALK_COMPLETED + ITLB_MISSES.WALK_COMPLETED ) ) / ( 2 * cycles )",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION + 7 * ( DTLB_STORE_MISSES.WALK_COMPLETED + DTLB_LOAD_MISSES.WALK_COMPLETED + ITLB_MISSES.WALK_COMPLETED ) ) / ( 2 * cycles )",
+         "MetricGroup": "TLB",
+         "MetricName": "Page_Walks_Utilization"
+     },
+     {
+-        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION + 7 * ( DTLB_STORE_MISSES.WALK_COMPLETED + DTLB_LOAD_MISSES.WALK_COMPLETED + ITLB_MISSES.WALK_COMPLETED ) ) / ( 2 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )) )",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION + 7 * ( DTLB_STORE_MISSES.WALK_COMPLETED + DTLB_LOAD_MISSES.WALK_COMPLETED + ITLB_MISSES.WALK_COMPLETED ) ) / ( 2 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )) )",
+         "MetricGroup": "TLB_SMT",
+         "MetricName": "Page_Walks_Utilization_SMT"
+     },
+     {
+-        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L1 data cache [GB / sec]",
++        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L1D_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L2 cache [GB / sec]",
++        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L2_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
++        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L3_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L1_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L1 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L1_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L1MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * L2_RQSTS.MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache misses per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * L2_RQSTS.MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * ( L2_RQSTS.REFERENCES - L2_RQSTS.MISS ) / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache hits per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * ( L2_RQSTS.REFERENCES - L2_RQSTS.MISS ) / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2HPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L3_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L3 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L3_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L3MPKI"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "BriefDescription": "Average CPU Utilization",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "MetricGroup": "Summary",
+         "MetricName": "CPU_Utilization"
+     },
+     {
+-        "MetricExpr": "( (( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "BriefDescription": "Giga Floating Point Operations Per Second",
++        "MetricExpr": "( (( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "MetricGroup": "FLOPS;Summary",
+         "MetricName": "GFLOPs"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Average Frequency Utilization relative nominal frequency",
++        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Power",
+         "MetricName": "Turbo_Utilization"
+     },
+     {
++        "BriefDescription": "Fraction of cycles where both hardware Logical Processors were active",
+         "MetricExpr": "1 - CPU_CLK_THREAD_UNHALTED.ONE_THREAD_ACTIVE / ( CPU_CLK_THREAD_UNHALTED.REF_XCLK_ANY / 2 ) if #SMT_on else 0",
+-        "BriefDescription": "Fraction of cycles where both hardware threads were active",
+         "MetricGroup": "SMT;Summary",
+         "MetricName": "SMT_2T_Utilization"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+     {
+-        "MetricExpr": "( 64 * ( uncore_imc@cas_count_read@ + uncore_imc@cas_count_write@ ) / 1000000000 ) / duration_time",
+         "BriefDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]",
++        "MetricExpr": "( 64 * ( uncore_imc@cas_count_read@ + uncore_imc@cas_count_write@ ) / 1000000000 ) / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_BW_Use"
+     },
+     {
+-        "MetricExpr": "1000000000 * ( cbox@event\\=0x36\\,umask\\=0x3\\,filter_opc\\=0x182@ / cbox@event\\=0x35\\,umask\\=0x3\\,filter_opc\\=0x182@ ) / ( cbox_0@event\\=0x0@ / duration_time )",
+         "BriefDescription": "Average latency of data read request to external memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetches",
++        "MetricExpr": "1000000000 * ( cbox@event\\=0x36\\,umask\\=0x3\\,filter_opc\\=0x182@ / cbox@event\\=0x35\\,umask\\=0x3\\,filter_opc\\=0x182@ ) / ( cbox_0@event\\=0x0@ / duration_time )",
+         "MetricGroup": "Memory_Lat",
+         "MetricName": "DRAM_Read_Latency"
+     },
+     {
+-        "MetricExpr": "cbox@event\\=0x36\\,umask\\=0x3\\,filter_opc\\=0x182@ / cbox@event\\=0x36\\,umask\\=0x3\\,filter_opc\\=0x182\\,thresh\\=1@",
+         "BriefDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches",
++        "MetricExpr": "cbox@event\\=0x36\\,umask\\=0x3\\,filter_opc\\=0x182@ / cbox@event\\=0x36\\,umask\\=0x3\\,filter_opc\\=0x182\\,thresh\\=1@",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_Parallel_Reads"
+     },
+     {
+-        "MetricExpr": "cbox_0@event\\=0x0@",
+         "BriefDescription": "Socket actual clocks when any core is active on that socket",
++        "MetricExpr": "cbox_0@event\\=0x0@",
+         "MetricGroup": "",
+         "MetricName": "Socket_CLKS"
+     },
+     {
++        "BriefDescription": "C3 residency percent per core",
+         "MetricExpr": "(cstate_core@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per core",
+         "MetricName": "C3_Core_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per core",
+         "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per core",
+         "MetricName": "C6_Core_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per core",
+         "MetricExpr": "(cstate_core@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per core",
+         "MetricName": "C7_Core_Residency"
+     },
+     {
++        "BriefDescription": "C2 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C2 residency percent per package",
+         "MetricName": "C2_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C3 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per package",
+         "MetricName": "C3_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per package",
+         "MetricName": "C6_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per package",
+         "MetricName": "C7_Pkg_Residency"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
+index a382b115633d..2ba32af9bc36 100644
+--- a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
+@@ -1,394 +1,412 @@
+ [
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Frontend_Bound"
++        "MetricName": "Frontend_Bound",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound."
+     },
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Frontend_Bound_SMT"
++        "MetricName": "Frontend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Bad_Speculation"
++        "MetricName": "Bad_Speculation",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Bad_Speculation_SMT"
++        "MetricName": "Bad_Speculation_SMT",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Backend_Bound"
++        "MetricName": "Backend_Bound",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Backend_Bound_SMT"
++        "MetricName": "Backend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. ",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Retiring"
++        "MetricName": "Retiring",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. "
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Retiring_SMT"
++        "MetricName": "Retiring_SMT",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
++        "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+         "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Instructions Per Cycle (per logical thread)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "IPC"
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
+         "BriefDescription": "Uops Per Instruction",
+-        "MetricGroup": "Pipeline;Retiring",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
++        "MetricGroup": "Pipeline;Retire",
+         "MetricName": "UPI"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Instruction per taken branch",
+-        "MetricGroup": "Branches;PGO",
++        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
++        "MetricGroup": "Branches;Fetch_BW;PGO",
+         "MetricName": "IpTB"
+     },
+     {
+-        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Branch instructions per taken branch. ",
++        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "MetricGroup": "Branches;PGO",
+         "MetricName": "BpTB"
+     },
+     {
+-        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 64 * ( ICACHE_64B.IFTAG_HIT + ICACHE_64B.IFTAG_MISS ) / 4.1 ) )",
+         "BriefDescription": "Rough Estimation of fraction of fetched lines bytes that were likely (includes speculatively fetches) consumed by program instructions",
+-        "MetricGroup": "PGO",
++        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 64 * ( ICACHE_64B.IFTAG_HIT + ICACHE_64B.IFTAG_MISS ) / 4.1 ) )",
++        "MetricGroup": "PGO;IcMiss",
+         "MetricName": "IFetch_Line_Utilization"
+     },
+     {
+-        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ))",
+         "BriefDescription": "Fraction of Uops delivered by the DSB (aka Decoded ICache; or Uop Cache)",
+-        "MetricGroup": "DSB;Frontend_Bandwidth",
++        "MetricExpr": "IDQ.DSB_UOPS / (IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS)",
++        "MetricGroup": "DSB;Fetch_BW",
+         "MetricName": "DSB_Coverage"
+     },
+     {
++        "BriefDescription": "Cycles Per Instruction (per Logical Processor)",
+         "MetricExpr": "1 / (INST_RETIRED.ANY / cycles)",
+-        "BriefDescription": "Cycles Per Instruction (threaded)",
+         "MetricGroup": "Pipeline;Summary",
+         "MetricName": "CPI"
+     },
+     {
++        "BriefDescription": "Per-Logical Processor actual clocks when the Logical Processor is active.",
+         "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Per-thread actual clocks when the logical processor is active.",
+         "MetricGroup": "Summary",
+         "MetricName": "CLKS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * cycles",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "SLOTS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1_SMT",
+         "MetricName": "SLOTS_SMT"
+     },
+     {
++        "BriefDescription": "Instructions per Load (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_INST_RETIRED.ALL_LOADS",
+-        "BriefDescription": "Instructions per Load (lower number means loads are more frequent)",
+-        "MetricGroup": "Instruction_Type;L1_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpL"
+     },
+     {
++        "BriefDescription": "Instructions per Store (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_INST_RETIRED.ALL_STORES",
+-        "BriefDescription": "Instructions per Store",
+-        "MetricGroup": "Instruction_Type;Store_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpS"
+     },
+     {
++        "BriefDescription": "Instructions per Branch (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Instructions per Branch",
+-        "MetricGroup": "Branches;Instruction_Type;Port_5;Port_6",
++        "MetricGroup": "Branches;Instruction_Type",
+         "MetricName": "IpB"
+     },
+     {
++        "BriefDescription": "Instruction per (near) call (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_CALL",
+-        "BriefDescription": "Instruction per (near) call",
+         "MetricGroup": "Branches",
+         "MetricName": "IpCall"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY",
+         "BriefDescription": "Total number of retired Instructions",
++        "MetricExpr": "INST_RETIRED.ANY",
+         "MetricGroup": "Summary",
+         "MetricName": "Instructions"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC_SMT"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16 * FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE )) / cycles",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16 * FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE )) / cycles",
+         "MetricGroup": "FLOPS",
+         "MetricName": "FLOPc"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16 * FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16 * FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "FLOPS_SMT",
+         "MetricName": "FLOPc_SMT"
+     },
+     {
+-        "MetricExpr": "UOPS_EXECUTED.THREAD / (( UOPS_EXECUTED.CORE_CYCLES_GE_1 / 2 ) if #SMT_on else UOPS_EXECUTED.CORE_CYCLES_GE_1)",
+         "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
+-        "MetricGroup": "Pipeline;Ports_Utilization",
++        "MetricExpr": "UOPS_EXECUTED.THREAD / (( UOPS_EXECUTED.CORE_CYCLES_GE_1 / 2 ) if #SMT_on else UOPS_EXECUTED.CORE_CYCLES_GE_1)",
++        "MetricGroup": "Pipeline",
+         "MetricName": "ILP"
+     },
+     {
++        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per non-speculative branch misprediction (jeclear)",
+         "MetricExpr": "( ((BR_MISP_RETIRED.ALL_BRANCHES / ( BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT )) * (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles))) + (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * cycles)) * (( INT_MISC.CLEAR_RESTEER_CYCLES + 9 * BACLEARS.ANY ) / cycles) / (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * cycles)) ) * (4 * cycles) / BR_MISP_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per branch misprediction (jeclear and baclear)",
+-        "MetricGroup": "Branch_Mispredicts",
++        "MetricGroup": "BrMispredicts",
+         "MetricName": "Branch_Misprediction_Cost"
+     },
+     {
++        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per non-speculative branch misprediction (jeclear)",
+         "MetricExpr": "( ((BR_MISP_RETIRED.ALL_BRANCHES / ( BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT )) * (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))))) + (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) * (( INT_MISC.CLEAR_RESTEER_CYCLES + 9 * BACLEARS.ANY ) / cycles) / (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) ) * (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) / BR_MISP_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per branch misprediction (jeclear and baclear)",
+-        "MetricGroup": "Branch_Mispredicts_SMT",
++        "MetricGroup": "BrMispredicts_SMT",
+         "MetricName": "Branch_Misprediction_Cost_SMT"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
+         "BriefDescription": "Number of Instructions per non-speculative Branch Misprediction (JEClear)",
+-        "MetricGroup": "Branch_Mispredicts",
++        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
++        "MetricGroup": "BrMispredicts",
+         "MetricName": "IpMispredict"
+     },
+     {
++        "BriefDescription": "Core actual clocks when any Logical Processor is active on the Physical Core",
+         "MetricExpr": "( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )",
+-        "BriefDescription": "Core actual clocks when any thread is active on the physical core",
+         "MetricGroup": "SMT",
+         "MetricName": "CORE_CLKS"
+     },
+     {
+-        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MISS + MEM_LOAD_RETIRED.FB_HIT )",
+         "BriefDescription": "Actual Average Latency for L1 data-cache miss demand loads (in core cycles)",
++        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MISS + MEM_LOAD_RETIRED.FB_HIT )",
+         "MetricGroup": "Memory_Bound;Memory_Lat",
+         "MetricName": "Load_Miss_Real_Latency"
+     },
+     {
++        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-Logical Processor)",
+         "MetricExpr": "L1D_PEND_MISS.PENDING / L1D_PEND_MISS.PENDING_CYCLES",
+-        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-thread)",
+         "MetricGroup": "Memory_Bound;Memory_BW",
+         "MetricName": "MLP"
+     },
+     {
+-        "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * cycles )",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * cycles )",
+         "MetricGroup": "TLB",
+         "MetricName": "Page_Walks_Utilization"
+     },
+     {
+-        "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )) )",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )) )",
+         "MetricGroup": "TLB_SMT",
+         "MetricName": "Page_Walks_Utilization_SMT"
+     },
+     {
+-        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L1 data cache [GB / sec]",
++        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L1D_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L2 cache [GB / sec]",
++        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L2_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
++        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L3_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / duration_time",
+         "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
++        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L3_Cache_Access_BW"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L1_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L1 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L1_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L1MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * L2_RQSTS.MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache misses per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * L2_RQSTS.MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * ( L2_RQSTS.REFERENCES - L2_RQSTS.MISS ) / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache hits per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * ( L2_RQSTS.REFERENCES - L2_RQSTS.MISS ) / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2HPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L3_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L3 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L3_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L3MPKI"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
++        "BriefDescription": "Rate of silent evictions from the L2 cache per Kilo instruction where the evicted lines are dropped (no writeback to L3 or memory)",
++        "MetricExpr": "1000 * L2_LINES_OUT.SILENT / INST_RETIRED.ANY",
++        "MetricGroup": "",
++        "MetricName": "L2_Evictions_Silent_PKI"
++    },
++    {
++        "BriefDescription": "Rate of non silent evictions from the L2 cache per Kilo instruction",
++        "MetricExpr": "1000 * L2_LINES_OUT.NON_SILENT / INST_RETIRED.ANY",
++        "MetricGroup": "",
++        "MetricName": "L2_Evictions_NonSilent_PKI"
++    },
++    {
+         "BriefDescription": "Average CPU Utilization",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "MetricGroup": "Summary",
+         "MetricName": "CPU_Utilization"
+     },
+     {
+-        "MetricExpr": "( (( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16 * FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "BriefDescription": "Giga Floating Point Operations Per Second",
++        "MetricExpr": "( (( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16 * FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "MetricGroup": "FLOPS;Summary",
+         "MetricName": "GFLOPs"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Average Frequency Utilization relative nominal frequency",
++        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Power",
+         "MetricName": "Turbo_Utilization"
+     },
+     {
++        "BriefDescription": "Fraction of cycles where both hardware Logical Processors were active",
+         "MetricExpr": "1 - CPU_CLK_THREAD_UNHALTED.ONE_THREAD_ACTIVE / ( CPU_CLK_THREAD_UNHALTED.REF_XCLK_ANY / 2 ) if #SMT_on else 0",
+-        "BriefDescription": "Fraction of cycles where both hardware threads were active",
+         "MetricGroup": "SMT;Summary",
+         "MetricName": "SMT_2T_Utilization"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+     {
+-        "MetricExpr": "( 64 * ( uncore_imc@cas_count_read@ + uncore_imc@cas_count_write@ ) / 1000000000 ) / duration_time",
+         "BriefDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]",
++        "MetricExpr": "( 64 * ( uncore_imc@cas_count_read@ + uncore_imc@cas_count_write@ ) / 1000000000 ) / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_BW_Use"
+     },
+     {
+-	"MetricExpr": "1000000000 * ( cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,config\\=0x40433@ / cha@event\\=0x35\\\\\\,umask\\=0x21\\\\\\,config\\=0x40433@ ) / ( cha_0@event\\=0x0@ / duration_time )",
+         "BriefDescription": "Average latency of data read request to external memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetches",
++        "MetricExpr": "1000000000 * ( cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x35\\\\\\,umask\\=0x21@ ) / ( cha_0@event\\=0x0@ / duration_time )",
+         "MetricGroup": "Memory_Lat",
+         "MetricName": "DRAM_Read_Latency"
+     },
+     {
+-	"MetricExpr": "cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,config\\=0x40433@ / cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,thresh\\=1\\\\\\,config\\=0x40433@",
+         "BriefDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches",
++        "MetricExpr": "cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,thresh\\=1@",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_Parallel_Reads"
+     },
+     {
+-        "MetricExpr": "( 1000000000 * ( imc@event\\=0xe0\\\\\\,umask\\=0x1@ / imc@event\\=0xe3@ ) / imc_0@event\\=0x0@ ) if 1 if 1 == 1 else 0 else 0",
+         "BriefDescription": "Average latency of data read request to external 3D X-Point memory [in nanoseconds]. Accounts for demand loads and L1/L2 data-read prefetches",
++        "MetricExpr": "( 1000000000 * ( imc@event\\=0xe0\\\\\\,umask\\=0x1@ / imc@event\\=0xe3@ ) / imc_0@event\\=0x0@ ) if 1 if 0 == 1 else 0 else 0",
+         "MetricGroup": "Memory_Lat",
+         "MetricName": "MEM_PMM_Read_Latency"
+     },
+     {
+-        "MetricExpr": "( ( 64 * imc@event\\=0xe3@ / 1000000000 ) / duration_time ) if 1 if 1 == 1 else 0 else 0",
+         "BriefDescription": "Average 3DXP Memory Bandwidth Use for reads [GB / sec]",
++        "MetricExpr": "( ( 64 * imc@event\\=0xe3@ / 1000000000 ) / duration_time ) if 1 if 0 == 1 else 0 else 0",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "PMM_Read_BW"
+     },
+     {
+-        "MetricExpr": "( ( 64 * imc@event\\=0xe7@ / 1000000000 ) / duration_time ) if 1 if 1 == 1 else 0 else 0",
+         "BriefDescription": "Average 3DXP Memory Bandwidth Use for Writes [GB / sec]",
++        "MetricExpr": "( ( 64 * imc@event\\=0xe7@ / 1000000000 ) / duration_time ) if 1 if 0 == 1 else 0 else 0",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "PMM_Write_BW"
+     },
+     {
+-        "MetricExpr": "cha_0@event\\=0x0@",
+         "BriefDescription": "Socket actual clocks when any core is active on that socket",
++        "MetricExpr": "cha_0@event\\=0x0@",
+         "MetricGroup": "",
+         "MetricName": "Socket_CLKS"
+     },
+     {
++        "BriefDescription": "Instructions per Far Branch ( Far Branches apply upon transition from application to operating system, handling interrupts, exceptions. )",
++        "MetricExpr": "INST_RETIRED.ANY / ( BR_INST_RETIRED.FAR_BRANCH / 2 )",
++        "MetricGroup": "",
++        "MetricName": "IpFarBranch"
++    },
++    {
++        "BriefDescription": "C3 residency percent per core",
+         "MetricExpr": "(cstate_core@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per core",
+         "MetricName": "C3_Core_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per core",
+         "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per core",
+         "MetricName": "C6_Core_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per core",
+         "MetricExpr": "(cstate_core@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per core",
+         "MetricName": "C7_Core_Residency"
+     },
+     {
++        "BriefDescription": "C2 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C2 residency percent per package",
+         "MetricName": "C2_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C3 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per package",
+         "MetricName": "C3_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per package",
+         "MetricName": "C6_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per package",
+         "MetricName": "C7_Pkg_Residency"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json b/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
+index 21b27488b621..c80f16fde6d0 100644
+--- a/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
+@@ -1,322 +1,322 @@
+ [
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Frontend_Bound"
++        "MetricName": "Frontend_Bound",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound."
+     },
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Frontend_Bound_SMT"
++        "MetricName": "Frontend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Bad_Speculation"
++        "MetricName": "Bad_Speculation",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Bad_Speculation_SMT"
++        "MetricName": "Bad_Speculation_SMT",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Backend_Bound"
++        "MetricName": "Backend_Bound",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Backend_Bound_SMT"
++        "MetricName": "Backend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. ",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Retiring"
++        "MetricName": "Retiring",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. "
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Retiring_SMT"
++        "MetricName": "Retiring_SMT",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
++        "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+         "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Instructions Per Cycle (per logical thread)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "IPC"
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
+         "BriefDescription": "Uops Per Instruction",
+-        "MetricGroup": "Pipeline;Retiring",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
++        "MetricGroup": "Pipeline;Retire",
+         "MetricName": "UPI"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Instruction per taken branch",
+-        "MetricGroup": "Branches;PGO",
++        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
++        "MetricGroup": "Branches;Fetch_BW;PGO",
+         "MetricName": "IpTB"
+     },
+     {
+-        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Branch instructions per taken branch. ",
++        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "MetricGroup": "Branches;PGO",
+         "MetricName": "BpTB"
+     },
+     {
+-        "MetricExpr": "min( 1 , IDQ.MITE_UOPS / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 16 * ( ICACHE.HIT + ICACHE.MISSES ) / 4.0 ) )",
+         "BriefDescription": "Rough Estimation of fraction of fetched lines bytes that were likely (includes speculatively fetches) consumed by program instructions",
+-        "MetricGroup": "PGO",
++        "MetricExpr": "min( 1 , IDQ.MITE_UOPS / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 16 * ( ICACHE.HIT + ICACHE.MISSES ) / 4.0 ) )",
++        "MetricGroup": "PGO;IcMiss",
+         "MetricName": "IFetch_Line_Utilization"
+     },
+     {
+-        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
+         "BriefDescription": "Fraction of Uops delivered by the DSB (aka Decoded ICache; or Uop Cache)",
+-        "MetricGroup": "DSB;Frontend_Bandwidth",
++        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
++        "MetricGroup": "DSB;Fetch_BW",
+         "MetricName": "DSB_Coverage"
+     },
+     {
++        "BriefDescription": "Cycles Per Instruction (per Logical Processor)",
+         "MetricExpr": "1 / (INST_RETIRED.ANY / cycles)",
+-        "BriefDescription": "Cycles Per Instruction (threaded)",
+         "MetricGroup": "Pipeline;Summary",
+         "MetricName": "CPI"
+     },
+     {
++        "BriefDescription": "Per-Logical Processor actual clocks when the Logical Processor is active.",
+         "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Per-thread actual clocks when the logical processor is active.",
+         "MetricGroup": "Summary",
+         "MetricName": "CLKS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * cycles",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "SLOTS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1_SMT",
+         "MetricName": "SLOTS_SMT"
+     },
+     {
++        "BriefDescription": "Instructions per Load (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_UOPS_RETIRED.ALL_LOADS",
+-        "BriefDescription": "Instructions per Load (lower number means loads are more frequent)",
+-        "MetricGroup": "Instruction_Type;L1_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpL"
+     },
+     {
++        "BriefDescription": "Instructions per Store (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_UOPS_RETIRED.ALL_STORES",
+-        "BriefDescription": "Instructions per Store",
+-        "MetricGroup": "Instruction_Type;Store_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpS"
+     },
+     {
++        "BriefDescription": "Instructions per Branch (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Instructions per Branch",
+-        "MetricGroup": "Branches;Instruction_Type;Port_5;Port_6",
++        "MetricGroup": "Branches;Instruction_Type",
+         "MetricName": "IpB"
+     },
+     {
++        "BriefDescription": "Instruction per (near) call (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_CALL",
+-        "BriefDescription": "Instruction per (near) call",
+         "MetricGroup": "Branches",
+         "MetricName": "IpCall"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY",
+         "BriefDescription": "Total number of retired Instructions",
++        "MetricExpr": "INST_RETIRED.ANY",
+         "MetricGroup": "Summary",
+         "MetricName": "Instructions"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC_SMT"
+     },
+     {
+-        "MetricExpr": "( UOPS_EXECUTED.CORE / 2 / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@) ) if #SMT_on else UOPS_EXECUTED.CORE / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@)",
+         "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
+-        "MetricGroup": "Pipeline;Ports_Utilization",
++        "MetricExpr": "( UOPS_EXECUTED.CORE / 2 / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@) ) if #SMT_on else UOPS_EXECUTED.CORE / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@)",
++        "MetricGroup": "Pipeline",
+         "MetricName": "ILP"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
+         "BriefDescription": "Number of Instructions per non-speculative Branch Misprediction (JEClear)",
+-        "MetricGroup": "Branch_Mispredicts",
++        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
++        "MetricGroup": "BrMispredicts",
+         "MetricName": "IpMispredict"
+     },
+     {
++        "BriefDescription": "Core actual clocks when any Logical Processor is active on the Physical Core",
+         "MetricExpr": "( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )",
+-        "BriefDescription": "Core actual clocks when any thread is active on the physical core",
+         "MetricGroup": "SMT",
+         "MetricName": "CORE_CLKS"
+     },
+     {
+-        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_UOPS_RETIRED.L1_MISS + mem_load_uops_retired.hit_lfb )",
+         "BriefDescription": "Actual Average Latency for L1 data-cache miss demand loads (in core cycles)",
++        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_UOPS_RETIRED.L1_MISS + mem_load_uops_retired.hit_lfb )",
+         "MetricGroup": "Memory_Bound;Memory_Lat",
+         "MetricName": "Load_Miss_Real_Latency"
+     },
+     {
++        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-Logical Processor)",
+         "MetricExpr": "L1D_PEND_MISS.PENDING / L1D_PEND_MISS.PENDING_CYCLES",
+-        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-thread)",
+         "MetricGroup": "Memory_Bound;Memory_BW",
+         "MetricName": "MLP"
+     },
+     {
+-        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / cycles",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / cycles",
+         "MetricGroup": "TLB",
+         "MetricName": "Page_Walks_Utilization"
+     },
+     {
+-        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "TLB_SMT",
+         "MetricName": "Page_Walks_Utilization_SMT"
+     },
+     {
+-        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L1 data cache [GB / sec]",
++        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L1D_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L2 cache [GB / sec]",
++        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L2_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
++        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L3_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L1_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L1 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L1_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L1MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache misses per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache hits per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2HPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L3_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L3 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L3_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L3MPKI"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "BriefDescription": "Average CPU Utilization",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "MetricGroup": "Summary",
+         "MetricName": "CPU_Utilization"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Average Frequency Utilization relative nominal frequency",
++        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Power",
+         "MetricName": "Turbo_Utilization"
+     },
+     {
++        "BriefDescription": "Fraction of cycles where both hardware Logical Processors were active",
+         "MetricExpr": "1 - CPU_CLK_THREAD_UNHALTED.ONE_THREAD_ACTIVE / ( CPU_CLK_THREAD_UNHALTED.REF_XCLK_ANY / 2 ) if #SMT_on else 0",
+-        "BriefDescription": "Fraction of cycles where both hardware threads were active",
+         "MetricGroup": "SMT;Summary",
+         "MetricName": "SMT_2T_Utilization"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+     {
+-        "MetricExpr": "64 * ( arb@event\\=0x81\\,umask\\=0x1@ + arb@event\\=0x84\\,umask\\=0x1@ ) / 1000000 / duration_time / 1000",
+         "BriefDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]",
++        "MetricExpr": "64 * ( arb@event\\=0x81\\,umask\\=0x1@ + arb@event\\=0x84\\,umask\\=0x1@ ) / 1000000 / duration_time / 1000",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_BW_Use"
+     },
+     {
++        "BriefDescription": "C3 residency percent per core",
+         "MetricExpr": "(cstate_core@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per core",
+         "MetricName": "C3_Core_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per core",
+         "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per core",
+         "MetricName": "C6_Core_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per core",
+         "MetricExpr": "(cstate_core@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per core",
+         "MetricName": "C7_Core_Residency"
+     },
+     {
++        "BriefDescription": "C2 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C2 residency percent per package",
+         "MetricName": "C2_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C3 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per package",
+         "MetricName": "C3_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per package",
+         "MetricName": "C6_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per package",
+         "MetricName": "C7_Pkg_Residency"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json b/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
+index e5aac148c941..e501729c3dd1 100644
+--- a/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
+@@ -1,340 +1,340 @@
+ [
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Frontend_Bound"
++        "MetricName": "Frontend_Bound",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound."
+     },
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Frontend_Bound_SMT"
++        "MetricName": "Frontend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Bad_Speculation"
++        "MetricName": "Bad_Speculation",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Bad_Speculation_SMT"
++        "MetricName": "Bad_Speculation_SMT",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Backend_Bound"
++        "MetricName": "Backend_Bound",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Backend_Bound_SMT"
++        "MetricName": "Backend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. ",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Retiring"
++        "MetricName": "Retiring",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. "
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Retiring_SMT"
++        "MetricName": "Retiring_SMT",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
++        "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+         "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Instructions Per Cycle (per logical thread)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "IPC"
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
+         "BriefDescription": "Uops Per Instruction",
+-        "MetricGroup": "Pipeline;Retiring",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
++        "MetricGroup": "Pipeline;Retire",
+         "MetricName": "UPI"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Instruction per taken branch",
+-        "MetricGroup": "Branches;PGO",
++        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
++        "MetricGroup": "Branches;Fetch_BW;PGO",
+         "MetricName": "IpTB"
+     },
+     {
+-        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Branch instructions per taken branch. ",
++        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "MetricGroup": "Branches;PGO",
+         "MetricName": "BpTB"
+     },
+     {
+-        "MetricExpr": "min( 1 , IDQ.MITE_UOPS / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 16 * ( ICACHE.HIT + ICACHE.MISSES ) / 4.0 ) )",
+         "BriefDescription": "Rough Estimation of fraction of fetched lines bytes that were likely (includes speculatively fetches) consumed by program instructions",
+-        "MetricGroup": "PGO",
++        "MetricExpr": "min( 1 , IDQ.MITE_UOPS / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 16 * ( ICACHE.HIT + ICACHE.MISSES ) / 4.0 ) )",
++        "MetricGroup": "PGO;IcMiss",
+         "MetricName": "IFetch_Line_Utilization"
+     },
+     {
+-        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
+         "BriefDescription": "Fraction of Uops delivered by the DSB (aka Decoded ICache; or Uop Cache)",
+-        "MetricGroup": "DSB;Frontend_Bandwidth",
++        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
++        "MetricGroup": "DSB;Fetch_BW",
+         "MetricName": "DSB_Coverage"
+     },
+     {
++        "BriefDescription": "Cycles Per Instruction (per Logical Processor)",
+         "MetricExpr": "1 / (INST_RETIRED.ANY / cycles)",
+-        "BriefDescription": "Cycles Per Instruction (threaded)",
+         "MetricGroup": "Pipeline;Summary",
+         "MetricName": "CPI"
+     },
+     {
++        "BriefDescription": "Per-Logical Processor actual clocks when the Logical Processor is active.",
+         "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Per-thread actual clocks when the logical processor is active.",
+         "MetricGroup": "Summary",
+         "MetricName": "CLKS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * cycles",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "SLOTS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1_SMT",
+         "MetricName": "SLOTS_SMT"
+     },
+     {
++        "BriefDescription": "Instructions per Load (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_UOPS_RETIRED.ALL_LOADS",
+-        "BriefDescription": "Instructions per Load (lower number means loads are more frequent)",
+-        "MetricGroup": "Instruction_Type;L1_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpL"
+     },
+     {
++        "BriefDescription": "Instructions per Store (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_UOPS_RETIRED.ALL_STORES",
+-        "BriefDescription": "Instructions per Store",
+-        "MetricGroup": "Instruction_Type;Store_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpS"
+     },
+     {
++        "BriefDescription": "Instructions per Branch (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Instructions per Branch",
+-        "MetricGroup": "Branches;Instruction_Type;Port_5;Port_6",
++        "MetricGroup": "Branches;Instruction_Type",
+         "MetricName": "IpB"
+     },
+     {
++        "BriefDescription": "Instruction per (near) call (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_CALL",
+-        "BriefDescription": "Instruction per (near) call",
+         "MetricGroup": "Branches",
+         "MetricName": "IpCall"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY",
+         "BriefDescription": "Total number of retired Instructions",
++        "MetricExpr": "INST_RETIRED.ANY",
+         "MetricGroup": "Summary",
+         "MetricName": "Instructions"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC_SMT"
+     },
+     {
+-        "MetricExpr": "( UOPS_EXECUTED.CORE / 2 / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@) ) if #SMT_on else UOPS_EXECUTED.CORE / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@)",
+         "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
+-        "MetricGroup": "Pipeline;Ports_Utilization",
++        "MetricExpr": "( UOPS_EXECUTED.CORE / 2 / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@) ) if #SMT_on else UOPS_EXECUTED.CORE / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@)",
++        "MetricGroup": "Pipeline",
+         "MetricName": "ILP"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
+         "BriefDescription": "Number of Instructions per non-speculative Branch Misprediction (JEClear)",
+-        "MetricGroup": "Branch_Mispredicts",
++        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
++        "MetricGroup": "BrMispredicts",
+         "MetricName": "IpMispredict"
+     },
+     {
++        "BriefDescription": "Core actual clocks when any Logical Processor is active on the Physical Core",
+         "MetricExpr": "( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )",
+-        "BriefDescription": "Core actual clocks when any thread is active on the physical core",
+         "MetricGroup": "SMT",
+         "MetricName": "CORE_CLKS"
+     },
+     {
+-        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_UOPS_RETIRED.L1_MISS + mem_load_uops_retired.hit_lfb )",
+         "BriefDescription": "Actual Average Latency for L1 data-cache miss demand loads (in core cycles)",
++        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_UOPS_RETIRED.L1_MISS + mem_load_uops_retired.hit_lfb )",
+         "MetricGroup": "Memory_Bound;Memory_Lat",
+         "MetricName": "Load_Miss_Real_Latency"
+     },
+     {
++        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-Logical Processor)",
+         "MetricExpr": "L1D_PEND_MISS.PENDING / L1D_PEND_MISS.PENDING_CYCLES",
+-        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-thread)",
+         "MetricGroup": "Memory_Bound;Memory_BW",
+         "MetricName": "MLP"
+     },
+     {
+-        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / cycles",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / cycles",
+         "MetricGroup": "TLB",
+         "MetricName": "Page_Walks_Utilization"
+     },
+     {
+-        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "TLB_SMT",
+         "MetricName": "Page_Walks_Utilization_SMT"
+     },
+     {
+-        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L1 data cache [GB / sec]",
++        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L1D_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L2 cache [GB / sec]",
++        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L2_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
++        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L3_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L1_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L1 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L1_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L1MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache misses per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache hits per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2HPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L3_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L3 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L3_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L3MPKI"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "BriefDescription": "Average CPU Utilization",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "MetricGroup": "Summary",
+         "MetricName": "CPU_Utilization"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Average Frequency Utilization relative nominal frequency",
++        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Power",
+         "MetricName": "Turbo_Utilization"
+     },
+     {
++        "BriefDescription": "Fraction of cycles where both hardware Logical Processors were active",
+         "MetricExpr": "1 - CPU_CLK_THREAD_UNHALTED.ONE_THREAD_ACTIVE / ( CPU_CLK_THREAD_UNHALTED.REF_XCLK_ANY / 2 ) if #SMT_on else 0",
+-        "BriefDescription": "Fraction of cycles where both hardware threads were active",
+         "MetricGroup": "SMT;Summary",
+         "MetricName": "SMT_2T_Utilization"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+     {
+-        "MetricExpr": "( 64 * ( uncore_imc@cas_count_read@ + uncore_imc@cas_count_write@ ) / 1000000000 ) / duration_time",
+         "BriefDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]",
++        "MetricExpr": "( 64 * ( uncore_imc@cas_count_read@ + uncore_imc@cas_count_write@ ) / 1000000000 ) / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_BW_Use"
+     },
+     {
+-        "MetricExpr": "1000000000 * ( cbox@event\\=0x36\\,umask\\=0x3\\,filter_opc\\=0x182@ / cbox@event\\=0x35\\,umask\\=0x3\\,filter_opc\\=0x182@ ) / ( cbox_0@event\\=0x0@ / duration_time )",
+         "BriefDescription": "Average latency of data read request to external memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetches",
++        "MetricExpr": "1000000000 * ( cbox@event\\=0x36\\,umask\\=0x3\\,filter_opc\\=0x182@ / cbox@event\\=0x35\\,umask\\=0x3\\,filter_opc\\=0x182@ ) / ( cbox_0@event\\=0x0@ / duration_time )",
+         "MetricGroup": "Memory_Lat",
+         "MetricName": "DRAM_Read_Latency"
+     },
+     {
+-        "MetricExpr": "cbox@event\\=0x36\\,umask\\=0x3\\,filter_opc\\=0x182@ / cbox@event\\=0x36\\,umask\\=0x3\\,filter_opc\\=0x182\\,thresh\\=1@",
+         "BriefDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches",
++        "MetricExpr": "cbox@event\\=0x36\\,umask\\=0x3\\,filter_opc\\=0x182@ / cbox@event\\=0x36\\,umask\\=0x3\\,filter_opc\\=0x182\\,thresh\\=1@",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_Parallel_Reads"
+     },
+     {
+-        "MetricExpr": "cbox_0@event\\=0x0@",
+         "BriefDescription": "Socket actual clocks when any core is active on that socket",
++        "MetricExpr": "cbox_0@event\\=0x0@",
+         "MetricGroup": "",
+         "MetricName": "Socket_CLKS"
+     },
+     {
++        "BriefDescription": "C3 residency percent per core",
+         "MetricExpr": "(cstate_core@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per core",
+         "MetricName": "C3_Core_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per core",
+         "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per core",
+         "MetricName": "C6_Core_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per core",
+         "MetricExpr": "(cstate_core@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per core",
+         "MetricName": "C7_Core_Residency"
+     },
+     {
++        "BriefDescription": "C2 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C2 residency percent per package",
+         "MetricName": "C2_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C3 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per package",
+         "MetricName": "C3_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per package",
+         "MetricName": "C6_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per package",
+         "MetricName": "C7_Pkg_Residency"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json b/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json
+index bc4d5fc284a0..e2446966b651 100644
+--- a/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json
+@@ -1,340 +1,340 @@
+ [
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Frontend_Bound"
++        "MetricName": "Frontend_Bound",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound."
+     },
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Frontend_Bound_SMT"
++        "MetricName": "Frontend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Bad_Speculation"
++        "MetricName": "Bad_Speculation",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Bad_Speculation_SMT"
++        "MetricName": "Bad_Speculation_SMT",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Backend_Bound"
++        "MetricName": "Backend_Bound",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Backend_Bound_SMT"
++        "MetricName": "Backend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. ",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Retiring"
++        "MetricName": "Retiring",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. "
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Retiring_SMT"
++        "MetricName": "Retiring_SMT",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
++        "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+         "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Instructions Per Cycle (per logical thread)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "IPC"
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
+         "BriefDescription": "Uops Per Instruction",
+-        "MetricGroup": "Pipeline;Retiring",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
++        "MetricGroup": "Pipeline;Retire",
+         "MetricName": "UPI"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Instruction per taken branch",
+-        "MetricGroup": "Branches;PGO",
++        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
++        "MetricGroup": "Branches;Fetch_BW;PGO",
+         "MetricName": "IpTB"
+     },
+     {
+-        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Branch instructions per taken branch. ",
++        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "MetricGroup": "Branches;PGO",
+         "MetricName": "BpTB"
+     },
+     {
+-        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 32 * ( ICACHE.HIT + ICACHE.MISSES ) / 4 ) )",
+         "BriefDescription": "Rough Estimation of fraction of fetched lines bytes that were likely (includes speculatively fetches) consumed by program instructions",
+-        "MetricGroup": "PGO",
++        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 32 * ( ICACHE.HIT + ICACHE.MISSES ) / 4 ) )",
++        "MetricGroup": "PGO;IcMiss",
+         "MetricName": "IFetch_Line_Utilization"
+     },
+     {
+-        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
+         "BriefDescription": "Fraction of Uops delivered by the DSB (aka Decoded ICache; or Uop Cache)",
+-        "MetricGroup": "DSB;Frontend_Bandwidth",
++        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
++        "MetricGroup": "DSB;Fetch_BW",
+         "MetricName": "DSB_Coverage"
+     },
+     {
++        "BriefDescription": "Cycles Per Instruction (per Logical Processor)",
+         "MetricExpr": "1 / (INST_RETIRED.ANY / cycles)",
+-        "BriefDescription": "Cycles Per Instruction (threaded)",
+         "MetricGroup": "Pipeline;Summary",
+         "MetricName": "CPI"
+     },
+     {
++        "BriefDescription": "Per-Logical Processor actual clocks when the Logical Processor is active.",
+         "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Per-thread actual clocks when the logical processor is active.",
+         "MetricGroup": "Summary",
+         "MetricName": "CLKS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * cycles",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "SLOTS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1_SMT",
+         "MetricName": "SLOTS_SMT"
+     },
+     {
++        "BriefDescription": "Instructions per Load (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_UOPS_RETIRED.ALL_LOADS",
+-        "BriefDescription": "Instructions per Load (lower number means loads are more frequent)",
+-        "MetricGroup": "Instruction_Type;L1_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpL"
+     },
+     {
++        "BriefDescription": "Instructions per Store (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_UOPS_RETIRED.ALL_STORES",
+-        "BriefDescription": "Instructions per Store",
+-        "MetricGroup": "Instruction_Type;Store_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpS"
+     },
+     {
++        "BriefDescription": "Instructions per Branch (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Instructions per Branch",
+-        "MetricGroup": "Branches;Instruction_Type;Port_5;Port_6",
++        "MetricGroup": "Branches;Instruction_Type",
+         "MetricName": "IpB"
+     },
+     {
++        "BriefDescription": "Instruction per (near) call (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_CALL",
+-        "BriefDescription": "Instruction per (near) call",
+         "MetricGroup": "Branches",
+         "MetricName": "IpCall"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY",
+         "BriefDescription": "Total number of retired Instructions",
++        "MetricExpr": "INST_RETIRED.ANY",
+         "MetricGroup": "Summary",
+         "MetricName": "Instructions"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC_SMT"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / cycles",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / cycles",
+         "MetricGroup": "FLOPS",
+         "MetricName": "FLOPc"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "FLOPS_SMT",
+         "MetricName": "FLOPc_SMT"
+     },
+     {
+-        "MetricExpr": "UOPS_EXECUTED.THREAD / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else UOPS_EXECUTED.CYCLES_GE_1_UOP_EXEC)",
+         "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
+-        "MetricGroup": "Pipeline;Ports_Utilization",
++        "MetricExpr": "UOPS_EXECUTED.THREAD / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else UOPS_EXECUTED.CYCLES_GE_1_UOP_EXEC)",
++        "MetricGroup": "Pipeline",
+         "MetricName": "ILP"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
+         "BriefDescription": "Number of Instructions per non-speculative Branch Misprediction (JEClear)",
+-        "MetricGroup": "Branch_Mispredicts",
++        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
++        "MetricGroup": "BrMispredicts",
+         "MetricName": "IpMispredict"
+     },
+     {
++        "BriefDescription": "Core actual clocks when any Logical Processor is active on the Physical Core",
+         "MetricExpr": "( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )",
+-        "BriefDescription": "Core actual clocks when any thread is active on the physical core",
+         "MetricGroup": "SMT",
+         "MetricName": "CORE_CLKS"
+     },
+     {
+-        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_UOPS_RETIRED.L1_MISS + mem_load_uops_retired.hit_lfb )",
+         "BriefDescription": "Actual Average Latency for L1 data-cache miss demand loads (in core cycles)",
++        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_UOPS_RETIRED.L1_MISS + mem_load_uops_retired.hit_lfb )",
+         "MetricGroup": "Memory_Bound;Memory_Lat",
+         "MetricName": "Load_Miss_Real_Latency"
+     },
+     {
++        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-Logical Processor)",
+         "MetricExpr": "L1D_PEND_MISS.PENDING / L1D_PEND_MISS.PENDING_CYCLES",
+-        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-thread)",
+         "MetricGroup": "Memory_Bound;Memory_BW",
+         "MetricName": "MLP"
+     },
+     {
+-        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / cycles",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / cycles",
+         "MetricGroup": "TLB",
+         "MetricName": "Page_Walks_Utilization"
+     },
+     {
+-        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "TLB_SMT",
+         "MetricName": "Page_Walks_Utilization_SMT"
+     },
+     {
+-        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L1 data cache [GB / sec]",
++        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L1D_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L2 cache [GB / sec]",
++        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L2_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
++        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L3_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L1_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L1 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L1_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L1MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache misses per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache hits per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2HPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.LLC_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L3 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.LLC_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L3MPKI"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "BriefDescription": "Average CPU Utilization",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "MetricGroup": "Summary",
+         "MetricName": "CPU_Utilization"
+     },
+     {
+-        "MetricExpr": "( (( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "BriefDescription": "Giga Floating Point Operations Per Second",
++        "MetricExpr": "( (( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "MetricGroup": "FLOPS;Summary",
+         "MetricName": "GFLOPs"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Average Frequency Utilization relative nominal frequency",
++        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Power",
+         "MetricName": "Turbo_Utilization"
+     },
+     {
++        "BriefDescription": "Fraction of cycles where both hardware Logical Processors were active",
+         "MetricExpr": "1 - CPU_CLK_THREAD_UNHALTED.ONE_THREAD_ACTIVE / ( CPU_CLK_THREAD_UNHALTED.REF_XCLK_ANY / 2 ) if #SMT_on else 0",
+-        "BriefDescription": "Fraction of cycles where both hardware threads were active",
+         "MetricGroup": "SMT;Summary",
+         "MetricName": "SMT_2T_Utilization"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+     {
+-        "MetricExpr": "64 * ( arb@event\\=0x81\\,umask\\=0x1@ + arb@event\\=0x84\\,umask\\=0x1@ ) / 1000000 / duration_time / 1000",
+         "BriefDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]",
++        "MetricExpr": "64 * ( arb@event\\=0x81\\,umask\\=0x1@ + arb@event\\=0x84\\,umask\\=0x1@ ) / 1000000 / duration_time / 1000",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_BW_Use"
+     },
+     {
++        "BriefDescription": "C3 residency percent per core",
+         "MetricExpr": "(cstate_core@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per core",
+         "MetricName": "C3_Core_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per core",
+         "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per core",
+         "MetricName": "C6_Core_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per core",
+         "MetricExpr": "(cstate_core@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per core",
+         "MetricName": "C7_Core_Residency"
+     },
+     {
++        "BriefDescription": "C2 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C2 residency percent per package",
+         "MetricName": "C2_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C3 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per package",
+         "MetricName": "C3_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per package",
+         "MetricName": "C6_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per package",
+         "MetricName": "C7_Pkg_Residency"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json b/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
+index f3874b5f9995..9294769dec64 100644
+--- a/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
+@@ -1,346 +1,346 @@
+ [
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Frontend_Bound"
++        "MetricName": "Frontend_Bound",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound."
+     },
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Frontend_Bound_SMT"
++        "MetricName": "Frontend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Bad_Speculation"
++        "MetricName": "Bad_Speculation",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Bad_Speculation_SMT"
++        "MetricName": "Bad_Speculation_SMT",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Backend_Bound"
++        "MetricName": "Backend_Bound",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Backend_Bound_SMT"
++        "MetricName": "Backend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. ",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Retiring"
++        "MetricName": "Retiring",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. "
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Retiring_SMT"
++        "MetricName": "Retiring_SMT",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
++        "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+         "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Instructions Per Cycle (per logical thread)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "IPC"
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
+         "BriefDescription": "Uops Per Instruction",
+-        "MetricGroup": "Pipeline;Retiring",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
++        "MetricGroup": "Pipeline;Retire",
+         "MetricName": "UPI"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Instruction per taken branch",
+-        "MetricGroup": "Branches;PGO",
++        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
++        "MetricGroup": "Branches;Fetch_BW;PGO",
+         "MetricName": "IpTB"
+     },
+     {
+-        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Branch instructions per taken branch. ",
++        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "MetricGroup": "Branches;PGO",
+         "MetricName": "BpTB"
+     },
+     {
+-        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 32 * ( ICACHE.HIT + ICACHE.MISSES ) / 4 ) )",
+         "BriefDescription": "Rough Estimation of fraction of fetched lines bytes that were likely (includes speculatively fetches) consumed by program instructions",
+-        "MetricGroup": "PGO",
++        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 32 * ( ICACHE.HIT + ICACHE.MISSES ) / 4 ) )",
++        "MetricGroup": "PGO;IcMiss",
+         "MetricName": "IFetch_Line_Utilization"
+     },
+     {
+-        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
+         "BriefDescription": "Fraction of Uops delivered by the DSB (aka Decoded ICache; or Uop Cache)",
+-        "MetricGroup": "DSB;Frontend_Bandwidth",
++        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
++        "MetricGroup": "DSB;Fetch_BW",
+         "MetricName": "DSB_Coverage"
+     },
+     {
++        "BriefDescription": "Cycles Per Instruction (per Logical Processor)",
+         "MetricExpr": "1 / (INST_RETIRED.ANY / cycles)",
+-        "BriefDescription": "Cycles Per Instruction (threaded)",
+         "MetricGroup": "Pipeline;Summary",
+         "MetricName": "CPI"
+     },
+     {
++        "BriefDescription": "Per-Logical Processor actual clocks when the Logical Processor is active.",
+         "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Per-thread actual clocks when the logical processor is active.",
+         "MetricGroup": "Summary",
+         "MetricName": "CLKS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * cycles",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "SLOTS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1_SMT",
+         "MetricName": "SLOTS_SMT"
+     },
+     {
++        "BriefDescription": "Instructions per Load (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_UOPS_RETIRED.ALL_LOADS",
+-        "BriefDescription": "Instructions per Load (lower number means loads are more frequent)",
+-        "MetricGroup": "Instruction_Type;L1_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpL"
+     },
+     {
++        "BriefDescription": "Instructions per Store (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_UOPS_RETIRED.ALL_STORES",
+-        "BriefDescription": "Instructions per Store",
+-        "MetricGroup": "Instruction_Type;Store_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpS"
+     },
+     {
++        "BriefDescription": "Instructions per Branch (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Instructions per Branch",
+-        "MetricGroup": "Branches;Instruction_Type;Port_5;Port_6",
++        "MetricGroup": "Branches;Instruction_Type",
+         "MetricName": "IpB"
+     },
+     {
++        "BriefDescription": "Instruction per (near) call (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_CALL",
+-        "BriefDescription": "Instruction per (near) call",
+         "MetricGroup": "Branches",
+         "MetricName": "IpCall"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY",
+         "BriefDescription": "Total number of retired Instructions",
++        "MetricExpr": "INST_RETIRED.ANY",
+         "MetricGroup": "Summary",
+         "MetricName": "Instructions"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC_SMT"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / cycles",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / cycles",
+         "MetricGroup": "FLOPS",
+         "MetricName": "FLOPc"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "FLOPS_SMT",
+         "MetricName": "FLOPc_SMT"
+     },
+     {
+-        "MetricExpr": "UOPS_EXECUTED.THREAD / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else UOPS_EXECUTED.CYCLES_GE_1_UOP_EXEC)",
+         "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
+-        "MetricGroup": "Pipeline;Ports_Utilization",
++        "MetricExpr": "UOPS_EXECUTED.THREAD / (( cpu@UOPS_EXECUTED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else UOPS_EXECUTED.CYCLES_GE_1_UOP_EXEC)",
++        "MetricGroup": "Pipeline",
+         "MetricName": "ILP"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
+         "BriefDescription": "Number of Instructions per non-speculative Branch Misprediction (JEClear)",
+-        "MetricGroup": "Branch_Mispredicts",
++        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
++        "MetricGroup": "BrMispredicts",
+         "MetricName": "IpMispredict"
+     },
+     {
++        "BriefDescription": "Core actual clocks when any Logical Processor is active on the Physical Core",
+         "MetricExpr": "( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )",
+-        "BriefDescription": "Core actual clocks when any thread is active on the physical core",
+         "MetricGroup": "SMT",
+         "MetricName": "CORE_CLKS"
+     },
+     {
+-        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_UOPS_RETIRED.L1_MISS + mem_load_uops_retired.hit_lfb )",
+         "BriefDescription": "Actual Average Latency for L1 data-cache miss demand loads (in core cycles)",
++        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_UOPS_RETIRED.L1_MISS + mem_load_uops_retired.hit_lfb )",
+         "MetricGroup": "Memory_Bound;Memory_Lat",
+         "MetricName": "Load_Miss_Real_Latency"
+     },
+     {
++        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-Logical Processor)",
+         "MetricExpr": "L1D_PEND_MISS.PENDING / L1D_PEND_MISS.PENDING_CYCLES",
+-        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-thread)",
+         "MetricGroup": "Memory_Bound;Memory_BW",
+         "MetricName": "MLP"
+     },
+     {
+-        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / cycles",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / cycles",
+         "MetricGroup": "TLB",
+         "MetricName": "Page_Walks_Utilization"
+     },
+     {
+-        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_DURATION + DTLB_STORE_MISSES.WALK_DURATION ) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "TLB_SMT",
+         "MetricName": "Page_Walks_Utilization_SMT"
+     },
+     {
+-        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L1 data cache [GB / sec]",
++        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L1D_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L2 cache [GB / sec]",
++        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L2_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
++        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L3_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L1_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L1 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L1_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L1MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache misses per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache hits per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2HPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.LLC_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L3 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_UOPS_RETIRED.LLC_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L3MPKI"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "BriefDescription": "Average CPU Utilization",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "MetricGroup": "Summary",
+         "MetricName": "CPU_Utilization"
+     },
+     {
+-        "MetricExpr": "( (( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "BriefDescription": "Giga Floating Point Operations Per Second",
++        "MetricExpr": "( (( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "MetricGroup": "FLOPS;Summary",
+         "MetricName": "GFLOPs"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Average Frequency Utilization relative nominal frequency",
++        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Power",
+         "MetricName": "Turbo_Utilization"
+     },
+     {
++        "BriefDescription": "Fraction of cycles where both hardware Logical Processors were active",
+         "MetricExpr": "1 - CPU_CLK_THREAD_UNHALTED.ONE_THREAD_ACTIVE / ( CPU_CLK_THREAD_UNHALTED.REF_XCLK_ANY / 2 ) if #SMT_on else 0",
+-        "BriefDescription": "Fraction of cycles where both hardware threads were active",
+         "MetricGroup": "SMT;Summary",
+         "MetricName": "SMT_2T_Utilization"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+     {
+-        "MetricExpr": "( 64 * ( uncore_imc@cas_count_read@ + uncore_imc@cas_count_write@ ) / 1000000000 ) / duration_time",
+         "BriefDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]",
++        "MetricExpr": "( 64 * ( uncore_imc@cas_count_read@ + uncore_imc@cas_count_write@ ) / 1000000000 ) / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_BW_Use"
+     },
+     {
+-        "MetricExpr": "cbox_0@event\\=0x0@",
+         "BriefDescription": "Socket actual clocks when any core is active on that socket",
++        "MetricExpr": "cbox_0@event\\=0x0@",
+         "MetricGroup": "",
+         "MetricName": "Socket_CLKS"
+     },
+     {
++        "BriefDescription": "C3 residency percent per core",
+         "MetricExpr": "(cstate_core@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per core",
+         "MetricName": "C3_Core_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per core",
+         "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per core",
+         "MetricName": "C6_Core_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per core",
+         "MetricExpr": "(cstate_core@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per core",
+         "MetricName": "C7_Core_Residency"
+     },
+     {
++        "BriefDescription": "C2 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C2 residency percent per package",
+         "MetricName": "C2_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C3 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per package",
+         "MetricName": "C3_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per package",
+         "MetricName": "C6_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per package",
+         "MetricName": "C7_Pkg_Residency"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json b/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
+index 98c73e430b05..603ff9c2e9a1 100644
+--- a/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
+@@ -1,232 +1,232 @@
+ [
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Frontend_Bound"
++        "MetricName": "Frontend_Bound",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound."
+     },
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Frontend_Bound_SMT"
++        "MetricName": "Frontend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Bad_Speculation"
++        "MetricName": "Bad_Speculation",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Bad_Speculation_SMT"
++        "MetricName": "Bad_Speculation_SMT",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Backend_Bound"
++        "MetricName": "Backend_Bound",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Backend_Bound_SMT"
++        "MetricName": "Backend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. ",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Retiring"
++        "MetricName": "Retiring",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. "
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Retiring_SMT"
++        "MetricName": "Retiring_SMT",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
++        "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+         "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Instructions Per Cycle (per logical thread)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "IPC"
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
+         "BriefDescription": "Uops Per Instruction",
+-        "MetricGroup": "Pipeline;Retiring",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
++        "MetricGroup": "Pipeline;Retire",
+         "MetricName": "UPI"
+     },
+     {
+-        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 32 * ( ICACHE.HIT + ICACHE.MISSES ) / 4 ) )",
+         "BriefDescription": "Rough Estimation of fraction of fetched lines bytes that were likely (includes speculatively fetches) consumed by program instructions",
+-        "MetricGroup": "PGO",
++        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 32 * ( ICACHE.HIT + ICACHE.MISSES ) / 4 ) )",
++        "MetricGroup": "PGO;IcMiss",
+         "MetricName": "IFetch_Line_Utilization"
+     },
+     {
+-        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
+         "BriefDescription": "Fraction of Uops delivered by the DSB (aka Decoded ICache; or Uop Cache)",
+-        "MetricGroup": "DSB;Frontend_Bandwidth",
++        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
++        "MetricGroup": "DSB;Fetch_BW",
+         "MetricName": "DSB_Coverage"
+     },
+     {
++        "BriefDescription": "Cycles Per Instruction (per Logical Processor)",
+         "MetricExpr": "1 / (INST_RETIRED.ANY / cycles)",
+-        "BriefDescription": "Cycles Per Instruction (threaded)",
+         "MetricGroup": "Pipeline;Summary",
+         "MetricName": "CPI"
+     },
+     {
++        "BriefDescription": "Per-Logical Processor actual clocks when the Logical Processor is active.",
+         "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Per-thread actual clocks when the logical processor is active.",
+         "MetricGroup": "Summary",
+         "MetricName": "CLKS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * cycles",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "SLOTS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1_SMT",
+         "MetricName": "SLOTS_SMT"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY",
+         "BriefDescription": "Total number of retired Instructions",
++        "MetricExpr": "INST_RETIRED.ANY",
+         "MetricGroup": "Summary",
+         "MetricName": "Instructions"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC_SMT"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / cycles",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / cycles",
+         "MetricGroup": "FLOPS",
+         "MetricName": "FLOPc"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "FLOPS_SMT",
+         "MetricName": "FLOPc_SMT"
+     },
+     {
+-        "MetricExpr": "UOPS_DISPATCHED.THREAD / (( cpu@UOPS_DISPATCHED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else cpu@UOPS_DISPATCHED.CORE\\,cmask\\=1@)",
+         "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
+-        "MetricGroup": "Pipeline;Ports_Utilization",
++        "MetricExpr": "UOPS_DISPATCHED.THREAD / (( cpu@UOPS_DISPATCHED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else cpu@UOPS_DISPATCHED.CORE\\,cmask\\=1@)",
++        "MetricGroup": "Pipeline",
+         "MetricName": "ILP"
+     },
+     {
++        "BriefDescription": "Core actual clocks when any Logical Processor is active on the Physical Core",
+         "MetricExpr": "( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )",
+-        "BriefDescription": "Core actual clocks when any thread is active on the physical core",
+         "MetricGroup": "SMT",
+         "MetricName": "CORE_CLKS"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "BriefDescription": "Average CPU Utilization",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "MetricGroup": "Summary",
+         "MetricName": "CPU_Utilization"
+     },
+     {
+-        "MetricExpr": "( (( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "BriefDescription": "Giga Floating Point Operations Per Second",
++        "MetricExpr": "( (( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "MetricGroup": "FLOPS;Summary",
+         "MetricName": "GFLOPs"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Average Frequency Utilization relative nominal frequency",
++        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Power",
+         "MetricName": "Turbo_Utilization"
+     },
+     {
++        "BriefDescription": "Fraction of cycles where both hardware Logical Processors were active",
+         "MetricExpr": "1 - CPU_CLK_THREAD_UNHALTED.ONE_THREAD_ACTIVE / ( CPU_CLK_THREAD_UNHALTED.REF_XCLK_ANY / 2 ) if #SMT_on else 0",
+-        "BriefDescription": "Fraction of cycles where both hardware threads were active",
+         "MetricGroup": "SMT;Summary",
+         "MetricName": "SMT_2T_Utilization"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+     {
+-        "MetricExpr": "( 64 * ( uncore_imc@cas_count_read@ + uncore_imc@cas_count_write@ ) / 1000000000 ) / duration_time",
+         "BriefDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]",
++        "MetricExpr": "( 64 * ( uncore_imc@cas_count_read@ + uncore_imc@cas_count_write@ ) / 1000000000 ) / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_BW_Use"
+     },
+     {
+-        "MetricExpr": "cbox_0@event\\=0x0@",
+         "BriefDescription": "Socket actual clocks when any core is active on that socket",
++        "MetricExpr": "cbox_0@event\\=0x0@",
+         "MetricGroup": "",
+         "MetricName": "Socket_CLKS"
+     },
+     {
++        "BriefDescription": "C3 residency percent per core",
+         "MetricExpr": "(cstate_core@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per core",
+         "MetricName": "C3_Core_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per core",
+         "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per core",
+         "MetricName": "C6_Core_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per core",
+         "MetricExpr": "(cstate_core@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per core",
+         "MetricName": "C7_Core_Residency"
+     },
+     {
++        "BriefDescription": "C2 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C2 residency percent per package",
+         "MetricName": "C2_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C3 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per package",
+         "MetricName": "C3_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per package",
+         "MetricName": "C6_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per package",
+         "MetricName": "C7_Pkg_Residency"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
+index cfeba5067bab..c6b485b3a2cb 100644
+--- a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
+@@ -1,226 +1,226 @@
+ [
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Frontend_Bound"
++        "MetricName": "Frontend_Bound",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound."
+     },
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Frontend_Bound_SMT"
++        "MetricName": "Frontend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Bad_Speculation"
++        "MetricName": "Bad_Speculation",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Bad_Speculation_SMT"
++        "MetricName": "Bad_Speculation_SMT",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Backend_Bound"
++        "MetricName": "Backend_Bound",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Backend_Bound_SMT"
++        "MetricName": "Backend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. ",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Retiring"
++        "MetricName": "Retiring",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. "
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Retiring_SMT"
++        "MetricName": "Retiring_SMT",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
++        "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+         "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Instructions Per Cycle (per logical thread)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "IPC"
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
+         "BriefDescription": "Uops Per Instruction",
+-        "MetricGroup": "Pipeline;Retiring",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
++        "MetricGroup": "Pipeline;Retire",
+         "MetricName": "UPI"
+     },
+     {
+-        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 32 * ( ICACHE.HIT + ICACHE.MISSES ) / 4 ) )",
+         "BriefDescription": "Rough Estimation of fraction of fetched lines bytes that were likely (includes speculatively fetches) consumed by program instructions",
+-        "MetricGroup": "PGO",
++        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 32 * ( ICACHE.HIT + ICACHE.MISSES ) / 4 ) )",
++        "MetricGroup": "PGO;IcMiss",
+         "MetricName": "IFetch_Line_Utilization"
+     },
+     {
+-        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
+         "BriefDescription": "Fraction of Uops delivered by the DSB (aka Decoded ICache; or Uop Cache)",
+-        "MetricGroup": "DSB;Frontend_Bandwidth",
++        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ) )",
++        "MetricGroup": "DSB;Fetch_BW",
+         "MetricName": "DSB_Coverage"
+     },
+     {
++        "BriefDescription": "Cycles Per Instruction (per Logical Processor)",
+         "MetricExpr": "1 / (INST_RETIRED.ANY / cycles)",
+-        "BriefDescription": "Cycles Per Instruction (threaded)",
+         "MetricGroup": "Pipeline;Summary",
+         "MetricName": "CPI"
+     },
+     {
++        "BriefDescription": "Per-Logical Processor actual clocks when the Logical Processor is active.",
+         "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Per-thread actual clocks when the logical processor is active.",
+         "MetricGroup": "Summary",
+         "MetricName": "CLKS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * cycles",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "SLOTS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1_SMT",
+         "MetricName": "SLOTS_SMT"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY",
+         "BriefDescription": "Total number of retired Instructions",
++        "MetricExpr": "INST_RETIRED.ANY",
+         "MetricGroup": "Summary",
+         "MetricName": "Instructions"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC_SMT"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / cycles",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / cycles",
+         "MetricGroup": "FLOPS",
+         "MetricName": "FLOPc"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "FLOPS_SMT",
+         "MetricName": "FLOPc_SMT"
+     },
+     {
+-        "MetricExpr": "UOPS_DISPATCHED.THREAD / (( cpu@UOPS_DISPATCHED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else cpu@UOPS_DISPATCHED.CORE\\,cmask\\=1@)",
+         "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
+-        "MetricGroup": "Pipeline;Ports_Utilization",
++        "MetricExpr": "UOPS_DISPATCHED.THREAD / (( cpu@UOPS_DISPATCHED.CORE\\,cmask\\=1@ / 2 ) if #SMT_on else cpu@UOPS_DISPATCHED.CORE\\,cmask\\=1@)",
++        "MetricGroup": "Pipeline",
+         "MetricName": "ILP"
+     },
+     {
++        "BriefDescription": "Core actual clocks when any Logical Processor is active on the Physical Core",
+         "MetricExpr": "( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )",
+-        "BriefDescription": "Core actual clocks when any thread is active on the physical core",
+         "MetricGroup": "SMT",
+         "MetricName": "CORE_CLKS"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "BriefDescription": "Average CPU Utilization",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "MetricGroup": "Summary",
+         "MetricName": "CPU_Utilization"
+     },
+     {
+-        "MetricExpr": "( (( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "BriefDescription": "Giga Floating Point Operations Per Second",
++        "MetricExpr": "( (( 1 * ( FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EXE.SSE_SCALAR_DOUBLE ) + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * ( FP_COMP_OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE ) + 8 * SIMD_FP_256.PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "MetricGroup": "FLOPS;Summary",
+         "MetricName": "GFLOPs"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Average Frequency Utilization relative nominal frequency",
++        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Power",
+         "MetricName": "Turbo_Utilization"
+     },
+     {
++        "BriefDescription": "Fraction of cycles where both hardware Logical Processors were active",
+         "MetricExpr": "1 - CPU_CLK_THREAD_UNHALTED.ONE_THREAD_ACTIVE / ( CPU_CLK_THREAD_UNHALTED.REF_XCLK_ANY / 2 ) if #SMT_on else 0",
+-        "BriefDescription": "Fraction of cycles where both hardware threads were active",
+         "MetricGroup": "SMT;Summary",
+         "MetricName": "SMT_2T_Utilization"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+     {
+-        "MetricExpr": "64 * ( arb@event\\=0x81\\,umask\\=0x1@ + arb@event\\=0x84\\,umask\\=0x1@ ) / 1000000 / duration_time / 1000",
+         "BriefDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]",
++        "MetricExpr": "64 * ( arb@event\\=0x81\\,umask\\=0x1@ + arb@event\\=0x84\\,umask\\=0x1@ ) / 1000000 / duration_time / 1000",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_BW_Use"
+     },
+     {
++        "BriefDescription": "C3 residency percent per core",
+         "MetricExpr": "(cstate_core@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per core",
+         "MetricName": "C3_Core_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per core",
+         "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per core",
+         "MetricName": "C6_Core_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per core",
+         "MetricExpr": "(cstate_core@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per core",
+         "MetricName": "C7_Core_Residency"
+     },
+     {
++        "BriefDescription": "C2 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C2 residency percent per package",
+         "MetricName": "C2_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C3 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per package",
+         "MetricName": "C3_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per package",
+         "MetricName": "C6_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per package",
+         "MetricName": "C7_Pkg_Residency"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
+index 2c95417a4dae..0ca539bb60f6 100644
+--- a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
+@@ -1,364 +1,370 @@
+ [
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Frontend_Bound"
++        "MetricName": "Frontend_Bound",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound."
+     },
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Frontend_Bound_SMT"
++        "MetricName": "Frontend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Bad_Speculation"
++        "MetricName": "Bad_Speculation",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Bad_Speculation_SMT"
++        "MetricName": "Bad_Speculation_SMT",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Backend_Bound"
++        "MetricName": "Backend_Bound",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Backend_Bound_SMT"
++        "MetricName": "Backend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. ",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Retiring"
++        "MetricName": "Retiring",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. "
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Retiring_SMT"
++        "MetricName": "Retiring_SMT",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
++        "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+         "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Instructions Per Cycle (per logical thread)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "IPC"
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
+         "BriefDescription": "Uops Per Instruction",
+-        "MetricGroup": "Pipeline;Retiring",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
++        "MetricGroup": "Pipeline;Retire",
+         "MetricName": "UPI"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Instruction per taken branch",
+-        "MetricGroup": "Branches;PGO",
++        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
++        "MetricGroup": "Branches;Fetch_BW;PGO",
+         "MetricName": "IpTB"
+     },
+     {
+-        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Branch instructions per taken branch. ",
++        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "MetricGroup": "Branches;PGO",
+         "MetricName": "BpTB"
+     },
+     {
+-        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 64 * ( ICACHE_64B.IFTAG_HIT + ICACHE_64B.IFTAG_MISS ) / 4.1 ) )",
+         "BriefDescription": "Rough Estimation of fraction of fetched lines bytes that were likely (includes speculatively fetches) consumed by program instructions",
+-        "MetricGroup": "PGO",
++        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 64 * ( ICACHE_64B.IFTAG_HIT + ICACHE_64B.IFTAG_MISS ) / 4.1 ) )",
++        "MetricGroup": "PGO;IcMiss",
+         "MetricName": "IFetch_Line_Utilization"
+     },
+     {
+-        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ))",
+         "BriefDescription": "Fraction of Uops delivered by the DSB (aka Decoded ICache; or Uop Cache)",
+-        "MetricGroup": "DSB;Frontend_Bandwidth",
++        "MetricExpr": "IDQ.DSB_UOPS / (IDQ.DSB_UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS)",
++        "MetricGroup": "DSB;Fetch_BW",
+         "MetricName": "DSB_Coverage"
+     },
+     {
++        "BriefDescription": "Cycles Per Instruction (per Logical Processor)",
+         "MetricExpr": "1 / (INST_RETIRED.ANY / cycles)",
+-        "BriefDescription": "Cycles Per Instruction (threaded)",
+         "MetricGroup": "Pipeline;Summary",
+         "MetricName": "CPI"
+     },
+     {
++        "BriefDescription": "Per-Logical Processor actual clocks when the Logical Processor is active.",
+         "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Per-thread actual clocks when the logical processor is active.",
+         "MetricGroup": "Summary",
+         "MetricName": "CLKS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * cycles",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "SLOTS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1_SMT",
+         "MetricName": "SLOTS_SMT"
+     },
+     {
++        "BriefDescription": "Instructions per Load (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_INST_RETIRED.ALL_LOADS",
+-        "BriefDescription": "Instructions per Load (lower number means loads are more frequent)",
+-        "MetricGroup": "Instruction_Type;L1_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpL"
+     },
+     {
++        "BriefDescription": "Instructions per Store (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_INST_RETIRED.ALL_STORES",
+-        "BriefDescription": "Instructions per Store",
+-        "MetricGroup": "Instruction_Type;Store_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpS"
+     },
+     {
++        "BriefDescription": "Instructions per Branch (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Instructions per Branch",
+-        "MetricGroup": "Branches;Instruction_Type;Port_5;Port_6",
++        "MetricGroup": "Branches;Instruction_Type",
+         "MetricName": "IpB"
+     },
+     {
++        "BriefDescription": "Instruction per (near) call (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_CALL",
+-        "BriefDescription": "Instruction per (near) call",
+         "MetricGroup": "Branches",
+         "MetricName": "IpCall"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY",
+         "BriefDescription": "Total number of retired Instructions",
++        "MetricExpr": "INST_RETIRED.ANY",
+         "MetricGroup": "Summary",
+         "MetricName": "Instructions"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC_SMT"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / cycles",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / cycles",
+         "MetricGroup": "FLOPS",
+         "MetricName": "FLOPc"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "FLOPS_SMT",
+         "MetricName": "FLOPc_SMT"
+     },
+     {
+-        "MetricExpr": "UOPS_EXECUTED.THREAD / (( UOPS_EXECUTED.CORE_CYCLES_GE_1 / 2 ) if #SMT_on else UOPS_EXECUTED.CORE_CYCLES_GE_1)",
+         "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
+-        "MetricGroup": "Pipeline;Ports_Utilization",
++        "MetricExpr": "UOPS_EXECUTED.THREAD / (( UOPS_EXECUTED.CORE_CYCLES_GE_1 / 2 ) if #SMT_on else UOPS_EXECUTED.CORE_CYCLES_GE_1)",
++        "MetricGroup": "Pipeline",
+         "MetricName": "ILP"
+     },
+     {
++        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per non-speculative branch misprediction (jeclear)",
+         "MetricExpr": "( ((BR_MISP_RETIRED.ALL_BRANCHES / ( BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT )) * (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles))) + (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * cycles)) * (( INT_MISC.CLEAR_RESTEER_CYCLES + 9 * BACLEARS.ANY ) / cycles) / (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * cycles)) ) * (4 * cycles) / BR_MISP_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per branch misprediction (jeclear and baclear)",
+-        "MetricGroup": "Branch_Mispredicts",
++        "MetricGroup": "BrMispredicts",
+         "MetricName": "Branch_Misprediction_Cost"
+     },
+     {
++        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per non-speculative branch misprediction (jeclear)",
+         "MetricExpr": "( ((BR_MISP_RETIRED.ALL_BRANCHES / ( BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT )) * (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))))) + (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) * (( INT_MISC.CLEAR_RESTEER_CYCLES + 9 * BACLEARS.ANY ) / cycles) / (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) ) * (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) / BR_MISP_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per branch misprediction (jeclear and baclear)",
+-        "MetricGroup": "Branch_Mispredicts_SMT",
++        "MetricGroup": "BrMispredicts_SMT",
+         "MetricName": "Branch_Misprediction_Cost_SMT"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
+         "BriefDescription": "Number of Instructions per non-speculative Branch Misprediction (JEClear)",
+-        "MetricGroup": "Branch_Mispredicts",
++        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
++        "MetricGroup": "BrMispredicts",
+         "MetricName": "IpMispredict"
+     },
+     {
++        "BriefDescription": "Core actual clocks when any Logical Processor is active on the Physical Core",
+         "MetricExpr": "( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )",
+-        "BriefDescription": "Core actual clocks when any thread is active on the physical core",
+         "MetricGroup": "SMT",
+         "MetricName": "CORE_CLKS"
+     },
+     {
+-        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MISS + MEM_LOAD_RETIRED.FB_HIT )",
+         "BriefDescription": "Actual Average Latency for L1 data-cache miss demand loads (in core cycles)",
++        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MISS + MEM_LOAD_RETIRED.FB_HIT )",
+         "MetricGroup": "Memory_Bound;Memory_Lat",
+         "MetricName": "Load_Miss_Real_Latency"
+     },
+     {
++        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-Logical Processor)",
+         "MetricExpr": "L1D_PEND_MISS.PENDING / L1D_PEND_MISS.PENDING_CYCLES",
+-        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-thread)",
+         "MetricGroup": "Memory_Bound;Memory_BW",
+         "MetricName": "MLP"
+     },
+     {
+-        "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * cycles )",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * cycles )",
+         "MetricGroup": "TLB",
+         "MetricName": "Page_Walks_Utilization"
+     },
+     {
+-        "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )) )",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )) )",
+         "MetricGroup": "TLB_SMT",
+         "MetricName": "Page_Walks_Utilization_SMT"
+     },
+     {
+-        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L1 data cache [GB / sec]",
++        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L1D_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L2 cache [GB / sec]",
++        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L2_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
++        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L3_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / duration_time",
+         "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
++        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L3_Cache_Access_BW"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L1_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L1 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L1_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L1MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * L2_RQSTS.MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache misses per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * L2_RQSTS.MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * ( L2_RQSTS.REFERENCES - L2_RQSTS.MISS ) / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache hits per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * ( L2_RQSTS.REFERENCES - L2_RQSTS.MISS ) / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2HPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L3_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L3 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L3_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L3MPKI"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "BriefDescription": "Average CPU Utilization",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "MetricGroup": "Summary",
+         "MetricName": "CPU_Utilization"
+     },
+     {
+-        "MetricExpr": "( (( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "BriefDescription": "Giga Floating Point Operations Per Second",
++        "MetricExpr": "( (( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "MetricGroup": "FLOPS;Summary",
+         "MetricName": "GFLOPs"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Average Frequency Utilization relative nominal frequency",
++        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Power",
+         "MetricName": "Turbo_Utilization"
+     },
+     {
++        "BriefDescription": "Fraction of cycles where both hardware Logical Processors were active",
+         "MetricExpr": "1 - CPU_CLK_THREAD_UNHALTED.ONE_THREAD_ACTIVE / ( CPU_CLK_THREAD_UNHALTED.REF_XCLK_ANY / 2 ) if #SMT_on else 0",
+-        "BriefDescription": "Fraction of cycles where both hardware threads were active",
+         "MetricGroup": "SMT;Summary",
+         "MetricName": "SMT_2T_Utilization"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+     {
+-        "MetricExpr": "64 * ( arb@event\\=0x81\\,umask\\=0x1@ + arb@event\\=0x84\\,umask\\=0x1@ ) / 1000000 / duration_time / 1000",
+         "BriefDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]",
++        "MetricExpr": "64 * ( arb@event\\=0x81\\,umask\\=0x1@ + arb@event\\=0x84\\,umask\\=0x1@ ) / 1000000 / duration_time / 1000",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_BW_Use"
+     },
+     {
+-        "MetricExpr": "arb@event\\=0x80\\,umask\\=0x2@ / arb@event\\=0x80\\,umask\\=0x2\\,thresh\\=1@",
+         "BriefDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches",
++        "MetricExpr": "arb@event\\=0x80\\,umask\\=0x2@ / arb@event\\=0x80\\,umask\\=0x2\\,thresh\\=1@",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_Parallel_Reads"
+     },
+     {
++        "BriefDescription": "Instructions per Far Branch ( Far Branches apply upon transition from application to operating system, handling interrupts, exceptions. )",
++        "MetricExpr": "INST_RETIRED.ANY / ( BR_INST_RETIRED.FAR_BRANCH / 2 )",
++        "MetricGroup": "",
++        "MetricName": "IpFarBranch"
++    },
++    {
++        "BriefDescription": "C3 residency percent per core",
+         "MetricExpr": "(cstate_core@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per core",
+         "MetricName": "C3_Core_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per core",
+         "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per core",
+         "MetricName": "C6_Core_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per core",
+         "MetricExpr": "(cstate_core@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per core",
+         "MetricName": "C7_Core_Residency"
+     },
+     {
++        "BriefDescription": "C2 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C2 residency percent per package",
+         "MetricName": "C2_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C3 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per package",
+         "MetricName": "C3_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per package",
+         "MetricName": "C6_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per package",
+         "MetricName": "C7_Pkg_Residency"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
+index 35b255fa6a79..047d7e11aa6f 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
+@@ -1,376 +1,394 @@
+ [
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Frontend_Bound"
++        "MetricName": "Frontend_Bound",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound."
+     },
+     {
+-        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Frontend_Bound_SMT"
++        "MetricName": "Frontend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where the processor's Frontend undersupplies its Backend. Frontend denotes the first part of the processor core responsible to fetch operations that are executed later on by the Backend part. Within the Frontend; a branch predictor predicts the next address to fetch; cache-lines are fetched from the memory subsystem; parsed into instructions; and lastly decoded into micro-ops (uops). Ideally the Frontend can issue 4 uops every cycle to the Backend. Frontend Bound denotes unutilized issue-slots when there is no Backend stall; i.e. bubbles where Frontend delivered no uops while Backend could have accepted them. For example; stalls due to instruction-cache misses would be categorized under Frontend Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Bad_Speculation"
++        "MetricName": "Bad_Speculation",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example."
+     },
+     {
+-        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots wasted due to incorrect speculations. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Bad_Speculation_SMT"
++        "MetricName": "Bad_Speculation_SMT",
++        "PublicDescription": "This category represents fraction of slots wasted due to incorrect speculations. This include slots used to issue uops that do not eventually get retired and slots for which the issue-pipeline was blocked due to recovery from earlier incorrect speculation. For example; wasted work due to miss-predicted branches are categorized under Bad Speculation category. Incorrect data speculation followed by Memory Ordering Nukes is another example. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * cycles)) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles)) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)) )",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Backend_Bound"
++        "MetricName": "Backend_Bound",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound."
+     },
+     {
+-        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+-        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "1 - ( (IDQ_UOPS_NOT_DELIVERED.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) + (UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) )",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Backend_Bound_SMT"
++        "MetricName": "Backend_Bound_SMT",
++        "PublicDescription": "This category represents fraction of slots where no uops are being delivered due to a lack of required resources for accepting new uops in the Backend. Backend is the portion of the processor core where the out-of-order scheduler dispatches ready uops into their respective execution units; and once completed these uops get retired according to program order. For example; stalls due to data-cache misses or stalls due to the divider unit being overloaded are both categorized under Backend Bound. Backend Bound is further divided into two main categories: Memory Bound and Core Bound. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. ",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * cycles)",
+         "MetricGroup": "TopdownL1",
+-        "MetricName": "Retiring"
++        "MetricName": "Retiring",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. "
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+-        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU.",
+         "BriefDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. SMT version; use when SMT is enabled and measuring per logical CPU.",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))",
+         "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Retiring_SMT"
++        "MetricName": "Retiring_SMT",
++        "PublicDescription": "This category represents fraction of slots utilized by useful work i.e. issued uops that eventually get retired. Ideally; all pipeline slots would be attributed to the Retiring category.  Retiring of 100% would indicate the maximum 4 uops retired per cycle has been achieved.  Maximizing Retiring typically increases the Instruction-Per-Cycle metric. Note that a high Retiring value does not necessary mean there is no room for more performance.  For example; Microcode assists are categorized under Retiring. They hurt performance and can often be avoided. SMT version; use when SMT is enabled and measuring per logical CPU."
+     },
+     {
++        "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+         "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Instructions Per Cycle (per logical thread)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "IPC"
+     },
+     {
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
+         "BriefDescription": "Uops Per Instruction",
+-        "MetricGroup": "Pipeline;Retiring",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY",
++        "MetricGroup": "Pipeline;Retire",
+         "MetricName": "UPI"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Instruction per taken branch",
+-        "MetricGroup": "Branches;PGO",
++        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
++        "MetricGroup": "Branches;Fetch_BW;PGO",
+         "MetricName": "IpTB"
+     },
+     {
+-        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "BriefDescription": "Branch instructions per taken branch. ",
++        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
+         "MetricGroup": "Branches;PGO",
+         "MetricName": "BpTB"
+     },
+     {
+-        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 64 * ( ICACHE_64B.IFTAG_HIT + ICACHE_64B.IFTAG_MISS ) / 4.1 ) )",
+         "BriefDescription": "Rough Estimation of fraction of fetched lines bytes that were likely (includes speculatively fetches) consumed by program instructions",
+-        "MetricGroup": "PGO",
++        "MetricExpr": "min( 1 , UOPS_ISSUED.ANY / ( (UOPS_RETIRED.RETIRE_SLOTS / INST_RETIRED.ANY) * 64 * ( ICACHE_64B.IFTAG_HIT + ICACHE_64B.IFTAG_MISS ) / 4.1 ) )",
++        "MetricGroup": "PGO;IcMiss",
+         "MetricName": "IFetch_Line_Utilization"
+     },
+     {
+-        "MetricExpr": "IDQ.DSB_UOPS / (( IDQ.DSB_UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS ))",
+         "BriefDescription": "Fraction of Uops delivered by the DSB (aka Decoded ICache; or Uop Cache)",
+-        "MetricGroup": "DSB;Frontend_Bandwidth",
++        "MetricExpr": "IDQ.DSB_UOPS / (IDQ.DSB_UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS)",
++        "MetricGroup": "DSB;Fetch_BW",
+         "MetricName": "DSB_Coverage"
+     },
+     {
++        "BriefDescription": "Cycles Per Instruction (per Logical Processor)",
+         "MetricExpr": "1 / (INST_RETIRED.ANY / cycles)",
+-        "BriefDescription": "Cycles Per Instruction (threaded)",
+         "MetricGroup": "Pipeline;Summary",
+         "MetricName": "CPI"
+     },
+     {
++        "BriefDescription": "Per-Logical Processor actual clocks when the Logical Processor is active.",
+         "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
+-        "BriefDescription": "Per-thread actual clocks when the logical processor is active.",
+         "MetricGroup": "Summary",
+         "MetricName": "CLKS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * cycles",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1",
+         "MetricName": "SLOTS"
+     },
+     {
++        "BriefDescription": "Total issue-pipeline slots (per-Physical Core)",
+         "MetricExpr": "4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+-        "BriefDescription": "Total issue-pipeline slots (per core)",
+         "MetricGroup": "TopDownL1_SMT",
+         "MetricName": "SLOTS_SMT"
+     },
+     {
++        "BriefDescription": "Instructions per Load (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_INST_RETIRED.ALL_LOADS",
+-        "BriefDescription": "Instructions per Load (lower number means loads are more frequent)",
+-        "MetricGroup": "Instruction_Type;L1_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpL"
+     },
+     {
++        "BriefDescription": "Instructions per Store (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / MEM_INST_RETIRED.ALL_STORES",
+-        "BriefDescription": "Instructions per Store",
+-        "MetricGroup": "Instruction_Type;Store_Bound",
++        "MetricGroup": "Instruction_Type",
+         "MetricName": "IpS"
+     },
+     {
++        "BriefDescription": "Instructions per Branch (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Instructions per Branch",
+-        "MetricGroup": "Branches;Instruction_Type;Port_5;Port_6",
++        "MetricGroup": "Branches;Instruction_Type",
+         "MetricName": "IpB"
+     },
+     {
++        "BriefDescription": "Instruction per (near) call (lower number means higher occurance rate)",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_CALL",
+-        "BriefDescription": "Instruction per (near) call",
+         "MetricGroup": "Branches",
+         "MetricName": "IpCall"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY",
+         "BriefDescription": "Total number of retired Instructions",
++        "MetricExpr": "INST_RETIRED.ANY",
+         "MetricGroup": "Summary",
+         "MetricName": "Instructions"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / cycles",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "SMT",
+         "MetricName": "CoreIPC_SMT"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16 * FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE )) / cycles",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16 * FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE )) / cycles",
+         "MetricGroup": "FLOPS",
+         "MetricName": "FLOPc"
+     },
+     {
+-        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16 * FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "(( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16 * FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE )) / (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))",
+         "MetricGroup": "FLOPS_SMT",
+         "MetricName": "FLOPc_SMT"
+     },
+     {
+-        "MetricExpr": "UOPS_EXECUTED.THREAD / (( UOPS_EXECUTED.CORE_CYCLES_GE_1 / 2 ) if #SMT_on else UOPS_EXECUTED.CORE_CYCLES_GE_1)",
+         "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
+-        "MetricGroup": "Pipeline;Ports_Utilization",
++        "MetricExpr": "UOPS_EXECUTED.THREAD / (( UOPS_EXECUTED.CORE_CYCLES_GE_1 / 2 ) if #SMT_on else UOPS_EXECUTED.CORE_CYCLES_GE_1)",
++        "MetricGroup": "Pipeline",
+         "MetricName": "ILP"
+     },
+     {
++        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per non-speculative branch misprediction (jeclear)",
+         "MetricExpr": "( ((BR_MISP_RETIRED.ALL_BRANCHES / ( BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT )) * (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * INT_MISC.RECOVERY_CYCLES ) / (4 * cycles))) + (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * cycles)) * (( INT_MISC.CLEAR_RESTEER_CYCLES + 9 * BACLEARS.ANY ) / cycles) / (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * cycles)) ) * (4 * cycles) / BR_MISP_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per branch misprediction (jeclear and baclear)",
+-        "MetricGroup": "Branch_Mispredicts",
++        "MetricGroup": "BrMispredicts",
+         "MetricName": "Branch_Misprediction_Cost"
+     },
+     {
++        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per non-speculative branch misprediction (jeclear)",
+         "MetricExpr": "( ((BR_MISP_RETIRED.ALL_BRANCHES / ( BR_MISP_RETIRED.ALL_BRANCHES + MACHINE_CLEARS.COUNT )) * (( UOPS_ISSUED.ANY - UOPS_RETIRED.RETIRE_SLOTS + 4 * (( INT_MISC.RECOVERY_CYCLES_ANY / 2 )) ) / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))))) + (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) * (( INT_MISC.CLEAR_RESTEER_CYCLES + 9 * BACLEARS.ANY ) / cycles) / (4 * IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE / (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )))) ) * (4 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ))) / BR_MISP_RETIRED.ALL_BRANCHES",
+-        "BriefDescription": "Branch Misprediction Cost: Fraction of TopDown slots wasted per branch misprediction (jeclear and baclear)",
+-        "MetricGroup": "Branch_Mispredicts_SMT",
++        "MetricGroup": "BrMispredicts_SMT",
+         "MetricName": "Branch_Misprediction_Cost_SMT"
+     },
+     {
+-        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
+         "BriefDescription": "Number of Instructions per non-speculative Branch Misprediction (JEClear)",
+-        "MetricGroup": "Branch_Mispredicts",
++        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
++        "MetricGroup": "BrMispredicts",
+         "MetricName": "IpMispredict"
+     },
+     {
++        "BriefDescription": "Core actual clocks when any Logical Processor is active on the Physical Core",
+         "MetricExpr": "( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )",
+-        "BriefDescription": "Core actual clocks when any thread is active on the physical core",
+         "MetricGroup": "SMT",
+         "MetricName": "CORE_CLKS"
+     },
+     {
+-        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MISS + MEM_LOAD_RETIRED.FB_HIT )",
+         "BriefDescription": "Actual Average Latency for L1 data-cache miss demand loads (in core cycles)",
++        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MISS + MEM_LOAD_RETIRED.FB_HIT )",
+         "MetricGroup": "Memory_Bound;Memory_Lat",
+         "MetricName": "Load_Miss_Real_Latency"
+     },
+     {
++        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-Logical Processor)",
+         "MetricExpr": "L1D_PEND_MISS.PENDING / L1D_PEND_MISS.PENDING_CYCLES",
+-        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-thread)",
+         "MetricGroup": "Memory_Bound;Memory_BW",
+         "MetricName": "MLP"
+     },
+     {
+-        "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * cycles )",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * cycles )",
+         "MetricGroup": "TLB",
+         "MetricName": "Page_Walks_Utilization"
+     },
+     {
+-        "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )) )",
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * (( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )) )",
+         "MetricGroup": "TLB_SMT",
+         "MetricName": "Page_Walks_Utilization_SMT"
+     },
+     {
+-        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L1 data cache [GB / sec]",
++        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L1D_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "BriefDescription": "Average data fill bandwidth to the L2 cache [GB / sec]",
++        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L2_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
++        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L3_Cache_Fill_BW"
+     },
+     {
+-        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / duration_time",
+         "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
++        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "L3_Cache_Access_BW"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L1_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L1 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L1_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L1MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L2_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI"
+     },
+     {
+-        "MetricExpr": "1000 * L2_RQSTS.MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache misses per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * L2_RQSTS.MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2MPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * ( L2_RQSTS.REFERENCES - L2_RQSTS.MISS ) / INST_RETIRED.ANY",
+         "BriefDescription": "L2 cache hits per kilo instruction for all request types (including speculative)",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * ( L2_RQSTS.REFERENCES - L2_RQSTS.MISS ) / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L2HPKI_All"
+     },
+     {
+-        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L3_MISS / INST_RETIRED.ANY",
+         "BriefDescription": "L3 cache true misses per kilo instruction for retired demand loads",
+-        "MetricGroup": "Cache_Misses;",
++        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L3_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "Cache_Misses",
+         "MetricName": "L3MPKI"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
++        "BriefDescription": "Rate of silent evictions from the L2 cache per Kilo instruction where the evicted lines are dropped (no writeback to L3 or memory)",
++        "MetricExpr": "1000 * L2_LINES_OUT.SILENT / INST_RETIRED.ANY",
++        "MetricGroup": "",
++        "MetricName": "L2_Evictions_Silent_PKI"
++    },
++    {
++        "BriefDescription": "Rate of non silent evictions from the L2 cache per Kilo instruction",
++        "MetricExpr": "1000 * L2_LINES_OUT.NON_SILENT / INST_RETIRED.ANY",
++        "MetricGroup": "",
++        "MetricName": "L2_Evictions_NonSilent_PKI"
++    },
++    {
+         "BriefDescription": "Average CPU Utilization",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
+         "MetricGroup": "Summary",
+         "MetricName": "CPU_Utilization"
+     },
+     {
+-        "MetricExpr": "( (( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16 * FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "BriefDescription": "Giga Floating Point Operations Per Second",
++        "MetricExpr": "( (( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16 * FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE )) / 1000000000 ) / duration_time",
+         "MetricGroup": "FLOPS;Summary",
+         "MetricName": "GFLOPs"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Average Frequency Utilization relative nominal frequency",
++        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Power",
+         "MetricName": "Turbo_Utilization"
+     },
+     {
++        "BriefDescription": "Fraction of cycles where both hardware Logical Processors were active",
+         "MetricExpr": "1 - CPU_CLK_THREAD_UNHALTED.ONE_THREAD_ACTIVE / ( CPU_CLK_THREAD_UNHALTED.REF_XCLK_ANY / 2 ) if #SMT_on else 0",
+-        "BriefDescription": "Fraction of cycles where both hardware threads were active",
+         "MetricGroup": "SMT;Summary",
+         "MetricName": "SMT_2T_Utilization"
+     },
+     {
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+     {
+-        "MetricExpr": "( 64 * ( uncore_imc@cas_count_read@ + uncore_imc@cas_count_write@ ) / 1000000000 ) / duration_time",
+         "BriefDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]",
++        "MetricExpr": "( 64 * ( uncore_imc@cas_count_read@ + uncore_imc@cas_count_write@ ) / 1000000000 ) / duration_time",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_BW_Use"
+     },
+     {
+-	"MetricExpr": "1000000000 * ( cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,config\\=0x40433@ / cha@event\\=0x35\\\\\\,umask\\=0x21\\\\\\,config\\=0x40433@ ) / ( cha_0@event\\=0x0@ / duration_time )",
+         "BriefDescription": "Average latency of data read request to external memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetches",
++        "MetricExpr": "1000000000 * ( cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x35\\\\\\,umask\\=0x21@ ) / ( cha_0@event\\=0x0@ / duration_time )",
+         "MetricGroup": "Memory_Lat",
+         "MetricName": "DRAM_Read_Latency"
+     },
+     {
+-	"MetricExpr": "cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,config\\=0x40433@ / cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,thresh\\=1\\\\\\,config\\=0x40433@",
+         "BriefDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches",
++        "MetricExpr": "cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,thresh\\=1@",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_Parallel_Reads"
+     },
+     {
+-        "MetricExpr": "cha_0@event\\=0x0@",
+         "BriefDescription": "Socket actual clocks when any core is active on that socket",
++        "MetricExpr": "cha_0@event\\=0x0@",
+         "MetricGroup": "",
+         "MetricName": "Socket_CLKS"
+     },
+     {
++        "BriefDescription": "Instructions per Far Branch ( Far Branches apply upon transition from application to operating system, handling interrupts, exceptions. )",
++        "MetricExpr": "INST_RETIRED.ANY / ( BR_INST_RETIRED.FAR_BRANCH / 2 )",
++        "MetricGroup": "",
++        "MetricName": "IpFarBranch"
++    },
++    {
++        "BriefDescription": "C3 residency percent per core",
+         "MetricExpr": "(cstate_core@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per core",
+         "MetricName": "C3_Core_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per core",
+         "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per core",
+         "MetricName": "C6_Core_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per core",
+         "MetricExpr": "(cstate_core@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per core",
+         "MetricName": "C7_Core_Residency"
+     },
+     {
++        "BriefDescription": "C2 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C2 residency percent per package",
+         "MetricName": "C2_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C3 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c3\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C3 residency percent per package",
+         "MetricName": "C3_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C6 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c6\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C6 residency percent per package",
+         "MetricName": "C6_Pkg_Residency"
+     },
+     {
++        "BriefDescription": "C7 residency percent per package",
+         "MetricExpr": "(cstate_pkg@c7\\-residency@ / msr@tsc@) * 100",
+         "MetricGroup": "Power",
+-        "BriefDescription": "C7 residency percent per package",
+         "MetricName": "C7_Pkg_Residency"
+     }
+ ]
 -- 
 2.11.0
 
