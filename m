@@ -2,133 +2,145 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B041CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879BDCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 061882080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BDB92080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 12:45:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="T5Mt/3Wr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rTgsJpzW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfJ3Mo1 (ORCPT
+        id S1726623AbfJ3Mph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 08:44:27 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:44064 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfJ3Mo1 (ORCPT
+        Wed, 30 Oct 2019 08:45:37 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42610 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfJ3Mpg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 08:44:27 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9UChUtj062928;
-        Wed, 30 Oct 2019 12:44:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=hjXJQzJc4al81yxlwcOSrDOdSsG+1fpvdzD3Lp+qPLY=;
- b=T5Mt/3WrukGnIB1hwM6uGkqF2if+FV9fHPH74L8xEEx15DWM/FN86yJBrde+QPyfVU/k
- Z4Rems3OX+6/VHKYFfLFc/Dz2qe3/QomC/onqQBMDhuXmmRZrCfVZKdg8rdSmVfwBUwX
- JbT9fUleXSA0p61Dqjsi5t3YI9a126LRmIUTnt8DH71G2kglccUgGhiEyv5HTkskpvgR
- rXqnAt/xT1cl7Jjq9NHs1KJav+uZXjEN/o3albcAhKfwVI2ibW6ehKnHMtaypW98l0wC
- IK8Jgf2recr6wFl/AhUxgwfuFevPVF97pxY0Ka3aXHaiJ9k7CVLdarBsIMXpnulyO+sN gQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2vxwhfbxkx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Oct 2019 12:44:11 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9UChkch007847;
-        Wed, 30 Oct 2019 12:44:10 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2vxwhw07eu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Oct 2019 12:44:10 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9UCi881024861;
-        Wed, 30 Oct 2019 12:44:08 GMT
-Received: from dm-oel.no.oracle.com (/10.172.157.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 30 Oct 2019 05:44:08 -0700
-From:   Dag Moxnes <dag.moxnes@oracle.com>
-To:     dledford@redhat.com, jgg@ziepe.ca, leon@kernel.org,
-        parav@mellanox.com
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dag.moxnes@oracle.com
-Subject: [PATCH rdma-next v2] RDMA/cma: Use ACK timeout for RoCE packetLifeTime
-Date:   Wed, 30 Oct 2019 13:44:00 +0100
-Message-Id: <1572439440-17416-1-git-send-email-dag.moxnes@oracle.com>
-X-Mailer: git-send-email 1.7.1
+        Wed, 30 Oct 2019 08:45:36 -0400
+Received: by mail-lf1-f68.google.com with SMTP id z12so1439170lfj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 05:45:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z/lBvgj2tEa3ewK9stecrJwWbqYMjUJzw11XHWG5FOU=;
+        b=rTgsJpzWI5VRDYzYA8OK+NMiiwUWn+nXQxhEXl702L+YTP/w8CrLC81P0JJEIstmBR
+         1CwT5RWxJkiYre2CpQ3vgohfeSR+vd0HmESrAN+Pc8K3Pp+ldKsr2ITBANimBtbruOqp
+         fUhw/5Pu/rRI1CsSEc/1avDvKOGppY2Pvel+6OsYVyIp4EpQ1rlJS3APYLqEY/MrQ4PJ
+         gvOlJloA0E5eSPhtgMyesfaO9SmwcFsZxjHpurmfcKYl8F7mt4tS0gGLKD2vDi3aWhPZ
+         zF8mfNYh1u7i3D+o/kdwc53E/0Fsr57dp+xD9DqF4w6uJlx8zqhDNoxTgpbYTFpqAQ+w
+         x8cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z/lBvgj2tEa3ewK9stecrJwWbqYMjUJzw11XHWG5FOU=;
+        b=aLSGDQldPPvhHbF/DJW/kyHGb3ZH1eppOF5nEg5KXU/LerW5E3rryErZsca/0dadZO
+         /Mkm3A2VGsxNNfL6b+q+k4BQahWDmo8blLPLLSEcnyin7PZKZ68S4JZNWzspmrZynimW
+         a2JRDfZDyrEmqNfoV0sQJJT7XfJIz5FReW4zg0vvlI/8PdvFqwIi8abN7hzPrWaOk5qQ
+         WIXOaqzo6K7KKuB3srHvCa9S+fljY8QOsqNl5KFx8vEo3NalOZY9p4q8XyhAencgt+cg
+         17BoNqnI1BAL+eF3IvTE/WVOuR+SxilGNhCCIx4qMb9tobNjSifmW6ispbI2T+ck47xf
+         nfBw==
+X-Gm-Message-State: APjAAAVDUskRm6hd1RZE7ujtKEN0ja9WWcZFcNAAed+E8ZCTg7naHYyC
+        zowIqqXDg2cWLlWiRd2SFksGzBpTQlF0Xo5FzgGiGg==
+X-Google-Smtp-Source: APXvYqzCnpzso0Psg3jJulXH2mRfwtdawfmefqJGiB+XfZIOBEFwhCwPfWOmE5n9Iqbz9Ejbwbc6JT9xQ6haKiRivgw=
+X-Received: by 2002:a19:3f0a:: with SMTP id m10mr6181421lfa.67.1572439534595;
+ Wed, 30 Oct 2019 05:45:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910300125
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9425 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910300125
+References: <20190405015859.32755-1-tobin@kernel.org> <20190405015859.32755-3-tobin@kernel.org>
+In-Reply-To: <20190405015859.32755-3-tobin@kernel.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 30 Oct 2019 18:15:22 +0530
+Message-ID: <CA+G9fYsfJpXQvOvHdjtg8z4a89dSStOQZOKa9zMjjQgWKng1aw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/6] kselftest: Add test runner creation script
+To:     "Tobin C. Harding" <tobin@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        kernel-hardening@lists.openwall.com,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cma is currently using a hard-coded value, CMA_IBOE_PACKET_LIFETIME,
-for the PacketLifeTime, as it can not be determined from the network.
-This value might not be optimal for all networks.
+Hi Tobin,
 
-The cma module supports the function rdma_set_ack_timeout to set the
-ACK timeout for a QP associated with a connection. As per IBTA 12.7.34
-local ACK timeout = (2 * PacketLifeTime + Local CA’s ACK delay).
-Assuming a negligible local ACK delay, we can use
-PacketLifeTime = local ACK timeout/2
-as a reasonable approximation for RoCE networks.
+On Fri, 5 Apr 2019 at 07:30, Tobin C. Harding <tobin@kernel.org> wrote:
+>
+> Currently if we wish to use kselftest to run tests within a kernel
+> module we write a small script to load/unload and do error reporting.
+> There are a bunch of these under tools/testing/selftests/lib/ that are
+> all identical except for the test name.  We can reduce code duplication
+> and improve maintainability if we have one version of this.  However
+> kselftest requires an executable for each test.  We can move all the
+> script logic to a central script then have each individual test script
+> call the main script.
+>
+> Oneliner to call kselftest_module.sh courtesy of Kees, thanks!
+>
+> Add test runner creation script.  Convert
+> tools/testing/selftests/lib/*.sh to use new test creation script.
+>
+> Testing
+> -------
+>
+> Configure kselftests for lib/ then build and boot kernel.  Then run
+> kselftests as follows:
+>
+>   $ cd /path/to/kernel/tree
+>   $ sudo make O=$output_path -C tools/testing/selftests TARGETS="lib" run_tests
 
-Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
----
- drivers/infiniband/core/cma.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+We are missing "kselftest_module.sh" file when we do "make install"
+and followed by generating a tar file "gen_kselftest_tar.sh" and
+copying that on to target device and running tests by using
+"run_kselftest.sh" script file on the target.
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index c8566a4237..2c1b08bde2 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -2530,7 +2530,9 @@ EXPORT_SYMBOL(rdma_set_service_type);
-  * This function should be called before rdma_connect() on active side,
-  * and on passive side before rdma_accept(). It is applicable to primary
-  * path only. The timeout will affect the local side of the QP, it is not
-- * negotiated with remote side and zero disables the timer.
-+ * negotiated with remote side and zero disables the timer. In case it is
-+ * set before rdma_resolve_route, the value will also be used to determine
-+ * PacketLifeTime for RoCE.
-  *
-  * Return: 0 for success
-  */
-@@ -2939,7 +2941,16 @@ static int cma_resolve_iboe_route(struct rdma_id_private *id_priv)
- 	route->path_rec->rate = iboe_get_rate(ndev);
- 	dev_put(ndev);
- 	route->path_rec->packet_life_time_selector = IB_SA_EQ;
--	route->path_rec->packet_life_time = CMA_IBOE_PACKET_LIFETIME;
-+	/* In case ACK timeout is set, use this value to calculate
-+	 * PacketLifeTime.  As per IBTA 12.7.34,
-+	 * local ACK timeout = (2 * PacketLifeTime + Local CA’s ACK delay).
-+	 * Assuming a negligible local ACK delay, we can use
-+	 * PacketLifeTime = local ACK timeout/2
-+	 * as a reasonable approximation for RoCE networks.
-+	 */
-+	route->path_rec->packet_life_time = id_priv->timeout_set ?
-+		id_priv->timeout - 1 : CMA_IBOE_PACKET_LIFETIME;
-+
- 	if (!route->path_rec->mtu) {
- 		ret = -EINVAL;
- 		goto err2;
--- 
-2.20.1
+Could you install the supporting script file "kselftest_module.sh" ?
 
+Error log,
+-------------
+# selftests lib printf.sh
+lib: printf.sh_ #
+# ./printf.sh line 4 ./../kselftest_module.sh No such file or directory
+line: 4_./../kselftest_module.sh #
+[FAIL] 1 selftests lib printf.sh # exit=127
+selftests: lib_printf.sh [FAIL]
+# selftests lib bitmap.sh
+lib: bitmap.sh_ #
+# ./bitmap.sh line 3 ./../kselftest_module.sh No such file or directory
+line: 3_./../kselftest_module.sh #
+[FAIL] 2 selftests lib bitmap.sh # exit=127
+selftests: lib_bitmap.sh [FAIL]
+# selftests lib prime_numbers.sh
+lib: prime_numbers.sh_ #
+# ./prime_numbers.sh line 4 ./../kselftest_module.sh No such file or directory
+line: 4_./../kselftest_module.sh #
+[FAIL] 3 selftests lib prime_numbers.sh # exit=127
+selftests: lib_prime_numbers.sh [FAIL]
+# selftests lib strscpy.sh
+lib: strscpy.sh_ #
+# ./strscpy.sh line 3 ./../kselftest_module.sh No such file or directory
+line: 3_./../kselftest_module.sh #
+[FAIL] 4 selftests lib strscpy.sh # exit=127
+selftests: lib_strscpy.sh [FAIL]
+
+- Naresh
