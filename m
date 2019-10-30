@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC351CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C13CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE42217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3309208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450839;
-	bh=9gjFkp5kO1oP3E8xCnnU6ER7abXY5+MJTsp64cWYHpw=;
+	s=default; t=1572450841;
+	bh=rfJoh8q2ttJiOkExTu/CY0Vkr6sPogKzCVxD224wjXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u99kEZbW5p3LLgp6CGS3lQMHrhml9Eknd5tEHEtjd9lB7Cq3fRsNkzSs7sztr1/Ab
-	 ENTPx0RQaHA9ruiICjJO6BA9GgAeQXZNMMdF+dehNB+EPv+NdWEv1VG6PxvZUsFlrm
-	 diifW17zDC653VcJoBR0B8mKFZPE9uBNV7AYRXB4=
+	b=PuFp6IGhHlIa9hn8bFx95IA2FuX0eIX+krrhN9bCREWCfpcBAXxfgiiAyQPcBMeCj
+	 6JiS4oxO7XwbESXvUvQzfLF3gRagXro9lS5BuSYUGus0HXTpGzR3DOoTyuzr9xGIZR
+	 0l7uYULKQFStHdfpSHiw1PN4G+johCOkgWikKW5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfJ3Px6 (ORCPT
+        id S1728266AbfJ3PyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:53:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55256 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:54:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728241AbfJ3Pxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:53:53 -0400
+        id S1728245AbfJ3Pxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:53:55 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D8A2208C0;
-        Wed, 30 Oct 2019 15:53:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 780B021882;
+        Wed, 30 Oct 2019 15:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450832;
-        bh=9gjFkp5kO1oP3E8xCnnU6ER7abXY5+MJTsp64cWYHpw=;
+        s=default; t=1572450834;
+        bh=rfJoh8q2ttJiOkExTu/CY0Vkr6sPogKzCVxD224wjXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=htF0YjXcw9yAYM0WWlBWmPOPKksQ3EUulV98sM60y4f8OZYX5XwlCdnvsTkadKDvA
-         sCeBAoZqGXCdxms68/yPzaoYT64JjuYJBd7yAImvjPYHFOhfUJo01APsgsPw8yWNwQ
-         KxyG42j4iuIVArk8C4wG4Oa8sk62YfiXFRxUokN8=
+        b=YDEqS+lr+8ByaQlf/e4leFH04fS749bmNLu207stFznFLd+t/SV3kGL0FMISyINvA
+         wVW4q/FzKQ3xRE7rWh6hbSVfty37FZbSUxdM8y29O8mno000jyvEYbzGzYnug/ignu
+         JCZA4FxDUKm3Weg/i6YG+m/MXZtGcQCwhoVVWgvk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dragos Tarcatu <dragos_tarcatu@mentor.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 60/81] ASoC: SOF: control: return true when kcontrol values change
-Date:   Wed, 30 Oct 2019 11:49:06 -0400
-Message-Id: <20191030154928.9432-60-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 61/81] tracing: Fix "gfp_t" format for synthetic events
+Date:   Wed, 30 Oct 2019 11:49:07 -0400
+Message-Id: <20191030154928.9432-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -60,111 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dragos Tarcatu <dragos_tarcatu@mentor.com>
+From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 
-[ Upstream commit 95a32c98055f664f9b3f34c41e153d4dcedd0eff ]
+[ Upstream commit 9fa8c9c647be624e91b09ecffa7cd97ee0600b40 ]
 
-All the kcontrol put() functions are currently returning 0 when
-successful. This does not go well with alsamixer as it does
-not seem to get notified on SND_CTL_EVENT_MASK_VALUE callbacks
-when values change for (some of) the sof kcontrols.
-This patch fixes that by returning true for volume, switch
-and enum type kcontrols when values do change in put().
+In the format of synthetic events, the "gfp_t" is shown as "signed:1",
+but in fact the "gfp_t" is "unsigned", should be shown as "signed:0".
 
-Signed-off-by: Dragos Tarcatu <dragos_tarcatu@mentor.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191018123806.18063-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+The issue can be reproduced by the following commands:
+
+echo 'memlatency u64 lat; unsigned int order; gfp_t gfp_flags; int migratetype' > /sys/kernel/debug/tracing/synthetic_events
+cat  /sys/kernel/debug/tracing/events/synthetic/memlatency/format
+
+name: memlatency
+ID: 2233
+format:
+        field:unsigned short common_type;       offset:0;       size:2; signed:0;
+        field:unsigned char common_flags;       offset:2;       size:1; signed:0;
+        field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
+        field:int common_pid;   offset:4;       size:4; signed:1;
+
+        field:u64 lat;  offset:8;       size:8; signed:0;
+        field:unsigned int order;       offset:16;      size:4; signed:0;
+        field:gfp_t gfp_flags;  offset:24;      size:4; signed:1;
+        field:int migratetype;  offset:32;      size:4; signed:1;
+
+print fmt: "lat=%llu, order=%u, gfp_flags=%x, migratetype=%d", REC->lat, REC->order, REC->gfp_flags, REC->migratetype
+
+Link: http://lkml.kernel.org/r/20191018012034.6404-1-zhengjun.xing@linux.intel.com
+
+Reviewed-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/control.c | 26 ++++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+ kernel/trace/trace_events_hist.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/sof/control.c b/sound/soc/sof/control.c
-index a4983f90ff5b3..2b8711eda362b 100644
---- a/sound/soc/sof/control.c
-+++ b/sound/soc/sof/control.c
-@@ -60,13 +60,16 @@ int snd_sof_volume_put(struct snd_kcontrol *kcontrol,
- 	struct snd_sof_dev *sdev = scontrol->sdev;
- 	struct sof_ipc_ctrl_data *cdata = scontrol->control_data;
- 	unsigned int i, channels = scontrol->num_channels;
-+	bool change = false;
-+	u32 value;
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index dd310d3b58431..725b9b35f933c 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -674,6 +674,8 @@ static bool synth_field_signed(char *type)
+ {
+ 	if (str_has_prefix(type, "u"))
+ 		return false;
++	if (strcmp(type, "gfp_t") == 0)
++		return false;
  
- 	/* update each channel */
- 	for (i = 0; i < channels; i++) {
--		cdata->chanv[i].value =
--			mixer_to_ipc(ucontrol->value.integer.value[i],
-+		value = mixer_to_ipc(ucontrol->value.integer.value[i],
- 				     scontrol->volume_table, sm->max + 1);
-+		change = change || (value != cdata->chanv[i].value);
- 		cdata->chanv[i].channel = i;
-+		cdata->chanv[i].value = value;
- 	}
- 
- 	/* notify DSP of mixer updates */
-@@ -76,8 +79,7 @@ int snd_sof_volume_put(struct snd_kcontrol *kcontrol,
- 					      SOF_CTRL_TYPE_VALUE_CHAN_GET,
- 					      SOF_CTRL_CMD_VOLUME,
- 					      true);
--
--	return 0;
-+	return change;
+ 	return true;
  }
- 
- int snd_sof_switch_get(struct snd_kcontrol *kcontrol,
-@@ -105,11 +107,15 @@ int snd_sof_switch_put(struct snd_kcontrol *kcontrol,
- 	struct snd_sof_dev *sdev = scontrol->sdev;
- 	struct sof_ipc_ctrl_data *cdata = scontrol->control_data;
- 	unsigned int i, channels = scontrol->num_channels;
-+	bool change = false;
-+	u32 value;
- 
- 	/* update each channel */
- 	for (i = 0; i < channels; i++) {
--		cdata->chanv[i].value = ucontrol->value.integer.value[i];
-+		value = ucontrol->value.integer.value[i];
-+		change = change || (value != cdata->chanv[i].value);
- 		cdata->chanv[i].channel = i;
-+		cdata->chanv[i].value = value;
- 	}
- 
- 	/* notify DSP of mixer updates */
-@@ -120,7 +126,7 @@ int snd_sof_switch_put(struct snd_kcontrol *kcontrol,
- 					      SOF_CTRL_CMD_SWITCH,
- 					      true);
- 
--	return 0;
-+	return change;
- }
- 
- int snd_sof_enum_get(struct snd_kcontrol *kcontrol,
-@@ -148,11 +154,15 @@ int snd_sof_enum_put(struct snd_kcontrol *kcontrol,
- 	struct snd_sof_dev *sdev = scontrol->sdev;
- 	struct sof_ipc_ctrl_data *cdata = scontrol->control_data;
- 	unsigned int i, channels = scontrol->num_channels;
-+	bool change = false;
-+	u32 value;
- 
- 	/* update each channel */
- 	for (i = 0; i < channels; i++) {
--		cdata->chanv[i].value = ucontrol->value.enumerated.item[i];
-+		value = ucontrol->value.enumerated.item[i];
-+		change = change || (value != cdata->chanv[i].value);
- 		cdata->chanv[i].channel = i;
-+		cdata->chanv[i].value = value;
- 	}
- 
- 	/* notify DSP of enum updates */
-@@ -163,7 +173,7 @@ int snd_sof_enum_put(struct snd_kcontrol *kcontrol,
- 					      SOF_CTRL_CMD_ENUM,
- 					      true);
- 
--	return 0;
-+	return change;
- }
- 
- int snd_sof_bytes_get(struct snd_kcontrol *kcontrol,
 -- 
 2.20.1
 
