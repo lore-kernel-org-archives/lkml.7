@@ -2,70 +2,98 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFA9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D098CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27003205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB4F2205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:21:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbfJ3JUS (ORCPT
+        id S1726476AbfJ3JVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:20:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49894 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726028AbfJ3JUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 05:20:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3A11EB263;
-        Wed, 30 Oct 2019 09:20:16 +0000 (UTC)
-Date:   Wed, 30 Oct 2019 10:20:14 +0100
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Denys Vlasenko <dvlasenk@redhat.com>
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu/amd: Do not re-fetch iommu->cmd_buf_tail
-Message-ID: <20191030092014.GO838@suse.de>
-References: <20191024125410.19224-1-dvlasenk@redhat.com>
+        Wed, 30 Oct 2019 05:21:19 -0400
+Received: from relay.sw.ru ([185.231.240.75]:56870 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfJ3JVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 05:21:19 -0400
+Received: from [172.16.24.163] (helo=snorch.sw.ru)
+        by relay.sw.ru with esmtp (Exim 4.92.2)
+        (envelope-from <ptikhomirov@virtuozzo.com>)
+        id 1iPkAG-0003hv-3T; Wed, 30 Oct 2019 12:21:16 +0300
+From:   Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+Subject: [PATCH] fs/ppoll: skip excess EINTR if we never sleep
+Date:   Wed, 30 Oct 2019 12:21:02 +0300
+Message-Id: <20191030092102.871-1-ptikhomirov@virtuozzo.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024125410.19224-1-dvlasenk@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 02:54:10PM +0200, Denys Vlasenko wrote:
-> The compiler is not smart enough to realize that iommu->cmd_buf_tail
-> can't be modified across memcpy:
-> 
-> 41 8b 45 74          mov    0x74(%r13),%eax   # iommu->cmd_buf_tail
-> 44 8d 78 10          lea    0x10(%rax),%r15d  # += sizeof(*cmd)
-> 41 81 e7 ff 1f 00 00 and    $0x1fff,%r15d     # %= CMD_BUFFER_SIZE
-> 49 03 45 68          add    0x68(%r13),%rax   # target = iommu->cmd_buf + iommu->cmd_buf_tail
-> 45 89 7d 74          mov    %r15d,0x74(%r13)  # store to iommu->cmd_buf_tail
-> 49 8b 34 24          mov    (%r12),%rsi       # memcpy
-> 49 8b 7c 24 08       mov    0x8(%r12),%rdi    # memcpy
-> 48 89 30             mov    %rsi,(%rax)       # memcpy
-> 48 89 78 08          mov    %rdi,0x8(%rax)    # memcpy
-> 49 8b 55 38          mov    0x38(%r13),%rdx   # iommu->mmio_base
-> 41 8b 45 74          mov    0x74(%r13),%eax   # redundant load of iommu->cmd_buf_tail
-> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> 89 82 08 20 00 00    mov    %eax,0x2008(%rdx) # writel
-> 
-> CC: Tom Lendacky <thomas.lendacky@amd.com>
-> CC: Joerg Roedel <jroedel@suse.de>
-> CC: linux-kernel@vger.kernel.org
-> Signed-off-by: Denys Vlasenko <dvlasenk@redhat.com>
-> ---
->  drivers/iommu/amd_iommu.c | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
+If while calling sys_ppoll with zero timeout we had received a signal,
+we do return -EINTR.
 
-Applied, thanks.
+FMPOV the -EINTR should specify that we were interrupted by the signal,
+and not that we have a pending signal which does not interfere with us
+at all as we were planning to return anyway. We can just return 0 in
+these case.
+
+I understand that it is a rare situation that signal comes to us while
+in poll with zero timeout, but that reproduced somehow on VZ7 kernel on
+CRIU tests.
+
+Signed-off-by: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+---
+ fs/select.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/fs/select.c b/fs/select.c
+index 53a0c149f528..54d523e3de7f 100644
+--- a/fs/select.c
++++ b/fs/select.c
+@@ -873,7 +873,7 @@ static int do_poll(struct poll_list *list, struct poll_wqueues *wait,
+ {
+ 	poll_table* pt = &wait->pt;
+ 	ktime_t expire, *to = NULL;
+-	int timed_out = 0, count = 0;
++	int timed_out = 0, no_timeout = 0, count = 0;
+ 	u64 slack = 0;
+ 	__poll_t busy_flag = net_busy_loop_on() ? POLL_BUSY_LOOP : 0;
+ 	unsigned long busy_start = 0;
+@@ -881,10 +881,10 @@ static int do_poll(struct poll_list *list, struct poll_wqueues *wait,
+ 	/* Optimise the no-wait case */
+ 	if (end_time && !end_time->tv_sec && !end_time->tv_nsec) {
+ 		pt->_qproc = NULL;
+-		timed_out = 1;
++		no_timeout = 1;
+ 	}
+ 
+-	if (end_time && !timed_out)
++	if (end_time && !no_timeout)
+ 		slack = select_estimate_accuracy(end_time);
+ 
+ 	for (;;) {
+@@ -921,10 +921,10 @@ static int do_poll(struct poll_list *list, struct poll_wqueues *wait,
+ 		pt->_qproc = NULL;
+ 		if (!count) {
+ 			count = wait->error;
+-			if (signal_pending(current))
++			if (!no_timeout && signal_pending(current))
+ 				count = -ERESTARTNOHAND;
+ 		}
+-		if (count || timed_out)
++		if (count || timed_out || no_timeout)
+ 			break;
+ 
+ 		/* only if found POLL_BUSY_LOOP sockets && not out of time */
+-- 
+2.21.0
 
