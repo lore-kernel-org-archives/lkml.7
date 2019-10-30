@@ -2,187 +2,221 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5E9CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D91CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAE6E2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:28:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q4vfihaI"
+	by mail.kernel.org (Postfix) with ESMTP id 358242067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:28:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726325AbfJ3J2A (ORCPT
+        id S1726371AbfJ3J2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:28:00 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:38138 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfJ3J2A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 05:28:00 -0400
-Received: by mail-vk1-f196.google.com with SMTP id g14so318156vkl.5
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 02:27:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MN5/XA2iWTn3JwsaVPfUNETYKLVHfkkM5TGKnq2qWow=;
-        b=q4vfihaI5SgnZO1mREK0EE92a2TcRqe5YARf2JUxGWe8b3RCSilUTop4ZV/z3M/1Ia
-         weN9ltfEM6u2b4/2t7/tw+Nxzk9cRD14JW13Kz1VeE42C+IfgQ/qD2/hYVUPK3BAQwqG
-         tlqjEzGFBCSsTNQ14MgdrT4ebi23gasDFuGezAvuHNHJVgg3LEBNiT6EXtL0homvbZhl
-         mio1vgHviIVlTCyvDstI8u54o+OZPUxbYIwR8RMJpDrxPfE5AB+uNioto7r5yR/eGy3p
-         WyJYHYunxFfhqU8bWoLWNd6oujzPiq2P6zitBof1M66HTaRyvjAV9LM2oWjqPhZdzTpp
-         LUnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MN5/XA2iWTn3JwsaVPfUNETYKLVHfkkM5TGKnq2qWow=;
-        b=gm3yL0Z4skTJ3skWPaWsHF0H3uTBiiswfNUf0bC0kJTAf+tPQojIATmZkMK0VwcrQF
-         zgp+RC2MC2zlADpZq2RP0BjYGxnXsnkrUV4zKaaeEX4eT5GInSz7hMvvugGXgI1m1Qut
-         yYQIv02gNllTUPZZx9exg07kDYo0yPT1/BOeyp7kSIVMqknXddry5hlP5DT8rkjKFAwu
-         DNAuLfaEzJmRZFen/ruoC8o2oY/QQORp4BqNOiQICmBr1HpKMm8uyf1T8xpaL5TM5tnc
-         1lvjYghjOOcOelK2OBcUl0CbtUY2IR3ZBUoqAczs5E6sfx1QQrOTY+5lWPVdHlpfAGCT
-         HTaw==
-X-Gm-Message-State: APjAAAXQPhgT0JsloW4Nn4SYV1QKPoCRgDqL1dyGbh3pAcah6tAWQF0D
-        9MPUr73GS6cRFl32GXXokhlAUaeTc2ULBmICXP93xg==
-X-Google-Smtp-Source: APXvYqzSHup2gFA5wBykiES6RNVVoT6htSpGRNx96Dg7POOVg6LTuWNWzkXHYGZc5adR+GHSe5AntmF9j9UEzqu7mqI=
-X-Received: by 2002:a1f:b202:: with SMTP id b2mr14227092vkf.59.1572427678476;
- Wed, 30 Oct 2019 02:27:58 -0700 (PDT)
+        Wed, 30 Oct 2019 05:28:13 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5652 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726028AbfJ3J2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 05:28:12 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id EDCB5622CAB3BB28B0F6;
+        Wed, 30 Oct 2019 17:28:03 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 30 Oct
+ 2019 17:27:55 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: bio_alloc should never fail
+To:     Gao Xiang <gaoxiang25@huawei.com>
+CC:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <20191030035518.65477-1-gaoxiang25@huawei.com>
+ <20aa40bd-280d-d223-9f73-d9ed7dbe4f29@huawei.com>
+ <20191030091542.GA24976@architecture4>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <19a417e6-8f0e-564e-bc36-59bfc883ec16@huawei.com>
+Date:   Wed, 30 Oct 2019 17:27:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <1571254641-13626-1-git-send-email-thara.gopinath@linaro.org>
- <1571254641-13626-7-git-send-email-thara.gopinath@linaro.org>
- <CAPDyKFqcKfmnNJ7j4Jb+JH739FBcHg5NBD6aR4H_N=zWGwm1ww@mail.gmail.com>
- <5DA88892.5000408@linaro.org> <CAPDyKFpYG7YADb6Xmm=8ug5=5X3d1y+JdkRvrnvtroeV3Yj62Q@mail.gmail.com>
- <5DA89267.30806@linaro.org> <20191029013648.GB27045@bogus>
- <CAPDyKFpiyvGg0+bXDVCbfr+yW0SOH6DhVgAiav8ZnE8TSF6EHQ@mail.gmail.com> <CAL_Jsq+OoyC5FZxYrX_KN1QLDXRvKuFbH=9pLiELsOtoPixnPA@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+OoyC5FZxYrX_KN1QLDXRvKuFbH=9pLiELsOtoPixnPA@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 30 Oct 2019 10:27:21 +0100
-Message-ID: <CAPDyKFrZ9uFt8zqncYTQ-SB6s6LqSRHbwo+Eh_zu57kxj_2eMw@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] dt-bindings: soc: qcom: Extend RPMh power
- controller binding to describe thermal warming device
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191030091542.GA24976@architecture4>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 at 21:16, Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Oct 29, 2019 at 5:07 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> >
-> > On Tue, 29 Oct 2019 at 02:36, Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Thu, Oct 17, 2019 at 12:10:15PM -0400, Thara Gopinath wrote:
-> > > > On 10/17/2019 11:43 AM, Ulf Hansson wrote:
-> > > > > On Thu, 17 Oct 2019 at 17:28, Thara Gopinath <thara.gopinath@linaro.org> wrote:
-> > > > >>
-> > > > >> Hello Ulf,
-> > > > >> Thanks for the review!
-> > > > >>
-> > > > >> On 10/17/2019 05:04 AM, Ulf Hansson wrote:
-> > > > >>> On Wed, 16 Oct 2019 at 21:37, Thara Gopinath <thara.gopinath@linaro.org> wrote:
-> > > > >>>>
-> > > > >>>> RPMh power controller hosts mx domain that can be used as thermal
-> > > > >>>> warming device. Add a sub-node to specify this.
-> > > > >>>>
-> > > > >>>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> > > > >>>> ---
-> > > > >>>>  Documentation/devicetree/bindings/power/qcom,rpmpd.txt | 10 ++++++++++
-> > > > >>>>  1 file changed, 10 insertions(+)
-> > > > >>>>
-> > > > >>>> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> > > > >>>> index eb35b22..fff695d 100644
-> > > > >>>> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> > > > >>>> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> > > > >>>> @@ -18,6 +18,16 @@ Required Properties:
-> > > > >>>>  Refer to <dt-bindings/power/qcom-rpmpd.h> for the level values for
-> > > > >>>>  various OPPs for different platforms as well as Power domain indexes
-> > > > >>>>
-> > > > >>>> += SUBNODES
-> > > > >>>> +RPMh alsp hosts power domains that can behave as thermal warming device.
-> > > > >>>> +These are expressed as subnodes of the RPMh. The name of the node is used
-> > > > >>>> +to identify the power domain and must therefor be "mx".
-> > > > >>>> +
-> > > > >>>> +- #cooling-cells:
-> > > > >>>> +       Usage: optional
-> > > > >>>> +       Value type: <u32>
-> > > > >>>> +       Definition: must be 2
-> > > > >>>> +
-> > > > >>>
-> > > > >>> Just wanted to express a minor thought about this. In general we use
-> > > > >>> subnodes of PM domain providers to represent the topology of PM
-> > > > >>> domains (subdomains), this is something different, which I guess is
-> > > > >>> fine.
-> > > > >>>
-> > > > >>> I assume the #cooling-cells is here tells us this is not a PM domain
-> > > > >>> provider, but a "cooling device provider"?
-> > > > >> Yep.
-> > > > >>>
-> > > > >>> Also, I wonder if it would be fine to specify "power-domains" here,
-> > > > >>> rather than using "name" as I think that is kind of awkward!?
-> > > > >> Do you mean "power-domain-names" ? I am using this to match against the
-> > > > >> genpd names defined in the provider driver.
-> > > > >
-> > > > > No. If you are using "power-domains" it means that you allow to
-> > > > > describe the specifier for the provider.
-> > > > Yep. But won't this look funny in DT ? The provider node will have a sub
-> > > > node with a power domain referencing to itself Like below: Is this ok ?
-> > > >
-> > > > rpmhpd: power-controller {
-> > > >                                 compatible = "qcom,sdm845-rpmhpd";
-> > > >                                 #power-domain-cells = <1>;
-> > > >
-> > > >                       ...
-> > > >                       ...
-> > > >                               mx_cdev: mx {
-> > > >                                         #cooling-cells = <2>;
-> > > >                                         power-domains = <&rpmhpd      SDM845_MX>;
-> > > >                                 };
-> > > >
-> > >
-> > > The whole concept here seems all wrong to me. Isn't it what's in the
-> > > power domain that's the cooling device. A CPU power domain is not a
-> > > cooling device, the CPU is. Or we wouldn't make a clock a cooling
-> > > device, but what the clock drives.
-> >
-> > Well, I don't think that's entirely correct description either.
-> >
-> > As I see it, it's really the actual PM domain (that manages voltages
-> > for a power island), that needs to stay in full power state and
-> > increase its voltage level, as to warm up some of the silicon. It's
-> > not a regular device, but more a characteristics of how the PM domain
-> > can be used.
->
-> First I've heard of Si needing warming...
+Hi Xiang,
 
-I guess people go to cooler places with their devices. :-)
+On 2019/10/30 17:15, Gao Xiang wrote:
+> Hi Chao,
+> 
+> On Wed, Oct 30, 2019 at 04:56:17PM +0800, Chao Yu wrote:
+>> On 2019/10/30 11:55, Gao Xiang wrote:
+>>> remove such useless code and related fault injection.
+>>
+>> Hi Xiang,
+>>
+>> Although, there is so many 'nofail' allocation in f2fs, I think we'd better
+>> avoid such allocation as much as possible (now for read path, we may allow to
+>> fail to allocate bio), I suggest to keep the failure path and bio allocation
+>> injection.
+>>
+>> It looks bio_alloc() will use its own mempool, which may suffer deadlock
+>> potentially. So how about changing to use bio_alloc_bioset(, , NULL) instead of
+>> bio_alloc()?
+> 
+> Yes, I noticed the original commit 740432f83560 ("f2fs: handle failed bio allocation"),
+> yet I don't find any real call trace clue what happened before.
+> 
+> As my understanding, if we allocate bios without submit_bio (I mean write path) with
+> default bs and gfp_flags GFP_NOIO or GFP_KERNEL, I think it will be slept inside
+> mempool rather than return NULL to its caller... Please correct me if I'm wrong...
 
->
-> I think I'd just expect the power domain provider to know which
-> domains to power on then.
+I'm curious too...
 
-Yeah, I agree. This seems reasonable.
+Jaegeuk may know the details.
 
-Thanks!
+> 
+> I could send another patch with bio_alloc_bioset(, , NULL), I am curious to know the
+> original issue and how it solved though...
+> 
+> For read or flush path, since it will submit_bio and bio_alloc one by one, I think
+> mempool will get a page quicker (memory failure path could be longer). But I can
+> send a patch just by using bio_alloc_bioset(, , NULL) instead as you suggested later.
 
-Kind regards
-Uffe
+You're right, in low memory scenario, allocation with bioset will be faster, as
+you mentioned offline, maybe we can add/use a priviate bioset like btrfs did
+rather than using global one, however, we'd better check how deadlock happen
+with a bioset mempool first ...
+
+Thanks,
+
+> 
+> Thanks,
+> Gao Xiang
+> 
+>>
+>> Thanks,
+>>
+>>>
+>>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+>>> ---
+>>>  Documentation/filesystems/f2fs.txt |  1 -
+>>>  fs/f2fs/data.c                     |  6 ++----
+>>>  fs/f2fs/f2fs.h                     | 21 ---------------------
+>>>  fs/f2fs/segment.c                  |  5 +----
+>>>  fs/f2fs/super.c                    |  1 -
+>>>  5 files changed, 3 insertions(+), 31 deletions(-)
+>>>
+>>> diff --git a/Documentation/filesystems/f2fs.txt b/Documentation/filesystems/f2fs.txt
+>>> index 7e1991328473..3477c3e4c08b 100644
+>>> --- a/Documentation/filesystems/f2fs.txt
+>>> +++ b/Documentation/filesystems/f2fs.txt
+>>> @@ -172,7 +172,6 @@ fault_type=%d          Support configuring fault injection type, should be
+>>>                         FAULT_KVMALLOC		0x000000002
+>>>                         FAULT_PAGE_ALLOC		0x000000004
+>>>                         FAULT_PAGE_GET		0x000000008
+>>> -                       FAULT_ALLOC_BIO		0x000000010
+>>>                         FAULT_ALLOC_NID		0x000000020
+>>>                         FAULT_ORPHAN		0x000000040
+>>>                         FAULT_BLOCK		0x000000080
+>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>>> index 5755e897a5f0..3b88dcb15de6 100644
+>>> --- a/fs/f2fs/data.c
+>>> +++ b/fs/f2fs/data.c
+>>> @@ -288,7 +288,7 @@ static struct bio *__bio_alloc(struct f2fs_io_info *fio, int npages)
+>>>  	struct f2fs_sb_info *sbi = fio->sbi;
+>>>  	struct bio *bio;
+>>>  
+>>> -	bio = f2fs_bio_alloc(sbi, npages, true);
+>>> +	bio = bio_alloc(GFP_NOIO, npages);
+>>>  
+>>>  	f2fs_target_device(sbi, fio->new_blkaddr, bio);
+>>>  	if (is_read_io(fio->op)) {
+>>> @@ -682,9 +682,7 @@ static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
+>>>  	struct bio_post_read_ctx *ctx;
+>>>  	unsigned int post_read_steps = 0;
+>>>  
+>>> -	bio = f2fs_bio_alloc(sbi, min_t(int, nr_pages, BIO_MAX_PAGES), false);
+>>> -	if (!bio)
+>>> -		return ERR_PTR(-ENOMEM);
+>>> +	bio = bio_alloc(GFP_KERNEL, min_t(int, nr_pages, BIO_MAX_PAGES));
+>>>  	f2fs_target_device(sbi, blkaddr, bio);
+>>>  	bio->bi_end_io = f2fs_read_end_io;
+>>>  	bio_set_op_attrs(bio, REQ_OP_READ, op_flag);
+>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>> index 4024790028aa..40012f874be0 100644
+>>> --- a/fs/f2fs/f2fs.h
+>>> +++ b/fs/f2fs/f2fs.h
+>>> @@ -44,7 +44,6 @@ enum {
+>>>  	FAULT_KVMALLOC,
+>>>  	FAULT_PAGE_ALLOC,
+>>>  	FAULT_PAGE_GET,
+>>> -	FAULT_ALLOC_BIO,
+>>>  	FAULT_ALLOC_NID,
+>>>  	FAULT_ORPHAN,
+>>>  	FAULT_BLOCK,
+>>> @@ -2210,26 +2209,6 @@ static inline void *f2fs_kmem_cache_alloc(struct kmem_cache *cachep,
+>>>  	return entry;
+>>>  }
+>>>  
+>>> -static inline struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi,
+>>> -						int npages, bool no_fail)
+>>> -{
+>>> -	struct bio *bio;
+>>> -
+>>> -	if (no_fail) {
+>>> -		/* No failure on bio allocation */
+>>> -		bio = bio_alloc(GFP_NOIO, npages);
+>>> -		if (!bio)
+>>> -			bio = bio_alloc(GFP_NOIO | __GFP_NOFAIL, npages);
+>>> -		return bio;
+>>> -	}
+>>> -	if (time_to_inject(sbi, FAULT_ALLOC_BIO)) {
+>>> -		f2fs_show_injection_info(FAULT_ALLOC_BIO);
+>>> -		return NULL;
+>>> -	}
+>>> -
+>>> -	return bio_alloc(GFP_KERNEL, npages);
+>>> -}
+>>> -
+>>>  static inline bool is_idle(struct f2fs_sb_info *sbi, int type)
+>>>  {
+>>>  	if (sbi->gc_mode == GC_URGENT)
+>>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>>> index 808709581481..28457c878d0d 100644
+>>> --- a/fs/f2fs/segment.c
+>>> +++ b/fs/f2fs/segment.c
+>>> @@ -552,10 +552,7 @@ static int __submit_flush_wait(struct f2fs_sb_info *sbi,
+>>>  	struct bio *bio;
+>>>  	int ret;
+>>>  
+>>> -	bio = f2fs_bio_alloc(sbi, 0, false);
+>>> -	if (!bio)
+>>> -		return -ENOMEM;
+>>> -
+>>> +	bio = bio_alloc(GFP_KERNEL, 0);
+>>>  	bio->bi_opf = REQ_OP_WRITE | REQ_SYNC | REQ_PREFLUSH;
+>>>  	bio_set_dev(bio, bdev);
+>>>  	ret = submit_bio_wait(bio);
+>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>>> index 1443cee15863..51945dd27f00 100644
+>>> --- a/fs/f2fs/super.c
+>>> +++ b/fs/f2fs/super.c
+>>> @@ -44,7 +44,6 @@ const char *f2fs_fault_name[FAULT_MAX] = {
+>>>  	[FAULT_KVMALLOC]	= "kvmalloc",
+>>>  	[FAULT_PAGE_ALLOC]	= "page alloc",
+>>>  	[FAULT_PAGE_GET]	= "page get",
+>>> -	[FAULT_ALLOC_BIO]	= "alloc bio",
+>>>  	[FAULT_ALLOC_NID]	= "alloc nid",
+>>>  	[FAULT_ORPHAN]		= "orphan",
+>>>  	[FAULT_BLOCK]		= "no more block",
+>>>
+> .
+> 
