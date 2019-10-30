@@ -2,283 +2,180 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6B9CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA70DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E52A2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B17782054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:33:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="p1qfxpx6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfJ3H2Z (ORCPT
+        id S1726047AbfJ3Hdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 03:28:25 -0400
-Received: from lucky1.263xmail.com ([211.157.147.130]:49142 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbfJ3H2Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 03:28:24 -0400
-Received: from localhost (unknown [192.168.167.235])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 869CC750B2;
-        Wed, 30 Oct 2019 15:28:17 +0800 (CST)
-X-MAIL-GRAY: 1
-X-MAIL-DELIVERY: 0
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P14182T139723234375424S1572420492941644_;
-        Wed, 30 Oct 2019 15:28:17 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <b22cd80876f92dc77e333184964d3eaa>
-X-RL-SENDER: andy.yan@rock-chips.com
-X-SENDER: yxj@rock-chips.com
-X-LOGIN-NAME: andy.yan@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Andy Yan <andy.yan@rock-chips.com>
-To:     heiko@sntech.de, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        kever.yang@rock-chips.com, Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH 2/2] arm64: dts: rockchip: Add devicetree for board roc-rk3308-cc
-Date:   Wed, 30 Oct 2019 15:28:11 +0800
-Message-Id: <20191030072811.29882-1-andy.yan@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191030072648.29738-1-andy.yan@rock-chips.com>
-References: <20191030072648.29738-1-andy.yan@rock-chips.com>
+        Wed, 30 Oct 2019 03:33:54 -0400
+Received: from mout01.posteo.de ([185.67.36.65]:44334 "EHLO mout01.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725923AbfJ3Hdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 03:33:53 -0400
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout01.posteo.de (Postfix) with ESMTPS id 3BBD7160063
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 08:33:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1572420829; bh=nifect0wzKlaGO4/RODKly3/EiwAvcvo65n8B4dh7jM=;
+        h=Subject:From:To:Cc:Openpgp:Autocrypt:Date:From;
+        b=p1qfxpx65fmDk/NUskZLZpsGbvs1lPwxr4uba88I0700F5kS5Djd1c/1QThhHacLg
+         pP/x/hVa+slZwP4l1Bb7sez+6FHKu37hgBk/TC3nBxIBhF6wlZFv4T8GiDwv6HjI+B
+         dF1iukgYUL05YNEm21d09nGj9GOcFAMsdtpBkVVcGaFURG9VpbOEssmZXpB8w6Z09q
+         Wec4xzFFnQBHiBw7dC97vLTI1mi9SV2H83f72KKCSZRSTIlhSD9YGOckQ0EIvJpstS
+         7YSoPChYP56X4uCXJKaBWDKRIz6Co0ZyeaWGzvJ96C0qOZEWtM+CdUATwJ3S1rEqS8
+         wdBfZEhQNU2SA==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 4730Z14DHtz6tq7;
+        Wed, 30 Oct 2019 08:33:45 +0100 (CET)
+Subject: Re: [RFC 0/2] Add workaround for core wake-up on IPI for i.MX8MQ
+From:   Martin Kepplinger <martink@posteo.de>
+To:     Abel Vesa <abelvesa@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bai Ping <ping.bai@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     devicetree@vger.kernel.org, Carlo Caione <ccaione@baylibre.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190610121346.15779-1-abel.vesa@nxp.com>
+ <d217a9d2-fc60-e057-6775-116542e39e8d@posteo.de>
+ <7d3a868a-768c-3cb1-c6d8-bf5fcd1ddd1c@posteo.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=martink@posteo.de; keydata=
+ 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
+Message-ID: <02ed2f06-7873-72a1-5610-961efaca28ac@posteo.de>
+Date:   Wed, 30 Oct 2019 08:33:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <7d3a868a-768c-3cb1-c6d8-bf5fcd1ddd1c@posteo.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ROC-RK3308-CC is a rk3308 based board designed by Firelfy,
-with eMMC and 256MB DDR3 and RTL8188 Wifi on board.
+On 30.10.19 07:11, Martin Kepplinger wrote:
+> On 23.06.19 13:47, Martin Kepplinger wrote:
+>> On 10.06.19 14:13, Abel Vesa wrote:
+>>> This is another alternative for the RFC:
+>>> https://lkml.org/lkml/2019/3/27/545
+>>>
+>>> This new workaround proposal is a little bit more hacky but more contained
+>>> since everything is done within the irq-imx-gpcv2 driver.
+>>>
+>>> Basically, it 'hijacks' the registered gic_raise_softirq __smp_cross_call
+>>> handler and registers instead a wrapper which calls in the 'hijacked' 
+>>> handler, after that calling into EL3 which will take care of the actual
+>>> wake up. This time, instead of expanding the PSCI ABI, we use a new vendor SIP.
+>>>
+>>> I also have the patches ready for TF-A but I'll hold on to them until I see if
+>>> this has a chance of getting in.
+>>
+> 
+> Hi Abel,
+> 
+> Running this workaround doesn't seem to work anymore on 5.4-rcX. Linux
+> doesn't boot, with ATF unchanged (includes your workaround changes). I
+> can try to add more details to this...
+> 
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
----
+When I run this change instead:
+https://source.puri.sm/Librem5/linux-next/commit/e59807ae0e236512761b751abc84a9b129d7fcda
+(again, with the same ATF) Linux 5.4 boots, but simply doesn't load a
+cpuidle driver (cpu-sleep; and cpuidle in /sys/devices/system/cpu/cpu0).
 
- arch/arm64/boot/dts/rockchip/Makefile         |   1 +
- .../arm64/boot/dts/rockchip/rk3308-roc-cc.dts | 191 ++++++++++++++++++
- 2 files changed, 192 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts
+Still, since this is starting with 5.4-rcX, my previous questions stay
+the same :)
 
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index a959434ad46e..cf69b0f33ecb 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-evb.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-roc-cc.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-roc-cc.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts
-new file mode 100644
-index 000000000000..4f01d2f4da83
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts
-@@ -0,0 +1,191 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
-+ */
-+
-+/dts-v1/;
-+#include "rk3308.dtsi"
-+
-+/ {
-+	model = "Firefly ROC-RK3308-CC board";
-+	compatible = "firefly,roc-rk3308-cc", "rockchip,rk3308";
-+	chosen {
-+		stdout-path = "serial2:1500000n8";
-+	};
-+
-+	ir_rx {
-+		compatible = "gpio-ir-receiver";
-+		gpios = <&gpio0 RK_PC0 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&ir_recv_pin>;
-+	};
-+
-+	ir_tx {
-+		compatible = "pwm-ir-tx";
-+		pwms = <&pwm5 0 25000 0>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		power {
-+			label = "firefly:red:power";
-+			linux,default-trigger = "ir-power-click";
-+			default-state = "on";
-+			gpios = <&gpio0 RK_PA6 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		user {
-+			label = "firefly:blue:user";
-+			linux,default-trigger = "ir-user-click";
-+			default-state = "off";
-+			gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	typec_vcc5v: typec-vcc5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "typec_vcc5v";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
-+
-+	vcc5v0_sys: vcc5v0-sys {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_sys";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&typec_vcc5v>;
-+	};
-+
-+	vdd_core: vdd-core {
-+		compatible = "pwm-regulator";
-+		pwms = <&pwm0 0 5000 1>;
-+		regulator-name = "vdd_core";
-+		regulator-min-microvolt = <827000>;
-+		regulator-max-microvolt = <1340000>;
-+		regulator-init-microvolt = <1015000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-settling-time-up-us = <250>;
-+		pwm-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vdd_log: vdd-log {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_log";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <1050000>;
-+		regulator-max-microvolt = <1050000>;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vcc_io: vcc-io {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_io";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vcc_sdmmc: vcc-sdmmc {
-+		compatible = "regulator-gpio";
-+		regulator-name = "vcc_sdmmc";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_HIGH>;
-+		states = <1800000 0x0
-+			  3300000 0x1>;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vcc_sd: vcc-sd {
-+		compatible = "regulator-fixed";
-+		gpio = <&gpio4 RK_PD6 GPIO_ACTIVE_LOW>;
-+		regulator-name = "vcc_sd";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vim-supply = <&vcc_io>;
-+	};
-+
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&vdd_core>;
-+};
-+
-+&emmc {
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	mmc-hs200-1_8v;
-+	supports-emmc;
-+	disable-wp;
-+	non-removable;
-+	num-slots = <1>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	status = "okay";
-+
-+	rtc: rtc@51 {
-+		compatible = "nxp,pcf8563";
-+		reg = <0x51>;
-+		#clock-cells = <0>;
-+	};
-+};
-+
-+&pwm5 {
-+	status = "okay";
-+	pinctrl-names = "active";
-+	pinctrl-0 = <&pwm5_pin_pull_down>;
-+};
-+
-+&pinctrl {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rtc_32k>;
-+
-+	ir-receiver {
-+		ir_recv_pin: ir-recv-pin  {
-+			rockchip,pins = <0 RK_PC0 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	buttons {
-+		pwr_key: pwr-key {
-+			rockchip,pins = <0 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+};
-+
-+&pwm0 {
-+	status = "okay";
-+	pinctrl-0 = <&pwm0_pin_pull_down>;
-+};
-+
-+&sdmmc {
-+	bus-width = <4>;
-+	cap-mmc-highspeed;
-+	cap-sd-highspeed;
-+	supports-sd;
-+	card-detect-delay = <300>;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr104;
-+	vmmc-supply = <&vcc_sd>;
-+	vqmmc-supply = <&vcc_sdmmc>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
--- 
-2.17.1
-
-
-
+thanks,
+                                      martin
