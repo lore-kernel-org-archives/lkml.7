@@ -2,362 +2,122 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9F6CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D71BCA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B49B620856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D955320856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:04:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="b/0GuUzy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfJ3OEV (ORCPT
+        id S1726673AbfJ3OEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:04:21 -0400
-Received: from smtp-sh2.infomaniak.ch ([128.65.195.6]:51351 "EHLO
-        smtp-sh2.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfJ3OET (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 10:04:19 -0400
-Received: from smtp7.infomaniak.ch (smtp7.infomaniak.ch [83.166.132.30])
-        by smtp-sh2.infomaniak.ch (8.14.4/8.14.4/Debian-8+deb8u2) with ESMTP id x9UE3Eeb245292
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Oct 2019 15:03:15 +0100
-Received: from ns3096276.ip-94-23-54.eu (ns3096276.ip-94-23-54.eu [94.23.54.103])
-        (authenticated bits=0)
-        by smtp7.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x9UE3A91166781
-        (version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=NO);
-        Wed, 30 Oct 2019 15:03:11 +0100
-Subject: Re: [PATCH bpf-next v11 2/7] landlock: Add the management of domains
-To:     "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Drysdale <drysdale@google.com>,
-        Florent Revest <revest@chromium.org>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        John Johansen <john.johansen@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        KP Singh <kpsingh@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Paul Moore <paul@paul-moore.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Will Drewry <wad@chromium.org>, bpf@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-References: <20191029171505.6650-1-mic@digikod.net>
- <20191029171505.6650-3-mic@digikod.net>
- <20191030025621.GA27626@mail.hallyn.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Openpgp: preference=signencrypt
-Message-ID: <e6c59db1-0fb5-704d-6693-335fa199101c@digikod.net>
-Date:   Wed, 30 Oct 2019 15:03:10 +0100
-User-Agent: 
+        Wed, 30 Oct 2019 10:04:50 -0400
+Received: from cmta20.telus.net ([209.171.16.93]:42242 "EHLO cmta20.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726284AbfJ3OEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 10:04:50 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id PoaZi6cp8N5I9PoaainIX7; Wed, 30 Oct 2019 08:04:48 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1572444288; bh=WJl/Zs24GFWlEsbeF89Dj/2Rqayile7sFsqtPXzJ8gY=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=b/0GuUzyyoTPlUH59Sb9pN/m0nMfbi04i6g17Yk0sp0UMVjc+Ms1djkgb/3PrgIF8
+         K3r5vt0MkS+CK3qa82YAS6ZD1GEfuKoreWHWbLiNNPYo+Cc4KzR8G5OK6/KzBlPZHg
+         0pTqUVXF0KkzQr9/Y1OJQ4poI09jp5lNHI24RQjpZNcbmVXqepcBrKlBHuhoxOx6Tu
+         ZsMoPUXW0waNaJOkJaQG6yCz1zEZj9URWUzXTiYxG2Q0s4GPdZrVxFpgFVyrhVU2fZ
+         gfvUh3KRwE4UnKEaSnMtY4uHD3n0gR8Ov3csEnaDlilogGqTqW7PQi4dtm4pm+9HQI
+         ER5fnQJ4SEueQ==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=K/Fc4BeI c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=qIE3Bv85-ZitGDqRaokA:9 a=CjuIK1q_8ugA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Vincent Guittot'" <vincent.guittot@linaro.org>
+Cc:     "'linux-kernel'" <linux-kernel@vger.kernel.org>,
+        "'open list:THERMAL'" <linux-pm@vger.kernel.org>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Ingo Molnar'" <mingo@kernel.org>,
+        "'Linus Torvalds'" <torvalds@linux-foundation.org>,
+        "'Thomas Gleixner'" <tglx@linutronix.de>,
+        "'Sargun Dhillon'" <sargun@sargun.me>,
+        "'Tejun Heo'" <tj@kernel.org>, "'Xie XiuQi'" <xiexiuqi@huawei.com>,
+        <xiezhipeng1@huawei.com>,
+        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Rik van Riel'" <riel@surriel.com>
+References: <1572018904-5234-1-git-send-email-dsmythies@telus.net> <CAKfTPtDFAS3TiNaaPoEXFZbqdMt_-tfGm9ffVcQAN=Mu_KbRdQ@mail.gmail.com> <000c01d58bca$f5709b30$e051d190$@net> <CAKfTPtDx6nu7YtYN=JLRAseZS3Q6Nt-QdMQuG_XoUtmtR_101A@mail.gmail.com> <001201d58e68$eaa39630$bfeac290$@net> <20191029160210.GA8343@linaro.org>
+In-Reply-To: <20191029160210.GA8343@linaro.org>
+Subject: RE: [PATCH] Revert "sched/fair: Fix O(nr_cgroups) in the load balancing path"
+Date:   Wed, 30 Oct 2019 07:04:40 -0700
+Message-ID: <000001d58f2a$fc593200$f50b9600$@net>
 MIME-Version: 1.0
-In-Reply-To: <20191030025621.GA27626@mail.hallyn.com>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdWOcj5NDaNMZsSTQUuRuqwCnNBdRwAt1ecg
+X-CMAE-Envelope: MS4wfBxVetny6cp33PTZir3OVfW1MX09EzRaMXmcljIjr1EIXAbAncmTTjt3A8b4DoD/0OnHrJG7USEyLmh7l4PVT1/nPP7/sHEewTPkx0lIdzNsRCF3xCFq
+ rMVbicXxj/2mdx+W96aevZ7QrczGPJO9siv8yY8hSxkFgR925ef50X/LpYp3I1V5MRIaq35EYzuMnnFWFGFB4mfTL7LTexpZa3PY05mJCRahAZEofEPfuuhL
+ 6r2W0CinsZ5cMO+/JddQe5MgZwkVSpIxgpvNU209CAlmNxO+nIMxcHO7zqvFWZ8R7zlR8fk3zsyJ3+vikuWMMslekMeEQ2mTQj49BtVTR6I+DX5DcUmnoPdd
+ lznXl31M1sEPexiKa0WvKprKAM2dCVNweobewV9KHhIja7zKGZPdhScM2lhcl3UCxhXU+VqFGv0Zor9vpmVb+Opdo4BXJUrVX/vjQgQrhcXvyUCo4YQgVSc5
+ IdOisKyK2uyR4NDwDbKPzSBKCNhWmzuBHII9Tl75KOLi9LytyCW7dw0fsgqT+Jh/7HOzjC2klcfTogek0eGg0ylLL20i6nu/5ace+w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019.10.29 09:02 Vincent Guittot wrote:
 
-On 30/10/2019 03:56, Serge E. Hallyn wrote:
-> On Tue, Oct 29, 2019 at 06:15:00PM +0100, Mickaël Salaün wrote:
->> A Landlock domain is a set of eBPF programs.  There is a list for each
->> different program types that can be run on a specific Landlock hook
->> (e.g. ptrace).  A domain is tied to a set of subjects (i.e. tasks).  A
->> Landlock program should not try (nor be able) to infer which subject is
->> currently enforced, but to have a unique security policy for all
->> subjects tied to the same domain.  This make the reasoning much easier
->> and help avoid pitfalls.
->>
->> The next commits tie a domain to a task's credentials thanks to
->> seccomp(2), but we could use cgroups or a security file-system to
->> enforce a sysadmin-defined policy .
->>
->> Signed-off-by: Mickaël Salaün <mic@digikod.net>
->> Cc: Alexei Starovoitov <ast@kernel.org>
->> Cc: Andy Lutomirski <luto@amacapital.net>
->> Cc: Daniel Borkmann <daniel@iogearbox.net>
->> Cc: James Morris <jmorris@namei.org>
->> Cc: Kees Cook <keescook@chromium.org>
->> Cc: Serge E. Hallyn <serge@hallyn.com>
->> Cc: Will Drewry <wad@chromium.org>
->> ---
->>
->> Changes since v10:
->> * rename files and names to clearly define a domain
->> * create a standalone patch to ease review
->> ---
+> Could you try the patch below ? It ensures that at least the root cfs rq stays
+> in the list so each time update_blocked_averages is called, we will call update_cfs_rq_load_avg()
+> for the root cfs_rq at least and even if everything already reach zero.
+> This will ensure that cfs_rq_util_change is called even if nothing has
+> changed.
+>
+> ---
+>  kernel/sched/fair.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 151c0b7..ac0a549 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -7552,6 +7552,8 @@ static inline void update_blocked_load_status(struct rq *rq, bool has_blocked) {
 > 
-> [...]
+>  static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
+>  {
+> +	struct rq *rq = rq_of(cfs_rq);
+> +
+>  	if (cfs_rq->load.weight)
+> 		return false;
 > 
->> +/**
->> + * store_landlock_prog - prepend and deduplicate a Landlock prog_list
->> + *
->> + * Prepend @prog to @init_domain while ignoring @prog if they are already in
->> + * @ref_domain.  Whatever is the result of this function call, you can call
->> + * bpf_prog_put(@prog) after.
->> + *
->> + * @init_domain: empty domain to prepend to
->> + * @ref_domain: domain to check for duplicate programs
->> + * @prog: program to prepend
->> + *
->> + * Return -errno on error or 0 if @prog was successfully stored.
->> + */
->> +static int store_landlock_prog(struct landlock_domain *init_domain,
->> +		const struct landlock_domain *ref_domain,
->> +		struct bpf_prog *prog)
->> +{
->> +	struct landlock_prog_list *tmp_list = NULL;
->> +	int err;
->> +	size_t hook;
->> +	enum landlock_hook_type last_type;
->> +	struct bpf_prog *new = prog;
->> +
->> +	/* allocate all the memory we need */
->> +	struct landlock_prog_list *new_list;
->> +
->> +	last_type = get_hook_type(new);
->> +
->> +	/* ignore duplicate programs */
+> @@ -7564,6 +7566,9 @@ static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
+> 	if (cfs_rq->avg.runnable_load_sum)
+> 		return false;
 > 
-> This comment should be "don't allow" rather than "ignore", right?
+> +	if (cfs_rq == &rq->cfs)
+> +		return false;
+> +
+> 	return true;
+> }
+> 
+> -- 
+> 2.7.4
 
-Exactly, fixed.
+Yes, this patch works and solves the long time
+between calls of the intel_pstate CPU frequency scaling
+driver issue.
+I see you sent a formal patch a few hours ago.
+I'll try it and report back.
 
-> 
->> +	if (ref_domain) {
->> +		struct landlock_prog_list *ref;
->> +
->> +		hook = get_hook_index(get_hook_type(new));
->> +		for (ref = ref_domain->programs[hook]; ref;
->> +				ref = ref->prev) {
->> +			if (ref->prog == new)
->> +				return -EINVAL;
->> +		}
->> +	}
->> +
->> +	new = bpf_prog_inc(new);
->> +	if (IS_ERR(new)) {
->> +		err = PTR_ERR(new);
->> +		goto put_tmp_list;
->> +	}
->> +	new_list = kzalloc(sizeof(*new_list), GFP_KERNEL);
->> +	if (!new_list) {
->> +		bpf_prog_put(new);
->> +		err = -ENOMEM;
->> +		goto put_tmp_list;
->> +	}
->> +	/* ignore Landlock types in this tmp_list */
->> +	new_list->prog = new;
->> +	new_list->prev = tmp_list;
->> +	refcount_set(&new_list->usage, 1);
->> +	tmp_list = new_list;
->> +
->> +	if (!tmp_list)
->> +		/* inform user space that this program was already added */
-> 
-> I'm not following this.  You just kzalloc'd new_list, pointed
-> tmp_list to new_list, so how could tmp_list be NULL?  Was there
-> a bad code reorg here, or am i being dense?
+... Doug
+ 
 
-Indeed, this was introduce with a code refactoring (while removing a
-program "chaining" concept) where this code snippet was in a loop, hence
-the weird use of tmp_list. I'm cleaning this up (and simplifying this
-whole code), and replacing the -EINVAL for the duplicate program check
-with the -EEXIST.
-
-Thanks!
-
-
-> 
->> +		return -EEXIST;
->> +
->> +	/* properly store the list (without error cases) */
->> +	while (tmp_list) {
->> +		struct landlock_prog_list *new_list;
->> +
->> +		new_list = tmp_list;
->> +		tmp_list = tmp_list->prev;
->> +		/* do not increment the previous prog list usage */
->> +		hook = get_hook_index(get_hook_type(new_list->prog));
->> +		new_list->prev = init_domain->programs[hook];
->> +		/* no need to add from the last program to the first because
->> +		 * each of them are a different Landlock type */
->> +		smp_store_release(&init_domain->programs[hook], new_list);
->> +	}
->> +	return 0;
->> +
->> +put_tmp_list:
->> +	put_landlock_prog_list(tmp_list);
->> +	return err;
->> +}
->> +
->> +/* limit Landlock programs set to 256KB */
->> +#define LANDLOCK_PROGRAMS_MAX_PAGES (1 << 6)
->> +
->> +/**
->> + * landlock_prepend_prog - attach a Landlock prog_list to @current_domain
->> + *
->> + * Whatever is the result of this function call, you can call
->> + * bpf_prog_put(@prog) after.
->> + *
->> + * @current_domain: landlock_domain pointer, must be (RCU-)locked (if needed)
->> + *                  to prevent a concurrent put/free. This pointer must not be
->> + *                  freed after the call.
->> + * @prog: non-NULL Landlock prog_list to prepend to @current_domain. @prog will
->> + *        be owned by landlock_prepend_prog() and freed if an error happened.
->> + *
->> + * Return @current_domain or a new pointer when OK. Return a pointer error
->> + * otherwise.
->> + */
->> +struct landlock_domain *landlock_prepend_prog(
->> +		struct landlock_domain *current_domain,
->> +		struct bpf_prog *prog)
->> +{
->> +	struct landlock_domain *new_domain = current_domain;
->> +	unsigned long pages;
->> +	int err;
->> +	size_t i;
->> +	struct landlock_domain tmp_domain = {};
->> +
->> +	if (prog->type != BPF_PROG_TYPE_LANDLOCK_HOOK)
->> +		return ERR_PTR(-EINVAL);
->> +
->> +	/* validate memory size allocation */
->> +	pages = prog->pages;
->> +	if (current_domain) {
->> +		size_t i;
->> +
->> +		for (i = 0; i < ARRAY_SIZE(current_domain->programs); i++) {
->> +			struct landlock_prog_list *walker_p;
->> +
->> +			for (walker_p = current_domain->programs[i];
->> +					walker_p; walker_p = walker_p->prev)
->> +				pages += walker_p->prog->pages;
->> +		}
->> +		/* count a struct landlock_domain if we need to allocate one */
->> +		if (refcount_read(&current_domain->usage) != 1)
->> +			pages += round_up(sizeof(*current_domain), PAGE_SIZE)
->> +				/ PAGE_SIZE;
->> +	}
->> +	if (pages > LANDLOCK_PROGRAMS_MAX_PAGES)
->> +		return ERR_PTR(-E2BIG);
->> +
->> +	/* ensure early that we can allocate enough memory for the new
->> +	 * prog_lists */
->> +	err = store_landlock_prog(&tmp_domain, current_domain, prog);
->> +	if (err)
->> +		return ERR_PTR(err);
->> +
->> +	/*
->> +	 * Each task_struct points to an array of prog list pointers.  These
->> +	 * tables are duplicated when additions are made (which means each
->> +	 * table needs to be refcounted for the processes using it). When a new
->> +	 * table is created, all the refcounters on the prog_list are bumped
->> +	 * (to track each table that references the prog). When a new prog is
->> +	 * added, it's just prepended to the list for the new table to point
->> +	 * at.
->> +	 *
->> +	 * Manage all the possible errors before this step to not uselessly
->> +	 * duplicate current_domain and avoid a rollback.
->> +	 */
->> +	if (!new_domain) {
->> +		/*
->> +		 * If there is no Landlock domain used by the current task,
->> +		 * then create a new one.
->> +		 */
->> +		new_domain = new_landlock_domain();
->> +		if (IS_ERR(new_domain))
->> +			goto put_tmp_lists;
->> +	} else if (refcount_read(&current_domain->usage) > 1) {
->> +		/*
->> +		 * If the current task is not the sole user of its Landlock
->> +		 * domain, then duplicate it.
->> +		 */
->> +		new_domain = new_landlock_domain();
->> +		if (IS_ERR(new_domain))
->> +			goto put_tmp_lists;
->> +		for (i = 0; i < ARRAY_SIZE(new_domain->programs); i++) {
->> +			new_domain->programs[i] =
->> +				READ_ONCE(current_domain->programs[i]);
->> +			if (new_domain->programs[i])
->> +				refcount_inc(&new_domain->programs[i]->usage);
->> +		}
->> +
->> +		/*
->> +		 * Landlock domain from the current task will not be freed here
->> +		 * because the usage is strictly greater than 1. It is only
->> +		 * prevented to be freed by another task thanks to the caller
->> +		 * of landlock_prepend_prog() which should be locked if needed.
->> +		 */
->> +		landlock_put_domain(current_domain);
->> +	}
->> +
->> +	/* prepend tmp_domain to new_domain */
->> +	for (i = 0; i < ARRAY_SIZE(tmp_domain.programs); i++) {
->> +		/* get the last new list */
->> +		struct landlock_prog_list *last_list =
->> +			tmp_domain.programs[i];
->> +
->> +		if (last_list) {
->> +			while (last_list->prev)
->> +				last_list = last_list->prev;
->> +			/* no need to increment usage (pointer replacement) */
->> +			last_list->prev = new_domain->programs[i];
->> +			new_domain->programs[i] = tmp_domain.programs[i];
->> +		}
->> +	}
->> +	return new_domain;
->> +
->> +put_tmp_lists:
->> +	for (i = 0; i < ARRAY_SIZE(tmp_domain.programs); i++)
->> +		put_landlock_prog_list(tmp_domain.programs[i]);
->> +	return new_domain;
->> +}
->> diff --git a/security/landlock/domain_manage.h b/security/landlock/domain_manage.h
->> new file mode 100644
->> index 000000000000..5b5b49f6e3e8
->> --- /dev/null
->> +++ b/security/landlock/domain_manage.h
->> @@ -0,0 +1,23 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * Landlock LSM - domain management headers
->> + *
->> + * Copyright © 2016-2019 Mickaël Salaün <mic@digikod.net>
->> + * Copyright © 2018-2019 ANSSI
->> + */
->> +
->> +#ifndef _SECURITY_LANDLOCK_DOMAIN_MANAGE_H
->> +#define _SECURITY_LANDLOCK_DOMAIN_MANAGE_H
->> +
->> +#include <linux/filter.h>
->> +
->> +#include "common.h"
->> +
->> +void landlock_get_domain(struct landlock_domain *dom);
->> +void landlock_put_domain(struct landlock_domain *dom);
->> +
->> +struct landlock_domain *landlock_prepend_prog(
->> +		struct landlock_domain *current_domain,
->> +		struct bpf_prog *prog);
->> +
->> +#endif /* _SECURITY_LANDLOCK_DOMAIN_MANAGE_H */
->> -- 
->> 2.23.0
-> 
