@@ -2,108 +2,63 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAF3CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8A6CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 440B92080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C27020873
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 23:13:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oLRbvfDJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="wvZ5ApIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbfJ3XMK (ORCPT
+        id S1727559AbfJ3XNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 19:12:10 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44699 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbfJ3XMJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 19:12:09 -0400
-Received: by mail-pg1-f194.google.com with SMTP id e10so2560613pgd.11;
-        Wed, 30 Oct 2019 16:12:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=885nbPg6jGyxC22i6djzkMtMUJgUk22kfQ1KMF5dCF4=;
-        b=oLRbvfDJm8VrWgYQ6QhhHNuvFg0HWFeMlx6uraE9cHEIEbD8Y1oHlM+S7uMR89ykig
-         BfnUSMWbX5wXD6M1Luqc9OvqhZCIF6SP5AJBqS5JclOKquwXOCvDsPXkqnE01c+5FPp3
-         UE67elkNz3DkQ2pUbtKXhNOQQ3mOta+UP73RbCv1nErNEX6a+3mjlG44qBG2gPZLXqat
-         gZswl4CcAZgj7NiEFz8QmrQEttmSAeNdYh0DtpI3YkTRDdLmPzQ4AiXauoif2iJOqtwe
-         u9VlEXoki011PG3H38z5ruJcH44K4kv4CvDQ9vm2frP71hTvnG1h/yE0nunVg8VfNv2G
-         daFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=885nbPg6jGyxC22i6djzkMtMUJgUk22kfQ1KMF5dCF4=;
-        b=faNfDdAIjZDaru17AUrcq1wG4DJwrbb/H8wyWxKwSsSasmZJAqeBB9o1FjezKSsDRU
-         zDR+bq3QzBB3Y/uc6qxYHsZK9pr87aqUjoBFr0e+R0fAoXriIzloUKNbNc4J7CUG57EA
-         S6qHQ7nfa3V/r1NAv37QCtuO0VYtfQ1qIlJeUFT4tU+CmbaiY5AvhF6tfWNjkbnWAEj+
-         7wOz65DlD0FY0tNXPWXs1RVy6fBH2O3EhmXv+2HPRgJqiDn9Wc4h3nsMdRyOufQ6n2bN
-         F7qWjpALE1xJxU7uGoPTF5s5j62v/d1F73453SlSaF75R0YvxoioI1MsLJ4sFqn5afYY
-         i3Qg==
-X-Gm-Message-State: APjAAAVC0fmFaLlL7lay7X3SLJYtyePJ1RNjgT56N5mNumNJMbS0wq3p
-        KxKXJWozflGfeyZzNPTp3IQ=
-X-Google-Smtp-Source: APXvYqxbfiwz4ogo5Kw8lSy4iUdkk8hpOLAZPedWTkyCs30wo0LDOGX1RlN+6AjnPZgj+BoIq0bmnQ==
-X-Received: by 2002:a17:90a:a504:: with SMTP id a4mr2279687pjq.61.1572477128315;
-        Wed, 30 Oct 2019 16:12:08 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id r21sm1079774pfc.27.2019.10.30.16.12.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 16:12:07 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 16:12:05 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Marcel Ziswiler <marcel@ziswiler.com>, devicetree@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        linux-kernel@vger.kernel.org,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        linux-imx@nxp.com, linux-input@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/5] dt-bindings: input: tochscreen: ad7879: generic
- node names in example
-Message-ID: <20191030231205.GI57214@dtor-ws>
-References: <20191026090403.3057-1-marcel@ziswiler.com>
- <20191026090403.3057-3-marcel@ziswiler.com>
- <20191030140455.GA4544@bogus>
+        Wed, 30 Oct 2019 19:13:14 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:42574 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726411AbfJ3XNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 19:13:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=08zRAW1fuCrOHTGj1vuy3kiI71SoEqzhE5Yn/YMo14M=; b=wvZ5ApIF9k8V2Cz22S1SmnYANH
+        C+MNLbexBdrlAt+KbDTc6ZtSCDulf6O9BcQerJ1lQm/S1z2Q4I27b0ykAF++bnhDXofVbCqgvz7cI
+        rzMCl9Grr5QFqwssCqZL/NTVBcsOl6ni2qu3IZefADBhv102h2aXW5XLm9Mese0SHseY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iPx9J-0005Vh-FV; Thu, 31 Oct 2019 00:13:09 +0100
+Date:   Thu, 31 Oct 2019 00:13:09 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [RFC PATCH 1/3] net: phy: at803x: fix Kconfig description
+Message-ID: <20191030231309.GF10555@lunn.ch>
+References: <20191030224251.21578-1-michael@walle.cc>
+ <20191030224251.21578-2-michael@walle.cc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191030140455.GA4544@bogus>
+In-Reply-To: <20191030224251.21578-2-michael@walle.cc>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 09:04:55AM -0500, Rob Herring wrote:
-> On Sat, Oct 26, 2019 at 11:04:01AM +0200, Marcel Ziswiler wrote:
-> > From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On Wed, Oct 30, 2019 at 11:42:49PM +0100, Michael Walle wrote:
+> The name of the PHY is actually AR803x not AT803x. Additionally, add the
+> name of the vendor and mention the AR8031 support.
 > 
-> There's a typo in the subject.
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-I fixed it up file applying, thank you for noticing.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-> 
-> > 
-> > Update example in ad7879 devicetree documentation to use generic touch
-> > controller node names.
-> > 
-> > Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> > 
-> > ---
-> > 
-> > Changes in v2: New patch.
-> > 
-> >  .../devicetree/bindings/input/touchscreen/ad7879.txt          | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-
--- 
-Dmitry
+    Andrew
