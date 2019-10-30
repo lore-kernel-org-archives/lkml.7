@@ -2,51 +2,55 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6826DCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704F6CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF772087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3419821906
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572450722;
-	bh=+f5fV1K5SfaR6N41ceXQ6zF7T0/XN+l1jzOcTOiNBzU=;
+	s=default; t=1572450726;
+	bh=Y61ZJb/1fN2SECbdyVM3niqERKXBoze0HLnOYjt7n5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U1xeQdMN83BNCDikXyyMMoRn01rQQOuz97qr0BnBFlGb0D6+uWDUOcySzMKvAtLTe
-	 zeV+eNPIAwBbuPqwF0SnnmM+2qAEixfuA49r+vqMuG1JFBCD1zzOont92oU3u6ybYq
-	 4mgeTDupFXyO/LsohEpmIqBeM8f5wRbIZ/InqO9Q=
+	b=bO7jwzMAWAqH/LZzZaSWdHgYDLzUAXfZ2HH4HLZz6p6WVA9mg4eNNU67XAs2k8o1Q
+	 Vfo/QCj/cqJ8dieMQLTbaunjEWaAVousTpJy6LKwKr9fRf6/XOTm+bauHWG796dUAY
+	 7NMpvJVDOanNfwfhW6bJLcMP2aJ+lE2B76p8mqqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbfJ3PwB (ORCPT
+        id S1727473AbfJ3PwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:52:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52824 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:52:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727883AbfJ3Pvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:51:54 -0400
+        id S1727900AbfJ3Pv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:51:58 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 088C920656;
-        Wed, 30 Oct 2019 15:51:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC22F21734;
+        Wed, 30 Oct 2019 15:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450714;
-        bh=+f5fV1K5SfaR6N41ceXQ6zF7T0/XN+l1jzOcTOiNBzU=;
+        s=default; t=1572450717;
+        bh=Y61ZJb/1fN2SECbdyVM3niqERKXBoze0HLnOYjt7n5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m61353Be9Rw4MrrrdZCwhF5lxBCViFs6wpWfQPvTGyxvpdsP4OUkEisVXtKYw7HZ5
-         LHA2kA2BvT9hxAYdpJPWwt5HCE+Zn/hEI4wmahMTshBJEUB9qDcvq5JqhU9Zx1GnPx
-         e3Bfm0tPWKM7Bu6Q6vBmulppXyJsIONzq7HJtACQ=
+        b=xsi7pjTLOUKDpYM0J2zcJ9v+/UNLatmSsjlN0FYbfgXtYAB4Oiojyk7utcyN11kxX
+         1dmiRMEWuVFUeVOelEq/QM/IkmHTq8cDpZsU/yH+YoG5yETW75kfdz24hRd9RKPkRn
+         fkVmyatWADrQgeCe3EHBujqrDnd779zi1wbmCiTU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 32/81] ASoC: simple_card_utils.h: Fix potential multiple redefinition error
-Date:   Wed, 30 Oct 2019 11:48:38 -0400
-Message-Id: <20191030154928.9432-32-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Eyal Reizer <eyalr@ti.com>, Guy Mishol <guym@ti.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 33/81] ARM: dts: Use level interrupt for omap4 & 5 wlcore
+Date:   Wed, 30 Oct 2019 11:48:39 -0400
+Message-Id: <20191030154928.9432-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
 References: <20191030154928.9432-1-sashal@kernel.org>
@@ -59,49 +63,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit af6219590b541418d3192e9bfa03989834ca0e78 ]
+[ Upstream commit 087a2b7ec973f6f30f6e7b72cb50b6f7734ffdd2 ]
 
-asoc_simple_debug_info and asoc_simple_debug_dai must be static
-otherwise we might a compilation error if the compiler decides
-not to inline the given function.
+Commit 572cf7d7b07d ("ARM: dts: Improve omap l4per idling with wlcore edge
+sensitive interrupt") changed wlcore interrupts to use edge interrupt based
+on what's specified in the wl1835mod.pdf data sheet.
 
-Fixes: 0580dde59438686d ("ASoC: simple-card-utils: add asoc_simple_debug_info()")
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Link: https://lore.kernel.org/r/20191009153615.32105-3-daniel.baluta@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+However, there are still cases where we can have lost interrupts as
+described in omap_gpio_unidle(). And using a level interrupt instead of edge
+interrupt helps as we avoid the check for untriggered GPIO interrupts in
+omap_gpio_unidle().
+
+And with commit e6818d29ea15 ("gpio: gpio-omap: configure edge detection
+for level IRQs for idle wakeup") GPIOs idle just fine with level interrupts.
+
+Let's change omap4 and 5 wlcore users back to using level interrupt
+instead of edge interrupt. Let's not change the others as I've only seen
+this on omap4 and 5, probably because the other SoCs don't have l4per idle
+independent of the CPUs.
+
+Fixes: 572cf7d7b07d ("ARM: dts: Improve omap l4per idling with wlcore edge sensitive interrupt")
+Depends-on: e6818d29ea15 ("gpio: gpio-omap: configure edge detection for level IRQs for idle wakeup")
+Cc: Anders Roxell <anders.roxell@linaro.org>
+Cc: Eyal Reizer <eyalr@ti.com>
+Cc: Guy Mishol <guym@ti.com>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/sound/simple_card_utils.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/omap4-droid4-xt894.dts       | 2 +-
+ arch/arm/boot/dts/omap4-panda-common.dtsi      | 2 +-
+ arch/arm/boot/dts/omap4-sdp.dts                | 2 +-
+ arch/arm/boot/dts/omap4-var-som-om44-wlan.dtsi | 2 +-
+ arch/arm/boot/dts/omap5-board-common.dtsi      | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/include/sound/simple_card_utils.h b/include/sound/simple_card_utils.h
-index 985a5f583de4c..31f76b6abf712 100644
---- a/include/sound/simple_card_utils.h
-+++ b/include/sound/simple_card_utils.h
-@@ -135,9 +135,9 @@ int asoc_simple_init_priv(struct asoc_simple_priv *priv,
- 			       struct link_info *li);
- 
- #ifdef DEBUG
--inline void asoc_simple_debug_dai(struct asoc_simple_priv *priv,
--				  char *name,
--				  struct asoc_simple_dai *dai)
-+static inline void asoc_simple_debug_dai(struct asoc_simple_priv *priv,
-+					 char *name,
-+					 struct asoc_simple_dai *dai)
- {
- 	struct device *dev = simple_priv_to_dev(priv);
- 
-@@ -167,7 +167,7 @@ inline void asoc_simple_debug_dai(struct asoc_simple_priv *priv,
- 		dev_dbg(dev, "%s clk %luHz\n", name, clk_get_rate(dai->clk));
- }
- 
--inline void asoc_simple_debug_info(struct asoc_simple_priv *priv)
-+static inline void asoc_simple_debug_info(struct asoc_simple_priv *priv)
- {
- 	struct snd_soc_card *card = simple_priv_to_card(priv);
- 	struct device *dev = simple_priv_to_dev(priv);
+diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+index 4454449de00c0..a40fe8d49da64 100644
+--- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
++++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+@@ -369,7 +369,7 @@
+ 		compatible = "ti,wl1285", "ti,wl1283";
+ 		reg = <2>;
+ 		/* gpio_100 with gpmc_wait2 pad as wakeirq */
+-		interrupts-extended = <&gpio4 4 IRQ_TYPE_EDGE_RISING>,
++		interrupts-extended = <&gpio4 4 IRQ_TYPE_LEVEL_HIGH>,
+ 				      <&omap4_pmx_core 0x4e>;
+ 		interrupt-names = "irq", "wakeup";
+ 		ref-clock-frequency = <26000000>;
+diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+index 14be2ecb62b1f..55ea8b6189af5 100644
+--- a/arch/arm/boot/dts/omap4-panda-common.dtsi
++++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+@@ -474,7 +474,7 @@
+ 		compatible = "ti,wl1271";
+ 		reg = <2>;
+ 		/* gpio_53 with gpmc_ncs3 pad as wakeup */
+-		interrupts-extended = <&gpio2 21 IRQ_TYPE_EDGE_RISING>,
++		interrupts-extended = <&gpio2 21 IRQ_TYPE_LEVEL_HIGH>,
+ 				      <&omap4_pmx_core 0x3a>;
+ 		interrupt-names = "irq", "wakeup";
+ 		ref-clock-frequency = <38400000>;
+diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+index 3c274965ff40a..91480ac1f3286 100644
+--- a/arch/arm/boot/dts/omap4-sdp.dts
++++ b/arch/arm/boot/dts/omap4-sdp.dts
+@@ -512,7 +512,7 @@
+ 		compatible = "ti,wl1281";
+ 		reg = <2>;
+ 		interrupt-parent = <&gpio1>;
+-		interrupts = <21 IRQ_TYPE_EDGE_RISING>; /* gpio 53 */
++		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>; /* gpio 53 */
+ 		ref-clock-frequency = <26000000>;
+ 		tcxo-clock-frequency = <26000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/omap4-var-som-om44-wlan.dtsi b/arch/arm/boot/dts/omap4-var-som-om44-wlan.dtsi
+index 6dbbc9b3229cc..d0032213101e6 100644
+--- a/arch/arm/boot/dts/omap4-var-som-om44-wlan.dtsi
++++ b/arch/arm/boot/dts/omap4-var-som-om44-wlan.dtsi
+@@ -69,7 +69,7 @@
+ 		compatible = "ti,wl1271";
+ 		reg = <2>;
+ 		interrupt-parent = <&gpio2>;
+-		interrupts = <9 IRQ_TYPE_EDGE_RISING>; /* gpio 41 */
++		interrupts = <9 IRQ_TYPE_LEVEL_HIGH>; /* gpio 41 */
+ 		ref-clock-frequency = <38400000>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
+index 7fff555ee3943..68ac04641bdb1 100644
+--- a/arch/arm/boot/dts/omap5-board-common.dtsi
++++ b/arch/arm/boot/dts/omap5-board-common.dtsi
+@@ -362,7 +362,7 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&wlcore_irq_pin>;
+ 		interrupt-parent = <&gpio1>;
+-		interrupts = <14 IRQ_TYPE_EDGE_RISING>;	/* gpio 14 */
++		interrupts = <14 IRQ_TYPE_LEVEL_HIGH>;	/* gpio 14 */
+ 		ref-clock-frequency = <26000000>;
+ 	};
+ };
 -- 
 2.20.1
 
