@@ -2,112 +2,120 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24581CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9625FCA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9407205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66862205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:35:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G8an5jEj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tR6noo5C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbfJ3Pdd (ORCPT
+        id S1726792AbfJ3PfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:33:33 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59627 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726255AbfJ3Pdc (ORCPT
+        Wed, 30 Oct 2019 11:35:25 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39778 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfJ3PfZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:33:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572449611;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jPxLc22m28c+kEUKzIvK5d4SLQMacaKmaA/P7n/BVkA=;
-        b=G8an5jEjRdDfAPc2WL7fmf7UNvMfm9f9NeR/sV00rkgEjNaAFonuOeq0Zf/St2ufauUyTt
-        FTK0z5XJKQsiFqd9YGHu/2HQOfGzC+iNqgJOXaXCLVOTCMBPpPg2eaRcAKf5eHUcY0wQes
-        Byf0do7l1uUENE6DfGyoOLXrmuGulbw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-23-k9J2UT_uPduup4A7VGRLgg-1; Wed, 30 Oct 2019 11:33:28 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5ACB92F2A;
-        Wed, 30 Oct 2019 15:33:27 +0000 (UTC)
-Received: from [10.36.116.178] (ovpn-116-178.ams2.redhat.com [10.36.116.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AC2ED60BE0;
-        Wed, 30 Oct 2019 15:33:25 +0000 (UTC)
-Subject: Re: [PATCH v2] mm/sparse.c: mark populate_section_memmap as __meminit
-To:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>
-References: <20191030151639.41486-1-iii@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <26d03485-054e-40cc-2a04-151f9d96fdae@redhat.com>
-Date:   Wed, 30 Oct 2019 16:33:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 30 Oct 2019 11:35:25 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y3so3184934ljj.6;
+        Wed, 30 Oct 2019 08:35:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6/cUvxppfvco+q/svBW0l1eTrvr4r1OMCG7AkgiKpcQ=;
+        b=tR6noo5CwOi34VQIokfGyMdP+tJf/ZPULHPz8KIcLua8ZoHBLlO50xCqeMHaAGvVQa
+         48WC0IzF8IxRv33JMgEH6NVNXDntgXn7Qbh44b6Itm/zy8iGjwULy02N0bndCfuE2mWn
+         J5Gwpff3AsiQbdxaPgA4+tL1vptqqQI4FjSr8FVKo2VUEXTe05i7hepKReBSN4ewi9tv
+         zbaqlMUmmjqzytwjIcNNu6xS9h9lWk0Eaj0NjvRt2/CJPLu+0YZNb2skTCtzBUyPYFNU
+         4LvGej/Mi9HNnkRrWKHopWrOtOHpFc32BVA/CVOOxGZuSTldPR3GNZh63N8HGJiB7fSn
+         K3Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6/cUvxppfvco+q/svBW0l1eTrvr4r1OMCG7AkgiKpcQ=;
+        b=a7G85NUd3PiSRYyz+PPHcvUPX8XFnp5xRv/fKEIFPBEaTClzadmxu2vw6e7wJlSfaK
+         /8BhwdjhG8RA7hDngdBoUi4STefYxbch3zK4rJmsJLs4xeZ6oEv5WuQOtPXHy1xBXtEI
+         abwQQXErdvqypLwf1Qm3puufAlGwyh+a96OxvcpKr7U2r0iaRZsMFfFvT03kSgua1Xvh
+         VevTTT6xctaJi2Ji954Qu4UtotJisPEnCB1Z1wwJAjUP5vY3ybhGxC0ms4JoqrA6doG+
+         6phCen7SOXVc3TYJoav2qwLi5ZgQHee6421/MgTQs5dfVf3P+wuxaSZZOqNGEr/VV8dr
+         cvvQ==
+X-Gm-Message-State: APjAAAUjf/oa0D64VtIqsqwlegW8iB8kED66rUkEAMUtLHn9uG3g28ro
+        Pwo4rzKn2cNKW8d2T1AkQkTkogdQ0Cx+0w/J90Q=
+X-Google-Smtp-Source: APXvYqxBvl31pTcQQnHQbXcbxQLKZEYYjr+em5rKZ5EtZ+2iT0oglxx0fEQ8/RXMOehSCT8SBwLe+R0VTmgUsFSdHMc=
+X-Received: by 2002:a2e:2412:: with SMTP id k18mr217604ljk.243.1572449721198;
+ Wed, 30 Oct 2019 08:35:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191030151639.41486-1-iii@linux.ibm.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: k9J2UT_uPduup4A7VGRLgg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+ <1572171452-7958-2-git-send-email-rppt@kernel.org> <20191028123124.ogkk5ogjlamvwc2s@box>
+ <20191028130018.GA7192@rapoport-lnx> <20191028131623.zwuwguhm4v4s5imh@box>
+ <20191028135521.GB4097@hirez.programming.kicks-ass.net> <0a35765f7412937c1775daa05177b20113760aee.camel@intel.com>
+ <20191028210052.GM4643@worktop.programming.kicks-ass.net> <69c57f7fa9a1be145827673b37beff155a3adc3c.camel@intel.com>
+ <20191030100418.GV4097@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191030100418.GV4097@hirez.programming.kicks-ass.net>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 30 Oct 2019 08:35:09 -0700
+Message-ID: <CAADnVQ+3LeLWv-rpATyfAbdS1w9L=sCQFuyy=paCZVBUr0rK6Q@mail.gmail.com>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user mappings
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rppt@kernel.org" <rppt@kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "kirill@shutemov.name" <kirill@shutemov.name>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.10.19 16:16, Ilya Leoshkevich wrote:
-> Building the kernel on s390 with -Og produces the following warning:
->=20
-> WARNING: vmlinux.o(.text+0x28dabe): Section mismatch in reference from th=
-e function populate_section_memmap() to the function .meminit.text:__popula=
-te_section_memmap()
-> The function populate_section_memmap() references
-> the function __meminit __populate_section_memmap().
-> This is often because populate_section_memmap lacks a __meminit
-> annotation or the annotation of __populate_section_memmap is wrong.
->=20
-> While -Og is not supported, in theory this might still happen with
-> another compiler or on another architecture. So fix this by using the
-> correct section annotations.
->=20
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> ---
->=20
-> v1 -> v2: Do not touch mm/sparse.c version of __populate_section_memmap:
-> its __init annotation is correct, since it is only called during init
-> phase (by sparse_init_nid), and contains the call to another __init
-> function. Spotted by kbuild test robot <lkp@intel.com> and Oscar
-> Salvador <osalvador@suse.de>.
->=20
-> I was notified that v1 has already been included into
-> http://ozlabs.org/~akpm/mmots/broken-out. Since this is not a git
-> repository, I've decided to send a v2 instead of the fix. Please let me
-> know if I should send a fix instead.
+On Wed, Oct 30, 2019 at 3:06 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Tue, Oct 29, 2019 at 05:27:43PM +0000, Edgecombe, Rick P wrote:
+> > On Mon, 2019-10-28 at 22:00 +0100, Peter Zijlstra wrote:
+>
+> > > That should be limited to the module range. Random data maps could
+> > > shatter the world.
+> >
+> > BPF has one vmalloc space allocation for the byte code and one for the module
+> > space allocation for the JIT. Both get RO also set on the direct map alias of
+> > the pages, and reset RW when freed.
+>
+> Argh, I didn't know they mapped the bytecode RO; why does it do that? It
+> can throw out the bytecode once it's JIT'ed.
 
-That's fine, Andrew will simply replace the patch.
-
-Acked-by: David Hildenbrand <david@redhat.com>
-
---=20
-
-Thanks,
-
-David / dhildenb
-
+because of endless security "concerns" that some folks had.
+Like what if something can exploit another bug in the kernel
+and modify bytecode that was already verified
+then interpreter will execute that modified bytecode.
+Sort of similar reasoning why .text is read-only.
+I think it's not a realistic attack, but I didn't bother to argue back then.
+The mere presence of interpreter itself is a real security concern.
+People that care about speculation attacks should
+have CONFIG_BPF_JIT_ALWAYS_ON=y,
+so modifying bytecode via another exploit will be pointless.
+Getting rid of RO for bytecode will save a ton of memory too,
+since we won't need to allocate full page for each small programs.
