@@ -2,185 +2,128 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77903CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D241ECA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 462D2208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:45:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uKbzD6z3"
+	by mail.kernel.org (Postfix) with ESMTP id A6788208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:45:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfJ3QpC (ORCPT
+        id S1727109AbfJ3Qpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:45:02 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:43090 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726995AbfJ3QpA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 12:45:00 -0400
-Received: by mail-ua1-f65.google.com with SMTP id c25so902250uap.10
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 09:44:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p3/pbvedwS4IhZb4B6nbOhbMOZh2AXw7ndulwhv3TfM=;
-        b=uKbzD6z3ZGjc1fWALJKpEEB/bbWW4HPabd5njl25crREYFACWhI8l1Kir807xOxFpf
-         uaLa/jYOBB4myt492ky0Bm4YMaUYwzK/94ra2AKsk/hjtGfxyIUNsYZMw3k03FhB7aa+
-         D2OMDUrVDFG4lh3JnM9JNhFiNrQATzIWHgWWrsFo/gfWlZcp7D/KPuimOVmXF9dmZDOE
-         kqpQKHr+JjnMM9ArF0cPmyy5HSVupmLBQmTJ2rUO9BmpLiphAUI7CTD1n8sVbxM3f7P+
-         y4tJ9cXCf+NQfuudxvOK6UYmowPV5Kf2WNvQcUvzZdfMJCJXPEp22cQ//ywxY1dvTRRP
-         vp1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p3/pbvedwS4IhZb4B6nbOhbMOZh2AXw7ndulwhv3TfM=;
-        b=RII9i6+UI+74Sr0/Jw6Sogg/LLe4Rbl6JcVvyeR0fv6+gsKgygnflF0S63R5QSnH3v
-         Yt79KPnPq1feL3hpx8xFf0w2MauqYBWPKDejR8raHBGgxL+zbXlXkp0TD3e/bSp0sy9u
-         mm95rYx2s3yKqfJzaeqRDEDatkbjK0WqHVipoJ0V2x6DIwyEMUROYpVQDJikXtZjQ7xb
-         Y82I2Mo8pv1o2XeqoTEVAFuoyP//TnLJJTwHtQH/egABLOwONcHSvKrhPwNdiAy9IUBc
-         3I9lC0e5dH8CjuAQN7a6MA7rr27KQ7F9gPx1mxwEpj53CJA0O7Xlc6dOjO6ZOYtpnoic
-         3Pjg==
-X-Gm-Message-State: APjAAAVcgV5wpZFwTr40f6Aka4vcBOTcM1oY2AFmJHbA0oJGHasgoBfZ
-        EKCDZ70HWJ6exIONgI6ebSesuixzAqYitwxfNlsseQ==
-X-Google-Smtp-Source: APXvYqxJtN6SyNTtxvr9eHmowjOiNggxSentSJ3MZnyqcgsnfmMgt0WjJPDMGJJ+lnTYhFM/TEriRkTW1hDBpWXDXFc=
-X-Received: by 2002:ab0:2258:: with SMTP id z24mr367974uan.100.1572453897721;
- Wed, 30 Oct 2019 09:44:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1571510481.git.hns@goldelico.com> <bec9d76e6da03d734649b9bdf76e9d575c57631a.1571510481.git.hns@goldelico.com>
-In-Reply-To: <bec9d76e6da03d734649b9bdf76e9d575c57631a.1571510481.git.hns@goldelico.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 30 Oct 2019 17:44:21 +0100
-Message-ID: <CAPDyKFrMQ3fBaeeAYVJfUdL8m=PDRU9Xt_9oGw6D1XOY68qDuQ@mail.gmail.com>
-Subject: Re: [PATCH v2 03/11] DTS: ARM: pandora-common: define wl1251 as child
- node of mmc3
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Sterba <dsterba@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
+        Wed, 30 Oct 2019 12:45:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:37992 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726942AbfJ3Qpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 12:45:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7FBDB31F;
+        Wed, 30 Oct 2019 09:45:40 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 119493F6C4;
+        Wed, 30 Oct 2019 09:45:37 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 16:45:35 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     linux-mm@kvack.org, Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        "# 4.0+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v14 21/22] arm64: mm: Convert mm/dump.c to use
+ walk_page_range()
+Message-ID: <20191030164535.GC13309@arrakis.emea.arm.com>
+References: <20191028135910.33253-1-steven.price@arm.com>
+ <20191028135910.33253-22-steven.price@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028135910.33253-22-steven.price@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 19 Oct 2019 at 20:42, H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> Since v4.7 the dma initialization requires that there is a
-> device tree property for "rx" and "tx" channels which is
-> not provided by the pdata-quirks initialization.
->
-> By conversion of the mmc3 setup to device tree this will
-> finally allows to remove the OpenPandora wlan specific omap3
-> data-quirks.
->
-> Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
->
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Cc: <stable@vger.kernel.org> # 4.7.0
-> ---
->  arch/arm/boot/dts/omap3-pandora-common.dtsi | 37 +++++++++++++++++++--
->  1 file changed, 35 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/omap3-pandora-common.dtsi b/arch/arm/boot/dts/omap3-pandora-common.dtsi
-> index ec5891718ae6..c595b3eb314d 100644
-> --- a/arch/arm/boot/dts/omap3-pandora-common.dtsi
-> +++ b/arch/arm/boot/dts/omap3-pandora-common.dtsi
-> @@ -226,6 +226,18 @@
->                 gpio = <&gpio6 4 GPIO_ACTIVE_HIGH>;     /* GPIO_164 */
->         };
->
-> +       /* wl1251 wifi+bt module */
-> +       wlan_en: fixed-regulator-wg7210_en {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vwlan";
-> +               regulator-min-microvolt = <1800000>;
-> +               regulator-max-microvolt = <1800000>;
+On Mon, Oct 28, 2019 at 01:59:09PM +0000, Steven Price wrote:
+> diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
+> index 93f9f77582ae..9d9b740a86d2 100644
+> --- a/arch/arm64/mm/dump.c
+> +++ b/arch/arm64/mm/dump.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/io.h>
+>  #include <linux/init.h>
+>  #include <linux/mm.h>
+> +#include <linux/ptdump.h>
+>  #include <linux/sched.h>
+>  #include <linux/seq_file.h>
+>  
+> @@ -75,10 +76,11 @@ static struct addr_marker address_markers[] = {
+>   * dumps out a description of the range.
+>   */
+>  struct pg_state {
+> +	struct ptdump_state ptdump;
+>  	struct seq_file *seq;
+>  	const struct addr_marker *marker;
+>  	unsigned long start_address;
+> -	unsigned level;
+> +	int level;
+>  	u64 current_prot;
+>  	bool check_wx;
+>  	unsigned long wx_pages;
+> @@ -178,6 +180,10 @@ static struct pg_level pg_level[] = {
+>  		.name	= "PGD",
+>  		.bits	= pte_bits,
+>  		.num	= ARRAY_SIZE(pte_bits),
+> +	}, { /* p4d */
+> +		.name	= "P4D",
+> +		.bits	= pte_bits,
+> +		.num	= ARRAY_SIZE(pte_bits),
+>  	}, { /* pud */
+>  		.name	= (CONFIG_PGTABLE_LEVELS > 3) ? "PUD" : "PGD",
+>  		.bits	= pte_bits,
 
-I doubt these are correct.
+We could use "PGD" for the p4d entry since we don't have five levels.
+This patches the "PGD" name used for pud/pmd when these levels are
+folded.
 
-I guess this should be in the range of 2.7V-3.6V.
+> @@ -240,11 +246,15 @@ static void note_prot_wx(struct pg_state *st, unsigned long addr)
+>  	st->wx_pages += (addr - st->start_address) / PAGE_SIZE;
+>  }
+>  
+> -static void note_page(struct pg_state *st, unsigned long addr, unsigned level,
+> -				u64 val)
+> +static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
+> +		      unsigned long val)
+>  {
+> +	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
+>  	static const char units[] = "KMGTPE";
+> -	u64 prot = val & pg_level[level].mask;
+> +	u64 prot = 0;
+> +
+> +	if (level >= 0)
+> +		prot = val & pg_level[level].mask;
 
-> +               startup-delay-us = <50000>;
-> +               regulator-always-on;
+I think this test is not needed as we never have level < 0. The only
+call with a level 0 is from ptdump_hole() where the level passed is
+depth+1 while depth is -1 or higher.
 
-Always on?
+Anyway, we can keep this test _if_ we shift the levels down. I find it
+quite confusing that ptdump_hole() takes a 'depth' argument where 0 is
+PGD and 4 is PTE while for note_page() 1 is PGD and 5 PTE.
 
-> +               enable-active-high;
-> +               gpio = <&gpio1 23 GPIO_ACTIVE_HIGH>;
-> +       };
-> +
->         /* wg7210 (wifi+bt module) 32k clock buffer */
->         wg7210_32k: fixed-regulator-wg7210_32k {
->                 compatible = "regulator-fixed";
-> @@ -522,9 +534,30 @@
->         /*wp-gpios = <&gpio4 31 GPIO_ACTIVE_HIGH>;*/    /* GPIO_127 */
->  };
->
-> -/* mmc3 is probed using pdata-quirks to pass wl1251 card data */
->  &mmc3 {
-> -       status = "disabled";
-> +       vmmc-supply = <&wlan_en>;
-> +
-> +       bus-width = <4>;
-> +       non-removable;
-> +       ti,non-removable;
-> +       cap-power-off-card;
-> +
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&mmc3_pins>;
-> +
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +
-> +       wlan: wl1251@1 {
-> +               compatible = "ti,wl1251";
-> +
-> +               reg = <1>;
-> +
-> +               interrupt-parent = <&gpio1>;
-> +               interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;  /* GPIO_21 */
-> +
-> +               ti,wl1251-has-eeprom;
-> +       };
->  };
->
->  /* bluetooth*/
-> --
-> 2.19.1
->
-
-Kind regards
-Uffe
+-- 
+Catalin
