@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF8CCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 095FBCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF7DF21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8EAB217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451209;
-	bh=eK03D9qDn2tTGcCq3GV9jpYR+3ahyJ+u39Vf1XxYdwQ=;
+	s=default; t=1572451225;
+	bh=+r78vgMnDR87npOWjtfsxJzphjSo8BM6zb8n59LRG3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v/nmhqGnALn6Qlrla4eBFLHUbRmTmhNyNMG9DeOyhZ5CYqCxHJqQl7UcEmsfLcdde
-	 6A2dyEgqz2mQ2QrAf6Pw70Ribs7BrwGSi/wD5YnZSvHcBelPaH9DjZzo8hY5V8YwHI
-	 /1+Ow0yN/Ibe+ywk/Zl2j6dCktce41uIZcMtWzn8=
+	b=eYbRzNKNoCj743BrjYx66MUnLlxdb08lFNrAy/U4tx5QMyNfyiiTiNlWMeoeO6lsK
+	 AHDObybu3unYpKVCwqj3CcF5LQIev10AEFOm9bOlzaRGuOJuBmr+gl7N0oiA40r9ct
+	 UJZpTOBx9aPOFRh3YcuspB3ek+wpstcrhE7tXIn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbfJ3P4L (ORCPT
+        id S1728241AbfJ3QAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:56:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57748 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 12:00:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727535AbfJ3P4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:56:08 -0400
+        id S1728043AbfJ3Pzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:55:44 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1D89217D9;
-        Wed, 30 Oct 2019 15:56:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE1A6217D9;
+        Wed, 30 Oct 2019 15:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450968;
-        bh=eK03D9qDn2tTGcCq3GV9jpYR+3ahyJ+u39Vf1XxYdwQ=;
+        s=default; t=1572450943;
+        bh=+r78vgMnDR87npOWjtfsxJzphjSo8BM6zb8n59LRG3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rn86h3Se8QUA3zxnXm68w/WTO0NbcgK3tKjsRVWKPNXjszDllGJw7UzXKX9FmrgSr
-         hI0TzbpeLn8DCqcMda+r7FwBr5LSJNUTqS+3L2kgwnwpCVlMh2HZiMbRD/3rPe5+ve
-         4k/arD3WNzPvS3AGA2cEfeKQk6aIagRFIXp1lvPM=
+        b=UIsrDZOtwV2SKdI78zQ8+dRWEv7MK+Q8PztIoNb1F6tkTwQWqjUd/JthhTL0r0liA
+         DcwHz3MRenEtoiY6ChvoHSDzAkRDN/SAfLfA/NQ8bt1y+0uz+lTQ1fI9NL7QR8KTVZ
+         0ATs14SZFE7c76C9q+TycV+8I259/oU+WiXAENRI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 05/24] ASoc: rockchip: i2s: Fix RPM imbalance
-Date:   Wed, 30 Oct 2019 11:55:36 -0400
-Message-Id: <20191030155555.10494-5-sashal@kernel.org>
+Cc:     Alain Volmat <alain.volmat@st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 34/38] i2c: stm32f7: remove warning when compiling with W=1
+Date:   Wed, 30 Oct 2019 11:54:02 -0400
+Message-Id: <20191030155406.10109-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191030155555.10494-1-sashal@kernel.org>
-References: <20191030155555.10494-1-sashal@kernel.org>
+In-Reply-To: <20191030155406.10109-1-sashal@kernel.org>
+References: <20191030155406.10109-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,37 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Alain Volmat <alain.volmat@st.com>
 
-[ Upstream commit b1e620e7d32f5aad5353cc3cfc13ed99fea65d3a ]
+[ Upstream commit 348e46fbb4cdb2aead79aee1fd8bb25ec5fd25db ]
 
-If rockchip_pcm_platform_register() fails, e.g. upon deferring to wait
-for an absent DMA channel, we return without disabling RPM, which makes
-subsequent re-probe attempts scream with errors about the unbalanced
-enable. Don't do that.
+Remove the following warning:
 
-Fixes: ebb75c0bdba2 ("ASoC: rockchip: i2s: Adjust devm usage")
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Link: https://lore.kernel.org/r/bcb12a849a05437fb18372bc7536c649b94bdf07.1570029862.git.robin.murphy@arm.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+drivers/i2c/busses/i2c-stm32f7.c:315:
+warning: cannot understand function prototype:
+'struct stm32f7_i2c_spec i2c_specs[] =
+
+Replace a comment starting with /** by simply /* to avoid having
+it interpreted as a kernel-doc comment.
+
+Fixes: aeb068c57214 ("i2c: i2c-stm32f7: add driver")
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/rockchip/rockchip_i2s.c | 2 +-
+ drivers/i2c/busses/i2c-stm32f7.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
-index 66fc13a2396a0..0e07e3dea7de4 100644
---- a/sound/soc/rockchip/rockchip_i2s.c
-+++ b/sound/soc/rockchip/rockchip_i2s.c
-@@ -676,7 +676,7 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
- 	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Could not register PCM\n");
--		return ret;
-+		goto err_suspend;
- 	}
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 362b23505f214..f4e3613f9361b 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -297,7 +297,7 @@ struct stm32f7_i2c_dev {
+ 	bool use_dma;
+ };
  
- 	return 0;
+-/**
++/*
+  * All these values are coming from I2C Specification, Version 6.0, 4th of
+  * April 2014.
+  *
 -- 
 2.20.1
 
