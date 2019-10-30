@@ -2,107 +2,150 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80FCCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1F2CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B15C7205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F08220856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:38:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VAIFwHjD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfJ3Pf6 (ORCPT
+        id S1726636AbfJ3Pi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:35:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:36414 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbfJ3Pf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:35:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5EE0A1FB;
-        Wed, 30 Oct 2019 08:35:57 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F03D3F6C4;
-        Wed, 30 Oct 2019 08:35:56 -0700 (PDT)
-Subject: Re: [PATCH 0/7] iommu: Permit modular builds of ARM SMMU[v3] drivers
-To:     Will Deacon <will@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-References: <20191030145112.19738-1-will@kernel.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <6e457227-ca06-2998-4ffa-a58ab171ce32@arm.com>
-Date:   Wed, 30 Oct 2019 15:35:55 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 30 Oct 2019 11:38:58 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36651 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726175AbfJ3Pi5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:38:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572449936;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GKUfBqzsWbWpLwq+4AXt80BF3zMIN95jw0nzaAUS1Zs=;
+        b=VAIFwHjD4RIaev3zP5Lmmn7I6SxpmvEwFJQmLqgG3Sk+wYeqVc9FyNjtd319D9M6j1pdyz
+        GwM1SQbwhQEC4q5Gn2elgqGT63Jx94kTSaL6A+krgRQlEmjsWfy0hPU2HiIfmO86cahBhi
+        n4LYQ3h8z0hrvnKEtsDip4mtfi8f3lE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-233-WZwI5j86PF64TD9j1RtGEg-1; Wed, 30 Oct 2019 11:38:52 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 43BD3107ACC0;
+        Wed, 30 Oct 2019 15:38:51 +0000 (UTC)
+Received: from [10.36.116.178] (ovpn-116-178.ams2.redhat.com [10.36.116.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C78419488;
+        Wed, 30 Oct 2019 15:38:50 +0000 (UTC)
+Subject: Re: [PATCH v3] mm: gup: fix comments of __get_user_pages() and
+ get_user_pages_remote()
+To:     Liu Xiang <liuxiang_1999@126.com>, linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, jhubbard@nvidia.com
+References: <1572443533-3118-1-git-send-email-liuxiang_1999@126.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <e15d7687-d975-7f9d-f029-d952cdfc969d@redhat.com>
+Date:   Wed, 30 Oct 2019 16:38:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191030145112.19738-1-will@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1572443533-3118-1-git-send-email-liuxiang_1999@126.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: WZwI5j86PF64TD9j1RtGEg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/10/2019 14:51, Will Deacon wrote:
-> Hi all,
-> 
-> As part of the work to enable a "Generic Kernel Image" across multiple
-> Android devices, there is a need to seperate shared, core kernel code
-> from modular driver code that may not be needed by all SoCs. This means
-> building IOMMU drivers as modules.
-> 
-> It turns out that most of the groundwork has already been done to enable
-> the ARM SMMU drivers to be 'tristate' options in drivers/iommu/Kconfig;
-> with a few symbols exported from the IOMMU/PCI core, everything builds
-> nicely out of the box. The one exception is support for the legacy SMMU
-> DT binding, which is not in widespread use and has never worked with
-> modules, so we can simply remove that when building as a module rather
-> than try to paper over it with even more hacks.
-> 
-> Obviously you need to be careful about using IOMMU drivers as modules,
-> since late loading of the driver for an IOMMU serving active DMA masters
-> is going to end badly in many cases. On Android, we're using device links
-> to ensure that the IOMMU probes first.
+On 30.10.19 14:52, Liu Xiang wrote:
+> Fix comments of __get_user_pages() and get_user_pages_remote(),
+> make them more clear.
+>=20
+> Suggested-by: John Hubbard <jhubbard@nvidia.com>
+> Signed-off-by: Liu Xiang <liuxiang_1999@126.com>
+>=20
+> ---
+>=20
+> Changes in v3:
+>   as suggested by John, apply the same fix to get_user_pages_remote().
+> ---
+>   mm/gup.c | 32 ++++++++++++++++++++++----------
+>   1 file changed, 22 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 8f236a3..c36c621 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -734,11 +734,17 @@ static int check_vma_flags(struct vm_area_struct *v=
+ma, unsigned long gup_flags)
+>    *=09=09Or NULL if the caller does not require them.
+>    * @nonblocking: whether waiting for disk IO or mmap_sem contention
+>    *
+> - * Returns number of pages pinned. This may be fewer than the number
+> - * requested. If nr_pages is 0 or negative, returns 0. If no pages
+> - * were pinned, returns -errno. Each page returned must be released
+> - * with a put_page() call when it is finished with. vmas will only
+> - * remain valid while mmap_sem is held.
+> + * Returns either number of pages pinned (which may be less than the
+> + * number requested), or an error. Details about the return value:
+> + *
+> + * -- If nr_pages is 0, returns 0.
+> + * -- If nr_pages is >0, but no pages were pinned, returns -errno.
+> + * -- If nr_pages is >0, and some pages were pinned, returns the number =
+of
+> + *    pages pinned. Again, this may be less than nr_pages.
+> + *
+> + * The caller is responsible for releasing returned @pages, via put_page=
+().
+> + *
+> + * @vmas are valid only as long as mmap_sem is held.
+>    *
+>    * Must be called with mmap_sem held.  It may be released.  See below.
+>    *
+> @@ -1107,11 +1113,17 @@ static __always_inline long __get_user_pages_lock=
+ed(struct task_struct *tsk,
+>    *=09=09subsequently whether VM_FAULT_RETRY functionality can be
+>    *=09=09utilised. Lock must initially be held.
+>    *
+> - * Returns number of pages pinned. This may be fewer than the number
+> - * requested. If nr_pages is 0 or negative, returns 0. If no pages
+> - * were pinned, returns -errno. Each page returned must be released
+> - * with a put_page() call when it is finished with. vmas will only
+> - * remain valid while mmap_sem is held.
+> + * Returns either number of pages pinned (which may be less than the
+> + * number requested), or an error. Details about the return value:
+> + *
+> + * -- If nr_pages is 0, returns 0.
+> + * -- If nr_pages is >0, but no pages were pinned, returns -errno.
+> + * -- If nr_pages is >0, and some pages were pinned, returns the number =
+of
+> + *    pages pinned. Again, this may be less than nr_pages.
+> + *
+> + * The caller is responsible for releasing returned @pages, via put_page=
+().
+> + *
+> + * @vmas are valid only as long as mmap_sem is held.
+>    *
+>    * Must be called with mmap_sem held for read or write.
+>    *
+>=20
 
-Out of curiosity, which device links are those? Clearly not the RPM 
-links created by the IOMMU drivers themselves... Is this some special 
-Android magic, or is there actually a chance of replacing all the 
-of_iommu_configure() machinery with something more generic?
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-Robin.
+--=20
 
-> 
-> Comments welcome,
-> 
-> Will
-> 
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> 
-> --->8
-> 
-> Will Deacon (7):
->    drivers/iommu: Export core IOMMU API symbols to permit modular drivers
->    iommu/of: Request ACS from the PCI core when configuring IOMMU linkage
->    PCI: Export pci_ats_disabled() as a GPL symbol to modules
->    Revert "iommu/arm-smmu: Make arm-smmu-v3 explicitly non-modular"
->    iommu/arm-smmu-v3: Allow building as a module
->    Revert "iommu/arm-smmu: Make arm-smmu explicitly non-modular"
->    iommu/arm-smmu: Allow building as a module
-> 
->   drivers/iommu/Kconfig         | 16 ++++++-
->   drivers/iommu/arm-smmu-impl.c |  6 +++
->   drivers/iommu/arm-smmu-v3.c   | 26 +++++++----
->   drivers/iommu/arm-smmu.c      | 86 +++++++++++++++++++++--------------
->   drivers/iommu/iommu-sysfs.c   |  5 ++
->   drivers/iommu/iommu.c         |  8 ++++
->   drivers/iommu/of_iommu.c      |  1 +
->   drivers/pci/pci.c             |  1 +
->   8 files changed, 102 insertions(+), 47 deletions(-)
-> 
+Thanks,
+
+David / dhildenb
+
