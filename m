@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85E8CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B2CCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD0020862
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C232820856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:53:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCHCfMc6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YbchFVgC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfJ3Vxz (ORCPT
+        id S1727377AbfJ3Vx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 17:53:55 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39021 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727015AbfJ3Vxz (ORCPT
+        Wed, 30 Oct 2019 17:53:58 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43461 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727099AbfJ3Vx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 17:53:55 -0400
-Received: by mail-lj1-f195.google.com with SMTP id y3so4380097ljj.6;
-        Wed, 30 Oct 2019 14:53:53 -0700 (PDT)
+        Wed, 30 Oct 2019 17:53:57 -0400
+Received: by mail-lj1-f196.google.com with SMTP id s4so4354637ljj.10;
+        Wed, 30 Oct 2019 14:53:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+iIhirnFklLn1OL2q/K6q4x2b2P+v7Ve0tVmAkHn4AI=;
-        b=QCHCfMc6kANijIVQw1KJuxfSKSmH+jkHIRDJOlHmoBRlkPXBTBfa4uzzbYnldhoSS6
-         7rH5rBWT5/0N8HBf4oeFpzsoo2e2AdUIwDiu93pt8xCNgNybwwwm9Hzdp9bUtCIPUFtN
-         tzUFcxMosKRjlV6139fQUAU1EK8E1JQNy5Ay4kmuuvQE+p7F1sk4Xv3VmTeURhYUjwOw
-         FnM1tJg6LXG3mjM9C7w6eOdO5y8Vqcno8rMvnGPJfKx7gsI26rLaLfpZQL77sP7q+qOl
-         7p4BwOtOdebtkhNb21g1NCY8AiaUFQvI/vJHCc4IjAZmkS36UK4bOksU9uS98E2N9chj
-         U1fw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LrhIzqAOKcThSWpXVPxHX0ADaa3rzHyxkRuOfbx8IPw=;
+        b=YbchFVgC3wpZUXEOaMjzcmtOkpjJhy86/i2w94hoelj0CeW162PV5eSTZQkTAhGhlB
+         JqQjSktlo0xAfY5Kt+dXooEoFGxXdN7bbDFGq9ez3f8ENcl2vlNjMkRL4rL3Shsq/WlC
+         5pIWipHRmxfwKr/TicnFRPNmV+plo7Ni6fS0m0nLvx09gkNOMg6qMYoddymOgI4NvYmt
+         SZE3O/muI+uHvUNRQk+MD/Nds/hvXJa5zzcMhi//I/k/4LwIkg8h9/b0lHZnrOSAkCX1
+         kMw7Sj+cMJJVZhZj5IW/GmIytVR6CEHXEcWxzLtdGsFzX2Sf0LBiKJTlq58aHyV1Ahyq
+         HOcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+iIhirnFklLn1OL2q/K6q4x2b2P+v7Ve0tVmAkHn4AI=;
-        b=jFHreicbMneDVXPDEtYHXEVvetX+qT2xg8BkDAI9AN5Rbm6HRkNzx4aBq5/TNnyxzr
-         9USU49RfUiiB7T8KR6zyR13O8Jyx7gIoDQfJKcA/iNe27Q5dL1FP/CZs5vmbqZ+BaLIF
-         9zhrHHbwPUTGkC6Ch6zrhNmh2XjhNqUOs0/8FzlPlDb9ahBqWP3Y0plMWtkClDSumqKB
-         0XStyUIOOTInm3Js5qw3MwuWhF7T0HKHPabo1jGTPJ9rX5+dbrkBa8YlsRHo6BJ6ogK2
-         KR3SDWCnVwhM6g7OcD0gVANKKGzuimuyHOxY+6uw0g+Ur9mllHMfZ+xqn8MnuUXJngof
-         vLXQ==
-X-Gm-Message-State: APjAAAX+WzwFzv8+QsEEm0kFy9qsZGZSyF1rkIHiG0n8WMfR9gNrPhfq
-        vrJXfgTj09YKTsBLlY1/A1E=
-X-Google-Smtp-Source: APXvYqwpmKfbKgKXmoJ7VfD8jQr0W8/TDCuxscJdav/6f6yiLUtGDuMrdaXy306YXDn9OgGLsExE0A==
-X-Received: by 2002:a2e:87c3:: with SMTP id v3mr1316353ljj.61.1572472433046;
-        Wed, 30 Oct 2019 14:53:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LrhIzqAOKcThSWpXVPxHX0ADaa3rzHyxkRuOfbx8IPw=;
+        b=L0BhTtmSO7QWlJre6jwQWav7WhExZZKFZoLum5/hwErTKR5Z58XNYy22074u8E5C0F
+         uOL2gnertT62OQAx6z1b2QDw7QIvn31m0HCyKwU/GJwo2weTow4o8JsalxLGlSOZHXJN
+         YczeK1vOlido3X8fsHSVZ8qieCBSmLwgoFJz0fe8FJdqclhmT95UMaOeDzC/wLQo9wJf
+         o99by3y9cwNcZoNRfBCgQYnRBNEfjcIEsQYPrg1XR32Zm5kIyPtjCHcNbmrZHbgaljCc
+         StTi3iNXCWo0eeQaftebdmAlbzvQbc8cqSqKeBRfqROuv2tGGaLWZLZYN5CtZGKRCiLA
+         6aLg==
+X-Gm-Message-State: APjAAAX0Wwp1etrrzFp/zqL8aVskqL4a8w0jXW2bRczJdBlK3XW0vcrl
+        yXUB0gKuWS+2gT8z6N4QYLc=
+X-Google-Smtp-Source: APXvYqyh+MeH0kSO9RSqv+LxrHF2Z40UZrsRQJdqxel0BvA8mn/9z5tEY/vzT7dQzNkNeMQ3yU6k6g==
+X-Received: by 2002:a05:651c:1b0:: with SMTP id c16mr1286453ljn.192.1572472434371;
+        Wed, 30 Oct 2019 14:53:54 -0700 (PDT)
 Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id a2sm520316lfh.73.2019.10.30.14.53.51
+        by smtp.gmail.com with ESMTPSA id a2sm520316lfh.73.2019.10.30.14.53.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 14:53:52 -0700 (PDT)
+        Wed, 30 Oct 2019 14:53:53 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -66,10 +66,12 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Stephen Boyd <sboyd@kernel.org>
 Cc:     linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/2] ARM: tegra: Switch CPU to PLLP on resume from LP1 on Tegra30/114/124
-Date:   Thu, 31 Oct 2019 00:53:41 +0300
-Message-Id: <20191030215342.14948-1-digetx@gmail.com>
+Subject: [PATCH v1 2/2] ARM: tegra: Don't enable PLLX while resuming from LP1 on Tegra30
+Date:   Thu, 31 Oct 2019 00:53:42 +0300
+Message-Id: <20191030215342.14948-2-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191030215342.14948-1-digetx@gmail.com>
+References: <20191030215342.14948-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,35 +79,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The early-resume code shall not switch CPU to PLLX because PLLX
-configuration could be unstable or PLLX should be simply disabled if
-CPU enters into suspend running off some other PLL (the case if CPUFREQ
-driver is active). The actual burst policy is restored by the clock
-drivers.
+PLLX may be kept disabled if cpufreq driver selects some other clock for
+CPU. In that case PLLX will be disabled later in the resume path by the
+CLK driver, which also can enable PLLX if necessary by itself. Thus there
+is no need to enable PLLX early during resume. Tegra114/124 CLK drivers do
+not manage PLLX on resume and thus they are left untouched by this patch.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/mach-tegra/sleep-tegra30.S | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ arch/arm/mach-tegra/sleep-tegra30.S | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm/mach-tegra/sleep-tegra30.S b/arch/arm/mach-tegra/sleep-tegra30.S
-index 5942cec9b6ef..2f9e5076d201 100644
+index 2f9e5076d201..3caae60a75a0 100644
 --- a/arch/arm/mach-tegra/sleep-tegra30.S
 +++ b/arch/arm/mach-tegra/sleep-tegra30.S
-@@ -383,11 +383,8 @@ _pll_m_c_x_done:
- 	ldr	r4, [r5, #0x1C]		@ restore SCLK_BURST
- 	str	r4, [r0, #CLK_RESET_SCLK_BURST]
+@@ -358,7 +358,6 @@ _no_pll_iddq_exit:
  
--	cmp	r10, #TEGRA30
--	movweq	r4, #:lower16:((1 << 28) | (0x8))	@ burst policy is PLLX
--	movteq	r4, #:upper16:((1 << 28) | (0x8))
--	movwne	r4, #:lower16:((1 << 28) | (0xe))
--	movtne	r4, #:upper16:((1 << 28) | (0xe))
-+	movw	r4, #:lower16:((1 << 28) | (0x4))	@ burst policy is PLLP
-+	movt	r4, #:upper16:((1 << 28) | (0x4))
- 	str	r4, [r0, #CLK_RESET_CCLK_BURST]
+ 	pll_enable r1, r0, CLK_RESET_PLLM_BASE, CLK_RESET_PLLM_MISC
+ 	pll_enable r1, r0, CLK_RESET_PLLC_BASE, CLK_RESET_PLLC_MISC
+-	pll_enable r1, r0, CLK_RESET_PLLX_BASE, CLK_RESET_PLLX_MISC
  
- 	/* Restore pad power state to normal */
+ _pll_m_c_x_done:
+ 	pll_enable r1, r0, CLK_RESET_PLLP_BASE, CLK_RESET_PLLP_MISC
+@@ -368,8 +367,18 @@ _pll_m_c_x_done:
+ 	pll_locked r1, r0, CLK_RESET_PLLP_BASE
+ 	pll_locked r1, r0, CLK_RESET_PLLA_BASE
+ 	pll_locked r1, r0, CLK_RESET_PLLC_BASE
++
++	/*
++	 * CPUFreq driver could select other PLL for CPU. PLLX will be
++	 * enabled by the Tegra30 CLK driver on an as-needed basis, see
++	 * tegra30_cpu_clock_resume().
++	 */
++	cmp	r10, #TEGRA30
++	beq	_pll_m_c_x_locked
++
+ 	pll_locked r1, r0, CLK_RESET_PLLX_BASE
+ 
++_pll_m_c_x_locked:
+ 	mov32	r7, TEGRA_TMRUS_BASE
+ 	ldr	r1, [r7]
+ 	add	r1, r1, #LOCK_DELAY
 -- 
 2.23.0
 
