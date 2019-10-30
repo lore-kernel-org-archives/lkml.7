@@ -2,162 +2,105 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CA3CA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB741CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9437020679
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCF22087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:19:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bGtl+H+X";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mvj20y4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfJ3PSh (ORCPT
+        id S1727209AbfJ3PS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:18:37 -0400
-Received: from mga11.intel.com ([192.55.52.93]:3811 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726950AbfJ3PSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:18:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 08:18:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
-   d="scan'208";a="374918242"
-Received: from kmbarley-mobl.amr.corp.intel.com (HELO [10.252.135.193]) ([10.252.135.193])
-  by orsmga005.jf.intel.com with ESMTP; 30 Oct 2019 08:18:35 -0700
-Subject: Re: [alsa-devel] [PATCH v3 2/2] soundwire: qcom: add support for
- SoundWire controller
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     robh@kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, spapothi@codeaurora.org,
-        lgirdwood@gmail.com, broonie@kernel.org
-References: <20191011154423.2506-1-srinivas.kandagatla@linaro.org>
- <20191011154423.2506-3-srinivas.kandagatla@linaro.org>
- <20191021044405.GB2654@vkoul-mobl>
- <17cb6d3f-2317-9667-8642-566a8a88bd4c@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <e9b63796-4af2-452c-53de-aab2e7c85866@linux.intel.com>
-Date:   Wed, 30 Oct 2019 10:18:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 30 Oct 2019 11:18:59 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:37624 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfJ3PS7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:18:59 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 63E3360913; Wed, 30 Oct 2019 15:18:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572448737;
+        bh=knA8Ic2tqj9JF9EG2DEMqJxtA5w9Djz+7CUfs/V50Aw=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=bGtl+H+XrUoY03ZZr3HSatChd6MxvbSQMsB1RfH0TokgE4gYSCkGBWh6OuSe9oKHp
+         6G+xK01An6Q4mXjr8v3Z9hMyHmOm4Fvnhji/ip6MG1nfQbSmg+n44e1Gv5SoklOskS
+         BKXL29/yhutMB7giM5Cx/5gSv8iyNij5McL2acOc=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9563E60F7A;
+        Wed, 30 Oct 2019 15:18:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572448736;
+        bh=knA8Ic2tqj9JF9EG2DEMqJxtA5w9Djz+7CUfs/V50Aw=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=mvj20y4BOibzuXc0Nbz+dRAhmVfmZV2VG0hn093YqWfpdd17xIpxEPhNxp22dhI+L
+         AMwNA/iuiW+hTlspeyanWyQzY1VBqbGozmVCrXl/kgeKX1iW+V9pju6HkEA6xCETO9
+         P7pNnp65bgfH81aU+gmE5Od0zG60rJSoM+NLJEdE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9563E60F7A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <17cb6d3f-2317-9667-8642-566a8a88bd4c@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ath: ath9k: Remove unneeded variable
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20191028204317.GA29468@saurav>
+References: <20191028204317.GA29468@saurav>
+To:     Saurav Girepunje <saurav.girepunje@gmail.com>
+Cc:     ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, saurav.girepunje@hotmail.com
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20191030151857.63E3360913@smtp.codeaurora.org>
+Date:   Wed, 30 Oct 2019 15:18:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Saurav Girepunje <saurav.girepunje@gmail.com> wrote:
 
+> Remove "len" variable which is not used in ath9k_dump_legacy_btcoex.
+> 
+> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
 
-On 10/30/19 9:56 AM, Srinivas Kandagatla wrote:
-> 
-> 
-> On 21/10/2019 05:44, Vinod Koul wrote:
->> On 11-10-19, 16:44, Srinivas Kandagatla wrote:
->>
->>> +static irqreturn_t qcom_swrm_irq_handler(int irq, void *dev_id)
->>> +{
->>> +    struct qcom_swrm_ctrl *ctrl = dev_id;
->>> +    u32 sts, value;
->>> +    unsigned long flags;
->>> +
->>> +    ctrl->reg_read(ctrl, SWRM_INTERRUPT_STATUS, &sts);
->>> +
->>> +    if (sts & SWRM_INTERRUPT_STATUS_CMD_ERROR) {
->>> +        ctrl->reg_read(ctrl, SWRM_CMD_FIFO_STATUS, &value);
->>> +        dev_err_ratelimited(ctrl->dev,
->>> +                    "CMD error, fifo status 0x%x\n",
->>> +                     value);
->>> +        ctrl->reg_write(ctrl, SWRM_CMD_FIFO_CMD, 0x1);
->>> +    }
->>> +
->>> +    if ((sts & SWRM_INTERRUPT_STATUS_NEW_SLAVE_ATTACHED) ||
->>> +        sts & SWRM_INTERRUPT_STATUS_CHANGE_ENUM_SLAVE_STATUS)
->>> +        schedule_work(&ctrl->slave_work);
->>
->> we are in irq thread, so why not do the work here rather than schedule
->> it?
-> 
-> The reason is that, sdw_handle_slave_status() we will read device id 
-> registers, which are fifo based in this controller and triggers an 
-> interrupt for each read.
-> So all the such reads will timeout waiting for interrupt if we do not do 
-> it in a separate thread.
+Fails to build, always compile test your patches.
 
-Yes, it's similar for Intel. we don't read device ID in the handler or 
-reads would time out. And in the latest patches we also use a work queue 
-for the slave status handling (due to MSI handling issues).
-Even if this timeout problem did not exists, updates to the slave status 
-will typically result in additional read/writes, which are going to be 
-throttled by the command bandwidth (frame rate), so this status update 
-should really not be done in a handler. This has to be done in a thread 
-or work queue.
+In file included from drivers/net/wireless/ath/ath9k/gpio.c:17:
+drivers/net/wireless/ath/ath9k/gpio.c: In function 'ath9k_dump_legacy_btcoex':
+drivers/net/wireless/ath/ath9k/ath9k.h:763:3: error: 'len' undeclared (first use in this function); did you mean '_end'?
+   len += scnprintf(buf + len, size - len,  \
+   ^~~
+drivers/net/wireless/ath/ath9k/gpio.c:502:2: note: in expansion of macro 'ATH_DUMP_BTCOEX'
+  ATH_DUMP_BTCOEX("Stomp Type", btcoex->bt_stomp_type);
+  ^~~~~~~~~~~~~~~
+drivers/net/wireless/ath/ath9k/ath9k.h:763:3: note: each undeclared identifier is reported only once for each function it appears in
+   len += scnprintf(buf + len, size - len,  \
+   ^~~
+drivers/net/wireless/ath/ath9k/gpio.c:502:2: note: in expansion of macro 'ATH_DUMP_BTCOEX'
+  ATH_DUMP_BTCOEX("Stomp Type", btcoex->bt_stomp_type);
+  ^~~~~~~~~~~~~~~
+make[5]: *** [drivers/net/wireless/ath/ath9k/gpio.o] Error 1
+make[4]: *** [drivers/net/wireless/ath/ath9k] Error 2
+make[3]: *** [drivers/net/wireless/ath] Error 2
+make[2]: *** [drivers/net/wireless] Error 2
+make[1]: *** [drivers/net] Error 2
+make[1]: *** Waiting for unfinished jobs....
+make: *** [drivers] Error 2
 
-> 
-> 
-> 
->>
->>> +static int qcom_swrm_compute_params(struct sdw_bus *bus)
->>> +{
->>> +    struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
->>> +    struct sdw_master_runtime *m_rt;
->>> +    struct sdw_slave_runtime *s_rt;
->>> +    struct sdw_port_runtime *p_rt;
->>> +    struct qcom_swrm_port_config *pcfg;
->>> +    int i = 0;
->>> +
->>> +    list_for_each_entry(m_rt, &bus->m_rt_list, bus_node) {
->>> +        list_for_each_entry(p_rt, &m_rt->port_list, port_node) {
->>> +            pcfg = &ctrl->pconfig[p_rt->num - 1];
->>> +            p_rt->transport_params.port_num = p_rt->num;
->>> +            p_rt->transport_params.sample_interval = pcfg->si + 1;
->>> +            p_rt->transport_params.offset1 = pcfg->off1;
->>> +            p_rt->transport_params.offset2 = pcfg->off2;
->>> +        }
->>> +
->>> +        list_for_each_entry(s_rt, &m_rt->slave_rt_list, m_rt_node) {
->>> +            list_for_each_entry(p_rt, &s_rt->port_list, port_node) {
->>> +                pcfg = &ctrl->pconfig[i];
->>> +                p_rt->transport_params.port_num = p_rt->num;
->>> +                p_rt->transport_params.sample_interval =
->>> +                    pcfg->si + 1;
->>> +                p_rt->transport_params.offset1 = pcfg->off1;
->>> +                p_rt->transport_params.offset2 = pcfg->off2;
->>> +                i++;
->>> +            }
->>
->> Can you explain this one, am not sure I understood this. This fn is
->> supposed to compute and fill up the params, all I can see is filling up!
->>
-> Bandwidth parameters are currently coming from board specific Device 
-> Tree, which are programmed here.
+Patch set to Rejected.
 
-'compute' does not mean 'dynamic on-demand bandwidth allocation', it's 
-perfectly legal to use fixed tables as done here.
+-- 
+https://patchwork.kernel.org/patch/11216495/
 
-> 
->>> +static const struct snd_soc_dai_ops qcom_swrm_pdm_dai_ops = {
->>> +    .hw_params = qcom_swrm_hw_params,
->>> +    .prepare = qcom_swrm_prepare,
->>> +    .hw_free = qcom_swrm_hw_free,
->>> +    .startup = qcom_swrm_startup,
->>> +    .shutdown = qcom_swrm_shutdown,
->>> +        .set_sdw_stream = qcom_swrm_set_sdw_stream,
->>
->> why does indent look off to me!
->>
-> Yep, Fixed in next version.
-> 
-> --srini
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
