@@ -2,206 +2,155 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4207CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A90C9CA9EC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A0102054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 751AC20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:13:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="wmVtkyKb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfJ3JNF (ORCPT
+        id S1726664AbfJ3JNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:13:05 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:41982 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726028AbfJ3JNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 05:13:04 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 975FED29C948E39BD46E;
-        Wed, 30 Oct 2019 17:12:57 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 30 Oct 2019 17:12:57 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Wed, 30 Oct 2019 17:12:57 +0800
-Date:   Wed, 30 Oct 2019 17:15:42 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Chao Yu <yuchao0@huawei.com>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [f2fs-dev] [PATCH] f2fs: bio_alloc should never fail
-Message-ID: <20191030091542.GA24976@architecture4>
-References: <20191030035518.65477-1-gaoxiang25@huawei.com>
- <20aa40bd-280d-d223-9f73-d9ed7dbe4f29@huawei.com>
+        Wed, 30 Oct 2019 05:13:39 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:7502 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726028AbfJ3JNi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 05:13:38 -0400
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9U97gTL028439;
+        Wed, 30 Oct 2019 05:13:35 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2vxwgw96v9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 30 Oct 2019 05:13:35 -0400
+Received: from m0167090.ppops.net (m0167090.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id x9U9Bweb031798;
+        Wed, 30 Oct 2019 05:13:35 -0400
+Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2059.outbound.protection.outlook.com [104.47.38.59])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2vxwgw96v7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 30 Oct 2019 05:13:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ViHGVHNrxThacTeQ607r850mjchgwnHGdhxggXu1uml3fq4ulmJgrxH0PXoZTZU4CX7v33KDkFYJG+cUs94KfL4HbNpxGwAmzqZRMFH1hJoWH+RxxGCzfdmm3VAmhyYccSuprnk7BW8WOcWFjtQmCJwYYNszjzwbj3dKJZDZZfkdAEtLPYSgJw3RLqkHFSjx+TUzJO7gTgER/f7lXi8biMlYUlb3Iji+BsAON11TaCIBhF6Ae2COmhdD4VNMksFrEfx2CSbs6xT5VaR8/DCVIyJ7VHbvxUnheSs8R1sNexatEG8BzJFXTUCb2mYgWiIRVnhn+hCZi2xXxDVQlug9zg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZCiFTRvd7YEy0zVsuH2Myr5fPjTF4rt5WO+cO6OF2Ak=;
+ b=fcJXQJhFe8QME1eYv8DUjN9jbKYvjNiXs4iRaLdN/FiwM+7yCc//Vm6cCwtcteQOWeHYa8MrSN9E8XCcO/UNQlefZfuGFJJVPo8XwlQ6Aoh4o3xVMURqWkW6lGErv06Cm5Mgofk/hMfKdcN+2izJS0U+i2O2YiLB7qJksoK3O0znTXjOypBcuj8cmosG5Zy0lfSYsWpJGHJuqql3ewTQaJEbOIcOIwxZwdWs/bDJTicL74eR2JBGpgeI/lS6y2qFGHkOJXsTBSeRzYhDEg6rmGnQmlkRxwWFwcDlv0ll24lTCD8Cx12RZp+sXfAxdmgMfVDcK3jZWePYdxRX778Pfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZCiFTRvd7YEy0zVsuH2Myr5fPjTF4rt5WO+cO6OF2Ak=;
+ b=wmVtkyKbhdo8VB/nfPYKIAVT7orXLkmv4Xqd266mv/Hm0m2XdFzxamseloPM3E2ecZjvRSyxYxcEUzf/MfsnnRCTzepfgDeWl0NwWDYbkdtD+ZaAQSpRu2LfynmWwIIiITitHXlnd2o4AfqYOL3EqfCCod3AmTk8YiYLHILjQp4=
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
+ CH2PR03MB5157.namprd03.prod.outlook.com (20.180.15.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.22; Wed, 30 Oct 2019 09:13:33 +0000
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::99:71f2:a588:977c]) by CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::99:71f2:a588:977c%3]) with mapi id 15.20.2387.028; Wed, 30 Oct 2019
+ 09:13:33 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "jic23@kernel.org" <jic23@kernel.org>,
+        "zhongjiang@huawei.com" <zhongjiang@huawei.com>
+CC:     "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH 1/2] iio: imu: adis16460: use DEFINE_DEBUGFS_ATTRIBUTE to
+ define debugfs fops
+Thread-Topic: [PATCH 1/2] iio: imu: adis16460: use DEFINE_DEBUGFS_ATTRIBUTE to
+ define debugfs fops
+Thread-Index: AQHVjvtrBj5Qf5upT0iyFDGx/fmGzady5qIA
+Date:   Wed, 30 Oct 2019 09:13:33 +0000
+Message-ID: <fb8722ad2c1ef51944dc814a7b24433f4348721e.camel@analog.com>
+References: <1572423581-59762-1-git-send-email-zhongjiang@huawei.com>
+         <1572423581-59762-2-git-send-email-zhongjiang@huawei.com>
+In-Reply-To: <1572423581-59762-2-git-send-email-zhongjiang@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 800642f6-c8d1-4060-d372-08d75d197067
+x-ms-traffictypediagnostic: CH2PR03MB5157:
+x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR03MB51574C2B0E933EEDECB2DA0FF9600@CH2PR03MB5157.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2449;
+x-forefront-prvs: 02065A9E77
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(346002)(39860400002)(136003)(376002)(189003)(199004)(229853002)(4326008)(118296001)(6246003)(8676002)(66476007)(66066001)(76176011)(54906003)(6506007)(66946007)(6512007)(4001150100001)(102836004)(36756003)(26005)(110136005)(186003)(99286004)(66446008)(6116002)(5660300002)(8936002)(7736002)(76116006)(81156014)(6486002)(305945005)(3846002)(66556008)(64756008)(86362001)(81166006)(6436002)(486006)(2906002)(256004)(71190400001)(11346002)(476003)(25786009)(446003)(71200400001)(2616005)(316002)(14454004)(478600001)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5157;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lbcxVcs+FJvi4gy0+gU2ml5c0oFo0KJ62yufZFMrmXb9fQMsixjLvw/xL/KCqYE9T1YEIzIZAnp8hD8KcVMkhZW1b4cJQvZ7GPlWE1huXPNp+YiLB2t+9BTnOnuJ9asKWYBQ8AGm0z6BJHcSc6rci62s/KtFFP/+OSY3UfmDxNWPvCmP9ml5R2CSWRgnd+p0vrHsdQZwF/pnb1ZxsdGek5Y6Ij1voc/7nBvQywECkRei6mv4bY5/ksMHYupLK9+m5ZL811dqr3YQaQzBKk5Pfd2GA1gZ8a9lvtsaMessecrpX4wC/QEd+vI2QeaBX8aoyPsM0qZMXPVvQeExknNxlUOrWyNIA2s0NDwpjo2pvjxFHTH5t+Qiz4X3pUtgl2SFAEUcJmBJJEN5Qslfu2sWLOySJhWplWFvMcOwP9N70vpUU8jzNG6Uko1VHx0RR+5B
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <712253D854665B4AA4C96780B13CC775@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20aa40bd-280d-d223-9f73-d9ed7dbe4f29@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme715-chm.china.huawei.com (10.1.199.111) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 800642f6-c8d1-4060-d372-08d75d197067
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 09:13:33.6656
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kzGBwJKOM2rBwayeu59E4i3HZXn3MyKGvvpL1mTmh1sCa9wXcamS+HGDfbXThrIdgL6zpg80tsczh+6YJuYuC2Q4QtR/KDT/q27CIdFoK+Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5157
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-30_04:2019-10-30,2019-10-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 clxscore=1015 suspectscore=0
+ priorityscore=1501 adultscore=0 malwarescore=0 impostorscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910300092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao,
-
-On Wed, Oct 30, 2019 at 04:56:17PM +0800, Chao Yu wrote:
-> On 2019/10/30 11:55, Gao Xiang wrote:
-> > remove such useless code and related fault injection.
-> 
-> Hi Xiang,
-> 
-> Although, there is so many 'nofail' allocation in f2fs, I think we'd better
-> avoid such allocation as much as possible (now for read path, we may allow to
-> fail to allocate bio), I suggest to keep the failure path and bio allocation
-> injection.
-> 
-> It looks bio_alloc() will use its own mempool, which may suffer deadlock
-> potentially. So how about changing to use bio_alloc_bioset(, , NULL) instead of
-> bio_alloc()?
-
-Yes, I noticed the original commit 740432f83560 ("f2fs: handle failed bio allocation"),
-yet I don't find any real call trace clue what happened before.
-
-As my understanding, if we allocate bios without submit_bio (I mean write path) with
-default bs and gfp_flags GFP_NOIO or GFP_KERNEL, I think it will be slept inside
-mempool rather than return NULL to its caller... Please correct me if I'm wrong...
-
-I could send another patch with bio_alloc_bioset(, , NULL), I am curious to know the
-original issue and how it solved though...
-
-For read or flush path, since it will submit_bio and bio_alloc one by one, I think
-mempool will get a page quicker (memory failure path could be longer). But I can
-send a patch just by using bio_alloc_bioset(, , NULL) instead as you suggested later.
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> 
-> > 
-> > Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> > ---
-> >  Documentation/filesystems/f2fs.txt |  1 -
-> >  fs/f2fs/data.c                     |  6 ++----
-> >  fs/f2fs/f2fs.h                     | 21 ---------------------
-> >  fs/f2fs/segment.c                  |  5 +----
-> >  fs/f2fs/super.c                    |  1 -
-> >  5 files changed, 3 insertions(+), 31 deletions(-)
-> > 
-> > diff --git a/Documentation/filesystems/f2fs.txt b/Documentation/filesystems/f2fs.txt
-> > index 7e1991328473..3477c3e4c08b 100644
-> > --- a/Documentation/filesystems/f2fs.txt
-> > +++ b/Documentation/filesystems/f2fs.txt
-> > @@ -172,7 +172,6 @@ fault_type=%d          Support configuring fault injection type, should be
-> >                         FAULT_KVMALLOC		0x000000002
-> >                         FAULT_PAGE_ALLOC		0x000000004
-> >                         FAULT_PAGE_GET		0x000000008
-> > -                       FAULT_ALLOC_BIO		0x000000010
-> >                         FAULT_ALLOC_NID		0x000000020
-> >                         FAULT_ORPHAN		0x000000040
-> >                         FAULT_BLOCK		0x000000080
-> > diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> > index 5755e897a5f0..3b88dcb15de6 100644
-> > --- a/fs/f2fs/data.c
-> > +++ b/fs/f2fs/data.c
-> > @@ -288,7 +288,7 @@ static struct bio *__bio_alloc(struct f2fs_io_info *fio, int npages)
-> >  	struct f2fs_sb_info *sbi = fio->sbi;
-> >  	struct bio *bio;
-> >  
-> > -	bio = f2fs_bio_alloc(sbi, npages, true);
-> > +	bio = bio_alloc(GFP_NOIO, npages);
-> >  
-> >  	f2fs_target_device(sbi, fio->new_blkaddr, bio);
-> >  	if (is_read_io(fio->op)) {
-> > @@ -682,9 +682,7 @@ static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
-> >  	struct bio_post_read_ctx *ctx;
-> >  	unsigned int post_read_steps = 0;
-> >  
-> > -	bio = f2fs_bio_alloc(sbi, min_t(int, nr_pages, BIO_MAX_PAGES), false);
-> > -	if (!bio)
-> > -		return ERR_PTR(-ENOMEM);
-> > +	bio = bio_alloc(GFP_KERNEL, min_t(int, nr_pages, BIO_MAX_PAGES));
-> >  	f2fs_target_device(sbi, blkaddr, bio);
-> >  	bio->bi_end_io = f2fs_read_end_io;
-> >  	bio_set_op_attrs(bio, REQ_OP_READ, op_flag);
-> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> > index 4024790028aa..40012f874be0 100644
-> > --- a/fs/f2fs/f2fs.h
-> > +++ b/fs/f2fs/f2fs.h
-> > @@ -44,7 +44,6 @@ enum {
-> >  	FAULT_KVMALLOC,
-> >  	FAULT_PAGE_ALLOC,
-> >  	FAULT_PAGE_GET,
-> > -	FAULT_ALLOC_BIO,
-> >  	FAULT_ALLOC_NID,
-> >  	FAULT_ORPHAN,
-> >  	FAULT_BLOCK,
-> > @@ -2210,26 +2209,6 @@ static inline void *f2fs_kmem_cache_alloc(struct kmem_cache *cachep,
-> >  	return entry;
-> >  }
-> >  
-> > -static inline struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi,
-> > -						int npages, bool no_fail)
-> > -{
-> > -	struct bio *bio;
-> > -
-> > -	if (no_fail) {
-> > -		/* No failure on bio allocation */
-> > -		bio = bio_alloc(GFP_NOIO, npages);
-> > -		if (!bio)
-> > -			bio = bio_alloc(GFP_NOIO | __GFP_NOFAIL, npages);
-> > -		return bio;
-> > -	}
-> > -	if (time_to_inject(sbi, FAULT_ALLOC_BIO)) {
-> > -		f2fs_show_injection_info(FAULT_ALLOC_BIO);
-> > -		return NULL;
-> > -	}
-> > -
-> > -	return bio_alloc(GFP_KERNEL, npages);
-> > -}
-> > -
-> >  static inline bool is_idle(struct f2fs_sb_info *sbi, int type)
-> >  {
-> >  	if (sbi->gc_mode == GC_URGENT)
-> > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > index 808709581481..28457c878d0d 100644
-> > --- a/fs/f2fs/segment.c
-> > +++ b/fs/f2fs/segment.c
-> > @@ -552,10 +552,7 @@ static int __submit_flush_wait(struct f2fs_sb_info *sbi,
-> >  	struct bio *bio;
-> >  	int ret;
-> >  
-> > -	bio = f2fs_bio_alloc(sbi, 0, false);
-> > -	if (!bio)
-> > -		return -ENOMEM;
-> > -
-> > +	bio = bio_alloc(GFP_KERNEL, 0);
-> >  	bio->bi_opf = REQ_OP_WRITE | REQ_SYNC | REQ_PREFLUSH;
-> >  	bio_set_dev(bio, bdev);
-> >  	ret = submit_bio_wait(bio);
-> > diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> > index 1443cee15863..51945dd27f00 100644
-> > --- a/fs/f2fs/super.c
-> > +++ b/fs/f2fs/super.c
-> > @@ -44,7 +44,6 @@ const char *f2fs_fault_name[FAULT_MAX] = {
-> >  	[FAULT_KVMALLOC]	= "kvmalloc",
-> >  	[FAULT_PAGE_ALLOC]	= "page alloc",
-> >  	[FAULT_PAGE_GET]	= "page get",
-> > -	[FAULT_ALLOC_BIO]	= "alloc bio",
-> >  	[FAULT_ALLOC_NID]	= "alloc nid",
-> >  	[FAULT_ORPHAN]		= "orphan",
-> >  	[FAULT_BLOCK]		= "no more block",
-> > 
+T24gV2VkLCAyMDE5LTEwLTMwIGF0IDE2OjE5ICswODAwLCB6aG9uZyBqaWFuZyB3cm90ZToNCj4g
+W0V4dGVybmFsXQ0KPiANCj4gSXQgaXMgbW9yZSBjbGVhciB0byB1c2UgREVGSU5FX0RFQlVHRlNf
+QVRUUklCVVRFIHRvIGRlZmluZSBkZWJ1Z2ZzIGZpbGUNCj4gb3BlcmF0aW9uIHJhdGhlciB0aGFu
+IERFRklORV9TSU1QTEVfQVRUUklCVVRFLg0KDQpOb3Qgc3VyZSBpZiAibW9yZSBjbGVhciIgaXMg
+dGhlIHdvcmQuDQpCdXQgaXQgaXMgbW9yZSBjb3JyZWN0IHRvIHVzZSBERUZJTkVfREVCVUdGU19B
+VFRSSUJVVEUoKSwgc2luY2UgdGhleSBhcmUNCmRlYnVnZnMgYXR0cnMuDQoNCkluIGFueSBjYXNl
+LCB0aGlzIGlzIG5vIGJpZyBkZWFsLg0KU286DQoNClJldmlld2VkLWJ5OiBBbGV4YW5kcnUgQXJk
+ZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KDQo+IA0KPiBTaWduZWQtb2Zm
+LWJ5OiB6aG9uZyBqaWFuZyA8emhvbmdqaWFuZ0BodWF3ZWkuY29tPg0KPiAtLS0NCj4gIGRyaXZl
+cnMvaWlvL2ltdS9hZGlzMTY0NjAuYyB8IDYgKysrLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMyBp
+bnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+aWlvL2ltdS9hZGlzMTY0NjAuYyBiL2RyaXZlcnMvaWlvL2ltdS9hZGlzMTY0NjAuYw0KPiBpbmRl
+eCA2YWVkOWU4Li4yZTdhNTgyIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2lpby9pbXUvYWRpczE2
+NDYwLmMNCj4gKysrIGIvZHJpdmVycy9paW8vaW11L2FkaXMxNjQ2MC5jDQo+IEBAIC04Nyw3ICs4
+Nyw3IEBAIHN0YXRpYyBpbnQgYWRpczE2NDYwX3Nob3dfc2VyaWFsX251bWJlcih2b2lkICphcmcs
+IHU2NA0KPiAqdmFsKQ0KPiAgDQo+ICAJcmV0dXJuIDA7DQo+ICB9DQo+IC1ERUZJTkVfU0lNUExF
+X0FUVFJJQlVURShhZGlzMTY0NjBfc2VyaWFsX251bWJlcl9mb3BzLA0KPiArREVGSU5FX0RFQlVH
+RlNfQVRUUklCVVRFKGFkaXMxNjQ2MF9zZXJpYWxfbnVtYmVyX2ZvcHMsDQo+ICAJYWRpczE2NDYw
+X3Nob3dfc2VyaWFsX251bWJlciwgTlVMTCwgIjB4JS40bGx4XG4iKTsNCj4gIA0KPiAgc3RhdGlj
+IGludCBhZGlzMTY0NjBfc2hvd19wcm9kdWN0X2lkKHZvaWQgKmFyZywgdTY0ICp2YWwpDQo+IEBA
+IC0xMDUsNyArMTA1LDcgQEAgc3RhdGljIGludCBhZGlzMTY0NjBfc2hvd19wcm9kdWN0X2lkKHZv
+aWQgKmFyZywgdTY0DQo+ICp2YWwpDQo+ICANCj4gIAlyZXR1cm4gMDsNCj4gIH0NCj4gLURFRklO
+RV9TSU1QTEVfQVRUUklCVVRFKGFkaXMxNjQ2MF9wcm9kdWN0X2lkX2ZvcHMsDQo+ICtERUZJTkVf
+REVCVUdGU19BVFRSSUJVVEUoYWRpczE2NDYwX3Byb2R1Y3RfaWRfZm9wcywNCj4gIAlhZGlzMTY0
+NjBfc2hvd19wcm9kdWN0X2lkLCBOVUxMLCAiJWxsdVxuIik7DQo+ICANCj4gIHN0YXRpYyBpbnQg
+YWRpczE2NDYwX3Nob3dfZmxhc2hfY291bnQodm9pZCAqYXJnLCB1NjQgKnZhbCkNCj4gQEAgLTEy
+Myw3ICsxMjMsNyBAQCBzdGF0aWMgaW50IGFkaXMxNjQ2MF9zaG93X2ZsYXNoX2NvdW50KHZvaWQg
+KmFyZywgdTY0DQo+ICp2YWwpDQo+ICANCj4gIAlyZXR1cm4gMDsNCj4gIH0NCj4gLURFRklORV9T
+SU1QTEVfQVRUUklCVVRFKGFkaXMxNjQ2MF9mbGFzaF9jb3VudF9mb3BzLA0KPiArREVGSU5FX0RF
+QlVHRlNfQVRUUklCVVRFKGFkaXMxNjQ2MF9mbGFzaF9jb3VudF9mb3BzLA0KPiAgCWFkaXMxNjQ2
+MF9zaG93X2ZsYXNoX2NvdW50LCBOVUxMLCAiJWxsZFxuIik7DQo+ICANCj4gIHN0YXRpYyBpbnQg
+YWRpczE2NDYwX2RlYnVnZnNfaW5pdChzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2KQ0K
