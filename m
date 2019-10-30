@@ -2,201 +2,180 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D17CA9EC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF039CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D945218DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:56:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fkgY6VB1"
+	by mail.kernel.org (Postfix) with ESMTP id C349A20578
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:56:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbfJ3I4X (ORCPT
+        id S1726377AbfJ3I43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:56:23 -0400
-Received: from mail-eopbgr30059.outbound.protection.outlook.com ([40.107.3.59]:16031
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        Wed, 30 Oct 2019 04:56:29 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58168 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726032AbfJ3I4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:56:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mVMV/GeILdlW6qt69PbT+Anem+wbNNGQl7l3/PB08MmcaQGzG1HCuKVmdsMWLt0bhxz9LgHg5xGgv0pvCIhsnLtyHbrJBTDdmxuEV1adPjvsI4QVz592WIp3m1lLdJAVuecAqyHtejK+ib9+9JqJ/8wuoTOLPlWSbiDkTeNC1WNz7LZQk2vR+TWdaoefV95iqU7W4UcWXGZ+ukU0dlHpjrKwsF7dhHJ7KSqOi18aq+3WoDHKGc5rTgda4ECeYWrWr6G7BX88bP1z34jteXI4pr8TDONkpsldOEkNTUfx9LI3j/cOhI6ss4igLVU0VQcNrHyTHcIIcVUYNZoTkFrs3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k5sgLmUzdv+odArpVE69TZfKBkYg/LWobGzinrRAVc0=;
- b=eBZGqJO2os765+QnkmyjroYp9lzshYfE43nx/f5zBDL/M9Y4qsZAHuvoeCzWMZwpH+5lZnGsctTZMJ1HiPy0+Dl9FHwMpYosKoOKyiEQ3y6ud4b3eslKnWic8iy2dUo1ERS4eg8AfAFExW2qjv9seohYeTzr3YCBR5VmxexQsG+ZIBYwUUnPznUMXs9SGkM1nRxpBEsWdwPdbSK3NktNZKxccH4dwldwApHIIOI/XGM5MIDHe22bxLWKrI8KLX9qqxMQ5BzKUv6Ll5weQpdvIcLgfse7z2OdpFCYlbmOpxx6XdjUNDPkI6bqFeKQhqc/gfbop78UfJpHJeTLZdtxlg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k5sgLmUzdv+odArpVE69TZfKBkYg/LWobGzinrRAVc0=;
- b=fkgY6VB14q6seopq3Fsh43/p6qnHMBeCI2wKhsrwFXIcytNSZXc8+mwCJxzxEi/hAS7ZQDqVIP4qgXbM0924Wg7DVbBuE3ogAiCI0iBrGnGXXlE2W0I4KVzID28kqnOLVzkwZFN85dfeSo8wYzJZZG3LaaopuW/m/wsFwAE9rl8=
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.51.23) by
- VI1PR04MB5824.eurprd04.prod.outlook.com (20.178.204.90) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.24; Wed, 30 Oct 2019 08:56:19 +0000
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::68e3:e1a6:78fd:7133]) by VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::68e3:e1a6:78fd:7133%3]) with mapi id 15.20.2387.023; Wed, 30 Oct 2019
- 08:56:19 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Roger Quadros <rogerq@ti.com>
-CC:     "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "pawell@cadence.com" <pawell@cadence.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>,
-        "kurahul@cadence.com" <kurahul@cadence.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: cdns3: gadget: Fix g_audio use case when connected
- to Super-Speed host
-Thread-Topic: [PATCH] usb: cdns3: gadget: Fix g_audio use case when connected
- to Super-Speed host
-Thread-Index: AQHVjmu0ISNy1ghJZk6ChiNFIxaNSqdyu+kAgAAjpACAAANYAA==
-Date:   Wed, 30 Oct 2019 08:56:19 +0000
-Message-ID: <20191030085608.GA11664@b29397-desktop>
-References: <20191029151514.28495-1-rogerq@ti.com>
- <20191030063636.GE26815@b29397-desktop>
- <b780ffea-dca0-310e-1d66-4ceca380b4ee@ti.com>
-In-Reply-To: <b780ffea-dca0-310e-1d66-4ceca380b4ee@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peter.chen@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b7261180-1ef7-4821-4674-08d75d1707e6
-x-ms-traffictypediagnostic: VI1PR04MB5824:
-x-microsoft-antispam-prvs: <VI1PR04MB582433809FD3EF00BB4DDCDF8B600@VI1PR04MB5824.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02065A9E77
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(376002)(346002)(39860400002)(136003)(396003)(366004)(43544003)(189003)(199004)(44832011)(66066001)(14444005)(86362001)(256004)(6916009)(14454004)(446003)(6512007)(186003)(6486002)(8676002)(3846002)(76176011)(229853002)(476003)(7736002)(6246003)(486006)(8936002)(6116002)(81166006)(4326008)(102836004)(81156014)(6436002)(9686003)(305945005)(25786009)(64756008)(54906003)(66476007)(26005)(66556008)(99286004)(11346002)(66446008)(33716001)(71190400001)(6506007)(5660300002)(53546011)(1076003)(76116006)(71200400001)(478600001)(91956017)(2906002)(33656002)(66946007)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5824;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +7mAYdJhpCVr6YvUNMT1uhlAQneTKg8J0b5WkAtXVsCPs+GyLo49JKlJDouzHNhPYSt5lv6hY9UxyUGR8mXyhDg8fcIG0Ew6Uxs4Y2Ij+i92u3OpW53F4P2Purm0DiX5TUoZAbRedXYV+kOBEL5NZAgRNRTFaX+sb9Mc7YmCr6kRkmxj2y4q51fCR8tdmWUmnJI2Q3mytvC+e1oI3kihpc5ddhgNfIP0K4EPr0SDa4WS2dr9WShOlINwjkeEZFTvr0ejusBoFPy3e4OqEwmFp38wA6ZQTmJz5jmcE60+e1mao9AnOyEmOCuFz1gpj2A+RnojU6rcTRtsfrifYUcYZVBebU2CeH/e9g3pPdyNkeFQvZPS6FoRYTnxXrau5ef664qEMXak1p4aK/STPQ1LX5M5HRmYi29DMtfbuFwhhNcP3H7UXnjb35oSTG2qg0hq
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <49ED2D1C0BBB7B48A45C798F05788BA6@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1726032AbfJ3I42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 04:56:28 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9234C5FFAD09EA435F84;
+        Wed, 30 Oct 2019 16:56:25 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 30 Oct
+ 2019 16:56:18 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: bio_alloc should never fail
+To:     Gao Xiang <gaoxiang25@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, "Chao Yu" <chao@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <20191030035518.65477-1-gaoxiang25@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <20aa40bd-280d-d223-9f73-d9ed7dbe4f29@huawei.com>
+Date:   Wed, 30 Oct 2019 16:56:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7261180-1ef7-4821-4674-08d75d1707e6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 08:56:19.3817
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zN/iuEx2Pyzp7wXye7o0hjcdeeqyjhb1pOGXPqZ8mtIE67Z5iKvRZ+u6k0lmoaEDjExtmVD3vSbHnyz/d+6t4A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5824
+In-Reply-To: <20191030035518.65477-1-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-10-30 10:44:10, Roger Quadros wrote:
->=20
->=20
-> On 30/10/2019 08:36, Peter Chen wrote:
-> > On 19-10-29 17:15:14, Roger Quadros wrote:
-> > > Take into account gadget driver's speed limit when programming
-> > > controller speed.
-> > >=20
-> > > Signed-off-by: Roger Quadros <rogerq@ti.com>
-> > > ---
-> > > Hi Greg,
-> > >=20
-> > > Please apply this for -rc.
-> > > Without this, g_audio is broken on cdns3 USB controller is
-> > > connected to a Super-Speed host.
-> > >=20
-> > > cheers,
-> > > -roger
-> > >=20
-> > >   drivers/usb/cdns3/gadget.c | 31 ++++++++++++++++++++++++++-----
-> > >   1 file changed, 26 insertions(+), 5 deletions(-)
-> > >=20
-> > > diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
-> > > index 40dad4e8d0dc..1c724c20d468 100644
-> > > --- a/drivers/usb/cdns3/gadget.c
-> > > +++ b/drivers/usb/cdns3/gadget.c
-> > > @@ -2338,9 +2338,35 @@ static int cdns3_gadget_udc_start(struct usb_g=
-adget *gadget,
-> > >   {
-> > >   	struct cdns3_device *priv_dev =3D gadget_to_cdns3_device(gadget);
-> > >   	unsigned long flags;
-> > > +	enum usb_device_speed max_speed =3D driver->max_speed;
-> > >   	spin_lock_irqsave(&priv_dev->lock, flags);
-> > >   	priv_dev->gadget_driver =3D driver;
-> > > +
-> > > +	/* limit speed if necessary */
-> > > +	max_speed =3D min(driver->max_speed, gadget->max_speed);
-> > > +
-> > > +	switch (max_speed) {
-> > > +	case USB_SPEED_FULL:
-> > > +		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
-> > > +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
-> > > +		break;
-> > > +	case USB_SPEED_HIGH:
-> > > +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
-> > > +		break;
-> > > +	case USB_SPEED_SUPER:
-> > > +		break;
-> > > +	default:
-> > > +		dev_err(priv_dev->dev,
-> > > +			"invalid maximum_speed parameter %d\n",
-> > > +			max_speed);
-> > > +		/* fall through */
-> > > +	case USB_SPEED_UNKNOWN:
-> > > +		/* default to superspeed */
-> > > +		max_speed =3D USB_SPEED_SUPER;
-> > > +		break;
-> > > +	}
-> > > +
-> > >   	cdns3_gadget_config(priv_dev);
-> > >   	spin_unlock_irqrestore(&priv_dev->lock, flags);
-> > >   	return 0;
-> > > @@ -2570,12 +2596,7 @@ static int cdns3_gadget_start(struct cdns3 *cd=
-ns)
-> > >   	/* Check the maximum_speed parameter */
-> > >   	switch (max_speed) {
-> > >   	case USB_SPEED_FULL:
-> > > -		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
-> > > -		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
-> > > -		break;
-> > >   	case USB_SPEED_HIGH:
-> > > -		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
-> > > -		break;
-> > >   	case USB_SPEED_SUPER:
-> > >   		break;
-> > >   	default:
-> >=20
-> > Just a small comment:
-> >=20
-> > You could delete switch-case at cdns3_gadget_start, and just use
-> > if() statement, eg:
-> >=20
-> > 	max_speed =3D usb_get_maximum_speed(cdns->dev);
-> > 	if (max_speed =3D=3D USB_SPEED_UNKNOWN)
-> > 		max_speed =3D USB_SPEED_SUPER;
->=20
-> But then it will not take care of bailing out for USB_SPEED_WIRELESS,
-> USB_SPEED_SUPER_PLUS and any future speeds.
+On 2019/10/30 11:55, Gao Xiang wrote:
+> remove such useless code and related fault injection.
 
-This IP only supports FS/HS/SS. It doesn't a big issue, if you would
-like to keep the code like your patch, it is also OK.
+Hi Xiang,
 
---=20
+Although, there is so many 'nofail' allocation in f2fs, I think we'd better
+avoid such allocation as much as possible (now for read path, we may allow to
+fail to allocate bio), I suggest to keep the failure path and bio allocation
+injection.
+
+It looks bio_alloc() will use its own mempool, which may suffer deadlock
+potentially. So how about changing to use bio_alloc_bioset(, , NULL) instead of
+bio_alloc()?
 
 Thanks,
-Peter Chen=
+
+> 
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> ---
+>  Documentation/filesystems/f2fs.txt |  1 -
+>  fs/f2fs/data.c                     |  6 ++----
+>  fs/f2fs/f2fs.h                     | 21 ---------------------
+>  fs/f2fs/segment.c                  |  5 +----
+>  fs/f2fs/super.c                    |  1 -
+>  5 files changed, 3 insertions(+), 31 deletions(-)
+> 
+> diff --git a/Documentation/filesystems/f2fs.txt b/Documentation/filesystems/f2fs.txt
+> index 7e1991328473..3477c3e4c08b 100644
+> --- a/Documentation/filesystems/f2fs.txt
+> +++ b/Documentation/filesystems/f2fs.txt
+> @@ -172,7 +172,6 @@ fault_type=%d          Support configuring fault injection type, should be
+>                         FAULT_KVMALLOC		0x000000002
+>                         FAULT_PAGE_ALLOC		0x000000004
+>                         FAULT_PAGE_GET		0x000000008
+> -                       FAULT_ALLOC_BIO		0x000000010
+>                         FAULT_ALLOC_NID		0x000000020
+>                         FAULT_ORPHAN		0x000000040
+>                         FAULT_BLOCK		0x000000080
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index 5755e897a5f0..3b88dcb15de6 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -288,7 +288,7 @@ static struct bio *__bio_alloc(struct f2fs_io_info *fio, int npages)
+>  	struct f2fs_sb_info *sbi = fio->sbi;
+>  	struct bio *bio;
+>  
+> -	bio = f2fs_bio_alloc(sbi, npages, true);
+> +	bio = bio_alloc(GFP_NOIO, npages);
+>  
+>  	f2fs_target_device(sbi, fio->new_blkaddr, bio);
+>  	if (is_read_io(fio->op)) {
+> @@ -682,9 +682,7 @@ static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
+>  	struct bio_post_read_ctx *ctx;
+>  	unsigned int post_read_steps = 0;
+>  
+> -	bio = f2fs_bio_alloc(sbi, min_t(int, nr_pages, BIO_MAX_PAGES), false);
+> -	if (!bio)
+> -		return ERR_PTR(-ENOMEM);
+> +	bio = bio_alloc(GFP_KERNEL, min_t(int, nr_pages, BIO_MAX_PAGES));
+>  	f2fs_target_device(sbi, blkaddr, bio);
+>  	bio->bi_end_io = f2fs_read_end_io;
+>  	bio_set_op_attrs(bio, REQ_OP_READ, op_flag);
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 4024790028aa..40012f874be0 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -44,7 +44,6 @@ enum {
+>  	FAULT_KVMALLOC,
+>  	FAULT_PAGE_ALLOC,
+>  	FAULT_PAGE_GET,
+> -	FAULT_ALLOC_BIO,
+>  	FAULT_ALLOC_NID,
+>  	FAULT_ORPHAN,
+>  	FAULT_BLOCK,
+> @@ -2210,26 +2209,6 @@ static inline void *f2fs_kmem_cache_alloc(struct kmem_cache *cachep,
+>  	return entry;
+>  }
+>  
+> -static inline struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi,
+> -						int npages, bool no_fail)
+> -{
+> -	struct bio *bio;
+> -
+> -	if (no_fail) {
+> -		/* No failure on bio allocation */
+> -		bio = bio_alloc(GFP_NOIO, npages);
+> -		if (!bio)
+> -			bio = bio_alloc(GFP_NOIO | __GFP_NOFAIL, npages);
+> -		return bio;
+> -	}
+> -	if (time_to_inject(sbi, FAULT_ALLOC_BIO)) {
+> -		f2fs_show_injection_info(FAULT_ALLOC_BIO);
+> -		return NULL;
+> -	}
+> -
+> -	return bio_alloc(GFP_KERNEL, npages);
+> -}
+> -
+>  static inline bool is_idle(struct f2fs_sb_info *sbi, int type)
+>  {
+>  	if (sbi->gc_mode == GC_URGENT)
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index 808709581481..28457c878d0d 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -552,10 +552,7 @@ static int __submit_flush_wait(struct f2fs_sb_info *sbi,
+>  	struct bio *bio;
+>  	int ret;
+>  
+> -	bio = f2fs_bio_alloc(sbi, 0, false);
+> -	if (!bio)
+> -		return -ENOMEM;
+> -
+> +	bio = bio_alloc(GFP_KERNEL, 0);
+>  	bio->bi_opf = REQ_OP_WRITE | REQ_SYNC | REQ_PREFLUSH;
+>  	bio_set_dev(bio, bdev);
+>  	ret = submit_bio_wait(bio);
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 1443cee15863..51945dd27f00 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -44,7 +44,6 @@ const char *f2fs_fault_name[FAULT_MAX] = {
+>  	[FAULT_KVMALLOC]	= "kvmalloc",
+>  	[FAULT_PAGE_ALLOC]	= "page alloc",
+>  	[FAULT_PAGE_GET]	= "page get",
+> -	[FAULT_ALLOC_BIO]	= "alloc bio",
+>  	[FAULT_ALLOC_NID]	= "alloc nid",
+>  	[FAULT_ORPHAN]		= "orphan",
+>  	[FAULT_BLOCK]		= "no more block",
+> 
