@@ -2,85 +2,119 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A353CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5388CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E930C2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I7SsVN9G"
+	by mail.kernel.org (Postfix) with ESMTP id A75272173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572451068;
+	bh=ZUSR9VoPo2ZvIQ3c86SNfsIuM/RV9efVWm0nda1ewrk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lly9PisjHm9aVhV77r7IpZlXIa8h6nixYN5bzk0Vk4RKEFiKiTYkFVcOOhJcrN/G7
+	 VyBuBJHRBjLg4rLGfOU9Omr1qdTafeN36gBSMNtSeKDMPLhCfcYWJ/kzmdWZRmQXIA
+	 jRYm8JRx9+CZLdxx4lNyHoW5PhKqCvUXAa2pxS58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbfJ3P5o (ORCPT
+        id S1729136AbfJ3P5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:57:44 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44064 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729108AbfJ3P5i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:57:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572451057;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oxmCKrD+1huL0UnafF7o9Ji5BC44afhsjiSZaqIxSAE=;
-        b=I7SsVN9Gl7zM5T0qSgOQHhhljbktufEt814fDDed815BzIq6XFqKvxlnP5npYgwa1yd5aq
-        OUHBcoZKdVcASaKTt36N/+0Ndr4oyxTS4VFW9+tqU2G81QYGlKOJnkyuxUKFHmffEaYelY
-        KMy/8bSV0KIfbdUPv2TPkKlc1AP1roM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-204-37-W3smINPiQ0aJcgrG5ag-1; Wed, 30 Oct 2019 11:57:36 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 30 Oct 2019 11:57:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729125AbfJ3P5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:57:39 -0400
+Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 92F3A800EB3;
-        Wed, 30 Oct 2019 15:57:34 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.206.16])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 52D85808B;
-        Wed, 30 Oct 2019 15:57:21 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 30 Oct 2019 16:57:34 +0100 (CET)
-Date:   Wed, 30 Oct 2019 16:57:20 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
-        juri.lelli@redhat.com, williams@redhat.com, bristot@redhat.com,
-        longman@redhat.com, dave@stgolabs.net, jack@suse.com
-Subject: Re: [PATCH] locking/percpu_rwsem: Rewrite to not use rwsem
-Message-ID: <20191030155720.GA20713@redhat.com>
-References: <20190805140241.GI2332@hirez.programming.kicks-ass.net>
- <20190807144305.v55fohssujsqtegb@willie-the-truck>
- <20191029190624.GB3079@worktop.programming.kicks-ass.net>
+        by mail.kernel.org (Postfix) with ESMTPSA id 446FA21734;
+        Wed, 30 Oct 2019 15:57:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572451059;
+        bh=ZUSR9VoPo2ZvIQ3c86SNfsIuM/RV9efVWm0nda1ewrk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FpVXTZWP16Zx/Iq2qqMao+xzLs9PzsHbYYl9FXbk2ai5GNTJnFJURVJ3ckX5g7bvw
+         cJ5uEhCs8y5zqKWyzD4PFhKLuZxXc05xAoIUjkNoobNNk3Nt5NwYQ11tCphRzIncU/
+         p+szreTnBQWZD7/PZ9QNbT4MMh84zA8D05uQt04o=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 15/18] scsi: target: core: Do not overwrite CDB byte 1
+Date:   Wed, 30 Oct 2019 11:56:57 -0400
+Message-Id: <20191030155700.10748-15-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191030155700.10748-1-sashal@kernel.org>
+References: <20191030155700.10748-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191029190624.GB3079@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: 37-W3smINPiQ0aJcgrG5ag-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/29, Peter Zijlstra wrote:
->
-> That said, I think cgroups use a variant of percpu-rwsem that wreck rss
-> on purpose and always take the slowpaths.
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-I forgot (never understodd) why does Android need this.
+[ Upstream commit 27e84243cb63601a10e366afe3e2d05bb03c1cb5 ]
 
-I am wondering if it makes any sense to add a config/boot or even runtime
-knob for cgroup_threadgroup_rwsem.
+passthrough_parse_cdb() - used by TCMU and PSCSI - attepts to reset the LUN
+field of SCSI-2 CDBs (bits 5,6,7 of byte 1).  The current code is wrong as
+for newer commands not having the LUN field it overwrites relevant command
+bits (e.g. for SECURITY PROTOCOL IN / OUT). We think this code was
+unnecessary from the beginning or at least it is no longer useful. So we
+remove it entirely.
 
-Oleg.
+Link: https://lore.kernel.org/r/12498eab-76fd-eaad-1316-c2827badb76a@ts.fujitsu.com
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/target/target_core_device.c | 21 ---------------------
+ 1 file changed, 21 deletions(-)
+
+diff --git a/drivers/target/target_core_device.c b/drivers/target/target_core_device.c
+index cc38a3509f78c..c3d576ed6f135 100644
+--- a/drivers/target/target_core_device.c
++++ b/drivers/target/target_core_device.c
+@@ -1046,27 +1046,6 @@ passthrough_parse_cdb(struct se_cmd *cmd,
+ {
+ 	unsigned char *cdb = cmd->t_task_cdb;
+ 
+-	/*
+-	 * Clear a lun set in the cdb if the initiator talking to use spoke
+-	 * and old standards version, as we can't assume the underlying device
+-	 * won't choke up on it.
+-	 */
+-	switch (cdb[0]) {
+-	case READ_10: /* SBC - RDProtect */
+-	case READ_12: /* SBC - RDProtect */
+-	case READ_16: /* SBC - RDProtect */
+-	case SEND_DIAGNOSTIC: /* SPC - SELF-TEST Code */
+-	case VERIFY: /* SBC - VRProtect */
+-	case VERIFY_16: /* SBC - VRProtect */
+-	case WRITE_VERIFY: /* SBC - VRProtect */
+-	case WRITE_VERIFY_12: /* SBC - VRProtect */
+-	case MAINTENANCE_IN: /* SPC - Parameter Data Format for SA RTPG */
+-		break;
+-	default:
+-		cdb[1] &= 0x1f; /* clear logical unit number */
+-		break;
+-	}
+-
+ 	/*
+ 	 * For REPORT LUNS we always need to emulate the response, for everything
+ 	 * else, pass it up.
+-- 
+2.20.1
 
