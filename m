@@ -2,73 +2,173 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C9DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1786FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB1B205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:40:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="nlo2Buu3"
+	by mail.kernel.org (Postfix) with ESMTP id DB8DB20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:40:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572424816;
+	bh=/nCth3tAN3zo9YpLVlMHUApCRm+0ZcTx184ZTc9xlgM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cZhFS2QNp6U8fl5O8y6AjZTOZxGH2VaJqEbxK3q2p3O4PBLk/Xbq3FGvIhP3x+HNE
+	 VHsEr04z3unNtPwxFLwmKmSS7JXJXvxYerIQfU4svXeQJ8UO6LxUDVJTbS73e8lU2s
+	 2K0m9SpkxpU5vDtaZBeYEsqeUeqmEMxmgDEo80Ug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbfJ3IkB (ORCPT
+        id S1726315AbfJ3IkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:40:01 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:12658 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfJ3IkB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:40:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1572424796;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ytcblrQ9momi5mrUnfe2JEwJ9Mxpgs6jMh2V+tmJuCc=;
-        b=nlo2Buu3DZ5rZPdLyBiKsNJZxoY82t5YeZT8XYxJkP2Dd+PWitgLp0F4JA5pxE5CJw
-        F9VXsEuaYRopoOids9/Ma3wd2cWM8UYr8I8pY86udjfqv3kPy+a9BxZMoctG4hxA8Hyh
-        lZgXHVg160KiSJ0Gy6eNIf4pKVyfooxjNTIm51+dyC4cPVKS8xsyvo/4oEdcIjzQDeeo
-        t6ThIA8JASUxMay7jibiQiFYuZBLyOeJUD10+E0eP14+M31cXC3ifHRgk5/xwpOvrRq0
-        6U5H3klWDkxTB4KxYM06pfYD3XG4waO3L89OkRenPWH3/u11m+ZrhU13BgR+BQGwyAW7
-        lIxw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrpwDvG"
-X-RZG-CLASS-ID: mo00
-Received: from mbp-13-nikolaus.fritz.box
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id L09db3v9U8dg1tu
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 30 Oct 2019 09:39:42 +0100 (CET)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [RFC v2 1/2] ARM: dts: omap3: Add cpu trips and cooling map for omap3 family
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CAHCN7xLN+52ZW6tzCQPDvwqrdgaQaMrkhPFPotYDr7RdNwqeNA@mail.gmail.com>
-Date:   Wed, 30 Oct 2019 09:39:45 +0100
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>, Nishanth Menon <nm@ti.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Grazvydas Ignotas <notasas@gmail.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <C469028D-959D-4BD1-9226-C0190A197CE5@goldelico.com>
-References: <20190913153714.30980-1-aford173@gmail.com> <B710D701-6311-4344-BF4E-F39157BBF2BD@goldelico.com> <CAHCN7xKU1v-BFkwiuZQx82+Cmdgj_1CH1j51bN0TaaduWcu8rQ@mail.gmail.com> <97204F98-FA33-4EBA-80AC-2FB3A6E78B2B@goldelico.com> <CAHCN7xJus=Unsm5rvgtccM9jpdiwGnJXrfjhavwkoswGbNd7qw@mail.gmail.com> <CAHCN7x+=O6f4Q0ps1d5KA+-E9L-8wr5B9XggzurJWtEnxEj7yg@mail.gmail.com> <FD6FED45-EF20-49D8-A2B2-012FB314DCC6@goldelico.com> <CAHCN7xLN+52ZW6tzCQPDvwqrdgaQaMrkhPFPotYDr7RdNwqeNA@mail.gmail.com>
-To:     Adam Ford <aford173@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+        Wed, 30 Oct 2019 04:40:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58964 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfJ3IkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 04:40:15 -0400
+Received: from rapoport-lnx (190.228.71.37.rev.sfr.net [37.71.228.190])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04AFE20856;
+        Wed, 30 Oct 2019 08:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572424814;
+        bh=/nCth3tAN3zo9YpLVlMHUApCRm+0ZcTx184ZTc9xlgM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Nesn8HlZl7oj3aP21LaeInYQ+pjC5N1ru/Ic4LIsTmwnHs/f8XRQSOkx71rnYe1Au
+         RSpTABrOh3VDdlU2zTYQNbqqVTXVwsnRNGFTBvg7cUfwoi8YwW1psOJ5Z6Fbj5mZP2
+         f+9qYKTxXa82mHdjLJcKrDzqXxxuQtR9XPh7IhV0=
+Date:   Wed, 30 Oct 2019 09:40:06 +0100
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, X86 ML <x86@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
+ mappings
+Message-ID: <20191030084005.GC20624@rapoport-lnx>
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+ <CA5C22D9-BC3E-4B69-8DD9-4D3B75E40BD5@amacapital.net>
+ <20191029093254.GE18773@rapoport-lnx>
+ <CALCETrUuuc4DS0cdMBtS550Wkp0x9ND3M3SgtaMgyRROnDR5Kg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALCETrUuuc4DS0cdMBtS550Wkp0x9ND3M3SgtaMgyRROnDR5Kg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
-what is the status of this RFC/PATCH?
+On Tue, Oct 29, 2019 at 10:00:55AM -0700, Andy Lutomirski wrote:
+> On Tue, Oct 29, 2019 at 2:33 AM Mike Rapoport <rppt@kernel.org> wrote:
+> >
+> > On Mon, Oct 28, 2019 at 02:44:23PM -0600, Andy Lutomirski wrote:
+> > >
+> > > > On Oct 27, 2019, at 4:17 AM, Mike Rapoport <rppt@kernel.org> wrote:
+> > > >
+> > > > ﻿From: Mike Rapoport <rppt@linux.ibm.com>
+> > > >
+> > > > Hi,
+> > > >
+> > > > The patch below aims to allow applications to create mappins that have
+> > > > pages visible only to the owning process. Such mappings could be used to
+> > > > store secrets so that these secrets are not visible neither to other
+> > > > processes nor to the kernel.
+> > > >
+> > > > I've only tested the basic functionality, the changes should be verified
+> > > > against THP/migration/compaction. Yet, I'd appreciate early feedback.
+> > >
+> > > I’ve contemplated the concept a fair amount, and I think you should
+> > > consider a change to the API. In particular, rather than having it be a
+> > > MAP_ flag, make it a chardev.  You can, at least at first, allow only
+> > > MAP_SHARED, and admins can decide who gets to use it.  It might also play
+> > > better with the VM overall, and you won’t need a VM_ flag for it — you
+> > > can just wire up .fault to do the right thing.
+> >
+> > I think mmap()/mprotect()/madvise() are the natural APIs for such
+> > interface.
+> 
+> Then you have a whole bunch of questions to answer.  For example:
+> 
+> What happens if you mprotect() or similar when the mapping is already
+> in use in a way that's incompatible with MAP_EXCLUSIVE?
 
-BR and thanks,
-Nikolaus
+Then we refuse to mprotect()? Like in any other case when vm_flags are not
+compatible with required madvise()/mprotect() operation.
 
+> Is it actually reasonable to malloc() some memory and then make it exclusive?
+> 
+> Are you permitted to map a file MAP_EXCLUSIVE?  What does it mean?
+
+I'd limit MAP_EXCLUSIVE only to anonymous memory.
+
+> What does MAP_PRIVATE | MAP_EXCLUSIVE do?
+
+My preference is to have only mmap() and then the semantics is more clear:
+
+MAP_PRIVATE | MAP_EXCLUSIVE creates a pre-populated region, marks it locked
+and drops the pages in this region from the direct map.
+The pages are returned back on munmap(). 
+Then there is no way to change an existing area to be exclusive or vice
+versa.
+
+> How does one pass exclusive memory via SCM_RIGHTS?  (If it's a
+> memfd-like or chardev interface, it's trivial.  mmap(), not so much.)
+
+Why passing such memory via SCM_RIGHTS would be useful?
+ 
+> And finally, there's my personal giant pet peeve: a major use of this
+> will be for virtualization.  I suspect that a lot of people would like
+> the majority of KVM guest memory to be unmapped from the host
+> pagetables.  But people might also like for guest memory to be
+> unmapped in *QEMU's* pagetables, and mmap() is a basically worthless
+> interface for this.  Getting fd-backed memory into a guest will take
+> some possibly major work in the kernel, but getting vma-backed memory
+> into a guest without mapping it in the host user address space seems
+> much, much worse.
+
+Well, in my view, the MAP_EXCLUSIVE is intended to keep small secrets
+rather than use it for the entire guest memory. I even considered adding a
+limit for the mapping size, but then I decided that since RLIMIT_MEMLOCK is
+anyway enforced there is no need for a new one.
+
+I agree that getting fd-backed memory into a guest would be less pain that
+VMA, but KVM can already use memory outside the control of the kernel via
+/dev/map [1].
+
+So unless I'm missing something here, there is no need to use MAP_EXCLUSIVE
+for the guest memory.
+
+[1] https://lwn.net/Articles/778240/
+
+> > Switching to a chardev doesn't solve the major problem of direct
+> > map fragmentation and defeats the ability to use exclusive memory mappings
+> > with the existing allocators, while mprotect() and madvise() do not.
+> >
+> 
+> Will people really want to do malloc() and then remap it exclusive?
+> This sounds dubiously useful at best.
+
+Again, my preference is to have mmap() only, but I see a value in this use
+case as well. Application developers allocate memory and then sometimes
+change its properties rather than go mmap() something. For such usage
+mprotect() may be usefull.
+
+
+-- 
+Sincerely yours,
+Mike.
