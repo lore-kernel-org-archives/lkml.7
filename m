@@ -2,119 +2,118 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A45CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F95ECA9EC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B61208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:39:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="fQ0EYHGn"
+	by mail.kernel.org (Postfix) with ESMTP id 47DF9208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:39:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572453574;
+	bh=uPpsLnIwswK4MvCgYfMrudAcG0whDitorkLSfI+nb3Q=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=V6+VXuQPZ26pxIquNFTNfNvCiICgBkw6oQt03WupybyFBve9cpDKEuw+hgLjpBGEd
+	 3GXnWCNkcLVI1GkDiInUXfDn+quNDzTTB10e06sM4jOiba+IajuZ2go7FgjQQR0Fm2
+	 gRASjZtt+w9AAZW0xc5eQTVQAFI/txzjFwCuXvOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfJ3QjY (ORCPT
+        id S1726948AbfJ3Qjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:39:24 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:30140 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbfJ3QjY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 12:39:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1572453562;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=Dn40tVbbGhA5NczjSxQCCaGadlXd23pRkpE7OM8NH5A=;
-        b=fQ0EYHGnVog07STSSHN1xVxozHHsN1q4avo/yikt4Mxs6niBW/Cdu/5zgLCk+NknRz
-        SmNRpolDwU+UIeiqmzeCT+C3pSkjtOO/zj/9G147LyD6NkvbKecOWHn8y3f3K/BV6+SW
-        Aoe71lBhAUSOVyfPZ9N/LZq30ueX3+6pqPRy2dYvJC8PXvW/0bfxfUIJaljRVIkoWeKA
-        DxRucbYmwLKbIchByJSYqPL8lKXugDik8xh7XqG+iGMmEQrGEAfXlu5XA+IgSB0yB9fy
-        Qa4a9MmcRAs7qNT9p9WT1E22l1J04kZ/xRF1MRVCRA4SeSWhEalK3DuDGNQ2Zo07+NQy
-        SYaw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCymhdRVSmPRBIbFC67m67z0KUz0RNG8vGE966zI"
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2001:16b8:2638:1d00:3142:f353:47a0:b4bd]
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id L09db3v9UGdC5Tu
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 30 Oct 2019 17:39:12 +0100 (CET)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH 1/7] dt-bindings: gpu: pvrsgx: add initial bindings
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20191030161604.GA5610@atomide.com>
-Date:   Wed, 30 Oct 2019 17:39:11 +0100
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <61AAD023-6B22-4F81-A3B3-7C9571F967B2@goldelico.com>
-References: <cover.1571424390.git.hns@goldelico.com> <f0fb68dc7bc027e5e911721852f6bc6fa2d77a63.1571424390.git.hns@goldelico.com> <20191030161604.GA5610@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+        Wed, 30 Oct 2019 12:39:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726903AbfJ3Qjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 12:39:32 -0400
+Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78A97218AC;
+        Wed, 30 Oct 2019 16:39:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572453571;
+        bh=uPpsLnIwswK4MvCgYfMrudAcG0whDitorkLSfI+nb3Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xdkOfd1yvSJdwDk7TNjX9HOowIi2HLFtg17p6P0NFVvETxTk1VqoKCMxbdUwfIY0G
+         DZEaIhwLkmobqT0No607KZqrpOI73RtwYdp6hgKBYTEm/tdOwc6pELf22IPS+wmtY1
+         dpYphs9pdwMIH6/RoQNz9Eu0TDrTa7y2xV7Z/TMQ=
+Received: by wens.tw (Postfix, from userid 1000)
+        id 66E5F5FB7D; Thu, 31 Oct 2019 00:39:28 +0800 (CST)
+From:   Chen-Yu Tsai <wens@kernel.org>
+To:     Markus Mayer <mmayer@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] thermal: brcmstb: enable hwmon
+Date:   Thu, 31 Oct 2019 00:38:07 +0800
+Message-Id: <20191030163807.17817-1-wens@kernel.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Chen-Yu Tsai <wens@csie.org>
 
-> Am 30.10.2019 um 17:16 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> * H. Nikolaus Schaller <hns@goldelico.com> [191018 18:47]:
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.txt
->> @@ -0,0 +1,76 @@
->> +Imagination PVR/SGX GPU
->> +
->> +Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently =
-covered by this binding.
->> +
->> +Required properties:
->> +- compatible:	Should be one of
->> +		"img,sgx530-121", "img,sgx530", =
-"ti,omap-omap3-sgx530-121";
->> +		  - BeagleBoard ABC, OpenPandora 600MHz
->> +		"img,sgx530-125", "img,sgx530", =
-"ti,omap-omap3-sgx530-125";
->> +		  - BeagleBoard XM, GTA04, OpenPandora 1GHz
->> +		"img,sgx530-125", "img,sgx530", =
-"ti,omap-am3517-sgx530-125";
->> +		"img,sgx530-125", "img,sgx530", =
-"ti,omap-am335x-sgx530-125";
->> +		  - BeagleBone Black
->> +		"img,sgx540-120", "img,sgx540", =
-"ti,omap-omap4-sgx540-120";
->> +		  - Pandaboard (ES)
->> +		"img,sgx544-112", "img,sgx544", =
-"ti,omap-omap4-sgx544-112";
->> +		"img,sgx544-116", "img,sgx544", =
-"ti,omap-omap5-sgx544-116";
->> +		  - OMAP5 UEVM, Pyra Handheld
->> +		"img,sgx544-116", "img,sgx544", =
-"ti,omap-dra7-sgx544-116";
->=20
-> FYI, the compatible names above have unnecessary omap in them:
->=20
-> "ti,omap-omap3-sgx530-121" should be "ti,omap3-sgx530-121"
-> "ti,omap-am335x-sgx530-125" should be "ti,am335x-sgx530-125";
-> "ti,omap-dra7-sgx544-116" should be "ti,dra7-sgx544-116"
->=20
-> And so on.
+By defaul of-based thermal driver do not have hwmon entries registered.
 
-Yes,
-Rob already noted a while ago and our latest private code has it fixed.
+Do this explicitly so users can use standard hwmon interfaces and tools
+to read the temperature.
 
-There is no progress towards a v2 since I am still fighting with the new
-yaml format he also requested...
+This is based on similar changes for bcm2835_thermal in commit
+d56c19d07e0b ("thermal: bcm2835: enable hwmon explicitly").
 
-BR and thanks,
-Nikolaus
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+
+This patch was only compile tested. A similar patch [1] was submitted to
+the downstream kernel, which I did build and actually run on a Raspberry
+Pi 4.
+
+This one for mainline is much simpler, as it does not need to deal with
+the error path or device removal, due to the use of devres.
+
+ [1] https://github.com/raspberrypi/linux/pull/3307
+
+---
+ drivers/thermal/broadcom/brcmstb_thermal.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/thermal/broadcom/brcmstb_thermal.c b/drivers/thermal/broadcom/brcmstb_thermal.c
+index 5825ac581f56..8353aaa4d624 100644
+--- a/drivers/thermal/broadcom/brcmstb_thermal.c
++++ b/drivers/thermal/broadcom/brcmstb_thermal.c
+@@ -21,6 +21,8 @@
+ #include <linux/of_device.h>
+ #include <linux/thermal.h>
+ 
++#include "../thermal_hwmon.h"
++
+ #define AVS_TMON_STATUS			0x00
+  #define AVS_TMON_STATUS_valid_msk	BIT(11)
+  #define AVS_TMON_STATUS_data_msk	GENMASK(10, 1)
+@@ -343,6 +345,12 @@ static int brcmstb_thermal_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	/* hwmon not enabled by default. Enable it here. */
++	thermal->tzp->no_hwmon = false;
++	ret = thermal_add_hwmon_sysfs(thermal);
++	if (ret)
++		return ret;
++
+ 	dev_info(&pdev->dev, "registered AVS TMON of-sensor driver\n");
+ 
+ 	return 0;
+-- 
+2.20.1
 
