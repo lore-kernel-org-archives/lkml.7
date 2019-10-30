@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8DACA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7533CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D4D217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F87217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451083;
-	bh=v3Vsq1jWVxR4xtDWLkdlbQS32M/Y8m4OfBUBuowFf88=;
+	s=default; t=1572451085;
+	bh=VUwH/AuwUiUuH2m0jq4xzOerAgHsaYC1KAQxUccPK4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PcFzULHwYWbGYhOeYtT1DWH2J3X+AjTeUbc5BKsVFFOT39QPrcxhCOyC3vZ7KbICD
-	 l6w+2BS/y6oQnDuEb5jQb02PnKG+ieB0kT36mQeFWF73xtb/3Yi+eBSjb2D74umrrw
-	 IqgvkSVzX+PZsGdrtFvwi0L6t3kQTNNzzsu6KJ8k=
+	b=c4HxyBVaHZUwaO4/RHP7+d2xtbVza3jpzzDHE/BueieVqUckT+ne1oFqdfQ4Rh+Ej
+	 v8juNouNXvO193J/JT9MbibPf1PtX9iUUw64pHi2UdO5bHXOiR48qhbbjdGN/MY4bM
+	 1wuJawOZnTZ9hz4QAeWVR9WgJVuh92Lj8f5wIENQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbfJ3P6C (ORCPT
+        id S1729191AbfJ3P6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:58:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59702 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:58:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729185AbfJ3P57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:57:59 -0400
+        id S1729178AbfJ3P56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:57:58 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBAA42190F;
-        Wed, 30 Oct 2019 15:57:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 124D221835;
+        Wed, 30 Oct 2019 15:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572451079;
-        bh=v3Vsq1jWVxR4xtDWLkdlbQS32M/Y8m4OfBUBuowFf88=;
+        s=default; t=1572451077;
+        bh=VUwH/AuwUiUuH2m0jq4xzOerAgHsaYC1KAQxUccPK4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uim7f3BVIEVFJ6Vo2FTA6h0mSxJnXeofd+xL3RaBUBP/pYWWYBZ9HG2JcmQSULxVl
-         m5vLiKKOygEhw3gEsQ3hiqezZHU1BLKaV/qQjT+AvNPhTn2NoTm6JzqOobpJfisELL
-         Z6bJ083wMhsBToLXqwMHPxP95A1wfRY/A1CePn80=
+        b=YveAxKuskVUxQc1qY3t5gefxsY3IpkMguSXM/d3eq3UvK6MfHudojESJHlD8rO7el
+         6KqEru/CJpRf8Mvd3Jgrv7Pbku9Z/PEjO+TJY5zu34OXO01WEoriakKBX8Lzctv7TL
+         P0Vvp+bD21aFpgNDvDFRJdRxKkxwT46QIMrFhllM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 03/13] ASoc: rockchip: i2s: Fix RPM imbalance
-Date:   Wed, 30 Oct 2019 11:57:41 -0400
-Message-Id: <20191030155751.10960-3-sashal@kernel.org>
+Cc:     Yizhuo <yzhai003@ucr.edu>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 02/13] regulator: pfuze100-regulator: Variable "val" in pfuze100_regulator_probe() could be uninitialized
+Date:   Wed, 30 Oct 2019 11:57:40 -0400
+Message-Id: <20191030155751.10960-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155751.10960-1-sashal@kernel.org>
 References: <20191030155751.10960-1-sashal@kernel.org>
@@ -60,37 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Yizhuo <yzhai003@ucr.edu>
 
-[ Upstream commit b1e620e7d32f5aad5353cc3cfc13ed99fea65d3a ]
+[ Upstream commit 1252b283141f03c3dffd139292c862cae10e174d ]
 
-If rockchip_pcm_platform_register() fails, e.g. upon deferring to wait
-for an absent DMA channel, we return without disabling RPM, which makes
-subsequent re-probe attempts scream with errors about the unbalanced
-enable. Don't do that.
+In function pfuze100_regulator_probe(), variable "val" could be
+initialized if regmap_read() fails. However, "val" is used to
+decide the control flow later in the if statement, which is
+potentially unsafe.
 
-Fixes: ebb75c0bdba2 ("ASoC: rockchip: i2s: Adjust devm usage")
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Link: https://lore.kernel.org/r/bcb12a849a05437fb18372bc7536c649b94bdf07.1570029862.git.robin.murphy@arm.com
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+Link: https://lore.kernel.org/r/20190929170957.14775-1-yzhai003@ucr.edu
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/rockchip/rockchip_i2s.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/pfuze100-regulator.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
-index 58ee64594f075..f583f317644a1 100644
---- a/sound/soc/rockchip/rockchip_i2s.c
-+++ b/sound/soc/rockchip/rockchip_i2s.c
-@@ -530,7 +530,7 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
- 	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Could not register PCM\n");
--		return ret;
-+		goto err_suspend;
- 	}
+diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
+index c68556bf6f399..ec185502dcebd 100644
+--- a/drivers/regulator/pfuze100-regulator.c
++++ b/drivers/regulator/pfuze100-regulator.c
+@@ -609,7 +609,13 @@ static int pfuze100_regulator_probe(struct i2c_client *client,
  
- 	return 0;
+ 		/* SW2~SW4 high bit check and modify the voltage value table */
+ 		if (i >= sw_check_start && i <= sw_check_end) {
+-			regmap_read(pfuze_chip->regmap, desc->vsel_reg, &val);
++			ret = regmap_read(pfuze_chip->regmap,
++						desc->vsel_reg, &val);
++			if (ret) {
++				dev_err(&client->dev, "Fails to read from the register.\n");
++				return ret;
++			}
++
+ 			if (val & sw_hi) {
+ 				if (pfuze_chip->chip_id == PFUZE3000) {
+ 					desc->volt_table = pfuze3000_sw2hi;
 -- 
 2.20.1
 
