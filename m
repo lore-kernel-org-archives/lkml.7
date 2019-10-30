@@ -2,94 +2,103 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38469CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648A8CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090B620873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA232086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:50:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfJaItt (ORCPT
+        id S1727084AbfJaIuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 04:49:49 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33418 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726874AbfJaIts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 04:49:48 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9CED2566D52269F09AA3;
-        Thu, 31 Oct 2019 16:49:45 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 31 Oct 2019
- 16:49:34 +0800
-Subject: Re: [PATCH v2 03/36] irqchip/gic-v3-its: Allow LPI invalidation via
- the DirectLPI interface
-To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-kernel@vger.kernel.org>
-CC:     Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Andrew Murray" <Andrew.Murray@arm.com>,
-        Jayachandran C <jnair@marvell.com>,
-        "Robert Richter" <rrichter@marvell.com>
-References: <20191027144234.8395-1-maz@kernel.org>
- <20191027144234.8395-4-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <a263e264-298c-57cf-31b7-a781160a3929@huawei.com>
-Date:   Thu, 31 Oct 2019 16:49:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 31 Oct 2019 04:50:06 -0400
+Received: from mga02.intel.com ([134.134.136.20]:43817 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726867AbfJaIuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 04:50:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 01:50:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
+   d="scan'208";a="401811082"
+Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
+  by fmsmga006.fm.intel.com with ESMTP; 31 Oct 2019 01:50:04 -0700
+From:   Like Xu <like.xu@linux.intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     like.xu@linux.intel.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: x86/pmu: Update guest cpuid10 entry if pmu->nr_*_counters are changed
+Date:   Thu, 31 Oct 2019 00:44:18 +0800
+Message-Id: <20191030164418.2957-1-like.xu@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20191027144234.8395-4-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+If the cpuid10_eax.split.num_counters* from kvm_vcpu_ioctl_set_cpuid2
+is larger than the host x86_pmu.num_counters_*, the min_t() is applied.
+We need do cpuid synchronisation locally for cpuid10 entry to avoid
+functional ambiguity and it's heavyweight to call kvm_update_cpuid for
+these simple assignments.
 
-On 2019/10/27 22:42, Marc Zyngier wrote:
-> We currently don't make much use of the DirectLPI feature, and it would
-> be beneficial to do this more, if only because it becomes a mandatory
-> feature for GICv4.1.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Like Xu <like.xu@linux.intel.com>
+---
+ arch/x86/kvm/vmx/pmu_intel.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-I have no objection to this patch, which says:
-
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-
-
-But this patch really drives me to look through all callsites of
-dev_event_to_col(), the abstraction which can be used _only_ with
-physical LPI mappings.
-
-I find that when building the INV command, we use dev_event_to_col()
-to find the "sync_obj" and then pass it to the following SYNC command.
-But the "INV+SYNC" will be performed both on physical LPI and *VLPI*
-(lpi_update_config/its_send_inv).
-So I have two questions about the way we sending INV on VLPI:
-
-1) Which "sync" command should be followed?  SYNC or VSYNC?
-(we currently use SYNC, while the spec says, SYNC "ensures all
-outstanding ITS operations associated with *physical* interrupts
-for the Redistributor are globally observed ...")
-
-2) The "sync_obj" we are currently using seems to be wrong.
-
-
-Thanks,
-Zenghui
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index 3e9c059099e9..f83b7506dcff 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -266,6 +266,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 	struct kvm_cpuid_entry2 *entry;
+ 	union cpuid10_eax eax;
+ 	union cpuid10_edx edx;
++	bool cpuid_update_needed = false;
+ 
+ 	pmu->nr_arch_gp_counters = 0;
+ 	pmu->nr_arch_fixed_counters = 0;
+@@ -288,6 +289,8 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 
+ 	pmu->nr_arch_gp_counters = min_t(int, eax.split.num_counters,
+ 					 x86_pmu.num_counters_gp);
++	if (pmu->nr_arch_gp_counters != eax.split.num_counters)
++		cpuid_update_needed = true;
+ 	pmu->counter_bitmask[KVM_PMC_GP] = ((u64)1 << eax.split.bit_width) - 1;
+ 	pmu->available_event_types = ~entry->ebx &
+ 					((1ull << eax.split.mask_length) - 1);
+@@ -298,6 +301,8 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 		pmu->nr_arch_fixed_counters =
+ 			min_t(int, edx.split.num_counters_fixed,
+ 			      x86_pmu.num_counters_fixed);
++		if (pmu->nr_arch_fixed_counters != edx.split.num_counters_fixed)
++			cpuid_update_needed = true;
+ 		pmu->counter_bitmask[KVM_PMC_FIXED] =
+ 			((u64)1 << edx.split.bit_width_fixed) - 1;
+ 	}
+@@ -317,6 +322,13 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 	    (boot_cpu_has(X86_FEATURE_HLE) || boot_cpu_has(X86_FEATURE_RTM)) &&
+ 	    (entry->ebx & (X86_FEATURE_HLE|X86_FEATURE_RTM)))
+ 		pmu->reserved_bits ^= HSW_IN_TX|HSW_IN_TX_CHECKPOINTED;
++
++	if (cpuid_update_needed) {
++		((union cpuid10_eax *)&entry->eax)->split.num_counters
++			= pmu->nr_arch_gp_counters;
++		((union cpuid10_edx *)&entry->edx)->split.num_counters_fixed
++			= pmu->nr_arch_fixed_counters;
++	}
+ }
+ 
+ static void intel_pmu_init(struct kvm_vcpu *vcpu)
+-- 
+2.21.0
 
