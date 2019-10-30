@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C70AACA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 128CBCA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7332054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7FA20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:02:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451314;
-	bh=A8OJ0gmDn66ao2MoOx6aQnaAj57Lc5OKhEELCpvSyIg=;
+	s=default; t=1572451324;
+	bh=5VyfATjDRZ/d61SscXopb+AgGGmd7/YaQZLg5GFAo3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BFQXp9GaEyoG6vTn0bnOyXh+2mutnrQKNYu2i57dTe82IP6NTSEI6SEeDyroGGoJ1
-	 qpzM8FoThLWw63EBnxOmr6EMIu/o1QcrmDtv84AIo6NzfM2BqrHJ6AAO9LOd6nsAVE
-	 5/uXhNsXuHIdA38nFP9SfHCVLbK4j2ykUmZTiSag=
+	b=xzqqYS7QtHtUTNr93vEL1Gj6d+W17PX7ASohQvHUMATlQfhHDx3DfMUobHugailIF
+	 5+im02J3KMyGYYZG7d2SQBNio7KbLMOXx6fqquS6UdFfqf/4ROyub7hYQdKBlpp5ZV
+	 R2YqNZ8IP9tZ+hx53XVZdDxZDddtcPEdJmDPB/Mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbfJ3QBx (ORCPT
+        id S1728134AbfJ3PxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:01:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55708 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:53:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728301AbfJ3PyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:54:17 -0400
+        id S1727413AbfJ3PxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:53:15 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31F5120874;
-        Wed, 30 Oct 2019 15:54:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D6E321734;
+        Wed, 30 Oct 2019 15:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450856;
-        bh=A8OJ0gmDn66ao2MoOx6aQnaAj57Lc5OKhEELCpvSyIg=;
+        s=default; t=1572450795;
+        bh=5VyfATjDRZ/d61SscXopb+AgGGmd7/YaQZLg5GFAo3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HbTI4sGqhdtgCGlPpKZa1bFAZ9mvCiMscKeHF9vCjop2ktnGKNoKjZC4qwgRT59Bu
-         loHqyF/IxGTBfDx9yHBlbC4cLRSuUktG0dv71+mg3VBJMFfBxU77rxy2m5+5YuHR0b
-         dQXJv1fiwR458xC0b2Qe2sALsUqmruPTp8qizESk=
+        b=CUkV1KWzFApbrC0eWa9eNKBKV4sgRol6zEUbE2ASw6HZ2j1InBQhGun9+QwiE4hO0
+         u1AlDqAEtQlzM3FNPAWl9/ZAVO3VCoXzU9IgMUDcIBwEFspGFcZa2CbycSpZ67kTHC
+         TuiKuvRj2uWFIKhYQBSpIzXtvUG8hln2Mdr51E0U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Ondrej Jirman <megous@megous.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 03/38] arm64: dts: allwinner: a64: pine64-plus: Add PHY regulator delay
-Date:   Wed, 30 Oct 2019 11:53:31 -0400
-Message-Id: <20191030155406.10109-3-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        legousb-devel@lists.sourceforge.net, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 51/81] USB: legousbtower: fix a signedness bug in tower_probe()
+Date:   Wed, 30 Oct 2019 11:48:57 -0400
+Message-Id: <20191030154928.9432-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191030155406.10109-1-sashal@kernel.org>
-References: <20191030155406.10109-1-sashal@kernel.org>
+In-Reply-To: <20191030154928.9432-1-sashal@kernel.org>
+References: <20191030154928.9432-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,44 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 2511366797fa6ab4a404b4b000ef7cd262aaafe8 ]
+[ Upstream commit fd47a417e75e2506eb3672ae569b1c87e3774155 ]
 
-Depending on kernel and bootloader configuration, it's possible that
-Realtek ethernet PHY isn't powered on properly. According to the
-datasheet, it needs 30ms to power up and then some more time before it
-can be used.
+The problem is that sizeof() is unsigned long so negative error codes
+are type promoted to high positive values and the condition becomes
+false.
 
-Fix that by adding 100ms ramp delay to regulator responsible for
-powering PHY.
-
-Fixes: 94dcfdc77fc5 ("arm64: allwinner: pine64-plus: Enable dwmac-sun8i")
-Suggested-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Fixes: 1d427be4a39d ("USB: legousbtower: fix slab info leak at probe")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191011141115.GA4521@mwanda
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/usb/misc/legousbtower.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-index 24f1aac366d64..d5b6e8159a335 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-@@ -63,3 +63,12 @@
- 		reg = <1>;
- 	};
- };
-+
-+&reg_dc1sw {
-+	/*
-+	 * Ethernet PHY needs 30ms to properly power up and some more
-+	 * to initialize. 100ms should be plenty of time to finish
-+	 * whole process.
-+	 */
-+	regulator-enable-ramp-delay = <100000>;
-+};
+diff --git a/drivers/usb/misc/legousbtower.c b/drivers/usb/misc/legousbtower.c
+index 62dab2441ec4f..23061f1526b4e 100644
+--- a/drivers/usb/misc/legousbtower.c
++++ b/drivers/usb/misc/legousbtower.c
+@@ -878,7 +878,7 @@ static int tower_probe (struct usb_interface *interface, const struct usb_device
+ 				  get_version_reply,
+ 				  sizeof(*get_version_reply),
+ 				  1000);
+-	if (result < sizeof(*get_version_reply)) {
++	if (result != sizeof(*get_version_reply)) {
+ 		if (result >= 0)
+ 			result = -EIO;
+ 		dev_err(idev, "get version request failed: %d\n", result);
 -- 
 2.20.1
 
