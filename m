@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D64F1CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F3CCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A56CD20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D594C2067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451027;
-	bh=1fsxAptcHjRbaUtNupDgJEBnnb6rWnIiTS9hB/14wZ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q4Wtsd3oFLUwsO7JMqjZAId7TL/beFrqaYz+C2zhAPzjompTFPiWjqiScI+5fli+n
-	 JU6vKDv95TJp+pyk5otmrVXKrRSuezWGCT0EkmfLHuyeO27J823H0ZaZmAU9OZwkni
-	 f3FCu/PnNrJ2PK37rlJCwM4XPwEzgH2T6NE0fJqM=
+	s=default; t=1572451031;
+	bh=owHE3ZeIOv3rXmhivjkG2BGzQ+rYjTJYyoFrtT9JlVk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=GNZtdJiJSMitQTqvRliB+l7sStVb9LaYOzRSyQgyiNi7Jt8d6ezJmGFztjBaU2nwY
+	 q0bFrG8pfVzQFHRIYxTd88h7rp3Hn83jRAFpJsw2GSRD7NmgXOMGEoDv/gx4Z4gvJS
+	 72eEKxXJ3b4P8yZ+HlAthjm9rFXNcatyCtl3+NKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbfJ3P5G (ORCPT
+        id S1728975AbfJ3P5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:57:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58576 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728938AbfJ3P47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:56:59 -0400
+        id S1728966AbfJ3P5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:57:04 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AED042080F;
-        Wed, 30 Oct 2019 15:56:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E484F2080F;
+        Wed, 30 Oct 2019 15:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572451018;
-        bh=1fsxAptcHjRbaUtNupDgJEBnnb6rWnIiTS9hB/14wZ0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j4sfqIP7q5w04rwCDXgg1TrMZM0C5Ey8buAAuV6Xj3wEAlgiDV0cP+TJOgJcVw4LA
-         5mVWuwXlzcR4N5LqA6YB6bGJgE1MoKlHYeETLbnL74XOauaKQ9edw8wm2U9eSKaVuk
-         ChW+9ULY1jyXMRJQXQUbBFoTxOmp/TB7K4UJAHPs=
+        s=default; t=1572451024;
+        bh=owHE3ZeIOv3rXmhivjkG2BGzQ+rYjTJYyoFrtT9JlVk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fxt2F1mcsddmrjfezgfdTdThI8wCWQ7bS1RhQ/9ubb79hTAnpNM7wMifFlYUY4wFv
+         rntahMkKOvgY2rfyBc9Pq4v13c/NCJOCWwfmU+6MmmXRelJOA5eT+QFh48gC4tRx4G
+         H/iPyjV6rm0oaqWBTWqbF5wF4Sx8LPilQjeS73dk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Christie <mchristi@redhat.com>,
-        syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com,
-        "Richard W . M . Jones" <rjones@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org, nbd@other.debian.org
-Subject: [PATCH AUTOSEL 4.14 24/24] nbd: verify socket is supported during setup
-Date:   Wed, 30 Oct 2019 11:55:55 -0400
-Message-Id: <20191030155555.10494-24-sashal@kernel.org>
+Cc:     Axel Lin <axel.lin@ingics.com>, Nishanth Menon <nm@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 01/18] regulator: ti-abb: Fix timeout in ti_abb_wait_txdone/ti_abb_clear_all_txdone
+Date:   Wed, 30 Oct 2019 11:56:43 -0400
+Message-Id: <20191030155700.10748-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191030155555.10494-1-sashal@kernel.org>
-References: <20191030155555.10494-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,76 +57,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Christie <mchristi@redhat.com>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit cf1b2326b734896734c6e167e41766f9cee7686a ]
+[ Upstream commit f64db548799e0330897c3203680c2ee795ade518 ]
 
-nbd requires socket families to support the shutdown method so the nbd
-recv workqueue can be woken up from its sock_recvmsg call. If the socket
-does not support the callout we will leave recv works running or get hangs
-later when the device or module is removed.
+ti_abb_wait_txdone() may return -ETIMEDOUT when ti_abb_check_txdone()
+returns true in the latest iteration of the while loop because the timeout
+value is abb->settling_time + 1. Similarly, ti_abb_clear_all_txdone() may
+return -ETIMEDOUT when ti_abb_check_txdone() returns false in the latest
+iteration of the while loop. Fix it.
 
-This adds a check during socket connection/reconnection to make sure the
-socket being passed in supports the needed callout.
-
-Reported-by: syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com
-Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
-Tested-by: Richard W.M. Jones <rjones@redhat.com>
-Signed-off-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Nishanth Menon <nm@ti.com>
+Link: https://lore.kernel.org/r/20190929095848.21960-1-axel.lin@ingics.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+ drivers/regulator/ti-abb-regulator.c | 26 ++++++++------------------
+ 1 file changed, 8 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index f322bb3286910..2fef2efa9051f 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -918,6 +918,25 @@ static blk_status_t nbd_queue_rq(struct blk_mq_hw_ctx *hctx,
- 	return ret;
+diff --git a/drivers/regulator/ti-abb-regulator.c b/drivers/regulator/ti-abb-regulator.c
+index d2f9942987535..6d17357b3a248 100644
+--- a/drivers/regulator/ti-abb-regulator.c
++++ b/drivers/regulator/ti-abb-regulator.c
+@@ -173,19 +173,14 @@ static int ti_abb_wait_txdone(struct device *dev, struct ti_abb *abb)
+ 	while (timeout++ <= abb->settling_time) {
+ 		status = ti_abb_check_txdone(abb);
+ 		if (status)
+-			break;
++			return 0;
+ 
+ 		udelay(1);
+ 	}
+ 
+-	if (timeout > abb->settling_time) {
+-		dev_warn_ratelimited(dev,
+-				     "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
+-				     __func__, timeout, readl(abb->int_base));
+-		return -ETIMEDOUT;
+-	}
+-
+-	return 0;
++	dev_warn_ratelimited(dev, "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
++			     __func__, timeout, readl(abb->int_base));
++	return -ETIMEDOUT;
  }
  
-+static struct socket *nbd_get_socket(struct nbd_device *nbd, unsigned long fd,
-+				     int *err)
-+{
-+	struct socket *sock;
-+
-+	*err = 0;
-+	sock = sockfd_lookup(fd, err);
-+	if (!sock)
-+		return NULL;
-+
-+	if (sock->ops->shutdown == sock_no_shutdown) {
-+		dev_err(disk_to_dev(nbd->disk), "Unsupported socket: shutdown callout must be supported.\n");
-+		*err = -EINVAL;
-+		return NULL;
-+	}
-+
-+	return sock;
-+}
-+
- static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
- 			  bool netlink)
- {
-@@ -927,7 +946,7 @@ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
- 	struct nbd_sock *nsock;
- 	int err;
+ /**
+@@ -205,19 +200,14 @@ static int ti_abb_clear_all_txdone(struct device *dev, const struct ti_abb *abb)
  
--	sock = sockfd_lookup(arg, &err);
-+	sock = nbd_get_socket(nbd, arg, &err);
- 	if (!sock)
- 		return err;
+ 		status = ti_abb_check_txdone(abb);
+ 		if (!status)
+-			break;
++			return 0;
  
-@@ -979,7 +998,7 @@ static int nbd_reconnect_socket(struct nbd_device *nbd, unsigned long arg)
- 	int i;
- 	int err;
+ 		udelay(1);
+ 	}
  
--	sock = sockfd_lookup(arg, &err);
-+	sock = nbd_get_socket(nbd, arg, &err);
- 	if (!sock)
- 		return err;
+-	if (timeout > abb->settling_time) {
+-		dev_warn_ratelimited(dev,
+-				     "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
+-				     __func__, timeout, readl(abb->int_base));
+-		return -ETIMEDOUT;
+-	}
+-
+-	return 0;
++	dev_warn_ratelimited(dev, "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
++			     __func__, timeout, readl(abb->int_base));
++	return -ETIMEDOUT;
+ }
  
+ /**
 -- 
 2.20.1
 
