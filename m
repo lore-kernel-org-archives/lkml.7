@@ -2,117 +2,127 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582D7CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDDECA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BEC82087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:50:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="NTwARt8G"
+	by mail.kernel.org (Postfix) with ESMTP id 7FAA920874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:51:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfJ3NuK (ORCPT
+        id S1726562AbfJ3Nvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:50:10 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35819 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbfJ3NuK (ORCPT
+        Wed, 30 Oct 2019 09:51:43 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54383 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfJ3Nvm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:50:10 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x6so1029853pln.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 06:50:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=pb0XrKghyFZgq2oeDgc1vRiv8K2ZCa6MKROaXA8DqHQ=;
-        b=NTwARt8GUFCdG5TLJcI8i9cPiC/uXK1HfVAmkF/Gi70bnHnieGDcLcKhO+TpHqC1fD
-         x4C83BpfmUyDj8Rjo5KmeHlhXkrHNK0d01ZempNxNYWBY4EvFCzdf8V7F/HDhoG9uk2i
-         sSv0amtdfi01NJeawZo9HWDVM2mJxLKzuZIuA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=pb0XrKghyFZgq2oeDgc1vRiv8K2ZCa6MKROaXA8DqHQ=;
-        b=mROqbA94ZvsWkosErhqkPAQoEklDTuRYRjAwVwNPB+F8c8JltqfpnIrLoHO+GsVI5L
-         hrg/dpmH77gdIXAnvQAsfIDtZyZv9e6Nof78aP1T3c+jst08ttZFmHJUNqKEvaRfgYSU
-         IXtUqKox9faaq5PsWrfsp2qJOcgdxI0i24MrXtFfs0Gu6SYMcySmh/lwVbvH0c6956D3
-         2s8F7/2/yGwJ+lxuBdxTDyNu7l2nXL78HK708A8sqybX8xTcO7A+mCgKNc3HbJ1buVs4
-         hrD8p1+fve3hTDh9yUWzo/uVypSJMLbw518lcaCHlxJNW+x/N5As0t/xO8B52KicNemz
-         SzeA==
-X-Gm-Message-State: APjAAAW+eNek24o5+/37S7wCzCVVhAchFLeX0j1mU+S/4Ahc2E01TC6q
-        jE3QlO61hCa5j0esKKWG6tNBqA==
-X-Google-Smtp-Source: APXvYqxZKEVBxM1Ya92TQcJqH+4T3C4D/gFc7Fw6wdXNjsqrvLc0beAsZLlvhMi0VRPxusNFqNzDbA==
-X-Received: by 2002:a17:902:760c:: with SMTP id k12mr102582pll.256.1572443409483;
-        Wed, 30 Oct 2019 06:50:09 -0700 (PDT)
-Received: from localhost (2001-44b8-1113-6700-783a-2bb9-f7cb-7c3c.static.ipv6.internode.on.net. [2001:44b8:1113:6700:783a:2bb9:f7cb:7c3c])
-        by smtp.gmail.com with ESMTPSA id e198sm35049pfh.83.2019.10.30.06.50.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 06:50:08 -0700 (PDT)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
-        glider@google.com, luto@kernel.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, dvyukov@google.com, christophe.leroy@c-s.fr
-Cc:     linuxppc-dev@lists.ozlabs.org, gor@linux.ibm.com,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 4/5] x86/kasan: support KASAN_VMALLOC
-In-Reply-To: <a144eaca-d7e1-1a18-5975-bd0bfdb9450e@virtuozzo.com>
-References: <20191029042059.28541-1-dja@axtens.net> <20191029042059.28541-5-dja@axtens.net> <a144eaca-d7e1-1a18-5975-bd0bfdb9450e@virtuozzo.com>
-Date:   Thu, 31 Oct 2019 00:50:05 +1100
-Message-ID: <87sgnamjg2.fsf@dja-thinkpad.axtens.net>
+        Wed, 30 Oct 2019 09:51:42 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iPoNs-00020h-Nw; Wed, 30 Oct 2019 14:51:36 +0100
+Message-ID: <116e2d1eb1333c322450f20a5f591b7038586865.camel@pengutronix.de>
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org
+Date:   Wed, 30 Oct 2019 14:51:35 +0100
+In-Reply-To: <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+         <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+         <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrey Ryabinin <aryabinin@virtuozzo.com> writes:
+On Wed, 2019-10-30 at 15:32 +0200, Peter Ujfalusi wrote:
+> 
+> On 30/10/2019 15.12, Rob Herring wrote:
+> > On Wed, Oct 30, 2019 at 7:03 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> > > Hi,
+> > > 
+> > > The shared GPIO line for external components tends to be a common issue and
+> > > there is no 'clean' way of handling it.
+> > > 
+> > > I'm aware of the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag, which must be provided when
+> > > a driver tries to request a GPIO which is already in use.
+> > > However the driver must know that the component is going to be used in such a
+> > > way, which can be said to any external components with GPIO line, so in theory
+> > > all drivers must set this flag when requesting the GPIO...
+> > > 
+> > > But with the GPIOD_FLAGS_BIT_NONEXCLUSIVE all clients have full control of the
+> > > GPIO line. For example any device using the same GPIO as reset/enable line can
+> > > reset/enable other devices, which is not something the other device might like
+> > > or can handle.
+> > > For example a device needs to be configured after it is enabled, but some other
+> > > driver would reset it while handling the same GPIO -> the device is not
+> > > operational anymmore as it lost it's configuration.
+> > > 
+> > > With the gpio-shared gpiochip we can overcome this by giving the gpio-shared
+> > > the role of making sure that the GPIO line only changes state when it will not
+> > > disturb any of the clients sharing the same GPIO line.
+> > 
+> > Why can't we just add a shared flag like we have for interrupts?
+> > Effectively, we have that for resets too, it's just hardcoded in the
+> > the drivers.
+> 
+> This would be kind of the same thing what the
+> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
+> fixed-regulators afaik.
+> 
+> But let's say that a board design will pick two components (C1 and C2)
+> and use the same GPIO line to enable them. We already have the drivers
+> for them and they are used in boards already.
+> 
+> Both needs the GPIO line to be high for normal operation.
+> One or both of them needs register writes after they are enabled.
+> 
+> During boot both requests the GPIO (OUTPUT_LOW) and sets it high, then
+> run the register setup.
+> 
+> C1 request GPIO (LOW)
+> C1 gpio_set(1)
+> C1 register writes
+> C2 requests GPIO (LOW)
+>  C1 placed to reset and looses the configuration
+> C2 gpio_set(1)
+>  C1 also enabled
+> C2 register writes
+> 
+> At this point C2 is operational, C1 is not.
+> 
+> In shared GPIO case the GPIO should be handled like a regulator with a
+> twist that the 'sticky' state of the GPIO might be low or high depending
+> on the needs of the components it is connected to.
+> 
+> The shared GPIO line is a board design quirk and basically any device
+> which have reset/enable GPIO must be able to work in a situation when
+> they are sharing that line with other components and the driver should
+> not know much about this small detail.
 
-> On 10/29/19 7:20 AM, Daniel Axtens wrote:
->> In the case where KASAN directly allocates memory to back vmalloc
->> space, don't map the early shadow page over it.
->> 
->> We prepopulate pgds/p4ds for the range that would otherwise be empty.
->> This is required to get it synced to hardware on boot, allowing the
->> lower levels of the page tables to be filled dynamically.
->> 
->> Acked-by: Dmitry Vyukov <dvyukov@google.com>
->> Signed-off-by: Daniel Axtens <dja@axtens.net>
->> 
->> ---
->
->> +static void __init kasan_shallow_populate_pgds(void *start, void *end)
->> +{
->> +	unsigned long addr, next;
->> +	pgd_t *pgd;
->> +	void *p;
->> +	int nid = early_pfn_to_nid((unsigned long)start);
->
-> This doesn't make sense. start is not even a pfn. With linear mapping 
-> we try to identify nid to have the shadow on the same node as memory. But 
-> in this case we don't have memory or the corresponding shadow (yet),
-> we only install pgd/p4d.
-> I guess we could just use NUMA_NO_NODE.
+What about components that require a register write right after being
+enabled, for example to put the device into a low power state, to
+silence it on a bus, or to mask some initially enabled interrupts?
 
-Ah wow, that's quite the clanger on my part.
+regards
+Philipp
 
-There are a couple of other invocations of early_pfn_to_nid in that file
-that use an address directly, but at least they reference actual memory.
-I'll send a separate patch to fix those up.
-
-> The rest looks ok, so with that fixed:
->
-> Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-
-Thanks heaps! I've fixed up the nit you identifed in the first patch,
-and I agree that the last patch probably isn't needed. I'll respin the
-series shortly.
-
-Regards,
-Daniel
