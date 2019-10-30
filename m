@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D3DCA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283DCCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1366B20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E85ED21924
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451038;
-	bh=oqcikNQaIlCTx7/PpLSFwH3TmCmGrsgNZ2IoEF/qXOU=;
+	s=default; t=1572451047;
+	bh=0bQe948ftx6P4hbTLJm624vlLfbcA0R1ysh4srYT92c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xf3cK++xwW3NhhqL6sVLUHddMcfM35LkoejkvULg/V/tMZCRkI6UiNqc814irbO2x
-	 6nycuQ0a/yMFbYzSO3ZtlqvuRRbmAOObzO6iThKin8WdR+Y01+Iw7eUprPmM2g30n3
-	 31wkeyoB6tiJqdfdbT5Q2kTxHpePWdHA46Q2pJg4=
+	b=eERYHsAeCZr9TG8YAnD+2WIGSla2ZO/aQLBOeOfcyiQNwjUiElzehE5JKbK69DtBf
+	 ZPoNailmGWnWhjfcMAFHwuipq/DaJz/w/pkf8spLzvHdpX2cmHsijhH6q1LMDYyD1H
+	 DDLwQZLNkvXd7+b9KmVNcVLMBNFN8pX/uyD1f3Us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbfJ3P5Q (ORCPT
+        id S1729040AbfJ3P5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:57:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58794 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:57:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728977AbfJ3P5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:57:10 -0400
+        id S1728977AbfJ3P5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:57:20 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6757E2067D;
-        Wed, 30 Oct 2019 15:57:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF18E2067D;
+        Wed, 30 Oct 2019 15:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572451029;
-        bh=oqcikNQaIlCTx7/PpLSFwH3TmCmGrsgNZ2IoEF/qXOU=;
+        s=default; t=1572451039;
+        bh=0bQe948ftx6P4hbTLJm624vlLfbcA0R1ysh4srYT92c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T0op7C2LP26veenimR5aKmrm2dpt+YVWt563+aRq+8hcdCYtNQz+zJLfH4pMwlI1G
-         DtLHxytnBZaBw9340ZiE6NHlhRIOzzEblfgI82doVQ/Icm3OjzqABqV1Qs04y4nXMp
-         j0WN7gKIIEeBA2PwEd1fPzy6bCaGEbxGUnBDSdHI=
+        b=vKCQVtOs8QcDrPaYUt1I+x8Wsd9h+QAqOz6QIQLcUvG6XXqjHpTxgIutO+R/sN43F
+         r48v6VZRVZWkRGOPByQ0AAUX3McylY8V4bwyrKBw4OZchc6IuDjv1jXAYmvjk9YvH1
+         HB1PurRl8trxxzI5fWsMcnGb2MNgKgiyV98LaMmQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stuart Henderson <stuarth@opensource.cirrus.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
-Subject: [PATCH AUTOSEL 4.9 03/18] ASoC: wm_adsp: Don't generate kcontrols without READ flags
-Date:   Wed, 30 Oct 2019 11:56:45 -0400
-Message-Id: <20191030155700.10748-3-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Jing Xiangfeng <jingxiangfeng@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 07/18] ARM: mm: fix alignment handler faults under memory pressure
+Date:   Wed, 30 Oct 2019 11:56:49 -0400
+Message-Id: <20191030155700.10748-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155700.10748-1-sashal@kernel.org>
 References: <20191030155700.10748-1-sashal@kernel.org>
@@ -60,37 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stuart Henderson <stuarth@opensource.cirrus.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 3ae7359c0e39f42a96284d6798fc669acff38140 ]
+[ Upstream commit 67e15fa5b487adb9b78a92789eeff2d6ec8f5cee ]
 
-User space always expects to be able to read ALSA controls, so ensure
-no kcontrols are generated without an appropriate READ flag. In the case
-of a read of such a control zeros will be returned.
+When the system has high memory pressure, the page containing the
+instruction may be paged out.  Using probe_kernel_address() means that
+if the page is swapped out, the resulting page fault will not be
+handled because page faults are disabled by this function.
 
-Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20191002084240.21589-1-ckeepax@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Use get_user() to read the instruction instead.
+
+Reported-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+Fixes: b255188f90e2 ("ARM: fix scheduling while atomic warning in alignment handling code")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm_adsp.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm/mm/alignment.c | 44 +++++++++++++++++++++++++++++++++--------
+ 1 file changed, 36 insertions(+), 8 deletions(-)
 
-diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
-index c03c9da076c2d..28eb55bc46634 100644
---- a/sound/soc/codecs/wm_adsp.c
-+++ b/sound/soc/codecs/wm_adsp.c
-@@ -948,8 +948,7 @@ static unsigned int wmfw_convert_flags(unsigned int in, unsigned int len)
+diff --git a/arch/arm/mm/alignment.c b/arch/arm/mm/alignment.c
+index 7d5f4c736a16b..cd18eda014c24 100644
+--- a/arch/arm/mm/alignment.c
++++ b/arch/arm/mm/alignment.c
+@@ -767,6 +767,36 @@ do_alignment_t32_to_handler(unsigned long *pinstr, struct pt_regs *regs,
+ 	return NULL;
+ }
+ 
++static int alignment_get_arm(struct pt_regs *regs, u32 *ip, unsigned long *inst)
++{
++	u32 instr = 0;
++	int fault;
++
++	if (user_mode(regs))
++		fault = get_user(instr, ip);
++	else
++		fault = probe_kernel_address(ip, instr);
++
++	*inst = __mem_to_opcode_arm(instr);
++
++	return fault;
++}
++
++static int alignment_get_thumb(struct pt_regs *regs, u16 *ip, u16 *inst)
++{
++	u16 instr = 0;
++	int fault;
++
++	if (user_mode(regs))
++		fault = get_user(instr, ip);
++	else
++		fault = probe_kernel_address(ip, instr);
++
++	*inst = __mem_to_opcode_thumb16(instr);
++
++	return fault;
++}
++
+ static int
+ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ {
+@@ -774,10 +804,10 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ 	unsigned long instr = 0, instrptr;
+ 	int (*handler)(unsigned long addr, unsigned long instr, struct pt_regs *regs);
+ 	unsigned int type;
+-	unsigned int fault;
+ 	u16 tinstr = 0;
+ 	int isize = 4;
+ 	int thumb2_32b = 0;
++	int fault;
+ 
+ 	if (interrupts_enabled(regs))
+ 		local_irq_enable();
+@@ -786,15 +816,14 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ 
+ 	if (thumb_mode(regs)) {
+ 		u16 *ptr = (u16 *)(instrptr & ~1);
+-		fault = probe_kernel_address(ptr, tinstr);
+-		tinstr = __mem_to_opcode_thumb16(tinstr);
++
++		fault = alignment_get_thumb(regs, ptr, &tinstr);
+ 		if (!fault) {
+ 			if (cpu_architecture() >= CPU_ARCH_ARMv7 &&
+ 			    IS_T32(tinstr)) {
+ 				/* Thumb-2 32-bit */
+-				u16 tinst2 = 0;
+-				fault = probe_kernel_address(ptr + 1, tinst2);
+-				tinst2 = __mem_to_opcode_thumb16(tinst2);
++				u16 tinst2;
++				fault = alignment_get_thumb(regs, ptr + 1, &tinst2);
+ 				instr = __opcode_thumb32_compose(tinstr, tinst2);
+ 				thumb2_32b = 1;
+ 			} else {
+@@ -803,8 +832,7 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ 			}
+ 		}
+ 	} else {
+-		fault = probe_kernel_address((void *)instrptr, instr);
+-		instr = __mem_to_opcode_arm(instr);
++		fault = alignment_get_arm(regs, (void *)instrptr, &instr);
  	}
  
- 	if (in) {
--		if (in & WMFW_CTL_FLAG_READABLE)
--			out |= rd;
-+		out |= rd;
- 		if (in & WMFW_CTL_FLAG_WRITEABLE)
- 			out |= wr;
- 		if (in & WMFW_CTL_FLAG_VOLATILE)
+ 	if (fault) {
 -- 
 2.20.1
 
