@@ -2,101 +2,167 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C019ECA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9159ACA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F4120578
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67FB120578
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 14:21:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tLFK+PV5"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="qwVsaT6C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbfJ3OU6 (ORCPT
+        id S1726671AbfJ3OVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 10:20:58 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44210 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbfJ3OU6 (ORCPT
+        Wed, 30 Oct 2019 10:21:20 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33818 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfJ3OVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 10:20:58 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UEKpqT099629;
-        Wed, 30 Oct 2019 09:20:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572445251;
-        bh=h6h3Qct4hHjh3WsRqxxeJYzZZhBniGFIESojv6iYpo4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tLFK+PV5UGf39undFQtz4JsZrh9rMrUSOJ0yJIB+T2x6ZkPtt82HXPunlXUkPQkdL
-         +CB4ulmsBvCYrjiEPetCwDLMU4aLumsLO/jRw3LP8GcRaOjcARjU03Qap2/Sa1xKFV
-         abgo5uxMhvbRhnMLOxgfAa4Ta5ipuKI6//0IfNdE=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UEKphm056166
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Oct 2019 09:20:51 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
- Oct 2019 09:20:38 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 30 Oct 2019 09:20:38 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UEKmD5011862;
-        Wed, 30 Oct 2019 09:20:49 -0500
-Subject: Re: [PATCH v2] usb: cdns3: gadget: Fix g_audio use case when
- connected to Super-Speed host
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <felipe.balbi@linux.intel.com>, <pawell@cadence.com>,
-        <peter.chen@nxp.com>, <nsekhar@ti.com>, <kurahul@cadence.com>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191029151514.28495-1-rogerq@ti.com>
- <20191030121607.21739-1-rogerq@ti.com> <20191030133011.GA703854@kroah.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <56fb2de5-a017-e910-972f-532e33dfdbd6@ti.com>
-Date:   Wed, 30 Oct 2019 16:20:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 30 Oct 2019 10:21:20 -0400
+Received: by mail-pl1-f193.google.com with SMTP id k7so1070992pll.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 07:21:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=lLBDwfjg5YnQXNE+xQ4JmNR71OHaPXxKWZ+MT4DW3/A=;
+        b=qwVsaT6Cw4Ycn/P/j7rzKjSzfApSkeaGvKWAkHM/AoJ0x7w8gndNK3s7Etg8RRAxdM
+         dJrZ61KmDDSt6pgTwvga1te1T0yseF+wo8rR0CZAnXvXPZmyS0ogKROK46Oehne5rc//
+         DMWh8+9qmkJfrb4qW2K18Bcyf+/n6OHl40DOk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=lLBDwfjg5YnQXNE+xQ4JmNR71OHaPXxKWZ+MT4DW3/A=;
+        b=uoU5VgBDPG4tqjScrhB3KJbOqzXJwezzMb534Ghtt8AFeKpMW3EEWtr/dokfxzl6vo
+         i/0KkaB6pOCTzge56324L9pOR68gNBCcXOgmjo/GGHl/VQj1t+uUGJ2dQle+OHNUSjlZ
+         57QDqVaJAm5ssapxkrTDYWVzL9me20Sk9jM7X1WKJ6HUeSPeCr/w3m35igvuTZs+u0lr
+         QfLKT6up9exP4JbhmViy3aAP/8SzERCbQ9U4XqGuO000TsleRhQDIsgQkSq1rseYoQ2k
+         Mxxv+7jAowM8g2f9hU7l1lR0pi+Cumds8z2LZCVqoyqaNOJZ2l6NyUYzOSMYE4YkVfvW
+         nldA==
+X-Gm-Message-State: APjAAAVfOJdBsQ+Uko+1XKIpF6ekTL56gdD40mTrsoeSzmVU68hTtouc
+        ayjzHmEhbPe0q9AcFsI2EUF/frwKn10=
+X-Google-Smtp-Source: APXvYqwMC7s8c7Hz5nvb/Nz/tGRMlobeX2sZ75mjj1c4WbVrvDU+HedG/Uqdzo2fEk41IYyK90rWig==
+X-Received: by 2002:a17:902:44d:: with SMTP id 71mr241216ple.274.1572445277919;
+        Wed, 30 Oct 2019 07:21:17 -0700 (PDT)
+Received: from localhost (2001-44b8-1113-6700-783a-2bb9-f7cb-7c3c.static.ipv6.internode.on.net. [2001:44b8:1113:6700:783a:2bb9:f7cb:7c3c])
+        by smtp.gmail.com with ESMTPSA id q6sm75232pgn.44.2019.10.30.07.21.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 07:21:17 -0700 (PDT)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
+        glider@google.com, luto@kernel.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, dvyukov@google.com, christophe.leroy@c-s.fr
+Cc:     linuxppc-dev@lists.ozlabs.org, gor@linux.ibm.com,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 4/5] x86/kasan: support KASAN_VMALLOC
+In-Reply-To: <ff1c2089-9404-21f6-dac6-661917e47181@virtuozzo.com>
+References: <20191029042059.28541-1-dja@axtens.net> <20191029042059.28541-5-dja@axtens.net> <a144eaca-d7e1-1a18-5975-bd0bfdb9450e@virtuozzo.com> <87sgnamjg2.fsf@dja-thinkpad.axtens.net> <ff1c2089-9404-21f6-dac6-661917e47181@virtuozzo.com>
+Date:   Thu, 31 Oct 2019 01:21:13 +1100
+Message-ID: <87mudimi06.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-In-Reply-To: <20191030133011.GA703854@kroah.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Andrey Ryabinin <aryabinin@virtuozzo.com> writes:
 
+> On 10/30/19 4:50 PM, Daniel Axtens wrote:
+>> Andrey Ryabinin <aryabinin@virtuozzo.com> writes:
+>> 
+>>> On 10/29/19 7:20 AM, Daniel Axtens wrote:
+>>>> In the case where KASAN directly allocates memory to back vmalloc
+>>>> space, don't map the early shadow page over it.
+>>>>
+>>>> We prepopulate pgds/p4ds for the range that would otherwise be empty.
+>>>> This is required to get it synced to hardware on boot, allowing the
+>>>> lower levels of the page tables to be filled dynamically.
+>>>>
+>>>> Acked-by: Dmitry Vyukov <dvyukov@google.com>
+>>>> Signed-off-by: Daniel Axtens <dja@axtens.net>
+>>>>
+>>>> ---
+>>>
+>>>> +static void __init kasan_shallow_populate_pgds(void *start, void *end)
+>>>> +{
+>>>> +	unsigned long addr, next;
+>>>> +	pgd_t *pgd;
+>>>> +	void *p;
+>>>> +	int nid = early_pfn_to_nid((unsigned long)start);
+>>>
+>>> This doesn't make sense. start is not even a pfn. With linear mapping 
+>>> we try to identify nid to have the shadow on the same node as memory. But 
+>>> in this case we don't have memory or the corresponding shadow (yet),
+>>> we only install pgd/p4d.
+>>> I guess we could just use NUMA_NO_NODE.
+>> 
+>> Ah wow, that's quite the clanger on my part.
+>> 
+>> There are a couple of other invocations of early_pfn_to_nid in that file
+>> that use an address directly, but at least they reference actual memory.
+>> I'll send a separate patch to fix those up.
+>
+> I see only one incorrect, in kasan_init(): early_pfn_to_nid(__pa(_stext))
+> It should be wrapped with PFN_DOWN().
+> Other usages in map_range() seems to be correct, range->start,end is pfns.
+>
 
-On 30/10/2019 15:30, Greg KH wrote:
-> On Wed, Oct 30, 2019 at 02:16:07PM +0200, Roger Quadros wrote:
->> Take into account gadget driver's speed limit when programming
->> controller speed.
->>
->> Fixes: commit 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
-> 
-> No need for "commit", doesn't the documentation say the correct format?
-> I haven't looked in a while...
-> 
+Oh, right, I didn't realise map_range was already using pfns.
 
-Sorry, my bad.
+>
+>> 
+>>> The rest looks ok, so with that fixed:
+>>>
+>>> Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+>> 
+>> Thanks heaps! I've fixed up the nit you identifed in the first patch,
+>> and I agree that the last patch probably isn't needed. I'll respin the
+>> series shortly.
+>> 
+>
+> Hold on a sec, just spotted another thing to fix.
+>
+>> @@ -352,9 +397,24 @@ void __init kasan_init(void)
+>>  	shadow_cpu_entry_end = (void *)round_up(
+>>  			(unsigned long)shadow_cpu_entry_end, PAGE_SIZE);
+>>  
+>> +	/*
+>> +	 * If we're in full vmalloc mode, don't back vmalloc space with early
+>> +	 * shadow pages. Instead, prepopulate pgds/p4ds so they are synced to
+>> +	 * the global table and we can populate the lower levels on demand.
+>> +	 */
+>> +#ifdef CONFIG_KASAN_VMALLOC
+>> +	kasan_shallow_populate_pgds(
+>> +		kasan_mem_to_shadow((void *)PAGE_OFFSET + MAXMEM),
+>
+> This should be VMALLOC_START, there is no point to allocate pgds for the hole between linear mapping
+> and vmalloc, just waste of memory. It make sense to map early shadow for that hole, because if code
+> dereferences address in that hole we will see the page fault on that address instead of fault on the shadow.
+>
+> So something like this might work:
+>
+> 	kasan_populate_early_shadow(
+> 		kasan_mem_to_shadow((void *)PAGE_OFFSET + MAXMEM),
+> 		kasan_mem_to_shadow((void *)VMALLOC_START));
+>
+> 	if (IS_ENABLED(CONFIG_KASAN_VMALLOC)
+> 		kasan_shallow_populate_pgds(kasan_mem_to_shadow(VMALLOC_START), kasan_mem_to_shadow((void *)VMALLOC_END))
+> 	else
+> 		kasan_populate_early_shadow(kasan_mem_to_shadow(VMALLOC_START), kasan_mem_to_shadow((void *)VMALLOC_END));
+>
+> 	kasan_populate_early_shadow(
+> 		kasan_mem_to_shadow((void *)VMALLOC_END + 1),
+> 		shadow_cpu_entry_begin);
 
-> I can edit it out this time...
+Sounds good. It's getting late for me so I'll change and test that and
+send a respin tomorrow my time.
 
-Thanks!
-> 
-> greg k-h
-> 
-
--- 
-cheers,
--roger
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Regards,
+Daniel
