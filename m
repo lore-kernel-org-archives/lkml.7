@@ -2,110 +2,405 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A398CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D483BCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5DB320717
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:28:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="gtK4LzEN"
+	by mail.kernel.org (Postfix) with ESMTP id 7DD39208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:30:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbfJ3Q2d (ORCPT
+        id S1727670AbfJ3QaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:28:33 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:42098 "EHLO vps0.lunn.ch"
+        Wed, 30 Oct 2019 12:30:00 -0400
+Received: from mga02.intel.com ([134.134.136.20]:41968 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbfJ3Q2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 12:28:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=SZUx4NVeGGOnxDClBHA9DgqzCOffD4hhcgm5wwv6WUs=; b=gtK4LzENJNZ3IfWDlksuD6F6Mk
-        +X7v8aAddo+Y3EA2Wk14qoXStLAhyN7omwt1LGMfId8PsMuvDF6vgFXxhVaFq4/anphnNaJlQJB01
-        /A8XrrdjOyaF3fZg3cGRF73XE25jsx06xJbg9e2o5hhopEgdBvPla7jPVCTBv0nkxouI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iPqph-0003cy-GH; Wed, 30 Oct 2019 17:28:29 +0100
-Date:   Wed, 30 Oct 2019 17:28:29 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next 2/3] net: stmmac: xgmac: Add C45 PHY support in
- the MDIO callbacks
-Message-ID: <20191030162829.GC10555@lunn.ch>
-References: <cover.1572449009.git.Jose.Abreu@synopsys.com>
- <444208cef341686bcf35f8361f409467f539c73b.1572449009.git.Jose.Abreu@synopsys.com>
+        id S1726261AbfJ3Q37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 12:29:59 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 09:29:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,248,1569308400"; 
+   d="scan'208";a="198725767"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Oct 2019 09:29:56 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iPqr6-0000Ox-47; Thu, 31 Oct 2019 00:29:56 +0800
+Date:   Thu, 31 Oct 2019 00:29:04 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     kbuild-all@lists.01.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] compiler*.h: Add '__' prefix and suffix to all
+ __attribute__ #defines
+Message-ID: <201910310006.XmSNHarx%lkp@intel.com>
+References: <7a15bc8ad7437dc3a044a4f9cd283500bd0b5f36.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <444208cef341686bcf35f8361f409467f539c73b.1572449009.git.Jose.Abreu@synopsys.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <7a15bc8ad7437dc3a044a4f9cd283500bd0b5f36.camel@perches.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 04:28:49PM +0100, Jose Abreu wrote:
-> Add the support for C45 PHYs in the MDIO callbacks for XGMAC. This was
-> tested using Synopsys DesignWare XPCS.
-> 
-> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-> 
-> ---
-> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: Jose Abreu <joabreu@synopsys.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-stm32@st-md-mailman.stormreply.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c | 47 +++++++++++++++++++++--
->  1 file changed, 43 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-> index 40c42637ad75..143bffd28acf 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-> @@ -41,6 +41,29 @@
->  #define MII_XGMAC_BUSY			BIT(22)
->  #define MII_XGMAC_MAX_C22ADDR		3
->  #define MII_XGMAC_C22P_MASK		GENMASK(MII_XGMAC_MAX_C22ADDR, 0)
-> +#define MII_XGMAC_PA_SHIFT		16
-> +#define MII_XGMAC_DA_SHIFT		21
-> +
-> +static int stmmac_xgmac2_c45_format(struct stmmac_priv *priv, int phyaddr,
-> +				    int phyreg, u32 *hw_addr)
-> +{
-> +	unsigned int mii_data = priv->hw->mii.data;
-> +	u32 tmp;
-> +
-> +	/* Wait until any existing MII operation is complete */
-> +	if (readl_poll_timeout(priv->ioaddr + mii_data, tmp,
-> +			       !(tmp & MII_XGMAC_BUSY), 100, 10000))
-> +		return -EBUSY;
+Hi Joe,
 
-Hi Jose
+I love your patch! Perhaps something to improve:
 
-The stmmac_xgmac2_c22_format function does the same. Maybe the call
-can be pulled out into stmmac_xgmac2_mdio_write() and
-stmmac_xgmac2_mdio_read()?
+[auto build test WARNING on linus/master]
+[also build test WARNING on v5.4-rc5 next-20191030]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-	Andrew
+url:    https://github.com/0day-ci/linux/commits/Joe-Perches/compiler-h-Add-__-prefix-and-suffix-to-all-__attribute__-defines/20191030-054036
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 23fdb198ae81f47a574296dab5167c5e136a02ba
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+   include/linux/mm_types.h:673:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:674:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:675:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:676:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:677:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:678:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:679:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:680:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:681:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:682:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:683:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:684:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:685:36: sparse: sparse: cast to restricted vm_fault_t
+   include/linux/mm_types.h:686:36: sparse: sparse: cast to restricted vm_fault_t
+   kernel/bpf/core.c:79:27: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:79:27: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:79:27: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:79:40: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:88:37: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:88:37: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:88:37: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:690:38: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:329:13: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:336:24: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:106:27: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:106:27: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:106:27: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:106:40: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:138:42: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:138:42: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:138:42: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:138:55: sparse: sparse: cast to restricted gfp_t
+   include/linux/slab.h:629:47: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:206:49: sparse: sparse: arithmetics on pointers to functions
+   kernel/bpf/core.c:219:27: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:219:27: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:219:27: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:219:40: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:320:17: sparse: sparse: cast to restricted __be64
+   kernel/bpf/core.c:329:29: sparse: sparse: cast to restricted __be32
+   kernel/bpf/core.c:462:37: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:462:37: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:462:37: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:462:37: sparse: sparse: cast to restricted gfp_t
+>> kernel/bpf/core.c:1417:45: sparse: sparse: cast to restricted __be16
+>> kernel/bpf/core.c:1417:32: sparse: sparse: cast from restricted __be16
+   kernel/bpf/core.c:1420:45: sparse: sparse: cast to restricted __be32
+>> kernel/bpf/core.c:1420:32: sparse: sparse: cast from restricted __be32
+   kernel/bpf/core.c:1423:45: sparse: sparse: cast to restricted __be64
+>> kernel/bpf/core.c:1423:32: sparse: sparse: cast from restricted __be64
+>> kernel/bpf/core.c:1430:45: sparse: sparse: cast to restricted __le16
+>> kernel/bpf/core.c:1430:32: sparse: sparse: cast from restricted __le16
+>> kernel/bpf/core.c:1433:45: sparse: sparse: cast to restricted __le32
+>> kernel/bpf/core.c:1433:32: sparse: sparse: cast from restricted __le32
+>> kernel/bpf/core.c:1436:45: sparse: sparse: cast to restricted __le64
+>> kernel/bpf/core.c:1436:32: sparse: sparse: cast from restricted __le64
+   kernel/bpf/core.c:1447:43: sparse: sparse: arithmetics on pointers to functions
+   kernel/bpf/core.c:1452:48: sparse: sparse: arithmetics on pointers to functions
+   kernel/bpf/core.c:1632:77: sparse: sparse: subtraction of functions? Share your drugs
+   kernel/bpf/core.c:1858:41: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:1858:41: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:1858:41: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:1858:41: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:1858:52: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:1926:56: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:1926:56: sparse: sparse: cast to restricted gfp_t
+   kernel/bpf/core.c:1926:56: sparse: sparse: cast to restricted gfp_t
+
+vim +1417 kernel/bpf/core.c
+
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1320  
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1321  select_insn:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1322  	goto *jumptable[insn->code];
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1323  
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1324  	/* ALU */
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1325  #define ALU(OPCODE, OP)			\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1326  	ALU64_##OPCODE##_X:		\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1327  		DST = DST OP SRC;	\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1328  		CONT;			\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1329  	ALU_##OPCODE##_X:		\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1330  		DST = (u32) DST OP (u32) SRC;	\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1331  		CONT;			\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1332  	ALU64_##OPCODE##_K:		\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1333  		DST = DST OP IMM;		\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1334  		CONT;			\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1335  	ALU_##OPCODE##_K:		\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1336  		DST = (u32) DST OP (u32) IMM;	\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1337  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1338  
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1339  	ALU(ADD,  +)
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1340  	ALU(SUB,  -)
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1341  	ALU(AND,  &)
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1342  	ALU(OR,   |)
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1343  	ALU(LSH, <<)
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1344  	ALU(RSH, >>)
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1345  	ALU(XOR,  ^)
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1346  	ALU(MUL,  *)
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1347  #undef ALU
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1348  	ALU_NEG:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1349  		DST = (u32) -DST;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1350  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1351  	ALU64_NEG:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1352  		DST = -DST;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1353  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1354  	ALU_MOV_X:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1355  		DST = (u32) SRC;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1356  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1357  	ALU_MOV_K:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1358  		DST = (u32) IMM;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1359  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1360  	ALU64_MOV_X:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1361  		DST = SRC;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1362  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1363  	ALU64_MOV_K:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1364  		DST = IMM;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1365  		CONT;
+02ab695bb37ee9 Alexei Starovoitov 2014-09-04  1366  	LD_IMM_DW:
+02ab695bb37ee9 Alexei Starovoitov 2014-09-04  1367  		DST = (u64) (u32) insn[0].imm | ((u64) (u32) insn[1].imm) << 32;
+02ab695bb37ee9 Alexei Starovoitov 2014-09-04  1368  		insn++;
+02ab695bb37ee9 Alexei Starovoitov 2014-09-04  1369  		CONT;
+2dc6b100f928aa Jiong Wang         2018-12-05  1370  	ALU_ARSH_X:
+75672dda27bd00 Jiong Wang         2019-06-25  1371  		DST = (u64) (u32) (((s32) DST) >> SRC);
+2dc6b100f928aa Jiong Wang         2018-12-05  1372  		CONT;
+2dc6b100f928aa Jiong Wang         2018-12-05  1373  	ALU_ARSH_K:
+75672dda27bd00 Jiong Wang         2019-06-25  1374  		DST = (u64) (u32) (((s32) DST) >> IMM);
+2dc6b100f928aa Jiong Wang         2018-12-05  1375  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1376  	ALU64_ARSH_X:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1377  		(*(s64 *) &DST) >>= SRC;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1378  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1379  	ALU64_ARSH_K:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1380  		(*(s64 *) &DST) >>= IMM;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1381  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1382  	ALU64_MOD_X:
+144cd91c4c2bce Daniel Borkmann    2019-01-03  1383  		div64_u64_rem(DST, SRC, &AX);
+144cd91c4c2bce Daniel Borkmann    2019-01-03  1384  		DST = AX;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1385  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1386  	ALU_MOD_X:
+144cd91c4c2bce Daniel Borkmann    2019-01-03  1387  		AX = (u32) DST;
+144cd91c4c2bce Daniel Borkmann    2019-01-03  1388  		DST = do_div(AX, (u32) SRC);
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1389  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1390  	ALU64_MOD_K:
+144cd91c4c2bce Daniel Borkmann    2019-01-03  1391  		div64_u64_rem(DST, IMM, &AX);
+144cd91c4c2bce Daniel Borkmann    2019-01-03  1392  		DST = AX;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1393  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1394  	ALU_MOD_K:
+144cd91c4c2bce Daniel Borkmann    2019-01-03  1395  		AX = (u32) DST;
+144cd91c4c2bce Daniel Borkmann    2019-01-03  1396  		DST = do_div(AX, (u32) IMM);
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1397  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1398  	ALU64_DIV_X:
+876a7ae65b86d8 Alexei Starovoitov 2015-04-27  1399  		DST = div64_u64(DST, SRC);
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1400  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1401  	ALU_DIV_X:
+144cd91c4c2bce Daniel Borkmann    2019-01-03  1402  		AX = (u32) DST;
+144cd91c4c2bce Daniel Borkmann    2019-01-03  1403  		do_div(AX, (u32) SRC);
+144cd91c4c2bce Daniel Borkmann    2019-01-03  1404  		DST = (u32) AX;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1405  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1406  	ALU64_DIV_K:
+876a7ae65b86d8 Alexei Starovoitov 2015-04-27  1407  		DST = div64_u64(DST, IMM);
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1408  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1409  	ALU_DIV_K:
+144cd91c4c2bce Daniel Borkmann    2019-01-03  1410  		AX = (u32) DST;
+144cd91c4c2bce Daniel Borkmann    2019-01-03  1411  		do_div(AX, (u32) IMM);
+144cd91c4c2bce Daniel Borkmann    2019-01-03  1412  		DST = (u32) AX;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1413  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1414  	ALU_END_TO_BE:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1415  		switch (IMM) {
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1416  		case 16:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22 @1417  			DST = (__force u16) cpu_to_be16(DST);
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1418  			break;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1419  		case 32:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22 @1420  			DST = (__force u32) cpu_to_be32(DST);
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1421  			break;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1422  		case 64:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22 @1423  			DST = (__force u64) cpu_to_be64(DST);
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1424  			break;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1425  		}
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1426  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1427  	ALU_END_TO_LE:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1428  		switch (IMM) {
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1429  		case 16:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22 @1430  			DST = (__force u16) cpu_to_le16(DST);
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1431  			break;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1432  		case 32:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22 @1433  			DST = (__force u32) cpu_to_le32(DST);
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1434  			break;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1435  		case 64:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22 @1436  			DST = (__force u64) cpu_to_le64(DST);
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1437  			break;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1438  		}
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1439  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1440  
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1441  	/* CALL */
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1442  	JMP_CALL:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1443  		/* Function call scratches BPF_R1-BPF_R5 registers,
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1444  		 * preserves BPF_R6-BPF_R9, and stores return value
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1445  		 * into BPF_R0.
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1446  		 */
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1447  		BPF_R0 = (__bpf_call_base + insn->imm)(BPF_R1, BPF_R2, BPF_R3,
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1448  						       BPF_R4, BPF_R5);
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1449  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1450  
+1ea47e01ad6ea0 Alexei Starovoitov 2017-12-14  1451  	JMP_CALL_ARGS:
+1ea47e01ad6ea0 Alexei Starovoitov 2017-12-14  1452  		BPF_R0 = (__bpf_call_base_args + insn->imm)(BPF_R1, BPF_R2,
+1ea47e01ad6ea0 Alexei Starovoitov 2017-12-14  1453  							    BPF_R3, BPF_R4,
+1ea47e01ad6ea0 Alexei Starovoitov 2017-12-14  1454  							    BPF_R5,
+1ea47e01ad6ea0 Alexei Starovoitov 2017-12-14  1455  							    insn + insn->off + 1);
+1ea47e01ad6ea0 Alexei Starovoitov 2017-12-14  1456  		CONT;
+1ea47e01ad6ea0 Alexei Starovoitov 2017-12-14  1457  
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1458  	JMP_TAIL_CALL: {
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1459  		struct bpf_map *map = (struct bpf_map *) (unsigned long) BPF_R2;
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1460  		struct bpf_array *array = container_of(map, struct bpf_array, map);
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1461  		struct bpf_prog *prog;
+90caccdd8cc021 Alexei Starovoitov 2017-10-03  1462  		u32 index = BPF_R3;
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1463  
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1464  		if (unlikely(index >= array->map.max_entries))
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1465  			goto out;
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1466  		if (unlikely(tail_call_cnt > MAX_TAIL_CALL_CNT))
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1467  			goto out;
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1468  
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1469  		tail_call_cnt++;
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1470  
+2a36f0b92eb638 Wang Nan           2015-08-06  1471  		prog = READ_ONCE(array->ptrs[index]);
+1ca1cc98bf7418 Daniel Borkmann    2016-06-28  1472  		if (!prog)
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1473  			goto out;
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1474  
+c4675f935399cb Daniel Borkmann    2015-07-13  1475  		/* ARG1 at this point is guaranteed to point to CTX from
+c4675f935399cb Daniel Borkmann    2015-07-13  1476  		 * the verifier side due to the fact that the tail call is
+c4675f935399cb Daniel Borkmann    2015-07-13  1477  		 * handeled like a helper, that is, bpf_tail_call_proto,
+c4675f935399cb Daniel Borkmann    2015-07-13  1478  		 * where arg1_type is ARG_PTR_TO_CTX.
+c4675f935399cb Daniel Borkmann    2015-07-13  1479  		 */
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1480  		insn = prog->insnsi;
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1481  		goto select_insn;
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1482  out:
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1483  		CONT;
+04fd61ab36ec06 Alexei Starovoitov 2015-05-19  1484  	}
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1485  	JMP_JA:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1486  		insn += insn->off;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1487  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1488  	JMP_EXIT:
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1489  		return BPF_R0;
+503a8865a47752 Jiong Wang         2019-01-26  1490  	/* JMP */
+503a8865a47752 Jiong Wang         2019-01-26  1491  #define COND_JMP(SIGN, OPCODE, CMP_OP)				\
+503a8865a47752 Jiong Wang         2019-01-26  1492  	JMP_##OPCODE##_X:					\
+503a8865a47752 Jiong Wang         2019-01-26  1493  		if ((SIGN##64) DST CMP_OP (SIGN##64) SRC) {	\
+503a8865a47752 Jiong Wang         2019-01-26  1494  			insn += insn->off;			\
+503a8865a47752 Jiong Wang         2019-01-26  1495  			CONT_JMP;				\
+503a8865a47752 Jiong Wang         2019-01-26  1496  		}						\
+503a8865a47752 Jiong Wang         2019-01-26  1497  		CONT;						\
+503a8865a47752 Jiong Wang         2019-01-26  1498  	JMP32_##OPCODE##_X:					\
+503a8865a47752 Jiong Wang         2019-01-26  1499  		if ((SIGN##32) DST CMP_OP (SIGN##32) SRC) {	\
+503a8865a47752 Jiong Wang         2019-01-26  1500  			insn += insn->off;			\
+503a8865a47752 Jiong Wang         2019-01-26  1501  			CONT_JMP;				\
+503a8865a47752 Jiong Wang         2019-01-26  1502  		}						\
+503a8865a47752 Jiong Wang         2019-01-26  1503  		CONT;						\
+503a8865a47752 Jiong Wang         2019-01-26  1504  	JMP_##OPCODE##_K:					\
+503a8865a47752 Jiong Wang         2019-01-26  1505  		if ((SIGN##64) DST CMP_OP (SIGN##64) IMM) {	\
+503a8865a47752 Jiong Wang         2019-01-26  1506  			insn += insn->off;			\
+503a8865a47752 Jiong Wang         2019-01-26  1507  			CONT_JMP;				\
+503a8865a47752 Jiong Wang         2019-01-26  1508  		}						\
+503a8865a47752 Jiong Wang         2019-01-26  1509  		CONT;						\
+503a8865a47752 Jiong Wang         2019-01-26  1510  	JMP32_##OPCODE##_K:					\
+503a8865a47752 Jiong Wang         2019-01-26  1511  		if ((SIGN##32) DST CMP_OP (SIGN##32) IMM) {	\
+503a8865a47752 Jiong Wang         2019-01-26  1512  			insn += insn->off;			\
+503a8865a47752 Jiong Wang         2019-01-26  1513  			CONT_JMP;				\
+503a8865a47752 Jiong Wang         2019-01-26  1514  		}						\
+503a8865a47752 Jiong Wang         2019-01-26  1515  		CONT;
+503a8865a47752 Jiong Wang         2019-01-26  1516  	COND_JMP(u, JEQ, ==)
+503a8865a47752 Jiong Wang         2019-01-26  1517  	COND_JMP(u, JNE, !=)
+503a8865a47752 Jiong Wang         2019-01-26  1518  	COND_JMP(u, JGT, >)
+503a8865a47752 Jiong Wang         2019-01-26  1519  	COND_JMP(u, JLT, <)
+503a8865a47752 Jiong Wang         2019-01-26  1520  	COND_JMP(u, JGE, >=)
+503a8865a47752 Jiong Wang         2019-01-26  1521  	COND_JMP(u, JLE, <=)
+503a8865a47752 Jiong Wang         2019-01-26  1522  	COND_JMP(u, JSET, &)
+503a8865a47752 Jiong Wang         2019-01-26  1523  	COND_JMP(s, JSGT, >)
+503a8865a47752 Jiong Wang         2019-01-26  1524  	COND_JMP(s, JSLT, <)
+503a8865a47752 Jiong Wang         2019-01-26  1525  	COND_JMP(s, JSGE, >=)
+503a8865a47752 Jiong Wang         2019-01-26  1526  	COND_JMP(s, JSLE, <=)
+503a8865a47752 Jiong Wang         2019-01-26  1527  #undef COND_JMP
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1528  	/* STX and ST and LDX*/
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1529  #define LDST(SIZEOP, SIZE)						\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1530  	STX_MEM_##SIZEOP:						\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1531  		*(SIZE *)(unsigned long) (DST + insn->off) = SRC;	\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1532  		CONT;							\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1533  	ST_MEM_##SIZEOP:						\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1534  		*(SIZE *)(unsigned long) (DST + insn->off) = IMM;	\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1535  		CONT;							\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1536  	LDX_MEM_##SIZEOP:						\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1537  		DST = *(SIZE *)(unsigned long) (SRC + insn->off);	\
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1538  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1539  
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1540  	LDST(B,   u8)
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1541  	LDST(H,  u16)
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1542  	LDST(W,  u32)
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1543  	LDST(DW, u64)
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1544  #undef LDST
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1545  	STX_XADD_W: /* lock xadd *(u32 *)(dst_reg + off16) += src_reg */
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1546  		atomic_add((u32) SRC, (atomic_t *)(unsigned long)
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1547  			   (DST + insn->off));
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1548  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1549  	STX_XADD_DW: /* lock xadd *(u64 *)(dst_reg + off16) += src_reg */
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1550  		atomic64_add((u64) SRC, (atomic64_t *)(unsigned long)
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1551  			     (DST + insn->off));
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1552  		CONT;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1553  
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1554  	default_label:
+5e581dad4fec0e Daniel Borkmann    2018-01-26  1555  		/* If we ever reach this, we have a bug somewhere. Die hard here
+5e581dad4fec0e Daniel Borkmann    2018-01-26  1556  		 * instead of just returning 0; we could be somewhere in a subprog,
+5e581dad4fec0e Daniel Borkmann    2018-01-26  1557  		 * so execution could continue otherwise which we do /not/ want.
+5e581dad4fec0e Daniel Borkmann    2018-01-26  1558  		 *
+5e581dad4fec0e Daniel Borkmann    2018-01-26  1559  		 * Note, verifier whitelists all opcodes in bpf_opcode_in_insntable().
+5e581dad4fec0e Daniel Borkmann    2018-01-26  1560  		 */
+5e581dad4fec0e Daniel Borkmann    2018-01-26  1561  		pr_warn("BPF interpreter: unknown opcode %02x\n", insn->code);
+5e581dad4fec0e Daniel Borkmann    2018-01-26  1562  		BUG_ON(1);
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1563  		return 0;
+f5bffecda951b5 Alexei Starovoitov 2014-07-22  1564  }
+f696b8f471ec98 Alexei Starovoitov 2017-05-30  1565  
+
+:::::: The code at line 1417 was first introduced by commit
+:::::: f5bffecda951b59d0d3cdd616d68952abc52bc40 net: filter: split filter.c into two files
+
+:::::: TO: Alexei Starovoitov <ast@plumgrid.com>
+:::::: CC: David S. Miller <davem@davemloft.net>
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
