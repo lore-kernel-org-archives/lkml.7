@@ -2,142 +2,129 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB396CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD79CA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD0CF2087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:55:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GOMrdPbt"
+	by mail.kernel.org (Postfix) with ESMTP id 20984218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:03:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572429790;
+	bh=0wRNsiX+/dQpBN05EOAr6sdKUyggVWB88XiAzM6Yi6U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZM49euGp6mwZdkkbl70MJIehApFNb55BsqyzGL4f5ZUoo/guNq4XrtTctuWjPl150
+	 tUmPjGC5XBcc2YjUyCA5va5xUcINjZYETbWiMHCnqxLzY3Ful6XYydU2wKwednd/pQ
+	 x99VOEi+oe/FnS+57CsnnQ+D8qj5CWNT5ubfb0AM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbfJ3JzQ (ORCPT
+        id S1726246AbfJ3KDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:55:16 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41579 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbfJ3JzP (ORCPT
+        Wed, 30 Oct 2019 06:03:08 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34025 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfJ3KDI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 05:55:15 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p4so1520991wrm.8
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 02:55:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hs0Xj3TpOFo7Xi2C92NXMI0mClPmgg9hIzDJgVyM7dI=;
-        b=GOMrdPbtza7bahmXFnK8BFCvQpxJK0EQx9lvmMYCWiUB8A+wjb7ykcc+ZmPoJ8CvTM
-         jbyq/wUOW8NOvHiKNVmSnOYslZCf5BVbXBM+9pgUmRnmYbWAJ63oxlKbgAIbtYO6bvz8
-         m/OtQlCrNANBMhVXthUDHMx4y0ZR3qqXBkI/C5auNKC2tYlJ10Qfxk4M12PXQExMxYb+
-         QWWWervwvAlSmyLn037zf39ucwHSn8ESM+PcaORjBd6NWlYu0Q7I1q9gkWYPO5+X19Ip
-         OSwsj3JqkQxj4M4epdlGZ/m8HpkLhowk+0Reki9OuLANr649y8RLZyGnq1wGz0de2K0q
-         ZJbw==
+        Wed, 30 Oct 2019 06:03:08 -0400
+Received: by mail-wr1-f67.google.com with SMTP id t16so1581439wrr.1;
+        Wed, 30 Oct 2019 03:03:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hs0Xj3TpOFo7Xi2C92NXMI0mClPmgg9hIzDJgVyM7dI=;
-        b=WhsfA+PncIVMm/424+l/fQtdFX4KQITjiK5iP6DrC8t4BZeCo99iQQIgK1luO+6xWm
-         utAbeC0IuVYigq5q58+m/o6lSVpN0qYRa7JY/8NjrIo3VbxVRSjGJJmk+IJURqXM31uR
-         9JlIO6Vp8bmlJMmTupEFhjMoDgD65pzzIXzMUzgb/KVkIQy+zzkn2B+idEt+cg+Kl8jN
-         bGWUrGyIoKp9eQy6RbfOFTuwGt2fuZ3OXjcrZJGrP054+mnVnCk8d3oQWPWAjnTPaj7/
-         dhG0hfA3fW2QFawbL8gRvb/5K3pKP6/O5Yw3HimMjKlZ5wTUT4jc25NYAW3DOsnxcvfA
-         bZdg==
-X-Gm-Message-State: APjAAAXYRyRvgTstweKEUhQvjQrOFPH6fjaxuchvqslm8Z6l0sLhW/Fj
-        6G3PC7jJKiB9UZYkWe+SDL4L4Q==
-X-Google-Smtp-Source: APXvYqyEXL1nWX9W5G1Oh1yg4gjs2XsDhJV/J4RZbb5xTf2TxaEp1juTXqmwC1y55FdaXSwMim9fMQ==
-X-Received: by 2002:a5d:4491:: with SMTP id j17mr9057873wrq.46.1572429314643;
-        Wed, 30 Oct 2019 02:55:14 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id g5sm1675086wmg.12.2019.10.30.02.55.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Oct 2019 02:55:13 -0700 (PDT)
-Subject: Re: [PATCH v2 01/11] ASoC: dt-bindings: add dt bindings for
- WCD9340/WCD9341 audio codec
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
- <20191018001849.27205-2-srinivas.kandagatla@linaro.org>
- <20191025204338.GA25892@bogus>
- <90b2d83b-f2b2-3a5d-4deb-589f4b48b208@linaro.org>
- <371955d9-ad2d-5ddc-31b4-710729feae42@linaro.org>
- <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <7811be04-dfda-5953-110c-bca685fdcaa4@linaro.org>
-Date:   Wed, 30 Oct 2019 09:55:12 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FMrNiLDlAG4LHDqZ/Yl8QilQGiUU1TiZ+I44MHl2pe8=;
+        b=HNN3Pn/vNFFcDuiCrIDZIAg0jUIX3Ma1J5xZ3pi4cQbbPvRlhWTxNCRZL1BXGTPgBV
+         mZPHjz9jzkrIab3DlA5QEPaVJmy/ml4Tiz+kinEe21oAK4IzLkyNrQqRwGZjY526zI03
+         Z5/XYQ5xvo82fUpG0b99AjLqOdTD5Hy5ATzwdglzhLO2gOMRy7HmXuhcVJ4mJ9T62sQQ
+         IGOs35f/F3IXziTFj002YE8D8BG+FaADlIa+AjvOYNtyG4bUsls0rfgjy5xaOS3Ln+1r
+         GdSeKJfaSlW8NXyZh1Z+dmZ6LV0170yMWq0z9sHwaV8MAjf2aN8k+utW+vHNhwTNZuSc
+         YfSw==
+X-Gm-Message-State: APjAAAXTKukUTE41VU2SDz8W6jg53jemBoHMy4yFizvee+S+yDRsfMh2
+        5OO/oOaso980dlZW7c6YhWU=
+X-Google-Smtp-Source: APXvYqx9yWpySXQAETRsK0lzvhrydwfQ9Qwl8MxBphTqjmTCxz57hjMnqNjhMrjsPw6+qJUa5JnAIA==
+X-Received: by 2002:adf:ec4b:: with SMTP id w11mr1963541wrn.243.1572429785547;
+        Wed, 30 Oct 2019 03:03:05 -0700 (PDT)
+Received: from pi (100.50.158.77.rev.sfr.net. [77.158.50.100])
+        by smtp.gmail.com with ESMTPSA id a11sm1768504wmh.40.2019.10.30.03.03.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 03:03:04 -0700 (PDT)
+Received: from johan by pi with local (Exim 4.92.2)
+        (envelope-from <johan@pi>)
+        id 1iPknS-0002ZQ-F2; Wed, 30 Oct 2019 11:01:46 +0100
+Date:   Wed, 30 Oct 2019 11:01:46 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     David Airlie <airlied@linux.ie>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>
+Subject: Re: [PATCH 1/4] drm/msm: fix memleak on release
+Message-ID: <20191030100146.GC4691@localhost>
+References: <20191010131333.23635-1-johan@kernel.org>
+ <20191010131333.23635-2-johan@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010131333.23635-2-johan@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 29/10/2019 20:47, Rob Herring wrote:
-> On Mon, Oct 28, 2019 at 7:45 AM Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
->>
->>
->>
->> On 28/10/2019 12:40, Srinivas Kandagatla wrote:
->>> Its Phandle.
->>>
->>> something like this is okay?
->>>
->>> slim-ifc-dev:
->>>     $ref: '/schemas/types.yaml#/definitions/phandle-array'
->>
->> Sorry this should not be an array, so something like this:
->>
->>     slim-ifc-dev:
->>       description: SLIMBus Interface device phandle
+On Thu, Oct 10, 2019 at 03:13:30PM +0200, Johan Hovold wrote:
+> If a process is interrupted while accessing the "gpu" debugfs file and
+> the drm device struct_mutex is contended, release() could return early
+> and fail to free related resources.
 > 
-> You're just spelling out the abbreviated name. I can do that much.
-> What is 'SLIMBus Interface device'?
-
-Each SLIMBus Component contains one Interface Device. Which is 
-responsible for Monitoring and reporting the status of component, Data 
-line to Data pin connection setup for SLIMBus streaming. Interface 
-device is enumerated just like any other slim device.
-
-We already have exactly same bindings for WCD9335 in upstream at:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt?h=v5.4-rc5#n42
-
+> Note that the return value from release() is ignored.
 > 
-> Is it a standard SLIMBus property? If so, document it in the right
-> place. If not, then needs a vendor prefix.
+> Fixes: 4f776f4511c7 ("drm/msm/gpu: Convert the GPU show function to use the GPU state")
+> Cc: stable <stable@vger.kernel.org>     # 4.18
+> Cc: Jordan Crouse <jcrouse@codeaurora.org>
+> Cc: Rob Clark <robdclark@gmail.com>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+> ---
 
-"SLIMBus Interface Device" itself is documented in SLIMBus Specification.
+Rob, Sean,
 
-If I remember it correctly You suggested me to move to "slim-ifc-dev" 
-as this is part of SLIMBus Specification.
+Sending a reminder about this one, which is not yet in linux-next.
+
+Perhaps Daniel can pick it up otherwise?
 
 Thanks,
-srini
+Johan
 
-
+>  drivers/gpu/drm/msm/msm_debugfs.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
 > 
->>       $ref: '/schemas/types.yaml#/definitions/phandle'
->>
->>
->>>     description: SLIMBus Interface device phandle
+> diff --git a/drivers/gpu/drm/msm/msm_debugfs.c b/drivers/gpu/drm/msm/msm_debugfs.c
+> index 6be879578140..1c74381a4fc9 100644
+> --- a/drivers/gpu/drm/msm/msm_debugfs.c
+> +++ b/drivers/gpu/drm/msm/msm_debugfs.c
+> @@ -47,12 +47,8 @@ static int msm_gpu_release(struct inode *inode, struct file *file)
+>  	struct msm_gpu_show_priv *show_priv = m->private;
+>  	struct msm_drm_private *priv = show_priv->dev->dev_private;
+>  	struct msm_gpu *gpu = priv->gpu;
+> -	int ret;
+> -
+> -	ret = mutex_lock_interruptible(&show_priv->dev->struct_mutex);
+> -	if (ret)
+> -		return ret;
+>  
+> +	mutex_lock(&show_priv->dev->struct_mutex);
+>  	gpu->funcs->gpu_state_put(show_priv->state);
+>  	mutex_unlock(&show_priv->dev->struct_mutex);
