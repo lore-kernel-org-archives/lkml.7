@@ -2,158 +2,121 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C42CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 17:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5942ECA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 17:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B536E20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 17:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2DA208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 17:22:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CbKJM/EM"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="Un1nk9Ek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbfJ3RT2 (ORCPT
+        id S1727254AbfJ3RWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 13:19:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24897 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726602AbfJ3RT2 (ORCPT
+        Wed, 30 Oct 2019 13:22:54 -0400
+Received: from sonic304-24.consmr.mail.gq1.yahoo.com ([98.137.68.205]:36441
+        "EHLO sonic304-24.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726488AbfJ3RWx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 13:19:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572455966;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dYb5zRD7pK3sLStdyv5gkgP6u1qsYdzN5mSOo4AiXXU=;
-        b=CbKJM/EMfHROzeiOE+UTvuycxiLNVlRJ3rW2Yifg1T5+EPIALdD6R0vS2FmUo4AJquf9iJ
-        GE3q4M3pdVKq6JMb6P9F5NMDeUzkpnv0UYuupAcfV+f4wEhXmYI3XBw+XJoO0QDcc542H1
-        eGRaoSC6qPf2aDm3djMXm4XMw9VR908=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-51-7ZDI3WjNNs6B979ETWTejQ-1; Wed, 30 Oct 2019 13:19:23 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B71A800D49;
-        Wed, 30 Oct 2019 17:19:21 +0000 (UTC)
-Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 04E525C883;
-        Wed, 30 Oct 2019 17:19:16 +0000 (UTC)
-Date:   Wed, 30 Oct 2019 13:19:15 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH v4 00/10] sched/fair: rework the CFS load balance
-Message-ID: <20191030171914.GF1686@pauld.bos.csb>
-References: <20191021075038.GA27361@gmail.com>
- <CAKfTPtCcvKuf1Gt0W-BeEbQxFP_co14jdv_L5zEpS==Ecibabg@mail.gmail.com>
- <20191024123844.GB2708@pauld.bos.csb>
- <20191024134650.GD2708@pauld.bos.csb>
- <CAKfTPtB0VruWXq+wGgvNOMFJvvZQiZyi2AgBoJP3Uaeduu2Lqg@mail.gmail.com>
- <20191025133325.GA2421@pauld.bos.csb>
- <CAKfTPtDWV7AkzMNuJtkN-pLmDcK41LwNiX0Wr8UT+vMFHAx6Qg@mail.gmail.com>
- <20191030143937.GC1686@pauld.bos.csb>
- <564ca629-5c34-dbd1-8e64-2da6910b18a3@arm.com>
- <bf96be8a-2358-b9ab-b8eb-d0b8b94ed0d7@arm.com>
+        Wed, 30 Oct 2019 13:22:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1572456172; bh=Kb4n1V0seA/ZgYHtBmZ8iV+zYnoNVd+L2wWX8RTfW1M=; h=Date:From:To:Subject:References:In-Reply-To:From:Subject; b=Un1nk9EkHYaK0BMxOM2tsndHhH/1x7yC0PS/+NhGQ3LFO5nZPw5xTtjOruCj2M/rZTMW18a7omSDc3toddZXTQN8RLsp5aGtea9mAuYHsLVmlJh7YPVzO5HaFe7jzGc3q62eTbmCl/Agy8RToWDrzP0pJdFWWjm+RrVnyDpie88KuNvUISYkAxt9hMqBHOaJuHun2Jvko4G/FpJINmsvRIQxF6mi1vWYDIT4iwRM7GEQGmx1Q8/ioFomSEwdh0MRenk/YDpNEkRGuwp+o83xMD88bBZ/ybqSEF9qX7Ik3p2Jr4Y24F/VGHrH0aI/BRzE0le28sLe0OWz440AiTQgqg==
+X-YMail-OSG: 9NV7YMwVM1li.vt0Wt_kGHuCLM6N2Rp7_uQIRZFfJ7mGGG.1e68Rtg8Ra6trvAd
+ 0T9LvpWHgRtlywhsGdG4YIBh2LXsRpT3CHlyuELKnHvI18e_Rw94OnJH9WtEl2xZ6_xBS6SYGZ2C
+ BsreKwFbODvzvDarCJn3XSiXj8ne8RN2vxQ24ogdT5KoaM.ufezIc5d1X9dW7cyN35n16zJp9cSz
+ dxXdCDKpK5ST3MKZIuwtOUFoTt.mPr22B2HdfLB2CaE.RCr5SjmNSoJsnC8oAe0wXP5A5DppDWio
+ E886lfvRy3wBanP.UQWZBtHM50M6SnWKIr6HLEPn7.r4hZUI_eNRV6kF6fAzbXpSXnUiOxtCnVzF
+ hHErg6VLrx286dzhFkHaBpEEDpXF8EZUyo.kX3gqxxOD4RkcmzocfHVCeik.ukZOmvEzVPYG0z2j
+ Znlk3noB3pXf2nyw5JFcte8cSn.HQ0r0BtFGfRIh0mdLoLMDTyDJZZmUl1arQc_Czi5AxqPcxzHJ
+ KXwl_7V_lmyPjbVP0anKSX4AkJddT455bEEjdlfKGQ8lcKmDEGCyjENOCLc0MIzx6kenTbeGJpyX
+ o3ofVD9mPGAPGY6kFoE.WlHEeXXqyv_nJ_s7UaDzPLri0ddtt.5gKHpH4Q_5Clx65SWFrLWyh7ho
+ 3cm5guUNcFaddNsbqmSjvXHeAjIO4zsJGkrbUjVJKQdSCv3fEPcNvHUkNQlUI6LrEiyZxiaBylUK
+ 9d8mpYHtW0NXsg83D3EJrZ3M19q.eq8BkSmGcRtku8h2r7GcBcmeWX85HSlJ0w_HcpmIDz0g1S5S
+ 9XsWQovO7r5EhpY67TBnbbmoYCVk36asjR_gDyogp.06Y63jhD_UHnNWSbN3Larh_CUXMz7TPpTs
+ GrNJiTCrRDPxiNUq9ia6FsWNZ4Eo6hD90fiSr00uB9fTky5RPGXJ4ilnRcSdhiX6j6BmfoT_Tvfv
+ VsnpNrWA95JmH4ktnyE46.jJWl28x46suX2eW8JJOrsyZgt5vPN6Cq6gCXnPLkBUTOtAQISOTfGJ
+ y__BWhFArZgROHVUwyAJjmZFBigK0GInRhtSmqz8w66rYwZzOaeGUOTe13S4GSdpxMhwiH2SvsCi
+ PKFwpYaxGbehsb9AbS_ccC3QVhiZyNgjeqONh5t1SMncpNhck0JSjkyJ0pc7J1pMKvmSZ5U.QkKz
+ 0zyJ3pqnKCi62C2J0q6jFKjzC.FYsO5mZDDqcU2axUh8GhsVSu.zBW1NB3SUz8j5_JjqsftSewFS
+ V5rwJnDq7JAvY6.35Br0J8USDelvfFLxVxTuIfC.KtdTx_DqBSoPnqvPNTjCwZxxOJx2HipgGEVA
+ vqKtD36H20RIuHquq6D_5FKxsfd07ESIuINmMsMGVPQc45BAgeIhYVMq4E72.vbcHEW8ra5PpVOA
+ fKEmF7TLQVw--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.gq1.yahoo.com with HTTP; Wed, 30 Oct 2019 17:22:52 +0000
+Received: by smtp415.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID c6b74f9a96653bcbb72edbf42affa5a8;
+          Wed, 30 Oct 2019 17:22:50 +0000 (UTC)
+Date:   Thu, 31 Oct 2019 01:22:44 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Fengguang Wu <fengguang.wu@intel.com>
+Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: support data compression
+Message-ID: <20191030172234.GA7018@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20191022171602.93637-1-jaegeuk@kernel.org>
+ <20191022171602.93637-2-jaegeuk@kernel.org>
+ <20191027225006.GA321938@sol.localdomain>
+ <da214cdc-0074-b7bf-7761-d4c4ad3d4f6a@huawei.com>
+ <20191030025512.GA4791@sol.localdomain>
+ <97c33fa1-15af-b319-29a1-22f254a26c0a@huawei.com>
+ <20191030165056.GA693@sol.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <bf96be8a-2358-b9ab-b8eb-d0b8b94ed0d7@arm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: 7ZDI3WjNNs6B979ETWTejQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191030165056.GA693@sol.localdomain>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Mailer: WebService/1.1.14593 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Eric,
 
-On Wed, Oct 30, 2019 at 05:35:55PM +0100 Valentin Schneider wrote:
->=20
->=20
-> On 30/10/2019 17:24, Dietmar Eggemann wrote:
-> > On 30.10.19 15:39, Phil Auld wrote:
-> >> Hi Vincent,
-> >>
-> >> On Mon, Oct 28, 2019 at 02:03:15PM +0100 Vincent Guittot wrote:
-> >=20
-> > [...]
-> >=20
-> >>>> When you say slow versus fast wakeup paths what do you mean? I'm sti=
-ll
-> >>>> learning my way around all this code.
-> >>>
-> >>> When task wakes up, we can decide to
-> >>> - speedup the wakeup and shorten the list of cpus and compare only
-> >>> prev_cpu vs this_cpu (in fact the group of cpu that share their
-> >>> respective LLC). That's the fast wakeup path that is used most of the
-> >>> time during a wakeup
-> >>> - or start to find the idlest CPU of the system and scan all domains.
-> >>> That's the slow path that is used for new tasks or when a task wakes
-> >>> up a lot of other tasks at the same time
-> >=20
-> > [...]
-> >=20
-> > Is the latter related to wake_wide()? If yes, is the SD_BALANCE_WAKE
-> > flag set on the sched domains on your machines? IMHO, otherwise those
-> > wakeups are not forced into the slowpath (if (unlikely(sd))?
-> >=20
-> > I had this discussion the other day with Valentin S. on #sched and we
-> > were not sure how SD_BALANCE_WAKE is set on sched domains on
-> > !SD_ASYM_CPUCAPACITY systems.
-> >=20
->=20
-> Well from the code nobody but us (asymmetric capacity systems) set
-> SD_BALANCE_WAKE. I was however curious if there were some folks who set i=
-t
-> with out of tree code for some reason.
->=20
-> As Dietmar said, not having SD_BALANCE_WAKE means you'll never go through
-> the slow path on wakeups, because there is no domain with SD_BALANCE_WAKE=
- for
-> the domain loop to find. Depending on your topology you most likely will
-> go through it on fork or exec though.
->=20
-> IOW wake_wide() is not really widening the wakeup scan on wakeups using
-> mainline topology code (disregarding asymmetric capacity systems), which
-> sounds a bit... off.
+(add some mm folks...)
 
-Thanks. It's not currently set. I'll set it and re-run to see if it makes
-a difference.=20
+On Wed, Oct 30, 2019 at 09:50:56AM -0700, Eric Biggers wrote:
 
+<snip>
 
-However, I'm not sure why it would be making a difference for only the cgro=
-up
-case. If this is causing issues I'd expect it to effect both runs.=20
+> > >>>
+> > >>> It isn't really appropriate to create fake pagecache pages like this.  Did you
+> > >>> consider changing f2fs to use fscrypt_decrypt_block_inplace() instead?
+> > >>
+> > >> We need to store i_crypto_info and iv index somewhere, in order to pass them to
+> > >> fscrypt_decrypt_block_inplace(), where did you suggest to store them?
+> > >>
+> > > 
+> > > The same place where the pages are stored.
+> > 
+> > Still we need allocate space for those fields, any strong reason to do so?
+> > 
+> 
+> page->mapping set implies that the page is a pagecache page.  Faking it could
+> cause problems with code elsewhere.
 
-In general I think these threads want to wake up the last cpu they were on.
-And given there are fewer cpu bound tasks that CPUs that wake cpu should,
-more often than not, be idle.=20
+Not very related with this patch. Faking page->mapping was used in zsmalloc before
+nonLRU migration (see material [1]) and use in erofs now (page->mapping to indicate
+nonLRU short lifetime temporary page type, page->private is used for per-page information),
+as far as I know, NonLRU page without PAGE_MAPPING_MOVABLE set is safe for most mm code.
 
+On the other hands, I think NULL page->mapping will waste such field in precious
+page structure... And we can not get such page type directly only by a NULL --
+a truncated file page or just allocated page or some type internal temporary pages...
 
-Cheers,
-Phil
+So I have some proposal is to use page->mapping to indicate specific page type for
+such nonLRU pages (by some common convention, e.g. some real structure, rather than
+just zero out to waste 8 bytes, it's also natural to indicate some page type by
+its `mapping' naming )... Since my English is not very well, I delay it util now...
 
+[1] https://elixir.bootlin.com/linux/v3.18.140/source/mm/zsmalloc.c#L379
+    https://lore.kernel.org/linux-mm/1459321935-3655-7-git-send-email-minchan@kernel.org
+    and some not very related topic: https://lwn.net/Articles/752564/
 
-
---=20
+Thanks,
+Gao Xiang
 
