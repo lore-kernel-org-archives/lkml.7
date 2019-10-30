@@ -2,247 +2,160 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FD1C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 910FECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 263BF21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:31:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="U7WU9wdM"
+	by mail.kernel.org (Postfix) with ESMTP id 6BD892087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 04:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfJ3EbZ (ORCPT
+        id S1727034AbfJ3EdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 00:31:25 -0400
-Received: from ozlabs.org ([203.11.71.1]:32807 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725308AbfJ3EbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 00:31:24 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 472wWT3qj8z9sPK;
-        Wed, 30 Oct 2019 15:31:17 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572409881;
-        bh=RJyD0Tjcr5oKzdh/d42tx+96CzKMvhsQ/4NUPLwRs7s=;
-        h=Date:From:To:Cc:Subject:From;
-        b=U7WU9wdM0ucxrXsPFhL0m0mE6H2eitlAz8LyzD19RPmKtqzYJDmM/8dMPo0mzU82o
-         jbt5Hu3z8Lq9UqAjMiQpCHS50sk1Rho8P0iJ4u56ztReohhwRNpfR7Fx1QXa5j9J5N
-         wquA5wrp1OjDty3x72nNO4bUXlrBqoxlpPok6OPWvvbe+n4nF4xbEwcZo+9i7AebgC
-         Ombk2PvcKQ2U10dQBbWfkQnWEH+UKOCXYf0IroyUa1uYr4ju5+xwRjOuN2EHPECJGz
-         8+Hc/u8EXp/1qmgdqyuxHzyRqtTkUBZC8GiLQu3g1l3ZDyoUsooCAlSyEfiWbF0zuE
-         Fgq53XT+4SaAA==
-Date:   Wed, 30 Oct 2019 15:31:10 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: linux-next: manual merge of the y2038 tree with the xfs tree
-Message-ID: <20191030153046.01efae4a@canb.auug.org.au>
+        Wed, 30 Oct 2019 00:33:04 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:47440 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725308AbfJ3EdD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 00:33:03 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tgg3fnq_1572409976;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tgg3fnq_1572409976)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 30 Oct 2019 12:32:59 +0800
+Subject: Re: mbind() breaks its API definition since v5.2 by commit
+ d883544515aa (mm: mempolicy: make the behavior consistent when MPOL_MF_MOVE*
+ and MPOL_MF_STRICT were specified)
+To:     Li Xinhai <lixinhai.lxh@gmail.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        akpm <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Linux API <linux-api@vger.kernel.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        lixinhai_lxh <lixinhai_lxh@126.com>
+References: <2019103010274679257634@gmail.com>
+ <dc4864bf-8fa3-f5c8-f68c-57edc68d4662@linux.alibaba.com>
+ <2019103011122763779044@gmail.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <da734171-bd69-b56b-2ca9-3038790155dd@linux.alibaba.com>
+Date:   Tue, 29 Oct 2019 21:32:54 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qpNmKIRF5YMVei_XnY+.A6k";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <2019103011122763779044@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qpNmKIRF5YMVei_XnY+.A6k
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the y2038 tree got a conflict in:
+On 10/29/19 8:12 PM, Li Xinhai wrote:
+> On 2019-10-30 at 10:50 Yang Shi wrote:
+>>
+>> On 10/29/19 7:27 PM, Li Xinhai wrote:
+>>> One change in do_mbind() of this commit has suspicious usage of return value of
+>>> queue_pages_range(), excerpt as below:
+>>>
+>>> ---
+>>> @@ -1243,10 +1265,15 @@ static long do_mbind(unsigned long start, unsigned long len,
+>>>     	if (err)
+>>>     	goto mpol_out;
+>>>    
+>>> -	err = queue_pages_range(mm, start, end, nmask,
+>>> +	ret = queue_pages_range(mm, start, end, nmask,
+>>>     	 flags | MPOL_MF_INVERT, &pagelist);
+>>> -	if (!err)
+>>> -	err = mbind_range(mm, start, end, new);
+>>> +
+>>> +	if (ret < 0) {      /////// convert to all possible 'ret' to '-EIO' <<<<
+>>> +	err = -EIO;
+>>> +	goto up_out;
+>>> +	}
+>>> +
+>>> +	err = mbind_range(mm, start, end, new);
+>>>    
+>>>     	if (!err) {
+>>>     	int nr_failed = 0;
+>>> ---
+>>>
+>>> Note that inside queue_pages_range(), the call to walk_page_range() may return
+>>> errors from 'test_walk' of 'struct mm_walk_ops', e.g. -EFAULT. Now, those error
+>>> codes are no longer reported to user space application.
+>>>
+>>>    From user space, the mbind() call need to reported error, with EFAULT, as example:
+>>> EFAULT
+>>> Part or all of the memory range specified by nodemask and maxnode points
+>>> outside your accessible address space. Or, there was an unmapped hole in the
+>>> specified memory range specified by addr and len.
+>> Thanks for catching this. That commit was aimed to correct the return
+>> values for some corner cases in mbind(), but it should not alter the
+>> errno for other failure cases, i.e. -EFAULT.
+>>
+>> Could you please try the below patch (build test only)?
+>>
+>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+>> index 4ae967b..99df43a 100644
+>> --- a/mm/mempolicy.c
+>> +++ b/mm/mempolicy.c
+>> @@ -1286,7 +1286,7 @@ static long do_mbind(unsigned long start, unsigned
+>> long len,
+>>                            flags | MPOL_MF_INVERT, &pagelist);
+>>
+>>          if (ret < 0) {
+>> -               err = -EIO;
+>> +               err = ret;
+>>                  goto up_out;
+>>          }
+>>
+>>
+> This seems do not work, because the 'pagelist' would have some pages queued
+> into it, need to put back those pages instead of return quickly.
+>
+> So, we need to remove this page leak as well. <<<<<<
+>
+> In my understanding, revert the changes as I quoted above may solve it, but not sure
+> the details about changes at end of do_mbind(), should keep them at there without
+> further change?
 
-  fs/compat_ioctl.c
+Thanks for pointing this out. We don't have to revert this commit to 
+handle the non-empty pagelist correctly. The simplest way is to just put 
+those pages back and I'm supposed this is also the preferred way since 
+mbind_range() is not called to really apply the policy so those pages 
+should not be migrated.
 
-between commit:
+The below patch should solve this:
 
-  837a6e7f5cdb ("fs: add generic UNRESVSP and ZERO_RANGE ioctl handlers")
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 4ae967b..d80025c 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -1286,7 +1286,10 @@ static long do_mbind(unsigned long start, 
+unsigned long len,
+                           flags | MPOL_MF_INVERT, &pagelist);
 
-from the xfs tree and commits:
-  011da44bc5b6 ("compat: move FS_IOC_RESVSP_32 handling to fs/ioctl.c")
-  37ecf8b20abd ("compat_sys_ioctl(): make parallel to do_vfs_ioctl()")
+         if (ret < 0) {
+-               err = -EIO;
++               if (!list_empty(&pagelist))
++                       putback_movable_pages(&pagelist);
++
++               err = ret;
+                 goto up_out;
+         }
 
-from the y2038 tree.
+>
+> - Xinhai
+>
+>>> Please correct me if this is the intended change(and will have updated API
+>>> definition), or something was misunderstood.
+>>>
+>>> -Xinhai
+> >
 
-I fixed it up (see below and the added patch) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
-=46rom af387ea192196ffd141234e7e45bcfbc2be1a4fc Mon Sep 17 00:00:00 2001
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Wed, 30 Oct 2019 15:05:29 +1100
-Subject: [PATCH] fix up for "compat: move FS_IOC_RESVSP_32 handling to
- fs/ioctl.c"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- fs/ioctl.c             | 4 ++--
- include/linux/falloc.h | 7 +++++--
- 2 files changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/fs/ioctl.c b/fs/ioctl.c
-index 455ad38c8610..2f5e4e5b97e1 100644
---- a/fs/ioctl.c
-+++ b/fs/ioctl.c
-@@ -495,7 +495,7 @@ int ioctl_preallocate(struct file *filp, int mode, void=
- __user *argp)
- /* on ia32 l_start is on a 32-bit boundary */
- #if defined CONFIG_COMPAT && defined(CONFIG_X86_64)
- /* just account for different alignment */
--int compat_ioctl_preallocate(struct file *file,
-+int compat_ioctl_preallocate(struct file *file, int mode,
- 				struct space_resv_32 __user *argp)
- {
- 	struct inode *inode =3D file_inode(file);
-@@ -517,7 +517,7 @@ int compat_ioctl_preallocate(struct file *file,
- 		return -EINVAL;
- 	}
-=20
--	return vfs_fallocate(file, FALLOC_FL_KEEP_SIZE, sr.l_start, sr.l_len);
-+	return vfs_fallocate(file, mode | FALLOC_FL_KEEP_SIZE, sr.l_start, sr.l_l=
-en);
- }
- #endif
-=20
-diff --git a/include/linux/falloc.h b/include/linux/falloc.h
-index 63c4f0d615bc..ab42b72424f0 100644
---- a/include/linux/falloc.h
-+++ b/include/linux/falloc.h
-@@ -45,10 +45,13 @@ struct space_resv_32 {
- 	__s32		l_pad[4];	/* reserve area */
- };
-=20
--#define FS_IOC_RESVSP_32		_IOW ('X', 40, struct space_resv_32)
-+#define FS_IOC_RESVSP_32	_IOW ('X', 40, struct space_resv_32)
-+#define FS_IOC_UNRESVSP_32	_IOW ('X', 41, struct space_resv_32)
- #define FS_IOC_RESVSP64_32	_IOW ('X', 42, struct space_resv_32)
-+#define FS_IOC_UNRESVSP64_32	_IOW ('X', 43, struct space_resv_32)
-+#define FS_IOC_ZERO_RANGE_32	_IOW ('X', 57, struct space_resv_32)
-=20
--int compat_ioctl_preallocate(struct file *, struct space_resv_32 __user *);
-+int compat_ioctl_preallocate(struct file *, int mode, struct space_resv_32=
- __user *);
-=20
- #endif
-=20
---=20
-2.23.0
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/compat_ioctl.c
-index 62e530814cef,9ae90d728c0f..000000000000
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@@ -1020,51 -165,38 +165,57 @@@ COMPAT_SYSCALL_DEFINE3(ioctl, unsigned=20
-  	case FIONBIO:
-  	case FIOASYNC:
-  	case FIOQSIZE:
-- 		break;
--=20
-- #if defined(CONFIG_IA64) || defined(CONFIG_X86_64)
-+ 	case FS_IOC_FIEMAP:
-+ 	case FIGETBSZ:
-+ 	case FICLONERANGE:
-+ 	case FIDEDUPERANGE:
-+ 		goto found_handler;
-+ 	/*
-+ 	 * The next group is the stuff handled inside file_ioctl().
-+ 	 * For regular files these never reach ->ioctl(); for
-+ 	 * devices, sockets, etc. they do and one (FIONREAD) is
-+ 	 * even accepted in some cases.  In all those cases
-+ 	 * argument has the same type, so we can handle these
-+ 	 * here, shunting them towards do_vfs_ioctl().
-+ 	 * ->compat_ioctl() will never see any of those.
-+ 	 */
-+ 	/* pointer argument, never actually handled by ->ioctl() */
-+ 	case FIBMAP:
-+ 		goto found_handler;
-+ 	/* handled by some ->ioctl(); always a pointer to int */
-+ 	case FIONREAD:
-+ 		goto found_handler;
-+ 	/* these two get messy on amd64 due to alignment differences */
-+ #if defined(CONFIG_X86_64)
-  	case FS_IOC_RESVSP_32:
-  	case FS_IOC_RESVSP64_32:
- -		error =3D compat_ioctl_preallocate(f.file, compat_ptr(arg));
- +		error =3D compat_ioctl_preallocate(f.file, 0, compat_ptr(arg));
- +		goto out_fput;
- +	case FS_IOC_UNRESVSP_32:
- +	case FS_IOC_UNRESVSP64_32:
- +		error =3D compat_ioctl_preallocate(f.file, FALLOC_FL_PUNCH_HOLE,
- +				compat_ptr(arg));
- +		goto out_fput;
- +	case FS_IOC_ZERO_RANGE_32:
- +		error =3D compat_ioctl_preallocate(f.file, FALLOC_FL_ZERO_RANGE,
- +				compat_ptr(arg));
-  		goto out_fput;
-  #else
-  	case FS_IOC_RESVSP:
-  	case FS_IOC_RESVSP64:
- -		goto found_handler;
- +		error =3D ioctl_preallocate(f.file, 0, compat_ptr(arg));
- +		goto out_fput;
- +	case FS_IOC_UNRESVSP:
- +	case FS_IOC_UNRESVSP64:
- +		error =3D ioctl_preallocate(f.file, FALLOC_FL_PUNCH_HOLE,
- +				compat_ptr(arg));
- +		goto out_fput;
- +	case FS_IOC_ZERO_RANGE:
- +		error =3D ioctl_preallocate(f.file, FALLOC_FL_ZERO_RANGE,
- +				compat_ptr(arg));
- +		goto out_fput;
-  #endif
- =20
-- 	case FICLONE:
-- 	case FICLONERANGE:
-- 	case FIDEDUPERANGE:
-- 	case FS_IOC_FIEMAP:
-- 		goto do_ioctl;
--=20
-- 	case FIBMAP:
-- 	case FIGETBSZ:
-- 	case FIONREAD:
-- 		if (S_ISREG(file_inode(f.file)->i_mode))
-- 			break;
-- 		/*FALL THROUGH*/
--=20
-  	default:
-  		if (f.file->f_op->compat_ioctl) {
-  			error =3D f.file->f_op->compat_ioctl(f.file, cmd, arg);
-
---Sig_/qpNmKIRF5YMVei_XnY+.A6k
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl25Eg4ACgkQAVBC80lX
-0GyZewf/YR8Lp8H7pzS1iv53Wt2ri2Rc3UAT9FEb+w6jiR2Gg5Rq4VEQmiwzdV0j
-smdGdVoCVx5hjfEz6vwYTJI53ASzQcXxInPTg2OnJHpWTun/wUBZ3rgYEAWY5a0B
-Yf36rPrtLyR1+nrqE0lWy/zM+fumMtAyeTY9Box+K/zsfvkYPZVeZhX0VvHmtTcG
-TINTD5Y49BWrO+WnzQA7UongQJORVCdV9YVyVeW0tMStBtKzjveP6SEkqcbaYMif
-QLJowlH7DEfK/m/dUFd/JYxd8+U/n9QQlyZ2xAWYYgAPhCl3QfBfSQuhBJnavcJt
-6ucZ9+wyfKA6u9DlHjxiljopgGNv4g==
-=YVBN
------END PGP SIGNATURE-----
-
---Sig_/qpNmKIRF5YMVei_XnY+.A6k--
