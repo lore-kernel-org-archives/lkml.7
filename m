@@ -2,175 +2,97 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF70CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74175CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E45121A49
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:40:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="TM26i1eu"
+	by mail.kernel.org (Postfix) with ESMTP id 424AA2087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 06:42:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbfJ3GkB (ORCPT
+        id S1727369AbfJ3GmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 02:40:01 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:61850 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbfJ3GkA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 02:40:00 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x9U6d6lu008465;
-        Wed, 30 Oct 2019 15:39:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x9U6d6lu008465
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1572417548;
-        bh=erN8NTfq9fWEVgi8xPhCmDbhwPzMq4qz2bhybl41Cg0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TM26i1euSoeVGaEdy8R0NzTO1o4dQUOca5dvyYGaDnBx4xbW535BbcaPPU+o5qIRH
-         yv8o+Zx61AU21FB4Hk49ttXCxyvjnEtuMMaF/9lCOhe/R4mlpTb5ZFv1dX/xOzn7AW
-         vfczyxVvM6R8F48f5bgm/myaNsAnXbudj2UcGxafO3Rdsz29HV+yrShO0sIN0MyKvC
-         /MJcXMy2OlRmIh3mqBHm1elaix77JuGRYb3KQSDlYzTuF5sipdizh8/+v4T6SDB5T3
-         g2xqzkzP1TXUHJvZhlZmJBVzDNMHfa2p2szAuUliCtIW6ITi3wmMG8++rL9kWD1Fh/
-         Q+Kiz4ZxG+x5A==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, sparclinux@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 1/3] arch: ipcbuf.h: make uapi asm/ipcbuf.h self-contained
-Date:   Wed, 30 Oct 2019 15:38:53 +0900
-Message-Id: <20191030063855.9989-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 30 Oct 2019 02:42:18 -0400
+Received: from mga11.intel.com ([192.55.52.93]:28720 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725855AbfJ3GmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 02:42:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Oct 2019 23:42:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,246,1569308400"; 
+   d="scan'208";a="374797609"
+Received: from um.fi.intel.com (HELO um) ([10.237.72.57])
+  by orsmga005.jf.intel.com with ESMTP; 29 Oct 2019 23:42:11 -0700
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     "Kang\, Luwei" <luwei.kang@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar\@redhat.com" <rkrcmar@redhat.com>,
+        "Christopherson\, Sean J" <sean.j.christopherson@intel.com>,
+        "vkuznets\@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli\@tencent.com" <wanpengli@tencent.com>,
+        "jmattson\@google.com" <jmattson@google.com>,
+        "joro\@8bytes.org" <joro@8bytes.org>,
+        "tglx\@linutronix.de" <tglx@linutronix.de>,
+        "mingo\@redhat.com" <mingo@redhat.com>,
+        "bp\@alien8.de" <bp@alien8.de>, "hpa\@zytor.com" <hpa@zytor.com>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "ak\@linux.intel.com" <ak@linux.intel.com>,
+        "thomas.lendacky\@amd.com" <thomas.lendacky@amd.com>,
+        "acme\@kernel.org" <acme@kernel.org>,
+        "mark.rutland\@arm.com" <mark.rutland@arm.com>,
+        "jolsa\@redhat.com" <jolsa@redhat.com>,
+        "namhyung\@kernel.org" <namhyung@kernel.org>,
+        alexander.shishkin@linux.intel.com
+Subject: RE: [PATCH v1 3/8] KVM: x86: Allocate performance counter for PEBS event
+In-Reply-To: <82D7661F83C1A047AF7DC287873BF1E173835B1A@SHSMSX104.ccr.corp.intel.com>
+References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com> <1572217877-26484-4-git-send-email-luwei.kang@intel.com> <20191029144612.GK4097@hirez.programming.kicks-ass.net> <82D7661F83C1A047AF7DC287873BF1E173835B1A@SHSMSX104.ccr.corp.intel.com>
+Date:   Wed, 30 Oct 2019 08:42:10 +0200
+Message-ID: <87o8xyg2f1.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The user-space cannot compile <asm/ipcbuf.h> due to some missing type
-definitions. For example, building it for x86 fails as follows:
+"Kang, Luwei" <luwei.kang@intel.com> writes:
 
-  CC      usr/include/asm/ipcbuf.h.s
-In file included from ./usr/include/asm/ipcbuf.h:1:0,
-                 from <command-line>:32:
-./usr/include/asm-generic/ipcbuf.h:21:2: error: unknown type name ‘__kernel_key_t’
-  __kernel_key_t  key;
-  ^~~~~~~~~~~~~~
-./usr/include/asm-generic/ipcbuf.h:22:2: error: unknown type name ‘__kernel_uid32_t’
-  __kernel_uid32_t uid;
-  ^~~~~~~~~~~~~~~~
-./usr/include/asm-generic/ipcbuf.h:23:2: error: unknown type name ‘__kernel_gid32_t’
-  __kernel_gid32_t gid;
-  ^~~~~~~~~~~~~~~~
-./usr/include/asm-generic/ipcbuf.h:24:2: error: unknown type name ‘__kernel_uid32_t’
-  __kernel_uid32_t cuid;
-  ^~~~~~~~~~~~~~~~
-./usr/include/asm-generic/ipcbuf.h:25:2: error: unknown type name ‘__kernel_gid32_t’
-  __kernel_gid32_t cgid;
-  ^~~~~~~~~~~~~~~~
-./usr/include/asm-generic/ipcbuf.h:26:2: error: unknown type name ‘__kernel_mode_t’
-  __kernel_mode_t  mode;
-  ^~~~~~~~~~~~~~~
-./usr/include/asm-generic/ipcbuf.h:28:35: error: ‘__kernel_mode_t’ undeclared here (not in a function)
-  unsigned char  __pad1[4 - sizeof(__kernel_mode_t)];
-                                   ^~~~~~~~~~~~~~~
-./usr/include/asm-generic/ipcbuf.h:31:2: error: unknown type name ‘__kernel_ulong_t’
-  __kernel_ulong_t __unused1;
-  ^~~~~~~~~~~~~~~~
-./usr/include/asm-generic/ipcbuf.h:32:2: error: unknown type name ‘__kernel_ulong_t’
-  __kernel_ulong_t __unused2;
-  ^~~~~~~~~~~~~~~~
+>> >  static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+>> >  				  unsigned config, bool exclude_user,
+>> >  				  bool exclude_kernel, bool intr,
+>> > -				  bool in_tx, bool in_tx_cp)
+>> > +				  bool in_tx, bool in_tx_cp, bool pebs)
+>> >  {
+>> >  	struct perf_event *event;
+>> >  	struct perf_event_attr attr = {
+>> > @@ -111,9 +111,12 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+>> >  		.exclude_user = exclude_user,
+>> >  		.exclude_kernel = exclude_kernel,
+>> >  		.config = config,
+>> > +		.precise_ip = pebs ? 1 : 0,
+>> > +		.aux_output = pebs ? 1 : 0,
+>> 
+>> srsly?
+>
+> Hi Peter,
+>     Thanks for review. For aux_output, I think it should be set 1 when the guest wants to enabled PEBS by Intel PT.
 
-It is just a matter of missing include directive.
+attr.aux_output==1 means your group leader should be an intel_pt event
+for this to succeed. Luckily for this instance,
+perf_event_create_kernel_counter() doesn't actually check the
+attr.aux_output.
 
-Include <asm/posix_types.h> to make it self-contained, and add it to
-the compile-test coverage.
+Also, does 'bool pebs' mean PEBS-via-PT or just a PEBS counter? Or does
+it mean that in kvm it's the same thing?
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- arch/s390/include/uapi/asm/ipcbuf.h   | 2 ++
- arch/sparc/include/uapi/asm/ipcbuf.h  | 2 ++
- arch/xtensa/include/uapi/asm/ipcbuf.h | 2 ++
- include/uapi/asm-generic/ipcbuf.h     | 2 ++
- usr/include/Makefile                  | 1 -
- 5 files changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/arch/s390/include/uapi/asm/ipcbuf.h b/arch/s390/include/uapi/asm/ipcbuf.h
-index 5b1c4f47c656..1030cd186899 100644
---- a/arch/s390/include/uapi/asm/ipcbuf.h
-+++ b/arch/s390/include/uapi/asm/ipcbuf.h
-@@ -2,6 +2,8 @@
- #ifndef __S390_IPCBUF_H__
- #define __S390_IPCBUF_H__
- 
-+#include <linux/posix_types.h>
-+
- /*
-  * The user_ipc_perm structure for S/390 architecture.
-  * Note extra padding because this structure is passed back and forth
-diff --git a/arch/sparc/include/uapi/asm/ipcbuf.h b/arch/sparc/include/uapi/asm/ipcbuf.h
-index 9d0d125500e2..5b933a598a33 100644
---- a/arch/sparc/include/uapi/asm/ipcbuf.h
-+++ b/arch/sparc/include/uapi/asm/ipcbuf.h
-@@ -2,6 +2,8 @@
- #ifndef __SPARC_IPCBUF_H
- #define __SPARC_IPCBUF_H
- 
-+#include <linux/posix_types.h>
-+
- /*
-  * The ipc64_perm structure for sparc/sparc64 architecture.
-  * Note extra padding because this structure is passed back and forth
-diff --git a/arch/xtensa/include/uapi/asm/ipcbuf.h b/arch/xtensa/include/uapi/asm/ipcbuf.h
-index a57afa0b606f..3bd0642f6660 100644
---- a/arch/xtensa/include/uapi/asm/ipcbuf.h
-+++ b/arch/xtensa/include/uapi/asm/ipcbuf.h
-@@ -12,6 +12,8 @@
- #ifndef _XTENSA_IPCBUF_H
- #define _XTENSA_IPCBUF_H
- 
-+#include <linux/posix_types.h>
-+
- /*
-  * Pad space is left for:
-  * - 32-bit mode_t and seq
-diff --git a/include/uapi/asm-generic/ipcbuf.h b/include/uapi/asm-generic/ipcbuf.h
-index 7d80dbd336fb..41a01b494fc7 100644
---- a/include/uapi/asm-generic/ipcbuf.h
-+++ b/include/uapi/asm-generic/ipcbuf.h
-@@ -2,6 +2,8 @@
- #ifndef __ASM_GENERIC_IPCBUF_H
- #define __ASM_GENERIC_IPCBUF_H
- 
-+#include <linux/posix_types.h>
-+
- /*
-  * The generic ipc64_perm structure:
-  * Note extra padding because this structure is passed back and forth
-diff --git a/usr/include/Makefile b/usr/include/Makefile
-index 57b20f7b6729..70f8fe256aed 100644
---- a/usr/include/Makefile
-+++ b/usr/include/Makefile
-@@ -16,7 +16,6 @@ override c_flags = $(UAPI_CFLAGS) -Wp,-MD,$(depfile) -I$(objtree)/usr/include
- # Please consider to fix the header first.
- #
- # Sorted alphabetically.
--header-test- += asm/ipcbuf.h
- header-test- += asm/msgbuf.h
- header-test- += asm/sembuf.h
- header-test- += asm/shmbuf.h
--- 
-2.17.1
-
+Regards,
+--
+Alex
