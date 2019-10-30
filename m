@@ -2,168 +2,254 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93E0CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EF2CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF70205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:41:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="oVufxpss"
+	by mail.kernel.org (Postfix) with ESMTP id 255C920578
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:44:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbfJ3IlZ (ORCPT
+        id S1726246AbfJ3IoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:41:25 -0400
-Received: from mout.web.de ([212.227.17.12]:49099 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbfJ3IlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:41:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1572424858;
-        bh=Zvh6PElDHOvLvzhTAFQmYtBoj7EBVf8dG1gdmzcc9Eg=;
-        h=X-UI-Sender-Class:Subject:Cc:References:From:To:Date:In-Reply-To;
-        b=oVufxpss10/MEg9GR7sMJabX3XIszFjeYUZ68TasNm0Amam+UZ4WbDLJvQHQYVfv4
-         rEr6U0Oj/kqv+SfC4nYJJP5y0ubgT7lw74gvPy04gH/joZrR9KSSb5N+NN5U7XwBYy
-         emiyXGz3EaxNQc/qgRplqdYSqj3WBWEn8srcPwo8=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.104.79]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LxOQ2-1htOoC06zS-016yXx; Wed, 30
- Oct 2019 09:40:58 +0100
-Subject: Re: [v4] coccicheck: Support search for SmPL scripts within selected
- directory hierarchy
-Cc:     linux-kernel@vger.kernel.org,
-        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Himanshu Jha <himanshujha199640@gmail.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Xue Zhihong <xue.zhihong@zte.com.cn>,
-        Yi Wang <wang.yi59@zte.com.cn>
-References: <201910301059095572036@zte.com.cn>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Zhong Shiqi <zhong.shiqi@zte.com.cn>, cocci@systeme.lip6.fr,
-        kernel-janitors@vger.kernel.org
-Message-ID: <d457995b-fed3-d560-e6b3-b8fa4b0059a0@web.de>
-Date:   Wed, 30 Oct 2019 09:40:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Wed, 30 Oct 2019 04:44:02 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42684 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726028AbfJ3IoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 04:44:01 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 15ADDE56AFBAB5BA9233;
+        Wed, 30 Oct 2019 16:43:58 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 30 Oct
+ 2019 16:43:52 +0800
+Subject: Re: [PATCH 2/2] f2fs: support data compression
+To:     Eric Biggers <ebiggers@kernel.org>
+References: <20191022171602.93637-1-jaegeuk@kernel.org>
+ <20191022171602.93637-2-jaegeuk@kernel.org>
+ <20191027225006.GA321938@sol.localdomain>
+ <da214cdc-0074-b7bf-7761-d4c4ad3d4f6a@huawei.com>
+ <20191030025512.GA4791@sol.localdomain>
+From:   Chao Yu <yuchao0@huawei.com>
+CC:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+Message-ID: <97c33fa1-15af-b319-29a1-22f254a26c0a@huawei.com>
+Date:   Wed, 30 Oct 2019 16:43:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <201910301059095572036@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191030025512.GA4791@sol.localdomain>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Plh1uJC1FphsuVWzEOoEvaOSNpyW7XB5MX+FxuNADIiNj4T4ANs
- 5xjE01LENnlQ+yN0/CeoxB1rIxTs7zEWBTLpguE6v4T1L5sGSid95MCwsjaYN6J/cIPzUtS
- WJCZVCpjMgMXg4sThq2rFNhcjIblW6kFBAh7W+AMRyAvss9vGpnnOTV38crueLqESOXKfmR
- mN9QzRUUZP+DbaHzICBWQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:N1XjkKcbh9w=:Oo6JQjx3OCTrFdDGCudGln
- uxxiDYKmUBvgfmACwcKchSwewiZk4h/kDfNJiKNFhhSBPoxD921dZpXFEjKxeo67ShV3a1YWV
- d/aeORNFJB8FMzatFGKqLn4QTPZCYIBsLGtRBa2qCCgjIvXBoBdc3u5swjlPl7/5bpnVSoaQI
- OKpAZitFEHZPzSrkgxUkeZU0SNsc99J2WBmhsYgJbOQ/MFDUyrZxGN9E4Y3K8HtisArP2iht7
- ZVxywBDHJDO3vq+TUrZPIyWii3PNck4egmjhgMlXgfO+u4febT8nlCbWm4+IChAnVj/TbJ8PX
- nS80ike2va6LUorqZqmE2ctTs4giU+twRqWoBGL90N35fut0qU9uBRa2wBIWVYEA/zxNuF17D
- wHfAMs+ntrMy/nvo2kdkvV4n6ooWn9IeZhdArgNP5HUHxno+DuSdiveAAyz/muXHmcaKjvJfd
- mcVuy7KXUqIzZxIpZueOqWeyfLdbuPljpif79oUjSe8276pSLjzlcx/y0tHp6AxEGLE86YkfV
- Sptiabb9upLikYIrGlrWgPTht7ZDlK7otvVHKDgQu8kB0i0RCo/m2WKa+83gYI5y3cDTGjiIh
- TSd02Rd5GiSIBXGi3Kt9/2z8bfKsQWKXQdEfrALe6iKoO89UDtnRanZYeW4zp6letx8azhRM4
- OpKM/xAKX0tcwZv5/PlM1wEAbJvxyrnF1kv2Fv6mgAgMQd0jeLRD/de5N2npzfmBGBl6kaazo
- ThJNJ0JkqdLszRTWhPCtnW6tEJk0Pe9UkQq1EeM2Yqzx0l34a1R7KePjezpJgXKe9VjVQ8aQt
- 2IbU0/70qnSitiQLoDnHWLCBeQRl5v8K6uAi/u3TM3+njz5YnOF5YDs3YJSpUsNt/BYJQoISu
- AQIrGjRlwYOaejcogDzUUFXdwFy+plxfvbVPklIL/vNaD5rUU0rmARrYi5Ls7MTbL1Ab1tvQp
- iO+IMEIFFzgattPfb6+GdceUmKpXWhbv05MBNIpdg9ZhZdU7PqXGaGouHEHV7m5au3efgKT8Z
- IvYlziQPf1XoOxFIpWu96XsJCkRUF6ogGZzEoUjC+ltFcUVAMa3hQL+b7Jcq4rfxYoXTJAg1S
- Pog21xAZKNPUIULFf3k2KtvKKJqAmO9H3GR60cTBkpGpwJ0RPcD4p2wbawqQVDUe1cRARUgW8
- VSpbXEO8veHJWW9V5b1zV8OOHSVjkS9D/ZVAI/zfVznl9AKWPkNt3PMzoYIVYeeCWjyyPvwG9
- RBRj3BpfPr6IJrjQ0tpmUu/4+ubc4PZPxisN8apYdqrpTQk9e6wxgvjCALoo=
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Please reconsider also the section =E2=80=9CUsing Coccinelle with a sin=
-gle semantic patch=E2=80=9D:
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/Documentation/dev-tools/coccinelle.rst?id=3Df877bee5ea0b56c39cd0a243e113a=
-577b5a4ef92#n151
->
-> Could we add new lines?
+On 2019/10/30 10:55, Eric Biggers wrote:
+> On Tue, Oct 29, 2019 at 04:33:36PM +0800, Chao Yu wrote:
+>> On 2019/10/28 6:50, Eric Biggers wrote:
+>>>> +bool f2fs_is_compressed_page(struct page *page)
+>>>> +{
+>>>> +	if (!page_private(page))
+>>>> +		return false;
+>>>> +	if (IS_ATOMIC_WRITTEN_PAGE(page) || IS_DUMMY_WRITTEN_PAGE(page))
+>>>> +		return false;
+>>>> +	return *((u32 *)page_private(page)) == F2FS_COMPRESSED_PAGE_MAGIC;
+>>>> +}
+>>>
+>>> This code implies that there can be multiple page private structures each of
+>>> which has a different magic number.  But I only see F2FS_COMPRESSED_PAGE_MAGIC.
+>>> Where in the code is the other one(s)?
+>>
+>> I'm not sure I understood you correctly, did you mean it needs to introduce
+>> f2fs_is_atomic_written_page() and f2fs_is_dummy_written_page() like
+>> f2fs_is_compressed_page()?
+>>
+> 
+> No, I'm asking what is the case where the line
+> 
+> 	*((u32 *)page_private(page)) == F2FS_COMPRESSED_PAGE_MAGIC
+> 
+> returns false?
 
-Yes, of course.
+Should be this?
 
+if (!page_private(page))
+	return false;
+f2fs_bug_on(*((u32 *)page_private(page)) != F2FS_COMPRESSED_PAGE_MAGIC)
+return true;
 
-> How about the following?
+> 
+>>>
+>>>> +
+>>>> +static void f2fs_set_compressed_page(struct page *page,
+>>>> +		struct inode *inode, pgoff_t index, void *data, refcount_t *r)
+>>>> +{
+>>>> +	SetPagePrivate(page);
+>>>> +	set_page_private(page, (unsigned long)data);
+>>>> +
+>>>> +	/* i_crypto_info and iv index */
+>>>> +	page->index = index;
+>>>> +	page->mapping = inode->i_mapping;
+>>>> +	if (r)
+>>>> +		refcount_inc(r);
+>>>> +}
+>>>
+>>> It isn't really appropriate to create fake pagecache pages like this.  Did you
+>>> consider changing f2fs to use fscrypt_decrypt_block_inplace() instead?
+>>
+>> We need to store i_crypto_info and iv index somewhere, in order to pass them to
+>> fscrypt_decrypt_block_inplace(), where did you suggest to store them?
+>>
+> 
+> The same place where the pages are stored.
 
-I suggest to improve the case distinction for the make (and environment)
-variable =E2=80=9CCOCCI=E2=80=9D also by adjusting the document outline.
-* Empty string
-* Directory selection
-* File name specification
+Still we need allocate space for those fields, any strong reason to do so?
 
-See also:
-https://docutils.readthedocs.io/en/sphinx-docs/user/rst/quickstart.html#se=
-ctions
+> 
+>>>> +
+>>>> +void f2fs_destroy_compress_ctx(struct compress_ctx *cc)
+>>>> +{
+>>>> +	kvfree(cc->rpages);
+>>>> +}
+>>>
+>>> The memory is allocated with kzalloc(), so why is it freed with kvfree() and not
+>>> just kfree()?
+>>
+>> It was allocated by f2fs_*alloc() which will fallback to kvmalloc() once
+>> kmalloc() failed.
+> 
+> This seems to be a bug in f2fs_kmalloc() -- it inappropriately falls back to
+> kvmalloc().  As per its name, it should only use kmalloc().  f2fs_kvmalloc()
+> already exists, so it can be used when the fallback is wanted.
 
+We can introduce f2fs_memalloc() to wrap f2fs_kmalloc() and f2fs_kvmalloc() as
+below:
 
-> The optional make variable COCCI can be used to search SmPL scripts in a
-> directory. In that case, the variable must be initialized with the name =
-of
+f2fs_memalloc()
+{
+	mem = f2fs_kmalloc();
+	if (mem)
+		return mem;
+	return f2fs_kvmalloc();
+}
 
-=E2=80=A6 it should be set to =E2=80=A6
+It can be used in specified place where we really need it, like the place
+descirbied in 5222595d093e ("f2fs: use kvmalloc, if kmalloc is failed") in where
+we introduced original logic.
 
+> 
+>>
+>>>> +static int lzo_compress_pages(struct compress_ctx *cc)
+>>>> +{
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = lzo1x_1_compress(cc->rbuf, cc->rlen, cc->cbuf->cdata,
+>>>> +					&cc->clen, cc->private);
+>>>> +	if (ret != LZO_E_OK) {
+>>>> +		printk_ratelimited("%sF2FS-fs: lzo compress failed, ret:%d\n",
+>>>> +								KERN_ERR, ret);
+>>>> +		return -EIO;
+>>>> +	}
+>>>> +	return 0;
+>>>> +}
+>>>
+>>> Why not using f2fs_err()?  Same in lots of other places.
+>>
+>> We use printk_ratelimited at some points where we can afford to lose logs,
+>> otherwise we use f2fs_{err,warn...} to record info as much as possible for
+>> troubleshoot.
+>>
+> 
+> It used to be the case that f2fs_msg() was ratelimited.  What stops it from
+> spamming the logs now?
 
-> directory contains SmPL scripts.
+https://lore.kernel.org/patchwork/patch/973837/
 
-a directory which contains scripts for the semantic patch language.
+> 
+> The problem with a bare printk is that it doesn't show which filesystem instance
+> the message is coming from.
 
-Regards,
-Markus
+We can add to print sbi->sb->s_id like f2fs_printk().
+
+> 
+>>>> +
+>>>> +	ret = cops->compress_pages(cc);
+>>>> +	if (ret)
+>>>> +		goto out_vunmap_cbuf;
+>>>> +
+>>>> +	max_len = PAGE_SIZE * (cc->cluster_size - 1) - COMPRESS_HEADER_SIZE;
+>>>> +
+>>>> +	if (cc->clen > max_len) {
+>>>> +		ret = -EAGAIN;
+>>>> +		goto out_vunmap_cbuf;
+>>>> +	}
+>>>
+>>> Since we already know the max length we're willing to compress to (the max
+>>> length for any space to be saved), why is more space than that being allocated?
+>>> LZ4_compress_default() will return an error if there isn't enough space, so that
+>>> error could just be used as the indication to store the data uncompressed.
+>>
+>> AFAIK, there is no such common error code returned from all compression
+>> algorithms indicating there is no room for limited target size, however we need
+>> that information to fallback to write raw pages. Any better idea?
+>>
+> 
+> "Not enough room" is the only reasonable way for compression to fail, so all
+
+At a glance, compression comments did say only fail due to out-of-space of
+dst_buf, and it will fail due to other reasons as I checked few codes.
+a) dst_buf is too small
+b) src_buf is too large/small
+c) wrong step
+maybe missed other cases...
+
+Yeah, we can get rid of condition b)/c) during implementation, however, what I'm
+concern is the implementation is too tight to all error handling of all
+compression algorithms, as we're not always aware of compression error handling
+changes.
+
+> that's needed is the ability for compression to report errors at all.  What
+> specifically prevents this approach from working?
+> 
+>>>>  static void bio_post_read_processing(struct bio_post_read_ctx *ctx)
+>>>>  {
+>>>> -	/*
+>>>> -	 * We use different work queues for decryption and for verity because
+>>>> -	 * verity may require reading metadata pages that need decryption, and
+>>>> -	 * we shouldn't recurse to the same workqueue.
+>>>> -	 */
+>>>
+>>> Why is it okay (i.e., no deadlocks) to no longer use different work queues for
+>>> decryption and for verity?  See the comment above which is being deleted.
+>>
+>> Could you explain more about how deadlock happen? or share me a link address if
+>> you have described that case somewhere?
+>>
+> 
+> The verity work can read pages from the file which require decryption.  I'm
+> concerned that it could deadlock if the work is scheduled on the same workqueue.
+
+I assume you've tried one workqueue, and suffered deadlock..
+
+> Granted, I'm not an expert in Linux workqueues, so if you've investigated this
+> and determined that it's safe, can you explain why?
+
+I'm not familiar with workqueue...  I guess it may not safe that if the work is
+scheduled to the same cpu in where verity was waiting for data? if the work is
+scheduled to other cpu, it may be safe.
+
+I can check that before splitting the workqueue for verity and decrypt/decompress.
+
+Thanks,
+
+> 
+> - Eric
+> .
+> 
