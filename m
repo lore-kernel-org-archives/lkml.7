@@ -2,94 +2,133 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA819CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F2FCA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E88E20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F25120874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:09:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V5lkrTTS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbfJ3NHn (ORCPT
+        id S1726297AbfJ3NJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:07:43 -0400
-Received: from mga03.intel.com ([134.134.136.65]:31723 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfJ3NHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:07:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 06:07:42 -0700
-X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
-   d="scan'208";a="193962381"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 06:07:39 -0700
-From:   Jani Nikula <jani.nikula@intel.com>
-To:     Chris Chiu <chiu@endlessm.com>, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, David Airlie <airlied@linux.ie>,
-        daniel@ffwll.ch, intel-gfx@lists.freedesktop.org,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
-        ville.syrjala@linux.intel.com
-Subject: Re: Unexpected screen flicker during i915 initialization
-In-Reply-To: <CAB4CAwcMqyOLJFPcVyoGuiXo-ujeyzL2TJkpZ3qAc1HymJ2x7A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <CAB4CAwcMqyOLJFPcVyoGuiXo-ujeyzL2TJkpZ3qAc1HymJ2x7A@mail.gmail.com>
-Date:   Wed, 30 Oct 2019 15:07:34 +0200
-Message-ID: <87o8xy8jqh.fsf@intel.com>
+        Wed, 30 Oct 2019 09:09:56 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52684 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbfJ3NJ4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:09:56 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UD9hoY093115;
+        Wed, 30 Oct 2019 08:09:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572440983;
+        bh=M5l3IXLPZ7PbLcGaD/x5qSLUDpxoQyE8oFPSKxV0M6M=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=V5lkrTTSDHh0l+SiR9NbcKYF4Ssaol8yXGCPibS7s4RTE0cDwNKtEG18APtxtqZGq
+         2uM4ETLP0V3C6c/DuT/EpHRVSbWe59T17HFe9pfSAQnuWKN5ROk9txWhrS4tvS2V6S
+         opxO1af7+PkGymOiMkSUpF9JVwCn8ESbgvAJHfPM=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UD9hQN087336
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 30 Oct 2019 08:09:43 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
+ Oct 2019 08:09:30 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 30 Oct 2019 08:09:43 -0500
+Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UD9eLx111494;
+        Wed, 30 Oct 2019 08:09:40 -0500
+Subject: Re: [PATCH v3 02/14] soc: ti: k3: add navss ringacc driver
+To:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
+ <20191001061704.2399-3-peter.ujfalusi@ti.com>
+ <b5f47303-b6d2-190b-d38c-d3557a93b111@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <5e65db22-1436-5f2d-6355-9ba3aa5a9d88@ti.com>
+Date:   Wed, 30 Oct 2019 15:10:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <b5f47303-b6d2-190b-d38c-d3557a93b111@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 30 Oct 2019, Chris Chiu <chiu@endlessm.com> wrote:
-> Hi guys,
->     We have 2 laptops, ASUS Z406MA and Acer TravelMate B118, both
-> powered by the same Intel N5000 GemniLake CPU. On the Acer laptop, the
-> panel will blink once during boot which never happens on the ASUS
-> laptop. It caught my attention and I find the difference between them
-> but I need help for more information,
->
->     The major difference happens in bxt_sanitize_cdclk() on the
-> following condition check.
->         if (cdctl == expected)
->                 /* All well; nothing to sanitize */
->                 return;
->
->     On the problematic Acer laptop, the value of cdctl is 0x27a while
-> the same cdctl is 0x278 on ASUS machine. Due to the 0x27a is not equal
-> to the expected value 0x278 so it needs to be sanitized by assigning
-> -1 to  dev_priv->cdclk.hw.vco. Then the consequent bxt_set_cdclk()
-> will force the full PLL disable and enable. And that's the flicker
-> (blink) we observed during boot.
->
->     Although I can't find the definition about the BIT(2) of CDCLK_CTL
-> which cause this difference. Can anyone suggest what exactly the
-> problem is and how should we deal with it? Thanks.
-
-The 11 least significant bits of that register are the cdclk frequency
-in 10.1 fixed point format. Apparently the Acer BIOS or GOP has a
-different idea of how to calculate the value from what i915 and the Asus
-think.
-
-To handle this in i915, we'd need to allow some deviation from the
-expected value, and only switch to use our value at the next modeset. We
-do need the sanitization though, because sometimes there have been
-completely bogus values to begin with.
-
-Please file a bug over at [1] and reference this thread.
-
-BR,
-Jani.
 
 
-[1] https://bugs.freedesktop.org/enter_bug.cgi?product=DRI&component=DRM/Intel
+On 29/10/2019 10:52, Lokesh Vutla wrote:
+> Hi Grygorii,
+> 
+> [...snip..]
+> 
+>> +
+>> +static int k3_ringacc_ring_access_io(struct k3_ring *ring, void *elem,
+>> +				     enum k3_ringacc_access_mode access_mode)
+>> +{
+>> +	void __iomem *ptr;
+>> +
+>> +	switch (access_mode) {
+>> +	case K3_RINGACC_ACCESS_MODE_PUSH_HEAD:
+>> +	case K3_RINGACC_ACCESS_MODE_POP_HEAD:
+>> +		ptr = (void __iomem *)&ring->fifos->head_data;
+>> +		break;
+>> +	case K3_RINGACC_ACCESS_MODE_PUSH_TAIL:
+>> +	case K3_RINGACC_ACCESS_MODE_POP_TAIL:
+>> +		ptr = (void __iomem *)&ring->fifos->tail_data;
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	ptr += k3_ringacc_ring_get_fifo_pos(ring);
+>> +
+>> +	switch (access_mode) {
+>> +	case K3_RINGACC_ACCESS_MODE_POP_HEAD:
+>> +	case K3_RINGACC_ACCESS_MODE_POP_TAIL:
+>> +		dev_dbg(ring->parent->dev,
+>> +			"memcpy_fromio(x): --> ptr(%p), mode:%d\n", ptr,
+>> +			access_mode);
+>> +		memcpy_fromio(elem, ptr, (4 << ring->elm_size));
+> 
+> Does this work for any elem_size < 64 or any element size not aligned with 64?
 
+Max value of elem_size is 6 as per TRM.
+
+> 
+> IIUC, in message mode, ring element should be inserted in a single burst write
+> and there is no doorbell facility. If the above conditions are not met, we are
+> supposed to use proxy.
+> 
+> In this driver, I don't see any restrictions on the ring element size for
+> message mode and directly written to io. Am I missing something?
+> 
+
+You are right and corresponding check can be added at k3_ringacc_ring_cfg() for the case
+K3_RINGACC_RING_MODE_MESSAGE and no proxy
+
+[..]
 
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+Best regards,
+grygorii
