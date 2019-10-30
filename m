@@ -2,95 +2,112 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAF7CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E54D6CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAFE4205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC25205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 20:24:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Iz6PdOPm"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SVAfgh6V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbfJ3UXm (ORCPT
+        id S1726837AbfJ3UYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 16:23:42 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37763 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbfJ3UXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 16:23:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 473KfM5hYJz9sPT;
-        Thu, 31 Oct 2019 07:23:39 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572467020;
-        bh=w6kDQkfrEux2/gUU+VqSk7zCj38XPqFLGM2B19pK83o=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Iz6PdOPmGgzdhBgjbcB+ONLXp1g1q+GKmBA5NuMF7jGRn3a+uX5iqHPJojy9c20zm
-         xSgrpv28iejUsUpUBBVSNeff3tSf/XqVspGMvIyvTkiUQaYEFfjLpg0mjsev83Jp0Z
-         g8nqDfOvTclp8N3WhVc0R4SJYW21kRljeQvb5W3xTmEGXtGQxHbNjMoovvlgFnozpp
-         k64fisdcbhZOHXdHs42TaMGBdMoi+A0TAkWfSaIQgeIG7L0LgqojOQxOGS4TUNK0g5
-         uKTqIgi0gP6HzuQpP5yHQVOo9sEkKhvjNZNMENTxnHKpOb0cy8woV1zwILAtN9igR3
-         aPBzo96ko8chQ==
-Date:   Thu, 31 Oct 2019 07:23:31 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeff Mahoney <jeffm@suse.com>
-Subject: linux-next: Fixes tag needs some work in the ext3 tree
-Message-ID: <20191031072331.1830d07d@canb.auug.org.au>
+        Wed, 30 Oct 2019 16:24:07 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34030 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726585AbfJ3UYH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 16:24:07 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9UKNuKj099408;
+        Wed, 30 Oct 2019 15:23:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572467036;
+        bh=QRjoE331Q/k4D/4Fby6fACVvZ6zBumRrr3LPiv9jIBA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=SVAfgh6V5NpUgTVMsmXdUR35BuWKy8I8d346G0sBuzrsR9MykqwlfjEmqBtDDbzvC
+         tCE1ye2Fac9sUOR0tWRifwSc0rhFhzx2yAxcW2kEPiE/s80OdYVz/nfCRfZRKsVvq7
+         4qXpbcVwyunJ6ujLBmCVVNkWl/uwtqUTfc2g3hXc=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9UKNuq5090504
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 30 Oct 2019 15:23:56 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
+ Oct 2019 15:23:43 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 30 Oct 2019 15:23:43 -0500
+Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9UKNtCG022757;
+        Wed, 30 Oct 2019 15:23:55 -0500
+Subject: Re: [PATCH v15 06/19] leds: lp50xx: Add the LP50XX family of the RGB
+ LED driver
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        kbuild test robot <lkp@intel.com>
+CC:     <kbuild-all@lists.01.org>, <pavel@ucw.cz>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191028183629.11779-7-dmurphy@ti.com>
+ <201910302027.2hNdR993%lkp@intel.com>
+ <bb3473ba-ddfc-2b51-4a75-c23c5bf3bc62@ti.com>
+ <075c9330-a9b5-1360-4447-71a4797553a9@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <f32e2063-3c56-607c-0e74-f75f68e62e16@ti.com>
+Date:   Wed, 30 Oct 2019 15:23:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/inn1J9XHnUghkUxv6i=quF_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <075c9330-a9b5-1360-4447-71a4797553a9@gmail.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/inn1J9XHnUghkUxv6i=quF_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Jacek
 
-Hi all,
 
-In commit
+>> Does not appear here
+>>
+>> Finally not sure why the MIPS compiler is complaining about this but the
+>> ARM and x86 is not
+> Compilation breaks also for ARM.
 
-  08b866beeb61 ("reiserfs: fix extended attributes on the root directory")
+Thanks for the information.
 
-Fixes tag
+I am not seeing this issue or even a warning when using the ARM 8.3 
+toolchain even in a clean build.
 
-  Fixes: d0a5b995a30 ("vfs: Add IOP_XATTR inode operations flag")
+arm-linux-gnueabihf-gcc (GNU Toolchain for the A-profile Architecture 
+8.3-2019.03 (arm-rel-8.36)) 8.3.0
 
-has these problem(s):
+So is a bug in this toolchain?
 
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
+> This is not architecture specific but language specific thing.
+>
+> If you enter this error message got Google you will get an answer
+> to why this happens in the first result.
 
---=20
-Cheers,
-Stephen Rothwell
+I did Google the issue and got the answer I guess I just question to why 
+I am not seeing the error because for me the patchset builds fine no errors.
 
---Sig_/inn1J9XHnUghkUxv6i=quF_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+And why is this only reported on the MIPS arch.  Not saying that it is 
+not an issue in the code just wondering how it gets there.
 
------BEGIN PGP SIGNATURE-----
+>
+> You need to patch your driver with the attached one.
+>
+I will try to reproduce the error and then apply the changes.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl258UQACgkQAVBC80lX
-0GyWvgf/aguf4b0HpMRcnPoR6g1Z64Q8xktOldj2qLtChR/q8dxHiENMV3857lT4
-PEOog6LrolmvR5QiKzChAJPMHYJN6E9KIv2uhYnJ0ZBV3BLKhmPo2iC27hQXpWPS
-jyFpuUN2DHZAGm46GdFp/O+SXc2k4Pj7aGM+z4BaVO8viqEBj2PHYjXNZqq5uINU
-v+yfCOMAGlS8GQnJciCG50AolIfC0wj1El2K+QROPdGYijsyUkq4sivVt7BHQU9L
-rfWJT1ojJDml3wNzZhuG9QCYH5MJB42kvYOY09okDJI1KEb1c3GqmuGHmVal2PEp
-I/b3LLdYKZ2wcq2q29c3TGBTACVeBA==
-=rk7G
------END PGP SIGNATURE-----
+Dan
 
---Sig_/inn1J9XHnUghkUxv6i=quF_--
