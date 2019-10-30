@@ -2,151 +2,111 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3667CA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E899BCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4E420874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:21:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FWjEutTH"
+	by mail.kernel.org (Postfix) with ESMTP id BB14620874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:22:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572430953;
+	bh=1bLiq4AIluAgC79Z23WkALOU8hnVVbjkbkomiBWoMYo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QnFwkBsiLpboImE2XLQi42IJwP3pK02Uf6CHvYP1qdvY29u1/CBAmuCnuf4ZG/7WA
+	 F4p5lEqoPbDQzWWExdVazJZuGTXjgx63ZCZVJ3TIEOo/nAkBTbhtiVvbNKuxuR8m9a
+	 2TKUWSPryq74aqt+znL1Eyfofh9NkInTwLp9Er18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfJ3KVM (ORCPT
+        id S1726728AbfJ3KWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 06:21:12 -0400
-Received: from mail-eopbgr40042.outbound.protection.outlook.com ([40.107.4.42]:27733
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        Wed, 30 Oct 2019 06:22:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50656 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726046AbfJ3KVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 06:21:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U3Z0zuSCPPMvyBlw6NQqKc/TfRpgxt+mQMMgAIbGr30zccJRIexpq3l+6D967pchiJnSKC1LabLAdIgbyDkBUJ8ejzwqp2rbAKJjOGwPv7buGKQwLBRpwf2hpIxvqpUBmLLzWo+L/Zjwlc5oh2abQiTVektfHivElvkYfk8O8PX5A/MWmxsvxRiKY6n27yZQ5Bfh+glSu5SkXQrW93dDSECiPv4quUKfeEQxZuQqECGoRbUKiVJq4+/aqR+WWMII1lp3oeB5eXiKSfZzRIwLrGMrkIjwjdYlDjzkaQBsZFFrZrRiiPw3ZMo9N6gatbVEhOgauWEUarcbJUjsVyjgVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kdq9QOAVIZ8f0JCm8tQbe+C3f0MeU7KlFAJZhP6HpT8=;
- b=JAjVR9tzQIAbC5dRbMrkGA/t/XflT3HbPIYlnT3oV/GvTNaX860h8oYNq8WL0T75nfx8HgRUzpGC+r3RWtJ9qvwWOA2s2ippmzqwcuWDKFAjDK13JjxGTYvKRmRum7zDx7REQNXzjSmIbRbgHBOW/1Pe75B9m6p9oUrvQMLVtSe0ir30jBRGXeXLurvoDbWq8Ccsn+POT7SN+Fa598k9tI/tgD/XEMrLLGrBDDbSXTkX34YJOm7HrVRqXmgXJKgU/UB7fVooEXlRF1nv6Stxttj5SlEyg2mbVrdze/dW62p643gFAjmHeG6JjnHErWVE622TEHleWmaN4bH0cw40nw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kdq9QOAVIZ8f0JCm8tQbe+C3f0MeU7KlFAJZhP6HpT8=;
- b=FWjEutTHJJasS8V4jN4xqtP6bb/7qv2KX+6VVMqAVLrkssxfLVqSB82eXoZtOLIHC8i/7hCeoJy7d4bZjZdgHSbKQutj8sr1BXDfea8kqy+mJj78mEvSHEO0vlqFhWawMKsOU20k5ab6koAoBB9cin4SfySBEUa9ZeI3k+uy9TY=
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
- AM0PR04MB4260.eurprd04.prod.outlook.com (52.134.124.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.25; Wed, 30 Oct 2019 10:21:08 +0000
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::4122:fda5:e903:8c02]) by AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::4122:fda5:e903:8c02%3]) with mapi id 15.20.2347.033; Wed, 30 Oct 2019
- 10:21:08 +0000
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Peng Fan <peng.fan@nxp.com>
-CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH 0/7] clk: imx: switch to clk_hw based API
-Thread-Topic: [PATCH 0/7] clk: imx: switch to clk_hw based API
-Thread-Index: AQHVjl55CLrCj3Q1sEiGZunySWSfBKdy+rWA
-Date:   Wed, 30 Oct 2019 10:21:08 +0000
-Message-ID: <20191030102059.ppb7le3qnfhbcii5@fsr-ub1664-175>
-References: <1572356175-24950-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1572356175-24950-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM6P195CA0028.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:209:81::41) To AM0PR04MB5779.eurprd04.prod.outlook.com
- (2603:10a6:208:131::23)
-x-originating-ip: [89.37.124.34]
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=abel.vesa@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7aa7261a-7d9f-4896-caac-08d75d22e0ed
-x-ms-traffictypediagnostic: AM0PR04MB4260:|AM0PR04MB4260:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB4260328A2042C6C35AFC5A4BF6600@AM0PR04MB4260.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 02065A9E77
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(396003)(366004)(136003)(39860400002)(346002)(376002)(199004)(189003)(11346002)(66476007)(66446008)(66946007)(8676002)(64756008)(76176011)(81166006)(66556008)(486006)(386003)(52116002)(81156014)(316002)(99286004)(102836004)(8936002)(478600001)(26005)(186003)(3846002)(6116002)(256004)(25786009)(4326008)(446003)(2906002)(476003)(6862004)(44832011)(86362001)(33716001)(6512007)(9686003)(6436002)(66066001)(229853002)(1076003)(71190400001)(71200400001)(6486002)(14454004)(305945005)(7736002)(54906003)(6506007)(53546011)(6246003)(5660300002)(6636002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4260;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sHdaHsUC6QmpjWwoN4FRqrOPDS1BK1t0zwKSmoHceM++j5YENN+XUe9npcuU59mD6uVqaBKBp60C6H82SbzhgRZyFqSjJ0nYeEID2d+JVN3ZOrFu+yZAnKwX2eF16lsCeXsV9yD5wpfdm7E/LjygNgAT7GTq0/zTN9dMQxIikGGQdSxtHYjnernokiGScZtgrjPciKDkacL6qWIJaPPBoJbELwYWh8ZS0nl1E/wf3zJbBPXmVjr7h5Lre7wMv4fXl1mOyEMuJQHj6p7r4skmLzHmn2pSrgdxdk00ThGX3b4e+FpzzmeUPItGTsSsZ6ACFyvgaHpP6nJbCRp8h43YAXf4zTLmz3DE7iuKsLhDgfSyF17vQ+Yu6K/YQmdpxWjNPzAPxismWUybTCpm6m2O9JBSqDng2RXarn53Ul/rM4fCE/cNQF/scTwhmExDtPKr
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <43350CFBC5517E408DDBE9D9EFAFA719@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1726069AbfJ3KWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 06:22:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8A10AB59F;
+        Wed, 30 Oct 2019 10:22:29 +0000 (UTC)
+Date:   Wed, 30 Oct 2019 11:22:29 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
+        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, rjw@rjwysocki.net, lenb@kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v7] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20191030102229.GY31513@dhcp22.suse.cz>
+References: <1572428068-180880-1-git-send-email-linyunsheng@huawei.com>
+ <20191030101449.GW4097@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7aa7261a-7d9f-4896-caac-08d75d22e0ed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 10:21:08.2314
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MG1w9bPkz9j8DbOEYMeQPyXUqSd1O98yfGuNl8quB567JEGEEkvbtgSCGf10mY3JXp/EAjGltDCthECu0nLLwA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4260
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030101449.GW4097@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-10-29 13:40:49, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
->=20
-> This is a preparation patch set to switch i.MX8MM/N/Q clk
-> driver to clk_hw based API.
->=20
-> There are some patches under reviewing for i.MX8M clk driver,
-> to avoid conflicts, so not include i.MX8M clk_hw patches in this
-> pach set.
->=20
-> The patch set covers the APIs used by i.MX8M clk driver.
->=20
+On Wed 30-10-19 11:14:49, Peter Zijlstra wrote:
+> On Wed, Oct 30, 2019 at 05:34:28PM +0800, Yunsheng Lin wrote:
+> > When passing the return value of dev_to_node() to cpumask_of_node()
+> > without checking if the device's node id is NUMA_NO_NODE, there is
+> > global-out-of-bounds detected by KASAN.
+> > 
+> > From the discussion [1], NUMA_NO_NODE really means no node affinity,
+> > which also means all cpus should be usable. So the cpumask_of_node()
+> > should always return all cpus online when user passes the node id as
+> > NUMA_NO_NODE, just like similar semantic that page allocator handles
+> > NUMA_NO_NODE.
+> > 
+> > But we cannot really copy the page allocator logic. Simply because the
+> > page allocator doesn't enforce the near node affinity. It just picks it
+> > up as a preferred node but then it is free to fallback to any other numa
+> > node. This is not the case here and node_to_cpumask_map will only restrict
+> > to the particular node's cpus which would have really non deterministic
+> > behavior depending on where the code is executed. So in fact we really
+> > want to return cpu_online_mask for NUMA_NO_NODE.
+> > 
+> > Also there is a debugging version of node_to_cpumask_map() for x86 and
+> > arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
+> > patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
+> > 
+> > [1] https://lkml.org/lkml/2019/9/11/66
+> > Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> > Suggested-by: Michal Hocko <mhocko@kernel.org>
+> > Acked-by: Michal Hocko <mhocko@suse.com>
+> > Acked-by: Paul Burton <paul.burton@mips.com> # MIPS bits
+> 
+> Still:
+> 
+> Nacked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Thanks for working on this.
+Do you have any other proposal that doesn't make any wild guesses about
+which node to use instead of the undefined one?
 
-The entire series looks good.
-
-Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
-
-> Peng Fan (7):
->   clk: imx: clk-pll14xx: Switch to clk_hw based API
->   clk: imx: clk-composite-8m: Switch to clk_hw based API
->   clk: imx: add imx_unregister_hw_clocks
->   clk: imx: add hw API imx_clk_hw_mux2_flags
->   clk: imx: frac-pll: Switch to clk_hw based API
->   clk: imx: sccg-pll: Switch to clk_hw based API
->   clk: imx: gate3: Switch to clk_hw based API
->=20
->  drivers/clk/imx/clk-composite-8m.c |  4 +--
->  drivers/clk/imx/clk-frac-pll.c     |  4 +--
->  drivers/clk/imx/clk-pll14xx.c      | 22 ++++++++-----
->  drivers/clk/imx/clk-sccg-pll.c     |  4 +--
->  drivers/clk/imx/clk.c              |  8 +++++
->  drivers/clk/imx/clk.h              | 67 ++++++++++++++++++++++++++++++--=
-------
->  6 files changed, 80 insertions(+), 29 deletions(-)
->=20
-> --=20
-> 2.16.4
->=20
+-- 
+Michal Hocko
+SUSE Labs
