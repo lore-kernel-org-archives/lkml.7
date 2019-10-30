@@ -2,163 +2,126 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF632C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF9ACA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A80F20717
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:27:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jb8vok3s"
+	by mail.kernel.org (Postfix) with ESMTP id 8F7F92087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:27:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572452865;
+	bh=SNeRKTTlIPVnDUCxC0bSPsIHj4Io4ehDm7wcAEYJjtk=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=1oKqup7ATVumaZdw8cknDOgziCmxKqUkF3o4BWf/3/TOplhC7sQcnttR1YZa+wmaY
+	 C80XzBRA9tB5mVBK/Ak//W7M7Pj/NF0oiS2uQG45ECUuRCY+98qgkcmsY5rVvSqYqs
+	 nngLFA2kp8jEBcC7xdXXtLEBGW84fW27zFgbSYbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbfJ3Q1B (ORCPT
+        id S1727578AbfJ3Q1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:27:01 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46057 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfJ3Q1A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 12:27:00 -0400
-Received: by mail-io1-f67.google.com with SMTP id s17so3195610iol.12;
-        Wed, 30 Oct 2019 09:27:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+uwntaunJvEfF6N2JBmOpTRxiy4nvBNTDpuqDzHj3b0=;
-        b=jb8vok3svlRvK8XDUQ92351D1Ta07Su1zLqkfJQKRnlsMXqPFxg8GRu9c0GaiP+aZd
-         O00jWQA1J4GoLIDboqupHxa6yXVKqnk+pq4vlQ+q00f5W5IrhfkxFHZX8N/ntFo4q1JS
-         qwyTWdpovHYWbX3hcKDq/8CoqxMV3ZhOzTJjOhYU6yVFa5lEZH1YVGHg/0J2LbBOgnag
-         jD8y4fZZKQtSQY9VMrx4L9WfzDGZVPQrSZKmj5fR/2QXBusoZIq2tZtkihkcQn2DU/Il
-         JmM3egjeyeOhbOmhOj+Pj0pYidsadh79q38qZPLtbO3E3Wpxg2C0iQkMDlx9hSLVo5kG
-         FMGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+uwntaunJvEfF6N2JBmOpTRxiy4nvBNTDpuqDzHj3b0=;
-        b=coc7DRcLoZ2sSVcFErCfdNDvkeomvMLb13mfLZGHU4zoRDfJsLU+0l42flfmaKS4vZ
-         ICmcFk/FqFi5n4BSo8f/ZKT4kANdhuAeNkhCllctxlPabQ0ALKBbfoZYSMzL/Wz1bR+9
-         P0ShtrF6CJULlhlXsf6NH1Ag+sor0u1QWN0f9NVyq9pebRTytyF3bTiUpTRaURmzPMiN
-         UV/eyWmH2Gk+FnBx51Btd01MFsBQUxFvZ0qsxPVdPrC1oD9qUcPLKniPAmNBwBjvqIC5
-         y9IjkfP3tiF8azumYWJvfdVOZ+tgTt+AtKx7M02ohPuNqMedBkRkZw1n9oqwoUdytzRX
-         XZcA==
-X-Gm-Message-State: APjAAAVmz9Q2NCP5RVuV8BVODqEkR6ay34ubV571bs+4ghOfz0YtzN+a
-        HVONRuuP/X+8mATNAlCUq9zgRgngN3JKZPXU8y0=
-X-Google-Smtp-Source: APXvYqyPBo5dvv8N1t+4tf6EegSpdd/Xproa15/OHfqG5GhOiT7Zv35Tr0Z+Y2zW0/n/0KMEaLZR6AhbyAug2k0gyFc=
-X-Received: by 2002:a6b:7006:: with SMTP id l6mr648689ioc.298.1572452819891;
- Wed, 30 Oct 2019 09:26:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190620062246.2665-1-e5ten.arch@gmail.com> <20191029210250.17007-1-e5ten.arch@gmail.com>
- <aaec7b5b-3a58-f36e-74e6-5be0a6185c5b@ideasonboard.com>
-In-Reply-To: <aaec7b5b-3a58-f36e-74e6-5be0a6185c5b@ideasonboard.com>
-From:   Ethan Sommer <e5ten.arch@gmail.com>
-Date:   Wed, 30 Oct 2019 12:26:49 -0400
-Message-ID: <CAMEGPiq66grdRyioma7pdftFAFD7BmK0w788nBXhx1XHxopj=Q@mail.gmail.com>
-Subject: Re: [PATCH v3] replace timeconst bc script with an sh script
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Wed, 30 Oct 2019 12:27:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbfJ3Q1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 12:27:44 -0400
+Received: from [172.20.52.151] (unknown [91.217.168.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A5E120717;
+        Wed, 30 Oct 2019 16:27:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572452863;
+        bh=SNeRKTTlIPVnDUCxC0bSPsIHj4Io4ehDm7wcAEYJjtk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=OpBHO7ouoTeY0DhFV/9oJyVVEW4ok/e2kh/S/DlErORuYtBL2PonN7fC+EJQw0IcR
+         9PqqMkFDhj+eSzB+LqXckqjXLJh0R4adehDhmwWqf2tt9kkdfNS3EM0oqGSa7PVmbl
+         /lfqcDbiawl2Xiu2I+wIKSAxBafBjIltvN6+DPAI=
+Subject: Re: [PATCH linux-kselftest/test v6] lib/list-test: add a test for the
+ 'list' doubly linked list
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        David Gow <davidgow@google.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        John Stultz <john.stultz@linaro.org>,
         Kees Cook <keescook@chromium.org>,
-        Corey Minyard <cminyard@mvista.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20191024224631.118656-1-davidgow@google.com>
+ <0cb1d948-0da3-eb0f-c58f-ae3a785dd0dd@kernel.org>
+ <CABVgOSmCHbGjZBjeWSbPEZbJw22SaBQnoO77xxNzN_ugAwzNiQ@mail.gmail.com>
+ <20191030104217.GA18421@kadam>
+From:   shuah <shuah@kernel.org>
+Message-ID: <42a8270d-ed6f-d29f-5e71-7b76a074b63e@kernel.org>
+Date:   Wed, 30 Oct 2019 10:27:12 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191030104217.GA18421@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Running shellcheck on kernel/time/timeconst.sh produces the following
-> warnings:
->
-> shellcheck kernel/time/timeconst.sh
->
-> In kernel/time/timeconst.sh line 11:
->         local i=1 j=0
->         ^-- SC2039: In POSIX sh, 'local' is undefined.
->
->
-> In kernel/time/timeconst.sh line 20:
->         local i="$1" j="$2" k
->         ^-- SC2039: In POSIX sh, 'local' is undefined.
->
->
-> In kernel/time/timeconst.sh line 34:
->         local i
->         ^-- SC2039: In POSIX sh, 'local' is undefined.
->
->
-> In kernel/time/timeconst.sh line 44:
->         local i=0 j
->         ^-- SC2039: In POSIX sh, 'local' is undefined.
->
->
->
-> Will this cause an issue for people running posix shells?
-> Which shells have you tested your script on ?
-While local is not part of POSIX, it is widely supported, including by
-dash, and is used by many shell scripts in the kernel's build including
-link-vmlinux.sh, however I can easily make the script work without local
-by using unique variable names in each function and resetting all of
-them at the beginning of the functions if that is desired instead of
-local.
->
-> Furthermore, I fear this conversion may not be suitable at present, as
-> it produces potentially different results for CONFIG_HZ < 100
->
-> (There may be more diffs, but I haven't yet compared a larger search space)
->
-> using a quick script I put together to compare the output of
-> timeconst.sh and timeconst.bc for a given CONFIG_HZ:
->
->
->  https://gist.github.com/kbingham/76e8718df7b7dc97361405cc1801a160
->
->
-> $ for i in `seq 0 300`; do ./check-timeconst.sh $i; done
->
-> produces a diff on almost every value 2 - 243
->
->    http://paste.ubuntu.com/p/wNggrfFZXB/
->
-> Or rather 137 faults to be exact:
->
->  for i in `seq 0 250`; \
->         do ./check-timeconst.sh $i; \
->  done | grep -- "--- BC" | wc -l
->
->
-> I think that might be considered a blocker to this implementation, or
-> those values and the impact should certainly be investigated thoroughly.
->
-> I haven't looked into detail into the change of any of those values, so
-> I can not ascertain which one is more correct (though I suspect it's
-> likely to be bc that will have the 'more correct' value)
->
-> I would fear doing this in shell just isn't going to maintain the
-> correct precision, which is likely a strong reason why bc was selected
-> in the first place.
->
->
-> If you can find the issue that causes this diff in your shell
-> processing, and clarify or fix it - then it might be possible to gain
-> some backing to the implementation, but even then it might become a
-> shell specific precision issue ...
-That definitely is a blocker, I will attempt to make this implementation
-match the bc script for those values.
+On 10/30/19 4:42 AM, Dan Carpenter wrote:
+> On Wed, Oct 30, 2019 at 01:02:11AM -0700, David Gow wrote:
+>>> ERROR: that open brace { should be on the previous line
+>>> #869: FILE: lib/list-test.c:680:
+>>> +static void list_test_list_for_each_entry_reverse(struct kunit *test)
+>>> +{
+>>>
+>>>
+>>> I am seeing these error and warns. As per our hallway conversation, the
+>>> "for_each*" in the test naming is tripping up checkpatch.pl
+>>>
+>>> For now you can change the name a bit to not trip checkpatch and maybe
+>>> explore fixing checkpatch to differentiate between function names
+>>> with "for_each" in them vs. the actual for_each usages in the code.
+>>
+>> Thanks, Shuah.
+>>
+>> Yes, the problem here is that checkpatch.pl believes that anything
+>> with "for_each" in its name must be a loop, so expects that the open
+>> brace is placed on the same line as for a for loop.
+>>
+>> Longer term, I think it'd be nicer, naming-wise, to fix or work around
+>> this issue in checkpatch.pl itself, as that'd allow the tests to
+>> continue to follow a naming pattern of "list_test_[x]", where [x] is
+>> the name of the function/macro being tested. Of course, short of
+>> trying to fit a whole C parser in checkpatch.pl, that's going to
+>> involve some compromises as well.
+> 
+> Just make it a black list of the 5 most common for_each macros.
+> 
+
+How does black listing work in the context of checkpatch.pl?
+
+>>
+>> In the meantime, I'm sending out v7 which replaces "for_each" with
+>> "for__each" (adding the extra underscore), so that checkpatch is
+>> happy.
+
+This change is required just to quiet checkpatch and I am not happy
+about asking for this change. At the same time, I am concerned about
+git hooks failing on this patch.
+
+> 
+> It's better to ignore checkpatch and other scripts when they are wrong.
+> (unless the warning message inspires you to make the code more readable
+> for humans).
+> 
+
+It gets confusing when to ignore and when not to. It takes work to
+figure out and it is subjective.
+
+It would be great if we can consistently rely on a tool that is used as
+a criteria for patches to accept patches.
+
+thanks,
+-- Shuah
+
+
