@@ -2,54 +2,148 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93ADECA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EDDCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA9A205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB937205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:45:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MIrjMvo4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfJ3Tph (ORCPT
+        id S1726596AbfJ3Tpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 15:45:37 -0400
-Received: from verein.lst.de ([213.95.11.211]:47490 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbfJ3Tpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 15:45:36 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id CE4BF68B05; Wed, 30 Oct 2019 20:45:32 +0100 (CET)
-Date:   Wed, 30 Oct 2019 20:45:32 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Kees Cook <keescook@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Semmle Security Reports <security-reports@semmle.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] dma-mapping: Add vmap checks to dma_map_single()
-Message-ID: <20191030194532.GA21020@lst.de>
-References: <20191029213423.28949-1-keescook@chromium.org> <20191029213423.28949-2-keescook@chromium.org> <20191030091849.GA637042@kroah.com> <20191030180921.GB19366@lst.de> <20191030192640.GC709410@kroah.com>
+        Wed, 30 Oct 2019 15:45:41 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35147 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfJ3Tpk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 15:45:40 -0400
+Received: by mail-pg1-f196.google.com with SMTP id c8so2181161pgb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 12:45:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=ecEFNwt5xPuwITAtTejJ0X5tM716GMmwbwC2dfiZh24=;
+        b=MIrjMvo4u9InYKJTysSQ4H4hlW9oSNtKSJwWcuUnG9O9ydVw8+wCy5EE2iqN1qMLjw
+         i/gGPcGSIbtJyjZgCtunv3Hsb3iUHehe4sUcxpdqDvWh1ZM6ahgyGMrxgneayUZjNozx
+         JI0Ahle/4EVd+ySOdvsXBKMrJlJn5VnKsriPk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=ecEFNwt5xPuwITAtTejJ0X5tM716GMmwbwC2dfiZh24=;
+        b=YRxOdmWtgL866AxLX+cm4n2HTJZ71gUiTvT1baWlw0boUMRHzPo2zf5Vx+5q00dsbe
+         Aa9Pr9bVvvINI9lwrmkPZqaBwxiBC7krVlYvMQftJsWQ7QhhQBXGWZ1EgRNAp+WlzEEM
+         TYE6qUXHHgbuVZNlo6oOy/Ud3CitLkGfQQ/zk3465oW/vTmLLpsDMYJcEG8o9NBkv4AX
+         uj23LXTX+Eu0FrtPTnphLdtG/PuzUrxT4JD3z/VEg+C98x4zsKwXOdaVFaWkl4PKBvW+
+         JQP0e7XyLSgOYzMdaRBMcxGAIjZOflDn9SsCR7K2OAQudA4RvVBwrPxER/PnNOsUWje2
+         2uhg==
+X-Gm-Message-State: APjAAAUQ9zVTBuRmftsSJk5a6QbsWdi6Sk3CS9smH67p/mNm7KuIIQw/
+        V/JgkmZqxOEfuErLqH8mMBLMX+w8D2Y=
+X-Google-Smtp-Source: APXvYqwQwIOOAwbO7wqCPgQ0DuL1rXe7sUOljeIAB+l6bc7EcLz2bFf7Vk0k9/6ldUGgPBK3Reb65g==
+X-Received: by 2002:a17:90a:8a0a:: with SMTP id w10mr1230293pjn.68.1572464738493;
+        Wed, 30 Oct 2019 12:45:38 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d14sm783122pfh.36.2019.10.30.12.45.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 12:45:37 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 12:45:36 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Tobin C. Harding" <tobin@kernel.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests: Move kselftest_module.sh into kselftest/
+Message-ID: <201910301244.9C3CABCA0@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191030192640.GC709410@kroah.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 08:26:40PM +0100, Greg Kroah-Hartman wrote:
-> Looks good!  You can apply patch 2/2 as well if you want to take that
-> through your tree too.
+The kselftest_module.sh file was not being installed by the Makefile
+"install" target, rendering the lib/*.sh tests nonfunction. This fixes
+that and takes the opportunity to move it into the kselftest/ subdirectory
+which is where the kselftest infrastructure bits are collecting.
 
-I can do that, I'll just need a formal ACK from you.
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Link: https://lore.kernel.org/lkml/CA+G9fYsfJpXQvOvHdjtg8z4a89dSStOQZOKa9zMjjQgWKng1aw@mail.gmail.com
+Fixes: d3460527706e ("kselftest: Add test runner creation script")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ tools/testing/selftests/Makefile                                | 1 +
+ .../selftests/{kselftest_module.sh => kselftest/module.sh}      | 0
+ tools/testing/selftests/lib/bitmap.sh                           | 2 +-
+ tools/testing/selftests/lib/prime_numbers.sh                    | 2 +-
+ tools/testing/selftests/lib/printf.sh                           | 2 +-
+ tools/testing/selftests/lib/strscpy.sh                          | 2 +-
+ 6 files changed, 5 insertions(+), 4 deletions(-)
+ rename tools/testing/selftests/{kselftest_module.sh => kselftest/module.sh} (100%)
+
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index d65f59669f7c..9ff31ec4277a 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -193,6 +193,7 @@ install: all
+ ifdef INSTALL_PATH
+ 	@# Ask all targets to install their files
+ 	mkdir -p $(INSTALL_PATH)/kselftest
++	install -m 744 kselftest/module.sh $(INSTALL_PATH)/kselftest/
+ 	install -m 744 kselftest/runner.sh $(INSTALL_PATH)/kselftest/
+ 	install -m 744 kselftest/prefix.pl $(INSTALL_PATH)/kselftest/
+ 	@for TARGET in $(TARGETS); do \
+diff --git a/tools/testing/selftests/kselftest_module.sh b/tools/testing/selftests/kselftest/module.sh
+similarity index 100%
+rename from tools/testing/selftests/kselftest_module.sh
+rename to tools/testing/selftests/kselftest/module.sh
+diff --git a/tools/testing/selftests/lib/bitmap.sh b/tools/testing/selftests/lib/bitmap.sh
+index 5511dddc5c2d..00a416fbc0ef 100755
+--- a/tools/testing/selftests/lib/bitmap.sh
++++ b/tools/testing/selftests/lib/bitmap.sh
+@@ -1,3 +1,3 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+-$(dirname $0)/../kselftest_module.sh "bitmap" test_bitmap
++$(dirname $0)/../kselftest/module.sh "bitmap" test_bitmap
+diff --git a/tools/testing/selftests/lib/prime_numbers.sh b/tools/testing/selftests/lib/prime_numbers.sh
+index 43b28f24e453..370b79a9cb2e 100755
+--- a/tools/testing/selftests/lib/prime_numbers.sh
++++ b/tools/testing/selftests/lib/prime_numbers.sh
+@@ -1,4 +1,4 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # Checks fast/slow prime_number generation for inconsistencies
+-$(dirname $0)/../kselftest_module.sh "prime numbers" prime_numbers selftest=65536
++$(dirname $0)/../kselftest/module.sh "prime numbers" prime_numbers selftest=65536
+diff --git a/tools/testing/selftests/lib/printf.sh b/tools/testing/selftests/lib/printf.sh
+index 2ffa61da0296..05f4544e87f9 100755
+--- a/tools/testing/selftests/lib/printf.sh
++++ b/tools/testing/selftests/lib/printf.sh
+@@ -1,4 +1,4 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # Tests the printf infrastructure using test_printf kernel module.
+-$(dirname $0)/../kselftest_module.sh "printf" test_printf
++$(dirname $0)/../kselftest/module.sh "printf" test_printf
+diff --git a/tools/testing/selftests/lib/strscpy.sh b/tools/testing/selftests/lib/strscpy.sh
+index 71f2be6afba6..be60ef6e1a7f 100755
+--- a/tools/testing/selftests/lib/strscpy.sh
++++ b/tools/testing/selftests/lib/strscpy.sh
+@@ -1,3 +1,3 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0+
+-$(dirname $0)/../kselftest_module.sh "strscpy*" test_strscpy
++$(dirname $0)/../kselftest/module.sh "strscpy*" test_strscpy
+-- 
+2.17.1
+
+
+-- 
+Kees Cook
