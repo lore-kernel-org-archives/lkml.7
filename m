@@ -2,103 +2,114 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEBCCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBF4CA9EC6
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BFAF20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 379262087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 10:35:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nu+IXLvm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cM8ljuzJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfJ3KaH (ORCPT
+        id S1726411AbfJ3KfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 06:30:07 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33023 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbfJ3KaH (ORCPT
+        Wed, 30 Oct 2019 06:35:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31688 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726046AbfJ3KfK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 06:30:07 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c184so1309408pfb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 03:30:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=K9dz1flpb3x7Oxzcj/V7nFSU5z6F4ELP/G1doRSrpMo=;
-        b=nu+IXLvmOAq7s8CzjblbRsMl9s1YCbJSabDqRwE0hwrJ/jWNE1VoJNn3CtNpshp7bn
-         KAvU7g5AuzoxbYtLNYtVdACU8ywpdh9X11ZxVCB1iHnj9gPma3cF5VcA7v2PD7HuUNeN
-         jx/lj6aQqxFULwQ0gfSJBWxNUDmtLTW8RpK+riRVkADQNw1fEVuaeJ8GjGnaR7QXT2Q6
-         bbX+6MDCMBKwe+5CW35hCXo3Bm+oJd+bo9/eiyxVb7MvHsXrqd+MgE/+eISN3F6vtmOf
-         JAZKTj75qbzIFmsYgkBZA3wDd0FnzQpG4Rj3uj1wQLmw0WlJA4N37k8kxR8uVk1065jw
-         0yXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=K9dz1flpb3x7Oxzcj/V7nFSU5z6F4ELP/G1doRSrpMo=;
-        b=FJ8QgW8E7G5f47vrugV8oPWqSssStUC81iPUHSigjM5f3x/+/ZwDp0EshEHIQIJaiw
-         QvA4uScnhUjBq9z/lPCFqLqv7dU6J5TlZSxDuF7Pjemhl+RUEXSJsbvU3u3EXPMI9FTZ
-         1AWNPKbR39YWSS4Is6SOfDbyjexrazB55fCtLGhJvK/a5z9w9+O7kb3Ztlmuc/2xjdWw
-         YxxxhLS9g2ulHf4I7Uo9WJHDuh+glHjR3SMLU4Io+0jHLTenMHnNyjuEp8MkzkD0xNax
-         BcAdXuek/WxArqH7hMBWmi09IqZixFqomdjqlPx/If994FcFCsOwbASE7/5gGtm4A9M9
-         d82A==
-X-Gm-Message-State: APjAAAXV9U+4VzcgKuHIUj8+YvmDuNTo9VAIeZfkxIgaQd0U6KmLF10f
-        lEn27T7tVW1Nkb5PuID9MULYD/J/SnuoyJ+3Wzc=
-X-Google-Smtp-Source: APXvYqwpQBaz98Y/9V9H6sJ1Db37/4ZcSGCis4zDiJBavLcl0GEgrodGSi2UtX77t+2DyWsFZLFrE7IN/tTNVFhDrr0=
-X-Received: by 2002:a17:90a:714a:: with SMTP id g10mr12870225pjs.13.1572431406696;
- Wed, 30 Oct 2019 03:30:06 -0700 (PDT)
+        Wed, 30 Oct 2019 06:35:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572431709;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vMnBP1vJh7DVtSAEiQOC37MaYouJjw4pGK3+A/kZfEE=;
+        b=cM8ljuzJEYay75gZmV+oyfNRyuEt79+iU/NIl03OwMj7CqNFqmmIXFEjeV0yalg1EkheTg
+        cMnSANZlcKEaVys+n0aH96mfcYVEp/v6WRPyy4A9/ZckonaMjJJwANrvAx3IjIBJ2VhcVQ
+        E2F1A+OzrpEH2NGGG8A7r1ORT5uJSRI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-182-nQpbRAfROVGuuPV7vSUXZw-1; Wed, 30 Oct 2019 06:35:06 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE4321005500;
+        Wed, 30 Oct 2019 10:35:04 +0000 (UTC)
+Received: from fogou.chygwyn.com (unknown [10.33.36.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 96A3910016EB;
+        Wed, 30 Oct 2019 10:34:32 +0000 (UTC)
+Subject: Re: [PATCH] mm/filemap: do not allocate cache pages beyond end of
+ file at read
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "cluster-devel@redhat.com" <cluster-devel@redhat.com>
+References: <157225677483.3442.4227193290486305330.stgit@buzz>
+ <20191028124222.ld6u3dhhujfqcn7w@box>
+ <CAHk-=wgQ-Dcs2keNJPovTb4gG33M81yANH6KZM9d5NLUb-cJ1g@mail.gmail.com>
+ <20191028125702.xdfbs7rqhm3wer5t@box>
+ <ac83fee6-9bcd-8c66-3596-2c0fbe6bcf96@yandex-team.ru>
+ <CAHk-=who0HS=NT8U7vFDT7er_CD7+ZreRJMxjYrRXs5G6dbpyw@mail.gmail.com>
+From:   Steven Whitehouse <swhiteho@redhat.com>
+Message-ID: <f0140b13-cca2-af9e-eb4b-82eda134eb8f@redhat.com>
+Date:   Wed, 30 Oct 2019 10:34:22 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <1572423756-59943-1-git-send-email-zhongjiang@huawei.com>
-In-Reply-To: <1572423756-59943-1-git-send-email-zhongjiang@huawei.com>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Wed, 30 Oct 2019 19:29:55 +0900
-Message-ID: <CAC5umygBcEic4HXCWfFKj0ZJHo8RRzPkO959051eYoH7y4C39A@mail.gmail.com>
-Subject: Re: [PATCH] fault-inject: use DEFINE_DEBUGFS_ATTRIBUTE to define
- debugfs fops
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHk-=who0HS=NT8U7vFDT7er_CD7+ZreRJMxjYrRXs5G6dbpyw@mail.gmail.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: nQpbRAfROVGuuPV7vSUXZw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B410=E6=9C=8830=E6=97=A5(=E6=B0=B4) 17:26 zhong jiang <zhongjian=
-g@huawei.com>:
->
-> It is more clear to use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs file
-> operation rather than DEFINE_SIMPLE_ATTRIBUTE.
->
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> ---
->  lib/fault-inject.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/lib/fault-inject.c b/lib/fault-inject.c
-> index 8186ca8..4e61326 100644
-> --- a/lib/fault-inject.c
-> +++ b/lib/fault-inject.c
-> @@ -164,7 +164,7 @@ static int debugfs_ul_get(void *data, u64 *val)
->         return 0;
->  }
->
-> -DEFINE_SIMPLE_ATTRIBUTE(fops_ul, debugfs_ul_get, debugfs_ul_set, "%llu\n=
-");
-> +DEFINE_DEBUGFS_ATTRIBUTE(fops_ul, debugfs_ul_get, debugfs_ul_set, "%llu\=
-n");
->
->  static void debugfs_create_ul(const char *name, umode_t mode,
->                               struct dentry *parent, unsigned long *value=
-)
+Hi,
 
-Nowadays we have debugfs_create_ulong(), so should we use it instead of
-debugfs_create_ul() defined in this file and remove the definision
-altogether?
+On 29/10/2019 16:52, Linus Torvalds wrote:
+> On Tue, Oct 29, 2019 at 3:25 PM Konstantin Khlebnikov
+> <khlebnikov@yandex-team.ru> wrote:
+>> I think all network filesystems which synchronize metadata lazily should=
+ be
+>> marked. For example as "SB_VOLATILE". And vfs could handle them speciall=
+y.
+> No need. The VFS layer doesn't call generic_file_buffered_read()
+> directly anyway. It's just a helper function for filesystems to use if
+> they want to.
+>
+> They could (and should) make sure the inode size is sufficiently
+> up-to-date before calling it. And if they want something more
+> synchronous, they can do it themselves.
+>
+> But NFS, for example, has open/close consistency, so the metadata
+> revalidation is at open() time, not at read time.
+>
+>                 Linus
+
+NFS may be ok here, but it will break GFS2. There may be others too...=20
+OCFS2 is likely one. Not sure about CIFS either. Does it really matter=20
+that we might occasionally allocate a page and then free it again?
+
+Ramfs is a simple test case, but at the same time it doesn't represent=20
+the complexity of a real world filesystem. I'm just back from a few days=20
+holiday so apologies if I've missed something earlier on in the discussions=
+,
+
+Steve.
+
