@@ -2,98 +2,92 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9584DCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD934CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE132087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 747F220862
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:25:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ezAf+K1R"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QyTE4zhZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfJ3LXM (ORCPT
+        id S1726302AbfJ3LZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 07:23:12 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:55022 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfJ3LXM (ORCPT
+        Wed, 30 Oct 2019 07:25:02 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50699 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726065AbfJ3LZC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 07:23:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1572434588; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DjB4iFUoYSWktvHsNLF8kVnWD4Jg24XecAhOTJ8u3tE=;
-        b=ezAf+K1R07La615dGqctJMMI3yoIrBsPonied8/uMKzr3ese0kuDA2Qy8hgl8IAAHNobH5
-        OD4jfE55CpzPLVPYW+xAN2cmT2ivUXiFAc2XtKMPmEgxUPxxdU1LgR35HM9c+PyaIZE8W5
-        ItioO4nmCd0tH3/+T8Fr8VV0/PeL+PY=
-Date:   Wed, 30 Oct 2019 12:23:02 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/6] usb: musb: dma: Correct parameter passed to IRQ
- handler
-To:     Bin Liu <b-liu@ti.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        od@zcrc.me, Artur Rojek <contact@artur-rojek.eu>
-Message-Id: <1572434582.3.0@crapouillou.net>
-In-Reply-To: <20191025114710.13222-1-paul@crapouillou.net>
-References: <20191025114710.13222-1-paul@crapouillou.net>
+        Wed, 30 Oct 2019 07:25:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572434701;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=WyEl0wLRTIq+YoJeUVVm33OKOBR2PjTrxSrJAN0xprI=;
+        b=QyTE4zhZA2qZ5k6QJu2mkESVDYXWWZpj+cm0XiJ0ZeLO1uJO2ptj742ZlS+kL61sgXyV/z
+        VDh1D0/mn4yMMPWzYeS7SioLTD6Sza/FqOel1h2ZnFjdApTchPcyM6k9dYVtnvEt2FSa2w
+        m2k2M1zOUxKzHKdfPQ4IRAqzt/4HSP4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-277-gA-vopK9M4uyfpozlQqNRw-1; Wed, 30 Oct 2019 07:24:59 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 434031800D56;
+        Wed, 30 Oct 2019 11:24:58 +0000 (UTC)
+Received: from max.com (unknown [10.40.206.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C8595DA70;
+        Wed, 30 Oct 2019 11:24:52 +0000 (UTC)
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     cluster-devel@redhat.com, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] gfs2: Fix remounting (broken in -rc1)
+Date:   Wed, 30 Oct 2019 12:24:49 +0100
+Message-Id: <20191030112449.24984-1-agruenba@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: gA-vopK9M4uyfpozlQqNRw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Linus,
 
+could you please pull the following fix for gfs2?
 
-Le ven., oct. 25, 2019 at 13:47, Paul Cercueil <paul@crapouillou.net> a=20
-=E9crit :
-> The IRQ handler was passed a pointer to a struct dma_controller, but=20
-> the
-> argument was then casted to a pointer to a struct musb_dma_controller.
->=20
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Tested-by: Artur Rojek <contact@artur-rojek.eu>
-> ---
->=20
-> Notes:
->     v2: Rebase on 4.5-rc4
+Thanks,
+Andreas
 
-Typo in the changelog of this patch and the following ones: it was=20
-rebased on 5.4-rc4, obviously.
+The following changes since commit d6d5df1db6e9d7f8f76d2911707f7d5877251b02=
+:
 
+  Linux 5.4-rc5 (2019-10-27 13:19:19 -0400)
 
->=20
->  drivers/usb/musb/musbhsdma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/usb/musb/musbhsdma.c=20
-> b/drivers/usb/musb/musbhsdma.c
-> index 5fc6825745f2..2d3751d885b4 100644
-> --- a/drivers/usb/musb/musbhsdma.c
-> +++ b/drivers/usb/musb/musbhsdma.c
-> @@ -425,7 +425,7 @@ struct dma_controller=20
-> *musbhs_dma_controller_create(struct musb *musb,
->  	controller->controller.channel_abort =3D dma_channel_abort;
->=20
->  	if (request_irq(irq, dma_controller_irq, 0,
-> -			dev_name(musb->controller), &controller->controller)) {
-> +			dev_name(musb->controller), controller)) {
->  		dev_err(dev, "request_irq %d failed!\n", irq);
->  		musb_dma_controller_destroy(&controller->controller);
->=20
-> --
-> 2.23.0
->=20
+are available in the Git repository at:
 
-=
+  git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gf=
+s2-v5.4-rc5.fixes
+
+for you to fetch changes up to d5798141fd54cea074c3429d5803f6c41ade0ca8:
+
+  gfs2: Fix initialisation of args for remount (2019-10-30 12:16:53 +0100)
+
+----------------------------------------------------------------
+Fix remounting (broken in -rc1).
+
+----------------------------------------------------------------
+Andrew Price (1):
+      gfs2: Fix initialisation of args for remount
+
+ fs/gfs2/ops_fstype.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
