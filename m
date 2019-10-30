@@ -2,287 +2,158 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2CECA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C689CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C178320717
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 030D920717
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 19:58:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCrrh5U9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="LukHfIUk";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="rkU3s/Sw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfJ3T6F (ORCPT
+        id S1726684AbfJ3T6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 15:58:05 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55706 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfJ3T6E (ORCPT
+        Wed, 30 Oct 2019 15:58:36 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:57329 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfJ3T6f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 15:58:04 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g24so3419463wmh.5;
-        Wed, 30 Oct 2019 12:58:02 -0700 (PDT)
+        Wed, 30 Oct 2019 15:58:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1572465515; x=1604001515;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=7fvut1icy3HpLdm3YrqlQxNZNPZAvvZrBQTM87IWvbU=;
+  b=LukHfIUkOenweqmRQbk1eC+Da9aihUKInyT5hS5vykEcIvJB3NMXRVuR
+   E2p1f2HaHnENBuKzXwcvIlq9T+gLiQur63aRFvnptZRCGwmnBRg5D1Wvj
+   jBjYt7FHLxLuvhr+k+lssFr9ba++ju8UyRgkHB/PNNTyLZBLdjVI0oRG6
+   3c8LfljSU819tfBU2a4Qe4XlUpQkRZhn7yXnPDP1AHEW/Ms9EvzbrnzMw
+   voTv4vEytYDL0sVovuxEC/UH42KOQ/b9ZvVxdk2MHxiFg5MAFmSmhE699
+   QBNKv02VxobiP3O/rjEvLEoP3wJxjW6b6ZKRFM3vlsVTsPdaV2bFmP+r1
+   g==;
+IronPort-SDR: hDdK6Wz2Zb3+D6neVNu84EoEd5NYAOoNVuSQ5id9D9HHCII49dVjXdTPL+rhC5dMmt5wWhVeCC
+ G/F4tJAFyWgmPHeG7kfuHLWlAHLAzk79ev/dzECbGPOO4c0w7pCML3Op89dR/55uOm4/+H20nR
+ l+MzdD565tZs8PGgSRUUsjduVwVyAEq27OUS+iga0OK1PYEe5XsEeqqGvC5lGkGOWhjbnVsiyl
+ o5C1F9jLbFImtspBdREeUm7hPMM1UL9ZBFIvJWpBajTWrU64rkvwHkFrDq4YX6rTWezPzhnTyQ
+ w90=
+X-IronPort-AV: E=Sophos;i="5.68,248,1569254400"; 
+   d="scan'208";a="121731953"
+Received: from mail-bn3nam01lp2051.outbound.protection.outlook.com (HELO NAM01-BN3-obe.outbound.protection.outlook.com) ([104.47.33.51])
+  by ob1.hgst.iphmx.com with ESMTP; 31 Oct 2019 03:58:33 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W8YDnjG8EdqBz0QgOIy+TOTWZrtWsk8IkJA4lgVXZNU96rVLVTiMa6r3nSMpYcQyXCfi6nqiY36VT2XQc/zuQl2EACudM5K1DU+ZANItbzXjNWoB1/Fm8SZEFo3Z7bWMJLg/Nt2W8LgdWs57EAnjlGVN0dYHB0BKQIpUGaY28PI71tGTVHcigZizkeQysBSlHdb/pt8Y6rk4El3vHXA2QYyxE1fx+hbRhCbqxoNRym0b9713PY8JqOySqjr2wm0chFQriYcyke0iDQnNQl7KUabl5T8J+VeyZKT2Z0AGsFttZyzTVvMg2kQjonKwAH7ZTpQVp8WTG3JhKAiDKVPtrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G7In7shVqQ9uXNX9+j7iIcb0igzZCEhOJ2dSzRju/+A=;
+ b=ZV7hcestIu5MzhvisOseZZssNSRSdHJwRL7N7HBffS7Aux2evPncLgXxlzGlTd5p4eLVzTFyZdg+AtvHY1f4y7+GKRVbcOsvb9S3uQ/LuC9sN7h318dDF9rtixriWH4kCOL97o9ijnI5KQZwLz6AZxVk+gqYYqe89rA4QbIWdoWhyQKrqrL/BBBRyQie+hyxr/lnOFGGwLr1pOyqwt/O4ZaWCpb1chojABq3fMvcgZxhnDsi9N1NlbsceDdTndA+0Oqu27obx8GDwlabufGe4yawF8wOV1RzZiE8WTG0d7qMiBvt6d5x3lzv9EAIxo9Gay9qk1V2d5rZAxPwiloeRQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language;
-        bh=uJHxujovfFJ9h5r77MUYV3oU68SO0pgD7skhSfMTwQQ=;
-        b=CCrrh5U9JnxqTkLCAf0T7LsAyB2pDTxTIkiZFhLRaCwnqMwQbc2XRW5WDfmNhyA/PE
-         xqyA2L4QbZeo4CUKiIPW3gYOY5tIWKgrGRpMtRqkD+TDZ8M44xxBlOr0BSaZMnYikCPc
-         R5+Qel5ioiHEf8ZDP5Et+LInXH9j9rqj4mA4oTsLKZBGLndfUD3i8BI+JlZbxGBc7NII
-         YbZjjZ/YB7Afhhbt5Q2qu9YaLClDW49h4QuKrzQ1d4sL4reDDu+A8gBtVP/XhRzHOh2q
-         HOOVm9xCkubtHo3qfQzEPyiF5yTjXGSa8mI9OL0XGoE08Jae15XMCz96XtYbSgDHreBO
-         oYWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language;
-        bh=uJHxujovfFJ9h5r77MUYV3oU68SO0pgD7skhSfMTwQQ=;
-        b=QswqXXo4PnnoOIxusA1mhYLZcsQPhAQU3CTlbCatT8un3ElRKFbHNvLUdN04f0WYW9
-         ansXx2uGvH1t16q9NiHIJP+ZMyhcUvKaakY5DRgr3LbUcxwtQNteLzsAViTGg5CuZqyR
-         EeYe3gtLphJyFLAYJItQFGoj1v90r4w6kvC4OQcNMa0r7Mjs/Y7E74e/DnuQVY+3YLHc
-         Plfgmm5fxYERgE3d1mupvHbjRhUISO1hY+hZSMPXC4f9m5zmDDxFUhuD5qSEO+r5PdIn
-         z05uk5nPXVT2qKTpWrfpfPVHrD7VnETlcBLeWO3k4+x2DuSzKuawrDFqiV73tqXawgZG
-         rBmQ==
-X-Gm-Message-State: APjAAAUwkY5gz2e8wDMj1QrSQ4vYHOliR/3BRIqeORiK7dxFyKdyMTdb
-        izgKvhCvfuP0PZX1zg3Fy4x33gOv
-X-Google-Smtp-Source: APXvYqzkp6jTCzQD+qf30/iLJkKIhNzdF1FbQwIwOVtCurQOe3VJ6QIT4IB8D5At7B6YszwgGiLW4A==
-X-Received: by 2002:a1c:4c09:: with SMTP id z9mr1107999wmf.33.1572465481289;
-        Wed, 30 Oct 2019 12:58:01 -0700 (PDT)
-Received: from [192.168.1.19] (bkv74.neoplus.adsl.tpnet.pl. [83.28.189.74])
-        by smtp.gmail.com with ESMTPSA id b196sm1228119wmd.24.2019.10.30.12.57.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Oct 2019 12:58:00 -0700 (PDT)
-Subject: Re: [PATCH v15 06/19] leds: lp50xx: Add the LP50XX family of the RGB
- LED driver
-To:     Dan Murphy <dmurphy@ti.com>, kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, pavel@ucw.cz, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191028183629.11779-7-dmurphy@ti.com>
- <201910302027.2hNdR993%lkp@intel.com>
- <bb3473ba-ddfc-2b51-4a75-c23c5bf3bc62@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <075c9330-a9b5-1360-4447-71a4797553a9@gmail.com>
-Date:   Wed, 30 Oct 2019 20:57:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <bb3473ba-ddfc-2b51-4a75-c23c5bf3bc62@ti.com>
-Content-Type: multipart/mixed;
- boundary="------------A18F7105DE67FD7CD77E8C5B"
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G7In7shVqQ9uXNX9+j7iIcb0igzZCEhOJ2dSzRju/+A=;
+ b=rkU3s/SwtQXlcng2ZExYjlkCLGaN5PMCasxpRlSspydpnNjNR6HYzgixSlrHBcF6fpOIgf5a7NUfvo684tkpcDxgH+i+Xp7GmtZwm4019jWm07wntXzdc2zPA9+WDwKG9lIjAx6dJ3vk6wrHXIe40A5VvD72zj5bcrDV7ysIq5o=
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com (20.179.57.21) by
+ BYAPR04MB5271.namprd04.prod.outlook.com (20.178.49.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.20; Wed, 30 Oct 2019 19:58:33 +0000
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::34a1:afd2:e5c1:77c7]) by BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::34a1:afd2:e5c1:77c7%6]) with mapi id 15.20.2387.028; Wed, 30 Oct 2019
+ 19:58:33 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     Daniel Wagner <dwagner@suse.de>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+CC:     Sagi Grimberg <sagi@grimberg.me>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [RFC] nvmet: Always remove processed AER elements from list
+Thread-Topic: [RFC] nvmet: Always remove processed AER elements from list
+Thread-Index: AQHVjzYhgmqnvQGm+02Suay/wXEq1Q==
+Date:   Wed, 30 Oct 2019 19:58:32 +0000
+Message-ID: <BYAPR04MB5749158C2EBD47FC48A79FF286600@BYAPR04MB5749.namprd04.prod.outlook.com>
+References: <20191030152418.23753-1-dwagner@suse.de>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
+x-originating-ip: [199.255.45.62]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f6cb92c6-92c6-4062-0ffe-08d75d738af4
+x-ms-traffictypediagnostic: BYAPR04MB5271:
+x-microsoft-antispam-prvs: <BYAPR04MB52715BADA6842BCDDCFBEED786600@BYAPR04MB5271.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 02065A9E77
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(39860400002)(366004)(136003)(396003)(199004)(189003)(64756008)(305945005)(7736002)(2501003)(316002)(53546011)(186003)(6506007)(99286004)(76176011)(26005)(102836004)(52536014)(14444005)(7696005)(54906003)(74316002)(3846002)(66446008)(33656002)(256004)(66476007)(6116002)(25786009)(2906002)(110136005)(5660300002)(66946007)(66556008)(14454004)(8676002)(66066001)(478600001)(229853002)(76116006)(446003)(4326008)(81166006)(81156014)(6436002)(71200400001)(6246003)(9686003)(476003)(486006)(86362001)(71190400001)(55016002)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5271;H:BYAPR04MB5749.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZsqYO+yV7FAjp29DJlg9sYYlyAdF1B+JsXidZFe4X6b4tdyT3XFGQZOqajG3Yp5I8eUepRBEigEzYpHjWcRCoU4IG3Fb5lzS95uzfqmJkm3tgKrEpDacj8OyxwH8gxlC5fo2xiUluQlgs+dlxrCj0YK3WhgZpGbUOu2oVnPzs/9ZT1AWSi7v5bvIWgucZRIHQJknI5l/JN8tW1DKQrYFx5aPirXCbHfUXYkEuxsn6/GFHPL0S+MPNBFsBENBGMjrLgENKPxxdrLbYSCjtpyTwv4g1oGVZd6RrMYui54I/cAP6rFX8vzvgAcqZHv5VsuZpMBeG27aPfC7GPh7Iu6NUtzNBgvIiVM6+5ggufql+LjO9CnRSxOtERu1QOmy8nNhazgNJ7UV7rE5NiJ+2TYFhwm+KDnJR4x+h/25ZB01Cok6tB2hXTlZeDaXW2pkMr5E
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6cb92c6-92c6-4062-0ffe-08d75d738af4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 19:58:32.8318
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xfMHjrxZCeXkn+qLBsNeRAn2dKR6sUZTqLGlYpl8Xe7wYOv36jzInAyQikXOAPiSpqaPpzg6mQPAdgHAhFxwPn/8wWEbgWzB0ts6YCw68mE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5271
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------A18F7105DE67FD7CD77E8C5B
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-
-Dan,
-
-On 10/30/19 5:41 PM, Dan Murphy wrote:
-> Hello
-> 
-> On 10/30/19 7:07 AM, kbuild test robot wrote:
->> Hi Dan,
->>
->> I love your patch! Yet something to improve:
->>
->> [auto build test ERROR on j.anaszewski-leds/for-next]
->> [also build test ERROR on v5.4-rc5 next-20191029]
-> 
-> I went to both these references and I do not see this patchset on either
-> of these.
-
-This branch is temporarily created by build bot by applying patch sets
-from lists on top of linux-leds for-next branch.
-
->> [if your patch is applied to the wrong git tree, please drop us a note
->> to help
->> improve the system. BTW, we also suggest to use '--base' option to
->> specify the
->> base tree in git format-patch, please see
->> https://stackoverflow.com/a/37406982]
->>
->> url:   
->> https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework/20191030-144320
->>
-> It appears here though
->> base:  
->> https://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git
->> for-next
-> 
-> Does not appear here
-> 
-> Finally not sure why the MIPS compiler is complaining about this but the
-> ARM and x86 is not
-
-Compilation breaks also for ARM.
-
-This is not architecture specific but language specific thing.
-
-If you enter this error message got Google you will get an answer
-to why this happens in the first result.
-
-You need to patch your driver with the attached one.
-
--- 
-Best regards,
-Jacek Anaszewski
-
---------------A18F7105DE67FD7CD77E8C5B
-Content-Type: text/x-patch;
- name="fix_lp50xx_struct_initialization.patch"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment;
- filename="fix_lp50xx_struct_initialization.patch"
-
-diff --git a/drivers/leds/leds-lp50xx.c b/drivers/leds/leds-lp50xx.c
-index 76ca5cc1347c..52246565f15d 100644
---- a/drivers/leds/leds-lp50xx.c
-+++ b/drivers/leds/leds-lp50xx.c
-@@ -336,7 +336,7 @@ enum lp50xx_model {
-  * @reset_reg: device reset register
-  */
- struct lp50xx_chip_info {
--	const struct regmap_config lp50xx_regmap_config;
-+	const struct regmap_config *lp50xx_regmap_config;
- 	int model_id;
- 	u8 max_modules;
- 	u8 num_leds;
-@@ -357,7 +357,7 @@ static const struct lp50xx_chip_info lp50xx_chip_info=
-_tbl[] =3D {
- 		.bank_brt_reg =3D LP5012_BNK_BRT,
- 		.bank_mix_reg =3D LP5012_BNKA_CLR,
- 		.reset_reg =3D LP5012_RESET,
--		.lp50xx_regmap_config =3D lp5012_regmap_config,
-+		.lp50xx_regmap_config =3D &lp5012_regmap_config,
- 	},
- 	[LP5012] =3D {
- 		.model_id =3D LP5012,
-@@ -368,7 +368,7 @@ static const struct lp50xx_chip_info lp50xx_chip_info=
-_tbl[] =3D {
- 		.bank_brt_reg =3D LP5012_BNK_BRT,
- 		.bank_mix_reg =3D LP5012_BNKA_CLR,
- 		.reset_reg =3D LP5012_RESET,
--		.lp50xx_regmap_config =3D lp5012_regmap_config,
-+		.lp50xx_regmap_config =3D &lp5012_regmap_config,
- 	},
- 	[LP5018] =3D {
- 		.model_id =3D LP5018,
-@@ -379,7 +379,7 @@ static const struct lp50xx_chip_info lp50xx_chip_info=
-_tbl[] =3D {
- 		.bank_brt_reg =3D LP5024_BNK_BRT,
- 		.bank_mix_reg =3D LP5024_BNKA_CLR,
- 		.reset_reg =3D LP5024_RESET,
--		.lp50xx_regmap_config =3D lp5024_regmap_config,
-+		.lp50xx_regmap_config =3D &lp5024_regmap_config,
- 	},
- 	[LP5024] =3D {
- 		.model_id =3D LP5024,
-@@ -390,7 +390,7 @@ static const struct lp50xx_chip_info lp50xx_chip_info=
-_tbl[] =3D {
- 		.bank_brt_reg =3D LP5024_BNK_BRT,
- 		.bank_mix_reg =3D LP5024_BNKA_CLR,
- 		.reset_reg =3D LP5024_RESET,
--		.lp50xx_regmap_config =3D lp5024_regmap_config,
-+		.lp50xx_regmap_config =3D &lp5024_regmap_config,
- 	},
- 	[LP5030] =3D {
- 		.model_id =3D LP5030,
-@@ -401,7 +401,7 @@ static const struct lp50xx_chip_info lp50xx_chip_info=
-_tbl[] =3D {
- 		.bank_brt_reg =3D LP5036_BNK_BRT,
- 		.bank_mix_reg =3D LP5036_BNKA_CLR,
- 		.reset_reg =3D LP5036_RESET,
--		.lp50xx_regmap_config =3D lp5036_regmap_config,
-+		.lp50xx_regmap_config =3D &lp5036_regmap_config,
- 	},
- 	[LP5036] =3D {
- 		.model_id =3D LP5036,
-@@ -412,7 +412,7 @@ static const struct lp50xx_chip_info lp50xx_chip_info=
-_tbl[] =3D {
- 		.bank_brt_reg =3D LP5036_BNK_BRT,
- 		.bank_mix_reg =3D LP5036_BNKA_CLR,
- 		.reset_reg =3D LP5036_RESET,
--		.lp50xx_regmap_config =3D lp5036_regmap_config,
-+		.lp50xx_regmap_config =3D &lp5036_regmap_config,
- 	},
- };
-=20
-@@ -716,7 +716,7 @@ static int lp50xx_probe(struct i2c_client *client,
- 	i2c_set_clientdata(client, led);
-=20
- 	led->regmap =3D devm_regmap_init_i2c(client,
--					&led->chip_info->lp50xx_regmap_config);
-+					led->chip_info->lp50xx_regmap_config);
- 	if (IS_ERR(led->regmap)) {
- 		ret =3D PTR_ERR(led->regmap);
- 		dev_err(&client->dev, "Failed to allocate register map: %d\n",
-
---------------A18F7105DE67FD7CD77E8C5B--
+On 10/30/2019 08:24 AM, Daniel Wagner wrote:=0A=
+> Hi,=0A=
+>=0A=
+> I've got following oops:=0A=
+>=0A=
+> PID: 79413  TASK: ffff92f03a814ec0  CPU: 19  COMMAND: "kworker/19:2"=0A=
+> #0 [ffffa5308b8c3c58] machine_kexec at ffffffff8e05dd02=0A=
+> #1 [ffffa5308b8c3ca8] __crash_kexec at ffffffff8e12102a=0A=
+> #2 [ffffa5308b8c3d68] crash_kexec at ffffffff8e122019=0A=
+> #3 [ffffa5308b8c3d80] oops_end at ffffffff8e02e091=0A=
+> #4 [ffffa5308b8c3da0] general_protection at ffffffff8e8015c5=0A=
+>      [exception RIP: nvmet_async_event_work+94]=0A=
+>      RIP: ffffffffc0d9a80e  RSP: ffffa5308b8c3e58  RFLAGS: 00010202=0A=
+>      RAX: dead000000000100  RBX: ffff92dcbc7464b0  RCX: 0000000000000002=
+=0A=
+>      RDX: 0000000000040002  RSI: 38ffff92dc9814cf  RDI: ffff92f217722f20=
+=0A=
+>      RBP: ffff92dcbc746418   R8: 0000000000000000   R9: 0000000000000000=
+=0A=
+>      R10: 000000000000035b  R11: ffff92efb8dd2091  R12: ffff92dcbc7464a0=
+=0A=
+>      R13: ffff92dbe03a5f29  R14: 0000000000000000  R15: 0ffff92f92f26864=
+=0A=
+>      ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018=0A=
+> #5 [ffffa5308b8c3e78] process_one_work at ffffffff8e0a3b0c=0A=
+> #6 [ffffa5308b8c3eb8] worker_thread at ffffffff8e0a41e7=0A=
+> #7 [ffffa5308b8c3f10] kthread at ffffffff8e0a93af=0A=
+> #8 [ffffa5308b8c3f50] ret_from_fork at ffffffff8e800235=0A=
+>=0A=
+> this maps to nvmet_async_event_results. So it looks like this function=0A=
+> access a stale aen pointer:=0A=
+>=0A=
+> static u32 nvmet_async_event_result(struct nvmet_async_event *aen)=0A=
+> {=0A=
+>          return aen->event_type | (aen->event_info << 8) | (aen->log_page=
+ << 16);=0A=
+> }=0A=
+Can you please explain the test setup ? Is that coming from the tests =0A=
+present in the blktests ? if so you can please provide test number ?=0A=
