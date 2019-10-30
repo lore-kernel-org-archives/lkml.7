@@ -2,87 +2,83 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6780CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C448CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 719D02087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:47:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Clox7xbM"
+	by mail.kernel.org (Postfix) with ESMTP id 239432087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:48:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfJ3Qry (ORCPT
+        id S1727208AbfJ3QsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:47:54 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:53138 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbfJ3Qry (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 12:47:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Zygts5mueFdRJmMbOPGfShgTrgo9xozW9Q5Ph5M0FH4=; b=Clox7xbMY9ZXoruc4Xyerj/A+
-        vl+aW6bq4YUfUu800KGtoEObSRfZQDiia+oEA/RRDZeSLQSkeKmMaGfpcbx0UzcK87bTHuynid8ZA
-        3h3E08cORTMljc0qF9vqMlsll7iADMV1xOeRH4Q183oMryIDo28z3HAj+QE7BU/7FV1m7Y2qxqwcN
-        GtH/b0uyByAo4Lcov4blEQan/GTyLyrqO1D/tugp7JRmPEOwsfukPZ/ZcEndyiVgr3lkuvCaudsO9
-        xHOfp7az5/JkO8LoRPfHJ+c6MjUbCublnaGHP0pDIfoOSQQone1UyRYnT27O9KmvVI+WM7uhdiV2R
-        3Vt06qXcQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPr8M-0002xK-7o; Wed, 30 Oct 2019 16:47:46 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A25AE3060AD;
-        Wed, 30 Oct 2019 17:46:42 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DDFDE2B444DB8; Wed, 30 Oct 2019 17:47:43 +0100 (CET)
-Date:   Wed, 30 Oct 2019 17:47:43 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Wed, 30 Oct 2019 12:48:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:38060 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726626AbfJ3QsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 12:48:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D50E31F;
+        Wed, 30 Oct 2019 09:48:18 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B27D93F6C4;
+        Wed, 30 Oct 2019 09:48:15 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 16:48:13 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     linux-mm@kvack.org, Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
-        juri.lelli@redhat.com, williams@redhat.com, bristot@redhat.com,
-        longman@redhat.com, dave@stgolabs.net, jack@suse.com
-Subject: Re: [PATCH] locking/percpu_rwsem: Rewrite to not use rwsem
-Message-ID: <20191030164743.GU4114@hirez.programming.kicks-ass.net>
-References: <20190805140241.GI2332@hirez.programming.kicks-ass.net>
- <20190807144305.v55fohssujsqtegb@willie-the-truck>
- <20191029190624.GB3079@worktop.programming.kicks-ass.net>
- <20191030155720.GA20713@redhat.com>
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v14 19/22] mm: Add generic ptdump
+Message-ID: <20191030164812.GD13309@arrakis.emea.arm.com>
+References: <20191028135910.33253-1-steven.price@arm.com>
+ <20191028135910.33253-20-steven.price@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191030155720.GA20713@redhat.com>
+In-Reply-To: <20191028135910.33253-20-steven.price@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 04:57:20PM +0100, Oleg Nesterov wrote:
-> On 10/29, Peter Zijlstra wrote:
-> >
-> > That said, I think cgroups use a variant of percpu-rwsem that wreck rss
-> > on purpose and always take the slowpaths.
-> 
-> I forgot (never understodd) why does Android need this.
-> 
-> I am wondering if it makes any sense to add a config/boot or even runtime
-> knob for cgroup_threadgroup_rwsem.
+On Mon, Oct 28, 2019 at 01:59:07PM +0000, Steven Price wrote:
+> +struct ptdump_state {
+> +	void (*note_page)(struct ptdump_state *st, unsigned long addr,
+> +			  int level, unsigned long val);
+> +	const struct ptdump_range *range;
+> +};
 
-It isn't just Android, but Android in specific likes to move tasks
-between cgroups a lot.
+It would be nice to have a comment above note_page about what 'level'
+actually means...
 
-And moving tasks between cgroups is what requires the write-side of the
-cgroup percpu-rwsem to be taken. Adding an RCU-GP to every task movement
-wasn't making them happy (which I can understand).
+[...]
+> +static int ptdump_hole(unsigned long addr, unsigned long next,
+> +		       int depth, struct mm_walk *walk)
+> +{
+> +	struct ptdump_state *st = walk->private;
+> +
+> +	st->note_page(st, addr, depth + 1, 0);
 
+... as it took me a while to figure out why you 'depth + 1' here.
+
+But see my other reply on the arm64 patch. Is it possible to align depth
+and level here to have the same range?
+
+-- 
+Catalin
