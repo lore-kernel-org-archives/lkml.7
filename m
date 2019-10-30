@@ -2,151 +2,164 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0639BCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C87ACA9ECB
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE67121906
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D40F821925
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 22:43:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="eLeq02PK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hu5aYBUc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbfJ3WnH (ORCPT
+        id S1727523AbfJ3WnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 18:43:07 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:52165 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfJ3WnG (ORCPT
+        Wed, 30 Oct 2019 18:43:10 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32778 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbfJ3WnI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 18:43:06 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 834D622EE4;
-        Wed, 30 Oct 2019 23:43:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1572475383;
-        bh=2nqBdwy/goa8bNtLuPpQtky+yG6Rfoal/1lI2pumSNk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eLeq02PKY8brujBPsziiI5NjHTblaCm4jqgLH0SoMxDX8AG2FjQVDFFE5qa1+Zp14
-         RYf2jCLTxz0qJlr5W87w+u2kdkh3VxuxzDyA+Fd3Dx2c8eNHfRZI793eko1MH3lLQf
-         fe7ZWvmM91gYAuxn95UFQU8H58MNjkzds+DMfBoA=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     Michael Walle <michael@walle.cc>
-Subject: [RFC PATCH 2/3] dt-bindings: net: phy: Add support for AT803X
-Date:   Wed, 30 Oct 2019 23:42:50 +0100
-Message-Id: <20191030224251.21578-3-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191030224251.21578-1-michael@walle.cc>
-References: <20191030224251.21578-1-michael@walle.cc>
+        Wed, 30 Oct 2019 18:43:08 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u23so2538452pgo.0;
+        Wed, 30 Oct 2019 15:43:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=y0oPUoFzTii7ISlKgBqFiFMQKVFEygUTi9cyMnkiLCk=;
+        b=Hu5aYBUcdoSDd90QlvKV/W8VXrJZeQw3jJdITe9I0iSl/Lt8Jm0Y03uMXbwhymKSe1
+         Eg/QToOWKxh6uOdgU38ghvs1Y+zwBpbgMmqRxZsgR8j4cK+EoLtPQvFUNwLEdfAHiXkH
+         1fKRURZoRJJU01e0ljT5raVLUFZaONGBW+vEwoH8mUBFQYqFCDM8jdlGYloZBCPlq770
+         VDvAAYHT5RF8XtZmrHoVbaLJyu7CMVcvgnXLeXKDDGPw6v7IZSIhn26BQDlHKFO0D6xM
+         pdkczxZlkBPvfxnEqve1mTorhjZJYw/jaiyDvaCeAttFaU+m6qECOYbFWGJmsMTpcDvZ
+         vEHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y0oPUoFzTii7ISlKgBqFiFMQKVFEygUTi9cyMnkiLCk=;
+        b=RG44ZwCbdHn3cAb+J88iYW5ZCag1KqaYf0F1/45q0g0HCq4ngFW7QThtpx9QggN0Go
+         VlebkohWH1LfL3+oRyXfGhVrxATscnJV2ZX+8/dwGPgcE8ZLThYdtFpe+k+aE5xJrBRW
+         Vf9SUrO6lbmrBLJnBrB7kAxoinhcgcFXAHQ4jnPvxA8JMWzQ/zuKPp3vuEnQX+33hQfq
+         kQN9XHrzQe5gW17SA1M6exDVhYunIGQsHyRO8iJ/Kpd4RTgPBwvmfu2aOS+yDCIHZEUm
+         n1PC2WWvwBX/kzt7S4lRP9GigpKbblOQzTv8oGZdla4QilMw6jGFqwA3PxYUZEynzdo5
+         zVvQ==
+X-Gm-Message-State: APjAAAVQz/h1QwCtOFqd1gURf9ysd+WJLXuzuJ4AmMSWwKkWK78Hf4mq
+        bmaNzvOjxUru0kEuhb9KIGY=
+X-Google-Smtp-Source: APXvYqyBfb9xuS39HM2yTn0aXyuVgz6M19c7eUmnE1VDN25ZFMX/dAt+2dtxP09MoQIhtjclqeUCog==
+X-Received: by 2002:a17:90a:5d0f:: with SMTP id s15mr2135497pji.126.1572475387770;
+        Wed, 30 Oct 2019 15:43:07 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id x7sm1100750pff.0.2019.10.30.15.43.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 15:43:06 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 15:43:04 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v6 00/15] software node: add support for reference
+ properties
+Message-ID: <20191030224304.GH57214@dtor-ws>
+References: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.101.4 at web
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the Atheros AR803x PHY bindings.
+Hi Rafael,
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- .../bindings/net/atheros,at803x.yaml          | 58 +++++++++++++++++++
- include/dt-bindings/net/atheros-at803x.h      | 13 +++++
- 2 files changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/atheros,at803x.yaml
- create mode 100644 include/dt-bindings/net/atheros-at803x.h
+On Wed, Oct 23, 2019 at 01:02:18PM -0700, Dmitry Torokhov wrote:
+> These series implement "references" properties for software nodes as true
+> properties, instead of managing them completely separately.
+> 
+> The first 10 patches are generic cleanups and consolidation and
+> unification of the existing code; patch #11 implements moving of small
+> properties inline when copying property entries; patch #12 implements
+> PROPERTY_ENTRY_REF() and friends; patch #13 converts the user of
+> references to the property syntax, and patch #14 removes the remains of
+> references as entities that are managed separately.
+> 
+> Patch #15 adds unit tests to verify that the handling of property
+> entries is correct.
 
-diff --git a/Documentation/devicetree/bindings/net/atheros,at803x.yaml b/Documentation/devicetree/bindings/net/atheros,at803x.yaml
-new file mode 100644
-index 000000000000..60500fd90fd8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/atheros,at803x.yaml
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/atheros,at803x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Atheros AR803x PHY
-+
-+maintainers:
-+  - TBD
-+
-+description: |
-+  Bindings for Atheros AR803x PHYs
-+
-+allOf:
-+  - $ref: ethernet-phy.yaml#
-+
-+properties:
-+  atheros,clk-out-frequency:
-+    description: Clock output frequency in Hertz.
-+    enum: [ 25000000, 50000000, 62500000, 125000000 ]
-+
-+  atheros,clk-out-strength:
-+    description: Clock output driver strength.
-+    enum: [ 0, 1, 2 ]
-+
-+  atheros,keep-pll-enabled:
-+    description: |
-+      If set, keep the PLL enabled even if there is no link. Useful if you
-+      want to use the clock output without an ethernet link.
-+    type: boolean
-+
-+  atheros,rgmii-io-1v8:
-+    description: |
-+      The PHY supports RGMII I/O voltages of 2.5V, 1.8V and 1.5V. By default,
-+      the PHY uses a voltage of 1.5V. If this is set, the voltage will changed
-+      to 1.8V.
-+      The 2.5V voltage is only supported with an external supply voltage.
-+    type: boolean
-+
-+examples:
-+  - |
-+    #include <dt-bindings/net/atheros-at803x.h>
-+
-+    ethernet {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        phy-mode = "rgmii-id";
-+
-+        ethernet-phy@0 {
-+            reg = <0>;
-+
-+            atheros,clk-out-frequency = <125000000>;
-+            atheros,clk-out-strength = <AT803X_STRENGTH_FULL>;
-+            atheros,rgmii-io-1v8;
-+        };
-+    };
-diff --git a/include/dt-bindings/net/atheros-at803x.h b/include/dt-bindings/net/atheros-at803x.h
-new file mode 100644
-index 000000000000..63b4fd10b2c6
---- /dev/null
-+++ b/include/dt-bindings/net/atheros-at803x.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Device Tree constants for the Atheros AR803x PHYs
-+ */
-+
-+#ifndef _DT_BINDINGS_ATHEROS_AR803X_H
-+#define _DT_BINDINGS_ATHEROS_AR803X_H
-+
-+#define AT803X_STRENGTH_FULL		0
-+#define AT803X_STRENGTH_HALF		1
-+#define AT803X_STRENGTH_QUARTER		2
-+
-+#endif
+Do you have any concerns with the series? I think Andy did all the
+reviewing that he could...
+
+Thanks!
+
+> 
+> Changes in v6:
+> - rebased onto next-20191023
+> - fixed patch moving small properties inline
+> - fixed handling boolean properties after is_array -> is_inline
+>   conversion
+> - changed comments around is_inline "stored directly" vs embedded
+>   in one place (Andy)
+> - added unit tests for property entries based on KUnit framework
+> - added Any's reviewed-by/acked-by
+> 
+> Changes in v5:
+> - rebased onto next-20191011
+> 
+> Changes in v4:
+> - dealt with union aliasing concerns
+> - inline small properties on copy
+> 
+> Changes in v3:
+> - added various cleanups before implementing reference properties
+> 
+> Changes in v2:
+> - reworked code so that even single-entry reference properties are
+>   stored as arrays (i.e. the software_node_ref_args instances are
+>   not part of property_entry structure) to avoid size increase.
+>   From user's POV nothing is changed, one can still use PROPERTY_ENTRY_REF
+>   macro to define reference "inline".
+> - dropped unused DEV_PROP_MAX
+> - rebased on linux-next
+> 
+> Dmitry Torokhov (15):
+>   software node: remove DEV_PROP_MAX
+>   software node: introduce PROPERTY_ENTRY_ARRAY_XXX_LEN()
+>   efi/apple-properties: use PROPERTY_ENTRY_U8_ARRAY_LEN
+>   software node: mark internal macros with double underscores
+>   software node: clean up property_copy_string_array()
+>   software node: get rid of property_set_pointer()
+>   software node: remove property_entry_read_uNN_array functions
+>   software node: unify PROPERTY_ENTRY_XXX macros
+>   software node: simplify property_entry_read_string_array()
+>   software node: rename is_array to is_inline
+>   software node: move small properties inline when copying
+>   software node: implement reference properties
+>   platform/x86: intel_cht_int33fe: use inline reference properties
+>   software node: remove separate handling of references
+>   software node: add basic tests for property entries
+> 
+>  drivers/base/swnode.c                         | 263 ++++------
+>  drivers/base/test/Makefile                    |   2 +
+>  drivers/base/test/property-entry-test.c       | 472 ++++++++++++++++++
+>  drivers/firmware/efi/apple-properties.c       |  18 +-
+>  .../platform/x86/intel_cht_int33fe_typec.c    |  81 +--
+>  include/linux/property.h                      | 178 +++----
+>  6 files changed, 702 insertions(+), 312 deletions(-)
+>  create mode 100644 drivers/base/test/property-entry-test.c
+> 
+> -- 
+> 2.23.0.866.gb869b98d4c-goog
+> 
+
 -- 
-2.20.1
-
+Dmitry
