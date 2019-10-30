@@ -2,85 +2,161 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4D9CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1490CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27AA220873
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75B7520862
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 21:36:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H6kn4x8e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8LlcTkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfJ3VgA (ORCPT
+        id S1727311AbfJ3Vfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 17:36:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37434 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727285AbfJ3Vf6 (ORCPT
+        Wed, 30 Oct 2019 17:35:34 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35522 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbfJ3Vfc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 17:35:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=oZE9PLQkCNqVdXZKdyI2tvc9yH25xqcUJOKWm/BFDc4=; b=H6kn4x8eafHW+zT8MA8DZo/7m
-        10m3usqaiRcsUGtruQ1nB9zh4kFZuo3BtMRMQvgvkwcftfx5ss2voVRdDWvgjNSQaCuiVO1kpgZUi
-        m+fiVa9aKYKxxSmTgN6OvCofwC1LLKg0CH9JBFEPANHerRoT71FRlKcovaJrnNFDd/UXSxHV4mhiV
-        4Uc6dgAxfO602UaQiF/v9SyeuluZf6h7LXyt6AXiC/L+CqZp0EDfWr7O92UalLHiJd4KribvJ5CkA
-        3rmnr4AVikO9CH08MyUoXJaGzX5TZ4Z5/2XEpzQSCVGFsDajuvmWd2aLXjLtS6bjSCI0VPSHre31F
-        P9JTWBSiQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPvdD-0008Vj-UC; Wed, 30 Oct 2019 21:35:55 +0000
-Date:   Wed, 30 Oct 2019 14:35:55 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v3 0/8] drivers: add new variants of
- devm_platform_ioremap_resource()
-Message-ID: <20191030213555.GA25515@infradead.org>
-References: <20191006053916.8849-1-brgl@bgdev.pl>
- <CAMRc=Me3Q=67fCDrFM38LAGXCd+apJybLYVfyrfwmwYa5L1CmQ@mail.gmail.com>
- <CAK8P3a3tUg4SBtO0xb2GAHfegp23WF4TLymzqFfra2-fGLRO7w@mail.gmail.com>
- <CAMRc=Me8g2gFiag0UQwuu4UZONcowQw900+MUbGF+4-E0z09Zg@mail.gmail.com>
- <CAK8P3a2mh+Eh+W1GFL2Mi5R3t55SRwWyXW_iBxXB-nBhdCO8LA@mail.gmail.com>
+        Wed, 30 Oct 2019 17:35:32 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y6so2779258lfj.2;
+        Wed, 30 Oct 2019 14:35:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=UXRoHcvapztDcfGo7L2UwrKkYpLR6LIFA1LRvGGCLHM=;
+        b=X8LlcTkO5qk6BAPnP/ZDsx2WqswLMh/PlzCz3X1hCOJIvQTHIwF2xYPwuJoKli2k5c
+         PN5cSfqN74IuCdT7Laf3+KG7RXFG60EYCO/SmsX8mkjZ5+UbHD+BCtMBy4s/MUksEwxE
+         dadFFVkMwiBC3SruJ8i1sdTrX7Yv5vL1ERb+MMAw0hS5nNVdr12lq3a4xZpuuBE26knl
+         bkVm6XP8TRAxwzuBAI9iQxvm1nDvKJg4o9iNFrRqR0UBHISpEx7GHPOUTWyipadkOt+G
+         4As6deKLK54f/UUdAAiMazMVLfAc2V40ETjUPCTQW8FCKQ6iWLCjDv9ke9OyRqJRkrZf
+         nLAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=UXRoHcvapztDcfGo7L2UwrKkYpLR6LIFA1LRvGGCLHM=;
+        b=s9ksIqhlY8mrl6x6EczDU0bymS7tkIYkkpftFojQ8keLnKGkDaNp36FoENGMYJSkB8
+         FsjJCScpd8sYbudXwI28enXlaJm1oUhyT33xgbPqoAxlcErZoc/7q5jTOAVofnxK3TX6
+         MIjAYoQiD1GKwoZGNv6CdoRYwpx14kkt3vOnNTSP3e+0LxvQp3yjkkYk2VfEtdd4AxM5
+         Xlq/ECt72V4pr5a/zpbtLZcnvPYfyX2cBG/agwd6WrXxXABD3dxpcmm7cxTZNvIeLuir
+         Xedpe3heEve6ePR+w7Up7IwJ/KNyMxD/JEt10cx2mGrc8/hyl9+sKmhlOGxDpAQWbsHd
+         qpWg==
+X-Gm-Message-State: APjAAAV49Zg/BZJUfWLXEHegllE/qWKgHHgU57jYIrsQ+HEXBKPtctfm
+        evbgqB6bbjEHTMkUHZHWDao=
+X-Google-Smtp-Source: APXvYqz85dLnDyS/EvxduG8znGwSF4AE/WsU/G0Mpxr0dk7od8G9sPwJG5DaAu+AziQ2Jv3Raq97OQ==
+X-Received: by 2002:ac2:5328:: with SMTP id f8mr258782lfh.128.1572471330483;
+        Wed, 30 Oct 2019 14:35:30 -0700 (PDT)
+Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.gmail.com with ESMTPSA id c24sm553812lfm.20.2019.10.30.14.35.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 14:35:29 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 06/10] dt-bindings: cpufreq: Add binding for NVIDIA Tegra20/30
+Date:   Thu, 31 Oct 2019 00:33:56 +0300
+Message-Id: <20191030213400.29434-7-digetx@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191030213400.29434-1-digetx@gmail.com>
+References: <20191030213400.29434-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2mh+Eh+W1GFL2Mi5R3t55SRwWyXW_iBxXB-nBhdCO8LA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 09:29:30PM +0200, Arnd Bergmann wrote:
-> > Is Christoph's work in next? The series doesn't apply cleanly on next,
-> > I needed to fix a couple conflicts. What branch should I rebase it on
-> > before resending?
-> 
-> Not sure, maybe Christoph can comment.
-> 
-> Your patches would best go through the char-misc tree and be based
-> on top of that, for Christoph's I think the idea is to have some go
-> through the architecture maintainer trees, and have whatever is
-> left go through my asm-generic tree.
+Add device-tree binding that describes CPU frequency-scaling hardware
+found on NVIDIA Tegra20/30 SoCs.
 
-Actually I thought of just doing an ioremap tree for this merge window.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ .../cpufreq/nvidia,tegra20-cpufreq.txt        | 56 +++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
 
-What kind of changes does Bartosz have?  I'm kinda missing the context
-here.
+diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+new file mode 100644
+index 000000000000..daeca6ae6b76
+--- /dev/null
++++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+@@ -0,0 +1,56 @@
++Binding for NVIDIA Tegra20 CPUFreq
++==================================
++
++Required properties:
++- clocks: Must contain an entry for the CPU clock.
++  See ../clocks/clock-bindings.txt for details.
++- operating-points-v2: See ../bindings/opp/opp.txt for details.
++- #cooling-cells: Should be 2. See ../thermal/thermal.txt for details.
++
++For each opp entry in 'operating-points-v2' table:
++- opp-supported-hw: Two bitfields indicating:
++	On Tegra20:
++	1. CPU process ID mask
++	2. SoC speedo ID mask
++
++	On Tegra30:
++	1. CPU process ID mask
++	2. CPU speedo ID mask
++
++	A bitwise AND is performed against these values and if any bit
++	matches, the OPP gets enabled.
++
++- opp-microvolt: CPU voltage triplet.
++
++Optional properties:
++- cpu-supply: Phandle to the CPU power supply.
++
++Example:
++	regulators {
++		cpu_reg: regulator0 {
++			regulator-name = "vdd_cpu";
++		};
++	};
++
++	cpu0_opp_table: opp_table0 {
++		compatible = "operating-points-v2";
++
++		opp@456000000 {
++			clock-latency-ns = <125000>;
++			opp-microvolt = <825000 825000 1125000>;
++			opp-supported-hw = <0x03 0x0001>;
++			opp-hz = /bits/ 64 <456000000>;
++		};
++
++		...
++	};
++
++	cpus {
++		cpu@0 {
++			compatible = "arm,cortex-a9";
++			clocks = <&tegra_car TEGRA20_CLK_CCLK>;
++			operating-points-v2 = <&cpu0_opp_table>;
++			cpu-supply = <&cpu_reg>;
++			#cooling-cells = <2>;
++		};
++	};
+-- 
+2.23.0
+
