@@ -2,146 +2,150 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F1DCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E05B1CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D01A02067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BADBE2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 18:23:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NS0T9NTn"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="n73Fs9YN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbfJ3SWX (ORCPT
+        id S1726973AbfJ3SXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 14:22:23 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37063 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbfJ3SWX (ORCPT
+        Wed, 30 Oct 2019 14:23:23 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38791 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbfJ3SXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 14:22:23 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p1so2025194pgi.4;
-        Wed, 30 Oct 2019 11:22:22 -0700 (PDT)
+        Wed, 30 Oct 2019 14:23:23 -0400
+Received: by mail-ed1-f66.google.com with SMTP id y8so2583285edu.5
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 11:23:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RMrszFJgqQZnz4BQZjFom+3bPfD40qA/+5eRpXchJeY=;
-        b=NS0T9NTn2sGO0rWBgW+4jVzupq39TCXDMIQTAD01DlJUEUxJasNRvYxTN7lhEcBxAO
-         MJnXnU2YnlB5hJLWIYhhQJPobtXE07VNl3h8cPpZX3RaQK2Pqvysp1i2oTAKqoR3uMdB
-         f74lLKWqLpqaNrN2EaQK/FTBSE2S4Qv2LdoxZObnuHBUKJCh31lwglekb9hOGGovtoVY
-         W3N8p/9IH+gPHj8dmWQ0VB+tMf4EwMbPdE1UrNf6MUdlk3VrGn2jM11wUEeN7LnpIuAv
-         MI2oK0TN/QUT5PpN2X0uZKU1TKX2+lL87m6iXHXsAGNam2rQmBqKAl9+YixKSr966MBy
-         6BUg==
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Lxy6IprtXZdN1Ywem6LzRdwBXd8vho1sAHNiae8FLkc=;
+        b=n73Fs9YNQtX1WLpOp/DvW7Jo0Rg47SCxO1onvdEWmm0oFIplwMPhi1j369yqnLzedG
+         WZWf1Mc/JN7Esy7Vz1u5CuNHu+0okYW1bPkGw1vvcbpSsdCi709aM9D+Fak2qjJi9szW
+         jRGyrqqiAVur1HuEJL6zXGspvAVCwHNYNsWsIrnGyHhxy2IXHVjbHVPDhKewKBAxvK2L
+         xo6DU9eEYjUk30W9LvA6d3fdjZrJfHkSajP1d7W+S72FyHHAxBRU3joh7LMtUiYpDdGd
+         apTtQHWAqRlreFj7iVMuenjFAyQR9xBZZu8ULj8wqEAJj7DOOi9ADLUZftexMeT+JsHo
+         nywA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=RMrszFJgqQZnz4BQZjFom+3bPfD40qA/+5eRpXchJeY=;
-        b=NPCYaMQfY34Vx4j63qVjirfOVw/pUqqpcXuoxMi0keLQp4pQ1Y8VDwtSL/fsd1veSv
-         PSwNpljDVgfDe6ruv9sPJf6yAhvJBvRbyZcd2JggHwVQyfg4cfMO5VQ+71faau1H2VWx
-         oK9ZQL+ZqD8X4yO32C1Y//tvyp64+kORw125TsQ+miQxftSmcfHKnHVhXQ6GoB93G3HS
-         q/r5VXtwpt8VljHbF0N8bB3ANfJ+94nKkYoctwgJIxdtZoYke5o9HMnAIfDow4V6mFW0
-         F5IGPuFrHicQ9ifhiMGisz6dUX7in7hn5voVQ5Ft+3slDRMu8NmGiu2FWmO+V8YLBh2Y
-         WQPg==
-X-Gm-Message-State: APjAAAXCbMGqaWhNb4jbdW2C7SwulJvr5F8Y2HVQCEsRt1l/Gdh0Ud0L
-        Xci40t4oANxmw0j+0ziinrgPnFgC
-X-Google-Smtp-Source: APXvYqx5ES4peqb/VFYaSUgBoAeQE3RpPCPQ5SNkOCGGUcY1JED3KHtlljdhgijC8J6e++KDRJUf4A==
-X-Received: by 2002:a17:90a:d58f:: with SMTP id v15mr767564pju.17.1572459741909;
-        Wed, 30 Oct 2019 11:22:21 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id z5sm521637pgi.19.2019.10.30.11.22.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 11:22:21 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM STB AVS TMON
-        DRIVER), Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-pm@vger.kernel.org (open list:BROADCOM STB AVS TMON DRIVER),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE)
-Subject: [PATCH 6/6] thermal: brcmstb_thermal: Register different ops per process
-Date:   Wed, 30 Oct 2019 11:21:32 -0700
-Message-Id: <20191030182132.25763-7-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191030182132.25763-1-f.fainelli@gmail.com>
-References: <20191030182132.25763-1-f.fainelli@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Lxy6IprtXZdN1Ywem6LzRdwBXd8vho1sAHNiae8FLkc=;
+        b=SXnxeGZnn55W+0W9m6wLyngyYODn7WW9Dz8QTSi21wUlVBGA9ndJK7GWCU1f39LYs6
+         ksb0iqB+liJ906N5s2FEoNVKKePArHmymbOfi0VArHsanOJ+6mQgWPvgXM5W5+/g72SZ
+         1jonEo3ACg83R/Qt5b5p8cTzSwcSDDZiC4mi1sM/zn2PaqllX/2KpT4SDrsOV6d06ThT
+         NmtGW1rgkE30vRsNNzgxxZ4/tTwKWFAh978i9re2zCU2LvFE43QhS0g42WIztWfuGebu
+         12I6DTDx46ozEO7mF+e+QHGEhddEEXxXG/HAue2QB/S0DmeLEIO6amSTN7n2O+wOFUsr
+         YDzw==
+X-Gm-Message-State: APjAAAW7ky7MenY0D40VWaUVnOMtgBjtxJELtjeCzJbMzmo+3JH6Tybo
+        BesdhtLy/ywAPlzMlj+9imZkxUP0LZUbRLc15okemQ==
+X-Google-Smtp-Source: APXvYqy681K0P2BhS9hNV/6IN1RzMU0NYrerzkLLmTAy0ae5W1KTT4HMpsivRJGyqAisB4evXw4J34XHaVMuvtUF2Uo=
+X-Received: by 2002:aa7:da10:: with SMTP id r16mr1235278eds.304.1572459800920;
+ Wed, 30 Oct 2019 11:23:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191030131122.8256-1-vincent.whitchurch@axis.com>
+ <20191030132958.GD31513@dhcp22.suse.cz> <20191030140216.i26n22asgafckfxy@axis.com>
+ <20191030141259.GE31513@dhcp22.suse.cz> <CA+CK2bDObV=N1Y+LhDX=tYsTX3HZ+mbB=8aXT=fPX254hKEUBQ@mail.gmail.com>
+ <20191030153150.GI31513@dhcp22.suse.cz> <CA+CK2bA3gM4pMSj-wDWgAPNoPtcjwd59_6VivKA2Uf2GriASsw@mail.gmail.com>
+ <20191030173123.GK31513@dhcp22.suse.cz> <CA+CK2bA_Cb95mu6XRLy3nnjNoRwMHR2OQuRAPGU-uzPXbBth1g@mail.gmail.com>
+ <20191030180116.GN31513@dhcp22.suse.cz>
+In-Reply-To: <20191030180116.GN31513@dhcp22.suse.cz>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Wed, 30 Oct 2019 14:23:10 -0400
+Message-ID: <CA+CK2bBuFM9Rdnu4yCQ4NXHCeXMyFFFOn80nfL2q6hVKXGHkOg@mail.gmail.com>
+Subject: Re: [PATCH] mm/sparse: Consistently do not zero memmap
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we do not have interrupts on BCM7216, we cannot have trip point
-crossing, the thermal subsystem expects us to provide a NULL set_trips
-operation in that case, so make it possible to provide per-process
-thermal_zone_of_device_ops
+On Wed, Oct 30, 2019 at 2:01 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Wed 30-10-19 13:53:52, Pavel Tatashin wrote:
+> > On Wed, Oct 30, 2019 at 1:31 PM Michal Hocko <mhocko@kernel.org> wrote:
+> > >
+> > > On Wed 30-10-19 12:53:41, Pavel Tatashin wrote:
+> [...]
+> > > > Yes, PMD_SIZE should be the alignment here. It just does not make
+> > > > sense to align to size.
+> > >
+> > > What about this? It still aligns to the size but that should be
+> > > correctly done to the section size level.
+> > >
+> > > diff --git a/mm/sparse.c b/mm/sparse.c
+> > > index 72f010d9bff5..ab1e6175ac9a 100644
+> > > --- a/mm/sparse.c
+> > > +++ b/mm/sparse.c
+> > > @@ -456,8 +456,7 @@ struct page __init *__populate_section_memmap(unsigned long pfn,
+> > >         if (map)
+> > >                 return map;
+> > >
+> > > -       map = memblock_alloc_try_nid(size,
+> > > -                                         PAGE_SIZE, addr,
+> > > +       map = memblock_alloc_try_nid(size, size, addr,
+> > >                                           MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+> > >         if (!map)
+> > >                 panic("%s: Failed to allocate %lu bytes align=0x%lx nid=%d from=%pa\n",
+> > > @@ -474,8 +473,13 @@ static void __init sparse_buffer_init(unsigned long size, int nid)
+> > >  {
+> > >         phys_addr_t addr = __pa(MAX_DMA_ADDRESS);
+> > >         WARN_ON(sparsemap_buf); /* forgot to call sparse_buffer_fini()? */
+> > > +       /*
+> > > +        * Pre-allocated buffer is mainly used by __populate_section_memmap
+> > > +        * and we want it to be properly aligned to the section size - this is
+> > > +        * especially the case for VMEMMAP which maps memmap to PMDs
+> > > +        */
+> > >         sparsemap_buf =
+> > > -               memblock_alloc_try_nid_raw(size, PAGE_SIZE,
+> > > +               memblock_alloc_try_nid_raw(size, section_map_size(),
+> > >                                                 addr,
+> > >                                                 MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+> > >         sparsemap_buf_end = sparsemap_buf + size;
+> >
+> > This looks good, I think we should also change alignment in fallback
+> > of vmemmap_alloc_block() to be
+> > section_map_size().
+> >
+> > +++ b/mm/sparse-vmemmap.c
+> > @@ -65,9 +65,10 @@ void * __meminit vmemmap_alloc_block(unsigned long
+> > size, int node)
+> >                         warned = true;
+> >                 }
+> >                 return NULL;
+> > -       } else
+> > -               return __earlyonly_bootmem_alloc(node, size, size,
+> > +       } else {
+> > +               return __earlyonly_bootmem_alloc(node, size, section_map_size(),
+> >                                 __pa(MAX_DMA_ADDRESS));
+> > +       }
+> >  }
+>
+> Are you sure? Doesn't this provide the proper alignement already? Most
+> callers do PAGE_SIZE vmemmap_populate_hugepages PMD_SIZE so the
+> resulting alignment looks good to me.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/thermal/broadcom/brcmstb_thermal.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+Nevermind, you are right. I tracked only one path, and forgot about
+the normal PAGE_SIZE path.
 
-diff --git a/drivers/thermal/broadcom/brcmstb_thermal.c b/drivers/thermal/broadcom/brcmstb_thermal.c
-index 64f715053ce9..a75a335d1bb3 100644
---- a/drivers/thermal/broadcom/brcmstb_thermal.c
-+++ b/drivers/thermal/broadcom/brcmstb_thermal.c
-@@ -96,6 +96,7 @@ static struct avs_tmon_trip avs_tmon_trips[] = {
- struct brcmstb_thermal_params {
- 	unsigned int offset;
- 	unsigned int mult;
-+	const struct thermal_zone_of_device_ops *of_ops;
- };
- 
- struct brcmstb_thermal_priv {
-@@ -278,19 +279,25 @@ static int brcmstb_set_trips(void *data, int low, int high)
- 	return 0;
- }
- 
--static const struct thermal_zone_of_device_ops of_ops = {
-+static const struct thermal_zone_of_device_ops brcmstb_16nm_of_ops = {
- 	.get_temp	= brcmstb_get_temp,
--	.set_trips	= brcmstb_set_trips,
- };
- 
- static const struct brcmstb_thermal_params brcmstb_16nm_params = {
- 	.offset	= 457829,
- 	.mult	= 557,
-+	.of_ops	= &brcmstb_16nm_of_ops,
-+};
-+
-+static const struct thermal_zone_of_device_ops brcmstb_28nm_of_ops = {
-+	.get_temp	= brcmstb_get_temp,
-+	.set_trips	= brcmstb_set_trips,
- };
- 
- static const struct brcmstb_thermal_params brcmstb_28nm_params = {
- 	.offset	= 410040,
- 	.mult	= 487,
-+	.of_ops	= &brcmstb_28nm_of_ops,
- };
- 
- static const struct of_device_id brcmstb_thermal_id_table[] = {
-@@ -329,7 +336,7 @@ static int brcmstb_thermal_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, priv);
- 
- 	thermal = devm_thermal_zone_of_sensor_register(&pdev->dev, 0, priv,
--						       &of_ops);
-+						       priv->temp_params.of_ops);
- 	if (IS_ERR(thermal)) {
- 		ret = PTR_ERR(thermal);
- 		dev_err(&pdev->dev, "could not register sensor: %d\n", ret);
--- 
-2.17.1
+Thank you,
+Pasha
 
+> --
+> Michal Hocko
+> SUSE Labs
