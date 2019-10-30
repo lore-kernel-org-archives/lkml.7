@@ -2,144 +2,127 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F81CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 17:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F452CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 17:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BFC9205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 17:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28279218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 17:44:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="sozm5qle"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfJ3RnP (ORCPT
+        id S1727231AbfJ3Ro6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 13:43:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:38600 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbfJ3RnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 13:43:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7BC2B1FB;
-        Wed, 30 Oct 2019 10:43:14 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 425273F6C4;
-        Wed, 30 Oct 2019 10:43:13 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 17:43:10 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
-Message-ID: <20191030174309.buptfbqha374efpl@e107158-lin.cambridge.arm.com>
-References: <20191009104611.15363-1-qais.yousef@arm.com>
- <39c08971-5d07-8018-915b-9c6284f89d5d@arm.com>
+        Wed, 30 Oct 2019 13:44:58 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35349 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbfJ3Ro6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 13:44:58 -0400
+Received: by mail-qk1-f194.google.com with SMTP id h6so3666330qkf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 10:44:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=A6yVuPB6LXuICIv7poxF2BAaptyD1Hihg4TrEeI9+Jw=;
+        b=sozm5qleGziX428szkw/H+7If3/x7loBPpt2oW5IYALdZ5UQ01sEahdB3jplMrxsZP
+         8fkP990UWGINNKWje1T4f34YF9bVU4CocJAZRe0X6x9G225pyXyZnEYlJCtSHi60PaGA
+         8xaOS1bCBt7dv+wXrcuytT6FOgqh2+DWU2Ib/zQKKFJRs7AN/rfFqn8yG/WuHsy+aqSM
+         QOxb3zm841f/ZAP+4vCwBLxyu/4qHsWqYzju81lMDLtfsdk7p56sfVOJmU0IcjFYg4fY
+         rFXxUpjxn4seusqGZzzFOSmhawfWX3VxePsC9Z5RLg6BdcH4X2d4YiOBfaIKt+nYFuVl
+         Ry1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=A6yVuPB6LXuICIv7poxF2BAaptyD1Hihg4TrEeI9+Jw=;
+        b=EE5gZPUCeEJZGqRuggK31pJZmqYHDMvvbFSC9N72i6PRWSxOdBZZBHmpUPXzgrdsBZ
+         PLDKOUSBnCEbnvh+1TGAbdC5/b0MGoz9UsLZautGERnIj4vFPpETsB2KFP28UvR8BuOA
+         pdcX8tsWys9kofAp9cTkhR9I2YMR3d1isNRcDI8Jp0hf+Tvfro8Mnd3EhCsaofLtM1/I
+         m/+/7L65ekYx9fbCtXNSvsR7R0gwIRReM+HGGG35vqQpUxT2vy04+Go9r7bBNUsrRh+H
+         AKB0d9tCbi+CqV5VklOPdOAr2TBk9iwOI/4t2I5nsfBk2/Pm2U8lAIqoLmKgofpX+Bgz
+         vYcw==
+X-Gm-Message-State: APjAAAXhLZ1VftkF94vzbYK68BPGGioptXerpywwHnFCWaa0P7kl0QvB
+        NK1T6XygFReRVZedj8SbWAaLWg==
+X-Google-Smtp-Source: APXvYqxuyncJaALPCXtj3n2azDg0h+QVUSTGonCFW3/bvuRX1ZRhsMSbKmid5pM8JPhvxb2afrYisg==
+X-Received: by 2002:a05:620a:12bb:: with SMTP id x27mr1126516qki.459.1572457497275;
+        Wed, 30 Oct 2019 10:44:57 -0700 (PDT)
+Received: from localhost (pool-108-27-252-85.nycmny.fios.verizon.net. [108.27.252.85])
+        by smtp.gmail.com with ESMTPSA id z17sm614026qtj.95.2019.10.30.10.44.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 10:44:56 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 13:44:55 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Greg Thelen <gthelen@google.com>, Roman Gushchin <guro@fb.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzbot+13f93c99c06988391efe@syzkaller.appspotmail.com
+Subject: Re: [PATCH] mm: vmscan: memcontrol: remove
+ mem_cgroup_select_victim_node()
+Message-ID: <20191030174455.GA45135@cmpxchg.org>
+References: <20191029234753.224143-1-shakeelb@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <39c08971-5d07-8018-915b-9c6284f89d5d@arm.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20191029234753.224143-1-shakeelb@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/30/19 12:57, Dietmar Eggemann wrote:
-> On 09.10.19 12:46, Qais Yousef wrote:
+On Tue, Oct 29, 2019 at 04:47:53PM -0700, Shakeel Butt wrote:
+> Since commit 1ba6fc9af35b ("mm: vmscan: do not share cgroup iteration
+> between reclaimers"), the memcg reclaim does not bail out earlier based
+> on sc->nr_reclaimed and will traverse all the nodes. All the reclaimable
+> pages of the memcg on all the nodes will be scanned relative to the
+> reclaim priority. So, there is no need to maintain state regarding which
+> node to start the memcg reclaim from. Also KCSAN complains data races in
+> the code maintaining the state.
 > 
-> [...]
+> This patch effectively reverts the commit 889976dbcb12 ("memcg: reclaim
+> memory from nodes in round-robin order") and the commit 453a9bf347f1
+> ("memcg: fix numa scan information update to be triggered by memory
+> event").
 > 
-> > Changes in v2:
-> > 	- Use cpupri_find() to check the fitness of the task instead of
-> > 	  sprinkling find_lowest_rq() with several checks of
-> > 	  rt_task_fits_capacity().
-> > 
-> > 	  The selected implementation opted to pass the fitness function as an
-> > 	  argument rather than call rt_task_fits_capacity() capacity which is
-> > 	  a cleaner to keep the logical separation of the 2 modules; but it
-> > 	  means the compiler has less room to optimize rt_task_fits_capacity()
-> > 	  out when it's a constant value.
-> 
-> I would prefer exporting rt_task_fits_capacity() sched-internally via
-> kernel/sched/sched.h. Less code changes and the indication whether
-> rt_task_fits_capacity() has to be used in cpupri_find() is already given
-> by lowest_mask being !NULL or NULL.
-> 
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> Reported-by: <syzbot+13f93c99c06988391efe@syzkaller.appspotmail.com>
 
-I don't mind if the maintainers agree too. The reason I did that way is because
-it keeps the implementation of cpupri generic and self contained.
+Excellent, thanks Shakeel!
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-rt_task_fits_capacity() at the moment is a static function in rt.c
-To use it in cpupri_find() I either need to make it public somewhere or have an
+Just a request on this bit:
 
-	extern bool rt_task_fits_capacity(...);
+> @@ -3360,16 +3358,9 @@ unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
+>  		.may_unmap = 1,
+>  		.may_swap = may_swap,
+>  	};
+> +	struct zonelist *zonelist = node_zonelist(numa_node_id(), sc.gfp_mask);
+>  
+>  	set_task_reclaim_state(current, &sc.reclaim_state);
+> -	/*
+> -	 * Unlike direct reclaim via alloc_pages(), memcg's reclaim doesn't
+> -	 * take care of from where we get pages. So the node where we start the
+> -	 * scan does not need to be the current node.
+> -	 */
+> -	nid = mem_cgroup_select_victim_node(memcg);
+> -
+> -	zonelist = &NODE_DATA(nid)->node_zonelists[ZONELIST_FALLBACK];
 
-in cpupri.c. Neither of which appealed to me personally.
+This works, but it *is* somewhat fragile if we decide to add bail-out
+conditions to reclaim again. And some numa nodes receiving slightly
+less pressure than others could be quite tricky to debug.
 
-> [...]
-> 
-> > +inline bool rt_task_fits_capacity(struct task_struct *p, int cpu)
-> > +{
-> > +	unsigned int min_cap;
-> > +	unsigned int max_cap;
-> > +	unsigned int cpu_cap;
-> 
-> Nit picking. Since we discussed it already,
-> 
-> I found this "Also please try to aggregate variables of the same type
-> into a single line. There is no point in wasting screen space::" ;-)
-> 
-> https://lore.kernel.org/r/20181107171149.165693799@linutronix.de
+Can we add a comment here that points out the assumption that the
+zonelist walk is comprehensive, and that all nodes receive equal
+reclaim pressure?
 
-That wasn't merged at the end AFAICT :)
-
-It's not my preferred style in this case if I have the choice - but I promise
-to change it if I ended up having to spin another version anyway :)
-
-> 
-> [...]
-> 
-> > @@ -2223,7 +2273,10 @@ static void switched_to_rt(struct rq *rq, struct task_struct *p)
-> >  	 */
-> >  	if (task_on_rq_queued(p) && rq->curr != p) {
-> >  #ifdef CONFIG_SMP
-> > -		if (p->nr_cpus_allowed > 1 && rq->rt.overloaded)
-> > +		bool need_to_push = rq->rt.overloaded ||
-> > +				    !rt_task_fits_capacity(p, cpu_of(rq));
-> > +
-> > +		if (p->nr_cpus_allowed > 1 && need_to_push)
-> >  			rt_queue_push_tasks(rq);
-> >  #endif /* CONFIG_SMP */
-> >  		if (p->prio < rq->curr->prio && cpu_online(cpu_of(rq)))
-> What happens to a always running CFS task which switches to RT? Luca
-> introduced a special migrate callback (next to push and pull)
-> specifically to deal with this scenario. A lot of new infrastructure for
-> this one use case, but still, do we care for it in RT as well?
-> 
-> https://lore.kernel.org/r/20190506044836.2914-4-luca.abeni@santannapisa.it
-> 
-
-Good question. This scenario and the one where uclamp values are changed while
-an RT task is running are similar.
-
-In both cases the migration will happen on the next activation/wakeup AFAICS.
-
-I am not sure an always running rt/deadline task is something conceivable in
-practice and we want to cater for. It is certainly something we can push a fix
-for in the future on top of this. IMHO we're better off trying to keep the
-complexity low until we have a real scenario/use case that justifies it.
-
-As it stands when the system is overloaded or when there are more RT tasks than
-big cores we're stuffed too. And there are probably more ways where we can
-shoot ourselves in the foot. Using RT and deadline is hard and that's one of
-their unavoidable plagues I suppose.
-
-Thanks
-
---
-Qais Yousef
+Also, I think we should use sc.gfp_mask & ~__GFP_THISNODE, so that
+allocations with a physical node preference still do node-agnostic
+reclaim for the purpose of cgroup accounting.
