@@ -2,136 +2,213 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F8FCA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BC5CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F26732087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:09:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Ub/lTWZR";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="bOPHCDfv"
+	by mail.kernel.org (Postfix) with ESMTP id 4A55920862
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 11:15:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfJ3LJV (ORCPT
+        id S1726584AbfJ3LPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 07:09:21 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:37367 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfJ3LJV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 07:09:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1572433821; x=1603969821;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=oyFv4rvJG1bYiLS7umy7qO9zjKpiioFSGN1JxG19pMc=;
-  b=Ub/lTWZRiX6ODF77PCJPXedTrGeu6TBARrS1UZktBssp/G0O0VAiZ2EG
-   JawiWQREJhRrDJliEaDH3ksPzJGwR+Cz8LM7G9aV0kDXD/svSl/TFLcOU
-   B5ssNIGSlopMc0hgDUPXXu/S5hFJJo7+trZTYB34Npi3qrmguo8TtY7rP
-   mzJ75P8cfxvadmIUFz/PQ0cptzGLRZlpS2HdMqTtvFz5Ut0Rh+bgV9ayW
-   46Wn1fkGZDFhtOFroy4pwt4ZSmvqEKaEB8OeybQrZcJGVfK8dFDjpTJyd
-   5Dzq52g9UoK7bUJFinavX0u/emyshMXBTKQFZKPdtD2U7rCS8u7ZTGCAs
-   A==;
-IronPort-SDR: PwY8W33nRuyqLb2mVgQWWsEWVQvzx3uI8xRqUUaWFZMr7PWkCcHI0RiZCTgS+DjbEEbwet5Adi
- BehfY1lSdHssKGMYypYBJjPvL6iIzcUupCE2rK+xCmm5XBqSjGHJ0hRBi0YKWz8gLzUynevbpa
- 7mBCRjHyfq5FBq58zpR/58nfr1qe3mdv/FZOA+5RypcYCREsXO2j8QTEzVILBX7ntSkYCNCXOO
- ex3l/b9DZV/paLx+S+tNU5K5nM6K3UVte9rr7PHEez1rMhg/52FO7IoaD0wNaYwkfeq+bcr7+b
- vqo=
-X-IronPort-AV: E=Sophos;i="5.68,247,1569254400"; 
-   d="scan'208";a="222818633"
-Received: from mail-sn1nam04lp2054.outbound.protection.outlook.com (HELO NAM04-SN1-obe.outbound.protection.outlook.com) ([104.47.44.54])
-  by ob1.hgst.iphmx.com with ESMTP; 30 Oct 2019 19:10:18 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HTn+ltL3TQzFT0Nmjtun5cdmMhRRc6Djsq/oXzNUTjqqAU8BBcAQ09x40X8ujQ5/kHfHUGbqiVHGCLsu0uJL0HXJceuIR0D08I1outXdV2THwriQcP0c4OCkKGVtnMvS/zcFH/37CE5jLWx94d5puqcIx0hifLECpfa+QR4rCneKQZ7mAl0NJBo6VqK7xVKR4OC2btKYPH/RyWl9n/ewu7bgBNqPKtKpsZpGd0GYT+juadBIL9aoVN4PlofakizTcdC9xXjkWYsK6owJsajOBRvpFEjczdAAFk6wFKzI9tAt9A0HsBdTcQJkM/ri/06zG5I3j/LpVgVTIcirNVyzAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oyFv4rvJG1bYiLS7umy7qO9zjKpiioFSGN1JxG19pMc=;
- b=itN9CE/hXPo3mMJExaQ+wQc2fRDIqw8t9B/ZfBVQInkZJ5JY7TcG9R5RYDy6GmMMSmPVEHtm5gQsuE5vP/UTyZ7FoIpOVe8soPiAX5rXF7c9BZHBirMfekOWb9LM0QDFbC/BvO4QWEO6CQh+E9toFhPFeHtQYC87ge7JUbOCBEh8DBTVdQVXYHMYgtawje+yXjWEVPsthbB0tAqCGbPnY6no2103+WdMBalWDwxKYcLdpCzevYLTOU4sLHkaC7kZ+17rJCUUi2ei3nbB/M3zxzREINzo7CncKTo1UUYCm5LGCw/Llgoaf5XGOnQ+qqxRQdTsWQ31r6+AsyX051WxUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oyFv4rvJG1bYiLS7umy7qO9zjKpiioFSGN1JxG19pMc=;
- b=bOPHCDfv0hxJxIHnYHJcEdbBsusK8ESMKXyzqBmX2+64xB5TSrZ9Y6bF+2YGKncsx9Ltid2BTpmxfTeMr0lRfki1PtkCxmAQALC+YE818Pe2Y5MRo8A+vjBQpEAahzSMsZuKaQQCnLlnlgfu5y8Yma8gkFYrOyzMJieAutHA/54=
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
- MN2PR04MB5855.namprd04.prod.outlook.com (20.179.23.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.17; Wed, 30 Oct 2019 11:09:17 +0000
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::5852:6199:7952:c2ce]) by MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::5852:6199:7952:c2ce%7]) with mapi id 15.20.2408.018; Wed, 30 Oct 2019
- 11:09:17 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>,
-        'Alim Akhtar' <alim.akhtar@samsung.com>,
-        'Pedro Sousa' <pedrom.sousa@synopsys.com>,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>
-CC:     "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
-        'Evan Green' <evgreen@chromium.org>,
-        'Stanley Chu' <stanley.chu@mediatek.com>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        "'linux-scsi@vger.kernel.org'" <linux-scsi@vger.kernel.org>,
-        Can Guo <cang@codeaurora.org>
-Subject: RE: [PATCH v1] scsi: ufs: delete redundant function
- ufshcd_def_desc_sizes()
-Thread-Topic: [PATCH v1] scsi: ufs: delete redundant function
- ufshcd_def_desc_sizes()
-Thread-Index: AdWOYNFUHmkvcAl2Q/qT6qb+uQ79WAAsYcCA
-Date:   Wed, 30 Oct 2019 11:09:17 +0000
-Message-ID: <MN2PR04MB699186FEAB9E731C0869374DFC600@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <BN7PR08MB5684A3ACE214C3D4792CE729DB610@BN7PR08MB5684.namprd08.prod.outlook.com>
-In-Reply-To: <BN7PR08MB5684A3ACE214C3D4792CE729DB610@BN7PR08MB5684.namprd08.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a742f65d-26f4-4b01-557d-08d75d299b1f
-x-ms-traffictypediagnostic: MN2PR04MB5855:
-x-microsoft-antispam-prvs: <MN2PR04MB5855CE57CC89F17F1AC87BA1FC600@MN2PR04MB5855.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:2657;
-x-forefront-prvs: 02065A9E77
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(346002)(376002)(136003)(366004)(199004)(189003)(486006)(6506007)(55016002)(25786009)(26005)(14454004)(102836004)(2906002)(229853002)(52536014)(478600001)(74316002)(8676002)(476003)(54906003)(9686003)(81156014)(186003)(256004)(7736002)(3846002)(6116002)(76176011)(66446008)(64756008)(66556008)(66476007)(305945005)(6436002)(86362001)(7696005)(76116006)(7416002)(110136005)(316002)(8936002)(66946007)(71190400001)(5660300002)(81166006)(33656002)(99286004)(11346002)(66066001)(446003)(6246003)(4326008)(71200400001)(4744005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5855;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uSpyu6KibGE4yorTfXT80ozSXa/mV3HkssgHxaajFLvUXhPqB/h5gTVZPkHFvzDPHnCqB1o81/6rpmBSYLFn74jR470DpKCfJ2AY8aSADJxhD/808TFJ48fkYzsAsJM+560g2XCSejI6Y0k8OnL3FWnfbwvPuca8QkWjhZhK145/Y8UW/Y3KKEPRKrsa7eQAQX1W1WoH4Hsv/34Ow2wuJJKx7r42m2lF/pZPk6Ge103cnKZ/3y7CO66Ou5Mc6mivDwqBPRynHl1p9b6/TR1ykJcf9WTyO8pKUJHqQhmplvn2ktMv4lOTwok/7ipLZ2qWEYLARoVi7HXn/rtXgBKwOrL7EbXyc/9h7iAZsfP+wdadUptyi5yzlT5+pN9PG/Bvk24CHlpsFpjOx2Ogy5jKfLsLdJZ8PK7iuK7PlYyxxr0kAMXn8ZNaVzLAZfMFW+Ud
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 30 Oct 2019 07:15:22 -0400
+Received: from mga03.intel.com ([134.134.136.65]:24063 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726088AbfJ3LPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 07:15:22 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 04:15:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
+   d="scan'208";a="211303915"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 30 Oct 2019 04:15:17 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 30 Oct 2019 13:15:16 +0200
+Date:   Wed, 30 Oct 2019 13:15:16 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
+ spec
+Message-ID: <20191030111516.GX2593@lahna.fi.intel.com>
+References: <20191029111520.GE2593@lahna.fi.intel.com>
+ <20191029202708.GA38926@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a742f65d-26f4-4b01-557d-08d75d299b1f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2019 11:09:17.2623
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VIi5aB4sFbrpGtrwEVdAUZHej8ThAvMQM2wmUsmFp4Pt1uZrM1MAXaUEkk+RQwAwvc1aEOQfQIADJm22/G2PwA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5855
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191029202708.GA38926@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
-> From: Bean Huo <beanhuo@micron.com>
->=20
-> There is no need to call ufshcd_def_desc_sizes() in ufshcd_init(), since
-> descriptor lengths will be checked and initialized later in
-> ufshcd_init_desc_sizes().
->=20
-> Fixes: a4b0e8a4e92b1b(scsi: ufs: Factor out ufshcd_read_desc_param)
-> Signed-off-by: Bean Huo <beanhuo@micron.com>
-Acked-by: Avri Altman <avri.altman.wdc.com>
+On Tue, Oct 29, 2019 at 03:27:09PM -0500, Bjorn Helgaas wrote:
+> On Tue, Oct 29, 2019 at 01:15:20PM +0200, Mika Westerberg wrote:
+> > On Mon, Oct 28, 2019 at 03:16:53PM -0500, Bjorn Helgaas wrote:
+> > > > The related hardware event is resume in this case. Can you point
+> > > > me to the actual point where you want me to put this?
+> > > 
+> > > "Resume" is a Linux software concept, so of course the PCIe spec
+> > > doesn't say anything about it.  The spec talks about delays
+> > > related to resets and device power and link state transitions, so
+> > > somehow we have to connect the Linux delay with those hardware
+> > > events.
+> > > 
+> > > Since we're talking about a transition from D3cold, this has to be
+> > > done via something external to the device such as power
+> > > regulators.  For ACPI systems that's probably hidden inside _PS0
+> > > or something similar.  That's opaque, but at least it's a hook
+> > > that says "here's where we put the device into D0".  I suggested
+> > > acpi_pci_set_power_state() as a possibility since I think that's
+> > > the lowest-level point where we have the pci_dev so we know the
+> > > current state and the new state.
+> > 
+> > I looked at how we could use acpi_pci_set_power_state() but I don't
+> > think it is possible because it is likely that only the root port
+> > has the power resource that is used to bring the link to L2 or L3.
+> > However, we would need to repeat the delay for each downstream/root
+> > port if there are multiple PCIe switches in the topology.
+> 
+> OK, I think I understand why that's a problem (correct me if I'm
+> wrong):
+> 
+>   We call pci_pm_resume_noirq() for every device, but it only calls
+>   acpi_pci_set_power_state() for devices that have _PS0 or _PR0
+>   methods.  So if the delay is in acpi_pci_set_power_state() and we
+>   have A -> B -> C where only A has _PS0, we would delay for the link
+>   to B to come up, but not for the link to C.
+
+Yes, that's correct.
+
+> I do see that we do need both delays.  In acpi_pci_set_power_state()
+> when we transition A from D3cold->D0, I assume that single _PS0
+> evaluation on A causes B to transition from D3cold->D3hot, which in
+> turn causes C to transition from D3cold->D3hot.  Is that your
+> understanding, too?
+
+Not exactly :)
+
+It is _ON() that causes the links to be retrained and it also causes the
+PERST# (reset) to be unasserted for the whole topology transitioning all
+devices into D0unitialized (default value for PMCSR PowerState field is 0).
+
+> We do know that topology in acpi_pci_set_power_state(), since we have
+> the pci_dev for A, so it seems conceivable that we could descend the
+> hierarchy and delay for each level.
+
+Right.
+
+> If the delay is in pci_pm_resume_noirq() (as in your patch), what
+> happens with a switch with several Downstream Ports?  I assume that
+> all the Downstream Ports start their transition out of D3cold
+> basically simultaneously, so we probably don't need N delays, do we?
+
+No. Actually Linux already resumes these in paraller because async
+suspend is set for them (for system suspend that is).
+
+> It seems a little messy to optimize this in pci_pm_resume_noirq().
+
+I agree.
+
+> The outline of the pci_pm_resume_noirq() part of this patch is:
+> 
+>   pci_pm_resume_noirq
+>     if (!dev->skip_bus_pm ...)   # <-- condition 1
+>       pci_pm_default_resume_early
+>         pci_power_up
+>           if (platform_pci_power_manageable())   # _PS0 or _PR0 exist?
+>             platform_pci_set_power_state
+>               pci_platform_pm->set_state
+>                 acpi_pci_set_power_state(PCI_D0) # acpi_pci_platform_pm.set_state
+>                   acpi_device_set_power(ACPI_STATE_D0) # <-- eval _PS0
+> +   if (d3cold)                  # <-- condition 2
+> +     pci_bridge_wait_for_secondary_bus
+> 
+> Another thing that niggles at me here is that the condition for
+> calling pci_bridge_wait_for_secondary_bus() is completely different
+> than the condition for changing the power state.  If we didn't change
+> the power state, there's no reason to wait, is there?
+
+Indeed, if you are talking about the dev->skip_bus_pm check there is no
+point to wait if we did not change the power state. I would assume that
+d3cold is false in that case but we could also do this for clarity:
+
+	if (!dev->skip_bus_pm && d3cold)
+		pci_bridge_wait_for_secondary_bus(...)
+
+> The outline of the pci_pm_runtime_resume() part of this patch is:
+> 
+>   pci_pm_runtime_resume
+>     pci_restore_standard_config
+>       if (dev->current_state != PCI_D0)
+>         pci_set_power_state(PCI_D0)
+>           __pci_start_power_transition
+>             pci_platform_power_transition
+>               if (platform_pci_power_manageable())   # _PS0 or _PR0 exist?
+>                 platform_pci_set_power_state
+>                   pci_platform_pm->set_state
+>                     acpi_pci_set_power_state(PCI_D0) # acpi_pci_platform_pm.set_state
+>                       acpi_device_set_power(ACPI_STATE_D0) # <-- eval _PS0
+>               pci_raw_set_power_state
+>           __pci_complete_power_transition
+> +   if (d3cold)
+> +     pci_bridge_wait_for_secondary_bus
+> 
+> In this part, the power state change is inside
+> pci_restore_standard_config(), which calls pci_set_power_state().
+> There are many other callers of pci_set_power_state(); can we be sure
+> that none of them need a delay?
+
+Since we are handling the delay when we resume the downstream port, not
+when we resume the device itself, I think the link should be up already
+and the device accessible if someone calls pci_set_power_state() for it
+(as the parent is always resumed before children).
+
+> > > But it seems that at least some ACPI firmware doesn't do those
+> > > delays, so I guess our only alternatives are to always do it in
+> > > the OS or have some sort of blacklist.  And it doesn't really seem
+> > > practical to maintain a blacklist.
+> > 
+> > I really think this is crystal clear:
+> 
+> I am agreeing with you that the OS needs to do the delays.
+> 
+> > The OS is always responsible for the delays described in the PCIe
+> > spec.
+> 
+> If the ACPI spec contained this statement, it would be useful, but I
+> haven't seen it.  It's certainly true that some combination of
+> firmware and the OS is responsible for the delays :)
+> 
+> > However, if the platform implements some of them say in _ON or _PS0
+> > methods then it can notify the OS about this by using the _DSM so
+> > the OS does not need to duplicate all of them.
+> 
+> That makes good sense, but there are other reasons for using that
+> _DSM, e.g., firmware may know that MID or similar devices are not
+> really PCI devices and don't need delays anywhere.  So the existence
+> of the _DSM by itself doesn't convince me that the OS is responsible
+> for the delays.
+
+Hmm, my interpretion of the specs is that OS is responsible for these
+delays but if you can't be convinced then how you propose we handle this
+problem? I mean there are two cases already listed in the changelog of
+this patch from a real systems that need these delays. I don't think we
+can just say people that unfortunately your system will not be supported
+by Linux because we are not convinced that OS should do these delays. ;-)
