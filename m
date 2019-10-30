@@ -2,75 +2,86 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C26CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798CBCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1634420874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:49:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NQDZIhFx"
+	by mail.kernel.org (Postfix) with ESMTP id 46F082087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:49:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbfJ3NtP (ORCPT
+        id S1726686AbfJ3Nto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:49:15 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41414 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfJ3NtO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:49:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2hu8C/OlAF3UH78qpfVOcPr9SOx8LcpHWXFVL8G1r8Q=; b=NQDZIhFxSbs2gs8rfDITE4u9T
-        58DTiOUQJvIYlPWr9J3GQRXq6hy8jX6TbWXILOfJ2nHA20JV3hv6Kg81aPH5NKhUmvRWHWkLO3kHb
-        A68VaPpc7JM2A1hgrR0aG/QQf4UPzDqAizcdTYtJO1+ZPOVU+PJJf8MYqrwi1AUYBgDwQpNDvSBBL
-        K4dAl4blYxXpVud/HF1C1jhtpYVvWyr1Y7s+BHmM5U7zUeShTrGSv5zW4VYwwyWwQx7nvdOooZ+0w
-        B19hKVp4tJ4FeZZVJ6UJ5X7R5kTf/xJbXZKthx7w/D4Kgd4xdyGpWs+evHH87u8Lbw7etA5XTnWgX
-        /iPrS+tng==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iPoLQ-00058L-NB; Wed, 30 Oct 2019 13:49:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4904D3006D0;
-        Wed, 30 Oct 2019 14:48:00 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6F08C2B435A44; Wed, 30 Oct 2019 14:49:01 +0100 (CET)
-Date:   Wed, 30 Oct 2019 14:49:01 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
-        rostedt@goodmis.org, mgorman@suse.de, dsmythies@telus.net
-Subject: Re: [PATCH] sched/pelt: fix update of blocked pelt ordering
-Message-ID: <20191030134901.GP4131@hirez.programming.kicks-ass.net>
-References: <1572434309-32512-1-git-send-email-vincent.guittot@linaro.org>
+        Wed, 30 Oct 2019 09:49:44 -0400
+Received: from mga17.intel.com ([192.55.52.151]:29031 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbfJ3Ntn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:49:43 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 06:49:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,247,1569308400"; 
+   d="scan'208";a="211327785"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 30 Oct 2019 06:49:40 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 30 Oct 2019 15:49:40 +0200
+Date:   Wed, 30 Oct 2019 15:49:39 +0200
+From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: Re: [PATCH v10 4/4] PCI: Allow extend_bridge_window() to shrink
+ resource if necessary
+Message-ID: <20191030134939.GG2593@lahna.fi.intel.com>
+References: <SL2P216MB0187C1ACBE716693FD5622BD80600@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+ <20191030132509.GE2593@lahna.fi.intel.com>
+ <SL2P216MB0187F0B0630B8C5950342CA680600@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1572434309-32512-1-git-send-email-vincent.guittot@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <SL2P216MB0187F0B0630B8C5950342CA680600@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 12:18:29PM +0100, Vincent Guittot wrote:
-> update_cfs_rq_load_avg() can call cpufreq_update_util() to trigger an
-> update of the frequency. Make sure that RT, DL and IRQ pelt signals have
-> been updated before calling cpufreq
-> 
-> Fixes: 371bf4273269 ("sched/rt: Add rt_rq utilization tracking")
-> Fixes: 3727e0e16340 ("sched/dl: Add dl_rq utilization tracking")
-> Fixes: 91c27493e78d ("sched/irq: Add IRQ utilization tracking")
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+On Wed, Oct 30, 2019 at 01:33:26PM +0000, Nicholas Johnson wrote:
+> On Wed, Oct 30, 2019 at 03:25:09PM +0200, mika.westerberg@linux.intel.com wrote:
+> > On Wed, Oct 30, 2019 at 12:47:44PM +0000, Nicholas Johnson wrote:
+> > > Remove checks for resource size in extend_bridge_window(). This is
+> > > necessary to allow the pci_bus_distribute_available_resources() to
+> > > function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
+> > > allocate resources. Because the kernel parameter sets the size of all
+> > > hotplug bridges to be the same, there are problems when nested hotplug
+> > > bridges are encountered. Fitting a downstream hotplug bridge with size X
+> > > and normal bridges with non-zero size Y into parent hotplug bridge with
+> > > size X is impossible, and hence the downstream hotplug bridge needs to
+> > > shrink to fit into its parent.
+> > > 
+> > > Add check for if bridge is extended or shrunken and adjust pci_dbg to
+> > > reflect this.
+> > > 
+> > > Reset the resource if its new size is zero (if we have run out of a
+> > > bridge window resource) to prevent the PCI resource assignment code from
+> > > attempting to assign a zero-sized resource.
+> > > 
+> > > Rename extend_bridge_window() to adjust_bridge_window() to reflect the
+> > > fact that the window can now shrink.
+> > > 
+> > > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> > 
+> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Do I need to re-post with this line in it?
 
-Thanks!
+No. Typically maintainers add these when they apply the patch.
