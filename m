@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4664CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2976CA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72FFA2190F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF2AF20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 16:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451290;
-	bh=NOlrqPWGx4Qt4ThG2zHhGh6kwXDfKzJEe1B4BQNVwPc=;
+	s=default; t=1572451295;
+	bh=Xs4IDM2HZxOEkjoGdFUPbSaw2vnPUJoHr1uA+dsviIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l3mlKOknyh3dOBRoTvhjll8RFdciZtQ2Dq4Elr7t4IQ5C45ioiCC4mxxcy6oMH0oZ
-	 pD5aX1uHyFcvlnVijUY119z16btGLjoaQ1gn7szUxu8hTk/gWT3y2ZqLF/gkJ7eXvV
-	 gS8mwmJyVrf5xzS6IJu9LbaFBgr8S/M1phc0ml3g=
+	b=WQ7ezFA8UiQr+zzXebalfyw+FEqIQIQIqwYgXQuOZSMS0KZiojwNu/g+JKFdYZKuO
+	 4GfIvQr4D/ozTOYWqq+Ffq6JNuiaQUchMbObLDri2D1UzPAEMnSWPXSqQdHVTjL4Eh
+	 xg8oJnkXw/RlORZnZpLHI91BRXNfk9DwYE9AMmR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbfJ3QB3 (ORCPT
+        id S1728422AbfJ3Pyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 12:01:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56142 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:54:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727792AbfJ3Pym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:54:42 -0400
+        id S1728369AbfJ3Pya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:54:30 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C62B2087E;
-        Wed, 30 Oct 2019 15:54:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F238420874;
+        Wed, 30 Oct 2019 15:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572450881;
-        bh=NOlrqPWGx4Qt4ThG2zHhGh6kwXDfKzJEe1B4BQNVwPc=;
+        s=default; t=1572450870;
+        bh=Xs4IDM2HZxOEkjoGdFUPbSaw2vnPUJoHr1uA+dsviIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PV7a+xwNTJi2esfNZ3KPP8i/zinPg9uVxLJckPc5mSL3gCZHVwW+ITNyNHhynyodN
-         i4f2LYHInk3HCjbcXaRcGYolAsSGpuyW0IT5Gd7XY/3gUFMZOVz6xEPnm1BKVErXgA
-         vw1Tbp+JeVmETwRfj3jahSOzUQB3SVvoInjDarvc=
+        b=F8d4qC2mco/5G/k1MvR8K75qm4fEqxvb1yrFgszaRb8SDCVnZyZb5khN3chgqWGGf
+         octWHEYiu8rJD8idrIL+Ms9GYKWYAb/KfRV6TuT4FDkA1TjxfaOqCDQvbBtmhAdeNS
+         hoA3kyYvYAXNbj3B85UeSqrLXhwJoszDwwCbSCxY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Allen Pais <allen.pais@oracle.com>, Martin Wilck <mwilck@suse.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 14/38] scsi: qla2xxx: fix a potential NULL pointer dereference
-Date:   Wed, 30 Oct 2019 11:53:42 -0400
-Message-Id: <20191030155406.10109-14-sashal@kernel.org>
+Cc:     Stuart Henderson <stuarth@opensource.cirrus.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
+Subject: [PATCH AUTOSEL 4.19 09/38] ASoC: wm_adsp: Don't generate kcontrols without READ flags
+Date:   Wed, 30 Oct 2019 11:53:37 -0400
+Message-Id: <20191030155406.10109-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155406.10109-1-sashal@kernel.org>
 References: <20191030155406.10109-1-sashal@kernel.org>
@@ -60,38 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Allen Pais <allen.pais@oracle.com>
+From: Stuart Henderson <stuarth@opensource.cirrus.com>
 
-[ Upstream commit 35a79a63517981a8aea395497c548776347deda8 ]
+[ Upstream commit 3ae7359c0e39f42a96284d6798fc669acff38140 ]
 
-alloc_workqueue is not checked for errors and as a result a potential
-NULL dereference could occur.
+User space always expects to be able to read ALSA controls, so ensure
+no kcontrols are generated without an appropriate READ flag. In the case
+of a read of such a control zeros will be returned.
 
-Link: https://lore.kernel.org/r/1568824618-4366-1-git-send-email-allen.pais@oracle.com
-Signed-off-by: Allen Pais <allen.pais@oracle.com>
-Reviewed-by: Martin Wilck <mwilck@suse.com>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20191002084240.21589-1-ckeepax@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/soc/codecs/wm_adsp.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 60b6019a2fcae..856a7ceb9a041 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -3186,6 +3186,10 @@ qla2x00_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
- 	    req->req_q_in, req->req_q_out, rsp->rsp_q_in, rsp->rsp_q_out);
+diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
+index ee85056a85774..b114fc7b2a95e 100644
+--- a/sound/soc/codecs/wm_adsp.c
++++ b/sound/soc/codecs/wm_adsp.c
+@@ -1147,8 +1147,7 @@ static unsigned int wmfw_convert_flags(unsigned int in, unsigned int len)
+ 	}
  
- 	ha->wq = alloc_workqueue("qla2xxx_wq", 0, 0);
-+	if (unlikely(!ha->wq)) {
-+		ret = -ENOMEM;
-+		goto probe_failed;
-+	}
- 
- 	if (ha->isp_ops->initialize_adapter(base_vha)) {
- 		ql_log(ql_log_fatal, base_vha, 0x00d6,
+ 	if (in) {
+-		if (in & WMFW_CTL_FLAG_READABLE)
+-			out |= rd;
++		out |= rd;
+ 		if (in & WMFW_CTL_FLAG_WRITEABLE)
+ 			out |= wr;
+ 		if (in & WMFW_CTL_FLAG_VOLATILE)
 -- 
 2.20.1
 
