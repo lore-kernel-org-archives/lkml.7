@@ -2,132 +2,101 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E171EC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECBFCA9EC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7F472080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:19:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JSDcl6LZ"
+	by mail.kernel.org (Postfix) with ESMTP id F08A22083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbfJ3ITp (ORCPT
+        id S1726213AbfJ3IUk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:19:45 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22758 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725822AbfJ3ITp (ORCPT
+        Wed, 30 Oct 2019 04:20:40 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:35385 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725923AbfJ3IUk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:19:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572423584;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tGP8/Cq/uIP6+eazYurLTr329KXGMw2YjLoiUkgJNCw=;
-        b=JSDcl6LZWYcSgXZeDubSupTVoEvXEQKl1OeK/yVq7WCNXPM1l0G/YIGkBFClkmEiFQkjUn
-        1tuoElZkQKbZBvrIZRdHRvmUIFRz8onSPWkF8b18k+8YcaXI3n1E3kzLh/JLFRSjWW9CuF
-        vxd2N9MIayLJLv7WsMptI0LRmajLisE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-CSJ1tpiVO8yEP9kAKb589Q-1; Wed, 30 Oct 2019 04:19:40 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F500107AD28;
-        Wed, 30 Oct 2019 08:19:38 +0000 (UTC)
-Received: from [10.36.116.222] (ovpn-116-222.ams2.redhat.com [10.36.116.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 91E5D60C4B;
-        Wed, 30 Oct 2019 08:19:34 +0000 (UTC)
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <1572171452-7958-2-git-send-email-rppt@kernel.org>
- <085ed07e-e646-f7a4-0370-06f33a2a4e4a@redhat.com>
- <20191030081529.GB20624@rapoport-lnx>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <9eae3941-64cf-4ea1-0287-0e64bab192c6@redhat.com>
-Date:   Wed, 30 Oct 2019 09:19:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 30 Oct 2019 04:20:40 -0400
+Received: from xps13 (67.173.185.81.rev.sfr.net [81.185.173.67])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 0599F200011;
+        Wed, 30 Oct 2019 08:20:35 +0000 (UTC)
+Date:   Wed, 30 Oct 2019 09:20:36 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Saurav Girepunje <saurav.girepunje@gmail.com>
+Cc:     joern@lazybastard.org, dwmw2@infradead.org,
+        computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at,
+        vigneshr@ti.com, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org, saurav.girepunje@hotmail.com
+Subject: Re: [PATCH v1] mtd: devices: phram.c: Fix multiple kfree statement
+ from phram_setup
+Message-ID: <20191030092036.38cf4f11@xps13>
+In-Reply-To: <20191029170849.GA6279@saurav>
+References: <20191029170849.GA6279@saurav>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191030081529.GB20624@rapoport-lnx>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: CSJ1tpiVO8yEP9kAKb589Q-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.10.19 09:15, Mike Rapoport wrote:
-> On Tue, Oct 29, 2019 at 12:02:34PM +0100, David Hildenbrand wrote:
->> On 27.10.19 11:17, Mike Rapoport wrote:
->>> From: Mike Rapoport <rppt@linux.ibm.com>
->>>
->>> The mappings created with MAP_EXCLUSIVE are visible only in the context=
- of
->>> the owning process and can be used by applications to store secret
->>> information that will not be visible not only to other processes but to=
- the
->>> kernel as well.
->>>
->>> The pages in these mappings are removed from the kernel direct map and
->>> marked with PG_user_exclusive flag. When the exclusive area is unmapped=
-,
->>> the pages are mapped back into the direct map.
->>>
->>
->> Just a thought, the kernel is still able to indirectly read the contents=
- of
->> these pages by doing a kdump from kexec environment, right?
->=20
-> Right.
->=20
->> Also, I wonder
->> what would happen if you map such pages via /dev/mem into another user s=
-pace
->> application and e.g., use them along with kvm [1].
->=20
-> Do you mean that one application creates MAP_EXCLUSIVE and another
-> applications accesses the same physical pages via /dev/mem?
+Saurav,
 
-Exactly.
+Saurav Girepunje <saurav.girepunje@gmail.com> wrote on Tue, 29 Oct 2019
+22:38:49 +0530:
 
->=20
-> With /dev/mem all physical memory is visible...
+Are you a robot?
 
-Okay, so the statement "information that will not be visible not only to=20
-other processes but to the kernel as well" is not correct. There are=20
-easy ways to access that information if you really want to (might=20
-require root permissions, though).
+> Remove multiple kfree statement from phram_setup() in phram.c
 
---=20
+This does not describe what you are doing, you don't remove them you
+factorize them. And honestly I am not convinced this change is useful
+in old code.
+
+> 
+> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+> ---
+> 
+> Change in v1:
+
+Your first version is v1, how can you be at v1? It is almost v3 already!
+
+> 
+> - Add change suggested by Miquel Raynal <miquel.raynal@bootlin.com>
+>   "The goto statement should not describe from where it is called but the
+>    action it is supposed to take. 'goto free_nam;' would be better."
+
+This is a copy/paste of what I have said. What I want you to write is:
+
+"
+- Rename the goto statement to describe bla bla bla.
+- Fix the typo in the goto label.
+"
+
+> 
+>  drivers/mtd/devices/phram.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/mtd/devices/phram.c b/drivers/mtd/devices/phram.c
+> index c467286ca007..38f95a1517ac 100644
+> --- a/drivers/mtd/devices/phram.c
+> +++ b/drivers/mtd/devices/phram.c
+> @@ -243,22 +243,22 @@ static int phram_setup(const char *val)
+>  
+>  	ret = parse_num64(&start, token[1]);
+>  	if (ret) {
+> -		kfree(name);
+>  		parse_err("illegal start address\n");
+> +		goto free_nam;
+
+Come one...
+
 
 Thanks,
-
-David / dhildenb
-
+Miquèl
