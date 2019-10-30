@@ -2,82 +2,70 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AD1CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFA9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D46205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27003205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 09:20:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfJ3JTN (ORCPT
+        id S1726488AbfJ3JUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 05:19:13 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5651 "EHLO huawei.com"
+        Wed, 30 Oct 2019 05:20:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49894 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726028AbfJ3JTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 05:19:13 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BCB42F7E8EC2917545BA;
-        Wed, 30 Oct 2019 17:19:08 +0800 (CST)
-Received: from [127.0.0.1] (10.57.101.250) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Wed, 30 Oct 2019
- 17:19:00 +0800
-Subject: Re: [PATCH v2 0/5] hisi_lpc: Improve build test coverage
-To:     John Garry <john.garry@huawei.com>, <xuwei5@huawei.com>
-References: <1572264605-172363-1-git-send-email-john.garry@huawei.com>
-CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <olof@lixom.net>, <bhelgaas@google.com>, <arnd@arndb.de>
-From:   Wei Xu <xuwei5@hisilicon.com>
-Message-ID: <5DB95584.3040907@hisilicon.com>
-Date:   Wed, 30 Oct 2019 17:19:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.2.0
+        id S1726028AbfJ3JUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 05:20:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3A11EB263;
+        Wed, 30 Oct 2019 09:20:16 +0000 (UTC)
+Date:   Wed, 30 Oct 2019 10:20:14 +0100
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Denys Vlasenko <dvlasenk@redhat.com>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu/amd: Do not re-fetch iommu->cmd_buf_tail
+Message-ID: <20191030092014.GO838@suse.de>
+References: <20191024125410.19224-1-dvlasenk@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1572264605-172363-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.101.250]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024125410.19224-1-dvlasenk@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 24, 2019 at 02:54:10PM +0200, Denys Vlasenko wrote:
+> The compiler is not smart enough to realize that iommu->cmd_buf_tail
+> can't be modified across memcpy:
+> 
+> 41 8b 45 74          mov    0x74(%r13),%eax   # iommu->cmd_buf_tail
+> 44 8d 78 10          lea    0x10(%rax),%r15d  # += sizeof(*cmd)
+> 41 81 e7 ff 1f 00 00 and    $0x1fff,%r15d     # %= CMD_BUFFER_SIZE
+> 49 03 45 68          add    0x68(%r13),%rax   # target = iommu->cmd_buf + iommu->cmd_buf_tail
+> 45 89 7d 74          mov    %r15d,0x74(%r13)  # store to iommu->cmd_buf_tail
+> 49 8b 34 24          mov    (%r12),%rsi       # memcpy
+> 49 8b 7c 24 08       mov    0x8(%r12),%rdi    # memcpy
+> 48 89 30             mov    %rsi,(%rax)       # memcpy
+> 48 89 78 08          mov    %rdi,0x8(%rax)    # memcpy
+> 49 8b 55 38          mov    0x38(%r13),%rdx   # iommu->mmio_base
+> 41 8b 45 74          mov    0x74(%r13),%eax   # redundant load of iommu->cmd_buf_tail
+> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 89 82 08 20 00 00    mov    %eax,0x2008(%rdx) # writel
+> 
+> CC: Tom Lendacky <thomas.lendacky@amd.com>
+> CC: Joerg Roedel <jroedel@suse.de>
+> CC: linux-kernel@vger.kernel.org
+> Signed-off-by: Denys Vlasenko <dvlasenk@redhat.com>
+> ---
+>  drivers/iommu/amd_iommu.c | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
 
-
-On 2019/10/28 20:10, John Garry wrote:
-> This series aims to improve the build test cover of the driver by
-> supporting building under COMPILE_TEST.
->
-> I also included "lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops
-> are set at registration" as it was never picked up for 5.4.
->
-> Two new patches are also included since v1:
-> - clean issues detected by sparse
-> - build logic_pio.o into /lib library
->
-> John Garry (5):
->    lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at
->      registration
->    logic_pio: Define PIO_INDIRECT_SIZE for !CONFIG_INDIRECT_PIO
->    bus: hisi_lpc: Clean some types
->    bus: hisi_lpc: Expand build test coverage
->    logic_pio: Build into a library
->
->   drivers/bus/Kconfig       |  4 ++--
->   drivers/bus/hisi_lpc.c    |  9 ++++-----
->   include/linux/logic_pio.h |  4 ++--
->   lib/Makefile              |  2 +-
->   lib/logic_pio.c           | 14 ++++++++------
->   5 files changed, 17 insertions(+), 16 deletions(-)
->
-
-Thanks!
-Series applied to the hisilicon driver tree.
-
-Best Regards,
-Wei
+Applied, thanks.
 
