@@ -2,103 +2,126 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFF6CA9EC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5EDCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D7920856
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:31:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572442315;
-	bh=18iDLXageGOL+c+Fls3ArC5buu0vCBpPAh4iOmj3UdY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xw2d6dqS7bYMmEkI8D3537dS6JIDTzAJVBmXXSO30SEJDIaf79zolCES2QO68B7lw
-	 FK3nN3y2mCL8FGN7//yZuEhOLTBdHnS96KxIc/SE6doMVzvGimV1V6lE8B/OcshAe2
-	 4bmqoOF+H4GANuzGpiroNK94Tsn3GZwnzIUUE5Co=
+	by mail.kernel.org (Postfix) with ESMTP id 66F7C20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 13:32:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H91MSlad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfJ3Nby (ORCPT
+        id S1726638AbfJ3NcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 09:31:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbfJ3Nby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 09:31:54 -0400
-Received: from localhost (unknown [91.217.168.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 30 Oct 2019 09:32:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50670 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726119AbfJ3Nb7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 09:31:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572442318;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0I0c5NVjrpNTNl/OL6Kn2k5U+xaEtyxd7H2PQP2aE10=;
+        b=H91MSladHKiN8YjvpE88iyRfR0jPzFKgvOOPVk7/COzSM3P9zh6Bl2VH5FrYsuY3BF5kcD
+        rr9ib5vIdtKwq7dbH73m4wX198vGgiaUxVFD46sQGqaatvnmRlFQg/FmUtltadBngWFXpa
+        FyUSHpCNpA7xrQB6UtKhC9jo84qrhJI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-276-GWuHbDW4NgOX4yFTEvnp5A-1; Wed, 30 Oct 2019 09:31:52 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7108C20856;
-        Wed, 30 Oct 2019 13:31:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572442313;
-        bh=18iDLXageGOL+c+Fls3ArC5buu0vCBpPAh4iOmj3UdY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jGok/hqHg8b/5uBWCLPHDj8cuP9XVU++EDHjZvsoV0l5rJp1kNtq5oK5MgApRVs9Z
-         yB0VobkpYMYZTEiZFrLpqBOyk+hmoaUdL4l+M/3J3DkM3Go4bNduXg/xvJlDUa/a7S
-         PtDMQqeDb+QjRTm9cRrS3ozAeeyVZoVWXNKEa3RI=
-Date:   Wed, 30 Oct 2019 09:31:49 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@microsoft.com, linux-hyperv@vger.kernel.org,
-        kys@microsoft.com, Stephen Hemminger <sthemmin@microsoft.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Hyper-V commits for 5.4-rc
-Message-ID: <20191030133149.GN1554@sasha-vm>
-References: <20191030113703.266992083E@mail.kernel.org>
- <CAHk-=wgx_pSBtvmQE9zuNB6aoP52z601SG1pQDtrhm9ZMHNPMw@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 49F0B1800D55;
+        Wed, 30 Oct 2019 13:31:51 +0000 (UTC)
+Received: from [10.36.116.222] (ovpn-116-222.ams2.redhat.com [10.36.116.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AF8CE600C6;
+        Wed, 30 Oct 2019 13:31:49 +0000 (UTC)
+Subject: Re: [PATCH] mm/sparse: Consistently do not zero memmap
+To:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        akpm@linux-foundation.org
+Cc:     osalvador@suse.de, mhocko@suse.com, pasha.tatashin@oracle.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Vincent Whitchurch <rabinv@axis.com>
+References: <20191030131122.8256-1-vincent.whitchurch@axis.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <eb5dbddd-afb6-2473-fa76-a4fabf62fb89@redhat.com>
+Date:   Wed, 30 Oct 2019 14:31:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgx_pSBtvmQE9zuNB6aoP52z601SG1pQDtrhm9ZMHNPMw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191030131122.8256-1-vincent.whitchurch@axis.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: GWuHbDW4NgOX4yFTEvnp5A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 02:15:08PM +0100, Linus Torvalds wrote:
->On Wed, Oct 30, 2019 at 12:37 PM Sasha Levin <sashal@kernel.org> wrote:
->>
->>   git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
->
->No, Sasha, I'm not pulling this.
->
->It's completely broken garbage.
+On 30.10.19 14:11, Vincent Whitchurch wrote:
+> sparsemem without VMEMMAP has two allocation paths to allocate the
+> memory needed for its memmap (done in sparse_mem_map_populate()).
+>=20
+> In one allocation path (sparse_buffer_alloc() succeeds), the memory is
+> not zeroed (since it was previously allocated with
+> memblock_alloc_try_nid_raw()).
+>=20
+> In the other allocation path (sparse_buffer_alloc() fails and
+> sparse_mem_map_populate() falls back to memblock_alloc_try_nid()), the
+> memory is zeroed.
+>=20
+> AFAICS this difference does not appear to be on purpose.  If the code is
+> supposed to work with non-initialized memory (__init_single_page() takes
+> care of zeroing the struct pages which are actually used), we should
+> consistently not zero the memory, to avoid masking bugs.
 
-It is, appologies!
+I agree
 
->You already sent me two of those fixes earlier, and they got pulled in
->commit 56c642e2aa1c ("Merge tag 'hyperv-fixes-signed' of
->git://git.kernel.org/pub/scm/linux/kernel/git/hyper>") two weeks ago.
->
->Fine - of the three fixes you claim, I could do this pull, and get at
->least one of them.
->
->Except YOU HAVE REBASED your branch, so I see the other two fixes that
->I already got as duplicates.
->
->WHY?
+Acked-by: David Hildenbrand <david@redhat.com>
 
-Honestly, I forgot that I sent you those two commits two weeks ago, but
-still - you must be asking yourself why the heck would he rebase those,
-right?
+>=20
+> (I noticed this because on my ARM64 platform, with 1 GiB of memory the
+>   first [and only] section is allocated from the zeroing path while with
+>   2 GiB of memory the first 1 GiB section is allocated from the
+>   non-zeroing path.)
+>=20
+> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+> ---
+>   mm/sparse.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index f6891c1992b1..01e467adc219 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -458,7 +458,7 @@ struct page __init *__populate_section_memmap(unsigne=
+d long pfn,
+>   =09if (map)
+>   =09=09return map;
+>  =20
+> -=09map =3D memblock_alloc_try_nid(size,
+> +=09map =3D memblock_alloc_try_nid_raw(size,
+>   =09=09=09=09=09  PAGE_SIZE, addr,
+>   =09=09=09=09=09  MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+>   =09if (!map)
+>=20
 
-As I was working on the branch a few days ago I messed up and killed my
--fixes branch accidentally. To fix that I figured I'll just pick up
-those 3 fixes again from my mailbox since they're grouped so nicely
-over there and I haven't sent them to you yet.
 
-Except that I did. And now they ended up with different IDs.
+--=20
 
-I then did a merge attempt before sending them to you, expecting that
-things would blow up if I messed something up, but it didn't because the
-commits themselves are identical, so I haven't noticed it then either.
-
-Anyway, sorry about this, I'll resend it with just the relevant fix.
-
--- 
 Thanks,
-Sasha
+
+David / dhildenb
+
