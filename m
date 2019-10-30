@@ -2,84 +2,129 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3000CA9EC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538B2CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BADFF20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34AEC20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 07:44:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbfJ3HoB (ORCPT
+        id S1726273AbfJ3HoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 03:44:01 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:38480 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbfJ3HoB (ORCPT
+        Wed, 30 Oct 2019 03:44:20 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12034 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725923AbfJ3HoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 03:44:01 -0400
-Received: by mail-il1-f197.google.com with SMTP id f6so1325719ilg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 00:44:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=dxnBOmtjfHc78Shusa2+2C/dwRTd+Y9TDOU+bAXew3I=;
-        b=LY1LzS6KcuPMI1uFKUVM+7v04S7f1CmlDiQ++IxHEyYGgVQ7pz0Yzd8oZhSBtmyvqE
-         Y0tKwtbq+VsOyfG79F2SXQc2Bf60UpZfegiSRVilJZsyra3zvxhxswcPnYc8d9s3svTr
-         ftIU3FBluUJ7GFQtGSdLC1eYb0s3ARedTYrQ+Le9l4JxZM0nPWLPxQRJPuzfQ+Ofu+xt
-         P3C+JvWVPSKDrSuyt7jiK0oj/3i4jiAo38Qxrx7gKnKnyhf/92PDrL80uIB9tzMB/S3F
-         9ZVndw+UufRmJ7Hq/0SI3kCOF4Uczf47D4lkRe5maVvyGdKkB0iymjEKR7ESYzKJAX6l
-         Zy9A==
-X-Gm-Message-State: APjAAAXpKgj22jmU1U01ktanxHk+COPzXMzaYkSxTMDAejU868+sLIOP
-        YkO4UmeHHgU2W6DqKYOVgQWQtRwSlznj6oceqnpS6xv+x6nF
-X-Google-Smtp-Source: APXvYqzGVHBXNanN7A1gB3Pu8U6dJQ1xC84jP6Pgwkt0UEP1XoERs3CsFZrP1t2i7TE5nit9eB6qSkADskBzJ+BxPwORRiMLm+9o
+        Wed, 30 Oct 2019 03:44:19 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9U7gJlJ131355
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 03:44:18 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vy60jrpby-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 03:44:18 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <freude@linux.ibm.com>;
+        Wed, 30 Oct 2019 07:44:16 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 30 Oct 2019 07:44:12 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9U7iCO361866182
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Oct 2019 07:44:12 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E728642041;
+        Wed, 30 Oct 2019 07:44:11 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3DCF642052;
+        Wed, 30 Oct 2019 07:44:11 +0000 (GMT)
+Received: from funtu.home (unknown [9.145.158.134])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 30 Oct 2019 07:44:11 +0000 (GMT)
+Subject: Re: [PATCH] s390: vfio-ap: disable IRQ in remove callback results in
+ kernel OOPS
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
+        pmorel@linux.ibm.com, pasic@linux.ibm.com, jjherne@linux.ibm.com
+References: <1572386946-22566-1-git-send-email-akrowiak@linux.ibm.com>
+From:   Harald Freudenberger <freude@linux.ibm.com>
+Date:   Wed, 30 Oct 2019 08:44:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:99ca:: with SMTP id t71mr16932987ilk.61.1572421440730;
- Wed, 30 Oct 2019 00:44:00 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 00:44:00 -0700
-In-Reply-To: <000000000000c6fb2a05961a0dd8@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000069801e05961be5fb@google.com>
-Subject: Re: BUG: unable to handle kernel paging request in io_wq_cancel_all
-From:   syzbot <syzbot+221cc24572a2fed23b6b@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, axboe@kernel.dk,
-        dan.j.williams@intel.com, dhowells@redhat.com,
-        gregkh@linuxfoundation.org, hannes@cmpxchg.org,
-        joel@joelfernandes.org, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mchehab+samsung@kernel.org, mingo@redhat.com,
-        patrick.bellasi@arm.com, rgb@redhat.com, rostedt@goodmis.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        yamada.masahiro@socionext.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <1572386946-22566-1-git-send-email-akrowiak@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19103007-0008-0000-0000-0000032907CB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19103007-0009-0000-0000-00004A484CD5
+Message-Id: <0565c250-726f-dd99-f933-f91162dc107e@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-30_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910300076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On 29.10.19 23:09, Tony Krowiak wrote:
+> From: aekrowia <akrowiak@linux.ibm.com>
+>
+> When an AP adapter card is configured off via the SE or the SCLP
+> Deconfigure Adjunct Processor command and the AP bus subsequently detects
+> that the adapter card is no longer in the AP configuration, the card
+> device representing the adapter card as well as each of its associated
+> AP queue devices will be removed by the AP bus. If one or more of the
+> affected queue devices is bound to the VFIO AP device driver, its remove
+> callback will be invoked for each queue to be removed. The remove callback
+> resets the queue and disables IRQ processing. If interrupt processing was
+> never enabled for the queue, disabling IRQ processing will fail resulting
+> in a kernel OOPS.
+>
+> This patch verifies IRQ processing is enabled before attempting to disable
+> interrupts for the queue.
+>
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> Signed-off-by: aekrowia <akrowiak@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/vfio_ap_drv.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+> index be2520cc010b..42d8308fd3a1 100644
+> --- a/drivers/s390/crypto/vfio_ap_drv.c
+> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+> @@ -79,7 +79,8 @@ static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
+>  	apid = AP_QID_CARD(q->apqn);
+>  	apqi = AP_QID_QUEUE(q->apqn);
+>  	vfio_ap_mdev_reset_queue(apid, apqi, 1);
+> -	vfio_ap_irq_disable(q);
+> +	if (q->saved_isc != VFIO_AP_ISC_INVALID)
+> +		vfio_ap_irq_disable(q);
+>  	kfree(q);
+>  	mutex_unlock(&matrix_dev->lock);
+>  }
+Reset of an APQN does also clear IRQ processing. I don't say that the
+resources associated with IRQ handling for the APQN are also cleared.
+But when you call PQAP(AQIC) after an PQAP(RAPQ) or PQAP(ZAPQ)
+it is superfluous. However, there should not appear any kernel OOPS.
+So can you please give me more details about this kernel oops - maybe
+I need to add exception handler code to the inline ap_aqic() function.
 
-commit ef0524d3654628ead811f328af0a4a2953a8310f
-Author: Jens Axboe <axboe@kernel.dk>
-Date:   Thu Oct 24 13:25:42 2019 +0000
+regards, Harald Freudenberger
 
-     io_uring: replace workqueue usage with io-wq
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16acf5d0e00000
-start commit:   c57cf383 Add linux-next specific files for 20191029
-git tree:       linux-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15acf5d0e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11acf5d0e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cb86688f30db053d
-dashboard link: https://syzkaller.appspot.com/bug?extid=221cc24572a2fed23b6b
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=168671d4e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=140f4898e00000
-
-Reported-by: syzbot+221cc24572a2fed23b6b@syzkaller.appspotmail.com
-Fixes: ef0524d36546 ("io_uring: replace workqueue usage with io-wq")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
