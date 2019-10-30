@@ -2,173 +2,147 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1786FCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD22CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB8DB20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:40:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572424816;
-	bh=/nCth3tAN3zo9YpLVlMHUApCRm+0ZcTx184ZTc9xlgM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cZhFS2QNp6U8fl5O8y6AjZTOZxGH2VaJqEbxK3q2p3O4PBLk/Xbq3FGvIhP3x+HNE
-	 VHsEr04z3unNtPwxFLwmKmSS7JXJXvxYerIQfU4svXeQJ8UO6LxUDVJTbS73e8lU2s
-	 2K0m9SpkxpU5vDtaZBeYEsqeUeqmEMxmgDEo80Ug=
+	by mail.kernel.org (Postfix) with ESMTP id A051920874
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 08:40:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbfJ3IkP (ORCPT
+        id S1726347AbfJ3Ika (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 04:40:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfJ3IkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 04:40:15 -0400
-Received: from rapoport-lnx (190.228.71.37.rev.sfr.net [37.71.228.190])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04AFE20856;
-        Wed, 30 Oct 2019 08:40:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572424814;
-        bh=/nCth3tAN3zo9YpLVlMHUApCRm+0ZcTx184ZTc9xlgM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Nesn8HlZl7oj3aP21LaeInYQ+pjC5N1ru/Ic4LIsTmwnHs/f8XRQSOkx71rnYe1Au
-         RSpTABrOh3VDdlU2zTYQNbqqVTXVwsnRNGFTBvg7cUfwoi8YwW1psOJ5Z6Fbj5mZP2
-         f+9qYKTxXa82mHdjLJcKrDzqXxxuQtR9XPh7IhV0=
-Date:   Wed, 30 Oct 2019 09:40:06 +0100
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, X86 ML <x86@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-Message-ID: <20191030084005.GC20624@rapoport-lnx>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <CA5C22D9-BC3E-4B69-8DD9-4D3B75E40BD5@amacapital.net>
- <20191029093254.GE18773@rapoport-lnx>
- <CALCETrUuuc4DS0cdMBtS550Wkp0x9ND3M3SgtaMgyRROnDR5Kg@mail.gmail.com>
+        Wed, 30 Oct 2019 04:40:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5960 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726028AbfJ3Ik3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 04:40:29 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9U8c6e1025635;
+        Wed, 30 Oct 2019 04:38:45 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vy6j519kq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 30 Oct 2019 04:38:44 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9U8ciIo027923;
+        Wed, 30 Oct 2019 04:38:44 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vy6j519jp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 30 Oct 2019 04:38:44 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9U8UsRA005183;
+        Wed, 30 Oct 2019 08:38:42 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma04wdc.us.ibm.com with ESMTP id 2vxwh541jy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 30 Oct 2019 08:38:42 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9U8cdkE14942778
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Oct 2019 08:38:39 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5F311AC05E;
+        Wed, 30 Oct 2019 08:38:39 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4BE12AC059;
+        Wed, 30 Oct 2019 08:38:34 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.102.3.6])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 30 Oct 2019 08:38:34 +0000 (GMT)
+From:   Chandan Rajendra <chandanrlinux@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Chandan Rajendra <chandanrlinux@gmail.com>,
+        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, rostedt@goodmis.org, tstoyanov@vmware.com,
+        gregkh@linuxfoundation.org, kstewart@linuxfoundation.org,
+        tglx@linutronix.de, chandan@linux.ibm.com
+Subject: [PATCH] perf script: Fix obtaining next event
+Date:   Wed, 30 Oct 2019 14:10:32 +0530
+Message-Id: <20191030084032.31503-1-chandanrlinux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALCETrUuuc4DS0cdMBtS550Wkp0x9ND3M3SgtaMgyRROnDR5Kg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-30_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=878 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910300086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 10:00:55AM -0700, Andy Lutomirski wrote:
-> On Tue, Oct 29, 2019 at 2:33 AM Mike Rapoport <rppt@kernel.org> wrote:
-> >
-> > On Mon, Oct 28, 2019 at 02:44:23PM -0600, Andy Lutomirski wrote:
-> > >
-> > > > On Oct 27, 2019, at 4:17 AM, Mike Rapoport <rppt@kernel.org> wrote:
-> > > >
-> > > > ﻿From: Mike Rapoport <rppt@linux.ibm.com>
-> > > >
-> > > > Hi,
-> > > >
-> > > > The patch below aims to allow applications to create mappins that have
-> > > > pages visible only to the owning process. Such mappings could be used to
-> > > > store secrets so that these secrets are not visible neither to other
-> > > > processes nor to the kernel.
-> > > >
-> > > > I've only tested the basic functionality, the changes should be verified
-> > > > against THP/migration/compaction. Yet, I'd appreciate early feedback.
-> > >
-> > > I’ve contemplated the concept a fair amount, and I think you should
-> > > consider a change to the API. In particular, rather than having it be a
-> > > MAP_ flag, make it a chardev.  You can, at least at first, allow only
-> > > MAP_SHARED, and admins can decide who gets to use it.  It might also play
-> > > better with the VM overall, and you won’t need a VM_ flag for it — you
-> > > can just wire up .fault to do the right thing.
-> >
-> > I think mmap()/mprotect()/madvise() are the natural APIs for such
-> > interface.
-> 
-> Then you have a whole bunch of questions to answer.  For example:
-> 
-> What happens if you mprotect() or similar when the mapping is already
-> in use in a way that's incompatible with MAP_EXCLUSIVE?
+The current code segfaults when perf.data file contains two or more
+events. This happens due to incorrect pointer arithmetic being performed
+in trace_find_next_event().
 
-Then we refuse to mprotect()? Like in any other case when vm_flags are not
-compatible with required madvise()/mprotect() operation.
+tep_handle->events is an array of pointers to 'struct tep_event'. The
+pointer arithmetic interprets tep_handle->events as an array of 'struct
+tep_event' elements.
 
-> Is it actually reasonable to malloc() some memory and then make it exclusive?
-> 
-> Are you permitted to map a file MAP_EXCLUSIVE?  What does it mean?
+This commit replaces the usage of pointer arithmetic with calls to
+tep_get_event().
 
-I'd limit MAP_EXCLUSIVE only to anonymous memory.
+Fixes: bb3dd7e ("tools lib traceevent, perf tools: Move struct tep_handler definition in a local header file")
+Signed-off-by: Chandan Rajendra <chandanrlinux@gmail.com>
+---
+ tools/perf/util/trace-event-parse.c | 24 +++++++-----------------
+ 1 file changed, 7 insertions(+), 17 deletions(-)
 
-> What does MAP_PRIVATE | MAP_EXCLUSIVE do?
-
-My preference is to have only mmap() and then the semantics is more clear:
-
-MAP_PRIVATE | MAP_EXCLUSIVE creates a pre-populated region, marks it locked
-and drops the pages in this region from the direct map.
-The pages are returned back on munmap(). 
-Then there is no way to change an existing area to be exclusive or vice
-versa.
-
-> How does one pass exclusive memory via SCM_RIGHTS?  (If it's a
-> memfd-like or chardev interface, it's trivial.  mmap(), not so much.)
-
-Why passing such memory via SCM_RIGHTS would be useful?
+diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
+index 5d6bfc70b210..7bf423a3631e 100644
+--- a/tools/perf/util/trace-event-parse.c
++++ b/tools/perf/util/trace-event-parse.c
+@@ -176,31 +176,21 @@ int parse_event_file(struct tep_handle *pevent,
+ struct tep_event *trace_find_next_event(struct tep_handle *pevent,
+ 					struct tep_event *event)
+ {
+-	static int idx;
++	int idx;
+ 	int events_count;
+-	struct tep_event *all_events;
  
-> And finally, there's my personal giant pet peeve: a major use of this
-> will be for virtualization.  I suspect that a lot of people would like
-> the majority of KVM guest memory to be unmapped from the host
-> pagetables.  But people might also like for guest memory to be
-> unmapped in *QEMU's* pagetables, and mmap() is a basically worthless
-> interface for this.  Getting fd-backed memory into a guest will take
-> some possibly major work in the kernel, but getting vma-backed memory
-> into a guest without mapping it in the host user address space seems
-> much, much worse.
-
-Well, in my view, the MAP_EXCLUSIVE is intended to keep small secrets
-rather than use it for the entire guest memory. I even considered adding a
-limit for the mapping size, but then I decided that since RLIMIT_MEMLOCK is
-anyway enforced there is no need for a new one.
-
-I agree that getting fd-backed memory into a guest would be less pain that
-VMA, but KVM can already use memory outside the control of the kernel via
-/dev/map [1].
-
-So unless I'm missing something here, there is no need to use MAP_EXCLUSIVE
-for the guest memory.
-
-[1] https://lwn.net/Articles/778240/
-
-> > Switching to a chardev doesn't solve the major problem of direct
-> > map fragmentation and defeats the ability to use exclusive memory mappings
-> > with the existing allocators, while mprotect() and madvise() do not.
-> >
-> 
-> Will people really want to do malloc() and then remap it exclusive?
-> This sounds dubiously useful at best.
-
-Again, my preference is to have mmap() only, but I see a value in this use
-case as well. Application developers allocate memory and then sometimes
-change its properties rather than go mmap() something. For such usage
-mprotect() may be usefull.
-
-
+-	all_events = tep_get_first_event(pevent);
+ 	events_count = tep_get_events_count(pevent);
+-	if (!pevent || !all_events || events_count < 1)
++	if (!pevent || events_count < 1)
+ 		return NULL;
+ 
+-	if (!event) {
+-		idx = 0;
+-		return all_events;
+-	}
++	if (!event)
++		return tep_get_event(pevent, 0);
+ 
+-	if (idx < events_count && event == (all_events + idx)) {
+-		idx++;
+-		if (idx == events_count)
+-			return NULL;
+-		return (all_events + idx);
++	for (idx = 0; idx < events_count - 1; idx++) {
++		if (event == tep_get_event(pevent, idx))
++			return tep_get_event(pevent, idx + 1);
+ 	}
+ 
+-	for (idx = 1; idx < events_count; idx++) {
+-		if (event == (all_events + (idx - 1)))
+-			return (all_events + idx);
+-	}
+ 	return NULL;
+ }
+ 
 -- 
-Sincerely yours,
-Mike.
+2.19.1
+
