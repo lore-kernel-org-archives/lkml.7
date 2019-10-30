@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CC0CA9EC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F8CCA9EC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A805217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356AD217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572451186;
-	bh=2qkLcwpEbkvyB56eMwEwhqmMpsgXBqVREUPQsPDFVac=;
+	s=default; t=1572451190;
+	bh=9FLjLiH7v5XHJHv+NXNnLPQ7INHN9b6L2M7gM2XWXIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sH+h5xRpHtgO9jJVjoNGwhDKvRCs6RYK9jEvbd435FYChGZ/uycoCKzW4C2wnHrZb
-	 YiCO6538pQX/ORpgRQuYeJJJ2uy7ud236fFDXKVUU9V5ZdOCsMNczv/csZcvnYGOeZ
-	 cJFtaWdNISHT5tv9ixAtOFsmSIyEc+DB7bn/nJiw=
+	b=ZvFgZaSiDgDY7OGQn9wHy2vp4Xsz4+qTvDQr4MSEg4pQIs4vt/ZNFNmNewvqLW3mg
+	 vK7q8mzDp/Pyl8Bbv3QtXjFrPBCxDA/+NoEIUJSIG5lNgKW5Hof6e8sOGSuSTM6qAc
+	 eIt+VSqbhePDY4o7k4ktexyasSSOMtKEbMSFEyFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbfJ3P4r (ORCPT
+        id S1728156AbfJ3P7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:56:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58314 "EHLO mail.kernel.org"
+        Wed, 30 Oct 2019 11:59:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728045AbfJ3P4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:56:42 -0400
+        id S1728169AbfJ3P4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 11:56:38 -0400
 Received: from sasha-vm.mshome.net (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D94220656;
-        Wed, 30 Oct 2019 15:56:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2623920874;
+        Wed, 30 Oct 2019 15:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572451001;
-        bh=2qkLcwpEbkvyB56eMwEwhqmMpsgXBqVREUPQsPDFVac=;
+        s=default; t=1572450998;
+        bh=9FLjLiH7v5XHJHv+NXNnLPQ7INHN9b6L2M7gM2XWXIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OItyTn8jqqvGVhREg6zXk+H1Z9HYKwYNmP1sjbU/mlVbEw6IjBoVdETBBrJX5jozV
-         PvEHiOPLfWeUdietqRlAwNonMd/4ojAq7Tfi0J7POWLSp32aXGJiEIEspCvpAmbSFh
-         uCc5ciQ6yFrOk1n3NHGhlBZ4YR2QmcgZ9DiOoFvU=
+        b=SEAZ94SCpsLtNodicIjDGv+JFiIA1aQoHoCWYC6u89T5tcO9Aq+bVgNpym8rnVA+h
+         gcF0HhHBDk6AIHDV0OgUQvhKwziBAd3B1lWESoixLkorLiYwqeRJuKYdgBBiD/TDTD
+         4Gtb2rysOtHXZo3eq9RnUhrJNCrx7cc+7y46HyWo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 18/24] ARM: 8926/1: v7m: remove register save to stack before svc
-Date:   Wed, 30 Oct 2019 11:55:49 -0400
-Message-Id: <20191030155555.10494-18-sashal@kernel.org>
+Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 17/24] scsi: target: core: Do not overwrite CDB byte 1
+Date:   Wed, 30 Oct 2019 11:55:48 -0400
+Message-Id: <20191030155555.10494-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191030155555.10494-1-sashal@kernel.org>
 References: <20191030155555.10494-1-sashal@kernel.org>
@@ -60,61 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: afzal mohammed <afzal.mohd.ma@gmail.com>
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-[ Upstream commit 2ecb287998a47cc0a766f6071f63bc185f338540 ]
+[ Upstream commit 27e84243cb63601a10e366afe3e2d05bb03c1cb5 ]
 
-r0-r3 & r12 registers are saved & restored, before & after svc
-respectively. Intention was to preserve those registers across thread to
-handler mode switch.
+passthrough_parse_cdb() - used by TCMU and PSCSI - attepts to reset the LUN
+field of SCSI-2 CDBs (bits 5,6,7 of byte 1).  The current code is wrong as
+for newer commands not having the LUN field it overwrites relevant command
+bits (e.g. for SECURITY PROTOCOL IN / OUT). We think this code was
+unnecessary from the beginning or at least it is no longer useful. So we
+remove it entirely.
 
-On v7-M, hardware saves the register context upon exception in AAPCS
-complaint way. Restoring r0-r3 & r12 is done from stack location where
-hardware saves it, not from the location on stack where these registers
-were saved.
-
-To clarify, on stm32f429 discovery board:
-
-1. before svc, sp - 0x90009ff8
-2. r0-r3,r12 saved to 0x90009ff8 - 0x9000a00b
-3. upon svc, h/w decrements sp by 32 & pushes registers onto stack
-4. after svc,  sp - 0x90009fd8
-5. r0-r3,r12 restored from 0x90009fd8 - 0x90009feb
-
-Above means r0-r3,r12 is not restored from the location where they are
-saved, but since hardware pushes the registers onto stack, the registers
-are restored correctly.
-
-Note that during register saving to stack (step 2), it goes past
-0x9000a000. And it seems, based on objdump, there are global symbols
-residing there, and it perhaps can cause issues on a non-XIP Kernel
-(on XIP, data section is setup later).
-
-Based on the analysis above, manually saving registers onto stack is at
-best no-op and at worst can cause data section corruption. Hence remove
-storing of registers onto stack before svc.
-
-Fixes: b70cd406d7fe ("ARM: 8671/1: V7M: Preserve registers across switch from Thread to Handler mode")
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-Acked-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Link: https://lore.kernel.org/r/12498eab-76fd-eaad-1316-c2827badb76a@ts.fujitsu.com
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/proc-v7m.S | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/target/target_core_device.c | 21 ---------------------
+ 1 file changed, 21 deletions(-)
 
-diff --git a/arch/arm/mm/proc-v7m.S b/arch/arm/mm/proc-v7m.S
-index 92e84181933ad..c68408d51c4bc 100644
---- a/arch/arm/mm/proc-v7m.S
-+++ b/arch/arm/mm/proc-v7m.S
-@@ -135,7 +135,6 @@ __v7m_setup_cont:
- 	dsb
- 	mov	r6, lr			@ save LR
- 	ldr	sp, =init_thread_union + THREAD_START_SP
--	stmia	sp, {r0-r3, r12}
- 	cpsie	i
- 	svc	#0
- 1:	cpsid	i
+diff --git a/drivers/target/target_core_device.c b/drivers/target/target_core_device.c
+index 84742125f7730..92b52d2314b53 100644
+--- a/drivers/target/target_core_device.c
++++ b/drivers/target/target_core_device.c
+@@ -1151,27 +1151,6 @@ passthrough_parse_cdb(struct se_cmd *cmd,
+ 	struct se_device *dev = cmd->se_dev;
+ 	unsigned int size;
+ 
+-	/*
+-	 * Clear a lun set in the cdb if the initiator talking to use spoke
+-	 * and old standards version, as we can't assume the underlying device
+-	 * won't choke up on it.
+-	 */
+-	switch (cdb[0]) {
+-	case READ_10: /* SBC - RDProtect */
+-	case READ_12: /* SBC - RDProtect */
+-	case READ_16: /* SBC - RDProtect */
+-	case SEND_DIAGNOSTIC: /* SPC - SELF-TEST Code */
+-	case VERIFY: /* SBC - VRProtect */
+-	case VERIFY_16: /* SBC - VRProtect */
+-	case WRITE_VERIFY: /* SBC - VRProtect */
+-	case WRITE_VERIFY_12: /* SBC - VRProtect */
+-	case MAINTENANCE_IN: /* SPC - Parameter Data Format for SA RTPG */
+-		break;
+-	default:
+-		cdb[1] &= 0x1f; /* clear logical unit number */
+-		break;
+-	}
+-
+ 	/*
+ 	 * For REPORT LUNS we always need to emulate the response, for everything
+ 	 * else, pass it up.
 -- 
 2.20.1
 
