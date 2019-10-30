@@ -2,149 +2,134 @@ Return-Path: <SRS0=iR9I=YX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800B0CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE37DCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52ABC20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572448557;
-	bh=E2VeR4DpC8qlFCo3RxqjxseT2yjTygu+f2xhqjwmhAo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fep0H5wnwS1a/W5zWjQ2W3JoYrgay7i+ogtL1gXDhJgSW7QOEUuPWAMZs6xOT9NEp
-	 iBtzJb36Bnh4457OO3tsJ2dzB6GN8g4/b9Pq+u6FF0x8QfRFEfSEMzV7uueanZlrUL
-	 35bBsTJRfkFh50kMJ2/BqrMSQ5ZTdQdHR19LeboA=
+	by mail.kernel.org (Postfix) with ESMTP id C274220679
+	for <linux-kernel@archiver.kernel.org>; Wed, 30 Oct 2019 15:16:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfJ3PP4 (ORCPT
+        id S1727085AbfJ3PQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 11:15:56 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35217 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbfJ3PP4 (ORCPT
+        Wed, 30 Oct 2019 11:16:54 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60084 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726451AbfJ3PQy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 11:15:56 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k2so2059413edx.2;
-        Wed, 30 Oct 2019 08:15:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Y+WK5GKecV/KBDUIy9GWTH4bwpBGohOzkeFmBQZf1R0=;
-        b=nfWQzkkf4PhLpKtA94RjGAhAZG4wqbg/1DGKs9XoN9ILhlAKw3anczuzfN9NpGDRRJ
-         XIOP3/cVplHJCsQDuoltwlOgecJaKjLACrNJMOYsXp0Zjo3QIJWCJ+cVlmaMCIFIcWmr
-         204QilFckeUrG2141XFOBHcZ0ZwG3wA6KIL/8Zw5KADiX8djTmsh7/VzyVDTRqYVCJwy
-         DubfI8lvWWkJ1eeJZsR1sj5LwnZG41IrrsWGD3PM7UMPA4sQKucwz7+/Xp34Q8IDR3Dc
-         1npOEJOzQipz2F5HFaAuHgdQf6s0Ie8sTOgssHAcOkciUkSMjp3NL7/M2hAhZg2fLZJa
-         CR1w==
-X-Gm-Message-State: APjAAAUGQXGq6ANzKT4oW5bKtBAgfTvpAqxqIU+7lRYqXzq5Iw1ZsG2Q
-        Ph5JTp63Z0JJQ01FpI/AzNU=
-X-Google-Smtp-Source: APXvYqzW36JMfOP+9Ckkk57hi580dnNzKCE+o0IDHat7XROi4wbyfWLMRXpJoPeDKapILbXIURAeVg==
-X-Received: by 2002:a17:906:85da:: with SMTP id i26mr25000ejy.186.1572448553957;
-        Wed, 30 Oct 2019 08:15:53 -0700 (PDT)
-Received: from pi3 ([194.230.155.180])
-        by smtp.googlemail.com with ESMTPSA id 32sm6111edq.23.2019.10.30.08.15.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 08:15:53 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 16:15:51 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] soc: samsung: exynos-asv: fix potential overflow
- in multiply
-Message-ID: <20191030151551.GA25718@pi3>
-References: <20191030145457.10120-1-colin.king@canonical.com>
+        Wed, 30 Oct 2019 11:16:54 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9UF61Ai129567
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 11:16:52 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vycekj4dd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 11:16:51 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <iii@linux.ibm.com>;
+        Wed, 30 Oct 2019 15:16:48 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 30 Oct 2019 15:16:46 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9UFGigr51904710
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Oct 2019 15:16:44 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 51984A4054;
+        Wed, 30 Oct 2019 15:16:44 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ECAF7A4060;
+        Wed, 30 Oct 2019 15:16:43 +0000 (GMT)
+Received: from white.boeblingen.de.ibm.com (unknown [9.152.96.251])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 30 Oct 2019 15:16:43 +0000 (GMT)
+From:   Ilya Leoshkevich <iii@linux.ibm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [PATCH v2] mm/sparse.c: mark populate_section_memmap as __meminit
+Date:   Wed, 30 Oct 2019 16:16:39 +0100
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191030145457.10120-1-colin.king@canonical.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19103015-0012-0000-0000-0000035F2C4E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19103015-0013-0000-0000-0000219A729B
+Message-Id: <20191030151639.41486-1-iii@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-30_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910300141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 02:54:57PM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The multiplication of opp_freq by MHZ is performed using unsigned int
-> multiplication however the result is being passed into a function where
-> the frequency is an unsigned long, so there is an expectation that the
-> result won't fit into an unsigned int. Fix any potential integer overflow
-> my making opp_freq an unsigned long.  Also change from %u to %lu format
-> specifiers
-> 
-> Addresses-Coverity: ("Unintentional integer overflow")
-> Fixes: 5ea428595cc5 ("soc: samsung: Add Exynos Adaptive Supply Voltage driver")
+Building the kernel on s390 with -Og produces the following warning:
 
-Although I like the idea of using the same type as the
-dev_pm_opp_find_freq_exact() interface, but I do not agree with severity
-of this. This is currently only ARMv7 (32-bit) driver, so using long
-does not change anything. It's still 4 bytes and it is still up to 4
-GHz.
+WARNING: vmlinux.o(.text+0x28dabe): Section mismatch in reference from the function populate_section_memmap() to the function .meminit.text:__populate_section_memmap()
+The function populate_section_memmap() references
+the function __meminit __populate_section_memmap().
+This is often because populate_section_memmap lacks a __meminit
+annotation or the annotation of __populate_section_memmap is wrong.
 
-Therefore on ARMv7, the possibility of overflow is exactly the same as
-before. Nothing was fixed.
+While -Og is not supported, in theory this might still happen with
+another compiler or on another architecture. So fix this by using the
+correct section annotations.
 
-If we really want to fix it, then all this should be "long long" or
-value should be checked while parsing DT.
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+---
 
-Semantically I agree, so I would prefer to adjust only the commit
-message.
+v1 -> v2: Do not touch mm/sparse.c version of __populate_section_memmap:
+its __init annotation is correct, since it is only called during init
+phase (by sparse_init_nid), and contains the call to another __init
+function. Spotted by kbuild test robot <lkp@intel.com> and Oscar
+Salvador <osalvador@suse.de>.
 
-Best regards,
-Krzysztof
+I was notified that v1 has already been included into
+http://ozlabs.org/~akpm/mmots/broken-out. Since this is not a git
+repository, I've decided to send a v2 instead of the fix. Please let me
+know if I should send a fix instead.
 
+ mm/sparse.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/soc/samsung/exynos-asv.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/soc/samsung/exynos-asv.c b/drivers/soc/samsung/exynos-asv.c
-> index 8abf4dfaa5c5..d66fc74379a3 100644
-> --- a/drivers/soc/samsung/exynos-asv.c
-> +++ b/drivers/soc/samsung/exynos-asv.c
-> @@ -30,7 +30,7 @@ static int exynos_asv_update_cpu_opps(struct exynos_asv *asv,
->  {
->  	struct exynos_asv_subsys *subsys = NULL;
->  	struct dev_pm_opp *opp;
-> -	unsigned int opp_freq;
-> +	unsigned long opp_freq;
->  	int i;
->  
->  	for (i = 0; i < ARRAY_SIZE(asv->subsys); i++) {
-> @@ -51,7 +51,7 @@ static int exynos_asv_update_cpu_opps(struct exynos_asv *asv,
->  
->  		opp = dev_pm_opp_find_freq_exact(cpu, opp_freq * MHZ, true);
->  		if (IS_ERR(opp)) {
-> -			dev_info(asv->dev, "cpu%d opp%d, freq: %u missing\n",
-> +			dev_info(asv->dev, "cpu%d opp%d, freq: %lu missing\n",
->  				 cpu->id, i, opp_freq);
->  
->  			continue;
-> @@ -68,11 +68,11 @@ static int exynos_asv_update_cpu_opps(struct exynos_asv *asv,
->  						new_volt, new_volt, new_volt);
->  		if (ret < 0)
->  			dev_err(asv->dev,
-> -				"Failed to adjust OPP %u Hz/%u uV for cpu%d\n",
-> +				"Failed to adjust OPP %lu Hz/%u uV for cpu%d\n",
->  				opp_freq, new_volt, cpu->id);
->  		else
->  			dev_dbg(asv->dev,
-> -				"Adjusted OPP %u Hz/%u -> %u uV, cpu%d\n",
-> +				"Adjusted OPP %lu Hz/%u -> %u uV, cpu%d\n",
->  				opp_freq, volt, new_volt, cpu->id);
->  	}
->  
-> -- 
-> 2.20.1
-> 
+diff --git a/mm/sparse.c b/mm/sparse.c
+index f6891c1992b1..c2c01b6330af 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -647,7 +647,7 @@ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+ #endif
+ 
+ #ifdef CONFIG_SPARSEMEM_VMEMMAP
+-static struct page *populate_section_memmap(unsigned long pfn,
++static struct page * __meminit populate_section_memmap(unsigned long pfn,
+ 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+ {
+ 	return __populate_section_memmap(pfn, nr_pages, nid, altmap);
+@@ -669,7 +669,7 @@ static void free_map_bootmem(struct page *memmap)
+ 	vmemmap_free(start, end, NULL);
+ }
+ #else
+-struct page *populate_section_memmap(unsigned long pfn,
++struct page * __meminit populate_section_memmap(unsigned long pfn,
+ 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+ {
+ 	struct page *page, *ret;
+-- 
+2.23.0
+
