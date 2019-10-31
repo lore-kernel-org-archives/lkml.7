@@ -2,78 +2,92 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402CFCA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EB1CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D01B208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572515330;
-	bh=pQ2TZ8AZGjE832CFWtP12FmqR4rocBUFpuSdy3IhJps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o2KJlpwu8ocGzAEkI/lYeVrElwQtwmYxbeWy0Hguv5+Vfm4ebil0GAeySsZ7ugbg3
-	 LtJVq5igNs4FDTBRSmUqNqlbGVV6dIYUp2nBqwSnKxujPwRm0Sm4LafYxqqrpId4Db
-	 Gq3XlrZpZ+hmSVS/m+sWUMA4B7Y6MNwTJnv3HYFU=
+	by mail.kernel.org (Postfix) with ESMTP id 8478A2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfJaJst (ORCPT
+        id S1727237AbfJaJtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 05:48:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44868 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbfJaJss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 05:48:48 -0400
-Received: from localhost (lns-bzn-32-82-254-4-138.adsl.proxad.net [82.254.4.138])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4EDD2086D;
-        Thu, 31 Oct 2019 09:48:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572515328;
-        bh=pQ2TZ8AZGjE832CFWtP12FmqR4rocBUFpuSdy3IhJps=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ecnwFU71ceqdrL0AkjJR5tVBlshMAAl40bFLHlhvuyeRilCtOSdIqM3aUH9rIYomt
-         uqFUHzTJvOCzAUGfbJ5UJsB7+hWo0abFBvUSVWS2cfwZF0MxNWWQkothYzO2b6ulSn
-         Ag1eINk53eyrnibM0eL5ntAKipomJK0pgdMDeTI8=
-Date:   Thu, 31 Oct 2019 10:48:37 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
-        jernej.skrabec@siol.net, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v3 1/3] ARM64: dts: sun50i-h6-pine-h64: state that the DT
- supports the modelB
-Message-ID: <20191031094837.wy4gj6xo4youao75@hendrix>
-References: <1572438255-26107-1-git-send-email-clabbe@baylibre.com>
- <1572438255-26107-2-git-send-email-clabbe@baylibre.com>
+        Thu, 31 Oct 2019 05:49:03 -0400
+Received: from smtp07.smtpout.orange.fr ([80.12.242.129]:26180 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbfJaJtD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 05:49:03 -0400
+Received: from [192.168.42.210] ([93.23.12.90])
+        by mwinf5d66 with ME
+        id L9ox2100X1waAWt039oxcA; Thu, 31 Oct 2019 10:49:01 +0100
+X-ME-Helo: [192.168.42.210]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 31 Oct 2019 10:49:01 +0100
+X-ME-IP: 93.23.12.90
+Subject: Re: [PATCH] vsock: Simplify '__vsock_release()'
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        davem@davemloft.net, sunilmut@microsoft.com, willemb@google.com,
+        sgarzare@redhat.com, stefanha@redhat.com, ytht.net@gmail.com,
+        arnd@arndb.de, tglx@linutronix.de, decui@microsoft.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20191031064741.4567-1-christophe.jaillet@wanadoo.fr>
+ <c7a0b6b0-96cd-1fd3-3d98-94a3692bda38@cogentembedded.com>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <1b33ca33-a02b-1923-cbee-814e520b9700@wanadoo.fr>
+Date:   Thu, 31 Oct 2019 10:48:53 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572438255-26107-2-git-send-email-clabbe@baylibre.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <c7a0b6b0-96cd-1fd3-3d98-94a3692bda38@cogentembedded.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 12:24:13PM +0000, Corentin Labbe wrote:
-> The current sun50i-h6-pine-h64 DT does not specify which model (A or B)
-> it supports.
-> When this file was created, only modelA was existing, but now both model
-> exists and with the time, this DT drifted to support the model B since it is
-> the most common one.
-> Furtheremore, some part of the model A does not work with it like ethernet and
-> HDMI connector (as confirmed by Jernej on IRC).
+Le 31/10/2019 à 10:36, Sergei Shtylyov a écrit :
+> Hello!
 >
-> So it is time to settle the issue, and the easiest way is to state that
-> this DT is for model B.
+> On 31.10.2019 9:47, Christophe JAILLET wrote:
+>
+>> Use '__skb_queue_purge()' instead of re-implementing it.
+>
+>    In don't see that double underscore below...
+This is a typo in the commit message.
 
-No, this DT was introduced for model A, and we have to keep that. If
-some model B changes crept in, that's unfortunate, but it should be
-reverted, instead of changing the assumptions like this.
+There is no need for __ because skb_dequeue was used.
 
-Maxime
+Could you fix it directly in the commit message (preferred solution for 
+me) or should I send a V2?
+
+CJ
+
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>> ---
+>>   net/vmw_vsock/af_vsock.c | 4 +---
+>>   1 file changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>> index 2ab43b2bba31..2983dc92ca63 100644
+>> --- a/net/vmw_vsock/af_vsock.c
+>> +++ b/net/vmw_vsock/af_vsock.c
+> [...]
+>> @@ -662,8 +661,7 @@ static void __vsock_release(struct sock *sk, int 
+>> level)
+>>           sock_orphan(sk);
+>>           sk->sk_shutdown = SHUTDOWN_MASK;
+>>   -        while ((skb = skb_dequeue(&sk->sk_receive_queue)))
+>> -            kfree_skb(skb);
+>> +        skb_queue_purge(&sk->sk_receive_queue);
+>>             /* Clean up any sockets that never were accepted. */
+>>           while ((pending = vsock_dequeue_accept(sk)) != NULL) {
+>
+> MBR, Sergei
+>
+
