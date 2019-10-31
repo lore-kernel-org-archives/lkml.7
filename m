@@ -2,113 +2,137 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD74CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BD2C47E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AFD02087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F4F20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:57:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbfJaQ5B (ORCPT
+        id S1728756AbfJaQ5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 12:57:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:52308 "EHLO foss.arm.com"
+        Thu, 31 Oct 2019 12:57:45 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:39638 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728685AbfJaQ5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:57:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6F3A1FB;
-        Thu, 31 Oct 2019 09:57:00 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (unknown [10.1.195.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D0743F6C4;
-        Thu, 31 Oct 2019 09:56:59 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 16:56:57 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
-        ionela.voinescu@arm.com, vincent.guittot@linaro.org,
-        rui.zhang@intel.com, edubezval@gmail.com, qperret@google.com,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org, daniel.lezcano@linaro.org
-Subject: Re: [Patch v4 4/6] sched/fair: update cpu_capcity to reflect thermal
- pressure
-Message-ID: <20191031165656.oad63hug4t7nlopl@e107158-lin.cambridge.arm.com>
-References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
- <1571776465-29763-5-git-send-email-thara.gopinath@linaro.org>
- <20191023122252.dz7obopab6iizy4s@e107158-lin.cambridge.arm.com>
- <20191028153010.GE4097@hirez.programming.kicks-ass.net>
- <20191031105342.b3sl5xhysldfla3g@e107158-lin.cambridge.arm.com>
- <5DBB05BC.40502@linaro.org>
+        id S1728597AbfJaQ5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 12:57:45 -0400
+Received: from dhcp-64-28.ens-lyon.fr ([140.77.64.28] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iQDlQ-0006YQ-Kx; Thu, 31 Oct 2019 17:57:36 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Markus Reichl <m.reichl@fivetechno.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: Add PCIe node on rk3399-roc-pc
+Date:   Thu, 31 Oct 2019 17:57:35 +0100
+Message-ID: <1719506.vT9a8mQdzu@phil>
+In-Reply-To: <09300c2d-4298-1b01-ac41-d1b2610589d4@fivetechno.de>
+References: <09300c2d-4298-1b01-ac41-d1b2610589d4@fivetechno.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5DBB05BC.40502@linaro.org>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/31/19 12:03, Thara Gopinath wrote:
-> On 10/31/2019 06:53 AM, Qais Yousef wrote:
-> > On 10/28/19 16:30, Peter Zijlstra wrote:
-> >> On Wed, Oct 23, 2019 at 01:28:40PM +0100, Qais Yousef wrote:
-> >>> On 10/22/19 16:34, Thara Gopinath wrote:
-> >>>> cpu_capacity relflects the maximum available capacity of a cpu. Thermal
-> >>>> pressure on a cpu means this maximum available capacity is reduced. This
-> >>>> patch reduces the average thermal pressure for a cpu from its maximum
-> >>>> available capacity so that cpu_capacity reflects the actual
-> >>>> available capacity.
-> >>>>
-> >>>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> >>>> ---
-> >>>>  kernel/sched/fair.c | 1 +
-> >>>>  1 file changed, 1 insertion(+)
-> >>>>
-> >>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> >>>> index 4f9c2cb..be3e802 100644
-> >>>> --- a/kernel/sched/fair.c
-> >>>> +++ b/kernel/sched/fair.c
-> >>>> @@ -7727,6 +7727,7 @@ static unsigned long scale_rt_capacity(struct sched_domain *sd, int cpu)
-> >>>>  
-> >>>>  	used = READ_ONCE(rq->avg_rt.util_avg);
-> >>>>  	used += READ_ONCE(rq->avg_dl.util_avg);
-> >>>> +	used += READ_ONCE(rq->avg_thermal.load_avg);
-> >>>
-> >>> Maybe a naive question - but can we add util_avg with load_avg without
-> >>> a conversion? I thought the 2 signals have different properties.
-> >>
-> >> Changelog of patch #1 explains, it's in that dense blob of text.
-> >>
-> >> But yes, you're quite right that that wants a comment here.
-> > 
-> > Thanks for the pointer! A comment would be nice indeed.
-> > 
-> > To make sure I got this correctly - it's because avg_thermal.load_avg
-> > represents delta_capacity which is already a 'converted' form of load. So this
-> > makes avg_thermal.load_avg a util_avg really. Correct?
-> Hello Quais,
-> 
-> Sorry for not replying to your earlier email. Thanks for the review.
-> So if you look at the code, util_sum in calculated as a binary signal
-> converted into capacity. Check out the the below snippet from accumulate_sum
-> 
->    if (load)
->                 sa->load_sum += load * contrib;
->         if (runnable)
->                 sa->runnable_load_sum += runnable * contrib;
->         if (running)
->                 sa->util_sum += contrib << SCHED_CAPACITY_SHIFT;
-> 
-> So the actual delta for the thermal pressure will never be considered
-> if util_avg is used.
-> 
-> I will update this patch with relevant comment.
+Hi,
 
-Okay thanks for the explanation.
+Am Montag, 28. Oktober 2019, 15:47:27 CET schrieb Markus Reichl:
+> rk3399-roc-pc has a PCIe interface. Enable it for use with
+> the M.2 NGFF M_KEY slot on roc-rk3399-mezzanine board.
+> Tested with Samsung 970 evo plus SSD.
+> 
+> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+> ---
+>  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 38 +++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> index 9313251765c7..2d637d54994b 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> @@ -158,6 +158,21 @@
+>  		regulator-max-microvolt = <1400000>;
+>  		vin-supply = <&vcc_sys>;
+>  	};
+> +
+> +	/* on roc-rk3399-mezzanine board */
 
---
-Qais Yousef
+I'm undecided on this. From what I've seen that mezzanine board is some
+sort of addon, like a raspberry pi hat. Therefore it's not always present,
+so probably should not be part of the base board dts.
+
+I'm thinking a dt-overlay that can then be activated might be the solution
+of choice, but I've reached out to arm-soc poeple on irc to determine the
+correct course.
+
+
+Heiko
+
+> +	vcc3v3_pcie: vcc3v3-pcie {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc3v3_pcie";
+> +		enable-active-high;
+> +		gpio = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vcc3v3_pcie_en>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&dc_12v>;
+> +	};
+>  };
+>  
+>  &cpu_l0 {
+> @@ -514,6 +529,19 @@
+>  	status = "okay";
+>  };
+>  
+> +&pcie_phy {
+> +	status = "okay";
+> +};
+> +
+> +&pcie0 {
+> +	ep-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>;
+> +	num-lanes = <4>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie_perst>;
+> +	vpcie3v3-supply = <&vcc3v3_pcie>;
+> +	status = "okay";
+> +};
+> +
+>  &pinctrl {
+>  	lcd-panel {
+>  		lcd_panel_reset: lcd-panel-reset {
+> @@ -535,6 +563,16 @@
+>  		};
+>  	};
+>  
+> +	pcie {
+> +		vcc3v3_pcie_en: vcc3v3-pcie-en {
+> +			rockchip,pins = <1 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +
+> +		pcie_perst: pcie-perst {
+> +			rockchip,pins = <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+>  	pmic {
+>  		vsel1_gpio: vsel1-gpio {
+>  			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
+> 
+
+
+
+
