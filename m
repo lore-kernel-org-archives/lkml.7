@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5227CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8BACA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A553020862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B11E520862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:02:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ctQDsBSi"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kd81AX2H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfJaKCF (ORCPT
+        id S1727370AbfJaKCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:02:05 -0400
-Received: from mail-eopbgr130058.outbound.protection.outlook.com ([40.107.13.58]:28266
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        Thu, 31 Oct 2019 06:02:09 -0400
+Received: from mail-eopbgr150054.outbound.protection.outlook.com ([40.107.15.54]:39300
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726864AbfJaKCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:02:04 -0400
+        id S1727337AbfJaKCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 06:02:05 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jWxgD9piWbcmDyd9QX7Z9LVEAgtMq1CXrzupgwHfTP1ScNxUI0SnHsCH2tJdW3Nd2QULssE/LKpAxchuLu8CxqRIszoyYn0EuzfCmZElIymGML82lXKxIukBB3znGsmuDDim6d1FTHMrCsR87lT0aifU2jvbNNhub3NIDSETdMtTRHkuNaKAv1rEfLCGB5brGpBSc+viZjg1PWbIVtzJCihj40uCXmAczlZvVR1D29dv9DkaJKbLLA9i+NIUYJc5KOi49KVcCfmT8n5VLYJLZ6gtsLcuKm/72JIw7c2MnQ8BUoL52Bb1QH6gy5+R75wIQdn0VX37SDpXvi6ybwXsgQ==
+ b=XS0CP8K/y7heaeGaoOx4PBSUCTmpmcYEFBl+LH6cgf5Hjf4XKyHmetAzjXhOgAD++E90AcyhcdiZfdWSemL6NdVEZVDN2G7Zs8+DeeBc3pN3s3YFf3wc3VbF7AUUcHaBI/FPmRC/b2vm3AteROJy8h4WDb87CsyEGusmGbI9saJm8acl+xt6/RY1ofxCrjjThztseCE6qqt5LCMEtbvrmFiquRFkspsewqnirH2N9wL1lrRY3BWkY7xQExWCsMtwCYbTkj/MHsr02Jfk1xpvw1rnQP4SRQ8C9G1ZeqSs7n0C0E+19BvsrW/RWENa5CgIuh/CAXTQ//q0HoPPnMhVuA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FuEwUkMU6aUSPQit30wKHkooFj+yWbCmhYyxpg+14fg=;
- b=AJcssvlCGnlYt3dnpEcVDq7UCwCVFL23bi9pB2YQlzDWKcuJRqOi8En/sq/D/TS0pOml0RMg//oCNHluCMBvF0039MUz+tHIyAviXPhqsvOk8HgWK3eZteTuRhyx/aZuga60KZltssUCKo8wOJEaghULgKGVDU6gx3iPiQoanwx0jy8hUbzq46zkL6ZxW/Ynbax4PmHuzhDnv6cyAqdkY1jmeCzcoSKCk+R6slvH5MQTssmQ8sBRdLLqje1/lm4/98DZu3Sv1Jl0DDIzylaXKFIbFhR6wcKUYYfz67y7tpCFzhcWz9XXZLYBOL2fu2hVIcd7vuFWflG8pQyWClDtxg==
+ bh=u9jCLTDb36RC2va2i/w6VXlYE81gCHs04E2EgyMcrgU=;
+ b=XIkWtR3PtHjoDk+O5DAnvkU1c79v9ilxgOLAXBWWrqzdssFsUPaeDFl6z9DTVuh3KSkBNTPD1Jl38n1tInXWdA+moEnvXPfViEwpEMeKnMsQlQIhmrl1pqBx2uFKg8usx9UAWFOp7mynR8ypGhlGC1zSkNZtj9TTNSTZNioHCblhTep+OiQxa6VlsxpBoGt3zqIOMUYSB1ZQ2j2MkMQOqat8Z6l0aYJ9D082XACMn1VaK7Tj4Zxfejm5tnnUc29/yWSui2ConacPfdkQiYvxYMvTHzHe/Z3O2J9bY33B74qu303mz+MVivuHqsIToVBUGZ25WMlnrKEX6ZtiQY895g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FuEwUkMU6aUSPQit30wKHkooFj+yWbCmhYyxpg+14fg=;
- b=ctQDsBSixnLiVhAh6rqc4aFwDvjF5olbOn84Z2hAmhvHk+bffwRulnc1VuRm43Yoh9E/YBEiSUF0E9lAgL+1U+v6vSOuErIsT4UAjDbQxIBwP8ovTWK5sIW232melmD+3PFkeYJGgoW3vnR0JJKARcnreDJCG5p7C35d/tviKec=
+ bh=u9jCLTDb36RC2va2i/w6VXlYE81gCHs04E2EgyMcrgU=;
+ b=kd81AX2H31DA1uE/8B4uTVamRfoUI3hRROy1NTSzwxKdk0Tsy4gyKB4Kznli+/+09yEg5I9A1Myels3zRJ15simvrh7/ClKasG1G6I2R3DkeXjPZrYP9lodXKPqzO+Z7WvdVECDin5KyxIKUL7lVe/4YvPw/YxD2rUIalppP1zo=
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6337.eurprd04.prod.outlook.com (20.179.253.213) with Microsoft SMTP
+ AM0PR04MB6722.eurprd04.prod.outlook.com (20.179.252.21) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.28; Thu, 31 Oct 2019 10:01:56 +0000
+ 15.20.2387.28; Thu, 31 Oct 2019 10:02:01 +0000
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::843c:e722:27cb:74e1]) by AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::843c:e722:27cb:74e1%5]) with mapi id 15.20.2387.028; Thu, 31 Oct 2019
- 10:01:55 +0000
+ 10:02:01 +0000
 From:   Peng Fan <peng.fan@nxp.com>
 To:     "sboyd@kernel.org" <sboyd@kernel.org>,
         "shawnguo@kernel.org" <shawnguo@kernel.org>,
@@ -61,11 +61,11 @@ CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Leonard Crestez <leonard.crestez@nxp.com>,
         Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 1/2] arm: dts: imx7s: ccm: add assigned-clocks
-Thread-Topic: [PATCH 1/2] arm: dts: imx7s: ccm: add assigned-clocks
-Thread-Index: AQHVj9I60I1lwvMAGE+caaX9vv5lLA==
-Date:   Thu, 31 Oct 2019 10:01:55 +0000
-Message-ID: <1572515888-3385-2-git-send-email-peng.fan@nxp.com>
+Subject: [PATCH 2/2] clk: imx: imx7d: remove clk_set_parent
+Thread-Topic: [PATCH 2/2] clk: imx: imx7d: remove clk_set_parent
+Thread-Index: AQHVj9I92AhYNbamKEyejI7asTmq+g==
+Date:   Thu, 31 Oct 2019 10:02:00 +0000
+Message-ID: <1572515888-3385-3-git-send-email-peng.fan@nxp.com>
 References: <1572515888-3385-1-git-send-email-peng.fan@nxp.com>
 In-Reply-To: <1572515888-3385-1-git-send-email-peng.fan@nxp.com>
 Accept-Language: en-US
@@ -82,30 +82,30 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e4580acc-9d46-4b43-f119-08d75de95c69
-x-ms-traffictypediagnostic: AM0PR04MB6337:|AM0PR04MB6337:
+x-ms-office365-filtering-correlation-id: 21cb476b-2e59-47b5-4457-08d75de95f76
+x-ms-traffictypediagnostic: AM0PR04MB6722:|AM0PR04MB6722:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB633768B39EEC2F4B8E0EADDE88630@AM0PR04MB6337.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-microsoft-antispam-prvs: <AM0PR04MB672214016F5FAC8A7A10494E88630@AM0PR04MB6722.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
 x-forefront-prvs: 02070414A1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(136003)(396003)(376002)(189003)(199004)(446003)(2501003)(71190400001)(71200400001)(6436002)(11346002)(8936002)(2616005)(99286004)(316002)(6636002)(66946007)(476003)(478600001)(50226002)(256004)(14454004)(110136005)(54906003)(305945005)(7736002)(2906002)(2201001)(102836004)(76176011)(44832011)(66446008)(64756008)(66476007)(6486002)(66556008)(486006)(3846002)(66066001)(26005)(386003)(86362001)(52116002)(81166006)(81156014)(186003)(5660300002)(8676002)(25786009)(36756003)(6512007)(4326008)(6116002)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6337;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(136003)(396003)(376002)(189003)(199004)(446003)(2501003)(71190400001)(71200400001)(6436002)(11346002)(8936002)(2616005)(99286004)(316002)(6636002)(66946007)(476003)(478600001)(50226002)(256004)(14454004)(110136005)(54906003)(305945005)(7736002)(2906002)(2201001)(102836004)(76176011)(44832011)(66446008)(64756008)(66476007)(6486002)(66556008)(486006)(3846002)(66066001)(26005)(386003)(86362001)(52116002)(81166006)(81156014)(186003)(5660300002)(8676002)(25786009)(36756003)(6512007)(4326008)(6116002)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6722;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AgUYKdF4cfgqDjRsjWNZnp5HNJdymYrWTEr3hfvNEIeRWYyBx4uMMFvgRzUziA2FYTNtoeGaMz6X13ZkiNf1BhonBiZB/5raOwOzLsCzmGO/9CQTBKTfrVyeWZhmJgAe+eBwFJf4E8iM1V59Mrm7ZU7Ego5ctUpxbplvFxHaSd1YNZVoA7ww8DxdyGHN5GwLvCVMlBI9ICpipBhro8gCMk9MKjy6+plL+i1BBePP/29/RpDXffyNK14sOtljJbTeUx0HLkZ7Zb9uAzd/fJJvA+1c8wlVhpotrafWui7e91dRriBjv09NTMOMtNVOUBgg+hXd3iuwClacNMEjURcPFaAy0Kd+sN8by2Bc/hl9bDMeN8YwResvIQnnYW4UB0CcQfz5amgLesg4Zb8kWhcJpPO+xP6Iw7KNldCsymZcVW5dK5RS/vZbBrK+6qKmpAqF
+x-microsoft-antispam-message-info: +jiVyIFCxwe9q6jRDi14gGyuxiVfOyGQPDr6jI7YzR+6CPgJdKRzTmYTtYZ9oVor0rmRyKdCbmxkyIjmKWXFYb+85KJjxf2iBocCrId4Mjsv9IECk/9+BuB4wF1nnGITczSwgSpxtn0Q1vim2tVvKQR5oQvbCFEy3VC12v3nPy60K4pdU9v+tDd1qF6T7SYc8cbz6d4azKHtiCIkpCqE1plx50nrKB/ewk5TLBW/z1jX0xFPgTyhc3zdmiVF4BRnatBAHIcDE587b9MKcrboMdI7siAK+SiDBOlvdORDhoFh8ZcQZ0sVeW6uP6gVkNqLg3OiOs3gvSttLIBnREe1vXxHGbnhf36kj0EflPRvXDzhEYlMk5Vy48TIAVM0oMfZZhsbSu/Z4IMej9S67xbmofZiwqZ9lWzeVamk/SyLelmTYfJAyx0hfAcpoaOJC9ti
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4580acc-9d46-4b43-f119-08d75de95c69
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Oct 2019 10:01:55.7433
+X-MS-Exchange-CrossTenant-Network-Message-Id: 21cb476b-2e59-47b5-4457-08d75de95f76
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Oct 2019 10:02:00.8532
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6epMvkXEmYY3oZekKdiQoSLzo/+vvSECtGf4ogxBJvZ5yjqZyCBhhLpzZe+hHaDZJgfAiXGs3MwJLchfB3x2vQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6337
+X-MS-Exchange-CrossTenant-userprincipalname: p5S7N/1rqRPIB3RfyseygYpuV6MirRESLRlVqO8Gjy3AkEN9zTZ4DuaIVX1jslH+hjMwtEGrmmN9xw7E4cuBiw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6722
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -113,45 +113,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-Add assigned-clocks and assigned-clock-parents, then
-we could remove the clk_set_parent code in clk-imx7d.c.
+Since the set parent could be done by assigned-clock-parents in
+dts, so no need clk_set_parent in driver.
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- arch/arm/boot/dts/imx7s.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/clk/imx/clk-imx7d.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 1b812f4e7453..36ae864d9b7c 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -625,6 +625,26 @@
- 				#clock-cells =3D <1>;
- 				clocks =3D <&ckil>, <&osc>;
- 				clock-names =3D "ckil", "osc";
-+				/*
-+				 * gpt1 root clk must be twice as gpt
-+				 * counter freq
-+				 */
-+				assigned-clocks =3D <&clks IMX7D_PLL_ARM_MAIN_BYPASS>,
-+						<&clks IMX7D_PLL_DRAM_MAIN_BYPASS>,
-+						<&clks IMX7D_PLL_SYS_MAIN_BYPASS>,
-+						<&clks IMX7D_PLL_ENET_MAIN_BYPASS>,
-+						<&clks IMX7D_PLL_AUDIO_MAIN_BYPASS>,
-+						<&clks IMX7D_PLL_VIDEO_MAIN_BYPASS>,
-+						<&clks IMX7D_MIPI_CSI_ROOT_SRC>,
-+						<&clks IMX7D_GPT1_ROOT_SRC>;
-+				assigned-clock-parents =3D <&clks IMX7D_PLL_ARM_MAIN>,
-+							 <&clks IMX7D_PLL_DRAM_MAIN>,
-+							 <&clks IMX7D_PLL_SYS_MAIN>,
-+							 <&clks IMX7D_PLL_ENET_MAIN>,
-+							 <&clks IMX7D_PLL_AUDIO_MAIN>,
-+							 <&clks IMX7D_PLL_VIDEO_MAIN>,
-+							 <&clks IMX7D_PLL_SYS_PFD3_CLK>,
-+							 <&clks IMX7D_OSC_24M_CLK>;
- 			};
+diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
+index 0c9f7adb41ae..b73e3e148497 100644
+--- a/drivers/clk/imx/clk-imx7d.c
++++ b/drivers/clk/imx/clk-imx7d.c
+@@ -878,18 +878,6 @@ static void __init imx7d_clocks_init(struct device_nod=
+e *ccm_node)
 =20
- 			src: src@30390000 {
+ 	of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_hw_data);
+=20
+-	clk_set_parent(hws[IMX7D_PLL_ARM_MAIN_BYPASS]->clk, hws[IMX7D_PLL_ARM_MAI=
+N]->clk);
+-	clk_set_parent(hws[IMX7D_PLL_DRAM_MAIN_BYPASS]->clk, hws[IMX7D_PLL_DRAM_M=
+AIN]->clk);
+-	clk_set_parent(hws[IMX7D_PLL_SYS_MAIN_BYPASS]->clk, hws[IMX7D_PLL_SYS_MAI=
+N]->clk);
+-	clk_set_parent(hws[IMX7D_PLL_ENET_MAIN_BYPASS]->clk, hws[IMX7D_PLL_ENET_M=
+AIN]->clk);
+-	clk_set_parent(hws[IMX7D_PLL_AUDIO_MAIN_BYPASS]->clk, hws[IMX7D_PLL_AUDIO=
+_MAIN]->clk);
+-	clk_set_parent(hws[IMX7D_PLL_VIDEO_MAIN_BYPASS]->clk, hws[IMX7D_PLL_VIDEO=
+_MAIN]->clk);
+-
+-	clk_set_parent(hws[IMX7D_MIPI_CSI_ROOT_SRC]->clk, hws[IMX7D_PLL_SYS_PFD3_=
+CLK]->clk);
+-
+-	/* use old gpt clk setting, gpt1 root clk must be twice as gpt counter fr=
+eq */
+-	clk_set_parent(hws[IMX7D_GPT1_ROOT_SRC]->clk, hws[IMX7D_OSC_24M_CLK]->clk=
+);
+-
+ 	/* Set clock rate for USBPHY, the USB_PLL at CCM is from USBOTG2 */
+ 	hws[IMX7D_USB1_MAIN_480M_CLK] =3D imx_clk_hw_fixed_factor("pll_usb1_main_=
+clk", "osc", 20, 1);
+ 	hws[IMX7D_USB_MAIN_480M_CLK] =3D imx_clk_hw_fixed_factor("pll_usb_main_cl=
+k", "osc", 20, 1);
 --=20
 2.16.4
 
