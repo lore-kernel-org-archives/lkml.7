@@ -2,108 +2,65 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC31CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7C2CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D24220862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:15:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wkipk/vm"
+	by mail.kernel.org (Postfix) with ESMTP id 46D8020856
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:16:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfJaCO7 (ORCPT
+        id S1726532AbfJaCQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 22:14:59 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34350 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbfJaCO6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 22:14:58 -0400
-Received: by mail-lf1-f66.google.com with SMTP id f5so3257703lfp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 19:14:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LsH3A1DqDOFl2XsHUyxDjmPi6g5GPerOQXufskJ4zsE=;
-        b=wkipk/vmz3K+UqUSWwx9TakqLnbKR+02jMAR5SGMZCzif8JAFmJ08VLcACypiWHgd3
-         Nq3A9LCWfNpUNIycEwlJ4UAxP5zL23OJiIho6/dnsB9Q36nvjP7/yqh7dc8MTagsv+FN
-         AAqP79LixqCc1p/WSlBvTZWZFa4zOOvid5BNy/2G4O03423a8n8czYonP/S1X7AzJei+
-         xFnAp1z2bYsMIRUatRet7wQ9djRfkazHtwwoJqZNe14MmN+igdTj+tXsgOE67YF8E3qO
-         ecbGQkektDWSE7iJ49llVAzwhgYwCscfYLsFMckewsT8APYyRdOiFPK6vFFNQb4UEuxg
-         dXfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LsH3A1DqDOFl2XsHUyxDjmPi6g5GPerOQXufskJ4zsE=;
-        b=pxAUh3fZHzoo6R6Qp7l0iGHHFbpRP/T6JrdkoiOU6SD1cDZdaiZ4XekiMNzKwT2Z4F
-         ggQzg/7yUq/RyHkUuJoR5OkDlbTIfau0TTerRlzpIZ+9AaanNo9NIUZZbH/RoEbElV1k
-         nIgTRuxaJqdJq+Um6AA6A7+1IEUKXK8qxVZb7aiYhb7VquJE0K6Zwdn1E5sWLCE8Roa4
-         gr01qq6p+fJUePDYeun5gsYLPh0LYIMcZQZE/uiG/bS+hXg3F9dVua7PaYlCN2NPz6Xf
-         nuSVAfQlriQI3wwSH/8r7bZGUlk0P7SsyodptzyXS4lauHXlYSZ46ejZF2GP7zukYH91
-         yAgw==
-X-Gm-Message-State: APjAAAVaOMqnPA5oi0doBpKg3BBYylLPfG3tBTQTNeocwlbWWKGjU/0R
-        V+o5J8dOfG4db+0ZW1r4Qw0Fu431d5oQg8iz0iRjLQ==
-X-Google-Smtp-Source: APXvYqw+VI3/9pmeyk/FQBCxrTYSXbxKCCcEUYb6gLT2e3GJrpxbjpDnQJnhwJNDWQ47aNAf2rbGE63JO7PrPoICa+g=
-X-Received: by 2002:ac2:420a:: with SMTP id y10mr997190lfh.65.1572488096719;
- Wed, 30 Oct 2019 19:14:56 -0700 (PDT)
+        Wed, 30 Oct 2019 22:16:41 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55134 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726184AbfJaCQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 22:16:41 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A746713D84877026D930;
+        Thu, 31 Oct 2019 10:16:37 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 31 Oct
+ 2019 10:16:32 +0800
+Subject: Re: [PATCH 2/2] f2fs: support data compression
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20191022171602.93637-1-jaegeuk@kernel.org>
+ <20191022171602.93637-2-jaegeuk@kernel.org>
+ <20191027225006.GA321938@sol.localdomain>
+ <da214cdc-0074-b7bf-7761-d4c4ad3d4f6a@huawei.com>
+ <20191030025512.GA4791@sol.localdomain>
+ <97c33fa1-15af-b319-29a1-22f254a26c0a@huawei.com>
+ <20191030165056.GA693@sol.localdomain>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <a2586ef0-9f0d-d2e1-ecf0-e6e946c20a7a@huawei.com>
+Date:   Thu, 31 Oct 2019 10:16:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <cover.1572245011.git.baolin.wang@linaro.org> <00202f739348258555dcc40982c330542ac61863.1572245011.git.baolin.wang@linaro.org>
- <20191030143949.GA18637@bogus>
-In-Reply-To: <20191030143949.GA18637@bogus>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Thu, 31 Oct 2019 10:14:45 +0800
-Message-ID: <CAMz4kuJ=8dOj6XbayNHKAYW7LD1EOaqv+Q4hYk_-7+R-z_m2Xw@mail.gmail.com>
-Subject: Re: [PATCH 4/5] dt-bindings: power: sc27xx: Add a new property to
- describe the real resistance of coulomb counter chip
-To:     Rob Herring <robh@kernel.org>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com,
-        baolin.wang7@gmail.com, Chunyan Zhang <zhang.lyra@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191030165056.GA693@sol.localdomain>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On 2019/10/31 0:50, Eric Biggers wrote:
+> No, just use kvmalloc().  The whole point of kvmalloc() is that it tries
+> kmalloc() and then falls back to vmalloc() if it fails.
 
-On Wed, 30 Oct 2019 at 22:39, Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Oct 28, 2019 at 03:19:00PM +0800, Baolin Wang wrote:
-> > Add a new property to describe the real resistance of coulomb counter chip,
-> > which is used to calibrate the accuracy of the coulomb counter chip.
-> >
-> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> > ---
-> >  .../devicetree/bindings/power/supply/sc27xx-fg.txt |    2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
-> > index 0a5705b..fc042d0 100644
-> > --- a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
-> > +++ b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
-> > @@ -13,6 +13,7 @@ Required properties:
-> >  - io-channel-names: Should be "bat-temp" or "charge-vol".
-> >  - nvmem-cells: A phandle to the calibration cells provided by eFuse device.
-> >  - nvmem-cell-names: Should be "fgu_calib".
-> > +- sprd,calib-resistance: Specify the real resistance of coulomb counter chip in micro Ohms.
-> >  - monitored-battery: Phandle of battery characteristics devicetree node.
-> >    See Documentation/devicetree/bindings/power/supply/battery.txt
->
-> Needs a standard unit suffix.
+Okay, it's fine to me, let me fix this in another patch.
 
-Got it. Thanks.
+Thanks,
 
--- 
-Baolin Wang
-Best Regards
+> 
+> - Eric
+> .
+> 
