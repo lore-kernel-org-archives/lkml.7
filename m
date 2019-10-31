@@ -2,173 +2,138 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EC1CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9FDCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF322086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:08:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572520101;
-	bh=SGpSH4Xl2KOfbwCQNK+JvV+z2ECgkq7GmuHKHVI9fzo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=2F+Xj2llR7rLlYiy2actvFjGmqlKGZys3F7UsLOCgqqS0lW7DL28YohK9TwJtrTXo
-	 ZApQ3d8OPuWBq+Y1eUJyyw20pu6vZZtquApf7yPIdq2qgm8nLnQHmDaFWa0Y9LQLy8
-	 s2kvNJ0A8FIFiG7YGY809IpVAW7K7bpG8R5VxV4A=
+	by mail.kernel.org (Postfix) with ESMTP id 609232087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfJaLIU (ORCPT
+        id S1727394AbfJaLKW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:08:20 -0400
-Received: from mga18.intel.com ([134.134.136.126]:55014 "EHLO mga18.intel.com"
+        Thu, 31 Oct 2019 07:10:22 -0400
+Received: from mga06.intel.com ([134.134.136.31]:12603 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727151AbfJaLIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:08:20 -0400
+        id S1727277AbfJaLKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 07:10:21 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 04:08:19 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 04:10:20 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
-   d="scan'208";a="206078265"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by FMSMGA003.fm.intel.com with ESMTP; 31 Oct 2019 04:08:17 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Roger Quadros <rogerq@ti.com>, gregkh@linuxfoundation.org,
-        pawell@cadence.com
-Cc:     peter.chen@nxp.com, nsekhar@ti.com, kurahul@cadence.com,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] usb: cdns3: gadget: Fix g_audio use case when connected to Super-Speed host
-In-Reply-To: <86a7fbc4-136f-78bb-4677-784199842c9f@ti.com>
-References: <20191029151514.28495-1-rogerq@ti.com> <20191030121607.21739-1-rogerq@ti.com> <87pnide1k7.fsf@gmail.com> <44b07e90-a9de-ea99-25c6-dc72cf39bbe1@ti.com> <875zk5dw0m.fsf@gmail.com> <86a7fbc4-136f-78bb-4677-784199842c9f@ti.com>
-Date:   Thu, 31 Oct 2019 13:08:16 +0200
-Message-ID: <87zhhhcgv3.fsf@gmail.com>
+   d="scan'208";a="400460813"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by fmsmga005.fm.intel.com with ESMTP; 31 Oct 2019 04:10:20 -0700
+Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 31 Oct 2019 04:10:20 -0700
+Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
+ fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 31 Oct 2019 04:10:20 -0700
+Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
+ fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 31 Oct 2019 04:10:19 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.127]) by
+ SHSMSX152.ccr.corp.intel.com ([169.254.6.2]) with mapi id 14.03.0439.000;
+ Thu, 31 Oct 2019 19:10:18 +0800
+From:   "Kang, Luwei" <luwei.kang@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>
+Subject: RE: [PATCH v1 3/8] KVM: x86: Allocate performance counter for PEBS
+ event
+Thread-Topic: [PATCH v1 3/8] KVM: x86: Allocate performance counter for PEBS
+ event
+Thread-Index: AQHVjLd13+lWyOpx00qD/bA0eE059qdxL6sAgAEppjCAABXXgIACK7fw
+Date:   Thu, 31 Oct 2019 11:10:18 +0000
+Message-ID: <82D7661F83C1A047AF7DC287873BF1E17383642D@SHSMSX104.ccr.corp.intel.com>
+References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
+ <1572217877-26484-4-git-send-email-luwei.kang@intel.com>
+ <20191029144612.GK4097@hirez.programming.kicks-ass.net>
+ <82D7661F83C1A047AF7DC287873BF1E173835B1A@SHSMSX104.ccr.corp.intel.com>
+ <20191030094941.GQ4097@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191030094941.GQ4097@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNzE3NjQyYjEtYmE2OS00YjI4LTk2MjUtMmVlZTIwM2Y2M2UzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiR2xDRGN4bHZSakV6S01JcHJMaVJnZFFmcTl3NHRyN0U4UkNOTmoxR0RsXC8rVmJKV1g4WGx0NWVDQTlvT3hFXC9EIn0=
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> > > >  static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+> > > >  				  unsigned config, bool exclude_user,
+> > > >  				  bool exclude_kernel, bool intr,
+> > > > -				  bool in_tx, bool in_tx_cp)
+> > > > +				  bool in_tx, bool in_tx_cp, bool pebs)
+> > > >  {
+> > > >  	struct perf_event *event;
+> > > >  	struct perf_event_attr attr = {
+> > > > @@ -111,9 +111,12 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc,
+> u32 type,
+> > > >  		.exclude_user = exclude_user,
+> > > >  		.exclude_kernel = exclude_kernel,
+> > > >  		.config = config,
+> > > > +		.precise_ip = pebs ? 1 : 0,
+> > > > +		.aux_output = pebs ? 1 : 0,
+> > >
+> > > srsly?
+> >
+> > Hi Peter,
+> >     Thanks for review. For aux_output, I think it should be set 1 when the guest wants to
+> enabled PEBS by Intel PT.
+> >      For precise_ip, it is the precise level in perf and set by perf command line in KVM
+> guest, this may not reflect the accurate value (can be 0~3) here. Here set to 1 is used to
+> allocate a counter for PEBS event and set the MSR_IA32_PEBS_ENABLE register. For
+> PMU virtualization, KVM will trap the guest's write operation to PMU registers and
+> allocate/free event counter from host if a counter enable/disable in guest. We can't
+> always deduce the exact parameter of perf command line from the value of the guest
+> writers to the register.
+> 
+> Please, teach your MUA to wrap on 78 chars.
+> 
+> The thing I really fell over is the gratuitous 'bool ? 1 : 0'. But yes, the aux_output without
+> a group leader is dead wrong. We'll go fix
+> perf_event_create_kernel_counter() to refuse that.
 
-Hi,
+Yes, I also think it is a little gratuitous here. But it is a little hard to reconstruct the guest perf parameters from the register value, especially the "precise_ip". Do you have any advice?
 
-Roger Quadros <rogerq@ti.com> writes:
->>>>> Take into account gadget driver's speed limit when programming
->>>>> controller speed.
->>>>>
->>>>> Fixes: commit 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
->>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>>> Acked-by: Peter Chen <peter.chen@nxp.com>
->>>>> ---
->>>>>
->>>>> Changelog:
->>>>> v2
->>>>> - Add Fixes line
->>>>>
->>>>>    drivers/usb/cdns3/gadget.c | 31 ++++++++++++++++++++++++++-----
->>>>>    1 file changed, 26 insertions(+), 5 deletions(-)
->>>>>
->>>>> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
->>>>> index 40dad4e8d0dc..1c724c20d468 100644
->>>>> --- a/drivers/usb/cdns3/gadget.c
->>>>> +++ b/drivers/usb/cdns3/gadget.c
->>>>> @@ -2338,9 +2338,35 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
->>>>>    {
->>>>>    	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
->>>>>    	unsigned long flags;
->>>>> +	enum usb_device_speed max_speed = driver->max_speed;
->>>>>    
->>>>>    	spin_lock_irqsave(&priv_dev->lock, flags);
->>>>>    	priv_dev->gadget_driver = driver;
->>>>> +
->>>>> +	/* limit speed if necessary */
->>>>> +	max_speed = min(driver->max_speed, gadget->max_speed);
->>>>> +
->>>>> +	switch (max_speed) {
->>>>> +	case USB_SPEED_FULL:
->>>>> +		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
->> 
->> so this forces the controller to FS
->
-> Right.
->
->> 
->>>>> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
->> 
->> and this disconnects in superspeed? What is this supposed to do?
->> 
->
-> It says "Disconnect USB device in SuperSpeed".
->
-> We were asked to set that bit to limit it to HS.
+About refuse the perf_event_create_kernel_counter() request w/o aux_ouput, I think I need to allocate the PT event as group leader here,  is that right?
 
-I wonder if by "Disconnect USB device in SuperSpeed" means tristating
-the PIPE3 interface, therefore forcing RX.Detect to fail.
-
->>>>> +		break;
->>>>> +	case USB_SPEED_HIGH:
->>>>> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
->>>>> +		break;
->>>>> +	case USB_SPEED_SUPER:
->>>>> +		break;
->>>>> +	default:
->>>>> +		dev_err(priv_dev->dev,
->>>>> +			"invalid maximum_speed parameter %d\n",
->>>>> +			max_speed);
->>>>> +		/* fall through */
->>>>> +	case USB_SPEED_UNKNOWN:
->>>>> +		/* default to superspeed */
->>>>> +		max_speed = USB_SPEED_SUPER;
->>>>> +		break;
->>>>> +	}
->>>>
->>>> I had suggested some simplification for this case statement.
->>>>
->>>
->>> oops, looks like Greg picked this already.
->>>
->>> During more tests today I just observed that this patch causes
->>> the following regression.
->>>
->>> Connect EVM to Super-Speed host
->>> Load g_audio. (this enumerates as HS which is fine)
->>> unload g_audio
->>> load g_zero (this enumerates at HS instead of SS).
->>>
->>> This is because the speed limit that we set doesn't get cleared.
->>>
->>> Now the bits are write only and there is a way to undo USB_CONF_SFORCE_FS
->>> by writing USB_CONF_CFORCE_FS, however there is no corresponding bit
->>> to clear USB_CONF_USB3DIS. Only way seems to be USB_CFG_SWRST which
->>> is a bit harsh IMO.
->> 
->> Isn't bit 0 enough?
->> 
->> /* Reset USB device configuration. */
->> #define USB_CONF_CFGRST		BIT(0)
->
-> Probably not, as explanation of USB3DIS bit says,
-> "To connect disconnected device, CPU performs
-> software reset (CFG.SWRST)." which is bit 7. "Device software reset.
-
-ouch
-
-> But I'll let Pawel comment on this.
-
-ok
-
->> Also, now that I look at this more carefully, you should move that code
->> to udc_set_speed().
->> 
->
-> Agreed. I'll revise the implementation to move it to udc_set_speed()
-> once I know how to undo the USB3DIS.
-
-Sure
-
--- 
-balbi
+Thanks,
+Luwei Kang
