@@ -2,250 +2,159 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3D4CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502AFCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332662087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 239DB2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:59:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vQtn5epM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbfJaN7o (ORCPT
+        id S1727873AbfJaN7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:59:44 -0400
-Received: from mout-p-101.mailbox.org ([80.241.56.151]:51592 "EHLO
-        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727771AbfJaN7m (ORCPT
+        Thu, 31 Oct 2019 09:59:50 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38744 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727855AbfJaN7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:59:42 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 473n4q2TVXzKmdp;
-        Thu, 31 Oct 2019 14:59:39 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id tXdZ0yfGJYAE; Thu, 31 Oct 2019 14:59:34 +0100 (CET)
-Date:   Fri, 1 Nov 2019 00:59:21 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-api@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] clone3: validate stack arguments
-Message-ID: <20191031135921.wlcnhqvkq4d6azvg@yavin.dot.cyphar.com>
-References: <20191031113608.20713-1-christian.brauner@ubuntu.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pw6zyzyjyealujoj"
-Content-Disposition: inline
-In-Reply-To: <20191031113608.20713-1-christian.brauner@ubuntu.com>
+        Thu, 31 Oct 2019 09:59:48 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w8so2748470plq.5
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 06:59:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=rBi9pDvmSRW/gfGz1S5LaiY/M3/1mDENiO/ALWeCgpk=;
+        b=vQtn5epM7BmXndczOajGVGAnDDTih0deQtjDHqOZaIno2sYSm5HgUpe9M/7tqsey17
+         JcgSTwFY/6xWrV+8iWqWzgWyz0OJ1KQ8VkRfHUX2V9qiUlAp1qHQCPlRPO3VZjqPglme
+         iDFSD+n12Tl45aTDsljHPGU1HSJZQH0J8DDYa7iVWrhovtRN1+WcIknfWRrt5npqTisz
+         qjYz+EqFAjDFNwFzeb2uxMlGTvMUNBpgN/uHLEcIhsUhQ3P0jCVsW6GLSldnblMq82fu
+         ltdsXfA3qM4hFrffaFAyC70OkJ8YQVOci0NA28T1yGIBut65i64DP9fivni/267D/coO
+         +C1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=rBi9pDvmSRW/gfGz1S5LaiY/M3/1mDENiO/ALWeCgpk=;
+        b=cQ2PINZRD6aA1o/0eX2yak3KtFvgDT7/Mmmx2ExlWJgqoLbkMvkMwsRX+ebM9Cw1Dx
+         2WorAU35sWpiUEaJeGu1J3qINKs1VuB2tUs/mRb/5bh+iIDKmpEh+FFtSZiyK6V/ET4/
+         4RyH1pmCXpPzX6CbuYtjCHYpQj2GrTK3R8+UaW43ayZWfi2V+BmpXfvSAi1ScA00G3Ob
+         RnzcNkwWE05PCiivdYNXdd8JBbexCrxsHRt2n/wVgMD6XbpfXu9pf+Dq9AfGJfIp7fA/
+         9GAGinechucKfw4vzYUqwpJVcakBwkHE7FReS8xlyF9wVKNbffbUaIi1uMZluXoKg1C2
+         qFnw==
+X-Gm-Message-State: APjAAAVwZf/j1sPT9sNnfdxAHgeSFxX336FOMdMmbqQFYJ9vuQrU5m6e
+        yMFoznhaxDgXIkAHjXqkiqmfvw==
+X-Google-Smtp-Source: APXvYqxvxuXZl/u6hfe9tV8jGqosv3YQ51/spMygFoU8LspT81JCa6iermf94WbaR84nA4XCB+w3XA==
+X-Received: by 2002:a17:902:d705:: with SMTP id w5mr6386152ply.142.1572530388055;
+        Thu, 31 Oct 2019 06:59:48 -0700 (PDT)
+Received: from localhost.localdomain ([117.252.69.143])
+        by smtp.gmail.com with ESMTPSA id i16sm3522441pfa.184.2019.10.31.06.59.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 31 Oct 2019 06:59:47 -0700 (PDT)
+From:   Sumit Garg <sumit.garg@linaro.org>
+To:     jens.wiklander@linaro.org, jarkko.sakkinen@linux.intel.com,
+        dhowells@redhat.com
+Cc:     corbet@lwn.net, jejb@linux.ibm.com, zohar@linux.ibm.com,
+        jmorris@namei.org, serge@hallyn.com, casey@schaufler-ca.com,
+        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
+        stuart.yoder@arm.com, janne.karhunen@gmail.com,
+        keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        tee-dev@lists.linaro.org, Sumit Garg <sumit.garg@linaro.org>
+Subject: [Patch v3 2/7] tee: enable support to register kernel memory
+Date:   Thu, 31 Oct 2019 19:28:38 +0530
+Message-Id: <1572530323-14802-3-git-send-email-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1572530323-14802-1-git-send-email-sumit.garg@linaro.org>
+References: <1572530323-14802-1-git-send-email-sumit.garg@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Enable support to register kernel memory reference with TEE. This change
+will allow TEE bus drivers to register memory references.
 
---pw6zyzyjyealujoj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+---
+ drivers/tee/tee_shm.c   | 26 ++++++++++++++++++++++++--
+ include/linux/tee_drv.h |  1 +
+ 2 files changed, 25 insertions(+), 2 deletions(-)
 
-On 2019-10-31, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> Validate the stack arguments and setup the stack depening on whether or n=
-ot
-> it is growing down or up.
->=20
-> Legacy clone() required userspace to know in which direction the stack is
-> growing and pass down the stack pointer appropriately. To make things more
-> confusing microblaze uses a variant of the clone() syscall selected by
-> CONFIG_CLONE_BACKWARDS3 that takes an additional stack_size argument.
-> IA64 has a separate clone2() syscall which also takes an additional
-> stack_size argument. Finally, parisc has a stack that is growing upwards.
-> Userspace therefore has a lot nasty code like the following:
->=20
->  #define __STACK_SIZE (8 * 1024 * 1024)
->  pid_t sys_clone(int (*fn)(void *), void *arg, int flags, int *pidfd)
->  {
->          pid_t ret;
->          void *stack;
->=20
->          stack =3D malloc(__STACK_SIZE);
->          if (!stack)
->                  return -ENOMEM;
->=20
->  #ifdef __ia64__
->          ret =3D __clone2(fn, stack, __STACK_SIZE, flags | SIGCHLD, arg, =
-pidfd);
->  #elif defined(__parisc__) /* stack grows up */
->          ret =3D clone(fn, stack, flags | SIGCHLD, arg, pidfd);
->  #else
->          ret =3D clone(fn, stack + __STACK_SIZE, flags | SIGCHLD, arg, pi=
-dfd);
->  #endif
->          return ret;
->  }
->=20
-> or even crazier variants such as [3].
->=20
-> With clone3() we have the ability to validate the stack. We can check that
-> when stack_size is passed, the stack pointer is valid and the other way
-> around. We can also check that the memory area userspace gave us is fine =
-to
-> use via access_ok(). Furthermore, we probably should not require
-> userspace to know in which direction the stack is growing. It is easy
-> for us to do this in the kernel and I couldn't find the original
-> reasoning behind exposing this detail to userspace.
->=20
-> /* Intentional user visible API change */
-> clone3() was released with 5.3. Currently, it is not documented and very
-> unclear to userspace how the stack and stack_size argument have to be
-> passed. After talking to glibc folks we concluded that trying to change
-> clone3() to setup the stack instead of requiring userspace to do this is
-> the right course of action.
-> Note, that this is an explicit change in user visible behavior we introdu=
-ce
-> with this patch. If it breaks someone's use-case we will revert! (And then
-> e.g. place the new behavior under an appropriate flag.)
-> Breaking someone's use-case is very unlikely though. First, neither glibc
-> nor musl currently expose a wrapper for clone3(). Second, there is no real
-> motivation for anyone to use clone3() directly since it does not provide
-> features that legacy clone doesn't. New features for clone3() will first
-> happen in v5.5 which is why v5.4 is still a good time to try and make that
-> change now and backport it to v5.3. Searches on [4] did not reveal any
-> packages calling clone3().
->=20
-> [1]: https://lore.kernel.org/r/CAG48ez3q=3DBeNcuVTKBN79kJui4vC6nw0Bfq6xc-=
-i0neheT17TA@mail.gmail.com
-> [2]: https://lore.kernel.org/r/20191028172143.4vnnjpdljfnexaq5@wittgenste=
-in
-> [3]: https://github.com/systemd/systemd/blob/5238e9575906297608ff802a27e2=
-ff9effa3b338/src/basic/raw-clone.h#L31
-> [4]: https://codesearch.debian.net
-> Fixes: 7f192e3cd316 ("fork: add clone3")
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Florian Weimer <fweimer@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: linux-api@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: <stable@vger.kernel.org> # 5.3
-> Cc: GNU C Library <libc-alpha@sourceware.org>
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
+index 09ddcd0..1ec1577 100644
+--- a/drivers/tee/tee_shm.c
++++ b/drivers/tee/tee_shm.c
+@@ -9,6 +9,7 @@
+ #include <linux/sched.h>
+ #include <linux/slab.h>
+ #include <linux/tee_drv.h>
++#include <linux/uio.h>
+ #include "tee_private.h"
+ 
+ static void tee_shm_release(struct tee_shm *shm)
+@@ -224,13 +225,14 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
+ {
+ 	struct tee_device *teedev = ctx->teedev;
+ 	const u32 req_flags = TEE_SHM_DMA_BUF | TEE_SHM_USER_MAPPED;
++	const u32 req_ker_flags = TEE_SHM_DMA_BUF | TEE_SHM_KERNEL_MAPPED;
+ 	struct tee_shm *shm;
+ 	void *ret;
+ 	int rc;
+ 	int num_pages;
+ 	unsigned long start;
+ 
+-	if (flags != req_flags)
++	if (flags != req_flags && flags != req_ker_flags)
+ 		return ERR_PTR(-ENOTSUPP);
+ 
+ 	if (!tee_device_get(teedev))
+@@ -265,7 +267,27 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
+ 		goto err;
+ 	}
+ 
+-	rc = get_user_pages_fast(start, num_pages, FOLL_WRITE, shm->pages);
++	if (flags & TEE_SHM_USER_MAPPED) {
++		rc = get_user_pages_fast(start, num_pages, FOLL_WRITE,
++					 shm->pages);
++	} else {
++		struct kvec *kiov;
++		int i;
++
++		kiov = kcalloc(num_pages, sizeof(*kiov), GFP_KERNEL);
++		if (!kiov) {
++			ret = ERR_PTR(-ENOMEM);
++			goto err;
++		}
++
++		for (i = 0; i < num_pages; i++) {
++			kiov[i].iov_base = (void *)(start + i * PAGE_SIZE);
++			kiov[i].iov_len = PAGE_SIZE;
++		}
++
++		rc = get_kernel_pages(kiov, num_pages, 0, shm->pages);
++		kfree(kiov);
++	}
+ 	if (rc > 0)
+ 		shm->num_pages = rc;
+ 	if (rc != num_pages) {
+diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
+index 7a03f68..dedf8fa 100644
+--- a/include/linux/tee_drv.h
++++ b/include/linux/tee_drv.h
+@@ -26,6 +26,7 @@
+ #define TEE_SHM_REGISTER	BIT(3)  /* Memory registered in secure world */
+ #define TEE_SHM_USER_MAPPED	BIT(4)  /* Memory mapped in user space */
+ #define TEE_SHM_POOL		BIT(5)  /* Memory allocated from pool */
++#define TEE_SHM_KERNEL_MAPPED	BIT(6)  /* Memory mapped in kernel space */
+ 
+ struct device;
+ struct tee_device;
+-- 
+2.7.4
 
-Looks reasonable, and it'll be lovely to not have to worry about stack
-ordering anymore. As for the UAPI breakage, I agree that nobody is using
-clone3() yet and so we still have a bit of lee-way to fix this
-behaviour.
-
-Acked-by: Aleksa Sarai <cyphar@cyphar.com>
-
-> ---
->  include/uapi/linux/sched.h |  4 ++++
->  kernel/fork.c              | 33 ++++++++++++++++++++++++++++++++-
->  2 files changed, 36 insertions(+), 1 deletion(-)
->=20
-> diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-> index 99335e1f4a27..25b4fa00bad1 100644
-> --- a/include/uapi/linux/sched.h
-> +++ b/include/uapi/linux/sched.h
-> @@ -51,6 +51,10 @@
->   *               sent when the child exits.
->   * @stack:       Specify the location of the stack for the
->   *               child process.
-> + *               Note, @stack is expected to point to the
-> + *               lowest address. The stack direction will be
-> + *               determined by the kernel and set up
-> + *               appropriately based on @stack_size.
->   * @stack_size:  The size of the stack for the child process.
->   * @tls:         If CLONE_SETTLS is set, the tls descriptor
->   *               is set to tls.
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index bcdf53125210..55af6931c6ec 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -2561,7 +2561,35 @@ noinline static int copy_clone_args_from_user(stru=
-ct kernel_clone_args *kargs,
->  	return 0;
->  }
-> =20
-> -static bool clone3_args_valid(const struct kernel_clone_args *kargs)
-> +/**
-> + * clone3_stack_valid - check and prepare stack
-> + * @kargs: kernel clone args
-> + *
-> + * Verify that the stack arguments userspace gave us are sane.
-> + * In addition, set the stack direction for userspace since it's easy fo=
-r us to
-> + * determine.
-> + */
-> +static inline bool clone3_stack_valid(struct kernel_clone_args *kargs)
-> +{
-> +	if (kargs->stack =3D=3D 0) {
-> +		if (kargs->stack_size > 0)
-> +			return false;
-> +	} else {
-> +		if (kargs->stack_size =3D=3D 0)
-> +			return false;
-> +
-> +		if (!access_ok((void __user *)kargs->stack, kargs->stack_size))
-> +			return false;
-> +
-> +#if !defined(CONFIG_STACK_GROWSUP) && !defined(CONFIG_IA64)
-> +		kargs->stack +=3D kargs->stack_size;
-> +#endif
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +static bool clone3_args_valid(struct kernel_clone_args *kargs)
->  {
->  	/*
->  	 * All lower bits of the flag word are taken.
-> @@ -2581,6 +2609,9 @@ static bool clone3_args_valid(const struct kernel_c=
-lone_args *kargs)
->  	    kargs->exit_signal)
->  		return false;
-> =20
-> +	if (!clone3_stack_valid(kargs))
-> +		return false;
-> +
->  	return true;
->  }
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---pw6zyzyjyealujoj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXbrotQAKCRCdlLljIbnQ
-ErrRAP4tqMhnjKyYprqmY6QeGWhkKcJ3tprEu2C5yjo7FwzPogEAl4/P+p0KALr9
-YM68clzUGdKCpq3iE0HCH8qF9MI/4gM=
-=OpcD
------END PGP SIGNATURE-----
-
---pw6zyzyjyealujoj--
