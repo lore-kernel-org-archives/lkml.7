@@ -2,64 +2,142 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5C4CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F65DCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B349D20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1081620873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:59:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbfJaQ66 (ORCPT
+        id S1728826AbfJaQ7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 12:58:58 -0400
-Received: from verein.lst.de ([213.95.11.211]:52079 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728597AbfJaQ65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:58:57 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 68576227A81; Thu, 31 Oct 2019 17:58:53 +0100 (CET)
-Date:   Thu, 31 Oct 2019 17:58:53 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH] dma/direct: turn ARCH_ZONE_DMA_BITS into a variable
-Message-ID: <20191031165853.GA8532@lst.de>
-References: <20191031152837.15253-1-nsaenzjulienne@suse.de> <20191031154759.GA7162@lst.de> <40d06d463c05d36968e8b64924d78f7794f8de50.camel@suse.de> <20191031155750.GA7394@lst.de> <6726a651c12d91ca22b9d8984745d90db5d507ec.camel@suse.de>
+        Thu, 31 Oct 2019 12:59:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36280 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728597AbfJaQ7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 12:59:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A3B4AB355;
+        Thu, 31 Oct 2019 16:59:06 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id CC7811E482D; Thu, 31 Oct 2019 17:59:05 +0100 (CET)
+Date:   Thu, 31 Oct 2019 17:59:05 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Dmitry Monakhov <dmonakhov@openvz.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jack@suse.cz, tytso@mit.edu,
+        lixi@ddn.com, Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Subject: Re: [PATCH] fs/ext4: get project quota from inode for mangling
+ statfs results
+Message-ID: <20191031165905.GE13321@quack2.suse.cz>
+References: <20191031110348.6991-1-dmonakhov@openvz.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6726a651c12d91ca22b9d8984745d90db5d507ec.camel@suse.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20191031110348.6991-1-dmonakhov@openvz.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 05:22:59PM +0100, Nicolas Saenz Julienne wrote:
-> OK, I see what you mean now. It's wrong indeed.
+On Thu 31-10-19 11:03:48, Dmitry Monakhov wrote:
+> From: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
 > 
-> The trouble is the ZONE_DMA series[1] in arm64, also due for v5.5, will be
-> affected by this patch. I don't know the right way to approach this problem
-> since depending on the merge order, this patch should be updated or the arm64
-> ZONE_DMA series fixed.
+> Right now ext4_statfs_project() does quota lookup by id every time.
+> This is costly operation, especially if there is no inode who hold
+> reference to this dquot. This means that each statfs performs useless
+> ext4_acquire_dquot()/ext4_release_dquot() which serialized on __jbd2_log_wait_for_space()
+> dqget()
+>  ->ext4_acquire_dquot
+>    -> ext4_journal_start
+>       -> __jbd2_log_wait_for_space
+> dqput()
+>   -> ext4_release_dquot
+>      ->ext4_journal_start
+>        ->__jbd2_log_wait_for_space
 > 
-> Maybe it's easier to just wait for v5.6.
+> 
+> Function ext4_statfs_project() could be moved into generic quota code,
+> it is required for every filesystem which uses generic project quota.
+> 
+> Reported-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-Ok, I can wait.  Or the arm64 maintainers can pick up this patch if
-you want to add it to that series.
+Thanks! The patch looks good to me. You can add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+
+> ---
+>  fs/ext4/super.c | 25 ++++++++++++++++---------
+>  1 file changed, 16 insertions(+), 9 deletions(-)
+> 
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index 2318e5f..4e8f97d68 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -5532,18 +5532,23 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+>  }
+>  
+>  #ifdef CONFIG_QUOTA
+> -static int ext4_statfs_project(struct super_block *sb,
+> -			       kprojid_t projid, struct kstatfs *buf)
+> +static int ext4_statfs_project(struct inode *inode, struct kstatfs *buf)
+>  {
+> -	struct kqid qid;
+> +	struct super_block *sb = inode->i_sb;
+>  	struct dquot *dquot;
+>  	u64 limit;
+>  	u64 curblock;
+> +	int err;
+> +
+> +	err = dquot_initialize(inode);
+> +	if (err)
+> +		return err;
+> +
+> +	spin_lock(&inode->i_lock);
+> +	dquot = ext4_get_dquots(inode)[PRJQUOTA];
+> +	if (!dquot)
+> +		goto out_unlock;
+>  
+> -	qid = make_kqid_projid(projid);
+> -	dquot = dqget(sb, qid);
+> -	if (IS_ERR(dquot))
+> -		return PTR_ERR(dquot);
+>  	spin_lock(&dquot->dq_dqb_lock);
+>  
+>  	limit = (dquot->dq_dqb.dqb_bsoftlimit ?
+> @@ -5569,7 +5574,9 @@ static int ext4_statfs_project(struct super_block *sb,
+>  	}
+>  
+>  	spin_unlock(&dquot->dq_dqb_lock);
+> -	dqput(dquot);
+> +out_unlock:
+> +	spin_unlock(&inode->i_lock);
+> +
+>  	return 0;
+>  }
+>  #endif
+> @@ -5609,7 +5616,7 @@ static int ext4_statfs(struct dentry *dentry, struct kstatfs *buf)
+>  #ifdef CONFIG_QUOTA
+>  	if (ext4_test_inode_flag(dentry->d_inode, EXT4_INODE_PROJINHERIT) &&
+>  	    sb_has_quota_limits_enabled(sb, PRJQUOTA))
+> -		ext4_statfs_project(sb, EXT4_I(dentry->d_inode)->i_projid, buf);
+> +		ext4_statfs_project(dentry->d_inode, buf);
+>  #endif
+>  	return 0;
+>  }
+> -- 
+> 2.7.4
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
