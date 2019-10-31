@@ -2,116 +2,114 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E640CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EA7CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D57ED20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:28:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Yl2TS2xa"
+	by mail.kernel.org (Postfix) with ESMTP id 3C9C52087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:28:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572528537;
+	bh=Vdsn3ouGQqdKJxg6rBIxYfacsyFRzG6/XTHAj2EWdFA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=rAtoKV5F5G/yT6/ywNOG5IC6AA/Xvw9fvoWV1Fi4A+Zn7jrY17uuBBpzUHzcxas0B
+	 YIhQ5L8KE389NwTOvgpGbw1e61Y6+p4HzHRLW6Tf1e3s41beBO5oF/wn0wNQj3+rvv
+	 rP8QGhrZPNTkOsIhb0uqTpV/Eo8fh2nd62Ju6OO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfJaN2L (ORCPT
+        id S1727474AbfJaN24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:28:11 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:51838 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727238AbfJaN2L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:28:11 -0400
-Received: from pendragon.ideasonboard.com (lmontsouris-658-1-103-151.w92-154.abo.wanadoo.fr [92.154.14.151])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6711A320;
-        Thu, 31 Oct 2019 14:28:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1572528489;
-        bh=fyvh80DRgyI9E6PTPAl80n4Ep0JkBrHpvJt615thuBo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Yl2TS2xaE6HWYahAVg9MatuaPiBE5dz3WaV0c4HjBNygbm7ZCK4ayTvTy0lbm7MYm
-         wuqSLpRlO1uoDDZ/XxPscACHzvqnn9knAqOCaNwVHNITY7heiPBs1BEx1vrR+DnCCr
-         oz26aNCVH/kdN+hC00kxvo2HXaXg+95peRZ2iueU=
-Date:   Thu, 31 Oct 2019 15:28:01 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, sakari.ailus@iki.fi,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v4 0/2] Add IMX296 CMOS image sensor support
-Message-ID: <20191031132801.GC5018@pendragon.ideasonboard.com>
-References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
- <20191031131644.GA8917@pendragon.ideasonboard.com>
- <20191031132352.GA24273@mani>
+        Thu, 31 Oct 2019 09:28:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727003AbfJaN24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 09:28:56 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D376220862;
+        Thu, 31 Oct 2019 13:28:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572528535;
+        bh=Vdsn3ouGQqdKJxg6rBIxYfacsyFRzG6/XTHAj2EWdFA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ILRPGrHpRJTaD8MzLwhSMUGNfpsMQmgiCICKFXUcL7Sd7Y5UVPjrrH3NZlV8bvuIs
+         4NzTRlP4QCsShkbDl9wwBIFjR5aYDWNeqxPDqu0Z2T+yw5DWrXrMWCC16L/XgrHEB1
+         fKK/7X0bJ72f05QxiEgJhnqTCJclx+tHO8r9dgQ8=
+Date:   Thu, 31 Oct 2019 08:28:53 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jian-Hong Pan <jian-hong@endlessm.com>
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] Revert "nvme: Add quirk for Kingston NVME SSD running
+ FW E8FK11.T"
+Message-ID: <20191031132853.GA46011@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191031132352.GA24273@mani>
+In-Reply-To: <20191031093408.9322-1-jian-hong@endlessm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mani,
+On Thu, Oct 31, 2019 at 05:34:09PM +0800, Jian-Hong Pan wrote:
+> Since commit 253eaf4faaaa ("PCI/MSI: Fix incorrect MSI-X masking on
+> resume") is merged, we can revert the previous quirk now.
 
-On Thu, Oct 31, 2019 at 06:53:52PM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Oct 31, 2019 at 03:16:44PM +0200, Laurent Pinchart wrote:
-> > On Wed, Oct 30, 2019 at 03:19:00PM +0530, Manivannan Sadhasivam wrote:
-> > > Hello,
-> > > 
-> > > This patchset adds support for IMX296 CMOS image sensor from Sony.
-> > > Sensor can be programmed through I2C and 4-wire interface but the
-> > > current driver only supports I2C interface. The sensor is
-> > > capable of outputting frames in CSI2 format (1 Lane). In the case
-> > > of sensor resolution, driver only supports 1440x1088 at 30 FPS.
-> > > 
-> > > The driver has been validated using Framos IMX296 module interfaced to
-> > > 96Boards Dragonboard410c.
-> > 
-> > I've just been made aware of your work. I also worked on an IMX296
-> > sensor driver in parallel, which I will post to the list. My driver
-> > doesn't hardcode the resolution but computes register values at runtime,
-> > so I wonder if it could be a better option. I'll post it now.
+253eaf4faaaa is pending on my pci/msi branch, planned to be merged
+during the v5.5 merge window.
+
+This revert patch must not be merged before 253eaf4faaaa.  The easiest
+way to do that would be for me to merge this one as well; otherwise
+we have to try to make things happen in the right order during the
+merge window.
+
+If the NVMe folks ack this idea and the patch, I'd be happy to merge
+it.
+
+> This reverts commit 19ea025e1d28c629b369c3532a85b3df478cc5c6.
 > 
-> I'm fine with it. The reason the driver is simple in the first place is, that's
-> how my usual workflow is. Start small and build it big ;-)
+> Fixes: 19ea025e1d28 ("nvme: Add quirk for Kingston NVME SSD running FW E8FK11.T")
+> Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204887
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> Cc: stable@vger.kernel.org
+> ---
+> v2:
+>   Re-send for mailing failure
 > 
-> Anyway, I'm happy if your driver gets in.
-
-My driver sometimes has trouble finding the sensor at probe time, so
-I'll study and try your code too. It could be a problem specific to my
-platform (I'm testing on a custom i.MX7 board).
-
-> > > Changes in v4:
-> > > 
-> > > * Fixed issues related to gain settings and few misc cleanups in driver
-> > > * Documented port node and removed maxItems, default prop from dt binding
-> > >   as per the review
-> > > 
-> > > Changes in v3:
-> > > 
-> > > * Fixed the reference to video-interfaces.txt in binding.
-> > > 
-> > > Changes in v2:
-> > > 
-> > > * Switched to YAML binding
-> > > 
-> > > Manivannan Sadhasivam (2):
-> > >   dt-bindings: media: i2c: Add IMX296 CMOS sensor binding
-> > >   media: i2c: Add IMX296 CMOS image sensor driver
-> > > 
-> > >  .../devicetree/bindings/media/i2c/imx296.yaml |  94 +++
-> > >  MAINTAINERS                                   |   8 +
-> > >  drivers/media/i2c/Kconfig                     |  11 +
-> > >  drivers/media/i2c/Makefile                    |   1 +
-> > >  drivers/media/i2c/imx296.c                    | 715 ++++++++++++++++++
-> > >  5 files changed, 829 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > >  create mode 100644 drivers/media/i2c/imx296.c
-
--- 
-Regards,
-
-Laurent Pinchart
+>  drivers/nvme/host/core.c | 10 ----------
+>  1 file changed, 10 deletions(-)
+> 
+> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+> index fa7ba09dca77..94bfbee1e5f7 100644
+> --- a/drivers/nvme/host/core.c
+> +++ b/drivers/nvme/host/core.c
+> @@ -2404,16 +2404,6 @@ static const struct nvme_core_quirk_entry core_quirks[] = {
+>  		.vid = 0x14a4,
+>  		.fr = "22301111",
+>  		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
+> -	},
+> -	{
+> -		/*
+> -		 * This Kingston E8FK11.T firmware version has no interrupt
+> -		 * after resume with actions related to suspend to idle
+> -		 * https://bugzilla.kernel.org/show_bug.cgi?id=204887
+> -		 */
+> -		.vid = 0x2646,
+> -		.fr = "E8FK11.T",
+> -		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
+>  	}
+>  };
+>  
+> -- 
+> 2.23.0
+> 
