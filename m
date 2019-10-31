@@ -2,154 +2,151 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50665C47E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD49CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 278FC216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:55:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZYtnp5Vt"
+	by mail.kernel.org (Postfix) with ESMTP id 92CF62086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:57:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572548241;
+	bh=atQgwlBQBSDutyoWJUcv5vkRPBLQF1Vzq04Vm6LQI7k=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=GEXUFTVRC1qqWaNgh7RkDIcEbgluwc/8kxeXYxHUzyRJIJ/ICSmxG8Itw+eqzS8/G
+	 wti4vqO03R2ofWmp0HMndOv7IKE++mBW22uHMNn0E0kAlFi7kC7p4/mYujjb9yq2dl
+	 1ylGXNwyF7e1Hv+R2usxESwyQEUngDPj4nDdC6T0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729434AbfJaSz6 (ORCPT
+        id S1729439AbfJaS5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:55:58 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37862 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729252AbfJaSz5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:55:57 -0400
-Received: by mail-wm1-f65.google.com with SMTP id q130so6980529wme.2;
-        Thu, 31 Oct 2019 11:55:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=KEZ2MGdwSvgyihy3BgAVtU7EXgoX4IyUpv+yaDE4EcM=;
-        b=ZYtnp5VtI2P7IqkhTg1B8qmX/LGKFnyoyP1OI02dcs9Y9z49dyvvKdcCH9EFsu7iyJ
-         t3/OP80zD06K5ZwZsq3mCVndr+GGQO6XZ+W2cyUIPfufhkG7kSrg8Mp7cfm2aDfxLUgV
-         eu11mNVUZvgFNT+OXFwpttyldXIHuSXsgwyUzXzLiEAZj5GUUmmBi7xHjroJUTFmlxXp
-         7qra1V80Vh6JiZ2mfcX/uIaSdLZJ7w/AN54R2pbz3oBnrULe1IxtgUwIpFIIrkVsqFw5
-         cbpacAfI5X7UrSZxxYKVBLQNgtp6ojnq1PgdlRoTMg4cI/bS+xYJaB0eEiO5W/GRwdOf
-         /sdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=KEZ2MGdwSvgyihy3BgAVtU7EXgoX4IyUpv+yaDE4EcM=;
-        b=tGfSqBmJEv5vaelaaPmluVSZ6oC0d3HEMpVPh45bQ5eZTAzo7Wwfw7k2o3kwksG0jf
-         yTlgcfXQxoJNHdGo4okbtsilU4nDglUDGj8CtkO9QV+me08iWYOE1iofQ9mfdhfBoVtq
-         9DyjiJoKbvbF3zaBZ5dboXSs3CQYBH2xFHU994HIG5w5mngjbiCci2P1xXM7hrzeoEl+
-         K1SavmSqXUpLzIucBkgJEGiICbjaDmPblc5MDRyv1myiVu+MQuDa2DOLmUHdMH+cSc0t
-         cBjClePFDnM6CH7C8wmtz87VYBI5RTt2RtJ/aoGIYfexjRqj8iw09B6K9JzdlmqVLAU4
-         Ns0g==
-X-Gm-Message-State: APjAAAXlKbnNx3B7QYk3PC5+w7qT9U6HFzkeSAzMlU0uwtwIIH2zq3Xc
-        CUUe7q6xHK+GOTLOwZC0itsv3dZ3Ga90w9Ht+/M=
-X-Google-Smtp-Source: APXvYqzQvRT21L0PVgbV5c5C9W19QRhbCaQ8fQ/tMOUZwJgzzYQuw10WGZvoatXernuYn4EhUroIbjQ5XFwa10cGKYc=
-X-Received: by 2002:a1c:480a:: with SMTP id v10mr6775812wma.138.1572548154853;
- Thu, 31 Oct 2019 11:55:54 -0700 (PDT)
+        Thu, 31 Oct 2019 14:57:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729239AbfJaS5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 14:57:20 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B5832080F;
+        Thu, 31 Oct 2019 18:57:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572548238;
+        bh=atQgwlBQBSDutyoWJUcv5vkRPBLQF1Vzq04Vm6LQI7k=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Cjcf/7O07YCyXuKXNzOhbJW4nq1AKDCe9lNASGA1eqkypJSttJJ6aYJ9teuX1J+uV
+         VH0MqdYXVUEDbhlHz79fCVxNlSc08Po1/9BkgLzPQhjhBBRhdpYP9hgsx3eXXbGGVL
+         qnWbLkjvUGA7kbdETqr0UwdoWDpD7uT88eHt2siQ=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 6A6DE352105F; Thu, 31 Oct 2019 11:57:18 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 11:57:18 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Lai Jiangshan <laijs@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH 03/11] rcu: clean up rcu_preempt_deferred_qs_irqrestore()
+Message-ID: <20191031185718.GY20975@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191031100806.1326-1-laijs@linux.alibaba.com>
+ <20191031100806.1326-4-laijs@linux.alibaba.com>
+ <20191031135234.GQ20975@paulmck-ThinkPad-P72>
+ <49c778ff-2187-26fb-1477-bdef6eaf298b@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20191031181359.282617-1-megous@megous.com>
-In-Reply-To: <20191031181359.282617-1-megous@megous.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Thu, 31 Oct 2019 19:55:43 +0100
-Message-ID: <CAJiuCcdZqpoXKuupk_w3F1npZgCHDgb=+Fdd1ukKA22K2PJ6Ww@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH] cpufreq: sun50i: Fix CPU speed bin detection
-To:     megous@megous.com
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:ALLWINNER CPUFREQ DRIVER" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <49c778ff-2187-26fb-1477-bdef6eaf298b@linux.alibaba.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ondrej,
+On Thu, Oct 31, 2019 at 11:25:11PM +0800, Lai Jiangshan wrote:
+> 
+> 
+> On 2019/10/31 9:52 下午, Paul E. McKenney wrote:
+> > On Thu, Oct 31, 2019 at 10:07:58AM +0000, Lai Jiangshan wrote:
+> > > Remove several unneeded return.
+> > > 
+> > > It doesn't need to return earlier after every code block.
+> > > The code protects itself and be safe to fall through because
+> > > every code block has its own condition tests.
+> > > 
+> > > Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+> > > ---
+> > >   kernel/rcu/tree_plugin.h | 14 +-------------
+> > >   1 file changed, 1 insertion(+), 13 deletions(-)
+> > > 
+> > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > > index 59ef10da1e39..82595db04eec 100644
+> > > --- a/kernel/rcu/tree_plugin.h
+> > > +++ b/kernel/rcu/tree_plugin.h
+> > > @@ -439,19 +439,10 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
+> > >   	 * t->rcu_read_unlock_special cannot change.
+> > >   	 */
+> > >   	special = t->rcu_read_unlock_special;
+> > > -	rdp = this_cpu_ptr(&rcu_data);
+> > > -	if (!special.s && !rdp->exp_deferred_qs) {
+> > > -		local_irq_restore(flags);
+> > > -		return;
+> > > -	}
+> > 
+> > The point of this check is the common case of this function being invoked
+> > when both fields are zero, avoiding the below redundant store and all the
+> > extra checks of subfields of special.
+> > 
+> > Or are you saying that current compilers figure all this out?
+> 
+> No.
+> 
+> So, I have to keep the first/above return branch.
+> 
+> Any reasons to keep the following 2 return branches?
+> There is no redundant store and the load for the checks
+> are hot in the cache if the condition for return is met.
 
-On Thu, 31 Oct 2019 at 19:14, Ondrej Jirman <megous@megous.com> wrote:
->
-> I have failures to boot on Orange Pi 3, because this driver determined
-> that my SoC is from the normal bin, but my SoC only works reliably with
-> the OPP values for the slowest bin.
->
-> Looking at BSP code, I found that efuse values have following meanings
-> on H6:
->
-> - 0b000 invalid (interpreted in vendor's BSP as normal bin)
-> - 0b001 slowest bin
-> - 0b011 normal bin
-> - 0b111 fastest bin
+And the code further down is not in a fastpath.  So, good point, it
+should be find to remove the two early exits below.
 
-Maybe have some defines will be more readable no ?
-https://megous.com/git/linux/tree/drivers/soc/sunxi/sunxi-sid.c?h=3Dh6-4.9-=
-bsp#n213
+							Thanx, Paul
 
-#define SUN50I_NVEM_INVALID_CPU_OPP (0b000)
-#define SUN50I_NVEM_LOW_CPU_OPP (0b001)
-#define SUN50I_NVEM_NORMAL_CPU_OPP (0b011)
-#define SUN50I_NVEM_HIGH_CPU_OPP (0b111)
-
-Regards,
-Cl=C3=A9ment
-
->
-> Let's play it safe and interpret 0 as the slowest bin, but fix detection
-> of other bins to match vendor code.
->
-> Fixes: f328584f7bff ("cpufreq: Add sun50i nvmem based CPU scaling driver"=
-)
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->
-> See https://megous.com/git/linux/tree/drivers/soc/sunxi/sunxi-sid.c?h=3Dh=
-6-4.9-bsp#n484
-> and https://megous.com/git/linux/tree/drivers/cpufreq/sunxi-cpufreq.c?h=
-=3Dh6-4.9-bsp#n428
-> (1 is substracted from soc_bin number here!)
->
->  drivers/cpufreq/sun50i-cpufreq-nvmem.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/cpufreq/sun50i-cpufreq-nvmem.c b/drivers/cpufreq/sun=
-50i-cpufreq-nvmem.c
-> index df35ef3ef567..41dad03e245c 100644
-> --- a/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-> +++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-> @@ -71,9 +71,12 @@ static int sun50i_cpufreq_get_efuse(u32 *versions)
->         efuse_value =3D (*speedbin >> NVMEM_SHIFT) & NVMEM_MASK;
->         switch (efuse_value) {
->         case 0b0001:
-> -               *versions =3D 1;
-> +               *versions =3D 0;
->                 break;
->         case 0b0011:
-> +               *versions =3D 1;
-> +               break;
-> +       case 0b0111:
->                 *versions =3D 2;
->                 break;
->         default:
-> --
-> 2.23.0
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msg=
-id/linux-sunxi/20191031181359.282617-1-megous%40megous.com.
+> Thanks.
+> Lai
+> 
+> > 
+> > 							Thanx, Paul
+> > 
+> > >   	t->rcu_read_unlock_special.b.deferred_qs = false;
+> > >   	if (special.b.need_qs) {
+> > >   		rcu_qs();
+> > >   		t->rcu_read_unlock_special.b.need_qs = false;
+> > > -		if (!t->rcu_read_unlock_special.s && !rdp->exp_deferred_qs) {
+> > > -			local_irq_restore(flags);
+> > > -			return;
+> > > -		}
+> > >   	}
+> > >   	/*
+> > > @@ -460,12 +451,9 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
+> > >   	 * tasks are handled when removing the task from the
+> > >   	 * blocked-tasks list below.
+> > >   	 */
+> > > +	rdp = this_cpu_ptr(&rcu_data);
+> > >   	if (rdp->exp_deferred_qs) {
+> > >   		rcu_report_exp_rdp(rdp);
+> > > -		if (!t->rcu_read_unlock_special.s) {
+> > > -			local_irq_restore(flags);
+> > > -			return;
+> > > -		}
+> > >   	}
+> > >   	/* Clean up if blocked during RCU read-side critical section. */
+> > > -- 
+> > > 2.20.1
+> > > 
