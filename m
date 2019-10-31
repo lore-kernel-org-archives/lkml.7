@@ -2,466 +2,158 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098C2CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC02CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A952080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711A72080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:08:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRmiPbcw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FxiEt0AS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbfJaXIW (ORCPT
+        id S1728535AbfJaXIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 19:08:22 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:47094 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbfJaXIW (ORCPT
+        Thu, 31 Oct 2019 19:08:43 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:32774 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbfJaXIn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 19:08:22 -0400
-Received: by mail-qk1-f195.google.com with SMTP id e66so8767375qkf.13
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 16:08:21 -0700 (PDT)
+        Thu, 31 Oct 2019 19:08:43 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y127so5958489lfc.0;
+        Thu, 31 Oct 2019 16:08:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZmrIdl6crkmkLSfRmtMWUraRfy3Kp0gsmtTe6S24sz8=;
-        b=XRmiPbcwpL2/Bhq+IzKt0Y/RSkKUXckCY9cco0Au+VmI4ceMvsEdULPGRktJsCh7xE
-         fNWCPc7Re6TccAzQ7iKYjvadMeOX8YOrXPthmqCad6+AMXBwxJPzAic5RBgR5hR0bOa1
-         ChGmlsecVgdZ5wshNttC0x3XOGC8ipGnPIjilbEpRU30rM+59zUbnWyeGzpJxsXCUvMG
-         Ya4MHRW2xpAhnDqXZmgnwu5cJD4zUEcQ4p/qf+vXNPOiw3TZYbhlN22V7GCuuHp2vlzQ
-         UOjplVpz4JuwpXehaGRFC47OYLtnpawvRZGLwTxw7aSpradiKuUyZTj+nP7BX/WAGeul
-         78Zw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LfMOpqmh3hu4Z0wFflv+lBYdascyk2HUnFcBRiRArs4=;
+        b=FxiEt0AS2hRxphbCFALjC5ZMg7ZgfrX+51lx7kWvtynPV9O+EVDTn6Xx0yNwMV+vzC
+         giwNAosbCwUnjbCq25rzROkZ371EOw4za9kBbNAZuO9TE827sW2C5XMkk9mFHzxZBrEf
+         03MpFOYMhWjS1gzCBUBqBvE0rcUFxu59U0jXyBrCMFlHIA/MlaEOQyGp8PDy8YrmsRQU
+         FkSGFNpFj+BNOKm73Y1Nam1eu6C61i3lfupzcc68sHtNWpAh3VXgXnFdp8IDo3eP49/U
+         CMSCQSE1dSsgK0tDDNITLPgwpUW3WfaKrzkxAAFGKLAmK+qOzF/zvoLdxt+6PVE5FjhY
+         IMLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZmrIdl6crkmkLSfRmtMWUraRfy3Kp0gsmtTe6S24sz8=;
-        b=dOunzKTVZmMiZjdjzlhTWph4KE5PvXsIK/LFuf9QAX6SgGL4AmO3UYSoU0KaafxkYq
-         YmvGHA/DiwLsSqxooCKAAsj7Kj6sxDjKfz25ebQcOzluYb87WdDYtYHR1/O4fd9jOkAK
-         aqF6rgmIuYR3KBJ8LohJy8eoxpBWp8DXBtr4fKUIaLnuPQXYRfL221HCtwTPUgTllivC
-         NGK/Ob0hWkXbYjGqFb/3Wrs4m7pknJxqDR0gcfD2qAjYXb8AIGRbKgiqawMTrV9F3gif
-         jTNyFXz1FtZwc8SpDrW5hm2iI1dvN4tkiX41TlkApCuvpXtcauJOGWkfxC4fmULfiwkD
-         bkNQ==
-X-Gm-Message-State: APjAAAXRHJsQEttjOoQJFl7JEhSAURl3ct9UnBxMZb6LrGGBcL3ZvWSv
-        xMNFsHPTdTbgSyKJaw3FasRcCxBya6w=
-X-Google-Smtp-Source: APXvYqxZwgNDH2iN89at3FcJsM2LnF75aee+UNKWY63oj4ABuN/mn6anXOMpQDsMkPtGyptV/GlhXw==
-X-Received: by 2002:aed:3908:: with SMTP id l8mr2866517qte.383.1572562984427;
-        Thu, 31 Oct 2019 16:03:04 -0700 (PDT)
-Received: from localhost.localdomain ([187.106.44.83])
-        by smtp.gmail.com with ESMTPSA id s67sm2633875qkh.70.2019.10.31.16.03.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 16:03:03 -0700 (PDT)
-From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-To:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
-        kim.jamie.bradley@gmail.com, nishkadg.linux@gmail.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-Subject: [PATCH v4 1/3] staging: rts5208: Eliminate the use of Camel Case in files ms.{h,c}
-Date:   Thu, 31 Oct 2019 20:02:41 -0300
-Message-Id: <20191031230243.3462-2-gabrielabittencourt00@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191031230243.3462-1-gabrielabittencourt00@gmail.com>
-References: <20191031230243.3462-1-gabrielabittencourt00@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LfMOpqmh3hu4Z0wFflv+lBYdascyk2HUnFcBRiRArs4=;
+        b=cOoWZBCeV/Q2DYum81KvwU323J057yCLfrF+7ZXgch0GwBX6Mr93CBhrPU41w9/Qx3
+         IzvbnP+bjmoPomQGk3wd2hbut60w6hegkk5SlKvb3p5q5BVf4UVFc6ODmYcrRlB7/HKA
+         HcGcETyiShePIaiEMvlyQJzs62MCPx0yiRb8Rj/a09xC736vR89qBWKKv0C3FvuAlEfH
+         qwxswEtqqvK9+7m1B+Wn+Iv9Ma87+p2LmL/b+rEiwfPoNHc4Hg4op7sM9Rm0PSJt8Vm8
+         zf6g1JERlNvCFYGE3eZR6sUZSJ/x6fdiyVviZztmrodChOO/JFkG60t0SMkhy/4Kq8VO
+         8PqA==
+X-Gm-Message-State: APjAAAWUeUJDigckv6At0go4yWoOZ1ydx8Dun08b8HAdTtimAL9guMPb
+        00bpsjVM3BWM/GtMiDmpH+5ABh1b
+X-Google-Smtp-Source: APXvYqzr4lcKOeeVIXl/TUk97eKlvMi5f7vvojFIvFqqpJBsMZ3XNcFMBuKn8gDJS40l/nML/Qikhg==
+X-Received: by 2002:ac2:41d2:: with SMTP id d18mr5098329lfi.92.1572563320400;
+        Thu, 31 Oct 2019 16:08:40 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id b2sm1832519ljk.64.2019.10.31.16.08.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 31 Oct 2019 16:08:39 -0700 (PDT)
+Subject: Re: [PATCH v7 06/19] PM / devfreq: tegra30: Use kHz units uniformly
+ in the code
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191029220019.26773-1-digetx@gmail.com>
+ <CGME20191029220734epcas1p42b635ee1c85a9480cecbaf7a1a41db25@epcas1p4.samsung.com>
+ <20191029220019.26773-7-digetx@gmail.com>
+ <a8ce6d98-26aa-b6eb-56ea-4bf960fc533d@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f0f64310-e2b0-9b02-fc6e-ccc23054d3de@gmail.com>
+Date:   Fri, 1 Nov 2019 02:08:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <a8ce6d98-26aa-b6eb-56ea-4bf960fc533d@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleans up checks of "Avoid CamelCase" in files ms.{h,c}
+31.10.2019 07:44, Chanwoo Choi пишет:
+> On 19. 10. 30. 오전 7:00, Dmitry Osipenko wrote:
+>> Part of the code uses Hz units and the other kHz, let's switch to kHz
+>> everywhere for consistency. A small benefit from this change (besides
+>> code's cleanup) is that now powertop utility correctly displays devfreq's
+>> stats, for some reason it expects them to be in kHz.
+>>
+>> Tested-by: Peter Geis <pgwipeout@gmail.com>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/devfreq/tegra30-devfreq.c | 11 ++++++-----
+>>  1 file changed, 6 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+>> index 1d22f5239cd5..06c5376a7201 100644
+>> --- a/drivers/devfreq/tegra30-devfreq.c
+>> +++ b/drivers/devfreq/tegra30-devfreq.c
+>> @@ -448,7 +448,7 @@ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
+>>  	rate = dev_pm_opp_get_freq(opp);
+>>  	dev_pm_opp_put(opp);
+>>  
+>> -	err = clk_set_min_rate(tegra->emc_clock, rate);
+>> +	err = clk_set_min_rate(tegra->emc_clock, rate * KHZ);
+>>  	if (err)
+>>  		return err;
+>>  
+>> @@ -477,7 +477,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
+>>  	stat->private_data = tegra;
+>>  
+>>  	/* The below are to be used by the other governors */
+>> -	stat->current_frequency = cur_freq * KHZ;
+>> +	stat->current_frequency = cur_freq;
+>>  
+>>  	actmon_dev = &tegra->devices[MCALL];
+>>  
+>> @@ -527,7 +527,7 @@ static int tegra_governor_get_target(struct devfreq *devfreq,
+>>  		target_freq = max(target_freq, dev->target_freq);
+>>  	}
+>>  
+>> -	*freq = target_freq * KHZ;
+>> +	*freq = target_freq;
+>>  
+>>  	return 0;
+>>  }
+>> @@ -663,7 +663,7 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>>  			goto remove_opps;
+>>  		}
+>>  
+>> -		err = dev_pm_opp_add(&pdev->dev, rate, 0);
+>> +		err = dev_pm_opp_add(&pdev->dev, rate / KHZ, 0);
+>>  		if (err) {
+>>  			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
+>>  			goto remove_opps;
+>> @@ -686,7 +686,8 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>>  		goto unreg_notifier;
+>>  	}
+>>  
+>> -	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
+>> +	tegra_devfreq_profile.initial_freq = tegra->cur_freq;
+>> +
+>>  	devfreq = devfreq_add_device(&pdev->dev, &tegra_devfreq_profile,
+>>  				     "tegra_actmon", NULL);
+>>  	if (IS_ERR(devfreq)) {
+>>
+> 
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> 
 
-Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-
----
-
-Changes in v2:
-- substitute variables in lower case to upper case
----
- drivers/staging/rts5208/ms.c | 86 ++++++++++++++++++------------------
- drivers/staging/rts5208/ms.h | 70 ++++++++++++++---------------
- 2 files changed, 78 insertions(+), 78 deletions(-)
-
-diff --git a/drivers/staging/rts5208/ms.c b/drivers/staging/rts5208/ms.c
-index e853fa9cc950..d53dd138a356 100644
---- a/drivers/staging/rts5208/ms.c
-+++ b/drivers/staging/rts5208/ms.c
-@@ -590,7 +590,7 @@ static int ms_identify_media_type(struct rtsx_chip *chip, int switch_8bit_bus)
- 	int retval, i;
- 	u8 val;
- 
--	retval = ms_set_rw_reg_addr(chip, Pro_StatusReg, 6, SystemParm, 1);
-+	retval = ms_set_rw_reg_addr(chip, PRO_STATUS_REG, 6, SYSTEM_PARAM, 1);
- 	if (retval != STATUS_SUCCESS)
- 		return STATUS_FAIL;
- 
-@@ -840,7 +840,7 @@ static int msxc_change_power(struct rtsx_chip *chip, u8 mode)
- 
- 	ms_cleanup_work(chip);
- 
--	retval = ms_set_rw_reg_addr(chip, 0, 0, Pro_DataCount1, 6);
-+	retval = ms_set_rw_reg_addr(chip, 0, 0, PRO_DATA_COUNT1, 6);
- 	if (retval != STATUS_SUCCESS)
- 		return STATUS_FAIL;
- 
-@@ -885,7 +885,7 @@ static int ms_read_attribute_info(struct rtsx_chip *chip)
- 	int found_sys_info = 0, found_model_name = 0;
- #endif
- 
--	retval = ms_set_rw_reg_addr(chip, Pro_IntReg, 2, Pro_SystemParm, 7);
-+	retval = ms_set_rw_reg_addr(chip, PRO_INT_REG, 2, PRO_SYSTEM_PARAM, 7);
- 	if (retval != STATUS_SUCCESS)
- 		return STATUS_FAIL;
- 
-@@ -1232,7 +1232,7 @@ static int ms_read_status_reg(struct rtsx_chip *chip)
- 	int retval;
- 	u8 val[2];
- 
--	retval = ms_set_rw_reg_addr(chip, StatusReg0, 2, 0, 0);
-+	retval = ms_set_rw_reg_addr(chip, STATUS_REG0, 2, 0, 0);
- 	if (retval != STATUS_SUCCESS)
- 		return STATUS_FAIL;
- 
-@@ -1255,8 +1255,8 @@ static int ms_read_extra_data(struct rtsx_chip *chip,
- 	int retval, i;
- 	u8 val, data[10];
- 
--	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
--				    SystemParm, 6);
-+	retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
-+				    SYSTEM_PARAM, 6);
- 	if (retval != STATUS_SUCCESS)
- 		return STATUS_FAIL;
- 
-@@ -1307,8 +1307,8 @@ static int ms_read_extra_data(struct rtsx_chip *chip,
- 			if (retval != STATUS_SUCCESS)
- 				return STATUS_FAIL;
- 
--			retval = ms_set_rw_reg_addr(chip, OverwriteFlag,
--						    MS_EXTRA_SIZE, SystemParm,
-+			retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG,
-+						    MS_EXTRA_SIZE, SYSTEM_PARAM,
- 						    6);
- 			if (retval != STATUS_SUCCESS)
- 				return STATUS_FAIL;
-@@ -1339,8 +1339,8 @@ static int ms_write_extra_data(struct rtsx_chip *chip, u16 block_addr,
- 	if (!buf || (buf_len < MS_EXTRA_SIZE))
- 		return STATUS_FAIL;
- 
--	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
--				    SystemParm, 6 + MS_EXTRA_SIZE);
-+	retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
-+				    SYSTEM_PARAM, 6 + MS_EXTRA_SIZE);
- 	if (retval != STATUS_SUCCESS)
- 		return STATUS_FAIL;
- 
-@@ -1392,8 +1392,8 @@ static int ms_read_page(struct rtsx_chip *chip, u16 block_addr, u8 page_num)
- 	int retval;
- 	u8 val, data[6];
- 
--	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
--				    SystemParm, 6);
-+	retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
-+				    SYSTEM_PARAM, 6);
- 	if (retval != STATUS_SUCCESS)
- 		return STATUS_FAIL;
- 
-@@ -1465,8 +1465,8 @@ static int ms_set_bad_block(struct rtsx_chip *chip, u16 phy_blk)
- 	if (retval != STATUS_SUCCESS)
- 		return STATUS_FAIL;
- 
--	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
--				    SystemParm, 7);
-+	retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
-+				    SYSTEM_PARAM, 7);
- 	if (retval != STATUS_SUCCESS)
- 		return STATUS_FAIL;
- 
-@@ -1519,8 +1519,8 @@ static int ms_erase_block(struct rtsx_chip *chip, u16 phy_blk)
- 	int retval, i = 0;
- 	u8 val, data[6];
- 
--	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
--				    SystemParm, 6);
-+	retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
-+				    SYSTEM_PARAM, 6);
- 	if (retval != STATUS_SUCCESS)
- 		return STATUS_FAIL;
- 
-@@ -1579,7 +1579,7 @@ static void ms_set_page_status(u16 log_blk, u8 type, u8 *extra, int extra_len)
- 
- 	memset(extra, 0xFF, MS_EXTRA_SIZE);
- 
--	if (type == setPS_NG) {
-+	if (type == set_PS_NG) {
- 		/* set page status as 1:NG,and block status keep 1:OK */
- 		extra[0] = 0xB8;
- 	} else {
-@@ -1670,8 +1670,8 @@ static int ms_copy_page(struct rtsx_chip *chip, u16 old_blk, u16 new_blk,
- 		if (retval != STATUS_SUCCESS)
- 			return STATUS_FAIL;
- 
--		retval = ms_set_rw_reg_addr(chip, OverwriteFlag,
--					    MS_EXTRA_SIZE, SystemParm, 6);
-+		retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG,
-+					    MS_EXTRA_SIZE, SYSTEM_PARAM, 6);
- 		if (retval != STATUS_SUCCESS)
- 			return STATUS_FAIL;
- 
-@@ -1725,7 +1725,7 @@ static int ms_copy_page(struct rtsx_chip *chip, u16 old_blk, u16 new_blk,
- 					return STATUS_FAIL;
- 
- 				if (uncorrect_flag) {
--					ms_set_page_status(log_blk, setPS_NG,
-+					ms_set_page_status(log_blk, set_PS_NG,
- 							   extra,
- 							   MS_EXTRA_SIZE);
- 					if (i == 0)
-@@ -1738,8 +1738,8 @@ static int ms_copy_page(struct rtsx_chip *chip, u16 old_blk, u16 new_blk,
- 						i, extra[0]);
- 					MS_SET_BAD_BLOCK_FLG(ms_card);
- 
--					ms_set_page_status(log_blk, setPS_Error,
--							   extra,
-+					ms_set_page_status(log_blk,
-+							   set_PS_error, extra,
- 							   MS_EXTRA_SIZE);
- 					ms_write_extra_data(chip, new_blk, i,
- 							    extra,
-@@ -1767,8 +1767,8 @@ static int ms_copy_page(struct rtsx_chip *chip, u16 old_blk, u16 new_blk,
- 			}
- 		}
- 
--		retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
--					    SystemParm, (6 + MS_EXTRA_SIZE));
-+		retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
-+					    SYSTEM_PARAM, (6 + MS_EXTRA_SIZE));
- 
- 		ms_set_err_code(chip, MS_NO_ERROR);
- 
-@@ -1822,8 +1822,8 @@ static int ms_copy_page(struct rtsx_chip *chip, u16 old_blk, u16 new_blk,
- 		}
- 
- 		if (i == 0) {
--			retval = ms_set_rw_reg_addr(chip, OverwriteFlag,
--						    MS_EXTRA_SIZE, SystemParm,
-+			retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG,
-+						    MS_EXTRA_SIZE, SYSTEM_PARAM,
- 						    7);
- 			if (retval != STATUS_SUCCESS)
- 				return STATUS_FAIL;
-@@ -1980,8 +1980,8 @@ static int reset_ms(struct rtsx_chip *chip)
- 	for (reg_addr = BLOCK_SIZE_0; reg_addr <= PAGE_SIZE_1; reg_addr++)
- 		rtsx_add_cmd(chip, READ_REG_CMD, reg_addr, 0, 0);
- 
--	rtsx_add_cmd(chip, READ_REG_CMD, MS_Device_Type, 0, 0);
--	rtsx_add_cmd(chip, READ_REG_CMD, MS_4bit_Support, 0, 0);
-+	rtsx_add_cmd(chip, READ_REG_CMD, MS_device_type, 0, 0);
-+	rtsx_add_cmd(chip, READ_REG_CMD, MS_4bit_support, 0, 0);
- 
- 	retval = rtsx_send_cmd(chip, MS_CARD, 100);
- 	if (retval < 0)
-@@ -2057,7 +2057,7 @@ static int reset_ms(struct rtsx_chip *chip)
- 
- 	/* Switch I/F Mode */
- 	if (ptr[15]) {
--		retval = ms_set_rw_reg_addr(chip, 0, 0, SystemParm, 1);
-+		retval = ms_set_rw_reg_addr(chip, 0, 0, SYSTEM_PARAM, 1);
- 		if (retval != STATUS_SUCCESS)
- 			return STATUS_FAIL;
- 
-@@ -2887,7 +2887,7 @@ int mspro_format(struct scsi_cmnd *srb, struct rtsx_chip *chip,
- 	if (retval != STATUS_SUCCESS)
- 		return STATUS_FAIL;
- 
--	retval = ms_set_rw_reg_addr(chip, 0x00, 0x00, Pro_TPCParm, 0x01);
-+	retval = ms_set_rw_reg_addr(chip, 0x00, 0x00, PRO_TPC_PARM, 0x01);
- 	if (retval != STATUS_SUCCESS)
- 		return STATUS_FAIL;
- 
-@@ -2970,8 +2970,8 @@ static int ms_read_multiple_pages(struct rtsx_chip *chip, u16 phy_blk,
- 		}
- 	}
- 
--	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
--				    SystemParm, 6);
-+	retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
-+				    SYSTEM_PARAM, 6);
- 	if (retval != STATUS_SUCCESS)
- 		return STATUS_FAIL;
- 
-@@ -3026,7 +3026,7 @@ static int ms_read_multiple_pages(struct rtsx_chip *chip, u16 phy_blk,
- 					if (!(chip->card_wp & MS_CARD)) {
- 						reset_ms(chip);
- 						ms_set_page_status
--							(log_blk, setPS_NG,
-+							(log_blk, set_PS_NG,
- 							 extra,
- 							 MS_EXTRA_SIZE);
- 						ms_write_extra_data
-@@ -3131,8 +3131,8 @@ static int ms_write_multiple_pages(struct rtsx_chip *chip, u16 old_blk,
- 	u8 *ptr;
- 
- 	if (!start_page) {
--		retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
--					    SystemParm, 7);
-+		retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
-+					    SYSTEM_PARAM, 7);
- 		if (retval != STATUS_SUCCESS)
- 			return STATUS_FAIL;
- 
-@@ -3165,8 +3165,8 @@ static int ms_write_multiple_pages(struct rtsx_chip *chip, u16 old_blk,
- 			return STATUS_FAIL;
- 	}
- 
--	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
--				    SystemParm, (6 + MS_EXTRA_SIZE));
-+	retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
-+				    SYSTEM_PARAM, (6 + MS_EXTRA_SIZE));
- 	if (retval != STATUS_SUCCESS)
- 		return STATUS_FAIL;
- 
-@@ -3773,9 +3773,9 @@ static int mg_set_tpc_para_sub(struct rtsx_chip *chip, int type,
- 	u8 buf[6];
- 
- 	if (type == 0)
--		retval = ms_set_rw_reg_addr(chip, 0, 0, Pro_TPCParm, 1);
-+		retval = ms_set_rw_reg_addr(chip, 0, 0, PRO_TPC_PARM, 1);
- 	else
--		retval = ms_set_rw_reg_addr(chip, 0, 0, Pro_DataCount1, 6);
-+		retval = ms_set_rw_reg_addr(chip, 0, 0, PRO_DATA_COUNT1, 6);
- 
- 	if (retval != STATUS_SUCCESS)
- 		return STATUS_FAIL;
-@@ -4154,7 +4154,7 @@ int mg_set_ICV(struct scsi_cmnd *srb, struct rtsx_chip *chip)
- 		} else {
- 			set_sense_type(chip, lun, SENSE_TYPE_MG_WRITE_ERR);
- 		}
--		goto SetICVFinish;
-+		goto set_ICV_finish;
- 	}
- 
- #ifdef MG_SET_ICV_SLOW
-@@ -4195,7 +4195,7 @@ int mg_set_ICV(struct scsi_cmnd *srb, struct rtsx_chip *chip)
- 					       SENSE_TYPE_MG_WRITE_ERR);
- 			}
- 			retval = STATUS_FAIL;
--			goto SetICVFinish;
-+			goto set_ICV_finish;
- 		}
- 	}
- #else
-@@ -4214,11 +4214,11 @@ int mg_set_ICV(struct scsi_cmnd *srb, struct rtsx_chip *chip)
- 		} else {
- 			set_sense_type(chip, lun, SENSE_TYPE_MG_WRITE_ERR);
- 		}
--		goto SetICVFinish;
-+		goto set_ICV_finish;
- 	}
- #endif
- 
--SetICVFinish:
-+set_ICV_finish:
- 	kfree(buf);
- 	return retval;
- }
-diff --git a/drivers/staging/rts5208/ms.h b/drivers/staging/rts5208/ms.h
-index 952cc14dd079..33bda9ce36b6 100644
---- a/drivers/staging/rts5208/ms.h
-+++ b/drivers/staging/rts5208/ms.h
-@@ -92,37 +92,37 @@
- #define PRO_FORMAT		0x10
- #define PRO_SLEEP		0x11
- 
--#define	IntReg			0x01
--#define StatusReg0		0x02
--#define StatusReg1		0x03
--
--#define SystemParm		0x10
--#define BlockAdrs		0x11
--#define CMDParm			0x14
--#define PageAdrs		0x15
--
--#define OverwriteFlag		0x16
--#define ManagemenFlag		0x17
--#define LogicalAdrs		0x18
--#define ReserveArea		0x1A
--
--#define	Pro_IntReg		0x01
--#define Pro_StatusReg		0x02
--#define Pro_TypeReg		0x04
--#define	Pro_IFModeReg		0x05
--#define Pro_CatagoryReg		0x06
--#define Pro_ClassReg		0x07
--
--#define Pro_SystemParm		0x10
--#define Pro_DataCount1		0x11
--#define Pro_DataCount0		0x12
--#define Pro_DataAddr3		0x13
--#define Pro_DataAddr2		0x14
--#define Pro_DataAddr1		0x15
--#define Pro_DataAddr0		0x16
--
--#define Pro_TPCParm		0x17
--#define Pro_CMDParm		0x18
-+#define INT_REG			0x01
-+#define STATUS_REG0		0x02
-+#define STATUS_REG1		0x03
-+
-+#define SYSTEM_PARAM		0x10
-+#define BLOCK_ADRS		0x11
-+#define CMD_PARM		0x14
-+#define PAGE_ADRS		0x15
-+
-+#define OVERWRITE_FLAG		0x16
-+#define MANAGEMEN_FLAG		0x17
-+#define LOGICAL_ADRS		0x18
-+#define RESERVE_AREA		0x1A
-+
-+#define PRO_INT_REG		0x01
-+#define PRO_STATUS_REG		0x02
-+#define PRO_TYPE_REG		0x04
-+#define PRO_IF_mode_REG		0x05
-+#define PRO_CATEGORY_REG	0x06
-+#define PRO_CLASS_REG		0x07
-+
-+#define PRO_SYSTEM_PARAM		0x10
-+#define PRO_DATA_COUNT1		0x11
-+#define PRO_DATA_COUNT0		0x12
-+#define PRO_DATA_ADDR3		0x13
-+#define PRO_DATA_ADDR2		0x14
-+#define PRO_DATA_ADDR1		0x15
-+#define PRO_DATA_ADDR0		0x16
-+
-+#define PRO_TPC_PARM		0x17
-+#define PRO_CMD_PARM		0x18
- 
- #define	INT_REG_CED		0x80
- #define	INT_REG_ERR		0x40
-@@ -152,12 +152,12 @@
- #define	PAGE_SIZE_0		(PPBUF_BASE2 + 0x1a0 + 8)
- #define	PAGE_SIZE_1		(PPBUF_BASE2 + 0x1a0 + 9)
- 
--#define MS_Device_Type		(PPBUF_BASE2 + 0x1D8)
-+#define MS_device_type		(PPBUF_BASE2 + 0x1D8)
- 
--#define	MS_4bit_Support		(PPBUF_BASE2 + 0x1D3)
-+#define MS_4bit_support		(PPBUF_BASE2 + 0x1D3)
- 
--#define setPS_NG	1
--#define setPS_Error	0
-+#define set_PS_NG	1
-+#define set_PS_error	0
- 
- #define	PARALLEL_8BIT_IF	0x40
- #define	PARALLEL_4BIT_IF	0x00
--- 
-2.20.1
-
+Thank you, looking forward to the comments to the rest of the patches.
+Will be nice if this series could get ready for 5.5.
