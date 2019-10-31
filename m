@@ -2,68 +2,104 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC8CCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B0DCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6482080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D98C208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:16:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572549404;
+	bh=69gDL61rTjpghvhJyvqd6Y8VD5aaYThiAwoyEVylUDc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2VT1Q6B2RY7UmOSm/LY7c86+ZDG80RzjrSHwKbXS5An+Tm/53FCnuPDoDLko0WoBs
+	 O3dcR+781sFzdeVGm6RJkxm+mQOmLHRZhRo8m4vDVCzdmdmhBUTmD5/ixpM+eW0ztE
+	 dJJaB7sphyJx54qZJCqjeD8Ec7DhOsbuhSXTjkKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbfJaTPr (ORCPT
+        id S1729608AbfJaTQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 15:15:47 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:59606 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729296AbfJaTPr (ORCPT
+        Thu, 31 Oct 2019 15:16:43 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44870 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729347AbfJaTQn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 15:15:47 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 856AA14F9AF54;
-        Thu, 31 Oct 2019 12:15:46 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 12:15:46 -0700 (PDT)
-Message-Id: <20191031.121546.1075325111948179622.davem@davemloft.net>
-To:     tbogendoerfer@suse.de
-Cc:     hch@lst.de, linux-mips@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] net: sgi: ioc3-eth: don't abuse dma_direct_* calls
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191031161817.b24181a2e7af3df994eec6c5@suse.de>
-References: <20191031095430.148daca03517c00f3e2b32ff@suse.de>
-        <20191031131501.GA4361@lst.de>
-        <20191031161817.b24181a2e7af3df994eec6c5@suse.de>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 31 Oct 2019 12:15:46 -0700 (PDT)
+        Thu, 31 Oct 2019 15:16:43 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m16so7837858qki.11;
+        Thu, 31 Oct 2019 12:16:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vanyUnjl7rLa98CaPgWAd6vjALctAE2zMH6j41yDlFQ=;
+        b=iLFYaTnkUOtpGHzaH2Wm0L5zrV2aOAgeS5/3Q4axYp61/bfi0CIEbdMccfEqzrmxXS
+         3pBLE7g1JtEniZyjzaM2FMSQsq5pPRAtDtOV/ynd4s6QTyVhMjNSgEHlXyTwz/jsqKYs
+         JZCBm870phUbXQkNN3+123W0Mcelr5DYTVxdG0VOEF+wj99DyUvH1F7sYKqD3nk5Jp1v
+         MQzDGEH7l3Pl53zKsyptEKqzqY7XsWlY8d5YIFJdmhQwDiPvms0WacXAiguL2NaJmRyK
+         mGLXRYXMxRVS33UIU4vpO7T9IKxu8QJENbbXtsPqlHvZGxqQNLMZlz7dQRWLisj8rFf/
+         Zfqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vanyUnjl7rLa98CaPgWAd6vjALctAE2zMH6j41yDlFQ=;
+        b=ekTP8YeIIqmrzAKw2RtYzvZS0p75iGeWvFyUB77fY4axYD6jOrpB0y3bcD1QERHp3z
+         7Uxfv60VZSDEYVM6Vx9LHa1UfhZTPoual+rf3JKxXKE8TdH49cUIEtuBHlu2TVe9bVhI
+         vSsoDh2u5IHWVVnRpgIr/xSoNytow/oht7gY+sLoG3F34y6JEeB3+GzORpOnxd8baPxk
+         deEHPvO1GeQgDJT4M3nc+NcKoCvN/V5uJI+Zt4vKRYQ5GceYZl/VyMDrqv/1Yj/TEhT3
+         RdN0DTMo8fAbFtrCUbxwvhFHlKNRPHkDe7bMXFpYa+jf0SXf8nxbQ/9L9HoLGd4Der3b
+         858w==
+X-Gm-Message-State: APjAAAWnkisyFlSFCd8lI4DACNPMhHtAnpxydPIlDf9X8u2d+/1Adoyk
+        ujzFOr6VjHDGdf9QCBtlIyg=
+X-Google-Smtp-Source: APXvYqyJdgtpE/wKH1MsVvvRYKtVGcwDBzqNEpcWGYwXhmW4HvayXpTiJx5oZRzGUd/FQfgwlk9F8Q==
+X-Received: by 2002:ae9:e215:: with SMTP id c21mr5182690qkc.476.1572549401615;
+        Thu, 31 Oct 2019 12:16:41 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::e44c])
+        by smtp.gmail.com with ESMTPSA id 76sm2815031qke.111.2019.10.31.12.16.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 31 Oct 2019 12:16:38 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 12:16:37 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Kernel Team <kernel-team@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux MM <linux-mm@kvack.org>, Mel Gorman <mgorman@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2] net: fix sk_page_frag() recursion from memory reclaim
+Message-ID: <20191031191637.GO3622521@devbig004.ftw2.facebook.com>
+References: <20191019170141.GQ18794@devbig004.ftw2.facebook.com>
+ <20191024205027.GF3622521@devbig004.ftw2.facebook.com>
+ <CALvZod6=B-gMJJxhMRt6k5eRwB-3zdgJR5419orTq8-+36wbMQ@mail.gmail.com>
+ <11f688a6-0288-0ec4-f925-7b8f16ec011b@gmail.com>
+ <CALvZod6Sw-2Wh0KEBiMgGZ1c+2nFW0ueL_4TM4d=Z0JcbvSXrw@mail.gmail.com>
+ <20191031184346.GM3622521@devbig004.ftw2.facebook.com>
+ <CALvZod7Lm5d-84wWubTUOFWo4XU2cgqBpFw84QzFdiokX86COQ@mail.gmail.com>
+ <20191031190053.GN3622521@devbig004.ftw2.facebook.com>
+ <CALvZod5U5yEZPhURYffEtDto6sL8JG+3ZSRtv3uOait8yBn=EQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALvZod5U5yEZPhURYffEtDto6sL8JG+3ZSRtv3uOait8yBn=EQ@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Date: Thu, 31 Oct 2019 16:18:17 +0100
+On Thu, Oct 31, 2019 at 12:14:58PM -0700, Shakeel Butt wrote:
+> Oh ok, I will send the incremental one once I have this patch in the mm tree.
 
-> On Thu, 31 Oct 2019 14:15:01 +0100
-> Christoph Hellwig <hch@lst.de> wrote:
-> 
->> On Thu, Oct 31, 2019 at 09:54:30AM +0100, Thomas Bogendoerfer wrote:
->> > I didn't want to argue about that. What I'm interested in is a way how 
->> > to allocate dma memory, which is 16kB aligned, via the DMA API ?
->> 
->> You can't.
-> 
-> So then __get_free_pages() and dma_map_page() is the only way ?
-> 
-> BTW I've successful tested your patches on an 8 CPU Origin 2k.
+It's in the networking tree already.
 
-Nope, it is not the only way.
+Thanks.
 
-Allocate a (SIZE*2)-1 sized piece of DMA memory and align the
-resulting CPU pointer and DMA address as needed.
+-- 
+tejun
