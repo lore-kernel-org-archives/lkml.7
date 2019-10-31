@@ -5,47 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8E5CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F53DCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBBCE208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20AD8208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:55:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfJaLzN (ORCPT
+        id S1727225AbfJaLzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:55:13 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55282 "EHLO
+        Thu, 31 Oct 2019 07:55:15 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55264 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbfJaLzG (ORCPT
+        with ESMTP id S1726927AbfJaLzE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:55:06 -0400
+        Thu, 31 Oct 2019 07:55:04 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iQ92U-0002qQ-EA; Thu, 31 Oct 2019 12:54:54 +0100
+        id 1iQ92V-0002qW-1Q; Thu, 31 Oct 2019 12:54:55 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0F2C61C0070;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AE3E91C0070;
         Thu, 31 Oct 2019 12:54:54 +0100 (CET)
-Date:   Thu, 31 Oct 2019 11:54:53 -0000
+Date:   Thu, 31 Oct 2019 11:54:54 -0000
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] net/netfilter: Replace rcu_swap_protected() with
+Subject: [tip: core/rcu] bpf/cgroup: Replace rcu_swap_protected() with
  rcu_replace_pointer()
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
-        <netdev@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+        Andrii Nakryiko <andriin@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Message-ID: <157252289377.29376.5021804327399438080.tip-bot2@tip-bot2>
+Message-ID: <157252289446.29376.17297507636809598285.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,14 +62,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     b685b534bf1586a01b32280d1da39febaf270039
-Gitweb:        https://git.kernel.org/tip/b685b534bf1586a01b32280d1da39febaf270039
+Commit-ID:     6092f7263f7e56dacf72e383ed7ba9cbabec30e5
+Gitweb:        https://git.kernel.org/tip/6092f7263f7e56dacf72e383ed7ba9cbabec30e5
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Mon, 23 Sep 2019 15:53:02 -07:00
+AuthorDate:    Mon, 23 Sep 2019 15:37:04 -07:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Wed, 30 Oct 2019 08:45:38 -07:00
+CommitterDate: Wed, 30 Oct 2019 08:45:14 -07:00
 
-net/netfilter: Replace rcu_swap_protected() with rcu_replace_pointer()
+bpf/cgroup: Replace rcu_swap_protected() with rcu_replace_pointer()
 
 This commit replaces the use of rcu_swap_protected() with the more
 intuitively appealing rcu_replace_pointer() as a step towards removing
@@ -78,30 +79,30 @@ Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta
 Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
 [ paulmck: From rcu_replace() to rcu_replace_pointer() per Ingo Molnar. ]
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Acked-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Cc: Jozsef Kadlecsik <kadlec@netfilter.org>
-Cc: Florian Westphal <fw@strlen.de>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: <netfilter-devel@vger.kernel.org>
-Cc: <coreteam@netfilter.org>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
 Cc: <netdev@vger.kernel.org>
+Cc: <bpf@vger.kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kernel/bpf/cgroup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index d481f9b..3379974 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -1461,8 +1461,9 @@ static void nft_chain_stats_replace(struct nft_trans *trans)
- 	if (!nft_trans_chain_stats(trans))
- 		return;
- 
--	rcu_swap_protected(chain->stats, nft_trans_chain_stats(trans),
--			   lockdep_commit_lock_is_held(trans->ctx.net));
-+	nft_trans_chain_stats(trans) =
-+		rcu_replace_pointer(chain->stats, nft_trans_chain_stats(trans),
-+				    lockdep_commit_lock_is_held(trans->ctx.net));
- 
- 	if (!nft_trans_chain_stats(trans))
- 		static_branch_inc(&nft_counters_enabled);
+diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+index ddd8add..c684cf4 100644
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -180,8 +180,8 @@ static void activate_effective_progs(struct cgroup *cgrp,
+ 				     enum bpf_attach_type type,
+ 				     struct bpf_prog_array *old_array)
+ {
+-	rcu_swap_protected(cgrp->bpf.effective[type], old_array,
+-			   lockdep_is_held(&cgroup_mutex));
++	old_array = rcu_replace_pointer(cgrp->bpf.effective[type], old_array,
++					lockdep_is_held(&cgroup_mutex));
+ 	/* free prog array after grace period, since __cgroup_bpf_run_*()
+ 	 * might be still walking the array
+ 	 */
