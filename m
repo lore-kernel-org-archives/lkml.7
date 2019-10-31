@@ -2,222 +2,155 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C39CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 03:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE718CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 03:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0E52080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 03:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827602080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 03:35:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i+/YH+Dy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbfJaDda (ORCPT
+        id S1726623AbfJaDfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 23:33:30 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64614 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726465AbfJaDd3 (ORCPT
+        Wed, 30 Oct 2019 23:35:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57206 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725909AbfJaDfq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 23:33:29 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9V3TCC7129660
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 23:33:28 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vyj0v9d5v-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 23:33:23 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 31 Oct 2019 03:31:54 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 31 Oct 2019 03:31:50 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9V3VmAX49283176
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Oct 2019 03:31:49 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D4747A405C;
-        Thu, 31 Oct 2019 03:31:48 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B11CA405B;
-        Thu, 31 Oct 2019 03:31:47 +0000 (GMT)
-Received: from localhost.ibm.com (unknown [9.85.201.217])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 31 Oct 2019 03:31:47 +0000 (GMT)
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Cc:     Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH v10 5/9] ima: make process_buffer_measurement() generic
-Date:   Wed, 30 Oct 2019 23:31:30 -0400
-X-Mailer: git-send-email 2.7.5
-In-Reply-To: <1572492694-6520-1-git-send-email-zohar@linux.ibm.com>
-References: <1572492694-6520-1-git-send-email-zohar@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19103103-0008-0000-0000-000003295393
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19103103-0009-0000-0000-00004A489CB1
-Message-Id: <1572492694-6520-6-git-send-email-zohar@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-31_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910310031
+        Wed, 30 Oct 2019 23:35:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572492945;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=jK74Oxlnm2iBnkdV68ehFY5CMziAHJqAXXBp9ZtwyWI=;
+        b=i+/YH+DyrS7KMxVhqJXd+2RTXO+Ic7odwd8/lqthBOnAThxVqA23kyMQSxCc5mbOqwwrsT
+        WvBe8HWaiMugX72budOpXKr1OFmzCYKZxdCTdKUmvBGvZyH8CmtUDCMHsmbQy8nIPgRcxU
+        42QZ3cHV2wbIEjRgV+AOvpXvJxQbeiU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-211-7oi4EHyqMRGesRh9v2vZdw-1; Wed, 30 Oct 2019 23:35:41 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C1FB71005500;
+        Thu, 31 Oct 2019 03:35:39 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-12-31.pek2.redhat.com [10.72.12.31])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CAF745C1BB;
+        Thu, 31 Oct 2019 03:35:26 +0000 (UTC)
+From:   Lianbo Jiang <lijiang@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, bhe@redhat.com, dyoung@redhat.com, jgross@suse.com,
+        dhowells@redhat.com, Thomas.Lendacky@amd.com,
+        ebiederm@xmission.com, vgoyal@redhat.com, d.hatayama@fujitsu.com,
+        horms@verge.net.au, kexec@lists.infradead.org
+Subject: [PATCH 0/2 RESEND v8] x86/kdump: Fix 'kmem -s' reported an invalid freepointer when SME was active
+Date:   Thu, 31 Oct 2019 11:35:15 +0800
+Message-Id: <20191031033517.11282-1-lijiang@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: 7oi4EHyqMRGesRh9v2vZdw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nayna Jain <nayna@linux.ibm.com>
+In purgatory(), the main things are as below:
 
-process_buffer_measurement() is limited to measuring the kexec boot
-command line. This patch makes process_buffer_measurement() more
-generic, allowing it to measure other types of buffer data (e.g.
-blacklisted binary hashes or key hashes).
+[1] verify sha256 hashes for various segments.
+    Lets keep these codes, and do not touch the logic.
 
-process_buffer_measurement() may be called directly from an IMA
-hook or as an auxiliary measurement record. In both cases the buffer
-measurement is based on policy. This patch modifies the function to
-conditionally retrieve the policy defined PCR and template for the IMA
-hook case.
+[2] copy the first 640k content to a backup region.
+    Lets safely remove it and clean all code related to backup region.
 
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-[zohar@linux.ibm.com: added comment in process_buffer_measurement()]
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
----
- security/integrity/ima/ima.h      |  3 ++
- security/integrity/ima/ima_main.c | 58 +++++++++++++++++++++++++++------------
- 2 files changed, 43 insertions(+), 18 deletions(-)
+This patch series will remove the backup region, because the current
+handling of copying the first 640k runs into problems when SME is
+active(https://bugzilla.kernel.org/show_bug.cgi?id=3D204793).
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 3689081aaf38..a65772ffa427 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -217,6 +217,9 @@ void ima_store_measurement(struct integrity_iint_cache *iint, struct file *file,
- 			   struct evm_ima_xattr_data *xattr_value,
- 			   int xattr_len, const struct modsig *modsig, int pcr,
- 			   struct ima_template_desc *template_desc);
-+void process_buffer_measurement(const void *buf, int size,
-+				const char *eventname, enum ima_hooks func,
-+				int pcr);
- void ima_audit_measurement(struct integrity_iint_cache *iint,
- 			   const unsigned char *filename);
- int ima_alloc_init_template(struct ima_event_data *event_data,
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 60027c643ecd..a26e3ad4e886 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -626,14 +626,14 @@ int ima_load_data(enum kernel_load_data_id id)
-  * @buf: pointer to the buffer that needs to be added to the log.
-  * @size: size of buffer(in bytes).
-  * @eventname: event name to be used for the buffer entry.
-- * @cred: a pointer to a credentials structure for user validation.
-- * @secid: the secid of the task to be validated.
-+ * @func: IMA hook
-+ * @pcr: pcr to extend the measurement
-  *
-  * Based on policy, the buffer is measured into the ima log.
-  */
--static void process_buffer_measurement(const void *buf, int size,
--				       const char *eventname,
--				       const struct cred *cred, u32 secid)
-+void process_buffer_measurement(const void *buf, int size,
-+				const char *eventname, enum ima_hooks func,
-+				int pcr)
- {
- 	int ret = 0;
- 	struct ima_template_entry *entry = NULL;
-@@ -642,19 +642,45 @@ static void process_buffer_measurement(const void *buf, int size,
- 					    .filename = eventname,
- 					    .buf = buf,
- 					    .buf_len = size};
--	struct ima_template_desc *template_desc = NULL;
-+	struct ima_template_desc *template = NULL;
- 	struct {
- 		struct ima_digest_data hdr;
- 		char digest[IMA_MAX_DIGEST_SIZE];
- 	} hash = {};
- 	int violation = 0;
--	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
- 	int action = 0;
-+	u32 secid;
- 
--	action = ima_get_action(NULL, cred, secid, 0, KEXEC_CMDLINE, &pcr,
--				&template_desc);
--	if (!(action & IMA_MEASURE))
--		return;
-+	/*
-+	 * Both LSM hooks and auxilary based buffer measurements are
-+	 * based on policy.  To avoid code duplication, differentiate
-+	 * between the LSM hooks and auxilary buffer measurements,
-+	 * retrieving the policy rule information only for the LSM hook
-+	 * buffer measurements.
-+	 */
-+	if (func) {
-+		security_task_getsecid(current, &secid);
-+		action = ima_get_action(NULL, current_cred(), secid, 0, func,
-+					&pcr, &template);
-+		if (!(action & IMA_MEASURE))
-+			return;
-+	}
-+
-+	if (!pcr)
-+		pcr = CONFIG_IMA_MEASURE_PCR_IDX;
-+
-+	if (!template) {
-+		template = lookup_template_desc("ima-buf");
-+		ret = template_desc_init_fields(template->fmt,
-+						&(template->fields),
-+						&(template->num_fields));
-+		if (ret < 0) {
-+			pr_err("template %s init failed, result: %d\n",
-+			       (strlen(template->name) ?
-+				template->name : template->fmt), ret);
-+			return;
-+		}
-+	}
- 
- 	iint.ima_hash = &hash.hdr;
- 	iint.ima_hash->algo = ima_hash_algo;
-@@ -664,7 +690,7 @@ static void process_buffer_measurement(const void *buf, int size,
- 	if (ret < 0)
- 		goto out;
- 
--	ret = ima_alloc_init_template(&event_data, &entry, template_desc);
-+	ret = ima_alloc_init_template(&event_data, &entry, template);
- 	if (ret < 0)
- 		goto out;
- 
-@@ -686,13 +712,9 @@ static void process_buffer_measurement(const void *buf, int size,
-  */
- void ima_kexec_cmdline(const void *buf, int size)
- {
--	u32 secid;
--
--	if (buf && size != 0) {
--		security_task_getsecid(current, &secid);
-+	if (buf && size != 0)
- 		process_buffer_measurement(buf, size, "kexec-cmdline",
--					   current_cred(), secid);
--	}
-+					   KEXEC_CMDLINE, 0);
- }
- 
- static int __init init_ima(void)
--- 
-2.7.5
+The low 1M region will always be reserved when the crashkernel kernel
+command line option is specified. And this way makes it unnecessary to
+do anything with the low 1M region, because the memory allocated later
+won't fall into the low 1M area.
+
+This series includes two patches:
+[1] x86/kdump: always reserve the low 1M when the crashkernel option
+    is specified
+    The low 1M region will always be reserved when the crashkernel
+    kernel command line option is specified, which ensures that the
+    memory allocated later won't fall into the low 1M area.
+
+[2] x86/kdump: clean up all the code related to the backup region
+    Remove the backup region and clean up.
+
+Changes since v1:
+[1] Add extra checking condition: when the crashkernel option is
+    specified, reserve the low 640k area.
+
+Changes since v2:
+[1] Reserve the low 1M region when the crashkernel option is only
+    specified.(Suggested by Eric)
+
+[2] Remove the unused crash_copy_backup_region()
+
+[3] Remove the backup region and clean up
+
+[4] Split them into three patches
+
+Changes since v3:
+[1] Improve the first patch's log
+
+[2] Improve the third patch based on Eric's suggestions
+
+Changes since v4:
+[1] Correct some typos, and also improve the first patch's log
+
+[2] Add a new function kexec_reserve_low_1MiB() in kernel/kexec_core.c
+    and which is called by reserve_real_mode(). (Suggested by Boris)
+
+Changes since v5:
+[1] Call the cmdline_find_option() instead of strstr() to check the
+    crashkernel option. (Suggested by Hatayama)
+
+[2] Add a weak function kexec_reserve_low_1MiB() in kernel/kexec_core.c,
+    and implement the kexec_reserve_low_1MiB() in arch/x86/kernel/
+    machine_kexec_64.c so that it does not cause the compile error
+    on non-x86 kernel, and also ensures that it can work well on x86
+    kernel.
+
+Changes since v6:
+[1] Move the kexec_reserve_low_1MiB() to arch/x86/kernel/crash.c and
+    also move its declaration function to arch/x86/include/asm/crash.h
+    (Suggested by Dave Young)
+
+[2] Adjust the corresponding header files.
+
+Changes since v7:
+[1] Change the function name from kexec_reserve_low_1MiB() to
+    crash_reserve_low_1M().
+
+[2] Fix some warnings reported by kduild.
+
+Lianbo Jiang (2):
+  x86/kdump: always reserve the low 1M when the crashkernel option is
+    specified
+  x86/kdump: clean up all the code related to the backup region
+
+ arch/x86/include/asm/crash.h       |   8 +++
+ arch/x86/include/asm/kexec.h       |  10 ---
+ arch/x86/include/asm/purgatory.h   |  10 ---
+ arch/x86/kernel/crash.c            | 102 ++++++++---------------------
+ arch/x86/kernel/machine_kexec_64.c |  47 -------------
+ arch/x86/purgatory/purgatory.c     |  19 ------
+ arch/x86/realmode/init.c           |   2 +
+ 7 files changed, 36 insertions(+), 162 deletions(-)
+
+--=20
+2.17.1
 
