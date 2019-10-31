@@ -2,127 +2,87 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D0DCA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA61CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE49B21906
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED1020862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfJaKD6 (ORCPT
+        id S1726982AbfJaKHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:03:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35996 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726864AbfJaKD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:03:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 369B9B227;
-        Thu, 31 Oct 2019 10:03:56 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] MIPS: SGI-IP27: fix exception handler replication
-Date:   Thu, 31 Oct 2019 10:46:04 +0100
-Message-Id: <20191031094605.12380-1-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.16.4
+        Thu, 31 Oct 2019 06:07:24 -0400
+Received: from smtprelay0006.hostedemail.com ([216.40.44.6]:41733 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726193AbfJaKHY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 06:07:24 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 66010180A5AFF;
+        Thu, 31 Oct 2019 10:07:22 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: kite22_402863056ff25
+X-Filterd-Recvd-Size: 2589
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 31 Oct 2019 10:07:20 +0000 (UTC)
+Message-ID: <bd76d5c22f389f3e6ecc2575e32c906f79647765.camel@perches.com>
+Subject: Re: [PATCH linux-kselftest/test v6] lib/list-test: add a test for
+ the 'list' doubly linked list
+From:   Joe Perches <joe@perches.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     shuah <shuah@kernel.org>, Dan Carpenter <dan.carpenter@oracle.com>,
+        David Gow <davidgow@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Thu, 31 Oct 2019 03:07:12 -0700
+In-Reply-To: <20191031085129.GA217570@google.com>
+References: <20191024224631.118656-1-davidgow@google.com>
+         <0cb1d948-0da3-eb0f-c58f-ae3a785dd0dd@kernel.org>
+         <CABVgOSmCHbGjZBjeWSbPEZbJw22SaBQnoO77xxNzN_ugAwzNiQ@mail.gmail.com>
+         <20191030104217.GA18421@kadam>
+         <42a8270d-ed6f-d29f-5e71-7b76a074b63e@kernel.org>
+         <CAFd5g47OZ8x9=etJUj4Sgsw38VQb0j=omOUsubc7+pb2rJi0bQ@mail.gmail.com>
+         <fad58e4f48237894de0d511adf1d663a42a2eee7.camel@perches.com>
+         <20191031085129.GA217570@google.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 775b089aeffa ("MIPS: tlbex: Remove cpu_has_local_ebase") removed
-generating tlb refill handlers for every CPU, which was needed for
-generating per node exception handlers on IP27. Instead of resurrecting
-(and fixing) refill handler generation, we simply copy all exception
-vectors from the boot node to the other nodes. Also remove the config
-option since the memory tradeoff for expection handler replication
-is just 8k per node.
+On Thu, 2019-10-31 at 01:51 -0700, Brendan Higgins wrote:
+> On Wed, Oct 30, 2019 at 10:18:44AM -0700, Joe Perches wrote:
+> > On Wed, 2019-10-30 at 09:35 -0700, Brendan Higgins wrote:
+> > > Agreed. I can see the point of not wanting to write an exception into
+> > > checkpatch for every exception of it's general rules; however, it
+> > > would be nice if there was a way to maybe have a special comment or
+> > > something that could turn off a checkpatch error. That way, a
+> > > checkpatch error/warning always means some action should be taken, and
+> > > if a rule is being ignored, there is always documentation as to why.
+> > 
+> > That couldn't work when a comment which may exist
+> > in a file is out of scope of the patch context.
+> 
+> Sorry, I don't understand exactly what you mean. Can you elaborate?
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
-Changes in v2:
-- use __flush_cache_all() to make sure copied handlers are flushed
-  to memory
-- fixed reference commit
+checkpatch works on patch contexts.
+If the comment is not within the patch context,
+checkpatch cannot ignore various test.
 
- arch/mips/sgi-ip27/Kconfig       |  7 -------
- arch/mips/sgi-ip27/ip27-init.c   | 21 ++++++---------------
- arch/mips/sgi-ip27/ip27-memory.c |  4 ----
- 3 files changed, 6 insertions(+), 26 deletions(-)
+> static void list_test_list_for_each_prev(struct kunit *test) /* checkpatch: disable=for-each-format */
 
-diff --git a/arch/mips/sgi-ip27/Kconfig b/arch/mips/sgi-ip27/Kconfig
-index ef3847e7aee0..e5b6cadbec85 100644
---- a/arch/mips/sgi-ip27/Kconfig
-+++ b/arch/mips/sgi-ip27/Kconfig
-@@ -38,10 +38,3 @@ config REPLICATE_KTEXT
- 	  Say Y here to enable replicating the kernel text across multiple
- 	  nodes in a NUMA cluster.  This trades memory for speed.
- 
--config REPLICATE_EXHANDLERS
--	bool "Exception handler replication support"
--	depends on SGI_IP27
--	help
--	  Say Y here to enable replicating the kernel exception handlers
--	  across multiple nodes in a NUMA cluster. This trades memory for
--	  speed.
-diff --git a/arch/mips/sgi-ip27/ip27-init.c b/arch/mips/sgi-ip27/ip27-init.c
-index 8fd3505e2b9c..f597e1ee2df7 100644
---- a/arch/mips/sgi-ip27/ip27-init.c
-+++ b/arch/mips/sgi-ip27/ip27-init.c
-@@ -64,23 +64,14 @@ static void per_hub_init(nasid_t nasid)
- 
- 	hub_rtc_init(nasid);
- 
--#ifdef CONFIG_REPLICATE_EXHANDLERS
--	/*
--	 * If this is not a headless node initialization,
--	 * copy over the caliased exception handlers.
--	 */
--	if (get_nasid() == nasid) {
--		extern char except_vec2_generic, except_vec3_generic;
--		extern void build_tlb_refill_handler(void);
--
--		memcpy((void *)(CKSEG0 + 0x100), &except_vec2_generic, 0x80);
--		memcpy((void *)(CKSEG0 + 0x180), &except_vec3_generic, 0x80);
--		build_tlb_refill_handler();
--		memcpy((void *)(CKSEG0 + 0x100), (void *) CKSEG0, 0x80);
--		memcpy((void *)(CKSEG0 + 0x180), &except_vec3_generic, 0x100);
-+	if (nasid) {
-+		/* copy exception handlers from first node to current node */
-+		memcpy((void *)NODE_OFFSET_TO_K0(nasid, 0),
-+		       (void *)CKSEG0, 0x200);
- 		__flush_cache_all();
-+		/* switch to node local exception handlers */
-+		REMOTE_HUB_S(nasid, PI_CALIAS_SIZE, PI_CALIAS_SIZE_8K);
- 	}
--#endif
- }
- 
- void per_cpu_init(void)
-diff --git a/arch/mips/sgi-ip27/ip27-memory.c b/arch/mips/sgi-ip27/ip27-memory.c
-index f610fff592a6..563aad5e6398 100644
---- a/arch/mips/sgi-ip27/ip27-memory.c
-+++ b/arch/mips/sgi-ip27/ip27-memory.c
-@@ -311,11 +311,7 @@ static void __init mlreset(void)
- 		 * thinks it is a node 0 address.
- 		 */
- 		REMOTE_HUB_S(nasid, PI_REGION_PRESENT, (region_mask | 1));
--#ifdef CONFIG_REPLICATE_EXHANDLERS
--		REMOTE_HUB_S(nasid, PI_CALIAS_SIZE, PI_CALIAS_SIZE_8K);
--#else
- 		REMOTE_HUB_S(nasid, PI_CALIAS_SIZE, PI_CALIAS_SIZE_0);
--#endif
- 
- #ifdef LATER
- 		/*
--- 
-2.16.4
+Long line, now what?
+
 
