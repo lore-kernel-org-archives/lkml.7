@@ -2,111 +2,117 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48ABBCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93562CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D62C216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711712086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:26:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbfJaRXY (ORCPT
+        id S1728880AbfJaR0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 13:23:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:52846 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728655AbfJaRXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 13:23:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DEEB1FB;
-        Thu, 31 Oct 2019 10:23:23 -0700 (PDT)
-Received: from [10.188.222.161] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C35D3F6C4;
-        Thu, 31 Oct 2019 10:23:21 -0700 (PDT)
-Subject: Re: [PATCH v4 1/2] sched/topology: Don't try to build empty sched
- domains
-To:     =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
-Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
-        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        Dietmar.Eggemann@arm.com, morten.rasmussen@arm.com,
-        qperret@google.com, stable@vger.kernel.org
-References: <20191023153745.19515-1-valentin.schneider@arm.com>
- <20191023153745.19515-2-valentin.schneider@arm.com>
- <20191031162334.GA18570@blackbody.suse.cz>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <3752bca9-a670-f415-4aaa-e8ff75ea6fcc@arm.com>
-Date:   Thu, 31 Oct 2019 18:23:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 31 Oct 2019 13:26:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49440 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728561AbfJaR0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 13:26:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3E70EB961;
+        Thu, 31 Oct 2019 17:26:14 +0000 (UTC)
+Message-ID: <9c051b0f2d89baa36fd3d3669a107f549c310d49.camel@suse.de>
+Subject: Re: [PATCH RFC 1/5] dma/direct: turn ARCH_ZONE_DMA_BITS into a
+ variable
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        ChristophHellwig <hch@infradead.org>,
+        iommu@lists.linux-foundation.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>, mbrugger@suse.com,
+        f.fainelli@gmail.com, wahrenst@gmx.net,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org
+Date:   Thu, 31 Oct 2019 18:26:10 +0100
+In-Reply-To: <20191031133831.GA21509@infradead.org>
+References: <20191014183108.24804-1-nsaenzjulienne@suse.de>
+         <20191014183108.24804-2-nsaenzjulienne@suse.de>
+         <20191030214914.GA15939@infradead.org>
+         <8c525f66c1c0d9f07e0cff4948d1ec3229756220.camel@suse.de>
+         <20191031133831.GA21509@infradead.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-HUsDE4pCuvQagD+CYqmq"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-In-Reply-To: <20191031162334.GA18570@blackbody.suse.cz>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal,
 
-On 31/10/2019 17:23, Michal Koutný wrote:
-> On Wed, Oct 23, 2019 at 04:37:44PM +0100, Valentin Schneider <valentin.schneider@arm.com> wrote:
->> Prevent generate_sched_domains() from returning empty cpumasks, and add
->> some assertion in build_sched_domains() to scream bloody murder if it
->> happens again.
-> Good catch. It makes sense to prune the empty domains in
-> generate_sched_domains already.
-> 
->> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
->> index c52bc91f882b..c87ee6412b36 100644
->> --- a/kernel/cgroup/cpuset.c
->> +++ b/kernel/cgroup/cpuset.c
->> @@ -798,7 +798,8 @@ static int generate_sched_domains(cpumask_var_t **domains,
->>  		    cpumask_subset(cp->cpus_allowed, top_cpuset.effective_cpus))
->>  			continue;
->>  
->> -		if (is_sched_load_balance(cp))
->> +		if (is_sched_load_balance(cp) &&
->> +		    !cpumask_empty(cp->effective_cpus))
->>  			csa[csn++] = cp;
-> If I didn't overlook anything, cp->effective_cpus can contain CPUs
-> exluded by housekeeping_cpumask(HK_FLAG_DOMAIN) later, i.e. possibly
-> still returning domains with empty cpusets.
-> 
-> I'd suggest moving the emptiness check down into the loop where domain
-> cpumasks are ultimately constructed.
-> 
+--=-HUsDE4pCuvQagD+CYqmq
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ah, wasn't aware of this - thanks for having a look!
+On Thu, 2019-10-31 at 06:38 -0700, Christoph Hellwig wrote:
+> On Thu, Oct 31, 2019 at 11:30:36AM +0100, Nicolas Saenz Julienne wrote:
+> > On Wed, 2019-10-30 at 14:49 -0700, Christoph Hellwig wrote:
+> > > On Mon, Oct 14, 2019 at 08:31:03PM +0200, Nicolas Saenz Julienne wrot=
+e:
+> > > > Some architectures, notably ARM, are interested in tweaking this
+> > > > depending on their runtime DMA addressing limitations.
+> > > >=20
+> > > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > >=20
+> > > Do you want me to pick this up for the 5.5 dma-mapping tree, or do yo=
+u
+> > > want me to wait for the rest to settle?
+> >=20
+> > I'd say take it, this will be ultimately needed once we push forward wi=
+th
+> > ARM.
+>=20
+> Can you resend a version that applies against 5.4-rc?  The current one
+> has conflicts in the arm64 code.
 
-I think I need to have the check before the final cpumask gets built,
-because at this point the cpumask array is already built and it's handed
-off directly to the sched domain rebuild.
+Hi Catalin,
+would you mind taking this patch on top of the arm64 ZONE_DMA series?
 
-Do you reckon the following would work? 
+I tried to go though Christoph's tree but it ultimately clashes with the
+ZONE_DMA series. It's simpler to apply it on top of your tree.
 
-----8<----
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index c87ee6412b36..e4c10785dc7c 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -798,8 +798,14 @@ static int generate_sched_domains(cpumask_var_t **domains,
- 		    cpumask_subset(cp->cpus_allowed, top_cpuset.effective_cpus))
- 			continue;
- 
-+		/*
-+		 * Skip cpusets that would lead to an empty sched domain.
-+		 * That could be because effective_cpus is empty, or because
-+		 * it's only spanning CPUs outside the housekeeping mask.
-+		 */
- 		if (is_sched_load_balance(cp) &&
--		    !cpumask_empty(cp->effective_cpus))
-+		    cpumask_intersects(cp->effective_cpus,
-+				       housekeeping_cpumask(HK_FLAG_DOMAIN)))
- 			csa[csn++] = cp;
- 
- 		/* skip @cp's subtree if not a partition root */
+Regrads,
+Nicolas
+
+
+--=-HUsDE4pCuvQagD+CYqmq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl27GTIACgkQlfZmHno8
+x/6rAgf/ZoMMGW7IRaV6x5ZwhpeWmnDuHERj4vzVJa0/eBKTyeFHQYuyNBygdzOW
+JGunOdpAkJNo6DdJKxyUt8u5d8vvnq3mIm+g0xkoz6PxzzUtPlEuFZ1fgP1oGYIT
+BdBcYj23cYMrYjtqcJJkBoBu+5JBkx28Mu5oGyWeRojupXkK+9NN53qUZMmYcFD+
+Lw9i3nBQmiozrdeHMiErrYTXOkz93sipx2zeo2jF4CsOtj67BfJMhmsRogeQTIe+
+Z5A6Ik+LQ8AejhKOAisJzXidZPdUwaENRKw2qicQFBoifWbqinhT6JxmrEk/AHR1
+eg9iA75sotbQfuNiAzn6qCofWaKfcg==
+=jqtB
+-----END PGP SIGNATURE-----
+
+--=-HUsDE4pCuvQagD+CYqmq--
+
