@@ -2,126 +2,100 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E92CCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B493DCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF0162080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:03:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a0LsMdpt"
+	by mail.kernel.org (Postfix) with ESMTP id 81AAE2080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:03:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572527036;
+	bh=jgcUqfyJ9Vc1K6JhIpHGG9TMI2W4z/QM29anylCoXU0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SxHV+vH0BK+rtSOTfnp60SmcyP8OPnqwvW9i1xIIi0z7f2KeFm2KvhHvI3ztnLG22
+	 BnmyPEU6ylF1X0VSg27R1tAfwn6yychEgoj3C1F6/3toNmRdx975QDru57nufG7ORj
+	 WqVcygNGw9hq9FsJm0XppovhBrOg7/rrUkObd6GQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfJaNDY (ORCPT
+        id S1727150AbfJaNDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:03:24 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55974 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfJaNDY (ORCPT
+        Thu, 31 Oct 2019 09:03:55 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42444 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfJaNDz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:03:24 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9VD31nq124895;
-        Thu, 31 Oct 2019 08:03:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572526981;
-        bh=jpBAUypS3kMb2gSVD1QCfzFnqXx0fy8eb1N5e+Nc4iA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=a0LsMdptZsrjHDm1mZ0BzdowBnneVMP6qD29KVAZrqbc+8mdtxb0BhGo8E8Bjys2S
-         zc7G+aoD4Ri6Hf7EBW7CcG3cQz62c9jN4uXqqVip5hJA3saxTs5/zk7vtD4+ZJNFAA
-         fvA9es4/97k69F7m43YRxQxXwikkj7kS8K578jtU=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9VD30QB048254
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 31 Oct 2019 08:03:00 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 31
- Oct 2019 08:02:47 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 31 Oct 2019 08:02:47 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9VD2vCC063280;
-        Thu, 31 Oct 2019 08:02:58 -0500
-Subject: Re: [PATCH] phy: phy-rockchip-inno-usb2: add phy description for px30
-To:     Heiko Stuebner <heiko@sntech.de>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <linux-rockchip@lists.infradead.org>,
-        <christoph.muellner@theobroma-systems.com>
-References: <20190917082532.25479-1-heiko@sntech.de> <1974613.gpRaQal8Ma@phil>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <1b31d4fe-fd78-700a-6e53-298bd85d7a27@ti.com>
-Date:   Thu, 31 Oct 2019 18:32:22 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 31 Oct 2019 09:03:55 -0400
+Received: by mail-ed1-f68.google.com with SMTP id s20so4694003edq.9;
+        Thu, 31 Oct 2019 06:03:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+PQJyexbtnGDK2uJq7K6j7gmpF2unU6d9dx98JUUEas=;
+        b=AojeMhBWYJS97cErx3m68443NdswQ3IeevaeKl+AdmSKwPek1vzKfXyWv+/EEU3+1C
+         7q1lVjCo5Qmo1IYYysSgCsORoB22iALbcLM447LO8Trr2Vpa++ywZgLLSngMrFXhqWFe
+         NIGq2lejBGmiDWkRldqudamW4x4C1obGtLTxnF/WdzhNpydoLRTecR1weYXbqndvx3Ev
+         1w0O0xpruA70AUrtDuTsgop2Y/C/Cal+DwF9GXpxNCeWdRY8KXSiVUehMgFwJytSaRq7
+         Dumgy4skKHLE8mY1mm0IjUknU1B2Z4y/s2j1d20KmNX4GNebKhQNztL1h+w7jp6c4DOG
+         yXXg==
+X-Gm-Message-State: APjAAAUgGqww/XWebDCVXCXKPOD4OGBCxTDkA2SJQxXuTatxTquPCMlP
+        zRPdMICmtj20ZBvAMbFoDvI=
+X-Google-Smtp-Source: APXvYqzN1wPdv61svA4m7DqM1igoTJ4AGX/nNpkJSYDUyg2S+Rlm9iUoqctcZfZGzWGx1r79/34yEA==
+X-Received: by 2002:a17:906:1f8b:: with SMTP id t11mr3797383ejr.191.1572527033117;
+        Thu, 31 Oct 2019 06:03:53 -0700 (PDT)
+Received: from pi3 ([194.230.155.180])
+        by smtp.googlemail.com with ESMTPSA id c15sm86411edl.16.2019.10.31.06.03.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 06:03:52 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 14:03:50 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 03/11] ARM: dts: imx6ul-kontron-n6310-s: Move common
+ nodes to a separate file
+Message-ID: <20191031130350.GB27967@pi3>
+References: <20191029112655.15058-1-frieder.schrempf@kontron.de>
+ <20191029112655.15058-4-frieder.schrempf@kontron.de>
 MIME-Version: 1.0
-In-Reply-To: <1974613.gpRaQal8Ma@phil>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191029112655.15058-4-frieder.schrempf@kontron.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Oct 29, 2019 at 11:27:51AM +0000, Schrempf Frieder wrote:
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> 
+> The baseboard for the Kontron N6310 SoM is also used for other SoMs
+> such as N6311 and N6411. In order to share the code, we move the
+> definitions of the baseboard to a separate dtsi file.
+> 
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> ---
+>  arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts  | 405 +----------------
+>  arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi | 414 ++++++++++++++++++
+>  2 files changed, 415 insertions(+), 404 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+> 
 
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-On 31/10/19 5:38 PM, Heiko Stuebner wrote:
-> Hi Kishon,
-> 
-> Am Dienstag, 17. September 2019, 10:25:32 CET schrieb Heiko Stuebner:
->> The px30 soc from Rockchip shares the same register description as
->> the rk3328, so can re-use its definitions.
->>
->> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> 
-> could you pick this up as well please?
+Best regards,
+Krzysztof
 
-merged now, thanks.
-
--Kishon
-> 
-> Thanks
-> Heiko
-> 
->> ---
->>  Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt | 1 +
->>  drivers/phy/rockchip/phy-rockchip-inno-usb2.c                    | 1 +
->>  2 files changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
->> index 00639baae74a..541f5298827c 100644
->> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
->> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
->> @@ -2,6 +2,7 @@ ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
->>  
->>  Required properties (phy (parent) node):
->>   - compatible : should be one of the listed compatibles:
->> +	* "rockchip,px30-usb2phy"
->>  	* "rockchip,rk3228-usb2phy"
->>  	* "rockchip,rk3328-usb2phy"
->>  	* "rockchip,rk3366-usb2phy"
->> diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
->> index eae865ff312c..680cc0c8825c 100644
->> --- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
->> +++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
->> @@ -1423,6 +1423,7 @@ static const struct rockchip_usb2phy_cfg rv1108_phy_cfgs[] = {
->>  };
->>  
->>  static const struct of_device_id rockchip_usb2phy_dt_match[] = {
->> +	{ .compatible = "rockchip,px30-usb2phy", .data = &rk3328_phy_cfgs },
->>  	{ .compatible = "rockchip,rk3228-usb2phy", .data = &rk3228_phy_cfgs },
->>  	{ .compatible = "rockchip,rk3328-usb2phy", .data = &rk3328_phy_cfgs },
->>  	{ .compatible = "rockchip,rk3366-usb2phy", .data = &rk3366_phy_cfgs },
->>
-> 
-> 
-> 
-> 
