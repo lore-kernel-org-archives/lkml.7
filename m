@@ -2,98 +2,120 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C354FCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC558CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 921F420650
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A245B20650
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:28:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uKrGepNX"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kW174yLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728973AbfJaR1k (ORCPT
+        id S1728981AbfJaR2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 13:27:40 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:46748 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728561AbfJaR1k (ORCPT
+        Thu, 31 Oct 2019 13:28:17 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:6913 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728561AbfJaR2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 13:27:40 -0400
-Received: by mail-ua1-f65.google.com with SMTP id i31so659973uae.13
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 10:27:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=46AmydREw6SfU27IOaxxeyDyoZWG9jeVi2WIEFhrMqA=;
-        b=uKrGepNXzPXDPzJbvbemKuf7R6S5LOyd1Myup06RKzLSP2nrNd0gQdYUKo5Mow3DAS
-         +SE7IfD6gsDwY0qy8BSl0pYU8GPWYV87yKCwXeFmUj8tfcvjCxE6XCZvWViSX7BLJr2h
-         JeRICf0gxuCWKgnMwiCuZSLMzerlDUIsThoYOFbNVmV4Iio6o99JIWYLgpdzR7oI4BDx
-         tISF+YHwsfL5BB8DS6m0YqBcFdYRIfZsqtAtZCMGUCUGgOjGgmE4qf5gvZ9MBWNon0hF
-         l2JKhPx8hF2es29OTb38GxXTjoyqOeNJvDE0LRnzacnT1nPR0db8A8Us17QUjMd2B+Rn
-         jUDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=46AmydREw6SfU27IOaxxeyDyoZWG9jeVi2WIEFhrMqA=;
-        b=lT2dbtZ6ORTh+rlD71NXXNgjr2olUht7e6XZSwCVcBCax/NSuyQVghcu1b+jqZs2B/
-         yZw7X+CHzLb1ihr12axohwTjgiTsSYphjQkGCfsDCW5u8cgqtMJO2QCJvwpmaMnT3vny
-         qi8PhR9VXutB2yBDV6XIIXQ9V81pocM+XrPorgWRGcQkt56EJ0t2C//PVY8juUf5j/e9
-         lWUk9CTpx2rI2oHZpEK56g1GD2VGZ+HSPRg+cfiqhdGMMGt0s47HpR4ov+0g3GjcmUf9
-         LhEPw+/W0zNkOI40PFlNmbd+OJTsXXC0n8p1mPrYWA2E6IsfrkqgXDAU99N8aziAdL8n
-         bbcg==
-X-Gm-Message-State: APjAAAXhrilFQwnygwXWMcDj5FlP28osF3YUq419H4g+/EuwpOZrCCHb
-        w3SnovP/u4CaHhdc03m1k+6skNC5zJOcRCxqlCIRbw==
-X-Google-Smtp-Source: APXvYqwHBpr5C3UNKE6XLzBUe1Jy/aZ4Jd12qOfI93i2wDsaUH2oAUrgK4KH1mAvPJ/zcWPVngS0f/6vsb1FU+PAYk8=
-X-Received: by 2002:a9f:3772:: with SMTP id a47mr3382097uae.53.1572542858440;
- Thu, 31 Oct 2019 10:27:38 -0700 (PDT)
+        Thu, 31 Oct 2019 13:28:17 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dbb19b70000>; Thu, 31 Oct 2019 10:28:23 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 31 Oct 2019 10:28:16 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 31 Oct 2019 10:28:16 -0700
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 31 Oct
+ 2019 17:28:12 +0000
+Subject: Re: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
+To:     Jason Gunthorpe <jgg@mellanox.com>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191023195515.13168-1-rcampbell@nvidia.com>
+ <20191023195515.13168-4-rcampbell@nvidia.com>
+ <20191029175837.GS22766@mellanox.com>
+ <3ffecdc6-625f-ebea-8fb4-984fe6ca90f3@nvidia.com>
+ <20191029231255.GX22766@mellanox.com>
+ <f42d06e2-ca08-acdd-948d-2803079a13c2@nvidia.com>
+ <20191031124200.GJ22766@mellanox.com>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <a6b49a4e-a194-ce0b-685f-5e597072aeee@nvidia.com>
+Date:   Thu, 31 Oct 2019 10:28:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191031164637.48901-1-samitolvanen@google.com> <20191031164637.48901-14-samitolvanen@google.com>
- <CAKwvOd=kcPS1CU=AUjOPr7SAipPFhs-v_mXi=AbqW5Vp9XUaiw@mail.gmail.com>
-In-Reply-To: <CAKwvOd=kcPS1CU=AUjOPr7SAipPFhs-v_mXi=AbqW5Vp9XUaiw@mail.gmail.com>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Thu, 31 Oct 2019 10:27:26 -0700
-Message-ID: <CABCJKudb2_OH5CRFm64rxv-VVnuOrO-ZOrXRHg8hR98Vj+BzVw@mail.gmail.com>
-Subject: Re: [PATCH v3 13/17] arm64: preserve x18 when CPU is suspended
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191031124200.GJ22766@mellanox.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572542903; bh=Wr3SVeuoH5XlM7NZPBlWqcbSTjspk3irIYRvlGi9yaI=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=kW174yLMG8IjxnIxZyGrbC9l4pJLEDIfwedwqdfEYw/0iC+ttgHPBJLMZkyCYUOr+
+         RmxUpyuuyis4YF6MLdl87jl0c7oyLblhWSadJUmnz1jEpOCgr23NZvbKblPTnLtGgs
+         F3C9AzLpFbe7EdbSmOJuem4Dc/OwsHeYevbSFMW2WlRNqRjQ0tLgmrujoxfb20sx1S
+         O7fLhLdjM5wM1kN93p9JjJXAvPayJPHH6IpfoERTCjwB492x//hykF6/MCqr0jmn7b
+         Q2/7fafKcaLwisg3k/YFqZ32xQkOEgoUivOon5ozWNgTbjxXT0nmbjOPmOykMNz16X
+         VpmUH5ZVPU//Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 10:18 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
-> > +#ifdef CONFIG_SHADOW_CALL_STACK
-> > +       ldr     x18, [x0, #96]
-> > +       str     xzr, [x0, #96]
->
-> How come we zero out x0+#96, but not for other offsets? Is this str necessary?
 
-It clears the shadow stack pointer from the sleep state buffer, which
-is not strictly speaking necessary, but leaves one fewer place to find
-it.
 
-Sami
+On 10/31/19 5:42 AM, Jason Gunthorpe wrote:
+> On Wed, Oct 30, 2019 at 05:14:30PM -0700, Ralph Campbell wrote:
+> 
+>>> Well, that is good, is it also under drivers/char? It kind feels like
+>>> it should not be there...
+>>
+>> I think most of the test modules live in lib/ but I wasn't sure that
+>> was the right place for the HMM test driver.
+>> If you think that is better, I can easily move it.
+> 
+> It would be good to get the various test people involved in this, I
+> really don't know.
+
+OK.
+  
+>>>>> It seems especially over-complicated to use a full page table layout
+>>>>> for this, wouldn't something simple like an xarray be good enough for
+>>>>> test purposes?
+>>>>
+>>>> Possibly. A page table is really just a lookup table from virtual address
+>>>> to pfn/page. Part of the rationale was to mimic what a real device
+>>>> might do.
+>>>
+>>> Well, but the details of the page table layout don't see really
+>>> important to this testing, IMHO.
+>>
+>> One problem with XArray is that on 32-bit machines the value would
+>> need to be u64 to hold a pfn which won't fit in a ULONG_MAX.
+>> I guess we could make the driver 64-bit only.
+> 
+> Why would a 32 bit machine need a 64 bit pfn?
+> 
+> Jason
+> 
+
+On x86, Physical Address Extension (PAE) uses a 64 bit PTE.
+See arch/x86/include/asm/pgtable_32_types.h which includes
+arch/x86/include/asm/pgtable-3level_types.h.
