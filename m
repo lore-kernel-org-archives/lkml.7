@@ -2,168 +2,117 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DC5CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81D2CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E37802087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FAA520873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:44:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbfJaQn0 (ORCPT
+        id S1728670AbfJaQos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 12:43:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59658 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728521AbfJaQn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:43:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 71E17B243;
-        Thu, 31 Oct 2019 16:43:23 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 5597C1E482D; Thu, 31 Oct 2019 17:43:22 +0100 (CET)
-Date:   Thu, 31 Oct 2019 17:43:22 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, Jan Kara <jack@suse.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-fsdevel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-arch@vger.kernel.org
-Subject: Re: [RFC] errno.h: Provide EFSCORRUPTED for everybody
-Message-ID: <20191031164322.GC13321@quack2.suse.cz>
-References: <20191031010736.113783-1-Valdis.Kletnieks@vt.edu>
+        Thu, 31 Oct 2019 12:44:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:51810 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727715AbfJaQos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 12:44:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 96B361FB;
+        Thu, 31 Oct 2019 09:44:47 -0700 (PDT)
+Received: from [192.168.1.20] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 834F03F6C4;
+        Thu, 31 Oct 2019 09:44:45 -0700 (PDT)
+Subject: Re: [Patch v4 4/6] sched/fair: update cpu_capcity to reflect thermal
+ pressure
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Ionela Voinescu <ionela.voinescu@arm.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Quentin Perret <qperret@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Amit Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
+ <1571776465-29763-5-git-send-email-thara.gopinath@linaro.org>
+ <20191023122252.dz7obopab6iizy4s@e107158-lin.cambridge.arm.com>
+ <20191028153010.GE4097@hirez.programming.kicks-ass.net>
+ <20191031105342.b3sl5xhysldfla3g@e107158-lin.cambridge.arm.com>
+ <e875ef90-d561-4eee-4951-6556ac89c6a2@arm.com>
+ <CAKfTPtCTYOBQ+TUYaGsEGK-UTQ=2of=1WYeeiMzak7ZhEPRxmA@mail.gmail.com>
+ <e38e9c86-7433-7c4b-d9c1-38fd2458b953@arm.com>
+ <CAKfTPtCQe8qd1e5s-jf_5C7eaGVc7OYcXYgdvBK+ACF8aL7ByQ@mail.gmail.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <aeb800c0-f23a-b9c3-6014-f5248f84adbd@arm.com>
+Date:   Thu, 31 Oct 2019 17:44:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031010736.113783-1-Valdis.Kletnieks@vt.edu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKfTPtCQe8qd1e5s-jf_5C7eaGVc7OYcXYgdvBK+ACF8aL7ByQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 30-10-19 21:07:33, Valdis Kletnieks wrote:
-> Three questions: (a) ACK/NAK on this patch, (b) should it be all in one
-> patch, or one to add to errno.h and 6 patches for 6 filesystems?), and
-> (c) if one patch, who gets to shepherd it through?
-> 
-> 
-> There's currently 6 filesystems that have the same #define. Move it
-> into errno.h so it's defined in just one place.
-> 
-> Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
+On 31.10.19 17:31, Vincent Guittot wrote:
+> On Thu, 31 Oct 2019 at 17:17, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>
+>> On 31.10.19 16:48, Vincent Guittot wrote:
+>>> On Thu, 31 Oct 2019 at 16:38, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>>>
+>>>> On 31.10.19 11:53, Qais Yousef wrote:
+>>>>> On 10/28/19 16:30, Peter Zijlstra wrote:
+>>>>>> On Wed, Oct 23, 2019 at 01:28:40PM +0100, Qais Yousef wrote:
+>>>>>>> On 10/22/19 16:34, Thara Gopinath wrote:
 
-Looks good to me. You can add:
+[...]
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  drivers/staging/exfat/exfat.h    | 2 --
->  fs/erofs/internal.h              | 2 --
->  fs/ext4/ext4.h                   | 1 -
->  fs/f2fs/f2fs.h                   | 1 -
->  fs/xfs/xfs_linux.h               | 1 -
->  include/linux/jbd2.h             | 1 -
->  include/uapi/asm-generic/errno.h | 1 +
->  7 files changed, 1 insertion(+), 8 deletions(-)
+>>>> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+>>>> index 38210691c615..d3035457483f 100644
+>>>> --- a/kernel/sched/pelt.c
+>>>> +++ b/kernel/sched/pelt.c
+>>>> @@ -357,9 +357,9 @@ int update_thermal_load_avg(u64 now, struct rq *rq,
+>>>> u64 capacity)
+>>>>  {
+>>>>         if (___update_load_sum(now, &rq->avg_thermal,
+>>>>                                capacity,
+>>>> -                              capacity,
+>>>> -                              capacity)) {
+>>>> -               ___update_load_avg(&rq->avg_thermal, 1, 1);
+>>>> +                              0,
+>>>> +                              0)) {
+>>>> +               ___update_load_avg(&rq->avg_thermal, 1, 0);
+>>>>                 return 1;
+>>>>         }
+>>
+>> So we could call it this way since we don't care about runnable_load or
+>> util?
 > 
-> diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
-> index 84de1123e178..3cf7e54af0b7 100644
-> --- a/drivers/staging/exfat/exfat.h
-> +++ b/drivers/staging/exfat/exfat.h
-> @@ -30,8 +30,6 @@
->  #undef DEBUG
->  #endif
->  
-> -#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
-> -
->  #define DENTRY_SIZE		32	/* dir entry size */
->  #define DENTRY_SIZE_BITS	5
->  
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> index 544a453f3076..3980026a8882 100644
-> --- a/fs/erofs/internal.h
-> +++ b/fs/erofs/internal.h
-> @@ -425,7 +425,5 @@ static inline int z_erofs_init_zip_subsystem(void) { return 0; }
->  static inline void z_erofs_exit_zip_subsystem(void) {}
->  #endif	/* !CONFIG_EROFS_FS_ZIP */
->  
-> -#define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
-> -
->  #endif	/* __EROFS_INTERNAL_H */
->  
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 03db3e71676c..a86c2585457d 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -3396,6 +3396,5 @@ static inline int ext4_buffer_uptodate(struct buffer_head *bh)
->  #endif	/* __KERNEL__ */
->  
->  #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
-> -#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
->  
->  #endif	/* _EXT4_H */
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 4024790028aa..04ebe77569a3 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -3752,6 +3752,5 @@ static inline bool is_journalled_quota(struct f2fs_sb_info *sbi)
->  }
->  
->  #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
-> -#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
->  
->  #endif /* _LINUX_F2FS_H */
-> diff --git a/fs/xfs/xfs_linux.h b/fs/xfs/xfs_linux.h
-> index ca15105681ca..3409d02a7d21 100644
-> --- a/fs/xfs/xfs_linux.h
-> +++ b/fs/xfs/xfs_linux.h
-> @@ -123,7 +123,6 @@ typedef __u32			xfs_nlink_t;
->  
->  #define ENOATTR		ENODATA		/* Attribute not found */
->  #define EWRONGFS	EINVAL		/* Mount with wrong filesystem type */
-> -#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
->  #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
->  
->  #define SYNCHRONIZE()	barrier()
-> diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
-> index 564793c24d12..1ecd3859d040 100644
-> --- a/include/linux/jbd2.h
-> +++ b/include/linux/jbd2.h
-> @@ -1657,6 +1657,5 @@ static inline tid_t  jbd2_get_latest_transaction(journal_t *journal)
->  #endif	/* __KERNEL__ */
->  
->  #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
-> -#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
->  
->  #endif	/* _LINUX_JBD2_H */
-> diff --git a/include/uapi/asm-generic/errno.h b/include/uapi/asm-generic/errno.h
-> index cf9c51ac49f9..1d5ffdf54cb0 100644
-> --- a/include/uapi/asm-generic/errno.h
-> +++ b/include/uapi/asm-generic/errno.h
-> @@ -98,6 +98,7 @@
->  #define	EINPROGRESS	115	/* Operation now in progress */
->  #define	ESTALE		116	/* Stale file handle */
->  #define	EUCLEAN		117	/* Structure needs cleaning */
-> +#define	EFSCORRUPTED	EUCLEAN
->  #define	ENOTNAM		118	/* Not a XENIX named type file */
->  #define	ENAVAIL		119	/* No XENIX semaphores available */
->  #define	EISNAM		120	/* Is a named type file */
-> -- 
-> 2.24.0.rc1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> one way or the other is quite similar but the current solution is
+> aligned with other irq, rt, dl signals which duplicates the same state
+> in each fields
+
+I see. But there is a subtle difference. For irq, rt, dl, we have to
+also set load (even we only use util) because of:
+
+___update_load_sum() {
+
+        ...
+        if (!load)
+                runnable = running = 0;
+        ...
+}
+
+which is there for se's only.
+
+I like self-explanatory code but I agree in this case it's not obvious.
