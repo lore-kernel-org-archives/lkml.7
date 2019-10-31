@@ -2,80 +2,99 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6E2CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FD2CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8595120856
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1E0620856
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:33:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfJaBcr (ORCPT
+        id S1726687AbfJaBd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 21:32:47 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:49440 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfJaBcr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 21:32:47 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 35C5114EBC34B;
-        Wed, 30 Oct 2019 18:32:46 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 18:32:45 -0700 (PDT)
-Message-Id: <20191030.183245.140124535901906874.davem@davemloft.net>
-To:     sheetal.tigadoli@broadcom.com
-Cc:     zajec5@gmail.com, gregkh@linuxfoundation.org,
-        michal.simek@xilinx.com, rajan.vaja@xilinx.com,
-        scott.branden@broadcom.com, ray.jui@broadcom.com,
-        vikram.prakash@broadcom.com, jens.wiklander@linaro.org,
-        michael.chan@broadcom.com, vikas.gupta@broadcom.com,
-        vasundhara-v.volam@broadcom.com, linux-kernel@vger.kernel.org,
-        tee-dev@lists.linaro.org, bcm-kernel-feedback-list@broadcom.com,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH net-next V4 0/3] Add OP-TEE based bnxt f/w manager
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1572450864-16761-1-git-send-email-sheetal.tigadoli@broadcom.com>
-References: <1572450864-16761-1-git-send-email-sheetal.tigadoli@broadcom.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Wed, 30 Oct 2019 21:33:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:43604 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726460AbfJaBd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 21:33:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75AE61FB;
+        Wed, 30 Oct 2019 18:33:26 -0700 (PDT)
+Received: from [10.188.222.161] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EE2E3F719;
+        Wed, 30 Oct 2019 18:33:23 -0700 (PDT)
+Subject: Re: NULL pointer dereference in pick_next_task_fair
+To:     Ram Muthiah <rammuthiah@google.com>,
+        Quentin Perret <qperret@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, aaron.lwe@gmail.com,
+        mingo@kernel.org, pauld@redhat.com, jdesfossez@digitalocean.com,
+        naravamudan@digitalocean.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        kernel-team@android.com, john.stultz@linaro.org
+References: <20191028174603.GA246917@google.com>
+ <20191029113411.GP4643@worktop.programming.kicks-ass.net>
+ <20191029115000.GA11194@google.com>
+ <CA+CXyWsoW8ann52pcR66ejRmjJ=4QmoaHTRVhb3=ohe0ZDnm-A@mail.gmail.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <75e99374-0bd6-a7d7-581e-9360a1f90103@arm.com>
+Date:   Thu, 31 Oct 2019 02:33:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <CA+CXyWsoW8ann52pcR66ejRmjJ=4QmoaHTRVhb3=ohe0ZDnm-A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 30 Oct 2019 18:32:46 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-Date: Wed, 30 Oct 2019 21:24:21 +0530
+On 30/10/2019 23:50, Ram Muthiah wrote:
+> 
+> Quentin and I were able to create a setup which reproduces the issue.
+> 
+> Given this, I tried Peter's proposed fix and was still able to reproduce the
+> issue unfortunately. Current patch is located here -
+> https://android-review.googlesource.com/c/kernel/common/+/1153487
+> 
+> Our mitigation for this issue on the android-mainline branch has been to
+> revert 67692435c411 ("sched: Rework pick_next_task() slow-path").
+> https://android-review.googlesource.com/c/kernel/common/+/1152564
+> 
+> I'll spend some time detailing repro steps next. I should be able to
+> provide an update on those details early next week.
+> 
+> We appreciate the help so far.
+> Thanks,
+> Ram
+> 
 
-> This patch series adds support for TEE based BNXT firmware
-> management module and the driver changes to invoke OP-TEE
-> APIs to fastboot firmware and to collect crash dump.
- ...
+The splat Quentin posted happens at secondary startup, is that always
+the case? I'm trying to think of what could make rq.cfs_rq.nr_running
+non-zero at secondary bringup time. It might not explain the NULL pointer, but
+I'm still curious as to how we can get something there this early, as it could
+point towards something. Be warned, I might bring up stuff I know nothing
+about, but this looks "fun" so I can't help myself :)
 
-Please start build testing properly:
 
-ld: drivers/firmware/broadcom/tee_bnxt_fw.o: in function `tee_bnxt_fw_load':
-(.text+0x1ca): undefined reference to `tee_client_invoke_func'
-ld: drivers/firmware/broadcom/tee_bnxt_fw.o: in function `tee_bnxt_copy_coredump':
-(.text+0x376): undefined reference to `tee_client_invoke_func'
-ld: (.text+0x3c0): undefined reference to `tee_shm_get_va'
-ld: drivers/firmware/broadcom/tee_bnxt_fw.o: in function `tee_bnxt_fw_remove':
-tee_bnxt_fw.c:(.text+0x482): undefined reference to `tee_shm_free'
-ld: tee_bnxt_fw.c:(.text+0x494): undefined reference to `tee_client_close_session'
-ld: tee_bnxt_fw.c:(.text+0x4a0): undefined reference to `tee_client_close_context'
-ld: drivers/firmware/broadcom/tee_bnxt_fw.o: in function `tee_bnxt_fw_probe':
-tee_bnxt_fw.c:(.text+0x548): undefined reference to `tee_client_open_context'
-ld: tee_bnxt_fw.c:(.text+0x5b2): undefined reference to `tee_client_open_session'
-ld: tee_bnxt_fw.c:(.text+0x610): undefined reference to `tee_shm_alloc'
-ld: tee_bnxt_fw.c:(.text+0x695): undefined reference to `tee_client_close_context'
-ld: tee_bnxt_fw.c:(.text+0x6ba): undefined reference to `tee_client_close_session'
-ld: tee_bnxt_fw.c:(.text+0x6cb): undefined reference to `tee_client_close_context'
-ld: drivers/firmware/broadcom/tee_bnxt_fw.o:(.data+0x10): undefined reference to `tee_bus_type'
-make: *** [Makefile:1074: vmlinux] Error 1
+sched domains are only setup after smp_init() in sched_init_smp(), thus after
+we've booted all secondaries. This should take load balance out of the
+picture.
+
+For wakeups, select_task_rq_fair() can only ever pick prev_cpu or this_cpu
+since there are no sched domains. I don't see many candidates that could
+wakeup on a secondary (thus have non-zero this_cpu) this early there. Perhaps
+the smpboot threads, but from a quick look they are first created *after*
+sched_init_smp(), so they couldn't exist during (boot-time) secondary bringup.
+Seems to be the same for IRQ threads (and they're setscheduler'd to FIFO
+anyway).
+
+So now I'm even more curious as to what CFS task could be enqueued on a
+secondary CPU rq before sched_init_smp(). Have you been sending stuff to space
+without any shielding lately?
+
