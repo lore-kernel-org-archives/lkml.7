@@ -2,206 +2,119 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2582BCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D30CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C1620862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77FE520862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:21:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gwicqu8t"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LhIKUufu";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VkO8QGUg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfJaMNz (ORCPT
+        id S1726720AbfJaMVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 08:13:55 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34411 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726462AbfJaMNy (ORCPT
+        Thu, 31 Oct 2019 08:21:30 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:37806 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfJaMV3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 08:13:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572524032;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Mpaz5iScARrazdtK8hPiRCxl6YGYTd9auym8Ja22A8M=;
-        b=Gwicqu8tZGqArw/igMHQjOK1zrP+HpMzumIWmjjhnYWQnzM1O9idlNszUcqWMWi/o9SjEv
-        7JkObkVZOsfztIvY4A02k/yI1TecXJMPuxWs9b9wtVsoWUnl2zTkJsq+v5c1CkXTw2DXzW
-        Z4Lj2R3L/l5lW5Q6etHug7fj3+jT0f8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-146-S5GbFTSyPsCvpNbgGufomQ-1; Thu, 31 Oct 2019 08:13:49 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 31 Oct 2019 08:21:29 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6658E607EF; Thu, 31 Oct 2019 12:21:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572524488;
+        bh=Ki3aKynv1XZjEovrcTD2QZluVpFd7CgUvfnjPmWeN48=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LhIKUufug+7s5Ssxfd7WneQNi6y0sHEAYTPCqle0BpIhE1wH6a+Lm//qCSVGgY5Ji
+         hEg6bSKnskj8orFVhZcIcj/v9cD1mlTpGUaCqsAA44IZUI6+DLyQAOTDZmRPV98/jQ
+         AtnHZUFYnG9pav9y5qLKEUHH971x35nJbxkvwHXQ=
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A4811005500;
-        Thu, 31 Oct 2019 12:13:48 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-40.rdu2.redhat.com [10.10.121.40])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 876905DA7B;
-        Thu, 31 Oct 2019 12:13:46 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net] rxrpc: Fix handling of last subpacket of jumbo packet
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 31 Oct 2019 12:13:46 +0000
-Message-ID: <157252402623.30237.12555934347853871645.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: S5GbFTSyPsCvpNbgGufomQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 297F4601C4;
+        Thu, 31 Oct 2019 12:21:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572524487;
+        bh=Ki3aKynv1XZjEovrcTD2QZluVpFd7CgUvfnjPmWeN48=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VkO8QGUgWqrJeE5jMb3geNEIOw/9IeeledGAJosS5+ELY4zaeDSXgwotPQ8PDoW17
+         /yTQ0kAq2aJw69fk2NeMFgdn4TH/eetDZoYPFhCluUvwuSnxqfkMQdwBOgoppvqu0z
+         wlR9b8cRUk2Zhdlel2oEa2L2rZLRoCI3R6JdvOPo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 297F4601C4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v1 0/7] Add GPU & Video Clock controller driver for SC7180
+Date:   Thu, 31 Oct 2019 17:51:06 +0530
+Message-Id: <1572524473-19344-1-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When rxrpc_recvmsg_data() sets the return value to 1 because it's drained
-all the data for the last packet, it checks the last-packet flag on the
-whole packet - but this is wrong, since the last-packet flag is only set on
-the final subpacket of the last jumbo packet.  This means that a call that
-receives its last packet in a jumbo packet won't complete properly.
+[v1]
+ * Fabia PLLs could fail latching in the case where the PLL is not
+   calibrated, so add support to calibrate in prepare clock ops.
 
-Fix this by having rxrpc_locate_data() determine the last-packet state of
-the subpacket it's looking at and passing that back to the caller rather
-than having the caller look in the packet header.  The caller then needs to
-cache this in the rxrpc_call struct as rxrpc_locate_data() isn't then
-called again for this packet.
+ * Add driver support for Graphics clock controller for SC7180 and also
+   update device tree bindings for the various clocks supported in the
+   clock controller.
 
-Fixes: 248f219cb8bc ("rxrpc: Rewrite the data and ack handling code")
-Fixes: e2de6c404898 ("rxrpc: Use info in skbuff instead of reparsing a jumb=
-o packet")
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+ * Add driver support for Video clock controller for SC7180 and also
+   update device tree bindings for the various clocks supported in the
+   clock controller.
 
- net/rxrpc/ar-internal.h |    1 +
- net/rxrpc/recvmsg.c     |   18 +++++++++++++-----
- 2 files changed, 14 insertions(+), 5 deletions(-)
+This change depends on below GCC clock driver series
+https://patchwork.kernel.org/project/linux-clk/list/?series=187089
 
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index ecc17dabec8f..7c7d10f2e0c1 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -601,6 +601,7 @@ struct rxrpc_call {
- =09int=09=09=09debug_id;=09/* debug ID for printks */
- =09unsigned short=09=09rx_pkt_offset;=09/* Current recvmsg packet offset *=
-/
- =09unsigned short=09=09rx_pkt_len;=09/* Current recvmsg packet len */
-+=09bool=09=09=09rx_pkt_last;=09/* Current recvmsg packet is last */
-=20
- =09/* Rx/Tx circular buffer, depending on phase.
- =09 *
-diff --git a/net/rxrpc/recvmsg.c b/net/rxrpc/recvmsg.c
-index a4090797c9b2..8578c39ec839 100644
---- a/net/rxrpc/recvmsg.c
-+++ b/net/rxrpc/recvmsg.c
-@@ -267,11 +267,13 @@ static int rxrpc_verify_packet(struct rxrpc_call *cal=
-l, struct sk_buff *skb,
-  */
- static int rxrpc_locate_data(struct rxrpc_call *call, struct sk_buff *skb,
- =09=09=09     u8 *_annotation,
--=09=09=09     unsigned int *_offset, unsigned int *_len)
-+=09=09=09     unsigned int *_offset, unsigned int *_len,
-+=09=09=09     bool *_last)
- {
- =09struct rxrpc_skb_priv *sp =3D rxrpc_skb(skb);
- =09unsigned int offset =3D sizeof(struct rxrpc_wire_header);
- =09unsigned int len;
-+=09bool last =3D false;
- =09int ret;
- =09u8 annotation =3D *_annotation;
- =09u8 subpacket =3D annotation & RXRPC_RX_ANNO_SUBPACKET;
-@@ -281,6 +283,8 @@ static int rxrpc_locate_data(struct rxrpc_call *call, s=
-truct sk_buff *skb,
- =09len =3D skb->len - offset;
- =09if (subpacket < sp->nr_subpackets - 1)
- =09=09len =3D RXRPC_JUMBO_DATALEN;
-+=09else if (sp->rx_flags & RXRPC_SKB_INCL_LAST)
-+=09=09last =3D true;
-=20
- =09if (!(annotation & RXRPC_RX_ANNO_VERIFIED)) {
- =09=09ret =3D rxrpc_verify_packet(call, skb, annotation, offset, len);
-@@ -291,6 +295,7 @@ static int rxrpc_locate_data(struct rxrpc_call *call, s=
-truct sk_buff *skb,
-=20
- =09*_offset =3D offset;
- =09*_len =3D len;
-+=09*_last =3D last;
- =09call->security->locate_data(call, skb, _offset, _len);
- =09return 0;
- }
-@@ -309,7 +314,7 @@ static int rxrpc_recvmsg_data(struct socket *sock, stru=
-ct rxrpc_call *call,
- =09rxrpc_serial_t serial;
- =09rxrpc_seq_t hard_ack, top, seq;
- =09size_t remain;
--=09bool last;
-+=09bool rx_pkt_last;
- =09unsigned int rx_pkt_offset, rx_pkt_len;
- =09int ix, copy, ret =3D -EAGAIN, ret2;
-=20
-@@ -319,6 +324,7 @@ static int rxrpc_recvmsg_data(struct socket *sock, stru=
-ct rxrpc_call *call,
-=20
- =09rx_pkt_offset =3D call->rx_pkt_offset;
- =09rx_pkt_len =3D call->rx_pkt_len;
-+=09rx_pkt_last =3D call->rx_pkt_last;
-=20
- =09if (call->state >=3D RXRPC_CALL_SERVER_ACK_REQUEST) {
- =09=09seq =3D call->rx_hard_ack;
-@@ -329,6 +335,7 @@ static int rxrpc_recvmsg_data(struct socket *sock, stru=
-ct rxrpc_call *call,
- =09/* Barriers against rxrpc_input_data(). */
- =09hard_ack =3D call->rx_hard_ack;
- =09seq =3D hard_ack + 1;
-+
- =09while (top =3D smp_load_acquire(&call->rx_top),
- =09       before_eq(seq, top)
- =09       ) {
-@@ -356,7 +363,8 @@ static int rxrpc_recvmsg_data(struct socket *sock, stru=
-ct rxrpc_call *call,
- =09=09if (rx_pkt_offset =3D=3D 0) {
- =09=09=09ret2 =3D rxrpc_locate_data(call, skb,
- =09=09=09=09=09=09 &call->rxtx_annotations[ix],
--=09=09=09=09=09=09 &rx_pkt_offset, &rx_pkt_len);
-+=09=09=09=09=09=09 &rx_pkt_offset, &rx_pkt_len,
-+=09=09=09=09=09=09 &rx_pkt_last);
- =09=09=09trace_rxrpc_recvmsg(call, rxrpc_recvmsg_next, seq,
- =09=09=09=09=09    rx_pkt_offset, rx_pkt_len, ret2);
- =09=09=09if (ret2 < 0) {
-@@ -396,13 +404,12 @@ static int rxrpc_recvmsg_data(struct socket *sock, st=
-ruct rxrpc_call *call,
- =09=09}
-=20
- =09=09/* The whole packet has been transferred. */
--=09=09last =3D sp->hdr.flags & RXRPC_LAST_PACKET;
- =09=09if (!(flags & MSG_PEEK))
- =09=09=09rxrpc_rotate_rx_window(call);
- =09=09rx_pkt_offset =3D 0;
- =09=09rx_pkt_len =3D 0;
-=20
--=09=09if (last) {
-+=09=09if (rx_pkt_last) {
- =09=09=09ASSERTCMP(seq, =3D=3D, READ_ONCE(call->rx_top));
- =09=09=09ret =3D 1;
- =09=09=09goto out;
-@@ -415,6 +422,7 @@ static int rxrpc_recvmsg_data(struct socket *sock, stru=
-ct rxrpc_call *call,
- =09if (!(flags & MSG_PEEK)) {
- =09=09call->rx_pkt_offset =3D rx_pkt_offset;
- =09=09call->rx_pkt_len =3D rx_pkt_len;
-+=09=09call->rx_pkt_last =3D rx_pkt_last;
- =09}
- done:
- =09trace_rxrpc_recvmsg(call, rxrpc_recvmsg_data_return, seq,
+Taniya Das (7):
+  clk: qcom: clk-alpha-pll: Add support for Fabia PLL calibration
+  dt-bindings: clock: Add YAML schemas for the QCOM GPUCC clock bindings
+  dt-bindings: clock: Introduce QCOM Graphics clock bindings
+  clk: qcom: Add graphics clock controller driver for SC7180
+  dt-bindings: clock: Add YAML schemas for the QCOM VIDEOCC clock
+    bindings
+  dt-bindings: clock: Introduce QCOM Video clock bindings
+  clk: qcom: Add video clock controller driver for SC7180
+
+ .../devicetree/bindings/clock/qcom,gpucc.txt       |  24 --
+ .../devicetree/bindings/clock/qcom,gpucc.yaml      |  70 ++++++
+ .../devicetree/bindings/clock/qcom,videocc.txt     |  18 --
+ .../devicetree/bindings/clock/qcom,videocc.yaml    |  62 +++++
+ drivers/clk/qcom/Kconfig                           |  16 ++
+ drivers/clk/qcom/Makefile                          |   2 +
+ drivers/clk/qcom/clk-alpha-pll.c                   |  84 ++++++-
+ drivers/clk/qcom/clk-alpha-pll.h                   |   4 +
+ drivers/clk/qcom/gpucc-sc7180.c                    | 274 +++++++++++++++++++++
+ drivers/clk/qcom/videocc-sc7180.c                  | 263 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gpucc-sc7180.h      |  21 ++
+ include/dt-bindings/clock/qcom,videocc-sc7180.h    |  23 ++
+ 12 files changed, 814 insertions(+), 47 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,gpucc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,videocc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,videocc.yaml
+ create mode 100644 drivers/clk/qcom/gpucc-sc7180.c
+ create mode 100644 drivers/clk/qcom/videocc-sc7180.c
+ create mode 100644 include/dt-bindings/clock/qcom,gpucc-sc7180.h
+ create mode 100644 include/dt-bindings/clock/qcom,videocc-sc7180.h
+
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
 
