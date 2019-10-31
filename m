@@ -2,137 +2,89 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9E1CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAE4CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92D572083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:59:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kdF7sWEw"
+	by mail.kernel.org (Postfix) with ESMTP id 9B6172083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:02:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfJaG70 (ORCPT
+        id S1726851AbfJaHCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 02:59:26 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34034 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbfJaG7Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 02:59:25 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9V6x8ld159889;
-        Thu, 31 Oct 2019 06:59:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=Tqrlv1r2UZYa19Qdf8MZqwbo2ZzfW9M4NvVmYegpsRQ=;
- b=kdF7sWEwNrnMlgnQpPb4UJt3gMlNSrm0QM4YFVkBO0rd7yBtW2oHldKK14ZZJMMq2QY9
- Cj2z5kWe2ZW/OAL3ZkosL2uCMz/71JQDnNO9WvsfPiuzJcTeTinnpKo/TT6lsDDXGwoj
- WXHlGxAtbDyKZGlZ/b0kQFFYcYfqoxK8dQkwQeJ5o9rpUyOYJpcJnsf/IWkydU/BG01z
- ER0OStkT0Hz+JiiVWL0YPaV/zKIPTmGukluAd2s3G9j2LQhA3MfVYXe3YZxvwi4gEgxg
- ToKY4IqnzZwfTu2yIXlcirGQ4KG2CC35wvvx572XJO23qYu2PSPNASZNj/9QD99gSpc/ rw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2vxwhfs3wh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Oct 2019 06:59:16 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9V6vwlQ141255;
-        Thu, 31 Oct 2019 06:59:15 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2vysbtkyr4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Oct 2019 06:59:15 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9V6xCx5021466;
-        Thu, 31 Oct 2019 06:59:12 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 30 Oct 2019 23:59:12 -0700
-Date:   Thu, 31 Oct 2019 09:59:01 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     shuah <shuah@kernel.org>, David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH linux-kselftest/test v6] lib/list-test: add a test for
- the 'list' doubly linked list
-Message-ID: <20191031065901.GC1705@kadam>
-References: <20191024224631.118656-1-davidgow@google.com>
- <0cb1d948-0da3-eb0f-c58f-ae3a785dd0dd@kernel.org>
- <CABVgOSmCHbGjZBjeWSbPEZbJw22SaBQnoO77xxNzN_ugAwzNiQ@mail.gmail.com>
- <20191030104217.GA18421@kadam>
- <42a8270d-ed6f-d29f-5e71-7b76a074b63e@kernel.org>
- <20191030184600.GC18421@kadam>
- <2b3b48a8512d2c567fce388394ad1d262d31908e.camel@perches.com>
+        Thu, 31 Oct 2019 03:02:17 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5658 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726535AbfJaHCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 03:02:17 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 269BFEE5CC8800A2EB72;
+        Thu, 31 Oct 2019 15:02:15 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 31 Oct 2019
+ 15:02:08 +0800
+Subject: [PATCH v3] crypto: arm64/aes-neonbs - add return value of
+ skcipher_walk_done() in __xts_crypt()
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <ard.biesheuvel@linaro.org>, <linux-crypto@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+References: <aaf0f585-3a06-8af1-e2f1-ab301e560d49@huawei.com>
+Message-ID: <32b39396-d514-524f-a85c-3bc627454ba7@huawei.com>
+Date:   Thu, 31 Oct 2019 15:01:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2b3b48a8512d2c567fce388394ad1d262d31908e.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910310069
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910310069
+In-Reply-To: <aaf0f585-3a06-8af1-e2f1-ab301e560d49@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 12:15:30PM -0700, Joe Perches wrote:
-> On Wed, 2019-10-30 at 21:46 +0300, Dan Carpenter wrote:
-> > Hm...  I imagined the checkpatch code a little different in my head but
-> > this would also work to make it stricter.  I doubt it miss very many
-> > real life style problems.
-> 
-> Well, doubts vs reality...
-> 
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> []
-> > @@ -3607,7 +3607,7 @@ sub process {
-> >  
-> >  # if/while/etc brace do not go on next line, unless defining a do while loop,
-> >  # or if that brace on the next line is for something else
-> > -		if ($line =~ /(.*)\b((?:if|while|for|switch|(?:[a-z_]+|)for_each[a-z_]+)\s*\(|do\b|else\b)/ && $line !~ /^.\s*\#/) {
-> > +		if ($line =~ /(.*)\b((?:if|while|for|switch|(?:list|hlist)_for_each[a-z_]+)\s*\(|do\b|else\b)/ && $line !~ /^.\s*\#/) {
-> >  			my $pre_ctx = "$1$2";
-> >  
-> >  			my ($level, @ctx) = ctx_statement_level($linenr, $realcnt, 0);
-> 
-> So - nak
-> 
+A warning is found by the static code analysis tool:
+  "Identical condition 'err', second condition is always false"
 
-What I mean is that only the people doing list_for_each and
-hlist_for_each don't know how to do it right.  I just tested this over
-night and my assumptions were correct.  Here are all the lines that
-generate a warning:
+Fix this by adding return value of skcipher_walk_done().
 
-+               hlist_for_each_entry_safe(tmp_fil, n, head, fnode)
-+static void list_test_list_for_each_prev(struct kunit *test)
-+static void list_test_list_for_each_safe(struct kunit *test)
-+static void list_test_list_for_each_prev_safe(struct kunit *test)
-+static void list_test_list_for_each_entry(struct kunit *test)
-+static void list_test_list_for_each_entry_reverse(struct kunit *test)
-+       hlist_for_each_entry_safe(x6spi, n,
-+       list_for_each_entry(w, &card->widgets, list)
+Fixes: 67cfa5d3b721 ("crypto: arm64/aes-neonbs - implement ciphertext stealing for XTS")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+---
+v2 -> v3:
+ - add "Acked-by:"
 
-Only the first and last warnings are real style problems and my patch
-catches both.
+v1 -> v2:
+ - update the subject and comment
+ - add return value of skcipher_walk_done()
 
-regards,
-dan carpenter
+ arch/arm64/crypto/aes-neonbs-glue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/crypto/aes-neonbs-glue.c b/arch/arm64/crypto/aes-neonbs-glue.c
+index ea873b8904c4..e3e27349a9fe 100644
+--- a/arch/arm64/crypto/aes-neonbs-glue.c
++++ b/arch/arm64/crypto/aes-neonbs-glue.c
+@@ -384,7 +384,7 @@ static int __xts_crypt(struct skcipher_request *req, bool encrypt,
+ 			goto xts_tail;
+
+ 		kernel_neon_end();
+-		skcipher_walk_done(&walk, nbytes);
++		err = skcipher_walk_done(&walk, nbytes);
+ 	}
+
+ 	if (err || likely(!tail))
+-- 
+2.7.4.3
+
 
