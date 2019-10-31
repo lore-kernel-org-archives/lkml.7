@@ -2,117 +2,466 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610FCCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098C2CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D2C82087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:05:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572563138;
-	bh=4z2WuELNukNwKuKrFR1f3kQfDOncbIyk/+Kn5OAHdec=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=nZBdiwU+XT+7zTdBIdj14h8lt9oWN3YP8DWXoA8MJn4lFSlrw60NTNlCrXqAzhowa
-	 WTH2MoqcovhCBBM0na+E8w5Rrs04Kl3m8UjP7Xl5fqiwk1HfIV2VImMhM5dnCiaePG
-	 P4/ZGNVqq5CJ4Dq/3sxgFnbdpz+nQ8PXyPPCGWzo=
+	by mail.kernel.org (Postfix) with ESMTP id B5A952080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:08:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRmiPbcw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728492AbfJaXFf (ORCPT
+        id S1728417AbfJaXIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 19:05:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726602AbfJaXFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 19:05:35 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 469D62080F;
-        Thu, 31 Oct 2019 23:05:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572563134;
-        bh=4z2WuELNukNwKuKrFR1f3kQfDOncbIyk/+Kn5OAHdec=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=L3xc+mry460+mKLDYMYkBOhGK+f+eRRMzhLD3aBVcDSwHy5hy+uJ44c7lwaBi7qoB
-         5h4rUMRCnK4Mv96EKpJWUkIToZgZiAhhwC67d28eUGe20yFziukgpXzAiE0veeh28K
-         42ADyhYQRSM6yuofTjj2JfBrWqYYQCAv8XwBwXOQ=
-Date:   Thu, 31 Oct 2019 18:05:32 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kar Hin Ong <kar.hin.ong@ni.com>
-Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-x86_64@vger.kernel.org, linux-pci@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: "oneshot" interrupt causes another interrupt to be fired
- erroneously in Haswell system
-Message-ID: <20191031230532.GA170712@google.com>
+        Thu, 31 Oct 2019 19:08:22 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:47094 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbfJaXIW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 19:08:22 -0400
+Received: by mail-qk1-f195.google.com with SMTP id e66so8767375qkf.13
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 16:08:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ZmrIdl6crkmkLSfRmtMWUraRfy3Kp0gsmtTe6S24sz8=;
+        b=XRmiPbcwpL2/Bhq+IzKt0Y/RSkKUXckCY9cco0Au+VmI4ceMvsEdULPGRktJsCh7xE
+         fNWCPc7Re6TccAzQ7iKYjvadMeOX8YOrXPthmqCad6+AMXBwxJPzAic5RBgR5hR0bOa1
+         ChGmlsecVgdZ5wshNttC0x3XOGC8ipGnPIjilbEpRU30rM+59zUbnWyeGzpJxsXCUvMG
+         Ya4MHRW2xpAhnDqXZmgnwu5cJD4zUEcQ4p/qf+vXNPOiw3TZYbhlN22V7GCuuHp2vlzQ
+         UOjplVpz4JuwpXehaGRFC47OYLtnpawvRZGLwTxw7aSpradiKuUyZTj+nP7BX/WAGeul
+         78Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ZmrIdl6crkmkLSfRmtMWUraRfy3Kp0gsmtTe6S24sz8=;
+        b=dOunzKTVZmMiZjdjzlhTWph4KE5PvXsIK/LFuf9QAX6SgGL4AmO3UYSoU0KaafxkYq
+         YmvGHA/DiwLsSqxooCKAAsj7Kj6sxDjKfz25ebQcOzluYb87WdDYtYHR1/O4fd9jOkAK
+         aqF6rgmIuYR3KBJ8LohJy8eoxpBWp8DXBtr4fKUIaLnuPQXYRfL221HCtwTPUgTllivC
+         NGK/Ob0hWkXbYjGqFb/3Wrs4m7pknJxqDR0gcfD2qAjYXb8AIGRbKgiqawMTrV9F3gif
+         jTNyFXz1FtZwc8SpDrW5hm2iI1dvN4tkiX41TlkApCuvpXtcauJOGWkfxC4fmULfiwkD
+         bkNQ==
+X-Gm-Message-State: APjAAAXRHJsQEttjOoQJFl7JEhSAURl3ct9UnBxMZb6LrGGBcL3ZvWSv
+        xMNFsHPTdTbgSyKJaw3FasRcCxBya6w=
+X-Google-Smtp-Source: APXvYqxZwgNDH2iN89at3FcJsM2LnF75aee+UNKWY63oj4ABuN/mn6anXOMpQDsMkPtGyptV/GlhXw==
+X-Received: by 2002:aed:3908:: with SMTP id l8mr2866517qte.383.1572562984427;
+        Thu, 31 Oct 2019 16:03:04 -0700 (PDT)
+Received: from localhost.localdomain ([187.106.44.83])
+        by smtp.gmail.com with ESMTPSA id s67sm2633875qkh.70.2019.10.31.16.03.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 16:03:03 -0700 (PDT)
+From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+To:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
+        kim.jamie.bradley@gmail.com, nishkadg.linux@gmail.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Subject: [PATCH v4 1/3] staging: rts5208: Eliminate the use of Camel Case in files ms.{h,c}
+Date:   Thu, 31 Oct 2019 20:02:41 -0300
+Message-Id: <20191031230243.3462-2-gabrielabittencourt00@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191031230243.3462-1-gabrielabittencourt00@gmail.com>
+References: <20191031230243.3462-1-gabrielabittencourt00@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MN2PR04MB625541BF4ADC84690B5C45E9C3630@MN2PR04MB6255.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Thomas, IRQ maintainer]
+Cleans up checks of "Avoid CamelCase" in files ms.{h,c}
 
-On Thu, Oct 31, 2019 at 03:53:50AM +0000, Kar Hin Ong wrote:
-> Hi,
-> 
-> I've an Intel Haswell system running Linux kernel v4.14 with
-> preempt_rt patch. The system contain 2 IOAPICs: IOAPIC 1 is on the
-> PCH where IOAPIC 2 is on the CPU.
-> 
-> I observed that whenever a PCI device is firing interrupt (INTx) to
-> Pin 20 of IOAPIC 2 (GSI 44); the kernel will receives 2 interrupts: 
->    1. Interrupt from Pin 20 of IOAPIC 2  -> Expected
->    2. Interrupt from Pin 19 of IOAPIC 1  -> UNEXPECTED, erroneously
->       triggered
-> 
-> The unexpected interrupt is unhandled eventually. When this scenario
-> happen more than 99,000 times, kernel disables the interrupt line
-> (Pin 19 of IOAPIC 1) and causing device that has requested it become
-> malfunction.
-> 
-> I managed to also reproduced this issue on RHEL 8 and Ubuntu 19-04
-> (without preempt_rt patch) after added "threadirqs" to the kernel
-> command line.
-> 
-> After digging further, I noticed that the said issue is happened
-> whenever an interrupt pin on IOAPIC 2 is masked:
->  - Masking Pin 20 of IOAPIC 2 triggers Pin 19 of IOAPIC 1  
->  - Masking Pin 22 of IOAPIC 2 triggers Pin 18 of IOAPIC 1  
-> 
-> I also noticed that kernel will explicitly mask a specific interrupt
-> pin before execute its handler, if the interrupt is configured as
-> "oneshot" (i.e. threaded). See
-> https://elixir.bootlin.com/linux/v4.14/source/kernel/irq/chip.c#L695
-> This explained why it only happened on RTOS and Desktop Linux with
-> "threadirqs" flag, because these configurations force the interrupt
-> handler to be threaded.
-> 
-> From Intel Xeon Processor E5/E7 v3 Product Family External Design
-> Specification (EDS), Volume One: Architecture, section 13.1 (Legacy
-> PCI Interrupt Handling), it mention: "If the I/OxAPIC entry is
-> masked (via the 'mask' bit in the corresponding Redirection Table
-> Entry), then the corresponding PCI Express interrupt(s) is forwarded
-> to the legacy PCH"
-> 
-> My interpretation is: when kernel receive a "oneshot" interrupt, it
-> mask the line before start handling it (or sending the eoi signal).
-> At this moment, if the interrupt line is still asserting, then the
-> interrupt signal will be routed to the IOAPIC in PCH, and hence
-> causing another interrupt to be fired erroneously.  
-> 
-> I would like to understand if my interpretation is make sense. If
-> yes, should the "oneshot" algorithm need to be updated to support
-> Haswell system?
+Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
 
-Just to make sure this hasn't already been fixed, can you reproduce
-the problem on a current kernel, e.g., v5.3 or v5.4-rc5?
+---
 
-Bjorn
+Changes in v2:
+- substitute variables in lower case to upper case
+---
+ drivers/staging/rts5208/ms.c | 86 ++++++++++++++++++------------------
+ drivers/staging/rts5208/ms.h | 70 ++++++++++++++---------------
+ 2 files changed, 78 insertions(+), 78 deletions(-)
+
+diff --git a/drivers/staging/rts5208/ms.c b/drivers/staging/rts5208/ms.c
+index e853fa9cc950..d53dd138a356 100644
+--- a/drivers/staging/rts5208/ms.c
++++ b/drivers/staging/rts5208/ms.c
+@@ -590,7 +590,7 @@ static int ms_identify_media_type(struct rtsx_chip *chip, int switch_8bit_bus)
+ 	int retval, i;
+ 	u8 val;
+ 
+-	retval = ms_set_rw_reg_addr(chip, Pro_StatusReg, 6, SystemParm, 1);
++	retval = ms_set_rw_reg_addr(chip, PRO_STATUS_REG, 6, SYSTEM_PARAM, 1);
+ 	if (retval != STATUS_SUCCESS)
+ 		return STATUS_FAIL;
+ 
+@@ -840,7 +840,7 @@ static int msxc_change_power(struct rtsx_chip *chip, u8 mode)
+ 
+ 	ms_cleanup_work(chip);
+ 
+-	retval = ms_set_rw_reg_addr(chip, 0, 0, Pro_DataCount1, 6);
++	retval = ms_set_rw_reg_addr(chip, 0, 0, PRO_DATA_COUNT1, 6);
+ 	if (retval != STATUS_SUCCESS)
+ 		return STATUS_FAIL;
+ 
+@@ -885,7 +885,7 @@ static int ms_read_attribute_info(struct rtsx_chip *chip)
+ 	int found_sys_info = 0, found_model_name = 0;
+ #endif
+ 
+-	retval = ms_set_rw_reg_addr(chip, Pro_IntReg, 2, Pro_SystemParm, 7);
++	retval = ms_set_rw_reg_addr(chip, PRO_INT_REG, 2, PRO_SYSTEM_PARAM, 7);
+ 	if (retval != STATUS_SUCCESS)
+ 		return STATUS_FAIL;
+ 
+@@ -1232,7 +1232,7 @@ static int ms_read_status_reg(struct rtsx_chip *chip)
+ 	int retval;
+ 	u8 val[2];
+ 
+-	retval = ms_set_rw_reg_addr(chip, StatusReg0, 2, 0, 0);
++	retval = ms_set_rw_reg_addr(chip, STATUS_REG0, 2, 0, 0);
+ 	if (retval != STATUS_SUCCESS)
+ 		return STATUS_FAIL;
+ 
+@@ -1255,8 +1255,8 @@ static int ms_read_extra_data(struct rtsx_chip *chip,
+ 	int retval, i;
+ 	u8 val, data[10];
+ 
+-	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
+-				    SystemParm, 6);
++	retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
++				    SYSTEM_PARAM, 6);
+ 	if (retval != STATUS_SUCCESS)
+ 		return STATUS_FAIL;
+ 
+@@ -1307,8 +1307,8 @@ static int ms_read_extra_data(struct rtsx_chip *chip,
+ 			if (retval != STATUS_SUCCESS)
+ 				return STATUS_FAIL;
+ 
+-			retval = ms_set_rw_reg_addr(chip, OverwriteFlag,
+-						    MS_EXTRA_SIZE, SystemParm,
++			retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG,
++						    MS_EXTRA_SIZE, SYSTEM_PARAM,
+ 						    6);
+ 			if (retval != STATUS_SUCCESS)
+ 				return STATUS_FAIL;
+@@ -1339,8 +1339,8 @@ static int ms_write_extra_data(struct rtsx_chip *chip, u16 block_addr,
+ 	if (!buf || (buf_len < MS_EXTRA_SIZE))
+ 		return STATUS_FAIL;
+ 
+-	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
+-				    SystemParm, 6 + MS_EXTRA_SIZE);
++	retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
++				    SYSTEM_PARAM, 6 + MS_EXTRA_SIZE);
+ 	if (retval != STATUS_SUCCESS)
+ 		return STATUS_FAIL;
+ 
+@@ -1392,8 +1392,8 @@ static int ms_read_page(struct rtsx_chip *chip, u16 block_addr, u8 page_num)
+ 	int retval;
+ 	u8 val, data[6];
+ 
+-	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
+-				    SystemParm, 6);
++	retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
++				    SYSTEM_PARAM, 6);
+ 	if (retval != STATUS_SUCCESS)
+ 		return STATUS_FAIL;
+ 
+@@ -1465,8 +1465,8 @@ static int ms_set_bad_block(struct rtsx_chip *chip, u16 phy_blk)
+ 	if (retval != STATUS_SUCCESS)
+ 		return STATUS_FAIL;
+ 
+-	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
+-				    SystemParm, 7);
++	retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
++				    SYSTEM_PARAM, 7);
+ 	if (retval != STATUS_SUCCESS)
+ 		return STATUS_FAIL;
+ 
+@@ -1519,8 +1519,8 @@ static int ms_erase_block(struct rtsx_chip *chip, u16 phy_blk)
+ 	int retval, i = 0;
+ 	u8 val, data[6];
+ 
+-	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
+-				    SystemParm, 6);
++	retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
++				    SYSTEM_PARAM, 6);
+ 	if (retval != STATUS_SUCCESS)
+ 		return STATUS_FAIL;
+ 
+@@ -1579,7 +1579,7 @@ static void ms_set_page_status(u16 log_blk, u8 type, u8 *extra, int extra_len)
+ 
+ 	memset(extra, 0xFF, MS_EXTRA_SIZE);
+ 
+-	if (type == setPS_NG) {
++	if (type == set_PS_NG) {
+ 		/* set page status as 1:NG,and block status keep 1:OK */
+ 		extra[0] = 0xB8;
+ 	} else {
+@@ -1670,8 +1670,8 @@ static int ms_copy_page(struct rtsx_chip *chip, u16 old_blk, u16 new_blk,
+ 		if (retval != STATUS_SUCCESS)
+ 			return STATUS_FAIL;
+ 
+-		retval = ms_set_rw_reg_addr(chip, OverwriteFlag,
+-					    MS_EXTRA_SIZE, SystemParm, 6);
++		retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG,
++					    MS_EXTRA_SIZE, SYSTEM_PARAM, 6);
+ 		if (retval != STATUS_SUCCESS)
+ 			return STATUS_FAIL;
+ 
+@@ -1725,7 +1725,7 @@ static int ms_copy_page(struct rtsx_chip *chip, u16 old_blk, u16 new_blk,
+ 					return STATUS_FAIL;
+ 
+ 				if (uncorrect_flag) {
+-					ms_set_page_status(log_blk, setPS_NG,
++					ms_set_page_status(log_blk, set_PS_NG,
+ 							   extra,
+ 							   MS_EXTRA_SIZE);
+ 					if (i == 0)
+@@ -1738,8 +1738,8 @@ static int ms_copy_page(struct rtsx_chip *chip, u16 old_blk, u16 new_blk,
+ 						i, extra[0]);
+ 					MS_SET_BAD_BLOCK_FLG(ms_card);
+ 
+-					ms_set_page_status(log_blk, setPS_Error,
+-							   extra,
++					ms_set_page_status(log_blk,
++							   set_PS_error, extra,
+ 							   MS_EXTRA_SIZE);
+ 					ms_write_extra_data(chip, new_blk, i,
+ 							    extra,
+@@ -1767,8 +1767,8 @@ static int ms_copy_page(struct rtsx_chip *chip, u16 old_blk, u16 new_blk,
+ 			}
+ 		}
+ 
+-		retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
+-					    SystemParm, (6 + MS_EXTRA_SIZE));
++		retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
++					    SYSTEM_PARAM, (6 + MS_EXTRA_SIZE));
+ 
+ 		ms_set_err_code(chip, MS_NO_ERROR);
+ 
+@@ -1822,8 +1822,8 @@ static int ms_copy_page(struct rtsx_chip *chip, u16 old_blk, u16 new_blk,
+ 		}
+ 
+ 		if (i == 0) {
+-			retval = ms_set_rw_reg_addr(chip, OverwriteFlag,
+-						    MS_EXTRA_SIZE, SystemParm,
++			retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG,
++						    MS_EXTRA_SIZE, SYSTEM_PARAM,
+ 						    7);
+ 			if (retval != STATUS_SUCCESS)
+ 				return STATUS_FAIL;
+@@ -1980,8 +1980,8 @@ static int reset_ms(struct rtsx_chip *chip)
+ 	for (reg_addr = BLOCK_SIZE_0; reg_addr <= PAGE_SIZE_1; reg_addr++)
+ 		rtsx_add_cmd(chip, READ_REG_CMD, reg_addr, 0, 0);
+ 
+-	rtsx_add_cmd(chip, READ_REG_CMD, MS_Device_Type, 0, 0);
+-	rtsx_add_cmd(chip, READ_REG_CMD, MS_4bit_Support, 0, 0);
++	rtsx_add_cmd(chip, READ_REG_CMD, MS_device_type, 0, 0);
++	rtsx_add_cmd(chip, READ_REG_CMD, MS_4bit_support, 0, 0);
+ 
+ 	retval = rtsx_send_cmd(chip, MS_CARD, 100);
+ 	if (retval < 0)
+@@ -2057,7 +2057,7 @@ static int reset_ms(struct rtsx_chip *chip)
+ 
+ 	/* Switch I/F Mode */
+ 	if (ptr[15]) {
+-		retval = ms_set_rw_reg_addr(chip, 0, 0, SystemParm, 1);
++		retval = ms_set_rw_reg_addr(chip, 0, 0, SYSTEM_PARAM, 1);
+ 		if (retval != STATUS_SUCCESS)
+ 			return STATUS_FAIL;
+ 
+@@ -2887,7 +2887,7 @@ int mspro_format(struct scsi_cmnd *srb, struct rtsx_chip *chip,
+ 	if (retval != STATUS_SUCCESS)
+ 		return STATUS_FAIL;
+ 
+-	retval = ms_set_rw_reg_addr(chip, 0x00, 0x00, Pro_TPCParm, 0x01);
++	retval = ms_set_rw_reg_addr(chip, 0x00, 0x00, PRO_TPC_PARM, 0x01);
+ 	if (retval != STATUS_SUCCESS)
+ 		return STATUS_FAIL;
+ 
+@@ -2970,8 +2970,8 @@ static int ms_read_multiple_pages(struct rtsx_chip *chip, u16 phy_blk,
+ 		}
+ 	}
+ 
+-	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
+-				    SystemParm, 6);
++	retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
++				    SYSTEM_PARAM, 6);
+ 	if (retval != STATUS_SUCCESS)
+ 		return STATUS_FAIL;
+ 
+@@ -3026,7 +3026,7 @@ static int ms_read_multiple_pages(struct rtsx_chip *chip, u16 phy_blk,
+ 					if (!(chip->card_wp & MS_CARD)) {
+ 						reset_ms(chip);
+ 						ms_set_page_status
+-							(log_blk, setPS_NG,
++							(log_blk, set_PS_NG,
+ 							 extra,
+ 							 MS_EXTRA_SIZE);
+ 						ms_write_extra_data
+@@ -3131,8 +3131,8 @@ static int ms_write_multiple_pages(struct rtsx_chip *chip, u16 old_blk,
+ 	u8 *ptr;
+ 
+ 	if (!start_page) {
+-		retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
+-					    SystemParm, 7);
++		retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
++					    SYSTEM_PARAM, 7);
+ 		if (retval != STATUS_SUCCESS)
+ 			return STATUS_FAIL;
+ 
+@@ -3165,8 +3165,8 @@ static int ms_write_multiple_pages(struct rtsx_chip *chip, u16 old_blk,
+ 			return STATUS_FAIL;
+ 	}
+ 
+-	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
+-				    SystemParm, (6 + MS_EXTRA_SIZE));
++	retval = ms_set_rw_reg_addr(chip, OVERWRITE_FLAG, MS_EXTRA_SIZE,
++				    SYSTEM_PARAM, (6 + MS_EXTRA_SIZE));
+ 	if (retval != STATUS_SUCCESS)
+ 		return STATUS_FAIL;
+ 
+@@ -3773,9 +3773,9 @@ static int mg_set_tpc_para_sub(struct rtsx_chip *chip, int type,
+ 	u8 buf[6];
+ 
+ 	if (type == 0)
+-		retval = ms_set_rw_reg_addr(chip, 0, 0, Pro_TPCParm, 1);
++		retval = ms_set_rw_reg_addr(chip, 0, 0, PRO_TPC_PARM, 1);
+ 	else
+-		retval = ms_set_rw_reg_addr(chip, 0, 0, Pro_DataCount1, 6);
++		retval = ms_set_rw_reg_addr(chip, 0, 0, PRO_DATA_COUNT1, 6);
+ 
+ 	if (retval != STATUS_SUCCESS)
+ 		return STATUS_FAIL;
+@@ -4154,7 +4154,7 @@ int mg_set_ICV(struct scsi_cmnd *srb, struct rtsx_chip *chip)
+ 		} else {
+ 			set_sense_type(chip, lun, SENSE_TYPE_MG_WRITE_ERR);
+ 		}
+-		goto SetICVFinish;
++		goto set_ICV_finish;
+ 	}
+ 
+ #ifdef MG_SET_ICV_SLOW
+@@ -4195,7 +4195,7 @@ int mg_set_ICV(struct scsi_cmnd *srb, struct rtsx_chip *chip)
+ 					       SENSE_TYPE_MG_WRITE_ERR);
+ 			}
+ 			retval = STATUS_FAIL;
+-			goto SetICVFinish;
++			goto set_ICV_finish;
+ 		}
+ 	}
+ #else
+@@ -4214,11 +4214,11 @@ int mg_set_ICV(struct scsi_cmnd *srb, struct rtsx_chip *chip)
+ 		} else {
+ 			set_sense_type(chip, lun, SENSE_TYPE_MG_WRITE_ERR);
+ 		}
+-		goto SetICVFinish;
++		goto set_ICV_finish;
+ 	}
+ #endif
+ 
+-SetICVFinish:
++set_ICV_finish:
+ 	kfree(buf);
+ 	return retval;
+ }
+diff --git a/drivers/staging/rts5208/ms.h b/drivers/staging/rts5208/ms.h
+index 952cc14dd079..33bda9ce36b6 100644
+--- a/drivers/staging/rts5208/ms.h
++++ b/drivers/staging/rts5208/ms.h
+@@ -92,37 +92,37 @@
+ #define PRO_FORMAT		0x10
+ #define PRO_SLEEP		0x11
+ 
+-#define	IntReg			0x01
+-#define StatusReg0		0x02
+-#define StatusReg1		0x03
+-
+-#define SystemParm		0x10
+-#define BlockAdrs		0x11
+-#define CMDParm			0x14
+-#define PageAdrs		0x15
+-
+-#define OverwriteFlag		0x16
+-#define ManagemenFlag		0x17
+-#define LogicalAdrs		0x18
+-#define ReserveArea		0x1A
+-
+-#define	Pro_IntReg		0x01
+-#define Pro_StatusReg		0x02
+-#define Pro_TypeReg		0x04
+-#define	Pro_IFModeReg		0x05
+-#define Pro_CatagoryReg		0x06
+-#define Pro_ClassReg		0x07
+-
+-#define Pro_SystemParm		0x10
+-#define Pro_DataCount1		0x11
+-#define Pro_DataCount0		0x12
+-#define Pro_DataAddr3		0x13
+-#define Pro_DataAddr2		0x14
+-#define Pro_DataAddr1		0x15
+-#define Pro_DataAddr0		0x16
+-
+-#define Pro_TPCParm		0x17
+-#define Pro_CMDParm		0x18
++#define INT_REG			0x01
++#define STATUS_REG0		0x02
++#define STATUS_REG1		0x03
++
++#define SYSTEM_PARAM		0x10
++#define BLOCK_ADRS		0x11
++#define CMD_PARM		0x14
++#define PAGE_ADRS		0x15
++
++#define OVERWRITE_FLAG		0x16
++#define MANAGEMEN_FLAG		0x17
++#define LOGICAL_ADRS		0x18
++#define RESERVE_AREA		0x1A
++
++#define PRO_INT_REG		0x01
++#define PRO_STATUS_REG		0x02
++#define PRO_TYPE_REG		0x04
++#define PRO_IF_mode_REG		0x05
++#define PRO_CATEGORY_REG	0x06
++#define PRO_CLASS_REG		0x07
++
++#define PRO_SYSTEM_PARAM		0x10
++#define PRO_DATA_COUNT1		0x11
++#define PRO_DATA_COUNT0		0x12
++#define PRO_DATA_ADDR3		0x13
++#define PRO_DATA_ADDR2		0x14
++#define PRO_DATA_ADDR1		0x15
++#define PRO_DATA_ADDR0		0x16
++
++#define PRO_TPC_PARM		0x17
++#define PRO_CMD_PARM		0x18
+ 
+ #define	INT_REG_CED		0x80
+ #define	INT_REG_ERR		0x40
+@@ -152,12 +152,12 @@
+ #define	PAGE_SIZE_0		(PPBUF_BASE2 + 0x1a0 + 8)
+ #define	PAGE_SIZE_1		(PPBUF_BASE2 + 0x1a0 + 9)
+ 
+-#define MS_Device_Type		(PPBUF_BASE2 + 0x1D8)
++#define MS_device_type		(PPBUF_BASE2 + 0x1D8)
+ 
+-#define	MS_4bit_Support		(PPBUF_BASE2 + 0x1D3)
++#define MS_4bit_support		(PPBUF_BASE2 + 0x1D3)
+ 
+-#define setPS_NG	1
+-#define setPS_Error	0
++#define set_PS_NG	1
++#define set_PS_error	0
+ 
+ #define	PARALLEL_8BIT_IF	0x40
+ #define	PARALLEL_4BIT_IF	0x00
+-- 
+2.20.1
+
