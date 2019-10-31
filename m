@@ -2,99 +2,134 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5CBCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A048CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B96CA20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:50:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572540627;
-	bh=bav111T7Ts/MW3KRk8o4XHIuPpAPtZ1cDzJEEAwCZlE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PUNsxkOhMZio5CH7tn/0Gu5aNXzj1z6u/239GJVLpm0Tv60vkg0p60dNRvKuxz5R5
-	 mEQ+BQQ/ecfPNS/WRza/bqDTnq2zobIj3hty9ixv6e8C5hOcNkPIl4Z4O2riuU7OAv
-	 WBqNXblq+u+3wKAr0TE0fxGPxn1BY74I/TvP2sB8=
+	by mail.kernel.org (Postfix) with ESMTP id 5D27C20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:51:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P8+lQfeQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbfJaQu0 (ORCPT
+        id S1728722AbfJaQvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 12:50:26 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37976 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727715AbfJaQu0 (ORCPT
+        Thu, 31 Oct 2019 12:51:54 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24138 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727715AbfJaQvy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:50:26 -0400
-Received: by mail-qt1-f196.google.com with SMTP id t26so9435559qtr.5;
-        Thu, 31 Oct 2019 09:50:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OLaOpRAjfrbacph10qr6xdAhMPmVu1fR+AKVwIeHENE=;
-        b=kEgxMwwRbZzxEVyKWXizq7cW+YwENZDem7Gqpa2Gy1RZwd/e3m9sD3Jd5SdMEBZMmJ
-         TcozJ04JWaN3ODGNDMAoCgrZrhXQGFVyqotHzCHWIAjK06BtKaHd8ZS5wBV0G5aqJzU/
-         /Jw/gcR2hr+SQsI/fFsGsIXl7qWrDS6rgIgUBeenySZPvWKFyiD4Y3vNyp9lP/RmgEcK
-         9S/SJczxVr/7HhlWmxzH/jHwKgf6Y3NKLhwy8LZq9VdQ+hwdM3I6Jw0mxsB1ntyysnkU
-         TlaT/hE1qGfrQqm2gZWTLLCEH0aFFEchLuc2FTcyhVNOmQgSWn7di2HFzdJ3DZGjYppy
-         XvvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OLaOpRAjfrbacph10qr6xdAhMPmVu1fR+AKVwIeHENE=;
-        b=bGZBclznMB0r62b3plHKVPpcaqKdPq0B385usytdJcCywLbPK5ErG0EZdhg+xLrRmO
-         3joMsRug1DllQu4jmvh71VXkHFWpqA81IRzuCvnOqmbDaZvesB7tEqIntqKXO/oF66OY
-         GmTd7bqtb0uM19HPL/6Y7y1afaB/yq0dkfp3aORknnEk3aCICzqCZMfru7ToBAtuoZJ0
-         sAKgvfkxzT0dTr0IDspatWe6fk6geFmOjDQgWKfuVkNz5sUK/EPFXRyJq6c1zGY2Z8VA
-         WmsLULqhvySiU80rG85woPCX5VZdoLaJd2KqvuvddfkHYgSqGAUfzApxALsoxlVk6Caz
-         Co8A==
-X-Gm-Message-State: APjAAAUKXnmTv/vfsYZlPG6arndjM0zaUvgPcO9auSeXRx5LxrwoEcBG
-        PXzVfzW4FMDGwVVHft2bjWm0wkbQ
-X-Google-Smtp-Source: APXvYqy8TB1c4Rpru49Qaq9QK03ijg1GplyOlvawK8eI65aLKQPSRzEse7c7fIE5r2DOAVG6rVB0AQ==
-X-Received: by 2002:aed:2392:: with SMTP id j18mr6468841qtc.296.1572540624862;
-        Thu, 31 Oct 2019 09:50:24 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::314e])
-        by smtp.gmail.com with ESMTPSA id f131sm469553qkb.99.2019.10.31.09.50.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 31 Oct 2019 09:50:23 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 09:50:19 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] iocost: don't nest spin_lock_irq in ioc_weight_write()
-Message-ID: <20191031165019.GL3622521@devbig004.ftw2.facebook.com>
-References: <20191031105341.GA26612@mwanda>
+        Thu, 31 Oct 2019 12:51:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572540712;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Eg9oWuOPqo1L+W4rD3h5PNuEgEsQhGB7UKbPvjWbL1s=;
+        b=P8+lQfeQ7cTDv/q1DrVF0wUF6/IfvVHW50Y5/VFOmJIEb2cotuHiAj4a7ui2btFO46Kxxp
+        FOmss1EgPGaR8achhbIOrpQWVlj1H3zx4VA6koMchycJ7F96Z4PAcaZCmQ/kxK1ZnSGWIt
+        k6RfhhwaaTTy2D6806CVlsG4d9dwd+Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-24-SFOVO5HhMI-DJYYvgzKgZA-1; Thu, 31 Oct 2019 12:51:49 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5AD8D107ACC0;
+        Thu, 31 Oct 2019 16:51:47 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3AC541001B07;
+        Thu, 31 Oct 2019 16:51:46 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
+        linux-nvdimm@lists.01.org
+Subject: Re: [PATCH 4/4] modpost: do not set ->preloaded for symbols from Module.symvers
+References: <20191003102915.28301-1-yamada.masahiro@socionext.com>
+        <20191003102915.28301-4-yamada.masahiro@socionext.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Thu, 31 Oct 2019 12:51:45 -0400
+In-Reply-To: <20191003102915.28301-4-yamada.masahiro@socionext.com> (Masahiro
+        Yamada's message of "Thu, 3 Oct 2019 19:29:15 +0900")
+Message-ID: <x497e4kluxq.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031105341.GA26612@mwanda>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: SFOVO5HhMI-DJYYvgzKgZA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 01:53:41PM +0300, Dan Carpenter wrote:
-> This code causes a static analysis warning:
-> 
->     block/blk-iocost.c:2113 ioc_weight_write() error: double lock 'irq'
-> 
-> We disable IRQs in blkg_conf_prep() and re-enable them in
-> blkg_conf_finish().  IRQ disable/enable should not be nested because
-> that means the IRQs will be enabled at the first unlock instead of the
-> second one.
-> 
-> Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Masahiro Yamada <yamada.masahiro@socionext.com> writes:
 
-Acked-by: Tejun Heo <tj@kernel.org>
+> Now that there is no overwrap between symbols from ELF files and
+> ones from Module.symvers.
+>
+> So, the 'exported twice' warning should be reported irrespective
+> of where the symbol in question came from. Only the exceptional case
+> is when __crc_<sym> symbol appears before __ksymtab_<sym>. This
+> typically occurs for EXPORT_SYMBOL in .S files.
 
-Thanks.
+Hi, Masahiro,
 
--- 
-tejun
+After apply this patch, I get the following modpost warnings when doing:
+
+$ make M=3Dtools/tesing/nvdimm
+...
+  Building modules, stage 2.
+  MODPOST 12 modules
+WARNING: tools/testing/nvdimm/libnvdimm: 'nvdimm_bus_lock' exported twice. =
+Previous export was in drivers/nvdimm/libnvdimm.ko
+WARNING: tools/testing/nvdimm/libnvdimm: 'nvdimm_bus_unlock' exported twice=
+. Previous export was in drivers/nvdimm/libnvdimm.ko
+WARNING: tools/testing/nvdimm/libnvdimm: 'is_nvdimm_bus_locked' exported tw=
+ice. Previous export was in drivers/nvdimm/libnvdimm.ko
+WARNING: tools/testing/nvdimm/libnvdimm: 'devm_nvdimm_memremap' exported tw=
+ice. Previous export was in drivers/nvdimm/libnvdimm.ko
+WARNING: tools/testing/nvdimm/libnvdimm: 'nd_fletcher64' exported twice. Pr=
+evious export was in drivers/nvdimm/libnvdimm.ko
+WARNING: tools/testing/nvdimm/libnvdimm: 'to_nd_desc' exported twice. Previ=
+ous export was in drivers/nvdimm/libnvdimm.ko
+WARNING: tools/testing/nvdimm/libnvdimm: 'to_nvdimm_bus_dev' exported twice=
+. Previous export was in drivers/nvdimm/libnvdimm.ko
+...
+
+There are a lot of these warnings.  :)  If I revert this patch, no
+complaints.
+
+Cheers,
+Jeff
+
+
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
+>  scripts/mod/modpost.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> index 5234555cf550..6ca38d10efc5 100644
+> --- a/scripts/mod/modpost.c
+> +++ b/scripts/mod/modpost.c
+> @@ -2457,7 +2457,6 @@ static void read_dump(const char *fname, unsigned i=
+nt kernel)
+>  =09=09s =3D sym_add_exported(symname, namespace, mod,
+>  =09=09=09=09     export_no(export));
+>  =09=09s->kernel    =3D kernel;
+> -=09=09s->preloaded =3D 1;
+>  =09=09s->is_static =3D 0;
+>  =09=09sym_update_crc(symname, mod, crc, export_no(export));
+>  =09}
+
