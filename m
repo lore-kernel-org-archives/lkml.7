@@ -2,118 +2,126 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B881FCA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E92CCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6242087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:01:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572526895;
-	bh=ZqQmIL+VZ3QRd14dH7SG/ODYbXnGFyGCVOWZyG3KxSY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=PHYhgj74Ywd4CJBbkVzXaRYsjY8+xoEbDDGJnh17gQBbuRZ1pzp/NmN5XzY8KsCpi
-	 1H/gXdpT6VZ8L0xW5DZqwOTcrLN2I/y0ISq+WzLoiIo+LOPg/c0+jU6MiQCrNfbi1R
-	 Tp/GYR8GN03kTni7+PmguPa9iRyqi1/zIK3MH1mA=
+	by mail.kernel.org (Postfix) with ESMTP id EF0162080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:03:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a0LsMdpt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfJaNBe (ORCPT
+        id S1727130AbfJaNDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:01:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726462AbfJaNBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:01:34 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5301A2080F;
-        Thu, 31 Oct 2019 13:01:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572526892;
-        bh=ZqQmIL+VZ3QRd14dH7SG/ODYbXnGFyGCVOWZyG3KxSY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hlInG3xtoBSQHfifz9LHNoOEdY9N8dlqgVblZ/QP0IlO7bwjXFGCVa9icKRitjoso
-         PzMKiJFjxRiaVg/P8AAm72mD7oaWA38vJ/M/hParD24E3dYe3FwmvgYptU/BJ5Vt+f
-         QlAjWdEH8WPyq0t5hmqDqYZckNeFzT5h1sU9yyEc=
-Date:   Thu, 31 Oct 2019 08:01:30 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Dilip Kota <eswara.kota@linux.intel.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        gustavo.pimentel@synopsys.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        martin.blumenstingl@googlemail.com,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, Linux PM <linux-pm@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
- pcie link
-Message-ID: <20191031130130.GA37287@google.com>
+        Thu, 31 Oct 2019 09:03:24 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:55974 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfJaNDY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 09:03:24 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9VD31nq124895;
+        Thu, 31 Oct 2019 08:03:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572526981;
+        bh=jpBAUypS3kMb2gSVD1QCfzFnqXx0fy8eb1N5e+Nc4iA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=a0LsMdptZsrjHDm1mZ0BzdowBnneVMP6qD29KVAZrqbc+8mdtxb0BhGo8E8Bjys2S
+         zc7G+aoD4Ri6Hf7EBW7CcG3cQz62c9jN4uXqqVip5hJA3saxTs5/zk7vtD4+ZJNFAA
+         fvA9es4/97k69F7m43YRxQxXwikkj7kS8K578jtU=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9VD30QB048254
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 31 Oct 2019 08:03:00 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 31
+ Oct 2019 08:02:47 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 31 Oct 2019 08:02:47 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9VD2vCC063280;
+        Thu, 31 Oct 2019 08:02:58 -0500
+Subject: Re: [PATCH] phy: phy-rockchip-inno-usb2: add phy description for px30
+To:     Heiko Stuebner <heiko@sntech.de>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <linux-rockchip@lists.infradead.org>,
+        <christoph.muellner@theobroma-systems.com>
+References: <20190917082532.25479-1-heiko@sntech.de> <1974613.gpRaQal8Ma@phil>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <1b31d4fe-fd78-700a-6e53-298bd85d7a27@ti.com>
+Date:   Thu, 31 Oct 2019 18:32:22 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5652130.irlrSN52DS@kreacher>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1974613.gpRaQal8Ma@phil>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 10:13:11AM +0100, Rafael J. Wysocki wrote:
-> On Thursday, October 31, 2019 3:56:37 AM CET Bjorn Helgaas wrote:
-> > On Thu, Oct 31, 2019 at 12:31:44AM +0100, Rafael J. Wysocki wrote:
-> > > On Wed, Oct 30, 2019 at 11:14 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-> > > > Rafael had some concerns about the proposed ASPM interface [2], but I
-> > > > don't know what they are yet.
-> > > 
-> > > I was talking about the existing ASPM interface in sysfs.  The new one
-> > > I still have to review, but I'm kind of wondering what about people
-> > > who used the old one?  Would it be supported going forward?
-> > 
-> > The old one interface was enabled by CONFIG_PCIEASPM_DEBUG.  Red Hat
-> > doesn't enable that.  Ubuntu does.  I *thought* we heard from a
-> > Canonical person who said they didn't have any tools that used it, but
-> > I can't find that now.  I don't know about SUSE.
-> > 
-> > So the idea was to drop it on the theory that nobody is using it.
-> > Possibly that's too aggressive.
+
+On 31/10/19 5:38 PM, Heiko Stuebner wrote:
+> Hi Kishon,
 > 
-> Well, one problem is that the "old" (actually existing) I/F has made it
-> to one of my OSS EU presentation slides (I did not talk to this particular
-> slide, but it is there in the deck that's available for downloading), so who
-> knows who is going to use it. :-)
+> Am Dienstag, 17. September 2019, 10:25:32 CET schrieb Heiko Stuebner:
+>> The px30 soc from Rockchip shares the same register description as
+>> the rk3328, so can re-use its definitions.
+>>
+>> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 > 
-> So I guess that there's a risk that needs to be taken into consideration.
+> could you pick this up as well please?
+
+merged now, thanks.
+
+-Kishon
 > 
-> What could be done, in principle, would be to make the new I/F depend on
-> CONFIG_PCIEASPM_DEBUG being unset and provide the "old" one when it is set.
-
-I would prefer to enable the new interface unconditionally to make it
-easier for userspace tools like powertop to use it.
-
-I think the existing and new interfaces could coexist, with the
-existing interface being enabled by CONFIG_PCIEASPM_DEBUG as it is
-today.  The patch that removes the existing interface is the last in
-the series and could easily be dropped.
-
-> In any case, the pcie_aspm.policy module parameter cannot be dropped, because
-> AFAICS there is quite a bit of user space using it (e.g. TLP).
-
-What is TLP?  Since CONFIG_PCIEASPM is a bool, aspm.o is built in
-statically if enabled, so pcie_aspm.policy is effectively a boot-time
-kernel parameter, right?  We don't have a plan to remove it.
-
-Bjorn
+> Thanks
+> Heiko
+> 
+>> ---
+>>  Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt | 1 +
+>>  drivers/phy/rockchip/phy-rockchip-inno-usb2.c                    | 1 +
+>>  2 files changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+>> index 00639baae74a..541f5298827c 100644
+>> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+>> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+>> @@ -2,6 +2,7 @@ ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
+>>  
+>>  Required properties (phy (parent) node):
+>>   - compatible : should be one of the listed compatibles:
+>> +	* "rockchip,px30-usb2phy"
+>>  	* "rockchip,rk3228-usb2phy"
+>>  	* "rockchip,rk3328-usb2phy"
+>>  	* "rockchip,rk3366-usb2phy"
+>> diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+>> index eae865ff312c..680cc0c8825c 100644
+>> --- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+>> +++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+>> @@ -1423,6 +1423,7 @@ static const struct rockchip_usb2phy_cfg rv1108_phy_cfgs[] = {
+>>  };
+>>  
+>>  static const struct of_device_id rockchip_usb2phy_dt_match[] = {
+>> +	{ .compatible = "rockchip,px30-usb2phy", .data = &rk3328_phy_cfgs },
+>>  	{ .compatible = "rockchip,rk3228-usb2phy", .data = &rk3228_phy_cfgs },
+>>  	{ .compatible = "rockchip,rk3328-usb2phy", .data = &rk3328_phy_cfgs },
+>>  	{ .compatible = "rockchip,rk3366-usb2phy", .data = &rk3366_phy_cfgs },
+>>
+> 
+> 
+> 
+> 
