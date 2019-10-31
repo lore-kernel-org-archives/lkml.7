@@ -2,97 +2,104 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7C4CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8411CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B8D620856
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A5C20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:49:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iSsXAz2h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfJaArM (ORCPT
+        id S1726751AbfJaAt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 20:47:12 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:47200 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726316AbfJaArL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 20:47:11 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2D3C61A04BC;
-        Thu, 31 Oct 2019 01:47:09 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A4CD01A01F5;
-        Thu, 31 Oct 2019 01:47:04 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CE09E4029B;
-        Thu, 31 Oct 2019 08:46:58 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2] ARM: dts: imx7ulp-evk: Use APLL_PFD1 as usdhc's clock source
-Date:   Thu, 31 Oct 2019 08:43:42 +0800
-Message-Id: <1572482622-22070-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 30 Oct 2019 20:49:58 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42552 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfJaAt6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 20:49:58 -0400
+Received: by mail-lj1-f193.google.com with SMTP id a21so4722062ljh.9
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 17:49:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2ANRS5wbwl/qhMyqDjpLwYIen+6o/RnmGm7reuX+RDc=;
+        b=iSsXAz2h6lI4/+bDAgo3ame/BZgVRj1aE4CRhVp1rkjDm5vlU5S7NBZHxBEgHg/wEo
+         LHjrlUjzfObyMjWplPS4iUm9RjAgF5qeticJqVKdiQIoBq9hkhZrryXIwlO/lC3rF9zI
+         RUGDn7MhN1RZ4aziEd7tokbiKmLKGtqN1oh1/Bkjo66ARSTwDEhXLfli2ZXzr+qUE27g
+         ego3mqJPqzkvZTa4lU2SYZa52RhXEJMi+KQRYiuHajDJTdUR2yAdoa+b3h4qMUN8tIfP
+         QZ6T99SeDihkZKnIxQBn1vOcNEJvsNSn6so+SKVs83W44KBmKnvrJIpsFergM970YDYy
+         jX0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2ANRS5wbwl/qhMyqDjpLwYIen+6o/RnmGm7reuX+RDc=;
+        b=VxOZ4aYFTAA5ltAKiy9kTuj0qWJhNjiAX8190lmtKo4u/aDoOWiIkC1y7UkmDtcphy
+         AoZnfQUTQ1F3bgFDmhiYU0/pa55hwwGPD/fUi9drzIswU0LijT/DBPG+CRHpkBOOc8zT
+         ysQa6jj9n/iEQ4bQJZJM4gdV3SUUCeRpfOX7jD8ovbxVqPFjkvqHIMtP5BxXnLDMNaJs
+         7tu6kVxe/+YKO3LHr4SORExon3jVKxPVEmW+aByQU43rtLQBLr1pva/cnqyquZPUm1W2
+         Lt9TnzrVSSDjFNPvFjhVZw6tvyo1uevd0ftQh0vRMsxMriPuCxEfO7RIbfA7brlwm3xo
+         ULBA==
+X-Gm-Message-State: APjAAAX2cSiR8D0OLEv0WCnXWKv7JSVf49dhQCAz2W88RAGp1W8E2I7m
+        Ylf67Ccrzdjd4BaxL7fL9Y5irJoMyM0HgQK4kq6WYA==
+X-Google-Smtp-Source: APXvYqwM7PCCU+3fgkz+ysEB76Izdi4UnxQslU0hMR9roPFMeD2kCgFi2OfvADVGoZLpFkAT3ZECdzLcVTd/EaP9GRk=
+X-Received: by 2002:a2e:90b:: with SMTP id 11mr1671387ljj.233.1572482995258;
+ Wed, 30 Oct 2019 17:49:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191028224909.1069-1-rentao.bupt@gmail.com>
+In-Reply-To: <20191028224909.1069-1-rentao.bupt@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 31 Oct 2019 01:49:43 +0100
+Message-ID: <CACRpkdbOPq4AYt9CLoganV_Ck9bYS9+_U3bggGKAukaQ=FHXkA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: ASPEED: update default ARCH_NR_GPIO for ARCH_ASPEED
+To:     rentao.bupt@gmail.com
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Tao Ren <taoren@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX7ULP does NOT support runtime switching clock source for PCC,
-APLL_PFD1 by default is usdhc's clock source, so just use it
-in kernel to avoid below kernel dump during kernel boot up and
-make sure kernel can boot up with SD root file-system.
+On Mon, Oct 28, 2019 at 11:49 PM <rentao.bupt@gmail.com> wrote:
 
-[    3.035892] Loading compiled-in X.509 certificates
-[    3.136301] sdhci-esdhc-imx 40370000.mmc: Got CD GPIO
-[    3.242886] mmc0: Reset 0x1 never completed.
-[    3.247190] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-[    3.253751] mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00000002
-[    3.260218] mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000001
-[    3.266775] mmc0: sdhci: Argument:  0x00009a64 | Trn mode: 0x00000000
-[    3.273333] mmc0: sdhci: Present:   0x00088088 | Host ctl: 0x00000002
-[    3.279794] mmc0: sdhci: Power:     0x00000000 | Blk gap:  0x00000080
-[    3.286350] mmc0: sdhci: Wake-up:   0x00000008 | Clock:    0x0000007f
-[    3.292901] mmc0: sdhci: Timeout:   0x0000008c | Int stat: 0x00000000
-[    3.299364] mmc0: sdhci: Int enab:  0x007f010b | Sig enab: 0x00000000
-[    3.305918] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00008402
-[    3.312471] mmc0: sdhci: Caps:      0x07eb0000 | Caps_1:   0x0000b400
-[    3.318934] mmc0: sdhci: Cmd:       0x0000113a | Max curr: 0x00ffffff
-[    3.325488] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0x0039b37f
-[    3.332040] mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x00400e00
-[    3.338501] mmc0: sdhci: Host ctl2: 0x00000000
-[    3.343051] mmc0: sdhci: ============================================
+> From: Tao Ren <rentao.bupt@gmail.com>
+>
+> Increase the max number of GPIOs from default 512 to 1024 for ASPEED
+> platforms, because Facebook Yamp (AST2500) BMC platform has total 594
+> GPIO pins (232 provided by ASPEED SoC, and 362 by I/O Expanders).
+>
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
 
-Fixes: 20434dc92c05 ("ARM: dts: imx: add common imx7ulp dtsi support")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Tested-by: Fabio Estevam <festevam@gmail.com>
----
-Changes since V1:
-	- Add fixes tag.
----
- arch/arm/boot/dts/imx7ulp-evk.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/arch/arm/boot/dts/imx7ulp-evk.dts b/arch/arm/boot/dts/imx7ulp-evk.dts
-index f1093d2..a863a2b 100644
---- a/arch/arm/boot/dts/imx7ulp-evk.dts
-+++ b/arch/arm/boot/dts/imx7ulp-evk.dts
-@@ -78,7 +78,7 @@
- 
- &usdhc0 {
- 	assigned-clocks = <&pcc2 IMX7ULP_CLK_USDHC0>;
--	assigned-clock-parents = <&scg1 IMX7ULP_CLK_NIC1_DIV>;
-+	assigned-clock-parents = <&scg1 IMX7ULP_CLK_APLL_PFD1>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc0>;
- 	cd-gpios = <&gpio_ptc 10 GPIO_ACTIVE_LOW>;
--- 
-2.7.4
+Please send this patch to the ARM SoC and SoC maintainers:
+arm@kernel.org
+soc@kernel.org
 
+Yours,
+Linus Walleij
