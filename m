@@ -5,193 +5,294 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04594CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 04:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997BDC47E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 04:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9011F2087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 04:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A53D20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 04:42:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aSuVD/U6"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O6wBhB8W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfJaEjY (ORCPT
+        id S1726620AbfJaEmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 00:39:24 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:13383 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfJaEjX (ORCPT
+        Thu, 31 Oct 2019 00:42:12 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39416 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfJaEmL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 00:39:23 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191031043920epoutp01746b19d90306c1890fe5ca15dd23cb52~SoXjlyTxK2675726757epoutp01W
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 04:39:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191031043920epoutp01746b19d90306c1890fe5ca15dd23cb52~SoXjlyTxK2675726757epoutp01W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1572496760;
-        bh=7D/E2evKGNTOcwIHpd5yyFb70AgXZ30JTIlKfDQrge8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=aSuVD/U6h57H05IughONWjI9XknSleNU3LT7d+qIbNzdEmedBrY6BfIAT5SOBxJki
-         YvU0td666CiblK6GZfwOB2J0xpegeBmlysfr1RTF5rVThNcDQK9t2oH6l3B8PeTdGK
-         jXJuMoeV+9ZQ1fHK1UEuAPqeRbh840ae76WMPf0c=
-Received: from epsnrtp5.localdomain (unknown [182.195.42.166]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20191031043920epcas1p460f22d8962c47eea8b1ecfc9b1d40697~SoXjKeG2C2856328563epcas1p4f;
-        Thu, 31 Oct 2019 04:39:20 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp5.localdomain (Postfix) with ESMTP id 473XfF4pYSzMqYkc; Thu, 31 Oct
-        2019 04:39:17 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        57.D3.04144.5756ABD5; Thu, 31 Oct 2019 13:39:17 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191031043917epcas1p3775b7eae1e78c3c71ffa3b466d15d3af~SoXghQswe2202222022epcas1p3q;
-        Thu, 31 Oct 2019 04:39:17 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191031043917epsmtrp1f837205a237fc04b5e66a3bc8aa2bf84~SoXggehZU2301423014epsmtrp1W;
-        Thu, 31 Oct 2019 04:39:17 +0000 (GMT)
-X-AuditID: b6c32a35-2dfff70000001030-6f-5dba657540d9
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        96.B4.24756.5756ABD5; Thu, 31 Oct 2019 13:39:17 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191031043916epsmtip14c38954253779d0b380cb603882bfeb7~SoXgJ9CQ_1042710427epsmtip1B;
-        Thu, 31 Oct 2019 04:39:16 +0000 (GMT)
-Subject: Re: [PATCH v7 06/19] PM / devfreq: tegra30: Use kHz units uniformly
- in the code
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Peter Geis <pgwipeout@gmail.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <a8ce6d98-26aa-b6eb-56ea-4bf960fc533d@samsung.com>
-Date:   Thu, 31 Oct 2019 13:44:48 +0900
+        Thu, 31 Oct 2019 00:42:11 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9V4g7KI053408;
+        Wed, 30 Oct 2019 23:42:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572496927;
+        bh=a8la0CU3oeh9uq93T41XgduJWZ4ZsuWOzQAJCUlqfK4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=O6wBhB8W1t+1O1h7hYVksPbxu1luT1WtP4XhgB/aX5xwKAnMvVtMNlh28DOVZMtFO
+         Ve8mZDPBrCGunzrTcDQGLxhpxtZxcfYRVt/HgfcKmgMETPqkCsAfAYaLeYxJxVlddm
+         ectpJtnbEfPzalyDMCJjfGjYhrowfNzoOZ8VwyzI=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9V4g73W030422;
+        Wed, 30 Oct 2019 23:42:07 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 30
+ Oct 2019 23:41:54 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 30 Oct 2019 23:41:54 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9V4g3bK112544;
+        Wed, 30 Oct 2019 23:42:04 -0500
+Subject: Re: [PATCH v2 13/14] dt-bindings: phy: Document WIZ (SERDES wrapper)
+ bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>,
+        Anil Varughese <aniljoy@cadence.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20191023125735.4713-1-kishon@ti.com>
+ <20191023125735.4713-14-kishon@ti.com> <20191029190816.GA27884@bogus>
+ <b3e8f037-3af3-2720-037c-73d6fc2a4c2b@ti.com>
+ <CAL_JsqL4dnx0o0cRQmiHU7qVcB5x5DO707JNpVrcmBs6VgsxuQ@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <76079264-9365-df61-4ffb-3535b91e3ce5@ti.com>
+Date:   Thu, 31 Oct 2019 10:11:29 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191029220019.26773-7-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0gUURjl7szOjNLatGp9SQ+b3pa5k61NodG7BSOW6kcJYsPusCvui51d
-        SeuHbWGbpRkF1WhWWmpWZGLlbtaSFhFSWVZEIRRKtRXay9Aia8cp8t/5vu+ce75z76Uw7WUi
-        gcp1eAS3g7cxRDR+tX1uSrJXCGbrfEdnc+c/9yBuj1SNc/d9H0muK1hJcF9LbyNu3zeJ4F7u
-        qie4+28yuaFgFc6VXXxMLI82tHSfQYaA1E0aSnf3EYay5gZk+No0xajOyku3CrxZcCcKDpPT
-        nOuwZDCZm3JW5ejTdGwyu4RbzCQ6eLuQwaxeb0xem2uLLMUk5vM2b6Rl5EWRSVmW7nZ6PUKi
-        1Sl6MhjBZba5lrgWiLxd9DosC0xO+1JWp1uojxC35VnPNUi460Ls9kdt/WQR6hhbgqIooBfB
-        cMkddQmKprR0C4IK3y1SKb4gqL1UhCvFdwRDvp5IQY1IHkt2Wa2lbyC4WzVf4fQj6Hz7ViUP
-        YuksqGz9PCKOo6tVcPHONUweYPRWaA+cHyERdBKE3j0nZDyWngZPB3uQjDX0Mmgta1DLGKdn
-        Qu9AKyYbx9NboGOAVyjj4N7xXlzGUXQaVIWvk8rxE+BF70mVgqfC7isVmLwD0HtJ+HaiF1MC
-        rIbTPpUSPxbe320mFZwA4YPFf/EOOHfvNqFo/QiaQ51qZZAKobOHVfI5GD0XLgVTlPY0CPw8
-        gRTfGOgbOKBWrDTgL9YqlOnQ9ar7r+1EqNm7jyhHjDQqjTQqgTQqgfTf7BTCG9B4wSXaLYLI
-        utjRb92ERr5rkr4FHXmwvg3RFGLGaMrzA9laNZ8vFtjbEFAYE6f5nh5pacx8QaHgdua4vTZB
-        bEP6yF0fwhLiTc7I53d4clj9wtTUVG4Rm6ZnWWaCZkXd2WwtbeE9Qp4guAT3P52KikooQpvr
-        TdX1j3Z+iK/45Mha9+vY1JvDSeFG9+Qnepd/0pqwRXfV2K/Zn2t9UfujkDzQFIotWBsVNzDc
-        7o8vzdxQadYGM01D8z5gVMyMYHFj1+CsUEx4MDRLXTFnfuNNf+HWldbl5LqA8cqa4o19NUfq
-        Dj3Y8Pvh9ZSa189KO175O8v1RQwuWnk2CXOL/B/bEjroxAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLIsWRmVeSWpSXmKPExsWy7bCSnG5p6q5Yg72zWSxWf3zMaNEyaxGL
-        xdmmN+wWl3fNYbP43HuE0aLzyyw2i9uNK9gszj7ztvi5ax6LRd/aS2wOXB477i5h9Ng56y67
-        R2/zOzaPvi2rGD0+b5ILYI3isklJzcksSy3St0vgyli5ahZLwRrhiouH3rM3MJ7m72Lk4JAQ
-        MJG4NCu3i5GLQ0hgN6PE1WO3WboYOYHikhLTLh5lhqgRljh8uBgkLCTwllHiwhFBEFtYIEpi
-        zp6PLCC9IgJLmCTOflnODJJgFoiU6Jm7hQ1i6FZGicNXl7CDJNgEtCT2v7jBBmLzCyhKXP3x
-        mBHE5hWwk9jTt4oVxGYRUJV48nUP2CBRgQiJ59tvQNUISpyc+QTsOE4BM4l5L3ezQyxTl/gz
-        7xLUYnGJW0/mM0HY8hLNW2czT2AUnoWkfRaSlllIWmYhaVnAyLKKUTK1oDg3PbfYsMAwL7Vc
-        rzgxt7g0L10vOT93EyM40rQ0dzBeXhJ/iFGAg1GJh3dC2c5YIdbEsuLK3EOMEhzMSiK832yA
-        QrwpiZVVqUX58UWlOanFhxilOViUxHmf5h2LFBJITyxJzU5NLUgtgskycXBKNTAa2K6xZXsa
-        p1YySeldhwBry/xWe0lDgbdKXOy3lv6622nmlL37w6l/otbT17wMiYh8cq7uJp+fWdWzkw4L
-        5FW3GHodZTshu/BHjQyH/p/a8Otql09xvZTVjDDomVMgKzRtFsMHKyF1CWYeUQnDK09+L9aP
-        jqnQkHj6feJqpg8T2wwvpOru/a/EUpyRaKjFXFScCABE8DEZsAIAAA==
-X-CMS-MailID: 20191031043917epcas1p3775b7eae1e78c3c71ffa3b466d15d3af
-X-Msg-Generator: CA
+In-Reply-To: <CAL_JsqL4dnx0o0cRQmiHU7qVcB5x5DO707JNpVrcmBs6VgsxuQ@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191029220734epcas1p42b635ee1c85a9480cecbaf7a1a41db25
-References: <20191029220019.26773-1-digetx@gmail.com>
-        <CGME20191029220734epcas1p42b635ee1c85a9480cecbaf7a1a41db25@epcas1p4.samsung.com>
-        <20191029220019.26773-7-digetx@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 10. 30. 오전 7:00, Dmitry Osipenko wrote:
-> Part of the code uses Hz units and the other kHz, let's switch to kHz
-> everywhere for consistency. A small benefit from this change (besides
-> code's cleanup) is that now powertop utility correctly displays devfreq's
-> stats, for some reason it expects them to be in kHz.
-> 
-> Tested-by: Peter Geis <pgwipeout@gmail.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra30-devfreq.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index 1d22f5239cd5..06c5376a7201 100644
-> --- a/drivers/devfreq/tegra30-devfreq.c
-> +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -448,7 +448,7 @@ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
->  	rate = dev_pm_opp_get_freq(opp);
->  	dev_pm_opp_put(opp);
->  
-> -	err = clk_set_min_rate(tegra->emc_clock, rate);
-> +	err = clk_set_min_rate(tegra->emc_clock, rate * KHZ);
->  	if (err)
->  		return err;
->  
-> @@ -477,7 +477,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
->  	stat->private_data = tegra;
->  
->  	/* The below are to be used by the other governors */
-> -	stat->current_frequency = cur_freq * KHZ;
-> +	stat->current_frequency = cur_freq;
->  
->  	actmon_dev = &tegra->devices[MCALL];
->  
-> @@ -527,7 +527,7 @@ static int tegra_governor_get_target(struct devfreq *devfreq,
->  		target_freq = max(target_freq, dev->target_freq);
->  	}
->  
-> -	*freq = target_freq * KHZ;
-> +	*freq = target_freq;
->  
->  	return 0;
->  }
-> @@ -663,7 +663,7 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->  			goto remove_opps;
->  		}
->  
-> -		err = dev_pm_opp_add(&pdev->dev, rate, 0);
-> +		err = dev_pm_opp_add(&pdev->dev, rate / KHZ, 0);
->  		if (err) {
->  			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
->  			goto remove_opps;
-> @@ -686,7 +686,8 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->  		goto unreg_notifier;
->  	}
->  
-> -	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
-> +	tegra_devfreq_profile.initial_freq = tegra->cur_freq;
-> +
->  	devfreq = devfreq_add_device(&pdev->dev, &tegra_devfreq_profile,
->  				     "tegra_actmon", NULL);
->  	if (IS_ERR(devfreq)) {
-> 
+Hi Rob,
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+On 31/10/19 12:56 AM, Rob Herring wrote:
+> On Wed, Oct 30, 2019 at 12:46 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>
+>> Hi,
+>>
+>> On 30/10/19 12:38 AM, Rob Herring wrote:
+>>> On Wed, Oct 23, 2019 at 06:27:34PM +0530, Kishon Vijay Abraham I wrote:
+>>>> Add DT binding documentation for WIZ (SERDES wrapper). WIZ is *NOT* a
+>>>> PHY but a wrapper used to configure some of the input signals to the
+>>>> SERDES. It is used with both Sierra(16G) and Torrent(10G) serdes.
+>>>>
+>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> [jsarha@ti.com: Add separate compatible for Sierra(16G) and Torrent(10G)
+>>>>  SERDES]
+>>>> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+>>>> ---
+>>>>  .../bindings/phy/ti,phy-j721e-wiz.yaml        | 159 ++++++++++++++++++
+>>>>  1 file changed, 159 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..8a1eccee6c1d
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+>>>> @@ -0,0 +1,159 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0)
+>>>
+>>> (GPL-2.0-only OR BSD-2-Clause) for new bindings please.
+>>>
+>>>> +# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: "http://devicetree.org/schemas/phy/ti,phy-j721e-wiz.yaml#"
+>>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>>>> +
+>>>> +title: TI J721E WIZ (SERDES Wrapper)
+>>>> +
+>>>> +maintainers:
+>>>> +  - Kishon Vijay Abraham I <kishon@ti.com>
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    oneOf:
+>>>> +      - items:
+>>>> +          - enum:
+>>>> +              - ti,j721e-wiz-16g
+>>>> +              - ti,j721e-wiz-10g
+>>>
+>>> You can drop oneOf and items.
+>>>
+>>>> +
+>>>> +  power-domains:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  clocks:
+>>>> +    maxItems: 3
+>>>> +    description: clock-specifier to represent input to the WIZ
+>>>> +
+>>>> +  clock-names:
+>>>> +    items:
+>>>> +      - const: fck
+>>>> +      - const: core_ref_clk
+>>>> +      - const: ext_ref_clk
+>>>> +
+>>>> +  num-lanes:
+>>>> +    maxItems: 1
+>>>> +    minimum: 1
+>>>> +    maximum: 4
+>>>
+>>> You've mixed array and scalar schema keywords. Drop maxItems.
+>>>
+>>> Update dtschema and run 'make dt_binding_check'. We should catch that
+>>> now.
+>>
+>> Sure.
+>>>
+>>>> +
+>>>> +  "#address-cells":
+>>>> +    const: 2
+>>>> +
+>>>> +  "#size-cells":
+>>>> +    const: 2
+>>>> +
+>>>> +  "#reset-cells":
+>>>> +    const: 1
+>>>> +
+>>>> +  ranges: true
+>>>> +
+>>>> +  assigned-clocks:
+>>>> +    maxItems: 2
+>>>> +
+>>>> +  assigned-clock-parents:
+>>>> +    maxItems: 2
+>>>> +
+>>>> +patternProperties:
+>>>> +  "^pll[0|1]_refclk$":
+>>>> +    type: object
+>>>> +    description: |
+>>>> +      WIZ node should have subnodes for each of the PLLs present in
+>>>> +      the SERDES.
+>>>> +
+>>>> +  "^cmn_refclk1?$":
+>>>> +    type: object
+>>>> +    description: |
+>>>> +      WIZ node should have subnodes for each of the PMA common refclock
+>>>> +      provided by the SERDES.
+>>>> +
+>>>> +  "^refclk_dig$":
+>>>> +    type: object
+>>>> +    description: |
+>>>> +      WIZ node should have subnode for refclk_dig to select the reference
+>>>> +      clock source for the reference clock used in the PHY and PMA digital
+>>>> +      logic.
+>>>> +
+>>>> +  "^serdes@[0-9a-f]+$":
+>>>> +    type: object
+>>>> +    description: |
+>>>> +      WIZ node should have '1' subnode for the SERDES. It could be either
+>>>> +      Sierra SERDES or Torrent SERDES. Sierra SERDES should follow the
+>>>> +      bindings specified in
+>>>> +      Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
+>>>> +      Torrent SERDES should follow the bindings specified in
+>>>> +      Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
+>>>> +
+>>>> +required:
+>>>> +  - compatible
+>>>> +  - power-domains
+>>>> +  - clocks
+>>>> +  - clock-names
+>>>> +  - num-lanes
+>>>> +  - "#address-cells"
+>>>> +  - "#size-cells"
+>>>> +  - "#reset-cells"
+>>>> +
+>>>> +examples:
+>>>> +  - |
+>>>> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+>>>> +
+>>>> +    wiz@5000000 {
+>>>> +           compatible = "ti,j721e-wiz-16g";
+>>>> +           #address-cells = <2>;
+>>>> +           #size-cells = <2>;
+>>>
+>>> Really need 64-bits of address space for the child nodes?
+>>
+>> hmm, the register space for the child nodes are in the 32-bit address space
+>> region. I'll fix this.
+>>>
+>>>> +           power-domains = <&k3_pds 292 TI_SCI_PD_EXCLUSIVE>;
+>>>> +           clocks = <&k3_clks 292 5>, <&k3_clks 292 11>, <&dummy_cmn_refclk>;
+>>>> +           clock-names = "fck", "core_ref_clk", "ext_ref_clk";
+>>>> +           assigned-clocks = <&k3_clks 292 11>, <&k3_clks 292 0>;
+>>>> +           assigned-clock-parents = <&k3_clks 292 15>, <&k3_clks 292 4>;
+>>>> +           num-lanes = <2>;
+>>>> +           #reset-cells = <1>;
+>>>
+>>> Unless you have additional registers, I'm not a fan of wrapper nodes.
+>>
+>> The wrapper node has TI specific registers while the child node has Cadence
+>> Sierra specific registers. It also has clock nodes which are input to the
+>> Sierra IP.
+> 
+> Yeah? Where's 'reg'?
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+The TI specific PHY registers use some of the reserved space within the Cadence
+region. So the WIZ wrapper driver will get the address from the "serdes" child
+node.
+> 
+>>>
+>>>> +
+>>>> +           pll0_refclk {
+>>>> +                  clocks = <&k3_clks 293 13>, <&dummy_cmn_refclk>;
+>>>> +                  clock-output-names = "wiz1_pll0_refclk";
+>>>> +                  #clock-cells = <0>;
+>>>> +                  assigned-clocks = <&wiz1_pll0_refclk>;
+>>>> +                  assigned-clock-parents = <&k3_clks 293 13>;
+>>>> +           };
+>>>> +
+>>>> +           pll1_refclk {
+>>>> +                  clocks = <&k3_clks 293 0>, <&dummy_cmn_refclk1>;
+>>>> +                  clock-output-names = "wiz1_pll1_refclk";
+>>>> +                  #clock-cells = <0>;
+>>>> +                  assigned-clocks = <&wiz1_pll1_refclk>;
+>>>> +                  assigned-clock-parents = <&k3_clks 293 0>;
+>>>> +           };
+>>>> +
+>>>> +           cmn_refclk {
+>>>> +                  clocks = <&wiz1_refclk_dig>;
+>>>> +                  clock-output-names = "wiz1_cmn_refclk";
+>>>> +                  #clock-cells = <0>;
+>>>> +           };
+>>>> +
+>>>> +           cmn_refclk1 {
+>>>> +                  clocks = <&wiz1_pll1_refclk>;
+>>>> +                  clock-output-names = "wiz1_cmn_refclk1";
+>>>> +                  #clock-cells = <0>;
+>>>> +           };
+>>>> +
+>>>> +           refclk_dig {
+>>>> +                  clocks = <&k3_clks 292 11>, <&k3_clks 292 0>, <&dummy_cmn_refclk>, <&dummy_cmn_refclk1>;
+>>>> +                  clock-output-names = "wiz0_refclk_dig";
+>>>> +                  #clock-cells = <0>;
+>>>> +                  assigned-clocks = <&wiz0_refclk_dig>;
+>>>> +                  assigned-clock-parents = <&k3_clks 292 11>;
+>>>> +           };
+>>>
+>>> How are all these clocks programmed?
+>>
+>> All these are programmed in the WIZ driver which is implemented in 14/14 of
+>> this series.
+> 
+> Not what I meant... How does one access the h/w because there's
+> nothing defined here to do so.
+
+As mentioned above the WIZ wrapper driver gets the address from "serdes" child
+node and use it for programming all these clocks.
+
+Thanks
+Kishon
