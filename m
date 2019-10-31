@@ -2,127 +2,105 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF4ECA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100DCC47E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE2D2087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8DF2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:22:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ycggx2U8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfJaKVC (ORCPT
+        id S1727310AbfJaKWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:21:02 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46156 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbfJaKVC (ORCPT
+        Thu, 31 Oct 2019 06:22:34 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60534 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbfJaKWe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:21:02 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 47A4728EE37;
-        Thu, 31 Oct 2019 10:21:00 +0000 (GMT)
-Date:   Thu, 31 Oct 2019 11:20:56 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Jonas Karlman <jonas@kwiboo.se>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC v2 09/10] media: uapi: h264: Add DPB entry field reference
- flags
-Message-ID: <20191031112056.3442d6ac@collabora.com>
-In-Reply-To: <HE1PR06MB401142C1E45B302094AD1149AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
-References: <HE1PR06MB401108289F09802C261374F8AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
-        <20191029012550.24628-1-jonas@kwiboo.se>
-        <HE1PR06MB401142C1E45B302094AD1149AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 31 Oct 2019 06:22:34 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9VAMPx8165363;
+        Thu, 31 Oct 2019 10:22:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=AIPRTbz1vKYMEJ2syx60gILwl+AYqYSi+XaONiaS/s8=;
+ b=Ycggx2U85q5A81uE3ok4s9kutMZ3oZVrWzG6uHq3Uze8EjiUrKMTrc35pZjPvADumEfr
+ qL8Fd4EckoPseP1QI21Ow88avnq4v/R/lj8Z4vcuU72YwlEHos1K63IjeJbWJ8UxI0IL
+ dIMRFqhg5w6R6s1SEf1UDt99W6rxM07dWoY0C0AZoLSsFLTAdJrAmhezlWGfHQB6nJjb
+ OU1BNooxcW4G4/SkNlJEajIRwEaljEMCSVPO3qdxuU57ABDXYw5Hph8kU+KutbpJz3Px
+ JFE5uBJtaXlPweLc4USCYk+aj3vTxwNqFdYjhxz2nlksbIn2I5Vy+BV9oKy3KpnxJC3N 7Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2vxwhft77x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 31 Oct 2019 10:22:25 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9VAJRUU151087;
+        Thu, 31 Oct 2019 10:20:23 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2vyqpdtyht-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 31 Oct 2019 10:20:23 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9VAKLJw022953;
+        Thu, 31 Oct 2019 10:20:21 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 31 Oct 2019 03:20:21 -0700
+Date:   Thu, 31 Oct 2019 13:20:10 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Joe Perches <joe@perches.com>, shuah <shuah@kernel.org>,
+        David Gow <davidgow@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH linux-kselftest/test v6] lib/list-test: add a test for
+ the 'list' doubly linked list
+Message-ID: <20191031102010.GF18421@kadam>
+References: <20191024224631.118656-1-davidgow@google.com>
+ <0cb1d948-0da3-eb0f-c58f-ae3a785dd0dd@kernel.org>
+ <CABVgOSmCHbGjZBjeWSbPEZbJw22SaBQnoO77xxNzN_ugAwzNiQ@mail.gmail.com>
+ <20191030104217.GA18421@kadam>
+ <42a8270d-ed6f-d29f-5e71-7b76a074b63e@kernel.org>
+ <CAFd5g47OZ8x9=etJUj4Sgsw38VQb0j=omOUsubc7+pb2rJi0bQ@mail.gmail.com>
+ <fad58e4f48237894de0d511adf1d663a42a2eee7.camel@perches.com>
+ <20191031085129.GA217570@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031085129.GA217570@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=882
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910310105
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=964 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910310105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 01:26:01 +0000
-Jonas Karlman <jonas@kwiboo.se> wrote:
+On Thu, Oct 31, 2019 at 01:51:29AM -0700, Brendan Higgins wrote:
+> static void list_test_list_for_each_prev(struct kunit *test) /* checkpatch: disable=for-each-format */
 
-> Add DPB entry flags to help indicate when a reference frame is a field picture
-> and how the DPB entry is referenced, top or bottom field or full frame.
-> 
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> ---
->  Documentation/media/uapi/v4l/ext-ctrls-codec.rst | 12 ++++++++++++
->  include/media/h264-ctrls.h                       |  4 ++++
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> index 28313c0f4e7c..d472a54d1c4d 100644
-> --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> @@ -2028,6 +2028,18 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
->      * - ``V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM``
->        - 0x00000004
->        - The DPB entry is a long term reference frame
-> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE``
-> +      - 0x00000008
-> +      - The DPB entry is a field picture
-> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_TOP``
-> +      - 0x00000010
-> +      - The DPB entry is a top field reference
-> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM``
-> +      - 0x00000020
-> +      - The DPB entry is a bottom field reference
-> +    * - ``V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME``
-> +      - 0x00000030
-> +      - The DPB entry is a reference frame
->  
->  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE (enum)``
->      Specifies the decoding mode to use. Currently exposes slice-based and
-> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> index e877bf1d537c..76020ebd1e6c 100644
-> --- a/include/media/h264-ctrls.h
-> +++ b/include/media/h264-ctrls.h
-> @@ -185,6 +185,10 @@ struct v4l2_ctrl_h264_slice_params {
->  #define V4L2_H264_DPB_ENTRY_FLAG_VALID		0x01
->  #define V4L2_H264_DPB_ENTRY_FLAG_ACTIVE		0x02
->  #define V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM	0x04
-> +#define V4L2_H264_DPB_ENTRY_FLAG_FIELD_PICTURE	0x08
-> +#define V4L2_H264_DPB_ENTRY_FLAG_REF_TOP	0x10
-> +#define V4L2_H264_DPB_ENTRY_FLAG_REF_BOTTOM	0x20
-> +#define V4L2_H264_DPB_ENTRY_FLAG_REF_FRAME	0x30
+These comments defeat the purpose of checkpatch which is to make the
+code cleaner.
 
-I don't remember all the details, but do we really need 3 flags?
-Maybe I'm wrong, but it looks like the following combination doesn't
-make sense:
-
-- FIELD_PICTURE + REF_FRAME: if it's a full frame ref it should
-  contain both top and bottom fields right, so it's no longer a
-  FIELD_PICTURE, is it?
-
-Can't we just have 2 flags?
-
-FIELD_PICTURE		0x08
-FIELD_REF_TOP		0x10 (meaning that FIELD_REF_BOTTOM is
-			      0x00)
-
-and then have the following combinations:
-
-top field ref => FIELD_PICTURE | FIELD_REF_TOP
-bottom field ref => FIELD_PICTURE
-full frame ref => 0x0
-
->  
->  struct v4l2_h264_dpb_entry {
->  	__u64 reference_ts;
+regards,
+dan carpenter
 
