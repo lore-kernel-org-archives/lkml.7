@@ -3,168 +3,271 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE8BCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5143BCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B72216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AB692080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:13:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="hCM/GltD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dNPAP+lK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729495AbfJaTNA (ORCPT
+        id S1729548AbfJaTNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 15:13:00 -0400
-Received: from vps.xff.cz ([195.181.215.36]:46168 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729296AbfJaTNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 15:13:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1572549177; bh=FBhBhCbprAZVkPZ3QAQvStNaQNJCu5ZanEhE9s1mTjM=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=hCM/GltDpo77xYTpaz5/dMejRWcp59srCsks7ySNzk7z79SyUnRSfnGdVP5DlrOpR
-         1ip+EBcUGDaNCK/biB6v8CbSlFIlqVZTyRqOaNPsSiM08tOHV1BKrSXrIv6dKpRsSJ
-         jVyh+iOa7L3nh1tSDQgOAVE7UuRJ/AB0EBdoG/ys=
-Date:   Thu, 31 Oct 2019 20:12:57 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:ALLWINNER CPUFREQ DRIVER" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [linux-sunxi] [PATCH] cpufreq: sun50i: Fix CPU speed bin
- detection
-Message-ID: <20191031191257.j7bpxx5xyot2ay2i@core.my.home>
-Mail-Followup-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        "open list:ALLWINNER CPUFREQ DRIVER" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191031181359.282617-1-megous@megous.com>
- <CAJiuCcdZqpoXKuupk_w3F1npZgCHDgb=+Fdd1ukKA22K2PJ6Ww@mail.gmail.com>
+        Thu, 31 Oct 2019 15:13:38 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33540 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729296AbfJaTNi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 15:13:38 -0400
+Received: by mail-io1-f68.google.com with SMTP id n17so8032244ioa.0;
+        Thu, 31 Oct 2019 12:13:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5qcbevFIs2aYQ2grseLiSq4gaoOdVmWtBf+FnqFDu18=;
+        b=dNPAP+lKDMBfFTAOu3FiyCc+LPMP7bTUUOMve/qOMH1/n0L9Lce/AQvMIoEMY9bClQ
+         zY8O53xKkYqzzIXG9MZHxMrEegAqubVvDxtofty5iOTs2GkIB61ibV2aC+S5hI97dNkI
+         XCF0WM0LPG8tCHQItkqxBl+tzL8hriTif+rmdr8oL3qAWXxLV2iiSc4qaMkWdzGG0Qun
+         TjropKHsiT+XDxlyDsBqOzqPChunVK4nIXU+EScoDAY/v2/IhGjfCkESsUnP47Gurd9B
+         En1hibSCbaGiHZ2x+EHfxY33Fx5Ob2cNUJKhivKOg1NcJv6cvS6Kn/C7herMvzPvcG3/
+         x9hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5qcbevFIs2aYQ2grseLiSq4gaoOdVmWtBf+FnqFDu18=;
+        b=b4jLDWZ/n3FPSt8FUru+hW0WXX87gIMMgaWy2Yx/VH5pOC7I0ibbXg1iJ5DTICspSl
+         kIKl3XhW2rXIEXo9bLBqh3KRzDeEgMLT4p96NvfOhE/ZhDZAR7GY7LMYZNHMJ1TuHAoY
+         oPTyeS+IOTAWXdwGNE3Z7Jn9g92PmRgvI12QL3ASn0Z5vXCoAX22SlNc3eaJnxUNqjPb
+         Qj6YN36dYXPgQw2L8G7gdzh4PPMrdOauQbgo8M/8tN5LTBtaQYm843SxUtjc4KINQb+S
+         ieeFIpYp3LOdQ8C4phwJTSZWR++0o2pTvYhA9eRbFpSSha9CLdlWr8PyTKxmlJmv2d0t
+         cpTA==
+X-Gm-Message-State: APjAAAWsB0AJ9zxsxwJxTQnSwT4bjO2PD1N/mMuJ3VSBXPZL9xZxt9jr
+        4KYkQvTmBDu01c4jUZZfDcLTEzdYmQcwHB5M5E8=
+X-Google-Smtp-Source: APXvYqwTphWgs+ycW1dBSjImY9hyMY/d77yCw21tUcfbBKo30qv0IQur7GF19IdAdhuuLLJatzxI3xYle0+mkIGhHIU=
+X-Received: by 2002:a5d:91d2:: with SMTP id k18mr6617936ior.178.1572549217261;
+ Thu, 31 Oct 2019 12:13:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJiuCcdZqpoXKuupk_w3F1npZgCHDgb=+Fdd1ukKA22K2PJ6Ww@mail.gmail.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+References: <20191031184632.2938295-1-bjorn.andersson@linaro.org> <20191031184632.2938295-3-bjorn.andersson@linaro.org>
+In-Reply-To: <20191031184632.2938295-3-bjorn.andersson@linaro.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Thu, 31 Oct 2019 13:13:26 -0600
+Message-ID: <CAOCk7Nr+nsfvaLbPK9q_Uyhy5s=Nx9A8w-HPtVmBPpfVNMhTJQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] remoteproc: qcom_q6v5_mss: Validate each segment
+ during loading
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Oct 31, 2019 at 12:48 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> The code used to sync with the MBA after each segment loaded and this is
+> still what's done downstream. So reduce the delta towards downstream by
+> switching to a model where the content is iteratively validated.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/remoteproc/qcom_q6v5_mss.c | 74 ++++++++++++++++++++----------
+>  1 file changed, 50 insertions(+), 24 deletions(-)
+>
+> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+> index f4a02105d539..bdf1dd00b89b 100644
+> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> @@ -358,23 +358,29 @@ static void q6v5_pds_disable(struct q6v5 *qproc, struct device **pds,
+>  }
+>
+>  static int q6v5_xfer_mem_ownership(struct q6v5 *qproc, int *current_perm,
+> -                                  bool remote_owner, phys_addr_t addr,
+> +                                  bool local, bool remote, phys_addr_t addr,
+>                                    size_t size)
+>  {
+> -       struct qcom_scm_vmperm next;
+> +       struct qcom_scm_vmperm next[2];
+> +       int perms = 0;
+>
+>         if (!qproc->need_mem_protection)
+>                 return 0;
+> -       if (remote_owner && *current_perm == BIT(QCOM_SCM_VMID_MSS_MSA))
+> -               return 0;
+> -       if (!remote_owner && *current_perm == BIT(QCOM_SCM_VMID_HLOS))
+> -               return 0;
+>
+> -       next.vmid = remote_owner ? QCOM_SCM_VMID_MSS_MSA : QCOM_SCM_VMID_HLOS;
+> -       next.perm = remote_owner ? QCOM_SCM_PERM_RW : QCOM_SCM_PERM_RWX;
+> +       if (local) {
+> +               next[perms].vmid = QCOM_SCM_VMID_HLOS;
+> +               next[perms].perm = QCOM_SCM_PERM_RWX;
 
-On Thu, Oct 31, 2019 at 07:55:43PM +0100, Clément Péron wrote:
-> Hi Ondrej,
-> 
-> On Thu, 31 Oct 2019 at 19:14, Ondrej Jirman <megous@megous.com> wrote:
-> >
-> > I have failures to boot on Orange Pi 3, because this driver determined
-> > that my SoC is from the normal bin, but my SoC only works reliably with
-> > the OPP values for the slowest bin.
-> >
-> > Looking at BSP code, I found that efuse values have following meanings
-> > on H6:
-> >
-> > - 0b000 invalid (interpreted in vendor's BSP as normal bin)
-> > - 0b001 slowest bin
-> > - 0b011 normal bin
-> > - 0b111 fastest bin
-> 
-> Maybe have some defines will be more readable no ?
-> https://megous.com/git/linux/tree/drivers/soc/sunxi/sunxi-sid.c?h=h6-4.9-bsp#n213
+So, does this need to be tristate?  Downstream makes the HLOS perms
+RWX only when HLOS is the sole owner.  HLOS has RW perms when it
+shares ownership with the remote (modem).
 
-Hmm, Alwwinner is really funny. Unused macros that just confuse things.
+> +               perms++;
+> +       }
+> +
+> +       if (remote) {
+> +               next[perms].vmid = QCOM_SCM_VMID_MSS_MSA;
+> +               next[perms].perm = QCOM_SCM_PERM_RW;
+> +               perms++;
+> +       }
+>
+>         return qcom_scm_assign_mem(addr, ALIGN(size, SZ_4K),
+> -                                  current_perm, &next, 1);
+> +                                  current_perm, next, perms);
+>  }
+>
+>  static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
+> @@ -681,7 +687,7 @@ static int q6v5_mpss_init_image(struct q6v5 *qproc, const struct firmware *fw)
+>
+>         /* Hypervisor mapping to access metadata by modem */
+>         mdata_perm = BIT(QCOM_SCM_VMID_HLOS);
+> -       ret = q6v5_xfer_mem_ownership(qproc, &mdata_perm, true, phys, size);
+> +       ret = q6v5_xfer_mem_ownership(qproc, &mdata_perm, false, true, phys, size);
+>         if (ret) {
+>                 dev_err(qproc->dev,
+>                         "assigning Q6 access to metadata failed: %d\n", ret);
+> @@ -699,7 +705,7 @@ static int q6v5_mpss_init_image(struct q6v5 *qproc, const struct firmware *fw)
+>                 dev_err(qproc->dev, "MPSS header authentication failed: %d\n", ret);
+>
+>         /* Metadata authentication done, remove modem access */
+> -       xferop_ret = q6v5_xfer_mem_ownership(qproc, &mdata_perm, false, phys, size);
+> +       xferop_ret = q6v5_xfer_mem_ownership(qproc, &mdata_perm, true, false, phys, size);
+>         if (xferop_ret)
+>                 dev_warn(qproc->dev,
+>                          "mdt buffer not reclaimed system may become unstable\n");
+> @@ -786,7 +792,7 @@ static int q6v5_mba_load(struct q6v5 *qproc)
+>         }
+>
+>         /* Assign MBA image access in DDR to q6 */
+> -       ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, true,
+> +       ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, false, true,
+>                                       qproc->mba_phys, qproc->mba_size);
+>         if (ret) {
+>                 dev_err(qproc->dev,
+> @@ -820,8 +826,8 @@ static int q6v5_mba_load(struct q6v5 *qproc)
+>         q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_nc);
+>
+>  reclaim_mba:
+> -       xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, false,
+> -                                               qproc->mba_phys,
+> +       xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, true,
+> +                                               false, qproc->mba_phys,
+>                                                 qproc->mba_size);
+>         if (xfermemop_ret) {
+>                 dev_err(qproc->dev,
+> @@ -888,7 +894,7 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
+>         /* In case of failure or coredump scenario where reclaiming MBA memory
+>          * could not happen reclaim it here.
+>          */
+> -       ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, false,
+> +       ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, true, false,
+>                                       qproc->mba_phys,
+>                                       qproc->mba_size);
+>         WARN_ON(ret);
+> @@ -915,6 +921,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+>         phys_addr_t boot_addr;
+>         phys_addr_t min_addr = PHYS_ADDR_MAX;
+>         phys_addr_t max_addr = 0;
+> +       u32 code_length;
+>         bool relocate = false;
+>         char *fw_name;
+>         size_t fw_name_len;
+> @@ -965,9 +972,19 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+>         }
+>
+>         /* Try to reset ownership back to Linux */
+> -       q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
+> +       q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, true, false,
+>                                 qproc->mpss_phys, qproc->mpss_size);
+>
+> +       /* Share ownership between Linux and MSS, during segment loading */
+> +       ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, true, true,
+> +                                     qproc->mpss_phys, qproc->mpss_size);
+> +       if (ret) {
+> +               dev_err(qproc->dev,
+> +                       "assigning Q6 access to mpss memory failed: %d\n", ret);
+> +               ret = -EAGAIN;
+> +               goto release_firmware;
+> +       }
+> +
+>         mpss_reloc = relocate ? min_addr : qproc->mpss_phys;
+>         qproc->mpss_reloc = mpss_reloc;
+>         /* Load firmware segments */
+> @@ -1016,10 +1033,24 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+>                                phdr->p_memsz - phdr->p_filesz);
+>                 }
+>                 size += phdr->p_memsz;
+> +
+> +               code_length = readl(qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
+> +               if (!code_length) {
+> +                       boot_addr = relocate ? qproc->mpss_phys : min_addr;
+> +                       writel(boot_addr, qproc->rmb_base + RMB_PMI_CODE_START_REG);
+> +                       writel(RMB_CMD_LOAD_READY, qproc->rmb_base + RMB_MBA_COMMAND_REG);
+> +               }
+> +               writel(size, qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
 
-#if defined(CONFIG_ARCH_SUN50IW6)
-#define TYPE_SB (0b001)
-#define TYPE_NB (0b010)
-#define TYPE_FB (0b011)
-#else
-#define TYPE_SB (0b001)
-#define TYPE_NB (0b011)
-#define TYPE_FB (0b111)
-#endif
+Should there be an explicit wmb() here since presumably this write
+needs to be flushed out before we do the following readl?
 
-So for H6 they define special bin values and actually use different ones
-in code. Fun.
+> +               ret = readl(qproc->rmb_base + RMB_MBA_STATUS_REG);
 
-I've sent out some testing program to Armbian forums, so hopefully, we'll
-collect some real efuse_values from real SoCs, to see what's really being
-used in the wild. If we see value 0b010, the BSP code is probably just
-wrong.
+Is this status reg immediately updated when RMB_PMI_CODE_LENGTH_REG is
+updated?  I would expect that the MBA may need some time to update
+this reg, thus there is an implicit race here.
 
-Interestingly, TYPE_NB 0b010 would be interpreted as normal bin even with
-the current BSP code, and TYPE_FB would be misdetected as TYPE_NB.
-
-> #define SUN50I_NVEM_INVALID_CPU_OPP (0b000)
-> #define SUN50I_NVEM_LOW_CPU_OPP (0b001)
-> #define SUN50I_NVEM_NORMAL_CPU_OPP (0b011)
-> #define SUN50I_NVEM_HIGH_CPU_OPP (0b111)
-
-I'd rather not describe meanings just yet, until we get some real-world
-data from H6 owners.
-
-https://forum.armbian.com/topic/9368-orangepi-3-h6-allwiner-chip/?do=findComment&comment=88439
-
-regards,
-	o.
-
-> Regards,
-> Clément
-> 
-> >
-> > Let's play it safe and interpret 0 as the slowest bin, but fix detection
-> > of other bins to match vendor code.
-> >
-> > Fixes: f328584f7bff ("cpufreq: Add sun50i nvmem based CPU scaling driver")
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >
-> > See https://megous.com/git/linux/tree/drivers/soc/sunxi/sunxi-sid.c?h=h6-4.9-bsp#n484
-> > and https://megous.com/git/linux/tree/drivers/cpufreq/sunxi-cpufreq.c?h=h6-4.9-bsp#n428
-> > (1 is substracted from soc_bin number here!)
-> >
-> >  drivers/cpufreq/sun50i-cpufreq-nvmem.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/cpufreq/sun50i-cpufreq-nvmem.c b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-> > index df35ef3ef567..41dad03e245c 100644
-> > --- a/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-> > +++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-> > @@ -71,9 +71,12 @@ static int sun50i_cpufreq_get_efuse(u32 *versions)
-> >         efuse_value = (*speedbin >> NVMEM_SHIFT) & NVMEM_MASK;
-> >         switch (efuse_value) {
-> >         case 0b0001:
-> > -               *versions = 1;
-> > +               *versions = 0;
-> >                 break;
-> >         case 0b0011:
-> > +               *versions = 1;
-> > +               break;
-> > +       case 0b0111:
-> >                 *versions = 2;
-> >                 break;
-> >         default:
-> > --
-> > 2.23.0
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20191031181359.282617-1-megous%40megous.com.
+> +               if (ret < 0) {
+> +                       dev_err(qproc->dev, "MPSS authentication failed: %d\n", ret);
+> +                       goto release_firmware;
+> +               }
+>         }
+>
+>         /* Transfer ownership of modem ddr region to q6 */
+> -       ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, true,
+> +       ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false, true,
+>                                       qproc->mpss_phys, qproc->mpss_size);
+>         if (ret) {
+>                 dev_err(qproc->dev,
+> @@ -1028,11 +1059,6 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+>                 goto release_firmware;
+>         }
+>
+> -       boot_addr = relocate ? qproc->mpss_phys : min_addr;
+> -       writel(boot_addr, qproc->rmb_base + RMB_PMI_CODE_START_REG);
+> -       writel(RMB_CMD_LOAD_READY, qproc->rmb_base + RMB_MBA_COMMAND_REG);
+> -       writel(size, qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
+> -
+>         ret = q6v5_rmb_mba_wait(qproc, RMB_MBA_AUTH_COMPLETE, 10000);
+>         if (ret == -ETIMEDOUT)
+>                 dev_err(qproc->dev, "MPSS authentication timed out\n");
+> @@ -1096,8 +1122,8 @@ static int q6v5_start(struct rproc *rproc)
+>                 goto reclaim_mpss;
+>         }
+>
+> -       xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, false,
+> -                                               qproc->mba_phys,
+> +       xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, true,
+> +                                               false, qproc->mba_phys,
+>                                                 qproc->mba_size);
+>         if (xfermemop_ret)
+>                 dev_err(qproc->dev,
+> --
+> 2.23.0
+>
