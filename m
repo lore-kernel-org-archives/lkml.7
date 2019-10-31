@@ -2,152 +2,95 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F206ECA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03861CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6B520873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D548E20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfJaQEi (ORCPT
+        id S1728526AbfJaQMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 12:04:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44768 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726540AbfJaQEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:04:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D7552B232;
-        Thu, 31 Oct 2019 16:04:35 +0000 (UTC)
-Message-ID: <6fd539b82cbbb2ae307a67a76eb4c2ead0bd5d4a.camel@suse.de>
-Subject: Re: [PATCH v6 3/4] arm64: use both ZONE_DMA and ZONE_DMA32
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     f.fainelli@gmail.com, wahrenst@gmx.net, marc.zyngier@arm.com,
-        will@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-mm@kvack.org,
-        mbrugger@suse.com, Qian Cai <cai@lca.pw>,
-        linux-rpi-kernel@lists.infradead.org, phill@raspberrypi.org,
-        Robin Murphy <Robin.Murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
-Date:   Thu, 31 Oct 2019 17:04:34 +0100
-In-Reply-To: <20191031155145.GF39590@arrakis.emea.arm.com>
-References: <6703f8dab4a21fe4e1049f8f224502e1733bf72c.camel@suse.de>
-         <A1A8EEF0-2273-4338-B4D8-D9B1328484B4@lca.pw>
-         <9208de061fe2b9ee7b74206b3cd52cc116e43ac0.camel@suse.de>
-         <AA6D37F1-A1B3-4EC4-8620-007095168BC7@lca.pw>
-         <1956a2c8f4911b2a7e2ba3c53506c0f06efb93f8.camel@suse.de>
-         <20191031155145.GF39590@arrakis.emea.arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-exV1eg95rhXTf/heN52G"
-User-Agent: Evolution 3.34.1 
+        Thu, 31 Oct 2019 12:12:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:51240 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726540AbfJaQMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 12:12:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E9171F1;
+        Thu, 31 Oct 2019 09:12:06 -0700 (PDT)
+Received: from [192.168.1.20] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97ED43F71E;
+        Thu, 31 Oct 2019 09:12:04 -0700 (PDT)
+Subject: Re: [Patch v4 3/6] sched/fair: Enable CFS periodic tick to update
+ thermal pressure
+To:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
+        peterz@infradead.org, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, rui.zhang@intel.com,
+        edubezval@gmail.com, qperret@google.com
+Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, daniel.lezcano@linaro.org
+References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
+ <1571776465-29763-4-git-send-email-thara.gopinath@linaro.org>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <a303b61e-42f6-dfd7-264b-ead91da5f5ca@arm.com>
+Date:   Thu, 31 Oct 2019 17:11:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <1571776465-29763-4-git-send-email-thara.gopinath@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 22.10.19 22:34, Thara Gopinath wrote:
+> Introduce support in CFS periodic tick to trigger the process of
+> computing average thermal pressure for a cpu.
+> 
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+>  kernel/sched/fair.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 682a754..4f9c2cb 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -21,6 +21,7 @@
+>   *  Copyright (C) 2007 Red Hat, Inc., Peter Zijlstra
+>   */
+>  #include "sched.h"
+> +#include "thermal.h"
+>  
+>  #include <trace/events/sched.h>
+>  
+> @@ -7574,6 +7575,8 @@ static void update_blocked_averages(int cpu)
+>  		done = false;
+>  
+>  	update_blocked_load_status(rq, !done);
+> +
+> +	trigger_thermal_pressure_average(rq);
+>  	rq_unlock_irqrestore(rq, &rf);
+>  }
 
---=-exV1eg95rhXTf/heN52G
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Since you update the thermal pressure signal in CFS's
+update_blocked_averages() as well, I guess the patch title has to change.
 
-On Thu, 2019-10-31 at 15:51 +0000, Catalin Marinas wrote:
-> (sorry, I've been away last week and only now caught up with emails)
->=20
-> On Tue, Oct 22, 2019 at 01:23:32PM +0200, Nicolas Saenz Julienne wrote:
-> > On Mon, 2019-10-21 at 16:36 -0400, Qian Cai wrote:
-> > > I managed to get more information here,
-> > >=20
-> > > [    0.000000] cma: dma_contiguous_reserve(limit c0000000)
-> > > [    0.000000] cma: dma_contiguous_reserve: reserving 64 MiB for glob=
-al
-> > > area
-> > > [    0.000000] cma: cma_declare_contiguous(size 0x0000000004000000, b=
-ase
-> > > 0x0000000000000000, limit 0x00000000c0000000 alignment 0x000000000000=
-0000)
-> > > [    0.000000] cma: Failed to reserve 512 MiB
-> > >=20
-> > > Full dmesg:
-> > >=20
-> > > https://cailca.github.io/files/dmesg.txt
-> >=20
-> > OK I got it, reproduced it too.
-> >=20
-> > Here are the relevant logs:
-> >=20
-> > 	[    0.000000]   DMA      [mem 0x00000000802f0000-0x00000000bfffffff]
-> > 	[    0.000000]   DMA32    [mem 0x00000000c0000000-0x00000000ffffffff]
-> > 	[    0.000000]   Normal   [mem 0x0000000100000000-0x00000097fcffffff]
-> >=20
-> > As you can see ZONE_DMA spans from 0x00000000802f0000-0x00000000bffffff=
-f
-> > which
-> > is slightly smaller than 1GB.
-> >=20
-> > 	[    0.000000] crashkernel reserved: 0x000000009fe00000 -
-> > 0x00000000bfe00000 (512 MB)
-> >=20
-> > Here crashkernel reserved 512M in ZONE_DMA.
-> >=20
-> > 	[    0.000000] cma: Failed to reserve 512 MiB
-> >=20
-> > CMA tried to allocate 512M in ZONE_DMA which fails as there is no enoug=
-h
-> > space.
-> > Makes sense.
-> >=20
-> > A fix could be moving crashkernel reservations after CMA and then if un=
-able
-> > to
-> > fit in ZONE_DMA try ZONE_DMA32 before bailing out. Maybe it's a little =
-over
-> > the
-> > top, yet although most devices will be fine with ZONE_DMA32, the RPi4 n=
-eeds
-> > crashkernel to be reserved in ZONE_DMA.
->=20
-> Does RPi4 need CMA in ZONE_DMA? If not, I'd rather reserve the CMA from
-> ZONE_DMA32.
-
-Yes, CMA is imperatively to be reserved in ZONE_DMA.
-
-> Even if you moved the crash kernel, someone else might complain that
-> they had 2GB of CMA and it no longer works.
-
-I have yet to look into it, but I've been told that on x86/x64 they have a
-'high' flag to be set alongside with crashkernel that forces the allocation
-into ZONE_DMA32. We could mimic this behavior for big servers that don't de=
-pend
-on ZONE_DMA but need to reserve big chunks of memory.
-
-Regards,
-Nicolas
-
-
---=-exV1eg95rhXTf/heN52G
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl27BhIACgkQlfZmHno8
-x/6ytQgAr4/GCUbLvqyD7pRmUlkzRlZj0aJHXFHEsX8ng2CM60HUWp5PPXvp74YZ
-gIbWndJ96KHhR79C2lG2TcpWJl4nSAtCEJohIE5vFr5//a2uhWy0PiJbYrWnLTwh
-ZJqmJwSdcBXQ8EQ25bakapXsJdF9Ny2IPe+9Hz/LTJEzC+VYXd8yvuQw3dfHLmGw
-kgNH0I8mV/fqIxezMhFIOfT5GubP9BNZJL1Kb3iKr1eh9pNpGEDM02xJI02vIElm
-GzA8KlEBcS5fRvtvInU5vKdBHQy1uVlYHgT5lKArcYCI7wFCkD+sP7NBw1ngHkmT
-BNmYX1jtM3jEaI2otTOL07aUoQlZsA==
-=AKNQ
------END PGP SIGNATURE-----
-
---=-exV1eg95rhXTf/heN52G--
-
+>  
+> @@ -9933,6 +9936,8 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+>  
+>  	update_misfit_status(curr, rq);
+>  	update_overutilized_status(task_rq(curr));
+> +
+> +	trigger_thermal_pressure_average(rq);
+>  }
+>  
+>  /*
+> 
