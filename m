@@ -2,134 +2,115 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F09CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D74ACA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B32A2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 260682083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:55:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572512158;
+	bh=bwH2lGBSgTbwBF/XaBAjPMDyWxkpYJ4k5ZkDsu7mIzI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=RSAKHMeW/fDFewaZ833JKB6X2jlGIYRw7h75QXuZobyFEHrRe70naalIN24oMQJ5U
+	 dgJ1ufAvoQGZqs9nwGfIChXqnipNS29vnzPsjLN+pa3a2tQCFDJzJwxMeIwgp8eF/0
+	 CNqMO2cF2Vxy9s9A2D5i+FN0E8foe8jcSJY7B22Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfJaIys (ORCPT
+        id S1727144AbfJaIz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 04:54:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38302 "EHLO mx1.redhat.com"
+        Thu, 31 Oct 2019 04:55:57 -0400
+Received: from mga11.intel.com ([192.55.52.93]:45690 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727237AbfJaIyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 04:54:47 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1B60C368E4
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 08:54:47 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id m17so2873103wrb.20
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 01:54:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wIxff/xeNXe1wb8LPDwW/yTYgkSfAil2vq+uYePEE2c=;
-        b=H9GqK6htRv6lEgHCurhRYSXxr268Vm4f5wD0olsC+vLiNj1LDz+6htsLslMxhRxhds
-         eCQ1CKLJklXGNRL+Qi2Dnm95Hx1Q5nknFyPIjFmA2dr+XgkED/g/k53QvnaibZyfCvEW
-         6XSgWU5roB40QxYFJ0rPk89ymfUdOGBsO+JgfrdExfEgvDutTlahTeRhrRJiOTFPqWC8
-         RD0Q9XSx4WfjdDHGy/fz0PxgK4i0HB94Obz6MqkqwMQBY5XmPngYrcD7KhOGlOEeddzW
-         Xa0VrWGCFf1L92iurJGKU59RhI5GjudbpnIUNAwO+fl+PpnmUiydOxd/ST1tzTE4aGKW
-         OdZQ==
-X-Gm-Message-State: APjAAAWhCY1oG37SGccas1bSfT+AOyNnQrPbhbNYxp86Fo9jhhiotoJU
-        sngS2wsx26meWWdOnPNCSJJ/iLKGnbJS1S6gh3L0tmgm8Zw6ckUaRf8+gK2fEqbdUURfeFCHBY9
-        Sht2n+uqjpYO+fwq5fEgNqXtr
-X-Received: by 2002:a05:600c:2248:: with SMTP id a8mr3992703wmm.176.1572512085606;
-        Thu, 31 Oct 2019 01:54:45 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwljnfXIFUbhpOVjeOyn7RSMG1RK8ExAwGTNSA6Ok15JomaTkrWe27dOdJI/ge/KJL7MFrKYQ==
-X-Received: by 2002:a05:600c:2248:: with SMTP id a8mr3992677wmm.176.1572512085348;
-        Thu, 31 Oct 2019 01:54:45 -0700 (PDT)
-Received: from steredhat ([91.217.168.176])
-        by smtp.gmail.com with ESMTPSA id l8sm3361933wru.22.2019.10.31.01.54.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 01:54:44 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 09:54:42 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jorgen Hansen <jhansen@vmware.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>, kvm <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH net-next 11/14] vsock: add multi-transports support
-Message-ID: <20191031085442.vkb5tnchfsa6n4dh@steredhat>
-References: <20191023095554.11340-1-sgarzare@redhat.com>
- <20191023095554.11340-12-sgarzare@redhat.com>
- <CAGxU2F7n48kBy_y2GB=mcvraK=mw_2Jn8=2hvQnEOWqWuT9OjA@mail.gmail.com>
- <MWHPR05MB3376E623764F54D39D8135A9DA600@MWHPR05MB3376.namprd05.prod.outlook.com>
+        id S1727005AbfJaIz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 04:55:56 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 01:55:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
+   d="scan'208";a="190558319"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga007.jf.intel.com with ESMTP; 31 Oct 2019 01:55:53 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Roger Quadros <rogerq@ti.com>, gregkh@linuxfoundation.org
+Cc:     pawell@cadence.com, peter.chen@nxp.com, nsekhar@ti.com,
+        kurahul@cadence.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2] usb: cdns3: gadget: Fix g_audio use case when connected to Super-Speed host
+In-Reply-To: <20191030121607.21739-1-rogerq@ti.com>
+References: <20191029151514.28495-1-rogerq@ti.com> <20191030121607.21739-1-rogerq@ti.com>
+Date:   Thu, 31 Oct 2019 10:55:52 +0200
+Message-ID: <87pnide1k7.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MWHPR05MB3376E623764F54D39D8135A9DA600@MWHPR05MB3376.namprd05.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 03:40:05PM +0000, Jorgen Hansen wrote:
-> > From: Stefano Garzarella [mailto:sgarzare@redhat.com]
-> > > +/* Assign a transport to a socket and call the .init transport callback.
-> > > + *
-> > > + * Note: for stream socket this must be called when vsk->remote_addr
-> > > +is set
-> > > + * (e.g. during the connect() or when a connection request on a
-> > > +listener
-> > > + * socket is received).
-> > > + * The vsk->remote_addr is used to decide which transport to use:
-> > > + *  - remote CID > VMADDR_CID_HOST will use host->guest transport
-> > > + *  - remote CID <= VMADDR_CID_HOST will use guest->host transport
-> > > +*/ int vsock_assign_transport(struct vsock_sock *vsk, struct
-> > > +vsock_sock *psk) {
-> > > +       const struct vsock_transport *new_transport;
-> > > +       struct sock *sk = sk_vsock(vsk);
-> > > +
-> > > +       switch (sk->sk_type) {
-> > > +       case SOCK_DGRAM:
-> > > +               new_transport = transport_dgram;
-> > > +               break;
-> > > +       case SOCK_STREAM:
-> > > +               if (vsk->remote_addr.svm_cid > VMADDR_CID_HOST)
-> > > +                       new_transport = transport_h2g;
-> > > +               else
-> > > +                       new_transport = transport_g2h;
-> > 
-> > I just noticed that this break the loopback in the guest.
-> > As a fix, we should use 'transport_g2h' when remote_cid <=
-> > VMADDR_CID_HOST or remote_cid is the id of 'transport_g2h'.
-> > 
-> > To do that we also need to avoid that L2 guests can have the same CID of L1.
-> > For vhost_vsock I can call vsock_find_cid() in vhost_vsock_set_cid()
-> > 
-> > @Jorgen: for vmci we need to do the same? or it is guaranteed, since it's
-> > already support nested VMs, that a L2 guests cannot have the same CID as
-> > the L1.
-> 
-> As far as I can tell, we have the same issue with the current support for nested VMs in
-> VMCI. If we have an L2 guest with the same CID as the L1 guest, we will always send to
-> the L2 guest, and we may assign an L2 guest the same CID as L1. It should be straight
-> forward to avoid this, though.
-> 
 
-Yes, I think so.
+Hi,
 
-For the v2 I'm exposing the vsock_find_cid() to the transports, in this
-way I can reject requests to set the same L1 CID for L2 guests.
+Roger Quadros <rogerq@ti.com> writes:
 
-Thanks,
-Stefano
+> Take into account gadget driver's speed limit when programming
+> controller speed.
+>
+> Fixes: commit 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Acked-by: Peter Chen <peter.chen@nxp.com>
+> ---
+>
+> Changelog:
+> v2
+> - Add Fixes line
+>
+>  drivers/usb/cdns3/gadget.c | 31 ++++++++++++++++++++++++++-----
+>  1 file changed, 26 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+> index 40dad4e8d0dc..1c724c20d468 100644
+> --- a/drivers/usb/cdns3/gadget.c
+> +++ b/drivers/usb/cdns3/gadget.c
+> @@ -2338,9 +2338,35 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
+>  {
+>  	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
+>  	unsigned long flags;
+> +	enum usb_device_speed max_speed = driver->max_speed;
+>  
+>  	spin_lock_irqsave(&priv_dev->lock, flags);
+>  	priv_dev->gadget_driver = driver;
+> +
+> +	/* limit speed if necessary */
+> +	max_speed = min(driver->max_speed, gadget->max_speed);
+> +
+> +	switch (max_speed) {
+> +	case USB_SPEED_FULL:
+> +		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
+> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
+> +		break;
+> +	case USB_SPEED_HIGH:
+> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
+> +		break;
+> +	case USB_SPEED_SUPER:
+> +		break;
+> +	default:
+> +		dev_err(priv_dev->dev,
+> +			"invalid maximum_speed parameter %d\n",
+> +			max_speed);
+> +		/* fall through */
+> +	case USB_SPEED_UNKNOWN:
+> +		/* default to superspeed */
+> +		max_speed = USB_SPEED_SUPER;
+> +		break;
+> +	}
+
+I had suggested some simplification for this case statement.
+
+-- 
+balbi
