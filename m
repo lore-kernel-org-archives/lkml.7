@@ -2,224 +2,144 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A922CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BDECA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632B920856
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2704420856
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:14:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MWJCdQBY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="UNLj984z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfJaAOg (ORCPT
+        id S1727153AbfJaAOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 20:14:36 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:17399 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbfJaAOf (ORCPT
+        Wed, 30 Oct 2019 20:14:44 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:50295 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbfJaAOn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 20:14:35 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dba276f0000>; Wed, 30 Oct 2019 17:14:39 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 30 Oct 2019 17:14:33 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 30 Oct 2019 17:14:33 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 31 Oct
- 2019 00:14:31 +0000
-Subject: Re: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191023195515.13168-1-rcampbell@nvidia.com>
- <20191023195515.13168-4-rcampbell@nvidia.com>
- <20191029175837.GS22766@mellanox.com>
- <3ffecdc6-625f-ebea-8fb4-984fe6ca90f3@nvidia.com>
- <20191029231255.GX22766@mellanox.com>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <f42d06e2-ca08-acdd-948d-2803079a13c2@nvidia.com>
-Date:   Wed, 30 Oct 2019 17:14:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 30 Oct 2019 20:14:43 -0400
+Received: from [IPv6:2a02:810c:c200:2e91:e1c6:7ce1:572b:20f1] (unknown [IPv6:2a02:810c:c200:2e91:e1c6:7ce1:572b:20f1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 3F17222178;
+        Thu, 31 Oct 2019 01:14:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
+        s=mail2016061301; t=1572480880;
+        bh=b2Lpx68dP8w+wDSl2KFVImOy9LT1HJJtztLSFbPe3FI=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=UNLj984znRLoYmfd8aM3tAtP7o9siVUkcAad1OJzA3L2z6JiB+EgNdaVZbtWX8kXg
+         UXuC1983De9jAXw83M28WhA5YXn19MOxwDup3FFM9xm8d7+YgCEVUWHpYYEGpBN+KX
+         c7so48QdKnM12QOYIvnKfM3A4AyJOS7cByQq6Ew4=
+Date:   Thu, 31 Oct 2019 01:14:38 +0100
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20191030231706.GG10555@lunn.ch>
+References: <20191030224251.21578-1-michael@walle.cc> <20191030224251.21578-3-michael@walle.cc> <20191030231706.GG10555@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <20191029231255.GX22766@mellanox.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572480879; bh=aQDvoiizFwVElu/+JB2LeJEv2uD96Wkmo0qAhVBooQc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=MWJCdQBYV5wFB7p92/YoCvnFMvaW5Z0IBrW0xE5hxmWN/aZqJV2A1iGIWrIIsAsV8
-         5VbUwe/ni8bh+UdPANC3o40XMQmti2jPniyG+kfKXopV2o92ZsH5WErJY0bTCkzbaq
-         Uv2d9ejyWGNHiGyn+USoMYCdZGkZjaf1R1TKpH3UAg2J2+/Vihh1G5u/xoT1MrefGQ
-         afjBFP8F4s4qdv4EK4vntC3rY/27ToshvjCbJrew79wgoor/yef38armEhFyhEvIAO
-         ruemKtXzYLn3lyFMiFLsaf9rlg03HrmcImjcDUjHfi1/TdGEdrlMlA1xfixlHdVgdW
-         DsWeazFXfVoKA==
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC PATCH 2/3] dt-bindings: net: phy: Add support for AT803X
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org
+From:   Michael Walle <michael@walle.cc>
+Message-ID: <9C1BD4CD-DB02-40CA-940E-3F5579BAE5F4@walle.cc>
+X-Virus-Scanned: clamav-milter 0.101.4 at web
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Am 31=2E Oktober 2019 00:17:06 MEZ schrieb Andrew Lunn <andrew@lunn=2Ech>:
+>On Wed, Oct 30, 2019 at 11:42:50PM +0100, Michael Walle wrote:
+>> Document the Atheros AR803x PHY bindings=2E
+>>=20
+>> Signed-off-by: Michael Walle <michael@walle=2Ecc>
+>> ---
+>>  =2E=2E=2E/bindings/net/atheros,at803x=2Eyaml          | 58
+>+++++++++++++++++++
+>>  include/dt-bindings/net/atheros-at803x=2Eh      | 13 +++++
+>>  2 files changed, 71 insertions(+)
+>>  create mode 100644
+>Documentation/devicetree/bindings/net/atheros,at803x=2Eyaml
+>>  create mode 100644 include/dt-bindings/net/atheros-at803x=2Eh
+>>=20
+>> diff --git
+>a/Documentation/devicetree/bindings/net/atheros,at803x=2Eyaml
+>b/Documentation/devicetree/bindings/net/atheros,at803x=2Eyaml
+>> new file mode 100644
+>> index 000000000000=2E=2E60500fd90fd8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/atheros,at803x=2Eyaml
+>> @@ -0,0 +1,58 @@
+>> +# SPDX-License-Identifier: GPL-2=2E0+
+>> +%YAML 1=2E2
+>> +---
+>> +$id: http://devicetree=2Eorg/schemas/net/atheros,at803x=2Eyaml#
+>> +$schema: http://devicetree=2Eorg/meta-schemas/core=2Eyaml#
+>> +
+>> +title: Atheros AR803x PHY
+>> +
+>> +maintainers:
+>> +  - TBD
+>
+>Hi Michael
+>
+>If you don't want to maintain it, then list the PHY maintainers=2E
+>
+>> +
+>> +description: |
+>> +  Bindings for Atheros AR803x PHYs
+>> +
+>> +allOf:
+>> +  - $ref: ethernet-phy=2Eyaml#
+>> +
+>> +properties:
+>> +  atheros,clk-out-frequency:
+>> +    description: Clock output frequency in Hertz=2E
+>> +    enum: [ 25000000, 50000000, 62500000, 125000000 ]
+>> +
+>> +  atheros,clk-out-strength:
+>> +    description: Clock output driver strength=2E
+>> +    enum: [ 0, 1, 2 ]
+>> +
+>> +  atheros,keep-pll-enabled:
+>> +    description: |
+>> +      If set, keep the PLL enabled even if there is no link=2E Useful
+>if you
+>> +      want to use the clock output without an ethernet link=2E
+>> +    type: boolean
+>> +
+>> +  atheros,rgmii-io-1v8:
+>> +    description: |
+>> +      The PHY supports RGMII I/O voltages of 2=2E5V, 1=2E8V and 1=2E5V=
+=2E By
+>default,
+>> +      the PHY uses a voltage of 1=2E5V=2E If this is set, the voltage
+>will changed
+>> +      to 1=2E8V=2E
+>> +      The 2=2E5V voltage is only supported with an external supply
+>voltage=2E
+>
+>So we can later add atheros,rgmii-io-2v5=2E That might need a regulator
+>as well=2E Maybe add that 2=2E5V is currently not supported=2E
 
-On 10/29/19 4:12 PM, Jason Gunthorpe wrote:
-> On Tue, Oct 29, 2019 at 02:16:05PM -0700, Ralph Campbell wrote:
-> 
->>> Frankly, I'm not super excited about the idea of a 'test driver', it
->>> seems more logical for testing to have some way for a test harness to
->>> call hmm_range_fault() under various conditions and check the results?
->>
->> test_vmalloc.sh at least uses a test module(s).
-> 
-> Well, that is good, is it also under drivers/char? It kind feels like
-> it should not be there...
+There is no special setting for the 2=2E5V mode=2E This is how it works: t=
+here is one voltage pad for the RGMII interface=2E Either you connect this =
+pad to a 2=2E5V voltage or you leave it open (well you would connect some d=
+ecoupling Cs)=2E If you leave it open the internal LDO, which seems to be e=
+nabled in any case takes over, supplying 1=2E5V=2E then there is a bit in t=
+he debug register which can switch the internal LDO to 1=2E8V=2E So if you'=
+ll use 2=2E5V the bit is irrelevant=2E=20
 
-I think most of the test modules live in lib/ but I wasn't sure that
-was the right place for the HMM test driver.
-If you think that is better, I can easily move it.
+Like I said maybe a "rgmii-io-microvolts" is a better property and only in=
+ the 1800000 setting would turn on this bit=2E but then both other setting =
+would be a noop=2E=20
 
->>> It seems especially over-complicated to use a full page table layout
->>> for this, wouldn't something simple like an xarray be good enough for
->>> test purposes?
->>
->> Possibly. A page table is really just a lookup table from virtual address
->> to pfn/page. Part of the rationale was to mimic what a real device
->> might do.
-> 
-> Well, but the details of the page table layout don't see really
-> important to this testing, IMHO.
+-michael=20
 
-One problem with XArray is that on 32-bit machines the value would
-need to be u64 to hold a pfn which won't fit in a ULONG_MAX.
-I guess we could make the driver 64-bit only.
-
->>>> +	for (addr = start; addr < end; ) {
->>>> +		long count;
->>>> +
->>>> +		next = min(addr + (ARRAY_SIZE(pfns) << PAGE_SHIFT), end);
->>>> +		range.start = addr;
->>>> +		range.end = next;
->>>> +
->>>> +		down_read(&mm->mmap_sem);
-> 
-> Also, did we get a mmget() before doing this down_read?
-> 
->>>> +
->>>> +		ret = hmm_range_register(&range, &dmirror->mirror);
->>>> +		if (ret) {
->>>> +			up_read(&mm->mmap_sem);
->>>> +			break;
->>>> +		}
->>>> +
->>>> +		if (!hmm_range_wait_until_valid(&range,
->>>> +						DMIRROR_RANGE_FAULT_TIMEOUT)) {
->>>> +			hmm_range_unregister(&range);
->>>> +			up_read(&mm->mmap_sem);
->>>> +			continue;
->>>> +		}
->>>> +
->>>> +		count = hmm_range_fault(&range, 0);
->>>> +		if (count < 0) {
->>>> +			ret = count;
->>>> +			hmm_range_unregister(&range);
->>>> +			up_read(&mm->mmap_sem);
->>>> +			break;
->>>> +		}
->>>> +
->>>> +		if (!hmm_range_valid(&range)) {
->>>
->>> There is no 'driver lock' being held here, how does this work?
->>> Shouldn't it hold dmirror->mutex for this sequence?
->>
->> I have a modified version of this driver that's based on your series
->> removing hmm_mirror_register() which uses a mutex.
->> Otherwise, it looks similar to the changes in nouveau.
-> 
-> Well, that locking pattern is required even for original hmm calls..
-
-Will be fixed in v4.
-
-> 
->>>> +static int dmirror_read(struct dmirror *dmirror,
->>>> +			struct hmm_dmirror_cmd *cmd)
->>>> +{
->>>
->>> Why not just use pread()/pwrite() for this instead of an ioctl?
->>
->> pread()/pwrite() could certainly be implemented.
->> I think the idea was that the read/write is actually the "device"
->> doing read/write and making that clearly different from a program
->> reading/writing the device. Also, the ioctl() allows information
->> about what faults or events happened during the operation. I only
->> have number of pages and number of page faults returned at the moment,
->> but one of Jerome's version of this driver had other counters being
->> returned.
-> 
-> Makes sense I guess
-> 
->>>> +static struct platform_driver dmirror_device_driver = {
->>>> +	.probe		= dmirror_probe,
->>>> +	.remove		= dmirror_remove,
->>>> +	.driver		= {
->>>> +		.name	= "HMM_DMIRROR",
->>>> +	},
->>>> +};
->>>
->>> This presence of a platform_driver and device is very confusing. I'm
->>> sure Greg KH would object to this as a misuse of platform drivers.
->>>
->>> A platform device isn't needed to create a char dev, so what is this for?
->>
->> The devm_request_free_mem_region() and devm_memremap_pages() calls for
->> creating the ZONE_DEVICE private pages tie into the devm* clean up framework.
->> I thought a platform_driver was the simplest way to also be able to call
->> devm_add_action_or_reset() to clean up on module unload and be compatible
->> with the private page clean up.
-> 
-> IIRC Christoph recently fixed things so there was a non devm version
-> of these functions. Certainly we should not be making fake
-> platform_devices just to call devm.
-> 
-> There is also a struct device inside the cdev, maybe that could be
-> arrange to be devm compatible if it was *really* needed.
-
-Will be fixed in v4.
-
->>>> diff --git a/include/Kbuild b/include/Kbuild
->>>> index ffba79483cc5..6ffb44a45957 100644
->>>> +++ b/include/Kbuild
->>>> @@ -1063,6 +1063,7 @@ header-test-			+= uapi/linux/coda_psdev.h
->>>>    header-test-			+= uapi/linux/errqueue.h
->>>>    header-test-			+= uapi/linux/eventpoll.h
->>>>    header-test-			+= uapi/linux/hdlc/ioctl.h
->>>> +header-test-			+= uapi/linux/hmm_dmirror.h
->>>
->>> Why? This list should only be updated if the header is broken in some
->>> way.
->>
->> Should this be in include/linux/ instead?
->> I wasn't sure where the "right" place was to put the header.
-> 
-> No, it is right, it just shouldn't be in this makefile.
-> 
-> Jason
-
-Will be fixed in v4.
-
-Thanks for the review, the code is much simpler now.
