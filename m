@@ -2,91 +2,99 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB5FCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5CBCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3D6721734
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B96CA20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572540627;
+	bh=bav111T7Ts/MW3KRk8o4XHIuPpAPtZ1cDzJEEAwCZlE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PUNsxkOhMZio5CH7tn/0Gu5aNXzj1z6u/239GJVLpm0Tv60vkg0p60dNRvKuxz5R5
+	 mEQ+BQQ/ecfPNS/WRza/bqDTnq2zobIj3hty9ixv6e8C5hOcNkPIl4Z4O2riuU7OAv
+	 WBqNXblq+u+3wKAr0TE0fxGPxn1BY74I/TvP2sB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbfJaQsV (ORCPT
+        id S1728715AbfJaQu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 12:48:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:51984 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728614AbfJaQsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:48:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 977111FB;
-        Thu, 31 Oct 2019 09:48:20 -0700 (PDT)
-Received: from [10.1.196.50] (unknown [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C56383F6C4;
-        Thu, 31 Oct 2019 09:48:19 -0700 (PDT)
-Subject: Re: [PATCH 4/4] docs/arm64: cpu-feature-registers: Documents missing
- visible fields
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     will@kernel.org, catalin.marinas@arm.com,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "julien@xen.org" <julien@xen.org>
-References: <20191003111211.483-1-julien.grall@arm.com>
- <20191003111211.483-5-julien.grall@arm.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <9a4aa626-a16f-b01a-0254-43946de9ff6e@arm.com>
-Date:   Thu, 31 Oct 2019 16:48:18 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 31 Oct 2019 12:50:26 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37976 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727715AbfJaQu0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 12:50:26 -0400
+Received: by mail-qt1-f196.google.com with SMTP id t26so9435559qtr.5;
+        Thu, 31 Oct 2019 09:50:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OLaOpRAjfrbacph10qr6xdAhMPmVu1fR+AKVwIeHENE=;
+        b=kEgxMwwRbZzxEVyKWXizq7cW+YwENZDem7Gqpa2Gy1RZwd/e3m9sD3Jd5SdMEBZMmJ
+         TcozJ04JWaN3ODGNDMAoCgrZrhXQGFVyqotHzCHWIAjK06BtKaHd8ZS5wBV0G5aqJzU/
+         /Jw/gcR2hr+SQsI/fFsGsIXl7qWrDS6rgIgUBeenySZPvWKFyiD4Y3vNyp9lP/RmgEcK
+         9S/SJczxVr/7HhlWmxzH/jHwKgf6Y3NKLhwy8LZq9VdQ+hwdM3I6Jw0mxsB1ntyysnkU
+         TlaT/hE1qGfrQqm2gZWTLLCEH0aFFEchLuc2FTcyhVNOmQgSWn7di2HFzdJ3DZGjYppy
+         XvvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OLaOpRAjfrbacph10qr6xdAhMPmVu1fR+AKVwIeHENE=;
+        b=bGZBclznMB0r62b3plHKVPpcaqKdPq0B385usytdJcCywLbPK5ErG0EZdhg+xLrRmO
+         3joMsRug1DllQu4jmvh71VXkHFWpqA81IRzuCvnOqmbDaZvesB7tEqIntqKXO/oF66OY
+         GmTd7bqtb0uM19HPL/6Y7y1afaB/yq0dkfp3aORknnEk3aCICzqCZMfru7ToBAtuoZJ0
+         sAKgvfkxzT0dTr0IDspatWe6fk6geFmOjDQgWKfuVkNz5sUK/EPFXRyJq6c1zGY2Z8VA
+         WmsLULqhvySiU80rG85woPCX5VZdoLaJd2KqvuvddfkHYgSqGAUfzApxALsoxlVk6Caz
+         Co8A==
+X-Gm-Message-State: APjAAAUKXnmTv/vfsYZlPG6arndjM0zaUvgPcO9auSeXRx5LxrwoEcBG
+        PXzVfzW4FMDGwVVHft2bjWm0wkbQ
+X-Google-Smtp-Source: APXvYqy8TB1c4Rpru49Qaq9QK03ijg1GplyOlvawK8eI65aLKQPSRzEse7c7fIE5r2DOAVG6rVB0AQ==
+X-Received: by 2002:aed:2392:: with SMTP id j18mr6468841qtc.296.1572540624862;
+        Thu, 31 Oct 2019 09:50:24 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::314e])
+        by smtp.gmail.com with ESMTPSA id f131sm469553qkb.99.2019.10.31.09.50.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 31 Oct 2019 09:50:23 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 09:50:19 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] iocost: don't nest spin_lock_irq in ioc_weight_write()
+Message-ID: <20191031165019.GL3622521@devbig004.ftw2.facebook.com>
+References: <20191031105341.GA26612@mwanda>
 MIME-Version: 1.0
-In-Reply-To: <20191003111211.483-5-julien.grall@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031105341.GA26612@mwanda>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 03/10/2019 12:12, Julien Grall wrote:
-> A couple of fields visible to userspace are not described in the
-> documentation. So update it.
+On Thu, Oct 31, 2019 at 01:53:41PM +0300, Dan Carpenter wrote:
+> This code causes a static analysis warning:
 > 
-> Signed-off-by: Julien Grall <julien.grall@arm.com>
-> ---
->   Documentation/arm64/cpu-feature-registers.rst | 4 ++++
->   1 file changed, 4 insertions(+)
+>     block/blk-iocost.c:2113 ioc_weight_write() error: double lock 'irq'
 > 
-> diff --git a/Documentation/arm64/cpu-feature-registers.rst b/Documentation/arm64/cpu-feature-registers.rst
-> index 2955287e9acc..ffcf4e2c71ef 100644
-> --- a/Documentation/arm64/cpu-feature-registers.rst
-> +++ b/Documentation/arm64/cpu-feature-registers.rst
-> @@ -193,6 +193,10 @@ infrastructure:
->        +------------------------------+---------+---------+
->        | Name                         |  bits   | visible |
->        +------------------------------+---------+---------+
-> +     | SB                           | [36-39] |    y    |
-> +     +------------------------------+---------+---------+
-> +     | FRINTTS                      | [32-35] |    y    |
-> +     +------------------------------+---------+---------+
-
-Will reported the bitfields were inconsistent (see [1]). Looking in more 
-details, it seems that I messed up this patch when sending it (I honestly can't 
-remember why I wrote like that :().
-
-@Catalin, I saw you applied this patch to for-next/elf-hwcap-docs. Would you
-mind to update the content of the patch? Or do you prefer a new version?
-
->        | GPI                          | [31-28] |    y    |
->        +------------------------------+---------+---------+
->        | GPA                          | [27-24] |    y    |
+> We disable IRQs in blkg_conf_prep() and re-enable them in
+> blkg_conf_finish().  IRQ disable/enable should not be nested because
+> that means the IRQs will be enabled at the first unlock instead of the
+> second one.
 > 
+> Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Cheers,
+Acked-by: Tejun Heo <tj@kernel.org>
 
-[1] <20191029111517.GE11590@willie-the-truck>
+Thanks.
 
 -- 
-Julien Grall
+tejun
