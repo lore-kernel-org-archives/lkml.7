@@ -2,135 +2,67 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095A6CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BCECA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC1982083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F25D2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:25:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbfJaOZD convert rfc822-to-8bit (ORCPT
+        id S1728168AbfJaOZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 10:25:03 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:55148 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727705AbfJaOZC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 10:25:02 -0400
-Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id A628DD4A56B;
-        Thu, 31 Oct 2019 15:24:31 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
- (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 31 Oct
- 2019 15:24:31 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Thu, 31 Oct 2019 15:24:31 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Sascha Hauer" <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 10/11] dt-bindings: arm: fsl: Add more Kontron i.MX6UL/ULL
- compatibles
-Thread-Topic: [PATCH v3 10/11] dt-bindings: arm: fsl: Add more Kontron
- i.MX6UL/ULL compatibles
-Thread-Index: AQHVj/boZjsU03v60U6rh0cSmj8HZg==
-Date:   Thu, 31 Oct 2019 14:24:31 +0000
-Message-ID: <20191031142112.12431-11-frieder.schrempf@kontron.de>
-References: <20191031142112.12431-1-frieder.schrempf@kontron.de>
-In-Reply-To: <20191031142112.12431-1-frieder.schrempf@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Thu, 31 Oct 2019 10:25:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:49428 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727705AbfJaOZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 10:25:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 621671F1;
+        Thu, 31 Oct 2019 07:25:04 -0700 (PDT)
+Received: from [172.20.53.248] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B183F3F71E;
+        Thu, 31 Oct 2019 07:25:00 -0700 (PDT)
+Subject: Re: NULL pointer dereference in pick_next_task_fair
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Ram Muthiah <rammuthiah@google.com>,
+        Quentin Perret <qperret@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, aaron.lwe@gmail.com,
+        mingo@kernel.org, pauld@redhat.com, jdesfossez@digitalocean.com,
+        naravamudan@digitalocean.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        kernel-team@android.com, john.stultz@linaro.org
+References: <20191028174603.GA246917@google.com>
+ <20191029113411.GP4643@worktop.programming.kicks-ass.net>
+ <20191029115000.GA11194@google.com>
+ <CA+CXyWsoW8ann52pcR66ejRmjJ=4QmoaHTRVhb3=ohe0ZDnm-A@mail.gmail.com>
+ <75e99374-0bd6-a7d7-581e-9360a1f90103@arm.com>
+ <8d8fe4e9-1905-cde1-9ced-0a860e5a961b@arm.com>
+Message-ID: <4f743a74-9b9c-d7e4-bae8-c7ad1d2aeee6@arm.com>
+Date:   Thu, 31 Oct 2019 15:24:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: A628DD4A56B.A0BAA
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: devicetree@vger.kernel.org, festevam@gmail.com,
-        kernel@pengutronix.de, krzk@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
+In-Reply-To: <8d8fe4e9-1905-cde1-9ced-0a860e5a961b@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+On 31/10/2019 11:54, Valentin Schneider wrote:
+> On 31/10/2019 02:33, Valentin Schneider wrote:
+>> For wakeups, select_task_rq_fair() can only ever pick prev_cpu or this_cpu
+>> since there are no sched domains. I don't see many candidates that could
+>> wakeup on a secondary (thus have non-zero this_cpu) this early there. 
 
-Add the compatibles for Kontron i.MX6UL N6311 SoM and boards and
-the compatibles for Kontron i.MX6ULL N6411 SoM and boards.
-
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 1b4b4e6573b5..6d718272725d 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -162,6 +162,7 @@ properties:
-           - enum:
-               - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
-               - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
-+              - kontron,imx6ul-n6311-som  # Kontron N6311 SOM
-           - const: fsl,imx6ul
- 
-       - description: Kontron N6310 S Board
-@@ -170,6 +171,12 @@ properties:
-           - const: kontron,imx6ul-n6310-som
-           - const: fsl,imx6ul
- 
-+      - description: Kontron N6311 S Board
-+        items:
-+          - const: kontron,imx6ul-n6311-s
-+          - const: kontron,imx6ul-n6311-som
-+          - const: fsl,imx6ul
-+
-       - description: Kontron N6310 S 43 Board
-         items:
-           - const: kontron,imx6ul-n6310-s-43
-@@ -181,6 +188,13 @@ properties:
-         items:
-           - enum:
-               - fsl,imx6ull-14x14-evk     # i.MX6 UltraLiteLite 14x14 EVK Board
-+              - kontron,imx6ull-n6411-som # Kontron N6411 SOM
-+          - const: fsl,imx6ull
-+
-+      - description: Kontron N6411 S Board
-+        items:
-+          - const: kontron,imx6ull-n6411-s
-+          - const: kontron,imx6ull-n6411-som
-           - const: fsl,imx6ull
- 
-       - description: i.MX6ULZ based Boards
--- 
-2.17.1
+And another fail here, this doesn't have to be at secondary bringup, it's 
+just that the bringup will always be in the idle task's callstack (if the
+timestamps weren't enough of a clue already). I guess I'll stop writing
+nonsense and keep staring in silence.
