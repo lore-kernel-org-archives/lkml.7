@@ -2,67 +2,84 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C0ECA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08157CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20F902080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D47E720873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbfJaTX3 (ORCPT
+        id S1729591AbfJaT0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 15:23:29 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:59800 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729315AbfJaTX3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 15:23:29 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id ECE6514FC9F70;
-        Thu, 31 Oct 2019 12:23:28 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 12:23:28 -0700 (PDT)
-Message-Id: <20191031.122328.1237720180513331270.davem@davemloft.net>
-To:     dhowells@redhat.com
-Cc:     netdev@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] rxrpc: Fix handling of last subpacket of jumbo
- packet
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <157252402623.30237.12555934347853871645.stgit@warthog.procyon.org.uk>
-References: <157252402623.30237.12555934347853871645.stgit@warthog.procyon.org.uk>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 31 Oct 2019 12:23:29 -0700 (PDT)
+        Thu, 31 Oct 2019 15:26:44 -0400
+Received: from mga06.intel.com ([134.134.136.31]:49730 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729347AbfJaT0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 15:26:44 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 12:26:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,252,1569308400"; 
+   d="scan'208";a="400610761"
+Received: from spandruv-mobl3.jf.intel.com ([10.254.190.10])
+  by fmsmga005.fm.intel.com with ESMTP; 31 Oct 2019 12:26:43 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     rjw@rjwysocki.net, viresh.kumar@linaro.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, cai@lca.pw
+Subject: [PATCH] cpufreq: intel_pstate: Fix Invalid EPB setting
+Date:   Thu, 31 Oct 2019 12:26:20 -0700
+Message-Id: <20191031192620.23482-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
-Date: Thu, 31 Oct 2019 12:13:46 +0000
+The max value of EPB can be only be 0x0F. Setting more than that results
+in "unchecked MSR access error". During CPU offline via cpufreq stop_cpu()
+callback, this error condition is triggered in the function
+intel_pstate_hwp_force_min_perf().
 
-> When rxrpc_recvmsg_data() sets the return value to 1 because it's drained
-> all the data for the last packet, it checks the last-packet flag on the
-> whole packet - but this is wrong, since the last-packet flag is only set on
-> the final subpacket of the last jumbo packet.  This means that a call that
-> receives its last packet in a jumbo packet won't complete properly.
-> 
-> Fix this by having rxrpc_locate_data() determine the last-packet state of
-> the subpacket it's looking at and passing that back to the caller rather
-> than having the caller look in the packet header.  The caller then needs to
-> cache this in the rxrpc_call struct as rxrpc_locate_data() isn't then
-> called again for this packet.
-> 
-> Fixes: 248f219cb8bc ("rxrpc: Rewrite the data and ack handling code")
-> Fixes: e2de6c404898 ("rxrpc: Use info in skbuff instead of reparsing a jumbo packet")
-> Signed-off-by: David Howells <dhowells@redhat.com>
+Instead, EPB corresponding to preference to maximize energy saving (0x0F),
+can be set. But this will conflict with the save/restore done in
+arch/x86/kernel/cpu/intel_epb.c. Based on the test, if 0x0F is set in the
+function intel_pstate_hwp_force_min_perf(), this gets restored during next
+CPU online operation. This is not desired.
 
-Applied, thanks David.
+Hence don't set EPB in the offline path in this driver and let the
+processing in intel_epb.c handle EPB.
+
+Fixes: af3b7379e2d70 ("cpufreq: intel_pstate: Force HWP min perf before offline")
+Reported-by: Qian Cai <cai@lca.pw>
+Cc: 5.0+ <stable@vger.kernel.org> # 5.0+
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ drivers/cpufreq/intel_pstate.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 53a51c169451..8ab31702cf6a 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -847,11 +847,9 @@ static void intel_pstate_hwp_force_min_perf(int cpu)
+ 	value |= HWP_MAX_PERF(min_perf);
+ 	value |= HWP_MIN_PERF(min_perf);
+ 
+-	/* Set EPP/EPB to min */
++	/* Set EPP to min */
+ 	if (boot_cpu_has(X86_FEATURE_HWP_EPP))
+ 		value |= HWP_ENERGY_PERF_PREFERENCE(HWP_EPP_POWERSAVE);
+-	else
+-		intel_pstate_set_epb(cpu, HWP_EPP_BALANCE_POWERSAVE);
+ 
+ 	wrmsrl_on_cpu(cpu, MSR_HWP_REQUEST, value);
+ }
+-- 
+2.17.2
+
