@@ -2,131 +2,119 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD35CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DD6CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAF3F20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6FEA20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:27:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="IXQH4Gd1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hG/i0zjP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfJaBWC (ORCPT
+        id S1726455AbfJaB1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 21:22:02 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:54472 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725867AbfJaBWC (ORCPT
+        Wed, 30 Oct 2019 21:27:06 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41045 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725927AbfJaB1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 21:22:02 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9V1DmsM022161
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 18:22:01 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=CV4Ax6uE22QPaR0xNwsjh/6y9+9ZiGdXaF/PQy3OPVA=;
- b=IXQH4Gd1sSvX7kK49VJTnR3X0k1v5c6CsxBTdgqd9U2rCYByoPk6KLjusb1stbEKZIdb
- 1AVy+CuFKv0WOhrK8Ui41LnF/JN5Oi1y231UCRZHIcEh5t9RY21G7jQPj9xQxTgavi1Y
- JuKcZlsnRXMLB23K+dHuY+5z3o10lHo3rSM= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2vybrebb1t-7
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 18:22:01 -0700
-Received: from 2401:db00:30:600c:face:0:1f:0 (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Wed, 30 Oct 2019 18:21:52 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id 6178E1960A610; Wed, 30 Oct 2019 18:21:52 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>
-CC:     Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
-        Roman Gushchin <guro@fb.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v2] mm: slab: make page_cgroup_ino() to recognize non-compound slab pages properly
-Date:   Wed, 30 Oct 2019 18:21:51 -0700
-Message-ID: <20191031012151.2722280-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Wed, 30 Oct 2019 21:27:06 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l3so2800539pgr.8
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 18:27:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/xbLLTWwwR0cd5qQbRpTD2PP+wmSB7aXKTDZeJyUHcY=;
+        b=hG/i0zjP4PIYhFBy9cjOQ+6FA5yvDVZTVwsRMIajyd3MWIPZ3T0uOJLuPyupkeskOu
+         p4O7CK/20sK5+q9CvApRlPjlmDJPHRoeeJRRqBvIKsFlsCrn50Lu7mW0xapyTrgg7BtH
+         LXafi0hTusVYmMZSxsrLU6nBtWCvO8pZmrcysBuy3SGK4glcRMGAPFSIYniDWCzl7Sik
+         MOPhn7yFhwcd7jtrp7Fs0nCmXttm95KAlIIqTS6ossP+ZqZO5BOTXBdG80Uobdi4uShM
+         0T4iRKxpc8Ed+ULYJ/X1Dg53tt6BQTcoO4bE4FrHOwUTmYF9QGdEpBR0wF24ZJeL0L27
+         qufw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/xbLLTWwwR0cd5qQbRpTD2PP+wmSB7aXKTDZeJyUHcY=;
+        b=OFK4Hg7X9l2Y7j9Gq9C93p2QUnDQQR3JEpEGLT76U+CKa5+c2r51QmEDKPifO3+dBv
+         l3+c2tu6/9NX1VfeybcjMgoZJcY4hD9mysm7XNQ1G56QAVfs7csFm8gOd4BCfPTreKK9
+         EPCDPFavjrHif1LokXYazcdguY6f75GSMucw+pAS9GpfSDpGBPlHMi2ZkpzTituUxreA
+         vl5vNKuEutLsnD4I9OtgChqvS3/6NIfpn7HjQN4Ty0re+VHZAtKhPTutPyAnnii4XJiO
+         mrxVbL6HHpOWKRTzuYi/44Ztj/BZ3+mR4kX7iTQc1HNgbnMH1nckDrV4/TlR5vg6Lqjs
+         vtaQ==
+X-Gm-Message-State: APjAAAV/bDZTYRMFOlyQ3tWHoLKqKoYjQxP1xd615A1wxJBnB6S4Ca+i
+        0v9sb8Pz/B/f6ETcVfRsbtY=
+X-Google-Smtp-Source: APXvYqxPeZ8N9bZyMSYjCKY94CTqtNjhdT7egzR2ZWKkCv1KRQ2Mfmvy5+dmaQz587G4EdWPOF72qA==
+X-Received: by 2002:a63:200e:: with SMTP id g14mr2889289pgg.91.1572485225237;
+        Wed, 30 Oct 2019 18:27:05 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:200::1:e375])
+        by smtp.gmail.com with ESMTPSA id n23sm1116451pff.137.2019.10.30.18.27.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 30 Oct 2019 18:27:04 -0700 (PDT)
+Date:   Wed, 30 Oct 2019 18:26:56 -0700
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Tao Ren <taoren@fb.com>
+Subject: Re: [PATCH] ARM: ASPEED: update default ARCH_NR_GPIO for ARCH_ASPEED
+Message-ID: <20191031012655.GA5841@taoren-ubuntu-R90MNF91>
+References: <20191028224909.1069-1-rentao.bupt@gmail.com>
+ <CACRpkdbOPq4AYt9CLoganV_Ck9bYS9+_U3bggGKAukaQ=FHXkA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-30_10:2019-10-30,2019-10-30 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
- spamscore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
- suspectscore=0 mlxscore=0 impostorscore=0 malwarescore=0 adultscore=0
- phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910310009
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbOPq4AYt9CLoganV_Ck9bYS9+_U3bggGKAukaQ=FHXkA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-page_cgroup_ino() doesn't return a valid memcg pointer for non-compound
-slab pages, because it depends on PgHead AND PgSlab flags to be set
-to determine the memory cgroup from the kmem_cache.
-It's correct for compound pages, but not for generic small pages. Those
-don't have PgHead set, so it ends up returning zero.
+On Thu, Oct 31, 2019 at 01:49:43AM +0100, Linus Walleij wrote:
+> On Mon, Oct 28, 2019 at 11:49 PM <rentao.bupt@gmail.com> wrote:
+> 
+> > From: Tao Ren <rentao.bupt@gmail.com>
+> >
+> > Increase the max number of GPIOs from default 512 to 1024 for ASPEED
+> > platforms, because Facebook Yamp (AST2500) BMC platform has total 594
+> > GPIO pins (232 provided by ASPEED SoC, and 362 by I/O Expanders).
+> >
+> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Please send this patch to the ARM SoC and SoC maintainers:
+> arm@kernel.org
+> soc@kernel.org
 
-Fix this by replacing the condition to PageSlab() && !PageTail().
+Thanks Linus for the review. I will add ARM SoC and SoC maintaniers in
+patch v2.
 
-Before this patch:
-[root@localhost ~]# ./page-types -c /sys/fs/cgroup/user.slice/user-0.slice/user@0.service/ | grep slab
-0x0000000000000080	        38        0  _______S___________________________________	slab
-
-After this patch:
-[root@localhost ~]# ./page-types -c /sys/fs/cgroup/user.slice/user-0.slice/user@0.service/ | grep slab
-0x0000000000000080	       147        0  _______S___________________________________	slab
-
-Fixes: 4d96ba353075 ("mm: memcg/slab: stop setting page->mem_cgroup pointer for slab pages")
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
----
- mm/memcontrol.c | 2 +-
- mm/slab.h       | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index ea085877c548..00b4188b1bed 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -476,7 +476,7 @@ ino_t page_cgroup_ino(struct page *page)
- 	unsigned long ino = 0;
+Somehow get_maintainer.pl doesn't list the 2 addresses in my tree; do I
+need to send a patch to update MAINTAINERS accordingly?
  
- 	rcu_read_lock();
--	if (PageHead(page) && PageSlab(page))
-+	if (PageSlab(page) && !PageTail(page))
- 		memcg = memcg_from_slab_page(page);
- 	else
- 		memcg = READ_ONCE(page->mem_cgroup);
-diff --git a/mm/slab.h b/mm/slab.h
-index 3eb29ae75743..8b77f973a6ab 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -323,8 +323,8 @@ static inline struct kmem_cache *memcg_root_cache(struct kmem_cache *s)
-  * Expects a pointer to a slab page. Please note, that PageSlab() check
-  * isn't sufficient, as it returns true also for tail compound slab pages,
-  * which do not have slab_cache pointer set.
-- * So this function assumes that the page can pass PageHead() and PageSlab()
-- * checks.
-+ * So this function assumes that the page can pass PageSlab() && !PageTail()
-+ * check.
-  *
-  * The kmem_cache can be reparented asynchronously. The caller must ensure
-  * the memcg lifetime, e.g. by taking rcu_read_lock() or cgroup_mutex.
--- 
-2.17.1
-
+> Yours,
+> Linus Walleij
