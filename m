@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF44CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7D3CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 462532086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8342086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:09:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZHC0k1GY"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Xpghh2BD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfJaKJM (ORCPT
+        id S1727549AbfJaKJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:09:12 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36987 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727481AbfJaKJJ (ORCPT
+        Thu, 31 Oct 2019 06:09:19 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38671 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727448AbfJaKIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:09:09 -0400
-Received: by mail-wr1-f65.google.com with SMTP id e11so5551161wrv.4
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 03:09:08 -0700 (PDT)
+        Thu, 31 Oct 2019 06:08:54 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z19so1076294wmk.3
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 03:08:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FgmJFc69aJGBfN43Lu4UDpX3eu2jhzY+mRsGnXR2dN8=;
-        b=ZHC0k1GYUbegvQPvHD4Xf19RSbmdOsmEtTOavJGxcZ+j5rqNyIcxQBxfljefzbXnN+
-         1Xzx6DkNI7/ZL5N3l58JRsc/uvaGc16UeZxniGRD40zpEC6amGSI60kL5ZuAKuHRau0N
-         SB2akz6Cb0d4UcZSsyfiRxS+E4JgcAdWmNCVk=
+        bh=wEtFuOQbnqkCm+YMw+q0AVoffrvisp8fPIpvD68mwAY=;
+        b=Xpghh2BDBzFLBYNzjJ+bYitguKy3roxfdmATYQSj3iUIQ2QpmlzG0qwHD3Kz/5jmP+
+         m+guLnF1LwakF+OYc6LFL6Eyst0UROI6O8RhIJ7L4G0ZdrszNQgFmtK++krqeQJcaxLp
+         37iE8iGxHIItp1LpGyzi8XtDTKXyG/nfd/wTk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=FgmJFc69aJGBfN43Lu4UDpX3eu2jhzY+mRsGnXR2dN8=;
-        b=ErjcrYWKPcfWjSHwY5M3QfMDxufjO3YSKxXHlGGPF4DAOg//julnrnYs5a3jUl5T7j
-         BRvuQG6Pfn+Xb2v7Ct+2hI2tEkUfoiWpi7jWRO6X+gp6P6TD+kxGOKv/d9aAuK0NWWVX
-         KB7C5oWbQUZQsgmv4oJII042u51Ym0GW8IqjajbpG55rzVll7khGD0b0KPCMS3h4s+YX
-         rIll1AHRluWOy/Ja1oBt3FGfzRA0Yboi1TZi4Mcwl9E2drDEaz/bF393XVjwZRHpHV7i
-         q6CRb8znR1RTlWEObfiLy1yahHHFK2rWQONdiE3ixKjhIMQE5jDvgR7Ka2iuAVKnWUwt
-         D7Kg==
-X-Gm-Message-State: APjAAAUCQxpx9SRdO+cZYQSLsf8/BjtGZKByKQUxxQZsCmZjiJK0InGB
-        h1dgivBKWFfQxH9MecVWZwdIJw==
-X-Google-Smtp-Source: APXvYqzn2VJmEXK7aYh4V+/yj10YOCdzf2dq2vOBaRTSRlfhZymHmmM6N7YE5R47IJV6pLoo05VoZA==
-X-Received: by 2002:a5d:6706:: with SMTP id o6mr4795882wru.54.1572516548159;
-        Thu, 31 Oct 2019 03:09:08 -0700 (PDT)
+        bh=wEtFuOQbnqkCm+YMw+q0AVoffrvisp8fPIpvD68mwAY=;
+        b=mqFFezofd9ZRVwJG401keoqIjGlkd1nh7Nckfl+GbkXGlFzUpIMftwmrrfiYjUezPs
+         iYl3WHjVPCBewcKk14U/RsrTahQMxnp8kumrbnc6EycDpejtvjrgEyxyug8l85kSicba
+         1EcvtLECl/eH2XAU1CpwPtqfGOKP6EdjkwWdJ0JK/5/+E9FGKBcHA+QfmIfTMU7F5/un
+         Eb7GHk8OrroT1YmYQ9/7Zjl325c0GlBcCzFHRkmUlbS91Rk9ZheqPFEYVu9a7wQvB9Mw
+         ZXVeXQ1wHixrgE0h6e5xfJxZ/gb0SFb2h38cauP3LLGhTRPZzet+/T6LTpWBA1aK4wlA
+         VR4A==
+X-Gm-Message-State: APjAAAUOEkvhRlEVeH/AL9TukDcJC0SwUYiec/c/u17Nx0esS5Jp0aAS
+        76dbi3A5jU9g10Zt4iQjR6ud6A==
+X-Google-Smtp-Source: APXvYqzule7hvriuqscJvUXX1Wh5M2p7vWtOLRWlgOaTiC+9Ep6zorMH//W6t65/6TZ0p73glJrW5w==
+X-Received: by 2002:a1c:9cc6:: with SMTP id f189mr4626287wme.80.1572516530022;
+        Thu, 31 Oct 2019 03:08:50 -0700 (PDT)
 Received: from shitalt.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id w8sm3719609wrr.44.2019.10.31.03.09.01
+        by smtp.gmail.com with ESMTPSA id w8sm3719609wrr.44.2019.10.31.03.08.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 31 Oct 2019 03:09:07 -0700 (PDT)
+        Thu, 31 Oct 2019 03:08:49 -0700 (PDT)
 From:   Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
 To:     =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -70,9 +70,9 @@ Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         netdev@vger.kernel.org,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-Subject: [PATCH net-next V5 3/3] bnxt_en: Add support to collect crash dump via ethtool
-Date:   Thu, 31 Oct 2019 15:38:52 +0530
-Message-Id: <1572516532-5977-4-git-send-email-sheetal.tigadoli@broadcom.com>
+Subject: [PATCH net-next V5 1/3] firmware: broadcom: add OP-TEE based BNXT f/w manager
+Date:   Thu, 31 Oct 2019 15:38:50 +0530
+Message-Id: <1572516532-5977-2-git-send-email-sheetal.tigadoli@broadcom.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1572516532-5977-1-git-send-email-sheetal.tigadoli@broadcom.com>
 References: <1572516532-5977-1-git-send-email-sheetal.tigadoli@broadcom.com>
@@ -81,137 +81,354 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Vikas Gupta <vikas.gupta@broadcom.com>
 
-Driver supports 2 types of core dumps.
-
-1. Live dump - Firmware dump when system is up and running.
-2. Crash dump - Dump which is collected during firmware crash
-                that can be retrieved after recovery.
-Crash dump is currently supported only on specific 58800 chips
-which can be retrieved using OP-TEE API only, as firmware cannot
-access this region directly.
-
-User needs to set the dump flag using following command before
-initiating the dump collection:
-
-    $ ethtool -W|--set-dump eth0 N
-
-Where N is "0" for live dump and "1" for crash dump
-
-Command to collect the dump after setting the flag:
-
-    $ ethtool -w eth0 data Filename
-
-v3: Modify set_dump to support even when CONFIG_TEE_BNXT_FW=n.
-Also change log message to netdev_info().
+This driver registers on TEE bus to interact with OP-TEE based
+BNXT firmware management modules
 
 Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
 Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.h     |  3 ++
- .../net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 37 ++++++++++++++++++-
- .../net/ethernet/broadcom/bnxt/bnxt_ethtool.h |  2 +
- 3 files changed, 40 insertions(+), 2 deletions(-)
+ drivers/firmware/broadcom/Kconfig             |   8 +
+ drivers/firmware/broadcom/Makefile            |   1 +
+ drivers/firmware/broadcom/tee_bnxt_fw.c       | 279 ++++++++++++++++++
+ include/linux/firmware/broadcom/tee_bnxt_fw.h |  14 +
+ 4 files changed, 302 insertions(+)
+ create mode 100644 drivers/firmware/broadcom/tee_bnxt_fw.c
+ create mode 100644 include/linux/firmware/broadcom/tee_bnxt_fw.h
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.h b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-index 09437150f818..3e7d1fb1b0b1 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-@@ -1807,6 +1807,9 @@ struct bnxt {
- 
- 	u8			num_leds;
- 	struct bnxt_led_info	leds[BNXT_MAX_LED];
-+	u16			dump_flag;
-+#define BNXT_DUMP_LIVE		0
-+#define BNXT_DUMP_CRASH		1
- 
- 	struct bpf_prog		*xdp_prog;
- 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index 51c140476717..f2220b826d61 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -3311,6 +3311,24 @@ static int bnxt_get_coredump(struct bnxt *bp, void *buf, u32 *dump_len)
- 	return rc;
- }
- 
-+static int bnxt_set_dump(struct net_device *dev, struct ethtool_dump *dump)
-+{
-+	struct bnxt *bp = netdev_priv(dev);
+diff --git a/drivers/firmware/broadcom/Kconfig b/drivers/firmware/broadcom/Kconfig
+index d03ed8e43ad7..8e3d355a637a 100644
+--- a/drivers/firmware/broadcom/Kconfig
++++ b/drivers/firmware/broadcom/Kconfig
+@@ -22,3 +22,11 @@ config BCM47XX_SPROM
+ 	  In case of SoC devices SPROM content is stored on a flash used by
+ 	  bootloader firmware CFE. This driver provides method to ssb and bcma
+ 	  drivers to read SPROM on SoC.
 +
-+	if (dump->flag > BNXT_DUMP_CRASH) {
-+		netdev_info(dev, "Supports only Live(0) and Crash(1) dumps.\n");
++config TEE_BNXT_FW
++	tristate "Broadcom BNXT firmware manager"
++	depends on (ARCH_BCM_IPROC && OPTEE) || (COMPILE_TEST && TEE)
++	default ARCH_BCM_IPROC
++	help
++	  This module help to manage firmware on Broadcom BNXT device. The module
++	  registers on tee bus and invoke calls to manage firmware on BNXT device.
+diff --git a/drivers/firmware/broadcom/Makefile b/drivers/firmware/broadcom/Makefile
+index 72c7fdc20c77..17c5061c47a7 100644
+--- a/drivers/firmware/broadcom/Makefile
++++ b/drivers/firmware/broadcom/Makefile
+@@ -1,3 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ obj-$(CONFIG_BCM47XX_NVRAM)		+= bcm47xx_nvram.o
+ obj-$(CONFIG_BCM47XX_SPROM)		+= bcm47xx_sprom.o
++obj-$(CONFIG_TEE_BNXT_FW)		+= tee_bnxt_fw.o
+diff --git a/drivers/firmware/broadcom/tee_bnxt_fw.c b/drivers/firmware/broadcom/tee_bnxt_fw.c
+new file mode 100644
+index 000000000000..5b7ef89eb701
+--- /dev/null
++++ b/drivers/firmware/broadcom/tee_bnxt_fw.c
+@@ -0,0 +1,279 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 Broadcom.
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/sizes.h>
++#include <linux/slab.h>
++#include <linux/tee_drv.h>
++#include <linux/uuid.h>
++
++#include <linux/firmware/broadcom/tee_bnxt_fw.h>
++
++#define MAX_SHM_MEM_SZ	SZ_4M
++
++#define MAX_TEE_PARAM_ARRY_MEMB		4
++
++enum ta_cmd {
++	/*
++	 * TA_CMD_BNXT_FASTBOOT - boot bnxt device by copying f/w into sram
++	 *
++	 *	param[0] unused
++	 *	param[1] unused
++	 *	param[2] unused
++	 *	param[3] unused
++	 *
++	 * Result:
++	 *	TEE_SUCCESS - Invoke command success
++	 *	TEE_ERROR_ITEM_NOT_FOUND - Corrupt f/w image found on memory
++	 */
++	TA_CMD_BNXT_FASTBOOT = 0,
++
++	/*
++	 * TA_CMD_BNXT_COPY_COREDUMP - copy the core dump into shm
++	 *
++	 *	param[0] (inout memref) - Coredump buffer memory reference
++	 *	param[1] (in value) - value.a: offset, data to be copied from
++	 *			      value.b: size of data to be copied
++	 *	param[2] unused
++	 *	param[3] unused
++	 *
++	 * Result:
++	 *	TEE_SUCCESS - Invoke command success
++	 *	TEE_ERROR_BAD_PARAMETERS - Incorrect input param
++	 *	TEE_ERROR_ITEM_NOT_FOUND - Corrupt core dump
++	 */
++	TA_CMD_BNXT_COPY_COREDUMP = 3,
++};
++
++/**
++ * struct tee_bnxt_fw_private - OP-TEE bnxt private data
++ * @dev:		OP-TEE based bnxt device.
++ * @ctx:		OP-TEE context handler.
++ * @session_id:		TA session identifier.
++ */
++struct tee_bnxt_fw_private {
++	struct device *dev;
++	struct tee_context *ctx;
++	u32 session_id;
++	struct tee_shm *fw_shm_pool;
++};
++
++static struct tee_bnxt_fw_private pvt_data;
++
++static void prepare_args(int cmd,
++			 struct tee_ioctl_invoke_arg *arg,
++			 struct tee_param *param)
++{
++	memset(arg, 0, sizeof(*arg));
++	memset(param, 0, MAX_TEE_PARAM_ARRY_MEMB * sizeof(*param));
++
++	arg->func = cmd;
++	arg->session = pvt_data.session_id;
++	arg->num_params = MAX_TEE_PARAM_ARRY_MEMB;
++
++	/* Fill invoke cmd params */
++	switch (cmd) {
++	case TA_CMD_BNXT_COPY_COREDUMP:
++		param[0].attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT;
++		param[0].u.memref.shm = pvt_data.fw_shm_pool;
++		param[0].u.memref.size = MAX_SHM_MEM_SZ;
++		param[0].u.memref.shm_offs = 0;
++		param[1].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT;
++		break;
++	case TA_CMD_BNXT_FASTBOOT:
++	default:
++		/* Nothing to do */
++		break;
++	}
++}
++
++/**
++ * tee_bnxt_fw_load() - Load the bnxt firmware
++ *		    Uses an OP-TEE call to start a secure
++ *		    boot process.
++ * Returns 0 on success, negative errno otherwise.
++ */
++int tee_bnxt_fw_load(void)
++{
++	int ret = 0;
++	struct tee_ioctl_invoke_arg arg;
++	struct tee_param param[MAX_TEE_PARAM_ARRY_MEMB];
++
++	if (!pvt_data.ctx)
++		return -ENODEV;
++
++	prepare_args(TA_CMD_BNXT_FASTBOOT, &arg, param);
++
++	ret = tee_client_invoke_func(pvt_data.ctx, &arg, param);
++	if (ret < 0 || arg.ret != 0) {
++		dev_err(pvt_data.dev,
++			"TA_CMD_BNXT_FASTBOOT invoke failed TEE err: %x, ret:%x\n",
++			arg.ret, ret);
 +		return -EINVAL;
 +	}
 +
-+	if (!IS_ENABLED(CONFIG_TEE_BNXT_FW) && dump->flag == BNXT_DUMP_CRASH) {
-+		netdev_info(dev, "Cannot collect crash dump as TEE_BNXT_FW config option is not enabled.\n");
-+		return -EOPNOTSUPP;
++	return 0;
++}
++EXPORT_SYMBOL(tee_bnxt_fw_load);
++
++/**
++ * tee_bnxt_copy_coredump() - Copy coredump from the allocated memory
++ *			    Uses an OP-TEE call to copy coredump
++ * @buf:	destination buffer where core dump is copied into
++ * @offset:	offset from the base address of core dump area
++ * @size:	size of the dump
++ *
++ * Returns 0 on success, negative errno otherwise.
++ */
++int tee_bnxt_copy_coredump(void *buf, u32 offset, u32 size)
++{
++	struct tee_ioctl_invoke_arg arg;
++	struct tee_param param[MAX_TEE_PARAM_ARRY_MEMB];
++	void *core_data;
++	u32 rbytes = size;
++	u32 nbytes = 0;
++	int ret = 0;
++
++	if (!pvt_data.ctx)
++		return -ENODEV;
++
++	prepare_args(TA_CMD_BNXT_COPY_COREDUMP, &arg, param);
++
++	while (rbytes)  {
++		nbytes = rbytes;
++
++		nbytes = min_t(u32, rbytes, param[0].u.memref.size);
++
++		/* Fill additional invoke cmd params */
++		param[1].u.value.a = offset;
++		param[1].u.value.b = nbytes;
++
++		ret = tee_client_invoke_func(pvt_data.ctx, &arg, param);
++		if (ret < 0 || arg.ret != 0) {
++			dev_err(pvt_data.dev,
++				"TA_CMD_BNXT_COPY_COREDUMP invoke failed TEE err: %x, ret:%x\n",
++				arg.ret, ret);
++			return -EINVAL;
++		}
++
++		core_data = tee_shm_get_va(pvt_data.fw_shm_pool, 0);
++		if (IS_ERR(core_data)) {
++			dev_err(pvt_data.dev, "tee_shm_get_va failed\n");
++			return PTR_ERR(core_data);
++		}
++
++		memcpy(buf, core_data, nbytes);
++
++		rbytes -= nbytes;
++		buf += nbytes;
++		offset += nbytes;
 +	}
 +
-+	bp->dump_flag = dump->flag;
++	return 0;
++}
++EXPORT_SYMBOL(tee_bnxt_copy_coredump);
++
++static int optee_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
++{
++	return (ver->impl_id == TEE_IMPL_ID_OPTEE);
++}
++
++static int tee_bnxt_fw_probe(struct device *dev)
++{
++	struct tee_client_device *bnxt_device = to_tee_client_device(dev);
++	int ret, err = -ENODEV;
++	struct tee_ioctl_open_session_arg sess_arg;
++	struct tee_shm *fw_shm_pool;
++
++	memset(&sess_arg, 0, sizeof(sess_arg));
++
++	/* Open context with TEE driver */
++	pvt_data.ctx = tee_client_open_context(NULL, optee_ctx_match, NULL,
++					       NULL);
++	if (IS_ERR(pvt_data.ctx))
++		return -ENODEV;
++
++	/* Open session with Bnxt load Trusted App */
++	memcpy(sess_arg.uuid, bnxt_device->id.uuid.b, TEE_IOCTL_UUID_LEN);
++	sess_arg.clnt_login = TEE_IOCTL_LOGIN_PUBLIC;
++	sess_arg.num_params = 0;
++
++	ret = tee_client_open_session(pvt_data.ctx, &sess_arg, NULL);
++	if (ret < 0 || sess_arg.ret != 0) {
++		dev_err(dev, "tee_client_open_session failed, err: %x\n",
++			sess_arg.ret);
++		err = -EINVAL;
++		goto out_ctx;
++	}
++	pvt_data.session_id = sess_arg.session;
++
++	pvt_data.dev = dev;
++
++	fw_shm_pool = tee_shm_alloc(pvt_data.ctx, MAX_SHM_MEM_SZ,
++				    TEE_SHM_MAPPED | TEE_SHM_DMA_BUF);
++	if (IS_ERR(fw_shm_pool)) {
++		tee_client_close_context(pvt_data.ctx);
++		dev_err(pvt_data.dev, "tee_shm_alloc failed\n");
++		err = PTR_ERR(fw_shm_pool);
++		goto out_sess;
++	}
++
++	pvt_data.fw_shm_pool = fw_shm_pool;
++
++	return 0;
++
++out_sess:
++	tee_client_close_session(pvt_data.ctx, pvt_data.session_id);
++out_ctx:
++	tee_client_close_context(pvt_data.ctx);
++
++	return err;
++}
++
++static int tee_bnxt_fw_remove(struct device *dev)
++{
++	tee_shm_free(pvt_data.fw_shm_pool);
++	tee_client_close_session(pvt_data.ctx, pvt_data.session_id);
++	tee_client_close_context(pvt_data.ctx);
++	pvt_data.ctx = NULL;
++
 +	return 0;
 +}
 +
- static int bnxt_get_dump_flag(struct net_device *dev, struct ethtool_dump *dump)
- {
- 	struct bnxt *bp = netdev_priv(dev);
-@@ -3323,7 +3341,12 @@ static int bnxt_get_dump_flag(struct net_device *dev, struct ethtool_dump *dump)
- 			bp->ver_resp.hwrm_fw_bld_8b << 8 |
- 			bp->ver_resp.hwrm_fw_rsvd_8b;
- 
--	return bnxt_get_coredump(bp, NULL, &dump->len);
-+	dump->flag = bp->dump_flag;
-+	if (bp->dump_flag == BNXT_DUMP_CRASH)
-+		dump->len = BNXT_CRASH_DUMP_LEN;
-+	else
-+		bnxt_get_coredump(bp, NULL, &dump->len);
-+	return 0;
- }
- 
- static int bnxt_get_dump_data(struct net_device *dev, struct ethtool_dump *dump,
-@@ -3336,7 +3359,16 @@ static int bnxt_get_dump_data(struct net_device *dev, struct ethtool_dump *dump,
- 
- 	memset(buf, 0, dump->len);
- 
--	return bnxt_get_coredump(bp, buf, &dump->len);
-+	dump->flag = bp->dump_flag;
-+	if (dump->flag == BNXT_DUMP_CRASH) {
-+#ifdef CONFIG_TEE_BNXT_FW
-+		return tee_bnxt_copy_coredump(buf, 0, dump->len);
-+#endif
-+	} else {
-+		return bnxt_get_coredump(bp, buf, &dump->len);
-+	}
++static const struct tee_client_device_id tee_bnxt_fw_id_table[] = {
++	{UUID_INIT(0x6272636D, 0x2019, 0x0716,
++		    0x42, 0x43, 0x4D, 0x5F, 0x53, 0x43, 0x48, 0x49)},
++	{}
++};
 +
-+	return 0;
- }
- 
- void bnxt_ethtool_init(struct bnxt *bp)
-@@ -3446,6 +3478,7 @@ const struct ethtool_ops bnxt_ethtool_ops = {
- 	.set_phys_id		= bnxt_set_phys_id,
- 	.self_test		= bnxt_self_test,
- 	.reset			= bnxt_reset,
-+	.set_dump		= bnxt_set_dump,
- 	.get_dump_flag		= bnxt_get_dump_flag,
- 	.get_dump_data		= bnxt_get_dump_data,
- };
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.h b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.h
-index b5b65b3f8534..01de7e79d14f 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.h
-@@ -59,6 +59,8 @@ struct hwrm_dbg_cmn_output {
- 	#define HWRM_DBG_CMN_FLAGS_MORE	1
- };
- 
-+#define BNXT_CRASH_DUMP_LEN	(8 << 20)
++MODULE_DEVICE_TABLE(tee, tee_bnxt_fw_id_table);
 +
- #define BNXT_LED_DFLT_ENA				\
- 	(PORT_LED_CFG_REQ_ENABLES_LED0_ID |		\
- 	 PORT_LED_CFG_REQ_ENABLES_LED0_STATE |		\
++static struct tee_client_driver tee_bnxt_fw_driver = {
++	.id_table	= tee_bnxt_fw_id_table,
++	.driver		= {
++		.name		= KBUILD_MODNAME,
++		.bus		= &tee_bus_type,
++		.probe		= tee_bnxt_fw_probe,
++		.remove		= tee_bnxt_fw_remove,
++	},
++};
++
++static int __init tee_bnxt_fw_mod_init(void)
++{
++	return driver_register(&tee_bnxt_fw_driver.driver);
++}
++
++static void __exit tee_bnxt_fw_mod_exit(void)
++{
++	driver_unregister(&tee_bnxt_fw_driver.driver);
++}
++
++module_init(tee_bnxt_fw_mod_init);
++module_exit(tee_bnxt_fw_mod_exit);
++
++MODULE_AUTHOR("Vikas Gupta <vikas.gupta@broadcom.com>");
++MODULE_DESCRIPTION("Broadcom bnxt firmware manager");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/firmware/broadcom/tee_bnxt_fw.h b/include/linux/firmware/broadcom/tee_bnxt_fw.h
+new file mode 100644
+index 000000000000..f24c82d6ef73
+--- /dev/null
++++ b/include/linux/firmware/broadcom/tee_bnxt_fw.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: BSD-2-Clause */
++/*
++ * Copyright 2019 Broadcom.
++ */
++
++#ifndef _BROADCOM_TEE_BNXT_FW_H
++#define _BROADCOM_TEE_BNXT_FW_H
++
++#include <linux/types.h>
++
++int tee_bnxt_fw_load(void);
++int tee_bnxt_copy_coredump(void *buf, u32 offset, u32 size);
++
++#endif /* _BROADCOM_TEE_BNXT_FW_H */
 -- 
 2.17.1
 
