@@ -2,88 +2,105 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C1ECA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA42DCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B66842083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:57:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AEGDXtnZ"
+	by mail.kernel.org (Postfix) with ESMTP id B24E72083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:58:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfJaI5e (ORCPT
+        id S1727068AbfJaI6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 04:57:34 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43623 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfJaI5e (ORCPT
+        Thu, 31 Oct 2019 04:58:19 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44978 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfJaI6T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 04:57:34 -0400
-Received: by mail-io1-f66.google.com with SMTP id c11so5791952iom.10
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 01:57:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8IZcXOhYWcQPPh8pbPgFawvnUK9M/706xBPYei9/eFw=;
-        b=AEGDXtnZWMhiiDLrfPhBu5ICyGLokIcM97C5AqmmYtNp2z4rEDiNSMFiVGL9YFN4gK
-         Uj3f2kBx7U99NDg1jvXkxJErUOKgrZq4hYWliDqk5fXZSjCI4KVDvH11dVlLkSqJieet
-         Mkto6617w/B5M8W5C/mJkZh6kUhVSBZXVZOAm82Y6b46MpJk0KXr12xXSSlENtsXCge+
-         UVqwAuvztYyNydIQGwWELbDJaKvyOdYOvCG8GUT19u4WJAGWj2rczHUjtop76ip9KZju
-         8r1Dl7DhMKHmcVXhCWd6lWLkR3ZuMGJ+T8Hr54LnR96RGeOKnJ6wGQb0FGWK+Mu6m8UY
-         4wmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8IZcXOhYWcQPPh8pbPgFawvnUK9M/706xBPYei9/eFw=;
-        b=jGtzxhiFWhYZcmmDnizPy2tgvTrSTXnQL9dJ0YseLBGzdEOGSzWPrY9JAsT7sVppMW
-         NtwnTDP5IHEc7XL/Er9cuB1E/9bYiweBdqTb+x003y+aUi9QNzBpxbSVII6YHkoTRHgX
-         aasTLInKge+ujTgi3QQWxotjyQbVZSYGE+DHg4UeR7Sw7mIp0NHfl0jUyeLEjCJhulGn
-         hnCsdU8UNiuXo32+SteyQfmt3hwRUWZnYrKKWACuRwqbj09sYxvjj8cy4vpmR8grgYiw
-         goD+rJEdgTXtEvYBV0KM2IOTwugB8npJeBUd0b4WDuazkmjE79jI7qKaTtYi/2w4rzMo
-         nc4w==
-X-Gm-Message-State: APjAAAWYgoakHntrzL0QuPQhpFKdpDh3lW6sM3eU4f4I8Zx/giNohUx4
-        h3D+Dk0/GLzGxCI0jtGQ/I2hvNuk7QDTU3UCCtT0ww==
-X-Google-Smtp-Source: APXvYqxV+dCgVfvyNIf9sww3KhPCvrGskZ13qCx0x5s+9JoRgcMYQVptyGjQDTFpRDYcZA9EtyzX0lv/U5iCaEQCo+0=
-X-Received: by 2002:a5d:8909:: with SMTP id b9mr4355813ion.138.1572512252076;
- Thu, 31 Oct 2019 01:57:32 -0700 (PDT)
+        Thu, 31 Oct 2019 04:58:19 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7076328FC69;
+        Thu, 31 Oct 2019 08:58:17 +0000 (GMT)
+Date:   Thu, 31 Oct 2019 09:58:14 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Jonas Karlman <jonas@kwiboo.se>, Tomasz Figa <tfiga@chromium.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Francois Buergisser <fbuergisser@chromium.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 02/10] media: hantro: Fix motion vectors usage
+ condition
+Message-ID: <20191031095814.25112ba0@collabora.com>
+In-Reply-To: <HE1PR06MB40116FEF3EBE4706E426A5FFAC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
+References: <HE1PR06MB401108289F09802C261374F8AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
+        <20191029012430.24566-1-jonas@kwiboo.se>
+        <HE1PR06MB40116FEF3EBE4706E426A5FFAC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20191030091038.678-1-daniel.lezcano@linaro.org> <20191030091038.678-2-daniel.lezcano@linaro.org>
-In-Reply-To: <20191030091038.678-2-daniel.lezcano@linaro.org>
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-Date:   Thu, 31 Oct 2019 14:27:20 +0530
-Message-ID: <CAKohpokt8_Ru8_g=EY+XEG71wTVUC+_h5+Bu=kydAzx0i0zEsQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] thermal: cpu_cooling: Reorder the header file
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        "open list:THERMAL/CPU_COOLING" <linux-pm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 30 Oct 2019 at 14:41, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->
-> As the conditions are simplified and unified, it is useless to have
-> different blocks of definitions under the same compiler condition,
-> let's merge the blocks.
->
-> There is no functional change.
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  include/linux/cpu_cooling.h | 16 +++++++---------
->  1 file changed, 7 insertions(+), 9 deletions(-)
+On Tue, 29 Oct 2019 01:24:47 +0000
+Jonas Karlman <jonas@kwiboo.se> wrote:
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> From: Francois Buergisser <fbuergisser@chromium.org>
+> 
+> The setting of the motion vectors usage and the setting of motion
+> vectors address are currently done under different conditions.
+> 
+> When decoding pre-recorded videos, this results of leaving the motion
+> vectors address unset, resulting in faulty memory accesses. Fix it
+> by using the same condition everywhere, which matches the profiles
+> that support motion vectors.
+> 
+> Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
+> Signed-off-by: Francois Buergisser <fbuergisser@chromium.org>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Tested-by: Boris Brezillon <boris.brezillon@collabora.com>
+
+This fix should apply cleanly to media/fixes. Would be great to have it
+queued for 5.4-rc6 so we don't have to backport it manually.
+
+> ---
+>  drivers/staging/media/hantro/hantro_g1_h264_dec.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> index 29130946dea4..a1cb18680200 100644
+> --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> @@ -35,7 +35,7 @@ static void set_params(struct hantro_ctx *ctx)
+>  	if (sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD)
+>  		reg |= G1_REG_DEC_CTRL0_SEQ_MBAFF_E;
+>  	reg |= G1_REG_DEC_CTRL0_PICORD_COUNT_E;
+> -	if (dec_param->nal_ref_idc)
+> +	if (sps->profile_idc > 66 && dec_param->nal_ref_idc)
+>  		reg |= G1_REG_DEC_CTRL0_WRITE_MVS_E;
+>  
+>  	if (!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY) &&
+> @@ -245,7 +245,7 @@ static void set_buffers(struct hantro_ctx *ctx)
+>  	vdpu_write_relaxed(vpu, dst_dma, G1_REG_ADDR_DST);
+>  
+>  	/* Higher profiles require DMV buffer appended to reference frames. */
+> -	if (ctrls->sps->profile_idc > 66) {
+> +	if (ctrls->sps->profile_idc > 66 && ctrls->decode->nal_ref_idc) {
+>  		size_t pic_size = ctx->h264_dec.pic_size;
+>  		size_t mv_offset = round_up(pic_size, 8);
+>  
+
