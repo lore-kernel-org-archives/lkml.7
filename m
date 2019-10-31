@@ -2,102 +2,102 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34E5CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A41CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5822086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:54:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EST86sBD"
+	by mail.kernel.org (Postfix) with ESMTP id B97782080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbfJaRya (ORCPT
+        id S1729185AbfJaRzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 13:54:30 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40879 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbfJaRya (ORCPT
+        Thu, 31 Oct 2019 13:55:12 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33587 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbfJaRzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 13:54:30 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r4so4862345pfl.7;
-        Thu, 31 Oct 2019 10:54:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kz/FCtj2PF4gxBdcIEXsfbI3RO9QLhbBmTNUon1wjBw=;
-        b=EST86sBDiClx5CY1TbLmQF3b5slqCpp8BgmFv4VLc7H8M+gWS4n0FyV7tJl/SNCedP
-         x+RIjeA/vG/S844grBTtcbmvcnGfRwRgmdoeUSOCuvmE+08qpPH2Uew7FU/IbFCTaNXV
-         NpOGNwzYATmj3M6w2DDZ86mwPurmvgfdrfNEb96YHl6L+leWAc3qLdpRuuod4c22wjbZ
-         dbUTVnX4+UJkxWXqRXIFlGytjAhwWnqjf5mYXYr11Z9rB+b6yF1fgfpPI7azzX29zQ1x
-         SwZE+rDreClmrLI3TroX6/PZGpkboSq9KsDv1ati/aajpk7JNZBDXS2U5Ed8zkFTM/Kz
-         dc/Q==
+        Thu, 31 Oct 2019 13:55:12 -0400
+Received: by mail-pl1-f196.google.com with SMTP id y8so3033636plk.0;
+        Thu, 31 Oct 2019 10:55:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kz/FCtj2PF4gxBdcIEXsfbI3RO9QLhbBmTNUon1wjBw=;
-        b=Zw3ydVs4mPPVGreKYSAOPbJPczc/UpOsqj2vLifZRouQthVSFDvlydlsKoF2YXISM8
-         1upCHH/AoGzNslJWL1UIIm/dPJl0VLP132H/39FLIIozp5GAYexsO2KmtXNXJIhc1wzZ
-         gR6zuF7zP9dvAYyF2q85a4adCOw40J/nir/DU1jV55VMe4s+EtIIW0cl1hlw21GMzj/G
-         EgK0hAgkUKFp4qVH2vBmx74IATBkBU/FLu5FZrIcSZfQ6TTxRzV25D5PzgskWe04WeYR
-         jvx3uVNrkxxitkSyPzlZSmIvjnR2g/9KMoksZ4Rq486RTXREuo+gkCwVOV8bqwGU3R5d
-         QsBQ==
-X-Gm-Message-State: APjAAAUERY3z1V10ECJa85Wi4RbCR6yGPqUu938DZNtJ0qCIdYM2hM0h
-        CV/kmjYsiaVwV94kbt7aeHY=
-X-Google-Smtp-Source: APXvYqzPEkkqE2XdSGKjYOFeXoi4DM/BqcfRzbuG+/8iiXNsBYnzSNslwun+1RAYM3et3ScThxGGzw==
-X-Received: by 2002:a63:1a46:: with SMTP id a6mr7805345pgm.3.1572544467672;
-        Thu, 31 Oct 2019 10:54:27 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j7sm3523599pgl.38.2019.10.31.10.54.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 31 Oct 2019 10:54:26 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 10:54:25 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH v2] nvme: Add hardware monitoring support
-Message-ID: <20191031175425.GA25602@roeck-us.net>
-References: <20191029223214.18889-1-linux@roeck-us.net>
- <CAC5umyhc=6yULiLwXu65VDvDk2cBiF0R9O39B-T5ftapJfj0rQ@mail.gmail.com>
- <e62b6763-0d1b-3359-6d3b-cb31e96bb862@roeck-us.net>
- <20191031134549.GB4763@lst.de>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rfu7xisG1VzK9l1fM8rUWCXjY+Vu9qgC5rX7Api65YQ=;
+        b=sVLCWYoob04UbUMLPirKTHrvWcBOotdRwKhsfJWBQOvCSVnm6iEgVJdycxjh2EKLNH
+         4DunIVF1bBAbyrz+xtnpDu8O0/CR2BrimsKIaNsileWcLvDrsCNI3P6nR/uBmAzhjkqu
+         bCDiYESXsHIS0eHtIj88B2eS4yjCRf26YEp9JrAVi4eAjAPIE+Vq9wwjgWiMhLWktpcS
+         a9i1UXkEdoGbbia4FpkPjewNtmQoGx4aP7ikTrTJdxMl73/OHxKF/qR9+a4+xHxODcHb
+         LJMOrXcN+ZdpSVkwOtXECVbzfCoEffRT/YQ6217RnJAe04azadxxGhSns1LrbvXKrdCl
+         hNMQ==
+X-Gm-Message-State: APjAAAW/f6DRTLEnx+D4OeCVT3vxqCaIjUFzA0TtosPueKlLnmTOVUQS
+        /s60eYkMwm3IzuNI39mXKX0=
+X-Google-Smtp-Source: APXvYqxOhQdnJ4HJ42l58Y2HemuWrKPK4wsg/9OWnqDaXmkG9u5MJ57Bd6czOyPkmD9iZ1pC0U6XfQ==
+X-Received: by 2002:a17:902:b687:: with SMTP id c7mr7654265pls.52.1572544511272;
+        Thu, 31 Oct 2019 10:55:11 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id 22sm3859912pfo.131.2019.10.31.10.55.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 31 Oct 2019 10:55:10 -0700 (PDT)
+Subject: Re: [PATCH 4/9] drivers/iio: Sign extend without triggering
+ implementation-defined behavior
+To:     dgilbert@interlog.com, Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+References: <20191028200700.213753-1-bvanassche@acm.org>
+ <20191028200700.213753-5-bvanassche@acm.org>
+ <20191030200232.GC3079@worktop.programming.kicks-ass.net>
+ <bc4941a9-25f0-c931-61f1-b4f96c4bdff9@interlog.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <a5863854-037d-55d5-69c8-ae15aa4a861a@acm.org>
+Date:   Thu, 31 Oct 2019 10:55:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031134549.GB4763@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <bc4941a9-25f0-c931-61f1-b4f96c4bdff9@interlog.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 02:45:49PM +0100, Christoph Hellwig wrote:
-> On Wed, Oct 30, 2019 at 07:20:37PM -0700, Guenter Roeck wrote:
-> >> The nvme_init_identify() can be called multiple time in nvme ctrl's
-> >> lifetime (e.g 'nvme reset /dev/nvme*' or suspend/resume paths), so
-> >> should we need to prevent nvme_hwmon_init() from registering hwmon
-> >> device more than twice?
-> >>
-> >> In the nvme thermal zone patchset[1], thernal zone is registered in
-> >> nvme_init_identify and unregistered in nvme_stop_ctrl().
-> >>
-> >
-> > Doesn't that mean that the initialization should happen in nvme_start_ctrl()
-> > and not here ?
+On 10/30/19 3:13 PM, Douglas Gilbert wrote:
+> On 2019-10-30 4:02 p.m., Peter Zijlstra wrote:
+>> On Mon, Oct 28, 2019 at 01:06:55PM -0700, Bart Van Assche wrote:
+>>>  From the C standard: "The result of E1 >> E2 is E1 right-shifted E2 bit
+>>> positions. If E1 has an unsigned type or if E1 has a signed type and a
+>>> nonnegative value, the value of the result is the integral part of the
+>>> quotient of E1 / 2E2 . If E1 has a signed type and a negative value, the
+>>> resulting value is implementation-defined."
+>>
+>> FWIW, we actually hard rely on this implementation defined behaviour all
+>> over the kernel. See for example the generic sign_extend{32,64}()
+>> functions.
+>>
+>> AFAIR the only reason the C standard says this is implementation defined
+>> is because it wants to support daft things like 1s complement and
+>> saturating integers.
 > 
-> I think calling it from nvme_init_identify is fine, it just needs to
-> be in the "if (!ctrl->identified)" section of that function.
+> See:
+>     http://www.open-std.org/jtc1/sc22/wg14/www/docs/n2218.htm
+> 
+> That is in C++20 and on the agenda for C2x:
+>     https://gustedt.wordpress.com/2018/11/12/c2x/
 
-Excellent, I'll do that. Thanks a lot for the hint!
+Thanks Peter and Doug. This is very useful feedback. I will drop the 
+sign_extend_24_to_32() function and use sign_extend32() instead.
 
-Guenter
+Bart.
