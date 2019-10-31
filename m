@@ -2,151 +2,169 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0586CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 04:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FB6CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 04:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 932592087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 04:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4AB12087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 04:44:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eIOliDS3"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="uLXw2V90"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfJaEmx (ORCPT
+        id S1726830AbfJaEoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 00:42:53 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:35406 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfJaEmx (ORCPT
+        Thu, 31 Oct 2019 00:44:08 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:41279 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726667AbfJaEoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 00:42:53 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191031044251epoutp02dc601b907e7ab581cd5a431acc2ecad6~Soanv1HH_1687316873epoutp024
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 04:42:51 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191031044251epoutp02dc601b907e7ab581cd5a431acc2ecad6~Soanv1HH_1687316873epoutp024
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1572496971;
-        bh=OAecQkkTsj6QSqDHVp6XSRMWpCIUpI3s7EMteQIPnZU=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=eIOliDS3nyPGhljMbWQrmV/tZvfJw8CIzwrrL8kFyY8lVM5rA00PoRXVzHk2z727v
-         GKwX4d+DpGx+zBpaqhXcIWVt+Hk+zM9ktNPEd8GUhsOr1Fk0cTa1IZ+Tt0YoVOK2PP
-         T3s7o4RL5IbS+uvJlTFfUwOWthraTfP7O+MLYiFE=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20191031044250epcas1p4b664e0f2f421c7d9058c2069b6b350ff~SoandkBXC1654716547epcas1p4H;
-        Thu, 31 Oct 2019 04:42:50 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 473XkK01ftzMqYm2; Thu, 31 Oct
-        2019 04:42:48 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        90.E6.04135.E366ABD5; Thu, 31 Oct 2019 13:42:39 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191031044238epcas1p1cdd20e6a35d35ae34739d1df500f6634~SoacM0YGd0549005490epcas1p1O;
-        Thu, 31 Oct 2019 04:42:38 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191031044238epsmtrp14a084bbfe7366e949b20a432143e406e~SoacMKVRu2586525865epsmtrp1L;
-        Thu, 31 Oct 2019 04:42:38 +0000 (GMT)
-X-AuditID: b6c32a36-7fbff70000001027-3d-5dba663e5cdc
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        80.05.25663.E366ABD5; Thu, 31 Oct 2019 13:42:38 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191031044238epsmtip1eab391409a45e5a127625dfedc7f03f9~SoacEVzB31061910619epsmtip1f;
-        Thu, 31 Oct 2019 04:42:38 +0000 (GMT)
-Subject: Re: [PATCH] extcon: sm5502: remove redundant assignment to variable
- cable_type
-To:     Colin King <colin.king@canonical.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <824f99c7-8de2-2b32-4d12-8a45e73b2349@samsung.com>
-Date:   Thu, 31 Oct 2019 13:48:10 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Thu, 31 Oct 2019 00:44:08 -0400
+Received: by mail-vs1-f66.google.com with SMTP id i22so3228424vsl.8
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 21:44:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SSmWUE5CWichZhorX+55ZMLpjQalQ+giQWwoK8E5DBs=;
+        b=uLXw2V904nlYKDyGs7+03vpTybp9imp69onWRxi5LnYo/gQ/0tRaV30wNRVWnbqzkR
+         yi2cBc2+H/thF2p6ll4zVGL4SoWukUqJblmt0/6l56k0FqNASTUyqnEgAA1yeDlegI7o
+         ep1Ph1/xVKjDP2yDo1I69libARWuTwjYkSv5iSkUfc0aEMTO/rcr4fRpLG8CUHjK8nob
+         KNFueQNCpG7agYHiUD1f0qA7GEP/wfqr1+8DHEq8zwSzHbbpWh/CTpOAoLba1HYN0F8H
+         2M9m94Qbhc6R/TzTKRgI9GkyayueiV+hwZmbpmQjFhCNZYpSgjFMhoWA+d5IilChshgK
+         rj7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SSmWUE5CWichZhorX+55ZMLpjQalQ+giQWwoK8E5DBs=;
+        b=YH1FZPmPPxUBEZMIKfdLiHNtltESDIJgqIjVNdzLVZ7dJk724vUJefFMZHOBtZ1cMb
+         syj3u7IV6XlYZeKyQ3M+49SAz6dy/YqQtHNJ6OH8nEABvcTSojYllBDQgQx7LPUXS68e
+         SvyHomhyVzmIYLJZcbjp1TOZTaF/g0thJ9Y4N03d7cwBs/7WYeEe9SqlEbspV3D4cnFf
+         7gqjdQJ89e7LRGG3QOicvklu6CaM6p3sgHCAuNFc8Af3muABnv4BwT3T7gL82jhI3DVf
+         hkwX6+MAxxFwKKX3nSZItvfVVWhAAvjOS48ElReXYAskbN5lh9lcSL4Bb+BMrPSRVixg
+         v8OQ==
+X-Gm-Message-State: APjAAAVJtqkf7jX4c0jMJsM6TQ3MN7MoW1x7N4+AL3Z24sBMw3sC8+p8
+        XJ3Kq+nh3BvH0Kq6LralBIrm4jRu2g3ZPgyq5lnBqQ==
+X-Google-Smtp-Source: APXvYqymGEbluLxhfYWqSz8igslfm5GCyFzNh+plgN1+M3mEWoUW2BmZ6Kvloy7vw2iDYKUG+MxHDSQGtVOBQzvkTpU=
+X-Received: by 2002:a67:b60c:: with SMTP id d12mr1611322vsm.159.1572497046919;
+ Wed, 30 Oct 2019 21:44:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191025131227.24894-1-colin.king@canonical.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupik+LIzCtJLcpLzFFi42LZdljTQNc+bVeswYvfTBa/V/eyWWy9JW1x
-        edccNovbjSvYHFg8ZjX0snn0bVnF6PF5k1wAc1S2TUZqYkpqkUJqXnJ+SmZeuq2Sd3C8c7yp
-        mYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QMiWFssScUqBQQGJxsZK+nU1RfmlJqkJGfnGJrVJq
-        QUpOgWWBXnFibnFpXrpecn6ulaGBgZEpUGFCdsbeJ2eYCtZzVrw/95S9gfE6excjJ4eEgInE
-        2q4tQDYXh5DADkaJM9fms0I4nxglPi14DOV8Y5S4ceEuC0zLxhc32CASe4FaDnxjhHDeM0r8
-        +v6RCaRKWCBSYvWbVawgtohAiMTpCxPBFjILOEqsm38HbBKbgJbEfrBJnBz8AooSV388ZgSx
-        eQXsJPZf/gjUy8HBIqAqse6qFIgpKhAhcfprIkSFoMTJmU/ApnACVb+82sgMMV1c4taT+UwQ
-        trxE89bZzCCnSQicYJOY8WAn1AMuEnfuTGeDsIUlXh3fAg0LKYmX/W1QdrXEypNH2CCaOxgl
-        tuy/wAqRMJbYv3QyE8hBzAKaEut36UOEFSV2/p7LCLGYT+Ld1x6w8yUEeCU62oQgSpQlLj+4
-        ywRhS0osbu9km8CoNAvJO7OQvDALyQuzEJYtYGRZxSiWWlCcm55abFhghBzZmxjB6VDLbAfj
-        onM+hxgFOBiVeHgnlO2MFWJNLCuuzD3EKMHBrCTC+80GKMSbklhZlVqUH19UmpNafIjRFBjW
-        E5mlRJPzgak6ryTe0NTI2NjYwsTQzNTQUEmc13H50lghgfTEktTs1NSC1CKYPiYOTqkGRmcF
-        necP1bzfJRi8/6Pjr9tV4nTpUfa0yxcOH1pVxnDfzKTkw3yumxd3zb/kV5/6pOH0EZO2PT3v
-        y9clL2S0jFevsRfdKLZcX6r2kEAC6xXfd5J6jU05M11bVjUtX7D/QeHEd7oT99xY/nS5+fxY
-        rfnV0VNKrl672WOlbjOlRbm8ddoWq2gxayWW4oxEQy3mouJEABSoYAmdAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKLMWRmVeSWpSXmKPExsWy7bCSnK5d2q5Yg/Z7Wha/V/eyWWy9JW1x
-        edccNovbjSvYHFg8ZjX0snn0bVnF6PF5k1wAcxSXTUpqTmZZapG+XQJXxt4nZ5gK1nNWvD/3
-        lL2B8Tp7FyMnh4SAicTGFzfYuhi5OIQEdjNKHDi+gwkiISkx7eJR5i5GDiBbWOLw4WKImreM
-        Eic3PmcGqREWiJRY/WYVK4gtIhAiMWv6JkYQm1nAUWLd/DssEA0TGSVeTD3JBpJgE9CS2A+2
-        jZODX0BR4uqPx2ANvAJ2Evsvf2QFWcYioCqx7qoUSFhUIELi+fYbUCWCEidnPmEBsTmByl9e
-        bWSG2KUu8WfeJShbXOLWk/lMELa8RPPW2cwTGIVnIWmfhaRlFpKWWUhaFjCyrGKUTC0ozk3P
-        LTYsMMpLLdcrTswtLs1L10vOz93ECI4MLa0djCdOxB9iFOBgVOLhnVC2M1aINbGsuDL3EKME
-        B7OSCO83G6AQb0piZVVqUX58UWlOavEhRmkOFiVxXvn8Y5FCAumJJanZqakFqUUwWSYOTqkG
-        xpWygqZPeWWe5HekcEyy8/n1/+3BU2rmO3atWxlo07BY9eZ1X2lFo3SxbVETD25+7zbHjF23
-        fBbfJ+OQJf9ZPe9XMR6O9uxIdas8kC3DuHMR0549F1zv9vWffVy/dPJfkd7d/GacIbxXlryZ
-        9W7Gu4nCKt2M//5dWny64Nm2P52XP5w9bu1ipazEUpyRaKjFXFScCABvXeSfiAIAAA==
-X-CMS-MailID: 20191031044238epcas1p1cdd20e6a35d35ae34739d1df500f6634
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191025131232epcas4p262cce6ea441f3f1b9251810ad9427732
-References: <CGME20191025131232epcas4p262cce6ea441f3f1b9251810ad9427732@epcas4p2.samsung.com>
-        <20191025131227.24894-1-colin.king@canonical.com>
+References: <cover.1571656014.git.amit.kucheria@linaro.org> <4efc55ad929dbb3432e72b96cb27876efa496242.camel@intel.com>
+In-Reply-To: <4efc55ad929dbb3432e72b96cb27876efa496242.camel@intel.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 31 Oct 2019 10:13:55 +0530
+Message-ID: <CAHLCerPNDJCjaUakCu-0woqy+kJM0LK9vieYKqncnNbAsH83qw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] Initialise thermal framework and cpufreq earlier
+ during boot
+To:     Zhang Rui <rui.zhang@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>, ilina@codeaurora.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Ben Segall <bsegall@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-clk <linux-clk@vger.kernel.org>, linux-doc@vger.kernel.org,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 10. 25. 오후 10:12, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The variable cable_type is being initialized with a value that
-> is never read and is being re-assigned a little later on. The
-> assignment is redundant and hence can be removed.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/extcon/extcon-sm5502.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/extcon/extcon-sm5502.c b/drivers/extcon/extcon-sm5502.c
-> index b3d93baf4fc5..bcf65aaca5d2 100644
-> --- a/drivers/extcon/extcon-sm5502.c
-> +++ b/drivers/extcon/extcon-sm5502.c
-> @@ -276,7 +276,7 @@ static int sm5502_muic_set_path(struct sm5502_muic_info *info,
->  /* Return cable type of attached or detached accessories */
->  static unsigned int sm5502_muic_get_cable_type(struct sm5502_muic_info *info)
->  {
-> -	unsigned int cable_type = -1, adc, dev_type1;
-> +	unsigned int cable_type, adc, dev_type1;
->  	int ret;
->  
->  	/* Read ADC value according to external cable or button */
-> 
+Hi Rui,
 
-Applied it. Thanks.
+I'm assuming that since Rafael acked it, he is ok with this going thru
+the thermal tree.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Regards,
+Amit
+
+On Thu, Oct 31, 2019 at 8:12 AM Zhang Rui <rui.zhang@intel.com> wrote:
+>
+> Hi,
+>
+> Given that all the patches in this series have got the ACK from the
+> subsystem maintainers, I suppose we can take all the patches through
+> thermal tree, right?
+>
+> thanks,
+> rui
+>
+> On Mon, 2019-10-21 at 17:45 +0530, Amit Kucheria wrote:
+> > Changes since v4:
+> > - Collect Acks
+> > - Pick the US spelling for 'initialis^Hze' consistently.
+> >
+> > Changes since v3:
+> > - Init schedutil governor earlier too
+> > - Simplified changes to thermal_init() error path
+> > - Collects Acks
+> >
+> > Changes since v2:
+> > - Missed one patch when posting v2. Respinning.
+> >
+> > Changes since v1:
+> > - Completely get rid of netlink support in the thermal framework.
+> > - This changes the early init patch to a single line - change to
+> >   core_initcall. Changed authorship of patch since it is nothing like
+> > the
+> >   original. Lina, let me know if you feel otherwise.
+> > - I've tested to make sure that the qcom-cpufreq-hw driver continues
+> > to
+> >   work correctly as a module so this won't impact Android's GKI
+> > plans.
+> > - Collected Acks
+> >
+> > Device boot needs to be as fast as possible while keeping under the
+> > thermal
+> > envelope. Now that thermal framework is built-in to the kernel, we
+> > can
+> > initialize it earlier to enable thermal mitigation during boot.
+> >
+> > We also need the cpufreq HW drivers to be initialised earlier to act
+> > as the
+> > cooling devices. This series only converts over the qcom-hw driver to
+> > initialize earlier but can be extended to other platforms as well.
+> >
+> > Amit Kucheria (6):
+> >   thermal: Remove netlink support
+> >   thermal: Initialize thermal subsystem earlier
+> >   cpufreq: Initialize the governors in core_initcall
+> >   cpufreq: Initialize cpufreq-dt driver earlier
+> >   clk: qcom: Initialize clock drivers earlier
+> >   cpufreq: qcom-hw: Move driver initialization earlier
+> >
+> >  .../driver-api/thermal/sysfs-api.rst          |  26 +----
+> >  drivers/clk/qcom/clk-rpmh.c                   |   2 +-
+> >  drivers/clk/qcom/gcc-qcs404.c                 |   2 +-
+> >  drivers/clk/qcom/gcc-sdm845.c                 |   2 +-
+> >  drivers/cpufreq/cpufreq-dt-platdev.c          |   2 +-
+> >  drivers/cpufreq/cpufreq_conservative.c        |   2 +-
+> >  drivers/cpufreq/cpufreq_ondemand.c            |   2 +-
+> >  drivers/cpufreq/cpufreq_performance.c         |   2 +-
+> >  drivers/cpufreq/cpufreq_powersave.c           |   2 +-
+> >  drivers/cpufreq/cpufreq_userspace.c           |   2 +-
+> >  drivers/cpufreq/qcom-cpufreq-hw.c             |   2 +-
+> >  drivers/thermal/thermal_core.c                | 103 +---------------
+> > --
+> >  include/linux/thermal.h                       |  11 --
+> >  kernel/sched/cpufreq_schedutil.c              |   2 +-
+> >  14 files changed, 19 insertions(+), 143 deletions(-)
+> >
+>
