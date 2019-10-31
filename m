@@ -2,199 +2,253 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD30CCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F1ACA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 924082087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B2C82080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:45:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kClnC7uq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KVauYvVS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfJaNoj (ORCPT
+        id S1727628AbfJaNpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:44:39 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:32815 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727488AbfJaNoj (ORCPT
+        Thu, 31 Oct 2019 09:45:22 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:32987 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727581AbfJaNpW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:44:39 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y8so2747118plk.0;
-        Thu, 31 Oct 2019 06:44:38 -0700 (PDT)
+        Thu, 31 Oct 2019 09:45:22 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c184so4437695pfb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 06:45:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6y88ku+FJUdhUiHptjPqtjsXAaLtim+0IMiXfQe0l/c=;
-        b=kClnC7uqlGiwNBff2eaN3FaYdxv5GrMNnthtVrwqhPlHJljqFTEXJZzuIjlRIGFBN/
-         lTW2cRQwEnuymUIsC1BdAnKUkxXQlyy4qUGLW7H+21IDwluFVOgB2NBYsA1gM43Ze5ck
-         7zva61eyFN0Cb5wlXmYqEG9a2FqWIAugG+kLwktpwJybmZ5u58mo2L0uxgWR+lhJu3rW
-         m53QcaXYV/ii8xvRpfWiQh0ZB3JvMaaX/VrBEl31nuUHf76qYKJcmz+EdaoD9DbyDxV1
-         dtfYhutD2qWJ9ab9JKfYi9gd0k7nqLLeYC66WMUS2jjCfrDf8hb1rhzZRuuqiulY6b5P
-         yfgw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=B4S3LkETZTQ6ciTtg+e4/uC9IOySHk8KduItAFIDCAk=;
+        b=KVauYvVSqsYWwSxOsteFFPrRimBn3s6dfVYJPLzP/z3LcsfsDO/h9ST4jQH6/Au/D5
+         CY65Z5zdq4G7NHpb17ZLHkVV2lp+aNBPNGGr2ZUq+0mkno2gL40mDh7CPP6iF05oCyYX
+         xbC2P2Hi13dEu55xAmMNe5FjzHJiW8uYrCVVbz9zqk3LVWLcZEj4g/PjgHn+MwncGcBF
+         UzFUlpfv9/oVlYkzhbH9p1Tek1X5VWAC9mHf6iewIGKmFCgYJeJhvbl1q+Rft5QE/CaZ
+         y64ojSEFKoEm+dqTqj3axvCH4zV7DlRNr5I4opyn0gQN0UBtnvk9lYlfZPxVYvUpPZBD
+         LZsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6y88ku+FJUdhUiHptjPqtjsXAaLtim+0IMiXfQe0l/c=;
-        b=F/1Dd32oty7UkSzazJk2p0VTpZreLfTJmTChNKQEuKwNGaoSJi4NeC+4pOTxOj0OTQ
-         iy58+Rh7QHZlkCLfVCAMhq2pRsTnEfnkGklII5snPCzI7dOgkV6+98bGdzQkPj+X/68V
-         wC2GOonW5p63o8HWtJItyiOJ0iJLPru4IZHGdkef6EEsX8Bs4yWSJKWAaHlo/LYms8w+
-         0OI4EMlcLya1ZWKfEp6wi/8p21zGIwGe5CNKeaqR4DSgut9VbD0VhKiUI4iktPYCtQfK
-         p64dgErJDnIf6bCYH1p3fcdEM4b5aEez8aNsOonYWedna9DHDIvugKc71rU09TAJuKdz
-         gDjg==
-X-Gm-Message-State: APjAAAXydNFzHsqVJzaP1GPSR0PevgTkWrnjf60eABx0x136lYNGCKpN
-        rknXJBjuEur9gdHlqkd1Gaow9Dbhw9bnFpA64SQ=
-X-Google-Smtp-Source: APXvYqyrzR6XIZRktDipu31wJpoWbBpvOQtSu9Q2KrNNdkdWl4+Sjukv611CtJUqK2iIR07BYZ5EvACGUByZf7+Yg3M=
-X-Received: by 2002:a17:902:7786:: with SMTP id o6mr6654785pll.109.1572529477869;
- Thu, 31 Oct 2019 06:44:37 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B4S3LkETZTQ6ciTtg+e4/uC9IOySHk8KduItAFIDCAk=;
+        b=ZzYmRoOQcrcvc+8quiqjWT03F8SzbzCz3vCtrJru9G0QwIGBAJ2Q4nVxWHGZiApFkf
+         OydshyoN1+1aX6g59NakJgXwfq2D4zJclhJlf/b7/9JKKLcu5hGm2V2yIwCwTHhyvNzh
+         WQgtS7NJ1RC7AiIbfQqCkJm2X9k7FUnGENZuAkxMbKIYIY7UXwHleajrLPL2Ix9qrpt9
+         HI5t4pki27BJDXZBAO7QaaX630Q7Sw2r1hgAmVAwCpk7gHmrFHpX9Yyy5serRxllHgWT
+         r6T8yoEsziIoY5S19kbIcwKC0Gh01WNm3vMV10898SrTTti4Q2yWEWad89UPnkLA/vq+
+         4AsA==
+X-Gm-Message-State: APjAAAXzprD/wWReFlDdOamgiy6RH1A6JBL5gn6F/IMXlGVx8+o33ybx
+        SefoB0U5HE1TnrJtXl0q8cvH
+X-Google-Smtp-Source: APXvYqyuqikEx9a3SP3UIaKfDeFTz5s3pu4Hg2hMzULCTaQWQKi9SfavbFkVlqJwlYsJqfgnYKSBzw==
+X-Received: by 2002:a63:d70e:: with SMTP id d14mr6718846pgg.10.1572529521194;
+        Thu, 31 Oct 2019 06:45:21 -0700 (PDT)
+Received: from mani ([103.59.133.81])
+        by smtp.gmail.com with ESMTPSA id f5sm4898579pjq.24.2019.10.31.06.45.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 31 Oct 2019 06:45:20 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 19:15:12 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org, sakari.ailus@iki.fi,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
+ binding
+Message-ID: <20191031134512.GB24273@mani>
+References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
+ <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
+ <20191031131538.GA9170@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-References: <20191029223214.18889-1-linux@roeck-us.net> <CAC5umyhc=6yULiLwXu65VDvDk2cBiF0R9O39B-T5ftapJfj0rQ@mail.gmail.com>
- <e62b6763-0d1b-3359-6d3b-cb31e96bb862@roeck-us.net>
-In-Reply-To: <e62b6763-0d1b-3359-6d3b-cb31e96bb862@roeck-us.net>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Thu, 31 Oct 2019 22:44:26 +0900
-Message-ID: <CAC5umygHEcVJQskfX0Ef4Z5Ti5B1-zKbmvvAbPPi4YtcQsV-WA@mail.gmail.com>
-Subject: Re: [PATCH v2] nvme: Add hardware monitoring support
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031131538.GA9170@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B410=E6=9C=8831=E6=97=A5(=E6=9C=A8) 11:20 Guenter Roeck <linux@r=
-oeck-us.net>:
->
-> On 10/30/19 4:16 AM, Akinobu Mita wrote:
-> > 2019=E5=B9=B410=E6=9C=8830=E6=97=A5(=E6=B0=B4) 7:32 Guenter Roeck <linu=
-x@roeck-us.net>:
-> >>
-> >> nvme devices report temperature information in the controller informat=
-ion
-> >> (for limits) and in the smart log. Currently, the only means to retrie=
-ve
-> >> this information is the nvme command line interface, which requires
-> >> super-user privileges.
-> >>
-> >> At the same time, it would be desirable to use NVME temperature inform=
-ation
-> >> for thermal control.
-> >>
-> >> This patch adds support to read NVME temperatures from the kernel usin=
-g the
-> >> hwmon API and adds temperature zones for NVME drives. The thermal subs=
-ystem
-> >> can use this information to set thermal policies, and userspace can ac=
-cess
-> >> it using libsensors and/or the "sensors" command.
-> >>
-> >> Example output from the "sensors" command:
-> >>
-> >> nvme0-pci-0100
-> >> Adapter: PCI adapter
-> >> Composite:    +39.0=C2=B0C  (high =3D +85.0=C2=B0C, crit =3D +85.0=C2=
-=B0C)
-> >> Sensor 1:     +39.0=C2=B0C
-> >> Sensor 2:     +41.0=C2=B0C
-> >>
-> >> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> >> ---
-> >> v2: Use devm_kfree() to release memory in error path
-> >>
-> >>   drivers/nvme/host/Kconfig      |  10 ++
-> >>   drivers/nvme/host/Makefile     |   1 +
-> >>   drivers/nvme/host/core.c       |   5 +
-> >>   drivers/nvme/host/nvme-hwmon.c | 163 +++++++++++++++++++++++++++++++=
-++
-> >>   drivers/nvme/host/nvme.h       |   8 ++
-> >>   5 files changed, 187 insertions(+)
-> >>   create mode 100644 drivers/nvme/host/nvme-hwmon.c
-> >>
-> >> diff --git a/drivers/nvme/host/Kconfig b/drivers/nvme/host/Kconfig
-> >> index 2b36f052bfb9..aeb49e16e386 100644
-> >> --- a/drivers/nvme/host/Kconfig
-> >> +++ b/drivers/nvme/host/Kconfig
-> >> @@ -23,6 +23,16 @@ config NVME_MULTIPATH
-> >>             /dev/nvmeXnY device will show up for each NVMe namespaces,
-> >>             even if it is accessible through multiple controllers.
-> >>
-> >> +config NVME_HWMON
-> >> +       bool "NVME hardware monitoring"
-> >> +       depends on (NVME_CORE=3Dy && HWMON=3Dy) || (NVME_CORE=3Dm && H=
-WMON)
-> >> +       help
-> >> +         This provides support for NVME hardware monitoring. If enabl=
-ed,
-> >> +         a hardware monitoring device will be created for each NVME d=
-rive
-> >> +         in the system.
-> >> +
-> >> +         If unsure, say N.
-> >> +
-> >>   config NVME_FABRICS
-> >>          tristate
-> >>
-> >> diff --git a/drivers/nvme/host/Makefile b/drivers/nvme/host/Makefile
-> >> index 8a4b671c5f0c..03de4797a877 100644
-> >> --- a/drivers/nvme/host/Makefile
-> >> +++ b/drivers/nvme/host/Makefile
-> >> @@ -14,6 +14,7 @@ nvme-core-$(CONFIG_TRACING)           +=3D trace.o
-> >>   nvme-core-$(CONFIG_NVME_MULTIPATH)     +=3D multipath.o
-> >>   nvme-core-$(CONFIG_NVM)                        +=3D lightnvm.o
-> >>   nvme-core-$(CONFIG_FAULT_INJECTION_DEBUG_FS)   +=3D fault_inject.o
-> >> +nvme-core-$(CONFIG_NVME_HWMON)         +=3D nvme-hwmon.o
-> >>
-> >>   nvme-y                                 +=3D pci.o
-> >>
-> >> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> >> index fa7ba09dca77..fc1d4b146717 100644
-> >> --- a/drivers/nvme/host/core.c
-> >> +++ b/drivers/nvme/host/core.c
-> >> @@ -2796,6 +2796,9 @@ int nvme_init_identify(struct nvme_ctrl *ctrl)
-> >>          ctrl->oncs =3D le16_to_cpu(id->oncs);
-> >>          ctrl->mtfa =3D le16_to_cpu(id->mtfa);
-> >>          ctrl->oaes =3D le32_to_cpu(id->oaes);
-> >> +       ctrl->wctemp =3D le16_to_cpu(id->wctemp);
-> >> +       ctrl->cctemp =3D le16_to_cpu(id->cctemp);
-> >> +
-> >>          atomic_set(&ctrl->abort_limit, id->acl + 1);
-> >>          ctrl->vwc =3D id->vwc;
-> >>          if (id->mdts)
-> >> @@ -2897,6 +2900,8 @@ int nvme_init_identify(struct nvme_ctrl *ctrl)
-> >>
-> >>          ctrl->identified =3D true;
-> >>
-> >> +       nvme_hwmon_init(ctrl);
-> >> +
-> >>          return 0;
-> >>
-> >>   out_free:
-> >
-> > The nvme_init_identify() can be called multiple time in nvme ctrl's
-> > lifetime (e.g 'nvme reset /dev/nvme*' or suspend/resume paths), so
-> > should we need to prevent nvme_hwmon_init() from registering hwmon
-> > device more than twice?
-> >
-> > In the nvme thermal zone patchset[1], thernal zone is registered in
-> > nvme_init_identify and unregistered in nvme_stop_ctrl().
-> >
->
-> Doesn't that mean that the initialization should happen in nvme_start_ctr=
-l()
-> and not here ?
+Hi Laurent,
 
-Seems possible.  But I would like to ask maintainers' opinion.
+On Thu, Oct 31, 2019 at 03:15:38PM +0200, Laurent Pinchart wrote:
+> Hi Mani,
+> 
+> Thank you for the patch.
+> 
+> On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
+> > Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
+> > add MAINTAINERS entry for the binding and driver.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
+> >  MAINTAINERS                                   |  8 ++
+> >  2 files changed, 102 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> > new file mode 100644
+> > index 000000000000..c04ec2203268
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> > @@ -0,0 +1,94 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
+> > +
+> > +maintainers:
+> > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +
+> > +description: |-
+> > +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
+> > +  sensor with square pixel array and 1.58 M effective pixels. This chip
+> > +  features a global shutter with variable charge-integration time. It is
+> > +  programmable through I2C and 4-wire interfaces. The sensor output is
+> > +  available via CSI-2 serial data output (1 Lane).
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: sony,imx296
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    description:
+> > +      Input clock for the sensor.
+> > +    items:
+> > +      - const: mclk
+> 
+> The pin is named INCK, let's name the clock accordingly.
+>
+
+Okay, I thought generic names are preferred here!
+ 
+> > +  clock-frequency:
+> > +    description:
+> > +      Frequency of the mclk clock in Hertz.
+> 
+> This shouldn't be needed, you can retrieve the clock frequency at
+> runtime from the clock source.
+> 
+
+Unless the clock source is a fixed one! What if the clock source comes from
+SoC? We need to set the rate, right?
+
+> > +  vddo-supply:
+> > +    description:
+> > +      Definition of the regulator used as interface power supply.
+> > +
+> > +  vdda-supply:
+> > +    description:
+> > +      Definition of the regulator used as analog power supply.
+> > +
+> > +  vddd-supply:
+> > +    description:
+> > +      Definition of the regulator used as digital power supply.
+> 
+> Do we really need three regulators ? I agree that the sensor has three
+> power rails, but aren't they usually powered by regulators that are
+> tied together, without individual control ? The IMX926 specifications
+> require the three power supplies to raise within 200ms, which we should
+> be able to ensure in software. What does your board use, does it have
+> multiple GPIOs to control each power supply ? If not I wonder if we
+> could just define vddd-supply now, and add vdda-supply and vddo-supply
+> later if we need to support systems that can control the supplies
+> individually.
+> 
+
+The whole power supply model is a bit rotten. In my case, there are 3 different
+regulators used with no software control. So, I can't control the rise time
+(I assume that they are handled by the external power regulator itself).
+
+So to be sane, I just documented with the assumption of fixed-regulators.
+
+Thanks,
+Mani
+> > +  reset-gpios:
+> > +    description:
+> > +      The phandle and specifier for the GPIO that controls sensor reset.
+> > +    maxItems: 1
+> > +
+> > +  port: true
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - clock-names
+> > +  - clock-frequency
+> > +  - vddo-supply
+> > +  - vdda-supply
+> > +  - vddd-supply
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +
+> > +    imx296: camera-sensor@1a {
+> > +        compatible = "sony,imx296";
+> > +        reg = <0x1a>;
+> > +        reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
+> > +        pinctrl-names = "default";
+> > +        pinctrl-0 = <&camera_rear_default>;
+> > +        clocks = <&gcc 90>;
+> > +        clock-names = "mclk";
+> > +        clock-frequency = <37125000>;
+> > +        vddo-supply = <&camera_vddo_1v8>;
+> > +        vdda-supply = <&camera_vdda_3v3>;
+> > +        vddd-supply = <&camera_vddd_1v2>;
+> > +
+> > +        port {
+> > +            imx296_ep: endpoint {
+> > +                remote-endpoint = <&csiphy0_ep>;
+> > +            };
+> > +        };
+> > +    };
+> > +
+> > +...
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 55199ef7fa74..51194bb2c392 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -15140,6 +15140,14 @@ S:	Maintained
+> >  F:	drivers/media/i2c/imx274.c
+> >  F:	Documentation/devicetree/bindings/media/i2c/imx274.txt
+> >  
+> > +SONY IMX296 SENSOR DRIVER
+> > +M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +L:	linux-media@vger.kernel.org
+> > +T:	git git://linuxtv.org/media_tree.git
+> > +S:	Maintained
+> > +F:	drivers/media/i2c/imx296.c
+> > +F:	Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> > +
+> >  SONY IMX319 SENSOR DRIVER
+> >  M:	Bingbu Cao <bingbu.cao@intel.com>
+> >  L:	linux-media@vger.kernel.org
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
