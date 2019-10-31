@@ -2,112 +2,94 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E2ACA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 368CBCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 701C920862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09DBA20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:53:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfJaLto (ORCPT
+        id S1726731AbfJaLxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:49:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54688 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726538AbfJaLtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:49:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 24F19B16E;
-        Thu, 31 Oct 2019 11:49:42 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        "Yan, Zheng" <zyan@redhat.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Henriques <lhenriques@suse.com>
-Subject: [PATCH] ceph: don't allow copy_file_range when stripe_count != 1
-Date:   Thu, 31 Oct 2019 11:49:39 +0000
-Message-Id: <20191031114939.24462-1-lhenriques@suse.com>
+        Thu, 31 Oct 2019 07:53:40 -0400
+Received: from smtprelay0048.hostedemail.com ([216.40.44.48]:47116 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726506AbfJaLxj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 07:53:39 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id D123D5DDB;
+        Thu, 31 Oct 2019 11:53:37 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: value36_76bb9bebfde10
+X-Filterd-Recvd-Size: 2520
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 31 Oct 2019 11:53:35 +0000 (UTC)
+Message-ID: <4541e77d257685c649f5f994e673a409a3634f50.camel@perches.com>
+Subject: Re: [PATCH net-next 8/9] net: hns3: cleanup some print format
+ warning
+From:   Joe Perches <joe@perches.com>
+To:     Huazhong Tan <tanhuazhong@huawei.com>, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
+        linuxarm@huawei.com, jakub.kicinski@netronome.com,
+        Guojia Liao <liaoguojia@huawei.com>
+Date:   Thu, 31 Oct 2019 04:53:26 -0700
+In-Reply-To: <1572521004-36126-9-git-send-email-tanhuazhong@huawei.com>
+References: <1572521004-36126-1-git-send-email-tanhuazhong@huawei.com>
+         <1572521004-36126-9-git-send-email-tanhuazhong@huawei.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-copy_file_range tries to use the OSD 'copy-from' operation, which simply
-performs a full object copy.  Unfortunately, the implementation of this
-system call assumes that stripe_count is always set to 1 and doesn't take
-into account that the data may be striped across an object set.  If the
-file layout has stripe_count different from 1, then the destination file
-data will be corrupted.
+On Thu, 2019-10-31 at 19:23 +0800, Huazhong Tan wrote:
+> From: Guojia Liao <liaoguojia@huawei.com>
+> 
+> Using '%d' for printing type unsigned int or '%u' for
+> type int would cause static tools to give false warnings,
+> so this patch cleanups this warning by using the suitable
+> format specifier of the type of variable.
+> 
+> BTW, modifies the type of some variables and macro to
+> synchronize with their usage.
 
-For example:
+What tool is this?
 
-Consider a 8 MiB file with 4 MiB object size, stripe_count of 2 and
-stripe_size of 2 MiB; the first half of the file will be filled with 'A's
-and the second half will be filled with 'B's:
+I think this static warning is excessive as macro
+defines with a small positive number are common
 
-               0      4M     8M       Obj1     Obj2
-               +------+------+       +----+   +----+
-        file:  | AAAA | BBBB |       | AA |   | AA |
-               +------+------+       |----|   |----|
-                                     | BB |   | BB |
-                                     +----+   +----+
+> diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+[]
+> @@ -72,7 +72,7 @@ enum hclge_mbx_vlan_cfg_subcode {
+>  };
+>  
+>  #define HCLGE_MBX_MAX_MSG_SIZE	16
+> -#define HCLGE_MBX_MAX_RESP_DATA_SIZE	8
+> +#define HCLGE_MBX_MAX_RESP_DATA_SIZE	8U
+>  #define HCLGE_MBX_RING_MAP_BASIC_MSG_NUM	3
+>  #define HCLGE_MBX_RING_NODE_VARIABLE_NUM	3
 
-If we copy_file_range this file into a new file (which needs to have the
-same file layout!), then it will start by copying the object starting at
-file offset 0 (Obj1).  And then it will copy the object starting at file
-offset 4M -- which is Obj1 again.
+like this one
 
-Unfortunately, the solution for this is to not allow remote object copies
-to be performed when the file layout stripe_count is not 1 and simply
-fallback to the default (VFS) copy_file_range implementation.
+> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
+[]
+> @@ -57,68 +57,68 @@ static int hns3_dbg_queue_info(struct hnae3_handle *h,
+>  					   HNS3_RING_RX_RING_BASEADDR_H_REG);
+>  		base_add_l = readl_relaxed(ring->tqp->io_base +
+>  					   HNS3_RING_RX_RING_BASEADDR_L_REG);
+> -		dev_info(&h->pdev->dev, "RX(%d) BASE ADD: 0x%08x%08x\n", i,
+> +		dev_info(&h->pdev->dev, "RX(%u) BASE ADD: 0x%08x%08x\n", i,
 
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
----
-Hi Jeff,
+so using %d is correct enough.
 
-I hope my understanding of the whole file striping in CephFS is correct;
-I had to go re-read the whole thing to refresh my memory.
 
-Anyway, I guess that this is not really the only solution to this
-problem, but it's definitely the simplest one.  copy_file_range is
-already way more complex that I had ever anticipated.  I would rather
-keep this simple solution instead of adding more complexity and cover
-more corner cases.  But yeah, we may want to revisit this in the
-future...
-
-[OOT: files layout is probably one of the biggest headaches to sort out
- the day we want to implement something like FIEMAP on CephFS ;-) ]
-
-Cheers,
---
-Luis
-
- fs/ceph/file.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index d277f71abe0b..3b0e6f9eb6a6 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -1957,9 +1957,12 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
- 		return -EOPNOTSUPP;
- 
- 	if ((src_ci->i_layout.stripe_unit != dst_ci->i_layout.stripe_unit) ||
--	    (src_ci->i_layout.stripe_count != dst_ci->i_layout.stripe_count) ||
--	    (src_ci->i_layout.object_size != dst_ci->i_layout.object_size))
-+	    (src_ci->i_layout.stripe_count != 1) ||
-+	    (dst_ci->i_layout.stripe_count != 1) ||
-+	    (src_ci->i_layout.object_size != dst_ci->i_layout.object_size)) {
-+		dout("Invalid src/dst files layout\n");
- 		return -EOPNOTSUPP;
-+	}
- 
- 	if (len < src_ci->i_layout.object_size)
- 		return -EOPNOTSUPP; /* no remote copy will be done */
