@@ -2,248 +2,157 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3E8CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DBBCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDEE020862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BCA120873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:40:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O9N4++Gr"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Ru6HuP4N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfJaCdG (ORCPT
+        id S1726664AbfJaCkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 22:33:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47020 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbfJaCdG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 22:33:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=gNHzY/slJV1OFQPWeiu4MtoA9eYahNCpK9kNgORibGM=; b=O9N4++GrNdYBF/lmRbyy0Rh/C
-        3abUCgRChF0YrqMy8bj3g4BLVwBxx7Py7sOvOvnn1ZayRQmcR7/DUfuhFL8U4UM233JlBXdJCDlls
-        06hCp2qCnUCjco5JIyp0OgYzbGGEcVjN4E9ug8I/SYuzZUmPGGTbrwR07qoic+mBsj3r6dRHTOrZk
-        o2wgo51Y9l6KZ+93vTGOEsVHSjkhc3YKrsncqxKUyxOGY8BdOPd3HkfdRNpWpkyovXdTizaMhDVwT
-        E0xY93nPl1uFLhBQaZb8qsdqiX3NKiTSNwAr6V4NmfttDiMJ01X0E6eZDouqD2yIdZpPZfM+0aRf5
-        6YjbOC27Q==;
-Received: from [2603:3004:32:9a00::f45c] (helo=dragon.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iQ0Gl-0006aJ-TD; Thu, 31 Oct 2019 02:33:03 +0000
-Subject: Re: [PATCH] scripts: prune-kernel:remove old kernels and modules dir
- from system
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>, bfields@fieldses.org
-Cc:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191030095445.912435-1-unixbhaskar@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b8a12c03-1e17-61de-2cd9-a09650dc22b1@infradead.org>
-Date:   Wed, 30 Oct 2019 19:33:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 30 Oct 2019 22:40:01 -0400
+Received: from ozlabs.org ([203.11.71.1]:42865 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726353AbfJaCkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 22:40:01 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 473V0X52pSz9sPl;
+        Thu, 31 Oct 2019 13:39:56 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1572489598;
+        bh=kh7Ij8wGLE85JmfMZDo7nA07OV4ozZTfqMQZHKEtQog=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Ru6HuP4NQURWTF/ppIf+4JjYsUi+3s1xPD/DtHVEhoqzV1uNWtu8tlfTJIGLLmi8P
+         Md3r6FH2F89VJddOWBfm7OYCJfR+uJdkEUQt2Wp0EGYCw4ErS3Da5J66exxhHwyLyt
+         6oeyDj0vl1y8dO7HUCKdJbC3l3Sake7GZC8zuTxyF+c+A9hhe5YSgK//ic6oWDlhdW
+         txuj0rpXoIT/DKKyyOBCtfTC15zN7Q/mPf4Y6jV+a5kvoaFV+Fnr3qL6EkHPsnBLnH
+         d2BrByItD5GHFBsBbyuqnQi5IxLk8jJFddYBYtb1OCkzSalGGbctcNyctq54CNBKDn
+         ilDrQteDWD8dQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     John Hubbard <jhubbard@nvidia.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+Cc:     linux-pm@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Preeti U Murthy <preeti@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2] cpufreq: powernv: fix stack bloat and NR_CPUS limitation
+In-Reply-To: <20191018045539.3765565-1-jhubbard@nvidia.com>
+References: <20191018045539.3765565-1-jhubbard@nvidia.com>
+Date:   Thu, 31 Oct 2019 13:39:55 +1100
+Message-ID: <87pnidbptw.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20191030095445.912435-1-unixbhaskar@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi John,
 
-On 10/30/19 2:54 AM, Bhaskar Chowdhury wrote:
-> This patch will remove old kernels and modules directorey related
-> to that kernel from the system by interactively and silently.Here
-> are few interactions with the scripts
-> 
-> 1)
-> 
-> ✔ ~/git-linux/linux-kbuild [master|AM 1/1 ↑·59|✔]
-> 14:52 $ ./scripts/prune-kernel -h
-> Usage: prune-kernel [ri]
-> 
->  -r | --remove kernel_ver modules_dir_name
-> 
->   -i | --interactive use as interactive way
->   ✘-1 ~/git-linux/linux-kbuild [master|AM 1/1 ↑·59|✔]
->   
->   14:52 $ ./scripts/prune-kernel --help
->   Usage: prune-kernel [ri]
+Sorry I didn't reply to this sooner, too many patches :/
 
-That "[ri]" is confusing to me.
+John Hubbard <jhubbard@nvidia.com> writes:
+> The following build warning occurred on powerpc 64-bit builds:
+>
+> drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
+> drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
 
-> 
->    -r | --remove kernel_ver modules_dir_na]
-> 
->     -i | --interactive use as interactive way
->    
->  2)
-> 
->  ✘-1 ~/git-linux/linux-kbuild [master|AM 1/1 ↑·59|✔]
->  14:52 $ ./scripts/prune-kernel -r 5.3.3
->  You need to provide kernel version and modules dir name
->  
->  ✘-1 ~/git-linux/linux-kbuild [master|AM 1/1 ↑·59|✔]
->  14:53 $ ./scripts/prune-kernel -r
->  You need to provide kernel version and modules dir name
->  
->  ✘-1 ~/git-linux/linux-kbuild [master|AM 1/1 ↑·59|✔]
->  14:54 $ ./scripts/prune-kernel -r 5.3.3 5.3.3-foo
+Oddly I don't see that warning in my builds, eg with GCC9:
 
-This one above didn't remove any kernel files.
-Needs more testing.
+  https://travis-ci.org/linuxppc/linux/jobs/604870722
 
-> 3)
-> 
-> $ ./scripts/prune-kernel --remove
-> You need to provide kernel version and modules dir name
-> 
-> ✘-1 ~/git-linux/linux-kbuild [master|AM 1/1 ↑·59|✔]
-> 14:55 $ ./scripts/prune-kernel --remove 5.3.3
-> You need to provide kernel version and modules dir name
-> 
-> ✘-1 ~/git-linux/linux-kbuild [master|AM 1/1 ↑·59|✔]
-> 14:55 $ ./scripts/prune-kernel --remove 5.3.3 5.3.3-foo
-> 
-> 
-> 4)14:55 $ ./scripts/prune-kernel -i
-> 
-> Enter kernel version to remove or blank/empty to exit:
-> 
-> 
-> 5)14:57 $ ./scripts/prune-kernel --interactive
-> 
-> Enter kernel version to remove or blank/empty to exit:
-> ✔ ~/git-linux/linux-kbuild [master|AM 1/1 ↑·59|✔]
-> 
-> 
-> 6)14:59 $ ./scripts/prune-kernel --interactive
-> 
-> Enter kernel version to remove or blank/empty to exit:5.3.3
-> Please give the full modules directory name to remove:5.3.3-foo
-> 
-> 
-> 
-> Removed kernel version:5.3.3 and associated modules:5.3.3-foo ...Done.
-> 
-> 
-> 7)15:00 $ ./scripts/prune-kernel -i
-> 
-> Enter kernel version to remove or blank/empty to exit:5.3.3
-> Please give the full modules directory name to remove:5.3.3-foo
-> 
-> 
-> 
-> Removed kernel version:5.3.3 and associated modules:5.3.3-foo ...Done.
-> 
-> 
-> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+> This is due to putting 1024 bytes on the stack:
+>
+>     unsigned int chip[256];
+>
+> ...and while looking at this, it also has a bug: it fails with a stack
+> overrun, if CONFIG_NR_CPUS > 256.
+
+It _probably_ doesn't, because it only increments the index when the
+chip_id of the CPU changes, ie. it doesn't create a chip for every CPU.
+But I agree it's flaky the way it's written.
+
+> Fix both problems by dynamically allocating based on CONFIG_NR_CPUS.
+
+Shouldn't it use num_possible_cpus() ?
+
+Given the for loop is over possible CPUs that seems like the upper
+bound. In practice it should be lower because some CPUs will share a
+chip.
+
+cheers
+
+
+> Fixes: 053819e0bf840 ("cpufreq: powernv: Handle throttling due to Pmax capping at chip level")
+> Cc: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+> Cc: Preeti U Murthy <preeti@linux.vnet.ibm.com>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: linux-pm@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 > ---
->  scripts/prune-kernel | 63 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
-> 
-> diff --git a/scripts/prune-kernel b/scripts/prune-kernel
-> index a25aa2160d47..a91010d0e2af 100755
-> --- a/scripts/prune-kernel
-> +++ b/scripts/prune-kernel
-> @@ -1,3 +1,66 @@
->  #!/bin/bash
->  # SPDX-License-Identifier: GPL-2.0
-> +#This script will delete old kernels and modules directory related to it
-> +#-h with the script will show you the help
-> +#-r with the script take two parameter: kernel_ver and modules_dir_name
-> +#-i with the script allow you do the removing interactive way
-> 
-> +flag=$1
-> +kernel_ver=$2
-> +modules_dir_name=$3
-> +boot_dir=/boot
-> +modules_dir=/lib/modules
+>
+> Changes since v1: includes Viresh's review commit fixes.
+>
+>  drivers/cpufreq/powernv-cpufreq.c | 17 +++++++++++++----
+>  1 file changed, 13 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cpufreq.c
+> index 6061850e59c9..5b2e968cb5ea 100644
+> --- a/drivers/cpufreq/powernv-cpufreq.c
+> +++ b/drivers/cpufreq/powernv-cpufreq.c
+> @@ -1041,9 +1041,14 @@ static struct cpufreq_driver powernv_cpufreq_driver = {
+>  
+>  static int init_chip_info(void)
+>  {
+> -	unsigned int chip[256];
+> +	unsigned int *chip;
+>  	unsigned int cpu, i;
+>  	unsigned int prev_chip_id = UINT_MAX;
+> +	int ret = 0;
 > +
-> +remove_old_kernel() {
-> +	cd $boot_dir
-> +	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
-> +	return 0
-> +}
-> +
-> +remove_old_modules_dir() {
-> +	cd $modules_dir
-> +	rm -rf $modules_version
-> +	return 0
-> +}
-> +
-> +usage() {
-> +	printf "Usage: $(basename $0) [ri] \n"
-> +	printf "\n -r | --remove kernel_ver modules_dir_name \n"
-> +	printf "\n -i | --interactive use as interactive way \n"
-> +}
-> +
-> +for arg in "$@"
-
-what is the purpose (use) of "arg" here?
-
-what is the purpose of the for loop?
-
-Is any 'shift' needed to consume (or discard) the first 3 positional
-command line arguments?
-
-> +do
-> +	case "$flag" in
-> +		-i | --interactive)
-> +			printf "\nEnter kernel version to remove or blank/empty to exit:%s"
-> +			read kernel_version
-> +			if [[ $kernel_version != "" ]]; then
-> +				remove_old_kernel
-> +				printf "Please give the full modules directory name to remove:%s"
-> +				read modules_version
-> +				if [[ $modules_version != "" ]]; then
-> +					remove_old_modules_dir
-> +					printf "\n\n\n Removed kernel version:$kernel_version and associated modules:$modules_version ...Done. \n"
-
-This message is only printed if $modules_version is non-empty.  If it is empty,
-remove_old_kernel() has silently removed some kernel files (if they existed).
-
-> +				else
-> +					exit 1
-> +				fi
-> +			fi
-> +			;;
-> +		-h | --help)
-> +			usage
-> +			exit 1
-> +			;;
-> +		-r | --remove)
-> +			if [[ $# -ne 3 ]]; then
-> +				printf "You need to provide kernel version and modules dir name\n"
-> +				exit 1
-> +			else
-> +				cd $boot_dir
-> +				rm -f $kernel_ver
-
-That 'rm' doesn't remove any files.  Compare what remove_old_kernel() does.
-
-> +				cd $modules_dir
-> +				rm -rf $modules_dir_name
-> +			fi
-> +			;;
-> +	esac
-> +done
-> --
-
-The script, after this patch is applied, still contains the old script's for-loop
-at the end of the "new" prune-kernel script.
-
-Nack.
-
--- 
-~Randy
+> +	chip = kcalloc(CONFIG_NR_CPUS, sizeof(*chip), GFP_KERNEL);
+> +	if (!chip)
+> +		return -ENOMEM;
+>  
+>  	for_each_possible_cpu(cpu) {
+>  		unsigned int id = cpu_to_chip_id(cpu);
+> @@ -1055,8 +1060,10 @@ static int init_chip_info(void)
+>  	}
+>  
+>  	chips = kcalloc(nr_chips, sizeof(struct chip), GFP_KERNEL);
+> -	if (!chips)
+> -		return -ENOMEM;
+> +	if (!chips) {
+> +		ret = -ENOMEM;
+> +		goto free_and_return;
+> +	}
+>  
+>  	for (i = 0; i < nr_chips; i++) {
+>  		chips[i].id = chip[i];
+> @@ -1066,7 +1073,9 @@ static int init_chip_info(void)
+>  			per_cpu(chip_info, cpu) =  &chips[i];
+>  	}
+>  
+> -	return 0;
+> +free_and_return:
+> +	kfree(chip);
+> +	return ret;
+>  }
+>  
+>  static inline void clean_chip_info(void)
+> -- 
+> 2.23.0
