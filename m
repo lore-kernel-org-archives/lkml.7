@@ -2,131 +2,89 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FF5CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8538BCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01DE0208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48D5E2087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:55:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="huUn94OR"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="l3C/2pCp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbfJaXxm (ORCPT
+        id S1728438AbfJaXzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 19:53:42 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:7006 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbfJaXxl (ORCPT
+        Thu, 31 Oct 2019 19:55:12 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:42604 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfJaXzL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 19:53:41 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dbb74090000>; Thu, 31 Oct 2019 16:53:46 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 31 Oct 2019 16:53:40 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 31 Oct 2019 16:53:40 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 31 Oct
- 2019 23:53:39 +0000
-Subject: Re: [PATCH 19/19] Documentation/vm: add pin_user_pages.rst
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20191030224930.3990755-1-jhubbard@nvidia.com>
- <20191030224930.3990755-20-jhubbard@nvidia.com>
- <20191031234922.GM14771@iweiny-DESK2.sc.intel.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <85de5845-d403-dc31-4f3b-f006c4a7b2a2@nvidia.com>
-Date:   Thu, 31 Oct 2019 16:53:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 31 Oct 2019 19:55:11 -0400
+Received: by mail-il1-f193.google.com with SMTP id n18so155419ilt.9
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 16:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=N5iHmlILXRbEi8EN+IUZsNyE4Ymf/VB8PmWy2Y78vP4=;
+        b=l3C/2pCpaeuyWCknJRQnTKh6SlFTtCYRDRLdQ4KxJW12S9T67ROtFv1XDnteZ4c6pe
+         RZMawNLPTzAJdVH58ytBFB8FjbdKER6jaVf5hBD+ZXfWPrsCt1kaeHn/kqbSdzn5G+se
+         TdxXO9hz4JV8xcaq6VxA1HMHYCylImZ31fpFBx0xs1ELH7sKeePIMh9PWet8fYYcCLfr
+         aNgGL3OwXekCBs5EMg/PVpVO3kZ9TLhOYd7Jm/hhnclYSHU1wCDDZhCzqM0WSDWYZg7e
+         Ukv3noUisj0/t0pGlqjaNpbHhfvixS4ZMc9xkaIBaAhfDFKGbMMjAHyTcQaT4wvUMZDC
+         Uvug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=N5iHmlILXRbEi8EN+IUZsNyE4Ymf/VB8PmWy2Y78vP4=;
+        b=A1DmC6J0mv7ZlHHaIprUGXEoHHpEowyeT/P2fPrRvlVOEXHYPVSjLQREhhz0hI/Z0l
+         dIkOQNLuokZdtf7ysdMLpxjpJz2ESKRRsYuFv7LUVyv5ljalAtPGb8y25ck4kWSTonFA
+         M30LVpqe1gglVbDT5ZSa00Nh+gkZTSX22hwjsJLbi/SLBadjRP3BRcWuzs0dLsf3p9Ej
+         /mPGgch8erxmHnnkKmUcCS7unBwfks8F1xr67s1SarLHgilw5xb9O6DN0ya2ayyENTFk
+         arQxAPICsb5DQRN2WFtn3Jm4xBVBeqeubaIbteh5F3LJyDUysX5Sn0oQuktAX+iYhq0A
+         PMZQ==
+X-Gm-Message-State: APjAAAWB0WgeynXlnUE8o0qDmA8SnsxzjCChQHi7lvthja8Q6DcmTWjf
+        oqjkZOun/TwH6f3lXlpO++DDNw==
+X-Google-Smtp-Source: APXvYqxU4quf2N5vI+TJ+4eYesycO5XewOnq4v3en4F2cHPBfEh+mUIkSI/bOsMbiXzuQTLUnrWjQQ==
+X-Received: by 2002:a92:5c5d:: with SMTP id q90mr9702452ilb.22.1572566111105;
+        Thu, 31 Oct 2019 16:55:11 -0700 (PDT)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id g13sm494749ion.23.2019.10.31.16.55.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 16:55:10 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 16:55:08 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Christoph Hellwig <hch@lst.de>
+cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anup Patel <anup@brainfault.org>
+Subject: Re: [PATCH 03/12] riscv: poison SBI calls for M-mode
+In-Reply-To: <20191028121043.22934-4-hch@lst.de>
+Message-ID: <alpine.DEB.2.21.9999.1910311654570.25874@viisi.sifive.com>
+References: <20191028121043.22934-1-hch@lst.de> <20191028121043.22934-4-hch@lst.de>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-In-Reply-To: <20191031234922.GM14771@iweiny-DESK2.sc.intel.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572566026; bh=vjWEFq7fNfPLFBVwJSkbaC93kNFVP4oSS83LfHWMvq4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=huUn94OR5NVpnI/NdJ3vTkz0Aags6KkZKFci9Fz5nHWE/pFd85Cktt11D1CQUWnOi
-         UTPR4qv0QPFgv/ONDQLcPNmALzbnAKqxnplv+MLSg0Lt5g7PakxG9E1PUBNwTzA4dg
-         k5IpEf3tN9qoIDtETnu//UzIRidkW3Ptv7qB5nHQktouL6xNQxT4kKgi3v8i+IvKdv
-         ffAJkGbaVSplOPwrv6cDHUyGv5RC9JGCEhmv/YdTyy6OAb8LAtR2JiVi7nJzrIOI/o
-         Ji4iiKunwQFUjG8sIvZShB4w9wwsMfCPKf36InyfzANf6JSqnPhJXe3qBOy7AOjUTp
-         IqJ2SDnd3CyHg==
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/31/19 4:49 PM, Ira Weiny wrote:
-> On Wed, Oct 30, 2019 at 03:49:30PM -0700, John Hubbard wrote:
->> Document the new pin_user_pages() and related calls
->> and behavior.
->>
->> Thanks to Jan Kara and Vlastimil Babka for explaining the 4 cases
->> in this documentation. (I've reworded it and expanded on it slightly.)
+On Mon, 28 Oct 2019, Christoph Hellwig wrote:
+
+> There is no SBI when we run in M-mode, so fail the compile for any code
+> trying to use SBI calls.
 > 
-> As I said before I think this may be better in a previous patch where you
-> reference it.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Anup Patel <anup@brainfault.org>
 
-Yes, I'll merge this in with patch #5 ("mm/gup: introduce pin_user_pages*()
-and FOLL_PIN").
-
-...
->> +TODO: There is also a special case when the pages are DAX pages: in addition to
->> +the above flags, the caller needs something like a layout lease on the
->> +associated file. This is yet to be implemented. When it is implemented, it's
->> +expected that the lease will be a prerequisite to setting FOLL_LONGTERM.
-> 
-> For now we probably want to leave this note out until we figure out how this is
-> going to work.  Best to say something like:
-> 
-> Some pages, such as DAX pages, can't be pinned with longterm pins and will
-> fail.
-> 
-
-OK, that is better, I'll use that instead of the "TODO".
+Thanks, queued for v5.5-rc.
 
 
-thanks,
-
-John Hubbard
-NVIDIA
+- Paul
