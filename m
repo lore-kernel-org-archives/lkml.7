@@ -2,134 +2,94 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74975CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38469CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48ECA20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:41:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572511293;
-	bh=II0M787tHwXSdY76yH+VciV6zy5sSuW0ALkTUHm8FIo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ucj7DH1nkLVXseRbyy5kJ/i/bOTGLdTDJ1CVYV+mvhHlII+FFJTDYRyPseYnVEutS
-	 es3RwbkdZ2s1WsMFL9Y8bVN6q23JUoIgmz+U/S2NGjqsLUHBGsSfVQwWebV+XDfD59
-	 jkQ+inswbq2IEqCq2YfhLxlu8H5r2Na1Ue3ES1+Y=
+	by mail.kernel.org (Postfix) with ESMTP id 090B620873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:49:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfJaIlb (ORCPT
+        id S1727054AbfJaItt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 04:41:31 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40664 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbfJaIlb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 04:41:31 -0400
-Received: by mail-wm1-f67.google.com with SMTP id w9so4942230wmm.5;
-        Thu, 31 Oct 2019 01:41:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sjs9ihZ0Cud86vWdYvO1bLBBEMUDpzpRxE2xbMyX++c=;
-        b=oNhYdM+4DuX5+jwvMxQuyPajQ/FyxCDE0/I+kO9QaCw0UyfhDJGWhyDZOE3I63rsNM
-         gIYBq4Suu/G+5ImLqgvC8SiR9F70DhfnPcXSeL1iGYlUjYwifcacRnMGDzQPYCtuX+cS
-         l/M7aoFK1euHZ8I9HrmHth7m9H0Tb+Anlfc5nOQrVGxTUBsSv94oy/VOD8YpodSyzl8R
-         t3XK/cA6qrArNBArP5ERYIPUeD10oxuVnmwVwp8AUtx7lOB1uee87ui+WZbi8y7lY45R
-         NLUe/vzuGqbPVSyyaFGly5OYOYgAOLOWZsBOPivxqzGlHhHKfFSMkVy6/kVRPwvsE3WS
-         +D8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sjs9ihZ0Cud86vWdYvO1bLBBEMUDpzpRxE2xbMyX++c=;
-        b=sV0+bEoIRNkF37NqD/t20XIcCnqKyQwYFTqzWwMJ0oDmcoR2G8Q9AH66QYL8cqRt+0
-         kSSCt/FyhV/DUKqLyWv/zty5Svfe0DlfUBG4o2LJ+nAabMpmQxYopa3VwHT1LfLA8UIA
-         +h3itBx+tcQ/RbBIw3Yo35bWHWnGWm1+z1EWkguj0sCqI/z0swbC+N0sS0NAXwmmFFgs
-         Rp5EZ4CdvqUz57AJY4Bs/W1LuSPSelGN/Sd6RO7ENgXwM7sbsdvfEGhClQr2iEkebMNB
-         eOar5UZRvfiIK/6wFr0O631GBcZ3CuxUp8TBpOcLAB90mUOoeE/EFFWSWmIb76g08wE1
-         o9/A==
-X-Gm-Message-State: APjAAAUIpwhcVlucj6pzwXDI/hEy8fhILAUi+8yMAGyQGCYd2ffg7dnK
-        QbdsVUqME5SIE6tIgglxqek=
-X-Google-Smtp-Source: APXvYqxXsa353WzGxLLSJ8LO+SGP6PoZI+zx/b+nV1f7dHOqC6OHvdz0emGxnB6ZGebYvp5WOBJ1+w==
-X-Received: by 2002:a1c:7719:: with SMTP id t25mr3784066wmi.56.1572511289037;
-        Thu, 31 Oct 2019 01:41:29 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id d16sm3127628wmb.27.2019.10.31.01.41.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 01:41:28 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 09:41:26 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Bhupesh Sharma <bhsharma@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
+        Thu, 31 Oct 2019 04:49:49 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33418 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726874AbfJaIts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 04:49:48 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9CED2566D52269F09AA3;
+        Thu, 31 Oct 2019 16:49:45 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 31 Oct 2019
+ 16:49:34 +0800
+Subject: Re: [PATCH v2 03/36] irqchip/gic-v3-its: Allow LPI invalidation via
+ the DirectLPI interface
+To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-kernel@vger.kernel.org>
+CC:     Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/6] efi/random: treat EFI_RNG_PROTOCOL output as
- bootloader randomness
-Message-ID: <20191031084126.GB107774@gmail.com>
-References: <20191029173755.27149-1-ardb@kernel.org>
- <20191029173755.27149-4-ardb@kernel.org>
- <CACi5LpMAagnn_yEmqRBGfxJFZcAUzohU30NACeGvdXaHFZwAMA@mail.gmail.com>
- <CAKv+Gu_zMMeRSBYk_tBX4UA+v1r+Kntrxe3xurLd1Q2_+HkbWw@mail.gmail.com>
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Andrew Murray" <Andrew.Murray@arm.com>,
+        Jayachandran C <jnair@marvell.com>,
+        "Robert Richter" <rrichter@marvell.com>
+References: <20191027144234.8395-1-maz@kernel.org>
+ <20191027144234.8395-4-maz@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <a263e264-298c-57cf-31b7-a781160a3929@huawei.com>
+Date:   Thu, 31 Oct 2019 16:49:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu_zMMeRSBYk_tBX4UA+v1r+Kntrxe3xurLd1Q2_+HkbWw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191027144234.8395-4-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Marc,
 
-* Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-
-> On Tue, 29 Oct 2019 at 20:14, Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> >
-> > Hi Ard,
-> >
-> > On Tue, Oct 29, 2019 at 11:10 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >
-> > > From: Dominik Brodowski <linux@dominikbrodowski.net>
-> > >
-> > > Commit 428826f5358c ("fdt: add support for rng-seed") introduced
-> > > add_bootloader_randomness(), permitting randomness provided by the
-> > > bootloader or firmware to be credited as entropy. However, the fact
-> > > that the UEFI support code was already wired into the RNG subsystem
-> > > via a call to add_device_randomness() was overlooked, and so it was
-> > > not converted at the same time.
-> > >
-> > > Note that this UEFI (v2.4 or newer) feature is currently only
-> > > implemented for EFI stub booting on ARM, and further note that
-> > > CONFIG_RANDOM_TRUST_BOOTLOADER must be enabled, and this should be
-> > > done only if there indeed is sufficient trust in the bootloader
-> > > _and_ its source of randomness.
-> > >
-> > > Signed-off-by: Dominik Brodowski <linux@dominikbrodowski.net>
-> > > [ardb: update commit log]
-> > > Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> >
-> > Seems my Tested-by was dropped which I provide for the RFC version of
-> > this patch.
-> > See <https://www.mail-archive.com/linux-efi@vger.kernel.org/msg12281.html>
-> > for details.
-> >
-> > I can provide a similar Tested-by for this version as well.
-> >
+On 2019/10/27 22:42, Marc Zyngier wrote:
+> We currently don't make much use of the DirectLPI feature, and it would
+> be beneficial to do this more, if only because it becomes a mandatory
+> feature for GICv4.1.
 > 
-> Thanks Bhupesh
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-I've added Bhupesh's Tested-by to the commit - no need to resend.
+I have no objection to this patch, which says:
 
-I've picked up all 6 EFI fixes, will push them out after a bit of testing 
-- sorry about the delay!
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+
+
+But this patch really drives me to look through all callsites of
+dev_event_to_col(), the abstraction which can be used _only_ with
+physical LPI mappings.
+
+I find that when building the INV command, we use dev_event_to_col()
+to find the "sync_obj" and then pass it to the following SYNC command.
+But the "INV+SYNC" will be performed both on physical LPI and *VLPI*
+(lpi_update_config/its_send_inv).
+So I have two questions about the way we sending INV on VLPI:
+
+1) Which "sync" command should be followed?  SYNC or VSYNC?
+(we currently use SYNC, while the spec says, SYNC "ensures all
+outstanding ITS operations associated with *physical* interrupts
+for the Redistributor are globally observed ...")
+
+2) The "sync_obj" we are currently using seems to be wrong.
+
 
 Thanks,
+Zenghui
 
-	Ingo
