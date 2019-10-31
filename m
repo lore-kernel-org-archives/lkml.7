@@ -2,206 +2,225 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CDCCA9ED2
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E09CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18780217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:46:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Fl9ftqk4"
+	by mail.kernel.org (Postfix) with ESMTP id 352DF2087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbfJaXqz (ORCPT
+        id S1729312AbfJaXrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 19:46:55 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:7772 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729119AbfJaXqw (ORCPT
+        Thu, 31 Oct 2019 19:47:09 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:56355 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728726AbfJaXqe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 19:46:52 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dbb726c0000>; Thu, 31 Oct 2019 16:46:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 31 Oct 2019 16:46:46 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 31 Oct 2019 16:46:46 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 31 Oct
- 2019 23:46:45 +0000
-Subject: Re: [PATCH 08/19] mm/process_vm_access: set FOLL_PIN via
- pin_user_pages_remote()
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20191030224930.3990755-1-jhubbard@nvidia.com>
- <20191030224930.3990755-9-jhubbard@nvidia.com>
- <20191031233519.GH14771@iweiny-DESK2.sc.intel.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <7e79d9b5-772e-3628-4a60-65efc2f490c5@nvidia.com>
-Date:   Thu, 31 Oct 2019 16:46:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 31 Oct 2019 19:46:34 -0400
+Received: from dread.disaster.area (pa49-180-67-183.pa.nsw.optusnet.com.au [49.180.67.183])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id CF9383A28AC;
+        Fri,  1 Nov 2019 10:46:25 +1100 (AEDT)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iQK8x-0007CG-Bo; Fri, 01 Nov 2019 10:46:19 +1100
+Received: from dave by discord.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iQK8x-00041g-9R; Fri, 01 Nov 2019 10:46:19 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 11/28] mm: factor shrinker work calculations
+Date:   Fri,  1 Nov 2019 10:46:01 +1100
+Message-Id: <20191031234618.15403-12-david@fromorbit.com>
+X-Mailer: git-send-email 2.24.0.rc0
+In-Reply-To: <20191031234618.15403-1-david@fromorbit.com>
+References: <20191031234618.15403-1-david@fromorbit.com>
 MIME-Version: 1.0
-In-Reply-To: <20191031233519.GH14771@iweiny-DESK2.sc.intel.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572565613; bh=Ni3MG24cn6KOx2mpKQf1IX0uBXAOxI/S5ACFQstwCH0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Fl9ftqk4J63wpZ0nmIiycLWCL11bYX50L+387BZ180hQh//V0Vp2ib5lF+gUyjqai
-         BUNKoNlXTqc57g1YISa4wLoDF8FDUSOEDk//A2D/giSdADgbBgvBgvcIBixm1N1+Zk
-         H8cgPXG2CeU33ioP0ErDWx6EuJtDE7b8cwg7DR730s9O71+39F8ouq+P6zklOCkkR4
-         oDUx19ikJNj9J8uGqwUijC3VwpTpRuFvJG1fW6Ohvn+piDj3I1HEee28haJHWEOnTW
-         Uwhe+F8yMyQV4WRYSdi28gKVURtaIyz8Dwtt8DEOye19K0wcNBp+Nz8BepqnA7FG/T
-         4uFqHk6o1ZuLQ==
+Content-Transfer-Encoding: 8bit
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=3wLbm4YUAFX2xaPZIabsgw==:117 a=3wLbm4YUAFX2xaPZIabsgw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=MeAgGD-zjQ4A:10 a=20KFwNOVAAAA:8
+        a=rQ5XUWRrd7byYprixfUA:9 a=NH2oGUoCzA-B3QL-:21 a=DSgJKIrDGFEhNJPj:21
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/31/19 4:35 PM, Ira Weiny wrote:
-> On Wed, Oct 30, 2019 at 03:49:19PM -0700, John Hubbard wrote:
->> Convert process_vm_access to use the new pin_user_pages_remote()
->> call, which sets FOLL_PIN. Setting FOLL_PIN is now required for
->> code that requires tracking of pinned pages.
->>
->> Also, release the pages via put_user_page*().
->>
->> Also, rename "pages" to "pinned_pages", as this makes for
->> easier reading of process_vm_rw_single_vec().
-> 
-> Ok...  but it made review a bit harder...
-> 
+From: Dave Chinner <dchinner@redhat.com>
 
-Yes, sorry about that. After dealing with "pages means struct page *[]"
-for all this time, having an "int pages" just was a step too far for
-me here. :)
+Start to clean up the shrinker code by factoring out the calculation
+that determines how much work to do. This separates the calculation
+from clamping and other adjustments that are done before the
+shrinker work is run. Document the scan batch size calculation
+better while we are there.
 
-Thanks for working through it. 
+Also convert the calculation for the amount of work to be done to
+use 64 bit logic so we don't have to keep jumping through hoops to
+keep calculations within 32 bits on 32 bit systems.
 
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+---
+ mm/vmscan.c | 97 ++++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 70 insertions(+), 27 deletions(-)
 
-thanks,
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index a215d71d9d4b..2d39ec37c04d 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -459,13 +459,68 @@ EXPORT_SYMBOL(unregister_shrinker);
+ 
+ #define SHRINK_BATCH 128
+ 
++/*
++ * Calculate the number of new objects to scan this time around. Return
++ * the work to be done. If there are freeable objects, return that number in
++ * @freeable_objects.
++ */
++static int64_t shrink_scan_count(struct shrink_control *shrinkctl,
++			    struct shrinker *shrinker, int priority,
++			    int64_t *freeable_objects)
++{
++	int64_t delta;
++	int64_t freeable;
++
++	freeable = shrinker->count_objects(shrinker, shrinkctl);
++	if (freeable == 0 || freeable == SHRINK_EMPTY)
++		return freeable;
++
++	if (shrinker->seeks) {
++		/*
++		 * shrinker->seeks is a measure of how much IO is required to
++		 * reinstantiate the object in memory. The default value is 2
++		 * which is typical for a cold inode requiring a directory read
++		 * and an inode read to re-instantiate.
++		 *
++		 * The scan batch size is defined by the shrinker priority, but
++		 * to be able to bias the reclaim we increase the default batch
++		 * size by 4. Hence we end up with a scan batch multipler that
++		 * scales like so:
++		 *
++		 * ->seeks	scan batch multiplier
++		 *    1		      4.00x
++		 *    2               2.00x
++		 *    3               1.33x
++		 *    4               1.00x
++		 *    8               0.50x
++		 *
++		 * IOWs, the more seeks it takes to pull the item into cache,
++		 * the smaller the reclaim scan batch. Hence we put more reclaim
++		 * pressure on caches that are fast to repopulate and to keep a
++		 * rough balance between caches that have different costs.
++		 */
++		delta = freeable >> (priority - 2);
++		do_div(delta, shrinker->seeks);
++	} else {
++		/*
++		 * These objects don't require any IO to create. Trim them
++		 * aggressively under memory pressure to keep them from causing
++		 * refetches in the IO caches.
++		 */
++		delta = freeable / 2;
++	}
++
++	*freeable_objects = freeable;
++	return delta > 0 ? delta : 0;
++}
++
+ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
+ 				    struct shrinker *shrinker, int priority)
+ {
+ 	unsigned long freed = 0;
+-	unsigned long long delta;
+ 	long total_scan;
+-	long freeable;
++	int64_t freeable_objects = 0;
++	int64_t scan_count;
+ 	long nr;
+ 	long new_nr;
+ 	int nid = shrinkctl->nid;
+@@ -476,9 +531,10 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
+ 	if (!(shrinker->flags & SHRINKER_NUMA_AWARE))
+ 		nid = 0;
+ 
+-	freeable = shrinker->count_objects(shrinker, shrinkctl);
+-	if (freeable == 0 || freeable == SHRINK_EMPTY)
+-		return freeable;
++	scan_count = shrink_scan_count(shrinkctl, shrinker, priority,
++					&freeable_objects);
++	if (scan_count == 0 || scan_count == SHRINK_EMPTY)
++		return scan_count;
+ 
+ 	/*
+ 	 * copy the current shrinker scan count into a local variable
+@@ -487,25 +543,11 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
+ 	 */
+ 	nr = atomic_long_xchg(&shrinker->nr_deferred[nid], 0);
+ 
+-	total_scan = nr;
+-	if (shrinker->seeks) {
+-		delta = freeable >> priority;
+-		delta *= 4;
+-		do_div(delta, shrinker->seeks);
+-	} else {
+-		/*
+-		 * These objects don't require any IO to create. Trim
+-		 * them aggressively under memory pressure to keep
+-		 * them from causing refetches in the IO caches.
+-		 */
+-		delta = freeable / 2;
+-	}
+-
+-	total_scan += delta;
++	total_scan = nr + scan_count;
+ 	if (total_scan < 0) {
+ 		pr_err("shrink_slab: %pS negative objects to delete nr=%ld\n",
+ 		       shrinker->scan_objects, total_scan);
+-		total_scan = freeable;
++		total_scan = scan_count;
+ 		next_deferred = nr;
+ 	} else
+ 		next_deferred = total_scan;
+@@ -522,19 +564,20 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
+ 	 * Hence only allow the shrinker to scan the entire cache when
+ 	 * a large delta change is calculated directly.
+ 	 */
+-	if (delta < freeable / 4)
+-		total_scan = min(total_scan, freeable / 2);
++	if (scan_count < freeable_objects / 4)
++		total_scan = min_t(long, total_scan, freeable_objects / 2);
+ 
+ 	/*
+ 	 * Avoid risking looping forever due to too large nr value:
+ 	 * never try to free more than twice the estimate number of
+ 	 * freeable entries.
+ 	 */
+-	if (total_scan > freeable * 2)
+-		total_scan = freeable * 2;
++	if (total_scan > freeable_objects * 2)
++		total_scan = freeable_objects * 2;
+ 
+ 	trace_mm_shrink_slab_start(shrinker, shrinkctl, nr,
+-				   freeable, delta, total_scan, priority);
++				   freeable_objects, scan_count,
++				   total_scan, priority);
+ 
+ 	/*
+ 	 * If the shrinker can't run (e.g. due to gfp_mask constraints), then
+@@ -559,7 +602,7 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
+ 	 * possible.
+ 	 */
+ 	while (total_scan >= batch_size ||
+-	       total_scan >= freeable) {
++	       total_scan >= freeable_objects) {
+ 		unsigned long ret;
+ 		unsigned long nr_to_scan = min(batch_size, total_scan);
+ 
+-- 
+2.24.0.rc0
 
-John Hubbard
-NVIDIA
-
-
-
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> 
-
-
->>
->> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
->> ---
->>  mm/process_vm_access.c | 28 +++++++++++++++-------------
->>  1 file changed, 15 insertions(+), 13 deletions(-)
->>
->> diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
->> index 357aa7bef6c0..fd20ab675b85 100644
->> --- a/mm/process_vm_access.c
->> +++ b/mm/process_vm_access.c
->> @@ -42,12 +42,11 @@ static int process_vm_rw_pages(struct page **pages,
->>  		if (copy > len)
->>  			copy = len;
->>  
->> -		if (vm_write) {
->> +		if (vm_write)
->>  			copied = copy_page_from_iter(page, offset, copy, iter);
->> -			set_page_dirty_lock(page);
->> -		} else {
->> +		else
->>  			copied = copy_page_to_iter(page, offset, copy, iter);
->> -		}
->> +
->>  		len -= copied;
->>  		if (copied < copy && iov_iter_count(iter))
->>  			return -EFAULT;
->> @@ -96,7 +95,7 @@ static int process_vm_rw_single_vec(unsigned long addr,
->>  		flags |= FOLL_WRITE;
->>  
->>  	while (!rc && nr_pages && iov_iter_count(iter)) {
->> -		int pages = min(nr_pages, max_pages_per_loop);
->> +		int pinned_pages = min(nr_pages, max_pages_per_loop);
->>  		int locked = 1;
->>  		size_t bytes;
->>  
->> @@ -106,14 +105,15 @@ static int process_vm_rw_single_vec(unsigned long addr,
->>  		 * current/current->mm
->>  		 */
->>  		down_read(&mm->mmap_sem);
->> -		pages = get_user_pages_remote(task, mm, pa, pages, flags,
->> -					      process_pages, NULL, &locked);
->> +		pinned_pages = pin_user_pages_remote(task, mm, pa, pinned_pages,
->> +						     flags, process_pages,
->> +						     NULL, &locked);
->>  		if (locked)
->>  			up_read(&mm->mmap_sem);
->> -		if (pages <= 0)
->> +		if (pinned_pages <= 0)
->>  			return -EFAULT;
->>  
->> -		bytes = pages * PAGE_SIZE - start_offset;
->> +		bytes = pinned_pages * PAGE_SIZE - start_offset;
->>  		if (bytes > len)
->>  			bytes = len;
->>  
->> @@ -122,10 +122,12 @@ static int process_vm_rw_single_vec(unsigned long addr,
->>  					 vm_write);
->>  		len -= bytes;
->>  		start_offset = 0;
->> -		nr_pages -= pages;
->> -		pa += pages * PAGE_SIZE;
->> -		while (pages)
->> -			put_page(process_pages[--pages]);
->> +		nr_pages -= pinned_pages;
->> +		pa += pinned_pages * PAGE_SIZE;
->> +
->> +		/* If vm_write is set, the pages need to be made dirty: */
->> +		put_user_pages_dirty_lock(process_pages, pinned_pages,
->> +					  vm_write);
->>  	}
->>  
->>  	return rc;
->> -- 
->> 2.23.0
->>
