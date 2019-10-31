@@ -2,236 +2,289 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26718CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0860CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF7FC20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D54D20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:49:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gbDGGLXZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729777AbfJaXsm (ORCPT
+        id S1729487AbfJaXtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 19:48:42 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:55593 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728345AbfJaXq1 (ORCPT
+        Thu, 31 Oct 2019 19:49:18 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:7860 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727020AbfJaXtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 19:46:27 -0400
-Received: from dread.disaster.area (pa49-180-67-183.pa.nsw.optusnet.com.au [49.180.67.183])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 07CF33A283A;
-        Fri,  1 Nov 2019 10:46:22 +1100 (AEDT)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iQK8x-0007By-1I; Fri, 01 Nov 2019 10:46:19 +1100
-Received: from dave by discord.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iQK8w-00041E-VT; Fri, 01 Nov 2019 10:46:18 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 02/28] xfs: Throttle commits on delayed background CIL push
-Date:   Fri,  1 Nov 2019 10:45:52 +1100
-Message-Id: <20191031234618.15403-3-david@fromorbit.com>
-X-Mailer: git-send-email 2.24.0.rc0
-In-Reply-To: <20191031234618.15403-1-david@fromorbit.com>
-References: <20191031234618.15403-1-david@fromorbit.com>
+        Thu, 31 Oct 2019 19:49:17 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dbb72fe0000>; Thu, 31 Oct 2019 16:49:18 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 31 Oct 2019 16:49:12 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 31 Oct 2019 16:49:12 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 31 Oct
+ 2019 23:49:11 +0000
+Subject: Re: [PATCH 07/19] infiniband: set FOLL_PIN, FOLL_LONGTERM via
+ pin_longterm_pages*()
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20191030224930.3990755-1-jhubbard@nvidia.com>
+ <20191030224930.3990755-8-jhubbard@nvidia.com>
+ <20191031232546.GG14771@iweiny-DESK2.sc.intel.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <4ca6a9e1-4e50-1d6d-b963-5cae073e9336@nvidia.com>
+Date:   Thu, 31 Oct 2019 16:49:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
-        a=3wLbm4YUAFX2xaPZIabsgw==:117 a=3wLbm4YUAFX2xaPZIabsgw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=MeAgGD-zjQ4A:10 a=20KFwNOVAAAA:8
-        a=WQ0osmkouEGinBUFY8QA:9 a=F0QMLCV4RP_8GM7f:21 a=RmuKINs690l8OJ9H:21
+In-Reply-To: <20191031232546.GG14771@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572565758; bh=ieW5LDDUqWmgSarlqMuNX+/1YMDHz0W8xMVtexhKvgo=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=gbDGGLXZqY/8icYHSM5MRhiYKVA+eizBWWFSxO/TIueTRZUkx+q2I/ctnXWEuj1SU
+         3b8rL527MPKlbemO2wk0ErzAkK+x6doZG8h3uq1WwyoBrkoEuR84P1P7qTkb1/vBTp
+         J6MO8/F6FSy7yBFzDOUXC3Slo0deKCe2Ow7Qdj34hmLRoYa0JPW5g8CeXkxPboRjjU
+         p0rVgC6TlCZJNqyD1XZELyNHA7huciSqPUIVb8uGvDJVGuvpPuis5XXDf+7KF3Ccqj
+         XPOoEC6fB6rRsY0cjS7CA2BPilaz+eehJAKsKGiaHftlDjyW2ricY/bORHd6ZI1zFz
+         FYO8cOaB3zkaQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+On 10/31/19 4:25 PM, Ira Weiny wrote:
+> On Wed, Oct 30, 2019 at 03:49:18PM -0700, John Hubbard wrote:
+>> Convert infiniband to use the new wrapper calls, and stop
+>> explicitly setting FOLL_LONGTERM at the call sites.
+>>
+>> The new pin_longterm_*() calls replace get_user_pages*()
+>> calls, and set both FOLL_LONGTERM and a new FOLL_PIN
+>> flag. The FOLL_PIN flag requires that the caller must
+>> return the pages via put_user_page*() calls, but
+>> infiniband was already doing that as part of an earlier
+>> commit.
+>>
+> 
+> NOTE: I'm not 100% convinced that mixing the flags and new calls like this is
+> good.  I think we are going to need a lot more documentation on which flags are
+> "user" accessible vs not...
 
-In certain situations the background CIL push can be indefinitely
-delayed. While we have workarounds from the obvious cases now, it
-doesn't solve the underlying issue. This issue is that there is no
-upper limit on the CIL where we will either force or wait for
-a background push to start, hence allowing the CIL to grow without
-bound until it consumes all log space.
+I'm open to suggestion there. I'm too close to it now to see what's missing,
+though...maybe after you take a peek at Documentation/ let's see if it's
+still the case...
 
-To fix this, add a new wait queue to the CIL which allows background
-pushes to wait for the CIL context to be switched out. This happens
-when the push starts, so it will allow us to block incoming
-transaction commit completion until the push has started. This will
-only affect processes that are running modifications, and only when
-the CIL threshold has been significantly overrun.
 
-This has no apparent impact on performance, and doesn't even trigger
-until over 45 million inodes had been created in a 16-way fsmark
-test on a 2GB log. That was limiting at 64MB of log space used, so
-the active CIL size is only about 3% of the total log in that case.
-The concurrent removal of those files did not trigger the background
-sleep at all.
+thanks,
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
----
- fs/xfs/xfs_log_cil.c  | 37 +++++++++++++++++++++++++++++++++----
- fs/xfs/xfs_log_priv.h | 24 ++++++++++++++++++++++++
- fs/xfs/xfs_trace.h    |  1 +
- 3 files changed, 58 insertions(+), 4 deletions(-)
+John Hubbard
+NVIDIA
 
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index a1204424a938..fc3f8e849dec 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -670,6 +670,11 @@ xlog_cil_push(
- 	push_seq = cil->xc_push_seq;
- 	ASSERT(push_seq <= ctx->sequence);
- 
-+	/*
-+	 * Wake up any background push waiters now this context is being pushed.
-+	 */
-+	wake_up_all(&ctx->push_wait);
-+
- 	/*
- 	 * Check if we've anything to push. If there is nothing, then we don't
- 	 * move on to a new sequence number and so we have to be able to push
-@@ -746,6 +751,7 @@ xlog_cil_push(
- 	 */
- 	INIT_LIST_HEAD(&new_ctx->committing);
- 	INIT_LIST_HEAD(&new_ctx->busy_extents);
-+	init_waitqueue_head(&new_ctx->push_wait);
- 	new_ctx->sequence = ctx->sequence + 1;
- 	new_ctx->cil = cil;
- 	cil->xc_ctx = new_ctx;
-@@ -900,7 +906,7 @@ xlog_cil_push_work(
-  */
- static void
- xlog_cil_push_background(
--	struct xlog	*log)
-+	struct xlog	*log) __releases(cil->xc_ctx_lock)
- {
- 	struct xfs_cil	*cil = log->l_cilp;
- 
-@@ -914,14 +920,36 @@ xlog_cil_push_background(
- 	 * don't do a background push if we haven't used up all the
- 	 * space available yet.
- 	 */
--	if (cil->xc_ctx->space_used < XLOG_CIL_SPACE_LIMIT(log))
-+	if (cil->xc_ctx->space_used < XLOG_CIL_SPACE_LIMIT(log)) {
-+		up_read(&cil->xc_ctx_lock);
- 		return;
-+	}
- 
- 	spin_lock(&cil->xc_push_lock);
- 	if (cil->xc_push_seq < cil->xc_current_sequence) {
- 		cil->xc_push_seq = cil->xc_current_sequence;
- 		queue_work(log->l_mp->m_cil_workqueue, &cil->xc_push_work);
- 	}
-+
-+	/*
-+	 * Drop the context lock now, we can't hold that if we need to sleep
-+	 * because we are over the blocking threshold. The push_lock is still
-+	 * held, so blocking threshold sleep/wakeup is still correctly
-+	 * serialised here.
-+	 */
-+	up_read(&cil->xc_ctx_lock);
-+
-+	/*
-+	 * If we are well over the space limit, throttle the work that is being
-+	 * done until the push work on this context has begun.
-+	 */
-+	if (cil->xc_ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log)) {
-+		trace_xfs_log_cil_wait(log, cil->xc_ctx->ticket);
-+		ASSERT(cil->xc_ctx->space_used < log->l_logsize);
-+		xlog_wait(&cil->xc_ctx->push_wait, &cil->xc_push_lock);
-+		return;
-+	}
-+
- 	spin_unlock(&cil->xc_push_lock);
- 
- }
-@@ -1038,9 +1066,9 @@ xfs_log_commit_cil(
- 		if (lip->li_ops->iop_committing)
- 			lip->li_ops->iop_committing(lip, xc_commit_lsn);
- 	}
--	xlog_cil_push_background(log);
- 
--	up_read(&cil->xc_ctx_lock);
-+	/* xlog_cil_push_background() releases cil->xc_ctx_lock */
-+	xlog_cil_push_background(log);
- }
- 
- /*
-@@ -1199,6 +1227,7 @@ xlog_cil_init(
- 
- 	INIT_LIST_HEAD(&ctx->committing);
- 	INIT_LIST_HEAD(&ctx->busy_extents);
-+	init_waitqueue_head(&ctx->push_wait);
- 	ctx->sequence = 1;
- 	ctx->cil = cil;
- 	cil->xc_ctx = ctx;
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index abd382cfffe3..1cc5333a3f6a 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -242,6 +242,7 @@ struct xfs_cil_ctx {
- 	struct xfs_log_vec	*lv_chain;	/* logvecs being pushed */
- 	struct list_head	iclog_entry;
- 	struct list_head	committing;	/* ctx committing list */
-+	wait_queue_head_t	push_wait;	/* background push throttle */
- 	struct work_struct	discard_endio_work;
- };
- 
-@@ -339,10 +340,33 @@ struct xfs_cil {
-  *   buffer window (32MB) as measurements have shown this to be roughly the
-  *   point of diminishing performance increases under highly concurrent
-  *   modification workloads.
-+ *
-+ * To prevent the CIL from overflowing upper commit size bounds, we introduce a
-+ * new threshold at which we block committing transactions until the background
-+ * CIL commit commences and switches to a new context. While this is not a hard
-+ * limit, it forces the process committing a transaction to the CIL to block and
-+ * yeild the CPU, giving the CIL push work a chance to be scheduled and start
-+ * work. This prevents a process running lots of transactions from overfilling
-+ * the CIL because it is not yielding the CPU. We set the blocking limit at
-+ * twice the background push space threshold so we keep in line with the AIL
-+ * push thresholds.
-+ *
-+ * Note: this is not a -hard- limit as blocking is applied after the transaction
-+ * is inserted into the CIL and the push has been triggered. It is largely a
-+ * throttling mechanism that allows the CIL push to be scheduled and run. A hard
-+ * limit will be difficult to implement without introducing global serialisation
-+ * in the CIL commit fast path, and it's not at all clear that we actually need
-+ * such hard limits given the ~7 years we've run without a hard limit before
-+ * finding the first situation where a checkpoint size overflow actually
-+ * occurred. Hence the simple throttle, and an ASSERT check to tell us that
-+ * we've overrun the max size.
-  */
- #define XLOG_CIL_SPACE_LIMIT(log)	\
- 	min_t(int, (log)->l_logsize >> 3, BBTOB(XLOG_TOTAL_REC_SHIFT(log)) << 4)
- 
-+#define XLOG_CIL_BLOCKING_SPACE_LIMIT(log)	\
-+	(XLOG_CIL_SPACE_LIMIT(log) * 2)
-+
- /*
-  * ticket grant locks, queues and accounting have their own cachlines
-  * as these are quite hot and can be operated on concurrently.
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index c13bb3655e48..d3635d1e3de6 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -1011,6 +1011,7 @@ DEFINE_LOGGRANT_EVENT(xfs_log_regrant_reserve_sub);
- DEFINE_LOGGRANT_EVENT(xfs_log_ungrant_enter);
- DEFINE_LOGGRANT_EVENT(xfs_log_ungrant_exit);
- DEFINE_LOGGRANT_EVENT(xfs_log_ungrant_sub);
-+DEFINE_LOGGRANT_EVENT(xfs_log_cil_wait);
- 
- DECLARE_EVENT_CLASS(xfs_log_item_class,
- 	TP_PROTO(struct xfs_log_item *lip),
--- 
-2.24.0.rc0
-
+> 
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> 
+>> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+>> ---
+>>  drivers/infiniband/core/umem.c              |  5 ++---
+>>  drivers/infiniband/core/umem_odp.c          | 10 +++++-----
+>>  drivers/infiniband/hw/hfi1/user_pages.c     |  4 ++--
+>>  drivers/infiniband/hw/mthca/mthca_memfree.c |  3 +--
+>>  drivers/infiniband/hw/qib/qib_user_pages.c  |  8 ++++----
+>>  drivers/infiniband/hw/qib/qib_user_sdma.c   |  2 +-
+>>  drivers/infiniband/hw/usnic/usnic_uiom.c    |  9 ++++-----
+>>  drivers/infiniband/sw/siw/siw_mem.c         |  5 ++---
+>>  8 files changed, 21 insertions(+), 25 deletions(-)
+>>
+>> diff --git a/drivers/infiniband/core/umem.c b/drivers/infiniband/core/umem.c
+>> index 24244a2f68cc..c5a78d3e674b 100644
+>> --- a/drivers/infiniband/core/umem.c
+>> +++ b/drivers/infiniband/core/umem.c
+>> @@ -272,11 +272,10 @@ struct ib_umem *ib_umem_get(struct ib_udata *udata, unsigned long addr,
+>>  
+>>  	while (npages) {
+>>  		down_read(&mm->mmap_sem);
+>> -		ret = get_user_pages(cur_base,
+>> +		ret = pin_longterm_pages(cur_base,
+>>  				     min_t(unsigned long, npages,
+>>  					   PAGE_SIZE / sizeof (struct page *)),
+>> -				     gup_flags | FOLL_LONGTERM,
+>> -				     page_list, NULL);
+>> +				     gup_flags, page_list, NULL);
+>>  		if (ret < 0) {
+>>  			up_read(&mm->mmap_sem);
+>>  			goto umem_release;
+>> diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
+>> index 163ff7ba92b7..a38b67b83db5 100644
+>> --- a/drivers/infiniband/core/umem_odp.c
+>> +++ b/drivers/infiniband/core/umem_odp.c
+>> @@ -534,7 +534,7 @@ static int ib_umem_odp_map_dma_single_page(
+>>  	} else if (umem_odp->page_list[page_index] == page) {
+>>  		umem_odp->dma_list[page_index] |= access_mask;
+>>  	} else {
+>> -		pr_err("error: got different pages in IB device and from get_user_pages. IB device page: %p, gup page: %p\n",
+>> +		pr_err("error: got different pages in IB device and from pin_longterm_pages. IB device page: %p, gup page: %p\n",
+>>  		       umem_odp->page_list[page_index], page);
+>>  		/* Better remove the mapping now, to prevent any further
+>>  		 * damage. */
+>> @@ -639,11 +639,11 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
+>>  		/*
+>>  		 * Note: this might result in redundent page getting. We can
+>>  		 * avoid this by checking dma_list to be 0 before calling
+>> -		 * get_user_pages. However, this make the code much more
+>> -		 * complex (and doesn't gain us much performance in most use
+>> -		 * cases).
+>> +		 * pin_longterm_pages. However, this makes the code much
+>> +		 * more complex (and doesn't gain us much performance in most
+>> +		 * use cases).
+>>  		 */
+>> -		npages = get_user_pages_remote(owning_process, owning_mm,
+>> +		npages = pin_longterm_pages_remote(owning_process, owning_mm,
+>>  				user_virt, gup_num_pages,
+>>  				flags, local_page_list, NULL, NULL);
+>>  		up_read(&owning_mm->mmap_sem);
+>> diff --git a/drivers/infiniband/hw/hfi1/user_pages.c b/drivers/infiniband/hw/hfi1/user_pages.c
+>> index 469acb961fbd..9b55b0a73e29 100644
+>> --- a/drivers/infiniband/hw/hfi1/user_pages.c
+>> +++ b/drivers/infiniband/hw/hfi1/user_pages.c
+>> @@ -104,9 +104,9 @@ int hfi1_acquire_user_pages(struct mm_struct *mm, unsigned long vaddr, size_t np
+>>  			    bool writable, struct page **pages)
+>>  {
+>>  	int ret;
+>> -	unsigned int gup_flags = FOLL_LONGTERM | (writable ? FOLL_WRITE : 0);
+>> +	unsigned int gup_flags = (writable ? FOLL_WRITE : 0);
+>>  
+>> -	ret = get_user_pages_fast(vaddr, npages, gup_flags, pages);
+>> +	ret = pin_longterm_pages_fast(vaddr, npages, gup_flags, pages);
+>>  	if (ret < 0)
+>>  		return ret;
+>>  
+>> diff --git a/drivers/infiniband/hw/mthca/mthca_memfree.c b/drivers/infiniband/hw/mthca/mthca_memfree.c
+>> index edccfd6e178f..beec7e4b8a96 100644
+>> --- a/drivers/infiniband/hw/mthca/mthca_memfree.c
+>> +++ b/drivers/infiniband/hw/mthca/mthca_memfree.c
+>> @@ -472,8 +472,7 @@ int mthca_map_user_db(struct mthca_dev *dev, struct mthca_uar *uar,
+>>  		goto out;
+>>  	}
+>>  
+>> -	ret = get_user_pages_fast(uaddr & PAGE_MASK, 1,
+>> -				  FOLL_WRITE | FOLL_LONGTERM, pages);
+>> +	ret = pin_longterm_pages_fast(uaddr & PAGE_MASK, 1, FOLL_WRITE, pages);
+>>  	if (ret < 0)
+>>  		goto out;
+>>  
+>> diff --git a/drivers/infiniband/hw/qib/qib_user_pages.c b/drivers/infiniband/hw/qib/qib_user_pages.c
+>> index 6bf764e41891..684a14e14d9b 100644
+>> --- a/drivers/infiniband/hw/qib/qib_user_pages.c
+>> +++ b/drivers/infiniband/hw/qib/qib_user_pages.c
+>> @@ -108,10 +108,10 @@ int qib_get_user_pages(unsigned long start_page, size_t num_pages,
+>>  
+>>  	down_read(&current->mm->mmap_sem);
+>>  	for (got = 0; got < num_pages; got += ret) {
+>> -		ret = get_user_pages(start_page + got * PAGE_SIZE,
+>> -				     num_pages - got,
+>> -				     FOLL_LONGTERM | FOLL_WRITE | FOLL_FORCE,
+>> -				     p + got, NULL);
+>> +		ret = pin_longterm_pages(start_page + got * PAGE_SIZE,
+>> +					 num_pages - got,
+>> +					 FOLL_WRITE | FOLL_FORCE,
+>> +					 p + got, NULL);
+>>  		if (ret < 0) {
+>>  			up_read(&current->mm->mmap_sem);
+>>  			goto bail_release;
+>> diff --git a/drivers/infiniband/hw/qib/qib_user_sdma.c b/drivers/infiniband/hw/qib/qib_user_sdma.c
+>> index 05190edc2611..fd86a9d19370 100644
+>> --- a/drivers/infiniband/hw/qib/qib_user_sdma.c
+>> +++ b/drivers/infiniband/hw/qib/qib_user_sdma.c
+>> @@ -670,7 +670,7 @@ static int qib_user_sdma_pin_pages(const struct qib_devdata *dd,
+>>  		else
+>>  			j = npages;
+>>  
+>> -		ret = get_user_pages_fast(addr, j, FOLL_LONGTERM, pages);
+>> +		ret = pin_longterm_pages_fast(addr, j, 0, pages);
+>>  		if (ret != j) {
+>>  			i = 0;
+>>  			j = ret;
+>> diff --git a/drivers/infiniband/hw/usnic/usnic_uiom.c b/drivers/infiniband/hw/usnic/usnic_uiom.c
+>> index 62e6ffa9ad78..6b90ca1c3771 100644
+>> --- a/drivers/infiniband/hw/usnic/usnic_uiom.c
+>> +++ b/drivers/infiniband/hw/usnic/usnic_uiom.c
+>> @@ -141,11 +141,10 @@ static int usnic_uiom_get_pages(unsigned long addr, size_t size, int writable,
+>>  	ret = 0;
+>>  
+>>  	while (npages) {
+>> -		ret = get_user_pages(cur_base,
+>> -				     min_t(unsigned long, npages,
+>> -				     PAGE_SIZE / sizeof(struct page *)),
+>> -				     gup_flags | FOLL_LONGTERM,
+>> -				     page_list, NULL);
+>> +		ret = pin_longterm_pages(cur_base,
+>> +					 min_t(unsigned long, npages,
+>> +					     PAGE_SIZE / sizeof(struct page *)),
+>> +					 gup_flags, page_list, NULL);
+>>  
+>>  		if (ret < 0)
+>>  			goto out;
+>> diff --git a/drivers/infiniband/sw/siw/siw_mem.c b/drivers/infiniband/sw/siw/siw_mem.c
+>> index e99983f07663..20e663d7ada8 100644
+>> --- a/drivers/infiniband/sw/siw/siw_mem.c
+>> +++ b/drivers/infiniband/sw/siw/siw_mem.c
+>> @@ -426,9 +426,8 @@ struct siw_umem *siw_umem_get(u64 start, u64 len, bool writable)
+>>  		while (nents) {
+>>  			struct page **plist = &umem->page_chunk[i].plist[got];
+>>  
+>> -			rv = get_user_pages(first_page_va, nents,
+>> -					    foll_flags | FOLL_LONGTERM,
+>> -					    plist, NULL);
+>> +			rv = pin_longterm_pages(first_page_va, nents,
+>> +						foll_flags, plist, NULL);
+>>  			if (rv < 0)
+>>  				goto out_sem_up;
+>>  
+>> -- 
+>> 2.23.0
+>>
