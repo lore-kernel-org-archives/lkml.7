@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5958CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C1ECA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A244C2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66842083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:57:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tvdh0va1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AEGDXtnZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfJaI4G (ORCPT
+        id S1727008AbfJaI5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 04:56:06 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:41602 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbfJaI4G (ORCPT
+        Thu, 31 Oct 2019 04:57:34 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43623 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfJaI5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 04:56:06 -0400
-Received: by mail-il1-f193.google.com with SMTP id z10so4667780ilo.8
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 01:56:04 -0700 (PDT)
+        Thu, 31 Oct 2019 04:57:34 -0400
+Received: by mail-io1-f66.google.com with SMTP id c11so5791952iom.10
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 01:57:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kFfdHfuhP+nEEQfQbC0Ba4Z+OQ9QN7a/luiGoxHZNKI=;
-        b=tvdh0va1KgpZTtjmMZNglpPZI03tvtnGrO5YO4cTV4BiVYA+11jNi3bTMfInJ1Up0a
-         aoVUaXwQWYabwxtf4Ll8mfoLG2JyLcMYt0mam5/o6dAfujWHFAcY/46v7Oq6GsABGJ0M
-         +Sds7J3eBBKmtI3m8OcMFpGgLP7p1VD1LZOFdfuKKY9IhTqlufbq0ZTaKFZ1OFbDTMeP
-         wt5HuQunjysLqwvbwBOoStV1dcahtv0duyWC0YgjtTkXgEto0XoPkk72ntb5A93L/tE8
-         itwFWMXuQOEeNIjk7rzz9dcNdf6oJotXCzlx94WWlSxwuvaLnbjM1f6Xg4BI8Xx9Mhky
-         Kh6w==
+        bh=8IZcXOhYWcQPPh8pbPgFawvnUK9M/706xBPYei9/eFw=;
+        b=AEGDXtnZWMhiiDLrfPhBu5ICyGLokIcM97C5AqmmYtNp2z4rEDiNSMFiVGL9YFN4gK
+         Uj3f2kBx7U99NDg1jvXkxJErUOKgrZq4hYWliDqk5fXZSjCI4KVDvH11dVlLkSqJieet
+         Mkto6617w/B5M8W5C/mJkZh6kUhVSBZXVZOAm82Y6b46MpJk0KXr12xXSSlENtsXCge+
+         UVqwAuvztYyNydIQGwWELbDJaKvyOdYOvCG8GUT19u4WJAGWj2rczHUjtop76ip9KZju
+         8r1Dl7DhMKHmcVXhCWd6lWLkR3ZuMGJ+T8Hr54LnR96RGeOKnJ6wGQb0FGWK+Mu6m8UY
+         4wmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kFfdHfuhP+nEEQfQbC0Ba4Z+OQ9QN7a/luiGoxHZNKI=;
-        b=jvQ4JE/tU0PHzinWnCJa5gwwBsBSDGVfM4HbYoS0OVbUMfOWFbhfBbzg1xUBsDqaNh
-         SJpcXX9605IjvQD9hBncywP1TlQhqG2+VnPWrOCeLEKJOonTkzAWj8gGNGcBYZjMSscM
-         9RYtD2Z5KHax93cTHgfaWyhIghuzfX4cWjNwosacM8yVG44QBI//BBTR6rEIpSZIirY9
-         uA5ApyslU304weVXvngfctm2TifoX2q3t6hdagzngZpDrzQkMrFS89bFBMrnIKnF2/9k
-         LEbUdz7vS9T1oUTf21meaNwVxx5VFxnk0Y5ow9QGlVxL65nahFUQmsGQzah69bGkJYaf
-         37PA==
-X-Gm-Message-State: APjAAAVdzEHk1X+BRxRTjcW0Jq8ipOU1pu1fF2k6aSdLl4x9FiQwEp/j
-        0YQ97i3fgYxGOsdU3uag6rKeYaOlTOQbzLCR/wZsAg==
-X-Google-Smtp-Source: APXvYqwfX3ZfmayVc1DkCMbcevGUQ3Zmtj89LujmSEYYk2OKKpmSKfIAH39CJHL+4amH5NwNeo9lS0jhOjQEwNOQDnM=
-X-Received: by 2002:a92:af19:: with SMTP id n25mr5445478ili.138.1572512164205;
- Thu, 31 Oct 2019 01:56:04 -0700 (PDT)
+        bh=8IZcXOhYWcQPPh8pbPgFawvnUK9M/706xBPYei9/eFw=;
+        b=jGtzxhiFWhYZcmmDnizPy2tgvTrSTXnQL9dJ0YseLBGzdEOGSzWPrY9JAsT7sVppMW
+         NtwnTDP5IHEc7XL/Er9cuB1E/9bYiweBdqTb+x003y+aUi9QNzBpxbSVII6YHkoTRHgX
+         aasTLInKge+ujTgi3QQWxotjyQbVZSYGE+DHg4UeR7Sw7mIp0NHfl0jUyeLEjCJhulGn
+         hnCsdU8UNiuXo32+SteyQfmt3hwRUWZnYrKKWACuRwqbj09sYxvjj8cy4vpmR8grgYiw
+         goD+rJEdgTXtEvYBV0KM2IOTwugB8npJeBUd0b4WDuazkmjE79jI7qKaTtYi/2w4rzMo
+         nc4w==
+X-Gm-Message-State: APjAAAWYgoakHntrzL0QuPQhpFKdpDh3lW6sM3eU4f4I8Zx/giNohUx4
+        h3D+Dk0/GLzGxCI0jtGQ/I2hvNuk7QDTU3UCCtT0ww==
+X-Google-Smtp-Source: APXvYqxV+dCgVfvyNIf9sww3KhPCvrGskZ13qCx0x5s+9JoRgcMYQVptyGjQDTFpRDYcZA9EtyzX0lv/U5iCaEQCo+0=
+X-Received: by 2002:a5d:8909:: with SMTP id b9mr4355813ion.138.1572512252076;
+ Thu, 31 Oct 2019 01:57:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191030091038.678-1-daniel.lezcano@linaro.org>
-In-Reply-To: <20191030091038.678-1-daniel.lezcano@linaro.org>
+References: <20191030091038.678-1-daniel.lezcano@linaro.org> <20191030091038.678-2-daniel.lezcano@linaro.org>
+In-Reply-To: <20191030091038.678-2-daniel.lezcano@linaro.org>
 From:   Viresh Kumar <viresh.kumar@linaro.org>
-Date:   Thu, 31 Oct 2019 14:25:52 +0530
-Message-ID: <CAKohpomW1CHrHZmXTmOAw9Oj2YauLPQmrL0Tw-j92qZ2YqK_Bw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] thermal: cpu_cooling: Remove pointless dependency on CONFIG_OF
+Date:   Thu, 31 Oct 2019 14:27:20 +0530
+Message-ID: <CAKohpokt8_Ru8_g=EY+XEG71wTVUC+_h5+Bu=kydAzx0i0zEsQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] thermal: cpu_cooling: Reorder the header file
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Amit Daniel Kachhap <amit.kachhap@gmail.com>,
         Javi Merino <javi.merino@kernel.org>,
@@ -75,14 +75,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, 30 Oct 2019 at 14:41, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
 >
-> The option CONFIG_CPU_THERMAL depends on CONFIG_OF in the Kconfig.
+> As the conditions are simplified and unified, it is useless to have
+> different blocks of definitions under the same compiler condition,
+> let's merge the blocks.
 >
-> It it pointless to check if CONFIG_OF is set in the header file as
-> this is always true if CONFIG_CPU_THERMAL is true. Remove it.
+> There is no functional change.
 >
 > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 > ---
->  include/linux/cpu_cooling.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  include/linux/cpu_cooling.h | 16 +++++++---------
+>  1 file changed, 7 insertions(+), 9 deletions(-)
 
 Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
