@@ -2,231 +2,159 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35708C47E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48FECA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 004D320862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A89A520862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:18:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RxFlxK/A"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vLVfuciN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfJaJOF (ORCPT
+        id S1727029AbfJaJSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 05:14:05 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38655 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfJaJOE (ORCPT
+        Thu, 31 Oct 2019 05:18:02 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36472 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbfJaJSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 05:14:04 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v9so5351163wrq.5;
-        Thu, 31 Oct 2019 02:14:01 -0700 (PDT)
+        Thu, 31 Oct 2019 05:18:02 -0400
+Received: by mail-pf1-f194.google.com with SMTP id v19so3950738pfm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 02:18:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DwGRG3/zucfy6TYRbn+kLcFz9oFEfIbTg62MDuhmTvw=;
-        b=RxFlxK/AAf/AV/xFCW+o3VzXwY9++S8LJxI8XWv3DsA130Tq9UCM6NCETf/Ah4XQcq
-         Z7Gb92BzN2mEWenbTKbsA/jUA1+7g0q4v6VyaWrGZqA0DHZQb7EIFJdxk5hhMrjgxKjT
-         dPA1QOFzq9rODYSBhCCeOFXXwEWBUTHvcSxxboPPbdBtOSZeCNOJGVEPAcFs+0vvvAgr
-         tQ05fnkgCrBwiXNOpEXBsvhGOaujGQPBVFW3vY7ZS7p58jT4TIRF7l6whDBEjdv2tswb
-         Zyy3yckc2h/skp1W+ygxazD5uB1vlDzxVYcoyTXgbsOCOTEqh4mjM/A+j987FaB7TCzD
-         3lAQ==
+        bh=/4vjjXip3PEZlpbvSCBjNSofs7TybrsEceZdmzVqTWg=;
+        b=vLVfuciNf7T8Yu5E2bROWn0NM0KpFjqxr++0zpwbFio/EEJo2T5wJdD3D7Cnjum+5S
+         oReoZsaxy9BkEdsv2pV9IsrGYf6fnv3cvIgdQCN+azdIrPfljxaoL8N7PG4SH1weLRJz
+         8Pq7bPws7tFsavO1Jg3lTNzhSqpD3x1IsE4n9KcEIEh9PPRkZNyo0J04GyWnA9YDYFDP
+         ON7Li7hij9hcochr8D0HBMbwnjWPQdG6D7NJ6RAEFI6WvqiJgQhzIpnsvDcS+UAGdqth
+         NnKwbU9dNTl+Ntmn//STGsXFF7/l/PtIpEuvLmkAT2KXdJJ9CPiqDpbYcmz4P/j/9KMH
+         oLJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DwGRG3/zucfy6TYRbn+kLcFz9oFEfIbTg62MDuhmTvw=;
-        b=WB8wwIOhv7rddSa3ETLCiVv/w9u2r4+wLMlrXGLYlUeT98Fyk+297q+GWgR/Bfrs7P
-         AdCZWEndNALCYJJYl+oln+jjdDGVNfbXbTw7prR01ZBgq0GY3VY/ec19UKMFAhx1OrYI
-         7QMi3R119tMVx/z3qO53ub0iXzHhev0jjvvFxsbrZmXe7aQM7vNBLXsnxsDpEiBet8rY
-         KD1OOdbEX7uevW6EPg8PXK7oPIJ3kzsO72eedBuLnA44Zu6iQQaK15RNuWwL4DiJCvmj
-         dJplO/fcmnwXFDZ9KLiAdLkVHiSjz/ec3BUYU0l7MFqdJylbqRs7qwDgLbdqQ6Wkll+r
-         ApRQ==
-X-Gm-Message-State: APjAAAWX3LR5tR3rKtutFW9MTvTJdELCrYTPNPoX//lH3V+a84/QRQAu
-        H9gTrOW1t/H+sy2u2Nbn4eEbHA20i43trY+fr4o=
-X-Google-Smtp-Source: APXvYqzZlyy0ojCdisc5mKiP7KI3KB8ScsjkNt2woKbQi+qwZtspMo5DxjNMK8nd/6Z9nQeoGERizX+B/EOjYztFaOk=
-X-Received: by 2002:adf:f78f:: with SMTP id q15mr4335498wrp.282.1572513241149;
- Thu, 31 Oct 2019 02:14:01 -0700 (PDT)
+        bh=/4vjjXip3PEZlpbvSCBjNSofs7TybrsEceZdmzVqTWg=;
+        b=UnRzao1cUB/WZpOuuvVX8Tj2/EZFBVtITV59d2TMEPYnJAMbgUPUFGvW9l7hwVmxHD
+         9AIRizBKztFUUlMXmX387Zn3SjLJrwNVQhiKEcDLWg+8avPVLOXpymk1w+HwYL38Us0M
+         OroVjAX44tmU/9VhmRFxgenAka9jo9O2TH8ipX8w9ICzJTPMCsv4K0MMUtzHd9fC0mhm
+         H9LXi+RsNMLExnhjfkCl1N9gRkuC00fxwMrNroXOiT9GVIrxkars76vxB6dGy1tnBO8d
+         7YZHy4fHurmZRYaETKKynXtIuicByOF8zQGERuVqPVBko/VBmhHCBOEEtRR007faSIFK
+         m08w==
+X-Gm-Message-State: APjAAAVj98zHVUEUdXkXhDOlE7sQ0VqaEIH2R18Nb73n1wEuK6fCTbVI
+        8xyHkHiDsUcSB5myBgS84pKMsASV3vHOE5neHTzaHA==
+X-Google-Smtp-Source: APXvYqypwZwY39bRA8SlcqSx2t9abzPasBSJqwBHjFz7WDKZ1NhGDmS5XjfCTop3u9EnVZ+RtajjJ+BbxlfeIRaFHGc=
+X-Received: by 2002:a63:234c:: with SMTP id u12mr5113679pgm.384.1572513480667;
+ Thu, 31 Oct 2019 02:18:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191027203259.948006506@linuxfoundation.org> <20191027203307.303661015@linuxfoundation.org>
- <3e9de35dda19c0ac207d49d24c2735655b1d8d64.camel@nokia.com>
-In-Reply-To: <3e9de35dda19c0ac207d49d24c2735655b1d8d64.camel@nokia.com>
-From:   Xin Long <lucien.xin@gmail.com>
-Date:   Thu, 31 Oct 2019 17:14:15 +0800
-Message-ID: <CADvbK_dx=dT6j-XMA=p9QgJJp5YgA2zRCLuY08u4pz0v=vXorw@mail.gmail.com>
-Subject: Re: [PATCH 4.14 024/119] sctp: change sctp_prot .no_autobind with true
-To:     "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
-Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "syzbot+d44f7bbebdea49dbc84a@syzkaller.appspotmail.com" 
-        <syzbot+d44f7bbebdea49dbc84a@syzkaller.appspotmail.com>,
-        "marcelo.leitner@gmail.com" <marcelo.leitner@gmail.com>
+References: <20191018001816.94460-1-brendanhiggins@google.com>
+ <20191018122949.GD11244@42.do-not-panic.com> <alpine.LRH.2.20.1910191348280.11804@dhcp-10-175-221-34.vpn.oracle.com>
+ <CAFd5g46aO4jwyo32DSz4L8GdhP6t38+Qb9NB+3fev3u4G6sg4w@mail.gmail.com>
+ <20191024101529.GK11244@42.do-not-panic.com> <201910301205.74EC2A226D@keescook>
+In-Reply-To: <201910301205.74EC2A226D@keescook>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 31 Oct 2019 02:17:49 -0700
+Message-ID: <CAFd5g45V-iYaAhHwoaUPoPYUBud-5vxbBkApp-h5O6J8trnPRA@mail.gmail.com>
+Subject: Re: [PATCH linux-kselftest/test v1] apparmor: add AppArmor KUnit
+ tests for policy unpack
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Matthias Maennich <maennich@google.com>,
+        shuah <shuah@kernel.org>,
+        John Johansen <john.johansen@canonical.com>, jmorris@namei.org,
+        serge@hallyn.com, Iurii Zaikin <yzaikin@google.com>,
+        David Gow <davidgow@google.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-security-module@vger.kernel.org,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Mike Salvatore <mike.salvatore@canonical.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 3:54 PM Rantala, Tommi T. (Nokia - FI/Espoo)
-<tommi.t.rantala@nokia.com> wrote:
+On Wed, Oct 30, 2019 at 12:09 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> On Sun, 2019-10-27 at 22:00 +0100, Greg Kroah-Hartman wrote:
-> > From: Xin Long <lucien.xin@gmail.com>
+> On Thu, Oct 24, 2019 at 10:15:29AM +0000, Luis Chamberlain wrote:
+> > On Wed, Oct 23, 2019 at 05:42:18PM -0700, Brendan Higgins wrote:
+> > > With that, I think the best solution in this case will be the
+> > > "__visible_for_testing" route. It has no overhead when testing is
+> > > turned off (in fact it is no different in anyway when testing is
+> > > turned off). The downsides I see are:
+> > >
+> > > 1) You may not be able to test non-module code not compiled for
+> > > testing later with the test modules that Alan is working on (But the
+> > > only way I think that will work is by preventing the symbol from being
+> > > inlined, right?).
+> > >
+> > > 2) I think "__visible_for_testing" will be prone to abuse. Here, I
+> > > think there are reasons why we might want to expose these symbols for
+> > > testing, but not otherwise. Nevertheless, I think most symbols that
+> > > should be tested should probably be made visible by default. Since you
+> > > usually only want to test your public interfaces. I could very well
+> > > see this getting used as a kludge that gets used far too frequently.
 > >
-> > [ Upstream commit 63dfb7938b13fa2c2fbcb45f34d065769eb09414 ]
+> > There are two parts to your statement on 2):
 > >
-> > syzbot reported a memory leak:
-> >
-> >   BUG: memory leak, unreferenced object 0xffff888120b3d380 (size 64):
-> >   backtrace:
-> >
-> >     [...] slab_alloc mm/slab.c:3319 [inline]
-> >     [...] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
-> >     [...] sctp_bucket_create net/sctp/socket.c:8523 [inline]
-> >     [...] sctp_get_port_local+0x189/0x5a0 net/sctp/socket.c:8270
-> >     [...] sctp_do_bind+0xcc/0x200 net/sctp/socket.c:402
-> >     [...] sctp_bindx_add+0x4b/0xd0 net/sctp/socket.c:497
-> >     [...] sctp_setsockopt_bindx+0x156/0x1b0 net/sctp/socket.c:1022
-> >     [...] sctp_setsockopt net/sctp/socket.c:4641 [inline]
-> >     [...] sctp_setsockopt+0xaea/0x2dc0 net/sctp/socket.c:4611
-> >     [...] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3147
-> >     [...] __sys_setsockopt+0x10f/0x220 net/socket.c:2084
-> >     [...] __do_sys_setsockopt net/socket.c:2100 [inline]
-> >
-> > It was caused by when sending msgs without binding a port, in the path:
-> > inet_sendmsg() -> inet_send_prepare() -> inet_autobind() ->
-> > .get_port/sctp_get_port(), sp->bind_hash will be set while bp->port is
-> > not. Later when binding another port by sctp_setsockopt_bindx(), a new
-> > bucket will be created as bp->port is not set.
-> >
-> > sctp's autobind is supposed to call sctp_autobind() where it does all
-> > things including setting bp->port. Since sctp_autobind() is called in
-> > sctp_sendmsg() if the sk is not yet bound, it should have skipped the
-> > auto bind.
-> >
-> > THis patch is to avoid calling inet_autobind() in inet_send_prepare()
-> > by changing sctp_prot .no_autobind with true, also remove the unused
-> > .get_port.
+> >   a) possible abuse of say __visible_for_testing
 >
-> Hi,
->
-> I'm seeing SCTP oops in 4.14.151, reproducible easily with iperf:
->
-> # iperf3 -s -1 &
-> # iperf3 -c localhost --sctp
->
-> This patch was also included in 4.19.81, but there it seems to be working
-> fine.
->
-> Any ideas if this patch is valid for 4.14, or what's missing in 4.14 to
-> make this work?
-pls get this commit into 4.14, which has been in 4.19:
+> I really don't like the idea of littering the kernel with these. It'll
 
-commit 644fbdeacf1d3edd366e44b8ba214de9d1dd66a9
-Author: Xin Long <lucien.xin@gmail.com>
-Date:   Sun May 20 16:39:10 2018 +0800
+Yeah, I kind of hope that it would make people think more
+intentionally about what is a public interface so that they wouldn't
+litter the kernel with those. But I agree that in the world where
+people *didn't* do that. Lots of these sprinkled around would be
+annoying.
 
-    sctp: fix the issue that flags are ignored when using kernel_connect
+> also require chunks in header files wrapped in #ifdefs. This is really
 
+Why would it require header files wrapped in #ifdefs?
+
+We could put all the ifdeffery logic in the __visible_for_testing
+macro so that nothing in the original code has to change except for
+adding an #include and replacing a couple of `static`s with
+`__visible_for_testing`.
+
+> ugly.
 >
+> >   b) you typically only want to test your public interfaces
 >
-> [   29.179116] sctp: Hash tables configured (bind 256/256)
-> [   29.188846] BUG: unable to handle kernel NULL pointer dereference
-> at           (null)
-> [   29.190189] IP:           (null)
-> [   29.190758] PGD 0 P4D 0
-> [   29.191224] Oops: 0010 [#1] SMP PTI
-> [   29.191786] Modules linked in: hmac sctp libcrc32c isofs kvm_intel kvm
-> irqbypass sch_fq_codel pcbc aesni_intel aes_x86_64 crypto_simd cryptd
-> glue_helper ata_piix dm_mirror dm_region_hash dm_log dm_mod dax autofs4
-> [   29.194585] CPU: 5 PID: 733 Comm: iperf3 Not tainted 4.14.151-1.x86_64
-> #1
-> [   29.195689] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> 1.12.0-2.fc30 04/01/2014
-> [   29.197009] task: ffff93edb0e65bc0 task.stack: ffff9fcdc11b8000
-> [   29.197916] RIP: 0010:          (null)
-> [   29.198532] RSP: 0018:ffff9fcdc11bbe50 EFLAGS: 00010246
-> [   29.199349] RAX: 0000000000000000 RBX: ffff93edb02d0680 RCX:
-> 0000000000000002
-> [   29.200426] RDX: 0000000000000001 RSI: 0000000000000000 RDI:
-> ffff93edb02d0680
-> [   29.201497] RBP: 000000000000001c R08: 0100000000000000 R09:
-> 0000564277abb4e8
-> [   29.202577] R10: 0000000000000000 R11: 0000000000000000 R12:
-> ffff9fcdc11bbe90
-> [   29.203656] R13: 0000564277abb4e0 R14: 0000000000000000 R15:
-> 0000000000000000
-> [   29.204737] FS:  00007f0f6242cb80(0000) GS:ffff93edbfd40000(0000)
-> knlGS:0000000000000000
-> [   29.205967] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   29.206863] CR2: 0000000000000000 CR3: 000000023037c002 CR4:
-> 00000000003606e0
-> [   29.207958] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> [   29.209079] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> 0000000000000400
-> [   29.210162] Call Trace:
-> [   29.210577]  inet_autobind+0x2c/0x60
-> [   29.211172]  inet_dgram_connect+0x45/0x80
-> [   29.211808]  SYSC_connect+0x89/0xb0
-> [   29.212384]  ? sock_map_fd+0x3d/0x60
-> [   29.212960]  do_syscall_64+0x74/0x190
-> [   29.213517]  entry_SYSCALL_64_after_hwframe+0x3d/0xa2
-> [   29.214212] RIP: 0033:0x7f0f626b5758
-> [   29.214710] RSP: 002b:00007ffc7ca624f8 EFLAGS: 00000246 ORIG_RAX:
-> 000000000000002a
-> [   29.215727] RAX: ffffffffffffffda RBX: 0000564277aba260 RCX:
-> 00007f0f626b5758
-> [   29.216660] RDX: 000000000000001c RSI: 0000564277abb4e0 RDI:
-> 0000000000000005
-> [   29.217613] RBP: 0000000000000005 R08: 0000564277abc9d0 R09:
-> 0000564277abb4e8
-> [   29.218604] R10: 0000000000000000 R11: 0000000000000246 R12:
-> 00007f0f627a7170
-> [   29.219606] R13: 00007ffc7ca62520 R14: 0000564277aba260 R15:
-> 0000000000000001
-> [   29.220596] Code:  Bad RIP value.
-> [   29.221075] RIP:           (null) RSP: ffff9fcdc11bbe50
-> [   29.221772] CR2: 0000000000000000
-> [   29.222260] ---[ end trace 831c4c1f11109ca0 ]---
->
->
-> > Reported-by: syzbot+d44f7bbebdea49dbc84a@syzkaller.appspotmail.com
-> > Signed-off-by: Xin Long <lucien.xin@gmail.com>
-> > Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-> > Signed-off-by: David S. Miller <davem@davemloft.net>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > ---
-> >  net/sctp/socket.c |    4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > --- a/net/sctp/socket.c
-> > +++ b/net/sctp/socket.c
-> > @@ -8313,7 +8313,7 @@ struct proto sctp_prot = {
-> >       .backlog_rcv =  sctp_backlog_rcv,
-> >       .hash        =  sctp_hash,
-> >       .unhash      =  sctp_unhash,
-> > -     .get_port    =  sctp_get_port,
-> > +     .no_autobind =  true,
-> >       .obj_size    =  sizeof(struct sctp_sock),
-> >       .sysctl_mem  =  sysctl_sctp_mem,
-> >       .sysctl_rmem =  sysctl_sctp_rmem,
-> > @@ -8352,7 +8352,7 @@ struct proto sctpv6_prot = {
-> >       .backlog_rcv    = sctp_backlog_rcv,
-> >       .hash           = sctp_hash,
-> >       .unhash         = sctp_unhash,
-> > -     .get_port       = sctp_get_port,
-> > +     .no_autobind    = true,
-> >       .obj_size       = sizeof(struct sctp6_sock),
-> >       .sysctl_mem     = sysctl_sctp_mem,
-> >       .sysctl_rmem    = sysctl_sctp_rmem,
-> >
-> >
->
+> True, but being able to test the little helper functions is a nice
+> starting point and a good building block.
+
+Yeah, I think I have come to accept that. We can argue about how this
+should change and how people need to learn to be more intentional
+about which interfaces are public and many other high minded ideas,
+but when it comes down to it, we need to provide a starting point that
+is easy.
+
+If our nice starting point becomes a problem, we can always improve it later.
+
+> Why can't unit tests live with the code they're testing? They're already
+> logically tied together; what's the harm there? This needn't be the case
+> for ALL tests, etc. The test driver could still live externally. The
+> test in the other .c would just have exported functions... ?
+
+Well, for one, it totally tanks certain cases for building KUnit tests
+as modules. I don't care about this point *too* much personally, but I
+accept that there are others that want this, and I don't want to make
+these people's lives too difficult.
+
+The main reason I care, however, is just that I think it looks bad to
+me. The file that these tests were in was already pretty long, and the
+tests made it even longer. So that makes the tests harder to find. If
+all tests are in a *-test.c file, then it becomes really easy to find
+all of your tests. Admittedly, this is a pretty minor point. Honestly,
+the main reason it looks bad to me, is because it is different from
+what I am used to, which, I know, is not a great reason.
