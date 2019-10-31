@@ -2,109 +2,114 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFF6CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BF8CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 776CF20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:43:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572547432;
-	bh=fdAfMNAe36f/3COL7qXnHCukzReyQ3PyEAz9/OgiPSA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WCL9kQvfYR7Fc6MC/FqYouothP8Z8y/8CWVSKyG6foYv5kyt7aUqagWxpxsWLotl8
-	 Cr7BbLqP47oR15VDTK8RJcIdOuyoMVOCy/pGbhRYDmdyWA0j16adljoXyWI0dqpsIv
-	 Va+57jfKymQ/TrG3HmPn2KwVlVdAAdd0cMLd0HPE=
+	by mail.kernel.org (Postfix) with ESMTP id 647712086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:45:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WUSQhNBA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbfJaSnv (ORCPT
+        id S1729358AbfJaSpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:43:51 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35972 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729304AbfJaSnu (ORCPT
+        Thu, 31 Oct 2019 14:45:40 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:33142 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729313AbfJaSpk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:43:50 -0400
-Received: by mail-qt1-f196.google.com with SMTP id y10so3111270qto.3;
-        Thu, 31 Oct 2019 11:43:49 -0700 (PDT)
+        Thu, 31 Oct 2019 14:45:40 -0400
+Received: by mail-qt1-f201.google.com with SMTP id k53so7290408qtk.0
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 11:45:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Hfo2/9DpljbvAhB9xl0YdOSI7Py9wSatQChmRyBaX2Y=;
-        b=peHYAPeXlBqrPFee2+Ck4DPkyTNSAkZMt4NL2IB8D3i6SnLsaxm94Z8WT/Pkw5KEmn
-         XQGCo7nu0OykrB+FvY75HEtIXp5NbHuSrunM4BeNeexfSauFgmGxUac2SHFknPFaE+i1
-         vgQykTq0ATqdXnzwYyjinkYHm4bQvCo0KweOcK7sssmUK0rdQPBeFyebfxchH516hZ4h
-         mkwcw3jbcwKYtyE7sSGzNcfEGhx34OqVuepXFnzOgV4AJfHsdWfDE+y8la5+R9D0wD0H
-         ETxkg/gZeIaGqkAPuzTN9tqQitF72e8cRAgYe0QnO//swqQLt5dWnEceAKrcGgXsvX1i
-         8Ulw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=8ALf84QyJ21Yy83EcsBZYx0R5ySmANW7J5oD5E9Gtsc=;
+        b=WUSQhNBAOxFkVi7Km6IbhgY+FLELPn8N20pipsZpHhKH3RIy/SdgG+EC4r8hz6fznI
+         ONaTeM7G+L6JDvf1deTj/CWq/4QnIhe06e4mRHS0LJBKW6lnhRj1U5zKz3skyHMfQAL4
+         uCiHZQNIq31Oqil/PmGKreOtZD8dJ3Kl+FTCWChnThvafmwBdxQft7VGFUXTzNsc1YUm
+         yCtbC9D652rQpFqNbUUvXQRM3WVxgYNtD/cMH9VxH+oahlNo4QM4tlFDkrBt+kBZ6aJG
+         0Wg9w6eYhkaryFrrwuwP3QezYuQXYrcGh/RqeBKBQoznD8OvZz5ByenyMAYvDajZ1yW2
+         8eVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Hfo2/9DpljbvAhB9xl0YdOSI7Py9wSatQChmRyBaX2Y=;
-        b=he2kzJvdQ8QTWV3K8RK9G2N/YFQar6mqKEDjOamCLZbtFTvC0wVasS4nLt5Cd/FpPu
-         EV/ZMJjn8kL/Vz9CWKJ+YzOFOzk8Ps+nlSF+wJ1pDDtc2NWQJnkdFC3G+OynzbILx4Rh
-         1lvj6qGAYSAnvE0v+OCIsMM9v2BUuGNHcjwuQ0g1PZwflAzVbQuk/M/Gkohdpiy2KYXr
-         Z9kw4eyt6sHrIs7HDfZhxL+vMTDaN/XB318RASlh+UvabzIpDd2e1MpC7P26YLRFV2xU
-         xV2qjDdUWn8kPntF5bPNJaUqkbYce9IUGMWPeXmkqFoVFarbq84/CqLnUvql3UU69lVe
-         4S2Q==
-X-Gm-Message-State: APjAAAXfa5oYzkuwgdgoSHn3ofiv28mZYUW8UQEAeGSUUu/qFGhsZXrr
-        uMP0zJWC8we71V2ww1uN+Gs=
-X-Google-Smtp-Source: APXvYqySb6tIznbjqfsQ8WMDhIHY8G3NjOyExytgE1RmUg4EJoBT2Wq/6z6BRRe1QvcVE4Trsj5QDw==
-X-Received: by 2002:ac8:866:: with SMTP id x35mr6771728qth.90.1572547428789;
-        Thu, 31 Oct 2019 11:43:48 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::e44c])
-        by smtp.gmail.com with ESMTPSA id i75sm2451492qke.22.2019.10.31.11.43.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 31 Oct 2019 11:43:48 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 11:43:46 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux MM <linux-mm@kvack.org>, Mel Gorman <mgorman@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2] net: fix sk_page_frag() recursion from memory reclaim
-Message-ID: <20191031184346.GM3622521@devbig004.ftw2.facebook.com>
-References: <20191019170141.GQ18794@devbig004.ftw2.facebook.com>
- <20191024205027.GF3622521@devbig004.ftw2.facebook.com>
- <CALvZod6=B-gMJJxhMRt6k5eRwB-3zdgJR5419orTq8-+36wbMQ@mail.gmail.com>
- <11f688a6-0288-0ec4-f925-7b8f16ec011b@gmail.com>
- <CALvZod6Sw-2Wh0KEBiMgGZ1c+2nFW0ueL_4TM4d=Z0JcbvSXrw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod6Sw-2Wh0KEBiMgGZ1c+2nFW0ueL_4TM4d=Z0JcbvSXrw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=8ALf84QyJ21Yy83EcsBZYx0R5ySmANW7J5oD5E9Gtsc=;
+        b=t06D7L3knSkPohtir/XgChK+rbnB0YbtgnHAs5CIr7IGNU5hzyiQcqZ/ytbRfQ+rOm
+         eAripJ48aR7OTKBPTZG+S9IP1t2B+fB9GLrN9Fctotuz+bMtzUdtmj+TqZBJc0dqWZEv
+         uDhhVyR/X1/PM826ry2EDe8hsUZt4/4vSkdmxz9tyb23u4LDsNLST8bRS6NGU95ycbHE
+         tRWC5qTf41HzoJ/E/9ZDGUO19gfDYbIned1yBf07EAQ9D8Wv6yQyaEQxOycecUWvpNwX
+         M83PbQ9IuWIjLMiL/zlqdPvg3TRZvSPrP1+Hf9fAwvIXBuGGKhX4fsFhYEeM2uNYDlyn
+         YSaw==
+X-Gm-Message-State: APjAAAUP4vmD9TuxwoCBuTg2prjpM7YsNPf2+HoUtZnEiHJmQ/lo6qaL
+        7lbeb3Rh5BvUv5DN1PYyV8ceVJVEXZ14
+X-Google-Smtp-Source: APXvYqxC7GbWTz0du6BFDrnwZDCsKhQAuGQ3BE9WEG+eJ2qywFvKJtEnZhEVSc14ueeltWSYJl5Lcq1pI75/
+X-Received: by 2002:ad4:5345:: with SMTP id v5mr6154067qvs.217.1572547538807;
+ Thu, 31 Oct 2019 11:45:38 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 11:45:33 -0700
+Message-Id: <20191031184533.67118-1-joshdon@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
+Subject: [PATCH] sched/fair: Do not set skip buddy up the sched hierarchy
+From:   Josh Don <joshdon@google.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Paul Turner <pjt@google.com>,
+        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
+        Venkatesh Pallipadi <venki@google.com>,
+        Josh Don <joshdon@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Venkatesh Pallipadi <venki@google.com>
 
-On Thu, Oct 31, 2019 at 11:30:57AM -0700, Shakeel Butt wrote:
-> Basically what I wanted to say that MM treats PF_MEMALLOC as the
-> reclaim context while __GFP_MEMALLOC just tells to give access to the
-> reserves. As gfpflags_allow_blocking() can be used beyond net
-> subsystem, my only concern is its potential usage under PF_MEMALLOC
-> context but without __GFP_MEMALLOC.
+Setting skip buddy all the way up the hierarchy does not play well
+with intra-cgroup yield. One typical usecase of yield is when a
+thread in a cgroup wants to yield CPU to another thread within the
+same cgroup. For such a case, setting the skip buddy all the way up
+the hierarchy is counter-productive, as that results in CPU being
+yielded to a task in some other cgroup.
 
-Yeah, PF_MEMALLOC is likely the better condition to check here as we
-primarily want to know whether %current might be recursing and that
-should be indicated reliably with PF_MEMALLOC.  Wanna prep a patch for
-it?
+So, limit the skip effect only to the task requesting it.
 
-Thanks.
+Signed-off-by: Josh Don <joshdon@google.com>
+---
+ kernel/sched/fair.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 682a754ea3e1..52ab06585d7f 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6647,8 +6647,15 @@ static void set_next_buddy(struct sched_entity *se)
+ 
+ static void set_skip_buddy(struct sched_entity *se)
+ {
+-	for_each_sched_entity(se)
+-		cfs_rq_of(se)->skip = se;
++	/*
++	 * One typical usecase of yield is when a thread in a cgroup
++	 * wants to yield CPU to another thread within the same cgroup.
++	 * For such a case, setting the skip buddy all the way up the
++	 * hierarchy is counter-productive, as that results in CPU being
++	 * yielded to a task in some other cgroup. So, only set skip
++	 * for the task requesting it.
++	 */
++	cfs_rq_of(se)->skip = se;
+ }
+ 
+ /*
 -- 
-tejun
+2.23.0.700.g56cf767bdb-goog
+
