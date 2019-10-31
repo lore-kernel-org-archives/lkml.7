@@ -2,135 +2,84 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640E2CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A146CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401E72087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 761EE2087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:54:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbfJaPxR (ORCPT
+        id S1728472AbfJaPyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 11:53:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38932 "EHLO mx1.suse.de"
+        Thu, 31 Oct 2019 11:54:39 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5673 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726602AbfJaPxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 11:53:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E32D1B7DF;
-        Thu, 31 Oct 2019 15:53:14 +0000 (UTC)
-Message-ID: <40d06d463c05d36968e8b64924d78f7794f8de50.camel@suse.de>
-Subject: Re: [PATCH] dma/direct: turn ARCH_ZONE_DMA_BITS into a variable
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Date:   Thu, 31 Oct 2019 16:53:13 +0100
-In-Reply-To: <20191031154759.GA7162@lst.de>
-References: <20191031152837.15253-1-nsaenzjulienne@suse.de>
-         <20191031154759.GA7162@lst.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-IbItouLWOYON9B5ojQkb"
-User-Agent: Evolution 3.34.1 
+        id S1727681AbfJaPyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 11:54:39 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C00F7390A8EFEF16C032;
+        Thu, 31 Oct 2019 23:54:30 +0800 (CST)
+Received: from [127.0.0.1] (10.133.219.218) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 31 Oct 2019
+ 23:54:25 +0800
+Message-ID: <5DBB03B0.5060003@huawei.com>
+Date:   Thu, 31 Oct 2019 23:54:24 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
+To:     Borislav Petkov <bp@alien8.de>
+CC:     <peterz@infradead.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
+        <dave.hansen@linux.intel.com>, <hpa@zytor.com>, <x86@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/ioremap: Use WARN_ONCE instead of printk() + WARN_ON_ONCE()
+References: <1572425838-39158-1-git-send-email-zhongjiang@huawei.com> <20191031110304.GE21133@nazgul.tnic> <5DBACB61.90809@huawei.com> <20191031154916.GA24152@nazgul.tnic>
+In-Reply-To: <20191031154916.GA24152@nazgul.tnic>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.219.218]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019/10/31 23:49, Borislav Petkov wrote:
+> On Thu, Oct 31, 2019 at 07:54:09PM +0800, zhong jiang wrote:
+>> Look at this again, It should not works. Because that will change the logical.
+>> if phys_addr_valid is false, we should drop out in time.
+> That you can do too:
+>
+> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+> index a39dcdb5ae34..13f44cc064af 100644
+> --- a/arch/x86/mm/ioremap.c
+> +++ b/arch/x86/mm/ioremap.c
+> @@ -171,12 +171,10 @@ __ioremap_caller(resource_size_t phys_addr, unsigned long size,
+>  	if (!size || last_addr < phys_addr)
+>  		return NULL;
+>  
+> -	if (!phys_addr_valid(phys_addr)) {
+> -		printk(KERN_WARNING "ioremap: invalid physical address %llx\n",
+> -		       (unsigned long long)phys_addr);
+> -		WARN_ON_ONCE(1);
+> +	if (WARN_ONCE(!phys_addr_valid(phys_addr),
+> +	    "ioremap: invalid physical address %llx\n",
+> +	    (unsigned long long)phys_addr))
+>  		return NULL;
+> -	}
+>  
+Yep,  WARN_ONCE alway return true in that case.
 
---=-IbItouLWOYON9B5ojQkb
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Thanks,
+zhong jiang
+>  	__ioremap_check_mem(phys_addr, size, &io_desc);
+>  
+> ---
+>
+> I'm not sure whether we care about printing every invalid address, as
+> Joe points out. Maybe we do... *shrug*
+>
 
-On Thu, 2019-10-31 at 16:47 +0100, Christoph Hellwig wrote:
-> On Thu, Oct 31, 2019 at 04:28:37PM +0100, Nicolas Saenz Julienne wrote:
-> > Some architectures, notably ARM, are interested in tweaking this
-> > depending on their runtime DMA addressing limitations.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > ---
-> >=20
-> > Changes since RFC:
-> >  - Rebased to v5.4-rc6, fixed arm64 code.
-> >=20
-> > NOTE: This will only apply to linux-next, where=20
->=20
-> missing end of the sentence.  But only applying to linux-next isn't
-> going to help anyone..
-
-Arrgh, excuse me, I meant to delete that line.
-
-> > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> > index 45c00a54909c..f716ea634804 100644
-> > --- a/arch/arm64/mm/init.c
-> > +++ b/arch/arm64/mm/init.c
-> > @@ -20,6 +20,7 @@
-> >  #include <linux/sort.h>
-> >  #include <linux/of.h>
-> >  #include <linux/of_fdt.h>
-> > +#include <linux/dma-direct.h>
-> >  #include <linux/dma-mapping.h>
-> >  #include <linux/dma-contiguous.h>
-> >  #include <linux/efi.h>
-> > @@ -41,6 +42,8 @@
-> >  #include <asm/tlb.h>
-> >  #include <asm/alternative.h>
-> > =20
-> > +#define ARM64_ZONE_DMA_BITS	30
-> > +
-> >  /*
-> >   * We need to be able to catch inadvertent references to memstart_addr
-> >   * that occur (potentially in generic code) before arm64_memblock_init=
-()
-> > @@ -424,6 +427,8 @@ void __init arm64_memblock_init(void)
-> >  	else
-> >  		arm64_dma_phys_limit =3D PHYS_MASK + 1;
-> > =20
-> > +	zone_dma_bits =3D ARM64_ZONE_DMA_BITS;
-> > +
-> >  	reserve_crashkernel();
->=20
-> This actually adds a new limit, as there wasn't one before for arm64.
-
-Well, as zone_dma_bits is only relevant in dma/direct when ZONE_DMA is defi=
-ned
-I figured it doesn't matter if the variable is set conditionally to ZONE_DM=
-A or
-not.
-
-
---=-IbItouLWOYON9B5ojQkb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl27A2kACgkQlfZmHno8
-x/7XBAf+KJ5m8SMWsJJk7jjM0aD1BkIeWDHPYCN7ZJq7655nTwa46aZv3zb18e3J
-4muJ6LfXcTh/PbK64B+/uJ+wGYyg0y4ObyEshTyxygfgDnnyCQ4Mr3kD38jm40tR
-pJh9bItNrHBr+LzC2oZhwwnj4K4haI2q1HO8C6waGzeQLNW6KGmQquBqbROWiTG3
-EJVQ5SwIHesd1qwzVo+Lpba3IHAf6FrVDoZ1/TnUCDgkEvPOX2N20IUroOb0O2Eu
-5L80i++E4veGNr4AxY2Ne0kXVIZWCiZNoO5HpB7EPreFYta5w5JCbVqZDvGl9YGI
-T+txLLE6SqBuvD/E5j2iwzXXv2SqQA==
-=jZsg
------END PGP SIGNATURE-----
-
---=-IbItouLWOYON9B5ojQkb--
 
