@@ -2,218 +2,112 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73331CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAFDCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4528C2080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:05:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="qeMNWRac"
+	by mail.kernel.org (Postfix) with ESMTP id 5294A2080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:10:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729594AbfJaTF6 (ORCPT
+        id S1729466AbfJaTKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 15:05:58 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.196]:21078 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729379AbfJaTF5 (ORCPT
+        Thu, 31 Oct 2019 15:10:32 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51862 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729296AbfJaTKb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 15:05:57 -0400
-X-Greylist: delayed 1450 seconds by postgrey-1.27 at vger.kernel.org; Thu, 31 Oct 2019 15:05:57 EDT
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 51C65A2081
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 13:41:47 -0500 (CDT)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id QFOEinn5BOdBHQFOFi5l9m; Thu, 31 Oct 2019 13:41:47 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=0s7yqwze+IyjqCaWlQRpYCliMtnXouGLS0DZiyaG5jI=; b=qeMNWRacdzT21rXVTgy7O8X1d+
-        Nk4KV3n7si3naxRSsiN98hwfTFtgz1lywNFlqvBOYYD1NZZVP8iL2fdjYaQhDMVaYoBdsXaobXcjv
-        e4FHDu+Sj0Lh4oiD05HSB5VlQ0L+cKDRVJXGgVOMvgyuCP1SnVMYO/QoCYa5pPw9RDD5i9JOtzds8
-        0zL9xYeuu9NrlC5HmLuuyvNw7rz9I0tMSmvIJrzTN2Gaa1Xr+dHX52bfkNl/4eynvK2WL+Hl+dmUD
-        Gc48Hh5TFBlwIKGo30KrYOuuU/bezmD6unVadJDFRG1rZUvRbgmq2ZSIJjT+EX13fzRoncM752hc4
-        c3xrmTrQ==;
-Received: from [191.31.195.127] (port=35710 helo=castello.bz.toradex.local)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1iQFOD-0035gz-JB; Thu, 31 Oct 2019 15:41:46 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v4 1/4] power: supply: max17040: Add IRQ handler for low SOC alert
-Date:   Thu, 31 Oct 2019 15:41:31 -0300
-Message-Id: <20191031184134.30621-2-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.24.0.rc2
-In-Reply-To: <20191031184134.30621-1-matheus@castello.eng.br>
-References: <CAJKOXPdCtbsPaAgYp5iVBhkAsjXzOYWwttQBptgiUgzhbKi09w@mail.gmail.com>
- <20191031184134.30621-1-matheus@castello.eng.br>
+        Thu, 31 Oct 2019 15:10:31 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id 5E60A290B9B
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     Emil Velikov <emil.l.velikov@gmail.com>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     "Linux-Kernel\@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-rockchip <linux-rockchip@lists.infradead.org>,
+        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
+        LAKML <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 0/4] Genericize DW MIPI DSI bridge and add i.MX 6 driver
+In-Reply-To: <CACvgo50NmofJrCvADOTxJqJqKEWDsy8qD-1B6R356vFMcmdbWA@mail.gmail.com>
+References: <20191031142633.12460-1-adrian.ratiu@collabora.com>
+ <CACvgo50NmofJrCvADOTxJqJqKEWDsy8qD-1B6R356vFMcmdbWA@mail.gmail.com>
+Date:   Thu, 31 Oct 2019 21:10:48 +0200
+Message-ID: <87y2x091dz.fsf@iwork.i-did-not-set--mail-host-address--so-tickle-me>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.195.127
-X-Source-L: No
-X-Exim-ID: 1iQFOD-0035gz-JB
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.bz.toradex.local) [191.31.195.127]:35710
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 12
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+Content-Type: text/plain; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According datasheet max17040 has a pin for alert host for low SOC.
-This pin can be used as external interrupt, so we need to check for
-interrupts assigned for device and handle it.
+On Thu, 31 Oct 2019, Emil Velikov <emil.l.velikov@gmail.com> 
+wrote:
+> Hi Adrian, 
 
-In handler we are checking and storing fuel gauge registers values
-and send an uevent to notificate user space, so user space can decide
-save work or turn off since the alert demonstrate that the battery may
-no have the power to keep the system turned on for much longer.
+Hi Emil!
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
----
- drivers/power/supply/max17040_battery.c | 65 +++++++++++++++++++++++--
- 1 file changed, 60 insertions(+), 5 deletions(-)
+> 
+> On Thu, 31 Oct 2019 at 14:26, Adrian Ratiu 
+> <adrian.ratiu@collabora.com> wrote: 
+>> 
+>> Having a generic Synopsis DesignWare MIPI-DSI host controller 
+>> bridge driver is a very good idea, however the current 
+>> implementation has hardcoded quite a lot of the register 
+>> layouts used by the two supported SoC vendors, STM and 
+>> Rockchip, which use IP cores v1.30 and v1.31. 
+>> 
+>> This makes it hard to support other SoC vendors like the 
+>> FSL/NXP i.MX 6 which use older v1.01 cores or future versions 
+>> because, based on history, layout changes should also be 
+>> expected in new DSI versions / SoCs. 
+>> 
+>> This patch series converts the bridge and platform drivers to 
+>> access registers via generic regmap APIs and allows each 
+>> platform driver to configure its register layout via struct 
+>> reg_fields, then adds support for the host controller found on 
+>> i.MX 6. 
+>> 
+> Have you considered keeping the difference internal to the 
+> dw-mipi-dsi driver?  Say having the iMX6 module "request" the 
+> v1.01 regmap from the bridge driver, while rockchip/others doing 
+> the equivalent.
 
-diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index 62499018e68b..75459f76d02c 100644
---- a/drivers/power/supply/max17040_battery.c
-+++ b/drivers/power/supply/max17040_battery.c
-@@ -13,6 +13,7 @@
- #include <linux/err.h>
- #include <linux/i2c.h>
- #include <linux/delay.h>
-+#include <linux/interrupt.h>
- #include <linux/power_supply.h>
- #include <linux/max17040_battery.h>
- #include <linux/slab.h>
-@@ -160,21 +161,40 @@ static void max17040_get_status(struct i2c_client *client)
- 		chip->status = POWER_SUPPLY_STATUS_FULL;
- }
+No, I haven't. It sounds like a good idea though and I think it's 
+doable. Thank you!
+ 
+> 
+>>  .../bindings/display/imx/mipi-dsi.txt         |  56 ++ 
+>>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 518 
+>>  +++++++++--------- drivers/gpu/drm/imx/Kconfig 
+>>  |   7 + drivers/gpu/drm/imx/Makefile                  |   1 + 
+>>  drivers/gpu/drm/imx/dw_mipi_dsi-imx.c         | 502 
+>>  +++++++++++++++++ .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c 
+>>  | 154 +++++- drivers/gpu/drm/stm/dw_mipi_dsi-stm.c         | 
+>>  160 +++++- include/drm/bridge/dw_mipi_dsi.h              |  60 
+>>  +- 8 files changed, 1185 insertions(+), 273 deletions(-) 
+>>  create mode 100644 
+>>  Documentation/devicetree/bindings/display/imx/mipi-dsi.txt 
+>>  create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx.c 
+>> 
+> 
+> This should make the delta a lot smaller, avoiding the 
+> unnecessary copy of register fields and regmap.  Plus plugging 
+> future users will be dead trivial.
 
-+static void max17040_check_changes(struct i2c_client *client)
-+{
-+	max17040_get_vcell(client);
-+	max17040_get_soc(client);
-+	max17040_get_online(client);
-+	max17040_get_status(client);
-+}
-+
- static void max17040_work(struct work_struct *work)
- {
- 	struct max17040_chip *chip;
+Agreed. I'll do this in v2 unless someone objects or proposes a 
+better alternative.
 
- 	chip = container_of(work, struct max17040_chip, work.work);
--
--	max17040_get_vcell(chip->client);
--	max17040_get_soc(chip->client);
--	max17040_get_online(chip->client);
--	max17040_get_status(chip->client);
-+	max17040_check_changes(chip->client);
+I'll let this series sit a little more on review so others have a 
+chance to see and review; will address all feedback in v2.
 
- 	queue_delayed_work(system_power_efficient_wq, &chip->work,
- 			   MAX17040_DELAY);
- }
-
-+static irqreturn_t max17040_thread_handler(int id, void *dev)
-+{
-+	struct max17040_chip *chip = dev;
-+	struct i2c_client *client = chip->client;
-+
-+	dev_warn(&client->dev, "IRQ: Alert battery low level");
-+	/* read registers */
-+	max17040_check_changes(chip->client);
-+
-+	/* send uevent */
-+	power_supply_changed(chip->battery);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static enum power_supply_property max17040_battery_props[] = {
- 	POWER_SUPPLY_PROP_STATUS,
- 	POWER_SUPPLY_PROP_ONLINE,
-@@ -220,6 +240,25 @@ static int max17040_probe(struct i2c_client *client,
- 	max17040_reset(client);
- 	max17040_get_version(client);
-
-+	/* check interrupt */
-+	if (client->irq) {
-+		int ret;
-+		unsigned int flags;
-+
-+		dev_info(&client->dev, "IRQ: enabled\n");
-+		flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
-+		ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
-+						max17040_thread_handler, flags,
-+						chip->battery->desc->name,
-+						chip);
-+
-+		if (ret) {
-+			client->irq = 0;
-+			dev_warn(&client->dev,
-+				"Failed to get IRQ err %d\n", ret);
-+		}
-+	}
-+
- 	INIT_DEFERRABLE_WORK(&chip->work, max17040_work);
- 	queue_delayed_work(system_power_efficient_wq, &chip->work,
- 			   MAX17040_DELAY);
-@@ -244,6 +283,14 @@ static int max17040_suspend(struct device *dev)
- 	struct max17040_chip *chip = i2c_get_clientdata(client);
-
- 	cancel_delayed_work(&chip->work);
-+
-+	if (client->irq) {
-+		if (device_may_wakeup(dev))
-+			enable_irq_wake(client->irq);
-+		else
-+			disable_irq_wake(client->irq);
-+	}
-+
- 	return 0;
- }
-
-@@ -254,6 +301,14 @@ static int max17040_resume(struct device *dev)
-
- 	queue_delayed_work(system_power_efficient_wq, &chip->work,
- 			   MAX17040_DELAY);
-+
-+	if (client->irq) {
-+		if (device_may_wakeup(dev))
-+			disable_irq_wake(client->irq);
-+		else
-+			enable_irq_wake(client->irq);
-+	}
-+
- 	return 0;
- }
-
---
-2.24.0.rc2
-
+>
+> -Emil
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
