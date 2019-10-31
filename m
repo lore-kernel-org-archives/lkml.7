@@ -2,85 +2,141 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C4BCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D689FCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 066AD2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8222086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:09:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="UEM+IQJN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfJaKI7 (ORCPT
+        id S1727514AbfJaKJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:08:59 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:9713 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727415AbfJaKIt (ORCPT
+        Thu, 31 Oct 2019 06:09:04 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42802 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727481AbfJaKJA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:08:49 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TgluWgs_1572516516;
-Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0TgluWgs_1572516516)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 31 Oct 2019 18:08:36 +0800
-From:   Lai Jiangshan <laijs@linux.alibaba.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-Subject: [PATCH 10/11] rcu: clear the special.b.need_qs in rcu_note_context_switch()
-Date:   Thu, 31 Oct 2019 10:08:05 +0000
-Message-Id: <20191031100806.1326-11-laijs@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191031100806.1326-1-laijs@linux.alibaba.com>
-References: <20191031100806.1326-1-laijs@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 31 Oct 2019 06:09:00 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a15so5526286wrf.9
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 03:08:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=1b/PjoEJ3+h+SBh6G5LSt0fwIln3xfl7/abE1bFQX1U=;
+        b=UEM+IQJNCIRkC+Zz26kydgCfcVSwtF8Sd742PhPGZYJ2EEjU2WLKAgZojPv2WPsVby
+         e+y1oSgRNd+jPfiLxIVNc8TWj2ePd7zfp1wsNpsKrqFn8MqGNkNnVFhH4Koi6996tsoV
+         yABReLlbrhd0UObtjrntiW2ZH4PrVilWXUYec=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=1b/PjoEJ3+h+SBh6G5LSt0fwIln3xfl7/abE1bFQX1U=;
+        b=GU0ts8fS8FmeUy0fvxo1E8HdAzmAVz2mvFQkk0br3tR1NK+J26vjh7aTFI7vPxL5BJ
+         F1Ykb2vmHaZAelD5U6fchUdvmjCut224Q4zEZtKyf+Uij7apOycmQDJ9bZecKK2vuKPd
+         XjgOpSyKBRAqSpSVy9cHXh4gUAsbjOTguqi9y8VM27O3ppoBXL1WjhXPbij2VO84dWhj
+         vgbwBHLXGb3gSQWXMycOd3YfBUVENzFc88I5qhc/pt0nnv5FZMDQluoCmToZNwQUQenM
+         XuJxiTUVDt0sZPUXgTMzpaRa5CQAHJTBXICNsr61Iu7ZawpAJZu2p3jt39RvsQJiQyI5
+         ySsQ==
+X-Gm-Message-State: APjAAAVtrRi1ZxhvYRsvQ9PsCG53tlupI63U9ft45oJQVrBnCplilI5G
+        RooXEUY3UmFgWb53iHrBQmrfBQ==
+X-Google-Smtp-Source: APXvYqwqeMLgZTiv2t/y7ulQTNl2LeGGoGdpvP9Wm3tZW+ENEK6kwM0/MIefJnaXXNAu8b7E1Fq/Pg==
+X-Received: by 2002:adf:ea8d:: with SMTP id s13mr3799182wrm.366.1572516538705;
+        Thu, 31 Oct 2019 03:08:58 -0700 (PDT)
+Received: from shitalt.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id w8sm3719609wrr.44.2019.10.31.03.08.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 31 Oct 2019 03:08:57 -0700 (PDT)
+From:   Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+To:     =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Vikram Prakash <vikram.prakash@broadcom.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vikas Gupta <vikas.gupta@broadcom.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        tee-dev@lists.linaro.org, bcm-kernel-feedback-list@broadcom.com,
+        netdev@vger.kernel.org,
+        Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+Subject: [PATCH net-next V5 2/3] bnxt_en: Add support to invoke OP-TEE API to reset firmware
+Date:   Thu, 31 Oct 2019 15:38:51 +0530
+Message-Id: <1572516532-5977-3-git-send-email-sheetal.tigadoli@broadcom.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1572516532-5977-1-git-send-email-sheetal.tigadoli@broadcom.com>
+References: <1572516532-5977-1-git-send-email-sheetal.tigadoli@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is better to clear the special.b.need_qs when it is
-replaced by special.b.blocked or it is really fulfill its
-goal in rcu_preempt_deferred_qs_irqrestore().
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-It makes rcu_qs() easier to be understood, and also prepares for
-the percpu rcu_preempt_depth patch, which reqires rcu_special
-bits to be clearred in irq-disable context.
+In error recovery process when firmware indicates that it is
+completely down, initiate a firmware reset by calling OP-TEE API.
 
-Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+Cc: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
 ---
- kernel/rcu/tree_plugin.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 13 +++++++++++--
+ drivers/net/ethernet/broadcom/bnxt/bnxt.h |  3 +++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 81cacf637865..21bb04fec0d2 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -264,8 +264,6 @@ static void rcu_qs(void)
- 				       __this_cpu_read(rcu_data.gp_seq),
- 				       TPS("cpuqs"));
- 		__this_cpu_write(rcu_data.cpu_no_qs.b.norm, false);
--		barrier(); /* Coordinate with rcu_flavor_sched_clock_irq(). */
--		WRITE_ONCE(current->rcu_read_unlock_special.b.need_qs, false);
- 	}
- }
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 8cdf71f8824d..c24caaaf05ca 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -10581,14 +10581,23 @@ static void bnxt_fw_reset_writel(struct bnxt *bp, int reg_idx)
+ static void bnxt_reset_all(struct bnxt *bp)
+ {
+ 	struct bnxt_fw_health *fw_health = bp->fw_health;
+-	int i;
++	int i, rc;
++
++	if (bp->fw_cap & BNXT_FW_CAP_ERR_RECOVER_RELOAD) {
++#ifdef CONFIG_TEE_BNXT_FW
++		rc = tee_bnxt_fw_load();
++		if (rc)
++			netdev_err(bp->dev, "Unable to reset FW rc=%d\n", rc);
++		bp->fw_reset_timestamp = jiffies;
++#endif
++		return;
++	}
  
-@@ -297,6 +295,7 @@ void rcu_note_context_switch(bool preempt)
- 		/* Possibly blocking in an RCU read-side critical section. */
- 		rnp = rdp->mynode;
- 		raw_spin_lock_rcu_node(rnp);
-+		t->rcu_read_unlock_special.b.need_qs = false;
- 		t->rcu_read_unlock_special.b.blocked = true;
- 		t->rcu_blocked_node = rnp;
+ 	if (fw_health->flags & ERROR_RECOVERY_QCFG_RESP_FLAGS_HOST) {
+ 		for (i = 0; i < fw_health->fw_reset_seq_cnt; i++)
+ 			bnxt_fw_reset_writel(bp, i);
+ 	} else if (fw_health->flags & ERROR_RECOVERY_QCFG_RESP_FLAGS_CO_CPU) {
+ 		struct hwrm_fw_reset_input req = {0};
+-		int rc;
+ 
+ 		bnxt_hwrm_cmd_hdr_init(bp, &req, HWRM_FW_RESET, -1, -1);
+ 		req.resp_addr = cpu_to_le64(bp->hwrm_cmd_kong_resp_dma_addr);
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.h b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
+index d333589811a5..09437150f818 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
+@@ -25,6 +25,9 @@
+ #include <net/dst_metadata.h>
+ #include <net/xdp.h>
+ #include <linux/dim.h>
++#ifdef CONFIG_TEE_BNXT_FW
++#include <linux/firmware/broadcom/tee_bnxt_fw.h>
++#endif
+ 
+ struct page_pool;
  
 -- 
-2.20.1
+2.17.1
 
