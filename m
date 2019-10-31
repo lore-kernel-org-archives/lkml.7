@@ -2,77 +2,91 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D20CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89C8CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D320C2087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9965C20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:43:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfJaHjc (ORCPT
+        id S1726925AbfJaHnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 03:39:32 -0400
-Received: from mga07.intel.com ([134.134.136.100]:26720 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726892AbfJaHjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 03:39:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 00:39:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
-   d="scan'208";a="401792868"
-Received: from um.fi.intel.com (HELO um) ([10.237.72.57])
-  by fmsmga006.fm.intel.com with ESMTP; 31 Oct 2019 00:39:25 -0700
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     "Kang\, Luwei" <luwei.kang@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar\@redhat.com" <rkrcmar@redhat.com>,
-        "Christopherson\, Sean J" <sean.j.christopherson@intel.com>,
-        "vkuznets\@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli\@tencent.com" <wanpengli@tencent.com>,
-        "jmattson\@google.com" <jmattson@google.com>,
-        "joro\@8bytes.org" <joro@8bytes.org>,
-        "tglx\@linutronix.de" <tglx@linutronix.de>,
-        "mingo\@redhat.com" <mingo@redhat.com>,
-        "bp\@alien8.de" <bp@alien8.de>, "hpa\@zytor.com" <hpa@zytor.com>,
-        "x86\@kernel.org" <x86@kernel.org>,
-        "ak\@linux.intel.com" <ak@linux.intel.com>,
-        "thomas.lendacky\@amd.com" <thomas.lendacky@amd.com>,
-        "acme\@kernel.org" <acme@kernel.org>,
-        "mark.rutland\@arm.com" <mark.rutland@arm.com>,
-        "jolsa\@redhat.com" <jolsa@redhat.com>,
-        "namhyung\@kernel.org" <namhyung@kernel.org>,
-        alexander.shishkin@linux.intel.com
-Subject: RE: [PATCH v1 8/8] perf/x86: Add event owner check when PEBS output to Intel PT
-In-Reply-To: <82D7661F83C1A047AF7DC287873BF1E173836317@SHSMSX104.ccr.corp.intel.com>
-References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com> <1572217877-26484-9-git-send-email-luwei.kang@intel.com> <20191029151302.GO4097@hirez.programming.kicks-ass.net> <82D7661F83C1A047AF7DC287873BF1E173835B6A@SHSMSX104.ccr.corp.intel.com> <20191030095400.GU4097@hirez.programming.kicks-ass.net> <82D7661F83C1A047AF7DC287873BF1E173836317@SHSMSX104.ccr.corp.intel.com>
-Date:   Thu, 31 Oct 2019 09:39:24 +0200
-Message-ID: <87bltxfjo3.fsf@ashishki-desk.ger.corp.intel.com>
+        Thu, 31 Oct 2019 03:43:14 -0400
+Received: from smtp10.smtpout.orange.fr ([80.12.242.132]:36087 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbfJaHnO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 03:43:14 -0400
+Received: from localhost.localdomain ([93.23.12.90])
+        by mwinf5d87 with ME
+        id L7j9210091waAWt037j9B8; Thu, 31 Oct 2019 08:43:12 +0100
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 31 Oct 2019 08:43:12 +0100
+X-ME-IP: 93.23.12.90
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     davem@davemloft.net, mareklindner@neomailbox.ch,
+        sw@simonwunderlich.de, a@unstable.cc, sven@narfation.org
+Cc:     b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] batman-adv: Simplify 'batadv_v_ogm_aggr_list_free()'
+Date:   Thu, 31 Oct 2019 08:42:55 +0100
+Message-Id: <20191031074255.3234-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Kang, Luwei" <luwei.kang@intel.com> writes:
+Use 'skb_queue_purge()' instead of re-implementing it.
 
->> Then how does KVM deal with the host using PT? You can't just steal PT.
->
-> Intel PT in virtualization can work in system and host_guest mode.
-> In system mode (default), the trace produced by host and guest will be saved in host PT buffer. Intel PT will not be exposed to guest in this mode.
->  In host_guest mode, Intel PT will be exposed to guest and guest can use PT like native. The value of host PT register will be saved and guest PT register value will be restored during VM-entry. Both trace of host and guest are exported to their respective PT buffer. The host PT buffer not include guest trace in this mode.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+BTW, I don't really see the need of 'aggr_list_lock'. I think that the code
+could be refactored to drop 'aggr_list_lock' and use the already existing
+'aggr_list.lock'.
+This would require to use the lock-free __skb_... variants when working on
+'aggr_list'.
 
-IOW, it will steal PT from the host.
+As far as I understand, the use of 'aggr_list' and 'aggr_list_lock' is
+limited to bat_v_ogm.c'. So the impact would be limited.
+This would avoid a useless locking that never fails, so the performance
+gain should be really limited.
 
-Regards,
---
-Alex
+So, I'm not sure this would be more readable and/or future proof, so
+I just note it here to open the discussion.
+
+If interested, I have a (compiled tested only) patch that implements this
+change.
+---
+ net/batman-adv/bat_v_ogm.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/net/batman-adv/bat_v_ogm.c b/net/batman-adv/bat_v_ogm.c
+index dc4f7430cb5a..b841c83d9c3b 100644
+--- a/net/batman-adv/bat_v_ogm.c
++++ b/net/batman-adv/bat_v_ogm.c
+@@ -177,13 +177,9 @@ static bool batadv_v_ogm_queue_left(struct sk_buff *skb,
+  */
+ static void batadv_v_ogm_aggr_list_free(struct batadv_hard_iface *hard_iface)
+ {
+-	struct sk_buff *skb;
+-
+ 	lockdep_assert_held(&hard_iface->bat_v.aggr_list_lock);
+ 
+-	while ((skb = skb_dequeue(&hard_iface->bat_v.aggr_list)))
+-		kfree_skb(skb);
+-
++	skb_queue_purge(&hard_iface->bat_v.aggr_list);
+ 	hard_iface->bat_v.aggr_len = 0;
+ }
+ 
+-- 
+2.20.1
+
