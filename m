@@ -2,208 +2,108 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEA1CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F48CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D562083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:03:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="8zKhE0QM"
+	by mail.kernel.org (Postfix) with ESMTP id 8EE9E2067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfJaJDE (ORCPT
+        id S1727072AbfJaJHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 05:03:04 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:27624 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726864AbfJaJDD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 05:03:03 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9V92Yvp007880;
-        Thu, 31 Oct 2019 05:02:50 -0400
-Received: from nam05-co1-obe.outbound.protection.outlook.com (mail-co1nam05lp2056.outbound.protection.outlook.com [104.47.48.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2vxwhjmkdu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 31 Oct 2019 05:02:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U5RPme6Lw45GEGGdMTM51PzWHKq6BHfrNLuFRlQ68uyIgersugfl6W60XgssQJLMzmNcjqV0h7T7r9NJrQyRpHKML4EOh/qSdTentDP9IFBFEimRLqQFyF9/Na59TRbn8Bc2YnLj6yKHQuk977jpL0ZXE+7njFmfCHyNT9/BkbH/SvID3OgMbgPUd8BRujuEIOQJTAyJ07iGHcAEv42c9YIYqhQvEcotbsY5YBHGeaNEdpvvEhyNPqaOhe8bokoZGsv3Z0T4HMIxcdklKH+1ZJmQK8kY0E0Vsad0o/rbFK28MVKN2tPst9gODV0Nfoi3E2d4L7j7t5hSNIC3omdXog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y+b9MC3wjmqiK2LtU5cdYMvRlwLtMCifyjGmv/1NSyY=;
- b=OF0TrfDOREIp1oIxMTlg2vdVu1RYAh/u2LXlVamEcqmHPYsyqYpSSZ427obMa+IeJVcwsGE8KYrBzulqwY6Dw+gEhcREpuC6Mq8bGzHmNmYJ+cGjuYjEmTcV/z4UCC4difQcMFkWEfYJ0TqblQi6HGvHSzm140tJpjvPCZstrKC/l/qIkQccJPUoqaRfSUj2J99Ir7uXJbXqIib9vWyAJvcQUwKPEEB2e00tOeFUscUR5c7Twx0MmmIArdwl/CLDUAelVD+nnSzyBqMkIBUIMSwJ2ettMI74o712MK79D9YKR+Ts1e7jApgQpEkSwPG6rcohCGy9bZ4Sjl0WMXkpZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y+b9MC3wjmqiK2LtU5cdYMvRlwLtMCifyjGmv/1NSyY=;
- b=8zKhE0QMsVWebifFp7syaqfP7p4lBCieY8GJkEnGMxSKftKvfQUe4H/MkpFDnAfEWEeRxk+PvsI7CRQdjl0KWbHFX2fs8b0kIS38BQbw55TTd0khpFY6HCAZEn2qu+VVRTntPcduZ73YO/uOSvJrpp9Wjzq56MFeHPLekJMm8So=
-Received: from BN6PR03CA0102.namprd03.prod.outlook.com (2603:10b6:404:10::16)
- by BN8PR03MB4756.namprd03.prod.outlook.com (2603:10b6:408:9a::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.24; Thu, 31 Oct
- 2019 09:02:42 +0000
-Received: from SN1NAM02FT043.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::203) by BN6PR03CA0102.outlook.office365.com
- (2603:10b6:404:10::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2408.20 via Frontend
- Transport; Thu, 31 Oct 2019 09:02:42 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- SN1NAM02FT043.mail.protection.outlook.com (10.152.72.184) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2387.20
- via Frontend Transport; Thu, 31 Oct 2019 09:02:42 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x9V92Y0P003410
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Thu, 31 Oct 2019 02:02:34 -0700
-Received: from saturn.ad.analog.com (10.48.65.117) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 31 Oct 2019 05:02:41 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <dmitry.torokhov@gmail.com>, <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3 2/2] input: adp5589: Add basic devicetree support
-Date:   Thu, 31 Oct 2019 11:03:12 +0200
-Message-ID: <20191031090312.17205-2-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191031090312.17205-1-alexandru.ardelean@analog.com>
-References: <20191031090312.17205-1-alexandru.ardelean@analog.com>
+        Thu, 31 Oct 2019 05:07:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37042 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726864AbfJaJHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 05:07:11 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 84BC25945B
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 09:07:11 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id k10so2889409wrl.22
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 02:07:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Uv8J8WDWlm5KkI7ZZB1632xd20pA70gOpFtg9sDlJvM=;
+        b=bFQoyIP+3H64fcp3Q8gGN1DilcNdHg/ELt7Qh0N7fZKZ8W9eat7Wly0DlzxGLcV/jn
+         OqLZ0BJR7vqtSsz6bcYuThfyQ6NapLyEJvkHluVC8rJRgFuRyonhWKyT5HC4T1IXFscZ
+         6tDLwqWeXZJWr9YSRcwQ4KUgLwONVGYtaDSnFhSMg9rF3z3hAcO/JPO0h1Xdk3uJsRhg
+         7SJgpQJ15SGc33RggVeaC2L4pmOvFnTsZBR8rsaJJejsT8dIfwBKu7e54L3sQAYZDgWe
+         jAAEQNNcJkDjOkEIASp+BqXIVATnN9s19wutrp4HHb28STvO2zQR5ZotrgSI4kKCHsfc
+         k83A==
+X-Gm-Message-State: APjAAAUY5yvuhxXuQwrfxltfsCZQrLOY0XWCFq9j42puGxkcaAGx9zdW
+        VH4FoN6pbpp3ZMyl6RHAeC22Pq3ofB+EkW20rL3gNb52ujZ2A9FNvnvSPz1rhb7m6c234g5p0Om
+        jixmmMrP6VjoPE5zQwDUCN4NH
+X-Received: by 2002:a1c:6308:: with SMTP id x8mr4076651wmb.140.1572512830195;
+        Thu, 31 Oct 2019 02:07:10 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwfjaVx5Id/rjqKFiRz8/nIcvC1Gfp7404XpLuXKxzmGRZ2YVyve+OhEy7UlUWjEBX07Dmh7Q==
+X-Received: by 2002:a1c:6308:: with SMTP id x8mr4076626wmb.140.1572512829951;
+        Thu, 31 Oct 2019 02:07:09 -0700 (PDT)
+Received: from steredhat ([91.217.168.176])
+        by smtp.gmail.com with ESMTPSA id x205sm3535236wmb.5.2019.10.31.02.07.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 02:07:09 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 10:07:07 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     davem@davemloft.net, sunilmut@microsoft.com, willemb@google.com,
+        stefanha@redhat.com, ytht.net@gmail.com, arnd@arndb.de,
+        tglx@linutronix.de, decui@microsoft.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] vsock: Simplify '__vsock_release()'
+Message-ID: <20191031090707.ec33h3z6zhux3hbq@steredhat>
+References: <20191031064741.4567-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(376002)(346002)(136003)(396003)(189003)(199004)(54534003)(70206006)(426003)(486006)(305945005)(11346002)(70586007)(44832011)(126002)(446003)(7636002)(2616005)(476003)(336012)(5660300002)(316002)(110136005)(54906003)(106002)(478600001)(356004)(8676002)(50466002)(86362001)(6666004)(8936002)(50226002)(107886003)(48376002)(1076003)(7696005)(36756003)(246002)(51416003)(76176011)(14444005)(47776003)(26005)(186003)(4326008)(2906002)(2870700001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR03MB4756;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e0ff67cb-000c-48d2-7c6d-08d75de11699
-X-MS-TrafficTypeDiagnostic: BN8PR03MB4756:
-X-Microsoft-Antispam-PRVS: <BN8PR03MB4756970F40CE788911B45E9AF9630@BN8PR03MB4756.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 02070414A1
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XFl0cy0PnMarQiVNGxGs0ofgUqb56go+1fM7xUXjhVkZuoNAkqFnB2F5yR1kPPBlq7n73kn97wmFdnZ27Vx1f4i3jwPlJ8YW891qLfqqH62ESZNfKG+YGRX3fmxg4oeFt9PKcgAxLNh1tcwAMfroWG+O+9ZtxvcZKeM9UwasMWmWp/mhg60O/i4HTMUC+oLW8qSFV6pw9Sk1StEzSY1ze3LkzRQ2+53hyLHDuI3nGz07ob8ih+vb+FP88VFpbJDdW12siUKcZ5ILHh2285iSE9GxcBWxsSCga2o6ssk84VxfuoMHz4ZcIs+uzu2JqwN0nZyEe0YF3vPBZJB5jx5drAF1/w22eBZ+NzdLDzELtp21oNjOY7WYsySHPN5QNIsNqDBMTTIgl/4ibe36zZ3RhmArbZp0wMOVMiEERkpSKqGF7EC1lVslqXDzzC2zA3f8
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Oct 2019 09:02:42.3306
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0ff67cb-000c-48d2-7c6d-08d75de11699
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR03MB4756
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-31_03:2019-10-30,2019-10-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 priorityscore=1501 adultscore=0 mlxscore=0 malwarescore=0
- bulkscore=0 spamscore=0 phishscore=0 clxscore=1015 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1910310091
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031064741.4567-1-christophe.jaillet@wanadoo.fr>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+On Thu, Oct 31, 2019 at 07:47:41AM +0100, Christophe JAILLET wrote:
+> Use '__skb_queue_purge()' instead of re-implementing it.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>  net/vmw_vsock/af_vsock.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> index 2ab43b2bba31..2983dc92ca63 100644
+> --- a/net/vmw_vsock/af_vsock.c
+> +++ b/net/vmw_vsock/af_vsock.c
+> @@ -641,7 +641,6 @@ EXPORT_SYMBOL_GPL(__vsock_create);
+>  static void __vsock_release(struct sock *sk, int level)
+>  {
+>  	if (sk) {
+> -		struct sk_buff *skb;
+>  		struct sock *pending;
+>  		struct vsock_sock *vsk;
+>  
+> @@ -662,8 +661,7 @@ static void __vsock_release(struct sock *sk, int level)
+>  		sock_orphan(sk);
+>  		sk->sk_shutdown = SHUTDOWN_MASK;
+>  
+> -		while ((skb = skb_dequeue(&sk->sk_receive_queue)))
+> -			kfree_skb(skb);
+> +		skb_queue_purge(&sk->sk_receive_queue);
+>  
+>  		/* Clean up any sockets that never were accepted. */
+>  		while ((pending = vsock_dequeue_accept(sk)) != NULL) {
 
-Add very basic devicetree suppport to the adp5589 allowing the device to be
-registered from devicetree.
+Good clean-up!
 
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
+This patch LGTM:
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 
-Changelog v2 -> v3:
-* fix `-Wpointer-to-int-cast` warnings for patch `input: adp5589: Add basic
-  devicetree support` ; warnings shows up on 64 bit ARCHs
-
-Changelog v1 -> v2:
-* adjusted patch `input: adp5589: Add default platform data` by
-  introducting a `adp5589_kpad_pdata_get()` helper, which returns the
-  platform-data; the previos patch was based on an older version of the
-  kernel from the ADI kernel-tree; the driver was sync-ed with the upstream
-  version
-
- drivers/input/keyboard/adp5589-keys.c | 33 ++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/input/keyboard/adp5589-keys.c b/drivers/input/keyboard/adp5589-keys.c
-index c6a801bcdf90..56f4ff7fa9c3 100644
---- a/drivers/input/keyboard/adp5589-keys.c
-+++ b/drivers/input/keyboard/adp5589-keys.c
-@@ -1008,6 +1008,25 @@ static void adp5589_keypad_remove(struct adp5589_kpad *kpad)
- 	}
- }
- 
-+static int adp5589_i2c_get_driver_data(struct i2c_client *i2c,
-+				       const struct i2c_device_id *id)
-+{
-+	const struct of_device_id *match;
-+
-+	if (id)
-+		return id->driver_data;
-+
-+	if (!IS_ENABLED(CONFIG_OF) || !i2c->dev.of_node)
-+		return -ENODEV;
-+
-+	match = of_match_node(i2c->dev.driver->of_match_table,
-+			      i2c->dev.of_node);
-+	if (match)
-+		return (uintptr_t)match->data;
-+
-+	return -ENODEV;
-+}
-+
- static int adp5589_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
-@@ -1029,7 +1048,11 @@ static int adp5589_probe(struct i2c_client *client,
- 
- 	kpad->client = client;
- 
--	switch (id->driver_data) {
-+	ret = adp5589_i2c_get_driver_data(client, id);
-+	if (ret < 0)
-+		return ret;
-+
-+	switch (ret) {
- 	case ADP5585_02:
- 		kpad->support_row5 = true;
- 		/* fall through */
-@@ -1129,6 +1152,13 @@ static int adp5589_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(adp5589_dev_pm_ops, adp5589_suspend, adp5589_resume);
- 
-+static const struct of_device_id adp5589_of_match[] = {
-+	{ .compatible = "adi,adp5585", .data = (void *)ADP5585_01 },
-+	{ .compatible = "adi,adp5585-02", .data = (void *)ADP5585_02 },
-+	{ .compatible = "adi,adp5589", .data = (void *)ADP5589 },
-+	{}
-+};
-+
- static const struct i2c_device_id adp5589_id[] = {
- 	{"adp5589-keys", ADP5589},
- 	{"adp5585-keys", ADP5585_01},
-@@ -1142,6 +1172,7 @@ static struct i2c_driver adp5589_driver = {
- 	.driver = {
- 		.name = KBUILD_MODNAME,
- 		.pm = &adp5589_dev_pm_ops,
-+		.of_match_table = adp5589_of_match,
- 	},
- 	.probe = adp5589_probe,
- 	.remove = adp5589_remove,
--- 
-2.20.1
-
+Thanks,
+Stefano
