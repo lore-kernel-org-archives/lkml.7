@@ -2,144 +2,128 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D0DCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 052EACA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E858D20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8F220873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:29:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dxUVa7Go"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbfJaO3L (ORCPT
+        id S1727999AbfJaO3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 10:29:11 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:34512 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727742AbfJaO3L (ORCPT
+        Thu, 31 Oct 2019 10:29:55 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52977 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbfJaO3z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 10:29:11 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Thu, 31 Oct 2019 10:29:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572532194;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5P7I/G/c69OPjbakvWV4bkQcdrPM+r0Yk0Byj4hhrDo=;
+        b=dxUVa7GogaG6YGkRr6TzUoFoHFNZqfJQsc13J0tJS8YIVQmSIdWrKqaMd0K3Z43YRHfH4D
+        p9JAcvLk+iZGZB4tDXsyba+J7CoN3Z1IwUMAmjIFkTpfX6+jGA/nXYEYuz8GiXgxxm3t31
+        c+lCvSSpbTvJuFL11wv66jpT3jRbkN0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-15-1ewAaRgoNHaIcomH8UFr9A-1; Thu, 31 Oct 2019 10:29:50 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id AF5C9634C87;
-        Thu, 31 Oct 2019 16:28:18 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1iQBQv-0001lR-Oc; Thu, 31 Oct 2019 16:28:17 +0200
-Date:   Thu, 31 Oct 2019 16:28:17 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
- binding
-Message-ID: <20191031142817.GK6253@valkosipuli.retiisi.org.uk>
-References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
- <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
- <20191031131538.GA9170@pendragon.ideasonboard.com>
- <20191031134512.GB24273@mani>
- <20191031141141.GD5018@pendragon.ideasonboard.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 300F71800D6B;
+        Thu, 31 Oct 2019 14:29:48 +0000 (UTC)
+Received: from t460s.redhat.com (unknown [10.36.118.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6DBF15D70E;
+        Thu, 31 Oct 2019 14:29:45 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arun KS <arunks@codeaurora.org>
+Subject: [PATCH v1 01/12] powerpc/pseries: CMM: Implement release() function for sysfs device
+Date:   Thu, 31 Oct 2019 15:29:22 +0100
+Message-Id: <20191031142933.10779-2-david@redhat.com>
+In-Reply-To: <20191031142933.10779-1-david@redhat.com>
+References: <20191031142933.10779-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031141141.GD5018@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: 1ewAaRgoNHaIcomH8UFr9A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+When unloading the module, one gets
+[  548.188594] ------------[ cut here ]------------
+[  548.188596] Device 'cmm0' does not have a release() function, it is brok=
+en and must be fixed. See Documentation/kobject.txt.
+[  548.188622] WARNING: CPU: 0 PID: 19308 at drivers/base/core.c:1244 .devi=
+ce_release+0xcc/0xf0
+...
 
-On Thu, Oct 31, 2019 at 04:11:41PM +0200, Laurent Pinchart wrote:
-> Hi Mani,
-> 
-> On Thu, Oct 31, 2019 at 07:15:12PM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Oct 31, 2019 at 03:15:38PM +0200, Laurent Pinchart wrote:
-> > > On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
-> > >> Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
-> > >> add MAINTAINERS entry for the binding and driver.
-> > >> 
-> > >> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > >> ---
-> > >>  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
-> > >>  MAINTAINERS                                   |  8 ++
-> > >>  2 files changed, 102 insertions(+)
-> > >>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > >> 
-> > >> diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > >> new file mode 100644
-> > >> index 000000000000..c04ec2203268
-> > >> --- /dev/null
-> > >> +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > >> @@ -0,0 +1,94 @@
-> > >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > >> +%YAML 1.2
-> > >> +---
-> > >> +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
-> > >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > >> +
-> > >> +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
-> > >> +
-> > >> +maintainers:
-> > >> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > >> +
-> > >> +description: |-
-> > >> +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
-> > >> +  sensor with square pixel array and 1.58 M effective pixels. This chip
-> > >> +  features a global shutter with variable charge-integration time. It is
-> > >> +  programmable through I2C and 4-wire interfaces. The sensor output is
-> > >> +  available via CSI-2 serial data output (1 Lane).
-> > >> +
-> > >> +properties:
-> > >> +  compatible:
-> > >> +    const: sony,imx296
-> > >> +
-> > >> +  reg:
-> > >> +    maxItems: 1
-> > >> +
-> > >> +  clocks:
-> > >> +    maxItems: 1
-> > >> +
-> > >> +  clock-names:
-> > >> +    description:
-> > >> +      Input clock for the sensor.
-> > >> +    items:
-> > >> +      - const: mclk
-> > > 
-> > > The pin is named INCK, let's name the clock accordingly.
-> > 
-> > Okay, I thought generic names are preferred here!
-> >  
-> > >> +  clock-frequency:
-> > >> +    description:
-> > >> +      Frequency of the mclk clock in Hertz.
-> > > 
-> > > This shouldn't be needed, you can retrieve the clock frequency at
-> > > runtime from the clock source.
-> > 
-> > Unless the clock source is a fixed one! What if the clock source comes from
-> > SoC? We need to set the rate, right?
-> 
-> In that case, if you want to hardcode the clock in DT, the preferred way
-> is to use the assigned-clock-rates property. Otherwise, if the driver
-> requires a specific clock frequency, it's better to hardcode it in the
-> driver itself. In this specific case, I think assigned-clock-rates is
-> best as the device can support three different clock frequencies.
+We only have on static fake device. There is nothing to do when
+releasing the device (via cmm_exit).
 
-Just note that if ACPI support is added to the sensor driver, you'll need
-the clock-frequency property again, for that's the only way how the driver
-will get the clock frequency.
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Arun KS <arunks@codeaurora.org>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ arch/powerpc/platforms/pseries/cmm.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-This is certainly not something that has to be taken into account in DT
-bindings, but in any case it'll add some lines of code in the driver which
-are not very useful.
+diff --git a/arch/powerpc/platforms/pseries/cmm.c b/arch/powerpc/platforms/=
+pseries/cmm.c
+index b33251d75927..572651a5c87b 100644
+--- a/arch/powerpc/platforms/pseries/cmm.c
++++ b/arch/powerpc/platforms/pseries/cmm.c
+@@ -411,6 +411,10 @@ static struct bus_type cmm_subsys =3D {
+ =09.dev_name =3D "cmm",
+ };
+=20
++static void cmm_release_device(struct device *dev)
++{
++}
++
+ /**
+  * cmm_sysfs_register - Register with sysfs
+  *
+@@ -426,6 +430,7 @@ static int cmm_sysfs_register(struct device *dev)
+=20
+ =09dev->id =3D 0;
+ =09dev->bus =3D &cmm_subsys;
++=09dev->release =3D cmm_release_device;
+=20
+ =09if ((rc =3D device_register(dev)))
+ =09=09goto subsys_unregister;
+--=20
+2.21.0
 
--- 
-Sakari Ailus
