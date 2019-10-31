@@ -2,205 +2,92 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8F4CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D397CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76D720862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E541F20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:21:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfJaJUp (ORCPT
+        id S1727085AbfJaJVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 05:20:45 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5236 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726864AbfJaJUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 05:20:45 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1AFA291DC1FC5E986338;
-        Thu, 31 Oct 2019 17:20:42 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 31 Oct
- 2019 17:20:31 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>
-CC:     <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Gao Xiang <gaoxiang25@huawei.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v2] ext4: bio_alloc with __GFP_DIRECT_RECLAIM never fails
-Date:   Thu, 31 Oct 2019 17:23:15 +0800
-Message-ID: <20191031092315.139267-1-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191030161244.GB3953@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20191030161244.GB3953@hsiangkao-HP-ZHAN-66-Pro-G1>
+        Thu, 31 Oct 2019 05:21:07 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:45220 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbfJaJVG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 05:21:06 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 559FC28FB05;
+        Thu, 31 Oct 2019 09:21:05 +0000 (GMT)
+Date:   Thu, 31 Oct 2019 10:21:02 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Jonas Karlman <jonas@kwiboo.se>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 06/10] media: hantro: Use capture buffer width and
+ height for H264 decoding
+Message-ID: <20191031102102.63afd4e5@collabora.com>
+In-Reply-To: <HE1PR06MB4011544CF7A6F36EF1CA47EEAC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
+References: <HE1PR06MB401108289F09802C261374F8AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
+        <20191029012430.24566-1-jonas@kwiboo.se>
+        <HE1PR06MB4011544CF7A6F36EF1CA47EEAC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to [1] [2], bio_alloc with __GFP_DIRECT_RECLAIM flags
-guarantees bio allocation under some given restrictions, as
-stated in block/bio.c and fs/direct-io.c So here it's ok to
-not check for NULL value from bio_alloc().
+On Tue, 29 Oct 2019 01:24:50 +0000
+Jonas Karlman <jonas@kwiboo.se> wrote:
 
-[1] https://lore.kernel.org/r/20191030035518.65477-1-gaoxiang25@huawei.com
-[2] https://lore.kernel.org/r/20190830162812.GA10694@infradead.org
-Cc: Theodore Ts'o <tytso@mit.edu>
-Cc: Andreas Dilger <adilger.kernel@dilger.ca>
-Cc: Ritesh Harjani <riteshh@linux.ibm.com>
-Cc: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
+> Calculations for motion vector buffer offset is based on width and height
+> from the configured capture format, lets use the same values for macroblock
+> width and height hw regs.
+> 
+> Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> ---
+> Changes in v2:
+>   - new patch split from "media: hantro: Fix H264 motion vector buffer offset"
+> ---
+>  drivers/staging/media/hantro/hantro_g1_h264_dec.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> index 71bf162eaf73..eeed11366135 100644
+> --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> @@ -51,8 +51,8 @@ static void set_params(struct hantro_ctx *ctx)
+>  	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL0);
+>  
+>  	/* Decoder control register 1. */
+> -	reg = G1_REG_DEC_CTRL1_PIC_MB_WIDTH(sps->pic_width_in_mbs_minus1 + 1) |
+> -	      G1_REG_DEC_CTRL1_PIC_MB_HEIGHT_P(sps->pic_height_in_map_units_minus1 + 1) |
+> +	reg = G1_REG_DEC_CTRL1_PIC_MB_WIDTH(MB_WIDTH(ctx->dst_fmt.width)) |
+> +	      G1_REG_DEC_CTRL1_PIC_MB_HEIGHT_P(MB_HEIGHT(ctx->dst_fmt.height)) |
 
-changes since v1:
- - fix commit message and simplify logic as suggested by Ritesh;
- - add short messages ahead of bio_alloc suggested by Ted.
+I'm just curious, do they differ in practice? Also not sure what's been
+decided for the "G1 post-proc", but if the dst/capture format res set
+by the user is the scaled res (PP can scale IIRC), then you probably
+shouldn't use those values here.
 
- fs/ext4/page-io.c  | 57 ++++++++++++++++++----------------------------
- fs/ext4/readpage.c |  6 +++--
- 2 files changed, 26 insertions(+), 37 deletions(-)
-
-diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
-index 12ceadef32c5..c92504c1b1ca 100644
---- a/fs/ext4/page-io.c
-+++ b/fs/ext4/page-io.c
-@@ -358,14 +358,16 @@ void ext4_io_submit_init(struct ext4_io_submit *io,
- 	io->io_end = NULL;
- }
- 
--static int io_submit_init_bio(struct ext4_io_submit *io,
--			      struct buffer_head *bh)
-+static void io_submit_init_bio(struct ext4_io_submit *io,
-+			       struct buffer_head *bh)
- {
- 	struct bio *bio;
- 
-+	/*
-+	 * bio_alloc will _always_ be able to allocate a bio if
-+	 * __GFP_DIRECT_RECLAIM is set, see comments for bio_alloc_bioset().
-+	 */
- 	bio = bio_alloc(GFP_NOIO, BIO_MAX_PAGES);
--	if (!bio)
--		return -ENOMEM;
- 	bio->bi_iter.bi_sector = bh->b_blocknr * (bh->b_size >> 9);
- 	bio_set_dev(bio, bh->b_bdev);
- 	bio->bi_end_io = ext4_end_bio;
-@@ -373,13 +375,12 @@ static int io_submit_init_bio(struct ext4_io_submit *io,
- 	io->io_bio = bio;
- 	io->io_next_block = bh->b_blocknr;
- 	wbc_init_bio(io->io_wbc, bio);
--	return 0;
- }
- 
--static int io_submit_add_bh(struct ext4_io_submit *io,
--			    struct inode *inode,
--			    struct page *page,
--			    struct buffer_head *bh)
-+static void io_submit_add_bh(struct ext4_io_submit *io,
-+			     struct inode *inode,
-+			     struct page *page,
-+			     struct buffer_head *bh)
- {
- 	int ret;
- 
-@@ -388,9 +389,7 @@ static int io_submit_add_bh(struct ext4_io_submit *io,
- 		ext4_io_submit(io);
- 	}
- 	if (io->io_bio == NULL) {
--		ret = io_submit_init_bio(io, bh);
--		if (ret)
--			return ret;
-+		io_submit_init_bio(io, bh);
- 		io->io_bio->bi_write_hint = inode->i_write_hint;
- 	}
- 	ret = bio_add_page(io->io_bio, page, bh->b_size, bh_offset(bh));
-@@ -398,7 +397,6 @@ static int io_submit_add_bh(struct ext4_io_submit *io,
- 		goto submit_and_retry;
- 	wbc_account_cgroup_owner(io->io_wbc, page, bh->b_size);
- 	io->io_next_block++;
--	return 0;
- }
- 
- int ext4_bio_write_page(struct ext4_io_submit *io,
-@@ -491,8 +489,14 @@ int ext4_bio_write_page(struct ext4_io_submit *io,
- 				gfp_flags |= __GFP_NOFAIL;
- 				goto retry_encrypt;
- 			}
--			bounce_page = NULL;
--			goto out;
-+
-+			printk_ratelimited(KERN_ERR "%s: ret = %d\n", __func__, ret);
-+			redirty_page_for_writepage(wbc, page);
-+			do {
-+				clear_buffer_async_write(bh);
-+				bh = bh->b_this_page;
-+			} while (bh != head);
-+			goto unlock;
- 		}
- 	}
- 
-@@ -500,30 +504,13 @@ int ext4_bio_write_page(struct ext4_io_submit *io,
- 	do {
- 		if (!buffer_async_write(bh))
- 			continue;
--		ret = io_submit_add_bh(io, inode, bounce_page ?: page, bh);
--		if (ret) {
--			/*
--			 * We only get here on ENOMEM.  Not much else
--			 * we can do but mark the page as dirty, and
--			 * better luck next time.
--			 */
--			break;
--		}
-+		io_submit_add_bh(io, inode,
-+				 bounce_page ? bounce_page : page, bh);
- 		nr_submitted++;
- 		clear_buffer_dirty(bh);
- 	} while ((bh = bh->b_this_page) != head);
- 
--	/* Error stopped previous loop? Clean up buffers... */
--	if (ret) {
--	out:
--		fscrypt_free_bounce_page(bounce_page);
--		printk_ratelimited(KERN_ERR "%s: ret = %d\n", __func__, ret);
--		redirty_page_for_writepage(wbc, page);
--		do {
--			clear_buffer_async_write(bh);
--			bh = bh->b_this_page;
--		} while (bh != head);
--	}
-+unlock:
- 	unlock_page(page);
- 	/* Nothing submitted - we have to end page writeback */
- 	if (!nr_submitted)
-diff --git a/fs/ext4/readpage.c b/fs/ext4/readpage.c
-index a30b203fa461..fef7755300c3 100644
---- a/fs/ext4/readpage.c
-+++ b/fs/ext4/readpage.c
-@@ -360,10 +360,12 @@ int ext4_mpage_readpages(struct address_space *mapping,
- 		if (bio == NULL) {
- 			struct bio_post_read_ctx *ctx;
- 
-+			/*
-+			 * bio_alloc will _always_ be able to allocate a bio if
-+			 * __GFP_DIRECT_RECLAIM is set, see bio_alloc_bioset().
-+			 */
- 			bio = bio_alloc(GFP_KERNEL,
- 				min_t(int, nr_pages, BIO_MAX_PAGES));
--			if (!bio)
--				goto set_error_page;
- 			ctx = get_bio_post_read_ctx(inode, bio, page->index);
- 			if (IS_ERR(ctx)) {
- 				bio_put(bio);
--- 
-2.17.1
+>  	      G1_REG_DEC_CTRL1_REF_FRAMES(sps->max_num_ref_frames);
+>  	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL1);
+>  
 
