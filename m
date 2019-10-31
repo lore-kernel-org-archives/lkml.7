@@ -2,75 +2,50 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 417C3CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED34CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15D2F2087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8692087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:06:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfJaOFq (ORCPT
+        id S1727811AbfJaOGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 10:05:46 -0400
-Received: from mail.gnudd.com ([77.43.112.34]:47462 "EHLO mail.gnudd.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbfJaOFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 10:05:45 -0400
-X-Greylist: delayed 372 seconds by postgrey-1.27 at vger.kernel.org; Thu, 31 Oct 2019 10:05:45 EDT
-Received: from mail.gnudd.com (localhost [127.0.0.1])
-        by mail.gnudd.com (8.14.4/8.14.4/Debian-4+deb7u1) with ESMTP id x9VDx046011812;
-        Thu, 31 Oct 2019 14:59:00 +0100
-Received: (from rubini@localhost)
-        by mail.gnudd.com (8.14.4/8.14.4/Submit) id x9VDx0vL011811;
-        Thu, 31 Oct 2019 14:59:00 +0100
-Date:   Thu, 31 Oct 2019 14:59:00 +0100
-From:   Alessandro Rubini <rubini@gnudd.com>
-To:     nsaenzjulienne@suse.de
-Cc:     hch@infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, bhelgaas@google.com, helgaas@kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] x86/PCI: sta2x11: use default DMA address
- translation
-Message-ID: <20191031135900.GA11804@mail.gnudd.com>
+        Thu, 31 Oct 2019 10:06:05 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:43022 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbfJaOGF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 10:06:05 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iQB5M-0004Vk-2W; Thu, 31 Oct 2019 14:06:00 +0000
+Date:   Thu, 31 Oct 2019 14:06:00 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Yi Li <yili@winhong.com>
+Cc:     linux-fsdevel@vger.kernel.org, Yi Li <yilikernel@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] seq_file: fix condition while loop
+Message-ID: <20191031140600.GL26530@ZenIV.linux.org.uk>
+References: <1572521901-5070-1-git-send-email-yili@winhong.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Organization: GnuDD, Device Drivers, Embedded Systems, Courses
-In-Reply-To: <51101de0f3b0fc5a3678c1ee0c723b131471f1b6.camel@suse.de>
-References: <51101de0f3b0fc5a3678c1ee0c723b131471f1b6.camel@suse.de>
-  <20191018110044.22062-1-nsaenzjulienne@suse.de>
-  <20191018110044.22062-3-nsaenzjulienne@suse.de>
-  <20191030214548.GC25515@infradead.org>
+In-Reply-To: <1572521901-5070-1-git-send-email-yili@winhong.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> But I can't tested it either, and kinda wonder if this code is actually
->> still used by anyone..
+On Thu, Oct 31, 2019 at 07:38:21PM +0800, Yi Li wrote:
+> From: Yi Li <yilikernel@gmail.com>
+> 
+> Use the break condition of loop body.
+> PTR_ERR has some meanings when p is illegal,and return 0 when p is null.
+> set the err = 0 on the next iteration if err > 0.
 
-I wonder too.
- 
-> Maybe Alessandro can shine some light on this (though I wonder his
-> mail is stil valid).
-
-Yes, the mail is valid, and I'm busy as usual.
-
-Now, this STA2X11 is a chipset by ST-Ericcson that was bringing the
-AMBA peripherals to the PC world. It was meant to be used as an I/O
-device in the automotive sector, as far as I know (the audio part had
-features aimed at automotive installations).  I'm sure the chip was
-never used in standard PC's -- the eval board was a PCIe slot, but
-that's it.
-
-So, I can't test and I don't know if there are users of this chip.
-If there are users, they are big numbers.  I think we can accept any
-clean-up patch on the code base: if anything goes wrong, the users
-will surface with a fix when they'll consider an upgrade to their
-installed systems.
-
-/alessndro
+IDGI.  PTR_ERR() is not going to cause any kind of undefined behaviour for
+any valid pointer and it's trivial to evaluate.  What's the point?
