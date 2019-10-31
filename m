@@ -2,43 +2,44 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9FACA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9360ACA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C120E21734
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65D992087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:01:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="PO3w6Iib"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="jUF9OEbk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfJaLBq (ORCPT
+        id S1727401AbfJaLBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:01:46 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:59462 "EHLO
+        Thu, 31 Oct 2019 07:01:03 -0400
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:59372 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727365AbfJaLBE (ORCPT
+        by vger.kernel.org with ESMTP id S1727279AbfJaLBD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:01:04 -0400
+        Thu, 31 Oct 2019 07:01:03 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 69311C08AB;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6F0A2C08AE;
         Thu, 31 Oct 2019 11:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1572519662; bh=V8PYaIxRBCd5CjKybZ8TOnz5iajxJsSRMUjscFeKcrU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PO3w6IibOhFkxjwWRg11eNllWPLX+y9tkr4SttSB67beRc+cRHHjP6iRn6DM+GjEO
-         LqZ231z1+9KaOUORitebZ9DIzR9SKVRDBBR0jtNUFGi5h63+M5rBy98/POd8TLLtS3
-         NTVaCYeYvZuUJZepDmruo50QV171HfQdTa6YWwyHlANv5Je5F83Qg+DGBOUPdLTxfw
-         2mnMF3WBPXQME0RqhoBXP6i8Z2KhhfC5om++R9GdXgxPvfNZgZGSsQWRDzKbxaFKdc
-         og88xysv/VLcUuQawRm44GeREezN3dabsxpOuumGmDa6p5EcZ9xC4scKrVM9O+bhqB
-         EFSvwK9nOcVJg==
+        t=1572519662; bh=evZvvLApro5hVwuymO7sh6uSbwgwXdDeSzUoyB4odvQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=jUF9OEbkEjXwuDbMHuZ70RnPxHxJgnjH9Rtt3C67/RLVpTT97kUPFnQ3WkBVSfEbB
+         3mimPr7Re3x1Uv7YdZXVbOWjITJznpZYTRp6+19A3m76FqITT8ouEvpTFZVGgnMYao
+         Iu0yiwG4U06FQ0B/rVoGUBTmCARqs4gIGDzvUCsNTLgD3QzP/Pyvw3TuZv8V/RrP88
+         +cYljxDzm32ACV/al8Mvg4pRyIGy0fAt2B7wH7Tfq60z7zMdFx5hXllXLqqxWgpiB0
+         2s7CteSSbdTLl3J2qOt5XacIqnA2wW6846eoixfulYUsiLH9P7LjbkE6IEKU5xDc1d
+         ymQBjUxPwJ/5Q==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 2F6B6A0057;
+        by mailhost.synopsys.com (Postfix) with ESMTP id E4388A0065;
         Thu, 31 Oct 2019 11:00:59 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -51,39 +52,23 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net v2 00/10] net: stmmac: Fixes for -net
-Date:   Thu, 31 Oct 2019 12:00:38 +0100
-Message-Id: <cover.1572519070.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net v2 02/10] net: stmmac: gmac4: bitrev32 returns u32
+Date:   Thu, 31 Oct 2019 12:00:40 +0100
+Message-Id: <897a8a6291b1533e6b64f2b85fc5a782983ccfe9.1572519070.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1572519070.git.Jose.Abreu@synopsys.com>
+References: <cover.1572519070.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1572519070.git.Jose.Abreu@synopsys.com>
+References: <cover.1572519070.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Misc fixes for stmmac.
+The bitrev32 function returns an u32 var, not an int. Fix it.
 
-Patch 1/10, corrects a sparse warning reported by kbuild.
-
-Patch 2/10 and 3/10, use the correct variable type for bitrev32() calls.
-
-Patch 4/10, fixes the random failures the we were seing when running selftests.
-This commit was re-worded because the old commit log no longer applied so we
-didn't add the history log to the commit. So far, no selftests failures were
-seen with the new re-worked commit.
-
-Patch 5/10, prevents a crash that can occur when receiving AVB packets and with
-SPH feature enabled on XGMAC.
-
-Patch 6/10, fixes the correct settings for CBS on XGMAC.
-
-Patch 7/10, corrects the interpretation of AVB feature on XGMAC.
-
-Patch 8/10, disables Flow Control for AVB enabled queues on XGMAC.
-
-Patch 9/10, disables MMC interrupts on XGMAC, preventing a storm of interrupts.
-
-Patch 10/10, was added in this version and it fixes the incorrect number of
-packets that were being passed to NAPI.
+Fixes: 477286b53f55 ("stmmac: add GMAC4 core support")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -96,30 +81,22 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Jose Abreu (10):
-  net: stmmac: Fix sparse warning
-  net: stmmac: gmac4: bitrev32 returns u32
-  net: stmmac: xgmac: bitrev32 returns u32
-  net: stmmac: selftests: Prevent false positives in filter tests
-  net: stmmac: xgmac: Only get SPH header len if available
-  net: stmmac: xgmac: Fix TSA selection
-  net: stmmac: xgmac: Fix AV Feature detection
-  net: stmmac: xgmac: Disable Flow Control when 1 or more queues are in
-    AV
-  net: stmmac: xgmac: Disable MMC interrupts by default
-  net: stmmac: Fix the packet count in stmmac_rx()
-
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |   4 +-
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    |   5 +-
- .../net/ethernet/stmicro/stmmac/dwxgmac2_descs.c   |   3 +-
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |   4 +-
- drivers/net/ethernet/stmicro/stmmac/hwif.h         |   2 +-
- drivers/net/ethernet/stmicro/stmmac/mmc_core.c     |   6 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  10 +-
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 134 +++++++++++++++------
- 8 files changed, 115 insertions(+), 53 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index 365e607f07cd..40ca00e596dd 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -432,7 +432,7 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 			 * bits used depends on the hardware configuration
+ 			 * selected at core configuration time.
+ 			 */
+-			int bit_nr = bitrev32(~crc32_le(~0, ha->addr,
++			u32 bit_nr = bitrev32(~crc32_le(~0, ha->addr,
+ 					ETH_ALEN)) >> (32 - mcbitslog2);
+ 			/* The most significant bit determines the register to
+ 			 * use (H/L) while the other 5 bits determine the bit
 -- 
 2.7.4
 
