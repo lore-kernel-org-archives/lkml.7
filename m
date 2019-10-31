@@ -2,93 +2,91 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3B3C47E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D93ECA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78BCE2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:08:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sLIJtvbX"
+	by mail.kernel.org (Postfix) with ESMTP id 39B072087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:09:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572534574;
+	bh=9tBCz/fylc7VVVgD21eF7T6KAra9agC6ZKRM9LyDwgE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ne5eJ+YJb1Wfi6RvQIcVvgJ5sGQyJVW0wdP7Sd5kXhJi732frTy+COkjQa7BeQ2he
+	 OC1SDs4eAVh7R8gsaJn1j6ysjOHreMMDIRAq+o8Vvzx0iYJaleUIC0+llqs1RjydBV
+	 /LfToWCxmT67BIQsE5S1Wduiq/jp6fDR/WDF+R18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbfJaPIx (ORCPT
+        id S1728078AbfJaPJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 11:08:53 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:43196 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbfJaPIx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 11:08:53 -0400
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 45D1420B7192;
-        Thu, 31 Oct 2019 08:08:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 45D1420B7192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1572534532;
-        bh=b552znnqsYND51xMigIZXtf6qqgljQrlCIE5HH5S2i4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=sLIJtvbXJ37ifCWsEv5uQlJL6ydCzZ9r2nzBqntNvkOn9VL478bTvghdzjppI4LuT
-         UbPE4B0JlPjWQ9wbW2NU/QsZjG0jVfrgvrb1FByefyTItfAZ2W9Ysyoz66iP0xgKDE
-         cTysNaCkTLXtdQrV8mMQrn74ShsmcxWzjk39quP0=
-Subject: Re: [PATCH v3 1/9] KEYS: Defined an IMA hook to measure keys on key
- create or update
-To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
-        matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
-Cc:     prsriva@linux.microsoft.com
-References: <20191031011910.2574-1-nramas@linux.microsoft.com>
- <20191031011910.2574-2-nramas@linux.microsoft.com>
- <1572523831.5028.43.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <b83bd7ef-ce7f-e750-e30b-30d5a6469a28@linux.microsoft.com>
-Date:   Thu, 31 Oct 2019 08:08:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 31 Oct 2019 11:09:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726664AbfJaPJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 11:09:32 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D36942083E;
+        Thu, 31 Oct 2019 15:09:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572534572;
+        bh=9tBCz/fylc7VVVgD21eF7T6KAra9agC6ZKRM9LyDwgE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=z8TnPqQT4tTuMQMa6dylinO6OKAdSfX2nsQZ4a3PLSgREOT+u/NMPEiozETqT21/8
+         W+Yilb9SMOyw49j8YNr7Y6JnaB7j+55vh6tc8+FqFlFwKC0zktIACa3WAaceFp4eeX
+         TzWO8rM1aqYeoI9oe5isljc5OgIsloqXzmcJBTOM=
+Date:   Thu, 31 Oct 2019 15:09:27 +0000
+From:   Will Deacon <will@kernel.org>
+To:     linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andreyknvl@google.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>, stable@vger.kernel.org
+Subject: Re: [RESEND PATCH] media: uvc: Avoid cyclic entity chains due to
+ malformed USB descriptors
+Message-ID: <20191031150925.GA27535@willie-the-truck>
+References: <20191016195800.22099-1-will@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1572523831.5028.43.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016195800.22099-1-will@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/31/19 5:10 AM, Mimi Zohar wrote:
-
-> On Wed, 2019-10-30 at 18:19 -0700, Lakshmi Ramasubramanian wrote:
->> Asymmetric keys used for verifying file signatures or certificates
->> are currently not included in the IMA measurement list.
->>
->> This patch defines a new IMA hook namely ima_post_key_create_or_update()
->> to measure asymmetric keys.
+On Wed, Oct 16, 2019 at 08:58:00PM +0100, Will Deacon wrote:
+> Add a check before adding an entity to a chain list to ensure that the
+> entity is not already part of a chain.
 > 
-> It's not enough for the kernel to be able to compile the kernel after
-> applying all the patches in a patch set.  After applying each patch,
-> the kernel should build properly, otherwise it is not bi-sect safe.
->   Refer to "3) Separate your changes" of
-> "Documentation/process/submitting-patches.rst.
-
-I started with kernel version 5.3 for this patch set.
-I applied Nayna's process_buffer_measurement() patch and then built my 
-changes on top of that.
-This patch has no other dependency as far as I know.
-
-Are you seeing a build break after applying this patch alone?
-
-(PATCH v3 1/9) KEYS: Defined an IMA hook to measure keys on key create 
-or update
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Kostya Serebryany <kcc@google.com>
+> Cc: <stable@vger.kernel.org>
+> Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
+> Reported-by: Andrey Konovalov <andreyknvl@google.com>
+> Link: https://lore.kernel.org/linux-media/CAAeHK+z+Si69jUR+N-SjN9q4O+o5KFiNManqEa-PjUta7EOb7A@mail.gmail.com/
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
 > 
-> This patch should also define the new "func".
+> Resending since I don't think any material changes are required to address
+> the comments on the previous posting:
 > 
+> http://lkml.kernel.org/r/20191002112753.21630-1-will@kernel.org
+> 
+>  drivers/media/usb/uvc/uvc_driver.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 
-Ok - I'll make that change.
+Gentle nudge on this patch, since I don't see it in -next and I've not
+received any comments on it for a while.
 
-thanks,
-  -lakshmi
+Cheers,
+
+Will
