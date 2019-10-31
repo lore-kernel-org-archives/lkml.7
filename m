@@ -2,53 +2,59 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 777DAC47E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E40ECA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E42B2080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA4F20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:59:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=bitmath.org header.i=@bitmath.org header.b="OspqUJoQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfJaH5u (ORCPT
+        id S1727020AbfJaH73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 03:57:50 -0400
-Received: from mga14.intel.com ([192.55.52.115]:65394 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbfJaH5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 03:57:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 00:57:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
-   d="scan'208";a="375157005"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 31 Oct 2019 00:57:48 -0700
-Received: from [10.226.38.65] (rtanwar-mobl.gar.corp.intel.com [10.226.38.65])
-        by linux.intel.com (Postfix) with ESMTP id 7C956580127;
-        Thu, 31 Oct 2019 00:57:45 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] pinctrl: Add pinmux & GPIO controller driver for a
- new SoC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
-References: <cover.1572409172.git.rahul.tanwar@linux.intel.com>
- <4bb885fe692d29f2635772dcd04839390f1f5671.1572409172.git.rahul.tanwar@linux.intel.com>
- <20191030143907.GY32742@smile.fi.intel.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <bb9d2c3d-2b01-7239-eefa-0e813b091cc8@linux.intel.com>
-Date:   Thu, 31 Oct 2019 15:57:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 31 Oct 2019 03:59:29 -0400
+Received: from mailrelay2-2.pub.mailoutpod1-cph3.one.com ([46.30.212.1]:22535
+        "EHLO mailrelay2-2.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726769AbfJaH72 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 03:59:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bitmath.org; s=20140924;
+        h=content-transfer-encoding:content-type:in-reply-to:mime-version:date:
+         message-id:from:references:cc:to:subject:from;
+        bh=rQso8MToqtRUHqnuedvZh5RwGvz7M/QcMmNwNECH16o=;
+        b=OspqUJoQm272B+Sie2PXjMepoG81G/Y42QJLebL9rjUPa17nUeCWtCfLYXr+YilaEuVWnh4cAcpCj
+         lQOvNWOWSDbjlVz8WwGrbRkLuZbNBI7pdCtQQt3GJ4QIF6mqfPdC2Iod3by4IN9oKJFkpeH+GNb22Y
+         mnTFBuvBf4SNeLlU=
+X-HalOne-Cookie: 43cc89dee2fd2bbb9ef64f88398e205b53a9986e
+X-HalOne-ID: 5b34d043-fbb4-11e9-ba02-d0431ea8a290
+Received: from [192.168.19.13] (unknown [98.128.166.173])
+        by mailrelay2.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
+        id 5b34d043-fbb4-11e9-ba02-d0431ea8a290;
+        Thu, 31 Oct 2019 07:59:25 +0000 (UTC)
+Subject: Re: [PATCH v4 01/48] Input: introduce input_mt_report_slot_inactive
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Jiada Wang <jiada_wang@mentor.com>, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, erosca@de.adit-jv.com,
+        Andrew_Gabbasov@mentor.com
+References: <20191029072010.8492-1-jiada_wang@mentor.com>
+ <20191029072010.8492-2-jiada_wang@mentor.com>
+ <b3de4c05-d2d1-58f8-a447-d5e127574ac0@bitmath.org>
+ <20191030232311.GK57214@dtor-ws>
+From:   Henrik Rydberg <rydberg@bitmath.org>
+Message-ID: <8bcc16bc-3726-0766-6ec7-213b165faf7e@bitmath.org>
+Date:   Thu, 31 Oct 2019 09:01:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191030143907.GY32742@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191030232311.GK57214@dtor-ws>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,204 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Dmitry,
 
-Hi Andy,
-
-On 30/10/2019 10:39 PM, Andy Shevchenko wrote:
-> On Wed, Oct 30, 2019 at 12:23:59PM +0800, Rahul Tanwar wrote:
->> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
->> controls pin multiplexing & configuration including GPIO functions selection &
->> GPIO attributes configuration.
+On 2019-10-31 00:23, Dmitry Torokhov wrote:
+> On Tue, Oct 29, 2019 at 06:13:09PM +0100, Henrik Rydberg wrote:
+>> Hi Jiada,
 >>
->> This IP is not based on & does not have anything in common with Chassis
->> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
->> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
->> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
+>>> input_mt_report_slot_state() ignores the tool when the slot is closed.
+>>> which has caused a bit of confusion.
+>>> This patch introduces input_mt_report_slot_inactive() to report slot
+>>> inactive state.
+>>> replaces all input_mt_report_slot_state() with
+>>> input_mt_report_slot_inactive() in case of close of slot.
+>>>
+>>> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+>> NACK on this one.
 >>
->> Add a new GPIO & pin control framework based driver for this IP.
+>> We already discussed this patch and the potentially changed behavior to
+>> existing setups stemming from ignoring the MT state.
 >>
->> +static inline void eqbr_set_val(void __iomem *addr, u32 offset,
->> +				u32 mask, u32 set, raw_spinlock_t *lock)
+>> On the upside, what I can see this patch does exactly no difference to the
+>> cases where the MT state is set, so it can be safely dropped without
+>> affecting the rest of the patch series.
+> I guess Jiada's concern that we are forcing to pass tool type even
+> though we end up ignoring it intervally, which confuses users of the API
+> as they might not know what tool to specify.
 >
-> Why is it marked with inline?
-
-Hard to justify. I can remove inline if you recommend so..
-
->> +{
->> +	u32 val;
->> +	unsigned long flags;
->> +
->> +	raw_spin_lock_irqsave(lock, flags);
->> +	val = readl(addr);
->> +	val = (val & ~(mask << offset)) | ((set & mask) << offset);
-> This is unusual, why offset can't be applied once to the mask?
-
-Do you mean like below ? (set still needs to be left shifted by offset)
-
-mask = mask << offset;
-val = (val & ~mask) | ((set << offset) & mask);
-
->> +	writel(val, addr);
->> +	raw_spin_unlock_irqrestore(lock, flags);
-> Hmm... Don't you have more complicated workflow that requires few
-> reads/writes/updates to be called atomically?
-
-I don't really see any complicated register programming in this driver.
-Just forpin configuration, mux setting & GPIO IRQ configuration..
-
->> +}
->> +static void eqbr_gpio_disable_irq(struct irq_data *d)
->> +{
->> +	unsigned int offset = irqd_to_hwirq(d);
->> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->> +	struct eqbr_gpio_desc *desc = gpiochip_get_data(gc);
->> +	writel(BIT(offset), desc->membase + GPIO_IRNENCLR);
-> Is it okay to be without spin lock?
-> Same Q to the rest similar places.
-
-Yes, you are right. GPIO IRQ ops also needs locking. I was incorrectly
-assuming that gpiolib will provide locking when it calls these ops. I
-will fix it in v3. Thanks.
-
->> +}
->> +static inline void eqbr_cfg_bit(void __iomem *addr,
->> +				unsigned int offset, unsigned int set)
->> +{
->> +	if (!set)
-> Why not to use positive condition?
-
-Well noted.
-
->> +		writel(readl(addr) & ~BIT(offset), addr);
->> +	else
->> +		writel(readl(addr) | BIT(offset), addr);
->> +}
->> +	struct gpio_irq_type it;
-> Not sure if this is used properly. Linus may clarify this.
+> How about we do:
 >
->> +static void eqbr_irq_handler(struct irq_desc *desc)
->> +{
->> +	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
->> +	struct eqbr_gpio_desc *gpio_desc = gpiochip_get_data(gc);
->> +	struct irq_chip *ic = irq_desc_get_chip(desc);
->> +	u32 pins, offset;
->> +
->> +	chained_irq_enter(ic, desc);
->> +	pins = readl(gpio_desc->membase + GPIO_IRNCR);
->> +
->> +	for_each_set_bit(offset, (unsigned long *)&pins, gc->ngpio)
-> This casting is no go.
+> static inline void input_mt_report_slot_inactive(struct input_dev *dev)
+> {
+> 	input_mt_report_slot_state(dev, 0, false);
+> }
+>
+> This should not change any behavior.
 
-Well noted. Copy paste mistake. Will fix it. Thanks.
+Agreed, that will work.
 
->> +		generic_handle_irq(irq_find_mapping(gc->irq.domain, offset));
->> +
->> +	chained_irq_exit(ic, desc);
->> +}
->> +static int gpiochip_setup(struct device *dev, struct eqbr_gpio_desc *desc)
->> +{
->> +	struct gpio_irq_chip *girq;
->> +	struct gpio_chip *gc;
->> +
->> +	gc = &desc->chip;
->> +	gc->owner = THIS_MODULE;
-> Do we still need this in the drivers?
+Thanks,
 
-Agree it is redundant. Will remove it. Thanks.
+Henrik
 
->> +	gc->label = desc->name;
->> +	gc->of_node = desc->node;
->> +
->> +	if (!of_property_read_bool(desc->node, "interrupt-controller")) {
-> Why is it fatal?
 
-It is not fatal, that's why it returns 0 instead of error i.e. if this
-gpio chip is notintended to be used as interrupt controller then do
-not setup gpio_irq_chipand proceed to register gpio chip without
-interrupt support.
-
->> +		dev_info(dev, "gc %s: doesn't act as interrupt controller!\n",
->> +			 desc->name);
->> +		return 0;
->> +	}
->> +	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
->> +				     GFP_KERNEL);
-> I believe it's fine to have it on one line.
-
-Well noted.
-
->> +	if (!girq->parents)
->> +		return -ENOMEM;
->> +
->> +	girq->default_type = IRQ_TYPE_NONE;
->> +	girq->handler = handle_level_irq;
-> Not bad IRQ handler?
-
-Yes, it should be handle_bad_irq(). Will fix, thanks.
-
->> +	girq->parents[0] = desc->virq;
->> +
->> +	return 0;
->> +}
->> +static int gpiolib_reg(struct eqbr_pinctrl_drv_data *drvdata)
->> +{
->> +	struct device_node *np;
->> +	struct eqbr_gpio_desc *desc;
->> +	struct device *dev;
->> +	int i, ret;
->> +	struct resource res;
->> +
->> +	dev = drvdata->dev;
->> +	for (i = 0; i < drvdata->nr_gpio_descs; i++) {
->> +		desc = drvdata->gpio_desc + i;
->> +		np = desc->node;
->> +
->> +		desc->name = devm_kasprintf(dev, GFP_KERNEL, "gpiochip%d", i);
->> +		if (!desc->name)
->> +			return -ENOMEM;
->> +
->> +		if (of_address_to_resource(np, 0, &res)) {
->> +			dev_err(dev, "Failed to get GPIO register address\n");
->> +			return -ENXIO;
->> +		}
->> +
->> +		desc->membase = devm_ioremap_resource(dev, &res);
->> +		if (IS_ERR(desc->membase)) {
->> +			dev_err(dev, "ioremap fail\n");
-> Redundant.
-
-Well noted.
-
->> +			return PTR_ERR(desc->membase);
->> +	}
-> Is it per descriptor?!
-
-Yes, it is per descriptor i.e. per gpio_chip. Each gpio_chip has different
-membase.
-
->> +
->> +		desc->virq = irq_of_parse_and_map(np, 0);
->> +		if (!desc->virq) {
->> +			dev_err(dev, "%s: failed to parse and map irq\n",
->> +				desc->name);
->> +			return -ENXIO;
->> +		}
->> +		raw_spin_lock_init(&desc->lock);
->> +	}
->> +
->> +	return 0;
->> +}
->> +static const struct pinmux_ops eqbr_pinmux_ops = {
->> +	.get_functions_count	= pinmux_generic_get_function_count,
->> +	.get_function_name 	= pinmux_generic_get_function_name,
->> +	.get_function_groups 	= pinmux_generic_get_function_groups,
->> +	.set_mux		= eqbr_pinmux_set_mux,
->> +	.gpio_request_enable	= eqbr_pinmux_gpio_request,
->> +	.strict			= true,
->> +};
-> TABs/spaces mix.
-
-Well noted. Thanks.
-
-Regards,
-Rahul
