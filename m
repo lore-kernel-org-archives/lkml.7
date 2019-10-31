@@ -4,47 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DB9CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F356BCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DBB62173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D112C2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbfJaL60 (ORCPT
+        id S1728018AbfJaL6b convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:58:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55234 "EHLO
+        Thu, 31 Oct 2019 07:58:31 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55244 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfJaLzD (ORCPT
+        with ESMTP id S1726878AbfJaLzE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:55:03 -0400
+        Thu, 31 Oct 2019 07:55:04 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iQ92a-0002vh-MF; Thu, 31 Oct 2019 12:55:00 +0100
+        id 1iQ92Z-0002rW-H8; Thu, 31 Oct 2019 12:54:59 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AFB2F1C03AD;
-        Thu, 31 Oct 2019 12:54:58 +0100 (CET)
-Date:   Thu, 31 Oct 2019 11:54:58 -0000
-From:   "tip-bot2 for Joel Fernandes (Google)" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1654C1C0070;
+        Thu, 31 Oct 2019 12:54:56 +0100 (CET)
+Date:   Thu, 31 Oct 2019 11:54:55 -0000
+From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Ensure that ->rcu_urgent_qs is set before resched IPI
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+Subject: [tip: core/rcu] x86/kvm/pmu: Replace rcu_swap_protected() with
+ rcu_replace_pointer()
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?b?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, <x86@kernel.org>,
+        <kvm@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
         linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Message-ID: <157252289837.29376.5576201849355844371.tip-bot2@tip-bot2>
+Message-ID: <157252289579.29376.8178836820582764127.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -55,39 +61,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     05ef9e9eb3dade21413680f41eb0170778e8ae2b
-Gitweb:        https://git.kernel.org/tip/05ef9e9eb3dade21413680f41eb0170778e8ae2b
-Author:        Joel Fernandes (Google) <joel@joelfernandes.org>
-AuthorDate:    Thu, 15 Aug 2019 22:59:14 -04:00
+Commit-ID:     12e78e6902134c9e49b2481c2515555e6f7b12dc
+Gitweb:        https://git.kernel.org/tip/12e78e6902134c9e49b2481c2515555e6f7b12dc
+Author:        Paul E. McKenney <paulmck@kernel.org>
+AuthorDate:    Mon, 23 Sep 2019 15:15:35 -07:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Wed, 30 Oct 2019 08:34:35 -07:00
+CommitterDate: Wed, 30 Oct 2019 08:43:51 -07:00
 
-rcu: Ensure that ->rcu_urgent_qs is set before resched IPI
+x86/kvm/pmu: Replace rcu_swap_protected() with rcu_replace_pointer()
 
-The RCU-specific resched_cpu() function sends a resched IPI to the
-specified CPU, which can be used to force the tick on for a given
-nohz_full CPU.  This is needed when this nohz_full CPU is looping in the
-kernel while blocking the current grace period.  However, for the tick
-to actually be forced on in all cases, that CPU's rcu_data structure's
-->rcu_urgent_qs flag must be set beforehand.  This commit therefore
-causes rcu_implicit_dynticks_qs() to set this flag prior to invoking
-resched_cpu() on a holdout nohz_full CPU.
+This commit replaces the use of rcu_swap_protected() with the more
+intuitively appealing rcu_replace_pointer() as a step towards removing
+rcu_swap_protected().
 
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+[ paulmck: From rcu_replace() to rcu_replace_pointer() per Ingo Molnar. ]
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: <x86@kernel.org>
+Cc: <kvm@vger.kernel.org>
 ---
- kernel/rcu/tree.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/pmu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 8110514..0d83b19 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1073,6 +1073,7 @@ static int rcu_implicit_dynticks_qs(struct rcu_data *rdp)
- 	if (tick_nohz_full_cpu(rdp->cpu) &&
- 		   time_after(jiffies,
- 			      READ_ONCE(rdp->last_fqs_resched) + jtsq * 3)) {
-+		WRITE_ONCE(*ruqp, true);
- 		resched_cpu(rdp->cpu);
- 		WRITE_ONCE(rdp->last_fqs_resched, jiffies);
- 	}
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index 46875bb..5ddb05a 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -416,8 +416,8 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
+ 	*filter = tmp;
+ 
+ 	mutex_lock(&kvm->lock);
+-	rcu_swap_protected(kvm->arch.pmu_event_filter, filter,
+-			   mutex_is_locked(&kvm->lock));
++	filter = rcu_replace_pointer(kvm->arch.pmu_event_filter, filter,
++				     mutex_is_locked(&kvm->lock));
+ 	mutex_unlock(&kvm->lock);
+ 
+ 	synchronize_srcu_expedited(&kvm->srcu);
