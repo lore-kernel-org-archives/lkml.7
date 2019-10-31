@@ -2,101 +2,95 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A63CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDABCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0FB20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1864E20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:44:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfJaKnq (ORCPT
+        id S1727239AbfJaKoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:43:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56310 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726867AbfJaKnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:43:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D0DD1B337;
-        Thu, 31 Oct 2019 10:43:43 +0000 (UTC)
-Message-ID: <51101de0f3b0fc5a3678c1ee0c723b131471f1b6.camel@suse.de>
-Subject: Re: [PATCH v2 2/2] x86/PCI: sta2x11: use default DMA address
- translation
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Christoph Hellwig <hch@infradead.org>, rubini <rubini@gnudd.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, helgaas@kernel.org,
-        linux-pci@vger.kernel.org
-Date:   Thu, 31 Oct 2019 11:43:40 +0100
-In-Reply-To: <20191030214548.GC25515@infradead.org>
-References: <20191018110044.22062-1-nsaenzjulienne@suse.de>
-         <20191018110044.22062-3-nsaenzjulienne@suse.de>
-         <20191030214548.GC25515@infradead.org>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-bbEBxDInIIIWgIikHBah"
-User-Agent: Evolution 3.34.1 
+        Thu, 31 Oct 2019 06:44:04 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46504 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbfJaKoD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 06:44:03 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 67FEF28BC5D;
+        Thu, 31 Oct 2019 10:44:02 +0000 (GMT)
+Date:   Thu, 31 Oct 2019 11:43:58 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     <Tudor.Ambarus@microchip.com>
+Cc:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 06/32] mtd: spi-nor: Use dev_err() instead of
+ pr_err()
+Message-ID: <20191031114358.4f9016d7@collabora.com>
+In-Reply-To: <20191029111615.3706-7-tudor.ambarus@microchip.com>
+References: <20191029111615.3706-1-tudor.ambarus@microchip.com>
+        <20191029111615.3706-7-tudor.ambarus@microchip.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 29 Oct 2019 11:16:57 +0000
+<Tudor.Ambarus@microchip.com> wrote:
 
---=-bbEBxDInIIIWgIikHBah
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+> 
+> Print identifying information about struct device.
+> 
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> ---
+>  drivers/mtd/spi-nor/spi-nor.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index e801f390728c..c794eff69fe9 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -448,7 +448,7 @@ static int spi_nor_read_sr(struct spi_nor *nor)
+>  	}
+>  
+>  	if (ret) {
+> -		pr_err("error %d reading SR\n", ret);
+> +		dev_err(nor->dev, "error %d reading SR\n", ret);
 
-On Wed, 2019-10-30 at 14:45 -0700, Christoph Hellwig wrote:
-> On Fri, Oct 18, 2019 at 01:00:44PM +0200, Nicolas Saenz Julienne wrote:
-> > The devices found behind this PCIe chip have unusual DMA mapping
-> > constraints as there is an AMBA interconnect placed in between them and
-> > the different PCI endpoints. The offset between physical memory
-> > addresses and AMBA's view is provided by reading a PCI config register,
-> > which is saved and used whenever DMA mapping is needed.
-> >=20
-> > It turns out that this DMA setup can be represented by properly setting
-> > 'dma_pfn_offset', 'dma_bus_mask' and 'dma_mask' during the PCI device
-> > enable fixup. And ultimately allows us to get rid of this device's
-> > custom DMA functions.
-> >=20
-> > Aside from the code deletion and DMA setup, sta2x11_pdev_to_mapping() i=
-s
-> > moved to avoid warnings whenever CONFIG_PM is not enabled.
->=20
-> Looks sensible to me:
->=20
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
->=20
-> But I can't tested it either, and kinda wonder if this code is actually
-> still used by anyone..
+nor->dev is not exactly what we should use since it points to the SPI
+NOR controller device in the !SPI_MEM case, and those controllers can
+be attached several SPI NOR devs. Ideally we should use mtd->dev, but
+that requires splitting the MTD initialization and registration steps
+so mtd->dev can have a valid name before registration time.
 
-Maybe Alessandro can shine some light on this (though I wonder his mail is =
-stil
-valid).
+Anyway, I guess this change is good enough for now, just mentioned the
+problem in case anyone is interested working on it.
 
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 
---=-bbEBxDInIIIWgIikHBah
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl26utwACgkQlfZmHno8
-x/5LdQf+NbC/ulCg/psnqPVhawPBGEveu8OIRa8NXE28iGjBsmKrzd7vEIVEypbC
-Sw8rUc2flbEyE88NX6sNKmDqFn8ydOU7IxtM4CFJV/XS3UjSLccTVJDyvB1afF67
-roBReMJNAqGkE/sV3n0gGMUuvK7Vv1Z3uLRvsNM8refMHm2+62ochGBWPiB0Th3v
-X7djIjJ9qsnvjKeIadD6OIUqooHSnpgWlRBOxTYmc5B8fJdl8Hv7iKwMdkp2Ffdr
-VRinylQj0Gzj+UWyQmlaxeSUNw/35uKRsyNnOQbLO2C270IUEPmnsyS46DtTxz0F
-vcxXHYj8h41TqtqdM78XSj6A31RcYQ==
-=wltj
------END PGP SIGNATURE-----
-
---=-bbEBxDInIIIWgIikHBah--
+>  		return ret;
+>  	}
+>  
+> @@ -478,7 +478,7 @@ static int spi_nor_read_fsr(struct spi_nor *nor)
+>  	}
+>  
+>  	if (ret) {
+> -		pr_err("error %d reading FSR\n", ret);
+> +		dev_err(nor->dev, "error %d reading FSR\n", ret);
+>  		return ret;
+>  	}
+>  
 
