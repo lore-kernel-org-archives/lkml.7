@@ -7,46 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02F4CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4127CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8089E2087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4DD92087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:56:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbfJaL4M (ORCPT
+        id S1727543AbfJaLzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:56:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55509 "EHLO
+        Thu, 31 Oct 2019 07:55:33 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55397 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727570AbfJaLzh (ORCPT
+        with ESMTP id S1727270AbfJaLzT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:55:37 -0400
+        Thu, 31 Oct 2019 07:55:19 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iQ931-0003BQ-BA; Thu, 31 Oct 2019 12:55:27 +0100
+        id 1iQ92p-00034Y-8N; Thu, 31 Oct 2019 12:55:15 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8AD231C0673;
-        Thu, 31 Oct 2019 12:55:14 +0100 (CET)
-Date:   Thu, 31 Oct 2019 11:55:14 -0000
-From:   "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B24AD1C04F3;
+        Thu, 31 Oct 2019 12:55:06 +0100 (CET)
+Date:   Thu, 31 Oct 2019 11:55:06 -0000
+From:   "tip-bot2 for Alan Stern" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: efi/urgent] efi: libstub/arm: Account for firmware reserved
- memory at the base of RAM
-Cc:     Guillaume Gardet <Guillaume.Gardet@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Chester Lin <clin@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191029173755.27149-5-ardb@kernel.org>
-References: <20191029173755.27149-5-ardb@kernel.org>
+Subject: [tip: core/rcu] tools/memory-model/Documentation: Fix typos in
+ explanation.txt
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Message-ID: <157252291426.29376.475960355315678836.tip-bot2@tip-bot2>
+Message-ID: <157252290634.29376.12383526445235828986.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,101 +56,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the efi/urgent branch of tip:
+The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     41cd96fa149b29684ebd38759fefb07f9c7d5276
-Gitweb:        https://git.kernel.org/tip/41cd96fa149b29684ebd38759fefb07f9c7d5276
-Author:        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-AuthorDate:    Tue, 29 Oct 2019 18:37:53 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 31 Oct 2019 09:40:19 +01:00
+Commit-ID:     3321ea12907abd477ff7e9bf5f365524b8f1f2fc
+Gitweb:        https://git.kernel.org/tip/3321ea12907abd477ff7e9bf5f365524b8f1f2fc
+Author:        Alan Stern <stern@rowland.harvard.edu>
+AuthorDate:    Tue, 01 Oct 2019 13:39:47 -04:00
+Committer:     Paul E. McKenney <paulmck@kernel.org>
+CommitterDate: Sat, 05 Oct 2019 11:58:55 -07:00
 
-efi: libstub/arm: Account for firmware reserved memory at the base of RAM
+tools/memory-model/Documentation: Fix typos in explanation.txt
 
-The EFI stubloader for ARM starts out by allocating a 32 MB window
-at the base of RAM, in order to ensure that the decompressor (which
-blindly copies the uncompressed kernel into that window) does not
-overwrite other allocations that are made while running in the context
-of the EFI firmware.
+This patch fixes a few minor typos and improves word usage in a few
+places in the Linux Kernel Memory Model's explanation.txt file.
 
-In some cases, (e.g., U-Boot running on the Raspberry Pi 2), this is
-causing boot failures because this initial allocation conflicts with
-a page of reserved memory at the base of RAM that contains the SMP spin
-tables and other pieces of firmware data and which was put there by
-the bootloader under the assumption that the TEXT_OFFSET window right
-below the kernel is only used partially during early boot, and will be
-left alone once the memory reservations are processed and taken into
-account.
-
-So let's permit reserved memory regions to exist in the region starting
-at the base of RAM, and ending at TEXT_OFFSET - 5 * PAGE_SIZE, which is
-the window below the kernel that is not touched by the early boot code.
-
-Tested-by: Guillaume Gardet <Guillaume.Gardet@arm.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Acked-by: Chester Lin <clin@suse.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191029173755.27149-5-ardb@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Acked-by: Andrea Parri <parri.andrea@gmail.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- drivers/firmware/efi/libstub/Makefile     |  1 +
- drivers/firmware/efi/libstub/arm32-stub.c | 16 +++++++++++++---
- 2 files changed, 14 insertions(+), 3 deletions(-)
+ tools/memory-model/Documentation/explanation.txt | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 0460c75..ee0661d 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -52,6 +52,7 @@ lib-$(CONFIG_EFI_ARMSTUB)	+= arm-stub.o fdt.o string.o random.o \
+diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
+index 488f11f..1b52645 100644
+--- a/tools/memory-model/Documentation/explanation.txt
++++ b/tools/memory-model/Documentation/explanation.txt
+@@ -206,7 +206,7 @@ goes like this:
+ 	P0 stores 1 to buf before storing 1 to flag, since it executes
+ 	its instructions in order.
  
- lib-$(CONFIG_ARM)		+= arm32-stub.o
- lib-$(CONFIG_ARM64)		+= arm64-stub.o
-+CFLAGS_arm32-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
- CFLAGS_arm64-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
+-	Since an instruction (in this case, P1's store to flag) cannot
++	Since an instruction (in this case, P0's store to flag) cannot
+ 	execute before itself, the specified outcome is impossible.
  
- #
-diff --git a/drivers/firmware/efi/libstub/arm32-stub.c b/drivers/firmware/efi/libstub/arm32-stub.c
-index e8f7aef..ffa242a 100644
---- a/drivers/firmware/efi/libstub/arm32-stub.c
-+++ b/drivers/firmware/efi/libstub/arm32-stub.c
-@@ -195,6 +195,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
- 				 unsigned long dram_base,
- 				 efi_loaded_image_t *image)
- {
-+	unsigned long kernel_base;
- 	efi_status_t status;
+ However, real computer hardware almost never follows the Sequential
+@@ -419,7 +419,7 @@ example:
  
- 	/*
-@@ -204,9 +205,18 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
- 	 * loaded. These assumptions are made by the decompressor,
- 	 * before any memory map is available.
- 	 */
--	dram_base = round_up(dram_base, SZ_128M);
-+	kernel_base = round_up(dram_base, SZ_128M);
+ The object code might call f(5) either before or after g(6); the
+ memory model cannot assume there is a fixed program order relation
+-between them.  (In fact, if the functions are inlined then the
++between them.  (In fact, if the function calls are inlined then the
+ compiler might even interleave their object code.)
  
--	status = reserve_kernel_base(sys_table, dram_base, reserve_addr,
-+	/*
-+	 * Note that some platforms (notably, the Raspberry Pi 2) put
-+	 * spin-tables and other pieces of firmware at the base of RAM,
-+	 * abusing the fact that the window of TEXT_OFFSET bytes at the
-+	 * base of the kernel image is only partially used at the moment.
-+	 * (Up to 5 pages are used for the swapper page tables)
-+	 */
-+	kernel_base += TEXT_OFFSET - 5 * PAGE_SIZE;
-+
-+	status = reserve_kernel_base(sys_table, kernel_base, reserve_addr,
- 				     reserve_size);
- 	if (status != EFI_SUCCESS) {
- 		pr_efi_err(sys_table, "Unable to allocate memory for uncompressed kernel.\n");
-@@ -220,7 +230,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
- 	*image_size = image->image_size;
- 	status = efi_relocate_kernel(sys_table, image_addr, *image_size,
- 				     *image_size,
--				     dram_base + MAX_UNCOMP_KERNEL_SIZE, 0);
-+				     kernel_base + MAX_UNCOMP_KERNEL_SIZE, 0);
- 	if (status != EFI_SUCCESS) {
- 		pr_efi_err(sys_table, "Failed to relocate kernel.\n");
- 		efi_free(sys_table, *reserve_size, *reserve_addr);
+ 
+@@ -499,7 +499,7 @@ different CPUs (external reads-from, or rfe).
+ 
+ For our purposes, a memory location's initial value is treated as
+ though it had been written there by an imaginary initial store that
+-executes on a separate CPU before the program runs.
++executes on a separate CPU before the main program runs.
+ 
+ Usage of the rf relation implicitly assumes that loads will always
+ read from a single store.  It doesn't apply properly in the presence
+@@ -955,7 +955,7 @@ atomic update.  This is what the LKMM's "atomic" axiom says.
+ THE PRESERVED PROGRAM ORDER RELATION: ppo
+ -----------------------------------------
+ 
+-There are many situations where a CPU is obligated to execute two
++There are many situations where a CPU is obliged to execute two
+ instructions in program order.  We amalgamate them into the ppo (for
+ "preserved program order") relation, which links the po-earlier
+ instruction to the po-later instruction and is thus a sub-relation of
+@@ -1572,7 +1572,7 @@ and there are events X, Y and a read-side critical section C such that:
+ 
+ 	2. X comes "before" Y in some sense (including rfe, co and fr);
+ 
+-	2. Y is po-before Z;
++	3. Y is po-before Z;
+ 
+ 	4. Z is the rcu_read_unlock() event marking the end of C;
+ 
