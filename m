@@ -2,131 +2,148 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD43CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B35E2CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9ECF2087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B8D2080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbfJaCA2 (ORCPT
+        id S1726836AbfJaCBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 22:00:28 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5231 "EHLO huawei.com"
+        Wed, 30 Oct 2019 22:01:39 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35666 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726317AbfJaCA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 22:00:26 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5FBB91B66F9351DEA189;
-        Thu, 31 Oct 2019 10:00:23 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 31 Oct 2019 10:00:14 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-To:     <akinobu.mita@gmail.com>, <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <zhongjiang@huawei.com>
-Subject: [PATCH v3 1/2] fault-inject: Use debugfs_create_ulong() instead of debugfs_create_ul()
-Date:   Thu, 31 Oct 2019 09:56:16 +0800
-Message-ID: <1572486977-14195-2-git-send-email-zhongjiang@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
-In-Reply-To: <1572486977-14195-1-git-send-email-zhongjiang@huawei.com>
-References: <1572486977-14195-1-git-send-email-zhongjiang@huawei.com>
+        id S1726317AbfJaCBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 22:01:39 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A534779C3B1900C0935C;
+        Thu, 31 Oct 2019 10:01:30 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 31 Oct
+ 2019 10:01:21 +0800
+Subject: Re: [PATCH] ext4: bio_alloc never fails
+To:     Gao Xiang <gaoxiang25@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
+        "Andreas Dilger" <adilger.kernel@dilger.ca>
+CC:     <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191030042618.124220-1-gaoxiang25@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <2716559d-95ac-399b-8105-38834f5ed660@huawei.com>
+Date:   Thu, 31 Oct 2019 10:01:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
+In-Reply-To: <20191030042618.124220-1-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-debugfs_create_ulong() has implemented the function of debugfs_create_ul()
-in lib/fault-inject.c. hence we can replace it.
+On 2019/10/30 12:26, Gao Xiang wrote:
+> Similar to [1] [2], it seems a trivial cleanup since
+> bio_alloc can handle memory allocation as mentioned in
+> fs/direct-io.c (also see fs/block_dev.c, fs/buffer.c, ..)
+> 
+> [1] https://lore.kernel.org/r/20191030035518.65477-1-gaoxiang25@huawei.com
+> [2] https://lore.kernel.org/r/20190830162812.GA10694@infradead.org
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-Suggested-by: Akinobu Mita <akinobu.mita@gmail.com>
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
----
- lib/fault-inject.c | 39 ++++++++++++---------------------------
- 1 file changed, 12 insertions(+), 27 deletions(-)
+I notice that there is still similar code in mpage.c
 
-diff --git a/lib/fault-inject.c b/lib/fault-inject.c
-index 8186ca8..430b3ac 100644
---- a/lib/fault-inject.c
-+++ b/lib/fault-inject.c
-@@ -151,10 +151,13 @@ bool should_fail(struct fault_attr *attr, ssize_t size)
- EXPORT_SYMBOL_GPL(should_fail);
- 
- #ifdef CONFIG_FAULT_INJECTION_DEBUG_FS
-+#ifdef CONFIG_FAULT_INJECTION_STACKTRACE_FILTER
- 
--static int debugfs_ul_set(void *data, u64 val)
-+static int debugfs_stacktrace_depth_set(void *data, u64 val)
- {
--	*(unsigned long *)data = val;
-+	*(unsigned long *)data =
-+		min_t(unsigned long, val, MAX_STACK_TRACE_DEPTH);
-+
- 	return 0;
- }
- 
-@@ -164,24 +167,6 @@ static int debugfs_ul_get(void *data, u64 *val)
- 	return 0;
- }
- 
--DEFINE_SIMPLE_ATTRIBUTE(fops_ul, debugfs_ul_get, debugfs_ul_set, "%llu\n");
--
--static void debugfs_create_ul(const char *name, umode_t mode,
--			      struct dentry *parent, unsigned long *value)
--{
--	debugfs_create_file(name, mode, parent, value, &fops_ul);
--}
--
--#ifdef CONFIG_FAULT_INJECTION_STACKTRACE_FILTER
--
--static int debugfs_stacktrace_depth_set(void *data, u64 val)
--{
--	*(unsigned long *)data =
--		min_t(unsigned long, val, MAX_STACK_TRACE_DEPTH);
--
--	return 0;
--}
--
- DEFINE_SIMPLE_ATTRIBUTE(fops_stacktrace_depth, debugfs_ul_get,
- 			debugfs_stacktrace_depth_set, "%llu\n");
- 
-@@ -204,11 +189,11 @@ struct dentry *fault_create_debugfs_attr(const char *name,
- 	if (IS_ERR(dir))
- 		return dir;
- 
--	debugfs_create_ul("probability", mode, dir, &attr->probability);
--	debugfs_create_ul("interval", mode, dir, &attr->interval);
-+	debugfs_create_ulong("probability", mode, dir, &attr->probability);
-+	debugfs_create_ulong("interval", mode, dir, &attr->interval);
- 	debugfs_create_atomic_t("times", mode, dir, &attr->times);
- 	debugfs_create_atomic_t("space", mode, dir, &attr->space);
--	debugfs_create_ul("verbose", mode, dir, &attr->verbose);
-+	debugfs_create_ulong("verbose", mode, dir, &attr->verbose);
- 	debugfs_create_u32("verbose_ratelimit_interval_ms", mode, dir,
- 			   &attr->ratelimit_state.interval);
- 	debugfs_create_u32("verbose_ratelimit_burst", mode, dir,
-@@ -218,10 +203,10 @@ struct dentry *fault_create_debugfs_attr(const char *name,
- #ifdef CONFIG_FAULT_INJECTION_STACKTRACE_FILTER
- 	debugfs_create_stacktrace_depth("stacktrace-depth", mode, dir,
- 					&attr->stacktrace_depth);
--	debugfs_create_ul("require-start", mode, dir, &attr->require_start);
--	debugfs_create_ul("require-end", mode, dir, &attr->require_end);
--	debugfs_create_ul("reject-start", mode, dir, &attr->reject_start);
--	debugfs_create_ul("reject-end", mode, dir, &attr->reject_end);
-+	debugfs_create_ulong("require-start", mode, dir, &attr->require_start);
-+	debugfs_create_ulong("require-end", mode, dir, &attr->require_end);
-+	debugfs_create_ulong("reject-start", mode, dir, &attr->reject_start);
-+	debugfs_create_ulong("reject-end", mode, dir, &attr->reject_end);
- #endif /* CONFIG_FAULT_INJECTION_STACKTRACE_FILTER */
- 
- 	attr->dname = dget(dir);
--- 
-1.7.12.4
+static struct bio *
+mpage_alloc(struct block_device *bdev,
+		sector_t first_sector, int nr_vecs,
+		gfp_t gfp_flags)
+{
+	struct bio *bio;
 
+	/* Restrict the given (page cache) mask for slab allocations */
+	gfp_flags &= GFP_KERNEL;
+	bio = bio_alloc(gfp_flags, nr_vecs);
+
+	if (bio == NULL && (current->flags & PF_MEMALLOC)) {
+		while (!bio && (nr_vecs /= 2))
+			bio = bio_alloc(gfp_flags, nr_vecs);
+	}
+
+	if (bio) {
+		bio_set_dev(bio, bdev);
+		bio->bi_iter.bi_sector = first_sector;
+	}
+	return bio;
+}
+
+Should we clean up them as well? however, I doubt we should get rid of loop in
+mempool allocation to relief the memory pressure on those uncritical path, for
+critical path like we should never fail, it would be fine looping in bio_alloc().
+
+Thanks,
+
+> ---
+>  fs/ext4/page-io.c  | 11 +++--------
+>  fs/ext4/readpage.c |  2 --
+>  2 files changed, 3 insertions(+), 10 deletions(-)
+> 
+> diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
+> index 12ceadef32c5..f1f7b6601780 100644
+> --- a/fs/ext4/page-io.c
+> +++ b/fs/ext4/page-io.c
+> @@ -358,14 +358,12 @@ void ext4_io_submit_init(struct ext4_io_submit *io,
+>  	io->io_end = NULL;
+>  }
+>  
+> -static int io_submit_init_bio(struct ext4_io_submit *io,
+> -			      struct buffer_head *bh)
+> +static void io_submit_init_bio(struct ext4_io_submit *io,
+> +			       struct buffer_head *bh)
+>  {
+>  	struct bio *bio;
+>  
+>  	bio = bio_alloc(GFP_NOIO, BIO_MAX_PAGES);
+> -	if (!bio)
+> -		return -ENOMEM;
+>  	bio->bi_iter.bi_sector = bh->b_blocknr * (bh->b_size >> 9);
+>  	bio_set_dev(bio, bh->b_bdev);
+>  	bio->bi_end_io = ext4_end_bio;
+> @@ -373,7 +371,6 @@ static int io_submit_init_bio(struct ext4_io_submit *io,
+>  	io->io_bio = bio;
+>  	io->io_next_block = bh->b_blocknr;
+>  	wbc_init_bio(io->io_wbc, bio);
+> -	return 0;
+>  }
+>  
+>  static int io_submit_add_bh(struct ext4_io_submit *io,
+> @@ -388,9 +385,7 @@ static int io_submit_add_bh(struct ext4_io_submit *io,
+>  		ext4_io_submit(io);
+>  	}
+>  	if (io->io_bio == NULL) {
+> -		ret = io_submit_init_bio(io, bh);
+> -		if (ret)
+> -			return ret;
+> +		io_submit_init_bio(io, bh);
+>  		io->io_bio->bi_write_hint = inode->i_write_hint;
+>  	}
+>  	ret = bio_add_page(io->io_bio, page, bh->b_size, bh_offset(bh));
+> diff --git a/fs/ext4/readpage.c b/fs/ext4/readpage.c
+> index a30b203fa461..bfeb77b93f48 100644
+> --- a/fs/ext4/readpage.c
+> +++ b/fs/ext4/readpage.c
+> @@ -362,8 +362,6 @@ int ext4_mpage_readpages(struct address_space *mapping,
+>  
+>  			bio = bio_alloc(GFP_KERNEL,
+>  				min_t(int, nr_pages, BIO_MAX_PAGES));
+> -			if (!bio)
+> -				goto set_error_page;
+>  			ctx = get_bio_post_read_ctx(inode, bio, page->index);
+>  			if (IS_ERR(ctx)) {
+>  				bio_put(bio);
+> 
