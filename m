@@ -2,147 +2,124 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6F4CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A595BCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C572083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C912083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:55:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfJaGzL convert rfc822-to-8bit (ORCPT
+        id S1726950AbfJaGzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 02:55:11 -0400
-Received: from mga11.intel.com ([192.55.52.93]:36926 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbfJaGzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 02:55:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Oct 2019 23:55:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
-   d="scan'208";a="375140915"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga005.jf.intel.com with ESMTP; 30 Oct 2019 23:55:09 -0700
-Received: from fmsmsx122.amr.corp.intel.com (10.18.125.37) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 30 Oct 2019 23:55:08 -0700
-Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
- fmsmsx122.amr.corp.intel.com (10.18.125.37) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 30 Oct 2019 23:55:08 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.127]) by
- SHSMSX153.ccr.corp.intel.com ([169.254.12.215]) with mapi id 14.03.0439.000;
- Thu, 31 Oct 2019 14:55:06 +0800
-From:   "Kang, Luwei" <luwei.kang@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>
-Subject: RE: [PATCH v1 8/8] perf/x86: Add event owner check when PEBS output
- to Intel PT
-Thread-Topic: [PATCH v1 8/8] perf/x86: Add event owner check when PEBS
- output to Intel PT
-Thread-Index: AQHVjLd7YuomyMFGekW7/CerqBL266dxNysAgAFIGiD///EXAIABvUSA
-Date:   Thu, 31 Oct 2019 06:55:06 +0000
-Message-ID: <82D7661F83C1A047AF7DC287873BF1E173836317@SHSMSX104.ccr.corp.intel.com>
-References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
- <1572217877-26484-9-git-send-email-luwei.kang@intel.com>
- <20191029151302.GO4097@hirez.programming.kicks-ass.net>
- <82D7661F83C1A047AF7DC287873BF1E173835B6A@SHSMSX104.ccr.corp.intel.com>
- <20191030095400.GU4097@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191030095400.GU4097@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiN2MxY2Y0YWYtOTMwZC00MzM4LTljNjItY2UxZjJmMjVlNDk5IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiME1DZnZiMmtFajIyUGxXcXVqY0JUVmVhK0swVHpGNEtXN3cxXC9IdmJVMTVIb01cL0x3YkFiZHhwOFQyZUZFb2VFIn0=
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 31 Oct 2019 02:55:16 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5235 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726479AbfJaGzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 02:55:15 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E01DC2C04A56620C2F94;
+        Thu, 31 Oct 2019 14:55:12 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 31 Oct
+ 2019 14:55:07 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: bio_alloc should never fail
+To:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>
+CC:     Jonathan Corbet <corbet@lwn.net>, <linux-doc@vger.kernel.org>,
+        Gao Xiang <hsiangkao@aol.com>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20191030035518.65477-1-gaoxiang25@huawei.com>
+ <20aa40bd-280d-d223-9f73-d9ed7dbe4f29@huawei.com>
+ <20191030091542.GA24976@architecture4>
+ <19a417e6-8f0e-564e-bc36-59bfc883ec16@huawei.com>
+ <20191030104345.GB170703@architecture4> <20191030151444.GC16197@mit.edu>
+ <20191030155020.GA3953@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20191030162243.GA18729@mit.edu>
+ <20191030163313.GB34056@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <0ef44e01-13a6-2519-bce2-075ca14a0cb9@huawei.com>
+Date:   Thu, 31 Oct 2019 14:55:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <20191030163313.GB34056@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > > For PEBS output to Intel PT, a Intel PT event should be the group
-> > > > leader of an PEBS counter event in host. For Intel PT
-> > > > virtualization enabling in KVM guest, the PT facilities will be
-> > > > passthrough to guest and do not allocate PT event from host perf
-> > > > event framework. This is different with PMU virtualization.
-> > > >
-> > > > Intel new hardware feature that can make PEBS enabled in KVM guest
-> > > > by output PEBS records to Intel PT buffer. KVM need to allocate a
-> > > > event counter for this PEBS event without Intel PT event leader.
-> > > >
-> > > > This patch add event owner check for PEBS output to PT event that
-> > > > only non-kernel event need group leader(PT).
-> > > >
-> > > > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > > > ---
-> > > >  arch/x86/events/core.c     | 3 ++-
-> > > >  include/linux/perf_event.h | 1 +
-> > > >  kernel/events/core.c       | 2 +-
-> > > >  3 files changed, 4 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c index
-> > > > 7b21455..214041a 100644
-> > > > --- a/arch/x86/events/core.c
-> > > > +++ b/arch/x86/events/core.c
-> > > > @@ -1014,7 +1014,8 @@ static int collect_events(struct cpu_hw_events *cpuc, struct perf_event *leader,
-> > > >  		 * away, the group was broken down and this singleton event
-> > > >  		 * can't schedule any more.
-> > > >  		 */
-> > > > -		if (is_pebs_pt(leader) && !leader->aux_event)
-> > > > +		if (is_pebs_pt(leader) && !leader->aux_event &&
-> > > > +					!is_kernel_event(leader))
-> > >
-> > > indent fail, but also, I'm not sure I buy this.
-> > >
-> > > Surely pt-on-kvm has a perf event to claim PT for the vCPU context?
-> >
-> > Hi Peter,
-> >     PT on KVM will not allocate perf events from host (this is different from performance counter). The guest PT MSRs value will be
-> load to hardware directly before VM-entry.
-> >     A PT event is needed by PEBS event as the event group leader in native. In virtualization, we can allocate a counter for PEBS but
-> can't assign a PT event as the leader of this PEBS event.
+On 2019/10/31 0:33, Jaegeuk Kim wrote:
+> On 10/30, Theodore Y. Ts'o wrote:
+>> On Wed, Oct 30, 2019 at 11:50:37PM +0800, Gao Xiang wrote:
+>>>
+>>> So I'm curious about the original issue in commit 740432f83560
+>>> ("f2fs: handle failed bio allocation"). Since f2fs manages multiple write
+>>> bios with its internal fio but it seems the commit is not helpful to
+>>> resolve potential mempool deadlock (I'm confused since no calltrace,
+>>> maybe I'm wrong)...
+>>
+>> Two possibilities come to mind.  (a) It may be that on older kernels
+>> (when f2fs is backported to older Board Support Package kernels from
+>> the SOC vendors) didn't have the bio_alloc() guarantee, so it was
+>> necessary on older kernels, but not on upstream, or (b) it wasn't
+>> *actually* possible for bio_alloc() to fail and someone added the
+>> error handling in 740432f83560 out of paranoia.
 > 
-> Please, fix your MUA already.
-> 
-> Then how does KVM deal with the host using PT? You can't just steal PT.
+> Yup, I was checking old device kernels but just stopped digging it out.
+> Instead, I hesitate to apply this patch since I can't get why we need to
+> get rid of this code for clean-up purpose. This may be able to bring
+> some hassles when backporting to android/device kernels.
 
-Intel PT in virtualization can work in system and host_guest mode.
-In system mode (default), the trace produced by host and guest will be saved in host PT buffer. Intel PT will not be exposed to guest in this mode.
- In host_guest mode, Intel PT will be exposed to guest and guest can use PT like native. The value of host PT register will be saved and guest PT register value will be restored during VM-entry. Both trace of host and guest are exported to their respective PT buffer. The host PT buffer not include guest trace in this mode.
+Jaegeuk,
+
+IIUC, as getting hint from commit 740432f83560, are we trying to fix potential
+deadlock like this?
+
+In low memory scenario:
+
+- f2fs_write_checkpoint()
+ - block_operations()
+  - f2fs_sync_node_pages()
+   step 1) flush cold nodes, allocate new bio from mempool
+   - bio_alloc()
+    - mempool_alloc()
+   step 2) flush hot nodes, allocate a bio from mempool
+   - bio_alloc()
+    - mempool_alloc()
+   step 3) flush warm nodes, be stuck in below call path
+   - bio_alloc()
+    - mempool_alloc()
+     - loop to wait mempool element release, as we only
+       reserved memory for two bio allocation, however above
+       allocated two bios never getting submitted.
+
+#define BIO_POOL_SIZE 2
+
+If so, we need avoid using bioset, or introducing private bioset, at least
+enlarging mempool size to three (adapt to total log headers' number)...
 
 Thanks,
-Luwei Kang
 
-
-
+> 
+>>
+>> (Hence my suggestion that in the ext4 version of the patch, we add a
+>> code comment justifying why there was no error checking, to make it
+>> clear that this was a deliberate choice.  :-)
+>>
+>> 						- Ted
+> 
+> 
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> .
+> 
