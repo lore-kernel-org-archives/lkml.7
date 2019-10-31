@@ -2,103 +2,65 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879C0CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6186ACA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D85420862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:44:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iI4lBDdy"
+	by mail.kernel.org (Postfix) with ESMTP id 3795D20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:51:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfJaHoZ (ORCPT
+        id S1726940AbfJaHvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 03:44:25 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47878 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfJaHoZ (ORCPT
+        Thu, 31 Oct 2019 03:51:37 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:26169 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726776AbfJaHvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 03:44:25 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9V7i7Re029589;
-        Thu, 31 Oct 2019 07:44:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=UJq0GuSeiAGq0pMGkmaU4zIL7MNZOdSl8Rq18xN+PfQ=;
- b=iI4lBDdyIAzBxP0cileGIQzISELbfAoNv23ij4kqk+CtjgML0U2FdpE5LzklOiUlmcrl
- HGG++KbBrFe5QcgWfujcAsEyO0Ci0VYI8jBlZRBQ2NNtUf9F5rV6u31dx5STvIAaBZgA
- Pd9vsYF5KkANXB/DPTFVA/KmXwqCHc+sB46BYztcra7GteAbAsWLZlxZLWnUVIqq6uxE
- 2HIyttXLMjoa0WzoItKjGMukhkHD3e8++zV3gepFkOeuGi6/+R8fnbXeT6TBnCOqcZVZ
- U1IT1qxXr/OB2IDBtbPHRSgWlwN7YJ4U8ml5rwi/nec6Mr/03FPnYlXh1vZMRsRwbGKU Yw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2vxwhfsb8j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Oct 2019 07:44:15 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9V7i2E5058050;
-        Thu, 31 Oct 2019 07:44:14 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2vysbtnwu7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Oct 2019 07:44:14 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9V7h7jb028429;
-        Thu, 31 Oct 2019 07:43:07 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 31 Oct 2019 00:43:06 -0700
-Date:   Thu, 31 Oct 2019 10:42:56 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     David Gow <davidgow@google.com>
-Cc:     Joe Perches <joe@perches.com>, shuah <shuah@kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH linux-kselftest/test v6] lib/list-test: add a test for
- the 'list' doubly linked list
-Message-ID: <20191031074256.GE18421@kadam>
-References: <20191024224631.118656-1-davidgow@google.com>
- <0cb1d948-0da3-eb0f-c58f-ae3a785dd0dd@kernel.org>
- <CABVgOSmCHbGjZBjeWSbPEZbJw22SaBQnoO77xxNzN_ugAwzNiQ@mail.gmail.com>
- <20191030104217.GA18421@kadam>
- <42a8270d-ed6f-d29f-5e71-7b76a074b63e@kernel.org>
- <20191030191255.GD18421@kadam>
- <f665ec7b21527c7095a61dd5c2f48fd00df0d5c9.camel@perches.com>
- <CABVgOSkKCXodwi=RcmRpB+t157surmEjq2b+92VQQD2Cy0WTvA@mail.gmail.com>
+        Thu, 31 Oct 2019 03:51:36 -0400
+X-Greylist: delayed 367 seconds by postgrey-1.27 at vger.kernel.org; Thu, 31 Oct 2019 03:51:35 EDT
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 31 Oct 2019 13:15:26 +0530
+IronPort-SDR: MN7tIGpJEpqomNc9ArNL1Jz6DKjfCwTsAuitr1lky9PtZWyuQpGXwxhUhQ0Pyxo9Vfp+gCL1Ug
+ CEJbQgqcu3bJSb3fI0upuKKgDAv85fTNHVIf2Ss54D77EC2zOh8G0Ra1ZQFRZjQuB5sxPjiHVF
+ I3iB4AY4UlGQNCgnRnorMyOJtXsuGyRCrukoCBznEjNyEea0ESjbjinI6SEZqSfiKhyoLOFwP4
+ mohuaVo//BpciVfoqT/8xi+Thtmj15u3AUwdERZYEqCnQDoaR9B3fiR/RxS9J0ECc7Sa03W4l9
+ jjHLqFi1Z4n1F5DHTirlF9nA
+Received: from c-rojay-linux.qualcomm.com ([10.206.21.80])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 31 Oct 2019 13:15:06 +0530
+Received: by c-rojay-linux.qualcomm.com (Postfix, from userid 88981)
+        id A65E21A50; Thu, 31 Oct 2019 13:15:04 +0530 (IST)
+From:   Roja Rani Yarubandi <rojay@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     mgautam@codeaurora.org, akashast@codeaurora.org,
+        msavaliy@codeaurora.org, rojay@codeaurora.org, sanm@codeaurora.org,
+        skakit@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1] Add QUP SE instances configuration
+Date:   Thu, 31 Oct 2019 13:14:59 +0530
+Message-Id: <20191031074500.28523-1-rojay@codeaurora.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABVgOSkKCXodwi=RcmRpB+t157surmEjq2b+92VQQD2Cy0WTvA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=952
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910310077
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910310077
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David, this is an easy question to answer.  I think Shuah is the
-maintainer here?  You don't have to make everyone happy, you just have
-to make Shuah happy.  Joe and I have very little emotional investment in
-this code and we don't care what you do and even if we did, it wouldn't
-matter.
+This change depends on below series
+https://patchwork.kernel.org/project/linux-arm-msm/list/?series=192087 
 
-regards,
-dan carpenter
+Roja Rani Yarubandi (1):
+  arm64: dts: sc7180: Add qupv3_0 and qupv3_1
+
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts | 152 +++++-
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 683 +++++++++++++++++++++++-
+ 2 files changed, 828 insertions(+), 7 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of the Code Aurora Forum, hosted by The Linux Foundation
+
