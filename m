@@ -2,69 +2,91 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78943CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2C8CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 472CE208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C72C120873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:30:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ggg2utQC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I7ppMjOT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbfJaO37 (ORCPT
+        id S1728121AbfJaOaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 10:29:59 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22585 "EHLO
+        Thu, 31 Oct 2019 10:30:04 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34729 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726741AbfJaO36 (ORCPT
+        by vger.kernel.org with ESMTP id S1728096AbfJaOaB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 10:29:58 -0400
+        Thu, 31 Oct 2019 10:30:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572532197;
+        s=mimecast20190719; t=1572532199;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+Jild0panmnMryQc3FHdcjwiw1vzd9T+vQ34c5Kbm58=;
-        b=Ggg2utQCFgia+P9tlU4INvmVqY0zvgkr/18clPx7EMm/BtAZDgeuYMm91xR3oZ4+Qx7ovf
-        a8pjLpOryn6ScLOGYQwClRTGOUsrRIb5XNxldMsfNUGJN2JaNTAacEUFjVLN4XQAfsuud1
-        vA05Kgfa6rzwiDOfgvkWOAU62WS0zVI=
+         content-transfer-encoding:content-transfer-encoding;
+        bh=1vLA2aaSbsVZTqJYFKSssRBFqJQhInsNJX02oeyquPQ=;
+        b=I7ppMjOTvHzgHzw2g8uHzAbyfZJOE1jMQQbI7TNF44+SKe/JjJaUcLCX2bLWa18vHVmY4/
+        NapkEMhp7Evmp73qcJHZbbHm7X48BOy3ip6mE64HtCqal+eEshcjpKOK+nN055YwQPnlnB
+        hpXhPYmt6s1xx6bmB3AEnvj+ScIvAEY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-200-9Cg2CvBGO2-gP-TXfq3tzQ-1; Thu, 31 Oct 2019 10:29:53 -0400
+ us-mta-325-LkKy19_aPp-1GGbtKKuzMQ-1; Thu, 31 Oct 2019 10:29:55 -0400
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F1F52EDC;
-        Thu, 31 Oct 2019 14:29:51 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20B9C800D49;
+        Thu, 31 Oct 2019 14:29:45 +0000 (UTC)
 Received: from t460s.redhat.com (unknown [10.36.118.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7BB4E63BA9;
-        Thu, 31 Oct 2019 14:29:48 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EB6D15D6D6;
+        Thu, 31 Oct 2019 14:29:33 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
         Andrew Morton <akpm@linux-foundation.org>,
         David Hildenbrand <david@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Richard Fontana <rfontana@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
         Allison Randal <allison@lohutok.net>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Anshuman Khandual <khandual@linux.vnet.ibm.com>,
+        Arun KS <arunks@codeaurora.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christian Brauner <christian@brauner.io>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Howells <dhowells@redhat.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Gao Xiang <xiang@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg Hackmann <ghackmann@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Paul Mackerras <paulus@samba.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Arun KS <arunks@codeaurora.org>
-Subject: [PATCH v1 02/12] powerpc/pseries: CMM: Report errors when registering notifiers fails
-Date:   Thu, 31 Oct 2019 15:29:23 +0100
-Message-Id: <20191031142933.10779-3-david@redhat.com>
-In-Reply-To: <20191031142933.10779-1-david@redhat.com>
-References: <20191031142933.10779-1-david@redhat.com>
+        Todd Kjos <tkjos@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [PATCH v1 00/12] powerpc/pseries: CMM: Implement balloon compaction and remove isolate notifier
+Date:   Thu, 31 Oct 2019 15:29:21 +0100
+Message-Id: <20191031142933.10779-1-david@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: 9Cg2CvBGO2-gP-TXfq3tzQ-1
+X-MC-Unique: LkKy19_aPp-1GGbtKKuzMQ-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -73,43 +95,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If we don't set the rc, we will return "0", making it look like we
-succeeded.
+This is the follow-up of:
+=09https://lkml.org/lkml/2019/9/10/711
 
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Richard Fontana <rfontana@redhat.com>
+We can get rid of the memory isolate notifier by switching to balloon
+compaction in powerpc's CMM (Collaborative Memory Management). The memory
+isolate notifier was only necessary to allow to offline memory blocks that
+contain inflated/"loaned" pages - which also possible when the inflated
+pages are movable (via balloon compaction). Having movable pages implies
+that memory will also no longer get fragmented when CMM is active.
+
+While I do have access to a LPAR, it does not have CMM active and I have np
+clue how to enable it. Instead, I implemented a simple simulation mode. I
+did some tests and the whole infrastructure, including page migration,
+seems to work fine (e.g., I can still offline memory blocks that contain
+inflated pages). Of course, I cannot tell if HW will like the changes,
+especially:
+
+1. I now use page_to_phys() to come up with the addresses to report to
+   the hypervisor. Hope that's correct.
+2. When migrating a page, I first inflate/"loan" the new page and then
+   deflate the old page. I have no idea if HW accepts to set pages loaned
+   if it didn't request a loan. I assume it does.
+3. We might now inflate/deflate pages in parallel (of course, not the
+   same page). I have no idea if HW likes that.
+
+It would be good if somebody could either point me at the spec of the
+hypervisor interface or verify directly. Also, it would be good if somebody
+could test with actual HW that has this feature.
+
+Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Alexey Kardashevskiy <aik@ozlabs.ru>
 Cc: Allison Randal <allison@lohutok.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Anshuman Khandual <khandual@linux.vnet.ibm.com>
 Cc: Arun KS <arunks@codeaurora.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- arch/powerpc/platforms/pseries/cmm.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Christian Brauner <christian@brauner.io>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc: Gao Xiang <xiang@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Greg Hackmann <ghackmann@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: "Oliver O'Halloran" <oohall@gmail.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Pingfan Liu <kernelfans@gmail.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Richard Fontana <rfontana@redhat.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Wei Yang <richardw.yang@linux.intel.com>
 
-diff --git a/arch/powerpc/platforms/pseries/cmm.c b/arch/powerpc/platforms/=
-pseries/cmm.c
-index 572651a5c87b..fab049d3ea1e 100644
---- a/arch/powerpc/platforms/pseries/cmm.c
-+++ b/arch/powerpc/platforms/pseries/cmm.c
-@@ -683,8 +683,12 @@ static int cmm_init(void)
- =09if ((rc =3D cmm_sysfs_register(&cmm_dev)))
- =09=09goto out_reboot_notifier;
-=20
--=09if (register_memory_notifier(&cmm_mem_nb) ||
--=09    register_memory_isolate_notifier(&cmm_mem_isolate_nb))
-+=09rc =3D register_memory_notifier(&cmm_mem_nb);
-+=09if (rc)
-+=09=09goto out_unregister_notifier;
-+
-+=09rc =3D register_memory_isolate_notifier(&cmm_mem_isolate_nb);
-+=09if (rc)
- =09=09goto out_unregister_notifier;
-=20
- =09if (cmm_disabled)
+David Hildenbrand (12):
+  powerpc/pseries: CMM: Implement release() function for sysfs device
+  powerpc/pseries: CMM: Report errors when registering notifiers fails
+  powerpc/pseries: CMM: Cleanup rc handling in cmm_init()
+  powerpc/pseries: CMM: Drop page array
+  powerpc/pseries: CMM: Use adjust_managed_page_count() insted of
+    totalram_pages_*
+  powerpc/pseries: CMM: Rip out memory isolate notifier
+  powerpc/pseries: CMM: Convert loaned_pages to an atomic_long_t
+  powerpc/pseries: CMM: Implement balloon compaction
+  powerpc/pseries: CMM: Switch to balloon_page_alloc()
+  powerpc/pseries: CMM: Simulation mode
+  mm: remove the memory isolate notifier
+  mm: remove "count" parameter from has_unmovable_pages()
+
+ arch/powerpc/platforms/pseries/Kconfig |   1 +
+ arch/powerpc/platforms/pseries/cmm.c   | 430 +++++++++++--------------
+ drivers/base/memory.c                  |  19 --
+ include/linux/memory.h                 |  27 --
+ include/linux/page-isolation.h         |   4 +-
+ include/uapi/linux/magic.h             |   1 +
+ mm/memory_hotplug.c                    |   2 +-
+ mm/page_alloc.c                        |  21 +-
+ mm/page_isolation.c                    |  27 +-
+ 9 files changed, 204 insertions(+), 328 deletions(-)
+
 --=20
 2.21.0
 
