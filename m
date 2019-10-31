@@ -2,103 +2,191 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E85CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482BACA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A44B20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:52:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d5jLZkPd"
+	by mail.kernel.org (Postfix) with ESMTP id 00FEB2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:53:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572547982;
+	bh=PGvxbJzT342Strm7mVTMnFZMxl1m/Na3nt+NR+Su468=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Zu1SAZWVwqPfVFaJ544GMechbGyt09jpkY8wgxFgr0OTNg9h7cxmvgDxalKDOs0dP
+	 0DSYTrdtiaCuOuNn/gEhvW1xND0vCaOe7UtCLvjPjIyn0upzf9tQDjticcrVRpEvBb
+	 PenHpbjNsr24+yyqZaGbFXlYoGet/z1O10e3pM5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbfJaSwN (ORCPT
+        id S1729430AbfJaSxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:52:13 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44960 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729212AbfJaSwM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:52:12 -0400
-Received: by mail-ot1-f67.google.com with SMTP id n48so6289106ota.11
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 11:52:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y665542Oih3bbYG29RtcM5M1AA4CG5FcogMWKfgVUYw=;
-        b=d5jLZkPdet2j4vxMAlRu9b4Y1iX5gCZ+5c/Y4KAlnWMJy3BoEUmzDGWLpGTeAotrWn
-         PMyrul5BdDeHk42eLBoRMTXXlpr7PEAEc0QpNV8nm8x1HLnoJoNAKRwEOU2KTeNN7mKU
-         O4bKCNrK5zFcYoJXDQ3jxA1SixCBbWHmbUWucIlWsU6PIru+FabhjDPRAmtYuO8Cbnmg
-         dwStpIVV7QaZaipeXYkOwNZbZpOA0i1d5Y6lRWOw2OCMGcEnsgST3LFifr+vhOhcBLZv
-         e+q65GD7RtN02l1t38OzVH/cswduI4BZqNcuiOgVwEl5KHzIPbgMXlH2BV3n+tqmzB/J
-         jMIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y665542Oih3bbYG29RtcM5M1AA4CG5FcogMWKfgVUYw=;
-        b=ofYYlwKyjGJEZW46Uqb61Yxv6g3qn7sC9R0UlmeNaKLe9WCFVnIL28MPkLn3nbBwNY
-         Ia7606knk2vsYyaAVNBkhEIp6qbVQbdNQ7WeBE1bqCNM3nwjhV8+m5gc0diiEuHvrVva
-         9VCaznORvJqelyyaLVQo8ZMrhFntpxn0XRZssyiZgkNwLGxddC+MQGV7CYCCAnvnICqK
-         CnT3Hb0O8GAsJS/qmfOwCcRSARIUEchyI7MEO4MynG4Z2pNKg5PBW8HDGgeR/z6OHMrE
-         B43uE7dAc8GihtWummpO0SzFjU310dgjPE4jdrwEF5xWyXxLYvLcQYxLdDfix7NeCPGX
-         lwCg==
-X-Gm-Message-State: APjAAAU8fQg1/kj9QPTW9JzEXnnmqNbqSHYaIsEa4rBy2+8dJE7jsWzT
-        vPsAav2z4bFe5YMHdWgRvaYMNhaENkDBA7Re2KFWNg==
-X-Google-Smtp-Source: APXvYqwFhgFBvc1YFm7oFHDExuZRWg7JWPuj+gexAJNggudyRztHHP+1uFgwz6wqygk9AUdId1hhArr8jtiDsq9vf3U=
-X-Received: by 2002:a9d:5e10:: with SMTP id d16mr3381847oti.191.1572547930208;
- Thu, 31 Oct 2019 11:52:10 -0700 (PDT)
+        Thu, 31 Oct 2019 14:53:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47056 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729212AbfJaSxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 14:53:00 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A6C42080F;
+        Thu, 31 Oct 2019 18:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572547979;
+        bh=PGvxbJzT342Strm7mVTMnFZMxl1m/Na3nt+NR+Su468=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=sZSilcOW7doqTJC0ynOboiV1HcXkEkxc7rBKZ023NdMeFyRBNbSE+LxBzfmAz89bR
+         Wp+zIpGCAjiDmY0N3DsfEBqc/PGJ+MI7tP+8YO9/1MK4lXMURvFS02c1DbR4xWtjQw
+         kpzERUH7FLuUbj73gELaiacGnPNKjftCf7tsiF1c=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id BE049352105F; Thu, 31 Oct 2019 11:52:58 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 11:52:58 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Lai Jiangshan <laijs@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH 02/11] rcu: fix bug when rcu_exp_handler() in nested
+ interrupt
+Message-ID: <20191031185258.GX20975@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191031100806.1326-1-laijs@linux.alibaba.com>
+ <20191031100806.1326-3-laijs@linux.alibaba.com>
+ <20191031134731.GP20975@paulmck-ThinkPad-P72>
+ <20191031143119.GA15954@paulmck-ThinkPad-P72>
+ <6b621228-4cab-6e2c-9912-cddc56ad6775@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20191019170141.GQ18794@devbig004.ftw2.facebook.com>
- <20191024205027.GF3622521@devbig004.ftw2.facebook.com> <CALvZod6=B-gMJJxhMRt6k5eRwB-3zdgJR5419orTq8-+36wbMQ@mail.gmail.com>
- <11f688a6-0288-0ec4-f925-7b8f16ec011b@gmail.com> <CALvZod6Sw-2Wh0KEBiMgGZ1c+2nFW0ueL_4TM4d=Z0JcbvSXrw@mail.gmail.com>
- <20191031184346.GM3622521@devbig004.ftw2.facebook.com>
-In-Reply-To: <20191031184346.GM3622521@devbig004.ftw2.facebook.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 31 Oct 2019 11:51:57 -0700
-Message-ID: <CALvZod7Lm5d-84wWubTUOFWo4XU2cgqBpFw84QzFdiokX86COQ@mail.gmail.com>
-Subject: Re: [PATCH v2] net: fix sk_page_frag() recursion from memory reclaim
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux MM <linux-mm@kvack.org>, Mel Gorman <mgorman@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6b621228-4cab-6e2c-9912-cddc56ad6775@linux.alibaba.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 11:43 AM Tejun Heo <tj@kernel.org> wrote:
->
-> Hello,
->
-> On Thu, Oct 31, 2019 at 11:30:57AM -0700, Shakeel Butt wrote:
-> > Basically what I wanted to say that MM treats PF_MEMALLOC as the
-> > reclaim context while __GFP_MEMALLOC just tells to give access to the
-> > reserves. As gfpflags_allow_blocking() can be used beyond net
-> > subsystem, my only concern is its potential usage under PF_MEMALLOC
-> > context but without __GFP_MEMALLOC.
->
-> Yeah, PF_MEMALLOC is likely the better condition to check here as we
-> primarily want to know whether %current might be recursing and that
-> should be indicated reliably with PF_MEMALLOC.  Wanna prep a patch for
-> it?
+On Thu, Oct 31, 2019 at 11:14:23PM +0800, Lai Jiangshan wrote:
+> 
+> 
+> On 2019/10/31 10:31 下午, Paul E. McKenney wrote:
+> > On Thu, Oct 31, 2019 at 06:47:31AM -0700, Paul E. McKenney wrote:
+> > > On Thu, Oct 31, 2019 at 10:07:57AM +0000, Lai Jiangshan wrote:
+> > > > These is a possible bug (although which I can't triger yet)
+> > > > since 2015 8203d6d0ee78
+> > > > (rcu: Use single-stage IPI algorithm for RCU expedited grace period)
+> > > > 
+> > > >   rcu_read_unlock()
+> > > >    ->rcu_read_lock_nesting = -RCU_NEST_BIAS;
+> > > >    interrupt(); // before or after rcu_read_unlock_special()
+> > > >     rcu_read_lock()
+> > > >      fetch some rcu protected pointers
+> > > >      // exp GP starts in other cpu.
+> > > >      some works
+> > > >      NESTED interrupt for rcu_exp_handler();
+> > 
+> > Also, which platforms support nested interrupts?  Last I knew, this was
+> > prohibited.
+> > 
+> > > >        report exp qs! BUG!
+> > > 
+> > > Why would a quiescent state for the expedited grace period be reported
+> > > here?  This CPU is still in an RCU read-side critical section, isn't it?
+> > 
+> > And I now see what you were getting at here.  Yes, the current code
+> > assumes that interrupt-disabled regions, like hardware interrupt
+> > handlers, cannot be interrupted.  But if interrupt-disabled regions such
+> > as hardware interrupt handlers can be interrupted (as opposed to being
+> > NMIed), wouldn't that break a whole lot of stuff all over the place in
+> > the kernel?  So that sounds like an arch bug to me.
+> 
+> I don't know when I started always assuming hardware interrupt
+> handler can be nested by (other) interrupt. I can't find any
+> documents say Linux don't allow nested interrupt handler.
+> Google search suggests the opposite.
 
-Sure, I will keep your commit message and authorship (if you are ok with it).
+The results I am seeing look to be talking about threaded interrupt
+handlers, which indeed can be interrupted by hardware interrupts.  As can
+softirq handlers.  But these are not examples of a hardware interrupt
+handler being interrupted by another hardware interrupt.  For that to
+work reasonably, something like a system priority level is required,
+as in the old DYNIX/ptx kernel, or, going even farther back, DEC's RT-11.
 
->
-> Thanks.
->
-> --
-> tejun
+> grep -rIni nested Documentation/memory-barriers.txt Documentation/x86/
+> It still have some words about nested interrupt handler.
+
+Some hardware does not differentiate between interrupts and exceptions,
+for example, an illegal-instruction trap within an interrupt handler
+might look in some ways like a nested interrupt.
+
+> The whole patchset doesn't depend on this patch, and actually
+> it is reverted later in the patchset. Dropping this patch
+> can be an option for next round.
+
+Sounds like a plan!
+
+							Thanx, Paul
+
+> thanks
+> Lai
+> 
+> > 							Thanx, Paul
+> > 
+> > > >      // exp GP completes and pointers are freed in other cpu
+> > > >      some works with the pointers. BUG
+> > > >     rcu_read_unlock();
+> > > >    ->rcu_read_lock_nesting = 0;
+> > > > 
+> > > > Although rcu_sched_clock_irq() can be in nested interrupt,
+> > > > there is no such similar bug since special.b.need_qs
+> > > > can only be set when ->rcu_read_lock_nesting > 0
+> > > > 
+> > > > Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+> > > > ---
+> > > >   kernel/rcu/tree_exp.h    | 5 +++--
+> > > >   kernel/rcu/tree_plugin.h | 9 ++++++---
+> > > >   2 files changed, 9 insertions(+), 5 deletions(-)
+> > > > 
+> > > > diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+> > > > index 6dec21909b30..c0d06bce35ea 100644
+> > > > --- a/kernel/rcu/tree_exp.h
+> > > > +++ b/kernel/rcu/tree_exp.h
+> > > > @@ -664,8 +664,9 @@ static void rcu_exp_handler(void *unused)
+> > > >   	 * Otherwise, force a context switch after the CPU enables everything.
+> > > >   	 */
+> > > >   	rdp->exp_deferred_qs = true;
+> > > > -	if (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
+> > > > -	    WARN_ON_ONCE(rcu_dynticks_curr_cpu_in_eqs())) {
+> > > > +	if (rcu_preempt_need_deferred_qs(t) &&
+> > > > +	    (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
+> > > > +	    WARN_ON_ONCE(rcu_dynticks_curr_cpu_in_eqs()))) {
+> > > >   		rcu_preempt_deferred_qs(t);
+> > > >   	} else {
+> > > >   		set_tsk_need_resched(t);
+> > > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > > > index d4c482490589..59ef10da1e39 100644
+> > > > --- a/kernel/rcu/tree_plugin.h
+> > > > +++ b/kernel/rcu/tree_plugin.h
+> > > > @@ -549,9 +549,12 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
+> > > >    */
+> > > >   static bool rcu_preempt_need_deferred_qs(struct task_struct *t)
+> > > >   {
+> > > > -	return (__this_cpu_read(rcu_data.exp_deferred_qs) ||
+> > > > -		READ_ONCE(t->rcu_read_unlock_special.s)) &&
+> > > > -	       t->rcu_read_lock_nesting <= 0;
+> > > > +	return (__this_cpu_read(rcu_data.exp_deferred_qs) &&
+> > > > +		(!t->rcu_read_lock_nesting ||
+> > > > +		 t->rcu_read_lock_nesting == -RCU_NEST_BIAS))
+> > > > +		||
+> > > > +		(READ_ONCE(t->rcu_read_unlock_special.s) &&
+> > > > +		 t->rcu_read_lock_nesting <= 0);
+> > > >   }
+> > > >   /*
+> > > > -- 
+> > > > 2.20.1
+> > > > 
