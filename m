@@ -2,127 +2,120 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814A2CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5316CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FEB220650
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:06:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mOpzU5+W"
+	by mail.kernel.org (Postfix) with ESMTP id 89796208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572534442;
+	bh=4U/ETnIzLhw19X4wyTeVNcJAT/xQDEsJ+bOoWVhUIU8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=eGxaqS60lusD4HInyDMf+4d03LRUZaSio9oYYIeAtFOsbLFBumemGiel4U1SSmeDh
+	 Z+CtSdK1MabKHweWlmZd8hHoImv6VrJsYROIw7aQZdXd1l7NKhd1oKHB/vgRb9FasA
+	 ihvf2uXD+/7I1ZHJRuEO5S04iJ4NJBXAYTgQZigk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbfJaPG6 (ORCPT
+        id S1728048AbfJaPHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 11:06:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46148 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727511AbfJaPG5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 11:06:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=MlOw5NRDpHwJ1Rs317sMHBDUIvhDZbgUO23wmmeFwVs=; b=mOpzU5+WZ4iG5/vKS1QWvyjDq
-        PFByJmppO3qnlgFnaQx+jkKxzwDF4kzy6vi67dXkyIjFaFil6qGbIeHi0VhVrma2cgqhYAI1xiQYS
-        v4CoCPWj2qTHk1SIcIO1CCXv1eksHk7FEQwtZ2RHaA4FEs3guS4kI35WTQKqgzKff16/CJppwZ56Z
-        6ZsIzxjcRktOQwmUO/n8AD9cOW7J+SvL0ZJ8/kfsRpaiwfshGIMOV9O5jgIZ0mm8uSTPUo31YRjoH
-        QYpOQPnDnIDqHLVSdaMtURmu9mWXjoyd3UX91lORcxFR5Q0nrHAOsrWuiI4C9aHxhdw8hylatC9Tt
-        nmV1BEPOg==;
-Received: from [2601:1c0:6280:3f0::4ba1]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iQC2K-0007hK-RC; Thu, 31 Oct 2019 15:06:56 +0000
-Subject: Re: [PATCH] scripts: prune-kernel:remove old kernels and modules dir
- from system
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc:     bfields@fieldses.org, yamada.masahiro@socionext.com,
-        michal.lkml@markovi.net, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191030095445.912435-1-unixbhaskar@gmail.com>
- <b8a12c03-1e17-61de-2cd9-a09650dc22b1@infradead.org>
- <20191031033722.GA7687@Gentoo>
- <41693d0e-8ff2-bf06-f1a6-e7fb52779f95@infradead.org>
- <20191031045242.GA3130@Gentoo>
- <809aa850-7a22-a7c5-af21-0e88d1c63dd7@infradead.org>
- <20191031071839.GB3130@Gentoo>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <875a75ec-bbf1-9d80-a3e1-9c759c9c05e1@infradead.org>
-Date:   Thu, 31 Oct 2019 08:06:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 31 Oct 2019 11:07:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727511AbfJaPHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 11:07:21 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30E472083E;
+        Thu, 31 Oct 2019 15:07:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572534440;
+        bh=4U/ETnIzLhw19X4wyTeVNcJAT/xQDEsJ+bOoWVhUIU8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=xeGBtlkuHRQz83nm/iwqpVgdCBKqcyiuyA/p1N3/cqYMDB6cU8e1hFK9PJloi9F3Q
+         jgO9+sNUcxddj2oYTBA73U/VDu5cvJ2UNrEUH4FVkfO548Lef1RVM0EIzlD0KakmC6
+         DQQCW4ldi3SnAF0FfGDxDIUyaSzuEn1eRwLkUIOc=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id EF2913520744; Thu, 31 Oct 2019 08:07:19 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 08:07:19 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Lai Jiangshan <laijs@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH 04/11] rcu: cleanup rcu_preempt_deferred_qs()
+Message-ID: <20191031150719.GU20975@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191031100806.1326-1-laijs@linux.alibaba.com>
+ <20191031100806.1326-5-laijs@linux.alibaba.com>
+ <20191031141056.GR20975@paulmck-ThinkPad-P72>
+ <1b5cf860-3d4a-954c-09ac-6383b38da4cf@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20191031071839.GB3130@Gentoo>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1b5cf860-3d4a-954c-09ac-6383b38da4cf@linux.alibaba.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/31/19 12:18 AM, Bhaskar Chowdhury wrote:
-> On 22:27 Wed 30 Oct 2019, Randy Dunlap wrote:
->> On 10/30/19 9:52 PM, Bhaskar Chowdhury wrote:
->>>>>> That 'rm' doesn't remove any files.  Compare what remove_old_kernel() does.
->>>>> No,it is not using that function rather take the parameter from the
->>>>> commandline and get into boot dir match with it and remove it.
->>>>
->>>> But it doesn't do that.  I tested it.  It should be more like what
->>>> rmeove_old_kernel() does:
->>>>
->>>>         rm -If vmlinuz-$kernel_ver System.map-$kernel_ver config-$kernel_ver
->>>>
->>>> and if not, please explain why not.
->>> Okay, again some uniformity missing in the code, I would like to your
->>> suggested method,i.e call remove_old_kernel to do the job instead of depending on individual kernel.
->>
->> The simplest thing to do is set kernel_version=$kernel_ver
->> and then call remove_old_kernel().
->> And set modules_version=$modules_dir_name and call remove_old_modules_dir().
->>
->> But it would be cleaner to pass a parameter (kernel_version) to the
->> remove_old_kernel() function and to pass a parameter (modules_dir) to the
->> remove_old_modules_dir() function.
+On Thu, Oct 31, 2019 at 10:35:22PM +0800, Lai Jiangshan wrote:
+> On 2019/10/31 10:10 下午, Paul E. McKenney wrote:
+> > On Thu, Oct 31, 2019 at 10:07:59AM +0000, Lai Jiangshan wrote:
+> > > Don't need to set ->rcu_read_lock_nesting negative, irq-protected
+> > > rcu_preempt_deferred_qs_irqrestore() doesn't expect
+> > > ->rcu_read_lock_nesting to be negative to work, it even
+> > > doesn't access to ->rcu_read_lock_nesting any more.
+> > > 
+> > > It is true that NMI over rcu_preempt_deferred_qs_irqrestore()
+> > > may access to ->rcu_read_lock_nesting, but it is still safe
+> > > since rcu_read_unlock_special() can protect itself from NMI.
+> > 
+> > Hmmm...  Testing identified the need for this one.  But I will wait for
+> > your responses on the earlier patches before going any further through
+> > this series.
 > 
->>
-> 
-> Thank you...I have just modified the code and call both the function
-> under remove option. BTW I didn't set the extra variable $kernel_ver name it $kernel_version and instead of $modules_dir_name name it $mo
-> dules_version.
-> 
-> Capturing command line parameter in $kernel_version and $modules_version
-> 
-> Is that fine? Here is a code snippet:
+> Hmmm... I was wrong, it should be after patch7 to avoid
+> the scheduler deadlock.
 
-Yes, that should be OK.
+I was wondering about that.  ;-)
 
-> -r | --remove)
->   if [[ $# -ne 3 ]]; then
->    printf "You need to provide kernel version and modules directory
->    name \n"
->    exit 1
->    else
->    remove_old_kernel
->    remove_old_modules_dir
->    fi
-> 
-> 
-> I have just test it and it works.
-> 
-> 
-> And about solitary r option without hypen is ignoring and doing nothing.
-> 
-> Means, if I pass ./scripts/prune-kernel r 5.3.3
-> it simply ignore and does nothing.Only with the hypen it can work.
+							Thanx, Paul
 
-Is that how it should be?
-or what would you expect that to do?
-
--- 
-~Randy
-
+> > > Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+> > > ---
+> > >   kernel/rcu/tree_plugin.h | 5 -----
+> > >   1 file changed, 5 deletions(-)
+> > > 
+> > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > > index 82595db04eec..9fe8138ed3c3 100644
+> > > --- a/kernel/rcu/tree_plugin.h
+> > > +++ b/kernel/rcu/tree_plugin.h
+> > > @@ -555,16 +555,11 @@ static bool rcu_preempt_need_deferred_qs(struct task_struct *t)
+> > >   static void rcu_preempt_deferred_qs(struct task_struct *t)
+> > >   {
+> > >   	unsigned long flags;
+> > > -	bool couldrecurse = t->rcu_read_lock_nesting >= 0;
+> > >   	if (!rcu_preempt_need_deferred_qs(t))
+> > >   		return;
+> > > -	if (couldrecurse)
+> > > -		t->rcu_read_lock_nesting -= RCU_NEST_BIAS;
+> > >   	local_irq_save(flags);
+> > >   	rcu_preempt_deferred_qs_irqrestore(t, flags);
+> > > -	if (couldrecurse)
+> > > -		t->rcu_read_lock_nesting += RCU_NEST_BIAS;
+> > >   }
+> > >   /*
+> > > -- 
+> > > 2.20.1
+> > > 
