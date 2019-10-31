@@ -2,138 +2,117 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924C4CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98236CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6500920873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CE8820873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:43:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qcch+4vO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K9S3/BOi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbfJaWjJ (ORCPT
+        id S1729551AbfJaWnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 18:39:09 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:32839 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfJaWjJ (ORCPT
+        Thu, 31 Oct 2019 18:43:31 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37206 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727922AbfJaWna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 18:39:09 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u23so5086022pgo.0
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 15:39:08 -0700 (PDT)
+        Thu, 31 Oct 2019 18:43:30 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t1so2042358wrv.4;
+        Thu, 31 Oct 2019 15:43:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XA2iuNh9/swDl9Tmfmg7ziCGA3j4b9My46MQqYugItM=;
-        b=Qcch+4vOBgJFluWS/CU9Vj23gJQmr2uMO/+Egn1smshXIoQwPnXBKkGcOOQWaLtOZv
-         SmxRSyak6prlt73W/NGkeVYk4oZi4IVPBG5aguOjSLF+F0MQgJyIkB4Kwb0ZryTvlEX4
-         lecHGdERD0zXwSZSpkxhNwbYmSmuS7j0Kch/GLOiTV7RBmE19xUE7ICmKzA77ZraozvM
-         OTcF8WZMpMO1SrDVhBLva8A0LYLXbZWaOkA52mBjobTQXQNIeSwqppG3oW2+xRkWGP53
-         Bfen5BhTk8ATttHhLCpXf2KpvLlj1HEj1kwX7jhNxoJxKPh3DPsvPi1HlDnb8cILh/z6
-         wlKQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=NVhlq3u3MB0yWfqyvlDf8GNlsP6JBTZWJ25QW6Q4a1k=;
+        b=K9S3/BOimBENnHF5gZaXALJDIm92WoYUMKRedQTXSjJyWbd1X35XIyfDutJ4md2rzB
+         yNrtLTOhqXfFJQHZgN4fARHcWcBitdRqIcuGxtmbTZtiDq+5L/hLmwGirmYD2PV3/uVV
+         l9ARANY56Z0RFhZz+XV8FymNO0yiPZVnwR2G7NYdrvK6UfbjoIEHjocWNatIWWxKgKvC
+         EMRHG1aOaBiUTlF80HVib9FKcgcmLGi9lA0TmcgqchAkfP+Bcd1M1TLddFdXE29Z33PX
+         tWrbfObkUWElwlhS+PT/Sm9iSNe3ea1DB01es0hASLUl3dRX88LDVYCL5ax+CEVRYdKv
+         ICJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XA2iuNh9/swDl9Tmfmg7ziCGA3j4b9My46MQqYugItM=;
-        b=GzIz6jkvc0FohqcdHFh6RsnNiUc9ANNi09uydt/34EUTWmpZLx8Yi9STqYF/U8zKol
-         Thb1Y0ppO/9iPSNW29ByvsltAVWJbnZP2hpXjo0Y1X85pw5kkG7GB8Aw4TTWWWVS+J3k
-         l0u8fpaRPHW/9+JEIKDeD9H6qEFXdMX3ndWLdCElHjLNHxbBJc8CDGWkfnUXKHalE8rq
-         QoMYdvJNJlZhK+KdKeYg/B24C0T1+C9pcxex1e5fC7ZZXAY/5qarWfXhgQDCmzcoizQC
-         5EomSty2pn3zxHvsMzVX1esSb/booyGgC2uq2x2nax4SlmlD5dYJMxfXozJqmwMsYrQn
-         ulnA==
-X-Gm-Message-State: APjAAAUl83zgPZDdaDrChAgG+etLnFHmrOBBUDq/nIvmDm2c62iRMg1J
-        2k/PAHzmxTsTQ/o6t98sZIs=
-X-Google-Smtp-Source: APXvYqxZ8YeP2THFsqrTpXurgYpWl6lUc8A7LHr282+Fya3K4vm6cvxvAdgKUc1rOUwIrrJ7Let3yw==
-X-Received: by 2002:a63:b24c:: with SMTP id t12mr9885542pgo.340.1572561548114;
-        Thu, 31 Oct 2019 15:39:08 -0700 (PDT)
-Received: from localhost ([100.118.89.196])
-        by smtp.gmail.com with ESMTPSA id m123sm4692234pfb.133.2019.10.31.15.39.07
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NVhlq3u3MB0yWfqyvlDf8GNlsP6JBTZWJ25QW6Q4a1k=;
+        b=Q6zeTxB7UFpBwBrY+FDPXzPRz3wBC4Xgny69WOPcUGAww8puobDRwJzH4NWJayZ9br
+         vOkQOMU2S5xNsyZS9gUO8eg1SawhIfxqB2hV646FBV9HkCCOIfFlY90Fpfyh34f8vSFj
+         YRLx8LAebXkTHuQihDhJxaEYNvv4qv7b8nfDg7O3fQo6zP8EIPClI9K9nmX7tpb0zsD1
+         wAHSdN9ytxAaJHpkKqSTiAAJSEds+KR3zOJtElzTAe6zYeDF0DI1zhG7yraUYxuPDFUy
+         AZ4PS+COvva1kMN8fRCf5363bMRDLKIYQ0VswF1vReqXDm2UtdUxARoGJJdgDvAPnJ4G
+         4kNA==
+X-Gm-Message-State: APjAAAWWc7A9PhXnrJE5g1R0hBSx5IqI1IklEGlOTWtrNvdNwXWiDY/S
+        WS8w4dEVUriVAFYn/yQ95HHApwqU
+X-Google-Smtp-Source: APXvYqy4uZvu1/xe1jdaVQAALYDVcKrohdw8sgU9zNIOJQARdWHgv3XCBCSpUSdEElZjwxlYov4Dbg==
+X-Received: by 2002:a5d:6a91:: with SMTP id s17mr8417102wru.224.1572561807881;
+        Thu, 31 Oct 2019 15:43:27 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id o25sm6280760wro.21.2019.10.31.15.43.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 15:39:07 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Thu, 31 Oct 2019 15:43:27 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     ioana.ciornei@nxp.com, olteanv@gmail.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/atomic: swap_state should stall on cleanup_done
-Date:   Thu, 31 Oct 2019 15:36:41 -0700
-Message-Id: <20191031223641.19208-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH net] net: phylink: Fix phylink_dbg() macro
+Date:   Thu, 31 Oct 2019 15:42:26 -0700
+Message-Id: <20191031224227.6992-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+The phylink_dbg() macro does not follow dynamic debug or defined(DEBUG)
+and as a result, it spams the kernel log since a PR_DEBUG level is
+currently used. Fix it to be defined appropriately whether
+CONFIG_DYNAMIC_DEBUG or defined(DEBUG) are set.
 
-Stalling on cleanup_done ensures that any atomic state related to a
-nonblock commit no longer has dangling references to per-object state
-that can be freed.
-
-Otherwise, if a !nonblock commit completes after a nonblock commit has
-swapped state (ie. the synchronous part of the nonblock commit comes
-before the !nonblock commit), but before the asynchronous part of the
-nonblock commit completes, what was the new per-object state in the
-nonblock commit can be freed.
-
-This shows up with the new self-refresh helper, as _update_avg_times()
-dereferences the original old and new crtc_state.
-
-Fixes: d4da4e33341c ("drm: Measure Self Refresh Entry/Exit times to avoid thrashing")
-Cc: Sean Paul <seanpaul@chromium.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Fixes: 17091180b152 ("net: phylink: Add phylink_{printk, err, warn, info, dbg} macros")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
-Other possibilities:
-1) maybe block later before freeing atomic state?
-2) refcount individual per-object state
+ drivers/net/phy/phylink.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
- drivers/gpu/drm/drm_atomic_helper.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index 3ef2ac52ce94..a5d95429f91b 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -2711,7 +2711,7 @@ int drm_atomic_helper_swap_state(struct drm_atomic_state *state,
- 			if (!commit)
- 				continue;
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index 20e2ebe458f2..a578f7ebf715 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -87,8 +87,24 @@ struct phylink {
+ 	phylink_printk(KERN_WARNING, pl, fmt, ##__VA_ARGS__)
+ #define phylink_info(pl, fmt, ...) \
+ 	phylink_printk(KERN_INFO, pl, fmt, ##__VA_ARGS__)
++#if defined(CONFIG_DYNAMIC_DEBUG)
+ #define phylink_dbg(pl, fmt, ...) \
++do {									\
++	if ((pl)->config->type == PHYLINK_NETDEV)			\
++		netdev_dbg((pl)->netdev, fmt, ##__VA_ARGS__);		\
++	else if ((pl)->config->type == PHYLINK_DEV)			\
++		dev_dbg((pl)->dev, fmt, ##__VA_ARGS__);			\
++} while (0)
++#elif defined(DEBUG)
++#define phylink_dbg(pl, fmt, ...)					\
+ 	phylink_printk(KERN_DEBUG, pl, fmt, ##__VA_ARGS__)
++#else
++#define phylink_dbg(pl, fmt, ...)					\
++({									\
++	if (0)								\
++		phylink_printk(KERN_DEBUG, pl, fmt, ##__VA_ARGS__);	\
++})
++#endif
  
--			ret = wait_for_completion_interruptible(&commit->hw_done);
-+			ret = wait_for_completion_interruptible(&commit->cleanup_done);
- 			if (ret)
- 				return ret;
- 		}
-@@ -2722,7 +2722,7 @@ int drm_atomic_helper_swap_state(struct drm_atomic_state *state,
- 			if (!commit)
- 				continue;
- 
--			ret = wait_for_completion_interruptible(&commit->hw_done);
-+			ret = wait_for_completion_interruptible(&commit->cleanup_done);
- 			if (ret)
- 				return ret;
- 		}
-@@ -2733,7 +2733,7 @@ int drm_atomic_helper_swap_state(struct drm_atomic_state *state,
- 			if (!commit)
- 				continue;
- 
--			ret = wait_for_completion_interruptible(&commit->hw_done);
-+			ret = wait_for_completion_interruptible(&commit->cleanup_done);
- 			if (ret)
- 				return ret;
- 		}
+ /**
+  * phylink_set_port_modes() - set the port type modes in the ethtool mask
 -- 
-2.21.0
+2.17.1
 
