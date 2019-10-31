@@ -2,39 +2,42 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 399A3CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 075BBCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E11A217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51C52083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfJaLW7 (ORCPT
+        id S1726700AbfJaLXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:22:59 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5663 "EHLO huawei.com"
+        Thu, 31 Oct 2019 07:23:00 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5662 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726403AbfJaLW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:22:59 -0400
+        id S1726552AbfJaLXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 07:23:00 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 07DF3BF0279C04143074;
-        Thu, 31 Oct 2019 19:22:57 +0800 (CST)
+        by Forcepoint Email with ESMTP id ED3026EA62EC6D320A4D;
+        Thu, 31 Oct 2019 19:22:56 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 31 Oct 2019 19:22:48 +0800
+ 14.3.439.0; Thu, 31 Oct 2019 19:22:49 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 0/9] net: hns3: add some optimizations ane cleanups
-Date:   Thu, 31 Oct 2019 19:23:15 +0800
-Message-ID: <1572521004-36126-1-git-send-email-tanhuazhong@huawei.com>
+        Guojia Liao <liaoguojia@huawei.com>,
+        "Huazhong Tan" <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 5/9] net: hns3: cleanup a format-truncation warning
+Date:   Thu, 31 Oct 2019 19:23:20 +0800
+Message-ID: <1572521004-36126-6-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1572521004-36126-1-git-send-email-tanhuazhong@huawei.com>
+References: <1572521004-36126-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.69.192.56]
@@ -44,67 +47,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds some code optimizations and cleanups for
-the HNS3 ethernet driver.
+From: Guojia Liao <liaoguojia@huawei.com>
 
-[patch 1/9] dumps some debug information when reset fail.
+In hns3_nic_init_irq(), when '*_int_idx' has more than 9 digits
+and the length of netdev's name is IFNAMSIZ, the total length
+of final name will be bigger the HNAE3_INT_NAME_LEN - 1, even
+though '*_int_idx' will never have such large value, but the
+compiler gives a format-truncation warning for this case.
 
-[patch 2/9] dumps some struct netdev_queue information when
-TX timeout.
+So this patch just enlarges the length to avoid this warning.
 
-[patch 3/9] cleanups some magic numbers.
+Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-[patch 4/9] cleanups some coding style issue.
-
-[patch 5/9] fixes a compiler warning.
-
-[patch 6/9] optimizes some local variable initialization.
-
-[patch 7/9] modifies some comments.
-
-[patch 8/9] cleanups some print format warnings.
-
-[patch 9/9] cleanups byte order issue.
-
-Guangbin Huang (3):
-  net: hns3: cleanup some coding style issues
-  net: hns3: optimize local variable initialization
-  net: hns3: add or modify some comments
-
-Guojia Liao (4):
-  net: hns3: cleanup some magic numbers
-  net: hns3: cleanup a format-truncation warning
-  net: hns3: cleanup some print format warning
-  net: hns3: cleanup byte order issues when printed
-
-Huazhong Tan (1):
-  net: hns3: dump some debug information when reset fail
-
-Yunsheng Lin (1):
-  net: hns3: add struct netdev_queue debug info for TX timeout
-
- drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h    |   4 +-
- drivers/net/ethernet/hisilicon/hns3/hnae3.c        |   2 +-
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   4 +-
- drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c |  69 +++++++------
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    |  29 +++---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h    |   4 +-
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  12 +--
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c |   7 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  30 ++++--
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c |   2 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 109 ++++++++++++---------
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c |   2 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 109 +++++++++++----------
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |   3 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c |  15 +--
- .../ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c    |   2 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c  |   4 +-
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c   |  10 +-
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  |  50 ++++++++--
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c   |  18 ++--
- 20 files changed, 278 insertions(+), 207 deletions(-)
-
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+index 23478ee..45f5916 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+@@ -575,7 +575,8 @@ struct hnae3_ae_algo {
+ 	const struct pci_device_id *pdev_id_table;
+ };
+ 
+-#define HNAE3_INT_NAME_LEN        (IFNAMSIZ + 16)
++#define HNAE3_INT_NAME_EXT_LEN    32	 /* Max extra information length */
++#define HNAE3_INT_NAME_LEN        (IFNAMSIZ + HNAE3_INT_NAME_EXT_LEN)
+ #define HNAE3_ITR_COUNTDOWN_START 100
+ 
+ struct hnae3_tc_info {
 -- 
 2.7.4
 
