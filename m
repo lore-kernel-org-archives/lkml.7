@@ -2,130 +2,115 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE99CCA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0611CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D6F222C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7686920873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:47:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WJXbXNxt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q6nZNOFX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbfJaQrH (ORCPT
+        id S1728955AbfJaQrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 12:47:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34331 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728913AbfJaQrE (ORCPT
+        Thu, 31 Oct 2019 12:47:10 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:52752 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728913AbfJaQrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:47:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572540423;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IN5IfNgFP34DHGSztrtam2F8ra3NciZQQBpcLS3E0ho=;
-        b=WJXbXNxtVyq0YHnAbSeFTBk1MO2fqxQtNDLXNXlEY9VYqPwzwm74u8jVSOQvISZOCKOT6T
-        OvWNY+7vYW2mEgpCH8dfZcHqS65y2TM8PvRGXKkXVCvnKNSSpRQ9ItIabhaDWV6lWAWVSc
-        n7YnquOAzheA7g+T7i/J/vGJtCZE7V4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-384-v6RguP_-OjCguHYJtNow1g-1; Thu, 31 Oct 2019 12:46:59 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4ABB1800D55;
-        Thu, 31 Oct 2019 16:46:57 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 6B1AC60852;
-        Thu, 31 Oct 2019 16:46:55 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 31 Oct 2019 17:46:56 +0100 (CET)
-Date:   Thu, 31 Oct 2019 17:46:53 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        Arnd Bergmann <arnd@arndb.de>,
+        Thu, 31 Oct 2019 12:47:08 -0400
+Received: by mail-pg1-f202.google.com with SMTP id e15so4767167pgh.19
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 09:47:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=K9E/B478ig/3FT/HPhGFdlo0v28kyi4gF0t5BJVte+4=;
+        b=Q6nZNOFXJobNQh66SBURqXR9jjgGc7xPtfVgiH00Q94Wq/lt68cuARge++0iJSOHbl
+         oW4NMEq+9cHqz9gbyOSyiBZcNrTjy/SOh+b8CYr8g09qvaCHNujmM1eqjZChkaUIta8N
+         R1Nytm89Z4g9Csz0lbSdVY2lZ5qMNHUcg9EX/BaicjSL2hYM0k+G3ChifSzc8IJFDYk1
+         GpIbxO2R5s2CgPxCiu0JT+4D9XPEJ59tckUnFp1YBhgg19qHemtrJSnWnwdM64fHfqzH
+         V51MYQa1MpvdRri6T2bUaJeLk+9cOeQ3PhUqIY7fT381QfU0I53VsE/DJ2wREqjXj4eZ
+         2Qsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=K9E/B478ig/3FT/HPhGFdlo0v28kyi4gF0t5BJVte+4=;
+        b=IDnMs8drFicVNcmRRysV5A+QT9cNkOOjaaHEryN+kpAioyNk3n2qwjCOE/5d63k4gB
+         zW3cQRcPquHgNDScC9fe3m2/ebqS1zQH5scQqBxmPINAXNck3+9fxmuSw2y4C1uE8UkA
+         UqISYeBfgRpTj1VNpzjn75wC1Slcc8INK+1STxFH/gj9yH3sbkONBHZfMkQ25wgDPDDN
+         WT5qUCFgorSj0aWHEnlfVyAdqkZH3pKgjEK5kFHgpEDzvVCeJVFeMD4qXoZ4s/fUYtVo
+         qMJk5GTLbDwvTgNuAEntfral+jZxoq2raa8r0zbZCLFfhJhUFjYeOFrPxz7h6mM9v7mn
+         Ni1g==
+X-Gm-Message-State: APjAAAUlgFWrRLztyfTN2VVFpm0LumQdJqRFwDKd6uTkCAkMnocBzb75
+        0OWLNy+6focToyXCcQ1VOOPAxs/ntrWHq4BXfcM=
+X-Google-Smtp-Source: APXvYqzC1qzspsODaXGFhM8lzAz2Kkvitd6Mcb2OnCrnHZg+dDRsPF4zisB/iRaRWzHFab+ubKlzQJYNZnG9GZBONHw=
+X-Received: by 2002:a63:e145:: with SMTP id h5mr7826628pgk.447.1572540427770;
+ Thu, 31 Oct 2019 09:47:07 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 09:46:29 -0700
+In-Reply-To: <20191031164637.48901-1-samitolvanen@google.com>
+Message-Id: <20191031164637.48901-10-samitolvanen@google.com>
+Mime-Version: 1.0
+References: <20191018161033.261971-1-samitolvanen@google.com> <20191031164637.48901-1-samitolvanen@google.com>
+X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
+Subject: [PATCH v3 09/17] arm64: kprobes: fix kprobes without CONFIG_KRETPROBES
+From:   samitolvanen@google.com
+To:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
         Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-api@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] clone3: validate stack arguments
-Message-ID: <20191031164653.GA24629@redhat.com>
-References: <20191031113608.20713-1-christian.brauner@ubuntu.com>
-MIME-Version: 1.0
-In-Reply-To: <20191031113608.20713-1-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: v6RguP_-OjCguHYJtNow1g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/31, Christian Brauner wrote:
->
-> --- a/include/uapi/linux/sched.h
-> +++ b/include/uapi/linux/sched.h
-> @@ -51,6 +51,10 @@
->   *               sent when the child exits.
->   * @stack:       Specify the location of the stack for the
->   *               child process.
-> + *               Note, @stack is expected to point to the
-> + *               lowest address. The stack direction will be
-> + *               determined by the kernel and set up
-> + *               appropriately based on @stack_size.
+This allows CONFIG_KRETPROBES to be disabled without disabling
+kprobes entirely.
 
-I can't review this patch, I have no idea what does stack_size mean
-if !arch/x86.
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+---
+ arch/arm64/kernel/probes/kprobes.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-x86 doesn't use stack_size unless a kthread does kernel_thread(), so
-this change is probably fine...
-
-Hmm. Off-topic question, why did 7f192e3cd3 ("fork: add clone3") add
-"& ~CSIGNAL" in kernel_thread() ? This looks pointless and confusing
-to me...
-
-> +static inline bool clone3_stack_valid(struct kernel_clone_args *kargs)
-> +{
-> +=09if (kargs->stack =3D=3D 0) {
-> +=09=09if (kargs->stack_size > 0)
-> +=09=09=09return false;
-> +=09} else {
-> +=09=09if (kargs->stack_size =3D=3D 0)
-> +=09=09=09return false;
-
-So to implement clone3_wrapper(void *bottom_of_stack) you need to do
-
-=09clone3_wrapper(void *bottom_of_stack)
-=09{
-=09=09struct clone_args args =3D {
-=09=09=09...
-=09=09=09// make clone3_stack_valid() happy
-=09=09=09.stack =3D bottom_of_stack - 1,
-=09=09=09.stack_size =3D 1,
-=09=09};
-=09}
-
-looks a bit strange. OK, I agree, this example is very artificial.
-But why do you think clone3() should nack stack_size =3D=3D 0 ?
-
-> +=09=09if (!access_ok((void __user *)kargs->stack, kargs->stack_size))
-> +=09=09=09return false;
-
-Why?
-
-Oleg.
+diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+index c4452827419b..98230ae979ca 100644
+--- a/arch/arm64/kernel/probes/kprobes.c
++++ b/arch/arm64/kernel/probes/kprobes.c
+@@ -551,6 +551,7 @@ void __kprobes __used *trampoline_probe_handler(struct pt_regs *regs)
+ 	return (void *)orig_ret_address;
+ }
+ 
++#ifdef CONFIG_KRETPROBES
+ void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
+ 				      struct pt_regs *regs)
+ {
+@@ -564,6 +565,7 @@ int __kprobes arch_trampoline_kprobe(struct kprobe *p)
+ {
+ 	return 0;
+ }
++#endif
+ 
+ int __init arch_init_kprobes(void)
+ {
+-- 
+2.24.0.rc0.303.g954a862665-goog
 
