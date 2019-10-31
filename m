@@ -2,162 +2,96 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A86D6CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B32CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C69F2087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:48:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dh4TGDJt"
+	by mail.kernel.org (Postfix) with ESMTP id B6901208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728462AbfJaPsu (ORCPT
+        id S1728477AbfJaPt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 11:48:50 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39740 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbfJaPsu (ORCPT
+        Thu, 31 Oct 2019 11:49:28 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:35032 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726664AbfJaPt2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 11:48:50 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y3so7167694ljj.6
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 08:48:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=260kgN6VgY6Es3AEFNd7jvs6pF/ZLC/U45J3qC3o/uw=;
-        b=dh4TGDJtErpngjh3cftUdxn1H6gwpzif+48xDGcGO4LGaRGJoBtzVgEcC3ZzOSoMyj
-         wIr5lM3nHRu7jgj0Rs1AXUp0t/k1QyqRfNdj58AMOdb99NjWhInTJjqFyucZedX82W5X
-         L9nJBqgwgnKbOtcZpIw56vM+UUn4IFHVOf5KBlNRwVu1yxiG4yS7CjaKQOXkHK7P+B2U
-         gOOIl6j5sCAquS/lgAbmeMVIFdxUJ4sngLAhLfTIVmmVHYSIXHZeO2riREnuMRq0rqnS
-         ZkKYsCDhCfUiNWCtmhjmleoZG7d0OhRLKz80orPetY+RBKT80asOHnzT3TRJ7f6HjLi4
-         7VQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=260kgN6VgY6Es3AEFNd7jvs6pF/ZLC/U45J3qC3o/uw=;
-        b=jjBUCF3/WZZTvavwvoLZjxRb74O2mBh89qTbIeMtx2u8X5A2h1P5r26jbZOdvcENne
-         k2vDzZNTTBLLKrgC+YHhiAVytRQsi7TenKiuzIkI5nz1YitvWXPIle0PJsNnVy3Sn7P2
-         DRFXueR052p2aUYVn8m/ZmmsfmvM4c6lewwPLfc/iu08T+VpgIm6eAkYztatBqZf8YYf
-         pjaFnOtnwTJ/TvxDcJvZ6fBsbrwjuBw8X2Tm0v47efOukTNs1HzZv5LffPLdfbmkhtDy
-         q2+TGW8DyWXipdldQTc+XAWcFQWmG1DhyJx6rRYp0cZc0YTslzs3F0TfvZaO03Iubm2h
-         2j8Q==
-X-Gm-Message-State: APjAAAUTTWcKHs+pVNSTWgoUKC1i2Rpv0gIQHG8KC/uIpeuhblotEsKE
-        IXpV187x9q9unAELq5UOu5Xh8y95Fx70n41ADm6E1w==
-X-Google-Smtp-Source: APXvYqwIOpjm1wQOSMhsTm0PkFDqCRdtOX91pbAmii64wZS/ela7esFj6jNlYxPS4Agba6LwPHYe1NblM09lKPWOHkA=
-X-Received: by 2002:a2e:a16d:: with SMTP id u13mr4890381ljl.214.1572536926284;
- Thu, 31 Oct 2019 08:48:46 -0700 (PDT)
+        Thu, 31 Oct 2019 11:49:28 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id AE154634C87;
+        Thu, 31 Oct 2019 17:48:34 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1iQCgb-0001mv-Nb; Thu, 31 Oct 2019 17:48:33 +0200
+Date:   Thu, 31 Oct 2019 17:48:33 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v4 0/2] Add IMX296 CMOS image sensor support
+Message-ID: <20191031154833.GM6253@valkosipuli.retiisi.org.uk>
+References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
+ <20191031131644.GA8917@pendragon.ideasonboard.com>
+ <20191031132352.GA24273@mani>
+ <20191031132801.GC5018@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
- <1571776465-29763-5-git-send-email-thara.gopinath@linaro.org>
- <20191023122252.dz7obopab6iizy4s@e107158-lin.cambridge.arm.com>
- <20191028153010.GE4097@hirez.programming.kicks-ass.net> <20191031105342.b3sl5xhysldfla3g@e107158-lin.cambridge.arm.com>
- <e875ef90-d561-4eee-4951-6556ac89c6a2@arm.com>
-In-Reply-To: <e875ef90-d561-4eee-4951-6556ac89c6a2@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 31 Oct 2019 16:48:34 +0100
-Message-ID: <CAKfTPtCTYOBQ+TUYaGsEGK-UTQ=2of=1WYeeiMzak7ZhEPRxmA@mail.gmail.com>
-Subject: Re: [Patch v4 4/6] sched/fair: update cpu_capcity to reflect thermal pressure
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Qais Yousef <qais.yousef@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Quentin Perret <qperret@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Amit Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031132801.GC5018@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 31 Oct 2019 at 16:38, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->
-> On 31.10.19 11:53, Qais Yousef wrote:
-> > On 10/28/19 16:30, Peter Zijlstra wrote:
-> >> On Wed, Oct 23, 2019 at 01:28:40PM +0100, Qais Yousef wrote:
-> >>> On 10/22/19 16:34, Thara Gopinath wrote:
-> >>>> cpu_capacity relflects the maximum available capacity of a cpu. Thermal
-> >>>> pressure on a cpu means this maximum available capacity is reduced. This
-> >>>> patch reduces the average thermal pressure for a cpu from its maximum
-> >>>> available capacity so that cpu_capacity reflects the actual
-> >>>> available capacity.
-> >>>>
-> >>>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> >>>> ---
-> >>>>  kernel/sched/fair.c | 1 +
-> >>>>  1 file changed, 1 insertion(+)
-> >>>>
-> >>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> >>>> index 4f9c2cb..be3e802 100644
-> >>>> --- a/kernel/sched/fair.c
-> >>>> +++ b/kernel/sched/fair.c
-> >>>> @@ -7727,6 +7727,7 @@ static unsigned long scale_rt_capacity(struct sched_domain *sd, int cpu)
-> >>>>
-> >>>>    used = READ_ONCE(rq->avg_rt.util_avg);
-> >>>>    used += READ_ONCE(rq->avg_dl.util_avg);
-> >>>> +  used += READ_ONCE(rq->avg_thermal.load_avg);
-> >>>
-> >>> Maybe a naive question - but can we add util_avg with load_avg without
-> >>> a conversion? I thought the 2 signals have different properties.
-> >>
-> >> Changelog of patch #1 explains, it's in that dense blob of text.
-> >>
-> >> But yes, you're quite right that that wants a comment here.
-> >
-> > Thanks for the pointer! A comment would be nice indeed.
-> >
-> > To make sure I got this correctly - it's because avg_thermal.load_avg
-> > represents delta_capacity which is already a 'converted' form of load. So this
-> > makes avg_thermal.load_avg a util_avg really. Correct?
-> >
-> > If I managed to get it right somehow. It'd be nice if we can do inverse
-> > conversion on delta_capacity so that avg_thermal.{load_avg, util_avg} meaning
-> > is consistent across the board. But I don't feel strongly about it if this gets
-> > documented properly.
->
-> So why can't we use rq->avg_thermal.util_avg here? Since capacity is
-> closer to util than to load?
->
-> Is it because you want to use the influence of ___update_load_sum(...,
-> unsigned long load eq. per-cpu delta_capacity in your signal?
->
-> Why not call it this way then?
+Hi Mani, Laurent,
 
-util_avg tracks a binary state with 2 fixed weights: running(1024)  vs
-not running (0)
-In the case of thermal pressure, we want to track how much pressure is
-put on the CPU: capping to half the max frequency is not the same as
-capping only 10%
-load_avg is not boolean but you set the weight  you want to apply and
-this weight reflects the amount of pressure.
+On Thu, Oct 31, 2019 at 03:28:01PM +0200, Laurent Pinchart wrote:
+> Hi Mani,
+> 
+> On Thu, Oct 31, 2019 at 06:53:52PM +0530, Manivannan Sadhasivam wrote:
+> > On Thu, Oct 31, 2019 at 03:16:44PM +0200, Laurent Pinchart wrote:
+> > > On Wed, Oct 30, 2019 at 03:19:00PM +0530, Manivannan Sadhasivam wrote:
+> > > > Hello,
+> > > > 
+> > > > This patchset adds support for IMX296 CMOS image sensor from Sony.
+> > > > Sensor can be programmed through I2C and 4-wire interface but the
+> > > > current driver only supports I2C interface. The sensor is
+> > > > capable of outputting frames in CSI2 format (1 Lane). In the case
+> > > > of sensor resolution, driver only supports 1440x1088 at 30 FPS.
+> > > > 
+> > > > The driver has been validated using Framos IMX296 module interfaced to
+> > > > 96Boards Dragonboard410c.
+> > > 
+> > > I've just been made aware of your work. I also worked on an IMX296
+> > > sensor driver in parallel, which I will post to the list. My driver
+> > > doesn't hardcode the resolution but computes register values at runtime,
+> > > so I wonder if it could be a better option. I'll post it now.
+> > 
+> > I'm fine with it. The reason the driver is simple in the first place is, that's
+> > how my usual workflow is. Start small and build it big ;-)
+> > 
+> > Anyway, I'm happy if your driver gets in.
+> 
+> My driver sometimes has trouble finding the sensor at probe time, so
+> I'll study and try your code too. It could be a problem specific to my
+> platform (I'm testing on a custom i.MX7 board).
 
->
-> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
-> index 38210691c615..d3035457483f 100644
-> --- a/kernel/sched/pelt.c
-> +++ b/kernel/sched/pelt.c
-> @@ -357,9 +357,9 @@ int update_thermal_load_avg(u64 now, struct rq *rq,
-> u64 capacity)
->  {
->         if (___update_load_sum(now, &rq->avg_thermal,
->                                capacity,
-> -                              capacity,
-> -                              capacity)) {
-> -               ___update_load_avg(&rq->avg_thermal, 1, 1);
-> +                              0,
-> +                              0)) {
-> +               ___update_load_avg(&rq->avg_thermal, 1, 0);
->                 return 1;
->         }
+Based on this discussion I'll mark the second patch of the set obsolete in
+Patchwork.
+
+Laurent: please see my comments on the driver as well.
+
+-- 
+Kind regards,
+
+Sakari Ailus
