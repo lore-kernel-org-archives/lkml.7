@@ -2,92 +2,108 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D397CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3C9CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E541F20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 342012086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:23:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="weLvOuQe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfJaJVH (ORCPT
+        id S1727133AbfJaJXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 05:21:07 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45220 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbfJaJVG (ORCPT
+        Thu, 31 Oct 2019 05:23:06 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:37639 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbfJaJXF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 05:21:06 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 559FC28FB05;
-        Thu, 31 Oct 2019 09:21:05 +0000 (GMT)
-Date:   Thu, 31 Oct 2019 10:21:02 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Jonas Karlman <jonas@kwiboo.se>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 06/10] media: hantro: Use capture buffer width and
- height for H264 decoding
-Message-ID: <20191031102102.63afd4e5@collabora.com>
-In-Reply-To: <HE1PR06MB4011544CF7A6F36EF1CA47EEAC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
-References: <HE1PR06MB401108289F09802C261374F8AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
-        <20191029012430.24566-1-jonas@kwiboo.se>
-        <HE1PR06MB4011544CF7A6F36EF1CA47EEAC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 31 Oct 2019 05:23:05 -0400
+Received: by mail-il1-f195.google.com with SMTP id t9so2471393ils.4
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 02:23:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tcqb+IhaSDNJqj7Em32KI5EwoshodE6lIm8MXsmML5E=;
+        b=weLvOuQe1qp7SmhCa5wqkA+qSy/HEWoAjkcTVlSLmbLlzcNRUYU35rD6ep79Car13u
+         zKYBIaW1HL+b+Ge52YcNvy+uigJvgEvkl2WJ5/xcQHSfo9uz/tLpaufL77nD/StOag98
+         5g0E/oajUNfHB3BaXhwyd+V6VC0DOOCkEdTVe6hgSLb+zF/DQRZrhi8Ja6YM6EH63NbX
+         INzL+8Y+jxQq1t32aM9SzxjjwZgkcoJxE2WGtHVb8mRN9BOIuXfCMQrYFOtkHs0AiBgO
+         GZAfXiwJTEGGz8yJ8QLfyZ+vTPRonyzYtQnbfO6X8991QDuI76GzMx0tXFymBenoUEsH
+         rruw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tcqb+IhaSDNJqj7Em32KI5EwoshodE6lIm8MXsmML5E=;
+        b=SFy4lVFoMoE8pez8wnYNBClSqwMGtf/EdYqs/fCvkEgyxdpkcQFYDpatZF+1HXGiJk
+         vqOYZ08Z6+/Q5gnsw0BLkGd9ocBqO2YzjOVmxobHcAU0ujgMjt/QdxOA3L5Vd9WnJIim
+         WBEY9rwrZR7u/3PCX+yr4nXMwmRsyvbNia8fSvXSNDAIzP7rX13ubz9l9gOVmmcGMqnv
+         Vv2oJcxKL5dwBZoJFqw9zyCsVkO3u9LgblAjXOxW3u/Xb6arJhsawt8VHV8GOU+2+uZn
+         L+VaIY1JkUpEV1znjXdkIswS9W4byhpCJn5+wmzguAqV+Ritksl0FbXq+YdAimSDc62c
+         BhsA==
+X-Gm-Message-State: APjAAAXcKWgqnCvnSelZtDJUFluLH7N+PgKH31XGRxPFZF3af323ekSZ
+        mQ3kub87jXpIWFb0lqzmsHmC/hoW+R0YHoEp3tOsKQ==
+X-Google-Smtp-Source: APXvYqwTEs0TXLg+Y9KN1LSZ7g7ly19CRMffOhO7e8e4HHml/6cDYR6bH9s2YdOlfMGLddxa8lx0sqJHYZVTLpNjaAw=
+X-Received: by 2002:a92:af99:: with SMTP id v25mr5291400ill.167.1572513784923;
+ Thu, 31 Oct 2019 02:23:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191031052159.4125031-1-jhubbard@nvidia.com>
+In-Reply-To: <20191031052159.4125031-1-jhubbard@nvidia.com>
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+Date:   Thu, 31 Oct 2019 14:52:53 +0530
+Message-ID: <CAKohpomBZPYyX_u2xSzE4UenR0s3eFo5SOmDZ=4NLVcD_pA5iQ@mail.gmail.com>
+Subject: Re: [PATCH v3] cpufreq: powernv: fix stack bloat and hard limit on
+ num cpus
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Preeti U Murthy <preeti@linux.vnet.ibm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 01:24:50 +0000
-Jonas Karlman <jonas@kwiboo.se> wrote:
-
-> Calculations for motion vector buffer offset is based on width and height
-> from the configured capture format, lets use the same values for macroblock
-> width and height hw regs.
-> 
-> Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+On Thu, 31 Oct 2019 at 10:52, John Hubbard <jhubbard@nvidia.com> wrote:
+>
+> The following build warning occurred on powerpc 64-bit builds:
+>
+> drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
+> drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of
+> 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
+>
+> This is with a cross-compiler based on gcc 8.1.0, which I got from:
+>   https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/
+>
+> The warning is due to putting 1024 bytes on the stack:
+>
+>     unsigned int chip[256];
+>
+> ...and it's also undesirable to have a hard limit on the number of
+> CPUs here.
+>
+> Fix both problems by dynamically allocating based on num_possible_cpus,
+> as recommended by Michael Ellerman.
+>
+> Fixes: 053819e0bf840 ("cpufreq: powernv: Handle throttling due to Pmax capping at chip level")
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+> Cc: Preeti U Murthy <preeti@linux.vnet.ibm.com>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: linux-pm@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 > ---
-> Changes in v2:
->   - new patch split from "media: hantro: Fix H264 motion vector buffer offset"
-> ---
->  drivers/staging/media/hantro/hantro_g1_h264_dec.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> index 71bf162eaf73..eeed11366135 100644
-> --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-> @@ -51,8 +51,8 @@ static void set_params(struct hantro_ctx *ctx)
->  	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL0);
->  
->  	/* Decoder control register 1. */
-> -	reg = G1_REG_DEC_CTRL1_PIC_MB_WIDTH(sps->pic_width_in_mbs_minus1 + 1) |
-> -	      G1_REG_DEC_CTRL1_PIC_MB_HEIGHT_P(sps->pic_height_in_map_units_minus1 + 1) |
-> +	reg = G1_REG_DEC_CTRL1_PIC_MB_WIDTH(MB_WIDTH(ctx->dst_fmt.width)) |
-> +	      G1_REG_DEC_CTRL1_PIC_MB_HEIGHT_P(MB_HEIGHT(ctx->dst_fmt.height)) |
 
-I'm just curious, do they differ in practice? Also not sure what's been
-decided for the "G1 post-proc", but if the dst/capture format res set
-by the user is the scaled res (PP can scale IIRC), then you probably
-shouldn't use those values here.
-
->  	      G1_REG_DEC_CTRL1_REF_FRAMES(sps->max_num_ref_frames);
->  	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL1);
->  
-
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
