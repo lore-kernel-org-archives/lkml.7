@@ -2,96 +2,96 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B32CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362D5CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6901208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0079D21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:49:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NtDoHHgn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbfJaPt2 (ORCPT
+        id S1728490AbfJaPtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 11:49:28 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:35032 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726664AbfJaPt2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 11:49:28 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Thu, 31 Oct 2019 11:49:33 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:48424 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726664AbfJaPtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 11:49:33 -0400
+Received: from nazgul.tnic (unknown [91.217.168.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id AE154634C87;
-        Thu, 31 Oct 2019 17:48:34 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1iQCgb-0001mv-Nb; Thu, 31 Oct 2019 17:48:33 +0200
-Date:   Thu, 31 Oct 2019 17:48:33 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v4 0/2] Add IMX296 CMOS image sensor support
-Message-ID: <20191031154833.GM6253@valkosipuli.retiisi.org.uk>
-References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
- <20191031131644.GA8917@pendragon.ideasonboard.com>
- <20191031132352.GA24273@mani>
- <20191031132801.GC5018@pendragon.ideasonboard.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1B26F1EC0CDE;
+        Thu, 31 Oct 2019 16:49:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1572536968;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=y5xotETdYxC/qXscPBu87/2M7mA/G8jPv3JiPD0/WkA=;
+        b=NtDoHHgnVBKNgT+xyKi0TH8lKc6DqoIVJUtKnkIMMRlllvJ4G/H9Vj7mlujLChw8Idj1kc
+        4Y7vC3KPDagdJdhKEUH0/Sb8eKRt1ESVW1OZG8bsuMymMQTZvKvf6rriklnGg+4WFOCa5O
+        iY1vkHsIGDaKrdk1l/wXgrzDGlg5554=
+Date:   Thu, 31 Oct 2019 16:49:16 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     zhong jiang <zhongjiang@huawei.com>
+Cc:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
+        dave.hansen@linux.intel.com, hpa@zytor.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/ioremap: Use WARN_ONCE instead of printk() +
+ WARN_ON_ONCE()
+Message-ID: <20191031154916.GA24152@nazgul.tnic>
+References: <1572425838-39158-1-git-send-email-zhongjiang@huawei.com>
+ <20191031110304.GE21133@nazgul.tnic>
+ <5DBACB61.90809@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191031132801.GC5018@pendragon.ideasonboard.com>
+In-Reply-To: <5DBACB61.90809@huawei.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mani, Laurent,
+On Thu, Oct 31, 2019 at 07:54:09PM +0800, zhong jiang wrote:
+> Look at this again, It should not works. Because that will change the logical.
+> if phys_addr_valid is false, we should drop out in time.
 
-On Thu, Oct 31, 2019 at 03:28:01PM +0200, Laurent Pinchart wrote:
-> Hi Mani,
-> 
-> On Thu, Oct 31, 2019 at 06:53:52PM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Oct 31, 2019 at 03:16:44PM +0200, Laurent Pinchart wrote:
-> > > On Wed, Oct 30, 2019 at 03:19:00PM +0530, Manivannan Sadhasivam wrote:
-> > > > Hello,
-> > > > 
-> > > > This patchset adds support for IMX296 CMOS image sensor from Sony.
-> > > > Sensor can be programmed through I2C and 4-wire interface but the
-> > > > current driver only supports I2C interface. The sensor is
-> > > > capable of outputting frames in CSI2 format (1 Lane). In the case
-> > > > of sensor resolution, driver only supports 1440x1088 at 30 FPS.
-> > > > 
-> > > > The driver has been validated using Framos IMX296 module interfaced to
-> > > > 96Boards Dragonboard410c.
-> > > 
-> > > I've just been made aware of your work. I also worked on an IMX296
-> > > sensor driver in parallel, which I will post to the list. My driver
-> > > doesn't hardcode the resolution but computes register values at runtime,
-> > > so I wonder if it could be a better option. I'll post it now.
-> > 
-> > I'm fine with it. The reason the driver is simple in the first place is, that's
-> > how my usual workflow is. Start small and build it big ;-)
-> > 
-> > Anyway, I'm happy if your driver gets in.
-> 
-> My driver sometimes has trouble finding the sensor at probe time, so
-> I'll study and try your code too. It could be a problem specific to my
-> platform (I'm testing on a custom i.MX7 board).
+That you can do too:
 
-Based on this discussion I'll mark the second patch of the set obsolete in
-Patchwork.
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index a39dcdb5ae34..13f44cc064af 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -171,12 +171,10 @@ __ioremap_caller(resource_size_t phys_addr, unsigned long size,
+ 	if (!size || last_addr < phys_addr)
+ 		return NULL;
+ 
+-	if (!phys_addr_valid(phys_addr)) {
+-		printk(KERN_WARNING "ioremap: invalid physical address %llx\n",
+-		       (unsigned long long)phys_addr);
+-		WARN_ON_ONCE(1);
++	if (WARN_ONCE(!phys_addr_valid(phys_addr),
++	    "ioremap: invalid physical address %llx\n",
++	    (unsigned long long)phys_addr))
+ 		return NULL;
+-	}
+ 
+ 	__ioremap_check_mem(phys_addr, size, &io_desc);
+ 
+---
 
-Laurent: please see my comments on the driver as well.
+I'm not sure whether we care about printing every invalid address, as
+Joe points out. Maybe we do... *shrug*
 
 -- 
-Kind regards,
+Regards/Gruss,
+    Boris.
 
-Sakari Ailus
+ECO tip #101: Trim your mails when you reply.
+--
