@@ -2,140 +2,103 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F9BC47E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91136CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4CA20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 633742080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:29:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mtDewwg/"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XzWHPNa9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729613AbfJaT1p (ORCPT
+        id S1729624AbfJaT3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 15:27:45 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37471 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729347AbfJaT1o (ORCPT
+        Thu, 31 Oct 2019 15:29:54 -0400
+Received: from mail-io1-f54.google.com ([209.85.166.54]:36726 "EHLO
+        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbfJaT3y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 15:27:44 -0400
-Received: by mail-io1-f65.google.com with SMTP id 1so8076552iou.4;
-        Thu, 31 Oct 2019 12:27:43 -0700 (PDT)
+        Thu, 31 Oct 2019 15:29:54 -0400
+Received: by mail-io1-f54.google.com with SMTP id s3so4246719ioe.3
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 12:29:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=B4jV3EnBBq5/1iaXnrQAt0NG52PBIas0sGtSMu6rBD8=;
-        b=mtDewwg/TLCLm7Hsns9t2qp9MDlqvS//iyppO5d6nWi63hFv2VV6CNhIMMf/jEIUoE
-         BooiTrj6VAdHlBSU/zrqShQRY5WDBHZdXfAkBMgFlipomCJb3n2ME5P8h2otxKr76mJa
-         EcHByfjllmmJtLjX9A9+mc+9pRjPvWhPXR81fUy1PrhnQKg2mBBMO8bvuWkNsZSCAza/
-         rYXDOU9MtKzpmKnCzD79IeCZxtB1KG3vpirsGX5EmeRBhJ5im8dHVxTNSjmiBvx3Ggk/
-         lyMtCGHXzCyMLVcn1L1+bjFQdvmP+4652pMoRVw+9mhHrZJ6De1jIGNkLkO0/7xwsG1K
-         XheA==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=ps9mIWZL6I4lt3cKBlCNZFVxrfgS2HQqXQheS1VhANc=;
+        b=XzWHPNa9zlkb/3BPgBxi8pnviBHJE8YC5j2rV4X3/iFDVc/vTJyS8zUGIi3MEUf14u
+         BWRGXbNjc1dXRhDzIfNdPuC2L8EfTJfsB/idFuJBVzfRDdQ4bp+thdbbQM9rsgNoymKk
+         OxzDrzhcHFAVu/EK027/3Y0ud/pMYD6x3CFPpsWOA95kh5FLxjSUyX6NDSjt/fhqyNZM
+         a1ldEorqYXclz7PPLviY2YnF+7YZOPJtMlfGSyyjGT3nZoXCP/V90hxfTuaMnG6SYu/d
+         nufF+cQRjKbMG9VqqJxVV89krnxzoELhpLDfaC63PNVj7IZvfnJLoUVsrn9zeRauA1Pw
+         N/xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=B4jV3EnBBq5/1iaXnrQAt0NG52PBIas0sGtSMu6rBD8=;
-        b=UfS/AxsrE+QBd4s7rWSIvnUnWVGOH7sdRwYgoALToJ6+GZhWwQ5kX6sCbzpbPlGvuH
-         Fh/4pqoH5NBNUDDlzOazC1RLAN+AatvpbqD8o/99OG0EZ5kCc3l4zyks3OIqaE7EW49c
-         yXMzy+QAqniO/0zvpEUob0S6+jyctpTFZ0R0vo5JyJFIqFjmue2gN19MZiJUbjchtT6e
-         Fr2NdTEjhoE8JNhPQsm1tHP1g+BZKHSscjDHlx+FQrpVwFbbVSfHuyGuLcQJWqGkOkC+
-         Qxxz2ZntjFrKRz6wQY5IzCy8iq4kU6ekqIFqxsFxtg52ocwmNB7mhKmscgZhLGGePnJM
-         zemg==
-X-Gm-Message-State: APjAAAUDyBrkYDxW9Lzlh5gIMfrLW++IaOX1IzGd8n5HreJUmiAgzrTl
-        bqZmHLfPBrLgKC5RZUyUjngdInqsHrbahjpdEeLzdDD8
-X-Google-Smtp-Source: APXvYqzpbGK9QDML4i9u/rZBSCaOHKfFsRoyUmn5YwTsiwj0GSCptKh6YEPsaOEgWkIsBSE/YGFsqAhJaM52OuTSOSo=
-X-Received: by 2002:a5d:9f02:: with SMTP id q2mr6698394iot.3.1572550062331;
- Thu, 31 Oct 2019 12:27:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=ps9mIWZL6I4lt3cKBlCNZFVxrfgS2HQqXQheS1VhANc=;
+        b=BDiGRzSiC+CHg3bK6eIkbSDiWu8ROk22jY2aG5ugUgHXw0FAKxOJaXqhtvx9NbAq3d
+         diYemaMCkfi3NNQUIZ9nhZAWqUaXZ1jwNRkHasJ3gzye70i7HCP+h7z8y0K3PU3a5Jfl
+         OkfQxPSK4JtU3xb6/pz6kzEfmxFyKD20wHs/dlWnw+H2q1kQKqGC20BuxWn1Unq2l6HG
+         3lL0BRrEik0yZf2zwDXY+WGbFW+RSAypPR0ivUBuloQ0JuD7vnUuFHjHIn4w8RDZ4nT0
+         oHqBX2A77NhHlRSejjWlWwuOvMUWAcwfXgRI7qp39PnIIu6kOMEdL8Mg82oYW0JwfNiB
+         iFXA==
+X-Gm-Message-State: APjAAAXLhpI4xXPHU55W6KeMq87CwjbE5r2c46UbhziTSf/c0FatMnU2
+        tAhfNQFIL8aBu0Lr9glGwPr8Pw==
+X-Google-Smtp-Source: APXvYqwuUBD1GtseY327OIvcq+SpT+2E+Z53XNLIt4/i9Xs32ZGpLdq2+5z5898PYsIrf3ahdzC5QA==
+X-Received: by 2002:a5d:9712:: with SMTP id h18mr5049544iol.256.1572550193215;
+        Thu, 31 Oct 2019 12:29:53 -0700 (PDT)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id y5sm350498ilk.83.2019.10.31.12.29.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 12:29:52 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 12:29:49 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Anup Patel <anup@brainfault.org>
+cc:     linux-riscv <linux-riscv@lists.infradead.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: Experimental branch
+In-Reply-To: <CAAhSdy3Y1W_8Uu00F66jVM=ObFouxw1C_z4-MVkLh0+s5Wx3HQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.9999.1910311223050.16921@viisi.sifive.com>
+References: <alpine.DEB.2.21.9999.1910311101480.23683@viisi.sifive.com> <CAAhSdy3Y1W_8Uu00F66jVM=ObFouxw1C_z4-MVkLh0+s5Wx3HQ@mail.gmail.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-References: <20191031035514.20871-1-lsahlber@redhat.com>
-In-Reply-To: <20191031035514.20871-1-lsahlber@redhat.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Thu, 31 Oct 2019 14:27:31 -0500
-Message-ID: <CAH2r5mvLOs2dWVoCUzCubCbHgvEH4msAjeqCmnriCVxH-g2Phw@mail.gmail.com>
-Subject: Fwd: [PATCH] cifs: don't use 'pre:' for MODULE_SOFTDEP
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I noticed that btrfs and ext4 have the same bug
+On Fri, 1 Nov 2019, Anup Patel wrote:
 
-modprobe btrfs
-modprobe -r btrfs
+> You can drop the KVM RISC-V patches from your experimental branch.
 
-returns
-"modprobe: FATAL: Module crc32c_intel is in use."
+We're not only doing it for you ;-)
 
-(although the module is actually unloaded despite the 'FATAL' error)
+> We are already maintaining KVM RISC-V patches (and dependent patches)
+> in the official KVM RISC-V gitrepo at: https://github.com/kvm-riscv/linux.git
+> 
+> All KVM RISC-V related work will go through above mentioned gitrepo
+> in-future. This gitrepo is co-maintained by me and Atish.
 
-Should fs modules not use MODULE_SOFTDEP as Ronnie's patch suggests?
----------- Forwarded message ---------
-From: Ronnie Sahlberg <lsahlber@redhat.com>
-Date: Wed, Oct 30, 2019 at 10:59 PM
-Subject: [PATCH] cifs: don't use 'pre:' for MODULE_SOFTDEP
-To: linux-cifs <linux-cifs@vger.kernel.org>
-Cc: Ronnie Sahlberg <lsahlber@redhat.com>
+It's great that you guys have your own git repository for KVM patch 
+development!
 
-
-It can cause
-to fail with
-modprobe: FATAL: Module <module> is builtin.
-
-RHBZ: 1767094
-
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
----
- fs/cifs/cifsfs.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
-index f8e201c45ccb..a578699ce63c 100644
---- a/fs/cifs/cifsfs.c
-+++ b/fs/cifs/cifsfs.c
-@@ -1677,17 +1677,17 @@ MODULE_DESCRIPTION
-        ("VFS to access SMB3 servers e.g. Samba, Macs, Azure and Windows (and "
-        "also older servers complying with the SNIA CIFS Specification)");
- MODULE_VERSION(CIFS_VERSION);
--MODULE_SOFTDEP("pre: ecb");
--MODULE_SOFTDEP("pre: hmac");
--MODULE_SOFTDEP("pre: md4");
--MODULE_SOFTDEP("pre: md5");
--MODULE_SOFTDEP("pre: nls");
--MODULE_SOFTDEP("pre: aes");
--MODULE_SOFTDEP("pre: cmac");
--MODULE_SOFTDEP("pre: sha256");
--MODULE_SOFTDEP("pre: sha512");
--MODULE_SOFTDEP("pre: aead2");
--MODULE_SOFTDEP("pre: ccm");
--MODULE_SOFTDEP("pre: gcm");
-+MODULE_SOFTDEP("ecb");
-+MODULE_SOFTDEP("hmac");
-+MODULE_SOFTDEP("md4");
-+MODULE_SOFTDEP("md5");
-+MODULE_SOFTDEP("nls");
-+MODULE_SOFTDEP("aes");
-+MODULE_SOFTDEP("cmac");
-+MODULE_SOFTDEP("sha256");
-+MODULE_SOFTDEP("sha512");
-+MODULE_SOFTDEP("aead2");
-+MODULE_SOFTDEP("ccm");
-+MODULE_SOFTDEP("gcm");
- module_init(init_cifs)
- module_exit(exit_cifs)
---
-2.13.6
+For upstreaming, all of the RISC-V KVM changes under arch/riscv need to go 
+up via the arch/riscv maintainers to ensure a coherent maintenance 
+approach across arch/riscv.  We may work out something with Paolo in the 
+future.
 
 
+thanks,
 
--- 
-Thanks,
-
-Steve
+- Paul
