@@ -2,118 +2,108 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31792CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC31CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7522080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D24220862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:15:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c3PocsTu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wkipk/vm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfJaCOb (ORCPT
+        id S1726803AbfJaCO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 22:14:31 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45314 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbfJaCOa (ORCPT
+        Wed, 30 Oct 2019 22:14:59 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34350 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbfJaCO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 22:14:30 -0400
-Received: by mail-qk1-f195.google.com with SMTP id q70so5215781qke.12;
-        Wed, 30 Oct 2019 19:14:30 -0700 (PDT)
+        Wed, 30 Oct 2019 22:14:58 -0400
+Received: by mail-lf1-f66.google.com with SMTP id f5so3257703lfp.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 19:14:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=nAtFBaF759uCGM4rCo8bYpeccOLVNQhATaaIk5meiKI=;
-        b=c3PocsTubGHZc+Vdfn1oU6/MMIpEZbErwAP34Q4VEp2CMaXUWioeVpLJbmFYdo180W
-         q8A6evE++Vj4HbXUb+1sIVXG75FoUAuhADZzeD0vvBrQS0OXlgta9T/bmH0uk9iPUttu
-         PQ/WCJpcJp5dBi/XL9sKlsVQcNWMgIP72dHcX8WoMkqwakTY8I5HMhaYgsjQVZV7ZZB7
-         UAQqnzLp/24K0TrtcHNa6hje2aoicLTV6EKpp52n/cYwwhWsGrK0ges2rT88Rc5cGVCb
-         ho6eCGyJ+ntuG9LIiJYOlzrSzqOLFjTZjVdSQjsdmGFNJ0zWh/8H9X+mwK2ViAu3x+fV
-         1TPg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LsH3A1DqDOFl2XsHUyxDjmPi6g5GPerOQXufskJ4zsE=;
+        b=wkipk/vmz3K+UqUSWwx9TakqLnbKR+02jMAR5SGMZCzif8JAFmJ08VLcACypiWHgd3
+         Nq3A9LCWfNpUNIycEwlJ4UAxP5zL23OJiIho6/dnsB9Q36nvjP7/yqh7dc8MTagsv+FN
+         AAqP79LixqCc1p/WSlBvTZWZFa4zOOvid5BNy/2G4O03423a8n8czYonP/S1X7AzJei+
+         xFnAp1z2bYsMIRUatRet7wQ9djRfkazHtwwoJqZNe14MmN+igdTj+tXsgOE67YF8E3qO
+         ecbGQkektDWSE7iJ49llVAzwhgYwCscfYLsFMckewsT8APYyRdOiFPK6vFFNQb4UEuxg
+         dXfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=nAtFBaF759uCGM4rCo8bYpeccOLVNQhATaaIk5meiKI=;
-        b=FueFiP8u5iDBoUEq+7JSJD0OweTr6xRyBjoesCaIqRRZBMiCZmsb9xZXkEOgQkOGRT
-         gPss0vSAKFizZjvWpDVi0GmEy15oFcdYOOS0a5Boy//Lyym67dGMVpDr3WchaN1to171
-         7NZhI4rS4pUWIca2eOFVHr00Q8KUcGIJxv31oAtHSJqQz7RFYxDJbYeel2uLr2XjI9as
-         psKAdTZjNDExO/JkwqMSFSHkRMwjlfBYLOCSXhjb56+RXX+eVTwpS2vdsBCKlcleXHTS
-         W69nPc5kLmJGQPuuFs5uvm2F5iT3V1a4ZnfMTiszsPx/EFmD97+3JzU4JQTwzDD4WeYR
-         3DKQ==
-X-Gm-Message-State: APjAAAVcgw9EvoEzK9TVFvIdz/SFLll2TzKG2F2OOmMYPAZt9ASkhFfP
-        Gru8qVBeq6GVxWrcPShY7ys=
-X-Google-Smtp-Source: APXvYqzjo/p8HCl6UKJSGUhDB6LDokrTpabXxMymCS2wsR5V9Ho4W2xvcr/9noLUPmmksNNcd5FZUg==
-X-Received: by 2002:a05:620a:1010:: with SMTP id z16mr3126971qkj.496.1572488069580;
-        Wed, 30 Oct 2019 19:14:29 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id v54sm1145242qtc.77.2019.10.30.19.14.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 19:14:29 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 22:14:28 -0400
-Message-ID: <20191030221428.GB140471@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, f.fainelli@gmail.com, andrew@lunn.ch,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH net-next 1/7] net: dsa: list DSA links in the fabric
-In-Reply-To: <20191030.143949.809392632168787466.davem@davemloft.net>
-References: <20191028195220.2371843-1-vivien.didelot@gmail.com>
- <20191028195220.2371843-2-vivien.didelot@gmail.com>
- <20191030.143949.809392632168787466.davem@davemloft.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LsH3A1DqDOFl2XsHUyxDjmPi6g5GPerOQXufskJ4zsE=;
+        b=pxAUh3fZHzoo6R6Qp7l0iGHHFbpRP/T6JrdkoiOU6SD1cDZdaiZ4XekiMNzKwT2Z4F
+         ggQzg/7yUq/RyHkUuJoR5OkDlbTIfau0TTerRlzpIZ+9AaanNo9NIUZZbH/RoEbElV1k
+         nIgTRuxaJqdJq+Um6AA6A7+1IEUKXK8qxVZb7aiYhb7VquJE0K6Zwdn1E5sWLCE8Roa4
+         gr01qq6p+fJUePDYeun5gsYLPh0LYIMcZQZE/uiG/bS+hXg3F9dVua7PaYlCN2NPz6Xf
+         nuSVAfQlriQI3wwSH/8r7bZGUlk0P7SsyodptzyXS4lauHXlYSZ46ejZF2GP7zukYH91
+         yAgw==
+X-Gm-Message-State: APjAAAVaOMqnPA5oi0doBpKg3BBYylLPfG3tBTQTNeocwlbWWKGjU/0R
+        V+o5J8dOfG4db+0ZW1r4Qw0Fu431d5oQg8iz0iRjLQ==
+X-Google-Smtp-Source: APXvYqw+VI3/9pmeyk/FQBCxrTYSXbxKCCcEUYb6gLT2e3GJrpxbjpDnQJnhwJNDWQ47aNAf2rbGE63JO7PrPoICa+g=
+X-Received: by 2002:ac2:420a:: with SMTP id y10mr997190lfh.65.1572488096719;
+ Wed, 30 Oct 2019 19:14:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <cover.1572245011.git.baolin.wang@linaro.org> <00202f739348258555dcc40982c330542ac61863.1572245011.git.baolin.wang@linaro.org>
+ <20191030143949.GA18637@bogus>
+In-Reply-To: <20191030143949.GA18637@bogus>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Thu, 31 Oct 2019 10:14:45 +0800
+Message-ID: <CAMz4kuJ=8dOj6XbayNHKAYW7LD1EOaqv+Q4hYk_-7+R-z_m2Xw@mail.gmail.com>
+Subject: Re: [PATCH 4/5] dt-bindings: power: sc27xx: Add a new property to
+ describe the real resistance of coulomb counter chip
+To:     Rob Herring <robh@kernel.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com,
+        baolin.wang7@gmail.com, Chunyan Zhang <zhang.lyra@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+Hi Rob,
 
-On Wed, 30 Oct 2019 14:39:49 -0700 (PDT), David Miller <davem@davemloft.net> wrote:
-> From: Vivien Didelot <vivien.didelot@gmail.com>
-> Date: Mon, 28 Oct 2019 15:52:14 -0400
-> 
-> > @@ -122,6 +124,29 @@ static struct dsa_port *dsa_tree_find_port_by_node(struct dsa_switch_tree *dst,
-> >  	return NULL;
-> >  }
-> >  
-> > +struct dsa_link *dsa_link_touch(struct dsa_port *dp, struct dsa_port *link_dp)
-> > +{
-> > +	struct dsa_switch *ds = dp->ds;
-> > +	struct dsa_switch_tree *dst = ds->dst;
-> > +	struct dsa_link *dl;
-> 
-> Please fix the reverse christmas tree here, two suggestions:
-> 
-> 	struct dsa_switch *ds = dp->ds;
-> 	struct dsa_switch_tree *dst;
-> 	struct dsa_link *dl;
-> 
-> 	dst = ds->dst;
-> 
-> Or, alternatively, since the dst variable is used only once, get rid of it
-> and change:
-> 
-> > +	list_add_tail(&dl->list, &dst->rtable);
-> 
-> to
-> 
-> > +	list_add_tail(&dl->list, &ds->dst->rtable);
+On Wed, 30 Oct 2019 at 22:39, Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Oct 28, 2019 at 03:19:00PM +0800, Baolin Wang wrote:
+> > Add a new property to describe the real resistance of coulomb counter chip,
+> > which is used to calibrate the accuracy of the coulomb counter chip.
+> >
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > ---
+> >  .../devicetree/bindings/power/supply/sc27xx-fg.txt |    2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+> > index 0a5705b..fc042d0 100644
+> > --- a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+> > +++ b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+> > @@ -13,6 +13,7 @@ Required properties:
+> >  - io-channel-names: Should be "bat-temp" or "charge-vol".
+> >  - nvmem-cells: A phandle to the calibration cells provided by eFuse device.
+> >  - nvmem-cell-names: Should be "fgu_calib".
+> > +- sprd,calib-resistance: Specify the real resistance of coulomb counter chip in micro Ohms.
+> >  - monitored-battery: Phandle of battery characteristics devicetree node.
+> >    See Documentation/devicetree/bindings/power/supply/battery.txt
+>
+> Needs a standard unit suffix.
 
-No problem, I've sent a v2 using the first suggestion, since dst is in fact
-used twice in this function.
+Got it. Thanks.
 
-
-Thank you,
-
-	Vivien
+-- 
+Baolin Wang
+Best Regards
