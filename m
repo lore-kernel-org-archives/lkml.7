@@ -2,95 +2,139 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F131CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 282CCCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E55DF208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F29A82087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:59:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nd7hRbEA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q5Nzzfdy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbfJaN7W (ORCPT
+        id S1727798AbfJaN7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:59:22 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:35559 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727567AbfJaN7W (ORCPT
+        Thu, 31 Oct 2019 09:59:32 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42000 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727771AbfJaN7c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:59:22 -0400
-Received: by mail-yw1-f66.google.com with SMTP id r134so2154630ywg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 06:59:22 -0700 (PDT)
+        Thu, 31 Oct 2019 09:59:32 -0400
+Received: by mail-pg1-f193.google.com with SMTP id s23so733156pgo.9
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 06:59:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6lc72BgRwD53g5GkhGUqFFG2nhb0dXxx1JADtBs5rJw=;
-        b=nd7hRbEAfWE8bai204exlUd4eQxE+PqtFpB4gNcChz18ASnUWtYBaJ7hq9VvRDL2Mt
-         9J1qcpniYjzrbZZF76uQKP4yZ7l0m26a3Oi696396zqnYybZSMV4jbZWNYIc0TuOavVG
-         coo19mZKcAn8G4QoLCo9pNivxwz3JdkdMXDLrDWI2KB4khoTwd0/B3TWA9ttzwc3vuUz
-         JIejUDdHxuSCBhI7MZG2MFRCFX+OMIsoY7gepXTB/RhrmJeo31B4ELQ07NhPc5XmGo5E
-         KW0So4p5uEzR946cLNcCBFQ2cLahz4wu4ihWFl7cq2CRQgiVgVSLPZcrcgjxBK/HL0QQ
-         fJrA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=FInjRudIZ1nBXyYRthwNUoyrlLqGhK39QJ4i7rNkC2w=;
+        b=q5NzzfdyvqU9FJ8L/8YVWhVw3zm/TD9+GmoDJBcQbO9fthEhMN0aA0zr1Jrn1Pe7Xv
+         3yxVpV1aCIy2BlbrmcRSI52doE+NBDvyhqGBcl545OAR+xdAP/8XKGa9aYsXyxpC6c4r
+         u/dLASdI5rFuj8KWg0Vg1ucxIfzi2SA6p0SEDwT5MaAY46LtvSjOArYaKC/ICMwgAn7L
+         5yuRCDkCXiEplKpIc1i196ovUMs+7c/jfyoF8FuXwJS2nhJb0Wx7IK586+yvbVU7V+hM
+         Z6T46N/XjF+k5fnSVRUiPTy/WMYlR9bd07WIAjbDF892AolQA4/q3VfGdCWxQIZ0w7m6
+         3cgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6lc72BgRwD53g5GkhGUqFFG2nhb0dXxx1JADtBs5rJw=;
-        b=XeTbKfpsPVdKwysxgyu2yRE+qy5JOqGEECWYCnF4NK0W2KZ5nLvks2wb8/SPbZGHNR
-         xKvq0isvCycRymoIqEfplYPVDSW18h/Rs5NG5RnMRSuLo75w1LhIxoklRKBYkTi1Pgk8
-         YQ5xUgnoA307lc5HZmxXlEMHF2DSocZDTEi+nysy+KMkj9YSJ/AKKc1uWurmLmnphxi8
-         5amhIfJ7FUbGWGxXNjxDwIpEnBbR4GGY6T4tmGaGYaEeHzQFSj8kOJ3BP79yCm6sddnR
-         gGZImV6owyCaufeWifCXIk3EthRw4pViPWgftMtUq+TDZhNmPLBfeTbyThWxiEVe9ReY
-         7nIw==
-X-Gm-Message-State: APjAAAWHgRE0Z3hxAMwzkw1d3wWjvWG+F7CWSkb6s6i1Ip/Dqrca8phl
-        vggXuYxdlM3u0hXsGsoTS2afzsFOlwbpNE2oCtw=
-X-Google-Smtp-Source: APXvYqxnJjDho9Fs/2WI2ekNVqdpR61OXuGHmahrpf/DG4rRrgDRSb2F2w/896cjP6fYX7HUL+77E3xhip/EDSGoPcQ=
-X-Received: by 2002:a81:61c3:: with SMTP id v186mr4332558ywb.151.1572530361617;
- Thu, 31 Oct 2019 06:59:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191031050338.12700-1-csm10495@gmail.com> <20191031133921.GA4763@lst.de>
-In-Reply-To: <20191031133921.GA4763@lst.de>
-From:   Charles Machalow <csm10495@gmail.com>
-Date:   Thu, 31 Oct 2019 06:59:10 -0700
-Message-ID: <CANSCoS-RzcutTWHN1t1iyW3GjqNcY5xFUZtJhAThDp5SPPrDAA@mail.gmail.com>
-Subject: Re: [PATCH] nvme: change nvme_passthru_cmd64's result field.
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-nvme@lists.infradead.org, marta.rybczynska@kalray.eu,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FInjRudIZ1nBXyYRthwNUoyrlLqGhK39QJ4i7rNkC2w=;
+        b=Q1RmWrjgV+VZ5V+GAS6LfzwyJSnuGdvgt9HyW03WTtCm2fhia57IYfbwtWSAQgUdbP
+         ok6LXnB4zRlB5pd8j/0gf3ZSjLn7etViVpx/FRUTYWHizCoRvv7qktujLIH6TaThXSWN
+         Ct2iFiCsG2KnLU78EihK756NXoXBQwPQOswFEhjLcvrOVcxFUrc8pHv4VZnxaIrIOHNC
+         lR14oHK7DJ+l9bABEBzXfmV9gI8S1d5JMk2Kaurp6z4Ou/dCn5VU7bXjkUdvGn9/I358
+         zfygianzSpOHS/2a9386foPGZ3xnLEG+V9t3qSW/qDkeLvGF6oOnpJ9W3wih/AW0lYvr
+         MfJg==
+X-Gm-Message-State: APjAAAUAGLGGIl5ZLBAQ0wzcEn6S4ZBaZ4KWuKuvx/0SDtA5/TPgTu+O
+        mDeVjqe/9oEkpupVaLwbkLs7TQ==
+X-Google-Smtp-Source: APXvYqzSpyD3GqbjVXKqKIxqLX3kf+eG/s3lqHhViq0jkE0RgoF86gbfk8pNgZ03UDv+V7aDn7oogg==
+X-Received: by 2002:aa7:8817:: with SMTP id c23mr7024726pfo.162.1572530371532;
+        Thu, 31 Oct 2019 06:59:31 -0700 (PDT)
+Received: from localhost.localdomain ([117.252.69.143])
+        by smtp.gmail.com with ESMTPSA id i16sm3522441pfa.184.2019.10.31.06.59.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 31 Oct 2019 06:59:30 -0700 (PDT)
+From:   Sumit Garg <sumit.garg@linaro.org>
+To:     jens.wiklander@linaro.org, jarkko.sakkinen@linux.intel.com,
+        dhowells@redhat.com
+Cc:     corbet@lwn.net, jejb@linux.ibm.com, zohar@linux.ibm.com,
+        jmorris@namei.org, serge@hallyn.com, casey@schaufler-ca.com,
+        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
+        stuart.yoder@arm.com, janne.karhunen@gmail.com,
+        keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        tee-dev@lists.linaro.org, Sumit Garg <sumit.garg@linaro.org>
+Subject: [Patch v3 0/7] Introduce TEE based Trusted Keys support
+Date:   Thu, 31 Oct 2019 19:28:36 +0530
+Message-Id: <1572530323-14802-1-git-send-email-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019, 6:39 AM Christoph Hellwig <hch@lst.de> wrote
+Add support for TEE based trusted keys where TEE provides the functionality
+to seal and unseal trusted keys using hardware unique key. Also, this is
+an alternative in case platform doesn't possess a TPM device.
 
-> All that casting is a pretty bad idea.  please just add an explicit
-> reserved field before the result, and check that it always is zero
-> in the ioctl handler.
+This series also adds some TEE features like:
 
-Not quite sure what you mean by check for zero in the ioctl handler. I
-like the idea of being able to use the same struct for either the
-original or 64 ioctls from userspace. I don't believe adding the
-explicit rsvd field allows that
+Patch #1, #2 enables support for registered kernel shared memory with TEE.
 
-- Charlie Scott Machalow
+Patch #3 enables support for private kernel login method required for
+cases like trusted keys where we don't wan't user-space to directly access
+TEE service to retrieve trusted key contents.
 
-On Thu, Oct 31, 2019 at 6:39 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Wed, Oct 30, 2019 at 10:03:38PM -0700, Charles Machalow wrote:
-> > Changing nvme_passthru_cmd64's result field to be backwards compatible
-> > with the nvme_passthru_cmd/nvme_admin_cmd struct in terms of the result
-> > field. With this change the first 32 bits of result in either case
-> > point to CQE DW0. This allows userspace tools to use the new structure
-> > when using the old ADMIN/IO_CMD ioctls or new ADMIN/IO_CMD64 ioctls.
->
-> All that casting is a pretty bad idea.  please just add an explicit
-> reserved field before the result, and check that it always is zero
-> in the ioctl handler.
+Rest of the patches from #4 to #7 adds support for TEE based trusted keys.
+
+This patch-set has been tested with OP-TEE based pseudo TA which can be
+found here [1].
+
+[1] https://github.com/OP-TEE/optee_os/pull/3082
+
+Changes in v3:
+1. Update patch #2 to support registration of multiple kernel pages.
+2. Incoporate dependency patch #4 in this patch-set:
+   https://patchwork.kernel.org/patch/11091435/
+3. Rebased to latest tpmdd-master.
+
+Changes in v2:
+1. Add reviewed-by tags for patch #1 and #2.
+2. Incorporate comments from Jens for patch #3.
+3. Switch to use generic trusted keys framework.
+
+Sumit Garg (7):
+  tee: optee: allow kernel pages to register as shm
+  tee: enable support to register kernel memory
+  tee: add private login method for kernel clients
+  KEYS: trusted: Add generic trusted keys framework
+  KEYS: trusted: Introduce TEE based Trusted Keys
+  doc: keys: Document usage of TEE based Trusted Keys
+  MAINTAINERS: Add entry for TEE based Trusted Keys
+
+ Documentation/security/keys/index.rst       |   1 +
+ Documentation/security/keys/tee-trusted.rst |  93 ++++++++
+ MAINTAINERS                                 |   9 +
+ drivers/tee/optee/call.c                    |   7 +
+ drivers/tee/tee_core.c                      |   6 +
+ drivers/tee/tee_shm.c                       |  26 ++-
+ include/keys/trusted-type.h                 |  48 ++++
+ include/keys/trusted_tee.h                  |  66 ++++++
+ include/keys/trusted_tpm.h                  |  15 --
+ include/linux/tee_drv.h                     |   1 +
+ include/uapi/linux/tee.h                    |   8 +
+ security/keys/Kconfig                       |   3 +
+ security/keys/trusted-keys/Makefile         |   2 +
+ security/keys/trusted-keys/trusted_common.c | 346 ++++++++++++++++++++++++++++
+ security/keys/trusted-keys/trusted_tee.c    | 282 +++++++++++++++++++++++
+ security/keys/trusted-keys/trusted_tpm1.c   | 345 +++++----------------------
+ 16 files changed, 954 insertions(+), 304 deletions(-)
+ create mode 100644 Documentation/security/keys/tee-trusted.rst
+ create mode 100644 include/keys/trusted_tee.h
+ create mode 100644 security/keys/trusted-keys/trusted_common.c
+ create mode 100644 security/keys/trusted-keys/trusted_tee.c
+
+-- 
+2.7.4
+
