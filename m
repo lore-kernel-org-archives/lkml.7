@@ -2,369 +2,139 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19928CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE931CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB052086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:51:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572544276;
-	bh=zhmMKUTLwGOLkNxC1vCZG7S32lZJoG/WRDbEbnRFarU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QOQ2YRX85Axh+0MOy5vmCMwa8hYG4OkrIlZzEFsd0lQRHC+15GPlfk3gRskcBVhCE
-	 7wDex7jgrVbllNYJRXRZXphmLdUw5W1wnuJwQsT1jttiID5RkCA1NL7b4ive5a0/L8
-	 K/rMQX201XqZXjGCciBoFLaBlqVZ95zq6QsrZd+Y=
+	by mail.kernel.org (Postfix) with ESMTP id A5FF22080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:52:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D6C1yVuR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbfJaRvO (ORCPT
+        id S1729140AbfJaRwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 13:51:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726602AbfJaRvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 13:51:14 -0400
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B1E42067D;
-        Thu, 31 Oct 2019 17:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572544272;
-        bh=zhmMKUTLwGOLkNxC1vCZG7S32lZJoG/WRDbEbnRFarU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=oT65MvjP6peplfZ/wSFv/rFNulH7Vb0RS4ke6ddCDvWxZz/42xCRCbszNzLb6dzee
-         Y7toaGN7SLHU3pvsILgd8qa0fQaaDRW6FjJP7ybHSPadv7Dvo/OjGs/rc4NGSYH4Cm
-         reZSMMYJJRK81PTFXIPGhur/pKJbzbEPhuIKUgm0=
-Received: by mail-qk1-f180.google.com with SMTP id e66so7847314qkf.13;
-        Thu, 31 Oct 2019 10:51:12 -0700 (PDT)
-X-Gm-Message-State: APjAAAUobNGqUwA36oEJY1deW1yHQoqGiJs2c0b/Kdo3a133x5t9yizh
-        uJI1vn7jqKin4iAyEM2vFuHixrxTAElgqsSnZA==
-X-Google-Smtp-Source: APXvYqyyBycVGgR82w3nJ2gAeNKcxZHW7J9XVnJiGMY/B+GhYIuxpzQdNSLNOx3KK09ue5JgLjpNGUGDtH1dwXd4I9s=
-X-Received: by 2002:a37:9847:: with SMTP id a68mr6570552qke.223.1572544271035;
- Thu, 31 Oct 2019 10:51:11 -0700 (PDT)
+        Thu, 31 Oct 2019 13:52:33 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36429 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbfJaRwd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 13:52:33 -0400
+Received: by mail-io1-f66.google.com with SMTP id s3so3895343ioe.3
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 10:52:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mxV+2q76TOXqdkYGmWgrFX3noerT+2XT5stD2pDGxy4=;
+        b=D6C1yVuRrDhf4QkrhECxb4poSSgofQd6d8y3lwuDnDDo8D10nO6Ax5FRjL4ps/cBH2
+         kibSwzCfBDl1f7CMhlXY1kciz6oFkW7LsIrytUSfdoT6ANPyz6PU14U40ImfzEl2fu5d
+         06UoCcfFhGpPMpgbOenFHbl2nIwNSPRnbySfc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mxV+2q76TOXqdkYGmWgrFX3noerT+2XT5stD2pDGxy4=;
+        b=cT/+r1HUe/poWIrfaH91z8KVFmLBFagXtVJEOipsYLIm6+3P/AuxfmdJZHd+o5o7LX
+         pDwmsC4AcKHYpgbMMB99R54X3UzkmEGtc7KKhpAc4pPj7W1ZFOWvBrjHvK6BLmCVWg44
+         Xq2OC6IaHAXEb22rU9gJUZlywpBuC2eHnDHgMWE434/MVlpV8lnW3/IzRDbsf0MGYMJT
+         nZUDlYA7YnlbHZvMItUtwpzsrV0HIGQszV2ViWkyPiKravEU0HzpRnYYbRJg+N8m9F0e
+         zOtr19UFapSHZelaZpbRGXGILRGMavygrv3Nsh/rqU5CNAvAwcTLNhAiy4Vd9dc5YKhX
+         lDsA==
+X-Gm-Message-State: APjAAAUWYSqdB2v8K5du6FwTaKjw3yfVm6mu7RiVQe/NOM7KpahFq7UJ
+        1nSE/gV7uu5FPWs/GoLziYrHzP6edFs=
+X-Google-Smtp-Source: APXvYqyt1wlhbDitPGbqgS8LkbBOkoeddeKqNgk5qZX5pmc+YCguxYTjL0dDMmSyeZE6vlwKriBa7A==
+X-Received: by 2002:a5d:9a0c:: with SMTP id s12mr6367311iol.41.1572544352636;
+        Thu, 31 Oct 2019 10:52:32 -0700 (PDT)
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com. [209.85.166.182])
+        by smtp.gmail.com with ESMTPSA id c73sm651379ila.9.2019.10.31.10.52.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 31 Oct 2019 10:52:32 -0700 (PDT)
+Received: by mail-il1-f182.google.com with SMTP id h5so6128239ilh.11
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 10:52:32 -0700 (PDT)
+X-Received: by 2002:a92:ba1b:: with SMTP id o27mr7815343ili.269.1572544351933;
+ Thu, 31 Oct 2019 10:52:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
- <0182df3c49c6c804ee20ef32fc4b85b50ff45fca.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
- <ed0b2aa8-8a70-0341-4ecf-8959f37c53bd@ti.com> <5c793f1308ccc6e787260b64fe6a875a8d0eb9d0.camel@fi.rohmeurope.com>
- <20191029193440.GA1812@bogus> <3e0f0943cd599cae544bd7a7a49dded46d57a604.camel@fi.rohmeurope.com>
- <CAL_JsqJgnYqv1q=wf++5FOX-niRWQ=H9wWYgUKy+z=H933Qraw@mail.gmail.com> <1e3901d1c7c26f4dbbc1de78b607b92bf9ddc098.camel@fi.rohmeurope.com>
-In-Reply-To: <1e3901d1c7c26f4dbbc1de78b607b92bf9ddc098.camel@fi.rohmeurope.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 31 Oct 2019 12:50:59 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJ6kmZyfXtZy_gz_6sxgK2CTXKTcpARkaf462QiwJXYZA@mail.gmail.com>
-Message-ID: <CAL_JsqJ6kmZyfXtZy_gz_6sxgK2CTXKTcpARkaf462QiwJXYZA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 02/13] dt-bindings: mfd: Document ROHM BD71828 bindings
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>
+References: <20191030100618.1.Ibf7a996e4a58e84f11eec910938cfc3f9159c5de@changeid>
+ <20191030173758.GC693@sol.localdomain> <CAD=FV=Uzma+eSGG1S1Aq6s3QdMNh4J-c=g-5uhB=0XBtkAawcA@mail.gmail.com>
+ <20191030190226.GD693@sol.localdomain> <20191030205745.GA216218@sol.localdomain>
+ <CAD=FV=X6Q3QZaND-tfYr9mf-KYMeKFmJDca3ee-i9roWj+GHsQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=X6Q3QZaND-tfYr9mf-KYMeKFmJDca3ee-i9roWj+GHsQ@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 31 Oct 2019 10:52:19 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=URZX4t-TB2Ne8y5ZfeBGoyhsPZhcncQ0yPe3cRXi=1gw@mail.gmail.com>
+Message-ID: <CAD=FV=URZX4t-TB2Ne8y5ZfeBGoyhsPZhcncQ0yPe3cRXi=1gw@mail.gmail.com>
+Subject: Re: [PATCH] Revert "ext4 crypto: fix to check feature status before
+ get policy"
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Gwendal Grignou <gwendal@chromium.org>, Chao Yu <chao@kernel.org>,
+        Ryo Hashimoto <hashimoto@chromium.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        Guenter Roeck <groeck@chromium.org>, apronin@chromium.org,
+        linux-doc@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-fscrypt@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 7:54 AM Vaittinen, Matti
-<Matti.Vaittinen@fi.rohmeurope.com> wrote:
+Hi,
+
+On Wed, Oct 30, 2019 at 2:59 PM Doug Anderson <dianders@chromium.org> wrote:
 >
+> Hi,
 >
-> On Wed, 2019-10-30 at 14:22 -0500, Rob Herring wrote:
-> > On Wed, Oct 30, 2019 at 3:27 AM Vaittinen, Matti
-> > <Matti.Vaittinen@fi.rohmeurope.com> wrote:
-> > >
-> > > On Tue, 2019-10-29 at 14:34 -0500, Rob Herring wrote:
-> > > > On Fri, Oct 25, 2019 at 05:49:17AM +0000, Vaittinen, Matti wrote:
-> > > > > Hello Dan,
-> > > > >
-> > > > > Thanks again for checking this :)
-> > > > >
-> > > > > On Thu, 2019-10-24 at 14:35 -0500, Dan Murphy wrote:
-> > > > > > Matti
-> > > > > >
-> > > > > > On 10/24/19 6:41 AM, Matti Vaittinen wrote:
-> > > > > > > ROHM BD71828 Power management IC integrates 7 buck
-> > > > > > > converters,
-> > > > > > > 7
-> > > > > > > LDOs,
-> > > > > > > a real-time clock (RTC), 3 GPO/regulator control pins, HALL
-> > > > > > > input
-> > > > > > > and a 32.768 kHz clock gate.
-> > > > > > >
-> > > > > > > Document the dt bindings drivers are using.
-> > > > > > >
-> > > > > > > Signed-off-by: Matti Vaittinen <
-> > > > > > > matti.vaittinen@fi.rohmeurope.com>
-> > > > > > > ---
-> > > > > > >
-> > > > > > > No changes since v1
-> > > > > > >
-> > > > > > >   .../bindings/mfd/rohm,bd71828-pmic.txt        | 180
-> > > > > > > ++++++++++++++++++
-> > > > > > >   1 file changed, 180 insertions(+)
-> > > > > > >   create mode 100644
-> > > > > > > Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt
-> > > > > >
-> > > > > > I will let maintainers weigh in here but if this is new this
-> > > > > > should
-> > > > > > probably be in the yaml format to avoid conversion in the
-> > > > > > future
-> > > > >
-> > > > > Oh... This is new to me. I guess there are reasons for this -
-> > > > > but I
-> > > > > must say I am not excited as I have never used yaml for
-> > > > > anything.
-> > > > > I'll
-> > > > > do as you suggest and wait for what others have to say :)
-> > > > > Thanks
-> > > > > for
-> > > > > pointing this out though.
-> > > >
-> > > > Sorry for your lack of excitement. It could be XML...
-> > >
-> > > Thanks, I appreciate that, apology accepted X-D
-> > >
-> > > > There aren't many MFD examples yet, but there is max77650 in my
-> > > > tree
-> > > > and
-> > > > linux-next.
-> > >
-> > > I looked at the max77650 MFD binding from linux-next. After that I
-> > > also
-> > > looked some of the generic documents for DT bindings (I know - I
-> > > should
-> > > have done that earlier and your job had been easier). But all that
-> > > left
-> > > me "slightly" puzzled. After some further wandering in the virtual
-> > > world I spotted this:
-> > > https://elinux.org/images/6/6b/LPC2018_json-schema_for_Devicetree.pdf
-> > >
-> > > I think this link in some dt-yaml-binding-readme might be helpful.
+> On Wed, Oct 30, 2019 at 1:57 PM Eric Biggers <ebiggers@kernel.org> wrote:
 > >
-> > Presentations bit rot, so I'd rather not. I'd hope that
-> > writing-schema.rst and example-schema.yaml capture what's in the
-> > presentation. What do you think is missing?
->
-> I personally wanted to understand "why?". Why not text doc. What is the
-> yaml thing aiming at? What are the problems we are solving here. And
-> maybe most crucially - I had no idea what is schema? It sure sounded
-> like some toolchain thingy or perhaps piece of new yaml representation
-> of dts (please note, I somehow thought that dts files were going to be
-> converted to yaml - maybe due to some reading about DTC getting yaml
-> support) which I thought would not need to be touched by me :) It took
-> me quite a while to understand that the old binding doc is actually a
-> schema. Without that piece finding out the new format of binding docs
-> was painful.
-
-I guess 'why' is easy enough to address.
-
-> Also, binding and binding document were not completely same thing in my
-> mind. I thought that binding is actual piece of dt - probably living
-> under arch/x/boot/dts - binding document is what explains how that
-> should be construct and is under Documentation/devicetree/bindings/.
-> This is probably largely due to my ignorance and habit oh skipping much
-> of reading and just trying out things. But I hoped I had these cleared
-> in first documents I tried reading for creation binding docs..
->
-> ...which brings me here. I looked at the
-> Documentation/devicetree/bindings folder and did read the 'writing-
-> bindings.txt' and 'submitting-patches.txt' from there. Then I also
-> checked the Documentation/devicetree/usage-model.txt None of which
-> helped me out. I did also open the 'writing-schema.rst' but I didn't
-> read it carefully enough. Probably because I thought after reading the
-> opening chapter that this described how to do actual dts in yaml.
-
-Things are a bit scattered around I'll admit. I feel like we need a
-'start here', but the challenge is people have different starting
-points.
-
-> Anyways, I might add some notes about using yaml format (and perhaps
-> shortly note that the yaml dt binding doc is called schema) in
-> Documentation/devicetree/bindings/writing-bindings.txt and
-> Documentation/devicetree/bindings/submitting-patches.txt
->
-> I could also appreciate some note about benefits/goals of using yaml
-> instead of text docs in writing-schema.rst - although I understand that
-> this may not be relevant for all readers.
->
-> > > So if I understand this correctly, idea is to convert the dts
-> > > sources
-> > > to use yaml (right?). This is seen better because more people
-> > > knowsubmitting-patches.txt
-> > > JSON/YAML than dts format(?) Fair enough. Although some of us know
-> > > dts
-> > > format decently well but have never used JSON or yaml. I guess dts
-> > > support is not going away though and yaml examples do not seem
-> > > terribly
-> > > hard at first sight.
+> > FWIW, from reading the Chrome OS code, I think the code you linked to isn't
+> > where the breakage actually is.  I think it's actually at
+> > https://chromium.googlesource.com/chromiumos/platform2/+/refs/heads/master/chromeos-common-script/share/chromeos-common.sh#375
+> > ... where an init script is using the error message printed by 'e4crypt
+> > get_policy' to decide whether to add -O encrypt to the filesystem or not.
 > >
-> > No, nothing is changing for .dts files (other than fixing errors the
-> > schemas find). The free form, human readable only prose called
-> > binding
-> > documentation is changing to YAML formatted, json-schema vocabulary
-> > binding schema which can be used to validate dts files.
->
-> Thanks for sorting this out. It all makes more sense now.
->
-> > > What comes to binding docs - well, in my eyes (which may be biased)
-> > > writing documentation in anything intended to be interpreted by a
-> > > machine is still a step backwards for a human document reader. Sure
-> > > syntax validation or reviewing is easier if format is machine
-> > > readable
-> > > - but free text info is more, well, informative (form me at least).
-> > > I
-> > > for example wouldn't like reading a book written in any script or
-> > > markup language. Nor writing one. It is difficult for me to
-> > > understand
-> > > the documentation change to yaml, maybe because I am more often
-> > > using
-> > > the binding docs for composing DT for a device than reviewing them
-> > > ;)
+> > It really should check instead:
 > >
-> > ICYMI, all the kernel docs are in a markup language now...
-> >
-> > Free form descriptions are easier to use because you can put in dts
-> > whatever you want. Nothing is going to check. There's been no
-> > shortage
-> > of errors and inconsistencies that we've already found.
+> >         [ -e /sys/fs/ext4/features/encryption ]
 >
-> I won't start arguing on this :)
->
-> > You can have as much description and comments as you like (though I'm
-> > trying to cut down on the copy-n-paste genericish 'clock for the
-> > module' type comments).
->
-> This is good to note. Thanks.
->
-> > > Anyways, I guess I'd better either try learning the yaml, figure
-> > > out
-> > > what are schemas and see how to convert yaml docs to text for nicer
-> > > reading (I assume this is doable) and how to verify yaml binding
-> > > docs
-> > > are Ok - or quit contributing. No one is forcing me to do this.
-> > > Continuing complaining on this is probably not getting us anywhere
-> > > so I
-> > > might as well shut up now :/
-> >
-> > There is some notion to convert the DT spec to schema and then
-> > generate the spec from the schema. Take properties, their type, and
-> > descriptions and put that back into tables for example. Would love to
-> > have someone work on that. :)
->
-> I am glad to hear you have developed / are developing such tooling.
+> OK, I filed <https://crbug.com/1019939> and CCed all the people listed
+> in the cryptohome "OWNERS" file.  Hopefully one of them can pick this
+> up as a general cleanup.  Thanks!
 
-TBC, I have not and am not. It's just an idea. There's been nothing
-done beyond experimenting if rST could be embedded into yaml.
+Just to follow-up: I did a quick test here to see if I could fix
+"chromeos-common.sh" as you suggested.  Then I got rid of the Revert
+and tried to login.  No joy.
 
-> I
-> really appreciate it. What comes to giving a helping hand - I'd better
-> to stick the simple C drivers for now ;) But if I ever get the feeling
-> that I don't know what to do I'll keep this in mind :] Let me do some
-> calculus... Only 11 years and my youngest son will probably leave our
-> house - do you think 2030 is a bit too late? Just let me know if this
-> is still relevant then - and I'll buy you a beer or write a tool (of
-> some kind) xD
+Digging a little deeper, the ext4_dir_encryption_supported() function
+is called in two places:
+* chromeos-install
+* chromeos_startup
 
-I've scheduled you in for 2030. :)
+In my test case I had a machine that I'd already logged into (on a
+previous kernel version) and I was trying to log into it a second
+time.  Thus there's no way that chromeos-install could be involved.
+Looking at chromeos_startup:
 
-> Meanwhile... I have tried to convert the BD71828 DT doc from the RFC
-> patch to yaml - and I am having hard time. Especially with the
-> regulators node - which I would like to place in
-> Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
->
-> My problem is the
-> regulators {
-> buck1: BUCK1 {
->                     regulator-name = "buck1";
->                     regulator-min-microvolt = <500000>;
->                     regulator-max-microvolt = <2000000>;
->                     regulator-ramp-delay = <2500>;
->                     rohm,dvs-runlvl-ctrl;
->                     rohm,dvs-runlevel0-voltage = <500000>;
->                     rohm,dvs-runlevel1-voltage = <506250>;
->                     rohm,dvs-runlevel2-voltage = <512500>;
->                     rohm,dvs-runlevel3-voltage = <518750>;
->                     regulator-boot-on;
->     };
->     ...
-> };
-> node which only contains BUCKX and LDOX sub-nodes. It has no own
-> properties.
->
-> From MFD yaml I did try:
->
->   regulators:
->     $ref: ../regulator/rohm,bd71828-regulator.yaml
->     description:
->       List of child nodes that specify the regulators.
->
-> and in rohm,bd71828-regulator.yaml
->
-> I tried doing:
->
-> patternProperties:
->   "^BUCK[1-7]$":
->     type: object
->     description:
->       Properties for single regulator.
->     properties:
->         ...
->
-> but this fails validation as properties: is not given.
->
-> [mvaittin@localhost linux]$ dt-doc-validate
-> Documentation/devicetree/bindings/regulator/rohm,bd71828-
-> regulator.yaml
-> /home/mvaittin/torvalds/linux/Documentation/devicetree/bindings/regulat
-> or/rohm,bd71828-regulator.yaml: 'properties' is a required property
->
-> If I try and add:
->
-> properties:
->   foo: true
->
-> patternProperties:
->     "^BUCK[1-7]$":
->       type: object
->       description:
->         Properties for single regulator.
->       properties:
->         ...
+https://chromium.googlesource.com/chromiumos/platform2/+/refs/heads/master/init/chromeos_startup
 
-That's a case of needing to adjust the meta-schema (the schema that
-checks the schemas). It's a bit overly restrictive just to try to
-contain what's allowed. I've fixed it now. Update dtschema and it
-should work now.
+...the function is only used for setting up the "encrypted stateful"
+partition.  That wasn't where my failure was.  My failure was with
+logging in AKA with cryptohome.  Thus I think it's plausible that my
+original commit message pointing at cryptohome may have been correct.
+It's possible that there were _also_ problems with encrypted stateful
+that I wasn't noticing, but if so they were not the only problems.
 
-BTW, what you will also need is to reference the common schema:
+It still may be wise to make Chrome OS use different tests, but it
+might not be quite as simple as hoped...
 
-"^BUCK[1-7]$":
-  type: object
-  allOf:
-    - $ref: regulator.yaml#
-  properties:
-   rohm,dvs-runlvl-ctrl:
-     type: boolean
-     description: ...
-   ...
-
-Rob
+-Doug
