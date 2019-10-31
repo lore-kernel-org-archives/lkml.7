@@ -2,133 +2,102 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDBBCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116D2CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF5482087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D305A2087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:54:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QH4xISMA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MlVKvzEK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729181AbfJaVw7 (ORCPT
+        id S1729206AbfJaVyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 17:52:59 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46667 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729018AbfJaVw7 (ORCPT
+        Thu, 31 Oct 2019 17:54:19 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36060 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729018AbfJaVyT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 17:52:59 -0400
-Received: by mail-io1-f68.google.com with SMTP id c6so8501791ioo.13;
-        Thu, 31 Oct 2019 14:52:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S6nzwdV69bS3qMmnYiEeOyRFqJ5MsMzJLi/ghgWFyCk=;
-        b=QH4xISMARBbOmmD3a9sgevwM4oEP3QBvRNmTOkMVYDdAKztdrYBiftDBJKA0Vzldim
-         02CjCPjP7ff7F/zqEeXFSTQ43DmYwvd4owfRWPEL28BYSnw6QBnx1uXHY3ZQfH8+h1hQ
-         jA7qdGHxzHXoz/fKWM2xzzGWqVQvKy/cp82yCB6I4dMUGs8aghFdymxrCW2FaMa/Kpme
-         5W7k3/vmCV0gi/sSh/qE01UlCsWWp5xLa2uOzNCs+irygA64lpLzQwsNhw64u017X4Bt
-         WDqwrayYdr3GjBsa49HTeGcGx2QQWX1DXM3UEXjl1pA1CLnzlj7qlloaeGXzaCfrWac4
-         h2Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S6nzwdV69bS3qMmnYiEeOyRFqJ5MsMzJLi/ghgWFyCk=;
-        b=mzfujrVPFPoHyE7kqdMMEvQ6h2QoLFq+YdYhUeEptpXUtf3prsLknIZ7wuSnY3VQ3t
-         knI4ILdw0fYILMdoF1OhsPVtBM4yGKgSaxTKKs9Q4qWvJDyFhuu1EnWivFJ2hWg/u8j3
-         EkBy48JYcrmB5g4/u6O9xFAQFGUwpvHWN5zxNP3L/HjvepPeOrKe7316BvTjDH98Jf8W
-         1dxLQa5a+vUtqAo4qVgVLobxQjVZhqAGYEocdnOVYdBnXtQDNQmDBZlsxz1Ef/2aLlLy
-         9yyLTaIKR85asDIN1jS8SSfc07qTPv94i1abZKN929xQrppi+egnBwKxLJHTEEYVApgi
-         fw+A==
-X-Gm-Message-State: APjAAAUi5eWh8fjv6TcahOv5NCdvjv64DF1rUqEXT+/PrV5CGVLRQ24N
-        0UajAOe/fb989dOOz7yDOSxEAULrSzmbIixsYzk=
-X-Google-Smtp-Source: APXvYqw1GGuyhktv3L0CWRwAE5jFdB3YHTBZ/G3in7KXjy4nSlz8MqaOjQ1BkXcRJhHFs83nIz1yDhXZBSuI2dNiaZg=
-X-Received: by 2002:a02:330e:: with SMTP id c14mr1725697jae.5.1572558778301;
- Thu, 31 Oct 2019 14:52:58 -0700 (PDT)
+        Thu, 31 Oct 2019 17:54:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=9BM+3AEpbkEyaVJFAB613unJ+Y8pJb9+MdJLqEvari0=; b=MlVKvzEKlh2LW4/LLwZY1S17tB
+        kWdgcYiidURkGdNnmILSAk8nMTOCppIja8R9N9kBeHC/MU00qGqYRasi2vIsf+mrXaOfiZIQM9LoS
+        QLffyK+RnmOGlboEn00rUU86Yc7Rgt6mMEMTkXp1xtKrFSPGb8GBKKuSk6ozPl1jArExSwPOmpMdD
+        6hyNU6Nf7rBggPqPtZd20sOd3VfNCp7dRNy5G8MQLtHtjJeq6x1ldPPIFi28O1RZpo/jSF8RyCT8U
+        5vsowCrj5dpLv97agvRZG6ah0p7YLYu/c7EvZg5iM9ATSNZev5ylA9FFnT6nWb/yueo91YzatjXY6
+        MMuWgk0g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iQIOV-0007AR-Uj; Thu, 31 Oct 2019 21:54:15 +0000
+Date:   Thu, 31 Oct 2019 14:54:15 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: dma coherent memory user-space maps
+Message-ID: <20191031215415.GA9809@infradead.org>
+References: <b811f66d-2353-23c6-c9fa-e279cdb0f832@shipmail.org>
 MIME-Version: 1.0
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <1572171452-7958-2-git-send-email-rppt@kernel.org> <085ed07e-e646-f7a4-0370-06f33a2a4e4a@redhat.com>
- <20191030081529.GB20624@rapoport-lnx> <9eae3941-64cf-4ea1-0287-0e64bab192c6@redhat.com>
- <20191031191651.GA26165@rapoport-lnx>
-In-Reply-To: <20191031191651.GA26165@rapoport-lnx>
-From:   Dan Williams <dan.j.williams@gmail.com>
-Date:   Thu, 31 Oct 2019 14:52:46 -0700
-Message-ID: <CAA9_cmdCmiu5wVs=Jo4c6VNw6N1raPTDXg4d9OuUj3w0+e5JHQ@mail.gmail.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user mappings
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b811f66d-2353-23c6-c9fa-e279cdb0f832@shipmail.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 12:17 PM Mike Rapoport <rppt@kernel.org> wrote:
->
-> On Wed, Oct 30, 2019 at 09:19:33AM +0100, David Hildenbrand wrote:
-> > On 30.10.19 09:15, Mike Rapoport wrote:
-> > >On Tue, Oct 29, 2019 at 12:02:34PM +0100, David Hildenbrand wrote:
-> > >>On 27.10.19 11:17, Mike Rapoport wrote:
-> > >>>From: Mike Rapoport <rppt@linux.ibm.com>
-> > >>>
-> > >>>The mappings created with MAP_EXCLUSIVE are visible only in the context of
-> > >>>the owning process and can be used by applications to store secret
-> > >>>information that will not be visible not only to other processes but to the
-> > >>>kernel as well.
-> > >>>
-> > >>>The pages in these mappings are removed from the kernel direct map and
-> > >>>marked with PG_user_exclusive flag. When the exclusive area is unmapped,
-> > >>>the pages are mapped back into the direct map.
-> > >>>
-> > >>
-> > >>Just a thought, the kernel is still able to indirectly read the contents of
-> > >>these pages by doing a kdump from kexec environment, right?
-> > >
-> > >Right.
-> > >
-> > >>Also, I wonder
-> > >>what would happen if you map such pages via /dev/mem into another user space
-> > >>application and e.g., use them along with kvm [1].
-> > >
-> > >Do you mean that one application creates MAP_EXCLUSIVE and another
-> > >applications accesses the same physical pages via /dev/mem?
-> >
-> > Exactly.
-> >
-> > >
-> > >With /dev/mem all physical memory is visible...
-> >
-> > Okay, so the statement "information that will not be visible not only to
-> > other processes but to the kernel as well" is not correct. There are easy
-> > ways to access that information if you really want to (might require root
-> > permissions, though).
->
-> Right, but /dev/mem is an easy way to extract any information in any
-> environment if one has root permissions...
->
+Hi Thomas,
 
-I don't understand this concern with /dev/mem. Just add these pages to
-the growing list of the things /dev/mem is not allowed to touch.
+sorry for the delay.  I've been travelling way to much laterly and had
+a hard time keeping up.
+
+On Tue, Oct 08, 2019 at 02:34:17PM +0200, Thomas Hellström (VMware) wrote:
+> /* Obtain struct dma_pfn pointers from a dma coherent allocation */
+> int dma_get_dpfns(struct device *dev, void *cpu_addr, dma_addr_t dma_addr,
+>           pgoff_t offset, pgoff_t num, dma_pfn_t dpfns[]);
+> 
+> I figure, for most if not all architectures we could use an ordinary pfn as
+> dma_pfn_t, but the dma layer would still have control over how those pfns
+> are obtained and how they are used in the kernel's mapping APIs.
+> 
+> If so, I could start looking at this, time permitting,  for the cases where
+> the pfn can be obtained from the kernel address or from
+> arch_dma_coherent_to_pfn(), and also the needed work to have a tailored
+> vmap_pfn().
+
+I'm not sure that infrastructure is all that helpful unfortunately, even
+if it ended up working.  The problem with the 'coherent' DMA mappings
+is that we they have a few different backends.  For architectures that
+are DMA coherent everything is easy and we use the normal page
+allocator, and your above is trivially doable as wrappers around the
+existing functionality.  Other remap ptes to be uncached, either
+in-place or using vmap, and the remaining ones use weird special
+allocators for which almost everything we can mormally do in the VM
+will fail.
+
+I promised Christian an uncached DMA allocator a while ago, and still
+haven't finished that either unfortunately.  But based on looking at
+the x86 pageattr code I'm now firmly down the road of using the
+set_memory_* helpers that change the pte attributes in place, as
+everything else can't actually work on x86 which doesn't allow
+aliasing of PTEs with different caching attributes.  The arm64 folks
+also would prefer in-place remapping even if they don't support it
+yet, and that is something the i915 code already does in a somewhat
+hacky way, and something the msm drm driver wants.  So I decided to
+come up with an API that gives back 'coherent' pages on the
+architectures that support it and otherwise just fail.
+
+Do you care about architectures other than x86 and arm64?  If not I'll
+hopefully have something for you soon.
