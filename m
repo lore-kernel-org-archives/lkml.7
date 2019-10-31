@@ -2,114 +2,119 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4502DCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DA4CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9942080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:46:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aP5orx4z"
+	by mail.kernel.org (Postfix) with ESMTP id 009502080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:51:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfJaBqj (ORCPT
+        id S1726476AbfJaBvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 21:46:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50028 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725926AbfJaBqi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 21:46:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572486397;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OIhA3h+F3B7b1YDj7xFASdzKWfp17j0nfrAmTNbsOig=;
-        b=aP5orx4zJ4rE44+Tr1pslHxkuSgMR2He6h2ZyVD2cmNK9FcasktZgILo9Jomw+Gol6vQ86
-        Gk8K45SD4uuWC6VFFOXXnM8kZSuAVT/GFmuMkc/vqYMDGT4Mq4Lx70Agu3e7UsjuVG3344
-        kfLrrKZ3SKIvqClUfN444doVLNxy1oc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-72-Lo1Jpa2NM_aZjD_2oVi__A-1; Wed, 30 Oct 2019 21:46:33 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 93F2C800D49;
-        Thu, 31 Oct 2019 01:46:28 +0000 (UTC)
-Received: from [10.72.12.100] (ovpn-12-100.pek2.redhat.com [10.72.12.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 07CE960870;
-        Thu, 31 Oct 2019 01:46:03 +0000 (UTC)
-Subject: Re: [PATCH V6 6/6] docs: sample driver to demonstrate how to
- implement virtio-mdev framework
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-References: <20191030064444.21166-1-jasowang@redhat.com>
- <20191030064444.21166-7-jasowang@redhat.com>
- <20191030212312.GA4251@infradead.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <d8266abb-391a-27d0-59ab-3e1412fe73da@redhat.com>
-Date:   Thu, 31 Oct 2019 09:46:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 30 Oct 2019 21:51:00 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58640 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725926AbfJaBu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 21:50:59 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8F4D698C7D8E304773C3;
+        Thu, 31 Oct 2019 09:50:55 +0800 (CST)
+Received: from [127.0.0.1] (10.133.219.218) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 31 Oct 2019
+ 09:50:53 +0800
+Message-ID: <5DBA3DFD.2020601@huawei.com>
+Date:   Thu, 31 Oct 2019 09:50:53 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-In-Reply-To: <20191030212312.GA4251@infradead.org>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: Lo1Jpa2NM_aZjD_2oVi__A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] fault-inject: Use debugfs_create_ulong() instead of
+ debugfs_create_ul()
+References: <1572440776-50318-1-git-send-email-zhongjiang@huawei.com> <CAC5umyhRiJ9LHD1fhhSUygmWtXMe28WL4KB9=5DXv0rU6rJ0vg@mail.gmail.com>
+In-Reply-To: <CAC5umyhRiJ9LHD1fhhSUygmWtXMe28WL4KB9=5DXv0rU6rJ0vg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.133.219.218]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/10/31 =E4=B8=8A=E5=8D=885:23, Christoph Hellwig wrote:
-> On Wed, Oct 30, 2019 at 02:44:44PM +0800, Jason Wang wrote:
->> This sample driver creates mdev device that simulate virtio net device
->> over virtio mdev transport. The device is implemented through vringh
->> and workqueue. A device specific dma ops is to make sure HVA is used
->> directly as the IOVA. This should be sufficient for kernel virtio
->> driver to work.
+On 2019/10/30 21:39, Akinobu Mita wrote:
+> 2019年10月30日(水) 22:10 zhong jiang <zhongjiang@huawei.com>:
+>> debugfs_create_ulong() has implemented the function of debugfs_create_ul()
+>> in lib/fault-inject.c. hence we can replace it.
 >>
->> Only 'virtio' type is supported right now. I plan to add 'vhost' type
->> on top which requires some virtual IOMMU implemented in this sample
->> driver.
-> Can we please submit a real driver for it?  A more or less useless
-> sample driver doesn't really qualify for our normal kernel requirements
-> that infrastructure should have a real user.
+>> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+>> ---
+>>  lib/fault-inject.c | 43 ++++++++++++++-----------------------------
+>>  1 file changed, 14 insertions(+), 29 deletions(-)
+>>
+>> diff --git a/lib/fault-inject.c b/lib/fault-inject.c
+>> index 8186ca8..326fc1d 100644
+>> --- a/lib/fault-inject.c
+>> +++ b/lib/fault-inject.c
+>> @@ -151,10 +151,13 @@ bool should_fail(struct fault_attr *attr, ssize_t size)
+>>  EXPORT_SYMBOL_GPL(should_fail);
+>>
+>>  #ifdef CONFIG_FAULT_INJECTION_DEBUG_FS
+>> +#ifdef CONFIG_FAULT_INJECTION_STACKTRACE_FILTER
+>>
+>> -static int debugfs_ul_set(void *data, u64 val)
+>> +static int debugfs_stacktrace_depth_set(void *data, u64 val)
+>>  {
+>> -       *(unsigned long *)data = val;
+>> +       *(unsigned long *)data =
+>> +               min_t(unsigned long, val, MAX_STACK_TRACE_DEPTH);
+>> +
+>>         return 0;
+>>  }
+>>
+>> @@ -164,26 +167,8 @@ static int debugfs_ul_get(void *data, u64 *val)
+>>         return 0;
+>>  }
+>>
+>> -DEFINE_SIMPLE_ATTRIBUTE(fops_ul, debugfs_ul_get, debugfs_ul_set, "%llu\n");
+>> -
+>> -static void debugfs_create_ul(const char *name, umode_t mode,
+>> -                             struct dentry *parent, unsigned long *value)
+>> -{
+>> -       debugfs_create_file(name, mode, parent, value, &fops_ul);
+>> -}
+>> -
+>> -#ifdef CONFIG_FAULT_INJECTION_STACKTRACE_FILTER
+>> -
+>> -static int debugfs_stacktrace_depth_set(void *data, u64 val)
+>> -{
+>> -       *(unsigned long *)data =
+>> -               min_t(unsigned long, val, MAX_STACK_TRACE_DEPTH);
+>> -
+>> -       return 0;
+>> -}
+>> -
+>> -DEFINE_SIMPLE_ATTRIBUTE(fops_stacktrace_depth, debugfs_ul_get,
+>> -                       debugfs_stacktrace_depth_set, "%llu\n");
+>> +DEFINE_DEBUGFS_ATTRIBUTE(fops_stacktrace_depth, debugfs_ul_get,
+>> +                        debugfs_stacktrace_depth_set, "%llu\n");
+>>
+> The commit message doesn't describe the s/SIMPLE/DEBUGFS/ change
+> for fops_stacktrace_depth.
+>
+> It is better to prepare another patch and I think debugfs_create_file()
+> in debugfs_create_stacktrace_depth() can now be replaced by
+> debugfs_create_file_unsafe().
+>
+> .
+Thanks for you suggestion.  I will repost as your proposal.
 
-
-Intel posted a real driver here: https://lkml.org/lkml/2019/10/15/1226.
-
-I plan to post another driver that wire virito-pci back to mdev bus on=20
-top of this series as well.
-
-Thanks
+Sincerely,
+zhong jiang
+>
 
 
