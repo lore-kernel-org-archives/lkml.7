@@ -2,325 +2,497 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C84CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D545CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C553C2087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:31:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FTzhdX6x"
+	by mail.kernel.org (Postfix) with ESMTP id 4294C2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:34:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfJaKb0 (ORCPT
+        id S1727005AbfJaKed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:31:26 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35681 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfJaKbY (ORCPT
+        Thu, 31 Oct 2019 06:34:33 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46322 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbfJaKed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:31:24 -0400
-Received: by mail-wm1-f67.google.com with SMTP id x5so5317190wmi.0
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 03:31:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NlAiN393nCfoZAygvg08JmQmUPznfSWcWyubnTUIKKE=;
-        b=FTzhdX6xA9OuelCfgiKsLtlknqLLFGDnkv0Ewxq2ueMPposxkBjtBde1+K6HfGCUPt
-         qIYL83dFAJt4Th0bz7plX90V/6hkhi6ob0yugsKsSgKe/ghH4tlSh+SoA1k9Tk54F0Jh
-         V8nnC5ExLwC7ZcXv6m5ixQXNUy5M+WMBh4SmeLRarr+P1n5nDUHRCW1o1x5Pq+BcKLf2
-         LDhTiUEXX9BfDRntrXDxlZyGXFsI+oRv1L8d94JIGzD3174pXs3lrMWpyAw8qRT6ukOs
-         6G0lH4FT698KoWL74vFlbOofb40GvIoZx3r/XaxhbuO9AeGS7l+V/eqF6EPxVn+xokZU
-         zqYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NlAiN393nCfoZAygvg08JmQmUPznfSWcWyubnTUIKKE=;
-        b=Qjs6uFK/rE3MnUFXpP7dDQL7ecCpdrhBmUxSDOxB2cYEB8w5yQogl/SNEyvxZipiWM
-         uYnPyyJtDI+BZyPOc3nu938+roYWkdhsPQ4AepSYXLgw+0DSuVOr9FQuH34D5w7axFc+
-         UGaD5nCIzhJ8OxErUMGRYpAxo+Ni5WltHAgUB1OkCgOIgaL5GXbziMhA3gTVOtiuiknl
-         iQ6WhiRBAMoO7jDStVSEQqJGkuWAqlalrTETAxSWPup8CCDXyiDvufximzK4EcCseAAo
-         +dRlMn4KPOZq+oHYduLSDYyEdNzoVATDQAJ91mxTJi7UNFmp3TQQeN5iwQNyMR/JmNj7
-         frHw==
-X-Gm-Message-State: APjAAAV+AB/2A+0aGkOBDHnr5NveWAZfA1ai4Pxe/k+x2hOEj5irHB3m
-        yyuvnS0Wz/Hypq248tO9EWBirA==
-X-Google-Smtp-Source: APXvYqwzIQFibqNdvPGWNk3heHcVRqkP3v0Z/1/+VvfGQ7xyaMJGSMdiwbE3vgpAkeqas6x5ShMlxA==
-X-Received: by 2002:a1c:5459:: with SMTP id p25mr4216403wmi.109.1572517881852;
-        Thu, 31 Oct 2019 03:31:21 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id d4sm4614799wrc.54.2019.10.31.03.31.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 31 Oct 2019 03:31:20 -0700 (PDT)
-Subject: Re: [PATCH v3 09/11] pinctrl: qcom-wcd934x: Add support to wcd934x
- pinctrl driver.
-To:     Stephen Boyd <swboyd@chromium.org>, broonie@kernel.org,
-        lee.jones@linaro.org, linus.walleij@linaro.org, robh@kernel.org
-Cc:     vinod.koul@linaro.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        linux-gpio@vger.kernel.org,
-        Yeleswarapu Nagaradhesh <nagaradh@codeaurora.org>
-References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
- <20191029112700.14548-10-srinivas.kandagatla@linaro.org>
- <5db9a34f.1c69fb81.23dfc.7ea5@mx.google.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <85aa859f-9d20-2a13-caba-d4901f18829c@linaro.org>
-Date:   Thu, 31 Oct 2019 10:31:19 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 31 Oct 2019 06:34:33 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id BEEFC28DE61;
+        Thu, 31 Oct 2019 10:34:29 +0000 (GMT)
+Date:   Thu, 31 Oct 2019 11:34:26 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     <Tudor.Ambarus@microchip.com>
+Cc:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 01/32] mtd: spi-nor: Prepend spi_nor_ to all Reg Ops
+ methods
+Message-ID: <20191031113426.69bb1468@collabora.com>
+In-Reply-To: <20191029111615.3706-2-tudor.ambarus@microchip.com>
+References: <20191029111615.3706-1-tudor.ambarus@microchip.com>
+        <20191029111615.3706-2-tudor.ambarus@microchip.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <5db9a34f.1c69fb81.23dfc.7ea5@mx.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Stephen for reviewing this patch.
+On Tue, 29 Oct 2019 11:16:49 +0000
+<Tudor.Ambarus@microchip.com> wrote:
 
-On 30/10/2019 14:50, Stephen Boyd wrote:
-> Quoting Srinivas Kandagatla (2019-10-29 04:26:58)
->> From: Yeleswarapu Nagaradhesh <nagaradh@codeaurora.org>
->>
->> This patch adds support to wcd934x pinctrl block found in
->> WCD9340/WC9341 Audio codecs.
->>
->> [Srini: multiple cleanups to the code]
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
 > 
-> This goes after the author signoff and before yours. Can you add more
-> details too?
-I agree, will fix this in next spin.
+> All the core functions should begin with "spi_nor_".
 > 
->> Signed-off-by: Yeleswarapu Nagaradhesh <nagaradh@codeaurora.org>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   drivers/pinctrl/qcom/Kconfig                |   7 +
->>   drivers/pinctrl/qcom/Makefile               |   1 +
->>   drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c | 365 ++++++++++++++++++++
->>   3 files changed, 373 insertions(+)
->>   create mode 100644 drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
->>
->> diff --git a/drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c b/drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
->> new file mode 100644
->> index 000000000000..1aff88d0bcb3
->> --- /dev/null
->> +++ b/drivers/pinctrl/qcom/pinctrl-wcd934x-gpio.c
->> @@ -0,0 +1,365 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +// Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
->> +// Copyright (c) 2019, Linaro Limited
->> +
->> +#include <linux/module.h>
->> +#include <linux/gpio.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/regmap.h>
->> +#include <linux/slab.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> +#include <linux/of_gpio.h>
->> +
->> +#include "../core.h"
->> +#include "../pinctrl-utils.h"
->> +
->> +#define WCD_REG_DIR_CTL_OFFSET 0x42
->> +#define WCD_REG_VAL_CTL_OFFSET 0x43
->> +#define WCD_GPIO_PULL_UP       1
->> +#define WCD_GPIO_PULL_DOWN     2
->> +#define WCD_GPIO_BIAS_DISABLE  3
->> +#define WCD_GPIO_STRING_LEN    20
->> +#define WCD934X_NPINS          5
->> +
->> +/**
->> + * struct wcd_gpio_pad - keep current GPIO settings
->> + * @offset: offset of gpio.
->> + * @is_valid: Set to false, when GPIO in high Z state.
->> + * @value: value of a pin
->> + * @output_enabled: Set to true if GPIO is output and false if it is input
->> + * @pullup: Constant current which flow through GPIO output buffer.
->> + * @strength: Drive strength of a pin
->> + */
->> +struct wcd_gpio_pad {
->> +       u16  offset;
->> +       bool is_valid;
->> +       bool value;
->> +       bool output_enabled;
->> +       unsigned int pullup;
->> +       unsigned int strength;
->> +};
->> +
->> +struct wcd_gpio_priv {
->> +       struct device *dev;
->> +       struct regmap *map;
->> +       struct pinctrl_dev *ctrl;
->> +       struct gpio_chip chip;
->> +};
->> +
->> +static int wcd_gpio_read(struct wcd_gpio_priv *priv_data,
->> +                        struct wcd_gpio_pad *pad, unsigned int addr)
->> +{
->> +       unsigned int val;
->> +       int ret;
->> +
->> +       ret = regmap_read(priv_data->map, addr, &val);
->> +       if (ret < 0)
->> +               dev_err(priv_data->dev, "%s: read 0x%x failed\n",
->> +                       __func__, addr);
->> +       else
->> +               ret = (val >> pad->offset);
->> +
->> +       return ret;
->> +}
->> +
->> +static int wcd_gpio_write(struct wcd_gpio_priv *priv_data,
->> +                         struct wcd_gpio_pad *pad, unsigned int addr,
->> +                         unsigned int val)
->> +{
->> +       int ret;
->> +
->> +       ret = regmap_update_bits(priv_data->map, addr, (1 << pad->offset),
->> +                                val << pad->offset);
->> +       if (ret < 0)
->> +               dev_err(priv_data->dev, "write 0x%x failed\n", addr);
-> 
-> Is there value in these error messages? Also, use %#x to get '0x'.
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-I can add ret in the err message.
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 
-I did not knew about "%#x".. nice, I will use this in future!
+> ---
+>  drivers/mtd/spi-nor/spi-nor.c | 110 +++++++++++++++++++++---------------------
+>  1 file changed, 56 insertions(+), 54 deletions(-)
 > 
->> +
->> +       return ret;
->> +}
-> [...]
->> +
->> +static int wcd_pinctrl_probe(struct platform_device *pdev)
->> +{
->> +       struct device *dev = &pdev->dev;
->> +       struct pinctrl_pin_desc *pindesc;
->> +       struct pinctrl_desc *pctrldesc;
->> +       struct wcd_gpio_pad *pad, *pads;
->> +       struct wcd_gpio_priv *priv_data;
->> +       u32 npins = WCD934X_NPINS;
->> +       char **name;
->> +       int i;
->> +
->> +       priv_data = devm_kzalloc(dev, sizeof(*priv_data), GFP_KERNEL);
->> +       if (!priv_data)
->> +               return -ENOMEM;
->> +
->> +       priv_data->dev = dev;
->> +       priv_data->map = dev_get_regmap(dev->parent, NULL);
->> +       if (!priv_data->map) {
->> +               dev_err(dev, "%s: failed to get regmap\n", __func__);
->> +               return  -EINVAL;
->> +       }
->> +
->> +       pindesc = devm_kcalloc(dev, npins, sizeof(*pindesc), GFP_KERNEL);
->> +       if (!pindesc)
->> +               return -ENOMEM;
->> +
->> +       pads = devm_kcalloc(dev, npins, sizeof(*pads), GFP_KERNEL);
->> +       if (!pads)
->> +               return -ENOMEM;
-> 
-> Is it possible to put the pad struct around the pindesc struct? It's
-> sort of sad that we have to allocate a chunk of memory twice for the
-> pindesc and the pads when we could either use container_of() on the
-> pindesc or just point the pindesc driver data member to the container
-> structure for the qcom specific bits.
-> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index a6f9f833c862..aca8245fb6c4 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -393,7 +393,7 @@ static ssize_t spi_nor_write_data(struct spi_nor *nor, loff_t to, size_t len,
+>   * Return the status register value.
+>   * Returns negative if error occurred.
+>   */
+> -static int read_sr(struct spi_nor *nor)
+> +static int spi_nor_read_sr(struct spi_nor *nor)
+>  {
+>  	int ret;
+>  
+> @@ -423,7 +423,7 @@ static int read_sr(struct spi_nor *nor)
+>   * Return the status register value.
+>   * Returns negative if error occurred.
+>   */
+> -static int read_fsr(struct spi_nor *nor)
+> +static int spi_nor_read_fsr(struct spi_nor *nor)
+>  {
+>  	int ret;
+>  
+> @@ -453,7 +453,7 @@ static int read_fsr(struct spi_nor *nor)
+>   * location. Return the configuration register value.
+>   * Returns negative if error occurred.
+>   */
+> -static int read_cr(struct spi_nor *nor)
+> +static int spi_nor_read_cr(struct spi_nor *nor)
+>  {
+>  	int ret;
+>  
+> @@ -482,7 +482,7 @@ static int read_cr(struct spi_nor *nor)
+>   * Write status register 1 byte
+>   * Returns negative if error occurred.
+>   */
+> -static int write_sr(struct spi_nor *nor, u8 val)
+> +static int spi_nor_write_sr(struct spi_nor *nor, u8 val)
+>  {
+>  	nor->bouncebuf[0] = val;
+>  	if (nor->spimem) {
+> @@ -503,7 +503,7 @@ static int write_sr(struct spi_nor *nor, u8 val)
+>   * Set write enable latch with Write Enable command.
+>   * Returns negative if error occurred.
+>   */
+> -static int write_enable(struct spi_nor *nor)
+> +static int spi_nor_write_enable(struct spi_nor *nor)
+>  {
+>  	if (nor->spimem) {
+>  		struct spi_mem_op op =
+> @@ -521,7 +521,7 @@ static int write_enable(struct spi_nor *nor)
+>  /*
+>   * Send write disable instruction to the chip.
+>   */
+> -static int write_disable(struct spi_nor *nor)
+> +static int spi_nor_write_disable(struct spi_nor *nor)
+>  {
+>  	if (nor->spimem) {
+>  		struct spi_mem_op op =
+> @@ -644,9 +644,9 @@ static int st_micron_set_4byte(struct spi_nor *nor, bool enable)
+>  {
+>  	int ret;
+>  
+> -	write_enable(nor);
+> +	spi_nor_write_enable(nor);
+>  	ret = macronix_set_4byte(nor, enable);
+> -	write_disable(nor);
+> +	spi_nor_write_disable(nor);
+>  
+>  	return ret;
+>  }
+> @@ -700,9 +700,9 @@ static int winbond_set_4byte(struct spi_nor *nor, bool enable)
+>  	 * Register to be set to 1, so all 3-byte-address reads come from the
+>  	 * second 16M. We must clear the register to enable normal behavior.
+>  	 */
+> -	write_enable(nor);
+> +	spi_nor_write_enable(nor);
+>  	ret = spi_nor_write_ear(nor, 0);
+> -	write_disable(nor);
+> +	spi_nor_write_disable(nor);
+>  
+>  	return ret;
+>  }
+> @@ -752,7 +752,7 @@ static int spi_nor_clear_sr(struct spi_nor *nor)
+>  
+>  static int spi_nor_sr_ready(struct spi_nor *nor)
+>  {
+> -	int sr = read_sr(nor);
+> +	int sr = spi_nor_read_sr(nor);
+>  	if (sr < 0)
+>  		return sr;
+>  
+> @@ -786,7 +786,7 @@ static int spi_nor_clear_fsr(struct spi_nor *nor)
+>  
+>  static int spi_nor_fsr_ready(struct spi_nor *nor)
+>  {
+> -	int fsr = read_fsr(nor);
+> +	int fsr = spi_nor_read_fsr(nor);
+>  	if (fsr < 0)
+>  		return fsr;
+>  
+> @@ -864,7 +864,7 @@ static int spi_nor_wait_till_ready(struct spi_nor *nor)
+>   *
+>   * Returns 0 if successful, non-zero otherwise.
+>   */
+> -static int erase_chip(struct spi_nor *nor)
+> +static int spi_nor_erase_chip(struct spi_nor *nor)
+>  {
+>  	dev_dbg(nor->dev, " %lldKiB\n", (long long)(nor->mtd.size >> 10));
+>  
+> @@ -1215,7 +1215,7 @@ static int spi_nor_erase_multi_sectors(struct spi_nor *nor, u64 addr, u32 len)
+>  	list_for_each_entry_safe(cmd, next, &erase_list, list) {
+>  		nor->erase_opcode = cmd->opcode;
+>  		while (cmd->count) {
+> -			write_enable(nor);
+> +			spi_nor_write_enable(nor);
+>  
+>  			ret = spi_nor_erase_sector(nor, addr);
+>  			if (ret)
+> @@ -1270,9 +1270,9 @@ static int spi_nor_erase(struct mtd_info *mtd, struct erase_info *instr)
+>  	if (len == mtd->size && !(nor->flags & SNOR_F_NO_OP_CHIP_ERASE)) {
+>  		unsigned long timeout;
+>  
+> -		write_enable(nor);
+> +		spi_nor_write_enable(nor);
+>  
+> -		if (erase_chip(nor)) {
+> +		if (spi_nor_erase_chip(nor)) {
+>  			ret = -EIO;
+>  			goto erase_err;
+>  		}
+> @@ -1298,7 +1298,7 @@ static int spi_nor_erase(struct mtd_info *mtd, struct erase_info *instr)
+>  	/* "sector"-at-a-time erase */
+>  	} else if (spi_nor_has_uniform_erase(nor)) {
+>  		while (len) {
+> -			write_enable(nor);
+> +			spi_nor_write_enable(nor);
+>  
+>  			ret = spi_nor_erase_sector(nor, addr);
+>  			if (ret)
+> @@ -1319,7 +1319,7 @@ static int spi_nor_erase(struct mtd_info *mtd, struct erase_info *instr)
+>  			goto erase_err;
+>  	}
+>  
+> -	write_disable(nor);
+> +	spi_nor_write_disable(nor);
+>  
+>  erase_err:
+>  	spi_nor_unlock_and_unprep(nor, SPI_NOR_OPS_ERASE);
+> @@ -1328,12 +1328,13 @@ static int spi_nor_erase(struct mtd_info *mtd, struct erase_info *instr)
+>  }
+>  
+>  /* Write status register and ensure bits in mask match written values */
+> -static int write_sr_and_check(struct spi_nor *nor, u8 status_new, u8 mask)
+> +static int spi_nor_write_sr_and_check(struct spi_nor *nor, u8 status_new,
+> +				      u8 mask)
+>  {
+>  	int ret;
+>  
+> -	write_enable(nor);
+> -	ret = write_sr(nor, status_new);
+> +	spi_nor_write_enable(nor);
+> +	ret = spi_nor_write_sr(nor, status_new);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -1341,7 +1342,7 @@ static int write_sr_and_check(struct spi_nor *nor, u8 status_new, u8 mask)
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = read_sr(nor);
+> +	ret = spi_nor_read_sr(nor);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -1447,7 +1448,7 @@ static int stm_lock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+>  	bool can_be_top = true, can_be_bottom = nor->flags & SNOR_F_HAS_SR_TB;
+>  	bool use_top;
+>  
+> -	status_old = read_sr(nor);
+> +	status_old = spi_nor_read_sr(nor);
+>  	if (status_old < 0)
+>  		return status_old;
+>  
+> @@ -1509,7 +1510,7 @@ static int stm_lock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+>  	if ((status_new & mask) < (status_old & mask))
+>  		return -EINVAL;
+>  
+> -	return write_sr_and_check(nor, status_new, mask);
+> +	return spi_nor_write_sr_and_check(nor, status_new, mask);
+>  }
+>  
+>  /*
+> @@ -1527,7 +1528,7 @@ static int stm_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+>  	bool can_be_top = true, can_be_bottom = nor->flags & SNOR_F_HAS_SR_TB;
+>  	bool use_top;
+>  
+> -	status_old = read_sr(nor);
+> +	status_old = spi_nor_read_sr(nor);
+>  	if (status_old < 0)
+>  		return status_old;
+>  
+> @@ -1592,7 +1593,7 @@ static int stm_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+>  	if ((status_new & mask) > (status_old & mask))
+>  		return -EINVAL;
+>  
+> -	return write_sr_and_check(nor, status_new, mask);
+> +	return spi_nor_write_sr_and_check(nor, status_new, mask);
+>  }
+>  
+>  /*
+> @@ -1606,7 +1607,7 @@ static int stm_is_locked(struct spi_nor *nor, loff_t ofs, uint64_t len)
+>  {
+>  	int status;
+>  
+> -	status = read_sr(nor);
+> +	status = spi_nor_read_sr(nor);
+>  	if (status < 0)
+>  		return status;
+>  
+> @@ -1670,11 +1671,11 @@ static int spi_nor_is_locked(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+>   * second byte will be written to the configuration register.
+>   * Return negative if error occurred.
+>   */
+> -static int write_sr_cr(struct spi_nor *nor, u8 *sr_cr)
+> +static int spi_nor_write_sr_cr(struct spi_nor *nor, u8 *sr_cr)
+>  {
+>  	int ret;
+>  
+> -	write_enable(nor);
+> +	spi_nor_write_enable(nor);
+>  
+>  	if (nor->spimem) {
+>  		struct spi_mem_op op =
+> @@ -1719,21 +1720,21 @@ static int macronix_quad_enable(struct spi_nor *nor)
+>  {
+>  	int ret, val;
+>  
+> -	val = read_sr(nor);
+> +	val = spi_nor_read_sr(nor);
+>  	if (val < 0)
+>  		return val;
+>  	if (val & SR_QUAD_EN_MX)
+>  		return 0;
+>  
+> -	write_enable(nor);
+> +	spi_nor_write_enable(nor);
+>  
+> -	write_sr(nor, val | SR_QUAD_EN_MX);
+> +	spi_nor_write_sr(nor, val | SR_QUAD_EN_MX);
+>  
+>  	ret = spi_nor_wait_till_ready(nor);
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = read_sr(nor);
+> +	ret = spi_nor_read_sr(nor);
+>  	if (!(ret > 0 && (ret & SR_QUAD_EN_MX))) {
+>  		dev_err(nor->dev, "Macronix Quad bit not set\n");
+>  		return -EINVAL;
+> @@ -1758,7 +1759,8 @@ static int macronix_quad_enable(struct spi_nor *nor)
+>   * some very old and few memories don't support this instruction. If a pull-up
+>   * resistor is present on the MISO/IO1 line, we might still be able to pass the
+>   * "read back" test because the QSPI memory doesn't recognize the command,
+> - * so leaves the MISO/IO1 line state unchanged, hence read_cr() returns 0xFF.
+> + * so leaves the MISO/IO1 line state unchanged, hence spi_nor_read_cr() returns
+> + * 0xFF.
+>   *
+>   * bit 1 of the Configuration Register is the QE bit for Spansion like QSPI
+>   * memories.
+> @@ -1772,12 +1774,12 @@ static int spansion_quad_enable(struct spi_nor *nor)
+>  
+>  	sr_cr[0] = 0;
+>  	sr_cr[1] = CR_QUAD_EN_SPAN;
+> -	ret = write_sr_cr(nor, sr_cr);
+> +	ret = spi_nor_write_sr_cr(nor, sr_cr);
+>  	if (ret)
+>  		return ret;
+>  
+>  	/* read back and check it */
+> -	ret = read_cr(nor);
+> +	ret = spi_nor_read_cr(nor);
+>  	if (!(ret > 0 && (ret & CR_QUAD_EN_SPAN))) {
+>  		dev_err(nor->dev, "Spansion Quad bit not set\n");
+>  		return -EINVAL;
+> @@ -1805,7 +1807,7 @@ static int spansion_no_read_cr_quad_enable(struct spi_nor *nor)
+>  	int ret;
+>  
+>  	/* Keep the current value of the Status Register. */
+> -	ret = read_sr(nor);
+> +	ret = spi_nor_read_sr(nor);
+>  	if (ret < 0) {
+>  		dev_err(nor->dev, "error while reading status register\n");
+>  		return -EINVAL;
+> @@ -1813,7 +1815,7 @@ static int spansion_no_read_cr_quad_enable(struct spi_nor *nor)
+>  	sr_cr[0] = ret;
+>  	sr_cr[1] = CR_QUAD_EN_SPAN;
+>  
+> -	return write_sr_cr(nor, sr_cr);
+> +	return spi_nor_write_sr_cr(nor, sr_cr);
+>  }
+>  
+>  /**
+> @@ -1836,7 +1838,7 @@ static int spansion_read_cr_quad_enable(struct spi_nor *nor)
+>  	int ret;
+>  
+>  	/* Check current Quad Enable bit value. */
+> -	ret = read_cr(nor);
+> +	ret = spi_nor_read_cr(nor);
+>  	if (ret < 0) {
+>  		dev_err(dev, "error while reading configuration register\n");
+>  		return -EINVAL;
+> @@ -1848,19 +1850,19 @@ static int spansion_read_cr_quad_enable(struct spi_nor *nor)
+>  	sr_cr[1] = ret | CR_QUAD_EN_SPAN;
+>  
+>  	/* Keep the current value of the Status Register. */
+> -	ret = read_sr(nor);
+> +	ret = spi_nor_read_sr(nor);
+>  	if (ret < 0) {
+>  		dev_err(dev, "error while reading status register\n");
+>  		return -EINVAL;
+>  	}
+>  	sr_cr[0] = ret;
+>  
+> -	ret = write_sr_cr(nor, sr_cr);
+> +	ret = spi_nor_write_sr_cr(nor, sr_cr);
+>  	if (ret)
+>  		return ret;
+>  
+>  	/* Read back and check it. */
+> -	ret = read_cr(nor);
+> +	ret = spi_nor_read_cr(nor);
+>  	if (!(ret > 0 && (ret & CR_QUAD_EN_SPAN))) {
+>  		dev_err(nor->dev, "Spansion Quad bit not set\n");
+>  		return -EINVAL;
+> @@ -1926,7 +1928,7 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
+>  	/* Update the Quad Enable bit. */
+>  	*sr2 |= SR2_QUAD_EN_BIT7;
+>  
+> -	write_enable(nor);
+> +	spi_nor_write_enable(nor);
+>  
+>  	ret = spi_nor_write_sr2(nor, sr2);
+>  	if (ret < 0) {
+> @@ -1964,15 +1966,15 @@ static int spi_nor_clear_sr_bp(struct spi_nor *nor)
+>  	int ret;
+>  	u8 mask = SR_BP2 | SR_BP1 | SR_BP0;
+>  
+> -	ret = read_sr(nor);
+> +	ret = spi_nor_read_sr(nor);
+>  	if (ret < 0) {
+>  		dev_err(nor->dev, "error while reading status register\n");
+>  		return ret;
+>  	}
+>  
+> -	write_enable(nor);
+> +	spi_nor_write_enable(nor);
+>  
+> -	ret = write_sr(nor, ret & ~mask);
+> +	ret = spi_nor_write_sr(nor, ret & ~mask);
+>  	if (ret) {
+>  		dev_err(nor->dev, "write to status register failed\n");
+>  		return ret;
+> @@ -2004,7 +2006,7 @@ static int spi_nor_spansion_clear_sr_bp(struct spi_nor *nor)
+>  	u8 *sr_cr =  nor->bouncebuf;
+>  
+>  	/* Check current Quad Enable bit value. */
+> -	ret = read_cr(nor);
+> +	ret = spi_nor_read_cr(nor);
+>  	if (ret < 0) {
+>  		dev_err(nor->dev,
+>  			"error while reading configuration register\n");
+> @@ -2018,7 +2020,7 @@ static int spi_nor_spansion_clear_sr_bp(struct spi_nor *nor)
+>  	if (ret & CR_QUAD_EN_SPAN) {
+>  		sr_cr[1] = ret;
+>  
+> -		ret = read_sr(nor);
+> +		ret = spi_nor_read_sr(nor);
+>  		if (ret < 0) {
+>  			dev_err(nor->dev,
+>  				"error while reading status register\n");
+> @@ -2026,7 +2028,7 @@ static int spi_nor_spansion_clear_sr_bp(struct spi_nor *nor)
+>  		}
+>  		sr_cr[0] = ret & ~mask;
+>  
+> -		ret = write_sr_cr(nor, sr_cr);
+> +		ret = spi_nor_write_sr_cr(nor, sr_cr);
+>  		if (ret)
+>  			dev_err(nor->dev, "16-bit write register failed\n");
+>  		return ret;
+> @@ -2602,7 +2604,7 @@ static int sst_write(struct mtd_info *mtd, loff_t to, size_t len,
+>  	if (ret)
+>  		return ret;
+>  
+> -	write_enable(nor);
+> +	spi_nor_write_enable(nor);
+>  
+>  	nor->sst_write_second = false;
+>  
+> @@ -2641,14 +2643,14 @@ static int sst_write(struct mtd_info *mtd, loff_t to, size_t len,
+>  	}
+>  	nor->sst_write_second = false;
+>  
+> -	write_disable(nor);
+> +	spi_nor_write_disable(nor);
+>  	ret = spi_nor_wait_till_ready(nor);
+>  	if (ret)
+>  		goto sst_write_err;
+>  
+>  	/* Write out trailing byte if it exists. */
+>  	if (actual != len) {
+> -		write_enable(nor);
+> +		spi_nor_write_enable(nor);
+>  
+>  		nor->program_opcode = SPINOR_OP_BP;
+>  		ret = spi_nor_write_data(nor, to, 1, buf + actual);
+> @@ -2659,7 +2661,7 @@ static int sst_write(struct mtd_info *mtd, loff_t to, size_t len,
+>  		ret = spi_nor_wait_till_ready(nor);
+>  		if (ret)
+>  			goto sst_write_err;
+> -		write_disable(nor);
+> +		spi_nor_write_disable(nor);
+>  		actual += 1;
+>  	}
+>  sst_write_err:
+> @@ -2711,7 +2713,7 @@ static int spi_nor_write(struct mtd_info *mtd, loff_t to, size_t len,
+>  
+>  		addr = spi_nor_convert_addr(nor, addr);
+>  
+> -		write_enable(nor);
+> +		spi_nor_write_enable(nor);
+>  		ret = spi_nor_write_data(nor, addr, page_remain, buf + i);
+>  		if (ret < 0)
+>  			goto write_err;
 
-I will give that a go in next version!
-
->> +
->> +       pctrldesc = devm_kzalloc(dev, sizeof(*pctrldesc), GFP_KERNEL);
->> +       if (!pctrldesc)
->> +               return -ENOMEM;
->> +
->> +       pctrldesc->pctlops = &wcd_pinctrl_ops;
->> +       pctrldesc->confops = &wcd_pinconf_ops;
->> +       pctrldesc->owner = THIS_MODULE;
->> +       pctrldesc->name = dev_name(dev);
->> +       pctrldesc->pins = pindesc;
->> +       pctrldesc->npins = npins;
->> +
->> +       name = devm_kcalloc(dev, npins, sizeof(char *), GFP_KERNEL);
->> +       if (!name)
->> +               return -ENOMEM;
->> +
->> +       for (i = 0; i < npins; i++, pindesc++) {
->> +               name[i] = devm_kzalloc(dev, sizeof(char) * WCD_GPIO_STRING_LEN,
->> +                                      GFP_KERNEL);
->> +               if (!name[i])
->> +                       return -ENOMEM;
->> +
->> +               pad = &pads[i];
->> +               pindesc->drv_data = pad;
->> +               pindesc->number = i;
->> +               snprintf(name[i], (WCD_GPIO_STRING_LEN - 1), "gpio%d", (i+1));
->> +               pindesc->name = name[i];
-> 
-> Why not use devm_kasprintf()? The 'name' array is also unnecessary?
-Am not sure why its not used her, but I can do that change in next version.
-
-> 
->> +               pad->offset = i;
->> +               pad->is_valid  = true;
->> +       }
->> +
->> +       priv_data->chip = wcd_gpio_chip;
->> +       priv_data->chip.parent = dev;
->> +       priv_data->chip.base = -1;
->> +       priv_data->chip.ngpio = npins;
->> +       priv_data->chip.label = dev_name(dev);
->> +       priv_data->chip.of_gpio_n_cells = 2;
->> +       priv_data->chip.can_sleep = false;
->> +       platform_set_drvdata(pdev, priv_data);
->> +
->> +       priv_data->ctrl = devm_pinctrl_register(dev, pctrldesc, priv_data);
->> +       if (IS_ERR(priv_data->ctrl)) {
->> +               dev_err(dev, "%s: failed to register to pinctrl\n", __func__);
->> +               return PTR_ERR(priv_data->ctrl);
->> +       }
->> +
->> +       return gpiochip_add_data(&priv_data->chip, priv_data);
-> 
-> WHy not use devm_gpiochip_add_data()?
-
-Good idea, will do that in next spin.
-> 
->> +}
->> +
->> +static int wcd_pinctrl_remove(struct platform_device *pdev)
->> +{
->> +       struct wcd_gpio_priv *priv_data = platform_get_drvdata(pdev);
->> +
->> +       gpiochip_remove(&priv_data->chip);
->> +
->> +       return 0;
-> 
-> And drop this function?
-> 
->> +}
->> +
->> +static const struct of_device_id wcd_pinctrl_of_match[] = {
->> +       { .compatible = "qcom,wcd9340-pinctrl" },
->> +       { .compatible = "qcom,wcd9341-pinctrl" },
->> +       { },
-> 
-> Nitpick: Drop the comma on the sentinel.
-> 
->> +};
->> +
->> +MODULE_DEVICE_TABLE(of, wcd_pinctrl_of_match);
-> 
-> Nitpick: Drop the newline between device table and match table.
-> 
