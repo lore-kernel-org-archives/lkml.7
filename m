@@ -2,124 +2,144 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0E9CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9506ECA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA602086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60CB1208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:23:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eqqw86rI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbfJaQXE (ORCPT
+        id S1728570AbfJaQXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 31 Oct 2019 12:23:05 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49669 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728559AbfJaQXE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 31 Oct 2019 12:23:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49834 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727580AbfJaQXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:23:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 60797B833;
-        Thu, 31 Oct 2019 16:23:01 +0000 (UTC)
-Message-ID: <6726a651c12d91ca22b9d8984745d90db5d507ec.camel@suse.de>
-Subject: Re: [PATCH] dma/direct: turn ARCH_ZONE_DMA_BITS into a variable
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Date:   Thu, 31 Oct 2019 17:22:59 +0100
-In-Reply-To: <20191031155750.GA7394@lst.de>
-References: <20191031152837.15253-1-nsaenzjulienne@suse.de>
-         <20191031154759.GA7162@lst.de>
-         <40d06d463c05d36968e8b64924d78f7794f8de50.camel@suse.de>
-         <20191031155750.GA7394@lst.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-geumnkbETQYdG1ZUMwUA"
-User-Agent: Evolution 3.34.1 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572538983;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RZGD6Pca66p5OqKCfFHPRMb7vejTA2ViSdqHSiuuHfA=;
+        b=Eqqw86rInQOhS0zNT5Bo2ZHtyKWk4FNeHKPvgP8T4g3JSazJal/UyBleGL4CKlJzgImUN7
+        91ImxrTaN6/UwwGOanKNQIY7BvKuNYw9xgdU6YSfoVDFtoo2aa3l99UBkDl9N0qMIKWaFt
+        UOTjJUgUcA7H5r19J1wNQgVNDT5WdXs=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-96-R1UKXFEpP2irAqPcelzv1g-1; Thu, 31 Oct 2019 12:22:59 -0400
+Received: by mail-lf1-f70.google.com with SMTP id v7so1555461lfi.2
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 09:22:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eAv0yHRWBIPIgHHe1zlsuAAt21y47eMoEjAinE7MfyI=;
+        b=nmT+8S7g4dPFMMlWr+SZHGbcQAxZYGbMlFnHLZJH5XVAgfHKXLB/IYpzXMj66iktiw
+         Ypg7aAckQFN0yHP0gFvk8bkoasHxIYabgp++QBevQt6xFrivfjoCfriefklHIte3ogZ1
+         RLMFJkv9WtAn0ohZaMQ2UQ9qjXNWDoY4UHcgdfkKIIO7ldDoAutrtCCuB4G2JfLcNJZZ
+         U4ODv6hPbx5zskuS5a2I0M21CX8ovIluZWJV02NbcCRUppEulsje6JNLNmEcXOzvefXg
+         yJNbmujxlgX9EhzNxfWjSN9oFMSfYV/Ds4oWaZwkpxItD8YqeRA1PvzL4P6N9bXzjHb8
+         V4gg==
+X-Gm-Message-State: APjAAAWC+sYmgOGYhcqGGEodBi6yXYSb3NWnBTfJt1prIlzJ2E6qhZh/
+        hLOPEIoh6avRKrGmWdf67+G3UAE9z6losjJX+hTaXmwxyiMAuwGt/hNddRZvc8jpomXg/JJzqwh
+        6hHpfDZN4Ckwafr7fQ7rQ0MAlsfeGZqkAAZFqgQ92
+X-Received: by 2002:ac2:5195:: with SMTP id u21mr4119366lfi.97.1572538977531;
+        Thu, 31 Oct 2019 09:22:57 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxL300SMULllKwH7VWvDdiKCap6Fv+tAFO8sNUl58YhcqKjt43ZyLnKC2evCebrRPLnKKAh/6MyHQYa2nywefI=
+X-Received: by 2002:ac2:5195:: with SMTP id u21mr4119340lfi.97.1572538977273;
+ Thu, 31 Oct 2019 09:22:57 -0700 (PDT)
 MIME-Version: 1.0
+References: <20191029135053.10055-1-mcroce@redhat.com> <20191029135053.10055-5-mcroce@redhat.com>
+ <5be14e4e-807f-486d-d11a-3113901e72fe@cumulusnetworks.com>
+ <576a4a96-861b-6a86-b059-6621a22d191c@gmail.com> <CAGnkfhzEgaH1-YNWw1_HzB5FOhZHjKewLD9NP+rnTP21Htxnjw@mail.gmail.com>
+ <43abab53-1425-0bff-9f79-50bd47567605@gmail.com> <CAGnkfhyaXzMx608jZqqjdywv6BZst97QSmGe++aSc=-xOQSWzg@mail.gmail.com>
+In-Reply-To: <CAGnkfhyaXzMx608jZqqjdywv6BZst97QSmGe++aSc=-xOQSWzg@mail.gmail.com>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Thu, 31 Oct 2019 17:22:21 +0100
+Message-ID: <CAGnkfhxvOdZgS90PittFgAtYnPzfQNVFsxsTpadzBcr1-mnD=Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 4/4] bonding: balance ICMP echoes in layer3+4 mode
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        netdev <netdev@vger.kernel.org>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Paul Blakey <paulb@mellanox.com>,
+        LKML <linux-kernel@vger.kernel.org>
+X-MC-Unique: R1UKXFEpP2irAqPcelzv1g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 30, 2019 at 12:19 AM Matteo Croce <mcroce@redhat.com> wrote:
+>
+> On Wed, Oct 30, 2019 at 12:14 AM Eric Dumazet <eric.dumazet@gmail.com> wr=
+ote:
+> >
+> >
+> >
+> > On 10/29/19 4:03 PM, Matteo Croce wrote:
+> >
+> > > Hi Eric,
+> > >
+> > > this would work for locally generated echoes, but what about forwarde=
+d packets?
+> > > The point behind my changeset is to provide consistent results within
+> > > a session by using the same path for request and response,
+> > > but avoid all sessions flowing to the same path.
+> > > This should resemble what happens with TCP and UDP: different
+> > > connections, different port, probably a different path. And by doing
+> > > this in the flow dissector, other applications could benefit it.
+> >
+> > In principle it is fine, but I was not sure of overall impact of your c=
+hange
+> > on performance for 99.9% of packets that are not ICMP :)
+> >
+>
+> Good point. I didn't measure it (I will) but all the code additions
+> are under some if (proto =3D=3D ICMP) or similar.
+> My guess is that performance shouldn't change for non ICMP traffic,
+> but I'm curious to test it.
+>
 
---=-geumnkbETQYdG1ZUMwUA
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Indeed if there is some impact it's way below the measurement uncertainty.
+I've bonded two veth pairs and added a tc drop to the peers, then
+started mausezahn to generate UDP traffic.
+Traffic is measured on the veth peers:
 
-On Thu, 2019-10-31 at 16:57 +0100, Christoph Hellwig wrote:
-> On Thu, Oct 31, 2019 at 04:53:13PM +0100, Nicolas Saenz Julienne wrote:
-> > > > +#define ARM64_ZONE_DMA_BITS	30
-> > > > +
-> > > >  /*
-> > > >   * We need to be able to catch inadvertent references to memstart_=
-addr
-> > > >   * that occur (potentially in generic code) before
-> > > > arm64_memblock_init()
-> > > > @@ -424,6 +427,8 @@ void __init arm64_memblock_init(void)
-> > > >  	else
-> > > >  		arm64_dma_phys_limit =3D PHYS_MASK + 1;
-> > > > =20
-> > > > +	zone_dma_bits =3D ARM64_ZONE_DMA_BITS;
-> > > > +
-> > > >  	reserve_crashkernel();
-> > >=20
-> > > This actually adds a new limit, as there wasn't one before for arm64.
-> >=20
-> > Well, as zone_dma_bits is only relevant in dma/direct when ZONE_DMA is
-> > defined
-> > I figured it doesn't matter if the variable is set conditionally to ZON=
-E_DMA
-> > or
-> > not.
->=20
-> I'd much prefer that to do separately.
+Stock 5.4-rc5:
 
-OK, I see what you mean now. It's wrong indeed.
+rx: 261.5 Mbps 605.4 Kpps
+rx: 261.2 Mbps 604.6 Kpps
+rx: 261.6 Mbps 605.5 Kpps
 
-The trouble is the ZONE_DMA series[1] in arm64, also due for v5.5, will be
-affected by this patch. I don't know the right way to approach this problem
-since depending on the merge order, this patch should be updated or the arm=
-64
-ZONE_DMA series fixed.
+patched:
 
-Maybe it's easier to just wait for v5.6.
+rx: 261.4 Mbps 605.1 Kpps
+rx: 261.1 Mbps 604.4 Kpps
+rx: 260.3 Mbps 602.5 Kpps
+
+perf top shows no significatn change in bond* and skb_flow* functions
 
 Regards,
-Nicolas
-
-[1] https://lkml.org/lkml/2019/9/11/734
-
-
---=-geumnkbETQYdG1ZUMwUA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl27CmMACgkQlfZmHno8
-x/4b+AgAoH8wv9sfGomdszgwev9YRlMzey4HKe8HTYaOtmPwv+9I5u2Q1L0Hll8U
-oOvfmsMi3/GCphnYxgVI15TV3gT23I4f+e1sVmHtdJwOja145qdVYeN0eVrJBGlW
-gllgXNWdKSeomR5jQYRo6/r/e4b2DFreMuJMYO5Ac0Jmp4lqqbZ9tXDqMvKt0VcB
-4olZERu99fJIT8AxzUVXOG9cft6l18Fio1WtXJLzXgVrjxEKnxGLAq1GxY5o8VF7
-mf5621L1pvp/rNs/CBhehPADNaJqYwdS+nm7md9u/My8zRvp2OqT8O9a4e7RxcQi
-QPdhGBoQVaeZdUmbRgLmr2hq8cGTqw==
-=2ip7
------END PGP SIGNATURE-----
-
---=-geumnkbETQYdG1ZUMwUA--
+--=20
+Matteo Croce
+per aspera ad upstream
 
