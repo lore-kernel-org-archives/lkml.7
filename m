@@ -2,125 +2,127 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D9ACA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6270ECA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A8B62086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:51:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tl8Hsb22"
+	by mail.kernel.org (Postfix) with ESMTP id 4003F2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:52:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfJaIvh (ORCPT
+        id S1727134AbfJaIwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 04:51:37 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44103 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbfJaIvh (ORCPT
+        Thu, 31 Oct 2019 04:52:11 -0400
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:40750 "EHLO
+        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726774AbfJaIwL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 04:51:37 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e10so3587126pgd.11
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 01:51:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ME3Ltsu28xY9FZ7FPzX/YEVGfUZBxiS82t6VZQlhtiQ=;
-        b=tl8Hsb22yrpTp+aE+3bIye9K5uVkV4y8FxN7YPrbBnmCT+YfJ3AUC2cwuSlDicKCxu
-         UDml6vdi71pvZSXoi5HfkSGyUpeBN4QTT/sBgk0cSnY1PpsPs2ib3+1pVot3g7+9VdSY
-         Kod9TenRE541RA9FzpBG+XBTjSYvG94TZduK7Hu13F3Bl+UKIr5aV3qtKD+GxX6vJf/q
-         kb5nkicEebV649v+z46H29loCCin+lqFILBZ6B2Vx0JktUqZk2IJNdSWiiDaKxt7KTlg
-         7bvpBPipwLfBqCAkflDGM7f0Ywys3KYYrZ742cfFgzEYGZ1AvWz5xEbH8SlVWB4udvfW
-         4ZyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ME3Ltsu28xY9FZ7FPzX/YEVGfUZBxiS82t6VZQlhtiQ=;
-        b=KLP0EJzAzTIaqdPzkgX4i8318v8WjFqKu2H0EkNnFcVt3lf8ZVdZTKztmRy5TiacoK
-         RvY9RWSlTXJ1v5HthAzp/lrkW9Jqg8AnzsVeRhYS1O1xlrqw2aFotvSv7hRTUsgmlscV
-         FyutePg1ADygYJRdeDzJkFnQqENZytppiBDHQi7whJt48GFPS59pjuwCFGaUx2q3TIfI
-         xAvJ0NZjtVKOpm1xwfZPTv4maVhu6YtF9ONnlRieIeRAHJq91QvCt2fZMu9Q3pdrtnnx
-         A2UjGNlXW7/Ck1s1Gd+DiVNFbpcRTvxJA6ZyUDTU6rait2N/9PAxkkoJwjpR5BBkjBtm
-         uf1Q==
-X-Gm-Message-State: APjAAAUW4NwBnssckirbdz+T74g2Co/2kP0f7nAobLWS/FKBsEet4pNu
-        I6dG+7pTneCDDOZpfwsVS3gP1w==
-X-Google-Smtp-Source: APXvYqzoFaeX5o55VyC/K9bIE1N04gxEQNyvlwlXslZU/q02UqRsAEQnjnAeFwmJW8iQtYVE6Fw2kA==
-X-Received: by 2002:a17:90a:3651:: with SMTP id s75mr5830500pjb.30.1572511894912;
-        Thu, 31 Oct 2019 01:51:34 -0700 (PDT)
-Received: from google.com ([2620:15c:2cb:1:e90c:8e54:c2b4:29e7])
-        by smtp.gmail.com with ESMTPSA id m123sm2657852pfb.133.2019.10.31.01.51.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 01:51:34 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 01:51:29 -0700
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     shuah <shuah@kernel.org>, Dan Carpenter <dan.carpenter@oracle.com>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH linux-kselftest/test v6] lib/list-test: add a test for
- the 'list' doubly linked list
-Message-ID: <20191031085129.GA217570@google.com>
-References: <20191024224631.118656-1-davidgow@google.com>
- <0cb1d948-0da3-eb0f-c58f-ae3a785dd0dd@kernel.org>
- <CABVgOSmCHbGjZBjeWSbPEZbJw22SaBQnoO77xxNzN_ugAwzNiQ@mail.gmail.com>
- <20191030104217.GA18421@kadam>
- <42a8270d-ed6f-d29f-5e71-7b76a074b63e@kernel.org>
- <CAFd5g47OZ8x9=etJUj4Sgsw38VQb0j=omOUsubc7+pb2rJi0bQ@mail.gmail.com>
- <fad58e4f48237894de0d511adf1d663a42a2eee7.camel@perches.com>
+        Thu, 31 Oct 2019 04:52:11 -0400
+Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
+        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1iQ6BU-0006VO-BN; Thu, 31 Oct 2019 09:52:00 +0100
+X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
+        linuxbbg.five-lan.de
+Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
+        (authenticated bits=0)
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id x9V8puaM011029
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Thu, 31 Oct 2019 09:51:56 +0100
+From:   Markus Reichl <m.reichl@fivetechno.de>
+Subject: [PATCH] arm64: dts: rockchip: Add vcc_sys enable pin on rk3399-roc-pc
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Autocrypt: addr=m.reichl@fivetechno.de; prefer-encrypt=mutual; keydata=
+ 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
+ eD/Xv4SsK2JTO4nkQYw8
+Organization: five technologies GmbH
+Message-ID: <c72db0ad-c261-af4f-efe6-22bbcf4a0b7b@fivetechno.de>
+Date:   Thu, 31 Oct 2019 09:51:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fad58e4f48237894de0d511adf1d663a42a2eee7.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1572511929;615ab41f;
+X-HE-SMSGID: 1iQ6BU-0006VO-BN
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 10:18:44AM -0700, Joe Perches wrote:
-> On Wed, 2019-10-30 at 09:35 -0700, Brendan Higgins wrote:
-> > Agreed. I can see the point of not wanting to write an exception into
-> > checkpatch for every exception of it's general rules; however, it
-> > would be nice if there was a way to maybe have a special comment or
-> > something that could turn off a checkpatch error. That way, a
-> > checkpatch error/warning always means some action should be taken, and
-> > if a rule is being ignored, there is always documentation as to why.
-> 
-> That couldn't work when a comment which may exist
-> in a file is out of scope of the patch context.
+rk3399-roc-pc has vcc_sys 5V supply for USB and other peripherals.
+Add the GPIO pin to enable the regulator.
 
-Sorry, I don't understand exactly what you mean. Can you elaborate?
+Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-If it wasn't obvious, I am not proposing that David should make the
-changed I described now for this patch. I know what I proposed would not
-be an easy thing to implement, especially given the opinions that it is
-likely to solicit.
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+index 4150e6900788..c0c2d896f4da 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+@@ -140,6 +140,10 @@
+ 
+ 	vcc_sys: vcc-sys {
+ 		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio2 RK_PA6 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&vcc_sys_en>;
+ 		regulator-name = "vcc_sys";
+ 		regulator-always-on;
+ 		regulator-boot-on;
+@@ -600,6 +604,10 @@
+ 			rockchip,pins = <1 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 
++		vcc_sys_en: vcc-sys-en {
++			rockchip,pins = <2 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
+ 		hub_rst: hub-rst {
+ 			rockchip,pins = <2 RK_PA4 RK_FUNC_GPIO &pcfg_output_high>;
+ 		};
+-- 
+2.20.1
 
-Nevertheless, in the long term, I have seen other projects allow a
-comment that would cause style checkers or static analysis tools to
-ignore the designated line. Maybe we could implement this as a line
-comment that suppresses a checkpatch warning of a certain kind on the
-line. So here, we might have something like:
-
-static void list_test_list_for_each_prev(struct kunit *test) /* checkpatch: disable=for-each-format */
-
-We would also probably want to require an explanation either in the
-checkpatch comment or the line above, but then you have to worry about
-that comment not being included in a patch that only updates the
-offending line.
-
-Anyway, it's just an idea. I know that we don't currently assume that
-all checkpatch errors/warnings require some action, but it might be cool
-if they did.
-
-Cheers
