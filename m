@@ -2,152 +2,129 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B96CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DEBCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 453EE20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F1712086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:11:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jy/SacxJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbfJaRJd (ORCPT
+        id S1728738AbfJaRLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 13:09:33 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:35702 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728474AbfJaRJc (ORCPT
+        Thu, 31 Oct 2019 13:11:30 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46368 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728547AbfJaRLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 13:09:32 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id E1E9E634C87;
-        Thu, 31 Oct 2019 19:08:38 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1iQDw5-0001nA-UE; Thu, 31 Oct 2019 19:08:37 +0200
-Date:   Thu, 31 Oct 2019 19:08:37 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
- binding
-Message-ID: <20191031170837.GN6253@valkosipuli.retiisi.org.uk>
-References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
- <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
- <20191031131538.GA9170@pendragon.ideasonboard.com>
- <20191031134512.GB24273@mani>
- <20191031141141.GD5018@pendragon.ideasonboard.com>
- <20191031142817.GK6253@valkosipuli.retiisi.org.uk>
- <20191031165444.GE5018@pendragon.ideasonboard.com>
+        Thu, 31 Oct 2019 13:11:30 -0400
+Received: by mail-pl1-f194.google.com with SMTP id q21so2951462plr.13
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 10:11:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b0X5YfN75r7PDdNJxvGQlnZAXFwdwuMLiQ3l0U13bDg=;
+        b=Jy/SacxJhf/Nbsx+JKEbMsxTmi9nTvRx9QrYmlIIdjaRaYWNvdZdUveUzeL7wIBsMZ
+         yB8Nz5UMhco8wy0o9k2IWrgIZlOKbDsMBdp3atJjR2eE50+zYjEZBM7mTKuaEMqSUi91
+         ueCuaeZ6gpnfO9SKoIhfR/pmAwffakughLyHWB5/OC9EGvGmL4MkTswLiMaKPF11fEWK
+         w0yeyTRVppcLDoCs0H8aL/rz2ddY3Gr0oQA89wXCPpwffH+YyILuj3R30CX+hlyoHfZ7
+         WFIUgANql15NGTPB5eu58+Vz5mden9xZ/hmIuvN0j6C6tSpO51yEvLSx5eUFDkhOQhtj
+         fI9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b0X5YfN75r7PDdNJxvGQlnZAXFwdwuMLiQ3l0U13bDg=;
+        b=YPL6FDp8NDxahcZQpkCpbfL8wsoM1p44Qs73FH/6TlwTLI0181PBsA8qQCSb6hau0l
+         BfLyHWhgiA+/TOfT+hXtmJ1dTUhQr8Qx6Yx3d8gXWVq+yCyDtlCZrpm5Wntk6pq/AK9G
+         ZM1tqB7bfmdwNLSTa24d8/docGfGTUyuYGaYAQRghekejY36DQVXR4jgd4JuQAsuzm/H
+         JD4H/hfBxomi62MiqdRErmkyOdWD4UsmJiQQi6bd835QF0QGQFd9N2TK8fNZdjR7Tevz
+         hYBOX4V5JE0nkqJ9JLYMcki3EbtNhMb5dAJqg2LBizZpxupnDZEwxoJ/FASL5HvyOZWv
+         yB1A==
+X-Gm-Message-State: APjAAAVMMf434gvDkgEqd+a5zv9q98Knk1+awHxnPsToDnawc6pO9tGg
+        YM8bHhkv7Bz2/ipK46zm+3jTBqL8d3152pQ3XC3wBw==
+X-Google-Smtp-Source: APXvYqyggyEISFvRqnEZ0+/A7Iby9Fs7Q+2KDnPlM3xak8otQQ4zH05zLjAp9ajmSpT131omcbyYgDm2ydz5aTw6/As=
+X-Received: by 2002:a17:902:b40f:: with SMTP id x15mr3965837plr.119.1572541887443;
+ Thu, 31 Oct 2019 10:11:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031165444.GE5018@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191031164637.48901-1-samitolvanen@google.com> <20191031164637.48901-13-samitolvanen@google.com>
+In-Reply-To: <20191031164637.48901-13-samitolvanen@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 31 Oct 2019 10:11:16 -0700
+Message-ID: <CAKwvOdmBcHuhZZV54-76zY60F0Tvd_0DGCi+5dzFTxk0upOYrQ@mail.gmail.com>
+Subject: Re: [PATCH v3 12/17] arm64: reserve x18 from general allocation with SCS
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+On Thu, Oct 31, 2019 at 9:47 AM <samitolvanen@google.com> wrote:
+>
+> Reserve the x18 register from general allocation when SCS is enabled,
+> because the compiler uses the register to store the current task's
+> shadow stack pointer. Note that all external kernel modules must also be
+> compiled with -ffixed-x18 if the kernel has SCS enabled.
 
-On Thu, Oct 31, 2019 at 06:54:44PM +0200, Laurent Pinchart wrote:
-> Hi Sakari,
-> 
-> On Thu, Oct 31, 2019 at 04:28:17PM +0200, Sakari Ailus wrote:
-> > On Thu, Oct 31, 2019 at 04:11:41PM +0200, Laurent Pinchart wrote:
-> > > On Thu, Oct 31, 2019 at 07:15:12PM +0530, Manivannan Sadhasivam wrote:
-> > >> On Thu, Oct 31, 2019 at 03:15:38PM +0200, Laurent Pinchart wrote:
-> > >>> On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
-> > >>>> Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
-> > >>>> add MAINTAINERS entry for the binding and driver.
-> > >>>> 
-> > >>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > >>>> ---
-> > >>>>  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
-> > >>>>  MAINTAINERS                                   |  8 ++
-> > >>>>  2 files changed, 102 insertions(+)
-> > >>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > >>>> 
-> > >>>> diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > >>>> new file mode 100644
-> > >>>> index 000000000000..c04ec2203268
-> > >>>> --- /dev/null
-> > >>>> +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> > >>>> @@ -0,0 +1,94 @@
-> > >>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > >>>> +%YAML 1.2
-> > >>>> +---
-> > >>>> +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
-> > >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > >>>> +
-> > >>>> +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
-> > >>>> +
-> > >>>> +maintainers:
-> > >>>> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > >>>> +
-> > >>>> +description: |-
-> > >>>> +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
-> > >>>> +  sensor with square pixel array and 1.58 M effective pixels. This chip
-> > >>>> +  features a global shutter with variable charge-integration time. It is
-> > >>>> +  programmable through I2C and 4-wire interfaces. The sensor output is
-> > >>>> +  available via CSI-2 serial data output (1 Lane).
-> > >>>> +
-> > >>>> +properties:
-> > >>>> +  compatible:
-> > >>>> +    const: sony,imx296
-> > >>>> +
-> > >>>> +  reg:
-> > >>>> +    maxItems: 1
-> > >>>> +
-> > >>>> +  clocks:
-> > >>>> +    maxItems: 1
-> > >>>> +
-> > >>>> +  clock-names:
-> > >>>> +    description:
-> > >>>> +      Input clock for the sensor.
-> > >>>> +    items:
-> > >>>> +      - const: mclk
-> > >>> 
-> > >>> The pin is named INCK, let's name the clock accordingly.
-> > >> 
-> > >> Okay, I thought generic names are preferred here!
-> > >>  
-> > >>>> +  clock-frequency:
-> > >>>> +    description:
-> > >>>> +      Frequency of the mclk clock in Hertz.
-> > >>> 
-> > >>> This shouldn't be needed, you can retrieve the clock frequency at
-> > >>> runtime from the clock source.
-> > >> 
-> > >> Unless the clock source is a fixed one! What if the clock source comes from
-> > >> SoC? We need to set the rate, right?
-> > > 
-> > > In that case, if you want to hardcode the clock in DT, the preferred way
-> > > is to use the assigned-clock-rates property. Otherwise, if the driver
-> > > requires a specific clock frequency, it's better to hardcode it in the
-> > > driver itself. In this specific case, I think assigned-clock-rates is
-> > > best as the device can support three different clock frequencies.
-> > 
-> > Just note that if ACPI support is added to the sensor driver, you'll need
-> > the clock-frequency property again, for that's the only way how the driver
-> > will get the clock frequency.
-> 
-> Why is so ? Why can't we implement of assigned-clock-rates for ACPI ?
+Inline/out-of-line assembly will also need to be careful not to
+accidentally overwrite the current task's shadow stack pointer.
 
-ACPI doesn't deal with clocks as such. So there's also no ACPI defined way
-to access clocks specifically, including the frequency --- instead the
-clock is controlled by an AML methods which implement power on and off
-sequences for the device.
+Without automated checking for that, we'll have to rely on a
+"gentlemen's promise" for code reviewers, though we'd likely hit such
+a regression with Android+mainline.
+
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  arch/arm64/Makefile | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+> index 2c0238ce0551..ef76101201b2 100644
+> --- a/arch/arm64/Makefile
+> +++ b/arch/arm64/Makefile
+> @@ -72,6 +72,10 @@ stack_protector_prepare: prepare0
+>                                         include/generated/asm-offsets.h))
+>  endif
+>
+> +ifeq ($(CONFIG_SHADOW_CALL_STACK), y)
+> +KBUILD_CFLAGS  += -ffixed-x18
+> +endif
+> +
+>  ifeq ($(CONFIG_CPU_BIG_ENDIAN), y)
+>  KBUILD_CPPFLAGS        += -mbig-endian
+>  CHECKFLAGS     += -D__AARCH64EB__
+> --
+> 2.24.0.rc0.303.g954a862665-goog
+>
+
 
 -- 
-Sakari Ailus
+Thanks,
+~Nick Desaulniers
