@@ -2,65 +2,128 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E728DCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 20:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 062A0CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5FF52086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 20:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E6020679
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:03:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbfJaU4P (ORCPT
+        id S1729827AbfJaVDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 16:56:15 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:60880 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727511AbfJaU4P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 16:56:15 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B557A14FEE6D8;
-        Thu, 31 Oct 2019 13:56:14 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 13:56:10 -0700 (PDT)
-Message-Id: <20191031.135610.684836389491757031.davem@davemloft.net>
-To:     natechancellor@gmail.com
-Cc:     jiri@mellanox.com, idosch@mellanox.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] mlxsw: Fix 64-bit division in
- mlxsw_sp_sb_prs_init
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191030160152.11305-1-natechancellor@gmail.com>
-References: <20191030160152.11305-1-natechancellor@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 31 Oct 2019 13:56:14 -0700 (PDT)
+        Thu, 31 Oct 2019 17:03:37 -0400
+Received: from mga02.intel.com ([134.134.136.20]:34915 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727742AbfJaVDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 17:03:36 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 14:03:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,253,1569308400"; 
+   d="scan'208";a="194457177"
+Received: from epobrien-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.10.103])
+  by orsmga008.jf.intel.com with ESMTP; 31 Oct 2019 14:03:31 -0700
+Date:   Thu, 31 Oct 2019 23:03:30 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
+        Ken Goldman <kgold@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+Message-ID: <20191031210330.GA10507@linux.intel.com>
+References: <20191014190033.GA15552@linux.intel.com>
+ <1571081397.3728.9.camel@HansenPartnership.com>
+ <20191016110031.GE10184@linux.intel.com>
+ <1571229252.3477.7.camel@HansenPartnership.com>
+ <20191016162543.GB6279@linux.intel.com>
+ <1571253029.17520.5.camel@HansenPartnership.com>
+ <20191017180440.GG6667@linux.intel.com>
+ <20191021113939.GA11649@linux.intel.com>
+ <20191029084258.GA5649@linux.intel.com>
+ <1572361096.4812.3.camel@HansenPartnership.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572361096.4812.3.camel@HansenPartnership.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
-Date: Wed, 30 Oct 2019 09:01:52 -0700
+On Tue, Oct 29, 2019 at 07:58:16AM -0700, James Bottomley wrote:
+> On Tue, 2019-10-29 at 10:42 +0200, Jarkko Sakkinen wrote:
+> > On Mon, Oct 21, 2019 at 02:39:39PM +0300, Jarkko Sakkinen wrote:
+> > > On Thu, Oct 17, 2019 at 09:04:40PM +0300, Jarkko Sakkinen wrote:
+> > > > On Wed, Oct 16, 2019 at 03:10:29PM -0400, James Bottomley wrote:
+> > > > > On Wed, 2019-10-16 at 19:25 +0300, Jarkko Sakkinen wrote:
+> > > > > > On Wed, Oct 16, 2019 at 08:34:12AM -0400, James Bottomley
+> > > > > > wrote:
+> > > > > > > reversible ciphers are generally frowned upon in random
+> > > > > > > number
+> > > > > > > generation, that's why the krng uses chacha20.  In general
+> > > > > > > I think
+> > > > > > > we shouldn't try to code our own mixing and instead should
+> > > > > > > get the
+> > > > > > > krng to do it for us using whatever the algorithm du jour
+> > > > > > > that the
+> > > > > > > crypto guys have blessed is.  That's why I proposed adding
+> > > > > > > the TPM
+> > > > > > > output to the krng as entropy input and then taking the
+> > > > > > > output of
+> > > > > > > the krng.
+> > > > > > 
+> > > > > > It is already registered as hwrng. What else?
+> > > > > 
+> > > > > It only contributes entropy once at start of OS.
+> > > > 
+> > > > Ok.
+> > > > 
+> > > > > >  Was the issue that it is only used as seed when the rng is
+> > > > > > init'd
+> > > > > > first? I haven't at this point gone to the internals of krng.
+> > > > > 
+> > > > > Basically it was similar to your xor patch except I got the
+> > > > > kernel rng
+> > > > > to do the mixing, so it would use the chacha20 cipher at the
+> > > > > moment
+> > > > > until they decide that's unsafe and change it to something
+> > > > > else:
+> > > > > 
+> > > > > https://lore.kernel.org/linux-crypto/1570227068.17537.4.camel@H
+> > > > > ansenPartnership.com/
+> > > > > 
+> > > > > It uses add_hwgenerator_randomness() to do the mixing.  It also
+> > > > > has an
+> > > > > unmixed source so that read of the TPM hwrng device works as
+> > > > > expected.
+> > > > 
+> > > > Thinking that could this potentially racy? I.e. between the calls
+> > > > something else could eat the entropy added?
+> > > 
+> > > Also, what is wrong just taking one value from krng and mixing
+> > > it with a value from TPM RNG where needed? That would be non-racy
+> > > too.
+> > 
+> > I guess we can move forward with this?
+> 
+> Sure I suppose; can we can figure out how to get the mixing function du
+> jour exposed?
 
-> When building for 32-bit ARM, there is a link time error because of a
-> 64-bit division:
-> 
-> ld.lld: error: undefined symbol: __aeabi_uldivmod
->>>> referenced by spectrum_buffers.c
->>>>               net/ethernet/mellanox/mlxsw/spectrum_buffers.o:(mlxsw_sp_buffers_init) in archive drivers/built-in.a
->>>> did you mean: __aeabi_uidivmod
->>>> defined in: arch/arm/lib/lib.a(lib1funcs.o
-> 
-> Avoid this by using div_u64, which is designed to avoid this problem.
-> 
-> Fixes: bc9f6e94bcb5 ("mlxsw: spectrum_buffers: Calculate the size of the main pool")
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Maybe it is best to reflect the whole issue in the context of the
+Sumit's 2nd patch set, which adds ARM TEE support in order to move
+forward.
 
-Applied, thanks.
+/Jarkko
