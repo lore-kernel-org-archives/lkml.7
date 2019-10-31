@@ -2,142 +2,290 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2774CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17269CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A73FC20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D21A82067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:43:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="KW35GtCH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iZpvMwET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfJaMmI (ORCPT
+        id S1727068AbfJaMnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 08:42:08 -0400
-Received: from mail-eopbgr30044.outbound.protection.outlook.com ([40.107.3.44]:59538
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726506AbfJaMmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 08:42:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UeOq8C9g0kdZUjjczHs7Xad72XIL80YIY571PEOMRpiAKmCHKdpIVYEsJbMd5ru2q3MCRMzmkkocBnehOLzWkTovdKDtZYoDQJiUVx5bA9uH6MxQsIPV8PUvgAz/md4QY+WUPGxTNsk9++sydcr2pQ3fmS2hQF5pSlEuX7GpjEGqfEm3ZO+yBZKCs477AWOkFI1R98WQmCiBO49C9s0fhyIiidF21I3hl6XO9TPaNjroNX0Q8wmaPSa4JUSVURh186RaasPscnbuZY9W/bD/V+lFj2wbOkH0CZagXJ3eexWZAY+XHwiB+pEw9FbnfdFMFevb/ZL5phz7rK63jCDFFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g4+BqV5ABwCFwJ4oVNgRoZ1Nbe1WjCm6P0NnqGhgMK4=;
- b=E9WC2BnvyUZAGz/n9baw+t6sQ/aMD7vJ/pvkdt7YcxvYz9v6FQhmQOyyqbTLq/PrFu07Jt1ZsDLHNfT0BnduX61g8ebnvR1iiDfyRGUhuFQtNHkjww6NZVILUxQq6B+29eS6FH4W169087Bulkui622TIyXoMGXna+ePf6OJJ9gZzABx70xZIw3b13rVQ0mIN7CAO2IvRiGZh5O13/MNDyMXyVQEAZtYeJAlFkrhEqAVN5+XM/ClTc0ddYK/DdJQZ/ZvtpPpcEiDYTfJP+kkyn36Z9a3XlKRw32kDFKppqmXQRyMuDupSyEI6tfIWz4YvgcQrvP5AQ5s1s72VZWpXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g4+BqV5ABwCFwJ4oVNgRoZ1Nbe1WjCm6P0NnqGhgMK4=;
- b=KW35GtCHtISOl+Kk8nlRCHUVNCeYcoZ0HVMopzupFGSpfJXklzQ1xLNL3QwT4tkW/lPihnOc8rOMI7/bk4ueAHHhCy5IcgTJL9GOW8AJvxgj+kWmMSX9nsR1J+zUdSV3uRe0WgPa4YsEdxZx40LZkrlMzu1mu8ukedoSaZf6WKA=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB5840.eurprd05.prod.outlook.com (20.178.123.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.23; Thu, 31 Oct 2019 12:42:04 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::b179:e8bf:22d4:bf8d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::b179:e8bf:22d4:bf8d%5]) with mapi id 15.20.2387.028; Thu, 31 Oct 2019
- 12:42:04 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
-Thread-Topic: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
-Thread-Index: AQHVidvRl0DiLfVRckS4hHS5dqmJyadx8UKAgAA3LICAACCkgIABo4oAgADQ2QA=
-Date:   Thu, 31 Oct 2019 12:42:03 +0000
-Message-ID: <20191031124200.GJ22766@mellanox.com>
-References: <20191023195515.13168-1-rcampbell@nvidia.com>
- <20191023195515.13168-4-rcampbell@nvidia.com>
- <20191029175837.GS22766@mellanox.com>
- <3ffecdc6-625f-ebea-8fb4-984fe6ca90f3@nvidia.com>
- <20191029231255.GX22766@mellanox.com>
- <f42d06e2-ca08-acdd-948d-2803079a13c2@nvidia.com>
-In-Reply-To: <f42d06e2-ca08-acdd-948d-2803079a13c2@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BL0PR02CA0081.namprd02.prod.outlook.com
- (2603:10b6:208:51::22) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.162.113.180]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c76b79f7-458c-4f91-ec16-08d75dffbb67
-x-ms-traffictypediagnostic: VI1PR05MB5840:
-x-microsoft-antispam-prvs: <VI1PR05MB5840721564872BC513288BFFCF630@VI1PR05MB5840.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 02070414A1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(376002)(346002)(396003)(189003)(199004)(36756003)(71200400001)(71190400001)(476003)(14444005)(446003)(11346002)(2906002)(2616005)(256004)(86362001)(33656002)(1076003)(6116002)(5660300002)(6916009)(486006)(316002)(3846002)(6512007)(229853002)(6436002)(54906003)(4326008)(6486002)(26005)(8676002)(186003)(25786009)(99286004)(6246003)(305945005)(52116002)(81166006)(81156014)(7736002)(386003)(76176011)(6506007)(478600001)(102836004)(8936002)(66446008)(66066001)(14454004)(66946007)(66476007)(64756008)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5840;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +pvlvGR4nSEsPJ3TrSyWLzaW9U3MwNNBia1b+okW0wcfwsetP35xdywwPNUruqPxmFRJJhfIJgzftznThKbaHcuXZhk8w51F6QNgWFIUZgHj3YZy4mVbp7sUUG7hff/mv//TN+0/u1GhtyV27bTz6vWngJakDjf3xiDNrrDf9bGCVEvR1zlvqzxju9yWhOhbdEeMvxgPvnMNOv+U2cKzPu22+pwmeuJvOxguPAqnII7wRGwR2DIJuR6hKe+ZKCLRPrBSajXX6KFplOnRyq/mkvNei28Rb3PTqbVbqagHNF2JmQUi4+1Bcj4C6MbGxMDZ6R1Wf/zbjh6i/IApDn6h+3RXP+UQgb66uPPYs2nk7NHIljijKV3vGUvl8NiqRkvReb93LkRFy9juwZTeuG4vd5TZQvlfOII16GvyTxvq/btWtCJgCmzdLz7PKndiZ4M7
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <20704D111969E44091B76631E43CF7B2@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 31 Oct 2019 08:43:46 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:33758 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbfJaMnq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 08:43:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jBmZlBwr/Ks6ozQpHVTeR+373gRUmQy202/ToYUuLdQ=; b=iZpvMwETeTxeBk8hPf/qRkJWl
+        492kC9Xhwdh3ydVEq1rYTJlyaclOuT8hQO0K26nMUQ7L/Gq3Se2NqGE4qn+vpNpbGYQuzZHk5W1bi
+        +aTouhu7n8VoXIkCJerO4kw46KG8zLjWnOHyY9lIr5uTNiHOx3DbJqj0zBOga3Qpn6Yflb6nejkiA
+        y9qeXToyeYP7IVyCOjPeNazp3zpZ4D8JcF8h/wK1FdOpNRWy0LsA+NZjyFoDcA7XGMK2OmrEYU8JX
+        jQaxOty+xukOP88YQaRmTY1FEKYu3bQXq8xuHa7X7MOIYw/BKTar8nDCJ63I+lWVwWOjH4TviiSmO
+        +iPLsBTaA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iQ9nb-0005dX-VS; Thu, 31 Oct 2019 12:43:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 00E4E30025A;
+        Thu, 31 Oct 2019 13:42:30 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 840812B45E75A; Thu, 31 Oct 2019 13:43:32 +0100 (CET)
+Date:   Thu, 31 Oct 2019 13:43:32 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, acme@kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v6] perf: Sharing PMU counters across compatible events
+Message-ID: <20191031124332.GQ4131@hirez.programming.kicks-ass.net>
+References: <20190919052314.2925604-1-songliubraving@fb.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c76b79f7-458c-4f91-ec16-08d75dffbb67
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Oct 2019 12:42:04.1106
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: irErugRJVLgiMcxkh1a3QVBjvIfaKXWSpTu1mBDKGJHz+uysgSNHi0D+Hk7nt7IsGvpSN3FPSEef6vxO/Xim0Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5840
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919052314.2925604-1-songliubraving@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 05:14:30PM -0700, Ralph Campbell wrote:
+On Wed, Sep 18, 2019 at 10:23:14PM -0700, Song Liu wrote:
+> This patch tries to enable PMU sharing. To make perf event scheduling
+> fast, we use special data structures.
+> 
+> An array of "struct perf_event_dup" is added to the perf_event_context,
+> to remember all the duplicated events under this ctx. All the events
+> under this ctx has a "dup_id" pointing to its perf_event_dup. Compatible
+> events under the same ctx share the same perf_event_dup. The following
+> figure shows a simplified version of the data structure.
+> 
+>       ctx ->  perf_event_dup -> master
+>                      ^
+>                      |
+>          perf_event /|
+>                      |
+>          perf_event /
+> 
+> Connection among perf_event and perf_event_dup are built when events are
+> added or removed from the ctx. So these are not on the critical path of
+> schedule or perf_rotate_context().
+> 
+> On the critical paths (add, del read), sharing PMU counters doesn't
+> increase the complexity. Helper functions event_pmu_[add|del|read]() are
+> introduced to cover these cases. All these functions have O(1) time
+> complexity.
+> 
+> We allocate a separate perf_event for perf_event_dup->master. This needs
+> extra attention, because perf_event_alloc() may sleep. To allocate the
+> master event properly, a new pointer, tmp_master, is added to perf_event.
+> tmp_master carries a separate perf_event into list_[add|del]_event().
+> The master event has valid ->ctx and holds ctx->refcount.
 
-> > Well, that is good, is it also under drivers/char? It kind feels like
-> > it should not be there...
->=20
-> I think most of the test modules live in lib/ but I wasn't sure that
-> was the right place for the HMM test driver.
-> If you think that is better, I can easily move it.
+That is realy nasty and expensive, it basically means every !sampling
+event carries a double allocate.
 
-It would be good to get the various test people involved in this, I
-really don't know.
-=20
-> > > > It seems especially over-complicated to use a full page table layou=
-t
-> > > > for this, wouldn't something simple like an xarray be good enough f=
-or
-> > > > test purposes?
-> > >=20
-> > > Possibly. A page table is really just a lookup table from virtual add=
-ress
-> > > to pfn/page. Part of the rationale was to mimic what a real device
-> > > might do.
-> >=20
-> > Well, but the details of the page table layout don't see really
-> > important to this testing, IMHO.
->=20
-> One problem with XArray is that on 32-bit machines the value would
-> need to be u64 to hold a pfn which won't fit in a ULONG_MAX.
-> I guess we could make the driver 64-bit only.
+Why can't we use one of the actual events as master?
 
-Why would a 32 bit machine need a 64 bit pfn?
+> +/*
+> + * Sharing PMU across compatible events
+> + *
+> + * If two perf_events in the same perf_event_context are counting same
+> + * hardware events (instructions, cycles, etc.), they could share the
+> + * hardware PMU counter.
+> + *
+> + * When a perf_event is added to the ctx (list_add_event), it is compared
+> + * against other events in the ctx. If they can share the PMU counter,
+> + * a perf_event_dup is allocated to represent the sharing.
+> + *
+> + * Each perf_event_dup has a virtual master event, which is called by
+> + * pmu->add() and pmu->del(). We cannot call perf_event_alloc() in
+> + * list_add_event(), so it is allocated and carried by event->tmp_master
+> + * into list_add_event().
+> + *
+> + * Virtual master in different cases/paths:
+> + *
+> + * < I > perf_event_open() -> close() path:
+> + *
+> + * 1. Allocated by perf_event_alloc() in sys_perf_event_open();
+> + * 2. event->tmp_master->ctx assigned in perf_install_in_context();
+> + * 3.a. if used by ctx->dup_events, freed in perf_event_release_kernel();
+> + * 3.b. if not used by ctx->dup_events, freed in perf_event_open().
+> + *
+> + * < II > inherit_event() path:
+> + *
+> + * 1. Allocated by perf_event_alloc() in inherit_event();
+> + * 2. tmp_master->ctx assigned in inherit_event();
+> + * 3.a. if used by ctx->dup_events, freed in perf_event_release_kernel();
+> + * 3.b. if not used by ctx->dup_events, freed in inherit_event().
+> + *
+> + * < III > perf_pmu_migrate_context() path:
+> + * all dup_events removed during migration (no sharing after the move).
+> + *
+> + * < IV > perf_event_create_kernel_counter() path:
+> + * not supported yet.
+> + */
+> +struct perf_event_dup {
+> +	/*
+> +	 * master event being called by pmu->add() and pmu->del().
+> +	 * This event is allocated with perf_event_alloc(). When
+> +	 * attached to a ctx, this event should hold ctx->refcount.
+> +	 */
+> +	struct perf_event       *master;
+> +	/* number of events in the ctx that shares the master */
+> +	int			total_event_count;
+> +	/* number of active events of the master */
+> +	int			active_event_count;
+> +};
+> +
+> +#define MAX_PERF_EVENT_DUP_PER_CTX 4
+>  /**
+>   * struct perf_event_context - event context structure
+>   *
+> @@ -791,6 +849,9 @@ struct perf_event_context {
+>  #endif
+>  	void				*task_ctx_data; /* pmu specific data */
+>  	struct rcu_head			rcu_head;
+> +
+> +	/* for PMU sharing. array is needed for O(1) access */
+> +	struct perf_event_dup		dup_events[MAX_PERF_EVENT_DUP_PER_CTX];
 
-Jason
+Yuck!
+
+event_pmu_{add,del,read}() appear to be the consumer of this array
+thing, but I'm not seeing why we need it.
+
+That is, again, why can't we use one of the actual events as master and
+have a dup_master pointer per event and then do something like:
+
+event_pmu_add()
+{
+	if (event->dup_master != event)
+		return;
+
+	event->pmu->add(event, PERF_EF_START);
+}
+
+Such that we only schedule the master events and ignore all duplicates.
+
+Then on read it can do something like:
+
+event_pmu_read()
+{
+	if (event->dup_master == event)
+		return;
+
+	/* use event->dup_master as counter */
+again:
+	prev_count = local64_read(&hwc->prev_count);
+	count = local64_read(&event->dup_master->count);
+	if (local64_cmpxchg(&hwc->prev_count, prev_count, count) != prev_count)
+		goto again;
+
+	delta = count - prev_count;
+	local64_add(delta, &event->count);
+}
+
+>  };
+
+> +/* Returns whether a perf_event can share PMU counter with other events */
+> +static inline bool perf_event_can_share(struct perf_event *event)
+> +{
+> +	/* only do sharing for hardware events */
+> +	if (is_software_event(event))
+> +		return false;
+> +
+> +	/*
+> +	 * limit sharing to counting events.
+> +	 * perf-stat sets PERF_SAMPLE_IDENTIFIER for counting events, so
+> +	 * let that in.
+> +	 */
+> +	if (event->attr.sample_type & ~PERF_SAMPLE_IDENTIFIER)
+> +		return false;
+
+Why is is_sampling_event() not usable?
+
+> +
+> +	return true;
+> +}
+> +
+> +/*
+> + * Returns whether the two events can share a PMU counter.
+> + *
+> + * Note: This function does NOT check perf_event_can_share() for
+> + * the two events, they should be checked before this function
+> + */
+> +static inline bool perf_event_compatible(struct perf_event *event_a,
+> +					 struct perf_event *event_b)
+> +{
+> +	return event_a->attr.type == event_b->attr.type &&
+> +		event_a->attr.config == event_b->attr.config &&
+> +		event_a->attr.config1 == event_b->attr.config1 &&
+> +		event_a->attr.config2 == event_b->attr.config2;
+> +}
+
+Slightly scared by this one.
+
+
+> @@ -2612,20 +2828,9 @@ static int  __perf_install_in_context(void *info)
+>  		raw_spin_lock(&task_ctx->lock);
+>  	}
+>  
+> -#ifdef CONFIG_CGROUP_PERF
+> -	if (is_cgroup_event(event)) {
+> -		/*
+> -		 * If the current cgroup doesn't match the event's
+> -		 * cgroup, we should not try to schedule it.
+> -		 */
+> -		struct perf_cgroup *cgrp = perf_cgroup_from_task(current, ctx);
+> -		reprogram = cgroup_is_descendant(cgrp->css.cgroup,
+> -					event->cgrp->css.cgroup);
+> -	}
+> -#endif
+
+Why is this removed?
+
+> @@ -10986,6 +11198,14 @@ SYSCALL_DEFINE5(perf_event_open,
+>  		goto err_cred;
+>  	}
+>  
+> +	if (perf_event_can_share(event)) {
+> +		event->tmp_master = perf_event_alloc(&event->attr, cpu,
+> +						     task, NULL, NULL,
+> +						     NULL, NULL, -1);
+> +		if (IS_ERR(event->tmp_master))
+> +			event->tmp_master = NULL;
+> +	}
+
+
+> @@ -11773,6 +12005,14 @@ inherit_event(struct perf_event *parent_event,
+>  	if (IS_ERR(child_event))
+>  		return child_event;
+>  
+> +	if (perf_event_can_share(child_event)) {
+> +		child_event->tmp_master = perf_event_alloc(&parent_event->attr,
+> +							   parent_event->cpu,
+> +							   child, NULL, NULL,
+> +							   NULL, NULL, -1);
+> +		if (IS_ERR(child_event->tmp_master))
+> +			child_event->tmp_master = NULL;
+> +	}
+
+So this is terrible!
+
+> 
