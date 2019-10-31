@@ -2,160 +2,180 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1258CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5277ECA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C39FC2087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1754A2087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:41:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="edAgsMtd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ciF98ugB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbfJaQkC (ORCPT
+        id S1728617AbfJaQlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 12:40:02 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:41414 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727593AbfJaQkC (ORCPT
+        Thu, 31 Oct 2019 12:41:25 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:43897 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbfJaQlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:40:02 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9VGdQEa016825
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 09:40:00 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=uA5VupX70Q9cTdALEHf4YRdTh6Lejo9S9pukcNuyetA=;
- b=edAgsMtduhoHBL4X0qZdoB692edqDjR+uod4/iYH3Gcs8JXHTz2EwEt61y3BlUJWeLf3
- 0xQZ8foyX5P9kSdoAZNT9ivnH+TXd0yg/RvBoK591je3IqnikCtnS1Yt3XNszrSJa0MV
- 7ppENiLmNkk1/L71XvDpVedlNHocDyTX7bs= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2w01bw8qd6-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 09:40:00 -0700
-Received: from 2401:db00:2050:5076:face:0:7:0 (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 31 Oct 2019 09:40:00 -0700
-Received: by devvm005.ftw2.facebook.com (Postfix, from userid 8731)
-        id 7CACA35494B0F; Thu, 31 Oct 2019 09:39:59 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Chris Mason <clm@fb.com>
-Smtp-Origin-Hostname: devvm005.ftw2.facebook.com
-To:     Paul Moore <paul@paul-moore.com>
-CC:     Eric Paris <eparis@redhat.com>,
-        Dave Jones <davej@codemonkey.org.uk>, <linux-audit@redhat.com>,
-        Kyle McMartin <jkkm@fb.com>, <linux-kernel@vger.kernel.org>,
-        Chris Mason <clm@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH] audit: set context->dummy even when audit is off
-Date:   Thu, 31 Oct 2019 09:39:31 -0700
-Message-ID: <20191031163931.1102669-1-clm@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
-References: <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
-X-FB-Internal: Safe
+        Thu, 31 Oct 2019 12:41:25 -0400
+Received: by mail-qk1-f195.google.com with SMTP id a194so7636302qkg.10
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 09:41:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=c2gDWEfkAfx9Q4PE/Rm807WIKTLgFBhcjREw7TevLRs=;
+        b=ciF98ugBd0QrAkNL11UiQY+M7NMZbjz4+Pu7HZ+cbK+xsUC2WQuwkUi+rc/nQ3iEtK
+         mV2CmBSCTMHvqxUOdzz8KUzarJuLmftQL+dYkSxbCam2L5ctFJ+BiS9HQBbZ0V9MB4TA
+         SZ5YSxG1RrfBiRnNak5np+8Gzmom7RJf8SsZn77u2lxX+PrUcG0cRGQq7ypT04rOMvBH
+         emytCpQwVKl/x7rXO6dmFt0B1D9axVvaADmGnp1vGZVEe/YzEJfkUsWSghk1rSCPGxZR
+         QBg6zuK5N2h/KLF1nmZmbJM1ihBESkqZyah1QjNhl74bCfjn3gkxErqwNCxyzKzw4MOH
+         gAig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=c2gDWEfkAfx9Q4PE/Rm807WIKTLgFBhcjREw7TevLRs=;
+        b=J+abtpDvfKzFXpMMMGIwXkfmdllWq5ewhlgkIZnDPYUbxXBgj+A0NaF1Iv4MLTKgkS
+         4PCIa5hcPbh4HABGj5BoM8AK0N8x+Hf8XFHFo5x4g40XZqpLxbG+5o56eyFSLKXcq/pk
+         1g7Ebxu8KK0SEjfao16pmh3xTXei/CYIjPOgsDikPzlAF579/jPGf20ouuY8f26GpveI
+         wf1aRmzrxxqrBSLSkLEqAao9YspcVY6sFORMg54g41jOaVUtoEB4AgrLBA/FRF+QamyW
+         MXuEw2OjBI6X/kK3dxk1QzFHDgrJjopUJraD77nb1Rs2kC5WPlsnoiRu5Kmhz/VhOk9Q
+         aJ5g==
+X-Gm-Message-State: APjAAAWpK+7MwVpxrAtY8GyFajqrJ7ncxtU8EsfJ373sFDXQMNN0dKHw
+        kbDdjVY6/2FOKp/fGwSXZa5JYw==
+X-Google-Smtp-Source: APXvYqzRAQ/QuPkY3XTnwzSsBdb38qZCugAfX8/oIVGdsN0CYp480IUG/4aPEVEVg9EBFBgbXAg4zQ==
+X-Received: by 2002:a05:620a:13c3:: with SMTP id g3mr873053qkl.109.1572540082370;
+        Thu, 31 Oct 2019 09:41:22 -0700 (PDT)
+Received: from [192.168.1.169] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id u7sm2081788qkm.127.2019.10.31.09.41.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 31 Oct 2019 09:41:21 -0700 (PDT)
+Subject: Re: [Patch v4 0/6] Introduce Thermal Pressure
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
+ <20191031094420.GA19197@e108754-lin>
+Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
+        rui.zhang@intel.com, edubezval@gmail.com, qperret@google.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, daniel.lezcano@linaro.org
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <5DBB0EB0.9050106@linaro.org>
+Date:   Thu, 31 Oct 2019 12:41:20 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-31_06:2019-10-30,2019-10-31 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
- clxscore=1015 bulkscore=0 mlxlogscore=999 suspectscore=0
- lowpriorityscore=0 impostorscore=0 phishscore=0 spamscore=0 mlxscore=0
- priorityscore=1501 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1910310166
-X-FB-Internal: deliver
+In-Reply-To: <20191031094420.GA19197@e108754-lin>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave Jones reported that we're finding a considerable amount of dmesg
-traffic from NTP time adjustments being reported through the audit
-subsystem.  His original post is here:
+On 10/31/2019 05:44 AM, Ionela Voinescu wrote:
+> Hi Thara,
+> 
+> On Tuesday 22 Oct 2019 at 16:34:19 (-0400), Thara Gopinath wrote:
+>> Thermal governors can respond to an overheat event of a cpu by
+>> capping the cpu's maximum possible frequency. This in turn
+>> means that the maximum available compute capacity of the
+>> cpu is restricted. But today in the kernel, task scheduler is 
+>> not notified of capping of maximum frequency of a cpu.
+>> In other words, scheduler is unware of maximum capacity
+> 
+> Nit: s/unware/unaware
+> 
+>> restrictions placed on a cpu due to thermal activity.
+>> This patch series attempts to address this issue.
+>> The benefits identified are better task placement among available
+>> cpus in event of overheating which in turn leads to better
+>> performance numbers.
+>>
+>> The reduction in the maximum possible capacity of a cpu due to a 
+>> thermal event can be considered as thermal pressure. Instantaneous
+>> thermal pressure is hard to record and can sometime be erroneous
+>> as there can be mismatch between the actual capping of capacity
+>> and scheduler recording it. Thus solution is to have a weighted
+>> average per cpu value for thermal pressure over time.
+>> The weight reflects the amount of time the cpu has spent at a
+>> capped maximum frequency. Since thermal pressure is recorded as
+>> an average, it must be decayed periodically. Exisiting algorithm
+>> in the kernel scheduler pelt framework is re-used to calculate
+>> the weighted average. This patch series also defines a sysctl
+>> inerface to allow for a configurable decay period.
+>>
+>> Regarding testing, basic build, boot and sanity testing have been
+>> performed on db845c platform with debian file system.
+>> Further, dhrystone and hackbench tests have been
+>> run with the thermal pressure algorithm. During testing, due to
+>> constraints of step wise governor in dealing with big little systems,
+>> trip point 0 temperature was made assymetric between cpus in little
+>> cluster and big cluster; the idea being that
+>> big core will heat up and cpu cooling device will throttle the
+>> frequency of the big cores faster, there by limiting the maximum available
+>> capacity and the scheduler will spread out tasks to little cores as well.
+>>
+> 
+> Can you please share the changes you've made to sdm845.dtsi and a kernel
+> base on top of which to apply your patches? I would like to reproduce
+> your results and run more tests and it would be good if our setups were
+> as close as possible.
+Hi Ionela
+Thank you for the review.
+So I tested this on 5.4-rc1 kernel. The dtsi changes is to reduce the
+thermal trip points for the big CPUs to 60000 or 70000 from the default
+90000. I did this for 2 reasons
+1. I could never get the db845 to heat up sufficiently for my test cases
+with the default trip.
+2. I was using the default step-wise governor for thermal. I did not
+want little and big to start throttling by the same % because then the
+task placement ratio will remain the same between little and big cores.
 
-https://lore.kernel.org/lkml/20190923155041.GA14807@codemonkey.org.uk/
 
-The confusing part is that we're seeing this on machines that don't have
-audit on.  The NTP code uses audit_dummy_context() to decide if it
-should log things:
+> 
+>> Test Results
+>>
+>> Hackbench: 1 group , 30000 loops, 10 runs       
+>>                                                Result         SD             
+>>                                                (Secs)     (% of mean)     
+>>  No Thermal Pressure                            14.03       2.69%           
+>>  Thermal Pressure PELT Algo. Decay : 32 ms      13.29       0.56%         
+>>  Thermal Pressure PELT Algo. Decay : 64 ms      12.57       1.56%           
+>>  Thermal Pressure PELT Algo. Decay : 128 ms     12.71       1.04%         
+>>  Thermal Pressure PELT Algo. Decay : 256 ms     12.29       1.42%           
+>>  Thermal Pressure PELT Algo. Decay : 512 ms     12.42       1.15%  
+>>
+>> Dhrystone Run Time  : 20 threads, 3000 MLOOPS
+>>                                                  Result      SD             
+>>                                                  (Secs)    (% of mean)     
+>>  No Thermal Pressure                              9.452      4.49%
+>>  Thermal Pressure PELT Algo. Decay : 32 ms        8.793      5.30%
+>>  Thermal Pressure PELT Algo. Decay : 64 ms        8.981      5.29%
+>>  Thermal Pressure PELT Algo. Decay : 128 ms       8.647      6.62%
+>>  Thermal Pressure PELT Algo. Decay : 256 ms       8.774      6.45%
+>>  Thermal Pressure PELT Algo. Decay : 512 ms       8.603      5.41%  
+>>
+> 
+> Do you happen to know by how much the CPUs were capped during these
+> experiments?
 
-	static inline void audit_ntp_log(const struct audit_ntp_data *ad)
-	{
-		if (!audit_dummy_context())
-			__audit_ntp_log(ad);
-	}
+I don't have any captured results here. I know that big cores were
+capped and at times there was capacity inversion.
 
-I confirmed with perf probes that:
+Also I will fix the nit comments above.
 
-	context->dummy = 0
-	audit_n_rules = 0
-	audit_enabled = 0
-	audit_ever_enabled = 1 // seems to be from journald
+> 
+> Thanks,
+> Ionela.
+> 
 
-The box boots, journald turns audit on, some time later our
-configuration management runs around and turns audit off.  This journald
-feature is discussed here: https://github.com/systemd/systemd/issues/959
 
-From what I can tell, audit_syscall_entry is responsible for setting
-context->dummy, but we never get down to the test for audit_n_rules:
 
-__audit_syscall_entry(int major, unsigned long a1, unsigned long a2,
-                           unsigned long a3, unsigned long a4)
-{
-        struct audit_context *context = audit_context();
-        enum audit_state     state;
-
-        if (!audit_enabled || !context)
-                return;
-                ^^^^^^^^^^^^^^^^^^  --- we bail here
-
-	[ ... ]
-
-        context->dummy = !audit_n_rules;
-
-This leaves context->dummy at 0, which appears to be the original value
-from kzalloc().
-
-If you've gotten this far, you've read everything I know about the audit
-code.  With that said, my preference is to make a single source of truth for
-decisions about logging.  This commit changes __audit_syscall_entry() to
-set context->dummy when audit is off.
-
-Reported-by: Dave Jones <davej@codemonkey.org.uk>
-Signed-off-by: Chris Mason <clm@fb.com>
----
- kernel/auditsc.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-index 4effe01ebbe2..a5c82d8f9c2b 100644
---- a/kernel/auditsc.c
-+++ b/kernel/auditsc.c
-@@ -1631,8 +1631,19 @@ void __audit_syscall_entry(int major, unsigned long a1, unsigned long a2,
- 	struct audit_context *context = audit_context();
- 	enum audit_state     state;
- 
--	if (!audit_enabled || !context)
-+	if (!context)
-+		return;
-+
-+	if (!audit_enabled) {
-+		/*
-+		 * ntp clock adjustments and a few other places check for
-+		 * a dummy context without checking to see if audit
-+		 * is enabled.  Make sure we set context->dummy when audit
-+		 * is off, otherwise they will try to log things.
-+		 */
-+		context->dummy = 1;
- 		return;
-+	}
- 
- 	BUG_ON(context->in_syscall || context->name_count);
- 
 -- 
-2.17.1
-
+Warm Regards
+Thara
