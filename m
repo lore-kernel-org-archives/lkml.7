@@ -2,172 +2,203 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2730ACA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4671CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB3F32086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:18:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmOccsOo"
+	by mail.kernel.org (Postfix) with ESMTP id 82A71217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:21:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572506485;
+	bh=RgGczvcyhNK7hxRphi3qyXJOIQ77K2UxqTiZPdnelJw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FDdW5HR24uy2NeZIVgRohaFKcYCeDVQ0aEN+pISQHlTraOQwk/fUlcYoADDeGioaW
+	 bB+xpcdCqwkVwW0xf4BOQ17W4jBW6s9vk8mnr2bmSdFUbOUIjN1dqopPicKiiSdPVJ
+	 9doTR5ogH39J4115/jftM7LCTxvL/PwRFfOp5lxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfJaHS5 (ORCPT
+        id S1726845AbfJaHVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 03:18:57 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42405 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbfJaHS5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 03:18:57 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 21so3669113pfj.9;
-        Thu, 31 Oct 2019 00:18:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1aArgnbDaF4vNzrG28Q3wfHxUiG18eeUAr/yEEfdFtc=;
-        b=UmOccsOougBbsjpy3d6bIpcYYQRViOd5I2N9QlSOHcN+LY+gwh+F4LbddXm4VitP3m
-         0p9aHGlyqKInmhPl71bs3SUqcvSo9WHouNNwRx3wkiyGKDpzj1vu1Z+rvoJCeN85gboE
-         2/aNkvj6ym1UXCtm1gtTEQSC6EhlvFLaK/FPZIzPh6w9ghepk1pPbXmkC9oIWcPR+wW1
-         yk4xNY0mj8mCvN8CoKSPViECopVuE7fLxZqxI00uArxSuWILkzapGOnfGsQY62rgBMUI
-         a9usQw2MP8BVlAYkQPde4mqlQjsoDXp0ejUnlBwbt8mne2z67DQcePna0yLenNWw/wQH
-         Uihw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1aArgnbDaF4vNzrG28Q3wfHxUiG18eeUAr/yEEfdFtc=;
-        b=kgdxFXYNtEafAYHZksu9n5y0c5RIGW4CR/eQvyLzfG60rlCD6e0MRQigfj2F4O8xRd
-         /FJEYYoi5sgQGmN1TFHCtTGxe0zS8Tcz3R/nrE25IHEG+jgsq7AjmJKlg2calK36wX68
-         ahh4XHRNQsKa1afP9vpAI9Xm/OZOgK4rLQgC0iSmEfl7O0up+7D2Bf/1ogIf0DP1xgmG
-         INKqYVTJEGxnTpA8AhA05VBcvaQONIkPypNOrLB0ipUKJI0xQjSPrzkv1ZvDRLfGZYco
-         7M9WzekVrZiQtnS8FwAdN5kJ7eH8mih97DAEWDpdlUoIATLNnd0ci2V1IYHqKXuH6zvu
-         EoKw==
-X-Gm-Message-State: APjAAAUE4qbru6B2JSxNTR68bseBTGKw2QSqISZLNdrZCGJRnc6kh4gL
-        AVURT6HYnhZPC2qtwY2k5DQ=
-X-Google-Smtp-Source: APXvYqx9nES+bwUHd/B+Dyxjp8g8HMYLV+RwsKVO3akjNB6ve2hIQl8jcptqMNCeRVTyHuuzftDdag==
-X-Received: by 2002:a17:90a:2a41:: with SMTP id d1mr5208172pjg.87.1572506334911;
-        Thu, 31 Oct 2019 00:18:54 -0700 (PDT)
-Received: from Gentoo ([103.231.90.174])
-        by smtp.gmail.com with ESMTPSA id e198sm2093458pfh.83.2019.10.31.00.18.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 31 Oct 2019 00:18:54 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 12:48:42 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     bfields@fieldses.org, yamada.masahiro@socionext.com,
-        michal.lkml@markovi.net, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scripts: prune-kernel:remove old kernels and modules dir
- from system
-Message-ID: <20191031071839.GB3130@Gentoo>
-References: <20191030095445.912435-1-unixbhaskar@gmail.com>
- <b8a12c03-1e17-61de-2cd9-a09650dc22b1@infradead.org>
- <20191031033722.GA7687@Gentoo>
- <41693d0e-8ff2-bf06-f1a6-e7fb52779f95@infradead.org>
- <20191031045242.GA3130@Gentoo>
- <809aa850-7a22-a7c5-af21-0e88d1c63dd7@infradead.org>
+        Thu, 31 Oct 2019 03:21:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726596AbfJaHVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 03:21:24 -0400
+Received: from rapoport-lnx (190.228.71.37.rev.sfr.net [37.71.228.190])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B92D12083E;
+        Thu, 31 Oct 2019 07:21:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572506482;
+        bh=RgGczvcyhNK7hxRphi3qyXJOIQ77K2UxqTiZPdnelJw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DG2bDla3FI4L3kxCkdSpGIP1S/AUE+/J+wCL/HQOxOCjeZBUlB4V0IFhk6ov/GsMp
+         saxuC/x188Q2/LNGMCF2oqXem4Xj48zkvWNkvM+gsB1VKSoqa3UR/BznnvxKIjJJCh
+         FRVsiCPLjLZdiu2iXzPdSo3upZ6BwIWtuv/IACLY=
+Date:   Thu, 31 Oct 2019 08:21:13 +0100
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, X86 ML <x86@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
+ mappings
+Message-ID: <20191031072112.GA6990@rapoport-lnx>
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+ <CA5C22D9-BC3E-4B69-8DD9-4D3B75E40BD5@amacapital.net>
+ <20191029093254.GE18773@rapoport-lnx>
+ <CALCETrUuuc4DS0cdMBtS550Wkp0x9ND3M3SgtaMgyRROnDR5Kg@mail.gmail.com>
+ <20191030084005.GC20624@rapoport-lnx>
+ <CALCETrXajrY+0SmzkL7t++ndYwRoYLLE9VPKwSGSyW8HZx-TeA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="61jdw2sOBCFtR2d/"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <809aa850-7a22-a7c5-af21-0e88d1c63dd7@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALCETrXajrY+0SmzkL7t++ndYwRoYLLE9VPKwSGSyW8HZx-TeA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 30, 2019 at 02:28:21PM -0700, Andy Lutomirski wrote:
+> On Wed, Oct 30, 2019 at 1:40 AM Mike Rapoport <rppt@kernel.org> wrote:
+> >
+> > On Tue, Oct 29, 2019 at 10:00:55AM -0700, Andy Lutomirski wrote:
+> > > On Tue, Oct 29, 2019 at 2:33 AM Mike Rapoport <rppt@kernel.org> wrote:
+> > > >
+> > > > On Mon, Oct 28, 2019 at 02:44:23PM -0600, Andy Lutomirski wrote:
+> > > > >
+> > > > > > On Oct 27, 2019, at 4:17 AM, Mike Rapoport <rppt@kernel.org> wrote:
+> > > > > >
+> > > > > > ﻿From: Mike Rapoport <rppt@linux.ibm.com>
+> > > > > >
+> > > > > > Hi,
+> > > > > >
+> > > > > > The patch below aims to allow applications to create mappins that have
+> > > > > > pages visible only to the owning process. Such mappings could be used to
+> > > > > > store secrets so that these secrets are not visible neither to other
+> > > > > > processes nor to the kernel.
+> > > > > >
+> > > > > > I've only tested the basic functionality, the changes should be verified
+> > > > > > against THP/migration/compaction. Yet, I'd appreciate early feedback.
+> > > > >
+> > > > > I’ve contemplated the concept a fair amount, and I think you should
+> > > > > consider a change to the API. In particular, rather than having it be a
+> > > > > MAP_ flag, make it a chardev.  You can, at least at first, allow only
+> > > > > MAP_SHARED, and admins can decide who gets to use it.  It might also play
+> > > > > better with the VM overall, and you won’t need a VM_ flag for it — you
+> > > > > can just wire up .fault to do the right thing.
+> > > >
+> > > > I think mmap()/mprotect()/madvise() are the natural APIs for such
+> > > > interface.
+> > >
+> > > Then you have a whole bunch of questions to answer.  For example:
+> > >
+> > > What happens if you mprotect() or similar when the mapping is already
+> > > in use in a way that's incompatible with MAP_EXCLUSIVE?
+> >
+> > Then we refuse to mprotect()? Like in any other case when vm_flags are not
+> > compatible with required madvise()/mprotect() operation.
+> >
+> 
+> I'm not talking about flags.  I'm talking about the case where one
+> thread (or RDMA or whatever) has get_user_pages()'d a mapping and
+> another thread mprotect()s it MAP_EXCLUSIVE.
+> 
+> > > Is it actually reasonable to malloc() some memory and then make it exclusive?
+> > >
+> > > Are you permitted to map a file MAP_EXCLUSIVE?  What does it mean?
+> >
+> > I'd limit MAP_EXCLUSIVE only to anonymous memory.
+> >
+> > > What does MAP_PRIVATE | MAP_EXCLUSIVE do?
+> >
+> > My preference is to have only mmap() and then the semantics is more clear:
+> >
+> > MAP_PRIVATE | MAP_EXCLUSIVE creates a pre-populated region, marks it locked
+> > and drops the pages in this region from the direct map.
+> > The pages are returned back on munmap().
+> > Then there is no way to change an existing area to be exclusive or vice
+> > versa.
+> 
+> And what happens if you fork()?  Limiting it to MAP_SHARED |
+> MAP_EXCLUSIVE would about this particular nasty question.
+> 
+> >
+> > > How does one pass exclusive memory via SCM_RIGHTS?  (If it's a
+> > > memfd-like or chardev interface, it's trivial.  mmap(), not so much.)
+> >
+> > Why passing such memory via SCM_RIGHTS would be useful?
+> 
+> Suppose I want to put a secret into exclusive memory and then send
+> that secret to some other process.  The obvious approach would be to
+> SCM_RIGHTS an fd over, but you can't do that with MAP_EXCLUSIVE as
+> you've defined it.  In general, there are lots of use cases for memfd
+> and other fd-backed memory.
+> 
+> >
+> > > And finally, there's my personal giant pet peeve: a major use of this
+> > > will be for virtualization.  I suspect that a lot of people would like
+> > > the majority of KVM guest memory to be unmapped from the host
+> > > pagetables.  But people might also like for guest memory to be
+> > > unmapped in *QEMU's* pagetables, and mmap() is a basically worthless
+> > > interface for this.  Getting fd-backed memory into a guest will take
+> > > some possibly major work in the kernel, but getting vma-backed memory
+> > > into a guest without mapping it in the host user address space seems
+> > > much, much worse.
+> >
+> > Well, in my view, the MAP_EXCLUSIVE is intended to keep small secrets
+> > rather than use it for the entire guest memory. I even considered adding a
+> > limit for the mapping size, but then I decided that since RLIMIT_MEMLOCK is
+> > anyway enforced there is no need for a new one.
+> >
+> > I agree that getting fd-backed memory into a guest would be less pain that
+> > VMA, but KVM can already use memory outside the control of the kernel via
+> > /dev/map [1].
+> 
+> That series doesn't address the problem I'm talking about at all.  I'm
+> saying that there is a legitimate use case where QEMU should *not*
+> have a mapping of the memory.  So QEMU would create some exclusive
+> memory using /dev/exclusive_memory and would tell KVM to map it into
+> the guest without mapping it into QEMU's address space at all.
+> 
+> (In fact, the way that SEV currently works is *functionally* like
+> this, except that there's a bogus incoherent mapping in the QEMU
+> process that is a giant can of worms.
+> 
+> 
+> IMO a major benefit of a chardev approach is that you don't need a new
+> VM_ flag and you don't need to worry about wiring it up everywhere in
+> the core mm code.
 
---61jdw2sOBCFtR2d/
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok, at last I'm starting to see your and Christoph's point.
 
-On 22:27 Wed 30 Oct 2019, Randy Dunlap wrote:
->On 10/30/19 9:52 PM, Bhaskar Chowdhury wrote:
->>>>> That=C2=A0'rm'=C2=A0doesn't=C2=A0remove=C2=A0any=C2=A0files.=C2=A0=C2=
-=A0Compare=C2=A0what=C2=A0remove_old_kernel()=C2=A0does.
->>>> No,it=C2=A0is=C2=A0not=C2=A0using=C2=A0that=C2=A0function=C2=A0rather=
-=C2=A0take=C2=A0the=C2=A0parameter=C2=A0from=C2=A0the
->>>> commandline=C2=A0and=C2=A0get=C2=A0into=C2=A0boot=C2=A0dir=C2=A0match=
-=C2=A0with=C2=A0it=C2=A0and=C2=A0remove=C2=A0it.
->>>
->>> But=C2=A0it=C2=A0doesn't=C2=A0do=C2=A0that.=C2=A0=C2=A0I=C2=A0tested=C2=
-=A0it.=C2=A0=C2=A0It=C2=A0should=C2=A0be=C2=A0more=C2=A0like=C2=A0what
->>> rmeove_old_kernel()=C2=A0does:
->>>
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0rm=C2=A0-If=C2=A0vmlinu=
-z-$kernel_ver=C2=A0System.map-$kernel_ver=C2=A0config-$kernel_ver
->>>
->>> and=C2=A0if=C2=A0not,=C2=A0please=C2=A0explain=C2=A0why=C2=A0not.
->> Okay,=C2=A0again=C2=A0some=C2=A0uniformity=C2=A0missing=C2=A0in=C2=A0the=
-=C2=A0code,=C2=A0I=C2=A0would=C2=A0like=C2=A0to=C2=A0your
->> suggested method,i.e call remove_old_kernel to do the job instead of dep=
-ending=C2=A0on=C2=A0individual=C2=A0kernel.
->
->The simplest thing to do is set kernel_version=3D$kernel_ver
->and then call remove_old_kernel().
->And set modules_version=3D$modules_dir_name and call remove_old_modules_di=
-r().
->
->But it would be cleaner to pass a parameter (kernel_version) to the
->remove_old_kernel() function and to pass a parameter (modules_dir) to the
->remove_old_modules_dir() function.
+Just to reiterate, we can use fd-backed memory using /dev/exclusive_memory
+chardev (or some other name we'll pick after long bikeshedding) and then
+the .mmap method of this character device can do interesting things with
+the backing physical memory. Since the memory is not VMA-mapped, we do not
+have to find all the places in the core that might require a check of a VM_
+flag to ensure there is no clashes with the exclusive memory.
 
->
+Still, whatever we do with the mapping  properties of this memory, we need
+a solution to the splitting of huge pages that map the direct map, but this
+is an orthogonal problem in a way.
 
-Thank you...I have just modified the code and call both the function
-under remove option. BTW I didn't set the extra variable $kernel_ver=20
-name it $kernel_version and instead of $modules_dir_name name it $mo
-dules_version.
-
-Capturing command line parameter in $kernel_version and $modules_version
-
-Is that fine? Here is a code snippet:
-
- -r | --remove)
-   if [[ $# -ne 3 ]]; then
-    printf "You need to provide kernel version and modules directory
-    name \n"
-    exit 1
-    else
-    remove_old_kernel
-    remove_old_modules_dir
-    fi
-
-
-I have just test it and it works.
-
-
-And about solitary r option without hypen is ignoring and doing nothing.
-
-Means, if I pass ./scripts/prune-kernel r 5.3.3=20
-
-it simply ignore and does nothing.Only with the hypen it can work.
-
->--=20
->~Randy
->
-Bhaskar
-
---61jdw2sOBCFtR2d/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl26isgACgkQsjqdtxFL
-KRVyXAf/ebHDm+R5TuyyrwcURHxUYZQ+vAAH5KziMSdZy7E6XMrQoRX3bmOrUsfd
-FQ7ew7Ol3rC6kmHRAVIi60Eqkanyo7ocjwQnrKMAJR7Uxx52HJz+/UBDLpy2xvKL
-rrkzvGAmRUrh/J/Fa2sglYZgdFzRP847eXRjFJEpfLdNldSIbTuBIMrtgIPdh2nP
-xT/ZCJgmn+kVvLd1Z57pWm5tiyJPnNpdjA6ckiWn2xC2uW2NAvA+/COqOb+I/bgu
-DSWu3kLkQncA/SE17PxrlOJyb6RUF3JurM1lnUcF4SaK6IJFhtUgEiqqTo+P9JzH
-If6K9voH/VypHZnbIV9hw9OCd2PHmg==
-=gnFn
------END PGP SIGNATURE-----
-
---61jdw2sOBCFtR2d/--
+-- 
+Sincerely yours,
+Mike.
