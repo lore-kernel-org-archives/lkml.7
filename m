@@ -2,138 +2,111 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DBACA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F14CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0591921734
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:39:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="eV1YePql"
+	by mail.kernel.org (Postfix) with ESMTP id DBA60217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:39:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfJaJj3 (ORCPT
+        id S1727343AbfJaJjd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 05:39:29 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37337 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727153AbfJaJj3 (ORCPT
+        Thu, 31 Oct 2019 05:39:33 -0400
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:38821 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727153AbfJaJjd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 05:39:29 -0400
-Received: by mail-pf1-f195.google.com with SMTP id u9so3991221pfn.4
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 02:39:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=v18HXwwUv8fdcmaD7WznN2j7mmagzU8FAwS/lrMAbV8=;
-        b=eV1YePqlbyO7tj1kbB9uk7OP/edmTARvYsB9Zgi7PH5bknrFXg/tJPOc7emhOO4x5j
-         KtyJj8T2PfQws87ybdR8idy8g57nveDsfrqx/ExGASQ3uibiJe4goUkyOdBsJ/O6tM75
-         VsNL8fB1S0lA/l67fDIo2fDZfwDm47jbBhpzA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=v18HXwwUv8fdcmaD7WznN2j7mmagzU8FAwS/lrMAbV8=;
-        b=Z3MwjLCZCyiTF6T6VeDsiugyFO594xS7pyl5pF7Vcdi2zwtiQ7CJUwUojZ74gDlzZ0
-         91Y443c+vKitwjA4OIvwh6oW8AcC5sy8rbOuwmUzGltWBMLWe7o+ryefU75Ux4iPiOEX
-         IQLi7aP54ru/ZG5sNf0/ACJmIPKecK0AVHGz53umhaU24MNz4YXnBe7EpvP6iyxk/AM/
-         pCWpamyrVKDjDnABIXLfx+Q2ADfdeQvkc0/V+W6GmGLRzTT+RtLFsvYq4lF0NMfT1mDb
-         QQ4+IHRF1SPrpnH2jUh5lTgFG9nVnr4mxyRpr687hElHSAUGAfsUwzoApphTgXAD5ugc
-         ZFig==
-X-Gm-Message-State: APjAAAW6UoZTe+b3CPVWmOzTfdQLGXTJlWOKorwoEfShrQVC9vhEqwti
-        xuO/Zb3WJq5bgqlIpsUGngOcVg==
-X-Google-Smtp-Source: APXvYqzcQf2seyFm3b/JjsEvVOy0D7utuomMGdhHrdtSNRCDKkdOsqd1sFCDqTrjR6KoKB+g/V5A2A==
-X-Received: by 2002:a62:2f43:: with SMTP id v64mr91811pfv.13.1572514768894;
-        Thu, 31 Oct 2019 02:39:28 -0700 (PDT)
-Received: from localhost (2001-44b8-1113-6700-783a-2bb9-f7cb-7c3c.static.ipv6.internode.on.net. [2001:44b8:1113:6700:783a:2bb9:f7cb:7c3c])
-        by smtp.gmail.com with ESMTPSA id p1sm2503669pfb.112.2019.10.31.02.39.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 02:39:28 -0700 (PDT)
-From:   Daniel Axtens <dja@axtens.net>
-To:     kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
-        aryabinin@virtuozzo.com, glider@google.com, luto@kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        dvyukov@google.com, christophe.leroy@c-s.fr
-Cc:     linuxppc-dev@lists.ozlabs.org, gor@linux.ibm.com,
-        Daniel Axtens <dja@axtens.net>
-Subject: [PATCH v11 3/4] fork: support VMAP_STACK with KASAN_VMALLOC
-Date:   Thu, 31 Oct 2019 20:39:08 +1100
-Message-Id: <20191031093909.9228-4-dja@axtens.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191031093909.9228-1-dja@axtens.net>
-References: <20191031093909.9228-1-dja@axtens.net>
+        Thu, 31 Oct 2019 05:39:33 -0400
+Received: from mailgate01.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x9V9d5KV030776
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 31 Oct 2019 18:39:05 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9V9d5Ds002546;
+        Thu, 31 Oct 2019 18:39:05 +0900
+Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9V9Y0El023154;
+        Thu, 31 Oct 2019 18:39:05 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.150] [10.38.151.150]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-9977829; Thu, 31 Oct 2019 18:38:42 +0900
+Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
+ BPXC22GP.gisp.nec.co.jp ([10.38.151.150]) with mapi id 14.03.0439.000; Thu,
+ 31 Oct 2019 18:38:41 +0900
+From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Roman Gushchin <guro@fb.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-team@fb.com" <kernel-team@fb.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: Re: [PATCH v2] mm: slab: make page_cgroup_ino() to recognize
+ non-compound slab pages properly
+Thread-Topic: [PATCH v2] mm: slab: make page_cgroup_ino() to recognize
+ non-compound slab pages properly
+Thread-Index: AQHVj6H5mxzEf5Q4l0mAfuJEVZ8f/qdz59AA
+Date:   Thu, 31 Oct 2019 09:38:40 +0000
+Message-ID: <20191031093840.GA9178@hori.linux.bs1.fc.nec.co.jp>
+References: <20191031012151.2722280-1-guro@fb.com>
+ <20191030211608.29f8fc92e07fd2ac2ef4d1d3@linux-foundation.org>
+In-Reply-To: <20191030211608.29f8fc92e07fd2ac2ef4d1d3@linux-foundation.org>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.150]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <4592DDEF39464440989A95B815E27759@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Supporting VMAP_STACK with KASAN_VMALLOC is straightforward:
+On Wed, Oct 30, 2019 at 09:16:08PM -0700, Andrew Morton wrote:
+> On Wed, 30 Oct 2019 18:21:51 -0700 Roman Gushchin <guro@fb.com> wrote:
+> 
+> > page_cgroup_ino() doesn't return a valid memcg pointer for non-compound
+> > slab pages, because it depends on PgHead AND PgSlab flags to be set
+> > to determine the memory cgroup from the kmem_cache.
+> > It's correct for compound pages, but not for generic small pages. Those
+> > don't have PgHead set, so it ends up returning zero.
+> > 
+> > Fix this by replacing the condition to PageSlab() && !PageTail().
+> > 
+> > Before this patch:
+> > [root@localhost ~]# ./page-types -c /sys/fs/cgroup/user.slice/user-0.slice/user@0.service/ | grep slab
+> > 0x0000000000000080	        38        0  _______S___________________________________	slab
+> > 
+> > After this patch:
+> > [root@localhost ~]# ./page-types -c /sys/fs/cgroup/user.slice/user-0.slice/user@0.service/ | grep slab
+> > 0x0000000000000080	       147        0  _______S___________________________________	slab
+> > 
+> > Fixes: 4d96ba353075 ("mm: memcg/slab: stop setting page->mem_cgroup pointer for slab pages")
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > Reviewed-by: Shakeel Butt <shakeelb@google.com>
+> > Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> > Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
+> 
+> Affects /proc/kpagecgroup, but page_cgroup_ino() is also used in the
+> memory-failure code - I wonder what effect this bug has there?
 
- - clear the shadow region of vmapped stacks when swapping them in
- - tweak Kconfig to allow VMAP_STACK to be turned on with KASAN
+hwpoison_filter_task() uses output of page_cgroup_ino() in order to
+filter error injection events based on memcg.
+So if page_cgroup_ino() fails to return memcg pointer, we just fail
+to inject memory error.  Considering that hwpoison filter is for testing,
+affected users are limited and the impact should be marginal.
 
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Signed-off-by: Daniel Axtens <dja@axtens.net>
----
- arch/Kconfig  | 9 +++++----
- kernel/fork.c | 4 ++++
- 2 files changed, 9 insertions(+), 4 deletions(-)
+> 
+> IOW, should we backport this into -stable?
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 5f8a5d84dbbe..2d914990402f 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -843,16 +843,17 @@ config HAVE_ARCH_VMAP_STACK
- config VMAP_STACK
- 	default y
- 	bool "Use a virtually-mapped stack"
--	depends on HAVE_ARCH_VMAP_STACK && !KASAN
-+	depends on HAVE_ARCH_VMAP_STACK
-+	depends on !KASAN || KASAN_VMALLOC
- 	---help---
- 	  Enable this if you want the use virtually-mapped kernel stacks
- 	  with guard pages.  This causes kernel stack overflows to be
- 	  caught immediately rather than causing difficult-to-diagnose
- 	  corruption.
- 
--	  This is presently incompatible with KASAN because KASAN expects
--	  the stack to map directly to the KASAN shadow map using a formula
--	  that is incorrect if the stack is in vmalloc space.
-+	  To use this with KASAN, the architecture must support backing
-+	  virtual mappings with real shadow memory, and KASAN_VMALLOC must
-+	  be enabled.
- 
- config ARCH_OPTIONAL_KERNEL_RWX
- 	def_bool n
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 4b2a82eda8e5..0eef4243019c 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -94,6 +94,7 @@
- #include <linux/livepatch.h>
- #include <linux/thread_info.h>
- #include <linux/stackleak.h>
-+#include <linux/kasan.h>
- 
- #include <asm/pgtable.h>
- #include <asm/pgalloc.h>
-@@ -224,6 +225,9 @@ static unsigned long *alloc_thread_stack_node(struct task_struct *tsk, int node)
- 		if (!s)
- 			continue;
- 
-+		/* Clear the KASAN shadow of the stack. */
-+		kasan_unpoison_shadow(s->addr, THREAD_SIZE);
-+
- 		/* Clear stale pointers from reused stack. */
- 		memset(s->addr, 0, THREAD_SIZE);
- 
--- 
-2.20.1
+I think yes, because the patch is small enough and clearly fixes a bug.
 
+Thanks,
+Naoya Horiguchi
