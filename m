@@ -2,151 +2,97 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE58C47E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3531ECA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F000920862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C65208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:16:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="IDDK+UpM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728936AbfJaWOk (ORCPT
+        id S1729066AbfJaWQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 18:14:40 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:59024 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728640AbfJaWOj (ORCPT
+        Thu, 31 Oct 2019 18:16:05 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33926 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbfJaWQF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 18:14:39 -0400
-Received: from 188.29.164.72.threembb.co.uk ([188.29.164.72] helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iQIi6-0001MD-If; Thu, 31 Oct 2019 22:14:37 +0000
-Received: from ben by deadeye with local (Exim 4.92.2)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iQIhw-0000pL-Vi; Thu, 31 Oct 2019 22:14:20 +0000
-Message-ID: <05be6a70382f1990a2ba6aba9ac75dac0c55f7fb.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 47/47] KVM: x86/vPMU: refine kvm_pmu err msg when
- event creation failed
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Date:   Thu, 31 Oct 2019 22:14:15 +0000
-In-Reply-To: <220d8f2c1b299d2e71fdcf50b98286aae5b0c6f2.camel@perches.com>
-References: <lsq.1572026582.631294584@decadent.org.uk>
-         <220d8f2c1b299d2e71fdcf50b98286aae5b0c6f2.camel@perches.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-hKUhIv2BLLOi+f5RLV/D"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 31 Oct 2019 18:16:05 -0400
+Received: by mail-qt1-f196.google.com with SMTP id e14so10689539qto.1
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 15:16:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rvzKkNDnFw8WgEsEEsv1HzkDI4bs5dlMd1q1SJlSRv8=;
+        b=IDDK+UpMUsRWxn79to0tss/Udaa2EnOB3HfpzeuN+sK1qCRI5FyV/QzNzsS7OOr9+w
+         uexitjcUSu0EToVQtruGvGYqrTR3Zb8B6WiuY/oo5A4TeAEwktQqtNARmn+yIH0G91km
+         oY7J0NjnqjXoh0wGiX0SOOS0uzfMuCztFNMqXuPNw1JhqDcS/b2ufzSuUMZP4GZIf6ot
+         QwGxWRb5o9XIekockwk6hdk/UxsQw18QyS37rDT3xWJSGLm5WH8hCVqEkqpW5L24+P5i
+         wDzYtit4hSwUHd07pXrCCjkerLSZbVegytzILb2WJM48locQzG/1EwyYMDqL9T/E7o8W
+         c1RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rvzKkNDnFw8WgEsEEsv1HzkDI4bs5dlMd1q1SJlSRv8=;
+        b=JXpKKZSSNdH2XtQgzH0Y7JQUEMy4Tk3A6l2wakmFllG1HuQnfD5JSRmK6OaUWHETrF
+         rih/3r16AOLhm0HzEYx1Xt9P1NJSbwcDehvo39E0FlT3rVANzuU5lOYxgHSCZljxQy2N
+         Vuq9pOfLe9GYvaMweVgW/LCeFeGaf/8QSNYgxM50NrxeVM4Tjmx8Jj1nh1b2hb1BN+01
+         ye0rLqinJjLvtPel2vNNgCZEaFuBwRuuOG29KWCkSgdTBaVct5Mpe/HNeHGfz2nHeDzn
+         fZLOrvTNpniM2RrDzDAp73/+dKHp/+ZUdkXCCZhkiZ+wNpY7WcNczXLDYyzcAVqBTh+V
+         CgQg==
+X-Gm-Message-State: APjAAAUPjItHR6hGwfZWr+0is0NwvtDzPlKkGY/zZf28IIwWE8vgKosh
+        6EE/X0h3ep6oYUUrG02aGngs8zoI2Sc=
+X-Google-Smtp-Source: APXvYqyUuLqB0cI+w53Vd93MAjEXiqViJpN4Vahcb11eeMP6ArsUp/aFprEaAG5BZjXBK3yNn7GvDQ==
+X-Received: by 2002:ac8:866:: with SMTP id x35mr7645846qth.90.1572560164030;
+        Thu, 31 Oct 2019 15:16:04 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::c357])
+        by smtp.gmail.com with ESMTPSA id x12sm2151101qkh.96.2019.10.31.15.16.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 15:16:03 -0700 (PDT)
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: [PATCH] kernel: sysctl: make drop_caches write-only
+Date:   Thu, 31 Oct 2019 18:16:02 -0400
+Message-Id: <20191031221602.9375-1-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 188.29.164.72
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently, the drop_caches proc file and sysctl read back the last
+value written, suggesting this is somehow a stateful setting instead
+of a one-time command. Make it write-only, like e.g. compact_memory.
 
---=-hKUhIv2BLLOi+f5RLV/D
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ kernel/sysctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Fri, 2019-10-25 at 12:05 -0700, Joe Perches wrote:
-> On Fri, 2019-10-25 at 19:03 +0100, Ben Hutchings wrote:
-> > 3.16.76-rc1 review patch.  If anyone has any objections, please let me =
-know.
->=20
-> This seems more like an enhancement than a bug fix.
->=20
-> Is this really the type of patch that is appropriate
-> for stable?
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 31ece1120aa4..50373984a5e2 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1474,7 +1474,7 @@ static struct ctl_table vm_table[] = {
+ 		.procname	= "drop_caches",
+ 		.data		= &sysctl_drop_caches,
+ 		.maxlen		= sizeof(int),
+-		.mode		= 0644,
++		.mode		= 0200,
+ 		.proc_handler	= drop_caches_sysctl_handler,
+ 		.extra1		= SYSCTL_ONE,
+ 		.extra2		= &four,
+-- 
+2.23.0
 
-Apparently so:
-
-v4.14.135: eba797dbf352 KVM: x86/vPMU: refine kvm_pmu err msg when event cr=
-eation failed
-v4.19.61: ba27a25df6df KVM: x86/vPMU: refine kvm_pmu err msg when event cre=
-ation failed
-v4.4.187: 505c011f9f53 KVM: x86/vPMU: refine kvm_pmu err msg when event cre=
-ation failed
-v4.9.187: 3984eae04473 KVM: x86/vPMU: refine kvm_pmu err msg when event cre=
-ation failed
-v5.1.20: edadec197fbf KVM: x86/vPMU: refine kvm_pmu err msg when event crea=
-tion failed
-v5.2.3: 9f062aef7356 KVM: x86/vPMU: refine kvm_pmu err msg when event creat=
-ion failed
-
-Ben.
-
-> > ------------------
-> >=20
-> > From: Like Xu <like.xu@linux.intel.com>
-> >=20
-> > commit 6fc3977ccc5d3c22e851f2dce2d3ce2a0a843842 upstream.
-> >=20
-> > If a perf_event creation fails due to any reason of the host perf
-> > subsystem, it has no chance to log the corresponding event for guest
-> > which may cause abnormal sampling data in guest result. In debug mode,
-> > this message helps to understand the state of vPMC and we may not
-> > limit the number of occurrences but not in a spamming style.
-> >=20
-> > Suggested-by: Joe Perches <joe@perches.com>
-> > Signed-off-by: Like Xu <like.xu@linux.intel.com>
-> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> > [bwh: Backported to 3.16: adjust context]
-> > Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-> > ---
-> >  arch/x86/kvm/pmu.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >=20
-> > --- a/arch/x86/kvm/pmu.c
-> > +++ b/arch/x86/kvm/pmu.c
-> > @@ -187,8 +187,8 @@ static void reprogram_counter(struct kvm
-> >  						 intr ? kvm_perf_overflow_intr :
-> >  						 kvm_perf_overflow, pmc);
-> >  	if (IS_ERR(event)) {
-> > -		printk_once("kvm: pmu event creation failed %ld\n",
-> > -				PTR_ERR(event));
-> > +		pr_debug_ratelimited("kvm_pmu: event creation failed %ld for pmc->id=
-x =3D %d\n",
-> > +			    PTR_ERR(event), pmc->idx);
-> >  		return;
-> >  	}
-> > =20
-> >=20
---=20
-Ben Hutchings
-Klipstein's 4th Law of Prototyping and Production:
-                               A fail-safe circuit will destroy others.
-
-
-
---=-hKUhIv2BLLOi+f5RLV/D
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl27XLgACgkQ57/I7JWG
-EQkqSQ//RR8xY73bxtHVjVHg0wo49KzosxapaAi+qo+HxB2zL7OfW9CJVOMTpOk+
-QT+iqkYNNcMAbRClkb86WoATNzC5Crau5quovdJdLbPNq/ANd1HP91jTwAhHc/cK
-8rSZTzUz1c13mBSFHGbTn+HQaiDsw+iElA06hcqARpe0lxm7m4Usvp6kiKOwlShK
-NKGzUz7GjntXzj+0r02jwKc7OEx73bQRc4Zng2QrAFwC4smeghiSm7zrrG12SC2Y
-Jipc6cGdeQ1/RVcnuEO93ZCEl6PHTZ4ngKlpdB5u9nFPgYvIQ60U6w/USNcdIu6C
-yNmnnOMt3XNOpYdeqYm1dYQ2jPy0S2POBawDd3+B68fLBgNt54lhIIgJt0imybj4
-/u9mznUCt+KWNAgwR5tYapxgWlrsAyH775S/7+0Svxir162A6YzCckGG7g0y7Ln0
-Q8Wp3jIQyq35ofh7gl69H/68A7FFKUnsvPKpxT/8QS67MCzDzSXxuTReHQaSLeVA
-638YTj0JAfEXipA1bP0JTcsBJaNEeqxwJHYwwz3exTL+Kr/a/C8WrvPSLGpmG1O3
-KugLzLeoJ0s66qnZdD79B/LKulAm6bP5GS1ujvvnuBYOOLlLwvCHw7nMmEq/YWEd
-lxWi06TTgsZ2+PhXBQvQspX966YWifIPjTBmtVyhVq7i1puVbBM=
-=r0nb
------END PGP SIGNATURE-----
-
---=-hKUhIv2BLLOi+f5RLV/D--
