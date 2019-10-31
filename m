@@ -6,63 +6,49 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BFCCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 777DAC47E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730C72080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E42B2080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:57:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfJaH5s (ORCPT
+        id S1727007AbfJaH5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 03:57:48 -0400
-Received: from mga06.intel.com ([134.134.136.31]:64655 "EHLO mga06.intel.com"
+        Thu, 31 Oct 2019 03:57:50 -0400
+Received: from mga14.intel.com ([192.55.52.115]:65394 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbfJaH5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 03:57:47 -0400
+        id S1726769AbfJaH5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 03:57:49 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 00:57:47 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 00:57:48 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
-   d="scan'208";a="206036015"
-Received: from lingshan-mobl5.ccr.corp.intel.com (HELO [10.238.129.48]) ([10.238.129.48])
-  by FMSMGA003.fm.intel.com with ESMTP; 31 Oct 2019 00:57:39 -0700
-Subject: Re: [PATCH V6 6/6] docs: sample driver to demonstrate how to
- implement virtio-mdev framework
-To:     Christoph Hellwig <hch@infradead.org>,
-        Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, idos@mellanox.com, eperezma@redhat.com,
-        lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-References: <20191030064444.21166-1-jasowang@redhat.com>
- <20191030064444.21166-7-jasowang@redhat.com>
- <20191030212312.GA4251@infradead.org>
-From:   "Zhu, Lingshan" <lingshan.zhu@intel.com>
-Message-ID: <1592d723-a580-8614-3fb4-88560a06cdc1@intel.com>
-Date:   Thu, 31 Oct 2019 15:57:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+   d="scan'208";a="375157005"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 31 Oct 2019 00:57:48 -0700
+Received: from [10.226.38.65] (rtanwar-mobl.gar.corp.intel.com [10.226.38.65])
+        by linux.intel.com (Postfix) with ESMTP id 7C956580127;
+        Thu, 31 Oct 2019 00:57:45 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] pinctrl: Add pinmux & GPIO controller driver for a
+ new SoC
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
+References: <cover.1572409172.git.rahul.tanwar@linux.intel.com>
+ <4bb885fe692d29f2635772dcd04839390f1f5671.1572409172.git.rahul.tanwar@linux.intel.com>
+ <20191030143907.GY32742@smile.fi.intel.com>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <bb9d2c3d-2b01-7239-eefa-0e813b091cc8@linux.intel.com>
+Date:   Thu, 31 Oct 2019 15:57:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191030212312.GA4251@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191030143907.GY32742@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,26 +57,203 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 10/31/2019 5:23 AM, Christoph Hellwig wrote:
-> On Wed, Oct 30, 2019 at 02:44:44PM +0800, Jason Wang wrote:
->> This sample driver creates mdev device that simulate virtio net device
->> over virtio mdev transport. The device is implemented through vringh
->> and workqueue. A device specific dma ops is to make sure HVA is used
->> directly as the IOVA. This should be sufficient for kernel virtio
->> driver to work.
+Hi Andy,
+
+On 30/10/2019 10:39 PM, Andy Shevchenko wrote:
+> On Wed, Oct 30, 2019 at 12:23:59PM +0800, Rahul Tanwar wrote:
+>> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
+>> controls pin multiplexing & configuration including GPIO functions selection &
+>> GPIO attributes configuration.
 >>
->> Only 'virtio' type is supported right now. I plan to add 'vhost' type
->> on top which requires some virtual IOMMU implemented in this sample
->> driver.
-> Can we please submit a real driver for it?  A more or less useless
-> sample driver doesn't really qualify for our normal kernel requirements
-> that infrastructure should have a real user.
+>> This IP is not based on & does not have anything in common with Chassis
+>> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
+>> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
+>> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
+>>
+>> Add a new GPIO & pin control framework based driver for this IP.
+>>
+>> +static inline void eqbr_set_val(void __iomem *addr, u32 offset,
+>> +				u32 mask, u32 set, raw_spinlock_t *lock)
+>
+> Why is it marked with inline?
 
-Hello Christoph,
+Hard to justify. I can remove inline if you recommend so..
 
-I am working on a real hardware driver for it, it's called IFC, I have 
-posted RFC V1 and will post RFC V2 soon.
+>> +{
+>> +	u32 val;
+>> +	unsigned long flags;
+>> +
+>> +	raw_spin_lock_irqsave(lock, flags);
+>> +	val = readl(addr);
+>> +	val = (val & ~(mask << offset)) | ((set & mask) << offset);
+> This is unusual, why offset can't be applied once to the mask?
 
-Thanks,
-BR
-Zhu Lingshan
+Do you mean like below ? (set still needs to be left shifted by offset)
+
+mask = mask << offset;
+val = (val & ~mask) | ((set << offset) & mask);
+
+>> +	writel(val, addr);
+>> +	raw_spin_unlock_irqrestore(lock, flags);
+> Hmm... Don't you have more complicated workflow that requires few
+> reads/writes/updates to be called atomically?
+
+I don't really see any complicated register programming in this driver.
+Just forpin configuration, mux setting & GPIO IRQ configuration..
+
+>> +}
+>> +static void eqbr_gpio_disable_irq(struct irq_data *d)
+>> +{
+>> +	unsigned int offset = irqd_to_hwirq(d);
+>> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>> +	struct eqbr_gpio_desc *desc = gpiochip_get_data(gc);
+>> +	writel(BIT(offset), desc->membase + GPIO_IRNENCLR);
+> Is it okay to be without spin lock?
+> Same Q to the rest similar places.
+
+Yes, you are right. GPIO IRQ ops also needs locking. I was incorrectly
+assuming that gpiolib will provide locking when it calls these ops. I
+will fix it in v3. Thanks.
+
+>> +}
+>> +static inline void eqbr_cfg_bit(void __iomem *addr,
+>> +				unsigned int offset, unsigned int set)
+>> +{
+>> +	if (!set)
+> Why not to use positive condition?
+
+Well noted.
+
+>> +		writel(readl(addr) & ~BIT(offset), addr);
+>> +	else
+>> +		writel(readl(addr) | BIT(offset), addr);
+>> +}
+>> +	struct gpio_irq_type it;
+> Not sure if this is used properly. Linus may clarify this.
+>
+>> +static void eqbr_irq_handler(struct irq_desc *desc)
+>> +{
+>> +	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
+>> +	struct eqbr_gpio_desc *gpio_desc = gpiochip_get_data(gc);
+>> +	struct irq_chip *ic = irq_desc_get_chip(desc);
+>> +	u32 pins, offset;
+>> +
+>> +	chained_irq_enter(ic, desc);
+>> +	pins = readl(gpio_desc->membase + GPIO_IRNCR);
+>> +
+>> +	for_each_set_bit(offset, (unsigned long *)&pins, gc->ngpio)
+> This casting is no go.
+
+Well noted. Copy paste mistake. Will fix it. Thanks.
+
+>> +		generic_handle_irq(irq_find_mapping(gc->irq.domain, offset));
+>> +
+>> +	chained_irq_exit(ic, desc);
+>> +}
+>> +static int gpiochip_setup(struct device *dev, struct eqbr_gpio_desc *desc)
+>> +{
+>> +	struct gpio_irq_chip *girq;
+>> +	struct gpio_chip *gc;
+>> +
+>> +	gc = &desc->chip;
+>> +	gc->owner = THIS_MODULE;
+> Do we still need this in the drivers?
+
+Agree it is redundant. Will remove it. Thanks.
+
+>> +	gc->label = desc->name;
+>> +	gc->of_node = desc->node;
+>> +
+>> +	if (!of_property_read_bool(desc->node, "interrupt-controller")) {
+> Why is it fatal?
+
+It is not fatal, that's why it returns 0 instead of error i.e. if this
+gpio chip is notintended to be used as interrupt controller then do
+not setup gpio_irq_chipand proceed to register gpio chip without
+interrupt support.
+
+>> +		dev_info(dev, "gc %s: doesn't act as interrupt controller!\n",
+>> +			 desc->name);
+>> +		return 0;
+>> +	}
+>> +	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
+>> +				     GFP_KERNEL);
+> I believe it's fine to have it on one line.
+
+Well noted.
+
+>> +	if (!girq->parents)
+>> +		return -ENOMEM;
+>> +
+>> +	girq->default_type = IRQ_TYPE_NONE;
+>> +	girq->handler = handle_level_irq;
+> Not bad IRQ handler?
+
+Yes, it should be handle_bad_irq(). Will fix, thanks.
+
+>> +	girq->parents[0] = desc->virq;
+>> +
+>> +	return 0;
+>> +}
+>> +static int gpiolib_reg(struct eqbr_pinctrl_drv_data *drvdata)
+>> +{
+>> +	struct device_node *np;
+>> +	struct eqbr_gpio_desc *desc;
+>> +	struct device *dev;
+>> +	int i, ret;
+>> +	struct resource res;
+>> +
+>> +	dev = drvdata->dev;
+>> +	for (i = 0; i < drvdata->nr_gpio_descs; i++) {
+>> +		desc = drvdata->gpio_desc + i;
+>> +		np = desc->node;
+>> +
+>> +		desc->name = devm_kasprintf(dev, GFP_KERNEL, "gpiochip%d", i);
+>> +		if (!desc->name)
+>> +			return -ENOMEM;
+>> +
+>> +		if (of_address_to_resource(np, 0, &res)) {
+>> +			dev_err(dev, "Failed to get GPIO register address\n");
+>> +			return -ENXIO;
+>> +		}
+>> +
+>> +		desc->membase = devm_ioremap_resource(dev, &res);
+>> +		if (IS_ERR(desc->membase)) {
+>> +			dev_err(dev, "ioremap fail\n");
+> Redundant.
+
+Well noted.
+
+>> +			return PTR_ERR(desc->membase);
+>> +	}
+> Is it per descriptor?!
+
+Yes, it is per descriptor i.e. per gpio_chip. Each gpio_chip has different
+membase.
+
+>> +
+>> +		desc->virq = irq_of_parse_and_map(np, 0);
+>> +		if (!desc->virq) {
+>> +			dev_err(dev, "%s: failed to parse and map irq\n",
+>> +				desc->name);
+>> +			return -ENXIO;
+>> +		}
+>> +		raw_spin_lock_init(&desc->lock);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +static const struct pinmux_ops eqbr_pinmux_ops = {
+>> +	.get_functions_count	= pinmux_generic_get_function_count,
+>> +	.get_function_name 	= pinmux_generic_get_function_name,
+>> +	.get_function_groups 	= pinmux_generic_get_function_groups,
+>> +	.set_mux		= eqbr_pinmux_set_mux,
+>> +	.gpio_request_enable	= eqbr_pinmux_gpio_request,
+>> +	.strict			= true,
+>> +};
+> TABs/spaces mix.
+
+Well noted. Thanks.
+
+Regards,
+Rahul
