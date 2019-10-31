@@ -2,42 +2,42 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FE3CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A67F2CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7006720856
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A95220856
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:07:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IqUeK8xU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="J97qCCEI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbfJaAHg (ORCPT
+        id S1727992AbfJaAHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 20:07:36 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:3017 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727918AbfJaAHd (ORCPT
+        Wed, 30 Oct 2019 20:07:43 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:10960 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727917AbfJaAHb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 20:07:33 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dba25c90000>; Wed, 30 Oct 2019 17:07:37 -0700
+        Wed, 30 Oct 2019 20:07:31 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dba25c90007>; Wed, 30 Oct 2019 17:07:38 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
   Wed, 30 Oct 2019 17:07:31 -0700
 X-PGP-Universal: processed;
         by hqpgpgate102.nvidia.com on Wed, 30 Oct 2019 17:07:31 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 31 Oct
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 31 Oct
  2019 00:07:30 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
  Transport; Thu, 31 Oct 2019 00:07:30 +0000
 Received: from vdumpa-ubuntu.nvidia.com (Not Verified[172.17.173.140]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5dba25c20001>; Wed, 30 Oct 2019 17:07:30 -0700
+        id <B5dba25c20002>; Wed, 30 Oct 2019 17:07:30 -0700
 From:   Krishna Reddy <vdumpa@nvidia.com>
 CC:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -47,9 +47,9 @@ CC:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
         <talho@nvidia.com>, <avanbrunt@nvidia.com>, <bbiswas@nvidia.com>,
         <olof@lixom.net>, <jtukkinen@nvidia.com>, <mperttunen@nvidia.com>,
         <nicolinc@nvidia.com>, Krishna Reddy <vdumpa@nvidia.com>
-Subject: [PATCH v4 5/6] arm64: tegra: Add DT node for T194 SMMU
-Date:   Wed, 30 Oct 2019 17:07:16 -0700
-Message-ID: <1572480437-28449-6-git-send-email-vdumpa@nvidia.com>
+Subject: [PATCH v4 6/6] arm64: tegra: enable SMMU for SDHCI and EQOS on T194
+Date:   Wed, 30 Oct 2019 17:07:17 -0700
+Message-ID: <1572480437-28449-7-git-send-email-vdumpa@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1572480437-28449-1-git-send-email-vdumpa@nvidia.com>
 References: <1572480437-28449-1-git-send-email-vdumpa@nvidia.com>
@@ -57,117 +57,73 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572480457; bh=tqLHlhwV6+T9UcYIe3S/OScCHaVWaVpXBJd2VMOOnfE=;
+        t=1572480458; bh=MK4nKTkYCuTB0cE4lZiJ4iSmYMFPWVXgkdIW4z/bGKU=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=IqUeK8xU4KuA+l4yRCeW62ps1/7QteYVWni0/F7YzrSOiQH6HAbuilIhYMp8pfpGq
-         8IFbjbSfAnX/08yrtGUXxDIhLyO8hYCl1ZU1FPXTj4H1wphjOQWj/5CaOFcpgIHDGe
-         76edUJ6vzAjNYw+Ja/vWJ5P/jinHQQb45tNh320QVSX90C200WkAN56CPAqYqn3MIj
-         qqpYMZI3zGWjh64gjWt0Iy5H+cSmgX5pHmdQDQwv40WBdCB4FLxNk5sc+zoTmnlkMb
-         /MOAfCc+56u2r0wheO0JpkWjgfVVajo6znoVULGfazkE07d5qdr8sQECk5lBzlSxTB
-         jv1gsYYzdO/TQ==
+        b=J97qCCEI/5GSsCKgjW1SrkBRK6+puk0f0RnQTI4wYEPoAAkw+QPxo3nEZC1Lrz8Wb
+         ELSxpkkCGctzRlB9rO3D/THY3VIZkQvxmFAGf5VVHUcsKN7LWSXRUXaGXZDv2RnJqp
+         lMZFp6kmF5MRxBOVilEPRT2Qq+ZSSBgWknqG3TeJvqHc9yAYPdSx/92peDwcwj6EO7
+         FX5gfVydE5d2iDNDsrUYxiMZfjUZoeNecMDB4pf1vnAseKTl98MfPm8yg99jOqhpqG
+         /YP4aDrgjDbTAcgV/jTLGbyGpG3bBwEZZ4Oey1M9vI1PjiiZYzKWTaN5/kaDKqLXLz
+         +skv8fyqmbzIg==
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT node for T194 SMMU to enable SMMU support.
+Enable SMMU translations for SDHCI and EQOS transactions on T194.
 
 Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
 ---
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 77 ++++++++++++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 1e0b54b..6f81e90 100644
+index 6f81e90..bf8ed7a 100644
 --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
 +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -1436,6 +1436,83 @@
- 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
- 	};
+@@ -3,6 +3,7 @@
+ #include <dt-bindings/gpio/tegra194-gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/mailbox/tegra186-hsp.h>
++#include <dt-bindings/memory/tegra186-mc.h>
+ #include <dt-bindings/pinctrl/pinctrl-tegra.h>
+ #include <dt-bindings/power/tegra194-powergate.h>
+ #include <dt-bindings/reset/tegra194-reset.h>
+@@ -51,6 +52,7 @@
+ 			clock-names = "master_bus", "slave_bus", "rx", "tx", "ptp_ref";
+ 			resets = <&bpmp TEGRA194_RESET_EQOS>;
+ 			reset-names = "eqos";
++			iommus = <&smmu TEGRA186_SID_EQOS>;
+ 			status = "disabled";
  
-+	smmu: iommu@12000000 {
-+		compatible = "arm,mmu-500","nvidia,tegra194-smmu";
-+		reg = <0 0x12000000 0 0x800000>,
-+		      <0 0x11000000 0 0x800000>,
-+		      <0 0x10000000 0 0x800000>;
-+		interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 240 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 240 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
-+		stream-match-mask = <0x7f80>;
-+		#global-interrupts = <3>;
-+		#iommu-cells = <1>;
-+	};
-+
- 	sysram@40000000 {
- 		compatible = "nvidia,tegra194-sysram", "mmio-sram";
- 		reg = <0x0 0x40000000 0x0 0x50000>;
+ 			snps,write-requests = <1>;
+@@ -413,6 +415,7 @@
+ 			clock-names = "sdhci";
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC1>;
+ 			reset-names = "sdhci";
++			iommus = <&smmu TEGRA186_SID_SDMMC1>;
+ 			nvidia,pad-autocal-pull-up-offset-3v3-timeout =
+ 									<0x07>;
+ 			nvidia,pad-autocal-pull-down-offset-3v3-timeout =
+@@ -435,6 +438,7 @@
+ 			clock-names = "sdhci";
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC3>;
+ 			reset-names = "sdhci";
++			iommus = <&smmu TEGRA186_SID_SDMMC3>;
+ 			nvidia,pad-autocal-pull-up-offset-1v8 = <0x00>;
+ 			nvidia,pad-autocal-pull-down-offset-1v8 = <0x7a>;
+ 			nvidia,pad-autocal-pull-up-offset-3v3-timeout = <0x07>;
+@@ -462,6 +466,7 @@
+ 					  <&bpmp TEGRA194_CLK_PLLC4>;
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC4>;
+ 			reset-names = "sdhci";
++			iommus = <&smmu TEGRA186_SID_SDMMC4>;
+ 			nvidia,pad-autocal-pull-up-offset-hs400 = <0x00>;
+ 			nvidia,pad-autocal-pull-down-offset-hs400 = <0x00>;
+ 			nvidia,pad-autocal-pull-up-offset-1v8-timeout = <0x0a>;
 -- 
 2.7.4
 
