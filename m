@@ -2,251 +2,160 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4CACA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1258CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12C82087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C39FC2087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:40:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mcEHczdy"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="edAgsMtd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbfJaQil (ORCPT
+        id S1728642AbfJaQkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 12:38:41 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46464 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727593AbfJaQil (ORCPT
+        Thu, 31 Oct 2019 12:40:02 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:41414 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727593AbfJaQkC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:38:41 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 19so41070lft.13
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 09:38:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i3JA9BeNpdMvTYkpJ4Yfiu06Nv7u2cZK1AMJmkSO1JI=;
-        b=mcEHczdyxkQ5gZdvEHh4SuqAiwcQMlKf0RBL4m0W0ShsIc428LgOrXULW53mmu1/Qg
-         sT/2Zw4kOUfb1Nqk1ai9cS6Ogo2EdhLU/ppfa3z7TY1eLsA0VISLpllU9yNe8MjWbgUK
-         pVPjHsUkm4iut7qutxV8ZwFC4uGQUN74qcZTSKtN6HWAPcL1hoRQi2JsFJxSETAJjmNP
-         cGEnl9KhOk4refjQFXbUbbwTd4ZafTpr9FsDObL+pMfPn9oJdRNMG3CWZueWxvr5qChf
-         55CRPsuRFPNS3wxChrlkOKOabcoqSSgzs/wP1LTGLdSIjthbt/isColAtDPNIWtVhRk1
-         NUSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i3JA9BeNpdMvTYkpJ4Yfiu06Nv7u2cZK1AMJmkSO1JI=;
-        b=aEnzrNznid0t5a1J6JHv+hm3V+nfvza1g/LO9UN7twrbtijNRdjrTW3IGzNi7zdVXm
-         a0fqajTnSkJ8gsfweG9BBHXCQ68KTkZEzzorbqJpBejfr4iHTMjps62PSXM/zlHkRkLe
-         znCB696dgS5WNIfqo+dxv30dIUHfuU81lZU616YdSIxymhf7JMUlD4lyKhWQdamzgNSP
-         zRDtjv14ZsECorlmrd00+e1Vzm0UY6Khw9MXLIUy46AlCiTZuwKKf/ICePi1HfUCIVxO
-         mZxLXN7gH3a6g6golvk22Axbku3yGbvVLJ5OOa/aINnqeBVeITsWIK5pBnJZ/zLnUDvE
-         s7BA==
-X-Gm-Message-State: APjAAAX/OhrOWan6JM4goQ5e5tWXQHXfpQj9Z1jBa2V/2FTqz4vvQDzr
-        LOEk429wBZrpuOQxBcKIzgOayPLr8Bgj25d4ho0cNg==
-X-Google-Smtp-Source: APXvYqxQr+TCee3NehJ4TvlU7v9GYF2QICBnBMIKXJTcCksY5VOfGaN8SkUchBgJ15O9Zql/1zU/coIFPDdDTRPAB90=
-X-Received: by 2002:ac2:4650:: with SMTP id s16mr4454635lfo.32.1572539916724;
- Thu, 31 Oct 2019 09:38:36 -0700 (PDT)
+        Thu, 31 Oct 2019 12:40:02 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9VGdQEa016825
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 09:40:00 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=uA5VupX70Q9cTdALEHf4YRdTh6Lejo9S9pukcNuyetA=;
+ b=edAgsMtduhoHBL4X0qZdoB692edqDjR+uod4/iYH3Gcs8JXHTz2EwEt61y3BlUJWeLf3
+ 0xQZ8foyX5P9kSdoAZNT9ivnH+TXd0yg/RvBoK591je3IqnikCtnS1Yt3XNszrSJa0MV
+ 7ppENiLmNkk1/L71XvDpVedlNHocDyTX7bs= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2w01bw8qd6-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 09:40:00 -0700
+Received: from 2401:db00:2050:5076:face:0:7:0 (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 31 Oct 2019 09:40:00 -0700
+Received: by devvm005.ftw2.facebook.com (Postfix, from userid 8731)
+        id 7CACA35494B0F; Thu, 31 Oct 2019 09:39:59 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Chris Mason <clm@fb.com>
+Smtp-Origin-Hostname: devvm005.ftw2.facebook.com
+To:     Paul Moore <paul@paul-moore.com>
+CC:     Eric Paris <eparis@redhat.com>,
+        Dave Jones <davej@codemonkey.org.uk>, <linux-audit@redhat.com>,
+        Kyle McMartin <jkkm@fb.com>, <linux-kernel@vger.kernel.org>,
+        Chris Mason <clm@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH] audit: set context->dummy even when audit is off
+Date:   Thu, 31 Oct 2019 09:39:31 -0700
+Message-ID: <20191031163931.1102669-1-clm@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
+References: <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
+X-FB-Internal: Safe
 MIME-Version: 1.0
-References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
- <1571776465-29763-6-git-send-email-thara.gopinath@linaro.org> <2b19d7da-412c-932f-7251-110eadbef3e3@arm.com>
-In-Reply-To: <2b19d7da-412c-932f-7251-110eadbef3e3@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 31 Oct 2019 17:38:25 +0100
-Message-ID: <CAKfTPtCpZq61gQVpATtTdg5hDA+tP4bF6xPMsvHYUMoY+H-6FQ@mail.gmail.com>
-Subject: Re: [Patch v4 5/6] thermal/cpu-cooling: Update thermal pressure in
- case of a maximum frequency capping
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Quentin Perret <qperret@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Amit Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-31_06:2019-10-30,2019-10-31 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
+ clxscore=1015 bulkscore=0 mlxlogscore=999 suspectscore=0
+ lowpriorityscore=0 impostorscore=0 phishscore=0 spamscore=0 mlxscore=0
+ priorityscore=1501 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1910310166
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 31 Oct 2019 at 17:29, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->
-> On 22.10.19 22:34, Thara Gopinath wrote:
-> > Thermal governors can request for a cpu's maximum supported frequency
-> > to be capped in case of an overheat event. This in turn means that the
-> > maximum capacity available for tasks to run on the particular cpu is
-> > reduced. Delta between the original maximum capacity and capped
-> > maximum capacity is known as thermal pressure. Enable cpufreq cooling
-> > device to update the thermal pressure in event of a capped
-> > maximum frequency.
-> >
-> > Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> > ---
-> >  drivers/thermal/cpu_cooling.c | 31 +++++++++++++++++++++++++++++--
-> >  1 file changed, 29 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
-> > index 391f397..2e6a979 100644
-> > --- a/drivers/thermal/cpu_cooling.c
-> > +++ b/drivers/thermal/cpu_cooling.c
-> > @@ -218,6 +218,23 @@ static u32 cpu_power_to_freq(struct cpufreq_cooling_device *cpufreq_cdev,
-> >  }
-> >
-> >  /**
-> > + * update_sched_max_capacity - update scheduler about change in cpu
-> > + *                                   max frequency.
-> > + * @policy - cpufreq policy whose max frequency is capped.
-> > + */
-> > +static void update_sched_max_capacity(struct cpumask *cpus,
-> > +                                   unsigned int cur_max_freq,
-> > +                                   unsigned int max_freq)
-> > +{
-> > +     int cpu;
-> > +     unsigned long capacity = (cur_max_freq << SCHED_CAPACITY_SHIFT) /
-> > +                               max_freq;
-> > +
-> > +     for_each_cpu(cpu, cpus)
-> > +             update_thermal_pressure(cpu, capacity);
-> > +}
-> > +
-> > +/**
-> >   * get_load() - get load for a cpu since last updated
-> >   * @cpufreq_cdev:    &struct cpufreq_cooling_device for this cpu
-> >   * @cpu:     cpu number
-> > @@ -320,6 +337,7 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
-> >                                unsigned long state)
-> >  {
-> >       struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
-> > +     int ret;
-> >
-> >       /* Request state should be less than max_level */
-> >       if (WARN_ON(state > cpufreq_cdev->max_level))
-> > @@ -331,8 +349,17 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
-> >
-> >       cpufreq_cdev->cpufreq_state = state;
-> >
-> > -     return dev_pm_qos_update_request(&cpufreq_cdev->qos_req,
-> > -                             cpufreq_cdev->freq_table[state].frequency);
-> > +     ret = dev_pm_qos_update_request
-> > +                             (&cpufreq_cdev->qos_req,
-> > +                              cpufreq_cdev->freq_table[state].frequency);
-> > +
-> > +     if (ret > 0)
-> > +             update_sched_max_capacity
-> > +                             (cpufreq_cdev->policy->cpus,
-> > +                              cpufreq_cdev->freq_table[state].frequency,
-> > +                              cpufreq_cdev->policy->cpuinfo.max_freq);
-> > +
-> > +     return ret;
-> >  }
-> >
-> >  /**
-> >
->
-> Why not getting rid of update_sched_max_capacity() entirely and call
-> update_thermal_pressure() in cpu_cooling.c directly? Saves one level in
-> the call chain and would mean less code for this feature.
+Dave Jones reported that we're finding a considerable amount of dmesg
+traffic from NTP time adjustments being reported through the audit
+subsystem.  His original post is here:
 
-But you add complexity in update_thermal_pressure which now has to
-deal with a cpumask and to compute some frequency ratio
-IMHO, it's cleaner to keep update_thermal_pressure simple as it is now
+https://lore.kernel.org/lkml/20190923155041.GA14807@codemonkey.org.uk/
 
->
-> Just compile tested on arm64:
->
-> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
-> index 3211b4d3a899..bf36995013b0 100644
-> --- a/drivers/thermal/cpu_cooling.c
-> +++ b/drivers/thermal/cpu_cooling.c
-> @@ -217,23 +217,6 @@ static u32 cpu_power_to_freq(struct
-> cpufreq_cooling_device *cpufreq_cdev,
->         return freq_table[i - 1].frequency;
->  }
->
-> -/**
-> - * update_sched_max_capacity - update scheduler about change in cpu
-> - *                                     max frequency.
-> - * @policy - cpufreq policy whose max frequency is capped.
-> - */
-> -static void update_sched_max_capacity(struct cpumask *cpus,
-> -                                     unsigned int cur_max_freq,
-> -                                     unsigned int max_freq)
-> -{
-> -       int cpu;
-> -       unsigned long capacity = (cur_max_freq << SCHED_CAPACITY_SHIFT) /
-> -                                 max_freq;
-> -
-> -       for_each_cpu(cpu, cpus)
-> -               update_thermal_pressure(cpu, capacity);
-> -}
-> -
->  /**
->   * get_load() - get load for a cpu since last updated
->   * @cpufreq_cdev:      &struct cpufreq_cooling_device for this cpu
-> @@ -353,7 +336,7 @@ static int cpufreq_set_cur_state(struct
-> thermal_cooling_device *cdev,
->                                 cpufreq_cdev->freq_table[state].frequency);
->
->         if (ret > 0)
-> -               update_sched_max_capacity
-> +               update_thermal_pressure
->                                 (cpufreq_cdev->policy->cpus,
->                                  cpufreq_cdev->freq_table[state].frequency,
->                                  cpufreq_cdev->policy->cpuinfo.max_freq);
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 55dfe9634f67..5707813c7621 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1985,9 +1985,9 @@ static inline void rseq_syscall(struct pt_regs *regs)
->  #endif
->
->  #ifdef CONFIG_SMP
-> -void update_thermal_pressure(int cpu, u64 capacity);
-> +void update_thermal_pressure(struct cpumask *cpus, unsigned int cur,
-> unsigned int max);
->  #else
-> -static inline void update_thermal_pressure(int cpu, u64 capacity)
-> +static inline void update_thermal_pressure(struct cpumask *cpus,
-> unsigned int cur, unsigned int max);
->  {
->  }
->  #endif
-> diff --git a/kernel/sched/thermal.c b/kernel/sched/thermal.c
-> index 0da31e12a5ff..691bdd79597a 100644
-> --- a/kernel/sched/thermal.c
-> +++ b/kernel/sched/thermal.c
-> @@ -43,17 +43,16 @@ static DEFINE_PER_CPU(unsigned long, delta_capacity);
->   * the arch_scale_cpu_capacity and capped capacity is stored in per cpu
->   * delta_capacity.
->   */
-> -void update_thermal_pressure(int cpu, u64 capped_freq_ratio)
-> +void update_thermal_pressure(struct cpumask *cpus, unsigned int cur,
-> unsigned int max)
->  {
-> -       unsigned long __capacity, delta;
-> +       int cpu;
->
-> -       /* Normalize the capped freq ratio */
-> -       __capacity = (capped_freq_ratio * arch_scale_cpu_capacity(cpu)) >>
-> -
-> SCHED_CAPACITY_SHIFT;
-> -       delta = arch_scale_cpu_capacity(cpu) -  __capacity;
-> -       pr_debug("updating cpu%d thermal pressure to %lu\n", cpu, delta);
-> +       for_each_cpu(cpu, cpus) {
-> +               unsigned long scale_cap = arch_scale_cpu_capacity(cpu);
-> +               unsigned long cur_cap = cur * scale_cap / max;
->
-> -       per_cpu(delta_capacity, cpu) = delta;
-> +               per_cpu(delta_capacity, cpu) = scale_cap - cur_cap;
-> +       }
->  }
+The confusing part is that we're seeing this on machines that don't have
+audit on.  The NTP code uses audit_dummy_context() to decide if it
+should log things:
+
+	static inline void audit_ntp_log(const struct audit_ntp_data *ad)
+	{
+		if (!audit_dummy_context())
+			__audit_ntp_log(ad);
+	}
+
+I confirmed with perf probes that:
+
+	context->dummy = 0
+	audit_n_rules = 0
+	audit_enabled = 0
+	audit_ever_enabled = 1 // seems to be from journald
+
+The box boots, journald turns audit on, some time later our
+configuration management runs around and turns audit off.  This journald
+feature is discussed here: https://github.com/systemd/systemd/issues/959
+
+From what I can tell, audit_syscall_entry is responsible for setting
+context->dummy, but we never get down to the test for audit_n_rules:
+
+__audit_syscall_entry(int major, unsigned long a1, unsigned long a2,
+                           unsigned long a3, unsigned long a4)
+{
+        struct audit_context *context = audit_context();
+        enum audit_state     state;
+
+        if (!audit_enabled || !context)
+                return;
+                ^^^^^^^^^^^^^^^^^^  --- we bail here
+
+	[ ... ]
+
+        context->dummy = !audit_n_rules;
+
+This leaves context->dummy at 0, which appears to be the original value
+from kzalloc().
+
+If you've gotten this far, you've read everything I know about the audit
+code.  With that said, my preference is to make a single source of truth for
+decisions about logging.  This commit changes __audit_syscall_entry() to
+set context->dummy when audit is off.
+
+Reported-by: Dave Jones <davej@codemonkey.org.uk>
+Signed-off-by: Chris Mason <clm@fb.com>
+---
+ kernel/auditsc.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index 4effe01ebbe2..a5c82d8f9c2b 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -1631,8 +1631,19 @@ void __audit_syscall_entry(int major, unsigned long a1, unsigned long a2,
+ 	struct audit_context *context = audit_context();
+ 	enum audit_state     state;
+ 
+-	if (!audit_enabled || !context)
++	if (!context)
++		return;
++
++	if (!audit_enabled) {
++		/*
++		 * ntp clock adjustments and a few other places check for
++		 * a dummy context without checking to see if audit
++		 * is enabled.  Make sure we set context->dummy when audit
++		 * is off, otherwise they will try to log things.
++		 */
++		context->dummy = 1;
+ 		return;
++	}
+ 
+ 	BUG_ON(context->in_syscall || context->name_count);
+ 
+-- 
+2.17.1
+
