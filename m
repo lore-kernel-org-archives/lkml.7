@@ -2,124 +2,124 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25819CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0E9CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3765208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA602086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:23:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfJaQR7 (ORCPT
+        id S1728560AbfJaQXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 12:17:59 -0400
-Received: from mga07.intel.com ([134.134.136.100]:63414 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728486AbfJaQR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:17:59 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 09:17:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,252,1569308400"; 
-   d="scan'208";a="351689706"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga004.jf.intel.com with ESMTP; 31 Oct 2019 09:17:58 -0700
-Date:   Thu, 31 Oct 2019 09:17:58 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Boaz Harrosh <boaz@plexistor.com>, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 0/5] Enable per-file/directory DAX operations
-Message-ID: <20191031161757.GA14771@iweiny-DESK2.sc.intel.com>
-References: <b883142c-ecfe-3c5b-bcd9-ebe4ff28d852@plexistor.com>
- <20191023221332.GE2044@dread.disaster.area>
- <efffc9e7-8948-a117-dc7f-e394e50606ab@plexistor.com>
- <20191024073446.GA4614@dread.disaster.area>
- <fb4f8be7-bca6-733a-7f16-ced6557f7108@plexistor.com>
- <20191024213508.GB4614@dread.disaster.area>
- <ab101f90-6ec1-7527-1859-5f6309640cfa@plexistor.com>
- <20191025003603.GE4614@dread.disaster.area>
- <20191025204926.GA26184@iweiny-DESK2.sc.intel.com>
- <20191027221039.GL4614@dread.disaster.area>
+        Thu, 31 Oct 2019 12:23:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49834 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727580AbfJaQXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 12:23:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 60797B833;
+        Thu, 31 Oct 2019 16:23:01 +0000 (UTC)
+Message-ID: <6726a651c12d91ca22b9d8984745d90db5d507ec.camel@suse.de>
+Subject: Re: [PATCH] dma/direct: turn ARCH_ZONE_DMA_BITS into a variable
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Date:   Thu, 31 Oct 2019 17:22:59 +0100
+In-Reply-To: <20191031155750.GA7394@lst.de>
+References: <20191031152837.15253-1-nsaenzjulienne@suse.de>
+         <20191031154759.GA7162@lst.de>
+         <40d06d463c05d36968e8b64924d78f7794f8de50.camel@suse.de>
+         <20191031155750.GA7394@lst.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-geumnkbETQYdG1ZUMwUA"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191027221039.GL4614@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 09:10:39AM +1100, Dave Chinner wrote:
-> On Fri, Oct 25, 2019 at 01:49:26PM -0700, Ira Weiny wrote:
 
-[snip]
+--=-geumnkbETQYdG1ZUMwUA
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> > Currently this works if I remount the fs or if I use <procfs>/drop_caches like
-> > Boaz mentioned.
-> 
-> drop_caches frees all the dentries that don't have an active
-> references before it iterates over inodes, thereby dropping the
-> cached reference(s) to the inode that pins it in memory before it
-> iterates the inode LRU.
-> 
-> > Isn't there a way to get xfs to do that on it's own?
-> 
-> Not reliably. Killing all the dentries doesn't guarantee the inode
-> will be reclaimed immediately. The ioctl() itself requires an open
-> file reference to the inode, and there's no telling how many other
-> references there are to the inode that the filesystem a) can't find,
-> and b) even if it can find them, it is illegal to release them.
-> 
-> IOWs, if you are relying on being able to force eviction of inode
-> from the cache for correct operation of a user controlled flag, then
-> it's just not going to work.
+On Thu, 2019-10-31 at 16:57 +0100, Christoph Hellwig wrote:
+> On Thu, Oct 31, 2019 at 04:53:13PM +0100, Nicolas Saenz Julienne wrote:
+> > > > +#define ARM64_ZONE_DMA_BITS	30
+> > > > +
+> > > >  /*
+> > > >   * We need to be able to catch inadvertent references to memstart_=
+addr
+> > > >   * that occur (potentially in generic code) before
+> > > > arm64_memblock_init()
+> > > > @@ -424,6 +427,8 @@ void __init arm64_memblock_init(void)
+> > > >  	else
+> > > >  		arm64_dma_phys_limit =3D PHYS_MASK + 1;
+> > > > =20
+> > > > +	zone_dma_bits =3D ARM64_ZONE_DMA_BITS;
+> > > > +
+> > > >  	reserve_crashkernel();
+> > >=20
+> > > This actually adds a new limit, as there wasn't one before for arm64.
+> >=20
+> > Well, as zone_dma_bits is only relevant in dma/direct when ZONE_DMA is
+> > defined
+> > I figured it doesn't matter if the variable is set conditionally to ZON=
+E_DMA
+> > or
+> > not.
+>=20
+> I'd much prefer that to do separately.
 
-Agree, I see the difficulty of forcing the effective flag to change in this
-path.  However, the only thing I am relying on is that the ioctl will change
-the physical flag.
+OK, I see what you mean now. It's wrong indeed.
 
-IOW I am proposing that the semantic be that changing the physical flag does
-_not_ immediately change the effective flag.  With that clarified up front the
-user can adjust accordingly.
+The trouble is the ZONE_DMA series[1] in arm64, also due for v5.5, will be
+affected by this patch. I don't know the right way to approach this problem
+since depending on the merge order, this patch should be updated or the arm=
+64
+ZONE_DMA series fixed.
 
-After thinking about this more I think there is a strong use case to be able to
-change the physical flag on a non-zero length file.  That use case is to be
-able to restore files from backups.
+Maybe it's easier to just wait for v5.6.
 
-Therefore, having the effective flag flip at some later time when the a_ops can
-safely be changed (for example a remount/drop_cache event) is beneficial.
+Regards,
+Nicolas
 
-I propose the user has no direct control over this event and it is mainly used
-to restore files from backups which is mainly an admin operation where a
-remount is a reasonable thing to do.
+[1] https://lkml.org/lkml/2019/9/11/734
 
-Users direct control of the effective flag is through inheritance.  The user
-needs to create the file in a DAX enable dir and they get effective operation
-right away.
 
-If in the future we can determine a safe way to trigger the a_ops change we can
-add that to the semantic as an alternative for users.
+--=-geumnkbETQYdG1ZUMwUA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-Ira
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl27CmMACgkQlfZmHno8
+x/4b+AgAoH8wv9sfGomdszgwev9YRlMzey4HKe8HTYaOtmPwv+9I5u2Q1L0Hll8U
+oOvfmsMi3/GCphnYxgVI15TV3gT23I4f+e1sVmHtdJwOja145qdVYeN0eVrJBGlW
+gllgXNWdKSeomR5jQYRo6/r/e4b2DFreMuJMYO5Ac0Jmp4lqqbZ9tXDqMvKt0VcB
+4olZERu99fJIT8AxzUVXOG9cft6l18Fio1WtXJLzXgVrjxEKnxGLAq1GxY5o8VF7
+mf5621L1pvp/rNs/CBhehPADNaJqYwdS+nm7md9u/My8zRvp2OqT8O9a4e7RxcQi
+QPdhGBoQVaeZdUmbRgLmr2hq8cGTqw==
+=2ip7
+-----END PGP SIGNATURE-----
+
+--=-geumnkbETQYdG1ZUMwUA--
+
