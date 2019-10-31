@@ -2,38 +2,38 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EBACA9EC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372F0CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A15D120856
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1640120856
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:40:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfJaBhu (ORCPT
+        id S1726509AbfJaBkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 21:37:50 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35886 "EHLO
+        Wed, 30 Oct 2019 21:40:24 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35927 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfJaBhu (ORCPT
+        with ESMTP id S1725926AbfJaBkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 21:37:50 -0400
+        Wed, 30 Oct 2019 21:40:23 -0400
 Received: from static-50-53-33-191.bvtn.or.frontiernet.net ([50.53.33.191] helo=[10.8.192.10])
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <john.johansen@canonical.com>)
-        id 1iPzPG-0006Iq-FN; Thu, 31 Oct 2019 01:37:46 +0000
+        id 1iPzRk-0006QX-KQ; Thu, 31 Oct 2019 01:40:21 +0000
 Subject: Re: [PATCH linux-kselftest/test v1] apparmor: add AppArmor KUnit
  tests for policy unpack
-To:     Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
+To:     Iurii Zaikin <yzaikin@google.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
         Alan Maguire <alan.maguire@oracle.com>,
         Matthias Maennich <maennich@google.com>,
         shuah <shuah@kernel.org>, jmorris@namei.org, serge@hallyn.com,
-        Iurii Zaikin <yzaikin@google.com>,
         David Gow <davidgow@google.com>, Theodore Ts'o <tytso@mit.edu>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-security-module@vger.kernel.org,
@@ -47,6 +47,7 @@ References: <20191018001816.94460-1-brendanhiggins@google.com>
  <CAFd5g46aO4jwyo32DSz4L8GdhP6t38+Qb9NB+3fev3u4G6sg4w@mail.gmail.com>
  <20191024101529.GK11244@42.do-not-panic.com>
  <201910301205.74EC2A226D@keescook>
+ <CAAXuY3o31iCJwZ+WGHMaK1MgpC0qv=JkJWnzv8Lhym9TnZQvcQ@mail.gmail.com>
 From:   John Johansen <john.johansen@canonical.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=john.johansen@canonical.com; prefer-encrypt=mutual; keydata=
@@ -92,12 +93,12 @@ Autocrypt: addr=john.johansen@canonical.com; prefer-encrypt=mutual; keydata=
  qJciYE8TGHkZw1hOku+4OoM2GB5nEDlj+2TF/jLQ+EipX9PkPJYvxfRlC6dK8PKKfX9KdfmA
  IcgHfnV1jSn+8yH2djBPtKiqW0J69aIsyx7iV/03paPCjJh7Xq9vAzydN5U/UA==
 Organization: Canonical
-Message-ID: <f6673ccf-30e3-449f-dd8b-7b71fe829f43@canonical.com>
-Date:   Wed, 30 Oct 2019 18:37:24 -0700
+Message-ID: <81d04cb1-057d-10bd-1c40-80aa2c26fe62@canonical.com>
+Date:   Wed, 30 Oct 2019 18:40:03 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <201910301205.74EC2A226D@keescook>
+In-Reply-To: <CAAXuY3o31iCJwZ+WGHMaK1MgpC0qv=JkJWnzv8Lhym9TnZQvcQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
@@ -106,55 +107,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/30/19 12:09 PM, Kees Cook wrote:
-> On Thu, Oct 24, 2019 at 10:15:29AM +0000, Luis Chamberlain wrote:
->> On Wed, Oct 23, 2019 at 05:42:18PM -0700, Brendan Higgins wrote:
->>> With that, I think the best solution in this case will be the
->>> "__visible_for_testing" route. It has no overhead when testing is
->>> turned off (in fact it is no different in anyway when testing is
->>> turned off). The downsides I see are:
->>>
->>> 1) You may not be able to test non-module code not compiled for
->>> testing later with the test modules that Alan is working on (But the
->>> only way I think that will work is by preventing the symbol from being
->>> inlined, right?).
->>>
->>> 2) I think "__visible_for_testing" will be prone to abuse. Here, I
->>> think there are reasons why we might want to expose these symbols for
->>> testing, but not otherwise. Nevertheless, I think most symbols that
->>> should be tested should probably be made visible by default. Since you
->>> usually only want to test your public interfaces. I could very well
->>> see this getting used as a kludge that gets used far too frequently.
+On 10/30/19 1:11 PM, Iurii Zaikin wrote:
+>> Why can't unit tests live with the code they're testing? They're already
+>> logically tied together; what's the harm there? This needn't be the case
+>> for ALL tests, etc. The test driver could still live externally. The
+>> test in the other .c would just have exported functions... ?
 >>
->> There are two parts to your statement on 2):
->>
->>   a) possible abuse of say __visible_for_testing
-> 
-> I really don't like the idea of littering the kernel with these. It'll
-> also require chunks in header files wrapped in #ifdefs. This is really
-> ugly.
-> 
->>   b) you typically only want to test your public interfaces
->
-I would disagree with this. Helper/lib functions benefit from testing,
-and ensuring they work as expected. Having tests on these helps catch
-errors when you fix bugs or make improvements. If you want its indirect
-testing of public interfaces.
+> Curiously enough, this approach has been adopted by D 2.0 where unittests are
+> members of the class under test:  https://digitalmars.com/d/2.0/unittest.html
+> but such approach is not mainstream.
+> I personally like the idea of testing the lowest level bits in isolation even if
+> they are not a part of any interface. I think that specifying the
+> interface using
+> unit tests and ensuring implementation correctness are complementary but
 
-> True, but being able to test the little helper functions is a nice
-> starting point and a good building block.
-> 
-yeah its a nice building block
+fwiw this is my preferred approach as well
 
-> Why can't unit tests live with the code they're testing? They're already
-> logically tied together; what's the harm there? This needn't be the case
-> for ALL tests, etc. The test driver could still live externally. The
-> test in the other .c would just have exported functions... ?
+> I haven't had much luck arguing this with our esteemed colleagues.
 > 
 
-they can, its my preference too. Or if the tests must live separate I
-don't even mind the abomination of including a test .c that contains
-the tests for the private fns only.
-
-In the end though, I just want to see more unit testing and will happily
-take what ever the community decides is the way to go.
+surprise, surprise /s
