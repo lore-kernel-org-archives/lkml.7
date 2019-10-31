@@ -2,74 +2,72 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DFFCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F63FCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B0C0208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F6DB2087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:57:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="jFkAPuVV"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="QKg7HV2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbfJaX4e (ORCPT
+        id S1728528AbfJaX5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 19:56:34 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44507 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfJaX4e (ORCPT
+        Thu, 31 Oct 2019 19:57:49 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39364 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfJaX5s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 19:56:34 -0400
-Received: by mail-io1-f66.google.com with SMTP id w12so8930765iol.11
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 16:56:34 -0700 (PDT)
+        Thu, 31 Oct 2019 19:57:48 -0400
+Received: by mail-io1-f67.google.com with SMTP id 18so8952184ion.6
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 16:57:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=date:from:to:cc:subject:in-reply-to:message-id:references
          :user-agent:mime-version;
-        bh=/fnQra9d+cV+1M9gZD3yWkRXYXxESEWySrRcy1ZQ884=;
-        b=jFkAPuVVbTiZQwRT+6JgakTwHUqWbofDYBVITUw8pN08LshcDUd/oVj2dI7th601+8
-         TTqVgro+D1ceDEO9npCbqiYcbeAWQcVvgs0AJKGgBPsenS/zBdBsV/YUDDNcRW6fy+Zy
-         r3CX1h0iNWq0Z4jRyr+u43bA1NCTAqjlbeaoe5wLvdbvjZOOKRSu5VZipIB5RDrAD92X
-         Za8OPIV/kkts6gTvUcSIjrkr5O77cnHjbWvbvrDW+UcEEbhBi4W+iv2puGFM7iMT1k0J
-         QIjdg5rZMtq82oiUlsA1XmU+pn7qAc5UD1iQkIxeO/m2mRI0i/P7j8l3PZBa0h2wNghl
-         Jwcg==
+        bh=DlWmb7IgZmhk+yp3PdCqAG1wjzyXN6dB08lLnHa3HSI=;
+        b=QKg7HV2pAE7DIHMgc/9tZeYwmdgbo2E+YYpv/47wUW17mWxHMTJ5yDYC1ruwzxtcBi
+         t9+kMhToecgxgoI9nhoVEw48Li/xVty1stCAtxtG2RovvSqv6rBCW78Ehp2+j5EmcFIs
+         UOsW5rIqW+axEbyd0M32o/mbx1WjWmbDfpaeJM3ZPxA0i4TfejI2Ms4I4Fk4TkLTCXOk
+         E6jErckYSrZ5IsP2d9+KaHBP6/LFhTB5wKaR74Ro+UGxej9RmD+qE31b37b6ceScIvMQ
+         8HLgAIs4bzDWhGXenL4fkBDEmp1SRIC7UgIcF8wSRhSbW5f+nKIPRZm7EB3gfwyDL2or
+         mXDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
          :references:user-agent:mime-version;
-        bh=/fnQra9d+cV+1M9gZD3yWkRXYXxESEWySrRcy1ZQ884=;
-        b=QPlsBbTtThAk2UiHetZhrGZD2xfcQRhTkmLMCwqBm2KmUhInR3cjGltxBcVqT4jofG
-         3PDxdjjwUtDJe+3Aztp4s5OJC8MuG80JDg1LDU7P+769Q0io9pbIg8D/AqKXaLBfOeaE
-         sQ0ihqrMIThDdYe02z9ZxVJ22M1XFzq2nZZD9Q5TIEJ+BKyKEH3F5hmQEMVwnbmO58pS
-         zjEZiKxTNT3OKuBkpgB4FOQzqnEzoFtNnYUOC2QCU/fjUl/rzkjcdaWSs5wRz+iSH7Ka
-         Pnb20EfUCu6pXeTAchLgKB+/HgdQPRWk6jaJYWe+TO2VHEM4SeWq7GS9qQmNX/PB17ak
-         68Og==
-X-Gm-Message-State: APjAAAUFmzmKq8sjgZOynQR7X7D2vq0ohE3Xe3+iT5y+fr3Sma4V3Qum
-        c9w2bN20OHezWejmr8c9QSihkQ==
-X-Google-Smtp-Source: APXvYqyieA3Tp6DtjKlQJqY+H7eiSAZWJm9Zhno/zJ+6iwEp6L11GD81J3wKgOoDEpx0lICfPhEy2g==
-X-Received: by 2002:a5d:9741:: with SMTP id c1mr7181277ioo.25.1572566193714;
-        Thu, 31 Oct 2019 16:56:33 -0700 (PDT)
+        bh=DlWmb7IgZmhk+yp3PdCqAG1wjzyXN6dB08lLnHa3HSI=;
+        b=Bn9DZYUwJV3vE9A9IBd5jVccO9YnSxe0dJyjrVyeNZJtE9UM4X5D2IJiwop9260g1u
+         A9gOiK6s4/w0B6+fWNqVQE8Ltpza3MHDb5nSQevbS7Mr7H+WLrsf7Toanyx2+JtZlSeG
+         2VBJNKVzRkU06mLWokwSl4jHHl/7k+5wJYKF+wJ+//NjXjHhARUKEZ130pLEVQoTGt6j
+         RC1dTBC98dLC5Wfc2gAdX+mBFbFA6lOsXUUDFQXjG0Uk+pyYAoTF45I9Xg+BHnEef1tf
+         HZRzac+YOcXK51/I7AbQpoOybkEo7qVMXX1IxmpVVSpzrvevb5ucBgdjDeHWgxWT6ePe
+         nJzQ==
+X-Gm-Message-State: APjAAAV/FBfSl3EIJ6eWDFIqcAc4OkjdnWMJHeYbag1oJPqWNk3xvm+4
+        EFsrXlMEjncRSiEyEgZnaddgxZTW59c=
+X-Google-Smtp-Source: APXvYqy/KVTA2A/G8TC2Xo2QaQ5wgHyPiwtcrr4nHibTrr61rJ7aezpdz/Jbn9eXGIwUvSRXBQWkrQ==
+X-Received: by 2002:a05:6638:da:: with SMTP id w26mr5957124jao.58.1572566267869;
+        Thu, 31 Oct 2019 16:57:47 -0700 (PDT)
 Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id 9sm658009ilv.57.2019.10.31.16.56.32
+        by smtp.gmail.com with ESMTPSA id s70sm807595ili.13.2019.10.31.16.57.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 16:56:33 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 16:56:31 -0700 (PDT)
+        Thu, 31 Oct 2019 16:57:47 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 16:57:45 -0700 (PDT)
 From:   Paul Walmsley <paul.walmsley@sifive.com>
 X-X-Sender: paulw@viisi.sifive.com
 To:     Christoph Hellwig <hch@lst.de>
 cc:     Palmer Dabbelt <palmer@sifive.com>,
         Damien Le Moal <damien.lemoal@wdc.com>,
         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anup Patel <anup@brainfault.org>,
-        Atish Patra <atish.patra@wdc.com>
-Subject: Re: [PATCH 04/12] riscv: cleanup the default power off
- implementation
-In-Reply-To: <20191028121043.22934-5-hch@lst.de>
-Message-ID: <alpine.DEB.2.21.9999.1910311655320.25874@viisi.sifive.com>
-References: <20191028121043.22934-1-hch@lst.de> <20191028121043.22934-5-hch@lst.de>
+        Anup Patel <anup@brainfault.org>
+Subject: Re: [PATCH 05/12] riscv: implement remote sfence.i using IPIs
+In-Reply-To: <20191028121043.22934-6-hch@lst.de>
+Message-ID: <alpine.DEB.2.21.9999.1910311657150.25874@viisi.sifive.com>
+References: <20191028121043.22934-1-hch@lst.de> <20191028121043.22934-6-hch@lst.de>
 User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -80,89 +78,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, 28 Oct 2019, Christoph Hellwig wrote:
 
-> Move the sbi poweroff to a separate function and file that is only
-> compiled if CONFIG_SBI is set.  Provide a new default fallback
-> power off that just sits in a wfi loop to save some power.
+> The RISC-V ISA only supports flushing the instruction cache for the
+> local CPU core.  Currently we always offload the remote TLB flushing to
+> the SBI, which then issues an IPI under the hoods.  But with M-mode
+> we do not have an SBI so we have to do it ourselves.   IPI to the
+> other nodes using the existing kernel helpers instead if we have
+> native clint support and thus can IPI directly from the kernel.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > Reviewed-by: Anup Patel <anup@brainfault.org>
-> Reviewed-by: Atish Patra <atish.patra@wdc.com>
 
-And here's the other part of this patch, queued for v5.5-rc1.
+Thanks, queued for v5.5-rc1 with a minor fix to one of the code comments.
 
 
 - Paul
-
-
-From: Christoph Hellwig <hch@lst.de>
-Date: Mon, 28 Oct 2019 13:10:35 +0100
-Subject: [PATCH] riscv: cleanup the default power off implementation
-
-Move the sbi poweroff to a separate function and file that is only
-compiled if CONFIG_SBI is set.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Anup Patel <anup@brainfault.org>
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
-[paul.walmsley@sifive.com: split the WFI fix into a separate patch]
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
----
- arch/riscv/kernel/Makefile |  1 +
- arch/riscv/kernel/reset.c  |  2 --
- arch/riscv/kernel/sbi.c    | 17 +++++++++++++++++
- 3 files changed, 18 insertions(+), 2 deletions(-)
- create mode 100644 arch/riscv/kernel/sbi.c
-
-diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-index 696020ff72db..d8c35fa93cc6 100644
---- a/arch/riscv/kernel/Makefile
-+++ b/arch/riscv/kernel/Makefile
-@@ -41,5 +41,6 @@ obj-$(CONFIG_DYNAMIC_FTRACE)	+= mcount-dyn.o
- obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o
- obj-$(CONFIG_PERF_EVENTS)	+= perf_callchain.o
- obj-$(CONFIG_HAVE_PERF_REGS)	+= perf_regs.o
-+obj-$(CONFIG_RISCV_SBI)		+= sbi.o
- 
- clean:
-diff --git a/arch/riscv/kernel/reset.c b/arch/riscv/kernel/reset.c
-index 485be426d9b1..ee5878d968cc 100644
---- a/arch/riscv/kernel/reset.c
-+++ b/arch/riscv/kernel/reset.c
-@@ -5,11 +5,9 @@
- 
- #include <linux/reboot.h>
- #include <linux/pm.h>
--#include <asm/sbi.h>
- 
- static void default_power_off(void)
- {
--	sbi_shutdown();
- 	while (1)
- 		wait_for_interrupt();
- }
-diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-new file mode 100644
-index 000000000000..f6c7c3e82d28
---- /dev/null
-+++ b/arch/riscv/kernel/sbi.c
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/init.h>
-+#include <linux/pm.h>
-+#include <asm/sbi.h>
-+
-+static void sbi_power_off(void)
-+{
-+	sbi_shutdown();
-+}
-+
-+static int __init sbi_init(void)
-+{
-+	pm_power_off = sbi_power_off;
-+	return 0;
-+}
-+early_initcall(sbi_init);
--- 
-2.24.0.rc0
-
