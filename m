@@ -2,143 +2,106 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC31CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A23CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D4A22087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBEB12087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:35:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ejy2Waqe"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zkd+dczq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbfJaRes (ORCPT
+        id S1729017AbfJaRfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 13:34:48 -0400
-Received: from mail-eopbgr70079.outbound.protection.outlook.com ([40.107.7.79]:17415
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728742AbfJaRer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 13:34:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LyDVHc9u4ojQxUHloUhl4xtKdMjsIsVyUFwQgOPp01FlAywTYzFg738/jdCR7p1QH/zCf32Il+9gBUWHCZMWwVsl3elSRGj4Cij0n9HLdYLHHg/5k2OjHWHURjOBPCml+4rdTph+Ojt2k6Bk9RGwKhjJupYcQzP8BXyd39/BEgJayiU2ubKI49HR90SUfDsboUlTFJHymDblXYJERjnFDmzyUEEQIm/LyxcNGrdf/len+vk+zmxk1ygQkKfsSDyEEu4feCcZeIVQkWvDgO7myfnjz/4Ua2Z4xxG1vzLx6U8xABKAelebRyjYGAPE1K4JaLzsmxhc4q4vUm0AWOS78Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lBtQzx54/3eZlsu3gdbnLEXdBp6ghsGP/eNaHUgtYsU=;
- b=Yx93msjxTlfZaNb/pwzOLDnI/flCVcoB7TwOyP1gKZVnbFeECTp1Xle+ZoiKbo1AqEBtxLBNzNiso3C4o+pJDwPgQoDMgAZvkrQhd7nvvNxR8LLltOy4YKjjZ4IzBDVJj3uDinTiejx08qjvLxmKOUVPSqnX5ix8eBo1QtDsFSXMyboI67cuSQIhR3e6nKZoPBsyhKl+5xQpjqolIXBGq1qF7Sj6L6H58LL2fD+oPt9zdUJRjR+C0tvJ8QcU0Cx6Ol+Cj31GMtzV0g4PttEfhdPewCbp2wd/iz/mCQlwETSpOM6WroUmq2/t6OzHeuriaMiL6UUR/a/wceH+w+VnlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lBtQzx54/3eZlsu3gdbnLEXdBp6ghsGP/eNaHUgtYsU=;
- b=ejy2WaqecyooCZU5PephBr/QvnaLKI7+1yyylG+EzBwDEWMZ4MbVT7ks0aHuMBSayupXtp1zpu6GSXCbSeDE6/PuO7d7pfKgnkuF90AEj8QRKQPhN29qNIBC2/J2zKS4w+/DGathIvDZh5DAICNlz4LCf1NIm2DY5K3bpMH7oB4=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB4671.eurprd05.prod.outlook.com (20.176.3.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.22; Thu, 31 Oct 2019 17:34:42 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::b179:e8bf:22d4:bf8d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::b179:e8bf:22d4:bf8d%5]) with mapi id 15.20.2387.028; Thu, 31 Oct 2019
- 17:34:42 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
-Thread-Topic: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
-Thread-Index: AQHVidvRl0DiLfVRckS4hHS5dqmJyadx8UKAgAA3LICAACCkgIABo4oAgADQ2QCAAE/3AIAAAcwA
-Date:   Thu, 31 Oct 2019 17:34:42 +0000
-Message-ID: <20191031173438.GL22766@mellanox.com>
-References: <20191023195515.13168-1-rcampbell@nvidia.com>
- <20191023195515.13168-4-rcampbell@nvidia.com>
- <20191029175837.GS22766@mellanox.com>
- <3ffecdc6-625f-ebea-8fb4-984fe6ca90f3@nvidia.com>
- <20191029231255.GX22766@mellanox.com>
- <f42d06e2-ca08-acdd-948d-2803079a13c2@nvidia.com>
- <20191031124200.GJ22766@mellanox.com>
- <a6b49a4e-a194-ce0b-685f-5e597072aeee@nvidia.com>
-In-Reply-To: <a6b49a4e-a194-ce0b-685f-5e597072aeee@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR05CA0022.namprd05.prod.outlook.com
- (2603:10b6:208:c0::35) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.162.113.180]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3434cb44-4f17-427b-931a-08d75e289cd3
-x-ms-traffictypediagnostic: VI1PR05MB4671:
-x-microsoft-antispam-prvs: <VI1PR05MB467156EAAEA441F7125EE3BACF630@VI1PR05MB4671.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02070414A1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(376002)(136003)(346002)(396003)(189003)(199004)(6436002)(4326008)(36756003)(186003)(66476007)(476003)(66556008)(64756008)(6916009)(66446008)(6506007)(33656002)(66946007)(26005)(316002)(6246003)(11346002)(446003)(2616005)(486006)(66066001)(102836004)(25786009)(229853002)(6486002)(14444005)(6116002)(478600001)(99286004)(14454004)(54906003)(256004)(386003)(6512007)(3846002)(71200400001)(76176011)(71190400001)(86362001)(1076003)(305945005)(52116002)(7736002)(81166006)(81156014)(8676002)(2906002)(5660300002)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4671;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qfPtVM8E9Aj187lYTgVJ6BVN6t/xNP1eUbG5C24IqkRVhkzw05cywjPexGDLeqrzjvBrfkxFiOfBuzgqN7XbJD3DUxpuNJEhDL+Ycf/H8Un+84CYaoTrKGAYjYO3EL04Pj9h482rX0zV2j/JB5OjryUxzWMlBhB+Mb6gipho3ho1hvs/J/WLip4xYb0LBb5RMEGduPMbohls8J9XMKcqc354rWwhdYN59KgnC3huEOGUcZOvz5IA2LliU1LBuVapwMH7syOLWzfu5jZB16if7bcHdhiFLyw+QldtrJ6N1GeGKbZ1LooFDRbeark54hxjQh2TlEPLipWWhO/WGpkWJEeR3LVh83eibfK6bNV9yXJurSMv1n23K9pEEn5Yc+jhUrvxdumuSy4cEkZVQdJQGxDmYyhpkyNZpdaiTpeT4w8AYOZM19VIBTRq76F0QfHT
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7B4A1F8CF57DCC4C90A11D864E35D0FD@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 31 Oct 2019 13:35:06 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46527 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728614AbfJaRfG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 13:35:06 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 193so3538372pfc.13
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 10:35:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6vxne2J2U+zueRlGB+uihx88K5obGcz7JfVVNIfE6MI=;
+        b=Zkd+dczqhPUCvaVxq3B8963P3V8Y9R+M6ldUJWVSSAWMYKxKqeHtnfr2PdTP/xQu2b
+         M24kRR6f+BemlR/4Y0IvK/z1JsB3EOLUV7taiH84F2Ii6S/051a5P0kFaw58bDYFmRYl
+         aNg+ivt2iWFLU8ljqbd20wQiN/S62lqFSuUkwS/f02KuHQnSP26/xslqjUm0PxnUl/nM
+         qI0N36UakRSXzfSUr6wSxS+I2jAHofRSRz2rGKpUptLXuoFXn9q5tA4/x48cLuSowzWM
+         m7sGquCCjWRdIn+Z2H+0+h0T7us+31n+XfF8IpapK82l/iCdOiiKW9oFk4wdTg6QArPU
+         kr1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6vxne2J2U+zueRlGB+uihx88K5obGcz7JfVVNIfE6MI=;
+        b=IoZbR+IGTd1TBxa6yu2/kqWmdzvAq6ljGirNK3U318UDll8sK90gSgGSIfiAD4pLSQ
+         l+pJfIdKDf+CwPf9so33kOqpTfUNhd7GaAJ66DnKM+x+/xje0Cxqk1/YJHfd4u+v3OLc
+         RA8pmiXdMLrHigCKRT4eOcpWDXZdFNwiXrzaMf/brDuO+U3sDE7JuKC7aQ7/KCRSE4bn
+         7TGim1MNOmS6hTqnIq7K06utUwDUrXuZZavzQYPDkPa7zCRqviralNtrKVXf9cKoEZok
+         Mgxf0uFpAlsaGpp73Y6akMK0Knev657pwuZH9GTdHAzKGaFA+be2SXYQpWSyfg4McYwb
+         x/+A==
+X-Gm-Message-State: APjAAAWDpYnggQs7dwspWEE7Ncte7miTrbK07c9xjz5UCJsf+ZYNkQqW
+        acGuJKMlOBZOjRCpz3Xj+SrUIGlTPegUIOAyqvMYxA==
+X-Google-Smtp-Source: APXvYqz/lhCOKKkE7+XVjZtp5lyRajdclaBkyDSosLmDck7GxCYMMFfzkg348/A5b/zQnTjld0uu3Efy3NYsSqb59C8=
+X-Received: by 2002:a17:90a:1f4b:: with SMTP id y11mr8889337pjy.123.1572543304777;
+ Thu, 31 Oct 2019 10:35:04 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3434cb44-4f17-427b-931a-08d75e289cd3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Oct 2019 17:34:42.1157
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rfrxOddc/pWv6ibOW6NX7zTWWW7a0fxNSQ0UBhFAgmZ3bWPY8xFgyTr5WKmflj9FPLf0tMqP/7FXQpWghtw81w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4671
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191031164637.48901-1-samitolvanen@google.com> <20191031164637.48901-14-samitolvanen@google.com>
+ <CAKwvOd=kcPS1CU=AUjOPr7SAipPFhs-v_mXi=AbqW5Vp9XUaiw@mail.gmail.com> <CABCJKudb2_OH5CRFm64rxv-VVnuOrO-ZOrXRHg8hR98Vj+BzVw@mail.gmail.com>
+In-Reply-To: <CABCJKudb2_OH5CRFm64rxv-VVnuOrO-ZOrXRHg8hR98Vj+BzVw@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 31 Oct 2019 10:34:53 -0700
+Message-ID: <CAKwvOd=dO2QjiRWegjCtnMmVguaJ2YHacJRP3SbVVy9jhx-BWw@mail.gmail.com>
+Subject: Re: [PATCH v3 13/17] arm64: preserve x18 when CPU is suspended
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 10:28:12AM -0700, Ralph Campbell wrote:
-> > > > > > It seems especially over-complicated to use a full page table l=
-ayout
-> > > > > > for this, wouldn't something simple like an xarray be good enou=
-gh for
-> > > > > > test purposes?
-> > > > >=20
-> > > > > Possibly. A page table is really just a lookup table from virtual=
- address
-> > > > > to pfn/page. Part of the rationale was to mimic what a real devic=
-e
-> > > > > might do.
-> > > >=20
-> > > > Well, but the details of the page table layout don't see really
-> > > > important to this testing, IMHO.
-> > >=20
-> > > One problem with XArray is that on 32-bit machines the value would
-> > > need to be u64 to hold a pfn which won't fit in a ULONG_MAX.
-> > > I guess we could make the driver 64-bit only.
-> >=20
-> > Why would a 32 bit machine need a 64 bit pfn?
-> >=20
->=20
-> On x86, Physical Address Extension (PAE) uses a 64 bit PTE.
-> See arch/x86/include/asm/pgtable_32_types.h which includes
-> arch/x86/include/asm/pgtable-3level_types.h.
+On Thu, Oct 31, 2019 at 10:27 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> On Thu, Oct 31, 2019 at 10:18 AM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+> > > +#ifdef CONFIG_SHADOW_CALL_STACK
+> > > +       ldr     x18, [x0, #96]
+> > > +       str     xzr, [x0, #96]
+> >
+> > How come we zero out x0+#96, but not for other offsets? Is this str necessary?
+>
+> It clears the shadow stack pointer from the sleep state buffer, which
+> is not strictly speaking necessary, but leaves one fewer place to find
+> it.
 
-That is the content of the PTE, not the address of the PTE. In this
-case the xarray index is the 'virtual' address of the fictional device
-and it can easily be 32 bits with no problem
-
-Jason
+That sounds like a good idea.  Consider adding comments or to the
+commit message so that the str doesn't get removed accidentally in the
+future.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+-- 
+Thanks,
+~Nick Desaulniers
