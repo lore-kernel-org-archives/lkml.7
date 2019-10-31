@@ -2,88 +2,106 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A64CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BCDCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C04F220862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:03:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/bB9NxU"
+	by mail.kernel.org (Postfix) with ESMTP id 90B1620862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbfJaWDp (ORCPT
+        id S1729394AbfJaWMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 18:03:45 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:33059 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727715AbfJaWDo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 18:03:44 -0400
-Received: by mail-il1-f196.google.com with SMTP id s6so6893694iln.0;
-        Thu, 31 Oct 2019 15:03:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Sb1QxzuAyQh2HIKxWPJ8MqFymBdmLerlZldXam14EWk=;
-        b=D/bB9NxUc/llN+2mf9ZU+YELVGZtW6NUdnpSIS0m0lbUm/IuoTOc+liMu3OOUkg0by
-         /XssxHKuMKavniNF26XZrsBlc1MeX0TV4lNuHaDYykRCy95/QApfIV4AwE3tLMywxgmv
-         WQb6QgUMjGRexK1kN9QhzXdnn/N0deLIDrkenFc+brlm1RpBjAxD1PxcTUKvjE+hgeuz
-         1TEI4GQkizz+q6kJSvRekA/qucm71elvUsUm8A7Saolvc7MQl7WsfV0JIEKfXEZ2IY2s
-         PH7QaHLMP9CIvGU0SW0TrLirWAxJnwsIR8eDpubdRGLpraumtM4ZhVXw1JUMZxScrqwu
-         x/+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Sb1QxzuAyQh2HIKxWPJ8MqFymBdmLerlZldXam14EWk=;
-        b=HGLTBfrzQIdTNUX0T4RYtW2uvRciEKelmV4hTykjDuOPwf5QS7AZz+s+otHXETBCa0
-         0ld60sgE3pCId/Cgx6u7iX4RKXdEkiUUzklTq77qR9eoKMTWzW3Xcjb+5/g3taalIFiB
-         bkWSgOFMPnCb0I02XC8no0R+DpTTQvxBpW3ZVgt29VPcBv76Dqy7cg43LV289EpB1ETG
-         ZwxytAZ0toccjlmW/3VV8TNDtZjB9Svm2Nn3VaJAZ17YnKy+6XpEinSnV2lAmcG6pRCi
-         ytOII7aTqQ2d4uJuCV7bXG3BFYYoeEuOfmJeUf+FrbB4PAVotIh+EPnK2r37Rdqnfp4n
-         bfMA==
-X-Gm-Message-State: APjAAAV1SFqy5/4UH2Kne82xHALINYRVKzQy5CFyDipbiznPpTMOR+WI
-        S/b6dfxtWAGhJut7KxO5moHbY29YuvzHUeQeHiE=
-X-Google-Smtp-Source: APXvYqw/dntoebDeFSNGndsXj4CSjqloFpHTg/ueKUrN5vQkZ5DcJK24HkUfI7B/jHqX+BqQnpcdRGiLNvG6ScF6vc4=
-X-Received: by 2002:a92:1d51:: with SMTP id d78mr9177073ild.166.1572559423698;
- Thu, 31 Oct 2019 15:03:43 -0700 (PDT)
+        Thu, 31 Oct 2019 18:12:16 -0400
+Received: from sauhun.de ([88.99.104.3]:37458 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726602AbfJaWMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 18:12:16 -0400
+Received: from localhost (unknown [77.130.135.221])
+        by pokefinder.org (Postfix) with ESMTPSA id 6726A2C009F;
+        Thu, 31 Oct 2019 23:12:13 +0100 (CET)
+Date:   Thu, 31 Oct 2019 23:12:11 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mmc: renesas_sdhi: add checks for pinctrl_lookup_state
+Message-ID: <20191031221211.GA3853@kunai>
+References: <20191018131338.11713-1-hslester96@gmail.com>
+ <CAPDyKFoBYchP96hv=7XfTo8CrCSD+KC0h_oFRAsOYT-Lc1SFZQ@mail.gmail.com>
+ <20191023153313.GB5153@kunai>
+ <CAPDyKFo9wYwhdy-1BDcRMJKTjADappsT-gBaKZE7hTLE4obxiA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191031184632.2938295-1-bjorn.andersson@linaro.org> <20191031184632.2938295-3-bjorn.andersson@linaro.org>
-In-Reply-To: <20191031184632.2938295-3-bjorn.andersson@linaro.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Thu, 31 Oct 2019 16:03:32 -0600
-Message-ID: <CAOCk7No0D2qyg-HFEcy_aog9eYOP2oSBPeVVfDAJ_90RCs=b1A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] remoteproc: qcom_q6v5_mss: Validate each segment
- during loading
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFo9wYwhdy-1BDcRMJKTjADappsT-gBaKZE7hTLE4obxiA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 12:48 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> The code used to sync with the MBA after each segment loaded and this is
-> still what's done downstream. So reduce the delta towards downstream by
-> switching to a model where the content is iteratively validated.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Seems to be just fine on the Lenovo Miix 630
+--C7zPtVaVf+AK4Oqc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Jeffrey Hugo<jeffrey.l.hugo@gmail.com>
-Tested-by: Jeffrey Hugo<jeffrey.l.hugo@gmail.com>
+HI Ulf,
+
+> > Well, I don't like to bail out because this error is not fatal for basic
+> > operations. How about releasing priv->pinctrl again with an additional
+> > warning that pinctrl settings are broken and will prevent 1.8v modes?
+> >
+> > Opinions?
+>=20
+> Hmm, from a mmc driver probe point of view, I don't quite share this appr=
+oach.
+>=20
+> I would rather fail as it forces the DTB to be corrected immediately,
+> rather than trusting some developer to look at a warning in a log. The
+> point is, in such a case it may never get fixed, if the product is
+> shipped with the wrong DTB.
+
+I could agree to this arguement, iff the only way pinctrl_select fails
+is a DT misconfiguration. I am not sure if this is true right now, and
+we can't be sure about the future. Or?
+
+> My concern at this point is rather to break existing DTBs, but it
+> seems that should not be an issue, right?
+
+AFAIK not for the upstream ones, I don't know the customer ones.
+
+I still prefer to not bail out.
+
+Kind regards,
+
+   Wolfram
+
+
+--C7zPtVaVf+AK4Oqc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl27XDcACgkQFA3kzBSg
+KbYYBRAAiikrBSwiMJ26xkXJxt4soVNJykMZrHS9niXYlb+cM9mznO9ah9yPKjFL
+Op6LtWP5EKJPU7Yz1FM+wjKKyLgC/nvLKw3gvbXXDI1GhZAa4yl0e9diIBzECp8g
+5EMTYmB5i9u5Z1MBkNQB8/UuQ7JlVNtGuWI3YcbcG0reM6i20BaynpDthwVKa9vv
+2h+5OWf8Ep76B5CEOmqF/TePJeTwR/Dzzzf9PxJOqu/v3MW8Pwc9WF7UwWSmxLel
+yBHr4bHOxYg4WEta99YirlXYadlxdv9cZ3+lcx+6kwaWd0kgv+xF5sxsxJFz2G/Y
+d8c1zYso/Js37VFI/E0lxCDnVBbZaiDDpSkkS2E+ZmBFZeHigFhRvRenkPKnjxCu
+S38I9e3M4pE//z7UirjR/uHv6VDopd1nEOmx4Md6eo0Yj5QhrlPOromAIVenpECO
+S2/L5NWy+sNZ4APAUeesKqRy0yQVqEEg3U01AC6PQpqfIHrjKXXHObsTwtt24ct3
+Vy51uTTB0BWZGY3cO+YuHJiJTCS5aC1k63FA7XCINArVhZh3ZTqGQZH3MoGy9dvj
+L168HXbOVK5HkDh/xZx9b1S0dkdPvciYYHiJ3GU2b63ICOczGPsF0vIwJdbgzN7i
+66m5ckYQdR1zDZVQAdWSoAMGAUYScPDMm3sU6/MTTu7I9D2H4ks=
+=XBqM
+-----END PGP SIGNATURE-----
+
+--C7zPtVaVf+AK4Oqc--
