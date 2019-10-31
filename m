@@ -2,89 +2,95 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A891ECA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA679CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C8820650
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:38:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sZixWELQ"
+	by mail.kernel.org (Postfix) with ESMTP id 9BC2E20650
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbfJaMil (ORCPT
+        id S1726959AbfJaMio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 08:38:41 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35507 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfJaMil (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 08:38:41 -0400
-Received: by mail-wm1-f66.google.com with SMTP id x5so5739778wmi.0
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 05:38:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uhoxQTqJS7TN8UEiHDJUbummgXcJZdDKj/YEdaqojMA=;
-        b=sZixWELQR5cQZ8lnCI3d78Zr4QlSClG+ptOiYGwAf+PKvZsCDCAbPcr9vDxEfUG7tl
-         wPbQUw+8FmP7IRyrt/96p3cLR/dOCT8xcf0s7QFTnwXDrUShJBp5m1HxNaVeOqJlphBt
-         L1acY9lKZB/4OakIuAlFXE6Zr03/RIaRGYg/mxZmQv43fj7yq7cIR8oUbGlSwnIvbJgg
-         ntAMXH/dbr4hZxW5lHu7vw5mRTCJN3QIuJOdpwTQzHfxrXCbIrLKEkaz15TudlW0/ynd
-         ouNuxHgsEjl/Wa0k2OXKSIHnymMAooX7vbbyD9lreDZfA1QT0BbRz9iD/N3QXIXOiFu4
-         qYyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uhoxQTqJS7TN8UEiHDJUbummgXcJZdDKj/YEdaqojMA=;
-        b=OgT2QHTSc9Ir1cTjHam5lIIALnWTcj6dJ8J58qZ4qeFIf/6RaNcAdEKI1Vf2msJusc
-         w5feiCnqM9Cjr1uaTXUK0ZA8V1ZW+wc/36SdMEvW/G4D2d7dXkGSgL40kRrnSpgjo7g0
-         jC5EOgGvIgyi72/UwF9Ofh/A2BVpPTs71EI/+d5I69aYlhGxbRYfny1efHFGOXWcxlWQ
-         r+Fh3e/2OHe1uRnpNshGPiA0wF85HNR3HEgwkizACEuRhK8vQPPIGcVnIYgZNBPJgR3w
-         Yuv6h+HyxGSxTnqpOkY7SqleD5nQvu8+rsSrpzNKqCHSuqeaOFGJvVQOfkfFaxe7VZPR
-         F5cw==
-X-Gm-Message-State: APjAAAVDr1yCXeGOd0aUjDKaN7Ruw+tjOSDU4uB9QttDbgzN8puYqStx
-        RekEs1Gc7S8lJJURzdL0YZ8=
-X-Google-Smtp-Source: APXvYqyobm4skG4Pd0DzqgekVRXwjSGHQx3GvfNg+Ad/meMFuELyqVIlhbD/fD9yrrI26HrwDMUBug==
-X-Received: by 2002:a1c:7ec2:: with SMTP id z185mr4767560wmc.69.1572525518925;
-        Thu, 31 Oct 2019 05:38:38 -0700 (PDT)
-Received: from localhost ([92.177.95.83])
-        by smtp.gmail.com with ESMTPSA id u7sm4429632wre.59.2019.10.31.05.38.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 05:38:38 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 13:38:36 +0100
-From:   Roi Martin <jroi.martin@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     valdis.kletnieks@vt.edu, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] staging: exfat: replace kmalloc with kmalloc_array
-Message-ID: <20191031123836.GA6924@miniwopr.localdomain>
-References: <20191030010328.10203-1-jroi.martin@gmail.com>
- <20191030010328.10203-7-jroi.martin@gmail.com>
- <20191030094222.GA678631@kroah.com>
+        Thu, 31 Oct 2019 08:38:44 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5238 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726506AbfJaMim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 08:38:42 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C50CC42C892F09C4CA5E;
+        Thu, 31 Oct 2019 20:38:40 +0800 (CST)
+Received: from [127.0.0.1] (10.67.102.197) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 31 Oct 2019
+ 20:38:38 +0800
+Subject: Re: [PATCH] tty:n_gsm.c: destroy port by tty_port_destroy()
+To:     Jiri Slaby <jslaby@suse.com>, <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>
+References: <1569317156-45850-1-git-send-email-nixiaoming@huawei.com>
+ <1fd7d2eb-7497-254b-b40f-84bc4114f8a3@suse.com>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <9d515be6-5430-7ca2-24e8-a8c3798beec9@huawei.com>
+Date:   Thu, 31 Oct 2019 20:38:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191030094222.GA678631@kroah.com>
+In-Reply-To: <1fd7d2eb-7497-254b-b40f-84bc4114f8a3@suse.com>
+Content-Type: text/plain; charset="iso-8859-2"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.102.197]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> This patch failed to apply.  Please fix it up and resend it as a new
-> version.
+On 2019/10/31 18:11, Jiri Slaby wrote:
+> On 24. 09. 19, 11:25, Xiaoming Ni wrote:
+>> According to the comment of tty_port_destroy():
+>>      When a port was initialized using tty_port_init, one has to destroy
+>>      the port by tty_port_destroy();
+> 
+> It continues with a part saying:
+>     Either indirectly by using tty_port refcounting
+>     (tty_port_put) or directly if refcounting is not used.
+> 
+>> tty_port_init() is called in gsm_dlci_alloc()
+>> so tty_port_destroy() needs to be called in gsm_dlci_free()
+>>
+>> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+>> ---
+>>   drivers/tty/n_gsm.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+>> index 36a3eb4..3f5bcc9 100644
+>> --- a/drivers/tty/n_gsm.c
+>> +++ b/drivers/tty/n_gsm.c
+>> @@ -1681,6 +1681,7 @@ static void gsm_dlci_free(struct tty_port *port)
+>>   
+>>   	del_timer_sync(&dlci->t1);
+>>   	dlci->gsm->dlci[dlci->addr] = NULL;
+>> +	tty_port_destroy(&dlci->port);
+> 
+> This is wrong. gsm_dlci_free is tty_port_operations->destruct, i.e.
+> n_gsm uses tty_port refcounting and tty_port_destroy was called on this
+> port in tty_port_destructor already.
+> 
+> Greg, please revert.
+> 
+> thanks,
+> 
 
-I have rebased the patch against the branch "staging-testing" of the
-tree:
+Function call flow
+tty_port_put
+     ===>  tty_port_destructor
+          ===> tty_port_destroy
+               Port->ops->destruct(port);
+                ===> .destruct = gsm_dlci_free
 
-https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
+Thank you for your correction, I am wrong.
 
-And sent the new version.
+thanks
 
-Thanks,
-
-	Roi Martin
