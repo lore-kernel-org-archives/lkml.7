@@ -2,223 +2,126 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30D3CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B45E2CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA487208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BAA4208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:23:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572521007;
+	bh=kZbrgBnyMA8h0x5/kgHd+8yWSc9Lj4f8QhgW8XZFIfI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xglLs99cxAdr/qeCSElFK1lNdWHxtOGL57/JAsL0l1VXRCzLEO2Xr+cm8B6ISIQA7
+	 ivskxbEbp8/u7Cswr+gCmYgoLCXhO3EAiJh+5L2DNjJyEUwrwdB5ypcp0i5KGufLoD
+	 bOVuexphVZua/cBMrtAAtBZSL6EGmQY1VlmET6N0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbfJaLXV (ORCPT
+        id S1726957AbfJaLX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:23:21 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5665 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726709AbfJaLXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:23:03 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 16AA468BBBAE43112AB3;
-        Thu, 31 Oct 2019 19:22:57 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 31 Oct 2019 19:22:49 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
-        Guangbin Huang <huangguangbin2@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 4/9] net: hns3: cleanup some coding style issues
-Date:   Thu, 31 Oct 2019 19:23:19 +0800
-Message-ID: <1572521004-36126-5-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572521004-36126-1-git-send-email-tanhuazhong@huawei.com>
-References: <1572521004-36126-1-git-send-email-tanhuazhong@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+        Thu, 31 Oct 2019 07:23:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58798 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726709AbfJaLXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 07:23:24 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C0D32083E;
+        Thu, 31 Oct 2019 11:23:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572521003;
+        bh=kZbrgBnyMA8h0x5/kgHd+8yWSc9Lj4f8QhgW8XZFIfI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SZ7Jf8FWwJbE2qBGs+l4rv4L1DUngP8mFgYn8YuBl29kN9NXPefisT3ZiCVcYXUMV
+         4TxW9q8Gga7NnaicGFeGFcxwuztcK+i8IynFbb0hdoghCgP12FTSzIRb7HwRxd4jhb
+         WSHYQZWqu7KiDMKhlaJP3gszuNGyTPw5nYmG1cmE=
+Date:   Thu, 31 Oct 2019 20:23:17 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jaswinder.singh@linaro.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Anshuman Khandual <khandual@linux.vnet.ibm.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Willem de Bruijn <willemb@google.com>,
+        Emilio =?UTF-8?B?TMOzcGV6?= <emilio.lopez@collabora.co.uk>
+Subject: Re: [BUGFIX PATCH v3 0/5] selftests: Fixes for 32bit arch
+Message-Id: <20191031202317.d264b984c4749af7abd43a84@kernel.org>
+In-Reply-To: <157180665007.17298.907392422924029261.stgit@devnote2>
+References: <157180665007.17298.907392422924029261.stgit@devnote2>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guangbin Huang <huangguangbin2@huawei.com>
+Hi,
 
-To unify code style and make code simpler, this patch modifies
-some code, deletes unnecessary blank lines and {}, changes
-location of code, and so on.
+Would anyone is OK for this fix?
 
-No functional change.
+I also found a typo on arm64 build... will send soon.
 
-Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hnae3.h                |  1 -
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h            |  4 ++--
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c     |  5 ++---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h     |  1 +
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c |  4 ++--
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 11 ++++++-----
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  |  1 -
- 7 files changed, 13 insertions(+), 14 deletions(-)
+Thanks,
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index e480236..23478ee 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -130,7 +130,6 @@ enum hnae3_module_type {
- 	HNAE3_MODULE_TYPE_CR		= 0x04,
- 	HNAE3_MODULE_TYPE_KR		= 0x05,
- 	HNAE3_MODULE_TYPE_TP		= 0x06,
--
- };
- 
- enum hnae3_fec_mode {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-index 0725dc5..345633f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-@@ -186,7 +186,7 @@ enum hns3_nic_state {
- #define HNS3_TXD_MSS_S				0
- #define HNS3_TXD_MSS_M				(0x3fff << HNS3_TXD_MSS_S)
- 
--#define HNS3_TX_LAST_SIZE_M                    0xffff
-+#define HNS3_TX_LAST_SIZE_M			0xffff
- 
- #define HNS3_VECTOR_TX_IRQ			BIT_ULL(0)
- #define HNS3_VECTOR_RX_IRQ			BIT_ULL(1)
-@@ -313,7 +313,7 @@ struct hns3_desc_cb {
- 
- 	u16 reuse_flag;
- 
--       /* desc type, used by the ring user to mark the type of the priv data */
-+	/* desc type, used by the ring user to mark the type of the priv data */
- 	u16 type;
- };
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-index ecf58cf..c331146 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-@@ -314,11 +314,10 @@ int hclge_cmd_send(struct hclge_hw *hw, struct hclge_desc *desc, int num)
- 		} while (timeout < hw->cmq.tx_timeout);
- 	}
- 
--	if (!complete) {
-+	if (!complete)
- 		retval = -EBADE;
--	} else {
-+	else
- 		retval = hclge_cmd_check_retval(hw, desc, num, ntc);
--	}
- 
- 	/* Clean the command send queue */
- 	handle = hclge_cmd_csq_clean(hw);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-index a4633d2..af96e79 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-@@ -261,6 +261,7 @@ enum hclge_opcode_type {
- 
- 	/* NCL config command */
- 	HCLGE_OPC_QUERY_NCL_CONFIG	= 0x7011,
-+
- 	/* M7 stats command */
- 	HCLGE_OPC_M7_STATS_BD		= 0x7012,
- 	HCLGE_OPC_M7_STATS_INFO		= 0x7013,
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-index 122ad92..e65c8cf 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-@@ -145,7 +145,7 @@ static void hclge_dbg_dump_reg_common(struct hclge_dev *hdev,
- 		return;
- 	}
- 
--	buf_len	 = sizeof(struct hclge_desc) * bd_num;
-+	buf_len	= sizeof(struct hclge_desc) * bd_num;
- 	desc_src = kzalloc(buf_len, GFP_KERNEL);
- 	if (!desc_src) {
- 		dev_err(&hdev->pdev->dev, "call kzalloc failed\n");
-@@ -153,7 +153,7 @@ static void hclge_dbg_dump_reg_common(struct hclge_dev *hdev,
- 	}
- 
- 	desc = desc_src;
--	ret  = hclge_dbg_cmd_send(hdev, desc, index, bd_num, reg_msg->cmd);
-+	ret = hclge_dbg_cmd_send(hdev, desc, index, bd_num, reg_msg->cmd);
- 	if (ret) {
- 		kfree(desc_src);
- 		return;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index dbdc245..69ab86a 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -2777,7 +2777,7 @@ static void hclge_update_port_capability(struct hclge_mac *mac)
- 	else if (mac->media_type == HNAE3_MEDIA_TYPE_COPPER)
- 		mac->module_type = HNAE3_MODULE_TYPE_TP;
- 
--	if (mac->support_autoneg == true) {
-+	if (mac->support_autoneg) {
- 		linkmode_set_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, mac->supported);
- 		linkmode_copy(mac->advertising, mac->supported);
- 	} else {
-@@ -3855,12 +3855,13 @@ static void hclge_reset_event(struct pci_dev *pdev, struct hnae3_handle *handle)
- 				  HCLGE_RESET_INTERVAL))) {
- 		mod_timer(&hdev->reset_timer, jiffies + HCLGE_RESET_INTERVAL);
- 		return;
--	} else if (hdev->default_reset_request)
-+	} else if (hdev->default_reset_request) {
- 		hdev->reset_level =
- 			hclge_get_reset_level(ae_dev,
- 					      &hdev->default_reset_request);
--	else if (time_after(jiffies, (hdev->last_reset_time + 4 * 5 * HZ)))
-+	} else if (time_after(jiffies, (hdev->last_reset_time + 4 * 5 * HZ))) {
- 		hdev->reset_level = HNAE3_FUNC_RESET;
-+	}
- 
- 	dev_info(&hdev->pdev->dev, "received reset event, reset type is %d\n",
- 		 hdev->reset_level);
-@@ -3985,6 +3986,7 @@ static void hclge_service_task(struct work_struct *work)
- 	hclge_update_link_status(hdev);
- 	hclge_update_vport_alive(hdev);
- 	hclge_sync_vlan_filter(hdev);
-+
- 	if (hdev->fd_arfs_expire_timer >= HCLGE_FD_ARFS_EXPIRE_TIMER_INTERVAL) {
- 		hclge_rfs_filter_expire(hdev);
- 		hdev->fd_arfs_expire_timer = 0;
-@@ -7409,7 +7411,7 @@ void hclge_rm_vport_mac_table(struct hclge_vport *vport, const u8 *mac_addr,
- 	mc_flag = is_write_tbl && mac_type == HCLGE_MAC_ADDR_MC;
- 
- 	list_for_each_entry_safe(mac_cfg, tmp, list, node) {
--		if (strncmp(mac_cfg->mac_addr, mac_addr, ETH_ALEN) == 0) {
-+		if (ether_addr_equal(mac_cfg->mac_addr, mac_addr)) {
- 			if (uc_flag && mac_cfg->hd_tbl_status)
- 				hclge_rm_uc_addr_common(vport, mac_addr);
- 
-@@ -9093,7 +9095,6 @@ static int hclge_init_client_instance(struct hnae3_client *client,
- 
- 		switch (client->type) {
- 		case HNAE3_CLIENT_KNIC:
--
- 			hdev->nic_client = client;
- 			vport->nic.client = client;
- 			ret = hclge_init_nic_client_instance(ae_dev, vport);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index 2f3f63b..9506d7d 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -2170,7 +2170,6 @@ static int hclgevf_rss_init_hw(struct hclgevf_dev *hdev)
- 		ret = hclgevf_set_rss_input_tuple(hdev, rss_cfg);
- 		if (ret)
- 			return ret;
--
- 	}
- 
- 	/* Initialize RSS indirect table */
+On Wed, 23 Oct 2019 13:57:30 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
+
+> Hi,
+> 
+> Here are the 3rd version of kselftest fixes some on 32bit arch
+> (e.g. arm)
+> 
+> In this version, I updated [1/5] to make va_max 1MB unconditionally
+> according to Alexey's comment.
+> 
+> When I built the ksefltest on arm, I hit some 32bit related warnings.
+> Here are the patches to fix those issues.
+> 
+> 
+>  - [1/5] va_max was set 2^32 even on 32bit arch. This can make
+>         va_max == 0 and always fail. Make it 1GB unconditionally.
+>  - [2/5] Some VM tests requires 64bit user space, which should
+>         not run on 32bit arch.
+>  - [3/5] For counting the size of large file, we should use
+>         size_t instead of unsinged long.
+>  - [4/5] Gcc warns printf format for size_t and int64_t on
+>         32bit arch. Use %llu and cast it.
+>  - [5/5] Gcc warns __u64 and pointer type castings. It should
+>         once translated to unsigned long.
+> 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (5):
+>       selftests: proc: Make va_max 1MB
+>       selftests: vm: Build/Run 64bit tests only on 64bit arch
+>       selftests: net: Use size_t and ssize_t for counting file size
+>       selftests: net: Fix printf format warnings on arm
+>       selftests: sync: Fix cast warnings on arm
+> 
+> 
+>  tools/testing/selftests/net/so_txtime.c            |    4 ++--
+>  tools/testing/selftests/net/tcp_mmap.c             |    8 ++++----
+>  tools/testing/selftests/net/udpgso.c               |    3 ++-
+>  tools/testing/selftests/net/udpgso_bench_tx.c      |    3 ++-
+>  .../selftests/proc/proc-self-map-files-002.c       |    6 +++++-
+>  tools/testing/selftests/sync/sync.c                |    6 +++---
+>  tools/testing/selftests/vm/Makefile                |    5 +++++
+>  tools/testing/selftests/vm/run_vmtests             |   10 ++++++++++
+>  8 files changed, 33 insertions(+), 12 deletions(-)
+> 
+> --
+> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
+
+
 -- 
-2.7.4
-
+Masami Hiramatsu <mhiramat@kernel.org>
