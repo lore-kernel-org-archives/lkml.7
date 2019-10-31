@@ -2,110 +2,97 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC2BCA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3520CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2EB2080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9843C2080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:51:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="idnQhtYQ"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="a2e4cvGV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbfJaNvL (ORCPT
+        id S1727784AbfJaNv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:51:11 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52904 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727511AbfJaNvK (ORCPT
+        Thu, 31 Oct 2019 09:51:29 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38298 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727511AbfJaNv3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:51:10 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p21so6021550wmg.2;
-        Thu, 31 Oct 2019 06:51:06 -0700 (PDT)
+        Thu, 31 Oct 2019 09:51:29 -0400
+Received: by mail-lf1-f68.google.com with SMTP id q28so4746483lfa.5
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 06:51:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gAclQFwXxT+EpCdR+7raEwTaxKHzgavsPREsM1zGn+U=;
-        b=idnQhtYQ3TBs6KRPEkfaDxAhsWnSbcQiblhWd/rUqCaholJb+Y6Q4/pGjTG3wgXy1P
-         40455Viwd3gxYt+PaByLrYdbujjRrwE6wSqw6ib1JZnsIJGSovtnxPn+I4tiL+vxp6ru
-         aCdFGQpzKNpKMx6C4EPSylCqtT2fhgJ4FH2TNd4AP6XuSpXi3YKYPH946q3VOhrO5XhI
-         KxSALsOS8wHCNu42BPwgvyYl1+Ju72i7yPUNb1V7wUce/jqdOtN0BFgyKHwRik2dFsGz
-         n9e3eC840rv8hyhOlyIBR1W4IPf4ghXMi/9D/PSA4o51ERYxrDKAwDCk5ZfPR5Es1dku
-         GbKQ==
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JBx+knSIw23E0kFzMffIcgfzLeLZsagWEAkRYzy0snk=;
+        b=a2e4cvGVs6luaA0dnUH3cnEwCfsZjoiIHFbjGfXgfJPAFrWBDNKGXh3GSX6eaI4Ejv
+         Uio0Ye2PW0sgV9rD4MYCDt/pMf3UgykOhYFXVS2Ou+7r5l/ySKehSA1KPrwIbf7BwURd
+         8p3TBGHeM0kkqxSF7Qq765TJGTATFoXzTJBR0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gAclQFwXxT+EpCdR+7raEwTaxKHzgavsPREsM1zGn+U=;
-        b=G5m4MW6w7cHfWpsOH8OzL5RYlFoLTXWnjOqsXAxTG6u/9ZQnV0xYQoa024G2JQYqGC
-         caI+ENAMl1Sze1UGQW6pT7AIBVaweJkrwMFrQeqzuNPlG5U/nNALIxaGnNMWlhw1RNHF
-         K5MJz0/LxezFF7iQLbxLcpAu3zGP46zXyK2fvnXbk7nyuk1I6g6oWZfoO/CAmxuszYiN
-         blxWqY0l1T037unm2IPMbzOXmgMvsLVuhvZ1U68guZXNx6EJSEeiOrnhayuxhgGWe/lN
-         I7DbwkwoFpmLPipts+2Q+cji9r06bjS8mp22FiQNkZrASM0Jf7jL2iaSei9zfAWjELZf
-         ahqg==
-X-Gm-Message-State: APjAAAX6//v0FQj3ZcEN+/5vhD7QjniplT/oeIp82u/zRAM8a4t5oGHl
-        GN48E/IWvZweAgWkRx2E/5BigO3nmtQ=
-X-Google-Smtp-Source: APXvYqznGvYQ+XQnAoy7o1i04CIKW2qqDDwcXhCWnjOonccojJ1bEGmlN+Ww8nI8BXSRkwxeB+pFOg==
-X-Received: by 2002:a1c:41c1:: with SMTP id o184mr5185694wma.57.1572529866293;
-        Thu, 31 Oct 2019 06:51:06 -0700 (PDT)
-Received: from mail.google.com ([104.238.174.53])
-        by smtp.gmail.com with ESMTPSA id b62sm3541546wmc.13.2019.10.31.06.50.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 06:51:05 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 21:50:54 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-fpga@vger.kernel.org,
-        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH v2] kernel-doc: rename the kernel-doc directive
- 'functions' to 'identifiers'
-Message-ID: <20191031135052.tl63uzhdgcpcqwj5@mail.google.com>
-References: <20191020131717.28990-1-changbin.du@gmail.com>
- <20191024121940.1d6a64df@lwn.net>
- <87woctb9cj.fsf@intel.com>
- <20191025144802.uixg2crhw6h7gghq@mail.google.com>
- <87v9s99q9l.fsf@intel.com>
- <20191029003120.llve32crfw63ovpw@mail.google.com>
- <20191029020027.516a6bce@lwn.net>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JBx+knSIw23E0kFzMffIcgfzLeLZsagWEAkRYzy0snk=;
+        b=SruYaTG5IsxTmL4xH/3TVI2HFmLjWuCzDzpiTpKBLPSMg7spQzQDObM+Q9vHWSbteN
+         JYUps/jTgNBVP01jVHVU5cL7kU9VDAhRTrspQzVzxcFm7WidQS61E0Ybbz6Re+Qb/aGv
+         g+y0L9p1FXBVOECMFq3NAvsKNIsDHmtR3O4deiH0+WKe55Eeq7RxKiQXJSjx2puVDj8m
+         8UAmywi2PfVPLYVFMJnKxzXnij7LX4uZJ83hZrsVlvvEKD8Zqg9ExAitM0lSj5dXQM83
+         J8XESvBcjUseidpnSAeHPumB99Bg1D/eKU7HOChLrs7Omi7pQODNDUQV5MGFo+S69SWH
+         cGgA==
+X-Gm-Message-State: APjAAAWOLnbGrGEgdezgipJdQ/SAO+bVcCSdUe7Sus77tkq9wUcv2Fqe
+        UYF+WAkL7vqL495bXskOgxb5QA==
+X-Google-Smtp-Source: APXvYqwiweGIG9nHtJ4BxHdQTne7zKoKjAheb3eRHombzQHcHc0Y0XSkKF/lH9B3uroo7Xe6SIzjnA==
+X-Received: by 2002:a19:7f15:: with SMTP id a21mr3676212lfd.169.1572529886145;
+        Thu, 31 Oct 2019 06:51:26 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id i17sm1451542ljd.2.2019.10.31.06.51.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 31 Oct 2019 06:51:25 -0700 (PDT)
+Subject: Re: [PATCH] MAINTAINERS: Add VSPRINTF
+To:     Petr Mladek <pmladek@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
+        Joe Perches <joe@perches.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+References: <20191031133337.9306-1-pmladek@suse.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <975eccc7-897c-fd14-ef4f-2486729eb67c@rasmusvillemoes.dk>
+Date:   Thu, 31 Oct 2019 14:51:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029020027.516a6bce@lwn.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191031133337.9306-1-pmladek@suse.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 02:00:27AM -0600, Jonathan Corbet wrote:
-> On Tue, 29 Oct 2019 08:31:22 +0800
-> Changbin Du <changbin.du@gmail.com> wrote:
+On 31/10/2019 14.33, Petr Mladek wrote:
+> printk maintainers have been reviewing patches against vsprintf code last
+> few years. Most changes have been committed via printk.git last two years.
 > 
-> > Here python is different from C. Both empty string and None are False in python.
-> > Note such condition is common in python.
-> 
-> Treating both as a False value is reasonably common.  Treating them
-> elsewhere in the same code block as separate values is less
-> so; that's the part I would prefer to avoid.
->
-ok, please check update in v3.
+> New group is used because printk() is not the only vsprintf() user.
+> Also the group of interested people is not the same.
 
-> Thanks,
-> 
-> jon
+Can you add
 
--- 
-Cheers,
-Changbin Du
+R: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+
+to that?
+
+Thanks,
+Rasmus
