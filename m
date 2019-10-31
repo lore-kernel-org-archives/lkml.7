@@ -4,191 +4,159 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD30CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E21CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98630208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DD21216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbfJaSSt (ORCPT
+        id S1729259AbfJaSTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:18:49 -0400
-Received: from mga02.intel.com ([134.134.136.20]:23109 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729027AbfJaSSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:18:48 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 11:18:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,252,1569308400"; 
-   d="scan'208";a="375329849"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga005.jf.intel.com with ESMTP; 31 Oct 2019 11:18:45 -0700
-Date:   Thu, 31 Oct 2019 11:18:44 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH 01/19] mm/gup: pass flags arg to __gup_device_* functions
-Message-ID: <20191031181844.GB14771@iweiny-DESK2.sc.intel.com>
-References: <20191030224930.3990755-1-jhubbard@nvidia.com>
- <20191030224930.3990755-2-jhubbard@nvidia.com>
+        Thu, 31 Oct 2019 14:19:17 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:37210 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729146AbfJaSTQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 14:19:16 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TgnZI-G_1572545953;
+Received: from 192.168.2.229(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0TgnZI-G_1572545953)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 01 Nov 2019 02:19:14 +0800
+Subject: Re: [PATCH 01/11] rcu: avoid leaking exp_deferred_qs into next GP
+To:     paulmck@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+References: <20191031100806.1326-1-laijs@linux.alibaba.com>
+ <20191031100806.1326-2-laijs@linux.alibaba.com>
+ <20191031134351.GO20975@paulmck-ThinkPad-P72>
+From:   Lai Jiangshan <laijs@linux.alibaba.com>
+Message-ID: <2cf71e70-4cb3-57f8-f542-69ddf04106dd@linux.alibaba.com>
+Date:   Fri, 1 Nov 2019 02:19:13 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191030224930.3990755-2-jhubbard@nvidia.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20191031134351.GO20975@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 03:49:12PM -0700, John Hubbard wrote:
-> A subsequent patch requires access to gup flags, so
-> pass the flags argument through to the __gup_device_*
-> functions.
-> 
-> Also placate checkpatch.pl by shortening a nearby line.
-> 
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  mm/gup.c | 28 ++++++++++++++++++----------
->  1 file changed, 18 insertions(+), 10 deletions(-)
+On 2019/10/31 9:43 下午, Paul E. McKenney wrote:
+> On Thu, Oct 31, 2019 at 10:07:56AM +0000, Lai Jiangshan wrote:
+>> If exp_deferred_qs is incorrectly set and leaked to the next
+>> exp GP, it may cause the next GP to be incorrectly prematurely
+>> completed.
 > 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 8f236a335ae9..85caf76b3012 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1890,7 +1890,8 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
->  
->  #if defined(CONFIG_ARCH_HAS_PTE_DEVMAP) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
->  static int __gup_device_huge(unsigned long pfn, unsigned long addr,
-> -		unsigned long end, struct page **pages, int *nr)
-> +			     unsigned long end, unsigned int flags,
-> +			     struct page **pages, int *nr)
->  {
->  	int nr_start = *nr;
->  	struct dev_pagemap *pgmap = NULL;
-> @@ -1916,13 +1917,14 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
->  }
->  
->  static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
-> -		unsigned long end, struct page **pages, int *nr)
-> +				 unsigned long end, unsigned int flags,
-> +				 struct page **pages, int *nr)
->  {
->  	unsigned long fault_pfn;
->  	int nr_start = *nr;
->  
->  	fault_pfn = pmd_pfn(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
-> -	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr))
-> +	if (!__gup_device_huge(fault_pfn, addr, end, flags, pages, nr))
->  		return 0;
->  
->  	if (unlikely(pmd_val(orig) != pmd_val(*pmdp))) {
-> @@ -1933,13 +1935,14 @@ static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
->  }
->  
->  static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
-> -		unsigned long end, struct page **pages, int *nr)
-> +				 unsigned long end, unsigned int flags,
-> +				 struct page **pages, int *nr)
->  {
->  	unsigned long fault_pfn;
->  	int nr_start = *nr;
->  
->  	fault_pfn = pud_pfn(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
-> -	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr))
-> +	if (!__gup_device_huge(fault_pfn, addr, end, flags, pages, nr))
->  		return 0;
->  
->  	if (unlikely(pud_val(orig) != pud_val(*pudp))) {
-> @@ -1950,14 +1953,16 @@ static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
->  }
->  #else
->  static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
-> -		unsigned long end, struct page **pages, int *nr)
-> +				 unsigned long end, unsigned int flags,
-> +				 struct page **pages, int *nr)
->  {
->  	BUILD_BUG();
->  	return 0;
->  }
->  
->  static int __gup_device_huge_pud(pud_t pud, pud_t *pudp, unsigned long addr,
-> -		unsigned long end, struct page **pages, int *nr)
-> +				 unsigned long end, unsigned int flags,
-> +				 struct page **pages, int *nr)
->  {
->  	BUILD_BUG();
->  	return 0;
-> @@ -2062,7 +2067,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
->  	if (pmd_devmap(orig)) {
->  		if (unlikely(flags & FOLL_LONGTERM))
->  			return 0;
-> -		return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr);
-> +		return __gup_device_huge_pmd(orig, pmdp, addr, end, flags,
-> +					     pages, nr);
->  	}
->  
->  	refs = 0;
-> @@ -2092,7 +2098,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
->  }
->  
->  static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
-> -		unsigned long end, unsigned int flags, struct page **pages, int *nr)
-> +			unsigned long end, unsigned int flags,
-> +			struct page **pages, int *nr)
->  {
->  	struct page *head, *page;
->  	int refs;
-> @@ -2103,7 +2110,8 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
->  	if (pud_devmap(orig)) {
->  		if (unlikely(flags & FOLL_LONGTERM))
->  			return 0;
-> -		return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr);
-> +		return __gup_device_huge_pud(orig, pudp, addr, end, flags,
-> +					     pages, nr);
->  	}
->  
->  	refs = 0;
-> -- 
-> 2.23.0
+> Could you please provide the sequence of events leading to a such a
+> failure?
+
+I just felt nervous with "leaking" exp_deferred_qs.
+I didn't careful consider the sequence of events.
+
+Now it proves that I must have misunderstood the exp_deferred_qs.
+So call "leaking" is wrong concept, preempt_disable()
+is considered as rcu_read_lock() and exp_deferred_qs
+needs to be set.
+
+Thanks
+Lai
+
+============don't need to read:
+
+read_read_lock()
+// other cpu start exp GP_A
+preempt_schedule() // queue itself
+read_read_unlock() //report qs, other cpu is sending ipi to me
+preempt_disable
+   rcu_exp_handler() interrupt for GP_A and leave a exp_deferred_qs
+   // exp GP_A finished
+   ---------------above is one possible way to leave a exp_deferred_qs
+preempt_enable()
+  interrupt before preempt_schedule()
+   read_read_lock()
+   read_read_unlock()
+    NESTED interrupt when nagative rcu_read_lock_nesting
+     read_read_lock()
+     // other cpu start exp GP_B
+     NESTED interrupt for rcu_flavor_sched_clock_irq()
+      report exq qs since rcu_read_lock_nesting <0 and \
+      exp_deferred_qs is true
+     // exp GP_B complete
+     read_read_unlock()
+
+This plausible sequence relies on NESTED interrupt too,
+and can be avoided by patch2 if NESTED interrupt were allowed.
+
 > 
+> Also, did you provoke such a failure in testing?  If so, an upgrade
+> to rcutorture would be good, so please tell me what you did to make
+> the failure happen.
+> 
+> I do like the reduction in state space, but I am a bit concerned about
+> the potential increase in contention on rnp->lock.  Thoughts?
+> 
+> 							Thanx, Paul
+> 
+>> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+>> ---
+>>   kernel/rcu/tree_exp.h | 23 ++++++++++++++---------
+>>   1 file changed, 14 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+>> index a0e1e51c51c2..6dec21909b30 100644
+>> --- a/kernel/rcu/tree_exp.h
+>> +++ b/kernel/rcu/tree_exp.h
+>> @@ -603,6 +603,18 @@ static void rcu_exp_handler(void *unused)
+>>   	struct rcu_node *rnp = rdp->mynode;
+>>   	struct task_struct *t = current;
+>>   
+>> +	/*
+>> +	 * Note that there is a large group of race conditions that
+>> +	 * can have caused this quiescent state to already have been
+>> +	 * reported, so we really do need to check ->expmask first.
+>> +	 */
+>> +	raw_spin_lock_irqsave_rcu_node(rnp, flags);
+>> +	if (!(rnp->expmask & rdp->grpmask)) {
+>> +		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+>> +		return;
+>> +	}
+>> +	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+>> +
+>>   	/*
+>>   	 * First, the common case of not being in an RCU read-side
+>>   	 * critical section.  If also enabled or idle, immediately
+>> @@ -628,17 +640,10 @@ static void rcu_exp_handler(void *unused)
+>>   	 * a future context switch.  Either way, if the expedited
+>>   	 * grace period is still waiting on this CPU, set ->deferred_qs
+>>   	 * so that the eventual quiescent state will be reported.
+>> -	 * Note that there is a large group of race conditions that
+>> -	 * can have caused this quiescent state to already have been
+>> -	 * reported, so we really do need to check ->expmask.
+>>   	 */
+>>   	if (t->rcu_read_lock_nesting > 0) {
+>> -		raw_spin_lock_irqsave_rcu_node(rnp, flags);
+>> -		if (rnp->expmask & rdp->grpmask) {
+>> -			rdp->exp_deferred_qs = true;
+>> -			t->rcu_read_unlock_special.b.exp_hint = true;
+>> -		}
+>> -		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+>> +		rdp->exp_deferred_qs = true;
+>> +		WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
+>>   		return;
+>>   	}
+>>   
+>> -- 
+>> 2.20.1
+>>
