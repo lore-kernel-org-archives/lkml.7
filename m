@@ -2,129 +2,183 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F1BCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9F6CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D9D2087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:52:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572529956;
-	bh=IvK8ua/CzhbWFAV9u+JUslEhWgIdcSDnR6QJTc4yF1o=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=jwnnvs+h9/foL90xequHgdI9JNWWkLTc4kSzRwpr9rpzcGOWbmQoZNumklpwmEc6G
-	 4eMm9VmDyb6020SWP9rg3tBB2CMvuojOahEy8QXb4q232WTEgc2p+eigGHaocLNh7a
-	 dIK+5zuKjfHq2AQ0wrRDBpt1tefPDV1WqD2zOzwk=
+	by mail.kernel.org (Postfix) with ESMTP id B28302086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:52:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrVgbkIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfJaNwf (ORCPT
+        id S1727806AbfJaNw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:52:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727511AbfJaNwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:52:34 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4475E2080F;
-        Thu, 31 Oct 2019 13:52:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572529954;
-        bh=IvK8ua/CzhbWFAV9u+JUslEhWgIdcSDnR6QJTc4yF1o=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=sczk0SXkjh6o9TdylfsUT5/fq9kZJTYsTwsemViasT9SJvcMMm4ks90PFHKeGKZf7
-         aV7BCUOpL3f9vUEMR/Awm6EOBSXrQRx5aac9Mj7Io85yWYsGTBDUTXsHRyWxAsRrPl
-         W/nMs6JctRxlVN8VLUooacTM9cXb3Vn/E+TY2WgA=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 14399352041F; Thu, 31 Oct 2019 06:52:34 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 06:52:34 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Lai Jiangshan <laijs@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH 03/11] rcu: clean up rcu_preempt_deferred_qs_irqrestore()
-Message-ID: <20191031135234.GQ20975@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191031100806.1326-1-laijs@linux.alibaba.com>
- <20191031100806.1326-4-laijs@linux.alibaba.com>
+        Thu, 31 Oct 2019 09:52:58 -0400
+Received: from mail-wm1-f53.google.com ([209.85.128.53]:36953 "EHLO
+        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727511AbfJaNw6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 09:52:58 -0400
+Received: by mail-wm1-f53.google.com with SMTP id q130so5989827wme.2;
+        Thu, 31 Oct 2019 06:52:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4Vi0yZSx1Lco5Hwdo0pJ66ma188kEsC572xx00JXapM=;
+        b=KrVgbkImc5E5SbO9CepXmFbXlttT7+anaqi6oyANUDoTHO4Tlk0srADEJvLOSp/iGE
+         6CjiQlV4BJyB9q5boslqLc6FYfVOZGCam/UTkcmCgTp/RhhJKM159qFY7gj+1DihBRwo
+         zDmlMb7SL5bkkEHKL9/lMHwFg1stKbxy31XHwffkVoUzULHrwlYq5jhZfsuRJxeQxAaO
+         plAXfrIU/ju7bNqgW9hLhyO6nb7MGlDmAcGo4v5APebPPxnzeoMzNPIeDTnY2Ubb/SXE
+         IDdiZ3oC9i6Z6AhMnE5/t4N9MgQee/Vj7Vm4/xSfigbykLJ/yb58eUbWZpT2Insub5vN
+         LZvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4Vi0yZSx1Lco5Hwdo0pJ66ma188kEsC572xx00JXapM=;
+        b=Ax9Wq4Nla0abXTfvurUnx4C0eSqTUit5qEy902gXLqbSD0/7SnZpL/80c1C3XdcbJD
+         oZY8GKyOq2moShn1Ztuvi0hh/W293xSiPfVn8w2EICKqUddMWsNX6LUsY0Kbr9ZQiPHs
+         MtEXERhPeEL41rz/6eDRa7TD4HjrW2Pd6QKCJLMMirRGBozsB3j5EDHeJVUsLTmLedPC
+         WYYEx/dGq0PzJfpHgDMMcUPmRvjtD6lDo5rxGM3BtY0Yyf5t6tuV135lk02k2MjKg0A+
+         CiIg+LzsIycEEBzMEDENMo7sv9oTs9VNWV9qH+KHtIf1iSJWr0zUNzmf7jQaA8AZpSM9
+         /f9A==
+X-Gm-Message-State: APjAAAWkb/yBM7+IoJbl1M/v1lpbD2NHQvJU3kWRIhGubDsnTYizbIHJ
+        k2Ri5LBaM9CSic6N+ERRpMQ=
+X-Google-Smtp-Source: APXvYqxKusZVXVc8qGqkgM9KheV0aq/A0DEMQRz3SuWCyOqGZpHs58y4IRPSHcY9wfo0n7sLCC66GQ==
+X-Received: by 2002:a05:600c:2551:: with SMTP id e17mr5618470wma.51.1572529975101;
+        Thu, 31 Oct 2019 06:52:55 -0700 (PDT)
+Received: from localhost.localdomain ([104.238.174.53])
+        by smtp.gmail.com with ESMTPSA id n3sm4036112wrr.50.2019.10.31.06.52.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 06:52:54 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Jiri Kosina <trivial@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v3] kernel-doc: rename the kernel-doc directive 'functions' to 'identifiers'
+Date:   Thu, 31 Oct 2019 21:52:45 +0800
+Message-Id: <20191031135245.7984-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031100806.1326-4-laijs@linux.alibaba.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 10:07:58AM +0000, Lai Jiangshan wrote:
-> Remove several unneeded return.
-> 
-> It doesn't need to return earlier after every code block.
-> The code protects itself and be safe to fall through because
-> every code block has its own condition tests.
-> 
-> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
-> ---
->  kernel/rcu/tree_plugin.h | 14 +-------------
->  1 file changed, 1 insertion(+), 13 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 59ef10da1e39..82595db04eec 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -439,19 +439,10 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
->  	 * t->rcu_read_unlock_special cannot change.
->  	 */
->  	special = t->rcu_read_unlock_special;
-> -	rdp = this_cpu_ptr(&rcu_data);
-> -	if (!special.s && !rdp->exp_deferred_qs) {
-> -		local_irq_restore(flags);
-> -		return;
-> -	}
+The 'functions' directive is not only for functions, but also works for
+structs/unions. So the name is misleading. This patch renames it to
+'identifiers', which specific the functions/types to be included in
+documentation. We keep the old name as an alias of the new one before
+all documentation are updated.
 
-The point of this check is the common case of this function being invoked
-when both fields are zero, avoiding the below redundant store and all the
-extra checks of subfields of special.
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
 
-Or are you saying that current compilers figure all this out?
+---
+v2:
+  o use 'identifiers' as the new directive name.
+---
+ Documentation/doc-guide/kernel-doc.rst | 29 ++++++++++++++------------
+ Documentation/sphinx/kerneldoc.py      | 17 +++++++++------
+ 2 files changed, 27 insertions(+), 19 deletions(-)
 
-							Thanx, Paul
+diff --git a/Documentation/doc-guide/kernel-doc.rst b/Documentation/doc-guide/kernel-doc.rst
+index 192c36af39e2..fff6604631ea 100644
+--- a/Documentation/doc-guide/kernel-doc.rst
++++ b/Documentation/doc-guide/kernel-doc.rst
+@@ -476,6 +476,22 @@ internal: *[source-pattern ...]*
+     .. kernel-doc:: drivers/gpu/drm/i915/intel_audio.c
+        :internal:
+ 
++identifiers: *[ function/type ...]*
++  Include documentation for each *function* and *type* in *source*.
++  If no *function* is specified, the documentation for all functions
++  and types in the *source* will be included.
++
++  Examples::
++
++    .. kernel-doc:: lib/bitmap.c
++       :identifiers: bitmap_parselist bitmap_parselist_user
++
++    .. kernel-doc:: lib/idr.c
++       :identifiers:
++
++functions: *[ function/type ...]*
++  This is an alias of the 'identifiers' directive and deprecated.
++
+ doc: *title*
+   Include documentation for the ``DOC:`` paragraph identified by *title* in
+   *source*. Spaces are allowed in *title*; do not quote the *title*. The *title*
+@@ -488,19 +504,6 @@ doc: *title*
+     .. kernel-doc:: drivers/gpu/drm/i915/intel_audio.c
+        :doc: High Definition Audio over HDMI and Display Port
+ 
+-functions: *[ function ...]*
+-  Include documentation for each *function* in *source*.
+-  If no *function* is specified, the documentation for all functions
+-  and types in the *source* will be included.
+-
+-  Examples::
+-
+-    .. kernel-doc:: lib/bitmap.c
+-       :functions: bitmap_parselist bitmap_parselist_user
+-
+-    .. kernel-doc:: lib/idr.c
+-       :functions:
+-
+ Without options, the kernel-doc directive includes all documentation comments
+ from the source file.
+ 
+diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
+index 1159405cb920..4bcbd6ae01cd 100644
+--- a/Documentation/sphinx/kerneldoc.py
++++ b/Documentation/sphinx/kerneldoc.py
+@@ -59,9 +59,10 @@ class KernelDocDirective(Directive):
+     optional_arguments = 4
+     option_spec = {
+         'doc': directives.unchanged_required,
+-        'functions': directives.unchanged,
+         'export': directives.unchanged,
+         'internal': directives.unchanged,
++        'identifiers': directives.unchanged,
++        'functions': directives.unchanged,
+     }
+     has_content = False
+ 
+@@ -77,6 +78,10 @@ class KernelDocDirective(Directive):
+ 
+         tab_width = self.options.get('tab-width', self.state.document.settings.tab_width)
+ 
++        # 'function' is an alias of 'identifiers'
++        if 'functions' in self.options:
++            self.options['identifiers'] = self.options.get('functions')
++
+         # FIXME: make this nicer and more robust against errors
+         if 'export' in self.options:
+             cmd += ['-export']
+@@ -86,11 +91,11 @@ class KernelDocDirective(Directive):
+             export_file_patterns = str(self.options.get('internal')).split()
+         elif 'doc' in self.options:
+             cmd += ['-function', str(self.options.get('doc'))]
+-        elif 'functions' in self.options:
+-            functions = self.options.get('functions').split()
+-            if functions:
+-                for f in functions:
+-                    cmd += ['-function', f]
++        elif 'identifiers' in self.options:
++            identifiers = self.options.get('identifiers').split()
++            if identifiers:
++                for i in identifiers:
++                    cmd += ['-function', i]
+             else:
+                 cmd += ['-no-doc-sections']
+ 
+-- 
+2.20.1
 
->  	t->rcu_read_unlock_special.b.deferred_qs = false;
->  	if (special.b.need_qs) {
->  		rcu_qs();
->  		t->rcu_read_unlock_special.b.need_qs = false;
-> -		if (!t->rcu_read_unlock_special.s && !rdp->exp_deferred_qs) {
-> -			local_irq_restore(flags);
-> -			return;
-> -		}
->  	}
->  
->  	/*
-> @@ -460,12 +451,9 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
->  	 * tasks are handled when removing the task from the
->  	 * blocked-tasks list below.
->  	 */
-> +	rdp = this_cpu_ptr(&rcu_data);
->  	if (rdp->exp_deferred_qs) {
->  		rcu_report_exp_rdp(rdp);
-> -		if (!t->rcu_read_unlock_special.s) {
-> -			local_irq_restore(flags);
-> -			return;
-> -		}
->  	}
->  
->  	/* Clean up if blocked during RCU read-side critical section. */
-> -- 
-> 2.20.1
-> 
