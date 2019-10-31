@@ -2,144 +2,106 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9506ECA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC7ACA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60CB1208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:23:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eqqw86rI"
+	by mail.kernel.org (Postfix) with ESMTP id DFB2F2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbfJaQXF (ORCPT
+        id S1728583AbfJaQXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 12:23:05 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49669 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728559AbfJaQXE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:23:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572538983;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RZGD6Pca66p5OqKCfFHPRMb7vejTA2ViSdqHSiuuHfA=;
-        b=Eqqw86rInQOhS0zNT5Bo2ZHtyKWk4FNeHKPvgP8T4g3JSazJal/UyBleGL4CKlJzgImUN7
-        91ImxrTaN6/UwwGOanKNQIY7BvKuNYw9xgdU6YSfoVDFtoo2aa3l99UBkDl9N0qMIKWaFt
-        UOTjJUgUcA7H5r19J1wNQgVNDT5WdXs=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-96-R1UKXFEpP2irAqPcelzv1g-1; Thu, 31 Oct 2019 12:22:59 -0400
-Received: by mail-lf1-f70.google.com with SMTP id v7so1555461lfi.2
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 09:22:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eAv0yHRWBIPIgHHe1zlsuAAt21y47eMoEjAinE7MfyI=;
-        b=nmT+8S7g4dPFMMlWr+SZHGbcQAxZYGbMlFnHLZJH5XVAgfHKXLB/IYpzXMj66iktiw
-         Ypg7aAckQFN0yHP0gFvk8bkoasHxIYabgp++QBevQt6xFrivfjoCfriefklHIte3ogZ1
-         RLMFJkv9WtAn0ohZaMQ2UQ9qjXNWDoY4UHcgdfkKIIO7ldDoAutrtCCuB4G2JfLcNJZZ
-         U4ODv6hPbx5zskuS5a2I0M21CX8ovIluZWJV02NbcCRUppEulsje6JNLNmEcXOzvefXg
-         yJNbmujxlgX9EhzNxfWjSN9oFMSfYV/Ds4oWaZwkpxItD8YqeRA1PvzL4P6N9bXzjHb8
-         V4gg==
-X-Gm-Message-State: APjAAAWC+sYmgOGYhcqGGEodBi6yXYSb3NWnBTfJt1prIlzJ2E6qhZh/
-        hLOPEIoh6avRKrGmWdf67+G3UAE9z6losjJX+hTaXmwxyiMAuwGt/hNddRZvc8jpomXg/JJzqwh
-        6hHpfDZN4Ckwafr7fQ7rQ0MAlsfeGZqkAAZFqgQ92
-X-Received: by 2002:ac2:5195:: with SMTP id u21mr4119366lfi.97.1572538977531;
-        Thu, 31 Oct 2019 09:22:57 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxL300SMULllKwH7VWvDdiKCap6Fv+tAFO8sNUl58YhcqKjt43ZyLnKC2evCebrRPLnKKAh/6MyHQYa2nywefI=
-X-Received: by 2002:ac2:5195:: with SMTP id u21mr4119340lfi.97.1572538977273;
- Thu, 31 Oct 2019 09:22:57 -0700 (PDT)
+        Thu, 31 Oct 2019 12:23:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50060 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728428AbfJaQXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 12:23:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 94264B833;
+        Thu, 31 Oct 2019 16:23:38 +0000 (UTC)
+Date:   Thu, 31 Oct 2019 17:23:34 +0100
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
+        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        Dietmar.Eggemann@arm.com, morten.rasmussen@arm.com,
+        qperret@google.com, stable@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] sched/topology: Don't try to build empty sched
+ domains
+Message-ID: <20191031162334.GA18570@blackbody.suse.cz>
+References: <20191023153745.19515-1-valentin.schneider@arm.com>
+ <20191023153745.19515-2-valentin.schneider@arm.com>
 MIME-Version: 1.0
-References: <20191029135053.10055-1-mcroce@redhat.com> <20191029135053.10055-5-mcroce@redhat.com>
- <5be14e4e-807f-486d-d11a-3113901e72fe@cumulusnetworks.com>
- <576a4a96-861b-6a86-b059-6621a22d191c@gmail.com> <CAGnkfhzEgaH1-YNWw1_HzB5FOhZHjKewLD9NP+rnTP21Htxnjw@mail.gmail.com>
- <43abab53-1425-0bff-9f79-50bd47567605@gmail.com> <CAGnkfhyaXzMx608jZqqjdywv6BZst97QSmGe++aSc=-xOQSWzg@mail.gmail.com>
-In-Reply-To: <CAGnkfhyaXzMx608jZqqjdywv6BZst97QSmGe++aSc=-xOQSWzg@mail.gmail.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Thu, 31 Oct 2019 17:22:21 +0100
-Message-ID: <CAGnkfhxvOdZgS90PittFgAtYnPzfQNVFsxsTpadzBcr1-mnD=Q@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 4/4] bonding: balance ICMP echoes in layer3+4 mode
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        netdev <netdev@vger.kernel.org>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Paul Blakey <paulb@mellanox.com>,
-        LKML <linux-kernel@vger.kernel.org>
-X-MC-Unique: R1UKXFEpP2irAqPcelzv1g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
+Content-Disposition: inline
+In-Reply-To: <20191023153745.19515-2-valentin.schneider@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 12:19 AM Matteo Croce <mcroce@redhat.com> wrote:
->
-> On Wed, Oct 30, 2019 at 12:14 AM Eric Dumazet <eric.dumazet@gmail.com> wr=
-ote:
-> >
-> >
-> >
-> > On 10/29/19 4:03 PM, Matteo Croce wrote:
-> >
-> > > Hi Eric,
-> > >
-> > > this would work for locally generated echoes, but what about forwarde=
-d packets?
-> > > The point behind my changeset is to provide consistent results within
-> > > a session by using the same path for request and response,
-> > > but avoid all sessions flowing to the same path.
-> > > This should resemble what happens with TCP and UDP: different
-> > > connections, different port, probably a different path. And by doing
-> > > this in the flow dissector, other applications could benefit it.
-> >
-> > In principle it is fine, but I was not sure of overall impact of your c=
-hange
-> > on performance for 99.9% of packets that are not ICMP :)
-> >
->
-> Good point. I didn't measure it (I will) but all the code additions
-> are under some if (proto =3D=3D ICMP) or similar.
-> My guess is that performance shouldn't change for non ICMP traffic,
-> but I'm curious to test it.
->
 
-Indeed if there is some impact it's way below the measurement uncertainty.
-I've bonded two veth pairs and added a tc drop to the peers, then
-started mausezahn to generate UDP traffic.
-Traffic is measured on the veth peers:
+--9jxsPFA5p3P2qPhR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Stock 5.4-rc5:
+On Wed, Oct 23, 2019 at 04:37:44PM +0100, Valentin Schneider <valentin.schn=
+eider@arm.com> wrote:
+> Prevent generate_sched_domains() from returning empty cpumasks, and add
+> some assertion in build_sched_domains() to scream bloody murder if it
+> happens again.
+Good catch. It makes sense to prune the empty domains in
+generate_sched_domains already.
 
-rx: 261.5 Mbps 605.4 Kpps
-rx: 261.2 Mbps 604.6 Kpps
-rx: 261.6 Mbps 605.5 Kpps
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index c52bc91f882b..c87ee6412b36 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -798,7 +798,8 @@ static int generate_sched_domains(cpumask_var_t **dom=
+ains,
+>  		    cpumask_subset(cp->cpus_allowed, top_cpuset.effective_cpus))
+>  			continue;
+> =20
+> -		if (is_sched_load_balance(cp))
+> +		if (is_sched_load_balance(cp) &&
+> +		    !cpumask_empty(cp->effective_cpus))
+>  			csa[csn++] =3D cp;
+If I didn't overlook anything, cp->effective_cpus can contain CPUs
+exluded by housekeeping_cpumask(HK_FLAG_DOMAIN) later, i.e. possibly
+still returning domains with empty cpusets.
 
-patched:
+I'd suggest moving the emptiness check down into the loop where domain
+cpumasks are ultimately constructed.
 
-rx: 261.4 Mbps 605.1 Kpps
-rx: 261.1 Mbps 604.4 Kpps
-rx: 260.3 Mbps 602.5 Kpps
+Michal
 
-perf top shows no significatn change in bond* and skb_flow* functions
+--9jxsPFA5p3P2qPhR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Regards,
---=20
-Matteo Croce
-per aspera ad upstream
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl27Cn4ACgkQia1+riC5
+qSjwiw//aWG1NlJLTWdANaPNkP7nuGfeAYzGU/S0B9laDxFk9ADU3V43MjwxmExI
+WIHDWQqzNlmbsbsQgIh4jQd2RnkKoV84bQVbEM3HPCsQcpGtpq5djPKIOXgAkEI4
+yS4gIMiYhbTD0wcjEtiRA8+WNMWKgNUa96Tdg3s6q9JfdrrROJm07taXI3L3YXFM
+w/N4Sj/XIMxgFEZunwU46ZoEihxPq7QwoChCE8qCXB9dPEbaftj3g0GlDSYQhXhu
+POS2IrraxRC5msvr/Ehu51zom7uvS/B+29dXOfF/jq2zk8cdspSzgFTsSGrUQ+eI
+cXI990mwxlT3XYi2fzmQZ6f3oTQhrQIS8Cjm0aGDY1vPbvH7Aacygcvu262jY0RF
+aQW/jQeqH7daCsFZn99bbHFnTUPF/eCw02yI0JHkO+sQXnsH2w5bJ14l69QpHkXs
+N7xqNgWVSwmfSecUKnpAq9VfQW473rs/nNGU3XsZrcErF4QhmCPwfMaw63YdYi5T
+bOxvfg1luMnDMbkjKeBawTxJuUjvB0LGm6c2t/wvsHoMo+CVMxWTzfZmrcoh/0Es
+rwLdn2pA+LVEmSdYsPndQo5xWBLns1muoa1vCvafthmHSGkEN1eLT03ZhXHwf1MK
+feIc5qyw4KHNJtYYa8qQYCwQAJ8EB6mglSqbt4/qRWGBbr3a5wg=
+=5/6w
+-----END PGP SIGNATURE-----
+
+--9jxsPFA5p3P2qPhR--
