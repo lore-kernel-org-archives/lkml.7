@@ -2,97 +2,219 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE78CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 20:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFB9CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 20:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8662087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 20:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76FDF20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 20:31:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="WJknctNb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mABEo0zY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbfJaUNt (ORCPT
+        id S1729742AbfJaUao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 16:13:49 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33054 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbfJaUNs (ORCPT
+        Thu, 31 Oct 2019 16:30:44 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:44404 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbfJaUan (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 16:13:48 -0400
-Received: by mail-io1-f68.google.com with SMTP id n17so8263167ioa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 13:13:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=edoR3drkOe7+sAAN2C14zGy1y4TkfH6JZVLoKAB2I1c=;
-        b=WJknctNbQNnq4Hj+o22VpWRFtQqoOiBTkKHsk+HRvEVy3BoU1PzUyESIxTdd5FfBNH
-         Da4DbpwX4BAQlSPVaEP7HsjwY9tNc8Rk0+O/ClWYh/dL8GvxUSFIlW/xtAbIp8ssk2d4
-         4QMY/4gASgyN4iTUy8LHtcceXfR3Fmirw1+KY5PwZIJ9oFB1X6Lq4K59XRIj4RQGfD5Q
-         HyWcdFwWXhpYTk5RAIfNZVGGNH1JTPuKcCPvlNICWWRvaBP4hzyhKAVU1SKNYydCzfKm
-         qlvJ+WFDWwM6b19TOzxn0xl7auPIlqje8Z+XWsHJNp7ymmWMhE3tHe7oKrh2Q00rf+iN
-         FPTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=edoR3drkOe7+sAAN2C14zGy1y4TkfH6JZVLoKAB2I1c=;
-        b=sZqMeOLLUP1g7MZ7GGofiKHLkp7T5R0Abzxw7JYqAlAxnyU7g5K1EDY81E+rw/IdWy
-         /KtUWRgCLuwDTd8OuYUZHxBs2ai/IKJl18xiwN66TwiVh4nHUyOtjjI+HkNfXe2+llwd
-         DRtsnzL+IZ12W97fMk4dnwabDgAXCgbQAk0uBAK06B329vppkgetUN7MOxyKmf9tQBHQ
-         LPokTHs5Mr34M1Zl5NQ/NBDAcLGr/bpFjIPA2CyYCUGZ29eFXW0XgoELjfryC4OGt8cc
-         7obDcwawvy91JWoTwsgMu+PK2PWEUmv8Jw4LbtW4JViTJxotFg6roVk9Slehr4AaS1vk
-         /ypg==
-X-Gm-Message-State: APjAAAWAV1FEsiL5tkFzuy1E96+gqn9AGsozYjio6CROhQWF8chXifwd
-        I9D83FY+Eo8EB5g7uEGtSGsKFg==
-X-Google-Smtp-Source: APXvYqwu18NgGtxYghLIqdGrPlyUezIGUUPxppmYLKUKXEShdep9/77fPJTZMl39SlwLPxfbxPxnCg==
-X-Received: by 2002:a02:cc66:: with SMTP id j6mr1049512jaq.61.1572552827929;
-        Thu, 31 Oct 2019 13:13:47 -0700 (PDT)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id h11sm436841ioq.57.2019.10.31.13.13.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 13:13:47 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 13:13:45 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: RISC-V nommu support v6
-In-Reply-To: <20191031155222.GA7270@lst.de>
-Message-ID: <alpine.DEB.2.21.9999.1910311312540.16921@viisi.sifive.com>
-References: <20191028121043.22934-1-hch@lst.de> <alpine.DEB.2.21.9999.1910301311240.6452@viisi.sifive.com> <20191031155222.GA7270@lst.de>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Thu, 31 Oct 2019 16:30:43 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1040)
+        id D4EE720B7192; Thu, 31 Oct 2019 13:30:41 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D4EE720B7192
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1572553841;
+        bh=QC5IgGNX+K4lVNk5r7CO7rrQsO2IiDjy89D6wZ29yao=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mABEo0zYKzYzi4Eq8fYMg1nmLPNjv8cm6B8HL8F5JSjSSKQBh8O6TeOtjiRap2lTp
+         WG+6t2Xu44TZ/prmYeQNicUvEOoVt1WLFWZoCYzN0lBqC1nMCDRib4hyU5dU6MIVQp
+         7TOZJKntn6qA1qVjJj9UdRRo36aQjQ/jYwUWd6mk=
+From:   Steve MacLean <steve.maclean@linux.microsoft.com>
+Cc:     Steve MacLean <Steve.MacLean@Microsoft.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] perf inject --jit: Remove //anon mmap events
+Date:   Thu, 31 Oct 2019 13:30:36 -0700
+Message-Id: <1572553836-32361-1-git-send-email-steve.maclean@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 31 Oct 2019, Christoph Hellwig wrote:
+From: Steve MacLean <Steve.MacLean@Microsoft.com>
 
-> On Wed, Oct 30, 2019 at 01:21:21PM -0700, Paul Walmsley wrote:
-> > I tried building this series from your git branch mentioned above, and 
-> > booted it with a buildroot userspace built from your custom buildroot 
-> > tree.  Am seeing some segmentation faults from userspace (below). 
-> > 
-> > Am still planning to merge your patches.
-> > 
-> > But I'm wondering whether you are seeing these segmentation faults also? 
-> > Or is it something that might be specific to my test setup?
-> 
-> I just built a fresh image using make -j4 with that report and it works
-> perfectly fine with my tree.
+While a JIT is jitting code it will eventually need to commit more pages and
+change these pages to executable permissions.
 
-OK, good to know.
+Typically the JIT will want these colocated to minimize branch displacements.
 
-If there are other folks out there who are using Christoph's nommu patch 
-set, it'd be great to get testing feedback.
+The kernel will coalesce these anonymous mapping with identical permissions
+before sending an MMAP event for the new pages. This means the mmap event for
+the new pages will include the older pages.
 
+These anonymous mmap events will obscure the jitdump injected pseudo events.
+This means that the jitdump generated symbols, machine code, debugging info,
+and unwind info will no longer be used.
 
-- Paul
+Observations:
+
+When a process emits a jit dump marker and a jitdump file, the perf-xxx.map
+file represents inferior information which has been superceded by the
+jitdump jit-xxx.dump file.
+
+Further the '//anon*' mmap events are only required for the legacy
+perf-xxx.map mapping.
+
+When attaching to an existing process, the synthetic anon map events are
+given a time stamp of -1. These should not obscure the jitdump events which
+have an actual time.
+
+Summary:
+
+Use thread->priv to store whether a jitdump file has been processed
+
+During "perf inject --jit", discard "//anon*" mmap events for any pid which
+has sucessfully processed a jitdump file.
+
+Committer testing:
+
+// jitdump case
+perf record <app with jitdump>
+perf inject --jit --input perf.data --output perfjit.data
+
+// verify mmap "//anon" events present initially
+perf script --input perf.data --show-mmap-events | grep '//anon'
+// verify mmap "//anon" events removed
+perf script --input perfjit.data --show-mmap-events | grep '//anon'
+
+// no jitdump case
+perf record <app without jitdump>
+perf inject --jit --input perf.data --output perfjit.data
+
+// verify mmap "//anon" events present initially
+perf script --input perf.data --show-mmap-events | grep '//anon'
+// verify mmap "//anon" events not removed
+perf script --input perfjit.data --show-mmap-events | grep '//anon'
+
+Repro:
+
+This issue was discovered while testing the initial CoreCLR jitdump
+implementation. https://github.com/dotnet/coreclr/pull/26897.
+
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
+---
+ tools/perf/builtin-inject.c |  4 ++--
+ tools/perf/util/jitdump.c   | 31 ++++++++++++++++++++++++++++++-
+ 2 files changed, 32 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 372ecb3..0f38862 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -263,7 +263,7 @@ static int perf_event__jit_repipe_mmap(struct perf_tool *tool,
+ 	 * if jit marker, then inject jit mmaps and generate ELF images
+ 	 */
+ 	ret = jit_process(inject->session, &inject->output, machine,
+-			  event->mmap.filename, sample->pid, &n);
++			  event->mmap.filename, event->mmap.pid, &n);
+ 	if (ret < 0)
+ 		return ret;
+ 	if (ret) {
+@@ -301,7 +301,7 @@ static int perf_event__jit_repipe_mmap2(struct perf_tool *tool,
+ 	 * if jit marker, then inject jit mmaps and generate ELF images
+ 	 */
+ 	ret = jit_process(inject->session, &inject->output, machine,
+-			  event->mmap2.filename, sample->pid, &n);
++			  event->mmap2.filename, event->mmap2.pid, &n);
+ 	if (ret < 0)
+ 		return ret;
+ 	if (ret) {
+diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+index e3ccb0c..d18596e 100644
+--- a/tools/perf/util/jitdump.c
++++ b/tools/perf/util/jitdump.c
+@@ -26,6 +26,7 @@
+ #include "jit.h"
+ #include "jitdump.h"
+ #include "genelf.h"
++#include "thread.h"
+ 
+ #include <linux/ctype.h>
+ #include <linux/zalloc.h>
+@@ -749,6 +750,28 @@ static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry *jr)
+ 	return 0;
+ }
+ 
++static void jit_add_pid(struct machine *machine, pid_t pid)
++{
++	struct thread *thread = machine__findnew_thread(machine, pid, pid);
++
++	if (!thread) {
++		pr_err("%s: thread %d not found or created\n", __func__, pid);
++		return;
++	}
++
++	thread->priv = (void *)1;
++}
++
++static bool jit_has_pid(struct machine *machine, pid_t pid)
++{
++	struct thread *thread = machine__find_thread(machine, pid, pid);
++
++	if (!thread)
++		return 0;
++
++	return (bool)thread->priv;
++}
++
+ int
+ jit_process(struct perf_session *session,
+ 	    struct perf_data *output,
+@@ -764,8 +787,13 @@ static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry *jr)
+ 	/*
+ 	 * first, detect marker mmap (i.e., the jitdump mmap)
+ 	 */
+-	if (jit_detect(filename, pid))
++	if (jit_detect(filename, pid)) {
++		// Strip //anon* mmaps if we processed a jitdump for this pid
++		if (jit_has_pid(machine, pid) && (strncmp(filename, "//anon", 6) == 0))
++			return 1;
++
+ 		return 0;
++	}
+ 
+ 	memset(&jd, 0, sizeof(jd));
+ 
+@@ -784,6 +812,7 @@ static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry *jr)
+ 
+ 	ret = jit_inject(&jd, filename);
+ 	if (!ret) {
++		jit_add_pid(machine, pid);
+ 		*nbytes = jd.bytes_written;
+ 		ret = 1;
+ 	}
+-- 
+1.8.3.1
+
