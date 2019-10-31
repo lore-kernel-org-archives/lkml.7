@@ -2,94 +2,237 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 368CBCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF04CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09DBA20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3251D2087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:54:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="y562YAlr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbfJaLxk (ORCPT
+        id S1726783AbfJaLyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:53:40 -0400
-Received: from smtprelay0048.hostedemail.com ([216.40.44.48]:47116 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726506AbfJaLxj (ORCPT
+        Thu, 31 Oct 2019 07:54:10 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:49976 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfJaLyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:53:39 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id D123D5DDB;
-        Thu, 31 Oct 2019 11:53:37 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: value36_76bb9bebfde10
-X-Filterd-Recvd-Size: 2520
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 31 Oct 2019 11:53:35 +0000 (UTC)
-Message-ID: <4541e77d257685c649f5f994e673a409a3634f50.camel@perches.com>
-Subject: Re: [PATCH net-next 8/9] net: hns3: cleanup some print format
- warning
-From:   Joe Perches <joe@perches.com>
-To:     Huazhong Tan <tanhuazhong@huawei.com>, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
-        linuxarm@huawei.com, jakub.kicinski@netronome.com,
-        Guojia Liao <liaoguojia@huawei.com>
-Date:   Thu, 31 Oct 2019 04:53:26 -0700
-In-Reply-To: <1572521004-36126-9-git-send-email-tanhuazhong@huawei.com>
-References: <1572521004-36126-1-git-send-email-tanhuazhong@huawei.com>
-         <1572521004-36126-9-git-send-email-tanhuazhong@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Thu, 31 Oct 2019 07:54:09 -0400
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x9VBs2aB001029;
+        Thu, 31 Oct 2019 20:54:02 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x9VBs2aB001029
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1572522843;
+        bh=m93XGxKPbCurKlKFk3bu8jhuKGv0fLdi65T0vmL+qQg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=y562YAlrVc0kdR5gsAkGhkYbZNSVU7042vHgwarApJ+msGR4gF6hrZxQ6Z45Ctxgw
+         Tj7Lc1A8xdsriGCBBqepXRQmgoKGKpBE0jH7rZlJaOO4Kb1YsV8LCjgb3iVKo1nABz
+         lJMpUwId/LhlNyY46AkZFFmEonQ61lrLuxBxVOrs4QYy1hI7UNdmzx3eHkHXeMznhB
+         DHbTxeOff+Yyaa/GFYUlvcJXOLA5JJ+2HEGehPgCsKERdFNxbNbL6q3PKlNO1KvqmT
+         U1YACh4tVxbMoLkyptIRJXkVkxtRoCi6WFLBZE7l7s66z5cKKErBdj99nOqgdBETLg
+         jijuPhrjNECPg==
+X-Nifty-SrcIP: [209.85.221.181]
+Received: by mail-vk1-f181.google.com with SMTP id k19so1294589vke.10;
+        Thu, 31 Oct 2019 04:54:02 -0700 (PDT)
+X-Gm-Message-State: APjAAAU+Exl5uThigefE7snqbu9sODjvStc0bvQArIFkdhFf0tjUarcr
+        7YEtD29Dp/WHZPftpJc0IPA0lhcK1n1vo8XbIEg=
+X-Google-Smtp-Source: APXvYqw9ZcRAr8ugDfLbOckJz9YBD5IgemzVYx/4Xa8WAM8apy1Wi1ubfXQJw9i8kuSCfEXiAWoYmh7iJljYAF6zzy8=
+X-Received: by 2002:a1f:7387:: with SMTP id o129mr2279206vkc.73.1572522841286;
+ Thu, 31 Oct 2019 04:54:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20191029123809.29301-1-yamada.masahiro@socionext.com>
+ <20191029123809.29301-3-yamada.masahiro@socionext.com> <20191031112044.GC2177@linux-8ccs>
+In-Reply-To: <20191031112044.GC2177@linux-8ccs>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 31 Oct 2019 20:53:25 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASCmSUuqLyJhZW+3yrGk1KTPxA-_0x86N=Y7A5psCVUSg@mail.gmail.com>
+Message-ID: <CAK7LNASCmSUuqLyJhZW+3yrGk1KTPxA-_0x86N=Y7A5psCVUSg@mail.gmail.com>
+Subject: Re: [PATCH 2/4] modpost: dump missing namespaces into a single
+ modules.nsdeps file
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Matthias Maennich <maennich@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-31 at 19:23 +0800, Huazhong Tan wrote:
-> From: Guojia Liao <liaoguojia@huawei.com>
-> 
-> Using '%d' for printing type unsigned int or '%u' for
-> type int would cause static tools to give false warnings,
-> so this patch cleanups this warning by using the suitable
-> format specifier of the type of variable.
-> 
-> BTW, modifies the type of some variables and macro to
-> synchronize with their usage.
+On Thu, Oct 31, 2019 at 8:20 PM Jessica Yu <jeyu@kernel.org> wrote:
+>
+> +++ Masahiro Yamada [29/10/19 21:38 +0900]:
+> >The modpost, with the -d option given, generates per-module .ns_deps
+> >files.
+> >
+> >Kbuild generates per-module .mod files to carry module information.
+> >This is convenient because Make handles multiple jobs when the -j
+> >option is given.
+> >
+> >On the other hand, the modpost always runs as a single thread.
+> >I do not see a strong reason to produce separate .ns_deps files.
+> >
+> >This commit changes the modpost to generate just one file,
+> >modules.nsdeps, each line of which has the following format:
+> >
+> >  <module_name>: <list of missing namespaces>
+> >
+> >Please note it contains *missing* namespaces instead of required ones.
+> >So, modules.nsdeps is empty if the namespace dependency is all good.
+> >
+> >This will work more efficiently because spatch will no longer process
+> >already imported namespaces. I removed the '(if needed)' from the
+> >nsdeps log since spatch is invoked only when needed.
+> >
+> >This also solved the stale .ns_deps files problem reported by
+> >Jessica Yu:
+> >
+> >  https://lkml.org/lkml/2019/10/28/467
+> >
+> >While I was here, I improved the modpost code a little more;
+> >I freed ns_deps_bus.p because buf_write() allocates memory.
+> >
+> >Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> >---
+> >
+> > .gitignore               |  2 +-
+> > Documentation/dontdiff   |  1 +
+> > Makefile                 |  4 ++--
+> > scripts/Makefile.modpost |  2 +-
+> > scripts/mod/modpost.c    | 44 +++++++++++++++++-----------------------
+> > scripts/mod/modpost.h    |  4 ++--
+> > scripts/nsdeps           | 21 +++++++++----------
+> > 7 files changed, 36 insertions(+), 42 deletions(-)
+> >
+> >diff --git a/.gitignore b/.gitignore
+> >index 70580bdd352c..72ef86a5570d 100644
+> >--- a/.gitignore
+> >+++ b/.gitignore
+> >@@ -32,7 +32,6 @@
+> > *.lzo
+> > *.mod
+> > *.mod.c
+> >-*.ns_deps
+> > *.o
+> > *.o.*
+> > *.patch
+> >@@ -61,6 +60,7 @@ modules.order
+> > /System.map
+> > /Module.markers
+> > /modules.builtin.modinfo
+> >+/modules.nsdeps
+> >
+> > #
+> > # RPM spec file (make rpm-pkg)
+> >diff --git a/Documentation/dontdiff b/Documentation/dontdiff
+> >index 9f4392876099..72fc2e9e2b63 100644
+> >--- a/Documentation/dontdiff
+> >+++ b/Documentation/dontdiff
+> >@@ -179,6 +179,7 @@ mkutf8data
+> > modpost
+> > modules.builtin
+> > modules.builtin.modinfo
+> >+modules.nsdeps
+> > modules.order
+> > modversions.h*
+> > nconf
+> >diff --git a/Makefile b/Makefile
+> >index 0ef897fd9cfd..1e3f307bd49b 100644
+> >--- a/Makefile
+> >+++ b/Makefile
+> >@@ -1356,7 +1356,7 @@ endif # CONFIG_MODULES
+> >
+> > # Directories & files removed with 'make clean'
+> > CLEAN_DIRS  += include/ksym
+> >-CLEAN_FILES += modules.builtin.modinfo
+> >+CLEAN_FILES += modules.builtin.modinfo modules.nsdeps
+>
+> Hmm, I tried to run `make -C path/to/kernel/src M=$(PWD) clean` for a test
+> external module, but it didn't remove modules.nsdeps for me. I declared a
+> MODULE namespace for testing purposes.
+>
+> $ make
+> make -C /dev/shm/linux M=/tmp/ppyu/test-module
+> make[1]: Entering directory '/dev/shm/linux'
+>   AR      /tmp/ppyu/test-module/built-in.a
+>   CC [M]  /tmp/ppyu/test-module/test1.o
+>   CC [M]  /tmp/ppyu/test-module/test2.o
+>   LD [M]  /tmp/ppyu/test-module/test.o
+>   Building modules, stage 2.
+>   MODPOST 1 modules
+> WARNING: module test uses symbol try_module_get from namespace MODULE, but does not import it.
+>   CC [M]  /tmp/ppyu/test-module/test.mod.o
+>   LD [M]  /tmp/ppyu/test-module/test.ko
+> make[1]: Leaving directory '/dev/shm/linux'
+>
+> Then I make nsdeps:
+>
+> make -C /dev/shm/linux M=/tmp/ppyu/test-module nsdeps
+> make[1]: Entering directory '/dev/shm/linux'
+>   Building modules, stage 2.
+>   MODPOST 1 modules
+> WARNING: module test uses symbol try_module_get from namespace MODULE, but does not import it.
+> Adding namespace MODULE to module /tmp/ppyu/test-module/test.ko.
+> --- /tmp/ppyu/test-module/test1.c
+> +++ /tmp/cocci-output-3696-c1f8b3-test1.c
+> @@ -38,3 +38,4 @@ static void __exit hello_cleanup(void)
+>  module_init(hello_init);
+>  module_exit(hello_cleanup);
+>  MODULE_LICENSE("GPL");
+> +MODULE_IMPORT_NS(MODULE);
+> make[1]: Leaving directory '/dev/shm/linux'
+> $ cat modules.nsdeps
+> /tmp/ppyu/test-module/test.ko: MODULE
+>
+> Looks good so far, then I try make clean:
+>
+> $ make clean
+> make -C /dev/shm/linux M=/tmp/ppyu/test-module clean
+> make[1]: Entering directory '/dev/shm/linux'
+>   CLEAN   /tmp/ppyu/test-module/Module.symvers
+> make[1]: Leaving directory '/dev/shm/linux'
+> $ ls
+> Makefile  modules.nsdeps  test1.c  test2.c
+>
+> But modules.nsdeps is still there.
+>
 
-What tool is this?
+Good catch!
 
-I think this static warning is excessive as macro
-defines with a small positive number are common
+I forgot to take care of it for external module builds.
 
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-[]
-> @@ -72,7 +72,7 @@ enum hclge_mbx_vlan_cfg_subcode {
->  };
->  
->  #define HCLGE_MBX_MAX_MSG_SIZE	16
-> -#define HCLGE_MBX_MAX_RESP_DATA_SIZE	8
-> +#define HCLGE_MBX_MAX_RESP_DATA_SIZE	8U
->  #define HCLGE_MBX_RING_MAP_BASIC_MSG_NUM	3
->  #define HCLGE_MBX_RING_NODE_VARIABLE_NUM	3
-
-like this one
-
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-[]
-> @@ -57,68 +57,68 @@ static int hns3_dbg_queue_info(struct hnae3_handle *h,
->  					   HNS3_RING_RX_RING_BASEADDR_H_REG);
->  		base_add_l = readl_relaxed(ring->tqp->io_base +
->  					   HNS3_RING_RX_RING_BASEADDR_L_REG);
-> -		dev_info(&h->pdev->dev, "RX(%d) BASE ADD: 0x%08x%08x\n", i,
-> +		dev_info(&h->pdev->dev, "RX(%u) BASE ADD: 0x%08x%08x\n", i,
-
-so using %d is correct enough.
+The following should work. I will fold it in 3/4.
 
 
+
+
+diff --git a/Makefile b/Makefile
+index 79be70bf2899..6035702803eb 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1619,7 +1619,7 @@ _emodinst_post: _emodinst_
+        $(call cmd,depmod)
+
+ clean-dirs := $(KBUILD_EXTMOD)
+-clean: rm-files := $(KBUILD_EXTMOD)/Module.symvers
++clean: rm-files := $(KBUILD_EXTMOD)/Module.symvers
+$(KBUILD_EXTMOD)/modules.nsdeps
+
+ PHONY += /
+ /:
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
