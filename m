@@ -2,142 +2,124 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D3ECA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C6FCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34727208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1319220862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:47:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="R7XYfBum"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfJaKrR (ORCPT
+        id S1727358AbfJaKrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:47:17 -0400
-Received: from mga01.intel.com ([192.55.52.88]:53905 "EHLO mga01.intel.com"
+        Thu, 31 Oct 2019 06:47:51 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60970 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726932AbfJaKrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:47:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 03:47:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
-   d="scan'208";a="401839713"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 31 Oct 2019 03:47:15 -0700
-Received: from [10.226.39.46] (unknown [10.226.39.46])
-        by linux.intel.com (Postfix) with ESMTP id 24DEE58048F;
-        Thu, 31 Oct 2019 03:47:10 -0700 (PDT)
-Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure pcie
- link
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Andrew Murray <andrew.murray@arm.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Rajat Jain <rajatja@google.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-References: <20191030221436.GA261632@google.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <f49e1e3c-aa26-2d9d-c100-fa073ada958b@linux.intel.com>
-Date:   Thu, 31 Oct 2019 18:47:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726922AbfJaKru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 06:47:50 -0400
+Received: from nazgul.tnic (unknown [91.217.168.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 387141EC0CD1;
+        Thu, 31 Oct 2019 11:47:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1572518869;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=hTysPbLoe/2KqpZjkjX3aRFBzExmpYnWMUSCHexYqlo=;
+        b=R7XYfBumbxk3dFtMvEdSUWhepoOWP4p6T2VKlR743okyJkJ/l0fB9hWQDIuUdR5pHt+KQ9
+        SK6oEoprNmbFve5Ek27jI0gRdccHPNEWGiAsSf9uoZ1adn7yNdVbUsfBrlDxk/Hvm0DqiT
+        64nhCIJUt4yUqppUuhjtNdqmtoz5iHA=
+Date:   Thu, 31 Oct 2019 11:47:48 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     lijiang <lijiang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, x86@kernel.org, bhe@redhat.com, dyoung@redhat.com,
+        jgross@suse.com, dhowells@redhat.com, Thomas.Lendacky@amd.com,
+        ebiederm@xmission.com, vgoyal@redhat.com, d.hatayama@fujitsu.com,
+        horms@verge.net.au, kexec@lists.infradead.org
+Subject: Re: [PATCH 1/2 RESEND v8] x86/kdump: always reserve the low 1M when
+ the crashkernel option is specified
+Message-ID: <20191031104748.GC21133@nazgul.tnic>
+References: <20191031033517.11282-1-lijiang@redhat.com>
+ <20191031033517.11282-2-lijiang@redhat.com>
+ <20191031071345.GA17248@nazgul.tnic>
+ <fe68b796-c483-20c4-623c-2671c52a3bf9@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191030221436.GA261632@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <fe68b796-c483-20c4-623c-2671c52a3bf9@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 31, 2019 at 05:40:35PM +0800, lijiang wrote:
+> Maybe it should be a separate patch to fix the old compile warnings as follow.
+> And i should put the patch into this series.
 
-On 10/31/2019 6:14 AM, Bjorn Helgaas wrote:
-> [+cc Heiner, Rajat]
->
-> On Tue, Oct 29, 2019 at 05:31:18PM +0800, Dilip Kota wrote:
->> On 10/22/2019 8:59 PM, Bjorn Helgaas wrote:
->>> [+cc Rafael, linux-pm, beginning of discussion at
->>> https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com]
->>>
->>> On Tue, Oct 22, 2019 at 05:27:38PM +0800, Dilip Kota wrote:
->>>> On 10/22/2019 1:18 AM, Bjorn Helgaas wrote:
->>>>> On Mon, Oct 21, 2019 at 02:38:50PM +0100, Andrew Murray wrote:
->>>>>> On Mon, Oct 21, 2019 at 02:39:20PM +0800, Dilip Kota wrote:
->>>>>>> PCIe RC driver on Intel Gateway SoCs have a requirement
->>>>>>> of changing link width and speed on the fly.
->>>>> Please add more details about why this is needed.  Since you're adding
->>>>> sysfs files, it sounds like it's not actually the *driver* that needs
->>>>> this; it's something in userspace?
->>>> We have use cases to change the link speed and width on the fly.
->>>> One is EMI check and other is power saving.  Some battery backed
->>>> applications have to switch PCIe link from higher GEN to GEN1 and
->>>> width to x1. During the cases like external power supply got
->>>> disconnected or broken. Once external power supply is connected then
->>>> switch PCIe link to higher GEN and width.
->>> That sounds plausible, but of course nothing there is specific to the
->>> Intel Gateway, so we should implement this generically so it would
->>> work on all hardware.
->> Agree.
->>> I'm not sure what the interface should look like -- should it be a
->>> low-level interface as you propose where userspace would have to
->>> identify each link of interest, or is there some system-wide
->>> power/performance knob that could tune all links?  Cc'd Rafael and
->>> linux-pm in case they have ideas.
->> To my knowledge sysfs is the appropriate way to go.
->> If there are any other best possible knobs, will be helpful.
-> I agree sysfs is the right place for it; my question was whether we
-> should have files like:
->
->    /sys/.../0000:00:1f.3/pcie_speed
->    /sys/.../0000:00:1f.3/pcie_width
->
-> as I think this patch would add (BTW, please include sample paths like
-> the above in the commit log), or whether there should be a more global
-> thing that would affect all the links in the system.
-Sure, i will add them.
->
-> I think the low-level files like you propose would be better because
-> one might want to tune link performance differently for different
-> types of devices and workloads.
->
-> We also have to decide if these files should be associated with the
-> device at the upstream or downstream end of the link.  For ASPM, the
-> current proposal [1] has the files at the downstream end on the theory
-> that the GPU, NIC, NVMe device, etc is the user-recognizable one.
-> Also, neither ASPM nor link speed/width make any sense unless there
-> *is* a device at the downstream end, so putting them there
-> automatically makes them visible only when they're useful.
+Yes, maybe.
 
-This patch places the speed and width in the host controller directory.
-/sys/.../xxx.pcie/pcie_speed
-/sys/.../xxx.pcie/pcie_width
+> commit d2091d1f4f67f1c38293b0e93fdbfefa766940cf (HEAD -> master)
+> Author: Lianbo Jiang <lijiang@redhat.com>
+> Date:   Thu Oct 31 15:48:02 2019 +0800
+> 
+>     kexec: Fix i386 build warnings that missed declaration of struct kimage
+>     
+>     Kbuild test robot reported some build warnings, please refer to the
+>     Link below for details.
 
-I agree with you partially,  because i am having couple of points making 
-me to
-keep speed and width change entries in controller directory:
+Explain here what the warnings are, why they trigger and how you're
+fixing it. How a commit message should look like is also explained in
+that document I pointed you at.
 
--- For changing the speed/width with device node, software ends up 
-traversing to the controller
-   from the device and do the operations.
--- Change speed and width are performed at controller level,
--- Keeping speed and width in controller gives a perspective (to the 
-user) of changing
-them only once irrespective of no. of devices.
--- For speed and link change in Synopsys PCIe controller, specific 
-registers need to be configured.
-    This prevents or complicates adding the speed and width change 
-functionality in pci-sysfs or pci framework.
+Refering to some link is not what we do in commit messages.
 
-Regards,
-Dilip
+>     Add a declaration of struct kimage to fix these compile warnings.
+>     
+>     Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
+>     Reported-by: kbuild test robot <lkp@intel.com>
+>     Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+>     Link: https://lkml.org/lkml/2019/10/30/833
 
+*NEVER* use lkml.org or any other external URL for refering to mail
+threads but *always* use our own
+
+lkml.kernel.org/r/<Message-ID>
+
+redirector. See other tip commits for an example.
+
+> > You can read
+> > 
+> > https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+> > 
+> > in the meantime, especially section
+> > 
+> > "9) Don't get discouraged - or impatient"
+> > 
+> > while waiting.
+> 
+> OK. Thanks.
+
+And make sure to read that whole document and also have a look at the
+process document
+
+https://www.kernel.org/doc/html/latest/process/index.html
+
+so that you can avoid such mistakes in the future.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
