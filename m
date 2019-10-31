@@ -2,95 +2,131 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE349CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A557CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD8A72087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:09:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572556151;
-	bh=NrGgjyhNy2XdFzwav441l2E0+4ygqgCiThCMrn4g7pY=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=uzrCZ9DILybzJr7tJ3NTohUQUnWQxonXWSrCkmDNpPX4fjNiFbHSeerZ+aD/nGV+t
-	 A3K3cPvhV1GU8Phg3dbPPSzsGuMDBGowlEOlCplYJBcMtjbcJxvRDbNXWpmQCsWBGa
-	 L9gcKfaeiLBiVTfxVm6yIHAZo8lsAXed9f8dl4ZM=
+	by mail.kernel.org (Postfix) with ESMTP id 25E262087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:10:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbfJaVJK (ORCPT
+        id S1729876AbfJaVJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 17:09:10 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37718 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727957AbfJaVJK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 17:09:10 -0400
-Received: by mail-oi1-f193.google.com with SMTP id y194so6478808oie.4;
-        Thu, 31 Oct 2019 14:09:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=OeM65qzQlCMGxnDQEqx3A4bb6MsrgL6yvE3aZD4ZDCc=;
-        b=dW7g2eBJDkHplEhCqrlvwA10d1mKm313R/35IGodio88xbo1iniv7xtZcPT4XfrHD6
-         RMWQezkqA06dZtSdSOly/oKJyxnoa/uvZjRfhhWr4zK6Hu+rNMCsAqOF+v0Q4wH61O1l
-         5xUxwnrbbS+ZNikQ65HgPPq2aRc+J5MZtvf1pyqVC8PA/lc4gZWTQvoYAed/G/rDhb+m
-         fbtL+eE/+9jgw23a1HCATAr2TOlUo0A5IB4PNib70GC+AWypVAhkfovuxi7hPwKymmfp
-         fDkgew/H0Sexn+QElnhkNXpVngRpFonXENWzRN1qA6TzC3TZlO1DBeibIJvhKaAKaXV2
-         1hrA==
-X-Gm-Message-State: APjAAAXrsRTt987EbwpCqChI10yfM5Jliaa3qsqw23Ir9fE7D+X/ryCe
-        6y3iGgOCG8ylntzseuHUWmprR+ui8ewi+xPJBWcj6ULhXNE=
-X-Google-Smtp-Source: APXvYqzGQWTo4sfQ84u/7FyPH4asPCHM/cbRLhyZmcDAqE9JZ1pjBLbCtms4+t5vPsqQgLdGcvF6jWb6sdv5e3gblCc=
-X-Received: by 2002:a05:6808:84:: with SMTP id s4mr2371555oic.115.1572556149657;
- Thu, 31 Oct 2019 14:09:09 -0700 (PDT)
+        Thu, 31 Oct 2019 17:09:59 -0400
+Received: from mga01.intel.com ([192.55.52.88]:43170 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727957AbfJaVJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 17:09:58 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 14:09:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,253,1569308400"; 
+   d="scan'208";a="375376881"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga005.jf.intel.com with ESMTP; 31 Oct 2019 14:09:55 -0700
+Date:   Thu, 31 Oct 2019 14:09:55 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Subject: Re: [PATCH 02/19] mm/gup: factor out duplicate code from four
+ routines
+Message-ID: <20191031210954.GE14771@iweiny-DESK2.sc.intel.com>
+References: <20191030224930.3990755-1-jhubbard@nvidia.com>
+ <20191030224930.3990755-3-jhubbard@nvidia.com>
+ <20191031183549.GC14771@iweiny-DESK2.sc.intel.com>
+ <75b557f7-24b2-740c-2640-2f914d131600@nvidia.com>
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 31 Oct 2019 22:08:58 +0100
-Message-ID: <CAJZ5v0gSz1Pk=7u0s-cgjc9_0ibCyA6RNCcVHw7+GLWWoCj22g@mail.gmail.com>
-Subject: [GIT PULL] Power management fix for v5.4-rc6
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <75b557f7-24b2-740c-2640-2f914d131600@nvidia.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Oct 31, 2019 at 11:43:37AM -0700, John Hubbard wrote:
+> On 10/31/19 11:35 AM, Ira Weiny wrote:
+> > On Wed, Oct 30, 2019 at 03:49:13PM -0700, John Hubbard wrote:
+> ...
+> >> +
+> >> +static void __remove_refs_from_head(struct page *page, int refs)
+> >> +{
+> >> +	/* Do a get_page() first, in case refs == page->_refcount */
+> >> +	get_page(page);
+> >> +	page_ref_sub(page, refs);
+> >> +	put_page(page);
+> >> +}
+> > 
+> > I wonder if this is better implemented as "put_compound_head()"?  To match the
+> > try_get_compound_head() call below?
+> 
+> Hi Ira,
+> 
+> Good idea, I'll rename it to that.
+> 
+> > 
+> >> +
+> >> +static int __huge_pt_done(struct page *head, int nr_recorded_pages, int *nr)
+> >> +{
+> >> +	*nr += nr_recorded_pages;
+> >> +	SetPageReferenced(head);
+> >> +	return 1;
+> > 
+> > When will this return anything but 1?
+> > 
+> 
+> Never, but it saves a line at all four call sites, by having it return like that.
+> 
+> I could see how maybe people would prefer to just have it be a void function,
+> and return 1 directly at the call sites. Since this was a lower line count I
+> thought maybe it would be slightly better, but it's hard to say really.
 
-Please pull from the tag
+It is a NIT perhaps but I feel like the signature of a function should stand on
+it's own.  What this does is mix the meaning of this function with those
+calling it.  Which IMO is not good style.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.4-rc6
+We can see what others say.
 
-with top-most commit e82b7457909afd2e973ebd251ad79945d04ca376
+Ira
 
- Merge branch 'pm-cpufreq'
-
-on top of commit 767d2d710e9066c47919a4e5f05a21e1ad40ddc4
-
- Merge branches 'pm-cpuidle' and 'pm-opp'
-
-to receive a power management fix for 5.4-rc6.
-
-This fixes a recently introduced (mostly theoretical) issue that the
-requests to confine the maximum CPU frequency coming from the platform
-firmware may not be taken into account if multiple CPUs are covered
-by one cpufreq policy on a system with ACPI.
-
-Thanks!
-
-
----------------
-
-Rafael J. Wysocki (1):
-      ACPI: processor: Add QoS requests for all CPUs
-
----------------
-
- drivers/acpi/processor_perflib.c | 34 +++++++++++++++++++++-------------
- drivers/acpi/processor_thermal.c | 34 +++++++++++++++++++++-------------
- 2 files changed, 42 insertions(+), 26 deletions(-)
+> 
+> thanks,
+> 
+> John Hubbard
+> NVIDIA
+> 
