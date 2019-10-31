@@ -2,80 +2,106 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8004BCA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0497ECA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B0D2087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C78912087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:48:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NHGlhWOH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbfJaVr6 (ORCPT
+        id S1728965AbfJaVsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 17:47:58 -0400
-Received: from mga09.intel.com ([134.134.136.24]:50799 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728598AbfJaVr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 17:47:57 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 14:47:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,253,1569308400"; 
-   d="scan'208";a="204331816"
-Received: from epobrien-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.10.103])
-  by orsmga006.jf.intel.com with ESMTP; 31 Oct 2019 14:47:48 -0700
-Date:   Thu, 31 Oct 2019 23:47:45 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     jens.wiklander@linaro.org, dhowells@redhat.com, corbet@lwn.net,
-        jejb@linux.ibm.com, zohar@linux.ibm.com, jmorris@namei.org,
-        serge@hallyn.com, casey@schaufler-ca.com,
-        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
-        stuart.yoder@arm.com, janne.karhunen@gmail.com,
-        keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        tee-dev@lists.linaro.org
-Subject: Re: [Patch v3 6/7] doc: keys: Document usage of TEE based Trusted
- Keys
-Message-ID: <20191031214745.GG10507@linux.intel.com>
-References: <1572530323-14802-1-git-send-email-sumit.garg@linaro.org>
- <1572530323-14802-7-git-send-email-sumit.garg@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572530323-14802-7-git-send-email-sumit.garg@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 31 Oct 2019 17:48:19 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45694 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728598AbfJaVsT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 17:48:19 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q13so7856959wrs.12;
+        Thu, 31 Oct 2019 14:48:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=sEuZEsN3CO17Mk96Q9i8WbzrGmqYVcLxl0EB6NndMBA=;
+        b=NHGlhWOH/lPzkiisqXGbCuqEH3Cld5YZg5wB3dQ5EjwTa2udUJNWsdHlxUGKg23GAT
+         5X6weI8hStYzrXSUv3yWPZWKvm+ql7YOJTqq9CQrjDzjlDxaHOO5QDMmkdvFrxKyImVg
+         l7cFw15yuXDcDQAQ9Jj19zsXBpy85G6mfCyF7ZKRWloLgf6pd5Er82Y9hBhOgc31d6k3
+         kzvjGCSMK83TiVP0PsUdBW5Aqsq6S+KrournTX1g5JHIoUV2U1zYYittS5pyaxgjuaYt
+         IRG21NXAysTNvlN3e9MckdKqEP5zoetsDm+TN3CnidRGBibcEZGLlPydXAnzmwxNfVvy
+         CwXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sEuZEsN3CO17Mk96Q9i8WbzrGmqYVcLxl0EB6NndMBA=;
+        b=Pu9NibAAWYvpiUEO/SbubTyvxiFDqWiykl0cR0n7Lq9AteueLMarG2Df7Bn1YW+GIv
+         ZNekfjiFJCz5ijGEjWBbsnkIAvsFpi3LnU3SJamt9M/wL8MYdE23ebovzzM6ZWAZVAM6
+         97GI2ptKj7NuZoxtaSOb0LMo7EcaeD6W7RRxzUBmDgs75kUKpO7+qp7VOvsVYc2EmkFg
+         HzefgxAqJEpjY93lG7ZH8OzS5nZGIFMqKWWnPVaZxTcn/zndmvkyW1QZ+0QqqBARPPiM
+         qu7l34RgDBxOZx/WZikqlcbegbyQs8ih/JBSIyjMAq99voPcFhnSUj9MD1C7rzx66vM5
+         zAMg==
+X-Gm-Message-State: APjAAAVxN8yu0bksIeqvyaBEjfol5xBh4VrxocFeQDACD1+tV1A1kSex
+        /NSV4p6mwYQtOlkU6thTL4s=
+X-Google-Smtp-Source: APXvYqwONELlt6nYOaizT5kkHAo20vYTlb0GLvd1u+tok17wOcwrfhYhLQBU7nsf0a6o7FC9F5iitA==
+X-Received: by 2002:adf:8088:: with SMTP id 8mr7492245wrl.230.1572558496697;
+        Thu, 31 Oct 2019 14:48:16 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id g184sm5813674wma.8.2019.10.31.14.48.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 14:48:15 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Doug Berger <opendmb@gmail.com>,
+        Hanjun Guo <guohanjun@huawei.com>, Qian Cai <cai@lca.pw>,
+        Zhang Lei <zhang.lei@jp.fujitsu.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 0/3] arm64: Brahma-B53 erratum updates
+Date:   Thu, 31 Oct 2019 14:47:22 -0700
+Message-Id: <20191031214725.1491-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 07:28:42PM +0530, Sumit Garg wrote:
-> Provide documentation for usage of TEE based Trusted Keys via existing
-> user-space "keyctl" utility. Also, document various use-cases.
-> 
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+Hi Will,
 
-This is the most important commit in order for someone who don't deal
-that much with ARM TEE to get right. Until this commit is right, I don't
-unfortunately have much to say about other commits.
+This patch series enable the Brahma-B53 CPU to be matched for the
+ARM64_ERRATUM_845719 and ARM64_ERRATUM_843419 and while we are it, also
+whitelists it for SSB and spectre v2.
 
-Instead of making disjoint islands, you should edit trusted-encrypted.rst
-so that it describes commonalities and differences.
+The silicon-errata.rst document is updated accordingly, we unfortunately
+do not have internal numbers tracking those errata.
 
-What the document currently describes is the usage model. It could be a
-section of its own. In that you should describe first the common
-parameters and separetely the backend specific parametrs.
+Doug Berger (1):
+  arm64: apply ARM64_ERRATUM_845719 workaround for Brahma-B53 core
 
-From kernel internals (there could be a section with this name)  the
-document describe the key generation e.g. is the hardware used and how
-it is used, is there salting with krng and so forth.
+Florian Fainelli (2):
+  arm64: Brahma-B53 is SSB and spectre v2 safe
+  arm64: apply ARM64_ERRATUM_843419 workaround for Brahma-B53 core
 
-/Jarkko
+ Documentation/arm64/silicon-errata.rst |  5 ++++
+ arch/arm64/include/asm/cputype.h       |  2 ++
+ arch/arm64/kernel/cpu_errata.c         | 38 ++++++++++++++++++++++----
+ 3 files changed, 40 insertions(+), 5 deletions(-)
+
+-- 
+2.17.1
+
