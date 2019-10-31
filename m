@@ -2,115 +2,127 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85FBCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC580CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE4092080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:01:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KdI7GJoP"
+	by mail.kernel.org (Postfix) with ESMTP id 84EF720650
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729216AbfJaSB3 (ORCPT
+        id S1729224AbfJaSCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:01:29 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36299 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729027AbfJaSB3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:01:29 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c7so6193789otm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 11:01:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7yF1ZFa0NQKW1P9+UET4zyA+4HzwzTV8eBOXyYYcm50=;
-        b=KdI7GJoPUQ87vC9eDvndZA0yAZXeweGXN1/7uAzOxrFy5OhyZwKF/N7T8DLXzqJ1JY
-         YcJmQzIxRU+2NgvLtHQQ3zH6cLb1e4skGxrap6E9BQJSurU7Q/20H96bUJ7Hrndsb++e
-         +QdEU2jUS01dbXwGCNlWHNwhOcF9bHuLrRbBw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7yF1ZFa0NQKW1P9+UET4zyA+4HzwzTV8eBOXyYYcm50=;
-        b=i9JYUX/3kP5CCPCoibj0WX7fB6FD8xwoRDtNaKN7xMyD3yQOCyWPKjOyLau6g/tcVI
-         3ryHjIGQjw/Y2+ygbtNtakiXtD8cY0pRE8B8B57OZEraLi+wAm504BKn+4rmr9/7iBa/
-         zmtVn+3DNnEOliQVZIsZ50g7WFNHkMhh4R0OQHNl/+8AIw+rN/NY93GZE0E6MkUvPzpJ
-         a9EkvKcAeblGjM9V0BlDCKxJp7wvfbch415vCnsFAJ4z7KIO6hfs58/gMut4GNb+SOpm
-         NaN0EIomSgvxR6a8Sa9UsAU4A+YOzOIPSDxVc0hefhFaLRVEbA8+scIogSquK6i0rZhG
-         LmsQ==
-X-Gm-Message-State: APjAAAWna2jIE8huT3uSF3FDDVrQMf8/wANzfdrN3NzxiJhUkji4F/Fp
-        qA7DDOwRCT/cC4XfY51Zqq2n7FB/YCksjOpW2944Bg==
-X-Google-Smtp-Source: APXvYqy1uzgZvxYZJr1xLmUp54jxULY37cEV21ulK7dM1ZQuVKhCPIrNGtKksA/VMg4P36KII5M0JLGeNPA8AF9oERU=
-X-Received: by 2002:a9d:39a5:: with SMTP id y34mr5476867otb.36.1572544888141;
- Thu, 31 Oct 2019 11:01:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <1572516532-5977-1-git-send-email-sheetal.tigadoli@broadcom.com> <1572516532-5977-4-git-send-email-sheetal.tigadoli@broadcom.com>
-In-Reply-To: <1572516532-5977-4-git-send-email-sheetal.tigadoli@broadcom.com>
-From:   Michael Chan <michael.chan@broadcom.com>
-Date:   Thu, 31 Oct 2019 11:01:17 -0700
-Message-ID: <CACKFLim+ru8c1JfB+Q3miyWid48OTPn_xHrrjG_z_OznjVWTJw@mail.gmail.com>
-Subject: Re: [PATCH net-next V5 3/3] bnxt_en: Add support to collect crash
- dump via ethtool
-To:     Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-Cc:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Vikram Prakash <vikram.prakash@broadcom.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vikas Gupta <vikas.gupta@broadcom.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Thu, 31 Oct 2019 14:02:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:53472 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726602AbfJaSCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 14:02:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8783A1FB;
+        Thu, 31 Oct 2019 11:02:44 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 86E343F6C4;
+        Thu, 31 Oct 2019 11:02:42 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 18:02:40 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     f.fainelli@gmail.com, wahrenst@gmx.net, marc.zyngier@arm.com,
+        will@kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tee-dev@lists.linaro.org,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Netdev <netdev@vger.kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>, linux-mm@kvack.org,
+        mbrugger@suse.com, Qian Cai <cai@lca.pw>,
+        linux-rpi-kernel@lists.infradead.org, phill@raspberrypi.org,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Subject: Re: [PATCH v6 3/4] arm64: use both ZONE_DMA and ZONE_DMA32
+Message-ID: <20191031180240.GH39590@arrakis.emea.arm.com>
+References: <6703f8dab4a21fe4e1049f8f224502e1733bf72c.camel@suse.de>
+ <A1A8EEF0-2273-4338-B4D8-D9B1328484B4@lca.pw>
+ <9208de061fe2b9ee7b74206b3cd52cc116e43ac0.camel@suse.de>
+ <AA6D37F1-A1B3-4EC4-8620-007095168BC7@lca.pw>
+ <1956a2c8f4911b2a7e2ba3c53506c0f06efb93f8.camel@suse.de>
+ <20191031155145.GF39590@arrakis.emea.arm.com>
+ <6fd539b82cbbb2ae307a67a76eb4c2ead0bd5d4a.camel@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6fd539b82cbbb2ae307a67a76eb4c2ead0bd5d4a.camel@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 3:09 AM Sheetal Tigadoli
-<sheetal.tigadoli@broadcom.com> wrote:
->
-> From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
->
-> Driver supports 2 types of core dumps.
->
-> 1. Live dump - Firmware dump when system is up and running.
-> 2. Crash dump - Dump which is collected during firmware crash
->                 that can be retrieved after recovery.
-> Crash dump is currently supported only on specific 58800 chips
-> which can be retrieved using OP-TEE API only, as firmware cannot
-> access this region directly.
->
-> User needs to set the dump flag using following command before
-> initiating the dump collection:
->
->     $ ethtool -W|--set-dump eth0 N
->
-> Where N is "0" for live dump and "1" for crash dump
->
-> Command to collect the dump after setting the flag:
->
->     $ ethtool -w eth0 data Filename
->
-> v3: Modify set_dump to support even when CONFIG_TEE_BNXT_FW=n.
-> Also change log message to netdev_info().
->
-> Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
-> Cc: Michael Chan <michael.chan@broadcom.com>
-> Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-> Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+On Thu, Oct 31, 2019 at 05:04:34PM +0100, Nicolas Saenz Julienne wrote:
+> On Thu, 2019-10-31 at 15:51 +0000, Catalin Marinas wrote:
+> > (sorry, I've been away last week and only now caught up with emails)
+> > 
+> > On Tue, Oct 22, 2019 at 01:23:32PM +0200, Nicolas Saenz Julienne wrote:
+> > > On Mon, 2019-10-21 at 16:36 -0400, Qian Cai wrote:
+> > > > I managed to get more information here,
+> > > > 
+> > > > [    0.000000] cma: dma_contiguous_reserve(limit c0000000)
+> > > > [    0.000000] cma: dma_contiguous_reserve: reserving 64 MiB for global
+> > > > area
+> > > > [    0.000000] cma: cma_declare_contiguous(size 0x0000000004000000, base
+> > > > 0x0000000000000000, limit 0x00000000c0000000 alignment 0x0000000000000000)
+> > > > [    0.000000] cma: Failed to reserve 512 MiB
+> > > > 
+> > > > Full dmesg:
+> > > > 
+> > > > https://cailca.github.io/files/dmesg.txt
+> > > 
+> > > OK I got it, reproduced it too.
+> > > 
+> > > Here are the relevant logs:
+> > > 
+> > > 	[    0.000000]   DMA      [mem 0x00000000802f0000-0x00000000bfffffff]
+> > > 	[    0.000000]   DMA32    [mem 0x00000000c0000000-0x00000000ffffffff]
+> > > 	[    0.000000]   Normal   [mem 0x0000000100000000-0x00000097fcffffff]
+> > > 
+> > > As you can see ZONE_DMA spans from 0x00000000802f0000-0x00000000bfffffff
+> > > which
+> > > is slightly smaller than 1GB.
+> > > 
+> > > 	[    0.000000] crashkernel reserved: 0x000000009fe00000 -
+> > > 0x00000000bfe00000 (512 MB)
+> > > 
+> > > Here crashkernel reserved 512M in ZONE_DMA.
+> > > 
+> > > 	[    0.000000] cma: Failed to reserve 512 MiB
+> > > 
+> > > CMA tried to allocate 512M in ZONE_DMA which fails as there is no enough
+> > > space.
+> > > Makes sense.
+> > > 
+> > > A fix could be moving crashkernel reservations after CMA and then if unable
+> > > to
+> > > fit in ZONE_DMA try ZONE_DMA32 before bailing out. Maybe it's a little over
+> > > the
+> > > top, yet although most devices will be fine with ZONE_DMA32, the RPi4 needs
+> > > crashkernel to be reserved in ZONE_DMA.
+> > 
+> > Does RPi4 need CMA in ZONE_DMA? If not, I'd rather reserve the CMA from
+> > ZONE_DMA32.
+> 
+> Yes, CMA is imperatively to be reserved in ZONE_DMA.
+> 
+> > Even if you moved the crash kernel, someone else might complain that
+> > they had 2GB of CMA and it no longer works.
+> 
+> I have yet to look into it, but I've been told that on x86/x64 they have a
+> 'high' flag to be set alongside with crashkernel that forces the allocation
+> into ZONE_DMA32. We could mimic this behavior for big servers that don't depend
+> on ZONE_DMA but need to reserve big chunks of memory.
 
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+The 'high' flag actually talks about crashkernel reserved above 4G which
+is not really the case here. Since RPi4 is the odd one out, I'd rather
+have the default crashkernel and CMA in the ZONE_DMA32 (current mainline
+behaviour) and have the RPi4 use explicit size@offset parameters for
+crashkernel and cma.
+
+-- 
+Catalin
