@@ -2,109 +2,108 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 884A3CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6822DCA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55DBC20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336D320862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:02:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UYmNphie"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="li15LPx+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387433AbfJaWBc (ORCPT
+        id S1728865AbfJaWC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 18:01:32 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46196 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729386AbfJaWBb (ORCPT
+        Thu, 31 Oct 2019 18:02:56 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:43304 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727715AbfJaWCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 18:01:31 -0400
-Received: by mail-wr1-f68.google.com with SMTP id b3so2109835wrs.13
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 15:01:30 -0700 (PDT)
+        Thu, 31 Oct 2019 18:02:55 -0400
+Received: by mail-il1-f196.google.com with SMTP id j2so4726868ilc.10;
+        Thu, 31 Oct 2019 15:02:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=TSWfpuHlmZHBiZrAWDxgOb4uOk4kRce+AnQCKIxwQCA=;
-        b=UYmNphie/gQPdtCpL+hIWLXiLGsjYbKuHWIKg2Ek8H5e8tWfy7gevZIMPHNPG8C11z
-         lsJlMQ5hNr7TBkGgF/XR5L+T8OU6+oAiGiLN48KHunq1bmTmrDQ4y2Xo4iG2PvF2sB8+
-         SJdUBnYF4dxhqC5s8yLtehKA4sTKNanVW3fBLXlzMF6QW+lAvZ2WkJanznmtfJk9cgeH
-         8taZMEJmQtP57TIWusOYJDdNA4r0lx0IyqqjJ8iMCSCasiGv7VE74m9u9ukY23Ch6VP0
-         7rKcz27gQ9FWanmFF6wGeLyZRtDH98JI/VDYzu7cQU/iRCiXByBoLyeFv53Nq+c4wvDT
-         L8jA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kcEj0zagT1kdGnm51IepUWol06DL1z1IUNa12dd8Jp4=;
+        b=li15LPx+6k9TbBmNsi4igNQNptExK0rDlvtE6zga52XA1/6JpM1H5iL8Cyv5EckBka
+         rygvNDBf+Xlm7lmmOfW5tECTv9en0bqRJhvPOYv26SBWrdLF2xffJDYa2hwXjoLf/xeW
+         OUQynDulrDqZc5hkFbkbJi7umsIAuUJoFisT2hB5XjKb92+GrofWHPFtBQRMZsiU2Bcg
+         0WSegVaW+AqgTyvgGJyFSnjPite1+L0M9+uBqQgaWa3URv7zJYO9vx5+AryEVndHBsJj
+         Mb82OGQbJK+InTipjZJyyTIRTfh4fhH4vh6qlYEzQPsSTWb2GisNNa/CQR4FOf/7u4ey
+         oLLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TSWfpuHlmZHBiZrAWDxgOb4uOk4kRce+AnQCKIxwQCA=;
-        b=Lx7y/+ThJ7zeYGb54IhC6E2bkDgZeXAbz28TqmjGw129VKnsiL7WxnxMZ/nauBn6zx
-         iw8nPr21IMFK/QoN7UOKn14WFl6ud2pReQOq+oEM+CChrKPzThyqoKbfbhp8QyVuHPpB
-         sNXQhQZLLlZFIZicGorHjglq0f9CiD87ZSUeOL4LKobeQB0xkCZOnpt5MbdNZGodasfL
-         KlLNZfM1xuECw2yEha3Re4woRCAH24J32+pqxio+dCy0b+DNJPmCxenk3jztPuEvltw8
-         HgyP5QJ1IFzrCqADdZ31z5N3e/alTUK99wx2Ipwmd2qq1qZpCMROxfjOD/zSbMQ0H4l5
-         B9hw==
-X-Gm-Message-State: APjAAAX4usIaAf9SNYWZUVc/kYjrYU8mc/vAlfDyhuT9yZ+KT+WYatWo
-        PA+TfZONsRHPSjNxlojgqCw=
-X-Google-Smtp-Source: APXvYqyLIoyqUyRVy0CLKSm5HCoIrvAuvATFFRdjjXa27GCEStef7EHk7MkbTQKmJWpNw/KX0PRu5g==
-X-Received: by 2002:a5d:4644:: with SMTP id j4mr8245262wrs.355.1572559289699;
-        Thu, 31 Oct 2019 15:01:29 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d4sm7514172wrc.54.2019.10.31.15.01.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 15:01:28 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     bcm-kernel-feedback-list@broadcom.com, catalin.marinas@arm.com,
-        will@kernel.org, Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ARM: spectre-v2: remove Brahma-B53 from hardening
-Date:   Thu, 31 Oct 2019 15:00:51 -0700
-Message-Id: <20191031220053.2720-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kcEj0zagT1kdGnm51IepUWol06DL1z1IUNa12dd8Jp4=;
+        b=Kyk9iGCbZSyYhxaWOkWKUMFnYp0PEUP9oP5UMrHm0jO6lIxiXZ6f3UIIvVRg5IdEui
+         S5t4pQGd63svG4sVIKWR4BlVE9pbBYHLbJYNnUzjnpFRxo4D33rbn/PYKydTpu65qZU4
+         X4oxMqCowTh2qbrZXfhP3kJ7PCIquYZFGjv6gtigJpg01spNbVdS7cIin8uDVyaExhLV
+         PPiblPOAitOkjoJ9/T/AxnZjN60ZIGPXD/lIV+XiQxJesjOR+XJNYmWs+Z7Z6A1ZWEdw
+         +oAhRw86pn/eYpmIgn1qvHK4/Plv+hjA+dJ2f1G42JTXZjnJde5U6Y/gYe9yqOd1SSFx
+         83rQ==
+X-Gm-Message-State: APjAAAXEpoUX/bBi6J6880rRh9oReVenMC9NsMNYh9jzNhQ/b35qaudk
+        i92tom/Mve2t4ehKHsjlSb7uOCQfccju6QWN3lWdzA==
+X-Google-Smtp-Source: APXvYqyErskCKg+NeuRncOCekaI3GkjEMhqdfrRmscKc1Oz87aqPjneGSPfs7vE8B2GOy+pmRuWVrKlHURiOwcI5JlQ=
+X-Received: by 2002:a92:17c8:: with SMTP id 69mr9020215ilx.42.1572559374831;
+ Thu, 31 Oct 2019 15:02:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191031184632.2938295-1-bjorn.andersson@linaro.org>
+ <20191031184632.2938295-2-bjorn.andersson@linaro.org> <CAOCk7Noq8dvKsWzAfAXRGhmoMG4_tHD0kw8_KVEBvyjm_fGc5A@mail.gmail.com>
+ <20191031194347.GO1929@tuxbook-pro>
+In-Reply-To: <20191031194347.GO1929@tuxbook-pro>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Thu, 31 Oct 2019 16:02:43 -0600
+Message-ID: <CAOCk7NoC+BmB7UH=-=g7ufmGUAfrc9JcPxwnVh9ytb9Xuq4FTQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] remoteproc: qcom_q6v5_mss: Don't reassign mpss region
+ on shutdown
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+On Thu, Oct 31, 2019 at 1:43 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Thu 31 Oct 12:36 PDT 2019, Jeffrey Hugo wrote:
+>
+> > On Thu, Oct 31, 2019 at 12:48 PM Bjorn Andersson
+> > <bjorn.andersson@linaro.org> wrote:
+> > >
+> > > Trying to reclaim mpss memory while the mba is not running causes the
+> > > system to crash on devices with security fuses blown, so leave it
+> > > assigned to the remote on shutdown and recover it on a subsequent boot.
+> > >
+> > > Fixes: 6c5a9dc2481b ("remoteproc: qcom: Make secure world call for mem ownership switch")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > ---
+> >
+> > Excellent.  This addresses the issue I was seeing with the Lenovo Miix 630
+> >
+>
+> Sweet!
+>
+> > Reviewed-by: Jeffrey Hugo<jeffrey.l.hugo@gmail.com>
+> > Tested-by: Jeffrey Hugo<jeffrey.l.hugo@gmail.com>
+>
+> Thanks!
 
-When the default processor handling was added to the function
-cpu_v7_spectre_init() it only excluded other ARM implemented processor
-cores. The Broadcom Brahma B53 core is not implemented by ARM so it
-ended up falling through into the set of processors that attempt to use
-the ARM_SMCCC_ARCH_WORKAROUND_1 service to harden the branch predictor.
-
-Since this workaround is not necessary for the Brahma-B53 this commit
-explicitly checks for it and prevents it from applying a branch
-predictor hardening workaround.
-
-Fixes: 10115105cb3a ("ARM: spectre-v2: add firmware based hardening")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/arm/mm/proc-v7-bugs.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm/mm/proc-v7-bugs.c b/arch/arm/mm/proc-v7-bugs.c
-index 9a07916af8dd..a6554fdb56c5 100644
---- a/arch/arm/mm/proc-v7-bugs.c
-+++ b/arch/arm/mm/proc-v7-bugs.c
-@@ -65,6 +65,9 @@ static void cpu_v7_spectre_init(void)
- 		break;
- 
- #ifdef CONFIG_ARM_PSCI
-+	case ARM_CPU_PART_BRAHMA_B53:
-+		/* Requires no workaround */
-+		break;
- 	default:
- 		/* Other ARM CPUs require no workaround */
- 		if (read_cpuid_implementor() == ARM_CPU_IMP_ARM)
--- 
-2.17.1
-
+As we talked offline, it appears we both missed the crashdump
+scenario, so please spin a v2 that reclaims the memory just before
+trying to access it in the crashdump scenario.  I'll be happy to
+re-review and re-test.
