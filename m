@@ -2,191 +2,97 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB56CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 20:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE78CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 20:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0AC0216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 20:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C8662087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 20:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UvFpZAsm"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="WJknctNb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbfJaUDH (ORCPT
+        id S1729736AbfJaUNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 16:03:07 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38890 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbfJaUDG (ORCPT
+        Thu, 31 Oct 2019 16:13:49 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33054 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbfJaUNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 16:03:06 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c13so5151353pfp.5
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 13:03:04 -0700 (PDT)
+        Thu, 31 Oct 2019 16:13:48 -0400
+Received: by mail-io1-f68.google.com with SMTP id n17so8263167ioa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 13:13:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wAwSqScQ+vUrp/ryQqbWQb0d71qTBbv+M5ScuaTLVuA=;
-        b=UvFpZAsm+36z2+sVeR2oDCHtBR3Blvo8Iq+db4k7K4CtUyKAQYn5qxSLqzoHJ6/z6L
-         VqALkp6XxC5EiLQ9WnBzOvBG2PcTfxaQby/DZOWC3d9nemjKCQ4r8pqb3dZaZkOYKb5t
-         zUbXEXIJDZCk71l+sW/rcZw3/5hUabjvHS8Xo=
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=edoR3drkOe7+sAAN2C14zGy1y4TkfH6JZVLoKAB2I1c=;
+        b=WJknctNbQNnq4Hj+o22VpWRFtQqoOiBTkKHsk+HRvEVy3BoU1PzUyESIxTdd5FfBNH
+         Da4DbpwX4BAQlSPVaEP7HsjwY9tNc8Rk0+O/ClWYh/dL8GvxUSFIlW/xtAbIp8ssk2d4
+         4QMY/4gASgyN4iTUy8LHtcceXfR3Fmirw1+KY5PwZIJ9oFB1X6Lq4K59XRIj4RQGfD5Q
+         HyWcdFwWXhpYTk5RAIfNZVGGNH1JTPuKcCPvlNICWWRvaBP4hzyhKAVU1SKNYydCzfKm
+         qlvJ+WFDWwM6b19TOzxn0xl7auPIlqje8Z+XWsHJNp7ymmWMhE3tHe7oKrh2Q00rf+iN
+         FPTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wAwSqScQ+vUrp/ryQqbWQb0d71qTBbv+M5ScuaTLVuA=;
-        b=SfvSbH8ixMLhO+t+u4yKQD74MYyT9CDqhcqi37r1KRmtKFohJoVlwr7My4kL0XqYSz
-         lSXZVMESLcjNCangwzlS+2UUak8LQlxXO2/dpddxZvXa67TRIe+13DEBhmJYW0GkfGZq
-         kTHh52Q/vZAuvtGMnUH1pLrVcO0YYxTMClPbnKF1Pso6EFRwLxl4xdWlGQMoyX6cknDU
-         o4Il0AOgpn2GJKAsuCU/kl2dJ3UxMZwz4SdQpjB85ZMRNzeKJ8K9vp4JCBfPPkADxxtS
-         3foLjbjLfSxEtenZg2hxUxQZAhlFGIEPFDOrBbcuZGVQKkljc4x4tpXorvv156XbFke/
-         kKFA==
-X-Gm-Message-State: APjAAAUsMuTfGRWgk6v9f+ZA75wsaarKqydvNVDLHCaRBNcHoiTq9FOH
-        ZCR8CYJIf9NTd/w5C0gGOwxxfg==
-X-Google-Smtp-Source: APXvYqy1QFcdBaNSK/vZaJl7cUaoBDnBBJPRlMAXTpmkfOsy4mLwiwytHZEScxC/mQYNhuxZsgvUow==
-X-Received: by 2002:a63:be4d:: with SMTP id g13mr8899385pgo.257.1572552184348;
-        Thu, 31 Oct 2019 13:03:04 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o1sm4230452pgm.1.2019.10.31.13.03.03
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=edoR3drkOe7+sAAN2C14zGy1y4TkfH6JZVLoKAB2I1c=;
+        b=sZqMeOLLUP1g7MZ7GGofiKHLkp7T5R0Abzxw7JYqAlAxnyU7g5K1EDY81E+rw/IdWy
+         /KtUWRgCLuwDTd8OuYUZHxBs2ai/IKJl18xiwN66TwiVh4nHUyOtjjI+HkNfXe2+llwd
+         DRtsnzL+IZ12W97fMk4dnwabDgAXCgbQAk0uBAK06B329vppkgetUN7MOxyKmf9tQBHQ
+         LPokTHs5Mr34M1Zl5NQ/NBDAcLGr/bpFjIPA2CyYCUGZ29eFXW0XgoELjfryC4OGt8cc
+         7obDcwawvy91JWoTwsgMu+PK2PWEUmv8Jw4LbtW4JViTJxotFg6roVk9Slehr4AaS1vk
+         /ypg==
+X-Gm-Message-State: APjAAAWAV1FEsiL5tkFzuy1E96+gqn9AGsozYjio6CROhQWF8chXifwd
+        I9D83FY+Eo8EB5g7uEGtSGsKFg==
+X-Google-Smtp-Source: APXvYqwu18NgGtxYghLIqdGrPlyUezIGUUPxppmYLKUKXEShdep9/77fPJTZMl39SlwLPxfbxPxnCg==
+X-Received: by 2002:a02:cc66:: with SMTP id j6mr1049512jaq.61.1572552827929;
+        Thu, 31 Oct 2019 13:13:47 -0700 (PDT)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id h11sm436841ioq.57.2019.10.31.13.13.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 13:03:03 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 13:03:02 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [RESEND PATCH] arm64: fix alternatives with LLVM's integrated
- assembler
-Message-ID: <201910311303.2FBAA3E3@keescook>
-References: <20191031194652.118427-1-samitolvanen@google.com>
+        Thu, 31 Oct 2019 13:13:47 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 13:13:45 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Christoph Hellwig <hch@lst.de>
+cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: RISC-V nommu support v6
+In-Reply-To: <20191031155222.GA7270@lst.de>
+Message-ID: <alpine.DEB.2.21.9999.1910311312540.16921@viisi.sifive.com>
+References: <20191028121043.22934-1-hch@lst.de> <alpine.DEB.2.21.9999.1910301311240.6452@viisi.sifive.com> <20191031155222.GA7270@lst.de>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031194652.118427-1-samitolvanen@google.com>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 12:46:52PM -0700, Sami Tolvanen wrote:
-> LLVM's integrated assembler fails with the following error when
-> building KVM:
-> 
->   <inline asm>:12:6: error: expected absolute expression
->    .if kvm_update_va_mask == 0
->        ^
->   <inline asm>:21:6: error: expected absolute expression
->    .if kvm_update_va_mask == 0
->        ^
->   <inline asm>:24:2: error: unrecognized instruction mnemonic
->           NOT_AN_INSTRUCTION
->           ^
->   LLVM ERROR: Error parsing inline asm
-> 
-> These errors come from ALTERNATIVE_CB and __ALTERNATIVE_CFG,
-> which test for the existence of the callback parameter in inline
-> assembly using the following expression:
-> 
->   " .if " __stringify(cb) " == 0\n"
-> 
-> This works with GNU as, but isn't supported by LLVM. This change
-> splits __ALTERNATIVE_CFG and ALTINSTR_ENTRY into separate macros
-> to fix the LLVM build.
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/472
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+On Thu, 31 Oct 2019, Christoph Hellwig wrote:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
->  arch/arm64/include/asm/alternative.h | 32 ++++++++++++++++++----------
->  1 file changed, 21 insertions(+), 11 deletions(-)
+> On Wed, Oct 30, 2019 at 01:21:21PM -0700, Paul Walmsley wrote:
+> > I tried building this series from your git branch mentioned above, and 
+> > booted it with a buildroot userspace built from your custom buildroot 
+> > tree.  Am seeing some segmentation faults from userspace (below). 
+> > 
+> > Am still planning to merge your patches.
+> > 
+> > But I'm wondering whether you are seeing these segmentation faults also? 
+> > Or is it something that might be specific to my test setup?
 > 
-> diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
-> index b9f8d787eea9..324e7d5ab37e 100644
-> --- a/arch/arm64/include/asm/alternative.h
-> +++ b/arch/arm64/include/asm/alternative.h
-> @@ -35,13 +35,16 @@ void apply_alternatives_module(void *start, size_t length);
->  static inline void apply_alternatives_module(void *start, size_t length) { }
->  #endif
->  
-> -#define ALTINSTR_ENTRY(feature,cb)					      \
-> +#define ALTINSTR_ENTRY(feature)					              \
->  	" .word 661b - .\n"				/* label           */ \
-> -	" .if " __stringify(cb) " == 0\n"				      \
->  	" .word 663f - .\n"				/* new instruction */ \
-> -	" .else\n"							      \
-> +	" .hword " __stringify(feature) "\n"		/* feature bit     */ \
-> +	" .byte 662b-661b\n"				/* source len      */ \
-> +	" .byte 664f-663f\n"				/* replacement len */
-> +
-> +#define ALTINSTR_ENTRY_CB(feature, cb)					      \
-> +	" .word 661b - .\n"				/* label           */ \
->  	" .word " __stringify(cb) "- .\n"		/* callback */	      \
-> -	" .endif\n"							      \
->  	" .hword " __stringify(feature) "\n"		/* feature bit     */ \
->  	" .byte 662b-661b\n"				/* source len      */ \
->  	" .byte 664f-663f\n"				/* replacement len */
-> @@ -62,15 +65,14 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
->   *
->   * Alternatives with callbacks do not generate replacement instructions.
->   */
-> -#define __ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg_enabled, cb)	\
-> +#define __ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg_enabled)	\
->  	".if "__stringify(cfg_enabled)" == 1\n"				\
->  	"661:\n\t"							\
->  	oldinstr "\n"							\
->  	"662:\n"							\
->  	".pushsection .altinstructions,\"a\"\n"				\
-> -	ALTINSTR_ENTRY(feature,cb)					\
-> +	ALTINSTR_ENTRY(feature)						\
->  	".popsection\n"							\
-> -	" .if " __stringify(cb) " == 0\n"				\
->  	".pushsection .altinstr_replacement, \"a\"\n"			\
->  	"663:\n\t"							\
->  	newinstr "\n"							\
-> @@ -78,17 +80,25 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
->  	".popsection\n\t"						\
->  	".org	. - (664b-663b) + (662b-661b)\n\t"			\
->  	".org	. - (662b-661b) + (664b-663b)\n"			\
-> -	".else\n\t"							\
-> +	".endif\n"
-> +
-> +#define __ALTERNATIVE_CFG_CB(oldinstr, feature, cfg_enabled, cb)	\
-> +	".if "__stringify(cfg_enabled)" == 1\n"				\
-> +	"661:\n\t"							\
-> +	oldinstr "\n"							\
-> +	"662:\n"							\
-> +	".pushsection .altinstructions,\"a\"\n"				\
-> +	ALTINSTR_ENTRY_CB(feature, cb)					\
-> +	".popsection\n"							\
->  	"663:\n\t"							\
->  	"664:\n\t"							\
-> -	".endif\n"							\
->  	".endif\n"
->  
->  #define _ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg, ...)	\
-> -	__ALTERNATIVE_CFG(oldinstr, newinstr, feature, IS_ENABLED(cfg), 0)
-> +	__ALTERNATIVE_CFG(oldinstr, newinstr, feature, IS_ENABLED(cfg))
->  
->  #define ALTERNATIVE_CB(oldinstr, cb) \
-> -	__ALTERNATIVE_CFG(oldinstr, "NOT_AN_INSTRUCTION", ARM64_CB_PATCH, 1, cb)
-> +	__ALTERNATIVE_CFG_CB(oldinstr, ARM64_CB_PATCH, 1, cb)
->  #else
->  
->  #include <asm/assembler.h>
-> -- 
-> 2.24.0.rc0.303.g954a862665-goog
-> 
+> I just built a fresh image using make -j4 with that report and it works
+> perfectly fine with my tree.
 
--- 
-Kees Cook
+OK, good to know.
+
+If there are other folks out there who are using Christoph's nommu patch 
+set, it'd be great to get testing feedback.
+
+
+- Paul
