@@ -6,100 +6,121 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B0DCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D935CCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D98C208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC1E320873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572549404;
-	bh=69gDL61rTjpghvhJyvqd6Y8VD5aaYThiAwoyEVylUDc=;
+	s=default; t=1572549424;
+	bh=wE7q2TFyOsW+GR4H9tqVpVKZDMZJNtUPDUlnoXzCkSY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2VT1Q6B2RY7UmOSm/LY7c86+ZDG80RzjrSHwKbXS5An+Tm/53FCnuPDoDLko0WoBs
-	 O3dcR+781sFzdeVGm6RJkxm+mQOmLHRZhRo8m4vDVCzdmdmhBUTmD5/ixpM+eW0ztE
-	 dJJaB7sphyJx54qZJCqjeD8Ec7DhOsbuhSXTjkKo=
+	b=JREtSHhcEJmwRbpt0mkLo/Wtkf/i+mmuwNHgRU7LyWxUZUBLVE3HUdHIAWAbjg2vP
+	 7Ezc73BNTUZ5SpWU31RKUojncQiR+S6to/VbD4HygadRoHVJ9YngdZgA3rh1H0VHoX
+	 HD9OMORlRnWGQNJGMwowMDkvUzFr5C53phC5oG1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729608AbfJaTQn (ORCPT
+        id S1729619AbfJaTRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 15:16:43 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:44870 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729347AbfJaTQn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 15:16:43 -0400
-Received: by mail-qk1-f193.google.com with SMTP id m16so7837858qki.11;
-        Thu, 31 Oct 2019 12:16:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vanyUnjl7rLa98CaPgWAd6vjALctAE2zMH6j41yDlFQ=;
-        b=iLFYaTnkUOtpGHzaH2Wm0L5zrV2aOAgeS5/3Q4axYp61/bfi0CIEbdMccfEqzrmxXS
-         3pBLE7g1JtEniZyjzaM2FMSQsq5pPRAtDtOV/ynd4s6QTyVhMjNSgEHlXyTwz/jsqKYs
-         JZCBm870phUbXQkNN3+123W0Mcelr5DYTVxdG0VOEF+wj99DyUvH1F7sYKqD3nk5Jp1v
-         MQzDGEH7l3Pl53zKsyptEKqzqY7XsWlY8d5YIFJdmhQwDiPvms0WacXAiguL2NaJmRyK
-         mGLXRYXMxRVS33UIU4vpO7T9IKxu8QJENbbXtsPqlHvZGxqQNLMZlz7dQRWLisj8rFf/
-         Zfqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vanyUnjl7rLa98CaPgWAd6vjALctAE2zMH6j41yDlFQ=;
-        b=ekTP8YeIIqmrzAKw2RtYzvZS0p75iGeWvFyUB77fY4axYD6jOrpB0y3bcD1QERHp3z
-         7Uxfv60VZSDEYVM6Vx9LHa1UfhZTPoual+rf3JKxXKE8TdH49cUIEtuBHlu2TVe9bVhI
-         vSsoDh2u5IHWVVnRpgIr/xSoNytow/oht7gY+sLoG3F34y6JEeB3+GzORpOnxd8baPxk
-         deEHPvO1GeQgDJT4M3nc+NcKoCvN/V5uJI+Zt4vKRYQ5GceYZl/VyMDrqv/1Yj/TEhT3
-         RdN0DTMo8fAbFtrCUbxwvhFHlKNRPHkDe7bMXFpYa+jf0SXf8nxbQ/9L9HoLGd4Der3b
-         858w==
-X-Gm-Message-State: APjAAAWnkisyFlSFCd8lI4DACNPMhHtAnpxydPIlDf9X8u2d+/1Adoyk
-        ujzFOr6VjHDGdf9QCBtlIyg=
-X-Google-Smtp-Source: APXvYqyJdgtpE/wKH1MsVvvRYKtVGcwDBzqNEpcWGYwXhmW4HvayXpTiJx5oZRzGUd/FQfgwlk9F8Q==
-X-Received: by 2002:ae9:e215:: with SMTP id c21mr5182690qkc.476.1572549401615;
-        Thu, 31 Oct 2019 12:16:41 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::e44c])
-        by smtp.gmail.com with ESMTPSA id 76sm2815031qke.111.2019.10.31.12.16.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 31 Oct 2019 12:16:38 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 12:16:37 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux MM <linux-mm@kvack.org>, Mel Gorman <mgorman@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2] net: fix sk_page_frag() recursion from memory reclaim
-Message-ID: <20191031191637.GO3622521@devbig004.ftw2.facebook.com>
-References: <20191019170141.GQ18794@devbig004.ftw2.facebook.com>
- <20191024205027.GF3622521@devbig004.ftw2.facebook.com>
- <CALvZod6=B-gMJJxhMRt6k5eRwB-3zdgJR5419orTq8-+36wbMQ@mail.gmail.com>
- <11f688a6-0288-0ec4-f925-7b8f16ec011b@gmail.com>
- <CALvZod6Sw-2Wh0KEBiMgGZ1c+2nFW0ueL_4TM4d=Z0JcbvSXrw@mail.gmail.com>
- <20191031184346.GM3622521@devbig004.ftw2.facebook.com>
- <CALvZod7Lm5d-84wWubTUOFWo4XU2cgqBpFw84QzFdiokX86COQ@mail.gmail.com>
- <20191031190053.GN3622521@devbig004.ftw2.facebook.com>
- <CALvZod5U5yEZPhURYffEtDto6sL8JG+3ZSRtv3uOait8yBn=EQ@mail.gmail.com>
+        Thu, 31 Oct 2019 15:17:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729296AbfJaTRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 15:17:03 -0400
+Received: from rapoport-lnx (190.228.71.37.rev.sfr.net [37.71.228.190])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 975612080F;
+        Thu, 31 Oct 2019 19:16:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572549422;
+        bh=wE7q2TFyOsW+GR4H9tqVpVKZDMZJNtUPDUlnoXzCkSY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CLZKcquG9n6x6VVl3YkcRfjVak/Ke+VAkHJDVPRDmcyfYXMLx2kPJMW08r6S6G7ae
+         d7WIsYWQMqrUZu0vaGvOXhLwKZTTuC2Bd06ITKDtAkbPLdjaKNIY8o4ddKuhvcOL8w
+         L0y2V9iihbBeBFIRMQ2zjZrFAJF5TC73bCi1zhA8=
+Date:   Thu, 31 Oct 2019 20:16:52 +0100
+From:   Mike Rapoport <rppt@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, x86@kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
+ mappings
+Message-ID: <20191031191651.GA26165@rapoport-lnx>
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+ <1572171452-7958-2-git-send-email-rppt@kernel.org>
+ <085ed07e-e646-f7a4-0370-06f33a2a4e4a@redhat.com>
+ <20191030081529.GB20624@rapoport-lnx>
+ <9eae3941-64cf-4ea1-0287-0e64bab192c6@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALvZod5U5yEZPhURYffEtDto6sL8JG+3ZSRtv3uOait8yBn=EQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <9eae3941-64cf-4ea1-0287-0e64bab192c6@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 12:14:58PM -0700, Shakeel Butt wrote:
-> Oh ok, I will send the incremental one once I have this patch in the mm tree.
+On Wed, Oct 30, 2019 at 09:19:33AM +0100, David Hildenbrand wrote:
+> On 30.10.19 09:15, Mike Rapoport wrote:
+> >On Tue, Oct 29, 2019 at 12:02:34PM +0100, David Hildenbrand wrote:
+> >>On 27.10.19 11:17, Mike Rapoport wrote:
+> >>>From: Mike Rapoport <rppt@linux.ibm.com>
+> >>>
+> >>>The mappings created with MAP_EXCLUSIVE are visible only in the context of
+> >>>the owning process and can be used by applications to store secret
+> >>>information that will not be visible not only to other processes but to the
+> >>>kernel as well.
+> >>>
+> >>>The pages in these mappings are removed from the kernel direct map and
+> >>>marked with PG_user_exclusive flag. When the exclusive area is unmapped,
+> >>>the pages are mapped back into the direct map.
+> >>>
+> >>
+> >>Just a thought, the kernel is still able to indirectly read the contents of
+> >>these pages by doing a kdump from kexec environment, right?
+> >
+> >Right.
+> >
+> >>Also, I wonder
+> >>what would happen if you map such pages via /dev/mem into another user space
+> >>application and e.g., use them along with kvm [1].
+> >
+> >Do you mean that one application creates MAP_EXCLUSIVE and another
+> >applications accesses the same physical pages via /dev/mem?
+> 
+> Exactly.
+> 
+> >
+> >With /dev/mem all physical memory is visible...
+> 
+> Okay, so the statement "information that will not be visible not only to
+> other processes but to the kernel as well" is not correct. There are easy
+> ways to access that information if you really want to (might require root
+> permissions, though).
 
-It's in the networking tree already.
-
-Thanks.
+Right, but /dev/mem is an easy way to extract any information in any
+environment if one has root permissions...
+ 
+> -- 
+> 
+> Thanks,
+> 
+> David / dhildenb
+> 
 
 -- 
-tejun
+Sincerely yours,
+Mike.
