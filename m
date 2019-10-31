@@ -2,59 +2,109 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A11CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D896CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C12D020862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5CCA20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:01:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ZVpASdIc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfJaK7t (ORCPT
+        id S1727536AbfJaLBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:59:49 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46724 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbfJaK7t (ORCPT
+        Thu, 31 Oct 2019 07:01:09 -0400
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:59344 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727151AbfJaLBD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:59:49 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 31 Oct 2019 07:01:03 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id AA8F228FB50;
-        Thu, 31 Oct 2019 10:59:47 +0000 (GMT)
-Date:   Thu, 31 Oct 2019 11:59:44 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     <Tudor.Ambarus@microchip.com>
-Cc:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 11/32] mtd: spi-nor: Drop redundant error reports in
- Reg Ops callers
-Message-ID: <20191031115944.2d10ed85@collabora.com>
-In-Reply-To: <20191029111615.3706-12-tudor.ambarus@microchip.com>
-References: <20191029111615.3706-1-tudor.ambarus@microchip.com>
-        <20191029111615.3706-12-tudor.ambarus@microchip.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A7428C08B3;
+        Thu, 31 Oct 2019 11:01:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1572519662; bh=YDnL8bpwK/tRJL9FcP1ml8xixy+yOmNErBznAAvEsXE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=ZVpASdIcb0OYgCvj4Jb0YMsy7mpfK6fWYwhIwgCijFhsDCNrVI0Y+lPejRbydOh0x
+         Qjstn+OR1SuMJRa81MVppQH9zlp9LjfLqV/dizl3GK5giakYr5v+6TRUNUkg/Psqkh
+         ygy31CYlNZvjoclqfvK0PI0I92C+rBt4fQCi43n54sGn/WjRbVXTzND3oXaaQCMl8j
+         ta5jw+Iw4NtSOnxcphxUuCEngW6qiagsp4mGelzM0KpfvDeZpamMJHMnijYaolepp0
+         wurJ0DsGPT5rrtFr1I0bKIVMtORptdnOgmRchJwz+GWs71AmwiIHL3SPPMNR/tmu0j
+         wvHZLtEHSYIlg==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 5E65AA007E;
+        Thu, 31 Oct 2019 11:01:00 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net v2 08/10] net: stmmac: xgmac: Disable Flow Control when 1 or more queues are in AV
+Date:   Thu, 31 Oct 2019 12:00:46 +0100
+Message-Id: <efeb1da2bc93722b9cce10c355bb540135cb7327.1572519070.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1572519070.git.Jose.Abreu@synopsys.com>
+References: <cover.1572519070.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1572519070.git.Jose.Abreu@synopsys.com>
+References: <cover.1572519070.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 11:17:05 +0000
-<Tudor.Ambarus@microchip.com> wrote:
+When in AVB mode we need to disable flow control to prevent MAC from
+pausing in TX side.
 
-> From: Tudor Ambarus <tudor.ambarus@microchip.com>
-> 
-> Drop the error messages from the callers, since the callees
-> already print an error message in case of failure.
-> 
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Fixes: ec6ea8e3eee9 ("net: stmmac: Add CBS support in XGMAC2")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+index 7bd1447f9f47..f148cb2061d8 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+@@ -473,6 +473,7 @@ static void dwxgmac2_enable_tso(void __iomem *ioaddr, bool en, u32 chan)
+ static void dwxgmac2_qmode(void __iomem *ioaddr, u32 channel, u8 qmode)
+ {
+ 	u32 value = readl(ioaddr + XGMAC_MTL_TXQ_OPMODE(channel));
++	u32 flow = readl(ioaddr + XGMAC_RX_FLOW_CTRL);
+ 
+ 	value &= ~XGMAC_TXQEN;
+ 	if (qmode != MTL_QUEUE_AVB) {
+@@ -480,6 +481,7 @@ static void dwxgmac2_qmode(void __iomem *ioaddr, u32 channel, u8 qmode)
+ 		writel(0, ioaddr + XGMAC_MTL_TCx_ETS_CONTROL(channel));
+ 	} else {
+ 		value |= 0x1 << XGMAC_TXQEN_SHIFT;
++		writel(flow & (~XGMAC_RFE), ioaddr + XGMAC_RX_FLOW_CTRL);
+ 	}
+ 
+ 	writel(value, ioaddr +  XGMAC_MTL_TXQ_OPMODE(channel));
+-- 
+2.7.4
+
