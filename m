@@ -2,84 +2,98 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8337CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043BCCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B6B20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF3620650
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:07:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EctAZ1qU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbfJaSGY (ORCPT
+        id S1729226AbfJaSHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:06:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:53562 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726602AbfJaSGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:06:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC1D41FB;
-        Thu, 31 Oct 2019 11:06:23 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A95563F6C4;
-        Thu, 31 Oct 2019 11:06:21 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 18:06:19 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH] dma/direct: turn ARCH_ZONE_DMA_BITS into a variable
-Message-ID: <20191031180619.GI39590@arrakis.emea.arm.com>
-References: <20191031152837.15253-1-nsaenzjulienne@suse.de>
- <20191031154759.GA7162@lst.de>
- <40d06d463c05d36968e8b64924d78f7794f8de50.camel@suse.de>
- <20191031155750.GA7394@lst.de>
- <6726a651c12d91ca22b9d8984745d90db5d507ec.camel@suse.de>
- <20191031165853.GA8532@lst.de>
+        Thu, 31 Oct 2019 14:07:08 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28782 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729027AbfJaSHH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 14:07:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572545226;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NrlpMDqyr5ApHQr8gH6aDAnpSTedXQNFwuC3wOLm8ko=;
+        b=EctAZ1qUzMtebvlaVfl5ZamQIvPo5R6UAUC8JTNL8d5J9ZRj0eIhEqrM82Bs+808UnruiB
+        bh1INGRDvg01BR1hQBkFGhyZJklts20BfI2qQfLc27OwuY/VqSgSzEmAyGhiRVTBthTZGs
+        kTKYrA8dDs6pwVJlVPGVwQ2X1m5HZ8E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-309-xBD6-fgwN0qswE14Jqdc1A-1; Thu, 31 Oct 2019 14:07:00 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AF3A5800EB6;
+        Thu, 31 Oct 2019 18:06:59 +0000 (UTC)
+Received: from treble (ovpn-124-23.rdu2.redhat.com [10.10.124.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 53EAA600CD;
+        Thu, 31 Oct 2019 18:06:53 +0000 (UTC)
+Date:   Thu, 31 Oct 2019 13:06:50 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/5] livepatch: new API to track system state changes
+Message-ID: <20191031180650.g4tss4wfksg2bs6a@treble>
+References: <20191030154313.13263-1-pmladek@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20191030154313.13263-1-pmladek@suse.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: xBD6-fgwN0qswE14Jqdc1A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191031165853.GA8532@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 05:58:53PM +0100, Christoph Hellwig wrote:
-> On Thu, Oct 31, 2019 at 05:22:59PM +0100, Nicolas Saenz Julienne wrote:
-> > OK, I see what you mean now. It's wrong indeed.
-> > 
-> > The trouble is the ZONE_DMA series[1] in arm64, also due for v5.5, will be
-> > affected by this patch. I don't know the right way to approach this problem
-> > since depending on the merge order, this patch should be updated or the arm64
-> > ZONE_DMA series fixed.
-> > 
-> > Maybe it's easier to just wait for v5.6.
-> 
-> Ok, I can wait.  Or the arm64 maintainers can pick up this patch if
-> you want to add it to that series.
+On Wed, Oct 30, 2019 at 04:43:08PM +0100, Petr Mladek wrote:
+> Hi,
+>=20
+> this is another piece in the puzzle that helps to maintain more
+> livepatches.
+>=20
+> Especially pre/post (un)patch callbacks might change a system state.
+> Any newly installed livepatch has to somehow deal with system state
+> modifications done be already installed livepatches.
+>=20
+> This patchset provides a simple and generic API that
+> helps to keep and pass information between the livepatches.
+> It is also usable to prevent loading incompatible livepatches.
+>=20
+> Changes since v3:
+>=20
+>   + selftests compilation error [kbuild test robot]=09
+>   + fix copyright in selftests [Joe]
+>   + used macros for the module names in selftests [Joe]
+>   + allow zero state version [Josh]
+>   + slightly refactor the code for checking state version [Josh]
+>   + fix few typos reported by checkpatch.pl [Petr]
+>   + added Acks [Joe]
 
-This branch is stable (may add a fix but not I'm not rebasing it) if you
-want to base this patch on top:
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/zone-dma
+--=20
+Josh
 
-Otherwise, with your ack, I can add it on top of the above branch (aimed
-at 5.5).
-
--- 
-Catalin
