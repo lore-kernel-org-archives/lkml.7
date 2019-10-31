@@ -5,41 +5,41 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5FCCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DAACA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D353820862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D16620862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:01:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="JasDuHEj"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="aaUZO+Vn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfJaLBS (ORCPT
+        id S1727519AbfJaLBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:01:18 -0400
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:59436 "EHLO
+        Thu, 31 Oct 2019 07:01:07 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:59388 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727348AbfJaLBD (ORCPT
+        by vger.kernel.org with ESMTP id S1727312AbfJaLBD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 31 Oct 2019 07:01:03 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 7ADC1C08AF;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 9D386C08B1;
         Thu, 31 Oct 2019 11:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1572519662; bh=WOrHnH2Cw3T6U8+gS8Ru/YnMbaTqsbVhoS8x//3uSik=;
+        t=1572519662; bh=sqeaRb0tZGvD7E7A9/5JfuhQALlctRTMEjpejmhQcb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=JasDuHEj5pNvCLT7DTbMtslrySsnWajObl0IO41Afnp2rMgs+oUQyaTwwsyYSbBUA
-         9Vv6MET2sj9KRxtYHiKomn8goinSwGSoNTKphJQFQw+RD677vTj1x6Sb4IqpXcoQiO
-         gYnk2rlpGE1tWfyOqqvv+rFitdSjCdrbs3b+pobv+GKdGGqqCV6FkcR1QEfcMvgks0
-         fgJ5cZx+hwSbzW9Sbjd8/gLOE+ZuVjqR/GqSUINK8ihs0AnbD2gnPShGoOfuwhmY4Y
-         EM40obcCRZ+KJ5+WMophT1zsLjTAlC851qjFp8IsbNpZxPmz8DTlVRo9fbdsnGhul9
-         VAgG52/blLdgQ==
+        b=aaUZO+VnhHutUUq/GPNueRdv8+q72ktCVq837Xz4XZwQu/FovuO/IlqaB5B6noqC5
+         J7DTe7FDSjeoL7kn39mKuZqe9XOJgCd7ir0SfpfqiruXAThAI2Tztu9rtEycAzlJ6y
+         qCbqWUU/KHGUWqMyYBq6zLJiJSvaUYaaLxFz7T8IPKZm3C/TWMkli2roQYXISIPbnh
+         VJoocTSZXkAN0IOGyOMR41pt+9Nh/D2/YlcrJVQHse3y6s8qTPoAImPIPoIP+fm6WN
+         9yTmBQkbeg1zZuROaTKyc3iPxaJ5BN/2ost4yB/n9KOU4pFkfKdbrOO2HCfLJCrpmd
+         IPNcAbKTJDzQQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 21584A0073;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 56BB7A007B;
         Thu, 31 Oct 2019 11:01:00 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net v2 05/10] net: stmmac: xgmac: Only get SPH header len if available
-Date:   Thu, 31 Oct 2019 12:00:43 +0100
-Message-Id: <f9d2377bce79f8ab4dae272aa5856452600acfba.1572519070.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net v2 07/10] net: stmmac: xgmac: Fix AV Feature detection
+Date:   Thu, 31 Oct 2019 12:00:45 +0100
+Message-Id: <2a714b856ee9baad8e5f3ae2eb03c6d7204c6f18.1572519070.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1572519070.git.Jose.Abreu@synopsys.com>
 References: <cover.1572519070.git.Jose.Abreu@synopsys.com>
@@ -65,10 +65,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split Header length is only available when L34T != 0. Fix this by
-correctly checking if L34T is not zero before trying to get Header length.
+Fix incorrect precedence of operators. For reference: AV implies AV
+Feature but RAV implies only RX side AV Feature. As we want full AV
+features we need to check RAV.
 
-Fixes: 67afd6d1cfdf ("net: stmmac: Add Split Header support and enable it in XGMAC cores")
+Fixes: c2b69474d63b ("net: stmmac: xgmac: Correct RAVSEL field interpretation")
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
@@ -82,23 +83,22 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-index ae48154f933c..bd5838ce1e8a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-@@ -288,7 +288,8 @@ static int dwxgmac2_get_rx_hash(struct dma_desc *p, u32 *hash,
- 
- static int dwxgmac2_get_rx_header_len(struct dma_desc *p, unsigned int *len)
- {
--	*len = le32_to_cpu(p->des2) & XGMAC_RDES2_HL;
-+	if (le32_to_cpu(p->des3) & XGMAC_RDES3_L34T)
-+		*len = le32_to_cpu(p->des2) & XGMAC_RDES2_HL;
- 	return 0;
- }
- 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+index 7cc331996cd8..7bd1447f9f47 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+@@ -372,7 +372,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
+ 	dma_cap->eee = (hw_cap & XGMAC_HWFEAT_EEESEL) >> 13;
+ 	dma_cap->atime_stamp = (hw_cap & XGMAC_HWFEAT_TSSEL) >> 12;
+ 	dma_cap->av = (hw_cap & XGMAC_HWFEAT_AVSEL) >> 11;
+-	dma_cap->av &= !(hw_cap & XGMAC_HWFEAT_RAVSEL) >> 10;
++	dma_cap->av &= !((hw_cap & XGMAC_HWFEAT_RAVSEL) >> 10);
+ 	dma_cap->arpoffsel = (hw_cap & XGMAC_HWFEAT_ARPOFFSEL) >> 9;
+ 	dma_cap->rmon = (hw_cap & XGMAC_HWFEAT_MMCSEL) >> 8;
+ 	dma_cap->pmt_magic_frame = (hw_cap & XGMAC_HWFEAT_MGKSEL) >> 7;
 -- 
 2.7.4
 
