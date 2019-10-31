@@ -2,136 +2,129 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BE0CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51DDCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D52A20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC7382080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:14:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fTQUL8ld"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N8tiDiHd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfJaCKG (ORCPT
+        id S1726513AbfJaCOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 22:10:06 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35666 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfJaCJk (ORCPT
+        Wed, 30 Oct 2019 22:14:08 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33606 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726322AbfJaCOI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 22:09:40 -0400
-Received: by mail-qt1-f196.google.com with SMTP id l3so6401998qtp.2;
-        Wed, 30 Oct 2019 19:09:39 -0700 (PDT)
+        Wed, 30 Oct 2019 22:14:08 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y127so3252671lfc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 19:14:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4W9AYepQ0ExS+WuRGCTZkKX0WkDwZNV6f0NYXF3lfA4=;
-        b=fTQUL8ldDYy7/7DQ++EenWXXcrkdo5WX2iU9NoTtViX2SucT8vFejJgUfNU1FMwwsG
-         /mDOHWrDjT0A+8JDiBFF5ZI+lYM2C4/wEnnCglf5QJ4zsZieX563yQoRhwI6dgFh0MMe
-         iEdY40hjBRqp4nYIhXucD7c3F9Sk/irtXR31Vxe9d9Qatw5pl8OgN6+9lbfcGbCiKGuC
-         UNSgHMfUqGNp/HCX59yQ4lf6mjFHmblH5OKpHLWGHpBfm9ceI1JAhi23tvyXepu5E0ga
-         1osorECsVm9f28AHzI2Ygmbdvyis63xqoD3vn+/QfArpdrRyFSONRT2JhIFIC0Mg3qnP
-         d6kQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0Q35Qrmg9wkHjqF+0NfAUFB1yR1/10F2WnVxGw+K294=;
+        b=N8tiDiHdtPsksEd3ROvQIlUsCu82XyKi8Txes5hv3NlYMQZbCqlL/T3M4JbOxPTB6p
+         Oq/yIeAjAo9+HB+fMGZ6zuqkmSpCcV4SxxtB8D2Y3oRX5PP/DLtTo7oA6KRWgh7d7tGg
+         uoZfrZvshqP8jjpzk5bcYJy8IthFfjxU/1WOK0wjpq41r5hr6VAtOd+SsBxLR8h3JSqf
+         vrQbaNrCk1CaKOl+KtMakLELlr3Zs83OW+3ybUkkLdS7/HeN1EsmfBWp0esMiyPD0KXv
+         RSAKHz+ftDKOoHI3JrnHrJ51GL2khuEKu/X7vXg6lkd8ZM4wECJzM96VL9A5BAzeYJJG
+         7joQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4W9AYepQ0ExS+WuRGCTZkKX0WkDwZNV6f0NYXF3lfA4=;
-        b=A+J8lebXLYUZzFreMADousS1fKiFdgdNKliYdlEeMv7wgZNJCv7n9ZrKtWBHVc/hDk
-         JsFJcQV9uKJasJKLVxAlzgbg18FTE3NlSVMQkcualOvboJEswdBVAW/U+SzSkhRNAFAu
-         lew59UywrkI89HMZOUxxOz3yYjD8XnDfYK9Q210BXW1AShjHphz5A0XfDZFDkc0TGIde
-         ejs2jBoXvTsGXCJP32b67ye4xPkzzBEUvmOV4xRklezoN5QVPY5cVp3Az5FRaiJtHHCk
-         bU9rXFsk+VItbUZ3Bm5EoxV8YPFHguINaqFRRH27/8CGq8+F0trLpw3OLf6bN6UtQHhb
-         UrBQ==
-X-Gm-Message-State: APjAAAXWPuhMRpu+lfItCcWEGV3UrevER7Ud9WfM5ooU7SUD/ySv//6E
-        wxWGfteOBrO3puJZrY1KIMPpzxiJ
-X-Google-Smtp-Source: APXvYqytX7IghU4vGYSNDLF/MA1ob/pVQx9txxsXnMuhjNULWbFtekuOgyjBYB5ziOHqrzu1ElBoIQ==
-X-Received: by 2002:a0c:e8c5:: with SMTP id m5mr2374888qvo.183.1572487779276;
-        Wed, 30 Oct 2019 19:09:39 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id f21sm1040966qte.36.2019.10.30.19.09.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 19:09:38 -0700 (PDT)
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org
-Subject: [PATCH net-next v2 4/7] net: dsa: remove the dst->ds array
-Date:   Wed, 30 Oct 2019 22:09:16 -0400
-Message-Id: <20191031020919.139872-5-vivien.didelot@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191031020919.139872-1-vivien.didelot@gmail.com>
-References: <20191031020919.139872-1-vivien.didelot@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0Q35Qrmg9wkHjqF+0NfAUFB1yR1/10F2WnVxGw+K294=;
+        b=av1LVR5+k5EpwGmkkn746kwtJMW/79PiOk5n+6lKUA3rO4AbJRCjavv6ZxMeD2+ldk
+         +jlHFTNdZeL+7GKeiKsBkWhYFskkDkP2f2kmIl/y++aNUCAwpxk/mP2YkQLMx15cKmYa
+         oeYHnH6dEsJKBez6kOlRidWJ0Du58hS0INfLZ+y6MSJp7Gbhx4zRgmuxlw2E4QGSgr2L
+         B13QA7QbHc/cvhoN4ZWO/yrn0T8SJBG+gm4bQNTKj9zw/iv5k508ySWBDCwG0G4MsWyl
+         3OyPxXZcuw2QB9MnwKg2wFYPZb8m1KKv4Og88ckHZPfDTullGCY/PNq5MTcFOUKvZ0fi
+         RR1A==
+X-Gm-Message-State: APjAAAWnPB29XkwLxIlA7Jz0PE5YaD7nPalmlkn1sHCayPwnElT3mhcp
+        sQ0NJzhFuaeB4+apav43QFhXMV+unFAYs5vhVFduCQ==
+X-Google-Smtp-Source: APXvYqzt5GwVr8iqs7GK09m3Y5rMVOPcTeuhfSQpo73+hoiTYTRcTwHFX7BcTFNYVFr1DATKDchziDslGCBtc8/XWKc=
+X-Received: by 2002:a19:911c:: with SMTP id t28mr1004590lfd.84.1572488046183;
+ Wed, 30 Oct 2019 19:14:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1572245011.git.baolin.wang@linaro.org> <44f0c19510c7317cb4ee6cac54b3adfa81c2d6d0.1572245011.git.baolin.wang@linaro.org>
+ <20191030143814.GA14919@bogus>
+In-Reply-To: <20191030143814.GA14919@bogus>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Thu, 31 Oct 2019 10:13:54 +0800
+Message-ID: <CAMz4kuKYTHWaRnYhFn2kNzv04g_pWTVqPXvRqwO78htJ9jAnFg@mail.gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: power: Introduce one property to
+ describe the battery resistance with temperature changes
+To:     Rob Herring <robh@kernel.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com,
+        baolin.wang7@gmail.com, Chunyan Zhang <zhang.lyra@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the DSA ports are listed in the switch fabric, there is
-no need to store the dsa_switch structures from the drivers in the
-fabric anymore. So get rid of the dst->ds static array.
+Hi Rob,
 
-Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
----
- include/net/dsa.h | 5 -----
- net/dsa/dsa2.c    | 7 -------
- 2 files changed, 12 deletions(-)
+On Wed, 30 Oct 2019 at 22:38, Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Oct 28, 2019 at 03:18:57PM +0800, Baolin Wang wrote:
+> > Since the battery internal resistance can be changed as the temperature
+> > changes, thus add one table to describe the battery resistance percent
+> > in different temperature to get a accurate battery internal resistance.
+> >
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > ---
+> >  .../devicetree/bindings/power/supply/battery.txt   |    5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+> > index 5c913d4c..1a6f951 100644
+> > --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+> > +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+> > @@ -35,6 +35,10 @@ Optional Properties:
+> >     for each of the battery capacity lookup table. The first temperature value
+> >     specifies the OCV table 0, and the second temperature value specifies the
+> >     OCV table 1, and so on.
+> > + - resistance-temp-table: An array providing the resistance percent and
+> > +   corresponding temperature in degree Celsius, which is used to look up the
+> > +   resistance percent according to current temperature to get a accurate
+> > +   batterty internal resistance.
+>
+> What's the order of values? The description and example don't seem to
+> agree unless negative percent is a thing.
 
-diff --git a/include/net/dsa.h b/include/net/dsa.h
-index b46222adb5c2..e4c697b95c70 100644
---- a/include/net/dsa.h
-+++ b/include/net/dsa.h
-@@ -125,11 +125,6 @@ struct dsa_switch_tree {
- 
- 	/* List of DSA links composing the routing table */
- 	struct list_head rtable;
--
--	/*
--	 * Data for the individual switch chips.
--	 */
--	struct dsa_switch	*ds[DSA_MAX_SWITCHES];
- };
- 
- /* TC matchall action types, only mirroring for now */
-diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
-index a887231fff13..92e71b12b729 100644
---- a/net/dsa/dsa2.c
-+++ b/net/dsa/dsa2.c
-@@ -578,25 +578,18 @@ static void dsa_tree_remove_switch(struct dsa_switch_tree *dst,
- {
- 	dsa_tree_teardown(dst);
- 
--	dst->ds[index] = NULL;
- 	dsa_tree_put(dst);
- }
- 
- static int dsa_tree_add_switch(struct dsa_switch_tree *dst,
- 			       struct dsa_switch *ds)
- {
--	unsigned int index = ds->index;
- 	int err;
- 
--	if (dst->ds[index])
--		return -EBUSY;
--
- 	dsa_tree_get(dst);
--	dst->ds[index] = ds;
- 
- 	err = dsa_tree_setup(dst);
- 	if (err) {
--		dst->ds[index] = NULL;
- 		dsa_tree_put(dst);
- 	}
- 
+Ah, right. I will fix the example according to the description's order
+in next version. Thanks.
+
+> >
+> >  Battery properties are named, where possible, for the corresponding
+> >  elements in enum power_supply_property, defined in
+> > @@ -61,6 +65,7 @@ Example:
+> >               ocv-capacity-table-0 = <4185000 100>, <4113000 95>, <4066000 90>, ...;
+> >               ocv-capacity-table-1 = <4200000 100>, <4185000 95>, <4113000 90>, ...;
+> >               ocv-capacity-table-2 = <4250000 100>, <4200000 95>, <4185000 90>, ...;
+> > +             resistance-temp-table = <20 100>, <10 90>, <0 80>, <(-10) 60>;
+> >       };
+> >
+> >       charger: charger@11 {
+> > --
+> > 1.7.9.5
+> >
+
+
+
 -- 
-2.23.0
-
+Baolin Wang
+Best Regards
