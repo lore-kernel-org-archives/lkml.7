@@ -2,159 +2,205 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D48FECA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8F4CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A89A520862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:18:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vLVfuciN"
+	by mail.kernel.org (Postfix) with ESMTP id C76D720862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:20:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbfJaJSC (ORCPT
+        id S1726991AbfJaJUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 05:18:02 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36472 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbfJaJSC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 05:18:02 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v19so3950738pfm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 02:18:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/4vjjXip3PEZlpbvSCBjNSofs7TybrsEceZdmzVqTWg=;
-        b=vLVfuciNf7T8Yu5E2bROWn0NM0KpFjqxr++0zpwbFio/EEJo2T5wJdD3D7Cnjum+5S
-         oReoZsaxy9BkEdsv2pV9IsrGYf6fnv3cvIgdQCN+azdIrPfljxaoL8N7PG4SH1weLRJz
-         8Pq7bPws7tFsavO1Jg3lTNzhSqpD3x1IsE4n9KcEIEh9PPRkZNyo0J04GyWnA9YDYFDP
-         ON7Li7hij9hcochr8D0HBMbwnjWPQdG6D7NJ6RAEFI6WvqiJgQhzIpnsvDcS+UAGdqth
-         NnKwbU9dNTl+Ntmn//STGsXFF7/l/PtIpEuvLmkAT2KXdJJ9CPiqDpbYcmz4P/j/9KMH
-         oLJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/4vjjXip3PEZlpbvSCBjNSofs7TybrsEceZdmzVqTWg=;
-        b=UnRzao1cUB/WZpOuuvVX8Tj2/EZFBVtITV59d2TMEPYnJAMbgUPUFGvW9l7hwVmxHD
-         9AIRizBKztFUUlMXmX387Zn3SjLJrwNVQhiKEcDLWg+8avPVLOXpymk1w+HwYL38Us0M
-         OroVjAX44tmU/9VhmRFxgenAka9jo9O2TH8ipX8w9ICzJTPMCsv4K0MMUtzHd9fC0mhm
-         H9LXi+RsNMLExnhjfkCl1N9gRkuC00fxwMrNroXOiT9GVIrxkars76vxB6dGy1tnBO8d
-         7YZHy4fHurmZRYaETKKynXtIuicByOF8zQGERuVqPVBko/VBmhHCBOEEtRR007faSIFK
-         m08w==
-X-Gm-Message-State: APjAAAVj98zHVUEUdXkXhDOlE7sQ0VqaEIH2R18Nb73n1wEuK6fCTbVI
-        8xyHkHiDsUcSB5myBgS84pKMsASV3vHOE5neHTzaHA==
-X-Google-Smtp-Source: APXvYqypwZwY39bRA8SlcqSx2t9abzPasBSJqwBHjFz7WDKZ1NhGDmS5XjfCTop3u9EnVZ+RtajjJ+BbxlfeIRaFHGc=
-X-Received: by 2002:a63:234c:: with SMTP id u12mr5113679pgm.384.1572513480667;
- Thu, 31 Oct 2019 02:18:00 -0700 (PDT)
+        Thu, 31 Oct 2019 05:20:45 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5236 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726864AbfJaJUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 05:20:45 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 1AFA291DC1FC5E986338;
+        Thu, 31 Oct 2019 17:20:42 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 31 Oct
+ 2019 17:20:31 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+CC:     <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Gao Xiang <gaoxiang25@huawei.com>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v2] ext4: bio_alloc with __GFP_DIRECT_RECLAIM never fails
+Date:   Thu, 31 Oct 2019 17:23:15 +0800
+Message-ID: <20191031092315.139267-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191030161244.GB3953@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20191030161244.GB3953@hsiangkao-HP-ZHAN-66-Pro-G1>
 MIME-Version: 1.0
-References: <20191018001816.94460-1-brendanhiggins@google.com>
- <20191018122949.GD11244@42.do-not-panic.com> <alpine.LRH.2.20.1910191348280.11804@dhcp-10-175-221-34.vpn.oracle.com>
- <CAFd5g46aO4jwyo32DSz4L8GdhP6t38+Qb9NB+3fev3u4G6sg4w@mail.gmail.com>
- <20191024101529.GK11244@42.do-not-panic.com> <201910301205.74EC2A226D@keescook>
-In-Reply-To: <201910301205.74EC2A226D@keescook>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 31 Oct 2019 02:17:49 -0700
-Message-ID: <CAFd5g45V-iYaAhHwoaUPoPYUBud-5vxbBkApp-h5O6J8trnPRA@mail.gmail.com>
-Subject: Re: [PATCH linux-kselftest/test v1] apparmor: add AppArmor KUnit
- tests for policy unpack
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Matthias Maennich <maennich@google.com>,
-        shuah <shuah@kernel.org>,
-        John Johansen <john.johansen@canonical.com>, jmorris@namei.org,
-        serge@hallyn.com, Iurii Zaikin <yzaikin@google.com>,
-        David Gow <davidgow@google.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module@vger.kernel.org,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Mike Salvatore <mike.salvatore@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 12:09 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, Oct 24, 2019 at 10:15:29AM +0000, Luis Chamberlain wrote:
-> > On Wed, Oct 23, 2019 at 05:42:18PM -0700, Brendan Higgins wrote:
-> > > With that, I think the best solution in this case will be the
-> > > "__visible_for_testing" route. It has no overhead when testing is
-> > > turned off (in fact it is no different in anyway when testing is
-> > > turned off). The downsides I see are:
-> > >
-> > > 1) You may not be able to test non-module code not compiled for
-> > > testing later with the test modules that Alan is working on (But the
-> > > only way I think that will work is by preventing the symbol from being
-> > > inlined, right?).
-> > >
-> > > 2) I think "__visible_for_testing" will be prone to abuse. Here, I
-> > > think there are reasons why we might want to expose these symbols for
-> > > testing, but not otherwise. Nevertheless, I think most symbols that
-> > > should be tested should probably be made visible by default. Since you
-> > > usually only want to test your public interfaces. I could very well
-> > > see this getting used as a kludge that gets used far too frequently.
-> >
-> > There are two parts to your statement on 2):
-> >
-> >   a) possible abuse of say __visible_for_testing
->
-> I really don't like the idea of littering the kernel with these. It'll
+Similar to [1] [2], bio_alloc with __GFP_DIRECT_RECLAIM flags
+guarantees bio allocation under some given restrictions, as
+stated in block/bio.c and fs/direct-io.c So here it's ok to
+not check for NULL value from bio_alloc().
 
-Yeah, I kind of hope that it would make people think more
-intentionally about what is a public interface so that they wouldn't
-litter the kernel with those. But I agree that in the world where
-people *didn't* do that. Lots of these sprinkled around would be
-annoying.
+[1] https://lore.kernel.org/r/20191030035518.65477-1-gaoxiang25@huawei.com
+[2] https://lore.kernel.org/r/20190830162812.GA10694@infradead.org
+Cc: Theodore Ts'o <tytso@mit.edu>
+Cc: Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: Ritesh Harjani <riteshh@linux.ibm.com>
+Cc: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
 
-> also require chunks in header files wrapped in #ifdefs. This is really
+changes since v1:
+ - fix commit message and simplify logic as suggested by Ritesh;
+ - add short messages ahead of bio_alloc suggested by Ted.
 
-Why would it require header files wrapped in #ifdefs?
+ fs/ext4/page-io.c  | 57 ++++++++++++++++++----------------------------
+ fs/ext4/readpage.c |  6 +++--
+ 2 files changed, 26 insertions(+), 37 deletions(-)
 
-We could put all the ifdeffery logic in the __visible_for_testing
-macro so that nothing in the original code has to change except for
-adding an #include and replacing a couple of `static`s with
-`__visible_for_testing`.
+diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
+index 12ceadef32c5..c92504c1b1ca 100644
+--- a/fs/ext4/page-io.c
++++ b/fs/ext4/page-io.c
+@@ -358,14 +358,16 @@ void ext4_io_submit_init(struct ext4_io_submit *io,
+ 	io->io_end = NULL;
+ }
+ 
+-static int io_submit_init_bio(struct ext4_io_submit *io,
+-			      struct buffer_head *bh)
++static void io_submit_init_bio(struct ext4_io_submit *io,
++			       struct buffer_head *bh)
+ {
+ 	struct bio *bio;
+ 
++	/*
++	 * bio_alloc will _always_ be able to allocate a bio if
++	 * __GFP_DIRECT_RECLAIM is set, see comments for bio_alloc_bioset().
++	 */
+ 	bio = bio_alloc(GFP_NOIO, BIO_MAX_PAGES);
+-	if (!bio)
+-		return -ENOMEM;
+ 	bio->bi_iter.bi_sector = bh->b_blocknr * (bh->b_size >> 9);
+ 	bio_set_dev(bio, bh->b_bdev);
+ 	bio->bi_end_io = ext4_end_bio;
+@@ -373,13 +375,12 @@ static int io_submit_init_bio(struct ext4_io_submit *io,
+ 	io->io_bio = bio;
+ 	io->io_next_block = bh->b_blocknr;
+ 	wbc_init_bio(io->io_wbc, bio);
+-	return 0;
+ }
+ 
+-static int io_submit_add_bh(struct ext4_io_submit *io,
+-			    struct inode *inode,
+-			    struct page *page,
+-			    struct buffer_head *bh)
++static void io_submit_add_bh(struct ext4_io_submit *io,
++			     struct inode *inode,
++			     struct page *page,
++			     struct buffer_head *bh)
+ {
+ 	int ret;
+ 
+@@ -388,9 +389,7 @@ static int io_submit_add_bh(struct ext4_io_submit *io,
+ 		ext4_io_submit(io);
+ 	}
+ 	if (io->io_bio == NULL) {
+-		ret = io_submit_init_bio(io, bh);
+-		if (ret)
+-			return ret;
++		io_submit_init_bio(io, bh);
+ 		io->io_bio->bi_write_hint = inode->i_write_hint;
+ 	}
+ 	ret = bio_add_page(io->io_bio, page, bh->b_size, bh_offset(bh));
+@@ -398,7 +397,6 @@ static int io_submit_add_bh(struct ext4_io_submit *io,
+ 		goto submit_and_retry;
+ 	wbc_account_cgroup_owner(io->io_wbc, page, bh->b_size);
+ 	io->io_next_block++;
+-	return 0;
+ }
+ 
+ int ext4_bio_write_page(struct ext4_io_submit *io,
+@@ -491,8 +489,14 @@ int ext4_bio_write_page(struct ext4_io_submit *io,
+ 				gfp_flags |= __GFP_NOFAIL;
+ 				goto retry_encrypt;
+ 			}
+-			bounce_page = NULL;
+-			goto out;
++
++			printk_ratelimited(KERN_ERR "%s: ret = %d\n", __func__, ret);
++			redirty_page_for_writepage(wbc, page);
++			do {
++				clear_buffer_async_write(bh);
++				bh = bh->b_this_page;
++			} while (bh != head);
++			goto unlock;
+ 		}
+ 	}
+ 
+@@ -500,30 +504,13 @@ int ext4_bio_write_page(struct ext4_io_submit *io,
+ 	do {
+ 		if (!buffer_async_write(bh))
+ 			continue;
+-		ret = io_submit_add_bh(io, inode, bounce_page ?: page, bh);
+-		if (ret) {
+-			/*
+-			 * We only get here on ENOMEM.  Not much else
+-			 * we can do but mark the page as dirty, and
+-			 * better luck next time.
+-			 */
+-			break;
+-		}
++		io_submit_add_bh(io, inode,
++				 bounce_page ? bounce_page : page, bh);
+ 		nr_submitted++;
+ 		clear_buffer_dirty(bh);
+ 	} while ((bh = bh->b_this_page) != head);
+ 
+-	/* Error stopped previous loop? Clean up buffers... */
+-	if (ret) {
+-	out:
+-		fscrypt_free_bounce_page(bounce_page);
+-		printk_ratelimited(KERN_ERR "%s: ret = %d\n", __func__, ret);
+-		redirty_page_for_writepage(wbc, page);
+-		do {
+-			clear_buffer_async_write(bh);
+-			bh = bh->b_this_page;
+-		} while (bh != head);
+-	}
++unlock:
+ 	unlock_page(page);
+ 	/* Nothing submitted - we have to end page writeback */
+ 	if (!nr_submitted)
+diff --git a/fs/ext4/readpage.c b/fs/ext4/readpage.c
+index a30b203fa461..fef7755300c3 100644
+--- a/fs/ext4/readpage.c
++++ b/fs/ext4/readpage.c
+@@ -360,10 +360,12 @@ int ext4_mpage_readpages(struct address_space *mapping,
+ 		if (bio == NULL) {
+ 			struct bio_post_read_ctx *ctx;
+ 
++			/*
++			 * bio_alloc will _always_ be able to allocate a bio if
++			 * __GFP_DIRECT_RECLAIM is set, see bio_alloc_bioset().
++			 */
+ 			bio = bio_alloc(GFP_KERNEL,
+ 				min_t(int, nr_pages, BIO_MAX_PAGES));
+-			if (!bio)
+-				goto set_error_page;
+ 			ctx = get_bio_post_read_ctx(inode, bio, page->index);
+ 			if (IS_ERR(ctx)) {
+ 				bio_put(bio);
+-- 
+2.17.1
 
-> ugly.
->
-> >   b) you typically only want to test your public interfaces
->
-> True, but being able to test the little helper functions is a nice
-> starting point and a good building block.
-
-Yeah, I think I have come to accept that. We can argue about how this
-should change and how people need to learn to be more intentional
-about which interfaces are public and many other high minded ideas,
-but when it comes down to it, we need to provide a starting point that
-is easy.
-
-If our nice starting point becomes a problem, we can always improve it later.
-
-> Why can't unit tests live with the code they're testing? They're already
-> logically tied together; what's the harm there? This needn't be the case
-> for ALL tests, etc. The test driver could still live externally. The
-> test in the other .c would just have exported functions... ?
-
-Well, for one, it totally tanks certain cases for building KUnit tests
-as modules. I don't care about this point *too* much personally, but I
-accept that there are others that want this, and I don't want to make
-these people's lives too difficult.
-
-The main reason I care, however, is just that I think it looks bad to
-me. The file that these tests were in was already pretty long, and the
-tests made it even longer. So that makes the tests harder to find. If
-all tests are in a *-test.c file, then it becomes really easy to find
-all of your tests. Admittedly, this is a pretty minor point. Honestly,
-the main reason it looks bad to me, is because it is different from
-what I am used to, which, I know, is not a great reason.
