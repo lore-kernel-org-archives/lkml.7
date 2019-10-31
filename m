@@ -2,84 +2,92 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63576CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94759CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4387C2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6592F2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfJaHEb (ORCPT
+        id S1726879AbfJaHGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 03:04:31 -0400
-Received: from mga03.intel.com ([134.134.136.65]:51601 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726535AbfJaHEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 03:04:30 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 00:04:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
-   d="scan'208";a="401784432"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 31 Oct 2019 00:04:26 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iQ4VN-000Hkd-LK; Thu, 31 Oct 2019 15:04:25 +0800
-Date:   Thu, 31 Oct 2019 15:04:16 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Can Guo <cang@codeaurora.org>
-Cc:     kbuild-all@lists.01.org, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH] scsi: ufs: ufshcd_scale_clks() can be static
-Message-ID: <20191031070416.7gfgfkqyln2qcuk4@4978f4969bb8>
-References: <1572351831-30373-2-git-send-email-cang@codeaurora.org>
+        Thu, 31 Oct 2019 03:06:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38324 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726575AbfJaHGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 03:06:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7D5F6AE04;
+        Thu, 31 Oct 2019 07:06:10 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572351831-30373-2-git-send-email-cang@codeaurora.org>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 31 Oct 2019 08:06:10 +0100
+From:   Johannes Thumshirn <jthumshirn@suse.de>
+To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Cc:     Daniel Wagner <dwagner@suse.de>, linux-nvme@lists.infradead.org,
+        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [RFC] nvmet: Always remove processed AER elements from list
+In-Reply-To: <BYAPR04MB5749158C2EBD47FC48A79FF286600@BYAPR04MB5749.namprd04.prod.outlook.com>
+References: <20191030152418.23753-1-dwagner@suse.de>
+ <BYAPR04MB5749158C2EBD47FC48A79FF286600@BYAPR04MB5749.namprd04.prod.outlook.com>
+Message-ID: <82e496f61183ebdf7924d660d3b8c90e@suse.de>
+X-Sender: jthumshirn@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-10-30 20:58, Chaitanya Kulkarni wrote:
+> On 10/30/2019 08:24 AM, Daniel Wagner wrote:
+>> Hi,
+>> 
+>> I've got following oops:
+>> 
+>> PID: 79413  TASK: ffff92f03a814ec0  CPU: 19  COMMAND: "kworker/19:2"
+>> #0 [ffffa5308b8c3c58] machine_kexec at ffffffff8e05dd02
+>> #1 [ffffa5308b8c3ca8] __crash_kexec at ffffffff8e12102a
+>> #2 [ffffa5308b8c3d68] crash_kexec at ffffffff8e122019
+>> #3 [ffffa5308b8c3d80] oops_end at ffffffff8e02e091
+>> #4 [ffffa5308b8c3da0] general_protection at ffffffff8e8015c5
+>>      [exception RIP: nvmet_async_event_work+94]
+>>      RIP: ffffffffc0d9a80e  RSP: ffffa5308b8c3e58  RFLAGS: 00010202
+>>      RAX: dead000000000100  RBX: ffff92dcbc7464b0  RCX: 
+>> 0000000000000002
+>>      RDX: 0000000000040002  RSI: 38ffff92dc9814cf  RDI: 
+>> ffff92f217722f20
+>>      RBP: ffff92dcbc746418   R8: 0000000000000000   R9: 
+>> 0000000000000000
+>>      R10: 000000000000035b  R11: ffff92efb8dd2091  R12: 
+>> ffff92dcbc7464a0
+>>      R13: ffff92dbe03a5f29  R14: 0000000000000000  R15: 
+>> 0ffff92f92f26864
+>>      ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+>> #5 [ffffa5308b8c3e78] process_one_work at ffffffff8e0a3b0c
+>> #6 [ffffa5308b8c3eb8] worker_thread at ffffffff8e0a41e7
+>> #7 [ffffa5308b8c3f10] kthread at ffffffff8e0a93af
+>> #8 [ffffa5308b8c3f50] ret_from_fork at ffffffff8e800235
+>> 
+>> this maps to nvmet_async_event_results. So it looks like this function
+>> access a stale aen pointer:
+>> 
+>> static u32 nvmet_async_event_result(struct nvmet_async_event *aen)
+>> {
+>>          return aen->event_type | (aen->event_info << 8) | 
+>> (aen->log_page << 16);
+>> }
+> Can you please explain the test setup ? Is that coming from the tests
+> present in the blktests ? if so you can please provide test number ?
 
-Fixes: 9136e6afe1e7 ("scsi: ufs: Fix up clock scaling")
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
- ufshcd.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No unfortunately this is coming from a customer bug report. We _think_ 
+we're having a race between AEN processing and nvmet_sq_destroy(), but 
+we're not 100% sure. Hence this RFC.
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 3a0b99b624829..54ae6433452f2 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -974,7 +974,7 @@ static int ufshcd_set_clk_freq(struct ufs_hba *hba, bool scale_up)
-  * Returns 0 if successful
-  * Returns < 0 for any other errors
-  */
--int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
-+static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
- {
- 	int ret = 0;
- 
+
