@@ -2,59 +2,133 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B21CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDBBCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C9372087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF5482087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:53:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QH4xISMA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbfJaVuQ (ORCPT
+        id S1729181AbfJaVw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 17:50:16 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:33230 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728561AbfJaVuQ (ORCPT
+        Thu, 31 Oct 2019 17:52:59 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46667 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729018AbfJaVw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 17:50:16 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5BDDA1500397B;
-        Thu, 31 Oct 2019 14:50:15 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 14:50:14 -0700 (PDT)
-Message-Id: <20191031.145014.186986700333108637.davem@davemloft.net>
-To:     joe@perches.com
-Cc:     gregkh@linuxfoundation.org, perex@perex.cz,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: Re: [PATCH] hp100: Move 100BaseVG AnyLAN driver to staging
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <4024b52c917975cebde58afc094eed1a107622c2.1572545956.git.joe@perches.com>
-References: <4024b52c917975cebde58afc094eed1a107622c2.1572545956.git.joe@perches.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 31 Oct 2019 14:50:15 -0700 (PDT)
+        Thu, 31 Oct 2019 17:52:59 -0400
+Received: by mail-io1-f68.google.com with SMTP id c6so8501791ioo.13;
+        Thu, 31 Oct 2019 14:52:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S6nzwdV69bS3qMmnYiEeOyRFqJ5MsMzJLi/ghgWFyCk=;
+        b=QH4xISMARBbOmmD3a9sgevwM4oEP3QBvRNmTOkMVYDdAKztdrYBiftDBJKA0Vzldim
+         02CjCPjP7ff7F/zqEeXFSTQ43DmYwvd4owfRWPEL28BYSnw6QBnx1uXHY3ZQfH8+h1hQ
+         jA7qdGHxzHXoz/fKWM2xzzGWqVQvKy/cp82yCB6I4dMUGs8aghFdymxrCW2FaMa/Kpme
+         5W7k3/vmCV0gi/sSh/qE01UlCsWWp5xLa2uOzNCs+irygA64lpLzQwsNhw64u017X4Bt
+         WDqwrayYdr3GjBsa49HTeGcGx2QQWX1DXM3UEXjl1pA1CLnzlj7qlloaeGXzaCfrWac4
+         h2Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S6nzwdV69bS3qMmnYiEeOyRFqJ5MsMzJLi/ghgWFyCk=;
+        b=mzfujrVPFPoHyE7kqdMMEvQ6h2QoLFq+YdYhUeEptpXUtf3prsLknIZ7wuSnY3VQ3t
+         knI4ILdw0fYILMdoF1OhsPVtBM4yGKgSaxTKKs9Q4qWvJDyFhuu1EnWivFJ2hWg/u8j3
+         EkBy48JYcrmB5g4/u6O9xFAQFGUwpvHWN5zxNP3L/HjvepPeOrKe7316BvTjDH98Jf8W
+         1dxLQa5a+vUtqAo4qVgVLobxQjVZhqAGYEocdnOVYdBnXtQDNQmDBZlsxz1Ef/2aLlLy
+         9yyLTaIKR85asDIN1jS8SSfc07qTPv94i1abZKN929xQrppi+egnBwKxLJHTEEYVApgi
+         fw+A==
+X-Gm-Message-State: APjAAAUi5eWh8fjv6TcahOv5NCdvjv64DF1rUqEXT+/PrV5CGVLRQ24N
+        0UajAOe/fb989dOOz7yDOSxEAULrSzmbIixsYzk=
+X-Google-Smtp-Source: APXvYqw1GGuyhktv3L0CWRwAE5jFdB3YHTBZ/G3in7KXjy4nSlz8MqaOjQ1BkXcRJhHFs83nIz1yDhXZBSuI2dNiaZg=
+X-Received: by 2002:a02:330e:: with SMTP id c14mr1725697jae.5.1572558778301;
+ Thu, 31 Oct 2019 14:52:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+ <1572171452-7958-2-git-send-email-rppt@kernel.org> <085ed07e-e646-f7a4-0370-06f33a2a4e4a@redhat.com>
+ <20191030081529.GB20624@rapoport-lnx> <9eae3941-64cf-4ea1-0287-0e64bab192c6@redhat.com>
+ <20191031191651.GA26165@rapoport-lnx>
+In-Reply-To: <20191031191651.GA26165@rapoport-lnx>
+From:   Dan Williams <dan.j.williams@gmail.com>
+Date:   Thu, 31 Oct 2019 14:52:46 -0700
+Message-ID: <CAA9_cmdCmiu5wVs=Jo4c6VNw6N1raPTDXg4d9OuUj3w0+e5JHQ@mail.gmail.com>
+Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user mappings
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches <joe@perches.com>
-Date: Thu, 31 Oct 2019 11:23:37 -0700
+On Thu, Oct 31, 2019 at 12:17 PM Mike Rapoport <rppt@kernel.org> wrote:
+>
+> On Wed, Oct 30, 2019 at 09:19:33AM +0100, David Hildenbrand wrote:
+> > On 30.10.19 09:15, Mike Rapoport wrote:
+> > >On Tue, Oct 29, 2019 at 12:02:34PM +0100, David Hildenbrand wrote:
+> > >>On 27.10.19 11:17, Mike Rapoport wrote:
+> > >>>From: Mike Rapoport <rppt@linux.ibm.com>
+> > >>>
+> > >>>The mappings created with MAP_EXCLUSIVE are visible only in the context of
+> > >>>the owning process and can be used by applications to store secret
+> > >>>information that will not be visible not only to other processes but to the
+> > >>>kernel as well.
+> > >>>
+> > >>>The pages in these mappings are removed from the kernel direct map and
+> > >>>marked with PG_user_exclusive flag. When the exclusive area is unmapped,
+> > >>>the pages are mapped back into the direct map.
+> > >>>
+> > >>
+> > >>Just a thought, the kernel is still able to indirectly read the contents of
+> > >>these pages by doing a kdump from kexec environment, right?
+> > >
+> > >Right.
+> > >
+> > >>Also, I wonder
+> > >>what would happen if you map such pages via /dev/mem into another user space
+> > >>application and e.g., use them along with kvm [1].
+> > >
+> > >Do you mean that one application creates MAP_EXCLUSIVE and another
+> > >applications accesses the same physical pages via /dev/mem?
+> >
+> > Exactly.
+> >
+> > >
+> > >With /dev/mem all physical memory is visible...
+> >
+> > Okay, so the statement "information that will not be visible not only to
+> > other processes but to the kernel as well" is not correct. There are easy
+> > ways to access that information if you really want to (might require root
+> > permissions, though).
+>
+> Right, but /dev/mem is an easy way to extract any information in any
+> environment if one has root permissions...
+>
 
-> 100BaseVG AnyLAN hasn't been useful since 1996 or so and even then
-> didn't sell many devices.  It's unlikely any are still in use.
-> 
-> Move the driver to staging with the intent of removing it altogether
-> one day.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
-
-Applied to net-next.
+I don't understand this concern with /dev/mem. Just add these pages to
+the growing list of the things /dev/mem is not allowed to touch.
