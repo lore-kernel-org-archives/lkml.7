@@ -2,102 +2,139 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116D2CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A23CCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D305A2087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4482220862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:01:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MlVKvzEK"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ikqeCXUq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbfJaVyT (ORCPT
+        id S2387422AbfJaWBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 17:54:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36060 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729018AbfJaVyT (ORCPT
+        Thu, 31 Oct 2019 18:01:15 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:14553 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728345AbfJaWBN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 17:54:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=9BM+3AEpbkEyaVJFAB613unJ+Y8pJb9+MdJLqEvari0=; b=MlVKvzEKlh2LW4/LLwZY1S17tB
-        kWdgcYiidURkGdNnmILSAk8nMTOCppIja8R9N9kBeHC/MU00qGqYRasi2vIsf+mrXaOfiZIQM9LoS
-        QLffyK+RnmOGlboEn00rUU86Yc7Rgt6mMEMTkXp1xtKrFSPGb8GBKKuSk6ozPl1jArExSwPOmpMdD
-        6hyNU6Nf7rBggPqPtZd20sOd3VfNCp7dRNy5G8MQLtHtjJeq6x1ldPPIFi28O1RZpo/jSF8RyCT8U
-        5vsowCrj5dpLv97agvRZG6ah0p7YLYu/c7EvZg5iM9ATSNZev5ylA9FFnT6nWb/yueo91YzatjXY6
-        MMuWgk0g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iQIOV-0007AR-Uj; Thu, 31 Oct 2019 21:54:15 +0000
-Date:   Thu, 31 Oct 2019 14:54:15 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: dma coherent memory user-space maps
-Message-ID: <20191031215415.GA9809@infradead.org>
-References: <b811f66d-2353-23c6-c9fa-e279cdb0f832@shipmail.org>
+        Thu, 31 Oct 2019 18:01:13 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dbb59aa0000>; Thu, 31 Oct 2019 15:01:14 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 31 Oct 2019 15:01:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 31 Oct 2019 15:01:08 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 31 Oct
+ 2019 22:01:07 +0000
+Subject: Re: [PATCH 02/19] mm/gup: factor out duplicate code from four
+ routines
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+References: <20191030224930.3990755-1-jhubbard@nvidia.com>
+ <20191030224930.3990755-3-jhubbard@nvidia.com>
+ <20191031183549.GC14771@iweiny-DESK2.sc.intel.com>
+ <75b557f7-24b2-740c-2640-2f914d131600@nvidia.com>
+ <20191031210954.GE14771@iweiny-DESK2.sc.intel.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <5cb84804-be12-82e8-11d8-7e593fd05619@nvidia.com>
+Date:   Thu, 31 Oct 2019 15:01:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b811f66d-2353-23c6-c9fa-e279cdb0f832@shipmail.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20191031210954.GE14771@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572559274; bh=St3Rf/REgq/1do28NhYtGJF/+ie61nX3HJRKUe+Kv+8=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ikqeCXUqsTwoQB5CbB+62UgGOxuiKLZDrBsuVMEaD9IjjDxXb09OkVp8xOPRF5wct
+         ee5DhXFx3ncNZEuTcZeSOQivxIJokuWUNeY+2vtv3ZOkk1HWJjkj1h2EH0AXlwb+WX
+         k+12VWYeIpYnIAMc/9Jx/3qdPSGK+huRjsgTXXwezXTbb/FzDozYDlQdAsy+QX8f3z
+         guPaB2LcynNr/sr3xHEr7wV68E214NkgY5BRukBI2Kt+YqGU/HP5jxWqLsbWsS/eGt
+         xEDw4hf53LcGHOIM9YJEHjAqS/wG8o7OePI2ydIId+OliMRlMyINElUiwkTZonGlbb
+         If9KlbJQJnB+Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
-
-sorry for the delay.  I've been travelling way to much laterly and had
-a hard time keeping up.
-
-On Tue, Oct 08, 2019 at 02:34:17PM +0200, Thomas Hellström (VMware) wrote:
-> /* Obtain struct dma_pfn pointers from a dma coherent allocation */
-> int dma_get_dpfns(struct device *dev, void *cpu_addr, dma_addr_t dma_addr,
->           pgoff_t offset, pgoff_t num, dma_pfn_t dpfns[]);
+On 10/31/19 2:09 PM, Ira Weiny wrote:
+> On Thu, Oct 31, 2019 at 11:43:37AM -0700, John Hubbard wrote:
+>> On 10/31/19 11:35 AM, Ira Weiny wrote:
+>>> On Wed, Oct 30, 2019 at 03:49:13PM -0700, John Hubbard wrote:
+>> ...
+>>>> +
+>>>> +static int __huge_pt_done(struct page *head, int nr_recorded_pages, int *nr)
+>>>> +{
+>>>> +	*nr += nr_recorded_pages;
+>>>> +	SetPageReferenced(head);
+>>>> +	return 1;
+>>>
+>>> When will this return anything but 1?
+>>>
+>>
+>> Never, but it saves a line at all four call sites, by having it return like that.
+>>
+>> I could see how maybe people would prefer to just have it be a void function,
+>> and return 1 directly at the call sites. Since this was a lower line count I
+>> thought maybe it would be slightly better, but it's hard to say really.
 > 
-> I figure, for most if not all architectures we could use an ordinary pfn as
-> dma_pfn_t, but the dma layer would still have control over how those pfns
-> are obtained and how they are used in the kernel's mapping APIs.
+> It is a NIT perhaps but I feel like the signature of a function should stand on
+> it's own.  What this does is mix the meaning of this function with those
+> calling it.  Which IMO is not good style.
 > 
-> If so, I could start looking at this, time permitting,  for the cases where
-> the pfn can be obtained from the kernel address or from
-> arch_dma_coherent_to_pfn(), and also the needed work to have a tailored
-> vmap_pfn().
+> We can see what others say.
+> 
 
-I'm not sure that infrastructure is all that helpful unfortunately, even
-if it ended up working.  The problem with the 'coherent' DMA mappings
-is that we they have a few different backends.  For architectures that
-are DMA coherent everything is easy and we use the normal page
-allocator, and your above is trivially doable as wrappers around the
-existing functionality.  Other remap ptes to be uncached, either
-in-place or using vmap, and the remaining ones use weird special
-allocators for which almost everything we can mormally do in the VM
-will fail.
+Sure. I'll plan on changing it to a void return type, then, unless someone else
+pipes up.
 
-I promised Christian an uncached DMA allocator a while ago, and still
-haven't finished that either unfortunately.  But based on looking at
-the x86 pageattr code I'm now firmly down the road of using the
-set_memory_* helpers that change the pte attributes in place, as
-everything else can't actually work on x86 which doesn't allow
-aliasing of PTEs with different caching attributes.  The arm64 folks
-also would prefer in-place remapping even if they don't support it
-yet, and that is something the i915 code already does in a somewhat
-hacky way, and something the msm drm driver wants.  So I decided to
-come up with an API that gives back 'coherent' pages on the
-architectures that support it and otherwise just fail.
 
-Do you care about architectures other than x86 and arm64?  If not I'll
-hopefully have something for you soon.
+thanks,
+
+John Hubbard
+NVIDIA
