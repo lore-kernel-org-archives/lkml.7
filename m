@@ -2,92 +2,111 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756C9CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48ABBCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4306F2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:22:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Vc1TOFMb"
+	by mail.kernel.org (Postfix) with ESMTP id 2D62C216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbfJaRW6 (ORCPT
+        id S1728961AbfJaRXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 13:22:58 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:38451 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728655AbfJaRW5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 13:22:57 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id F3D4922487;
-        Thu, 31 Oct 2019 18:22:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1572542573;
-        bh=0fQn8J+Kg8/qf+a/0vkp3JOugLpSh1Dl2VWX2whBuF4=;
-        h=Date:From:To:Subject:In-Reply-To:References:From;
-        b=Vc1TOFMbc7wpbIIG8zLgOB3I0KhAi4uO1/wBcuW3szUioH68leIr78gX6t69rkAnU
-         jb4OjfId/UqtNw7H44PmvTgYjLzVThaaOq/bC/ht7IqjrYhzNCwXeSwuQH/tBLOl5G
-         pFaoUquAy00L2OmBODOgUHjpmyYdUhyEpaHeh5Yo=
+        Thu, 31 Oct 2019 13:23:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:52846 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728655AbfJaRXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 13:23:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DEEB1FB;
+        Thu, 31 Oct 2019 10:23:23 -0700 (PDT)
+Received: from [10.188.222.161] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C35D3F6C4;
+        Thu, 31 Oct 2019 10:23:21 -0700 (PDT)
+Subject: Re: [PATCH v4 1/2] sched/topology: Don't try to build empty sched
+ domains
+To:     =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
+Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
+        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        Dietmar.Eggemann@arm.com, morten.rasmussen@arm.com,
+        qperret@google.com, stable@vger.kernel.org
+References: <20191023153745.19515-1-valentin.schneider@arm.com>
+ <20191023153745.19515-2-valentin.schneider@arm.com>
+ <20191031162334.GA18570@blackbody.suse.cz>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <3752bca9-a670-f415-4aaa-e8ff75ea6fcc@arm.com>
+Date:   Thu, 31 Oct 2019 18:23:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 31 Oct 2019 18:22:52 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [RFC PATCH 3/3] net: phy: at803x: add device tree binding
-In-Reply-To: <B3B13FB8-42D9-42F9-8106-536F574FA35B@walle.cc>
-References: <20191030224251.21578-1-michael@walle.cc>
- <20191030224251.21578-4-michael@walle.cc>
- <754a493b-a557-c369-96e1-6701ba5d5a30@gmail.com>
- <B3B13FB8-42D9-42F9-8106-536F574FA35B@walle.cc>
-Message-ID: <e867d1a9a1e4b878aa0dafe413e9a6f7@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.2.3
-X-Virus-Scanned: clamav-milter 0.101.4 at web
-X-Virus-Status: Clean
+In-Reply-To: <20191031162334.GA18570@blackbody.suse.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2019-10-31 00:59, schrieb Michael Walle:
->>> +
->>> +	if (of_property_read_bool(node, "atheros,keep-pll-enabled"))
->>> +		priv->flags |= AT803X_KEEP_PLL_ENABLED;
->> 
->> This should probably be a PHY tunable rather than a Device Tree
->> property
->> as this delves more into the policy than the pure hardware 
->> description.
+Hi Michal,
+
+On 31/10/2019 17:23, Michal Koutný wrote:
+> On Wed, Oct 23, 2019 at 04:37:44PM +0100, Valentin Schneider <valentin.schneider@arm.com> wrote:
+>> Prevent generate_sched_domains() from returning empty cpumasks, and add
+>> some assertion in build_sched_domains() to scream bloody murder if it
+>> happens again.
+> Good catch. It makes sense to prune the empty domains in
+> generate_sched_domains already.
 > 
-> To be frank. I'll first need to look into PHY tunables before answering 
-> ;)
-> But keep in mind that this clock output might be used anywhere on the
-> board. It must not have something to do with networking. The PHY has a
-> crystal and it can generate these couple of frequencies regardless of
-> its network operation.
+>> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+>> index c52bc91f882b..c87ee6412b36 100644
+>> --- a/kernel/cgroup/cpuset.c
+>> +++ b/kernel/cgroup/cpuset.c
+>> @@ -798,7 +798,8 @@ static int generate_sched_domains(cpumask_var_t **domains,
+>>  		    cpumask_subset(cp->cpus_allowed, top_cpuset.effective_cpus))
+>>  			continue;
+>>  
+>> -		if (is_sched_load_balance(cp))
+>> +		if (is_sched_load_balance(cp) &&
+>> +		    !cpumask_empty(cp->effective_cpus))
+>>  			csa[csn++] = cp;
+> If I didn't overlook anything, cp->effective_cpus can contain CPUs
+> exluded by housekeeping_cpumask(HK_FLAG_DOMAIN) later, i.e. possibly
+> still returning domains with empty cpusets.
+> 
+> I'd suggest moving the emptiness check down into the loop where domain
+> cpumasks are ultimately constructed.
+> 
 
-Although it could be used to provide any clock on the board, I don't 
-know
-if that is possible at the moment, because the PHY is configured in
-config_init() which is only called when someone brings the interface up,
-correct?
+Ah, wasn't aware of this - thanks for having a look!
 
-Anyway, I don't know if that is worth the hassle because in almost all
-cases the use case is to provide a fixed clock to the MAC for an RGMII
-interface. I don't know if that really fits a PHY tunable, because in
-the worst case the link won't work at all if the SoC expects an
-always-on clock.
+I think I need to have the check before the final cpumask gets built,
+because at this point the cpumask array is already built and it's handed
+off directly to the sched domain rebuild.
 
--- 
--michael
+Do you reckon the following would work? 
+
+----8<----
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index c87ee6412b36..e4c10785dc7c 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -798,8 +798,14 @@ static int generate_sched_domains(cpumask_var_t **domains,
+ 		    cpumask_subset(cp->cpus_allowed, top_cpuset.effective_cpus))
+ 			continue;
+ 
++		/*
++		 * Skip cpusets that would lead to an empty sched domain.
++		 * That could be because effective_cpus is empty, or because
++		 * it's only spanning CPUs outside the housekeeping mask.
++		 */
+ 		if (is_sched_load_balance(cp) &&
+-		    !cpumask_empty(cp->effective_cpus))
++		    cpumask_intersects(cp->effective_cpus,
++				       housekeeping_cpumask(HK_FLAG_DOMAIN)))
+ 			csa[csn++] = cp;
+ 
+ 		/* skip @cp's subtree if not a partition root */
