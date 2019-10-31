@@ -2,256 +2,89 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C92B2CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A891ECA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F27D20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C8820650
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:38:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="k8uGJAIP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sZixWELQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfJaMfb (ORCPT
+        id S1726900AbfJaMil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 08:35:31 -0400
-Received: from m15-112.126.com ([220.181.15.112]:44038 "EHLO m15-112.126.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbfJaMfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 08:35:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=dPTq6
-        cuEB8CU2v3V0ikyBaTPFJjF2LRQTHEofpNiWqo=; b=k8uGJAIPIGgWldzOCOByI
-        zCWkmnOxUDYlosT2toV30V3jS1PwAY4gRCnXwdBV1yJ3VaEOwJW8Wr7MezD411hr
-        uQm/25VwKiHNZMP/iIKx8HE3/fRLZg72k09LW41R5Svw74OWaX4vCQHddg/y+dVM
-        x3t3QsMdmtwmwC5p7s8J4A=
-Received: from [192.168.0.103] (unknown [115.192.52.162])
-        by smtp2 (Coremail) with SMTP id DMmowACX9g5C1LpdtFNEDQ--.4517S2;
-        Thu, 31 Oct 2019 20:32:04 +0800 (CST)
-Subject: Re: [PATCH v2] mm: Fix checking unmapped holes for mbind
-To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Li Xinhai <lixinhai.lxh@gmail.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        akpm <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Hugh Dickins <hughd@google.com>
-References: <201910291756045288126@gmail.com>
- <2019103111150700409251@gmail.com>
- <20191031090621.GA8196@hori.linux.bs1.fc.nec.co.jp>
-From:   Li Xinhai <lixinhai_lxh@126.com>
-Message-ID: <696e5cdb-5292-c5fb-43f4-32c91ae82607@126.com>
-Date:   Thu, 31 Oct 2019 20:32:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 31 Oct 2019 08:38:41 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35507 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfJaMil (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 08:38:41 -0400
+Received: by mail-wm1-f66.google.com with SMTP id x5so5739778wmi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 05:38:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uhoxQTqJS7TN8UEiHDJUbummgXcJZdDKj/YEdaqojMA=;
+        b=sZixWELQR5cQZ8lnCI3d78Zr4QlSClG+ptOiYGwAf+PKvZsCDCAbPcr9vDxEfUG7tl
+         wPbQUw+8FmP7IRyrt/96p3cLR/dOCT8xcf0s7QFTnwXDrUShJBp5m1HxNaVeOqJlphBt
+         L1acY9lKZB/4OakIuAlFXE6Zr03/RIaRGYg/mxZmQv43fj7yq7cIR8oUbGlSwnIvbJgg
+         ntAMXH/dbr4hZxW5lHu7vw5mRTCJN3QIuJOdpwTQzHfxrXCbIrLKEkaz15TudlW0/ynd
+         ouNuxHgsEjl/Wa0k2OXKSIHnymMAooX7vbbyD9lreDZfA1QT0BbRz9iD/N3QXIXOiFu4
+         qYyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uhoxQTqJS7TN8UEiHDJUbummgXcJZdDKj/YEdaqojMA=;
+        b=OgT2QHTSc9Ir1cTjHam5lIIALnWTcj6dJ8J58qZ4qeFIf/6RaNcAdEKI1Vf2msJusc
+         w5feiCnqM9Cjr1uaTXUK0ZA8V1ZW+wc/36SdMEvW/G4D2d7dXkGSgL40kRrnSpgjo7g0
+         jC5EOgGvIgyi72/UwF9Ofh/A2BVpPTs71EI/+d5I69aYlhGxbRYfny1efHFGOXWcxlWQ
+         r+Fh3e/2OHe1uRnpNshGPiA0wF85HNR3HEgwkizACEuRhK8vQPPIGcVnIYgZNBPJgR3w
+         Yuv6h+HyxGSxTnqpOkY7SqleD5nQvu8+rsSrpzNKqCHSuqeaOFGJvVQOfkfFaxe7VZPR
+         F5cw==
+X-Gm-Message-State: APjAAAVDr1yCXeGOd0aUjDKaN7Ruw+tjOSDU4uB9QttDbgzN8puYqStx
+        RekEs1Gc7S8lJJURzdL0YZ8=
+X-Google-Smtp-Source: APXvYqyobm4skG4Pd0DzqgekVRXwjSGHQx3GvfNg+Ad/meMFuELyqVIlhbD/fD9yrrI26HrwDMUBug==
+X-Received: by 2002:a1c:7ec2:: with SMTP id z185mr4767560wmc.69.1572525518925;
+        Thu, 31 Oct 2019 05:38:38 -0700 (PDT)
+Received: from localhost ([92.177.95.83])
+        by smtp.gmail.com with ESMTPSA id u7sm4429632wre.59.2019.10.31.05.38.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 05:38:38 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 13:38:36 +0100
+From:   Roi Martin <jroi.martin@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     valdis.kletnieks@vt.edu, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] staging: exfat: replace kmalloc with kmalloc_array
+Message-ID: <20191031123836.GA6924@miniwopr.localdomain>
+References: <20191030010328.10203-1-jroi.martin@gmail.com>
+ <20191030010328.10203-7-jroi.martin@gmail.com>
+ <20191030094222.GA678631@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20191031090621.GA8196@hori.linux.bs1.fc.nec.co.jp>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: DMmowACX9g5C1LpdtFNEDQ--.4517S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxtr47ZFyDWw1ftFyrCr1xKrg_yoWxAr4kpr
-        WrG3WYva18W3yUtwnFvr1q9ry3tr18Gr48AF17JFn5Xrn8tr4aq34xtry5uFWvy3ykZ3W8
-        ZF42gwsxCFs8AFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07bfoGdUUUUU=
-X-Originating-IP: [115.192.52.162]
-X-CM-SenderInfo: pol0x0pkdlszl0k6ij2wof0z/1tbiTwRf1VpD+tFUwgAAsl
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191030094222.GA678631@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> This patch failed to apply.  Please fix it up and resend it as a new
+> version.
 
+I have rebased the patch against the branch "staging-testing" of the
+tree:
 
-On 2019/10/31 17:06, Naoya Horiguchi wrote:
-> On Thu, Oct 31, 2019 at 11:15:09AM +0800, Li Xinhai wrote:
->> On 2019-10-29 at 17:56 Li Xinhai wrote:
->>> queue_pages_range() will check for unmapped holes besides queue pages for
->>> migration. The rules for checking unmapped holes are:
->>> 1 Unmapped holes at any part of the specified range should be reported as
->>>    EFAULT if mbind() for none MPOL_DEFAULT cases;
->>> 2 Unmapped holes at any part of the specified range should be ignored if
->>>    mbind() for MPOL_DEFAULT case;
->>> Note that the second rule is the current implementation, but it seems
->>> conflicts the Linux API definition.
->>>
->>> queue_pages_test_walk() is fixed by introduce new fields in struct
->>> queue_pages which help to check:
->>> 1 holes at head and tail side of specified range;
->>> 2 the whole range is in a hole;
->>>
->>> Besides, queue_pages_test_walk() must update previous vma record no matter
->>> the current vma should be considered for queue pages or not.
->>>
->>
->> More details about current issue (which breaks the mbind() API definition):
->> 1. In queue_pages_test_walk()
->> checking on (!vma->vm_next && vma->vm_end < end) would never success,
->> because 'end' passed from walk_page_test() make sure "end <=  vma->vm_end". so hole
->> beyond the last vma can't be detected.
->>
->> 2. queue_pages_test_walk() only called for vma, and 'start', 'end' parameters are guaranteed
->> within vma. Then, if the range starting or ending in an unmapped hole,
->> queue_pages_test_walk() don't have chance to be called to check. In other words, the
->> current code can detect this case (range span over hole):
->> [  vma  ][ hole ][ vma]
->>     [     range      ]
->> but cant not detect these case :
->> [  vma  ][ hole ][ vma]
->>     [  range  ]
->> [  vma  ][ hole ][  vma  ]
->>              [  range  ]
-> 
-> IIRC, page table walker (walk_page_range()) should be designed to
-> handle these range inputs by separating into sub-ranges by vma
-> boundaries like below (with your notation):
-> 
->    [  vma  ][ hole ][ vma  ]
->       [    ][      ][  ]      // for your 1st case
->       [    ][   ]             // for your 2nd case
->                [   ][  ]      // for your 3rd case
-> 
-Yes, pagewalk works exactly as your description.
+https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
 
-> And I found that .pte_hole is undefined in queue_pages_walk_ops.
-> So I'm guessing now that that's why hole regions are ignored and
-> the definition of EFAULT behavior in manpage is violated.
-> So providing proper .pte_hole callback could be another approach
-> for this issue which might fit better to the design.
-Using the .pte_hole() can be one option, we may stop detecting the
-unmapped holes when .pte_hole() been first called for a hole which
-is outside vma. But, .pte_hole() would be called many times during
-the walking, because it is called for holes inside and outside VMA.
-.test_walk() is called once for one vma, and not called for other
-situation, so better for cost.
+And sent the new version.
 
-> IOW, queue_pages_test_walk() might not the right place to handle
-> hole regions by definition.
-I guess the original design was to avoid walking those vma twice, one
-for test holes and one for queue pages. Maybe we can find better
-choice?
+Thanks,
 
-> 
-> Thanks,
-> Naoya Horiguchi
-> 
->>
->> 3. a checking in mbind_range() try to recover if the hole is in head side, but can't
->> recover if hole is in tail side of range.
->>
->> - Xinhai
->>
->>> Fixes: 9d8cebd4bcd7 ("mm: fix mbind vma merge problem")
->>> Fixes: 6f4576e3687b ("mempolicy: apply page table walker on queue_pages_range()")
->>> Fixes: 48684a65b4e3 ("mm: pagewalk: fix misbehavior of walk_page_range for vma(VM_PFNMAP)")
->>> Signed-off-by: Li Xinhai <lixinhai.li@gmail.com>
->>> ---
->>> Changes in v2:
->>>    - Fix the unmapped holes checking in queue_pages_test_walk() instead of
->>>      mbind_rnage().
->>>
->>>   mm/mempolicy.c | 44 +++++++++++++++++++++++++++++---------------
->>>   1 file changed, 29 insertions(+), 15 deletions(-)
->>>
->>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
->>> index 4ae967bcf954..24087dfa4dcd 100644
->>> --- a/mm/mempolicy.c
->>> +++ b/mm/mempolicy.c
->>> @@ -411,6 +411,9 @@ struct queue_pages {
->>>   	unsigned long flags;
->>>   	nodemask_t *nmask;
->>>   	struct vm_area_struct *prev;
->>> +	unsigned long start;
->>> +	unsigned long end;
->>> +	int in_hole;
->>>   };
->>>   
->>>   /*
->>> @@ -618,28 +621,31 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
->>>   	unsigned long endvma = vma->vm_end;
->>>   	unsigned long flags = qp->flags;
->>>   
->>> -	/*
->>> -	* Need check MPOL_MF_STRICT to return -EIO if possible
->>> -	* regardless of vma_migratable
->>> -	*/
->>> -	if (!vma_migratable(vma) &&
->>> -	   !(flags & MPOL_MF_STRICT))
->>> -	return 1;
->>> -
->>> +	/* range check first */
->>>   	if (endvma > end)
->>>   	endvma = end;
->>> -	if (vma->vm_start > start)
->>> -	start = vma->vm_start;
->>> +	BUG_ON((vma->vm_start > start) || (vma->vm_end < end));
->>>   
->>> +	qp->in_hole = 0;
->>>   	if (!(flags & MPOL_MF_DISCONTIG_OK)) {
->>> -	if (!vma->vm_next && vma->vm_end < end)
->>> +	if ((!vma->vm_next && vma->vm_end < qp->end) ||
->>> +	(vma->vm_next && qp->end < vma->vm_next->vm_start))
->>>   	return -EFAULT;
->>> -	if (qp->prev && qp->prev->vm_end < vma->vm_start)
->>> +	if ((qp->prev && qp->prev->vm_end < vma->vm_start) ||
->>> +	(!qp->prev && qp->start < vma->vm_start))
->>>   	return -EFAULT;
->>>   	}
->>>   
->>>   	qp->prev = vma;
->>>   
->>> +	/*
->>> +	* Need check MPOL_MF_STRICT to return -EIO if possible
->>> +	* regardless of vma_migratable
->>> +	*/
->>> +	if (!vma_migratable(vma) &&
->>> +	   !(flags & MPOL_MF_STRICT))
->>> +	return 1;
->>> +
->>>   	if (flags & MPOL_MF_LAZY) {
->>>   	/* Similar to task_numa_work, skip inaccessible VMAs */
->>>   	if (!is_vm_hugetlb_page(vma) &&
->>> @@ -679,14 +685,23 @@ queue_pages_range(struct mm_struct *mm, unsigned long start, unsigned long end,
->>>   	nodemask_t *nodes, unsigned long flags,
->>>   	struct list_head *pagelist)
->>>   {
->>> +	int err;
->>>   	struct queue_pages qp = {
->>>   	.pagelist = pagelist,
->>>   	.flags = flags,
->>>   	.nmask = nodes,
->>>   	.prev = NULL,
->>> +	.start = start,
->>> +	.end = end,
->>> +	.in_hole = 1,
->>>   	};
->>>   
->>> -	return walk_page_range(mm, start, end, &queue_pages_walk_ops, &qp);
->>> +	err = walk_page_range(mm, start, end, &queue_pages_walk_ops, &qp);
->>> +	/* whole range in unmapped hole */
->>> +	if (qp->in_hole && !(flags & MPOL_MF_DISCONTIG_OK))
->>> +	err = -EFAULT;
->>> +
->>> +	return err;
->>>   }
->>>   
->>>   /*
->>> @@ -738,8 +753,7 @@ static int mbind_range(struct mm_struct *mm, unsigned long start,
->>>   	unsigned long vmend;
->>>   
->>>   	vma = find_vma(mm, start);
->>> -	if (!vma || vma->vm_start > start)
->>> -	return -EFAULT;
->>> +	BUG_ON(!vma);
->>>   
->>>   	prev = vma->vm_prev;
->>>   	if (start > vma->vm_start)
->>> -- 
->>> 2.22.0
-
+	Roi Martin
