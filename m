@@ -8,58 +8,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2961BCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D386CCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E085D216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50DE2087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:48:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FanvcEmI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rnAhf9Ic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbfJaVsX (ORCPT
+        id S1729988AbfJaVs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 17:48:23 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40184 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728598AbfJaVsX (ORCPT
+        Thu, 31 Oct 2019 17:48:27 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39492 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728598AbfJaVs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 17:48:23 -0400
-Received: by mail-wr1-f66.google.com with SMTP id o28so7855606wro.7;
-        Thu, 31 Oct 2019 14:48:21 -0700 (PDT)
+        Thu, 31 Oct 2019 17:48:26 -0400
+Received: by mail-wr1-f65.google.com with SMTP id a11so7860750wra.6;
+        Thu, 31 Oct 2019 14:48:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ve3LOHXOaREWp3o88DTnyild24rHhjfRfeBuPC+5t3M=;
-        b=FanvcEmIjrpvEib4DeOjMcywQ5YoiPsMt2E1MaRu2j5P+pjb0QURqOoKhFzdA1cT8g
-         PVQloZnh3ZYYocdAP4KNIYrmIbrz9E1skM8eN6QlWTaLqXz6oHOlC25WVZxIGt9yDhjh
-         a+qXdZSXTLbsGQf8VpUnGpfs06hwzXWN3rOH/hXSkhOOunpFMvfhmvJj/WpoiLxaqdN8
-         4+1LgclolGv9sfw9NXnwEk15FNjpJOdZ3adry5aTk3py2ffdCLGwRb50OJ3mds2kDDB1
-         ouNA8Q1nvjaBCBYchlNlhzRCmgeJftAwDCoVBkuNRBIzfcTxcucMjC2gGsx0DIMk7ySV
-         RAAw==
+        bh=5uFgNaQscOS3J7biXheGbSey4ELRTdn8KbZYbK8731c=;
+        b=rnAhf9IcenrlT0/sCny2Wmq3Q1I6xcfKIik4VJKor84zfXkeZjV0i2cQzbgX9xp/lX
+         CE64cnZZ6V8n727mevZS5B6H2sRRXpDnpmJu5LPMbrE35VJF+HM+NutngIBYea/EJI8y
+         eGlaWecSbuylY0J6MuCeW6MJTuXWcCnzFkfbpm/pktfBZWtTbGLQmtaFu/jQANr1iwW2
+         i7TIVQuudGtoPIhsoDNTcZb507LWTsjkmZyLBkFGVe+je3F9Es9usI7PUo/Zm8a3flmE
+         KoZux/Pla/dAoI73HB6I9g/mlBrJbBBYOawUenvcbgWYV+2MIQ9aIq6+xQFS9KVFUit6
+         yE+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ve3LOHXOaREWp3o88DTnyild24rHhjfRfeBuPC+5t3M=;
-        b=fEXGqLY+n3AyYzx/L86ADr6A627G94M48G6W4gnS1ln4nwrzMh3cEpfA95CdZhGuYy
-         Kth19+q+CZBVRTJvMv9avnnYEs4mAYAuUIiE+/hzGVEiqHJXrlCNeO/DFD1VLn+tp9jA
-         Wk4PGQKHYb3UocvJFDC2kI5//oo5C1v11ozlXIazYT6JxgISp+SaBRwnwh9Ob9A7zcD5
-         MNWVEmQQNz4SQWIjO6JE0HXhXNoJtQAx7/P23dSM81CtAMW8OmmFUeov93/pUAgpvXok
-         E2CUypQM+y4wgHWyPp+KuuhrwtSoQY+WPLhNEsquMDX3p49xlBIMa40MkCUq0yoNfQQh
-         hrHg==
-X-Gm-Message-State: APjAAAW+8IE2gjFRF+KgmLMh4pjlwQaVJVdWmEesiDCAwef7/D95eI6p
-        ixTcLG0H7B0HwZE5P+hdpm4=
-X-Google-Smtp-Source: APXvYqyc891iyQP05RQpakGQc/2QDPOJzJ1GroEpUNgMx+loVXIWeZMG7nVgs2+XEYEzGuKeYzi/Cw==
-X-Received: by 2002:a5d:5288:: with SMTP id c8mr708420wrv.1.1572558500533;
-        Thu, 31 Oct 2019 14:48:20 -0700 (PDT)
+        bh=5uFgNaQscOS3J7biXheGbSey4ELRTdn8KbZYbK8731c=;
+        b=KrDCJQPBPlfoSPDFbC4oC65zIlwUW/qf1QTbKd5OK5h9RfRoOkaKnNoqs9l8Ys5Z9K
+         tHNw3VPlQJnQmwokIZpi37zTEn+kMjRBAVns5FS9BpVUTgrWy9Bd833lHapWiqg5MFYl
+         nfcBQu/DCuu+dWOAIjZG55jY6aNasKiVbLrmNi6U2x0dTgfYuw1p8BGs8xI/QBmpAj9R
+         M0XwjD6J6KLEc+d10BkUp1nP2h6+7bn1Q8c0AI9vyvaJFMjmw8AyA7EOf9/0oD//4BXB
+         EZo+W5dZ/v93hejlxaNd56aSffqbZkgXg5A+sHM675B0yGkWtb4Jkshv5zvyi+ecQltP
+         j58w==
+X-Gm-Message-State: APjAAAVAc18E1J8tCVGEf9AtYlQOdXjY5Yww/OeIDtJKxQ8nomf6NdBy
+        FpIQutwRvmmyF6Uy2djilFQ=
+X-Google-Smtp-Source: APXvYqzWe3btYgsNeCFwdVrMe+UNfJD/nil/R+ovtC1wJ4uWr3FiXtG/rUUVnAmwO3Nl76ZJ/Gx24w==
+X-Received: by 2002:adf:e64f:: with SMTP id b15mr7212951wrn.372.1572558504419;
+        Thu, 31 Oct 2019 14:48:24 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id g184sm5813674wma.8.2019.10.31.14.48.16
+        by smtp.gmail.com with ESMTPSA id g184sm5813674wma.8.2019.10.31.14.48.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 14:48:19 -0700 (PDT)
+        Thu, 31 Oct 2019 14:48:23 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
-Cc:     Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -67,6 +66,7 @@ Cc:     Doug Berger <opendmb@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Vladimir Murzin <vladimir.murzin@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Doug Berger <opendmb@gmail.com>,
         Hanjun Guo <guohanjun@huawei.com>, Qian Cai <cai@lca.pw>,
         Zhang Lei <zhang.lei@jp.fujitsu.com>,
         Marc Zyngier <maz@kernel.org>,
@@ -74,9 +74,9 @@ Cc:     Doug Berger <opendmb@gmail.com>,
         Andre Przywara <andre.przywara@arm.com>,
         linux-doc@vger.kernel.org (open list:DOCUMENTATION),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 1/3] arm64: apply ARM64_ERRATUM_845719 workaround for Brahma-B53 core
-Date:   Thu, 31 Oct 2019 14:47:23 -0700
-Message-Id: <20191031214725.1491-2-f.fainelli@gmail.com>
+Subject: [PATCH v2 2/3] arm64: Brahma-B53 is SSB and spectre v2 safe
+Date:   Thu, 31 Oct 2019 14:47:24 -0700
+Message-Id: <20191031214725.1491-3-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191031214725.1491-1-f.fainelli@gmail.com>
 References: <20191031214725.1491-1-f.fainelli@gmail.com>
@@ -85,90 +85,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+Add the Brahma-B53 CPU (all versions) to the whitelists of CPUs for the
+SSB and spectre v2 mitigations.
 
-The Broadcom Brahma-B53 core is susceptible to the issue described by
-ARM64_ERRATUM_845719 so this commit enables the workaround to be applied
-when executing on that core.
-
-Since there are now multiple entries to match, we must convert the
-existing ARM64_ERRATUM_845719 into an erratum list.
-
-Signed-off-by: Doug Berger <opendmb@gmail.com>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- Documentation/arm64/silicon-errata.rst |  3 +++
- arch/arm64/include/asm/cputype.h       |  2 ++
- arch/arm64/kernel/cpu_errata.c         | 13 +++++++++++--
- 3 files changed, 16 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/cpu_errata.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/arm64/silicon-errata.rst b/Documentation/arm64/silicon-errata.rst
-index ab7ed2fd072f..57757c73ead1 100644
---- a/Documentation/arm64/silicon-errata.rst
-+++ b/Documentation/arm64/silicon-errata.rst
-@@ -91,6 +91,9 @@ stable kernels.
- | ARM            | MMU-500         | #841119,826419  | N/A                         |
- +----------------+-----------------+-----------------+-----------------------------+
- +----------------+-----------------+-----------------+-----------------------------+
-+| Broadcom       | Brahma-B53      | N/A             | ARM64_ERRATUM_845719        |
-++----------------+-----------------+-----------------+-----------------------------+
-++----------------+-----------------+-----------------+-----------------------------+
- | Cavium         | ThunderX ITS    | #22375,24313    | CAVIUM_ERRATUM_22375        |
- +----------------+-----------------+-----------------+-----------------------------+
- | Cavium         | ThunderX ITS    | #23144          | CAVIUM_ERRATUM_23144        |
-diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
-index b1454d117cd2..aca07c2f6e6e 100644
---- a/arch/arm64/include/asm/cputype.h
-+++ b/arch/arm64/include/asm/cputype.h
-@@ -79,6 +79,7 @@
- #define CAVIUM_CPU_PART_THUNDERX_83XX	0x0A3
- #define CAVIUM_CPU_PART_THUNDERX2	0x0AF
- 
-+#define BRCM_CPU_PART_BRAHMA_B53	0x100
- #define BRCM_CPU_PART_VULCAN		0x516
- 
- #define QCOM_CPU_PART_FALKOR_V1		0x800
-@@ -105,6 +106,7 @@
- #define MIDR_THUNDERX_81XX MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX_81XX)
- #define MIDR_THUNDERX_83XX MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX_83XX)
- #define MIDR_CAVIUM_THUNDERX2 MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX2)
-+#define MIDR_BRAHMA_B53 MIDR_CPU_MODEL(ARM_CPU_IMP_BRCM, BRCM_CPU_PART_BRAHMA_B53)
- #define MIDR_BRCM_VULCAN MIDR_CPU_MODEL(ARM_CPU_IMP_BRCM, BRCM_CPU_PART_VULCAN)
- #define MIDR_QCOM_FALKOR_V1 MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_FALKOR_V1)
- #define MIDR_QCOM_FALKOR MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_FALKOR)
 diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index 6c3b10a41bd8..c065dd48d661 100644
+index c065dd48d661..9b1ba1f489ac 100644
 --- a/arch/arm64/kernel/cpu_errata.c
 +++ b/arch/arm64/kernel/cpu_errata.c
-@@ -737,6 +737,16 @@ static const struct midr_range erratum_1418040_list[] = {
+@@ -489,6 +489,7 @@ static const struct midr_range arm64_ssb_cpus[] = {
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A35),
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
++	MIDR_ALL_VERSIONS(MIDR_BRAHMA_B53),
+ 	{},
  };
- #endif
  
-+#ifdef CONFIG_ARM64_ERRATUM_845719
-+static const struct midr_range erratum_845719_list[] = {
-+	/* Cortex-A53 r0p[01234] */
-+	MIDR_REV_RANGE(MIDR_CORTEX_A53, 0, 0, 4),
-+	/* Brahma-B53 r0p[0] */
-+	MIDR_REV(MIDR_BRAHMA_B53, 0, 0),
-+	{},
-+};
-+#endif
-+
- const struct arm64_cpu_capabilities arm64_errata[] = {
- #ifdef CONFIG_ARM64_WORKAROUND_CLEAN_CACHE
- 	{
-@@ -777,10 +787,9 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
- #endif
- #ifdef CONFIG_ARM64_ERRATUM_845719
- 	{
--	/* Cortex-A53 r0p[01234] */
- 		.desc = "ARM erratum 845719",
- 		.capability = ARM64_WORKAROUND_845719,
--		ERRATA_MIDR_REV_RANGE(MIDR_CORTEX_A53, 0, 0, 4),
-+		ERRATA_MIDR_RANGE_LIST(erratum_845719_list),
- 	},
- #endif
- #ifdef CONFIG_CAVIUM_ERRATUM_23154
+@@ -573,6 +574,7 @@ static const struct midr_range spectre_v2_safe_list[] = {
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A35),
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
++	MIDR_ALL_VERSIONS(MIDR_BRAHMA_B53),
+ 	{ /* sentinel */ }
+ };
+ 
 -- 
 2.17.1
 
