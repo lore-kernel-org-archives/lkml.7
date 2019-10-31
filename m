@@ -2,63 +2,115 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616C2CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85FBCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40DAC20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE4092080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:01:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KdI7GJoP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbfJaSBC (ORCPT
+        id S1729216AbfJaSB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:01:02 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:58466 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729114AbfJaSBB (ORCPT
+        Thu, 31 Oct 2019 14:01:29 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36299 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729027AbfJaSB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:01:01 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0CB2514DE0AF7;
-        Thu, 31 Oct 2019 11:01:01 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 11:01:00 -0700 (PDT)
-Message-Id: <20191031.110100.985830325607594650.davem@davemloft.net>
-To:     sheetal.tigadoli@broadcom.com
-Cc:     zajec5@gmail.com, gregkh@linuxfoundation.org,
-        michal.simek@xilinx.com, rajan.vaja@xilinx.com,
-        scott.branden@broadcom.com, ray.jui@broadcom.com,
-        vikram.prakash@broadcom.com, jens.wiklander@linaro.org,
-        michael.chan@broadcom.com, vikas.gupta@broadcom.com,
-        vasundhara-v.volam@broadcom.com, linux-kernel@vger.kernel.org,
-        tee-dev@lists.linaro.org, bcm-kernel-feedback-list@broadcom.com,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH net-next V5 0/3] Add OP-TEE based bnxt f/w manager
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1572516532-5977-1-git-send-email-sheetal.tigadoli@broadcom.com>
-References: <1572516532-5977-1-git-send-email-sheetal.tigadoli@broadcom.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 31 Oct 2019 11:01:01 -0700 (PDT)
+        Thu, 31 Oct 2019 14:01:29 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c7so6193789otm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 11:01:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7yF1ZFa0NQKW1P9+UET4zyA+4HzwzTV8eBOXyYYcm50=;
+        b=KdI7GJoPUQ87vC9eDvndZA0yAZXeweGXN1/7uAzOxrFy5OhyZwKF/N7T8DLXzqJ1JY
+         YcJmQzIxRU+2NgvLtHQQ3zH6cLb1e4skGxrap6E9BQJSurU7Q/20H96bUJ7Hrndsb++e
+         +QdEU2jUS01dbXwGCNlWHNwhOcF9bHuLrRbBw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7yF1ZFa0NQKW1P9+UET4zyA+4HzwzTV8eBOXyYYcm50=;
+        b=i9JYUX/3kP5CCPCoibj0WX7fB6FD8xwoRDtNaKN7xMyD3yQOCyWPKjOyLau6g/tcVI
+         3ryHjIGQjw/Y2+ygbtNtakiXtD8cY0pRE8B8B57OZEraLi+wAm504BKn+4rmr9/7iBa/
+         zmtVn+3DNnEOliQVZIsZ50g7WFNHkMhh4R0OQHNl/+8AIw+rN/NY93GZE0E6MkUvPzpJ
+         a9EkvKcAeblGjM9V0BlDCKxJp7wvfbch415vCnsFAJ4z7KIO6hfs58/gMut4GNb+SOpm
+         NaN0EIomSgvxR6a8Sa9UsAU4A+YOzOIPSDxVc0hefhFaLRVEbA8+scIogSquK6i0rZhG
+         LmsQ==
+X-Gm-Message-State: APjAAAWna2jIE8huT3uSF3FDDVrQMf8/wANzfdrN3NzxiJhUkji4F/Fp
+        qA7DDOwRCT/cC4XfY51Zqq2n7FB/YCksjOpW2944Bg==
+X-Google-Smtp-Source: APXvYqy1uzgZvxYZJr1xLmUp54jxULY37cEV21ulK7dM1ZQuVKhCPIrNGtKksA/VMg4P36KII5M0JLGeNPA8AF9oERU=
+X-Received: by 2002:a9d:39a5:: with SMTP id y34mr5476867otb.36.1572544888141;
+ Thu, 31 Oct 2019 11:01:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <1572516532-5977-1-git-send-email-sheetal.tigadoli@broadcom.com> <1572516532-5977-4-git-send-email-sheetal.tigadoli@broadcom.com>
+In-Reply-To: <1572516532-5977-4-git-send-email-sheetal.tigadoli@broadcom.com>
+From:   Michael Chan <michael.chan@broadcom.com>
+Date:   Thu, 31 Oct 2019 11:01:17 -0700
+Message-ID: <CACKFLim+ru8c1JfB+Q3miyWid48OTPn_xHrrjG_z_OznjVWTJw@mail.gmail.com>
+Subject: Re: [PATCH net-next V5 3/3] bnxt_en: Add support to collect crash
+ dump via ethtool
+To:     Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+Cc:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Vikram Prakash <vikram.prakash@broadcom.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vikas Gupta <vikas.gupta@broadcom.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        tee-dev@lists.linaro.org,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Netdev <netdev@vger.kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-Date: Thu, 31 Oct 2019 15:38:49 +0530
+On Thu, Oct 31, 2019 at 3:09 AM Sheetal Tigadoli
+<sheetal.tigadoli@broadcom.com> wrote:
+>
+> From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+>
+> Driver supports 2 types of core dumps.
+>
+> 1. Live dump - Firmware dump when system is up and running.
+> 2. Crash dump - Dump which is collected during firmware crash
+>                 that can be retrieved after recovery.
+> Crash dump is currently supported only on specific 58800 chips
+> which can be retrieved using OP-TEE API only, as firmware cannot
+> access this region directly.
+>
+> User needs to set the dump flag using following command before
+> initiating the dump collection:
+>
+>     $ ethtool -W|--set-dump eth0 N
+>
+> Where N is "0" for live dump and "1" for crash dump
+>
+> Command to collect the dump after setting the flag:
+>
+>     $ ethtool -w eth0 data Filename
+>
+> v3: Modify set_dump to support even when CONFIG_TEE_BNXT_FW=n.
+> Also change log message to netdev_info().
+>
+> Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
+> Cc: Michael Chan <michael.chan@broadcom.com>
+> Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+> Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
 
-> This patch series adds support for TEE based BNXT firmware
-> management module and the driver changes to invoke OP-TEE
-> APIs to fastboot firmware and to collect crash dump.
-> 
-> Changes from v4:
->  - update Kconfig to reflect dependency on TEE driver
-
-Series applied, thanks.
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
