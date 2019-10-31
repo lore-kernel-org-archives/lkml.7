@@ -2,159 +2,94 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2806C47E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7D9CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E6D2080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD4F42086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:05:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z82auzUS"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="d8lMcHEv";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kDdIjhGZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbfJaIBF (ORCPT
+        id S1727002AbfJaIFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 04:01:05 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35736 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfJaIBF (ORCPT
+        Thu, 31 Oct 2019 04:05:18 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:41816 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbfJaIFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 04:01:05 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9V80tYr099287;
-        Thu, 31 Oct 2019 03:00:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572508855;
-        bh=TKe46EoF1J60ShuFHgR4qomu3QEwz48sNCBTYx/91/g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Z82auzUS36CE6SDIajfIV5GVqXyvm0MdUM2vZQwy7QPNnOg7JRHukjfaOarY/WBY5
-         iQh3/UuGeO55Qlkz/v23GMqgbe4oBFuaJa/fnJt3sBs+p6ipEwo9jCN1YENffpxO+S
-         zKUZkRnJQ2yT2AORtx6k2wFA686JgUYWYe1YRkys=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9V80sEM067010
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 31 Oct 2019 03:00:55 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 31
- Oct 2019 03:00:54 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 31 Oct 2019 03:00:54 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9V80pDA057797;
-        Thu, 31 Oct 2019 03:00:52 -0500
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <devicetree@vger.kernel.org>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
- <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
- <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
- <20191030141736.GN4568@sirena.org.uk>
- <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
- <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com>
-Date:   Thu, 31 Oct 2019 10:01:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
+        Thu, 31 Oct 2019 04:05:17 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id BFC5360907; Thu, 31 Oct 2019 08:05:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572509116;
+        bh=zfPjYfxYvEa2P4UUr9Y4+q9hJp/scBvnbb1Oc55091Q=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=d8lMcHEv5opneU5qnfD78MRDQahkaNJtov+IHjpZi56KOctkfOgtrVehjPKWLDluz
+         YSS4hkBehXaHPDxSG9wDcxG9riOCtwB4A4RQtp/2QB/IAP3ecYkBnmHeB4lCpuQaBU
+         xjyCGg7y5xFry1aT8569H/moL8naxk0rZJNMn7Vk=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1C5B9603A3;
+        Thu, 31 Oct 2019 08:05:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572509116;
+        bh=zfPjYfxYvEa2P4UUr9Y4+q9hJp/scBvnbb1Oc55091Q=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=kDdIjhGZm21VV7lsdD7YeP4MWS3CAtGS6K5qfASN2fPkwVFs6SB4IxuVKZPRglqSw
+         EA0qA5gHnjDJ5QCPg3SOX0qcFFMMa4wm87QJ/MtHPbF18aU1xHly1saNnH4HBsmHLa
+         PXhQMk82D0HWcSICCdKQCS7thWFvMCf4NM3fqbZw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1C5B9603A3
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] rtw88: remove redundant null pointer check on arrays
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20191025113056.19167-1-colin.king@canonical.com>
+References: <20191025113056.19167-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Chris Chiu <chiu@endlessm.com>,
+        Tzu-En Huang <tehuang@realtek.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20191031080516.BFC5360907@smtp.codeaurora.org>
+Date:   Thu, 31 Oct 2019 08:05:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Colin King <colin.king@canonical.com> wrote:
 
-
-On 30/10/2019 20.49, Rob Herring wrote:
-> On Wed, Oct 30, 2019 at 9:30 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>
->>
->>
->> On 30/10/2019 16.17, Mark Brown wrote:
->>> On Wed, Oct 30, 2019 at 03:32:09PM +0200, Peter Ujfalusi wrote:
->>>> On 30/10/2019 15.12, Rob Herring wrote:
->>>
->>>>> Why can't we just add a shared flag like we have for interrupts?
->>>>> Effectively, we have that for resets too, it's just hardcoded in the
->>>>> the drivers.
->>>
->>>> This would be kind of the same thing what the
->>>> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
->>>> fixed-regulators afaik.
->>>
->>> The theory with that was that any usage of this would need the
->>> higher level code using the GPIO to cooperate so they didn't step
->>> on each other's toes so the GPIO code should just punt to it.
->>
->> But from the client driver point of view a GPIO is still GPIO and if the
->> components are unrelated then it is hard to patch things together from
->> the top.
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> You can't escape a driver being aware. If a driver depends on that
-> GPIO to actually be set to states the driver says, then it can't be
-> guaranteed to work. For example, maybe the driver assumes the device
-> is in reset state after toggling reset and doesn't work if not in
-> reset state. The driver has to be aware no matter what you do in DT.
+> The checks to see if swing_table->n or swing_table->p are null are
+> redundant since n and p are arrays and can never be null if
+> swing_table is non-null.  I believe these are redundant checks
+> and can be safely removed, especially the checks implies that these
+> are not arrays which can lead to confusion.
+> 
+> Addresses-Coverity: ("Array compared against 0")
+> Fixes: c97ee3e0bea2 ("rtw88: add power tracking support")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-That's true for some device, but it is also true that some can not
-tolerate being reset without them knowing it.
+Patch applied to wireless-drivers-next.git, thanks.
 
-If all users of the shared GPIO have full control over it then they can
-just toggle it whatever way they want. How would a regulator, codec,
-amplifier would negotiate on what to do with the shared GPIO?
+baff8da6e163 rtw88: remove redundant null pointer check on arrays
 
-Another not uncommon setup is when the two components needs different level:
-C1: ENABLE is high active
-C2: RESET is high active
+-- 
+https://patchwork.kernel.org/patch/11212093/
 
-To enable C1, the GPIO should be high. To enable C2 the GPIO must be low.
-In the board one of the branch of the shared GPIO needs (and have) a
-logic inverter.
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
-If they both control the same GPIO then they must have requested it with
-different GPIO_ACTIVE_ since the drivers are written according to chip
-spec, so C1 sets the GPIO to 1, C2 sets it to 0, the inversion for one
-of them must happen in gpio core, right?
-
-It should be possible to add pass-through mode for gpio-shared so that
-all requests would propagate to the root GPIO if that's what needed for
-some setups.
-
-That way the gpio-shared would nicely handle the GPIO inversions, would
-be able to handle cases to avoid unwanted reset/enable of components or
-allow components to be ninja-reset.
-
-I think it would be possible to add gpiod_is_shared(struct gpio_desc
-*desc) so users can check if the GPIO is shared - it would only return
-true if the gpio-shared is not in pass-through mode so they can know
-that the state they see on their gpio desc is not necessary matching
-with reality.
-Probably another gpiod_shared_get_root_value() to fetch the root's state?
-
-I intentionally not returning that in the driver as clients might skip a
-gpio_set_value() seeing that the GPIO line is already in a state they
-would want it, but that would not register their needs for the level.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
