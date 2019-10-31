@@ -2,306 +2,196 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D802CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 04:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04594CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 04:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0CE62087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 04:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9011F2087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 04:39:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HJ0gijY/"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aSuVD/U6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfJaEcM (ORCPT
+        id S1726658AbfJaEjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 00:32:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37154 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfJaEcM (ORCPT
+        Thu, 31 Oct 2019 00:39:24 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:13383 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbfJaEjX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 00:32:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3iBRwf8xkomOfRCFd+e7UVewWIdDDeKJVSgRku6rWU8=; b=HJ0gijY/+8Fl8EhdBBvERthat
-        V5lsipmLBw9VHyRMkK0vK8QMiudxxzhb7IO+B7J3fPNucLhcbRh6T4bR5FD1HxTFw7msnnEyJcqtQ
-        Eff0RPLIBBEkylJryoPO9bEcbgL9TCupKtqDclpQU5absl7v6PWmsGYU0wmnUst+2aQUN7fyHyBGt
-        ZA3boRY27Ek4BOFhpkHok1ODLMoC8OkhKkWzHVyEORLZyKCuYWmaDivGSyPT2LK45eLvyP8dDa70V
-        JomxlXs7f2ElRV8vT738MKPRnyTEZoVVDmvVR+tSKPHh3sLhnMobT9GVMtn5CmBwfsf+l2wNcAEgq
-        1mSFHbChw==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iQ283-0002zV-0u; Thu, 31 Oct 2019 04:32:11 +0000
-Subject: Re: [PATCH] scripts: prune-kernel:remove old kernels and modules dir
- from system
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc:     bfields@fieldses.org, yamada.masahiro@socionext.com,
-        michal.lkml@markovi.net, linux-kbuild@vger.kernel.org,
+        Thu, 31 Oct 2019 00:39:23 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191031043920epoutp01746b19d90306c1890fe5ca15dd23cb52~SoXjlyTxK2675726757epoutp01W
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 04:39:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191031043920epoutp01746b19d90306c1890fe5ca15dd23cb52~SoXjlyTxK2675726757epoutp01W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1572496760;
+        bh=7D/E2evKGNTOcwIHpd5yyFb70AgXZ30JTIlKfDQrge8=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=aSuVD/U6h57H05IughONWjI9XknSleNU3LT7d+qIbNzdEmedBrY6BfIAT5SOBxJki
+         YvU0td666CiblK6GZfwOB2J0xpegeBmlysfr1RTF5rVThNcDQK9t2oH6l3B8PeTdGK
+         jXJuMoeV+9ZQ1fHK1UEuAPqeRbh840ae76WMPf0c=
+Received: from epsnrtp5.localdomain (unknown [182.195.42.166]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20191031043920epcas1p460f22d8962c47eea8b1ecfc9b1d40697~SoXjKeG2C2856328563epcas1p4f;
+        Thu, 31 Oct 2019 04:39:20 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.152]) by
+        epsnrtp5.localdomain (Postfix) with ESMTP id 473XfF4pYSzMqYkc; Thu, 31 Oct
+        2019 04:39:17 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        57.D3.04144.5756ABD5; Thu, 31 Oct 2019 13:39:17 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20191031043917epcas1p3775b7eae1e78c3c71ffa3b466d15d3af~SoXghQswe2202222022epcas1p3q;
+        Thu, 31 Oct 2019 04:39:17 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191031043917epsmtrp1f837205a237fc04b5e66a3bc8aa2bf84~SoXggehZU2301423014epsmtrp1W;
+        Thu, 31 Oct 2019 04:39:17 +0000 (GMT)
+X-AuditID: b6c32a35-2dfff70000001030-6f-5dba657540d9
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        96.B4.24756.5756ABD5; Thu, 31 Oct 2019 13:39:17 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191031043916epsmtip14c38954253779d0b380cb603882bfeb7~SoXgJ9CQ_1042710427epsmtip1B;
+        Thu, 31 Oct 2019 04:39:16 +0000 (GMT)
+Subject: Re: [PATCH v7 06/19] PM / devfreq: tegra30: Use kHz units uniformly
+ in the code
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Peter Geis <pgwipeout@gmail.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20191030095445.912435-1-unixbhaskar@gmail.com>
- <b8a12c03-1e17-61de-2cd9-a09650dc22b1@infradead.org>
- <20191031033722.GA7687@Gentoo>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <41693d0e-8ff2-bf06-f1a6-e7fb52779f95@infradead.org>
-Date:   Wed, 30 Oct 2019 21:32:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <a8ce6d98-26aa-b6eb-56ea-4bf960fc533d@samsung.com>
+Date:   Thu, 31 Oct 2019 13:44:48 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191031033722.GA7687@Gentoo>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191029220019.26773-7-digetx@gmail.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0gUURjl7szOjNLatGp9SQ+b3pa5k61NodG7BSOW6kcJYsPusCvui51d
+        SeuHbWGbpRkF1WhWWmpWZGLlbtaSFhFSWVZEIRRKtRXay9Aia8cp8t/5vu+ce75z76Uw7WUi
+        gcp1eAS3g7cxRDR+tX1uSrJXCGbrfEdnc+c/9yBuj1SNc/d9H0muK1hJcF9LbyNu3zeJ4F7u
+        qie4+28yuaFgFc6VXXxMLI82tHSfQYaA1E0aSnf3EYay5gZk+No0xajOyku3CrxZcCcKDpPT
+        nOuwZDCZm3JW5ejTdGwyu4RbzCQ6eLuQwaxeb0xem2uLLMUk5vM2b6Rl5EWRSVmW7nZ6PUKi
+        1Sl6MhjBZba5lrgWiLxd9DosC0xO+1JWp1uojxC35VnPNUi460Ls9kdt/WQR6hhbgqIooBfB
+        cMkddQmKprR0C4IK3y1SKb4gqL1UhCvFdwRDvp5IQY1IHkt2Wa2lbyC4WzVf4fQj6Hz7ViUP
+        YuksqGz9PCKOo6tVcPHONUweYPRWaA+cHyERdBKE3j0nZDyWngZPB3uQjDX0Mmgta1DLGKdn
+        Qu9AKyYbx9NboGOAVyjj4N7xXlzGUXQaVIWvk8rxE+BF70mVgqfC7isVmLwD0HtJ+HaiF1MC
+        rIbTPpUSPxbe320mFZwA4YPFf/EOOHfvNqFo/QiaQ51qZZAKobOHVfI5GD0XLgVTlPY0CPw8
+        gRTfGOgbOKBWrDTgL9YqlOnQ9ar7r+1EqNm7jyhHjDQqjTQqgTQqgfTf7BTCG9B4wSXaLYLI
+        utjRb92ERr5rkr4FHXmwvg3RFGLGaMrzA9laNZ8vFtjbEFAYE6f5nh5pacx8QaHgdua4vTZB
+        bEP6yF0fwhLiTc7I53d4clj9wtTUVG4Rm6ZnWWaCZkXd2WwtbeE9Qp4guAT3P52KikooQpvr
+        TdX1j3Z+iK/45Mha9+vY1JvDSeFG9+Qnepd/0pqwRXfV2K/Zn2t9UfujkDzQFIotWBsVNzDc
+        7o8vzdxQadYGM01D8z5gVMyMYHFj1+CsUEx4MDRLXTFnfuNNf+HWldbl5LqA8cqa4o19NUfq
+        Dj3Y8Pvh9ZSa189KO175O8v1RQwuWnk2CXOL/B/bEjroxAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLIsWRmVeSWpSXmKPExsWy7bCSnG5p6q5Yg72zWSxWf3zMaNEyaxGL
+        xdmmN+wWl3fNYbP43HuE0aLzyyw2i9uNK9gszj7ztvi5ax6LRd/aS2wOXB477i5h9Ng56y67
+        R2/zOzaPvi2rGD0+b5ILYI3isklJzcksSy3St0vgyli5ahZLwRrhiouH3rM3MJ7m72Lk4JAQ
+        MJG4NCu3i5GLQ0hgN6PE1WO3WboYOYHikhLTLh5lhqgRljh8uBgkLCTwllHiwhFBEFtYIEpi
+        zp6PLCC9IgJLmCTOflnODJJgFoiU6Jm7hQ1i6FZGicNXl7CDJNgEtCT2v7jBBmLzCyhKXP3x
+        mBHE5hWwk9jTt4oVxGYRUJV48nUP2CBRgQiJ59tvQNUISpyc+QTsOE4BM4l5L3ezQyxTl/gz
+        7xLUYnGJW0/mM0HY8hLNW2czT2AUnoWkfRaSlllIWmYhaVnAyLKKUTK1oDg3PbfYsMAwL7Vc
+        rzgxt7g0L10vOT93EyM40rQ0dzBeXhJ/iFGAg1GJh3dC2c5YIdbEsuLK3EOMEhzMSiK832yA
+        QrwpiZVVqUX58UWlOanFhxilOViUxHmf5h2LFBJITyxJzU5NLUgtgskycXBKNTAa2K6xZXsa
+        p1YySeldhwBry/xWe0lDgbdKXOy3lv6622nmlL37w6l/otbT17wMiYh8cq7uJp+fWdWzkw4L
+        5FW3GHodZTshu/BHjQyH/p/a8Otql09xvZTVjDDomVMgKzRtFsMHKyF1CWYeUQnDK09+L9aP
+        jqnQkHj6feJqpg8T2wwvpOru/a/EUpyRaKjFXFScCABE8DEZsAIAAA==
+X-CMS-MailID: 20191031043917epcas1p3775b7eae1e78c3c71ffa3b466d15d3af
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191029220734epcas1p42b635ee1c85a9480cecbaf7a1a41db25
+References: <20191029220019.26773-1-digetx@gmail.com>
+        <CGME20191029220734epcas1p42b635ee1c85a9480cecbaf7a1a41db25@epcas1p4.samsung.com>
+        <20191029220019.26773-7-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/30/19 8:37 PM, Bhaskar Chowdhury wrote:
-> Thank you Randy, my response are inline. Please look at it.I am
-> wondering , what else I could do get this damn! thing going??
-> Any clue??
+On 19. 10. 30. 오전 7:00, Dmitry Osipenko wrote:
+> Part of the code uses Hz units and the other kHz, let's switch to kHz
+> everywhere for consistency. A small benefit from this change (besides
+> code's cleanup) is that now powertop utility correctly displays devfreq's
+> stats, for some reason it expects them to be in kHz.
 > 
-> On 19:33 Wed 30 Oct 2019, Randy Dunlap wrote:
->> Hi,
->>
->> On 10/30/19 2:54 AM, Bhaskar Chowdhury wrote:
->>> This patch will remove old kernels and modules directorey related
->>> to that kernel from the system by interactively and silently.Here
->>> are few interactions with the scripts
->>>
->>> 1)
->>>
->>> ✔ ~/git-linux/linux-kbuild [master|AM 1/1 ↑·59|✔]
->>> 14:52 $ ./scripts/prune-kernel -h
->>> Usage: prune-kernel [ri]
->>>
->>>  -r | --remove kernel_ver modules_dir_name
->>>
->>>   -i | --interactive use as interactive way
->>>   ✘-1 ~/git-linux/linux-kbuild [master|AM 1/1 ↑·59|✔]
->>>     14:52 $ ./scripts/prune-kernel --help
->>>   Usage: prune-kernel [ri]
->>
->> That "[ri]" is confusing to me.
-> This are the options one has to pass with the script.Like below:
-
-I know that.  But it's missing '-', so it looks like
-$ prune-kernel r 5.2.5-foobar
-
-would work.
-
->>>
->>>    -r | --remove kernel_ver modules_dir_na]
->>>
->>>     -i | --interactive use as interactive way
->>>     2)
->>>
->>>  ✘-1 ~/git-linux/linux-kbuild [master|AM 1/1 ↑·59|✔]
->>>  14:52 $ ./scripts/prune-kernel -r 5.3.3
->>>  You need to provide kernel version and modules dir name
->>>  
->>>  ✘-1 ~/git-linux/linux-kbuild [master|AM 1/1 ↑·59|✔]
->>>  14:53 $ ./scripts/prune-kernel -r
->>>  You need to provide kernel version and modules dir name
->>>  
->>>  ✘-1 ~/git-linux/linux-kbuild [master|AM 1/1 ↑·59|✔]
->>>  14:54 $ ./scripts/prune-kernel -r 5.3.3 5.3.3-foo
->>
->> This one above didn't remove any kernel files.
->> Needs more testing.
-> It does remove but silently, as you and Bruce asked for this feature.
-
-No, see the code below for -r...
-
->>> 3)
->>>
->>> $ ./scripts/prune-kernel --remove
->>> You need to provide kernel version and modules dir name
->>>
->>> ✘-1 ~/git-linux/linux-kbuild [master|AM 1/1 ↑·59|✔]
->>> 14:55 $ ./scripts/prune-kernel --remove 5.3.3
->>> You need to provide kernel version and modules dir name
->>>
->>> ✘-1 ~/git-linux/linux-kbuild [master|AM 1/1 ↑·59|✔]
->>> 14:55 $ ./scripts/prune-kernel --remove 5.3.3 5.3.3-foo
->>>
->>>
->>> 4)14:55 $ ./scripts/prune-kernel -i
->>>
->>> Enter kernel version to remove or blank/empty to exit:
->>>
->>>
->>> 5)14:57 $ ./scripts/prune-kernel --interactive
->>>
->>> Enter kernel version to remove or blank/empty to exit:
->>> ✔ ~/git-linux/linux-kbuild [master|AM 1/1 ↑·59|✔]
->>>
->>>
->>> 6)14:59 $ ./scripts/prune-kernel --interactive
->>>
->>> Enter kernel version to remove or blank/empty to exit:5.3.3
->>> Please give the full modules directory name to remove:5.3.3-foo
->>>
->>>
->>>
->>> Removed kernel version:5.3.3 and associated modules:5.3.3-foo ...Done.
->>>
->>>
->>> 7)15:00 $ ./scripts/prune-kernel -i
->>>
->>> Enter kernel version to remove or blank/empty to exit:5.3.3
->>> Please give the full modules directory name to remove:5.3.3-foo
->>>
->>>
->>>
->>> Removed kernel version:5.3.3 and associated modules:5.3.3-foo ...Done.
->>>
->>>
->>> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
->>> ---
->>>  scripts/prune-kernel | 63 ++++++++++++++++++++++++++++++++++++++++++++
->>>  1 file changed, 63 insertions(+)
->>>
->>> diff --git a/scripts/prune-kernel b/scripts/prune-kernel
->>> index a25aa2160d47..a91010d0e2af 100755
->>> --- a/scripts/prune-kernel
->>> +++ b/scripts/prune-kernel
->>> @@ -1,3 +1,66 @@
->>>  #!/bin/bash
->>>  # SPDX-License-Identifier: GPL-2.0
->>> +#This script will delete old kernels and modules directory related to it
->>> +#-h with the script will show you the help
->>> +#-r with the script take two parameter: kernel_ver and modules_dir_name
->>> +#-i with the script allow you do the removing interactive way
->>>
->>> +flag=$1
->>> +kernel_ver=$2
->>> +modules_dir_name=$3
->>> +boot_dir=/boot
->>> +modules_dir=/lib/modules
->>> +
->>> +remove_old_kernel() {
->>> +    cd $boot_dir
->>> +    rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
->>> +    return 0
->>> +}
->>> +
->>> +remove_old_modules_dir() {
->>> +    cd $modules_dir
->>> +    rm -rf $modules_version
->>> +    return 0
->>> +}
->>> +
->>> +usage() {
->>> +    printf "Usage: $(basename $0) [ri] \n"
->>> +    printf "\n -r | --remove kernel_ver modules_dir_name \n"
->>> +    printf "\n -i | --interactive use as interactive way \n"
->>> +}
->>> +
->>> +for arg in "$@"
->>
->> what is the purpose (use) of "arg" here?
+> Tested-by: Peter Geis <pgwipeout@gmail.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/tegra30-devfreq.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 > 
-> This variable is used in case statement below.
-
-I can't find any use of 'arg' anywhere else in the script.
-Please show me where it is.
-
->> what is the purpose of the for loop?
->>
-> It scan through all the parameters pass .
-
-What is this script supposed (expected) to do with multiple arg parameters?
-
->> Is any 'shift' needed to consume (or discard) the first 3 positional
->> command line arguments?
-> Nope, that is not required. And I haven't use any.
->>
->>> +do
->>> +    case "$flag" in
->>> +        -i | --interactive)
->>> +            printf "\nEnter kernel version to remove or blank/empty to exit:%s"
->>> +            read kernel_version
->>> +            if [[ $kernel_version != "" ]]; then
->>> +                remove_old_kernel
->>> +                printf "Please give the full modules directory name to remove:%s"
->>> +                read modules_version
->>> +                if [[ $modules_version != "" ]]; then
->>> +                    remove_old_modules_dir
->>> +                    printf "\n\n\n Removed kernel version:$kernel_version and associated modules:$modules_version ...Done. \n"
->>
->> This message is only printed if $modules_version is non-empty.  If it is empty,
->> remove_old_kernel() has silently removed some kernel files (if they existed).
-> it will fail to remove anything if the kernel_version or modules_version
-> are empty and importantly exit.
->>
->>> +                else
->>> +                    exit 1
->>> +                fi
->>> +            fi
->>> +            ;;
->>> +        -h | --help)
->>> +            usage
->>> +            exit 1
->>> +            ;;
->>> +        -r | --remove)
->>> +            if [[ $# -ne 3 ]]; then
->>> +                printf "You need to provide kernel version and modules dir name\n"
->>> +                exit 1
->>> +            else
->>> +                cd $boot_dir
->>> +                rm -f $kernel_ver
->>
->> That 'rm' doesn't remove any files.  Compare what remove_old_kernel() does.
-> No,it is not using that function rather take the parameter from the
-> commandline and get into boot dir match with it and remove it.
-
-But it doesn't do that.  I tested it.  It should be more like what
-rmeove_old_kernel() does:
-
-		rm -If vmlinuz-$kernel_ver System.map-$kernel_ver config-$kernel_ver
-
-and if not, please explain why not.
-
-
->>> +                cd $modules_dir
->>> +                rm -rf $modules_dir_name
->>> +            fi
->>> +            ;;
->>> +    esac
->>> +done
->>> -- 
->>
->> The script, after this patch is applied, still contains the old script's for-loop
->> at the end of the "new" prune-kernel script.
+> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+> index 1d22f5239cd5..06c5376a7201 100644
+> --- a/drivers/devfreq/tegra30-devfreq.c
+> +++ b/drivers/devfreq/tegra30-devfreq.c
+> @@ -448,7 +448,7 @@ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
+>  	rate = dev_pm_opp_get_freq(opp);
+>  	dev_pm_opp_put(opp);
+>  
+> -	err = clk_set_min_rate(tegra->emc_clock, rate);
+> +	err = clk_set_min_rate(tegra->emc_clock, rate * KHZ);
+>  	if (err)
+>  		return err;
+>  
+> @@ -477,7 +477,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
+>  	stat->private_data = tegra;
+>  
+>  	/* The below are to be used by the other governors */
+> -	stat->current_frequency = cur_freq * KHZ;
+> +	stat->current_frequency = cur_freq;
+>  
+>  	actmon_dev = &tegra->devices[MCALL];
+>  
+> @@ -527,7 +527,7 @@ static int tegra_governor_get_target(struct devfreq *devfreq,
+>  		target_freq = max(target_freq, dev->target_freq);
+>  	}
+>  
+> -	*freq = target_freq * KHZ;
+> +	*freq = target_freq;
+>  
+>  	return 0;
+>  }
+> @@ -663,7 +663,7 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  			goto remove_opps;
+>  		}
+>  
+> -		err = dev_pm_opp_add(&pdev->dev, rate, 0);
+> +		err = dev_pm_opp_add(&pdev->dev, rate / KHZ, 0);
+>  		if (err) {
+>  			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
+>  			goto remove_opps;
+> @@ -686,7 +686,8 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  		goto unreg_notifier;
+>  	}
+>  
+> -	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
+> +	tegra_devfreq_profile.initial_freq = tegra->cur_freq;
+> +
+>  	devfreq = devfreq_add_device(&pdev->dev, &tegra_devfreq_profile,
+>  				     "tegra_actmon", NULL);
+>  	if (IS_ERR(devfreq)) {
 > 
-> Amazing! now it needs some explanation how I did...you probably want
-> that ..here are the steps....
-> 1)fetch that prune-kernel file from repos , which contains Bruce's code
-> in it.
-> 2) get inot it by editior, remove all except first two lines i.e bash
-> interpreter and PSDX .
-> 3)Save and commit it locally.
-> 4) Write my own code
-> 5) save it and commit it locally.
-> 6) go one level up use checkpatch to see anything bad creeps in
-> 7) Fixed the damn things if it reports.
-> 8) create the patch
-> 9) test it
-> 10) Send it.
-> 
-> Now, how the heck , that for loop is getting staying there is a mystry
-> to me!! Look like that is ruin all the work.
-> irk...
 
-I don't know.  I just know that it's not working AFAICT.
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
 -- 
-~Randy
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
