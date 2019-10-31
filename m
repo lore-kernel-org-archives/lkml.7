@@ -2,194 +2,118 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AF0CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B881FCA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 201682087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E6242087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572526870;
-	bh=f8eRto+8exxLgWUVCKrmmM8ykoEw4tBZ+Sa1c7y0s1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kmi/o72AWs+Ra/CqdDxpqHzbdwbC3H4r/kegjbF6GFYJVA7eva6nMZsDmEwZcQx/M
-	 RY/BTkKm6SpCHwWZ6wPxJKeG8B2fzkMyVYZucWlbuDpTjpe1dtEWq3e+or0ShVo6nX
-	 Im3OZT+z3uU+AIR3dIMIxf8A/3nB3WK76/nas9KU=
+	s=default; t=1572526895;
+	bh=ZqQmIL+VZ3QRd14dH7SG/ODYbXnGFyGCVOWZyG3KxSY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=PHYhgj74Ywd4CJBbkVzXaRYsjY8+xoEbDDGJnh17gQBbuRZ1pzp/NmN5XzY8KsCpi
+	 1H/gXdpT6VZ8L0xW5DZqwOTcrLN2I/y0ISq+WzLoiIo+LOPg/c0+jU6MiQCrNfbi1R
+	 Tp/GYR8GN03kTni7+PmguPa9iRyqi1/zIK3MH1mA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfJaNBI (ORCPT
+        id S1727121AbfJaNBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:01:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60836 "EHLO mail.kernel.org"
+        Thu, 31 Oct 2019 09:01:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbfJaNBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:01:08 -0400
-Received: from localhost (lns-bzn-32-82-254-4-138.adsl.proxad.net [82.254.4.138])
+        id S1726462AbfJaNBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 09:01:34 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FF182080F;
-        Thu, 31 Oct 2019 13:01:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5301A2080F;
+        Thu, 31 Oct 2019 13:01:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572526867;
-        bh=f8eRto+8exxLgWUVCKrmmM8ykoEw4tBZ+Sa1c7y0s1k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JPgWzUplTsqtsEfcET7zNSf9SFujmQQQiVz6ScjU8KqRhl7L8N21vc1eI4dpAwt8d
-         A4w6TuYAOUBZ6qC6lBBSRdgVUCMXuY57ED265QOpQriUW3BfrSq5F8CfqEG9YWMPmD
-         6aj56dA7bidFDsGO+7aha31rwXjoNoEwTJQX8qGY=
-Date:   Thu, 31 Oct 2019 13:51:00 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Torsten Duwe <duwe@lst.de>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 6/7] dt-bindings: Add ANX6345 DP/eDP transmitter
- binding
-Message-ID: <20191031125100.qprbdaaysg3tmhif@hendrix>
-References: <20191029153815.C631668C4E@verein.lst.de>
- <20191029153953.8EE9B68D04@verein.lst.de>
+        s=default; t=1572526892;
+        bh=ZqQmIL+VZ3QRd14dH7SG/ODYbXnGFyGCVOWZyG3KxSY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=hlInG3xtoBSQHfifz9LHNoOEdY9N8dlqgVblZ/QP0IlO7bwjXFGCVa9icKRitjoso
+         PzMKiJFjxRiaVg/P8AAm72mD7oaWA38vJ/M/hParD24E3dYe3FwmvgYptU/BJ5Vt+f
+         QlAjWdEH8WPyq0t5hmqDqYZckNeFzT5h1sU9yyEc=
+Date:   Thu, 31 Oct 2019 08:01:30 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Dilip Kota <eswara.kota@linux.intel.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        gustavo.pimentel@synopsys.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        martin.blumenstingl@googlemail.com,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, Linux PM <linux-pm@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v4 3/3] pci: intel: Add sysfs attributes to configure
+ pcie link
+Message-ID: <20191031130130.GA37287@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4cs2y66oqe25ixg3"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191029153953.8EE9B68D04@verein.lst.de>
+In-Reply-To: <5652130.irlrSN52DS@kreacher>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 31, 2019 at 10:13:11AM +0100, Rafael J. Wysocki wrote:
+> On Thursday, October 31, 2019 3:56:37 AM CET Bjorn Helgaas wrote:
+> > On Thu, Oct 31, 2019 at 12:31:44AM +0100, Rafael J. Wysocki wrote:
+> > > On Wed, Oct 30, 2019 at 11:14 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 
---4cs2y66oqe25ixg3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> > > > Rafael had some concerns about the proposed ASPM interface [2], but I
+> > > > don't know what they are yet.
+> > > 
+> > > I was talking about the existing ASPM interface in sysfs.  The new one
+> > > I still have to review, but I'm kind of wondering what about people
+> > > who used the old one?  Would it be supported going forward?
+> > 
+> > The old one interface was enabled by CONFIG_PCIEASPM_DEBUG.  Red Hat
+> > doesn't enable that.  Ubuntu does.  I *thought* we heard from a
+> > Canonical person who said they didn't have any tools that used it, but
+> > I can't find that now.  I don't know about SUSE.
+> > 
+> > So the idea was to drop it on the theory that nobody is using it.
+> > Possibly that's too aggressive.
+> 
+> Well, one problem is that the "old" (actually existing) I/F has made it
+> to one of my OSS EU presentation slides (I did not talk to this particular
+> slide, but it is there in the deck that's available for downloading), so who
+> knows who is going to use it. :-)
+> 
+> So I guess that there's a risk that needs to be taken into consideration.
+> 
+> What could be done, in principle, would be to make the new I/F depend on
+> CONFIG_PCIEASPM_DEBUG being unset and provide the "old" one when it is set.
 
-On Tue, Oct 29, 2019 at 01:16:57PM +0100, Torsten Duwe wrote:
-> The anx6345 is an ultra-low power DisplayPort/eDP transmitter designed
-> for portable devices.
->
-> Add a binding document for it.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Torsten Duwe <duwe@suse.de>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
->  .../bindings/display/bridge/anx6345.yaml           | 92 ++++++++++++++++++++++
->  1 file changed, 92 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.yaml
->
-> diff --git a/Documentation/devicetree/bindings/display/bridge/anx6345.yaml b/Documentation/devicetree/bindings/display/bridge/anx6345.yaml
-> new file mode 100644
-> index 000000000000..094e8e8a5faa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/anx6345.yaml
-> @@ -0,0 +1,92 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/anx6345.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analogix ANX6345 eDP Transmitter Device Tree Bindings
-> +
-> +maintainers:
-> +  - Torsten Duwe <duwe@lst.de>
-> +
-> +description: |
-> +  The ANX6345 is an ultra-low power Full-HD eDP transmitter designed for
-> +  portable devices.
-> +
-> +properties:
-> +  compatible:
-> +    const: analogix,anx6345
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: base I2C address of the device
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: GPIO connected to active low reset
-> +
-> +  dvdd12-supply:
-> +    maxItems: 1
-> +    description: Regulator for 1.2V digital core power.
-> +
-> +  dvdd25-supply:
-> +    maxItems: 1
-> +    description: Regulator for 2.5V digital core power.
-> +
-> +  ports:
-> +    anyOf:
-> +      - port@0:
-> +        description: Video port for LVTTL input
-> +      - port@1:
-> +        description: Video port for eDP output (panel or connector).
-> +                     May be omitted if EDID works reliably.
-> +    required:
-> +      - port@0
+I would prefer to enable the new interface unconditionally to make it
+easier for userspace tools like powertop to use it.
 
-Have you tried to validate those two ports in a DT?
+I think the existing and new interfaces could coexist, with the
+existing interface being enabled by CONFIG_PCIEASPM_DEBUG as it is
+today.  The patch that removes the existing interface is the last in
+the series and could easily be dropped.
 
-I'm not quite sure what you wanted to express with that anyOf, but if
-it was something like port@0 is mandatory, and port@1 is optional, it
-should be something like this:
+> In any case, the pcie_aspm.policy module parameter cannot be dropped, because
+> AFAICS there is quite a bit of user space using it (e.g. TLP).
 
-properties:
+What is TLP?  Since CONFIG_PCIEASPM is a bool, aspm.o is built in
+statically if enabled, so pcie_aspm.policy is effectively a boot-time
+kernel parameter, right?  We don't have a plan to remove it.
 
-  ...
-
-  ports:
-    type: object
-
-    properties:
-      port@0:
-        type: object
-        description: |
-	  Video port for LVTTL input
-
-      port@1:
-        type: object
-        description: |
-	  Video port for eDP output (..)
-
-    required:
-      - port@0
-
-This way, you express that both port@0 and port@1 must by nodes, under
-a node called ports, and port@0 is mandatory.
-
-You should even push this a bit further by adding
-additionalProperties: false to prevent a DT from having undocumented
-properties and children for the main node and ports node.
-
-Maxime
-
---4cs2y66oqe25ixg3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXbrYtAAKCRDj7w1vZxhR
-xV1dAQC5514CdqdwGVxKBgHABRr2w2ucyLWqPk68wp3r0weRTAEA1E4SCm2To1Xt
-ZnSJZF6aVIy6kDrJXQRDNT9vWD9JOwY=
-=TzGz
------END PGP SIGNATURE-----
-
---4cs2y66oqe25ixg3--
+Bjorn
