@@ -2,115 +2,149 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9141ECA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5079CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9D0208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D2D620659
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:31:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jOt/U4mM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfJaQa3 (ORCPT
+        id S1728593AbfJaQbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 12:30:29 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64506 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726540AbfJaQa2 (ORCPT
+        Thu, 31 Oct 2019 12:31:55 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41453 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbfJaQbz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:30:28 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9VGT3bU075421;
-        Thu, 31 Oct 2019 12:30:19 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w027f2kpg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 31 Oct 2019 12:30:18 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9VGT34G075383;
-        Thu, 31 Oct 2019 12:30:18 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w027f2knx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 31 Oct 2019 12:30:18 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9VGQC3f010328;
-        Thu, 31 Oct 2019 16:30:17 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma05wdc.us.ibm.com with ESMTP id 2vxwh68r1c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 31 Oct 2019 16:30:17 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9VGUDPs61014424
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Oct 2019 16:30:13 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 110086E058;
-        Thu, 31 Oct 2019 16:30:13 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AF39B6E054;
-        Thu, 31 Oct 2019 16:30:12 +0000 (GMT)
-Received: from localhost (unknown [9.85.136.151])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 31 Oct 2019 16:30:12 +0000 (GMT)
-From:   Nathan Lynch <nathanl@linux.ibm.com>
-To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamaleshb@in.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: Re: [PATCH v2 1/1] pseries/hotplug-cpu: Change default behaviour of cede_offline to "off"
-In-Reply-To: <1571740391-3251-2-git-send-email-ego@linux.vnet.ibm.com>
-References: <1571740391-3251-1-git-send-email-ego@linux.vnet.ibm.com> <1571740391-3251-2-git-send-email-ego@linux.vnet.ibm.com>
-Date:   Thu, 31 Oct 2019 11:30:11 -0500
-Message-ID: <87k18klvxo.fsf@linux.ibm.com>
+        Thu, 31 Oct 2019 12:31:55 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j14so5183835lfb.8
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 09:31:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QJy+/1CBSTIBM4kMR9zV2cJD7nIKgEp9xFX8JUKFW2E=;
+        b=jOt/U4mMtKIUnd6iQExm2RnkfdpqCGqZsZ1DNnTOaUulO7dtPJ2YzxmzhKa+O+TCGn
+         00RC+P7bmfZ3WE65lTa8ej6+/5Jle55joSu8YwvzLEkjqhHErp6ELt48+Ne5gIau8wJO
+         xPO+oHZsISV1M6oOSrc/2xRxCloRQEtAuOhPTAdkOrdv3QbVGO2CFcX37aPQGoos/wFY
+         zGFj07ivqUJErado0/trG6eyVHsDPWPRMRnaeOC7JyzegJjl1CkST4UV2Wm7zNmrvBL1
+         AYeciSD2W2g3Ho68LJdYqlvXSuCZ5PeNEVpeQRirVQavIc+i+i29CvuNWxLWpKlImZcx
+         Ogng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QJy+/1CBSTIBM4kMR9zV2cJD7nIKgEp9xFX8JUKFW2E=;
+        b=Mkh7GWlpc7EmI+EfDbOFfUBVPlrrtxa8OK6y4C/rutxp43OoZzVgmd2JQxzOkJcVGG
+         p36Q8F7Il5Nh0yYk7D807024B9xdtul03dkEu/O4rp24awGTIMJd2bNg9wXuqtaDPhkU
+         Nwdln34AwE4vSQemMBGtqGEVPNyVsRBzyCzhDt/SuKVrZkgrJ8ujNFk6MosHTq7Zwenb
+         8NpZjQnJaK8gwMRJwFNrlAsmz6HY0A+WfZQECkstUNqfi6LMj+EnWL5JuSk3fUBmvjt9
+         jZZ9Q79TPmLmbqEneF0/NMldDOdH3rPUlb/8/2xZtCJfEuLySn6VfrXc6cshsadhoHOe
+         KubQ==
+X-Gm-Message-State: APjAAAUey9bhrenJ3Y3TTJ7/v84R+rp6C20fEqiCLL0Dslh88MqrvDCu
+        xJFPChKzy+gXcxDJpoEwl9Fe3stLef+LCrbPyhAUlA==
+X-Google-Smtp-Source: APXvYqw8mOlWJ/N/hmIRPZrWSFfby917eKiZ41AwHu273ooh2iE0nJZSOupFUJHV/DFSo7bPrYDUKRRrlXIJSIvFE3w=
+X-Received: by 2002:a19:800a:: with SMTP id b10mr4231686lfd.15.1572539511165;
+ Thu, 31 Oct 2019 09:31:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-31_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910310164
+References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
+ <1571776465-29763-5-git-send-email-thara.gopinath@linaro.org>
+ <20191023122252.dz7obopab6iizy4s@e107158-lin.cambridge.arm.com>
+ <20191028153010.GE4097@hirez.programming.kicks-ass.net> <20191031105342.b3sl5xhysldfla3g@e107158-lin.cambridge.arm.com>
+ <e875ef90-d561-4eee-4951-6556ac89c6a2@arm.com> <CAKfTPtCTYOBQ+TUYaGsEGK-UTQ=2of=1WYeeiMzak7ZhEPRxmA@mail.gmail.com>
+ <e38e9c86-7433-7c4b-d9c1-38fd2458b953@arm.com>
+In-Reply-To: <e38e9c86-7433-7c4b-d9c1-38fd2458b953@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 31 Oct 2019 17:31:39 +0100
+Message-ID: <CAKfTPtCQe8qd1e5s-jf_5C7eaGVc7OYcXYgdvBK+ACF8aL7ByQ@mail.gmail.com>
+Subject: Re: [Patch v4 4/6] sched/fair: update cpu_capcity to reflect thermal pressure
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Ionela Voinescu <ionela.voinescu@arm.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Quentin Perret <qperret@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Amit Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
-> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+On Thu, 31 Oct 2019 at 17:17, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
 >
-> Currently on PSeries Linux guests, the offlined CPU can be put to one
-> of the following two states:
->    - Long term processor cede (also called extended cede)
->    - Returned to the hypervisor via RTAS "stop-self" call.
+> On 31.10.19 16:48, Vincent Guittot wrote:
+> > On Thu, 31 Oct 2019 at 16:38, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+> >>
+> >> On 31.10.19 11:53, Qais Yousef wrote:
+> >>> On 10/28/19 16:30, Peter Zijlstra wrote:
+> >>>> On Wed, Oct 23, 2019 at 01:28:40PM +0100, Qais Yousef wrote:
+> >>>>> On 10/22/19 16:34, Thara Gopinath wrote:
 >
-> This is controlled by the kernel boot parameter "cede_offline=on/off".
+> [...]
 >
-> By default the offlined CPUs enter extended cede. The PHYP hypervisor
-> considers CPUs in extended cede to be "active" since they are still
-> under the control fo the Linux guests. Hence, when we change the SMT
-> modes by offlining the secondary CPUs, the PURR and the RWMR SPRs will
-> continue to count the values for offlined CPUs in extended cede as if
-> they are online. This breaks the accounting in tools such as lparstat.
+> >>> To make sure I got this correctly - it's because avg_thermal.load_avg
+> >>> represents delta_capacity which is already a 'converted' form of load. So this
+> >>> makes avg_thermal.load_avg a util_avg really. Correct?
+> >>>
+> >>> If I managed to get it right somehow. It'd be nice if we can do inverse
+> >>> conversion on delta_capacity so that avg_thermal.{load_avg, util_avg} meaning
+> >>> is consistent across the board. But I don't feel strongly about it if this gets
+> >>> documented properly.
+> >>
+> >> So why can't we use rq->avg_thermal.util_avg here? Since capacity is
+> >> closer to util than to load?
+> >>
+> >> Is it because you want to use the influence of ___update_load_sum(...,
+> >> unsigned long load eq. per-cpu delta_capacity in your signal?
+> >>
+> >> Why not call it this way then?
+> >
+> > util_avg tracks a binary state with 2 fixed weights: running(1024)  vs
+> > not running (0)
+> > In the case of thermal pressure, we want to track how much pressure is
+> > put on the CPU: capping to half the max frequency is not the same as
+> > capping only 10%
+> > load_avg is not boolean but you set the weight  you want to apply and
+> > this weight reflects the amount of pressure.
 >
-> To fix this, ensure that by default the offlined CPUs are returned to
-> the hypervisor via RTAS "stop-self" call by changing the default value
-> of "cede_offline_enabled" to false.
+> I see. This is what I meant by 'load (weight) eq. per-cpu delta_capacity
+> (pressure)'.
 >
-> Fixes: commit 3aa565f53c39 ("powerpc/pseries: Add hooks to put the CPU
-> into an appropriate offline state")
 >
-> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+> >> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+> >> index 38210691c615..d3035457483f 100644
+> >> --- a/kernel/sched/pelt.c
+> >> +++ b/kernel/sched/pelt.c
+> >> @@ -357,9 +357,9 @@ int update_thermal_load_avg(u64 now, struct rq *rq,
+> >> u64 capacity)
+> >>  {
+> >>         if (___update_load_sum(now, &rq->avg_thermal,
+> >>                                capacity,
+> >> -                              capacity,
+> >> -                              capacity)) {
+> >> -               ___update_load_avg(&rq->avg_thermal, 1, 1);
+> >> +                              0,
+> >> +                              0)) {
+> >> +               ___update_load_avg(&rq->avg_thermal, 1, 0);
+> >>                 return 1;
+> >>         }
+>
+> So we could call it this way since we don't care about runnable_load or
+> util?
 
-I'm OK with changing the default as a precursor to removing the code
-that implements the cede offline mode.
-
-Acked-by: Nathan Lynch <nathanl@linux.ibm.com>
+one way or the other is quite similar but the current solution is
+aligned with other irq, rt, dl signals which duplicates the same state
+in each fields
