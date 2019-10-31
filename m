@@ -4,41 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B53CCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B252DC47E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E8B208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B1D2087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:55:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbfJaLzs (ORCPT
+        id S1727686AbfJaLzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:55:48 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55461 "EHLO
+        Thu, 31 Oct 2019 07:55:52 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55508 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727455AbfJaLz2 (ORCPT
+        with ESMTP id S1727560AbfJaLzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:55:28 -0400
+        Thu, 31 Oct 2019 07:55:36 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iQ92z-00039a-5I; Thu, 31 Oct 2019 12:55:25 +0100
+        id 1iQ933-0003CN-4R; Thu, 31 Oct 2019 12:55:29 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 119101C0671;
-        Thu, 31 Oct 2019 12:55:12 +0100 (CET)
-Date:   Thu, 31 Oct 2019 11:55:11 -0000
-From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AF3F01C04F3;
+        Thu, 31 Oct 2019 12:55:15 +0100 (CET)
+Date:   Thu, 31 Oct 2019 11:55:15 -0000
+From:   "tip-bot2 for Narendra K" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Force on tick when invoking lots of callbacks
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
+Subject: [tip: efi/urgent] efi: Make CONFIG_EFI_RCI2_TABLE selectable on x86 only
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Narendra K <Narendra.K@dell.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191029173755.27149-2-ardb@kernel.org>
+References: <20191029173755.27149-2-ardb@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157252291178.29376.6993443685603243726.tip-bot2@tip-bot2>
+Message-ID: <157252291543.29376.8913809191549096088.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -52,52 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/rcu branch of tip:
+The following commit has been merged into the efi/urgent branch of tip:
 
-Commit-ID:     6a949b7af82db7eb1e52caaed122eab1cf63acee
-Gitweb:        https://git.kernel.org/tip/6a949b7af82db7eb1e52caaed122eab1cf63acee
-Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Sun, 28 Jul 2019 11:50:56 -07:00
-Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Sat, 05 Oct 2019 10:46:04 -07:00
+Commit-ID:     0b6b30c65621fc11a799ca71241f52d8fd9e334c
+Gitweb:        https://git.kernel.org/tip/0b6b30c65621fc11a799ca71241f52d8fd9e334c
+Author:        Narendra K <Narendra.K@dell.com>
+AuthorDate:    Tue, 29 Oct 2019 18:37:50 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 31 Oct 2019 09:40:16 +01:00
 
-rcu: Force on tick when invoking lots of callbacks
+efi: Make CONFIG_EFI_RCI2_TABLE selectable on x86 only
 
-Callback invocation can run for a significant time period, and within
-CONFIG_NO_HZ_FULL=y kernels, this period will be devoid of scheduler-clock
-interrupts.  In-kernel execution without such interrupts can cause all
-manner of malfunction, with RCU CPU stall warnings being but one result.
+For the EFI_RCI2_TABLE Kconfig option, 'make oldconfig' asks the user
+for input on platforms where the option may not be applicable. This patch
+modifies the Kconfig option to ask the user for input only when CONFIG_X86
+or CONFIG_COMPILE_TEST is set to y.
 
-This commit therefore forces scheduling-clock interrupts on whenever more
-than a few RCU callbacks are invoked.  Because offloaded callback invocation
-can be preempted, this forcing is withdrawn on each context switch.  This
-in turn requires that the loop invoking RCU callbacks reiterate the forcing
-periodically.
-
-[ paulmck: Apply Joel Fernandes TICK_DEP_MASK_RCU->TICK_DEP_BIT_RCU fix. ]
-[ paulmck: Remove NO_HZ_FULL check per Frederic Weisbecker feedback. ]
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Narendra K <Narendra.K@dell.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191029173755.27149-2-ardb@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/rcu/tree.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/firmware/efi/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 8110514..238f93b 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2151,6 +2151,7 @@ static void rcu_do_batch(struct rcu_data *rdp)
- 	rcu_nocb_unlock_irqrestore(rdp, flags);
+diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
+index 178ee81..b248870 100644
+--- a/drivers/firmware/efi/Kconfig
++++ b/drivers/firmware/efi/Kconfig
+@@ -182,6 +182,7 @@ config RESET_ATTACK_MITIGATION
  
- 	/* Invoke callbacks. */
-+	tick_dep_set_task(current, TICK_DEP_BIT_RCU);
- 	rhp = rcu_cblist_dequeue(&rcl);
- 	for (; rhp; rhp = rcu_cblist_dequeue(&rcl)) {
- 		debug_rcu_head_unqueue(rhp);
-@@ -2217,6 +2218,7 @@ static void rcu_do_batch(struct rcu_data *rdp)
- 	/* Re-invoke RCU core processing if there are callbacks remaining. */
- 	if (!offloaded && rcu_segcblist_ready_cbs(&rdp->cblist))
- 		invoke_rcu_core();
-+	tick_dep_clear_task(current, TICK_DEP_BIT_RCU);
- }
- 
- /*
+ config EFI_RCI2_TABLE
+ 	bool "EFI Runtime Configuration Interface Table Version 2 Support"
++	depends on X86 || COMPILE_TEST
+ 	help
+ 	  Displays the content of the Runtime Configuration Interface
+ 	  Table version 2 on Dell EMC PowerEdge systems as a binary
