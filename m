@@ -2,97 +2,105 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FE1CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8732CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3152080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1FE521734
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:16:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="QbLwWY74"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZZoSEWiu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbfJaSOI (ORCPT
+        id S1729219AbfJaSQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:14:08 -0400
-Received: from vps.xff.cz ([195.181.215.36]:45420 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726602AbfJaSOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:14:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1572545646; bh=+8+aVOF3iSqGvzL1N7hB/tIOgnCmWN7n8SmI/voLyuw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=QbLwWY74HjtrueocUL8/R6dmMGmMTLGX3Dtb/snOuodi4/KJ9dq9X1jj4qf9QgnL7
-         Ob52iOVQ/R+gj88YDgepIN76L1UZZbucbHXnbTQD/flG9XuTD2lC5Hr/uFx5h9P/Vm
-         jaXcikK1Gat9slDGatNmvF4/K6ATPO5tww36z3PY=
-From:   Ondrej Jirman <megous@megous.com>
-To:     linux-sunxi@googlegroups.com
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-pm@vger.kernel.org (open list:ALLWINNER CPUFREQ DRIVER),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
-        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] cpufreq: sun50i: Fix CPU speed bin detection
-Date:   Thu, 31 Oct 2019 19:13:58 +0100
-Message-Id: <20191031181359.282617-1-megous@megous.com>
+        Thu, 31 Oct 2019 14:16:10 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39442 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729027AbfJaSQK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 14:16:10 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t12so3041958plo.6
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 11:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=K2iXeP4n/LwziPu4ZI0OnTyPorZqTcS6twEPx1hqLdc=;
+        b=ZZoSEWiuBiik9RngUZeM0aAoWI9AFCUNVgIOH02T+Zipkev3DGDSdgR04ugiyl+Xjh
+         /w/R1/t8Uf/OyFOuZzdsZ2o0wguO61GJAUdq9KcvaQXB30WaHfBQBqNJtj3frvwjpZGW
+         DNrZviL6OPWqo7YTYYINjXLQVdc1qRWQJyxExYmhi2EXcQtdi13mFBlEgJdEX/C+bVUu
+         EEgHZexKJwTbTO/99HqM5GuZEcJKn8HmquvFjGXsrBjlRhISx5oBspIuE50ZE8KWy6EF
+         oxMnUfuJaJlW6Lu2eCY3ofQ6ytmmH4E9Z/6EjUl3CigFKtL88U21b8Fdeb1wvNxAZTh3
+         2FBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=K2iXeP4n/LwziPu4ZI0OnTyPorZqTcS6twEPx1hqLdc=;
+        b=Y4zB6suYSI/oaed4ENRnCAyf4jYW+RFOcGcyBaTEbIN49HTdo8DUBIs2LedI+6GfOz
+         ealcXGS64cjulpK38Uk8YSrSPn5abuD6O7TRSk4S16xMf6Kv/JPB4bLQl4CEmCLBKf8e
+         Or9UNWKDa7Le/iewSRjgLB0n4wnYxHtij/P7ohnzzZ0ziDJifxbZMhHE5rVMeB7b35Xg
+         E28vHv0FnUkU+Fo5D9IIQjHBoYRW9SheR6MexzOJZ9VOW5fi9K3zVHqExgvBbMx5Bl7i
+         sMIJp3O5Abs/3eduya5FK6yqRDwlrmsVKh6iyRirrZxGoT+EM/hC7J6fbEdnqW3CjHMS
+         CXAg==
+X-Gm-Message-State: APjAAAUlALeSVQsVCI9jWpieROl3NR9Hba7vZ+j0LraADsPxT9vroKfL
+        dWGeAJlvkK6EnlS2UKmSviW8SQ==
+X-Google-Smtp-Source: APXvYqyubcz1aeS43b5/oVJTOA+Lgv6A7pzeQRkjnlzDj+Vyrx5Aef3FMZd2GCIXWcCCPV3DgS/bEQ==
+X-Received: by 2002:a17:902:4a:: with SMTP id 68mr7864287pla.8.1572545769038;
+        Thu, 31 Oct 2019 11:16:09 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id 74sm3620489pgb.62.2019.10.31.11.16.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 11:16:08 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 11:16:07 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Roman Gushchin <guro@fb.com>
+cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: Re: [PATCH v2] mm: slab: make page_cgroup_ino() to recognize
+ non-compound slab pages properly
+In-Reply-To: <20191031012151.2722280-1-guro@fb.com>
+Message-ID: <alpine.DEB.2.21.1910311115540.226869@chino.kir.corp.google.com>
+References: <20191031012151.2722280-1-guro@fb.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I have failures to boot on Orange Pi 3, because this driver determined
-that my SoC is from the normal bin, but my SoC only works reliably with
-the OPP values for the slowest bin.
+On Wed, 30 Oct 2019, Roman Gushchin wrote:
 
-Looking at BSP code, I found that efuse values have following meanings
-on H6:
+> page_cgroup_ino() doesn't return a valid memcg pointer for non-compound
+> slab pages, because it depends on PgHead AND PgSlab flags to be set
+> to determine the memory cgroup from the kmem_cache.
+> It's correct for compound pages, but not for generic small pages. Those
+> don't have PgHead set, so it ends up returning zero.
+> 
+> Fix this by replacing the condition to PageSlab() && !PageTail().
+> 
+> Before this patch:
+> [root@localhost ~]# ./page-types -c /sys/fs/cgroup/user.slice/user-0.slice/user@0.service/ | grep slab
+> 0x0000000000000080	        38        0  _______S___________________________________	slab
+> 
+> After this patch:
+> [root@localhost ~]# ./page-types -c /sys/fs/cgroup/user.slice/user-0.slice/user@0.service/ | grep slab
+> 0x0000000000000080	       147        0  _______S___________________________________	slab
+> 
+> Fixes: 4d96ba353075 ("mm: memcg/slab: stop setting page->mem_cgroup pointer for slab pages")
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-- 0b000 invalid (interpreted in vendor's BSP as normal bin)
-- 0b001 slowest bin
-- 0b011 normal bin
-- 0b111 fastest bin
-
-Let's play it safe and interpret 0 as the slowest bin, but fix detection
-of other bins to match vendor code.
-
-Fixes: f328584f7bff ("cpufreq: Add sun50i nvmem based CPU scaling driver")
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
-
-See https://megous.com/git/linux/tree/drivers/soc/sunxi/sunxi-sid.c?h=h6-4.9-bsp#n484
-and https://megous.com/git/linux/tree/drivers/cpufreq/sunxi-cpufreq.c?h=h6-4.9-bsp#n428
-(1 is substracted from soc_bin number here!)
-
- drivers/cpufreq/sun50i-cpufreq-nvmem.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/cpufreq/sun50i-cpufreq-nvmem.c b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-index df35ef3ef567..41dad03e245c 100644
---- a/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-+++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-@@ -71,9 +71,12 @@ static int sun50i_cpufreq_get_efuse(u32 *versions)
- 	efuse_value = (*speedbin >> NVMEM_SHIFT) & NVMEM_MASK;
- 	switch (efuse_value) {
- 	case 0b0001:
--		*versions = 1;
-+		*versions = 0;
- 		break;
- 	case 0b0011:
-+		*versions = 1;
-+		break;
-+	case 0b0111:
- 		*versions = 2;
- 		break;
- 	default:
--- 
-2.23.0
-
+Acked-by: David Rientjes <rientjes@google.com>
