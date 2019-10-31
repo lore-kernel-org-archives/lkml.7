@@ -2,134 +2,96 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24538CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C7BCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEB2F2080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:10:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572523804;
-	bh=Xg5muOo5oRTRDo6O568Mu+IEqVbP4rhVmImXxDI9kGE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PrRuUOwmWiPzpY049Bb4uzfRnC0VVDbfKuz0q+nkBJWwU1vZmkALDlNplVZ5nke8J
-	 QTPf6ThUg9Ol/EhB4ZW7Uv1LQTuA5iUoxm2BVZv8xPl3X9JRTrfGDnx3NwFGIIVnhS
-	 56Avru7uT8tRBZrJIgViuZvccNFd59WpnluF4ejg=
+	by mail.kernel.org (Postfix) with ESMTP id 46DD02080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:10:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfJaMKC (ORCPT
+        id S1726950AbfJaMK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 08:10:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726462AbfJaMKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 08:10:02 -0400
-Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0018D2086D;
-        Thu, 31 Oct 2019 12:10:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572523801;
-        bh=Xg5muOo5oRTRDo6O568Mu+IEqVbP4rhVmImXxDI9kGE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YLQTkCzSF8c36EjORPL7CN7vsv0XYXUP3f3gIjyDRUlmkYaYNK6zo8sQ9SwdjY2UG
-         JlJRUCsX2Hlt7OoEtwD8DT9xPQ1nRqRjhRzCPLN3R+7NPMLryVC5yPqpKztmfF8K03
-         XxGg7zc+Sr6QFmGw4UaqQmwkwhvELsxLqvCWVCtk=
-Date:   Thu, 31 Oct 2019 08:09:58 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Xin Long <lucien.xin@gmail.com>
-Cc:     "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "syzbot+d44f7bbebdea49dbc84a@syzkaller.appspotmail.com" 
-        <syzbot+d44f7bbebdea49dbc84a@syzkaller.appspotmail.com>,
-        "marcelo.leitner@gmail.com" <marcelo.leitner@gmail.com>
-Subject: Re: [PATCH 4.14 024/119] sctp: change sctp_prot .no_autobind with
- true
-Message-ID: <20191031120958.GP1554@sasha-vm>
-References: <20191027203259.948006506@linuxfoundation.org>
- <20191027203307.303661015@linuxfoundation.org>
- <3e9de35dda19c0ac207d49d24c2735655b1d8d64.camel@nokia.com>
- <CADvbK_dx=dT6j-XMA=p9QgJJp5YgA2zRCLuY08u4pz0v=vXorw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CADvbK_dx=dT6j-XMA=p9QgJJp5YgA2zRCLuY08u4pz0v=vXorw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 31 Oct 2019 08:10:57 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34226 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726687AbfJaMK4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 08:10:56 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9VC4v9R064326
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 08:10:56 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vyv89xr2h-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 08:10:55 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 31 Oct 2019 12:10:47 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 31 Oct 2019 12:10:44 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9VCAhee29425716
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 31 Oct 2019 12:10:43 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 48040AE04D;
+        Thu, 31 Oct 2019 12:10:43 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F36AAAE045;
+        Thu, 31 Oct 2019 12:10:41 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.194.174])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 31 Oct 2019 12:10:41 +0000 (GMT)
+Subject: Re: [PATCH v3 2/9] KEYS: Defined functions to queue and dequeue
+ keys for measurement
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Cc:     prsriva@linux.microsoft.com
+Date:   Thu, 31 Oct 2019 08:10:41 -0400
+In-Reply-To: <20191031011910.2574-3-nramas@linux.microsoft.com>
+References: <20191031011910.2574-1-nramas@linux.microsoft.com>
+         <20191031011910.2574-3-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19103112-0028-0000-0000-000003B173E5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19103112-0029-0000-0000-00002473BD8E
+Message-Id: <1572523841.5028.44.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-31_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=875 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910310124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 05:14:15PM +0800, Xin Long wrote:
->On Thu, Oct 31, 2019 at 3:54 PM Rantala, Tommi T. (Nokia - FI/Espoo)
-><tommi.t.rantala@nokia.com> wrote:
->>
->> On Sun, 2019-10-27 at 22:00 +0100, Greg Kroah-Hartman wrote:
->> > From: Xin Long <lucien.xin@gmail.com>
->> >
->> > [ Upstream commit 63dfb7938b13fa2c2fbcb45f34d065769eb09414 ]
->> >
->> > syzbot reported a memory leak:
->> >
->> >   BUG: memory leak, unreferenced object 0xffff888120b3d380 (size 64):
->> >   backtrace:
->> >
->> >     [...] slab_alloc mm/slab.c:3319 [inline]
->> >     [...] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
->> >     [...] sctp_bucket_create net/sctp/socket.c:8523 [inline]
->> >     [...] sctp_get_port_local+0x189/0x5a0 net/sctp/socket.c:8270
->> >     [...] sctp_do_bind+0xcc/0x200 net/sctp/socket.c:402
->> >     [...] sctp_bindx_add+0x4b/0xd0 net/sctp/socket.c:497
->> >     [...] sctp_setsockopt_bindx+0x156/0x1b0 net/sctp/socket.c:1022
->> >     [...] sctp_setsockopt net/sctp/socket.c:4641 [inline]
->> >     [...] sctp_setsockopt+0xaea/0x2dc0 net/sctp/socket.c:4611
->> >     [...] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3147
->> >     [...] __sys_setsockopt+0x10f/0x220 net/socket.c:2084
->> >     [...] __do_sys_setsockopt net/socket.c:2100 [inline]
->> >
->> > It was caused by when sending msgs without binding a port, in the path:
->> > inet_sendmsg() -> inet_send_prepare() -> inet_autobind() ->
->> > .get_port/sctp_get_port(), sp->bind_hash will be set while bp->port is
->> > not. Later when binding another port by sctp_setsockopt_bindx(), a new
->> > bucket will be created as bp->port is not set.
->> >
->> > sctp's autobind is supposed to call sctp_autobind() where it does all
->> > things including setting bp->port. Since sctp_autobind() is called in
->> > sctp_sendmsg() if the sk is not yet bound, it should have skipped the
->> > auto bind.
->> >
->> > THis patch is to avoid calling inet_autobind() in inet_send_prepare()
->> > by changing sctp_prot .no_autobind with true, also remove the unused
->> > .get_port.
->>
->> Hi,
->>
->> I'm seeing SCTP oops in 4.14.151, reproducible easily with iperf:
->>
->> # iperf3 -s -1 &
->> # iperf3 -c localhost --sctp
->>
->> This patch was also included in 4.19.81, but there it seems to be working
->> fine.
->>
->> Any ideas if this patch is valid for 4.14, or what's missing in 4.14 to
->> make this work?
->pls get this commit into 4.14, which has been in 4.19:
->
->commit 644fbdeacf1d3edd366e44b8ba214de9d1dd66a9
->Author: Xin Long <lucien.xin@gmail.com>
->Date:   Sun May 20 16:39:10 2018 +0800
->
->    sctp: fix the issue that flags are ignored when using kernel_connect
+On Wed, 2019-10-30 at 18:19 -0700, Lakshmi Ramasubramanian wrote:
+> Key measurements cannot be done if the IMA hook to measure keys is
+> called before IMA is initialized. Key measurement needs to be deferred
+> if IMA is not yet initialized. Queued keys need to be processed when
+> IMA initialization is completed.
+> 
+> This patch defines functions to queue and de-queue keys for measurement.
 
-Care to send a backport?
+I would defer this patch until later in the patch set, after having
+the basic measuring of keys in place.
 
--- 
-Thanks,
-Sasha
+Mimi
+
