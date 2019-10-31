@@ -2,118 +2,335 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CCFCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B06CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 043D62067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6354F2067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:48:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JItNmFbK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pdtCaFTs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbfJaRsW (ORCPT
+        id S1729126AbfJaRsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 13:48:22 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:19142 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbfJaRsW (ORCPT
+        Thu, 31 Oct 2019 13:48:36 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52493 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728999AbfJaRsf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 13:48:22 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dbb1e6b0001>; Thu, 31 Oct 2019 10:48:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 31 Oct 2019 10:48:21 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 31 Oct 2019 10:48:21 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 31 Oct
- 2019 17:48:18 +0000
-Subject: Re: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191023195515.13168-1-rcampbell@nvidia.com>
- <20191023195515.13168-4-rcampbell@nvidia.com>
- <20191029175837.GS22766@mellanox.com>
- <3ffecdc6-625f-ebea-8fb4-984fe6ca90f3@nvidia.com>
- <20191029231255.GX22766@mellanox.com>
- <f42d06e2-ca08-acdd-948d-2803079a13c2@nvidia.com>
- <20191031124200.GJ22766@mellanox.com>
- <a6b49a4e-a194-ce0b-685f-5e597072aeee@nvidia.com>
- <20191031173438.GL22766@mellanox.com>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <8ed8f207-42be-8f86-1778-67fbd4f81370@nvidia.com>
-Date:   Thu, 31 Oct 2019 10:48:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 31 Oct 2019 13:48:35 -0400
+Received: by mail-wm1-f67.google.com with SMTP id p21so6871619wmg.2
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 10:48:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+/3EDUZycaB8WmuMT7WSWoL+CXvoo8Hi6Ol6b/xCsow=;
+        b=pdtCaFTs+6xJg14kz8luFymVOVpJ9AcGks1vF3lVPvfED0/oykOOBpCwtwCXtV4fnt
+         v/C33VVOeBJ2aN84+wbLBMEdhvYdwiKPXSj58eMJ6nA1mi6/vl7MfLblipvy3qIIiaPX
+         nqp4lmeglY/fH6AuVOu/dHgDfWfxHRNfY/zUw6QgpH7tVzFVRWPfufeFDR0ZkqHajTg2
+         UOUVmiumL57F835cSGZgVqrhoU6m4YCI4V+3T9wcWHRR7UmXW1+2mY2ONF/1O/f1M7Ya
+         r8DSGYkBze6cTG8nv+E/ZfVvaPXqat4x/2SOjDHwoPJFqJnA0nm2vfL6qlCl0RKuWyw/
+         hopA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=+/3EDUZycaB8WmuMT7WSWoL+CXvoo8Hi6Ol6b/xCsow=;
+        b=XXB1rkZUvUgSbiP8jQebn71urWUHi5Xjx4KoA2eyt0hgZB6OOntiBGzUcTtXkuhmQk
+         ataOa97C2l2mOv92Kad9m7zwv+UQHuLZAEmmjG7RPQDmfljm5GHx0HAjbViMElfQKX5d
+         TorzHOWmDb+VmDlYMUA2Cni5RGc6012lC0LmXEpkTGxkOAfc1klfzk8osppu7IsaT1gl
+         5uEWhUKQoFXaO61Nyp+0KdTbItW1sliG5kF5hI+mT21pqonQPUM0eHtvRUiWVQ/zZnzj
+         X3AuKV2ZAg9gZvoO61/zi7ayYGOJSuSAnAzdfExGofG823S1rmq29BazilLgm0I5QnUx
+         zDvQ==
+X-Gm-Message-State: APjAAAXWsycYrsKAntTo0VcZ11wBl6QwayyZXVkFmPvCRmoEZ68JmAVz
+        PNZz20ovKMd6eMozfuBn+i8AiQ==
+X-Google-Smtp-Source: APXvYqyD5nzqkhU4qv7CajxfctazpJB9YHiwYlhd15esx++fGcynlgc64fnauBWKMVs9ZG/9iHGYZA==
+X-Received: by 2002:a1c:28d4:: with SMTP id o203mr6417301wmo.147.1572544111448;
+        Thu, 31 Oct 2019 10:48:31 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:bc1d:8e1f:c99f:e225? ([2a01:e34:ed2f:f020:bc1d:8e1f:c99f:e225])
+        by smtp.googlemail.com with ESMTPSA id v8sm5073331wra.79.2019.10.31.10.48.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 31 Oct 2019 10:48:30 -0700 (PDT)
+Subject: Re: [Patch v4 0/6] Introduce Thermal Pressure
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        rui.zhang@intel.com, edubezval@gmail.com, qperret@google.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org
+References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
+ <c6169634-ab1d-6bda-183f-bdd06048736a@linaro.org>
+ <20191031100631.GC19197@e108754-lin>
+ <2009bac3-405a-c60e-a1dd-191625ff3fc5@linaro.org>
+ <20191031125536.GA9817@e108754-lin>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <93ed8dd3-7c27-40ab-ea2c-2f2530c75ebc@linaro.org>
+Date:   Thu, 31 Oct 2019 18:48:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191031173438.GL22766@mellanox.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20191031125536.GA9817@e108754-lin>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572544107; bh=LznH2n0BPiaLplJqvKWT47fMxxQTp0JpxcklCzrgrx8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=JItNmFbKZtF95h4CaQOTHCrPr1j0phnvMJhlmRMLs8C/+i25yq/LtTtZ51xAuB9lP
-         F9lcAQG6x9fjq0RMj+RJZn9y1MCZvSunoNdXd+6YlfTnBvFja3YeVWxZPBlede9oI3
-         UmAid2qwJNPZRSpxpzzYlLVcAOPMbYlgdBG442mT8Gp8TE1XNX8tSHj0h4lwo+cAZS
-         wBwn01Jgno/GjH41PK0gWhHNojLh1BUywB43wnlxTuB0229i3mDcBLleKuVPhs98ho
-         5g/FS5j/o3hgavh6NEWyFY+O9on+D79k3ynJVAV4UWHs+DSXgYO++PO9mjVs983nI3
-         3zSHEuX1JQNCA==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 10/31/19 10:34 AM, Jason Gunthorpe wrote:
-> On Thu, Oct 31, 2019 at 10:28:12AM -0700, Ralph Campbell wrote:
->>>>>>> It seems especially over-complicated to use a full page table layout
->>>>>>> for this, wouldn't something simple like an xarray be good enough for
->>>>>>> test purposes?
->>>>>>
->>>>>> Possibly. A page table is really just a lookup table from virtual address
->>>>>> to pfn/page. Part of the rationale was to mimic what a real device
->>>>>> might do.
->>>>>
->>>>> Well, but the details of the page table layout don't see really
->>>>> important to this testing, IMHO.
->>>>
->>>> One problem with XArray is that on 32-bit machines the value would
->>>> need to be u64 to hold a pfn which won't fit in a ULONG_MAX.
->>>> I guess we could make the driver 64-bit only.
->>>
->>> Why would a 32 bit machine need a 64 bit pfn?
->>>
+On 31/10/2019 13:57, Ionela Voinescu wrote:
+> On Thursday 31 Oct 2019 at 12:54:03 (+0100), Daniel Lezcano wrote:
+>> Hi Ionela,
 >>
->> On x86, Physical Address Extension (PAE) uses a 64 bit PTE.
->> See arch/x86/include/asm/pgtable_32_types.h which includes
->> arch/x86/include/asm/pgtable-3level_types.h.
+>> On 31/10/2019 11:07, Ionela Voinescu wrote:
+>>> Hi Daniel,
+>>>
+>>> On Tuesday 29 Oct 2019 at 16:34:11 (+0100), Daniel Lezcano wrote:
+>>>> Hi Thara,
+>>>>
+>>>> On 22/10/2019 22:34, Thara Gopinath wrote:
+>>>>> Thermal governors can respond to an overheat event of a cpu by
+>>>>> capping the cpu's maximum possible frequency. This in turn
+>>>>> means that the maximum available compute capacity of the
+>>>>> cpu is restricted. But today in the kernel, task scheduler is 
+>>>>> not notified of capping of maximum frequency of a cpu.
+>>>>> In other words, scheduler is unware of maximum capacity
+>>>>> restrictions placed on a cpu due to thermal activity.
+>>>>> This patch series attempts to address this issue.
+>>>>> The benefits identified are better task placement among available
+>>>>> cpus in event of overheating which in turn leads to better
+>>>>> performance numbers.
+>>>>>
+>>>>> The reduction in the maximum possible capacity of a cpu due to a 
+>>>>> thermal event can be considered as thermal pressure. Instantaneous
+>>>>> thermal pressure is hard to record and can sometime be erroneous
+>>>>> as there can be mismatch between the actual capping of capacity
+>>>>> and scheduler recording it. Thus solution is to have a weighted
+>>>>> average per cpu value for thermal pressure over time.
+>>>>> The weight reflects the amount of time the cpu has spent at a
+>>>>> capped maximum frequency. Since thermal pressure is recorded as
+>>>>> an average, it must be decayed periodically. Exisiting algorithm
+>>>>> in the kernel scheduler pelt framework is re-used to calculate
+>>>>> the weighted average. This patch series also defines a sysctl
+>>>>> inerface to allow for a configurable decay period.
+>>>>>
+>>>>> Regarding testing, basic build, boot and sanity testing have been
+>>>>> performed on db845c platform with debian file system.
+>>>>> Further, dhrystone and hackbench tests have been
+>>>>> run with the thermal pressure algorithm. During testing, due to
+>>>>> constraints of step wise governor in dealing with big little systems,
+>>>>> trip point 0 temperature was made assymetric between cpus in little
+>>>>> cluster and big cluster; the idea being that
+>>>>> big core will heat up and cpu cooling device will throttle the
+>>>>> frequency of the big cores faster, there by limiting the maximum available
+>>>>> capacity and the scheduler will spread out tasks to little cores as well.
+>>>>>
+>>>>> Test Results
+>>>>>
+>>>>> Hackbench: 1 group , 30000 loops, 10 runs       
+>>>>>                                                Result         SD             
+>>>>>                                                (Secs)     (% of mean)     
+>>>>>  No Thermal Pressure                            14.03       2.69%           
+>>>>>  Thermal Pressure PELT Algo. Decay : 32 ms      13.29       0.56%         
+>>>>>  Thermal Pressure PELT Algo. Decay : 64 ms      12.57       1.56%           
+>>>>>  Thermal Pressure PELT Algo. Decay : 128 ms     12.71       1.04%         
+>>>>>  Thermal Pressure PELT Algo. Decay : 256 ms     12.29       1.42%           
+>>>>>  Thermal Pressure PELT Algo. Decay : 512 ms     12.42       1.15%  
+>>>>>
+>>>>> Dhrystone Run Time  : 20 threads, 3000 MLOOPS
+>>>>>                                                  Result      SD             
+>>>>>                                                  (Secs)    (% of mean)     
+>>>>>  No Thermal Pressure                              9.452      4.49%
+>>>>>  Thermal Pressure PELT Algo. Decay : 32 ms        8.793      5.30%
+>>>>>  Thermal Pressure PELT Algo. Decay : 64 ms        8.981      5.29%
+>>>>>  Thermal Pressure PELT Algo. Decay : 128 ms       8.647      6.62%
+>>>>>  Thermal Pressure PELT Algo. Decay : 256 ms       8.774      6.45%
+>>>>>  Thermal Pressure PELT Algo. Decay : 512 ms       8.603      5.41%  
+>>>>
+>>>> I took the opportunity to try glmark2 on the db845c platform with the
+>>>> default decay and got the following glmark2 scores:
+>>>>
+>>>> Without thermal pressure:
+>>>>
+>>>> # NumSamples = 9; Min = 790.00; Max = 805.00
+>>>> # Mean = 794.888889; Variance = 19.209877; SD = 4.382907; Median 794.000000
+>>>> # each ∎ represents a count of 1
+>>>>   790.0000 -   791.5000 [     2]: ∎∎
+>>>>   791.5000 -   793.0000 [     2]: ∎∎
+>>>>   793.0000 -   794.5000 [     2]: ∎∎
+>>>>   794.5000 -   796.0000 [     1]: ∎
+>>>>   796.0000 -   797.5000 [     0]:
+>>>>   797.5000 -   799.0000 [     1]: ∎
+>>>>   799.0000 -   800.5000 [     0]:
+>>>>   800.5000 -   802.0000 [     0]:
+>>>>   802.0000 -   803.5000 [     0]:
+>>>>   803.5000 -   805.0000 [     1]: ∎
+>>>>
+>>>>
+>>>> With thermal pressure:
+>>>>
+>>>> # NumSamples = 9; Min = 933.00; Max = 960.00
+>>>> # Mean = 940.777778; Variance = 64.172840; SD = 8.010795; Median 937.000000
+>>>> # each ∎ represents a count of 1
+>>>>   933.0000 -   935.7000 [     3]: ∎∎∎
+>>>>   935.7000 -   938.4000 [     2]: ∎∎
+>>>>   938.4000 -   941.1000 [     2]: ∎∎
+>>>>   941.1000 -   943.8000 [     0]:
+>>>>   943.8000 -   946.5000 [     0]:
+>>>>   946.5000 -   949.2000 [     1]: ∎
+>>>>   949.2000 -   951.9000 [     0]:
+>>>>   951.9000 -   954.6000 [     0]:
+>>>>   954.6000 -   957.3000 [     0]:
+>>>>   957.3000 -   960.0000 [     1]: ∎
+>>>>
+>>>
+>>> Interesting! If I'm interpreting these correctly there seems to be
+>>> significant improvement when applying thermal pressure.
+>>>
+>>> I'm not familiar with glmark2, can you tell me more about the process
+>>> and the work that the benchmark does?
+>>
+>> glmark2 is a 3D benchmark. I ran it without parameters, so all tests are
+>> run. At the end, it gives a score which are the values given above.
+>>
+>>> I assume this is a GPU benchmark,
+>>> but not knowing more about it I fail to see the correlation between
+>>> applying thermal pressure to CPU capacities and the improvement of GPU
+>>> performance.
+>>> Do you happen to know more about the behaviour that resulted in these
+>>> benchmark scores?
+>>
+>> My hypothesis is glmark2 makes the GPU to contribute a lot to the
+>> heating effect, thus increasing the temperature to the CPU close to it.
+>>
 > 
-> That is the content of the PTE, not the address of the PTE. In this
-> case the xarray index is the 'virtual' address of the fictional device
-> and it can easily be 32 bits with no problem
+> Hhmm.. yes, I am assuming that there is some thermal mitigation (CPU
+> frequency capping) done as a result of the heat inflicted by the work
+> on the GPU, but these patches do not result in better thermal
+> management as for the GPU to perform better. They only inform the
+> scheduler in regards to reduced capacity of CPUs so it can decide to
+> better use the compute capacity that it has available.
 > 
-> Jason
-> 
+> There could be a second hand effect of the more efficient use of the
+> CPUs which would release thermal headroom for the GPU to use, but I
+> would not expect the differences to be as high as in the results above.
 
-Oh, I see. You mean use a 32-bit user virtual address for the index
-and store a pointer to the 64-bit PTE which of course would be
-32 bit. That should work.
-I was stuck on thinking the PTE needed to be stored.
+Indeed, you may be right.
+
+> Another possibility is that work on the CPUs impacts the scores more
+> than I would expect for such a benchmark but again I would not
+> expect the work on the CPUs to be significant as to result in such
+> differences in the scores.
+> 
+> If you have the chance to look more into exactly what is the behaviour,
+> with and without thermal pressure - cooling states, average frequency,
+> use of CPUs, use of GPU, etc, it would be very valuable.
+
+Not sure I have enough bandwidth to do all. I'll double check if there
+is a difference when testing both versions.
+
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
