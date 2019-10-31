@@ -5,35 +5,35 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C79CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E020CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1AE02087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34AFE20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:19:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cOBkoTcy"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BcqWxn18"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfJaBTr (ORCPT
+        id S1727024AbfJaBT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 21:19:47 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:34490 "EHLO
+        Wed, 30 Oct 2019 21:19:57 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:34418 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfJaBTS (ORCPT
+        with ESMTP id S1726411AbfJaBTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 30 Oct 2019 21:19:18 -0400
 Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 07E9520B4909;
-        Wed, 30 Oct 2019 18:19:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 07E9520B4909
+        by linux.microsoft.com (Postfix) with ESMTPSA id DC23F20B4902;
+        Wed, 30 Oct 2019 18:19:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DC23F20B4902
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1572484758;
-        bh=OmpAzjnJ/nj/UbF+W79M2ah1WZCUvBkzqdH43tv+ZxQ=;
+        s=default; t=1572484757;
+        bh=ZRFpbgsDbjA1XcnoStH4tyuW3IfSbLxQM+i2Js18XJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cOBkoTcyx9A1UVXfYeuGsU1IDnsUhOMbwjGSQ650wPYPEMm0Unq2X5uZY0/KvhLcK
-         cnNZhWYNaZIAUzXLHcvmxJF5YBs2E3o8phnGAvXJBYdYzvrtABb2AM/IWwWF8dU6MJ
-         WKzzEi4dSMaMmHCUfF7IDS+crZg2idoKBaL/KELI=
+        b=BcqWxn18jquwKg2h8QjAPd1AX6sd7RAixafXpPaRmtZ1XjIbazhBQMLOY+JBIIoEZ
+         6r1VttW6DW957PbX2g4NA9d5QasQl87tO6YM9SVYLFSvaM+N+JTaQe9L5BKlOZIgVQ
+         K3ioxg55/QHcv1C+u01SbvJvoQCY3MApNsHVwlVw=
 From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 To:     zohar@linux.ibm.com, dhowells@redhat.com,
         matthewgarrett@google.com, sashal@kernel.org,
@@ -41,9 +41,9 @@ To:     zohar@linux.ibm.com, dhowells@redhat.com,
         linux-integrity@vger.kernel.org,
         linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
 Cc:     prsriva@linux.microsoft.com
-Subject: [PATCH v3 9/9] KEYS: Call the IMA hook to measure key when a new key is created or an existing key is updated
-Date:   Wed, 30 Oct 2019 18:19:10 -0700
-Message-Id: <20191031011910.2574-10-nramas@linux.microsoft.com>
+Subject: [PATCH v3 2/9] KEYS: Defined functions to queue and dequeue keys for measurement
+Date:   Wed, 30 Oct 2019 18:19:03 -0700
+Message-Id: <20191031011910.2574-3-nramas@linux.microsoft.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191031011910.2574-1-nramas@linux.microsoft.com>
 References: <20191031011910.2574-1-nramas@linux.microsoft.com>
@@ -52,77 +52,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-key_create_or_update function needs to call the IMA hook to measure
-the key when a new key is created or an existing key is updated.
+Key measurements cannot be done if the IMA hook to measure keys is
+called before IMA is initialized. Key measurement needs to be deferred
+if IMA is not yet initialized. Queued keys need to be processed when
+IMA initialization is completed.
 
-This patch adds the call to the IMA hook from key_create_or_update
-function.
+This patch defines functions to queue and de-queue keys for measurement.
 
 Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 ---
- include/linux/ima.h | 7 +++++++
- security/keys/key.c | 9 +++++++++
- 2 files changed, 16 insertions(+)
+ security/integrity/ima/ima.h       | 12 ++++
+ security/integrity/ima/ima_queue.c | 92 ++++++++++++++++++++++++++++++
+ 2 files changed, 104 insertions(+)
 
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index a20ad398d260..f085f1c6ef34 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -24,6 +24,9 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
- 			      enum kernel_read_file_id id);
- extern void ima_post_path_mknod(struct dentry *dentry);
- extern void ima_kexec_cmdline(const void *buf, int size);
-+extern void ima_post_key_create_or_update(struct key *keyring,
-+					  struct key *key,
-+					  unsigned long flags, bool create);
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 22d0628faf56..b9600070e415 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -198,6 +198,16 @@ enum ima_hooks {
+ 	__ima_hooks(__ima_hook_enumify)
+ };
  
- #ifdef CONFIG_IMA_KEXEC
- extern void ima_add_kexec_buffer(struct kimage *image);
-@@ -91,6 +94,10 @@ static inline void ima_post_path_mknod(struct dentry *dentry)
- }
- 
- static inline void ima_kexec_cmdline(const void *buf, int size) {}
-+static inline void ima_post_key_create_or_update(struct key *keyring,
-+						 struct key *key,
-+						 unsigned long flags,
-+						 bool create) {}
- #endif /* CONFIG_IMA */
- 
- #ifndef CONFIG_IMA_KEXEC
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 764f4c57913e..7c39054d8da6 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -13,6 +13,7 @@
- #include <linux/security.h>
- #include <linux/workqueue.h>
- #include <linux/random.h>
-+#include <linux/ima.h>
- #include <linux/err.h>
- #include "internal.h"
- 
-@@ -936,6 +937,9 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
- 		goto error_link_end;
- 	}
- 
-+	/* let the ima module know about the created key. */
-+	ima_post_key_create_or_update(keyring, key, flags, true);
++/*
++ * To track keys that need to be measured.
++ */
++struct ima_measure_key_entry {
++	struct list_head list;
++	void *public_key;
++	u32  public_key_len;
++	char *keyring_name;
++};
 +
- 	key_ref = make_key_ref(key, is_key_possessed(keyring_ref));
+ /* LIM API function definitions */
+ int ima_get_action(struct inode *inode, const struct cred *cred, u32 secid,
+ 		   int mask, enum ima_hooks func, int *pcr,
+@@ -224,6 +234,8 @@ int ima_store_template(struct ima_template_entry *entry, int violation,
+ 		       const unsigned char *filename, int pcr);
+ void ima_free_template_entry(struct ima_template_entry *entry);
+ const char *ima_d_path(const struct path *path, char **pathbuf, char *filename);
++int ima_queue_key_for_measurement(struct key *keyring, struct key *key);
++void ima_measure_queued_keys(void);
  
- error_link_end:
-@@ -965,6 +969,11 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
- 	}
+ /* IMA policy related functions */
+ int ima_match_policy(struct inode *inode, const struct cred *cred, u32 secid,
+diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
+index 1ce8b1701566..f2503f10abf4 100644
+--- a/security/integrity/ima/ima_queue.c
++++ b/security/integrity/ima/ima_queue.c
+@@ -46,6 +46,12 @@ struct ima_h_table ima_htable = {
+  */
+ static DEFINE_MUTEX(ima_extend_list_mutex);
  
- 	key_ref = __key_update(key_ref, &prep);
-+	if (!IS_ERR(key_ref)) {
-+		/* let the ima module know about the updated key. */
-+		ima_post_key_create_or_update(keyring, key, flags, false);
++/*
++ * To synchronize access to the list of keys that need to be measured
++ */
++static DEFINE_MUTEX(ima_measure_keys_mutex);
++static LIST_HEAD(ima_measure_keys);
++
+ /* lookup up the digest value in the hash table, and return the entry */
+ static struct ima_queue_entry *ima_lookup_digest_entry(u8 *digest_value,
+ 						       int pcr)
+@@ -232,3 +238,89 @@ int __init ima_init_digests(void)
+ 
+ 	return 0;
+ }
++
++static void ima_free_measure_key_entry(struct ima_measure_key_entry *entry)
++{
++	if (entry != NULL) {
++		if (entry->public_key != NULL)
++			kzfree(entry->public_key);
++		if (entry->keyring_name != NULL)
++			kzfree(entry->keyring_name);
++		kzfree(entry);
++	}
++}
++
++static struct ima_measure_key_entry *ima_alloc_measure_key_entry(
++	struct key *keyring,
++	struct key *key)
++{
++	int rc = 0;
++	const struct public_key *pk;
++	size_t keyring_name_len;
++	struct ima_measure_key_entry *entry = NULL;
++
++	pk = key->payload.data[asym_crypto];
++	keyring_name_len = strlen(keyring->description) + 1;
++	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
++	if (entry != NULL) {
++		entry->public_key = kzalloc(pk->keylen, GFP_KERNEL);
++		entry->keyring_name =
++			kzalloc(keyring_name_len, GFP_KERNEL);
 +	}
 +
- 	goto error_free_prep;
- }
- EXPORT_SYMBOL(key_create_or_update);
++	if ((entry == NULL) || (entry->public_key == NULL) ||
++	    (entry->keyring_name == NULL)) {
++		rc = -ENOMEM;
++		goto out;
++	}
++
++	strcpy(entry->keyring_name, keyring->description);
++	memcpy(entry->public_key, pk->key, pk->keylen);
++	entry->public_key_len = pk->keylen;
++	rc = 0;
++
++out:
++	if (rc) {
++		ima_free_measure_key_entry(entry);
++		entry = NULL;
++	}
++
++	return entry;
++}
++
++int ima_queue_key_for_measurement(struct key *keyring, struct key *key)
++{
++	int rc = 0;
++	struct ima_measure_key_entry *entry = NULL;
++
++	mutex_lock(&ima_measure_keys_mutex);
++
++	entry = ima_alloc_measure_key_entry(keyring, key);
++	if (entry != NULL) {
++		INIT_LIST_HEAD(&entry->list);
++		list_add_tail(&entry->list, &ima_measure_keys);
++	} else
++		rc = -ENOMEM;
++
++	mutex_unlock(&ima_measure_keys_mutex);
++
++	return rc;
++}
++
++void ima_measure_queued_keys(void)
++{
++	struct ima_measure_key_entry *entry, *tmp;
++
++	mutex_lock(&ima_measure_keys_mutex);
++
++	list_for_each_entry_safe(entry, tmp, &ima_measure_keys, list) {
++		process_buffer_measurement(entry->public_key,
++					   entry->public_key_len,
++					   entry->keyring_name,
++					   NONE, 0);
++		list_del(&entry->list);
++		ima_free_measure_key_entry(entry);
++	}
++
++	mutex_unlock(&ima_measure_keys_mutex);
++}
 -- 
 2.17.1
 
