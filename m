@@ -2,168 +2,137 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70093CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 05:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2247CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 05:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8A120862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 05:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77E420862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 05:43:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eXNFG2SX"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eupzgewX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfJaFmP (ORCPT
+        id S1726757AbfJaFnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 01:42:15 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37294 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbfJaFmO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 01:42:14 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 53so4346881otv.4;
-        Wed, 30 Oct 2019 22:42:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NFOmH+X1zL15bEQ+0SP3D+wVm5m7cWoIjddeXOmNWis=;
-        b=eXNFG2SXsL9b1x6q7lAgPhnuMoQAzJF21zbs5UhqxjhJeHA+91N5noHZGTRXt5++Cm
-         vwy0zL1vmeyQcZTw9htTRB9XuFml2B5ff7NJs5YnQ41HZifNqhvEfZqYygawtRB/LU7c
-         sXrW/uKMUCtNg/P74t2GooIxHeq0Gv2jXweyvLTzXtGk4EEge8tcb/+7rCLjnOPIJNds
-         dHIEsT/ub90pbOjfvyBYAp2fWAP73/SPcMOrAfLRvAJVgz82Pf5oHR4lI16evfHkjYWz
-         qVwqjkWsNh8fKeWkSEwMO+Dp73HRJhtJSg1Uqd8VAFj4ppi7mhgj4zJ+U7OHwU/iANq5
-         WICg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NFOmH+X1zL15bEQ+0SP3D+wVm5m7cWoIjddeXOmNWis=;
-        b=gLDXUS4WD2EuXS0thS087d9buGdrW70BAHVz6JdCQtjyPNUN5oRutk63hS+oSjpkBP
-         xK0EvlMl0b5x/kYVAr77VuGe/6s9XSW/umfAcZUr/EFAegRL7qifLgBxQnjSwBExhpkX
-         dmMrPFeJEGg+9dDbhPU/lqpzLvI+oQmp6cWpKXO6uZ3r59wjzGbftKAezy+D/mob6rG8
-         AEHCKdNXoNQNsBjH4CY5eWnZ8tsQJGJFx0nl+qSlI8ZJ7+kdE+QaNtUIX63OXyodtYyr
-         kJvpGoLrJwJkV1Ff2Nd/K7P6Iz5wQ+GnoNyVaMRdI5+NoYO54nmWNHhoTRWlbGls2qET
-         J+kg==
-X-Gm-Message-State: APjAAAUhncS0lyJgWutteca+vDa2XZ7Nz3H4VZ3z6KQIskSNTlPI0hX9
-        4XdSKqdFiV5FnVo/eR09+LU=
-X-Google-Smtp-Source: APXvYqx5hNnAJsc9WyHXr2j5TdrQCtHYOXjDDNgSHQBS5iBRNflmYTlpJXbQJ4F2Hw2R0/45k1y5jA==
-X-Received: by 2002:a9d:611c:: with SMTP id i28mr1000462otj.348.1572500531565;
-        Wed, 30 Oct 2019 22:42:11 -0700 (PDT)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id f9sm835784otq.52.2019.10.30.22.42.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 30 Oct 2019 22:42:10 -0700 (PDT)
-Date:   Wed, 30 Oct 2019 22:42:09 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Jiada Wang <jiada_wang@mentor.com>
-Cc:     jikos@kernel.org, benjamin.tissoires@redhat.com,
-        rydberg@bitmath.org, dmitry.torokhov@gmail.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v4 24/48] Input: atmel_mxt_ts - make bootloader interrupt
- driven
-Message-ID: <20191031054209.GA44197@ubuntu-m2-xlarge-x86>
-References: <20191029072010.8492-1-jiada_wang@mentor.com>
- <20191029072010.8492-25-jiada_wang@mentor.com>
+        Thu, 31 Oct 2019 01:43:41 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:44701 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726321AbfJaFnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 01:43:41 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 473Z4S3hWXz9sCJ;
+        Thu, 31 Oct 2019 16:43:36 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1572500617;
+        bh=4tX0YNHPXUIIEYJsc1hzCYM22rQSJ6RboQ5s8rNjCWQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=eupzgewXX5mD6Kz3omiK4fgj0wlKxSsYyv6eRESUT0qLKRp0PBLTMtmefm6uatUeB
+         jK0ul6HqYVPThRsF4QpWbBQFYzjjh9a8LDOy3vod6b2I/3IrlNMtrvDj6GR9JWDMZC
+         1OCLaVXo2n/hrtwm1PgvFNhS85a7c8vUUGi15UmHhNdC0Em94ThCYCQhWMNJe8qoOH
+         tdG4M/vFtVoNRkN0CfmM9Oira1Z0griK42TcRHk+NXtOI3/U2mRVhyfnXYjUpkVu66
+         Yb6KO815eaowDuKl0Sn6HCOYICOV+HevtEPA2zy3BxUz0Z7Loa17PYQxUQg+YzFoiI
+         GtuoZrL8DIAYA==
+Date:   Thu, 31 Oct 2019 16:43:23 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Julien Grall <julien.grall@arm.com>
+Subject: linux-next: manual merge of the akpm-current tree with the tip tree
+Message-ID: <20191031164323.67a3414e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029072010.8492-25-jiada_wang@mentor.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/Lxfq+_MFYUV4qymGCEE4Skq";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiada,
+--Sig_/Lxfq+_MFYUV4qymGCEE4Skq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 31, 2019 at 01:26:23PM +0800, kbuild test robot wrote:
-> CC: kbuild-all@lists.01.org
-> In-Reply-To: <20191029072010.8492-25-jiada_wang@mentor.com>
-> References: <20191029072010.8492-25-jiada_wang@mentor.com>
-> TO: Jiada Wang <jiada_wang@mentor.com>
-> CC: jikos@kernel.org, benjamin.tissoires@redhat.com, rydberg@bitmath.org, dmitry.torokhov@gmail.com
-> CC: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, jiada_wang@mentor.com, erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-> 
-> Hi Jiada,
-> 
-> I love your patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on input/next]
-> [also build test WARNING on v5.4-rc5 next-20191030]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Jiada-Wang/atmel_mxt_ts-misc/20191031-032509
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git next
-> config: arm64-defconfig (attached as .config)
-> compiler: clang version 10.0.0 (git://gitmirror/llvm_project 6cb181f086a5bc69a97c1a01e9a36f8293dea7ed)
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=arm64 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    drivers/input/touchscreen/atmel_mxt_ts.c:1190:2: error: implicit declaration of function 'dev_debug' [-Werror,-Wimplicit-function-declaration]
->            dev_debug(dev, "T92 long stroke LSTR=%d %d\n",
->            ^
->    drivers/input/touchscreen/atmel_mxt_ts.c:1200:2: error: implicit declaration of function 'dev_debug' [-Werror,-Wimplicit-function-declaration]
->            dev_debug(dev, "T93 report double tap %d\n", status);
->            ^
-> >> drivers/input/touchscreen/atmel_mxt_ts.c:1402:36: warning: address of 'data->flash->work' will always evaluate to 'true' [-Wpointer-bool-conversion]
->                    if (data->flash && &data->flash->work)
->                                    ~~  ~~~~~~~~~~~~~^~~~
+Hi all,
 
-The 0day team has been running clang builds for us and this warning
-popped up because of this commit. Presumably, you will need to spin
-up a v5 because of the other error, mind addressing this warning
-while you are at it? As it points out, the check should be unnecessary,
-unless you meant to check for something else?
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
->    1 warning and 2 errors generated.
-> 
-> vim +1402 drivers/input/touchscreen/atmel_mxt_ts.c
-> 
->   1394	
->   1395	static irqreturn_t mxt_interrupt(int irq, void *dev_id)
->   1396	{
->   1397		struct mxt_data *data = dev_id;
->   1398	
->   1399		if (data->in_bootloader) {
->   1400			complete(&data->chg_completion);
->   1401	
-> > 1402			if (data->flash && &data->flash->work)
->   1403				cancel_delayed_work_sync(&data->flash->work);
->   1404	
->   1405			return IRQ_RETVAL(mxt_check_bootloader(data));
->   1406		}
->   1407	
->   1408		if (!data->object_table)
->   1409			return IRQ_HANDLED;
->   1410	
->   1411		if (data->T44_address) {
->   1412			return mxt_process_messages_t44(data);
->   1413		} else {
->   1414			return mxt_process_messages(data);
->   1415		}
->   1416	}
->   1417	
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> 
+  lib/ubsan.c
 
+between commit:
+
+  9a50dcaf0416 ("ubsan, x86: Annotate and allow __ubsan_handle_shift_out_of=
+_bounds() in uaccess regions")
+
+from the tip tree and commit:
+
+  edbefc568464 ("lib/ubsan: don't serialize UBSAN report")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
 Cheers,
-Nathan
+Stephen Rothwell
+
+diff --cc lib/ubsan.c
+index 0c4681118fcd,39d5952c4273..000000000000
+--- a/lib/ubsan.c
++++ b/lib/ubsan.c
+@@@ -374,12 -359,11 +359,12 @@@ void __ubsan_handle_shift_out_of_bounds
+  	struct type_descriptor *lhs_type =3D data->lhs_type;
+  	char rhs_str[VALUE_LENGTH];
+  	char lhs_str[VALUE_LENGTH];
+ +	unsigned long ua_flags =3D user_access_save();
+ =20
+  	if (suppress_report(&data->location))
+ -		return;
+ +		goto out;
+ =20
+- 	ubsan_prologue(&data->location, &flags);
++ 	ubsan_prologue(&data->location);
+ =20
+  	val_to_string(rhs_str, sizeof(rhs_str), rhs_type, rhs);
+  	val_to_string(lhs_str, sizeof(lhs_str), lhs_type, lhs);
+@@@ -402,9 -386,7 +387,9 @@@
+  			lhs_str, rhs_str,
+  			lhs_type->type_name);
+ =20
+- 	ubsan_epilogue(&flags);
++ 	ubsan_epilogue();
+ +out:
+ +	user_access_restore(ua_flags);
+  }
+  EXPORT_SYMBOL(__ubsan_handle_shift_out_of_bounds);
+ =20
+
+--Sig_/Lxfq+_MFYUV4qymGCEE4Skq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl26dHsACgkQAVBC80lX
+0GwMHAgAmfLeQgjWZxcFDyZUhIN6o0S5dxwaOfHfx5TDc4MjgODz5D+X+G6/Qs8y
+MP6h44zinuOtix1aHAYpWCvIW6B5gCeBfzsk6kMKzbgsUVL32jva50CDzGx1xZRU
+sKB34TqB1cPPo6bN6MBhw4KuIrn4e1v0zeFsxUPjsr0Nvh3lEzdW2GyKgVW/OgJF
+Gh7TaKYsXZ4h67s7Wp3nuQ8Jdel7E/TW+OIf3eQA6XhAsffcScTm65QanSexZwvY
+LpbveSDwJxlpynYdRFNKzAaHpHvW5rCxOdyOV1+aeFC8SPwfpCWAEtkfjJS9ejEf
+l1ao4kd6USkUHVj/c8HQg2IFo9YWdA==
+=846c
+-----END PGP SIGNATURE-----
+
+--Sig_/Lxfq+_MFYUV4qymGCEE4Skq--
