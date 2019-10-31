@@ -2,69 +2,59 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE00CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16DACA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A11C20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FD2820873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:15:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbfJaONp (ORCPT
+        id S1727830AbfJaOPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 10:13:45 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5672 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726540AbfJaONo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 10:13:44 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AA2AC92789834D879914;
-        Thu, 31 Oct 2019 22:13:40 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 31 Oct 2019 22:13:31 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-To:     <broonie@kernel.org>, <lgirdwood@gmail.com>
-CC:     <perex@perex.cz>, <tiwai@suse.com>, <mripard@kernel.org>,
-        <zhongjiang@huawei.com>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ASoC: sun4i: Use PTR_ERR_OR_ZERO to simplify the code
-Date:   Thu, 31 Oct 2019 22:09:39 +0800
-Message-ID: <1572530979-27595-1-git-send-email-zhongjiang@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Thu, 31 Oct 2019 10:15:53 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:38116 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726793AbfJaOPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 10:15:53 -0400
+Received: from dhcp-64-28.ens-lyon.fr ([140.77.64.28] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iQBEs-0005kg-Tz; Thu, 31 Oct 2019 15:15:50 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-rockchip@lists.infradead.org,
+        christoph.muellner@theobroma-systems.com
+Subject: Re: [PATCH 01/13] arm64: dts: rockchip: fix iface clock-name on px30 iommus
+Date:   Thu, 31 Oct 2019 15:15:49 +0100
+Message-ID: <8112330.DWCu6rFsBr@phil>
+In-Reply-To: <2015322.eFjuJPvpNX@phil>
+References: <20190917082659.25549-1-heiko@sntech.de> <2015322.eFjuJPvpNX@phil>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is better to use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR.
+Am Donnerstag, 3. Oktober 2019, 23:25:51 CET schrieb Heiko Stuebner:
+> Am Dienstag, 17. September 2019, 10:26:47 CEST schrieb Heiko Stuebner:
+> > The iommu clock names are aclk+iface not aclk+hclk as in the vendor kernel,
+> > so fix that in the px30.dtsi
+> > 
+> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> 
+> applied patches 1-11 for 5.5
+> 
+> Patches 12+13 need the corresponding phy change to land first
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
----
- sound/soc/sunxi/sun4i-i2s.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+also applied 12+13 now
 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index d0a8d58..72012a6 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -1174,10 +1174,8 @@ static int sun4i_i2s_init_regmap_fields(struct device *dev,
- 	i2s->field_fmt_sr =
- 			devm_regmap_field_alloc(dev, i2s->regmap,
- 						i2s->variant->field_fmt_sr);
--	if (IS_ERR(i2s->field_fmt_sr))
--		return PTR_ERR(i2s->field_fmt_sr);
- 
--	return 0;
-+	return PTR_ERR_OR_ZERO(i2s->field_fmt_sr);
- }
- 
- static int sun4i_i2s_probe(struct platform_device *pdev)
--- 
-1.7.12.4
+
 
