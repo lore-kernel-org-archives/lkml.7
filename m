@@ -2,82 +2,106 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F13BCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8C9CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0876208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:42:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="G2hhH/AW"
+	by mail.kernel.org (Postfix) with ESMTP id D537B2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:42:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572536577;
+	bh=GRreUt5vILq8iwJLnTWSsnpWtfLL+f+wCy2zYdNxf6o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q1aJKquVchuU9hc9d3fwceUAdP9OcWQ9DkzfSC9eYy58MMPBn0tis2xkBnzzpbWo5
+	 sZE8tpneleer19tR3a1+3n8ylc/WhDNZyuY+v38ZnH7IMI/rQb7PGcGE7bgn0vMMTm
+	 lO452WZpTl6tT2OEnfsIfh6k3S0DRHuYtEw+kICc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbfJaPmx (ORCPT
+        id S1728446AbfJaPm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 11:42:53 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:55280 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbfJaPmw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 11:42:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727579AbfJaPmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 31 Oct 2019 11:42:52 -0400
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id B3DC020B7192;
-        Thu, 31 Oct 2019 08:42:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B3DC020B7192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1572536571;
-        bh=VEMRMLTSgqwtGYH1CLoFnXVfEwXi5+fo0FYWAu1w7Go=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=G2hhH/AW1SH0XWVF66twEG0I+7/S1MLgrbzWgHOt8e1t1b3nCBUej8k9gqk9zS3Vg
-         E1yjfNTAspzVJF3iDIaQPJGM0OeZPp7jqrO8/3Z5p/x6/1z2cJtGOetUuYXADAYhCV
-         b3KLUodKNyJfdMrxz7NHebkEWUhWZHyE0BCtRQeo=
-Subject: Re: [PATCH v3 1/9] KEYS: Defined an IMA hook to measure keys on key
- create or update
-To:     Mimi Zohar <zohar@linux.ibm.com>, Sasha Levin <sashal@kernel.org>
-Cc:     dhowells@redhat.com, matthewgarrett@google.com,
-        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        prsriva@linux.microsoft.com
-References: <20191031011910.2574-1-nramas@linux.microsoft.com>
- <20191031011910.2574-2-nramas@linux.microsoft.com>
- <1572523831.5028.43.camel@linux.ibm.com>
- <b83bd7ef-ce7f-e750-e30b-30d5a6469a28@linux.microsoft.com>
- <20191031152730.GQ1554@sasha-vm> <1572536253.5028.50.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <a629707a-40d2-e3dd-fdf4-af2f84f47796@linux.microsoft.com>
-Date:   Thu, 31 Oct 2019 08:42:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DECD82086D;
+        Thu, 31 Oct 2019 15:42:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572536572;
+        bh=GRreUt5vILq8iwJLnTWSsnpWtfLL+f+wCy2zYdNxf6o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qaAJ8XcWGfT4LUOvU811aRsvOWAxezJATr7Uk9nzN23oXUvKxtHZVcY0AqzVTOyjZ
+         Epk2/3n2IWDhuOaWcOoDQDWApaqgYgldCxMrpckQEgKjPXnL2Tv96+pJVdwc1WPwcm
+         ftKHIyiFmV9Fi/cSBRpiXvhFrSLJm+8Fm2Mkj3Fg=
+Date:   Thu, 31 Oct 2019 15:42:47 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 5/7] iommu/arm-smmu-v3: Allow building as a module
+Message-ID: <20191031154247.GB28061@willie-the-truck>
+References: <20191030145112.19738-1-will@kernel.org>
+ <20191030145112.19738-6-will@kernel.org>
+ <20191030193148.GA8432@8bytes.org>
 MIME-Version: 1.0
-In-Reply-To: <1572536253.5028.50.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030193148.GA8432@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/31/19 8:37 AM, Mimi Zohar wrote:
+Hi Joerg,
 
->> I couldn't even apply this patch: Nayna's series (v10) doesn't apply  >> top of 5.3 to begin with, and while it does apply on mainline, 
-this>> first patch wouldn't apply on top.
-> Lakshmi, development is always on top of mainline.  In this case,
->   please use 5.4.0-rc3 and apply Nayna's v10 patch set.
+On Wed, Oct 30, 2019 at 08:31:48PM +0100, Joerg Roedel wrote:
+> On Wed, Oct 30, 2019 at 02:51:10PM +0000, Will Deacon wrote:
+> > By removing the redundant call to 'pci_request_acs()' we can allow the
+> > ARM SMMUv3 driver to be built as a module.
+> > 
+> > Signed-off-by: Will Deacon <will@kernel.org>
+> > ---
+> >  drivers/iommu/Kconfig       | 2 +-
+> >  drivers/iommu/arm-smmu-v3.c | 1 -
+> >  2 files changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> > index e3842eabcfdd..7583d47fc4d5 100644
+> > --- a/drivers/iommu/Kconfig
+> > +++ b/drivers/iommu/Kconfig
+> > @@ -388,7 +388,7 @@ config ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT
+> >  	  config.
+> >  
+> >  config ARM_SMMU_V3
+> > -	bool "ARM Ltd. System MMU Version 3 (SMMUv3) Support"
+> > +	tristate "ARM Ltd. System MMU Version 3 (SMMUv3) Support"
+> >  	depends on ARM64
+> >  	select IOMMU_API
+> >  	select IOMMU_IO_PGTABLE_LPAEa
 > 
-> Mimi
+> Sorry for the stupid question, but what prevents the iommu module from
+> being unloaded when there are active users? There are no symbol
+> dependencies to endpoint device drivers, because the interface is only
+> exposed through the iommu-api, right? Is some sort of manual module
+> reference counting needed?
 
+Generally, I think unloading the IOMMU driver module while there are
+active users is a pretty bad idea, much like unbinding the driver via
+/sys in the same situation would also be fairly daft. However, I *think*
+the code in __device_release_driver() tries to deal with this by
+iterating over the active consumers and ->remove()ing them first.
 
-Thanks for the info Mimi.
+I'm without hardware access at the moment, so I haven't been able to
+test this myself. We could nobble the module_exit() hook, but there's
+still the "force unload" option depending on the .config.
 
-I initially started with v5.4, but the kernel I built wouldn't boot on 
-my machine :(
-
-I'll update to the latest v5.4 changes and try again.
-
-thanks,
-  -lakshmi
+Will
