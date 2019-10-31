@@ -2,100 +2,54 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0B8CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A67F3CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36AD208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:36:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572536165;
-	bh=AbvQStO4mftxwOLZ6Vl8wEv4VUDwqs8YdcH3DMqFFYs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zt+vFUUFNr9mvuz+xq3iI6LRw6LVEgQOsUDawjw59cPfoUveL2M0O6nyTqWim8tfM
-	 9cz1dfhxEhPByVQGz3o3GyxT+U4sLrPLPx+N2zylGdYGl33i6aR4PVHfIFIkPcEImr
-	 lHblN8+cfPqHFYM3h19/6Uw8anj3mA5scHFgerCU=
+	by mail.kernel.org (Postfix) with ESMTP id 87055208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:36:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbfJaPgE (ORCPT
+        id S1728400AbfJaPgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 11:36:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49142 "EHLO mail.kernel.org"
+        Thu, 31 Oct 2019 11:36:46 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:38990 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727630AbfJaPgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 11:36:04 -0400
-Received: from localhost (unknown [91.217.168.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BD632086D;
-        Thu, 31 Oct 2019 15:36:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572536163;
-        bh=AbvQStO4mftxwOLZ6Vl8wEv4VUDwqs8YdcH3DMqFFYs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SgK0nkFL/OFf39EmgXyG/cwq07tF9zrAreYfzEZ96SVGFKha6hnCKad0/aaVbdJ+l
-         DiTmvprYSSf1qmHgsy1CNs0dW2uNwTc9ki2AMyLcuQEeTQDVdiqNYznTyttAYf6SQZ
-         Ug1rsN0rcIK7euU0dn26eb8hJ6iD4r6Fbi52ufKg=
-Date:   Thu, 31 Oct 2019 11:36:00 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     zohar@linux.ibm.com, dhowells@redhat.com,
-        matthewgarrett@google.com, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        prsriva@linux.microsoft.com
-Subject: Re: [PATCH v3 1/9] KEYS: Defined an IMA hook to measure keys on key
- create or update
-Message-ID: <20191031153600.GR1554@sasha-vm>
-References: <20191031011910.2574-1-nramas@linux.microsoft.com>
- <20191031011910.2574-2-nramas@linux.microsoft.com>
- <20191031091041.GO1554@sasha-vm>
- <af591616-ac80-c862-6822-d11addeabb91@linux.microsoft.com>
+        id S1728308AbfJaPgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 11:36:46 -0400
+Received: from dhcp-64-28.ens-lyon.fr ([140.77.64.28] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iQCV4-000698-Qw; Thu, 31 Oct 2019 16:36:38 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Andy Yan <andy.yan@rock-chips.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 1/2] dt-bindings: Add doc for Firefly ROC-RK3308-CC board
+Date:   Thu, 31 Oct 2019 16:36:37 +0100
+Message-ID: <314513738.FDhnDVbnjr@phil>
+In-Reply-To: <20191030072648.29738-1-andy.yan@rock-chips.com>
+References: <20191030072648.29738-1-andy.yan@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <af591616-ac80-c862-6822-d11addeabb91@linux.microsoft.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 08:27:47AM -0700, Lakshmi Ramasubramanian wrote:
->On 10/31/19 2:10 AM, Sasha Levin wrote:
->
->Hi Sasha,
->
->>On Wed, Oct 30, 2019 at 06:19:02PM -0700, Lakshmi Ramasubramanian wrote:
->>>Asymmetric keys used for verifying file signatures or certificates
->>>are currently not included in the IMA measurement list.
->>>
->>>This patch defines a new IMA hook namely ima_post_key_create_or_update()
->>>to measure asymmetric keys.
->>>
->>>Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
->>
->>What are the prerequisites for this patch?
->
->I built this patch set on kernel v5.3
->
->I applied the following patch provided by Nayna Jain@IBM and then 
->added my changes:
->
->	[PATCH v9 5/8] ima: make process_buffer_measurement() generic
+Am Mittwoch, 30. Oktober 2019, 08:26:48 CET schrieb Andy Yan:
+> Add compatible for Firefly ROC-RK3308-CC board.
+> 
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 
-$ git checkout v5.3
-HEAD is now at 4d856f72c10ec Linux 5.3
-$ git am ~/incoming/_PATCH_v9_5-8_ima_make_process_buffer_measurement__generic.patch
-Applying: ima: make process_buffer_measurement() generic
-error: patch failed: security/integrity/ima/ima.h:217
-error: security/integrity/ima/ima.h: patch does not apply
+applied both patches for 5.5, with some small fixes.
 
-What am I missing?
+Thanks
+Heiko
 
--- 
-Thanks,
-Sasha
+
