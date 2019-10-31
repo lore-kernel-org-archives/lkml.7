@@ -2,87 +2,174 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA61CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A07CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CED1020862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE59920862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:07:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfJaKHY (ORCPT
+        id S1727232AbfJaKHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:07:24 -0400
-Received: from smtprelay0006.hostedemail.com ([216.40.44.6]:41733 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726193AbfJaKHY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:07:24 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 66010180A5AFF;
-        Thu, 31 Oct 2019 10:07:22 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: kite22_402863056ff25
-X-Filterd-Recvd-Size: 2589
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 31 Oct 2019 10:07:20 +0000 (UTC)
-Message-ID: <bd76d5c22f389f3e6ecc2575e32c906f79647765.camel@perches.com>
-Subject: Re: [PATCH linux-kselftest/test v6] lib/list-test: add a test for
- the 'list' doubly linked list
-From:   Joe Perches <joe@perches.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     shuah <shuah@kernel.org>, Dan Carpenter <dan.carpenter@oracle.com>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Thu, 31 Oct 2019 03:07:12 -0700
-In-Reply-To: <20191031085129.GA217570@google.com>
-References: <20191024224631.118656-1-davidgow@google.com>
-         <0cb1d948-0da3-eb0f-c58f-ae3a785dd0dd@kernel.org>
-         <CABVgOSmCHbGjZBjeWSbPEZbJw22SaBQnoO77xxNzN_ugAwzNiQ@mail.gmail.com>
-         <20191030104217.GA18421@kadam>
-         <42a8270d-ed6f-d29f-5e71-7b76a074b63e@kernel.org>
-         <CAFd5g47OZ8x9=etJUj4Sgsw38VQb0j=omOUsubc7+pb2rJi0bQ@mail.gmail.com>
-         <fad58e4f48237894de0d511adf1d663a42a2eee7.camel@perches.com>
-         <20191031085129.GA217570@google.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Thu, 31 Oct 2019 06:07:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:46554 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726193AbfJaKHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 06:07:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E32E61F1;
+        Thu, 31 Oct 2019 03:07:44 -0700 (PDT)
+Received: from localhost (e108754-lin.cambridge.arm.com [10.1.199.68])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 837C13F719;
+        Thu, 31 Oct 2019 03:07:44 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 10:07:43 +0000
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        rui.zhang@intel.com, edubezval@gmail.com, qperret@google.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org
+Subject: Re: [Patch v4 0/6] Introduce Thermal Pressure
+Message-ID: <20191031100631.GC19197@e108754-lin>
+References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
+ <c6169634-ab1d-6bda-183f-bdd06048736a@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c6169634-ab1d-6bda-183f-bdd06048736a@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-31 at 01:51 -0700, Brendan Higgins wrote:
-> On Wed, Oct 30, 2019 at 10:18:44AM -0700, Joe Perches wrote:
-> > On Wed, 2019-10-30 at 09:35 -0700, Brendan Higgins wrote:
-> > > Agreed. I can see the point of not wanting to write an exception into
-> > > checkpatch for every exception of it's general rules; however, it
-> > > would be nice if there was a way to maybe have a special comment or
-> > > something that could turn off a checkpatch error. That way, a
-> > > checkpatch error/warning always means some action should be taken, and
-> > > if a rule is being ignored, there is always documentation as to why.
-> > 
-> > That couldn't work when a comment which may exist
-> > in a file is out of scope of the patch context.
+Hi Daniel,
+
+On Tuesday 29 Oct 2019 at 16:34:11 (+0100), Daniel Lezcano wrote:
+> Hi Thara,
 > 
-> Sorry, I don't understand exactly what you mean. Can you elaborate?
+> On 22/10/2019 22:34, Thara Gopinath wrote:
+> > Thermal governors can respond to an overheat event of a cpu by
+> > capping the cpu's maximum possible frequency. This in turn
+> > means that the maximum available compute capacity of the
+> > cpu is restricted. But today in the kernel, task scheduler is 
+> > not notified of capping of maximum frequency of a cpu.
+> > In other words, scheduler is unware of maximum capacity
+> > restrictions placed on a cpu due to thermal activity.
+> > This patch series attempts to address this issue.
+> > The benefits identified are better task placement among available
+> > cpus in event of overheating which in turn leads to better
+> > performance numbers.
+> > 
+> > The reduction in the maximum possible capacity of a cpu due to a 
+> > thermal event can be considered as thermal pressure. Instantaneous
+> > thermal pressure is hard to record and can sometime be erroneous
+> > as there can be mismatch between the actual capping of capacity
+> > and scheduler recording it. Thus solution is to have a weighted
+> > average per cpu value for thermal pressure over time.
+> > The weight reflects the amount of time the cpu has spent at a
+> > capped maximum frequency. Since thermal pressure is recorded as
+> > an average, it must be decayed periodically. Exisiting algorithm
+> > in the kernel scheduler pelt framework is re-used to calculate
+> > the weighted average. This patch series also defines a sysctl
+> > inerface to allow for a configurable decay period.
+> > 
+> > Regarding testing, basic build, boot and sanity testing have been
+> > performed on db845c platform with debian file system.
+> > Further, dhrystone and hackbench tests have been
+> > run with the thermal pressure algorithm. During testing, due to
+> > constraints of step wise governor in dealing with big little systems,
+> > trip point 0 temperature was made assymetric between cpus in little
+> > cluster and big cluster; the idea being that
+> > big core will heat up and cpu cooling device will throttle the
+> > frequency of the big cores faster, there by limiting the maximum available
+> > capacity and the scheduler will spread out tasks to little cores as well.
+> > 
+> > Test Results
+> > 
+> > Hackbench: 1 group , 30000 loops, 10 runs       
+> >                                                Result         SD             
+> >                                                (Secs)     (% of mean)     
+> >  No Thermal Pressure                            14.03       2.69%           
+> >  Thermal Pressure PELT Algo. Decay : 32 ms      13.29       0.56%         
+> >  Thermal Pressure PELT Algo. Decay : 64 ms      12.57       1.56%           
+> >  Thermal Pressure PELT Algo. Decay : 128 ms     12.71       1.04%         
+> >  Thermal Pressure PELT Algo. Decay : 256 ms     12.29       1.42%           
+> >  Thermal Pressure PELT Algo. Decay : 512 ms     12.42       1.15%  
+> > 
+> > Dhrystone Run Time  : 20 threads, 3000 MLOOPS
+> >                                                  Result      SD             
+> >                                                  (Secs)    (% of mean)     
+> >  No Thermal Pressure                              9.452      4.49%
+> >  Thermal Pressure PELT Algo. Decay : 32 ms        8.793      5.30%
+> >  Thermal Pressure PELT Algo. Decay : 64 ms        8.981      5.29%
+> >  Thermal Pressure PELT Algo. Decay : 128 ms       8.647      6.62%
+> >  Thermal Pressure PELT Algo. Decay : 256 ms       8.774      6.45%
+> >  Thermal Pressure PELT Algo. Decay : 512 ms       8.603      5.41%  
+> 
+> I took the opportunity to try glmark2 on the db845c platform with the
+> default decay and got the following glmark2 scores:
+> 
+> Without thermal pressure:
+> 
+> # NumSamples = 9; Min = 790.00; Max = 805.00
+> # Mean = 794.888889; Variance = 19.209877; SD = 4.382907; Median 794.000000
+> # each ∎ represents a count of 1
+>   790.0000 -   791.5000 [     2]: ∎∎
+>   791.5000 -   793.0000 [     2]: ∎∎
+>   793.0000 -   794.5000 [     2]: ∎∎
+>   794.5000 -   796.0000 [     1]: ∎
+>   796.0000 -   797.5000 [     0]:
+>   797.5000 -   799.0000 [     1]: ∎
+>   799.0000 -   800.5000 [     0]:
+>   800.5000 -   802.0000 [     0]:
+>   802.0000 -   803.5000 [     0]:
+>   803.5000 -   805.0000 [     1]: ∎
+> 
+> 
+> With thermal pressure:
+> 
+> # NumSamples = 9; Min = 933.00; Max = 960.00
+> # Mean = 940.777778; Variance = 64.172840; SD = 8.010795; Median 937.000000
+> # each ∎ represents a count of 1
+>   933.0000 -   935.7000 [     3]: ∎∎∎
+>   935.7000 -   938.4000 [     2]: ∎∎
+>   938.4000 -   941.1000 [     2]: ∎∎
+>   941.1000 -   943.8000 [     0]:
+>   943.8000 -   946.5000 [     0]:
+>   946.5000 -   949.2000 [     1]: ∎
+>   949.2000 -   951.9000 [     0]:
+>   951.9000 -   954.6000 [     0]:
+>   954.6000 -   957.3000 [     0]:
+>   957.3000 -   960.0000 [     1]: ∎
+> 
 
-checkpatch works on patch contexts.
-If the comment is not within the patch context,
-checkpatch cannot ignore various test.
+Interesting! If I'm interpreting these correctly there seems to be
+significant improvement when applying thermal pressure.
 
-> static void list_test_list_for_each_prev(struct kunit *test) /* checkpatch: disable=for-each-format */
+I'm not familiar with glmark2, can you tell me more about the process
+and the work that the benchmark does? I assume this is a GPU benchmark,
+but not knowing more about it I fail to see the correlation between
+applying thermal pressure to CPU capacities and the improvement of GPU
+performance.
 
-Long line, now what?
+Do you happen to know more about the behaviour that resulted in these
+benchmark scores?
 
+Thanks,
+Ionela.
 
+> 
+> 
+> -- 
+>  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> 
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+> 
