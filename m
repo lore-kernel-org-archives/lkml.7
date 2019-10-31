@@ -2,226 +2,183 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D1BCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2236FCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395F621835
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:05:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ChEaHnzz"
+	by mail.kernel.org (Postfix) with ESMTP id F068A2080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 01:08:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbfJaBFT (ORCPT
+        id S1726741AbfJaBID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 21:05:19 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:57658 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbfJaBFT (ORCPT
+        Wed, 30 Oct 2019 21:08:03 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:43236 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726317AbfJaBID (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 21:05:19 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1040)
-        id 66DEB20B7192; Wed, 30 Oct 2019 18:05:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 66DEB20B7192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1572483918;
-        bh=l+1Yn3gcH/T0rqz8/lhOt/F8mgcwtdsD0FATtgC5VQc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ChEaHnzzMA+/CkOQ1n0UThFyFbizzPu0yT/ys7YIBKTPUa5YZKaH0+4JwTLjDUPAB
-         g/60C1wwgAiUPee7DgyKylplzUajhGMcxsF7UualkxMg8agP5+2jXn8nT5T9da6vVH
-         y3/Cb4PM32qU6LJRabzYXvPqoPcFqA1HYNYA+uPY=
-From:   Steve MacLean <steve.maclean@linux.microsoft.com>
-Cc:     Steve MacLean <Steve.MacLean@Microsoft.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] perf inject --jit: Remove //anon mmap events
-Date:   Wed, 30 Oct 2019 18:05:12 -0700
-Message-Id: <1572483912-111747-1-git-send-email-steve.maclean@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 30 Oct 2019 21:08:03 -0400
+Received: from mr2.cc.vt.edu (mr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:90:e077:bf22])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x9V181GN019579
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 21:08:01 -0400
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x9V17uLB030055
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 21:08:01 -0400
+Received: by mail-qk1-f200.google.com with SMTP id v143so4063346qka.21
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 18:08:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=A6x5zvKJWNelVsaR2qz0QPsCww3yKpvWiohVOKat7vg=;
+        b=l2lBVhzY59e8mtOLoAAaiD4CWvf7Nyf7T/iCfNSRlSudDcaKl3rN9Tiyz+qifpoFDL
+         JfGfbGrvh5iZyFlBnXG5NIAxW9B5ag8C0oO0QbJam/HZWWbmTzkW9EOOI9kRRA5UmRBp
+         /XverTp2NcYOIR9Q9TVPGDq9grfd+JuKgyf29pNObORyUVdoEX84VOgmCqqtLWWzO7uh
+         dO3laPqKI1dim2qS/vj35btxSPTJ9LNSEevl1VJsezC4V35pXyA6FLlKIOGP2uCNadba
+         U/umf4Pl5wR+5BccwAcOHPsswX2aZ8h5JrP810AQv5Lx1WjxR/magfyk8fGt6Qhzo3EZ
+         53qA==
+X-Gm-Message-State: APjAAAWD8Q5swOc3G7XxwlyWSLwBhNSDeKt6dKWg8c5DGcStY7B8cqGH
+        mmzwhErito2ot0jfx565206m9B8byUE8a3G8hOOtzKd5j5qxB+mFrrwSiFcdEMm1Tlvh6UMyQ8f
+        zaGvEJLT/Q5slRzLmmx7Tq6qvQrhvibVEcNM=
+X-Received: by 2002:a05:620a:12c2:: with SMTP id e2mr2944266qkl.162.1572484075627;
+        Wed, 30 Oct 2019 18:07:55 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxlE8kPCGfGf/g8Sz78JkaUwhSUp0GYw6gPnzEQRzaLcuBtPOcj575mA0HsP7G//KxKX1X8dA==
+X-Received: by 2002:a05:620a:12c2:: with SMTP id e2mr2944240qkl.162.1572484075278;
+        Wed, 30 Oct 2019 18:07:55 -0700 (PDT)
+Received: from turing-police.lan ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id u9sm1042529qke.50.2019.10.30.18.07.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 18:07:53 -0700 (PDT)
+From:   Valdis Kletnieks <valdis.kletnieks@vt.edu>
+X-Google-Original-From: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Valdis Kletnieks <Valdis.Kletnieks@vt.edu>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, Jan Kara <jack@suse.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-fsdevel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-arch@vger.kernel.org
+Subject: [RFC] errno.h: Provide EFSCORRUPTED for everybody
+Date:   Wed, 30 Oct 2019 21:07:33 -0400
+Message-Id: <20191031010736.113783-1-Valdis.Kletnieks@vt.edu>
+X-Mailer: git-send-email 2.24.0.rc1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve MacLean <Steve.MacLean@Microsoft.com>
+Three questions: (a) ACK/NAK on this patch, (b) should it be all in one
+patch, or one to add to errno.h and 6 patches for 6 filesystems?), and
+(c) if one patch, who gets to shepherd it through?
 
-While a JIT is jitting code it will eventually need to commit more pages and
-change these pages to executable permissions.
 
-Typically the JIT will want these colocated to minimize branch displacements.
+There's currently 6 filesystems that have the same #define. Move it
+into errno.h so it's defined in just one place.
 
-The kernel will coalesce these anonymous mapping with identical permissions
-before sending an MMAP event for the new pages. This means the mmap event for
-the new pages will include the older pages.
-
-These anonymous mmap events will obscure the jitdump injected pseudo events.
-This means that the jitdump generated symbols, machine code, debugging info,
-and unwind info will no longer be used.
-
-Observations:
-
-When a process emits a jit dump marker and a jitdump file, the perf-xxx.map
-file represents inferior information which has been superceded by the
-jitdump jit-xxx.dump file.
-
-Further the '//anon*' mmap events are only required for the legacy
-perf-xxx.map mapping.
-
-When attaching to an existing process, the synthetic anon map events are
-given a time stamp of -1. These should not obscure the jitdump events which
-have an actual time.
-
-Summary:
-
-Use thread->priv to store whether a jitdump file has been processed
-
-During "perf inject --jit", discard "//anon*" mmap events for any pid which
-has sucessfully processed a jitdump file.
-
-Committer testing:
-
-// jitdump case
-perf record <app with jitdump>
-perf inject --jit --input perf.data --output perfjit.data
-
-// verify mmap "//anon" events present initially
-perf script --input perf.data --show-mmap-events | grep '//anon'
-// verify mmap "//anon" events removed
-perf script --input perfjit.data --show-mmap-events | grep '//anon'
-
-// no jitdump case
-perf record <app without jitdump>
-perf inject --jit --input perf.data --output perfjit.data
-
-// verify mmap "//anon" events present initially
-perf script --input perf.data --show-mmap-events | grep '//anon'
-// verify mmap "//anon" events not removed
-perf script --input perfjit.data --show-mmap-events | grep '//anon'
-
-Repro:
-
-This issue was discovered while testing the initial CoreCLR jitdump
-implementation. https://github.com/dotnet/coreclr/pull/26897.
-
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
+Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
 ---
- tools/perf/builtin-inject.c |  4 ++--
- tools/perf/util/jitdump.c   | 38 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 40 insertions(+), 2 deletions(-)
+ drivers/staging/exfat/exfat.h    | 2 --
+ fs/erofs/internal.h              | 2 --
+ fs/ext4/ext4.h                   | 1 -
+ fs/f2fs/f2fs.h                   | 1 -
+ fs/xfs/xfs_linux.h               | 1 -
+ include/linux/jbd2.h             | 1 -
+ include/uapi/asm-generic/errno.h | 1 +
+ 7 files changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 372ecb3..0f38862 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -263,7 +263,7 @@ static int perf_event__jit_repipe_mmap(struct perf_tool *tool,
- 	 * if jit marker, then inject jit mmaps and generate ELF images
- 	 */
- 	ret = jit_process(inject->session, &inject->output, machine,
--			  event->mmap.filename, sample->pid, &n);
-+			  event->mmap.filename, event->mmap.pid, &n);
- 	if (ret < 0)
- 		return ret;
- 	if (ret) {
-@@ -301,7 +301,7 @@ static int perf_event__jit_repipe_mmap2(struct perf_tool *tool,
- 	 * if jit marker, then inject jit mmaps and generate ELF images
- 	 */
- 	ret = jit_process(inject->session, &inject->output, machine,
--			  event->mmap2.filename, sample->pid, &n);
-+			  event->mmap2.filename, event->mmap2.pid, &n);
- 	if (ret < 0)
- 		return ret;
- 	if (ret) {
-diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-index e3ccb0c..c36d19b 100644
---- a/tools/perf/util/jitdump.c
-+++ b/tools/perf/util/jitdump.c
-@@ -26,6 +26,7 @@
- #include "jit.h"
- #include "jitdump.h"
- #include "genelf.h"
-+#include "thread.h"
+diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
+index 84de1123e178..3cf7e54af0b7 100644
+--- a/drivers/staging/exfat/exfat.h
++++ b/drivers/staging/exfat/exfat.h
+@@ -30,8 +30,6 @@
+ #undef DEBUG
+ #endif
  
- #include <linux/ctype.h>
- #include <linux/zalloc.h>
-@@ -749,6 +750,34 @@ static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry *jr)
- 	return 0;
+-#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+-
+ #define DENTRY_SIZE		32	/* dir entry size */
+ #define DENTRY_SIZE_BITS	5
+ 
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 544a453f3076..3980026a8882 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -425,7 +425,5 @@ static inline int z_erofs_init_zip_subsystem(void) { return 0; }
+ static inline void z_erofs_exit_zip_subsystem(void) {}
+ #endif	/* !CONFIG_EROFS_FS_ZIP */
+ 
+-#define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
+-
+ #endif	/* __EROFS_INTERNAL_H */
+ 
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 03db3e71676c..a86c2585457d 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -3396,6 +3396,5 @@ static inline int ext4_buffer_uptodate(struct buffer_head *bh)
+ #endif	/* __KERNEL__ */
+ 
+ #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
+-#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+ 
+ #endif	/* _EXT4_H */
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 4024790028aa..04ebe77569a3 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3752,6 +3752,5 @@ static inline bool is_journalled_quota(struct f2fs_sb_info *sbi)
  }
  
-+static void jit_add_pid(struct machine *machine, pid_t pid)
-+{
-+	struct thread *thread = machine__findnew_thread(machine, pid, pid);
-+
-+	if (!thread)
-+	{
-+		pr_err("jit_add_pid() thread not found\n");
-+
-+		return;
-+	}
-+
-+	thread->priv = (void *) 1;
-+}
-+
-+static bool jit_has_pid(struct machine *machine, pid_t pid)
-+{
-+	struct thread *thread = machine__findnew_thread(machine, pid, pid);
-+
-+	if (!thread)
-+	{
-+		pr_err("jit_has_pid() thread not found\n");
-+
-+		return 0;
-+	}
-+
-+	return (bool) thread->priv;
-+}
-+
- int
- jit_process(struct perf_session *session,
- 	    struct perf_data *output,
-@@ -765,7 +794,15 @@ static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry *jr)
- 	 * first, detect marker mmap (i.e., the jitdump mmap)
- 	 */
- 	if (jit_detect(filename, pid))
-+	{
-+		/*
-+		 * Strip //anon* mmaps if we processed a jitdump for this pid
-+		 */
-+		if (jit_has_pid(machine, pid) && (strncmp(filename, "//anon", 6) == 0))
-+			return 1;
-+
- 		return 0;
-+	}
+ #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
+-#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
  
- 	memset(&jd, 0, sizeof(jd));
+ #endif /* _LINUX_F2FS_H */
+diff --git a/fs/xfs/xfs_linux.h b/fs/xfs/xfs_linux.h
+index ca15105681ca..3409d02a7d21 100644
+--- a/fs/xfs/xfs_linux.h
++++ b/fs/xfs/xfs_linux.h
+@@ -123,7 +123,6 @@ typedef __u32			xfs_nlink_t;
  
-@@ -784,6 +821,7 @@ static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry *jr)
+ #define ENOATTR		ENODATA		/* Attribute not found */
+ #define EWRONGFS	EINVAL		/* Mount with wrong filesystem type */
+-#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+ #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
  
- 	ret = jit_inject(&jd, filename);
- 	if (!ret) {
-+		jit_add_pid(machine, pid);
- 		*nbytes = jd.bytes_written;
- 		ret = 1;
- 	}
+ #define SYNCHRONIZE()	barrier()
+diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
+index 564793c24d12..1ecd3859d040 100644
+--- a/include/linux/jbd2.h
++++ b/include/linux/jbd2.h
+@@ -1657,6 +1657,5 @@ static inline tid_t  jbd2_get_latest_transaction(journal_t *journal)
+ #endif	/* __KERNEL__ */
+ 
+ #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
+-#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+ 
+ #endif	/* _LINUX_JBD2_H */
+diff --git a/include/uapi/asm-generic/errno.h b/include/uapi/asm-generic/errno.h
+index cf9c51ac49f9..1d5ffdf54cb0 100644
+--- a/include/uapi/asm-generic/errno.h
++++ b/include/uapi/asm-generic/errno.h
+@@ -98,6 +98,7 @@
+ #define	EINPROGRESS	115	/* Operation now in progress */
+ #define	ESTALE		116	/* Stale file handle */
+ #define	EUCLEAN		117	/* Structure needs cleaning */
++#define	EFSCORRUPTED	EUCLEAN
+ #define	ENOTNAM		118	/* Not a XENIX named type file */
+ #define	ENAVAIL		119	/* No XENIX semaphores available */
+ #define	EISNAM		120	/* Is a named type file */
 -- 
-1.8.3.1
+2.24.0.rc1
 
