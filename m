@@ -2,112 +2,169 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAFDCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE8BCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5294A2080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7B72216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:13:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="hCM/GltD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729466AbfJaTKc (ORCPT
+        id S1729495AbfJaTNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 15:10:32 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51862 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729296AbfJaTKb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 15:10:31 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aratiu)
-        with ESMTPSA id 5E60A290B9B
-From:   Adrian Ratiu <adrian.ratiu@collabora.com>
-To:     Emil Velikov <emil.l.velikov@gmail.com>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc:     "Linux-Kernel\@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-rockchip <linux-rockchip@lists.infradead.org>,
-        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
-        LAKML <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 0/4] Genericize DW MIPI DSI bridge and add i.MX 6 driver
-In-Reply-To: <CACvgo50NmofJrCvADOTxJqJqKEWDsy8qD-1B6R356vFMcmdbWA@mail.gmail.com>
-References: <20191031142633.12460-1-adrian.ratiu@collabora.com>
- <CACvgo50NmofJrCvADOTxJqJqKEWDsy8qD-1B6R356vFMcmdbWA@mail.gmail.com>
-Date:   Thu, 31 Oct 2019 21:10:48 +0200
-Message-ID: <87y2x091dz.fsf@iwork.i-did-not-set--mail-host-address--so-tickle-me>
+        Thu, 31 Oct 2019 15:13:00 -0400
+Received: from vps.xff.cz ([195.181.215.36]:46168 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729296AbfJaTNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 15:13:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1572549177; bh=FBhBhCbprAZVkPZ3QAQvStNaQNJCu5ZanEhE9s1mTjM=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=hCM/GltDpo77xYTpaz5/dMejRWcp59srCsks7ySNzk7z79SyUnRSfnGdVP5DlrOpR
+         1ip+EBcUGDaNCK/biB6v8CbSlFIlqVZTyRqOaNPsSiM08tOHV1BKrSXrIv6dKpRsSJ
+         jVyh+iOa7L3nh1tSDQgOAVE7UuRJ/AB0EBdoG/ys=
+Date:   Thu, 31 Oct 2019 20:12:57 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:ALLWINNER CPUFREQ DRIVER" <linux-pm@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [linux-sunxi] [PATCH] cpufreq: sun50i: Fix CPU speed bin
+ detection
+Message-ID: <20191031191257.j7bpxx5xyot2ay2i@core.my.home>
+Mail-Followup-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        "open list:ALLWINNER CPUFREQ DRIVER" <linux-pm@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191031181359.282617-1-megous@megous.com>
+ <CAJiuCcdZqpoXKuupk_w3F1npZgCHDgb=+Fdd1ukKA22K2PJ6Ww@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJiuCcdZqpoXKuupk_w3F1npZgCHDgb=+Fdd1ukKA22K2PJ6Ww@mail.gmail.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 31 Oct 2019, Emil Velikov <emil.l.velikov@gmail.com> 
-wrote:
-> Hi Adrian, 
+Hi,
 
-Hi Emil!
-
+On Thu, Oct 31, 2019 at 07:55:43PM +0100, Clément Péron wrote:
+> Hi Ondrej,
 > 
-> On Thu, 31 Oct 2019 at 14:26, Adrian Ratiu 
-> <adrian.ratiu@collabora.com> wrote: 
->> 
->> Having a generic Synopsis DesignWare MIPI-DSI host controller 
->> bridge driver is a very good idea, however the current 
->> implementation has hardcoded quite a lot of the register 
->> layouts used by the two supported SoC vendors, STM and 
->> Rockchip, which use IP cores v1.30 and v1.31. 
->> 
->> This makes it hard to support other SoC vendors like the 
->> FSL/NXP i.MX 6 which use older v1.01 cores or future versions 
->> because, based on history, layout changes should also be 
->> expected in new DSI versions / SoCs. 
->> 
->> This patch series converts the bridge and platform drivers to 
->> access registers via generic regmap APIs and allows each 
->> platform driver to configure its register layout via struct 
->> reg_fields, then adds support for the host controller found on 
->> i.MX 6. 
->> 
-> Have you considered keeping the difference internal to the 
-> dw-mipi-dsi driver?  Say having the iMX6 module "request" the 
-> v1.01 regmap from the bridge driver, while rockchip/others doing 
-> the equivalent.
-
-No, I haven't. It sounds like a good idea though and I think it's 
-doable. Thank you!
- 
+> On Thu, 31 Oct 2019 at 19:14, Ondrej Jirman <megous@megous.com> wrote:
+> >
+> > I have failures to boot on Orange Pi 3, because this driver determined
+> > that my SoC is from the normal bin, but my SoC only works reliably with
+> > the OPP values for the slowest bin.
+> >
+> > Looking at BSP code, I found that efuse values have following meanings
+> > on H6:
+> >
+> > - 0b000 invalid (interpreted in vendor's BSP as normal bin)
+> > - 0b001 slowest bin
+> > - 0b011 normal bin
+> > - 0b111 fastest bin
 > 
->>  .../bindings/display/imx/mipi-dsi.txt         |  56 ++ 
->>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 518 
->>  +++++++++--------- drivers/gpu/drm/imx/Kconfig 
->>  |   7 + drivers/gpu/drm/imx/Makefile                  |   1 + 
->>  drivers/gpu/drm/imx/dw_mipi_dsi-imx.c         | 502 
->>  +++++++++++++++++ .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c 
->>  | 154 +++++- drivers/gpu/drm/stm/dw_mipi_dsi-stm.c         | 
->>  160 +++++- include/drm/bridge/dw_mipi_dsi.h              |  60 
->>  +- 8 files changed, 1185 insertions(+), 273 deletions(-) 
->>  create mode 100644 
->>  Documentation/devicetree/bindings/display/imx/mipi-dsi.txt 
->>  create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx.c 
->> 
+> Maybe have some defines will be more readable no ?
+> https://megous.com/git/linux/tree/drivers/soc/sunxi/sunxi-sid.c?h=h6-4.9-bsp#n213
+
+Hmm, Alwwinner is really funny. Unused macros that just confuse things.
+
+#if defined(CONFIG_ARCH_SUN50IW6)
+#define TYPE_SB (0b001)
+#define TYPE_NB (0b010)
+#define TYPE_FB (0b011)
+#else
+#define TYPE_SB (0b001)
+#define TYPE_NB (0b011)
+#define TYPE_FB (0b111)
+#endif
+
+So for H6 they define special bin values and actually use different ones
+in code. Fun.
+
+I've sent out some testing program to Armbian forums, so hopefully, we'll
+collect some real efuse_values from real SoCs, to see what's really being
+used in the wild. If we see value 0b010, the BSP code is probably just
+wrong.
+
+Interestingly, TYPE_NB 0b010 would be interpreted as normal bin even with
+the current BSP code, and TYPE_FB would be misdetected as TYPE_NB.
+
+> #define SUN50I_NVEM_INVALID_CPU_OPP (0b000)
+> #define SUN50I_NVEM_LOW_CPU_OPP (0b001)
+> #define SUN50I_NVEM_NORMAL_CPU_OPP (0b011)
+> #define SUN50I_NVEM_HIGH_CPU_OPP (0b111)
+
+I'd rather not describe meanings just yet, until we get some real-world
+data from H6 owners.
+
+https://forum.armbian.com/topic/9368-orangepi-3-h6-allwiner-chip/?do=findComment&comment=88439
+
+regards,
+	o.
+
+> Regards,
+> Clément
 > 
-> This should make the delta a lot smaller, avoiding the 
-> unnecessary copy of register fields and regmap.  Plus plugging 
-> future users will be dead trivial.
-
-Agreed. I'll do this in v2 unless someone objects or proposes a 
-better alternative.
-
-I'll let this series sit a little more on review so others have a 
-chance to see and review; will address all feedback in v2.
-
->
-> -Emil
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> >
+> > Let's play it safe and interpret 0 as the slowest bin, but fix detection
+> > of other bins to match vendor code.
+> >
+> > Fixes: f328584f7bff ("cpufreq: Add sun50i nvmem based CPU scaling driver")
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >
+> > See https://megous.com/git/linux/tree/drivers/soc/sunxi/sunxi-sid.c?h=h6-4.9-bsp#n484
+> > and https://megous.com/git/linux/tree/drivers/cpufreq/sunxi-cpufreq.c?h=h6-4.9-bsp#n428
+> > (1 is substracted from soc_bin number here!)
+> >
+> >  drivers/cpufreq/sun50i-cpufreq-nvmem.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/cpufreq/sun50i-cpufreq-nvmem.c b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+> > index df35ef3ef567..41dad03e245c 100644
+> > --- a/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+> > +++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+> > @@ -71,9 +71,12 @@ static int sun50i_cpufreq_get_efuse(u32 *versions)
+> >         efuse_value = (*speedbin >> NVMEM_SHIFT) & NVMEM_MASK;
+> >         switch (efuse_value) {
+> >         case 0b0001:
+> > -               *versions = 1;
+> > +               *versions = 0;
+> >                 break;
+> >         case 0b0011:
+> > +               *versions = 1;
+> > +               break;
+> > +       case 0b0111:
+> >                 *versions = 2;
+> >                 break;
+> >         default:
+> > --
+> > 2.23.0
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20191031181359.282617-1-megous%40megous.com.
