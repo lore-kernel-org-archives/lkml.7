@@ -2,236 +2,118 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A54C0CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122B0CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7C22087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC5592080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:07:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572527274;
+	bh=xMigDxa3I9yFnuaA1/rSvcF5DRLGFmKTKGP8/j2Poeg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VgOxSLDfImpBZ9gUMclNKtfdkKzw+/MXunD4PKm7WwRxPTxARaMoPWGC9zQk5x4Vk
+	 2wezH2QDcWnWml8AlQuhgGKtsP2GlSSaJSlDHtf0ZJxfg1o4EWNV8Oa+bXyUJk2fQg
+	 kJPuIosbOtw3PjbjLZtH6+fcJPJhUTqgxLpfq09Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfJaNHi (ORCPT
+        id S1727141AbfJaNHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:07:38 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5240 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726462AbfJaNHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:07:38 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1D02563FB0F6D69357FD;
-        Thu, 31 Oct 2019 21:07:35 +0800 (CST)
-Received: from [127.0.0.1] (10.133.216.73) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 31 Oct 2019
- 21:07:24 +0800
-Subject: Re: [RFC PATCH 1/2] kvm/arm: add capability to forward hypercall to
- user space
-To:     James Morse <james.morse@arm.com>
-References: <1569338454-26202-1-git-send-email-guoheyi@huawei.com>
- <1569338454-26202-2-git-send-email-guoheyi@huawei.com>
- <e097fb69-1e68-4082-d310-e7666e30b5d6@arm.com>
- <d62b84ac-1a7e-de05-a1c1-c52dfb463462@huawei.com>
- <22aa23e0-cd4e-3692-ee94-e110ace49adb@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <qemu-arm@nongnu.org>, <wanghaibin.wang@huawei.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+        Thu, 31 Oct 2019 09:07:54 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35905 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbfJaNHx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 09:07:53 -0400
+Received: by mail-ed1-f68.google.com with SMTP id f7so1615644edq.3;
+        Thu, 31 Oct 2019 06:07:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=33+edZoJSD4COmLxAmuLRBayFF47TyCyfQ5sB53fkNg=;
+        b=fmT1nE7RJQoDNhpZQCRgKBXwSv5YmnDIQXc3l4kfQhoIgKS8TtCD839yykMQGro993
+         TrzEzza2ZjF5zxQeBe8b/qAhIOH/yF1VOLJHkJZGilgClM09V4r5OQjU4U/5UolneaXQ
+         CNEF6bv0RSdvzwtRx9+s8fZE1oGg1LfaWHQfRYcu3VCuDahRMuPLdREcdfBfwQtI8EcW
+         vnHzTw3kOdILqCncZxNVwVoeAhekfjn9ZTtfvNRBjbLA/UUueKBjAeBKMivVS1hcAduf
+         CAIT+mkGHICRdWbAsIaIEYSaqXXS9XWfbU1s7YNp8cYPpd9flkiPaft3n74inukrQB52
+         QB7g==
+X-Gm-Message-State: APjAAAUmT6vzgf0YLqZDpK3NsmPKQ1M1+0mjNjHxeN4IFFEj+0VBkgrb
+        vB+tlPPEMObnnxp7Ub2sFpyNOyQu
+X-Google-Smtp-Source: APXvYqz4VxBrjaFKNam8HxGYebLyu4OQUFPsJAleYl1IAKYrh6TRa2TfdjIxJwYwEwR4b6LuyxC7Xw==
+X-Received: by 2002:a17:906:a986:: with SMTP id jr6mr3834820ejb.158.1572527271575;
+        Thu, 31 Oct 2019 06:07:51 -0700 (PDT)
+Received: from pi3 ([194.230.155.180])
+        by smtp.googlemail.com with ESMTPSA id a102sm27645edf.46.2019.10.31.06.07.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 06:07:50 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 14:07:48 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Fabio Estevam <festevam@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, <kvmarm@lists.cs.columbia.edu>
-From:   Guoheyi <guoheyi@huawei.com>
-Message-ID: <4af47d1c-40cc-8440-d834-d721e1c0a758@huawei.com>
-Date:   Thu, 31 Oct 2019 21:07:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 11/11] ARM: dts: imx6ul-kontron-n6310-s-43: Add
+ missing includes for GPIOs and IRQs
+Message-ID: <20191031130748.GC27967@pi3>
+References: <20191029112655.15058-1-frieder.schrempf@kontron.de>
+ <20191029112655.15058-12-frieder.schrempf@kontron.de>
 MIME-Version: 1.0
-In-Reply-To: <22aa23e0-cd4e-3692-ee94-e110ace49adb@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.216.73]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191029112655.15058-12-frieder.schrempf@kontron.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for the late, for it took some time for me to think it over...
+On Tue, Oct 29, 2019 at 11:28:16AM +0000, Schrempf Frieder wrote:
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> 
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron i.MX6UL N6310 SoM and boards")
+> ---
+>  arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts b/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
+> index 5bad29683cc3..295bc3138fea 100644
+> --- a/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
+> +++ b/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
+> @@ -7,6 +7,9 @@
+>  
+>  #include "imx6ul-kontron-n6310-s.dts"
+>  
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/gpio/gpio.h>
+
+This is not needed. This includes imx6ul-kontron-n6310-s.dts, which
+includes imx6ul-kontron-n6310-som.dtsi which has proper GPIO include. It
+also polls imx6ul.dtsi which has the IRQ defines.
+
+My comment from v1 was for a case where you have a DTSI standing on its
+own. If it does not include anything else, then it should have all
+necessary inclusions (not only GPIO but also iMX-specific pinctrl and clock).
+
+Best regards,
+Krzysztof
 
 
-On 2019/10/22 0:42, James Morse wrote:
-> Hi Heyi,
->
-> On 09/10/2019 13:33, Guoheyi wrote:
->> On 2019/10/2 1:19, James Morse wrote:
->>> On 24/09/2019 16:20, Heyi Guo wrote:
->>>> As more SMC/HVC usages emerge on arm64 platforms, like SDEI, it makes
->>>> sense for kvm to have the capability of forwarding such calls to user
->>>> space for further emulation.
->>> (what do you mean by further? Doesn't user-space have to do all of it?)
->> For kvm will always handle hvc/smc guest exit for the first step, even if it is only a
->> simple forwarding, I called the user-space processing as "further emulation".
->>
->>>> We reuse the existing term "hypercall" for SMC/HVC, as well as the
->>>> hypercall structure in kvm_run to exchange arguments and return
->>>> values. The definition on arm64 is as below:
->>>>
->>>> exit_reason: KVM_EXIT_HYPERCALL
->>>>
->>>> Input:
->>>>     nr: the immediate value of SMC/HVC calls; not really used today.
->>>>     args[6]: x0..x5 (This is not fully conform with SMCCC which requires
->>>>              x6 as argument as well, but use space can use GET_ONE_REG
->>>>              ioctl for such rare case).
->>> If this structure isn't right for us, we could define a different one for arm/arm64.
->>> (we did this for kvm_vcpu_events)
->> Do you mean that we can move the hypercall struct definition to arch specific kvm_host.h?
->> For it is in the common kvm_run structure, we'll need to change every kvm supported
->> architectures, including x86, mips, powerpc, s390. Is it acceptable?
-> Ah! Sorry, I'd missed this was in the kvm_run structure. The get-events example doesn't
-> apply here as that was a separate ioctl().
->
->
->>>> Return:
->>>>     args[0..3]: x0..x3 as defined in SMCCC. We need to extract
->>>>                 args[0..3] and write them to x0..x3 when hypercall exit
->>>>                 returns.
->>> Are we saying that KVM_EXIT_HYPERCALL expects to be used with SMC-CC?
->>> (if so, we should state that).
->> Yes I followed SMC-CC when writing this.
->>> I'm not certain we should tie this to SMC-CC.
->>>
->>> If we don't tie it to SMC-CC this selection of in/out registers looks odd, there is
->>> nothing about HVC/SMC that uses these registers, its just the SMC convention.
->> Maybe we don't need to tie it to SMC-CC, and simply load all values in args[6] to GP
->> registers...
->> And then there is either no strong reason to extend hypercall structure for ARM.
->
->>>> Flag hypercall_forward is added to turn on/off hypercall forwarding
->>>> and the default is false. Another flag hypercall_excl_psci is to
->>>> exclude PSCI from forwarding for backward compatible, and it only
->>>> makes sense to check its value when hypercall_forward is enabled.
->>> Calling out PSCI like this is something we shouldn't do. There will be, (are!) other
->>> SMC-CC calls that the kernel provides emulation for, we can't easily add to this list.
->> Yes; I didn't figure out good way to keep compatibility and future extension...
-> I think the best trick is not to interpret the SMC/HVC calls from the guest. The kernel
-> obviously does, but the API shouldn't force us to.
->
->
->>> I think the best way to avoid this, is to say the hypercall mechanism forwards 'unhandled
->>> SMC/HVC' to user-space. Which things the kernel chooses to handle can change.
->>>
->>> We need a way for user-space to know which SMC/HVC calls the kernel will handle, and will
->>> not forward. A suggestion is to add a co-processor that lists these by #imm and r0/x0
->>> value. User-space can then query any call to find out if it would be exported if the guest
->>> made that call. Something like kvm_arm_get_fw_reg().
->> Do you mean we add only one co-processor to list all SMC/HVC calls kernel will handle?
-> Yes, some way of listing them.
-> e.g. user-space wants to handle HVC's with #imm==0 and w0==0x84000000, this co-processor
-> would list that as one of the things that the kernel will handle.
->
-> If we can find a way of describing 64bit register values that would save them from being a
-> problem in the future, but it may be too complicated to describe a 64bit register space
-> and 16 bits of immediate.
->
-> I think its okay for this co-processor to be SMC-CC specific, as its describing what the
-> kernel supports. The KVM-api in contrast should be flexible enough to describe anything
-> any guest may wish to do.
->
->
->> So
->> the reg size should be large enough to hold the list, each entry of which contains a #imm
->> and r0/x0 pair? Is the reg size fixed by definition or it can be queried by user-space? If
->> it is fixed, what's the size should we choose?
-> (fixed/not-fixed - its a trade-off for complexity now, but no-one may ever use the full
-> flexibility).
->
-> I think we can assume the kernel will only offer things that look like SMC-CC to the
-> guest. If the guest does something outside this space, its up to user-space to handle. (so
-> the KVM-API must support non-SMC-CC stuff). I think we should define a co-processor for
-> SMC/HVC where the #imm is 0. This then gives us 32bits of space we can map directly onto
-> the w0 values.
-Shall we setup a new class of co-processor and use the following id bit 
-patterns (assuming the type index to be 0x0016)?
-
-0x6030 <high 16 bits of SMC-CC function ID> 0016 <low 16 bits of SMC-CC 
-function ID>
-
-And the value of the co-processor returned to user space can be 0 (KVM 
-will not handle) or 1 (KVM will handle)?
-
->
->
->> Does it make sense to extend the entry to hold the function ID base and limit, so that it
->> can describe the whole range for each function group, like PSCI, SDEI, etc?
-> This may be over-complex, user-space would always need to enumerate the whole thing. I
-> think commonly user-space would only want to know about one entry: For cases where we know
-> the structure, user-space can just query the '_VERSION' call. If that isn't supported,
-> user-space can assume the rest of that space is unimplemented. (the kernel shouldn't
-> provide an incomplete emulation of these APIs)
->
->
->>> For 32bit, are we going to export SMC/HVC calls that failed their condition-code checks?
->> I'm not familiar with 32bit, either we don't have 32bit platforms to test the code. So my
->> preference is not to make many changes to 32bit...
-> I'm not that familiar with it either ... You don't have anything with aarch32 support at
-> EL1? I don't think we should add an API that only works with Aarch64 guests.
-We have some D05 which is based on cortex A72 and should support aarch32 
-guest. I can take a try.
-
-Our object is to support aarch32 guest on an aarch64 hypervisor, but not 
-on an aarch32 hypervisor, isn't it?
-
->
-> For 32bit, we either need to expose these condition-code bits, and say user-space should
-> work out if it needs to do anything. Or, handle this in the kernel, in which case we don't
-> need to expose the condition-code bits, but we should document that the kernel will do the
-> check.
->
->
-> Nested-virt may cause some 'fun' here. If user-space starts an aarch64 guest at EL2, it
-> may start its own aarch32 guest at EL1. If the aarch32 guest makes an SMC, who handles it?
-> If user-space's aarch64 guest didn't set the traps for SMC, I think this should be
-> delivered to user-space, which may be surprised by the request from an aarch32 guest.
->
-> (its also possible nested-virt has me confused, it is pretty mind bending!)
->
->
->>> The hypercall structure should probably indicate whether the SMC/HVC call came from
->>> aarch32 or aarch64, as the behaviour may be different.
->> How about to use the longmode field in hypercall structure? Standard service calls will
->> indicate this in function ID, but we may need to know before parsing the function ID,
->> isn't it?
-> Sure, as its a __u32, we could dump the guest PSTATE from SPSR in there.
->
->
-> I think the last thing is 'ret', and whether we should provide a way of passing 'x0' back
-> to the guest, or expect user-space to use set-one-reg. Most of the time user-space will
-> only want to set x0, and doing this would let us initialise it to all-ones in the kernel,
-> which means the guest gets the unknown-smc value back if user-space ignores the exit.
-The current RFC is not expecting user-space to use set-one-reg to set GP 
-registers for returning, to reduce ioctl() invocations for better 
-performance.
-I didn't use "ret" for guest to hold the returned x0, but still used 
-"args[6]" to exchange x0~x5. I agree to set quick path for x0 only, and 
-kvm doesn't bother to set the other 5 GP registers.
-
-Thanks a lot,
-
-Heyi
-
->
->
-> Thanks,
->
-> James
->
-> .
->
-
-
+> +
+>  / {
+>  	model = "Kontron N6310 S 43";
+>  	compatible = "kontron,imx6ul-n6310-s-43", "kontron,imx6ul-n6310-s",
+> -- 
+> 2.17.1
