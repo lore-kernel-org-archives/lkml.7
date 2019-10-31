@@ -7,47 +7,39 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063ABCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30154CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAE9E2087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CD082087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:56:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfJaLz6 (ORCPT
+        id S1727673AbfJaLzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:55:58 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55518 "EHLO
+        Thu, 31 Oct 2019 07:55:50 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55484 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727598AbfJaLzk (ORCPT
+        with ESMTP id S1727511AbfJaLzd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:55:40 -0400
+        Thu, 31 Oct 2019 07:55:33 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iQ932-0003CM-0q; Thu, 31 Oct 2019 12:55:28 +0100
+        id 1iQ931-0003A3-DT; Thu, 31 Oct 2019 12:55:27 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 57BA01C06DF;
-        Thu, 31 Oct 2019 12:55:15 +0100 (CET)
-Date:   Thu, 31 Oct 2019 11:55:15 -0000
-From:   "tip-bot2 for Jerry Snitselaar" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6B6351C06D7;
+        Thu, 31 Oct 2019 12:55:12 +0100 (CET)
+Date:   Thu, 31 Oct 2019 11:55:12 -0000
+From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: efi/urgent] efi/tpm: Return -EINVAL when determining tpm final
- events log size fails
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191029173755.27149-3-ardb@kernel.org>
-References: <20191029173755.27149-3-ardb@kernel.org>
+Subject: [tip: core/rcu] time: Export tick start/stop functions for rcutorture
+Cc:     kbuild test robot <lkp@intel.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Message-ID: <157252291507.29376.5876568697452910817.tip-bot2@tip-bot2>
+Message-ID: <157252291213.29376.13393459625257690838.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,46 +53,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the efi/urgent branch of tip:
+The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     2bb6a81633cb47dcba4c9f75605cbe49e6b73d60
-Gitweb:        https://git.kernel.org/tip/2bb6a81633cb47dcba4c9f75605cbe49e6b73d60
-Author:        Jerry Snitselaar <jsnitsel@redhat.com>
-AuthorDate:    Tue, 29 Oct 2019 18:37:51 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 31 Oct 2019 09:40:17 +01:00
+Commit-ID:     ae9e557b5be2e285f48ee945d9c8faf75d4f6a66
+Gitweb:        https://git.kernel.org/tip/ae9e557b5be2e285f48ee945d9c8faf75d4f6a66
+Author:        Paul E. McKenney <paulmck@kernel.org>
+AuthorDate:    Fri, 09 Aug 2019 16:29:42 -07:00
+Committer:     Paul E. McKenney <paulmck@kernel.org>
+CommitterDate: Sat, 05 Oct 2019 10:46:03 -07:00
 
-efi/tpm: Return -EINVAL when determining tpm final events log size fails
+time: Export tick start/stop functions for rcutorture
 
-Currently nothing checks the return value of efi_tpm_eventlog_init(),
-but in case that changes in the future make sure an error is
-returned when it fails to determine the tpm final events log
-size.
+It turns out that rcutorture needs to ensure that the scheduling-clock
+interrupt is enabled in CONFIG_NO_HZ_FULL kernels before starting on
+CPU-bound in-kernel processing.  This commit therefore exports
+tick_nohz_dep_set_task(), tick_nohz_dep_clear_task(), and
+tick_nohz_full_setup() to GPL kernel modules.
 
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Fixes: e658c82be556 ("efi/tpm: Only set 'efi_tpm_final_log_size' after ...")
-Link: https://lkml.kernel.org/r/20191029173755.27149-3-ardb@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- drivers/firmware/efi/tpm.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/time/tick-sched.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
-index ebd7977..31f9f0e 100644
---- a/drivers/firmware/efi/tpm.c
-+++ b/drivers/firmware/efi/tpm.c
-@@ -88,6 +88,7 @@ int __init efi_tpm_eventlog_init(void)
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index d1b0a84..1ffdb4b 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -172,6 +172,7 @@ static void tick_sched_handle(struct tick_sched *ts, struct pt_regs *regs)
+ #ifdef CONFIG_NO_HZ_FULL
+ cpumask_var_t tick_nohz_full_mask;
+ bool tick_nohz_full_running;
++EXPORT_SYMBOL_GPL(tick_nohz_full_running);
+ static atomic_t tick_dep_mask;
  
- 	if (tbl_size < 0) {
- 		pr_err(FW_BUG "Failed to parse event in TPM Final Events Log\n");
-+		ret = -EINVAL;
- 		goto out_calc;
- 	}
+ static bool check_tick_dependency(atomic_t *dep)
+@@ -351,11 +352,13 @@ void tick_nohz_dep_set_task(struct task_struct *tsk, enum tick_dep_bits bit)
+ 	 */
+ 	tick_nohz_dep_set_all(&tsk->tick_dep_mask, bit);
+ }
++EXPORT_SYMBOL_GPL(tick_nohz_dep_set_task);
  
+ void tick_nohz_dep_clear_task(struct task_struct *tsk, enum tick_dep_bits bit)
+ {
+ 	atomic_andnot(BIT(bit), &tsk->tick_dep_mask);
+ }
++EXPORT_SYMBOL_GPL(tick_nohz_dep_clear_task);
+ 
+ /*
+  * Set a per-taskgroup tick dependency. Posix CPU timers need this in order to elapse
+@@ -404,6 +407,7 @@ void __init tick_nohz_full_setup(cpumask_var_t cpumask)
+ 	cpumask_copy(tick_nohz_full_mask, cpumask);
+ 	tick_nohz_full_running = true;
+ }
++EXPORT_SYMBOL_GPL(tick_nohz_full_setup);
+ 
+ static int tick_nohz_cpu_down(unsigned int cpu)
+ {
