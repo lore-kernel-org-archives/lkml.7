@@ -2,123 +2,84 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C622CCA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3943BCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E542083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009A32083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:15:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c14BIyVg"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ijtel4Es";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KFKcnpd4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfJaIN0 (ORCPT
+        id S1727030AbfJaIPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 04:13:26 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43967 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbfJaIN0 (ORCPT
+        Thu, 31 Oct 2019 04:15:41 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46352 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbfJaIPk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 04:13:26 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n1so5136360wra.10
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 01:13:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cVTpH9x5w5p5t2TLyqv/I4Qxh336u+KvXbCEegt8Uv0=;
-        b=c14BIyVgJODeeLH4b+TJ4cZ3xE088RbzxSHE1oTs79eyAHCgcKk3JXB0jSQIKMQBnF
-         14T+VdlXD9Yhegoso0KsMVDY8BamFtWhmdyNa8fck76+mXM51IIrNkdguUrXkvA4gtj0
-         lb1GzN5v4I9LbC+uEo91w4pMPlRwq5lQlQ1TYYB7KJT1hmZQQCsC96cvUOG6Pwg0ICSm
-         P1NMe+P4DWXxpyUfW2mH9OoZ6RS2AylG1gmVsVTuUOrNiQXuC+S1BYcijFNSWxXd2n3D
-         4prXedSxCp0ksj6cqn8BrOVUvrR9qh2IlvII0AkqKmYmSBuB3BB7RSvVICzQFd33hlME
-         x5Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cVTpH9x5w5p5t2TLyqv/I4Qxh336u+KvXbCEegt8Uv0=;
-        b=aQDzHdLIKOKe9bpEwnH8cXU3Dbq2HLoWoEp4fevcYsK1ogYyGDkj7lyleEdol0h2uK
-         UBwkdiBALbvSQNBlBaudiPfmfvpWJTHJLGHcHjUct6se9C7J10eZ/rgO8kkm+/fJRVyD
-         G+GqHJNkmyV0QVM3duEnnX2ivDIpsdYRHaCdkDOVolDOer0MNbn4q839QngL4fcisjFX
-         xabuYFhGmaWqWqu9grat6MX3TnFc+9atMbABdL2LuR5YHBI9/cyctg1i9KPI2Q09gYie
-         GTTrN++wKVNsTQo05oxiuLkpYMVyUaLfm3dIjyUcfjlaVskgV2BXnktUtBXOVRcSZwKj
-         MO4w==
-X-Gm-Message-State: APjAAAW04okis9TYXpPNt8x9US646WPLQt3gHtYqoLeV1uIHdpbaCEqA
-        8wLImQf35k7cgy9nKbdRA2CR6s/cF+sBBYb6e4MrLA==
-X-Google-Smtp-Source: APXvYqz6adAsRCPRenCDRosUSP27YreZHLiRCFj8jQzS6Tz09/zC+Fh0l+FEOJ0uIHx4MuiYSdWocUlHuB9/hM3TrEg=
-X-Received: by 2002:a5d:6b0a:: with SMTP id v10mr3981224wrw.32.1572509602778;
- Thu, 31 Oct 2019 01:13:22 -0700 (PDT)
+        Thu, 31 Oct 2019 04:15:40 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id EBB8C60540; Thu, 31 Oct 2019 08:15:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572509739;
+        bh=sp/YuXqKxRq6BSEULbjzuuxJCs1WunIjmlNVKfVpHes=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=Ijtel4EshkgBpjFvlxbBWbrsq99aKVFA9ocGJUpdzSAELVKxJ18sE7KH4Q+7aV/1b
+         M1jK+pCdu/Mj7APEE21LMra4oiJ43nL0fqIMKb/k/1ubyb3muaMokN7m4GzQalxkwU
+         D+pp5Sp1Y4jvQQeFWQTJ2u69BQADe37ENL9utD/U=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BEB8860540;
+        Thu, 31 Oct 2019 08:15:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572509739;
+        bh=sp/YuXqKxRq6BSEULbjzuuxJCs1WunIjmlNVKfVpHes=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=KFKcnpd4XBYxIcUmwPGE6RZ1tg+eZBxF6Dtqgwrmo7hQePpVg+sIndWrFmx6Zdq4l
+         2dt/+9m/mJS53yskmVY1pk84HKYXeINz9KW8cRDwflQkvx9vuepmLpWnTKukZlau7R
+         BMjCc4KC6cpdfXyCZaP7KxuVAIZcJ9MJ3PMfY+o0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BEB8860540
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <aaf0f585-3a06-8af1-e2f1-ab301e560d49@huawei.com> <32b39396-d514-524f-a85c-3bc627454ba7@huawei.com>
-In-Reply-To: <32b39396-d514-524f-a85c-3bc627454ba7@huawei.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 31 Oct 2019 09:13:10 +0100
-Message-ID: <CAKv+Gu8A+kDK0Jtmu6oOO6jhgFkgYQ7=4tw_eMStmYPMkMp6iQ@mail.gmail.com>
-Subject: Re: [PATCH v3] crypto: arm64/aes-neonbs - add return value of
- skcipher_walk_done() in __xts_crypt()
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        hushiyuan@huawei.com,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ath10k: remove unneeded semicolon
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20191025091041.34056-1-yuehaibing@huawei.com>
+References: <20191025091041.34056-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <davem@davemloft.net>, <ath10k@lists.infradead.org>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20191031081539.EBB8C60540@smtp.codeaurora.org>
+Date:   Thu, 31 Oct 2019 08:15:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 31 Oct 2019 at 08:02, Yunfeng Ye <yeyunfeng@huawei.com> wrote:
->
-> A warning is found by the static code analysis tool:
->   "Identical condition 'err', second condition is always false"
->
-> Fix this by adding return value of skcipher_walk_done().
->
-> Fixes: 67cfa5d3b721 ("crypto: arm64/aes-neonbs - implement ciphertext stealing for XTS")
-> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+YueHaibing <yuehaibing@huawei.com> wrote:
 
-Please don't send the exact same patch twice, and when you feel the
-need to do so, just ask instead whether your patch was received or
-not.
+> remove unneeded semicolon.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-I'm sure Herbert will pick it up shortly.
+Patch applied to ath-next branch of ath.git, thanks.
 
-> ---
-> v2 -> v3:
->  - add "Acked-by:"
->
-> v1 -> v2:
->  - update the subject and comment
->  - add return value of skcipher_walk_done()
->
->  arch/arm64/crypto/aes-neonbs-glue.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/crypto/aes-neonbs-glue.c b/arch/arm64/crypto/aes-neonbs-glue.c
-> index ea873b8904c4..e3e27349a9fe 100644
-> --- a/arch/arm64/crypto/aes-neonbs-glue.c
-> +++ b/arch/arm64/crypto/aes-neonbs-glue.c
-> @@ -384,7 +384,7 @@ static int __xts_crypt(struct skcipher_request *req, bool encrypt,
->                         goto xts_tail;
->
->                 kernel_neon_end();
-> -               skcipher_walk_done(&walk, nbytes);
-> +               err = skcipher_walk_done(&walk, nbytes);
->         }
->
->         if (err || likely(!tail))
-> --
-> 2.7.4.3
->
->
+0dc269314a25 ath10k: remove unneeded semicolon
+
+-- 
+https://patchwork.kernel.org/patch/11211787/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
