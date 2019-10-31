@@ -7,38 +7,39 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4738CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B133CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92CB821734
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEFBD21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:58:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbfJaL6G (ORCPT
+        id S1727533AbfJaL6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:58:06 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55293 "EHLO
+        Thu, 31 Oct 2019 07:58:13 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55291 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbfJaLzH (ORCPT
+        with ESMTP id S1726945AbfJaLzH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 31 Oct 2019 07:55:07 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iQ92d-0002uN-Iz; Thu, 31 Oct 2019 12:55:03 +0100
+        id 1iQ92d-0002x9-Nu; Thu, 31 Oct 2019 12:55:03 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E62AD1C04D7;
-        Thu, 31 Oct 2019 12:54:57 +0100 (CET)
-Date:   Thu, 31 Oct 2019 11:54:57 -0000
-From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D5DF91C0070;
+        Thu, 31 Oct 2019 12:54:59 +0100 (CET)
+Date:   Thu, 31 Oct 2019 11:54:59 -0000
+From:   "tip-bot2 for Ethan Hansen" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Update descriptions for rcu_nocb_wake tracepoint
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+Subject: [tip: core/rcu] rcu: Remove unused function hlist_bl_del_init_rcu()
+Cc:     Ethan Hansen <1ethanhansen@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Message-ID: <157252289767.29376.2910308882156136502.tip-bot2@tip-bot2>
+Message-ID: <157252289950.29376.4828245605504588132.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,63 +55,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     d01f86206864e429839f6a4aeb90064f0c043ed9
-Gitweb:        https://git.kernel.org/tip/d01f86206864e429839f6a4aeb90064f0c043ed9
-Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Wed, 21 Aug 2019 10:29:06 -07:00
+Commit-ID:     8e6af017f4b1da9cdd2b55ce83853df8e167b4d3
+Gitweb:        https://git.kernel.org/tip/8e6af017f4b1da9cdd2b55ce83853df8e167b4d3
+Author:        Ethan Hansen <1ethanhansen@gmail.com>
+AuthorDate:    Fri, 02 Aug 2019 13:37:58 -07:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Wed, 30 Oct 2019 08:34:52 -07:00
+CommitterDate: Wed, 30 Oct 2019 08:32:07 -07:00
 
-rcu: Update descriptions for rcu_nocb_wake tracepoint
+rcu: Remove unused function hlist_bl_del_init_rcu()
 
+The function hlist_bl_del_init_rcu() is declared in rculist_bl.h,
+but never used.  This commit therefore removes it.
+
+Signed-off-by: Ethan Hansen <1ethanhansen@gmail.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/trace/events/rcu.h | 35 +++++++++++++++++++++--------------
- 1 file changed, 21 insertions(+), 14 deletions(-)
+ include/linux/rculist_bl.h | 28 ----------------------------
+ 1 file changed, 28 deletions(-)
 
-diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
-index afa8985..4609f2e 100644
---- a/include/trace/events/rcu.h
-+++ b/include/trace/events/rcu.h
-@@ -258,20 +258,27 @@ TRACE_EVENT_RCU(rcu_exp_funnel_lock,
-  * the number of the offloaded CPU are extracted.  The third and final
-  * argument is a string as follows:
-  *
-- *	"WakeEmpty": Wake rcuo kthread, first CB to empty list.
-- *	"WakeEmptyIsDeferred": Wake rcuo kthread later, first CB to empty list.
-- *	"WakeOvf": Wake rcuo kthread, CB list is huge.
-- *	"WakeOvfIsDeferred": Wake rcuo kthread later, CB list is huge.
-- *	"WakeNot": Don't wake rcuo kthread.
-- *	"WakeNotPoll": Don't wake rcuo kthread because it is polling.
-- *	"DeferredWake": Carried out the "IsDeferred" wakeup.
-- *	"Poll": Start of new polling cycle for rcu_nocb_poll.
-- *	"Sleep": Sleep waiting for GP for !rcu_nocb_poll.
-- *	"CBSleep": Sleep waiting for CBs for !rcu_nocb_poll.
-- *	"WokeEmpty": rcuo kthread woke to find empty list.
-- *	"WokeNonEmpty": rcuo kthread woke to find non-empty list.
-- *	"WaitQueue": Enqueue partially done, timed wait for it to complete.
-- *	"WokeQueue": Partial enqueue now complete.
-+ * "AlreadyAwake": The to-be-awakened rcuo kthread is already awake.
-+ * "Bypass": rcuo GP kthread sees non-empty ->nocb_bypass.
-+ * "CBSleep": rcuo CB kthread sleeping waiting for CBs.
-+ * "Check": rcuo GP kthread checking specified CPU for work.
-+ * "DeferredWake": Timer expired or polled check, time to wake.
-+ * "DoWake": The to-be-awakened rcuo kthread needs to be awakened.
-+ * "EndSleep": Done waiting for GP for !rcu_nocb_poll.
-+ * "FirstBQ": New CB to empty ->nocb_bypass (->cblist maybe non-empty).
-+ * "FirstBQnoWake": FirstBQ plus rcuo kthread need not be awakened.
-+ * "FirstBQwake": FirstBQ plus rcuo kthread must be awakened.
-+ * "FirstQ": New CB to empty ->cblist (->nocb_bypass maybe non-empty).
-+ * "NeedWaitGP": rcuo GP kthread must wait on a grace period.
-+ * "Poll": Start of new polling cycle for rcu_nocb_poll.
-+ * "Sleep": Sleep waiting for GP for !rcu_nocb_poll.
-+ * "Timer": Deferred-wake timer expired.
-+ * "WakeEmptyIsDeferred": Wake rcuo kthread later, first CB to empty list.
-+ * "WakeEmpty": Wake rcuo kthread, first CB to empty list.
-+ * "WakeNot": Don't wake rcuo kthread.
-+ * "WakeNotPoll": Don't wake rcuo kthread because it is polling.
-+ * "WakeOvfIsDeferred": Wake rcuo kthread later, CB list is huge.
-+ * "WokeEmpty": rcuo CB kthread woke to find empty list.
-  */
- TRACE_EVENT_RCU(rcu_nocb_wake,
+diff --git a/include/linux/rculist_bl.h b/include/linux/rculist_bl.h
+index 66e73ec..0b952d0 100644
+--- a/include/linux/rculist_bl.h
++++ b/include/linux/rculist_bl.h
+@@ -25,34 +25,6 @@ static inline struct hlist_bl_node *hlist_bl_first_rcu(struct hlist_bl_head *h)
+ }
  
+ /**
+- * hlist_bl_del_init_rcu - deletes entry from hash list with re-initialization
+- * @n: the element to delete from the hash list.
+- *
+- * Note: hlist_bl_unhashed() on the node returns true after this. It is
+- * useful for RCU based read lockfree traversal if the writer side
+- * must know if the list entry is still hashed or already unhashed.
+- *
+- * In particular, it means that we can not poison the forward pointers
+- * that may still be used for walking the hash list and we can only
+- * zero the pprev pointer so list_unhashed() will return true after
+- * this.
+- *
+- * The caller must take whatever precautions are necessary (such as
+- * holding appropriate locks) to avoid racing with another
+- * list-mutation primitive, such as hlist_bl_add_head_rcu() or
+- * hlist_bl_del_rcu(), running on this same list.  However, it is
+- * perfectly legal to run concurrently with the _rcu list-traversal
+- * primitives, such as hlist_bl_for_each_entry_rcu().
+- */
+-static inline void hlist_bl_del_init_rcu(struct hlist_bl_node *n)
+-{
+-	if (!hlist_bl_unhashed(n)) {
+-		__hlist_bl_del(n);
+-		n->pprev = NULL;
+-	}
+-}
+-
+-/**
+  * hlist_bl_del_rcu - deletes entry from hash list without re-initialization
+  * @n: the element to delete from the hash list.
+  *
