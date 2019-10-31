@@ -2,58 +2,80 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AABBCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8004BCA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4085F2087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56B0D2087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbfJaVrH (ORCPT
+        id S1728913AbfJaVr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 17:47:07 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:33178 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728598AbfJaVrG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 17:47:06 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0DD311500396F;
-        Thu, 31 Oct 2019 14:47:06 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 14:47:05 -0700 (PDT)
-Message-Id: <20191031.144705.1438444010840329715.davem@davemloft.net>
-To:     vivien.didelot@gmail.com
-Cc:     linux-kernel@vger.kernel.org, f.fainelli@gmail.com, andrew@lunn.ch,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v2 0/7] net: dsa: replace routing tables with
- a list
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191031020919.139872-1-vivien.didelot@gmail.com>
-References: <20191031020919.139872-1-vivien.didelot@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 31 Oct 2019 14:47:06 -0700 (PDT)
+        Thu, 31 Oct 2019 17:47:58 -0400
+Received: from mga09.intel.com ([134.134.136.24]:50799 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728598AbfJaVr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 17:47:57 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 14:47:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,253,1569308400"; 
+   d="scan'208";a="204331816"
+Received: from epobrien-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.10.103])
+  by orsmga006.jf.intel.com with ESMTP; 31 Oct 2019 14:47:48 -0700
+Date:   Thu, 31 Oct 2019 23:47:45 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     jens.wiklander@linaro.org, dhowells@redhat.com, corbet@lwn.net,
+        jejb@linux.ibm.com, zohar@linux.ibm.com, jmorris@namei.org,
+        serge@hallyn.com, casey@schaufler-ca.com,
+        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
+        stuart.yoder@arm.com, janne.karhunen@gmail.com,
+        keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        tee-dev@lists.linaro.org
+Subject: Re: [Patch v3 6/7] doc: keys: Document usage of TEE based Trusted
+ Keys
+Message-ID: <20191031214745.GG10507@linux.intel.com>
+References: <1572530323-14802-1-git-send-email-sumit.garg@linaro.org>
+ <1572530323-14802-7-git-send-email-sumit.garg@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572530323-14802-7-git-send-email-sumit.garg@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vivien Didelot <vivien.didelot@gmail.com>
-Date: Wed, 30 Oct 2019 22:09:12 -0400
-
-> This branch gets rid of the ds->rtable static arrays in favor of
-> a single dst->rtable list. This allows us to move away from the
-> DSA_MAX_SWITCHES limitation and simplify the switch fabric setup.
+On Thu, Oct 31, 2019 at 07:28:42PM +0530, Sumit Garg wrote:
+> Provide documentation for usage of TEE based Trusted Keys via existing
+> user-space "keyctl" utility. Also, document various use-cases.
 > 
-> Changes in v2:
->   - fix the reverse christmas for David
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 
-Series applied, thanks Vivien.
+This is the most important commit in order for someone who don't deal
+that much with ARM TEE to get right. Until this commit is right, I don't
+unfortunately have much to say about other commits.
+
+Instead of making disjoint islands, you should edit trusted-encrypted.rst
+so that it describes commonalities and differences.
+
+What the document currently describes is the usage model. It could be a
+section of its own. In that you should describe first the common
+parameters and separetely the backend specific parametrs.
+
+From kernel internals (there could be a section with this name)  the
+document describe the key generation e.g. is the hardware used and how
+it is used, is there salting with krng and so forth.
+
+/Jarkko
