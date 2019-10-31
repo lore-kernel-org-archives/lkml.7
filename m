@@ -2,117 +2,192 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BA6CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 05:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CCCCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 05:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7027E2087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 05:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C05F2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 05:20:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vC9Ql59H"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rF+/ZRGY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfJaFEO (ORCPT
+        id S1726843AbfJaFT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 01:04:14 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39846 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfJaFEN (ORCPT
+        Thu, 31 Oct 2019 01:19:56 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:16365 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbfJaFTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 01:04:13 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p12so3144772pgn.6
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 22:04:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Q8TzIHOB34wunGGFvG3qDuYMqHP3uwgf9+UhSlvIUAw=;
-        b=vC9Ql59HkHjZBIv0+Qrdcm4yjn9AbvOeO/5G+LtGu77Ij7J+/0Y6NSrfvvb0M7qLW2
-         59zp1ZanJkN4gd26qrkXRwhXi/R5sRDYyyAdT0/Mlqh5cqfkBfvx80uc8R0T+1EJnaP5
-         i4IT8PkUo88AygfTJ9Ydtj4UEfDWRaTNlvrzmuAhJlQWnWmcI/CV5rVO+4c9DehHT7bW
-         bbb/T2faM6X2+WJcZK0grS3ipFHNv3gVZAz5yRuqvxmv+aBRZcjP8q0VutnKxlswwjmS
-         Ib9uoNxzw1ER1bpXnCfco36fRlFEqrbeCYaPud7bWbMzHnbwNi4f4xZlb7Rd2ayFXBYH
-         6qOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Q8TzIHOB34wunGGFvG3qDuYMqHP3uwgf9+UhSlvIUAw=;
-        b=qGtD7D5oCm08L+rqR5k3qCXLSNaOR0ITR1qjs/jJs9eeFTm1D0BcOvLfVO6oVP5ekh
-         QN7S7VzxyFNpISw5z17ZQvaI8py3vlgXpnMEGirxxPhQ5XX8stxWitAbfwbe/Wk83My4
-         sLD4vPcoiJxv+WjP5lKSR6r5EvtevIXg/OvZZGSV9QSHOKP5ppAtHiFvJJTi6hkc+wK/
-         Nhik1sMiEbgx30qTA4S9qartPxp4nRM6BGiq3++NrXcXmLNetGBTbve+s6UY4kTUNmY/
-         TIy8ZB1ElsNmAzyrtyN41QEZUG5cxNaNN/auWnuk6hivgok5iFh0G5ZPZvZZt4we9EpW
-         Wq5A==
-X-Gm-Message-State: APjAAAWBvk48nS7p175y/bvAbNa+EF7FamaRrLt7tRH/CrJMr/7cwqXk
-        oQuqxDVI5qDhAa+Jt8cmJWM=
-X-Google-Smtp-Source: APXvYqzhfX06D2X9smqNQnw7ToE/n97hSatioUOx52Ftu/g4VKY4Zq57v2uLymMAP/fVh+iD1BOG6g==
-X-Received: by 2002:a63:3d03:: with SMTP id k3mr3880999pga.375.1572498253048;
-        Wed, 30 Oct 2019 22:04:13 -0700 (PDT)
-Received: from localhost.localdomain (c-73-48-141-28.hsd1.ca.comcast.net. [73.48.141.28])
-        by smtp.googlemail.com with ESMTPSA id d16sm1899658pfo.75.2019.10.30.22.04.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 22:04:12 -0700 (PDT)
-From:   Charles Machalow <csm10495@gmail.com>
-To:     linux-nvme@lists.infradead.org
-Cc:     csm10495@gmail.com, marta.rybczynska@kalray.eu,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org
-Subject: [PATCH] nvme: change nvme_passthru_cmd64's result field.
-Date:   Wed, 30 Oct 2019 22:03:38 -0700
-Message-Id: <20191031050338.12700-1-csm10495@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 31 Oct 2019 01:19:55 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dba6f000000>; Wed, 30 Oct 2019 22:20:01 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 30 Oct 2019 22:19:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 30 Oct 2019 22:19:55 -0700
+Received: from [10.2.172.9] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 31 Oct
+ 2019 05:19:53 +0000
+Subject: Re: [PATCH v2] cpufreq: powernv: fix stack bloat and NR_CPUS
+ limitation
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+CC:     <linux-pm@vger.kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Preeti U Murthy <preeti@linux.vnet.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>
+References: <20191018045539.3765565-1-jhubbard@nvidia.com>
+ <87pnidbptw.fsf@mpe.ellerman.id.au>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <405c2ac2-a61c-e7e6-3487-c55bcdf1e839@nvidia.com>
+Date:   Wed, 30 Oct 2019 22:17:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <87pnidbptw.fsf@mpe.ellerman.id.au>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572499201; bh=Lgg3WPBQcbXMUHYh4dycG3/ll1LXNGzsuqWxnAt4TKM=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=rF+/ZRGYrkR9VRln6J5ePJeOIpT6GvsoLVg88ufoOYIY7pXltVb3YHDWZvgJCIyWo
+         ihWk8+KEWdwR3jW6DpWyPcYl3rvT8NwfjaE6bShuYysDPGs/TFM01m1ogW/jmf7mVM
+         aUjXhy83XPqTOu1Uo/PUt+js7RvguT0tAloLNdtPDAcbljqkBLqrXuPrcbczL+SNN2
+         gMsxDUxVw+GiXXRLQMnK9Zi36ntanv+qzJFK0Zf7oTyR8RRHghv1IAl1qrfxumvDJv
+         q4kljYJqN8tNueKEaIQZUXvW2SJcAsE7X6ojukF9AXR1DBJlobRAl3j+zSwFbNCLyT
+         DWiZAxhoLJKwg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changing nvme_passthru_cmd64's result field to be backwards compatible
-with the nvme_passthru_cmd/nvme_admin_cmd struct in terms of the result
-field. With this change the first 32 bits of result in either case
-point to CQE DW0. This allows userspace tools to use the new structure
-when using the old ADMIN/IO_CMD ioctls or new ADMIN/IO_CMD64 ioctls.
+On 10/30/19 7:39 PM, Michael Ellerman wrote:
+> Hi John,
+> 
+> Sorry I didn't reply to this sooner, too many patches :/
+> 
+> John Hubbard <jhubbard@nvidia.com> writes:
+>> The following build warning occurred on powerpc 64-bit builds:
+>>
+>> drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
+>> drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
+> 
+> Oddly I don't see that warning in my builds, eg with GCC9:
+> 
+>    https://travis-ci.org/linuxppc/linux/jobs/604870722
 
-Signed-off-by: Charles Machalow <csm10495@gmail.com>
----
- drivers/nvme/host/core.c        | 4 ++--
- include/uapi/linux/nvme_ioctl.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+This is with a cross-compiler based on gcc 8.1.0, which I got from:
+   https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index fa7ba09dc..74a7cc2dd 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1453,11 +1453,11 @@ static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
- 			(void __user *)(uintptr_t)cmd.addr, cmd.data_len,
- 			(void __user *)(uintptr_t)cmd.metadata, cmd.metadata_len,
--			0, &cmd.result, timeout);
-+			0, (u64 *)&cmd.result, timeout);
- 	nvme_passthru_end(ctrl, effects);
- 
- 	if (status >= 0) {
--		if (put_user(cmd.result, &ucmd->result))
-+		if (put_user(*(u64 *)&cmd.result, (u64 *)&ucmd->result))
- 			return -EFAULT;
- 	}
- 
-diff --git a/include/uapi/linux/nvme_ioctl.h b/include/uapi/linux/nvme_ioctl.h
-index e168dc59e..4cb07bd6d 100644
---- a/include/uapi/linux/nvme_ioctl.h
-+++ b/include/uapi/linux/nvme_ioctl.h
-@@ -63,7 +63,7 @@ struct nvme_passthru_cmd64 {
- 	__u32	cdw14;
- 	__u32	cdw15;
- 	__u32	timeout_ms;
--	__u64	result;
-+	__u32	result[2];
- };
- 
- #define nvme_admin_cmd nvme_passthru_cmd
+I'll put that in the v3 commit description.
+
+> 
+>> This is due to putting 1024 bytes on the stack:
+>>
+>>      unsigned int chip[256];
+>>
+>> ...and while looking at this, it also has a bug: it fails with a stack
+>> overrun, if CONFIG_NR_CPUS > 256.
+> 
+> It _probably_ doesn't, because it only increments the index when the
+> chip_id of the CPU changes, ie. it doesn't create a chip for every CPU.
+> But I agree it's flaky the way it's written.
+
+I'll soften up the wording accordingly.
+
+> 
+>> Fix both problems by dynamically allocating based on CONFIG_NR_CPUS.
+> 
+> Shouldn't it use num_possible_cpus() ?
+> 
+> Given the for loop is over possible CPUs that seems like the upper
+> bound. In practice it should be lower because some CPUs will share a
+> chip.
+> 
+
+OK, I see, that's more consistent with the code, I'll change to that.
+
+
+thanks,
 -- 
-2.17.1
+John Hubbard
+NVIDIA
 
+> 
+> 
+>> Fixes: 053819e0bf840 ("cpufreq: powernv: Handle throttling due to Pmax capping at chip level")
+>> Cc: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+>> Cc: Preeti U Murthy <preeti@linux.vnet.ibm.com>
+>> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+>> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+>> Cc: linux-pm@vger.kernel.org
+>> Cc: linuxppc-dev@lists.ozlabs.org
+>> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+>> ---
+>>
+>> Changes since v1: includes Viresh's review commit fixes.
+>>
+>>   drivers/cpufreq/powernv-cpufreq.c | 17 +++++++++++++----
+>>   1 file changed, 13 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cpufreq.c
+>> index 6061850e59c9..5b2e968cb5ea 100644
+>> --- a/drivers/cpufreq/powernv-cpufreq.c
+>> +++ b/drivers/cpufreq/powernv-cpufreq.c
+>> @@ -1041,9 +1041,14 @@ static struct cpufreq_driver powernv_cpufreq_driver = {
+>>   
+>>   static int init_chip_info(void)
+>>   {
+>> -	unsigned int chip[256];
+>> +	unsigned int *chip;
+>>   	unsigned int cpu, i;
+>>   	unsigned int prev_chip_id = UINT_MAX;
+>> +	int ret = 0;
+>> +
+>> +	chip = kcalloc(CONFIG_NR_CPUS, sizeof(*chip), GFP_KERNEL);
+>> +	if (!chip)
+>> +		return -ENOMEM;
+>>   
+>>   	for_each_possible_cpu(cpu) {
+>>   		unsigned int id = cpu_to_chip_id(cpu);
+>> @@ -1055,8 +1060,10 @@ static int init_chip_info(void)
+>>   	}
+>>   
+>>   	chips = kcalloc(nr_chips, sizeof(struct chip), GFP_KERNEL);
+>> -	if (!chips)
+>> -		return -ENOMEM;
+>> +	if (!chips) {
+>> +		ret = -ENOMEM;
+>> +		goto free_and_return;
+>> +	}
+>>   
+>>   	for (i = 0; i < nr_chips; i++) {
+>>   		chips[i].id = chip[i];
+>> @@ -1066,7 +1073,9 @@ static int init_chip_info(void)
+>>   			per_cpu(chip_info, cpu) =  &chips[i];
+>>   	}
+>>   
+>> -	return 0;
+>> +free_and_return:
+>> +	kfree(chip);
+>> +	return ret;
+>>   }
+>>   
+>>   static inline void clean_chip_info(void)
+>> -- 
+>> 2.23.0
