@@ -2,200 +2,92 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 275FCCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8D4CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E58DF20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285A920862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:03:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="embPrBh4"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qNmMGXtV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfJaLCd (ORCPT
+        id S1727645AbfJaLDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:02:33 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53114 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfJaLCd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:02:33 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9VB2H6x063092;
-        Thu, 31 Oct 2019 06:02:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572519737;
-        bh=bB3RaByQ4n8ZNwM2TmPODUC5xV88xdL4nzVoyZOor/o=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=embPrBh4ZavJ2O2q/1lBVebnQCCkZUX9O1fQU+7IDoRcnkh4vJYFPIAKnJwBouOr4
-         ozXwj3YI+rly+EepF5Ua3zD6rYQTa3DPKxlsFuaMVDNvXoxdg3DK9R257fGCa3emN0
-         8Wts7GfopEjc7qe/BX4UeeeqlGnY2ZqlEASkCTn8=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9VB2Hls079270
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 31 Oct 2019 06:02:17 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 31
- Oct 2019 06:02:04 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 31 Oct 2019 06:02:04 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9VB2ECn023353;
-        Thu, 31 Oct 2019 06:02:15 -0500
-Subject: Re: [PATCH v2] usb: cdns3: gadget: Fix g_audio use case when
- connected to Super-Speed host
-To:     Felipe Balbi <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <pawell@cadence.com>
-CC:     <peter.chen@nxp.com>, <nsekhar@ti.com>, <kurahul@cadence.com>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191029151514.28495-1-rogerq@ti.com>
- <20191030121607.21739-1-rogerq@ti.com> <87pnide1k7.fsf@gmail.com>
- <44b07e90-a9de-ea99-25c6-dc72cf39bbe1@ti.com> <875zk5dw0m.fsf@gmail.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <86a7fbc4-136f-78bb-4677-784199842c9f@ti.com>
-Date:   Thu, 31 Oct 2019 13:02:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 31 Oct 2019 07:03:11 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:35124 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726897AbfJaLDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 07:03:10 -0400
+Received: from nazgul.tnic (unknown [91.217.168.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 856641EC0CD3;
+        Thu, 31 Oct 2019 12:03:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1572519785;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=z39G9UOa5V+G2XaGK01K79kOY635cMjOB2YxE8Kx4mQ=;
+        b=qNmMGXtVmSr3U2Q5XPPA1HDPHZfskzbUAw2Nb1PiMknM3AX86LxGI+avV6f2Q6h9TF8h+3
+        IihVuHX0vp4R2u/x6Acv+yOxmIC6BxqQUKnwrkbnZowwTHPq8cG1JmPqOm2b9hXq5Eggmf
+        l+DDBIWtqVJgU899u7Uvy3qUJNFI9VQ=
+Date:   Thu, 31 Oct 2019 12:03:04 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     zhong jiang <zhongjiang@huawei.com>
+Cc:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
+        dave.hansen@linux.intel.com, hpa@zytor.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/ioremap: Use WARN_ONCE instead of printk() +
+ WARN_ON_ONCE()
+Message-ID: <20191031110304.GE21133@nazgul.tnic>
+References: <1572425838-39158-1-git-send-email-zhongjiang@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <875zk5dw0m.fsf@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1572425838-39158-1-git-send-email-zhongjiang@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 31/10/2019 12:55, Felipe Balbi wrote:
+On Wed, Oct 30, 2019 at 04:57:18PM +0800, zhong jiang wrote:
+> WARN_ONCE is more clear and simpler. Just replace it.
 > 
-> Hi,
+> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+> ---
+>  arch/x86/mm/ioremap.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-> Roger Quadros <rogerq@ti.com> writes:
-> 
->> Hi,
->>
->> On 31/10/2019 10:55, Felipe Balbi wrote:
->>>
->>> Hi,
->>>
->>> Roger Quadros <rogerq@ti.com> writes:
->>>
->>>> Take into account gadget driver's speed limit when programming
->>>> controller speed.
->>>>
->>>> Fixes: commit 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
->>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>> Acked-by: Peter Chen <peter.chen@nxp.com>
->>>> ---
->>>>
->>>> Changelog:
->>>> v2
->>>> - Add Fixes line
->>>>
->>>>    drivers/usb/cdns3/gadget.c | 31 ++++++++++++++++++++++++++-----
->>>>    1 file changed, 26 insertions(+), 5 deletions(-)
->>>>
->>>> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
->>>> index 40dad4e8d0dc..1c724c20d468 100644
->>>> --- a/drivers/usb/cdns3/gadget.c
->>>> +++ b/drivers/usb/cdns3/gadget.c
->>>> @@ -2338,9 +2338,35 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
->>>>    {
->>>>    	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
->>>>    	unsigned long flags;
->>>> +	enum usb_device_speed max_speed = driver->max_speed;
->>>>    
->>>>    	spin_lock_irqsave(&priv_dev->lock, flags);
->>>>    	priv_dev->gadget_driver = driver;
->>>> +
->>>> +	/* limit speed if necessary */
->>>> +	max_speed = min(driver->max_speed, gadget->max_speed);
->>>> +
->>>> +	switch (max_speed) {
->>>> +	case USB_SPEED_FULL:
->>>> +		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
-> 
-> so this forces the controller to FS
+> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+> index a39dcdb..3b74599 100644
+> --- a/arch/x86/mm/ioremap.c
+> +++ b/arch/x86/mm/ioremap.c
+> @@ -172,9 +172,8 @@ static void __ioremap_check_mem(resource_size_t addr, unsigned long size,
+>  		return NULL;
+>  
+>  	if (!phys_addr_valid(phys_addr)) {
+> -		printk(KERN_WARNING "ioremap: invalid physical address %llx\n",
+> -		       (unsigned long long)phys_addr);
+> -		WARN_ON_ONCE(1);
+> +		WARN_ONCE(1, "ioremap: invalid physical address %llx\n",
+> +			  (unsigned long long)phys_addr);
 
-Right.
+Does
+	WARN_ONCE(!phys_addr_valid(phys_addr),
+		  "ioremap: invalid physical address %llx\n",
+		  (unsigned long long)phys_addr);
 
-> 
->>>> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
-> 
-> and this disconnects in superspeed? What is this supposed to do?
-> 
-
-It says "Disconnect USB device in SuperSpeed".
-
-We were asked to set that bit to limit it to HS.
-
->>>> +		break;
->>>> +	case USB_SPEED_HIGH:
->>>> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
->>>> +		break;
->>>> +	case USB_SPEED_SUPER:
->>>> +		break;
->>>> +	default:
->>>> +		dev_err(priv_dev->dev,
->>>> +			"invalid maximum_speed parameter %d\n",
->>>> +			max_speed);
->>>> +		/* fall through */
->>>> +	case USB_SPEED_UNKNOWN:
->>>> +		/* default to superspeed */
->>>> +		max_speed = USB_SPEED_SUPER;
->>>> +		break;
->>>> +	}
->>>
->>> I had suggested some simplification for this case statement.
->>>
->>
->> oops, looks like Greg picked this already.
->>
->> During more tests today I just observed that this patch causes
->> the following regression.
->>
->> Connect EVM to Super-Speed host
->> Load g_audio. (this enumerates as HS which is fine)
->> unload g_audio
->> load g_zero (this enumerates at HS instead of SS).
->>
->> This is because the speed limit that we set doesn't get cleared.
->>
->> Now the bits are write only and there is a way to undo USB_CONF_SFORCE_FS
->> by writing USB_CONF_CFORCE_FS, however there is no corresponding bit
->> to clear USB_CONF_USB3DIS. Only way seems to be USB_CFG_SWRST which
->> is a bit harsh IMO.
-> 
-> Isn't bit 0 enough?
-> 
-> /* Reset USB device configuration. */
-> #define USB_CONF_CFGRST		BIT(0)
-
-Probably not, as explanation of USB3DIS bit says,
-"To connect disconnected device, CPU performs
-software reset (CFG.SWRST)." which is bit 7. "Device software reset.
-
-But I'll let Pawel comment on this.
-
-> 
-> Also, now that I look at this more carefully, you should move that code
-> to udc_set_speed().
-> 
-
-Agreed. I'll revise the implementation to move it to udc_set_speed()
-once I know how to undo the USB3DIS.
+work too?
 
 -- 
-cheers,
--roger
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
