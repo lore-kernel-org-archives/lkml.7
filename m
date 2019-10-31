@@ -2,114 +2,92 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BF8CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1EDC47E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 647712086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B282080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:46:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WUSQhNBA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jknekqfC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbfJaSpk (ORCPT
+        id S1729370AbfJaSqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:45:40 -0400
-Received: from mail-qt1-f201.google.com ([209.85.160.201]:33142 "EHLO
-        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729313AbfJaSpk (ORCPT
+        Thu, 31 Oct 2019 14:46:37 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40844 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729255AbfJaSqg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:45:40 -0400
-Received: by mail-qt1-f201.google.com with SMTP id k53so7290408qtk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 11:45:39 -0700 (PDT)
+        Thu, 31 Oct 2019 14:46:36 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 15so4615070pgt.7
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 11:46:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=8ALf84QyJ21Yy83EcsBZYx0R5ySmANW7J5oD5E9Gtsc=;
-        b=WUSQhNBAOxFkVi7Km6IbhgY+FLELPn8N20pipsZpHhKH3RIy/SdgG+EC4r8hz6fznI
-         ONaTeM7G+L6JDvf1deTj/CWq/4QnIhe06e4mRHS0LJBKW6lnhRj1U5zKz3skyHMfQAL4
-         uCiHZQNIq31Oqil/PmGKreOtZD8dJ3Kl+FTCWChnThvafmwBdxQft7VGFUXTzNsc1YUm
-         yCtbC9D652rQpFqNbUUvXQRM3WVxgYNtD/cMH9VxH+oahlNo4QM4tlFDkrBt+kBZ6aJG
-         0Wg9w6eYhkaryFrrwuwP3QezYuQXYrcGh/RqeBKBQoznD8OvZz5ByenyMAYvDajZ1yW2
-         8eVQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IZB/HP5rByh41Vpe5hUbFd2NNqVPk5ZV2uMfwHrp4YQ=;
+        b=jknekqfCQdDs4huuyK7WRBTw4sn2JFkqcgwzKW+KIDZErDMn8IXEkAU69lC91ZePTN
+         s8Yvp8L0VCT1N/bjIf+g69sZQL4yX5cvMEygUApCEN8dr1MewmmwQkyLW13mY6kfnZHV
+         PeRPIoQaMyTQ78DHwiaXOxekIf7lGq+Xz6N6uj7bNURYnrN5BAb3obdQoqq1wZHKJnAx
+         6L2mApTK85k7QKJMDGwgVaUPZFLqFKwgKxXwqbTDz8DsMI4sVe3F9KM+7DihbS/LJYJi
+         tRke62p1QAF4LGFAVh4+u3fyyX8SaPK4n+oOcgmI/Te0weEvBtBQlSLoomEiD9Cd/2g8
+         ptsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=8ALf84QyJ21Yy83EcsBZYx0R5ySmANW7J5oD5E9Gtsc=;
-        b=t06D7L3knSkPohtir/XgChK+rbnB0YbtgnHAs5CIr7IGNU5hzyiQcqZ/ytbRfQ+rOm
-         eAripJ48aR7OTKBPTZG+S9IP1t2B+fB9GLrN9Fctotuz+bMtzUdtmj+TqZBJc0dqWZEv
-         uDhhVyR/X1/PM826ry2EDe8hsUZt4/4vSkdmxz9tyb23u4LDsNLST8bRS6NGU95ycbHE
-         tRWC5qTf41HzoJ/E/9ZDGUO19gfDYbIned1yBf07EAQ9D8Wv6yQyaEQxOycecUWvpNwX
-         M83PbQ9IuWIjLMiL/zlqdPvg3TRZvSPrP1+Hf9fAwvIXBuGGKhX4fsFhYEeM2uNYDlyn
-         YSaw==
-X-Gm-Message-State: APjAAAUP4vmD9TuxwoCBuTg2prjpM7YsNPf2+HoUtZnEiHJmQ/lo6qaL
-        7lbeb3Rh5BvUv5DN1PYyV8ceVJVEXZ14
-X-Google-Smtp-Source: APXvYqxC7GbWTz0du6BFDrnwZDCsKhQAuGQ3BE9WEG+eJ2qywFvKJtEnZhEVSc14ueeltWSYJl5Lcq1pI75/
-X-Received: by 2002:ad4:5345:: with SMTP id v5mr6154067qvs.217.1572547538807;
- Thu, 31 Oct 2019 11:45:38 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 11:45:33 -0700
-Message-Id: <20191031184533.67118-1-joshdon@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-Subject: [PATCH] sched/fair: Do not set skip buddy up the sched hierarchy
-From:   Josh Don <joshdon@google.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Paul Turner <pjt@google.com>,
-        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
-        Venkatesh Pallipadi <venki@google.com>,
-        Josh Don <joshdon@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IZB/HP5rByh41Vpe5hUbFd2NNqVPk5ZV2uMfwHrp4YQ=;
+        b=s6MCSjnGcn4Mrn/aihhEYs9sgGPo4+4IfohUeOSQ/iyMOA50fXej5iP2mJvdOygz4F
+         BF5wr4fwQfRNENvfMY9WvoZMdeHOCUurJ8MRbmm2WkBWFBOeAj0ZjefXwKumQYJojrf8
+         hY080CeD9Dmwn/TaVyHH2vG1UrHGTRT3hyGLnWu5N6IPfZI5E+kT+iUQdTghRMhgVCOm
+         2gMpaO7dFw4pw+MNZVLvpPslFFyrODoxmR256R9MEdUXWvOI3VL3/I9sGmKGIFruJZwQ
+         SzDjmEqHVOQw3htkekNFkevv518/J5ygo9go9QlDkSmrco0t3e21N7x+8UTHd5QHJv1e
+         Lguw==
+X-Gm-Message-State: APjAAAVWRQe0HkonckfbnTAWuB77jWMfqJ7l4SHa+qVOfrlp/XPutCrg
+        NW9r5eFjyBp6ribE90+967TRcNXxQuA=
+X-Google-Smtp-Source: APXvYqyyo2asPSNJFpPqVF/uSfEkTI/6KyfThLC1g8UCU9Q61QKHz5HCqXIPplnQXSNmAfaHfYeuFg==
+X-Received: by 2002:a17:90a:2e18:: with SMTP id q24mr9375378pjd.61.1572547595658;
+        Thu, 31 Oct 2019 11:46:35 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id b82sm3950874pfb.33.2019.10.31.11.46.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 11:46:35 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH 0/2] remoteproc: mss: Improve memory assignment
+Date:   Thu, 31 Oct 2019 11:46:30 -0700
+Message-Id: <20191031184632.2938295-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Venkatesh Pallipadi <venki@google.com>
+Two things came up in the effort of figuring out why the modem crashed the
+entire system when being restarted; the first one solves the actual problem, in
+that it's not possible to reclaim the main modem firmware region unless the
+modem subsystem is running - causing the crash.
 
-Setting skip buddy all the way up the hierarchy does not play well
-with intra-cgroup yield. One typical usecase of yield is when a
-thread in a cgroup wants to yield CPU to another thread within the
-same cgroup. For such a case, setting the skip buddy all the way up
-the hierarchy is counter-productive, as that results in CPU being
-yielded to a task in some other cgroup.
+The second patch aligns the firmware loading process to that of the downstream
+driver, which seems to be a requirement in 8974 as well.
 
-So, limit the skip effect only to the task requesting it.
+Bjorn Andersson (2):
+  remoteproc: qcom_q6v5_mss: Don't reassign mpss region on shutdown
+  remoteproc: qcom_q6v5_mss: Validate each segment during loading
 
-Signed-off-by: Josh Don <joshdon@google.com>
----
- kernel/sched/fair.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/remoteproc/qcom_q6v5_mss.c | 85 +++++++++++++++++++-----------
+ 1 file changed, 53 insertions(+), 32 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 682a754ea3e1..52ab06585d7f 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6647,8 +6647,15 @@ static void set_next_buddy(struct sched_entity *se)
- 
- static void set_skip_buddy(struct sched_entity *se)
- {
--	for_each_sched_entity(se)
--		cfs_rq_of(se)->skip = se;
-+	/*
-+	 * One typical usecase of yield is when a thread in a cgroup
-+	 * wants to yield CPU to another thread within the same cgroup.
-+	 * For such a case, setting the skip buddy all the way up the
-+	 * hierarchy is counter-productive, as that results in CPU being
-+	 * yielded to a task in some other cgroup. So, only set skip
-+	 * for the task requesting it.
-+	 */
-+	cfs_rq_of(se)->skip = se;
- }
- 
- /*
 -- 
-2.23.0.700.g56cf767bdb-goog
+2.23.0
 
