@@ -2,129 +2,148 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B520CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD40CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04FED208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F4D1208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:00:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tf+KATEy"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="T0WGQpXF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbfJaN75 (ORCPT
+        id S1727927AbfJaOAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:59:57 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35534 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727855AbfJaN75 (ORCPT
+        Thu, 31 Oct 2019 10:00:04 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45139 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727902AbfJaOAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:59:57 -0400
-Received: by mail-pf1-f194.google.com with SMTP id d13so4454013pfq.2
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 06:59:56 -0700 (PDT)
+        Thu, 31 Oct 2019 10:00:03 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q64so6697323ljb.12
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 07:00:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=E3OJFxf+mUWoz3h8BXrLdL53qyDG3CcJuYs/0iyxKF4=;
-        b=tf+KATEyMKScBhe2rDxFmvhHdhpJvsG8Ppi+Ok6s+1JY+Ck0LsQI6EgbXGwk6Gxns2
-         PBhFeVi79K6keCg6KQopPP+74YLxVly8VZb6Lkf1BGv+ATKanKjaohe+f55adgBuMttF
-         ghSDNFsV11Nb21uJw86b7GMyPRXXuWo3nSS9se6Vt7rIUg3OvajwiDKd2Byp1nMqXkx6
-         RLI18VC7Bc7ONNECHSTu/fq24VhTJJYi4wjTUIJfJ7zE+NM+fU/oyzFLdPiRdKQgL9qR
-         NVu9qVxDVu59qNFL7TyaD+bkES5v9TlqyZ9mHlOmkX4lzMqpiLj8bfpJmBr8MVXkfcQW
-         HHUA==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DuatfVoIRwFhp1fiwVqEQDhLv5NKcD5+eL4mURteBJw=;
+        b=T0WGQpXFDtrHJfxqFmxbHxIc4bAH6IQvZs0OTPR85eE1GuPEBycmk9QZ+dEad3gcBZ
+         111Tl8gHMDWobnSVm/oAzghXtZ67XKZeU7Iv1i1wit1eJeMjOr73oWKibGez8sYJXCg5
+         +cQOCUohhdbNghmuNdLDmn228db2gz+xBmkAIvJqZTSY4dHUXeEEkpIrb7ncIQmqboAt
+         Z/ov5p25AUY1THMKi1DviI/uX3DGy8zd/T97zX+udzdtsfjL4srz+5gXsM7b01LCQpzv
+         BX6g51anf+KwtwI58WA9i6Uh/aOtyToAeS5ZFqybf4ztcFcPzqIgUxpnTGSLbS4pEaEu
+         btAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=E3OJFxf+mUWoz3h8BXrLdL53qyDG3CcJuYs/0iyxKF4=;
-        b=pdB0A/x6x3jGIPxoesmNPjn6PcX6GR+1SLYlNyOYIwAbqCCUR9uWvY6LS1NbtdHeb0
-         6xff1ktcvjRSxfh1JISZoQIfaIIcRG+RiE4MUu0mgG/A0ea9VhlddUsML5GAdwR6ckFT
-         q5oBHsg9Vy/VeXkrtSmRsG1xTg2y3jUGYrkQlnvMBLBhy/yu3h5jXGiPI32PWPaxpWXk
-         uDnB73K1ICud76frtJe++HfmOg7Sx2yDxxZHai7ryzVe9H2UraYX85FjmJ8OukPbR8/e
-         2kL95wj8r0lb3Uq8Qzxb//DSOyBSP14NAgBamuNTvDFR0S5rxo3C6UMP0o4VONkItPtG
-         +GSA==
-X-Gm-Message-State: APjAAAU5ICrYFsaiI82VDHz5xFUa0+QbLC80dhvwcb2dWKxNka4KggS7
-        lKw0NQcuyw107yQsJLZ6TSHTsw==
-X-Google-Smtp-Source: APXvYqx6w3fK7udP850k+SVSjxTClJG1BWGTayyOqKUy8HcRBFjYN6ROvTumbYp2kjoyQbEiFFSOdg==
-X-Received: by 2002:a63:fe0c:: with SMTP id p12mr6825858pgh.121.1572530396394;
-        Thu, 31 Oct 2019 06:59:56 -0700 (PDT)
-Received: from localhost.localdomain ([117.252.69.143])
-        by smtp.gmail.com with ESMTPSA id i16sm3522441pfa.184.2019.10.31.06.59.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 31 Oct 2019 06:59:55 -0700 (PDT)
-From:   Sumit Garg <sumit.garg@linaro.org>
-To:     jens.wiklander@linaro.org, jarkko.sakkinen@linux.intel.com,
-        dhowells@redhat.com
-Cc:     corbet@lwn.net, jejb@linux.ibm.com, zohar@linux.ibm.com,
-        jmorris@namei.org, serge@hallyn.com, casey@schaufler-ca.com,
-        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
-        stuart.yoder@arm.com, janne.karhunen@gmail.com,
-        keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        tee-dev@lists.linaro.org, Sumit Garg <sumit.garg@linaro.org>
-Subject: [Patch v3 3/7] tee: add private login method for kernel clients
-Date:   Thu, 31 Oct 2019 19:28:39 +0530
-Message-Id: <1572530323-14802-4-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572530323-14802-1-git-send-email-sumit.garg@linaro.org>
-References: <1572530323-14802-1-git-send-email-sumit.garg@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DuatfVoIRwFhp1fiwVqEQDhLv5NKcD5+eL4mURteBJw=;
+        b=Da0tqY9K6hyRMpzDd2E5JwtGs2KpeEYs55guKX8SkM4SG92mgQc180puFR4mz9JMnL
+         ySbR6zKuAhtoC/pbGuPSFJjHW4dZE68U0BPI0dTE01IN7QHUq+O4DlDKF2HB+OlLZ9h/
+         AzpfeUeM8zZsiBDQTUe9lRgZXEPu1/I897/nLj8KEToTaiyV+siOu4PjZyUlmcJ6fRb5
+         gxbsDbMk0jZ8OhcsP+AYFagQe2eEgb+TgvLIEeHYJdkYQXEG8zYh02xokzBttcQITEIx
+         mnhoaJBq1a94Ru+aPDzWA6I21ZZgir+E0OXawgu0wS35tpu4pV8EuNALn2L/ABKFlOe3
+         SV8w==
+X-Gm-Message-State: APjAAAUeCIPUG5hg+ZADKBaDUo9Om8Yn8QW61LFnmVyR7ZpbF2vH7FQw
+        fO+MsqELiAEYyi7gQvZvbPFEpucocJltOBJLmb04
+X-Google-Smtp-Source: APXvYqwq2wNVb076m3Quvyq9PXqhSEvG470R+68J3/Y3Ahcr5xKs7JewCzfRlqwmRAqfj89jdi6yOS5N64nrB3PIo6A=
+X-Received: by 2002:a05:651c:1056:: with SMTP id x22mr1097948ljm.225.1572530400425;
+ Thu, 31 Oct 2019 07:00:00 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1568834524.git.rgb@redhat.com> <214163d11a75126f610bcedfad67a4d89575dc77.1568834525.git.rgb@redhat.com>
+ <20191019013904.uevmrzbmztsbhpnh@madcap2.tricolour.ca> <CAHC9VhRPygA=LsHLUqv+K=ouAiPFJ6fb2_As=OT-_zB7kGc_aQ@mail.gmail.com>
+ <20191021213824.6zti5ndxu7sqs772@madcap2.tricolour.ca> <CAHC9VhRdNXsY4neJpSoNyJoAVEoiEc2oW5kSscF99tjmoQAxFA@mail.gmail.com>
+ <20191021235734.mgcjotdqoe73e4ha@madcap2.tricolour.ca> <CAHC9VhSiwnY-+2awxvGeO4a0NgfVkOPd8fzzBVujp=HtjskTuQ@mail.gmail.com>
+ <20191024210010.owwgc3bqbvtdsqws@madcap2.tricolour.ca> <CAHC9VhRDoX9du4XbCnBtBzsNPMGOsb-TKM1CC+sCL7HP=FuTRQ@mail.gmail.com>
+ <20191030220320.tnwkaj5gbzchcn7j@madcap2.tricolour.ca>
+In-Reply-To: <20191030220320.tnwkaj5gbzchcn7j@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 31 Oct 2019 09:59:48 -0400
+Message-ID: <CAHC9VhTKaBwFxEnY9vLRgtZ5ptQzF-WvwiAyVgtTNn6tt4bZqw@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V7 20/21] audit: add capcontid to set contid
+ outside init_user_ns
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are use-cases where user-space shouldn't be allowed to communicate
-directly with a TEE device which is dedicated to provide a specific
-service for a kernel client. So add a private login method for kernel
-clients and disallow user-space to open-session using GP implementation
-defined login method range: (0x80000000 - 0xFFFFFFFF).
+On Wed, Oct 30, 2019 at 6:04 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2019-10-30 16:27, Paul Moore wrote:
+> > On Thu, Oct 24, 2019 at 5:00 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > Here's the note I had from that meeting:
+> > >
+> > > - Eric raised the issue that using /proc is likely to get more and more
+> > >   hoary due to mount namespaces and suggested that we use a netlink
+> > > audit message (or a new syscall) to set the audit container identifier
+> > > and since the loginuid is a similar type of operation, that it should be
+> > > migrated over to a similar mechanism to get it away from /proc.  Get
+> > > could be done with a netlink audit message that triggers an audit log
+> > > message to deliver the information.  I'm reluctant to further pollute
+> > > the syscall space if we can find another method.  The netlink audit
+> > > message makes sense since any audit-enabled service is likely to already
+> > > have an audit socket open.
+> >
+> > Thanks for the background info on the off-list meeting.  I would
+> > encourage you to have discussions like this on-list in the future; if
+> > that isn't possible, hosting a public call would okay-ish, but a
+> > distant second.
+>
+> I'm still trying to get Eric's attention to get him to weigh in here and
+> provide a more eloquent representation of his ideas and concerns.  Some
+> of it was related to CRIU(sp?) issues which we've already of which we've
+> already seen similar concerns in namespace identifiers including the
+> device identity to qualify it.
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
----
- drivers/tee/tee_core.c   | 6 ++++++
- include/uapi/linux/tee.h | 8 ++++++++
- 2 files changed, 14 insertions(+)
+Okay, let's leave this open until we hear from Eric to see if he has
+any additional information, but it's going to need to be pretty
+compelling.
 
-diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
-index 0f16d9f..2c2f646 100644
---- a/drivers/tee/tee_core.c
-+++ b/drivers/tee/tee_core.c
-@@ -334,6 +334,12 @@ static int tee_ioctl_open_session(struct tee_context *ctx,
- 			goto out;
- 	}
- 
-+	if (arg.clnt_login & TEE_IOCTL_LOGIN_MASK) {
-+		pr_debug("login method not allowed for user-space client\n");
-+		rc = -EPERM;
-+		goto out;
-+	}
-+
- 	rc = ctx->teedev->desc->ops->open_session(ctx, &arg, params);
- 	if (rc)
- 		goto out;
-diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
-index 4b9eb06..a0a3d52 100644
---- a/include/uapi/linux/tee.h
-+++ b/include/uapi/linux/tee.h
-@@ -172,6 +172,14 @@ struct tee_ioctl_buf_data {
- #define TEE_IOCTL_LOGIN_APPLICATION		4
- #define TEE_IOCTL_LOGIN_USER_APPLICATION	5
- #define TEE_IOCTL_LOGIN_GROUP_APPLICATION	6
-+/*
-+ * Disallow user-space to use GP implementation specific login
-+ * method range (0x80000000 - 0xFFFFFFFF). This range is rather
-+ * being reserved for REE kernel clients or TEE implementation.
-+ */
-+#define TEE_IOCTL_LOGIN_MASK			0x80000000
-+/* Private login method for REE kernel clients */
-+#define TEE_IOCTL_LOGIN_REE_KERNEL		0x80000000
- 
- /**
-  * struct tee_ioctl_param - parameter
+> > At this point in time I'm not overly concerned about /proc completely
+> > going away in namespaces/containers that are full featured enough to
+> > host a container orchestrator.  If/when reliance on procfs becomes an
+> > issue, we can look at alternate APIs, but given the importance of
+> > /proc to userspace (including to audit) I suspect we are going to see
+> > it persist for some time.  I would prefer to see you to drop the audit
+> > container ID netlink API portions of this patchset and focus on the
+> > procfs API.
+>
+> I've already refactored the code to put the netlink bits at the end as
+> completely optional pieces for completeness so they won't get in the way
+> of the real substance of this patchset.  The nesting depth and total
+> number of containers checks have also been punted to the end of the
+> patchset to get them out of the way of discussion.
+
+That's fine, but if we do decide to drop the netlink API after hearing
+from Eric, please drop those from the patchset.  Keeping the patchset
+small and focused should be a goal, and including rejected/dead
+patches (even at the end) doesn't help move towards that goal.
+
+> > Also, for the record, removing the audit loginuid from procfs is not
+> > something to take lightly, if at all; like it or not, it's part of the
+> > kernel API.
+>
+> Oh, I'm quite aware of how important this change is and it was discussed
+> with Steve Grubb who saw the concern and value of considering such a
+> disruptive change.  Removing proc support for auid/ses would be a
+> long-term deprecation if accepted.
+
+As I mentioned, that comment was more "for the record" than you in
+particular; I know we've talked a lot over the years about kernel API
+stability and I'm confident you are aware of the pitfalls there. :)
+
 -- 
-2.7.4
-
+paul moore
+www.paul-moore.com
