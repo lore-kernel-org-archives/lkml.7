@@ -2,105 +2,98 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100DCC47E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECFBCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA8DF2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:22:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ycggx2U8"
+	by mail.kernel.org (Postfix) with ESMTP id 42ABF2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:30:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbfJaKWe (ORCPT
+        id S1726964AbfJaKan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:22:34 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:60534 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbfJaKWe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:22:34 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9VAMPx8165363;
-        Thu, 31 Oct 2019 10:22:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=AIPRTbz1vKYMEJ2syx60gILwl+AYqYSi+XaONiaS/s8=;
- b=Ycggx2U85q5A81uE3ok4s9kutMZ3oZVrWzG6uHq3Uze8EjiUrKMTrc35pZjPvADumEfr
- qL8Fd4EckoPseP1QI21Ow88avnq4v/R/lj8Z4vcuU72YwlEHos1K63IjeJbWJ8UxI0IL
- dIMRFqhg5w6R6s1SEf1UDt99W6rxM07dWoY0C0AZoLSsFLTAdJrAmhezlWGfHQB6nJjb
- OU1BNooxcW4G4/SkNlJEajIRwEaljEMCSVPO3qdxuU57ABDXYw5Hph8kU+KutbpJz3Px
- JFE5uBJtaXlPweLc4USCYk+aj3vTxwNqFdYjhxz2nlksbIn2I5Vy+BV9oKy3KpnxJC3N 7Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2vxwhft77x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Oct 2019 10:22:25 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9VAJRUU151087;
-        Thu, 31 Oct 2019 10:20:23 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2vyqpdtyht-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Oct 2019 10:20:23 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9VAKLJw022953;
-        Thu, 31 Oct 2019 10:20:21 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 31 Oct 2019 03:20:21 -0700
-Date:   Thu, 31 Oct 2019 13:20:10 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Joe Perches <joe@perches.com>, shuah <shuah@kernel.org>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH linux-kselftest/test v6] lib/list-test: add a test for
- the 'list' doubly linked list
-Message-ID: <20191031102010.GF18421@kadam>
-References: <20191024224631.118656-1-davidgow@google.com>
- <0cb1d948-0da3-eb0f-c58f-ae3a785dd0dd@kernel.org>
- <CABVgOSmCHbGjZBjeWSbPEZbJw22SaBQnoO77xxNzN_ugAwzNiQ@mail.gmail.com>
- <20191030104217.GA18421@kadam>
- <42a8270d-ed6f-d29f-5e71-7b76a074b63e@kernel.org>
- <CAFd5g47OZ8x9=etJUj4Sgsw38VQb0j=omOUsubc7+pb2rJi0bQ@mail.gmail.com>
- <fad58e4f48237894de0d511adf1d663a42a2eee7.camel@perches.com>
- <20191031085129.GA217570@google.com>
+        Thu, 31 Oct 2019 06:30:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51478 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726867AbfJaKam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 06:30:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 89138B38E;
+        Thu, 31 Oct 2019 10:30:40 +0000 (UTC)
+Message-ID: <8c525f66c1c0d9f07e0cff4948d1ec3229756220.camel@suse.de>
+Subject: Re: [PATCH RFC 1/5] dma/direct: turn ARCH_ZONE_DMA_BITS into a
+ variable
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>, mbrugger@suse.com,
+        f.fainelli@gmail.com, wahrenst@gmx.net,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org
+Date:   Thu, 31 Oct 2019 11:30:36 +0100
+In-Reply-To: <20191030214914.GA15939@infradead.org>
+References: <20191014183108.24804-1-nsaenzjulienne@suse.de>
+         <20191014183108.24804-2-nsaenzjulienne@suse.de>
+         <20191030214914.GA15939@infradead.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-c/h1zpmiYL5xA/R3DgLo"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031085129.GA217570@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=882
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910310105
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=964 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910310105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 01:51:29AM -0700, Brendan Higgins wrote:
-> static void list_test_list_for_each_prev(struct kunit *test) /* checkpatch: disable=for-each-format */
 
-These comments defeat the purpose of checkpatch which is to make the
-code cleaner.
+--=-c/h1zpmiYL5xA/R3DgLo
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-regards,
-dan carpenter
+On Wed, 2019-10-30 at 14:49 -0700, Christoph Hellwig wrote:
+> On Mon, Oct 14, 2019 at 08:31:03PM +0200, Nicolas Saenz Julienne wrote:
+> > Some architectures, notably ARM, are interested in tweaking this
+> > depending on their runtime DMA addressing limitations.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>=20
+> Do you want me to pick this up for the 5.5 dma-mapping tree, or do you
+> want me to wait for the rest to settle?
+
+I'd say take it, this will be ultimately needed once we push forward with A=
+RM.
+
+
+--=-c/h1zpmiYL5xA/R3DgLo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl26t8wACgkQlfZmHno8
+x/6Bvgf8CKw0zktkkeQiMRg7+/wfA7jkI0EdKaeR38AVackkoByc3ab5S2A4Qepy
+XpQVhaciStaOBkqCzcHLVJnucMd/6d9YH+49GubC64NT12ukfjVwUBbfzgVHTJH2
+SOf3YpmsDw+8RokSUatZQZwY4D+b+jezcgK12EYOj244ip65tNEnM87G5ZUZVG1U
+2rXnFOH4ne4LmUn6u6Gdgydn5j7pSJnvYH0U0DRU0PLK7kV2uxOrllqSnvdENiRz
+QLSjWe2SON35T0OsddsecCq/FWrNzYBYa6bEfc2NsA0qdNAEJVaXQEn3p9bROBPw
+I2SkWEPTaKCtL9hUC1eiqUx1nLTY8g==
+=5BcM
+-----END PGP SIGNATURE-----
+
+--=-c/h1zpmiYL5xA/R3DgLo--
 
