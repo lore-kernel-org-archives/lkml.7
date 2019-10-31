@@ -2,192 +2,118 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BC1CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A88C47E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07C8321897
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:43:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WcECVR+i"
+	by mail.kernel.org (Postfix) with ESMTP id 8428D20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:46:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728153AbfJaXnV (ORCPT
+        id S1728174AbfJaXqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 19:43:21 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:6542 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbfJaXnU (ORCPT
+        Thu, 31 Oct 2019 19:46:23 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:55323 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727003AbfJaXqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 19:43:20 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dbb719b0000>; Thu, 31 Oct 2019 16:43:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 31 Oct 2019 16:43:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 31 Oct 2019 16:43:17 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 31 Oct
- 2019 23:43:17 +0000
-Subject: Re: [PATCH 05/19] mm/gup: introduce pin_user_pages*() and FOLL_PIN
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20191030224930.3990755-1-jhubbard@nvidia.com>
- <20191030224930.3990755-6-jhubbard@nvidia.com>
- <20191031231503.GF14771@iweiny-DESK2.sc.intel.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <f37f7727-4e19-2488-4db8-91feb72ace12@nvidia.com>
-Date:   Thu, 31 Oct 2019 16:43:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 31 Oct 2019 19:46:23 -0400
+Received: from dread.disaster.area (pa49-180-67-183.pa.nsw.optusnet.com.au [49.180.67.183])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 93DF93A0641;
+        Fri,  1 Nov 2019 10:46:21 +1100 (AEDT)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iQK8x-0007CB-9V; Fri, 01 Nov 2019 10:46:19 +1100
+Received: from dave by discord.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iQK8x-00041Z-7D; Fri, 01 Nov 2019 10:46:19 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 09/28] mm: directed shrinker work deferral
+Date:   Fri,  1 Nov 2019 10:45:59 +1100
+Message-Id: <20191031234618.15403-10-david@fromorbit.com>
+X-Mailer: git-send-email 2.24.0.rc0
+In-Reply-To: <20191031234618.15403-1-david@fromorbit.com>
+References: <20191031234618.15403-1-david@fromorbit.com>
 MIME-Version: 1.0
-In-Reply-To: <20191031231503.GF14771@iweiny-DESK2.sc.intel.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572565403; bh=PrJ35wWczmWpdy8SkgccuWUsoQYieyO1GnA2qpEHC/A=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=WcECVR+iSXkISjovnYPdLc0VuZ56KulHWxjHPNkHamdnVkeg8Qni2kb2nQWiZpF0R
-         uHERsJFKafYQzmBPtdM38PPqlW9hVOG53FvDZ5P/CxOEzhou6QhRqcQ9N12GqgYgNp
-         /wHowk2nkXrYaCJhmEFLqJYYfo78cS3l7gi+SGvxI9D5IHER/CaM/qs9FgQ9C1/ITB
-         55hcdTY0VgK3qlFmt0zG/WKLy9ecbOZj0gkPVF2N0VtGLv24a1MPDNGxZaK/MyTkD4
-         GQ5q+uS/VQIxS/skRMHIwldhmJ5+XRyQaWgtFy880BgX2uhvtBtgNacphnrNm0S54P
-         UIFLHD8GyGD5Q==
+Content-Transfer-Encoding: 8bit
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=3wLbm4YUAFX2xaPZIabsgw==:117 a=3wLbm4YUAFX2xaPZIabsgw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=MeAgGD-zjQ4A:10 a=20KFwNOVAAAA:8
+        a=3J8m_CEvPCn7CZIx0tYA:9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/31/19 4:15 PM, Ira Weiny wrote:
-> On Wed, Oct 30, 2019 at 03:49:16PM -0700, John Hubbard wrote:
-...
->> + * FOLL_PIN indicates that a special kind of tracking (not just page->_refcount,
->> + * but an additional pin counting system) will be invoked. This is intended for
->> + * anything that gets a page reference and then touches page data (for example,
->> + * Direct IO). This lets the filesystem know that some non-file-system entity is
->> + * potentially changing the pages' data. In contrast to FOLL_GET (whose pages
->> + * are released via put_page()), FOLL_PIN pages must be released, ultimately, by
->> + * a call to put_user_page().
->> + *
->> + * FOLL_PIN is similar to FOLL_GET: both of these pin pages. They use different
->> + * and separate refcounting mechanisms, however, and that means that each has
->> + * its own acquire and release mechanisms:
->> + *
->> + *     FOLL_GET: get_user_pages*() to acquire, and put_page() to release.
->> + *
->> + *     FOLL_PIN: pin_user_pages*() or pin_longterm_pages*() to acquire, and
->> + *               put_user_pages to release.
->> + *
->> + * FOLL_PIN and FOLL_GET are mutually exclusive.
-> 
-> You mean the flags are mutually exclusive for any single call, correct?
-> Because my first thought was that you meant that a page which was pin'ed can't
-> be "got".  Which I don't think is true or necessary...
+From: Dave Chinner <dchinner@redhat.com>
 
-Yes, you are correct. And yes you can absolutely mix get_user_pages() and 
-pin_user_pages() calls on the same page(s).
+Introduce a mechanism for ->count_objects() to indicate to the
+shrinker infrastructure that the reclaim context will not allow
+scanning work to be done and so the work it decides is necessary
+needs to be deferred.
 
-OK, I'll change the wording to "mutually exclusive for a given function call".
+This simplifies the code by separating out the accounting of
+deferred work from the actual doing of the work, and allows better
+decisions to be made by the shrinekr control logic on what action it
+can take.
 
-> 
->> + *
->> + * Please see Documentation/vm/pin_user_pages.rst for more information.
-> 
-> NIT: I think we should include this file as part of this patch...
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+---
+ include/linux/shrinker.h | 7 +++++++
+ mm/vmscan.c              | 8 ++++++++
+ 2 files changed, 15 insertions(+)
 
-heh. I kept hopping back and forth on this, because I've seen other patchsets that
-often put Documentation/ into its own patch. But you're right, of course: it's
-not right to refer to items that are not here until a later patch. I'll merge
-patch 19 into this one, then.
+diff --git a/include/linux/shrinker.h b/include/linux/shrinker.h
+index 0f80123650e2..3405c39ab92c 100644
+--- a/include/linux/shrinker.h
++++ b/include/linux/shrinker.h
+@@ -31,6 +31,13 @@ struct shrink_control {
+ 
+ 	/* current memcg being shrunk (for memcg aware shrinkers) */
+ 	struct mem_cgroup *memcg;
++
++	/*
++	 * set by ->count_objects if reclaim context prevents reclaim from
++	 * occurring. This allows the shrinker to immediately defer all the
++	 * work and not even attempt to scan the cache.
++	 */
++	bool defer_work;
+ };
+ 
+ #define SHRINK_STOP (~0UL)
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index ee4eecc7e1c2..a215d71d9d4b 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -536,6 +536,13 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
+ 	trace_mm_shrink_slab_start(shrinker, shrinkctl, nr,
+ 				   freeable, delta, total_scan, priority);
+ 
++	/*
++	 * If the shrinker can't run (e.g. due to gfp_mask constraints), then
++	 * defer the work to a context that can scan the cache.
++	 */
++	if (shrinkctl->defer_work)
++		goto done;
++
+ 	/*
+ 	 * Normally, we should not scan less than batch_size objects in one
+ 	 * pass to avoid too frequent shrinker calls, but if the slab has less
+@@ -570,6 +577,7 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
+ 		cond_resched();
+ 	}
+ 
++done:
+ 	if (next_deferred >= scanned)
+ 		next_deferred -= scanned;
+ 	else
+-- 
+2.24.0.rc0
 
-...
->> @@ -1603,11 +1630,25 @@ static __always_inline long __gup_longterm_locked(struct task_struct *tsk,
->>   * and mm being operated on are the current task's and don't allow
->>   * passing of a locked parameter.  We also obviously don't pass
->>   * FOLL_REMOTE in here.
->> + *
->> + * A note on gup_flags: FOLL_PIN should only be set internally by the
->> + * pin_user_page*() and pin_longterm_*() APIs, never directly by the caller.
->> + * That's in order to help avoid mismatches when releasing pages:
->> + * get_user_pages*() pages must be released via put_page(), while
->> + * pin_user_pages*() pages must be released via put_user_page().
-> 
-> Rather than put this here should we put it next to the definition of FOLL_PIN?
-> Because now we have this text 2x...  :-/
-> 
-
-OK, I'll move it up next to FOLL_PIN, and get rid of the 2x places in gup.c
-
-
-...
->> +long pin_longterm_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
->> +			       unsigned long start, unsigned long nr_pages,
->> +			       unsigned int gup_flags, struct page **pages,
->> +			       struct vm_area_struct **vmas, int *locked)
->> +{
->> +	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
->> +	if (WARN_ON_ONCE(gup_flags & FOLL_GET))
->> +		return -EINVAL;
->> +
->> +	/*
->> +	 * FIXME: as noted in the get_user_pages_remote() implementation, it
->> +	 * is not yet possible to safely set FOLL_LONGTERM here. FOLL_LONGTERM
->> +	 * needs to be set, but for now the best we can do is a "TODO" item.
->> +	 */
-> 
-> Wait?  Why can't we set FOLL_LONGTERM here?  pin_* are new calls which are not
-> used yet right?
-
-Nope, not quite! See patch #14 ("vfio, mm: pin_longterm_pages (FOLL_PIN) and 
-put_user_page() conversion"), in which I'm converting an existing 
-get_user_pages_remote() caller.
-
-> 
-> You set it in the other new pin_* functions?
-> 
-
-Yes I did. Because those work already in their gup() counterparts.
-
-thanks,
-
-John Hubbard
-NVIDIA
