@@ -2,96 +2,206 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4FBCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2582BCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C0520862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C1620862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:13:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gwicqu8t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfJaMLp (ORCPT
+        id S1726958AbfJaMNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 08:11:45 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10750 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726680AbfJaMLp (ORCPT
+        Thu, 31 Oct 2019 08:13:55 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34411 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726462AbfJaMNy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 08:11:45 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9VC4tMd064161
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 08:11:44 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vyv89xrgm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 08:11:17 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 31 Oct 2019 12:11:06 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 31 Oct 2019 12:11:02 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9VCB1px35651762
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Oct 2019 12:11:01 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 797E35205A;
-        Thu, 31 Oct 2019 12:11:01 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.194.174])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3436452050;
-        Thu, 31 Oct 2019 12:11:00 +0000 (GMT)
-Subject: Re: [PATCH v3 4/9] KEYS: Updated IMA policy functions for handling
- key measurement
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
-Cc:     prsriva@linux.microsoft.com
-Date:   Thu, 31 Oct 2019 08:10:59 -0400
-In-Reply-To: <20191031011910.2574-5-nramas@linux.microsoft.com>
-References: <20191031011910.2574-1-nramas@linux.microsoft.com>
-         <20191031011910.2574-5-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19103112-0016-0000-0000-000002BF7A31
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19103112-0017-0000-0000-00003320DD8A
-Message-Id: <1572523859.5028.46.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-31_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=993 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910310124
+        Thu, 31 Oct 2019 08:13:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572524032;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Mpaz5iScARrazdtK8hPiRCxl6YGYTd9auym8Ja22A8M=;
+        b=Gwicqu8tZGqArw/igMHQjOK1zrP+HpMzumIWmjjhnYWQnzM1O9idlNszUcqWMWi/o9SjEv
+        7JkObkVZOsfztIvY4A02k/yI1TecXJMPuxWs9b9wtVsoWUnl2zTkJsq+v5c1CkXTw2DXzW
+        Z4Lj2R3L/l5lW5Q6etHug7fj3+jT0f8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-146-S5GbFTSyPsCvpNbgGufomQ-1; Thu, 31 Oct 2019 08:13:49 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A4811005500;
+        Thu, 31 Oct 2019 12:13:48 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-40.rdu2.redhat.com [10.10.121.40])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 876905DA7B;
+        Thu, 31 Oct 2019 12:13:46 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH net] rxrpc: Fix handling of last subpacket of jumbo packet
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 31 Oct 2019 12:13:46 +0000
+Message-ID: <157252402623.30237.12555934347853871645.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: S5GbFTSyPsCvpNbgGufomQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for "keyring=".  The patch title should
-reflect it.
+When rxrpc_recvmsg_data() sets the return value to 1 because it's drained
+all the data for the last packet, it checks the last-packet flag on the
+whole packet - but this is wrong, since the last-packet flag is only set on
+the final subpacket of the last jumbo packet.  This means that a call that
+receives its last packet in a jumbo packet won't complete properly.
 
-On Wed, 2019-10-30 at 18:19 -0700, Lakshmi Ramasubramanian wrote:
-> Information regarding what keyrings need to be measured is missing.
-> 
-> A new field in the IMA policy, namely, keyrings is added to
-> convey what keyrings need to be measured.
-> 
-> This patch updates the IMA function to retrieve keyrings from the policy.
+Fix this by having rxrpc_locate_data() determine the last-packet state of
+the subpacket it's looking at and passing that back to the caller rather
+than having the caller look in the packet header.  The caller then needs to
+cache this in the rxrpc_call struct as rxrpc_locate_data() isn't then
+called again for this packet.
 
-Defining a new policy option should be separate from modifying
-functions.
+Fixes: 248f219cb8bc ("rxrpc: Rewrite the data and ack handling code")
+Fixes: e2de6c404898 ("rxrpc: Use info in skbuff instead of reparsing a jumb=
+o packet")
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
 
-Mimi
+ net/rxrpc/ar-internal.h |    1 +
+ net/rxrpc/recvmsg.c     |   18 +++++++++++++-----
+ 2 files changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
+index ecc17dabec8f..7c7d10f2e0c1 100644
+--- a/net/rxrpc/ar-internal.h
++++ b/net/rxrpc/ar-internal.h
+@@ -601,6 +601,7 @@ struct rxrpc_call {
+ =09int=09=09=09debug_id;=09/* debug ID for printks */
+ =09unsigned short=09=09rx_pkt_offset;=09/* Current recvmsg packet offset *=
+/
+ =09unsigned short=09=09rx_pkt_len;=09/* Current recvmsg packet len */
++=09bool=09=09=09rx_pkt_last;=09/* Current recvmsg packet is last */
+=20
+ =09/* Rx/Tx circular buffer, depending on phase.
+ =09 *
+diff --git a/net/rxrpc/recvmsg.c b/net/rxrpc/recvmsg.c
+index a4090797c9b2..8578c39ec839 100644
+--- a/net/rxrpc/recvmsg.c
++++ b/net/rxrpc/recvmsg.c
+@@ -267,11 +267,13 @@ static int rxrpc_verify_packet(struct rxrpc_call *cal=
+l, struct sk_buff *skb,
+  */
+ static int rxrpc_locate_data(struct rxrpc_call *call, struct sk_buff *skb,
+ =09=09=09     u8 *_annotation,
+-=09=09=09     unsigned int *_offset, unsigned int *_len)
++=09=09=09     unsigned int *_offset, unsigned int *_len,
++=09=09=09     bool *_last)
+ {
+ =09struct rxrpc_skb_priv *sp =3D rxrpc_skb(skb);
+ =09unsigned int offset =3D sizeof(struct rxrpc_wire_header);
+ =09unsigned int len;
++=09bool last =3D false;
+ =09int ret;
+ =09u8 annotation =3D *_annotation;
+ =09u8 subpacket =3D annotation & RXRPC_RX_ANNO_SUBPACKET;
+@@ -281,6 +283,8 @@ static int rxrpc_locate_data(struct rxrpc_call *call, s=
+truct sk_buff *skb,
+ =09len =3D skb->len - offset;
+ =09if (subpacket < sp->nr_subpackets - 1)
+ =09=09len =3D RXRPC_JUMBO_DATALEN;
++=09else if (sp->rx_flags & RXRPC_SKB_INCL_LAST)
++=09=09last =3D true;
+=20
+ =09if (!(annotation & RXRPC_RX_ANNO_VERIFIED)) {
+ =09=09ret =3D rxrpc_verify_packet(call, skb, annotation, offset, len);
+@@ -291,6 +295,7 @@ static int rxrpc_locate_data(struct rxrpc_call *call, s=
+truct sk_buff *skb,
+=20
+ =09*_offset =3D offset;
+ =09*_len =3D len;
++=09*_last =3D last;
+ =09call->security->locate_data(call, skb, _offset, _len);
+ =09return 0;
+ }
+@@ -309,7 +314,7 @@ static int rxrpc_recvmsg_data(struct socket *sock, stru=
+ct rxrpc_call *call,
+ =09rxrpc_serial_t serial;
+ =09rxrpc_seq_t hard_ack, top, seq;
+ =09size_t remain;
+-=09bool last;
++=09bool rx_pkt_last;
+ =09unsigned int rx_pkt_offset, rx_pkt_len;
+ =09int ix, copy, ret =3D -EAGAIN, ret2;
+=20
+@@ -319,6 +324,7 @@ static int rxrpc_recvmsg_data(struct socket *sock, stru=
+ct rxrpc_call *call,
+=20
+ =09rx_pkt_offset =3D call->rx_pkt_offset;
+ =09rx_pkt_len =3D call->rx_pkt_len;
++=09rx_pkt_last =3D call->rx_pkt_last;
+=20
+ =09if (call->state >=3D RXRPC_CALL_SERVER_ACK_REQUEST) {
+ =09=09seq =3D call->rx_hard_ack;
+@@ -329,6 +335,7 @@ static int rxrpc_recvmsg_data(struct socket *sock, stru=
+ct rxrpc_call *call,
+ =09/* Barriers against rxrpc_input_data(). */
+ =09hard_ack =3D call->rx_hard_ack;
+ =09seq =3D hard_ack + 1;
++
+ =09while (top =3D smp_load_acquire(&call->rx_top),
+ =09       before_eq(seq, top)
+ =09       ) {
+@@ -356,7 +363,8 @@ static int rxrpc_recvmsg_data(struct socket *sock, stru=
+ct rxrpc_call *call,
+ =09=09if (rx_pkt_offset =3D=3D 0) {
+ =09=09=09ret2 =3D rxrpc_locate_data(call, skb,
+ =09=09=09=09=09=09 &call->rxtx_annotations[ix],
+-=09=09=09=09=09=09 &rx_pkt_offset, &rx_pkt_len);
++=09=09=09=09=09=09 &rx_pkt_offset, &rx_pkt_len,
++=09=09=09=09=09=09 &rx_pkt_last);
+ =09=09=09trace_rxrpc_recvmsg(call, rxrpc_recvmsg_next, seq,
+ =09=09=09=09=09    rx_pkt_offset, rx_pkt_len, ret2);
+ =09=09=09if (ret2 < 0) {
+@@ -396,13 +404,12 @@ static int rxrpc_recvmsg_data(struct socket *sock, st=
+ruct rxrpc_call *call,
+ =09=09}
+=20
+ =09=09/* The whole packet has been transferred. */
+-=09=09last =3D sp->hdr.flags & RXRPC_LAST_PACKET;
+ =09=09if (!(flags & MSG_PEEK))
+ =09=09=09rxrpc_rotate_rx_window(call);
+ =09=09rx_pkt_offset =3D 0;
+ =09=09rx_pkt_len =3D 0;
+=20
+-=09=09if (last) {
++=09=09if (rx_pkt_last) {
+ =09=09=09ASSERTCMP(seq, =3D=3D, READ_ONCE(call->rx_top));
+ =09=09=09ret =3D 1;
+ =09=09=09goto out;
+@@ -415,6 +422,7 @@ static int rxrpc_recvmsg_data(struct socket *sock, stru=
+ct rxrpc_call *call,
+ =09if (!(flags & MSG_PEEK)) {
+ =09=09call->rx_pkt_offset =3D rx_pkt_offset;
+ =09=09call->rx_pkt_len =3D rx_pkt_len;
++=09=09call->rx_pkt_last =3D rx_pkt_last;
+ =09}
+ done:
+ =09trace_rxrpc_recvmsg(call, rxrpc_recvmsg_data_return, seq,
 
