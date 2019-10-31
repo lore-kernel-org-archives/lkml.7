@@ -2,85 +2,142 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A287BCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FB2CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C42F20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CFEC2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:47:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572529654;
+	bh=XtU7maLi0m0RCK6weT51ZGxTR2Gw4KqH0PD4iCIEgc0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=N4SjH2iia0FvykB5F6bM1LQkidobLT9XJ7JTTWFSmQfIV4Ywm667+D45Gept+KQuw
+	 4hdlffZFTvzDd71wPUCiCz7/yWh/4h17n7QhQTYAeawHBilwB1OG/ZUVfnxWcU51iM
+	 1KBrmXEwe7UWiaE8lrljVO3Wg12Wlu3Z/9O/fx04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbfJaNrE (ORCPT
+        id S1727729AbfJaNrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:47:04 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:51615 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727696AbfJaNrE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:47:04 -0400
-Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MY5XR-1iTfHn251x-00YO30; Thu, 31 Oct 2019 14:47:02 +0100
-Received: by mail-qk1-f179.google.com with SMTP id m4so7025100qke.9;
-        Thu, 31 Oct 2019 06:47:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAU6PeP9agN7/anhlm5j4iLIWr18mL9ZZSSTiwGWKlT5gotlXw0G
-        bjeIJp1VUpPLLjGREFwaECh/eSQSoJForsGx0UQ=
-X-Google-Smtp-Source: APXvYqwYoQTEthtnSTVFwt/kx2esJ5/VAbLAMZ9ee49FdSHuytOsmyxwwNYKV3cufux6mKtj2roQiWuAZmQk9D9c/Io=
-X-Received: by 2002:a37:4f0a:: with SMTP id d10mr586266qkb.286.1572529621308;
- Thu, 31 Oct 2019 06:47:01 -0700 (PDT)
+        Thu, 31 Oct 2019 09:47:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727593AbfJaNrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 09:47:33 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 041532080F;
+        Thu, 31 Oct 2019 13:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572529652;
+        bh=XtU7maLi0m0RCK6weT51ZGxTR2Gw4KqH0PD4iCIEgc0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=DHw0qRTLOoUAXD+kXCvniCWMlineL4kp+ZqUpJ+YQ3QI7SeffDzQ+m8z39UbWymF9
+         dmFUhbEjIGsO9MFgRsAjwasYxr5ptjwvqDIFT6aha1QMMlHGmD3ZwLwFcS1OtlLG6r
+         sQlYHmeCQpu7rw8o+znz6eQwjZixq10VSznTekjs=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id C83B7352041F; Thu, 31 Oct 2019 06:47:31 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 06:47:31 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Lai Jiangshan <laijs@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH 02/11] rcu: fix bug when rcu_exp_handler() in nested
+ interrupt
+Message-ID: <20191031134731.GP20975@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191031100806.1326-1-laijs@linux.alibaba.com>
+ <20191031100806.1326-3-laijs@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20191031003154.21969-1-linux@rasmusvillemoes.dk> <04799503-b423-6bc8-71cd-bee54e45883e@rasmusvillemoes.dk>
-In-Reply-To: <04799503-b423-6bc8-71cd-bee54e45883e@rasmusvillemoes.dk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 31 Oct 2019 14:46:41 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a17NbSuWzvjKSJiUkxPLhKbqnAEzJLBKuHkPGGjDA6QtQ@mail.gmail.com>
-Message-ID: <CAK8P3a17NbSuWzvjKSJiUkxPLhKbqnAEzJLBKuHkPGGjDA6QtQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/5] powerpc: make iowrite32be etc. inline
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:mHUdX1ZTCd4q6WBqCcgL4S6XxArpQsw6z1YowM0PkBXHFEHy/QX
- joV9mwTKo/tZbs6eQ0YeXj0GXEH8RynAzN1SMN1WMVzVeA8FMbiJotNEwvh73AD9LcP53wh
- eIWA5JBDUQWBF9Bdon9zFjoyY71b3jLVFsacwlHJR345EptVAuS50Sz/7Bx8jRynEMZRHzx
- qrJU/xKsoied4iZXomdUA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cz6l7kZIsvA=:eKgx9G8HquZtQ8jWbhW2e5
- cwifKxrl5vQBpPy3WeZCUnV9h0dVY+9eC+w4t4JKcNkPtyFjwTN1sw1o7r+Bub2A+BvjkzBNb
- D6+4xVDgOHmbLMDErodIfF8CJZi5Pzqnm7c2drK+EOEh63/TdkqSwNbhC34lDt6DmZL7RTG1F
- OTq/Jxxv382tkcDkhR8yl7ZumqIJQQOqsZFPkrF22iI8opr6Dcv1h9UbXHWdNa0bpOKa7JMW9
- 8XOl+Baj6rP3wKbtpJoNkFzIBrM9QmK27WBCw6aAJo2mGcbdXhXo3/9iUBfeMrpes5+at5nkH
- j3BjlgJRZn6jLERQxhT6tlm90PeXDvizIZNqHq61rUHWxD2fW+BZwVbzdctY9rhnumLYZ1wEq
- 9Mr6dIXicefuANMXxQpgqpnTmMbvqyLr/6CTOiTz6GlKZQL/4i+bMJMg18WICyJCtF2gbVvIb
- gXv3OHbjsNI+gOOXOeYDppOTwPf7HreOYwZ70rb+ocXCpQIhb/jA5yvkeSkzxY2X/bP0N+HO/
- LLCcpc2Xqc+34Un6aOvGtwX10u0RyYUfAn8PXfx9ZFYIB/CXTU6pq1OVEyfJ3LPHndx7uV9vo
- YxULOYqlHm0YpAB1q3mTbJd/SQCCv1LI3ZtciYm2zM+oBKrrFR9I5cSua3aSI4qDUzEu/jGva
- NQe5/Ib2PLl5ZYogKhh+c7j1sQwZFhdezKirLyEnak1DZXPJA3+3pEoXDAs3A1vz9f2WTATNn
- neGr8+vjnufMBg9LD3Hc4YT2zYsM/oXdPILVnnKq7Q/PjF8igIecNboG4NJ8dzbGgSHQGCdjR
- bu4BeutPTFOmirac8KuHNN4VDOIFerbsHPqcfu5EU3duEIJMLXg5VkBwtgj5oAeUFfjAQoaGd
- X0KSpH9EceFpi07bj+lg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031100806.1326-3-laijs@linux.alibaba.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 8:39 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
-> On 31/10/2019 01.31, Rasmus Villemoes wrote:
->
-> So sorry for the noise. Maybe I'll just have to bite the bullet and
-> introduce private qe_iowrite32be etc. and define them based on $ARCH.
-> Any better ideas would be much appreciated.
+On Thu, Oct 31, 2019 at 10:07:57AM +0000, Lai Jiangshan wrote:
+> These is a possible bug (although which I can't triger yet)
+> since 2015 8203d6d0ee78
+> (rcu: Use single-stage IPI algorithm for RCU expedited grace period)
+> 
+>  rcu_read_unlock()
+>   ->rcu_read_lock_nesting = -RCU_NEST_BIAS;
+>   interrupt(); // before or after rcu_read_unlock_special()
+>    rcu_read_lock()
+>     fetch some rcu protected pointers
+>     // exp GP starts in other cpu.
+>     some works
+>     NESTED interrupt for rcu_exp_handler();
+>       report exp qs! BUG!
 
-We use that approach in a number of drivers already, I think it's ok to add it
-to another driver. Just make the powerpc case use out_be32 and everything
-else use iowrite32_be. You may also be able to enable the driver for
-CONFIG_COMPILE_TEST after that.
+Why would a quiescent state for the expedited grace period be reported
+here?  This CPU is still in an RCU read-side critical section, isn't it?
 
-     Arnd
+							Thanx, Paul
+
+>     // exp GP completes and pointers are freed in other cpu
+>     some works with the pointers. BUG
+>    rcu_read_unlock();
+>   ->rcu_read_lock_nesting = 0;
+> 
+> Although rcu_sched_clock_irq() can be in nested interrupt,
+> there is no such similar bug since special.b.need_qs
+> can only be set when ->rcu_read_lock_nesting > 0
+> 
+> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+> ---
+>  kernel/rcu/tree_exp.h    | 5 +++--
+>  kernel/rcu/tree_plugin.h | 9 ++++++---
+>  2 files changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+> index 6dec21909b30..c0d06bce35ea 100644
+> --- a/kernel/rcu/tree_exp.h
+> +++ b/kernel/rcu/tree_exp.h
+> @@ -664,8 +664,9 @@ static void rcu_exp_handler(void *unused)
+>  	 * Otherwise, force a context switch after the CPU enables everything.
+>  	 */
+>  	rdp->exp_deferred_qs = true;
+> -	if (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
+> -	    WARN_ON_ONCE(rcu_dynticks_curr_cpu_in_eqs())) {
+> +	if (rcu_preempt_need_deferred_qs(t) &&
+> +	    (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
+> +	    WARN_ON_ONCE(rcu_dynticks_curr_cpu_in_eqs()))) {
+>  		rcu_preempt_deferred_qs(t);
+>  	} else {
+>  		set_tsk_need_resched(t);
+> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> index d4c482490589..59ef10da1e39 100644
+> --- a/kernel/rcu/tree_plugin.h
+> +++ b/kernel/rcu/tree_plugin.h
+> @@ -549,9 +549,12 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
+>   */
+>  static bool rcu_preempt_need_deferred_qs(struct task_struct *t)
+>  {
+> -	return (__this_cpu_read(rcu_data.exp_deferred_qs) ||
+> -		READ_ONCE(t->rcu_read_unlock_special.s)) &&
+> -	       t->rcu_read_lock_nesting <= 0;
+> +	return (__this_cpu_read(rcu_data.exp_deferred_qs) &&
+> +		(!t->rcu_read_lock_nesting ||
+> +		 t->rcu_read_lock_nesting == -RCU_NEST_BIAS))
+> +		||
+> +		(READ_ONCE(t->rcu_read_unlock_special.s) &&
+> +		 t->rcu_read_lock_nesting <= 0);
+>  }
+>  
+>  /*
+> -- 
+> 2.20.1
+> 
