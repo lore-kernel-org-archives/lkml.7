@@ -2,98 +2,116 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECFBCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E24CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42ABF2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1F120873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:31:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfJaKan (ORCPT
+        id S1727131AbfJaKbY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:30:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51478 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726867AbfJaKam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:30:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 89138B38E;
-        Thu, 31 Oct 2019 10:30:40 +0000 (UTC)
-Message-ID: <8c525f66c1c0d9f07e0cff4948d1ec3229756220.camel@suse.de>
-Subject: Re: [PATCH RFC 1/5] dma/direct: turn ARCH_ZONE_DMA_BITS into a
- variable
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>, mbrugger@suse.com,
-        f.fainelli@gmail.com, wahrenst@gmx.net,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org
-Date:   Thu, 31 Oct 2019 11:30:36 +0100
-In-Reply-To: <20191030214914.GA15939@infradead.org>
-References: <20191014183108.24804-1-nsaenzjulienne@suse.de>
-         <20191014183108.24804-2-nsaenzjulienne@suse.de>
-         <20191030214914.GA15939@infradead.org>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-c/h1zpmiYL5xA/R3DgLo"
-User-Agent: Evolution 3.34.1 
+        Thu, 31 Oct 2019 06:31:24 -0400
+Received: from mga06.intel.com ([134.134.136.31]:10024 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727021AbfJaKbX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 06:31:23 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 03:31:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
+   d="scan'208";a="375198433"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga005.jf.intel.com with ESMTP; 31 Oct 2019 03:31:22 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 31 Oct 2019 03:31:21 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 31 Oct 2019 03:31:21 -0700
+Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 31 Oct 2019 03:31:21 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.127]) by
+ SHSMSX152.ccr.corp.intel.com ([169.254.6.2]) with mapi id 14.03.0439.000;
+ Thu, 31 Oct 2019 18:31:20 +0800
+From:   "Kang, Luwei" <luwei.kang@intel.com>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>
+Subject: RE: [PATCH v1 8/8] perf/x86: Add event owner check when PEBS output
+ to Intel PT
+Thread-Topic: [PATCH v1 8/8] perf/x86: Add event owner check when PEBS
+ output to Intel PT
+Thread-Index: AQHVjLd7YuomyMFGekW7/CerqBL266dxNysAgAFIGiD///EXAIABvUSA//+vdgCAALWpgA==
+Date:   Thu, 31 Oct 2019 10:31:20 +0000
+Message-ID: <82D7661F83C1A047AF7DC287873BF1E1738363E9@SHSMSX104.ccr.corp.intel.com>
+References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
+ <1572217877-26484-9-git-send-email-luwei.kang@intel.com>
+ <20191029151302.GO4097@hirez.programming.kicks-ass.net>
+ <82D7661F83C1A047AF7DC287873BF1E173835B6A@SHSMSX104.ccr.corp.intel.com>
+ <20191030095400.GU4097@hirez.programming.kicks-ass.net>
+ <82D7661F83C1A047AF7DC287873BF1E173836317@SHSMSX104.ccr.corp.intel.com>
+ <87bltxfjo3.fsf@ashishki-desk.ger.corp.intel.com>
+In-Reply-To: <87bltxfjo3.fsf@ashishki-desk.ger.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZWIxMzBhNzctZTg2ZS00OTkwLTlmZGUtZTg1N2ZiZWQyNGMzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiUit0SlZZVGtzeFZaQnhUV01YeXRzOW9mMHV4aFNKamM0QU9sZ05FOXI5WHYwaEFLRFNYcnFDVkVyN0VKNEVFdCJ9
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> >> Then how does KVM deal with the host using PT? You can't just steal PT.
+> >
+> > Intel PT in virtualization can work in system and host_guest mode.
+> > In system mode (default), the trace produced by host and guest will be saved in host PT buffer. Intel PT will not be exposed to guest
+> in this mode.
+> >  In host_guest mode, Intel PT will be exposed to guest and guest can use PT like native. The value of host PT register will be saved
+> and guest PT register value will be restored during VM-entry. Both trace of host and guest are exported to their respective PT buffer.
+> The host PT buffer not include guest trace in this mode.
+> 
+> IOW, it will steal PT from the host.
 
---=-c/h1zpmiYL5xA/R3DgLo
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Alexander,
+    The host buffer does not include guest packets in this mode because the guest trace will be saved in guest PT buffer in this mode. You can think it is stealing. 
 
-On Wed, 2019-10-30 at 14:49 -0700, Christoph Hellwig wrote:
-> On Mon, Oct 14, 2019 at 08:31:03PM +0200, Nicolas Saenz Julienne wrote:
-> > Some architectures, notably ARM, are interested in tweaking this
-> > depending on their runtime DMA addressing limitations.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->=20
-> Do you want me to pick this up for the 5.5 dma-mapping tree, or do you
-> want me to wait for the rest to settle?
-
-I'd say take it, this will be ultimately needed once we push forward with A=
-RM.
-
-
---=-c/h1zpmiYL5xA/R3DgLo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl26t8wACgkQlfZmHno8
-x/6Bvgf8CKw0zktkkeQiMRg7+/wfA7jkI0EdKaeR38AVackkoByc3ab5S2A4Qepy
-XpQVhaciStaOBkqCzcHLVJnucMd/6d9YH+49GubC64NT12ukfjVwUBbfzgVHTJH2
-SOf3YpmsDw+8RokSUatZQZwY4D+b+jezcgK12EYOj244ip65tNEnM87G5ZUZVG1U
-2rXnFOH4ne4LmUn6u6Gdgydn5j7pSJnvYH0U0DRU0PLK7kV2uxOrllqSnvdENiRz
-QLSjWe2SON35T0OsddsecCq/FWrNzYBYa6bEfc2NsA0qdNAEJVaXQEn3p9bROBPw
-I2SkWEPTaKCtL9hUC1eiqUx1nLTY8g==
-=5BcM
------END PGP SIGNATURE-----
-
---=-c/h1zpmiYL5xA/R3DgLo--
-
+> 
+> Regards,
+> --
+> Alex
