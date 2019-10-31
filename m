@@ -2,115 +2,123 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE65CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C622CCA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0912083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E542083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:13:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="GR9/xp6H"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c14BIyVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfJaIM3 (ORCPT
+        id S1726994AbfJaIN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 04:12:29 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38178 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbfJaIM2 (ORCPT
+        Thu, 31 Oct 2019 04:13:26 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43967 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbfJaIN0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 04:12:28 -0400
-Received: by mail-io1-f67.google.com with SMTP id u8so5693385iom.5
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 01:12:26 -0700 (PDT)
+        Thu, 31 Oct 2019 04:13:26 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n1so5136360wra.10
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 01:13:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=rOCUGAkw41wVs89+EhO5yewU1a4RTtYYZqQvXNtrcs0=;
-        b=GR9/xp6H+4NBpu+XucDM5RhhleRHZ/B36we0Tx9iqC0S9iWspFCAyw35gLfklGkCwD
-         VwXz2x3iqgf4+egjISYf6W4F1r5LHTnnNd/hl1pMf8CaAnU4gK7E6d0ypCSt47LXJq4B
-         lDPLtGzh4baJj4iXZDxDNVz2fvlhG0F01/GAcbza8d1rnx7s6+Vj/KXMJlM6ZYxPnhTP
-         MxyiRodNGpY4zXxB+D6KALdMtbKmAPWUmeHKpKvU+IiLpSTjBRh+E1PxjRFu73Ud6nmI
-         3So3HJcb5HBwkKEYIhk9Bk6KTaoEkz53UcPNUlbq0SWQdCpYXw05aKhxhrn+zlm5JWX/
-         9AMw==
+         :cc;
+        bh=cVTpH9x5w5p5t2TLyqv/I4Qxh336u+KvXbCEegt8Uv0=;
+        b=c14BIyVgJODeeLH4b+TJ4cZ3xE088RbzxSHE1oTs79eyAHCgcKk3JXB0jSQIKMQBnF
+         14T+VdlXD9Yhegoso0KsMVDY8BamFtWhmdyNa8fck76+mXM51IIrNkdguUrXkvA4gtj0
+         lb1GzN5v4I9LbC+uEo91w4pMPlRwq5lQlQ1TYYB7KJT1hmZQQCsC96cvUOG6Pwg0ICSm
+         P1NMe+P4DWXxpyUfW2mH9OoZ6RS2AylG1gmVsVTuUOrNiQXuC+S1BYcijFNSWxXd2n3D
+         4prXedSxCp0ksj6cqn8BrOVUvrR9qh2IlvII0AkqKmYmSBuB3BB7RSvVICzQFd33hlME
+         x5Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=rOCUGAkw41wVs89+EhO5yewU1a4RTtYYZqQvXNtrcs0=;
-        b=ilzfCMKWCHLV9zwK9xQLei99gyg7JbZTGP0gFmYILCRyCHvwkEmq6+ePBKVUflJCpx
-         JXH7Gn41DkT3Pcu2cNLmuGS5xnAPfsNRbSa/QNDdSDROlXbK1wAdrBlEkHVz1fQAvNFr
-         CScHbY2S81bEEKmorT9YLc7HnbErXJn/nIRuJ7nZlFv9Oo8ZoUgQRHwEm1GrDwR2JV3b
-         oNwNbKXsLD3Zexn+IESplSTfUeuBYuEMmQ5qTD/srSUhlO23lFU0/5V5norihY9kMifa
-         5qKtrPAfYLFCl+3woyHCJMKRJM16OOkJp3xegG7IqY9UfzEbuF8HMMDqX8cI6upGsHEo
-         IBBg==
-X-Gm-Message-State: APjAAAWtis5W3t3ieHp4mguyblz65XUzss0EAM2NkVIxrFE/0ZEOe3UB
-        3J5eYTFVXxep7JwfXXMBz5i4Ug8NHSFm7NtCE7INJg==
-X-Google-Smtp-Source: APXvYqzCS2TeB4sqdrLijb5Y1d6jjSdnZ6MQdPlO/+Ixz45cbwTzvFNMP7rQQMznswokntR4fKoTP6lgkkSuzK7nlgY=
-X-Received: by 2002:a02:742a:: with SMTP id o42mr2364jac.24.1572509546182;
- Thu, 31 Oct 2019 01:12:26 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=cVTpH9x5w5p5t2TLyqv/I4Qxh336u+KvXbCEegt8Uv0=;
+        b=aQDzHdLIKOKe9bpEwnH8cXU3Dbq2HLoWoEp4fevcYsK1ogYyGDkj7lyleEdol0h2uK
+         UBwkdiBALbvSQNBlBaudiPfmfvpWJTHJLGHcHjUct6se9C7J10eZ/rgO8kkm+/fJRVyD
+         G+GqHJNkmyV0QVM3duEnnX2ivDIpsdYRHaCdkDOVolDOer0MNbn4q839QngL4fcisjFX
+         xabuYFhGmaWqWqu9grat6MX3TnFc+9atMbABdL2LuR5YHBI9/cyctg1i9KPI2Q09gYie
+         GTTrN++wKVNsTQo05oxiuLkpYMVyUaLfm3dIjyUcfjlaVskgV2BXnktUtBXOVRcSZwKj
+         MO4w==
+X-Gm-Message-State: APjAAAW04okis9TYXpPNt8x9US646WPLQt3gHtYqoLeV1uIHdpbaCEqA
+        8wLImQf35k7cgy9nKbdRA2CR6s/cF+sBBYb6e4MrLA==
+X-Google-Smtp-Source: APXvYqz6adAsRCPRenCDRosUSP27YreZHLiRCFj8jQzS6Tz09/zC+Fh0l+FEOJ0uIHx4MuiYSdWocUlHuB9/hM3TrEg=
+X-Received: by 2002:a5d:6b0a:: with SMTP id v10mr3981224wrw.32.1572509602778;
+ Thu, 31 Oct 2019 01:13:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191006053916.8849-1-brgl@bgdev.pl> <CAMRc=Me3Q=67fCDrFM38LAGXCd+apJybLYVfyrfwmwYa5L1CmQ@mail.gmail.com>
- <CAK8P3a3tUg4SBtO0xb2GAHfegp23WF4TLymzqFfra2-fGLRO7w@mail.gmail.com>
- <CAMRc=Me8g2gFiag0UQwuu4UZONcowQw900+MUbGF+4-E0z09Zg@mail.gmail.com>
- <CAK8P3a2mh+Eh+W1GFL2Mi5R3t55SRwWyXW_iBxXB-nBhdCO8LA@mail.gmail.com>
- <20191030213555.GA25515@infradead.org> <CAMpxmJXOANjxZgTcReRmd6TGaUKNi=8Cxwj4K69aRY=bF3jDiw@mail.gmail.com>
-In-Reply-To: <CAMpxmJXOANjxZgTcReRmd6TGaUKNi=8Cxwj4K69aRY=bF3jDiw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 31 Oct 2019 09:12:15 +0100
-Message-ID: <CAMRc=MeYe4X1zXAnsK_cAYfcAE-t3X0nW7+NbsVtsBU4f+C_KA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] drivers: add new variants of devm_platform_ioremap_resource()
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-doc <linux-doc@vger.kernel.org>,
+References: <aaf0f585-3a06-8af1-e2f1-ab301e560d49@huawei.com> <32b39396-d514-524f-a85c-3bc627454ba7@huawei.com>
+In-Reply-To: <32b39396-d514-524f-a85c-3bc627454ba7@huawei.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 31 Oct 2019 09:13:10 +0100
+Message-ID: <CAKv+Gu8A+kDK0Jtmu6oOO6jhgFkgYQ7=4tw_eMStmYPMkMp6iQ@mail.gmail.com>
+Subject: Re: [PATCH v3] crypto: arm64/aes-neonbs - add return value of
+ skcipher_walk_done() in __xts_crypt()
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
+        hushiyuan@huawei.com,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 31 pa=C5=BA 2019 o 07:41 Bartosz Golaszewski
-<bgolaszewski@baylibre.com> napisa=C5=82(a):
+On Thu, 31 Oct 2019 at 08:02, Yunfeng Ye <yeyunfeng@huawei.com> wrote:
 >
-> =C5=9Br., 30 pa=C5=BA 2019 o 22:35 Christoph Hellwig <hch@infradead.org> =
-napisa=C5=82(a):
-> >
-> > On Mon, Oct 21, 2019 at 09:29:30PM +0200, Arnd Bergmann wrote:
-> > > > Is Christoph's work in next? The series doesn't apply cleanly on ne=
-xt,
-> > > > I needed to fix a couple conflicts. What branch should I rebase it =
-on
-> > > > before resending?
-> > >
-> > > Not sure, maybe Christoph can comment.
-> > >
-> > > Your patches would best go through the char-misc tree and be based
-> > > on top of that, for Christoph's I think the idea is to have some go
-> > > through the architecture maintainer trees, and have whatever is
-> > > left go through my asm-generic tree.
-> >
-> > Actually I thought of just doing an ioremap tree for this merge window.
-> >
-> > What kind of changes does Bartosz have?  I'm kinda missing the context
-> > here.
+> A warning is found by the static code analysis tool:
+>   "Identical condition 'err', second condition is always false"
 >
-> Just the series you've responded to here, but I don't think it should
-> conflict with your changes (not very much anyway).
+> Fix this by adding return value of skcipher_walk_done().
 >
-> Greg: can this be picked up into char-misc?
->
-> Bart
+> Fixes: 67cfa5d3b721 ("crypto: arm64/aes-neonbs - implement ciphertext stealing for XTS")
+> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-I refer of course to the re-sent version rebased on top of char-misc.
+Please don't send the exact same patch twice, and when you feel the
+need to do so, just ask instead whether your patch was received or
+not.
 
-Bart
+I'm sure Herbert will pick it up shortly.
+
+> ---
+> v2 -> v3:
+>  - add "Acked-by:"
+>
+> v1 -> v2:
+>  - update the subject and comment
+>  - add return value of skcipher_walk_done()
+>
+>  arch/arm64/crypto/aes-neonbs-glue.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/crypto/aes-neonbs-glue.c b/arch/arm64/crypto/aes-neonbs-glue.c
+> index ea873b8904c4..e3e27349a9fe 100644
+> --- a/arch/arm64/crypto/aes-neonbs-glue.c
+> +++ b/arch/arm64/crypto/aes-neonbs-glue.c
+> @@ -384,7 +384,7 @@ static int __xts_crypt(struct skcipher_request *req, bool encrypt,
+>                         goto xts_tail;
+>
+>                 kernel_neon_end();
+> -               skcipher_walk_done(&walk, nbytes);
+> +               err = skcipher_walk_done(&walk, nbytes);
+>         }
+>
+>         if (err || likely(!tail))
+> --
+> 2.7.4.3
+>
+>
