@@ -2,153 +2,159 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B291FCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2086BCA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3AE2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F61208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbfJaPNv (ORCPT
+        id S1728287AbfJaPOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 11:13:51 -0400
-Received: from mout2.fh-giessen.de ([212.201.18.46]:36144 "EHLO
-        mout2.fh-giessen.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfJaPNv (ORCPT
+        Thu, 31 Oct 2019 11:14:40 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:1547 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727511AbfJaPOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 11:13:51 -0400
-Received: from mx3.fh-giessen.de ([212.201.18.28])
-        by mout2.fh-giessen.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
-        id 1iQC8v-0005rm-DU; Thu, 31 Oct 2019 16:13:45 +0100
-Received: from mailgate-1.its.fh-giessen.de ([212.201.18.15])
-        by mx3.fh-giessen.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
-        id 1iQC8v-00FeOP-Ac; Thu, 31 Oct 2019 16:13:45 +0100
-Received: from p549d322d.dip0.t-ipconnect.de ([84.157.50.45] helo=zwei.fritz.box)
-        by mailgate-1.its.fh-giessen.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
-        id 1iQC8v-0003jc-5A; Thu, 31 Oct 2019 16:13:45 +0100
-Subject: Re: e1000e regression - 5.4rc1
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     jeffrey.t.kirsher@intel.com, intel-wired-lan@lists.osuosl.org,
-        linux-kernel@vger.kernel.org, tobias.klausmann@freenet.de
-References: <171f0c61-73a2-81c2-5c8a-7c140f548803@mni.thm.de>
- <56242322-D549-4E23-97AB-153CC392B107@canonical.com>
- <76fc2204-0786-03b3-773d-110912d48168@mni.thm.de>
- <2994F2A2-D844-40B0-9971-C002E5EC49CD@canonical.com>
- <940da657-a8af-ccde-34ca-7a93fad94567@mni.thm.de>
- <ADFA5FA0-ED36-4313-9CDD-602946FEBA67@canonical.com>
-From:   Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
-Message-ID: <2906026b-15e5-fd34-0311-da28164f1196@mni.thm.de>
-Date:   Thu, 31 Oct 2019 16:13:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:72.0) Gecko/20100101
- Thunderbird/72.0a1
+        Thu, 31 Oct 2019 11:14:40 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TgnJPtZ_1572534863;
+Received: from 192.168.2.229(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0TgnJPtZ_1572534863)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 31 Oct 2019 23:14:24 +0800
+Subject: Re: [PATCH 02/11] rcu: fix bug when rcu_exp_handler() in nested
+ interrupt
+To:     paulmck@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+References: <20191031100806.1326-1-laijs@linux.alibaba.com>
+ <20191031100806.1326-3-laijs@linux.alibaba.com>
+ <20191031134731.GP20975@paulmck-ThinkPad-P72>
+ <20191031143119.GA15954@paulmck-ThinkPad-P72>
+From:   Lai Jiangshan <laijs@linux.alibaba.com>
+Message-ID: <6b621228-4cab-6e2c-9912-cddc56ad6775@linux.alibaba.com>
+Date:   Thu, 31 Oct 2019 23:14:23 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <ADFA5FA0-ED36-4313-9CDD-602946FEBA67@canonical.com>
+In-Reply-To: <20191031143119.GA15954@paulmck-ThinkPad-P72>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
 
-On 28.10.19 08:07, Kai-Heng Feng wrote:
-> Hi Tobias,
->
->> On Oct 9, 2019, at 02:28, Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de> wrote:
->>
->> Hi,
->>
->> On 08.10.19 09:46, Kai-Heng Feng wrote:
->>> Hi Tobias,
+On 2019/10/31 10:31 下午, Paul E. McKenney wrote:
+> On Thu, Oct 31, 2019 at 06:47:31AM -0700, Paul E. McKenney wrote:
+>> On Thu, Oct 31, 2019 at 10:07:57AM +0000, Lai Jiangshan wrote:
+>>> These is a possible bug (although which I can't triger yet)
+>>> since 2015 8203d6d0ee78
+>>> (rcu: Use single-stage IPI algorithm for RCU expedited grace period)
 >>>
->>>> On Oct 5, 2019, at 03:52, Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de> wrote:
->>>>
->>>> Hello,
->>>>
->>>> On 04.10.19 19:36, Kai-Heng Feng wrote:
->>>>> Hi Tobias
->>>>>
->>>>>> On Oct 4, 2019, at 18:34, Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de> wrote:
->>>>>>
->>>>>> Hello all,
->>>>>>
->>>>>> While testing the 5.4rc1 release, i noticed my Ethernet never coming fully up, seemingly having a timeout problem. While bisecting this i landed at the commit dee23594d587386e9fda76732aa5f5a487709510 ("e1000e: Make speed detection on hotplugging cable more reliable") as the first bad commit. And indeed just reverting the commit on top of 5.4rc1 resolves the problem. Let me know if you have further questions, or patches to test!
->>>>> Is runtime PM enabled (i.e. "power/control" = auto)?
->>>> Yes it is set to auto.
->>> Is something like TLP or `powertop --auto-tune` is in use?
+>>>   rcu_read_unlock()
+>>>    ->rcu_read_lock_nesting = -RCU_NEST_BIAS;
+>>>    interrupt(); // before or after rcu_read_unlock_special()
+>>>     rcu_read_lock()
+>>>      fetch some rcu protected pointers
+>>>      // exp GP starts in other cpu.
+>>>      some works
+>>>      NESTED interrupt for rcu_exp_handler();
+> 
+> Also, which platforms support nested interrupts?  Last I knew, this was
+> prohibited.
+> 
+>>>        report exp qs! BUG!
+>>
+>> Why would a quiescent state for the expedited grace period be reported
+>> here?  This CPU is still in an RCU read-side critical section, isn't it?
+> 
+> And I now see what you were getting at here.  Yes, the current code
+> assumes that interrupt-disabled regions, like hardware interrupt
+> handlers, cannot be interrupted.  But if interrupt-disabled regions such
+> as hardware interrupt handlers can be interrupted (as opposed to being
+> NMIed), wouldn't that break a whole lot of stuff all over the place in
+> the kernel?  So that sounds like an arch bug to me.
+> 
+
+I don't know when I started always assuming hardware interrupt
+handler can be nested by (other) interrupt. I can't find any
+documents say Linux don't allow nested interrupt handler.
+Google search suggests the opposite.
+
+grep -rIni nested Documentation/memory-barriers.txt Documentation/x86/
+It still have some words about nested interrupt handler.
+
+The whole patchset doesn't depend on this patch, and actually
+it is reverted later in the patchset. Dropping this patch
+can be an option for next round.
+
+thanks
+Lai
+
+> 							Thanx, Paul
+> 
+>>>      // exp GP completes and pointers are freed in other cpu
+>>>      some works with the pointers. BUG
+>>>     rcu_read_unlock();
+>>>    ->rcu_read_lock_nesting = 0;
 >>>
->>> Do you still see the issue when "power/control" keeps at "on"?
->>
->> With "power/control" set to "on" it does still cycle between up and down. But yes i have upower and powerdevil running. After killing them the connection comes up with "power/control" set to "on", yet not with "auto".
-> Can you please give this branch a try:
-> https://git.kernel.org/pub/scm/linux/kernel/git/jkirsher/next-queue.git/log/?h=dev-queue
-
-
-Compiled and tested as is (not having set /power/control) the up and 
-down cycle is still persistent.
-
-Greetings,
-
-Tobias
-
-
->
-> Kai-Heng
->
->>
->> Greetings,
->>
->> Tobias
->>
->>
->>> Kai-Heng
+>>> Although rcu_sched_clock_irq() can be in nested interrupt,
+>>> there is no such similar bug since special.b.need_qs
+>>> can only be set when ->rcu_read_lock_nesting > 0
 >>>
->>>>> Also please attach full dmesg, thanks!
->>>> Attached,
->>>>
->>>> Tobias
->>>>
->>>>> Kai-Heng
->>>>>
->>>>>> Greetings,
->>>>>>
->>>>>> Tobias
->>>>>>
->>>>>>
->>>>>> lspci:
->>>>>>
->>>>>> 00:19.0 Ethernet controller: Intel Corporation 82579V Gigabit Network Connection (rev 06)
->>>>>>          DeviceName:  Onboard LAN
->>>>>>          Subsystem: ASUSTeK Computer Inc. P8P67 Deluxe Motherboard
->>>>>>          Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
->>>>>>          Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
->>>>>>          Latency: 0
->>>>>>          Interrupt: pin A routed to IRQ 56
->>>>>>          Region 0: Memory at fbf00000 (32-bit, non-prefetchable) [size=128K]
->>>>>>          Region 1: Memory at fbf28000 (32-bit, non-prefetchable) [size=4K]
->>>>>>          Region 2: I/O ports at f040 [size=32]
->>>>>>          Capabilities: [c8] Power Management version 2
->>>>>>                  Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
->>>>>>                  Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=1 PME-
->>>>>>          Capabilities: [d0] MSI: Enable+ Count=1/1 Maskable- 64bit+
->>>>>>                  Address: 00000000fee00698  Data: 0000
->>>>>>          Capabilities: [e0] PCI Advanced Features
->>>>>>                  AFCap: TP+ FLR+
->>>>>>                  AFCtrl: FLR-
->>>>>>                  AFStatus: TP-
->>>>>>          Kernel driver in use: e1000e
->>>>>>          Kernel modules: e1000e
->>>>>>
->>>> <dmesg.txt>
+>>> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+>>> ---
+>>>   kernel/rcu/tree_exp.h    | 5 +++--
+>>>   kernel/rcu/tree_plugin.h | 9 ++++++---
+>>>   2 files changed, 9 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+>>> index 6dec21909b30..c0d06bce35ea 100644
+>>> --- a/kernel/rcu/tree_exp.h
+>>> +++ b/kernel/rcu/tree_exp.h
+>>> @@ -664,8 +664,9 @@ static void rcu_exp_handler(void *unused)
+>>>   	 * Otherwise, force a context switch after the CPU enables everything.
+>>>   	 */
+>>>   	rdp->exp_deferred_qs = true;
+>>> -	if (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
+>>> -	    WARN_ON_ONCE(rcu_dynticks_curr_cpu_in_eqs())) {
+>>> +	if (rcu_preempt_need_deferred_qs(t) &&
+>>> +	    (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
+>>> +	    WARN_ON_ONCE(rcu_dynticks_curr_cpu_in_eqs()))) {
+>>>   		rcu_preempt_deferred_qs(t);
+>>>   	} else {
+>>>   		set_tsk_need_resched(t);
+>>> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+>>> index d4c482490589..59ef10da1e39 100644
+>>> --- a/kernel/rcu/tree_plugin.h
+>>> +++ b/kernel/rcu/tree_plugin.h
+>>> @@ -549,9 +549,12 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
+>>>    */
+>>>   static bool rcu_preempt_need_deferred_qs(struct task_struct *t)
+>>>   {
+>>> -	return (__this_cpu_read(rcu_data.exp_deferred_qs) ||
+>>> -		READ_ONCE(t->rcu_read_unlock_special.s)) &&
+>>> -	       t->rcu_read_lock_nesting <= 0;
+>>> +	return (__this_cpu_read(rcu_data.exp_deferred_qs) &&
+>>> +		(!t->rcu_read_lock_nesting ||
+>>> +		 t->rcu_read_lock_nesting == -RCU_NEST_BIAS))
+>>> +		||
+>>> +		(READ_ONCE(t->rcu_read_unlock_special.s) &&
+>>> +		 t->rcu_read_lock_nesting <= 0);
+>>>   }
+>>>   
+>>>   /*
+>>> -- 
+>>> 2.20.1
+>>>
