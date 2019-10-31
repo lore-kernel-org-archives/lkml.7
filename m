@@ -2,260 +2,97 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD29CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D37CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31A2D20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F24EC20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfJaNdd (ORCPT
+        id S1727539AbfJaNdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:33:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:48758 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726728AbfJaNdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:33:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 055861FB;
-        Thu, 31 Oct 2019 06:33:30 -0700 (PDT)
-Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8741C3F71E;
-        Thu, 31 Oct 2019 06:33:27 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Steven Price <steven.price@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH] mm: ptdump: Reduce level numbers by 1 in note_page()
-Date:   Thu, 31 Oct 2019 13:33:22 +0000
-Message-Id: <20191031133322.3239-1-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <40956d62-241c-6685-72f1-bfc01183141e@arm.com>
-References: <40956d62-241c-6685-72f1-bfc01183141e@arm.com>
+        Thu, 31 Oct 2019 09:33:46 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43896 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726728AbfJaNdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 09:33:46 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 59160C34EDB324E71694;
+        Thu, 31 Oct 2019 21:33:44 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 31 Oct 2019
+ 21:33:40 +0800
+Subject: Re: [PATCH -next] gpu: host1x: Fix compile test failure
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <mperttunen@nvidia.com>, <arnd@arndb.de>, <seanpaul@chromium.org>
+References: <20191030135458.27960-1-yuehaibing@huawei.com>
+ <283304d6-bf23-8107-29b6-9f3e7dda943c@gmail.com>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <cb0a976a-0148-d554-15ff-5f4059eccd37@huawei.com>
+Date:   Thu, 31 Oct 2019 21:33:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
+In-Reply-To: <283304d6-bf23-8107-29b6-9f3e7dda943c@gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rather than having to increment the 'depth' number by 1 in
-ptdump_hole(), let's change the meaning of 'level' in note_page() since
-that makes the code simplier.
+On 2019/10/31 6:26, Dmitry Osipenko wrote:
+> 30.10.2019 16:54, YueHaibing пишет:
+>> If IOMMU_SUPPORT is not set, but IOMMU_IOVA is m and
+>> COMPILE_TEST is y, building fails:
+>>
+>> drivers/gpu/host1x/dev.o: In function `host1x_remove':
+>> dev.c:(.text+0x624): undefined reference to `put_iova_domain'
+>> dev.c:(.text+0x624): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `put_iova_domain'
+>> dev.c:(.text+0x62c): undefined reference to `iova_cache_put'
+>> dev.c:(.text+0x62c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `iova_cache_put'
+>>
+>> Select IOMMU_IOVA while COMPILE_TEST is set to fix this.
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Fixes: 52499a6ad2ae ("gpu: host1x: select IOMMU_IOVA")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  drivers/gpu/host1x/Kconfig | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/host1x/Kconfig b/drivers/gpu/host1x/Kconfig
+>> index cf987a3..354232d 100644
+>> --- a/drivers/gpu/host1x/Kconfig
+>> +++ b/drivers/gpu/host1x/Kconfig
+>> @@ -2,7 +2,7 @@
+>>  config TEGRA_HOST1X
+>>  	tristate "NVIDIA Tegra host1x driver"
+>>  	depends on ARCH_TEGRA || (ARM && COMPILE_TEST)
+>> -	select IOMMU_IOVA if IOMMU_SUPPORT
+>> +	select IOMMU_IOVA if (IOMMU_SUPPORT || COMPILE_TEST)
+>>  	help
+>>  	  Driver for the NVIDIA Tegra host1x hardware.
+>>  
+>>
+> 
+> It should be better to unconditionally select IOMMU_IOVA here.
+> 
+> The same could be done for drivers/staging/media/tegra-vde/ and
+> drivers/gpu/host1x/, please see [1].
 
-Note that for x86, the level numbers were previously increased by 1 in
-commit 45dcd2091363 ("x86/mm/dump_pagetables: Fix printout of p4d level")
-and the comment "Bit 7 has a different meaning" was not updated, so this
-change also makes the code match the comment again.
+Yep, I will repost, thanks!
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- arch/arm64/mm/dump.c          |  6 +++---
- arch/x86/mm/dump_pagetables.c | 19 ++++++++++---------
- include/linux/ptdump.h        |  1 +
- mm/ptdump.c                   | 16 ++++++++--------
- 4 files changed, 22 insertions(+), 20 deletions(-)
-
-diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
-index 3203dd8e6d0a..4997ce244172 100644
---- a/arch/arm64/mm/dump.c
-+++ b/arch/arm64/mm/dump.c
-@@ -175,8 +175,7 @@ struct pg_level {
- };
- 
- static struct pg_level pg_level[] = {
--	{
--	}, { /* pgd */
-+	{ /* pgd */
- 		.name	= "PGD",
- 		.bits	= pte_bits,
- 		.num	= ARRAY_SIZE(pte_bits),
-@@ -256,7 +255,7 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
- 	if (level >= 0)
- 		prot = val & pg_level[level].mask;
- 
--	if (!st->level) {
-+	if (st->level == -1) {
- 		st->level = level;
- 		st->current_prot = prot;
- 		st->start_address = addr;
-@@ -350,6 +349,7 @@ void ptdump_check_wx(void)
- 			{ 0, NULL},
- 			{ -1, NULL},
- 		},
-+		.level = -1,
- 		.check_wx = true,
- 		.ptdump = {
- 			.note_page = note_page,
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index 77a1332c6cd4..d3c28b3765fc 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -176,7 +176,7 @@ static struct addr_marker address_markers[] = {
- static void printk_prot(struct seq_file *m, pgprotval_t pr, int level, bool dmsg)
- {
- 	static const char * const level_name[] =
--		{ "cr3", "pgd", "p4d", "pud", "pmd", "pte" };
-+		{ "pgd", "p4d", "pud", "pmd", "pte" };
- 
- 	if (!(pr & _PAGE_PRESENT)) {
- 		/* Not present */
-@@ -200,12 +200,12 @@ static void printk_prot(struct seq_file *m, pgprotval_t pr, int level, bool dmsg
- 			pt_dump_cont_printf(m, dmsg, "    ");
- 
- 		/* Bit 7 has a different meaning on level 3 vs 4 */
--		if (level <= 4 && pr & _PAGE_PSE)
-+		if (level <= 3 && pr & _PAGE_PSE)
- 			pt_dump_cont_printf(m, dmsg, "PSE ");
- 		else
- 			pt_dump_cont_printf(m, dmsg, "    ");
--		if ((level == 5 && pr & _PAGE_PAT) ||
--		    ((level == 4 || level == 3) && pr & _PAGE_PAT_LARGE))
-+		if ((level == 4 && pr & _PAGE_PAT) ||
-+		    ((level == 3 || level == 2) && pr & _PAGE_PAT_LARGE))
- 			pt_dump_cont_printf(m, dmsg, "PAT ");
- 		else
- 			pt_dump_cont_printf(m, dmsg, "    ");
-@@ -267,15 +267,15 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
- 
- 	new_prot = val & PTE_FLAGS_MASK;
- 
--	if (level > 1) {
--		new_eff = effective_prot(st->prot_levels[level - 2],
-+	if (level > 0) {
-+		new_eff = effective_prot(st->prot_levels[level - 1],
- 					 new_prot);
- 	} else {
- 		new_eff = new_prot;
- 	}
- 
--	if (level > 0)
--		st->prot_levels[level - 1] = new_eff;
-+	if (level >= 0)
-+		st->prot_levels[level] = new_eff;
- 
- 	/*
- 	 * If we have a "break" in the series, we need to flush the state that
-@@ -285,7 +285,7 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
- 	cur = st->current_prot;
- 	eff = st->effective_prot;
- 
--	if (!st->level) {
-+	if (st->level == -1) {
- 		/* First entry */
- 		st->current_prot = new_prot;
- 		st->effective_prot = new_eff;
-@@ -376,6 +376,7 @@ static void ptdump_walk_pgd_level_core(struct seq_file *m, struct mm_struct *mm,
- 			.note_page	= note_page,
- 			.range		= ptdump_ranges
- 		},
-+		.level = -1,
- 		.to_dmesg	= dmesg,
- 		.check_wx	= checkwx,
- 		.seq		= m
-diff --git a/include/linux/ptdump.h b/include/linux/ptdump.h
-index a0fb8dd2be97..b28f3f2acf90 100644
---- a/include/linux/ptdump.h
-+++ b/include/linux/ptdump.h
-@@ -11,6 +11,7 @@ struct ptdump_range {
- };
- 
- struct ptdump_state {
-+	/* level is 0:PGD to 4:PTE, or -1 if unknown */
- 	void (*note_page)(struct ptdump_state *st, unsigned long addr,
- 			  int level, unsigned long val);
- 	const struct ptdump_range *range;
-diff --git a/mm/ptdump.c b/mm/ptdump.c
-index 5d349311e77e..856feba4cdf9 100644
---- a/mm/ptdump.c
-+++ b/mm/ptdump.c
-@@ -11,7 +11,7 @@ static int ptdump_pgd_entry(pgd_t *pgd, unsigned long addr,
- 	pgd_t val = READ_ONCE(*pgd);
- 
- 	if (pgd_leaf(val))
--		st->note_page(st, addr, 1, pgd_val(val));
-+		st->note_page(st, addr, 0, pgd_val(val));
- 
- 	return 0;
- }
-@@ -23,7 +23,7 @@ static int ptdump_p4d_entry(p4d_t *p4d, unsigned long addr,
- 	p4d_t val = READ_ONCE(*p4d);
- 
- 	if (p4d_leaf(val))
--		st->note_page(st, addr, 2, p4d_val(val));
-+		st->note_page(st, addr, 1, p4d_val(val));
- 
- 	return 0;
- }
-@@ -35,7 +35,7 @@ static int ptdump_pud_entry(pud_t *pud, unsigned long addr,
- 	pud_t val = READ_ONCE(*pud);
- 
- 	if (pud_leaf(val))
--		st->note_page(st, addr, 3, pud_val(val));
-+		st->note_page(st, addr, 2, pud_val(val));
- 
- 	return 0;
- }
-@@ -47,7 +47,7 @@ static int ptdump_pmd_entry(pmd_t *pmd, unsigned long addr,
- 	pmd_t val = READ_ONCE(*pmd);
- 
- 	if (pmd_leaf(val))
--		st->note_page(st, addr, 4, pmd_val(val));
-+		st->note_page(st, addr, 3, pmd_val(val));
- 
- 	return 0;
- }
-@@ -57,7 +57,7 @@ static int ptdump_pte_entry(pte_t *pte, unsigned long addr,
- {
- 	struct ptdump_state *st = walk->private;
- 
--	st->note_page(st, addr, 5, pte_val(READ_ONCE(*pte)));
-+	st->note_page(st, addr, 4, pte_val(READ_ONCE(*pte)));
- 
- 	return 0;
- }
-@@ -75,7 +75,7 @@ static inline int note_kasan_page_table(struct mm_walk *walk,
- {
- 	struct ptdump_state *st = walk->private;
- 
--	st->note_page(st, addr, 5, pte_val(kasan_early_shadow_pte[0]));
-+	st->note_page(st, addr, 4, pte_val(kasan_early_shadow_pte[0]));
- 	return 1;
- }
- 
-@@ -115,7 +115,7 @@ static int ptdump_hole(unsigned long addr, unsigned long next,
- {
- 	struct ptdump_state *st = walk->private;
- 
--	st->note_page(st, addr, depth + 1, 0);
-+	st->note_page(st, addr, depth, 0);
- 
- 	return 0;
- }
-@@ -146,5 +146,5 @@ void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm)
- 	up_read(&mm->mmap_sem);
- 
- 	/* Flush out the last page */
--	st->note_page(st, 0, 0, 0);
-+	st->note_page(st, 0, -1, 0);
- }
--- 
-2.20.1
+> 
+> [1] https://lore.kernel.org/linux-iommu/20190829154902.GC19842@ulmo/
+> 
+> .
+> 
 
