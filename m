@@ -2,135 +2,185 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A63AACA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B77CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7012B2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:01:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fkp6Syx6"
+	by mail.kernel.org (Postfix) with ESMTP id F31002083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:03:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfJaGBH (ORCPT
+        id S1726739AbfJaGDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 02:01:07 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45527 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbfJaGBH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 02:01:07 -0400
-Received: by mail-lf1-f67.google.com with SMTP id v8so3542040lfa.12;
-        Wed, 30 Oct 2019 23:01:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:references:mime-version:message-id
-         :content-transfer-encoding;
-        bh=B9pBKnFjfixHWQ/ZEyIY+63diOqN5jpX/fJTCisM0+M=;
-        b=Fkp6Syx6mHbOLRCg/THpgtyk4gCS05UCGwcgJi5cBfBcrSgo/HwFigMnvXxvLOM5F2
-         vGwlHeDPxUrySg3tOOeyorFr6FS/BAtjxRo/umHFbdq1mFwg5minYcuBXrauE1e39W1i
-         SVJt6mccSS61DEOTkSLgFSBZJVEVaNFkOC7cynYKAX5TbhFOLln8ol90SkxWOy4ofFOG
-         JiuxNf9+PFjVyC24JJaahEzYu6ZhUaCLu5VOHthNl/rrUeYoItKi0pU5Zp76DdnIlZ3e
-         KGRP1tN6mASAs4LLHZBP6AwdfpOEjA4Yy+zK8YpQ2y1XcDjIBo07T8+GEHw+hjvlQK9e
-         K5zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:references:mime-version
-         :message-id:content-transfer-encoding;
-        bh=B9pBKnFjfixHWQ/ZEyIY+63diOqN5jpX/fJTCisM0+M=;
-        b=eSqy0osA8RoSNC6GPnFyGXQVdvfe9wCHVypXaeQuWeMAM9T/f06gsnC5jsrN47j5eW
-         tyyVRjglaObBx3bPqC9MOapqjnf6M/8RvHqRCm7ODT2u08d7XZVN1crptIUrKwtLzoTV
-         aev4PHHT8ACwAXh3Zw2cNUjl0RqH/ifW2jJ2hhyqjYhCyKuuenICcwKpRHmKKlpjWY2t
-         F7ziL6GZQweetrurc7wpnpdRVv9yiPD2caV5bNnGnW4/8aYROboWjKPr3usi4Gve2ZWt
-         OTLP59VhIwjpzDnY8g9u74ioVvIYvb2OQCct6Sb/AHPeEkgf8pgUPC5X5cvmtp1LivSs
-         iX7g==
-X-Gm-Message-State: APjAAAWjvGFlFqE9ZWXYlnA+hVmZixM+RzIKb6AmhtfpqFWL/qyVC9FW
-        rPp4CvntRZtzXkTfO5XG5IE=
-X-Google-Smtp-Source: APXvYqzKGcjgiqWDmZQtkX4i4E9Z6uMkIO9vy8g/Qcy7z1Y1exXSWj23ipY0ULxG9VWMivkMsEKdTQ==
-X-Received: by 2002:ac2:5496:: with SMTP id t22mr839811lfk.31.1572501663756;
-        Wed, 30 Oct 2019 23:01:03 -0700 (PDT)
-Received: from N-20L6PF1KTYA2 ([131.228.2.20])
-        by smtp.gmail.com with ESMTPSA id t4sm704967lji.40.2019.10.30.23.01.00
-        (version=TLS1_2 cipher=AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Oct 2019 23:01:02 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 14:01:00 +0800
-From:   "Li Xinhai" <lixinhai.lxh@gmail.com>
-To:     akpm <akpm@linux-foundation.org>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "Vlastimil Babka" <vbabka@suse.cz>,
-        "Michal Hocko" <mhocko@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Linux API" <linux-api@vger.kernel.org>,
-        "Hugh Dickins" <hughd@google.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        n-horiguchi <n-horiguchi@ah.jp.nec.com>
-Subject: Re: [PATCH v2] mm: Fix checking unmapped holes for mbind
-References: <201910291756045288126@gmail.com>, 
-        <20191030210836.a17c0649354b59961903d1a8@linux-foundation.org>
-X-Priority: 3
-X-GUID: 6300A385-0B3A-4454-B5DB-0B15FEDE58AA
-X-Has-Attach: no
-X-Mailer: Foxmail 7.2.13.365[cn]
-Mime-Version: 1.0
-Message-ID: <2019103114005855855689@gmail.com>
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 31 Oct 2019 02:03:34 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54876 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726370AbfJaGDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 02:03:33 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2116CB2439A51576775E;
+        Thu, 31 Oct 2019 14:03:31 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 31 Oct 2019 14:03:20 +0800
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     yuqi jin <jinyuqi@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>
+Subject: [PATCH] lib: optimize cpumask_local_spread()
+Date:   Thu, 31 Oct 2019 14:03:33 +0800
+Message-ID: <1572501813-2125-1-git-send-email-zhangshaokun@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMC0zMcKgYXQgMTI6MDjCoEFuZHJldyBNb3J0b27CoHdyb3RlOgo+KGNjIGxpbnV4
-LW1hbkB2Z2VyLmtlcm5lbC5vcmcpCj4KPk9uIFR1ZSwgMjkgT2N0IDIwMTkgMTc6NTY6MDYgKzA4
-MDAgIkxpIFhpbmhhaSIgPGxpeGluaGFpLmx4aEBnbWFpbC5jb20+IHdyb3RlOgo+Cj4+IHF1ZXVl
-X3BhZ2VzX3JhbmdlKCkgd2lsbCBjaGVjayBmb3IgdW5tYXBwZWQgaG9sZXMgYmVzaWRlcyBxdWV1
-ZSBwYWdlcyBmb3IKPj4gbWlncmF0aW9uLiBUaGUgcnVsZXMgZm9yIGNoZWNraW5nIHVubWFwcGVk
-IGhvbGVzIGFyZToKPj4gMSBVbm1hcHBlZCBob2xlcyBhdCBhbnkgcGFydCBvZiB0aGUgc3BlY2lm
-aWVkIHJhbmdlIHNob3VsZCBiZSByZXBvcnRlZCBhcwo+PiDCoCBFRkFVTFQgaWYgbWJpbmQoKSBm
-b3Igbm9uZSBNUE9MX0RFRkFVTFQgY2FzZXM7Cj4+IDIgVW5tYXBwZWQgaG9sZXMgYXQgYW55IHBh
-cnQgb2YgdGhlIHNwZWNpZmllZCByYW5nZSBzaG91bGQgYmUgaWdub3JlZCBpZgo+PiDCoCBtYmlu
-ZCgpIGZvciBNUE9MX0RFRkFVTFQgY2FzZTsKPj4gTm90ZSB0aGF0IHRoZSBzZWNvbmQgcnVsZSBp
-cyB0aGUgY3VycmVudCBpbXBsZW1lbnRhdGlvbiwgYnV0IGl0IHNlZW1zCj4+IGNvbmZsaWN0cyB0
-aGUgTGludXggQVBJIGRlZmluaXRpb24uCj4KPkNhbiB5b3UgcXVvdGUgdGhlIHBhcnQgb2YgdGhl
-IEFQSSBkZWZpbml0aW9uIHdoaWNoIHlvdSdyZSBsb29raW5nIGF0Pwo+Cj5NeSBtYmluZCgyKSBt
-YW5wYWdlIHNheXMKPgo+RVJST1JTCj7CoMKgwqDCoMKgwqAgRUZBVUxUIFBhcnQgb3IgYWxsIG9m
-IHRoZSBtZW1vcnkgcmFuZ2Ugc3BlY2lmaWVkIGJ5IG5vZGVtYXNrIGFuZCBtYXhuLQo+wqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgb2RlIHBvaW50cyBvdXRzaWRlIHlvdXIgYWNjZXNzaWJsZSBh
-ZGRyZXNzIHNwYWNlLsKgIE9yLCB0aGVyZSB3YXMKPsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IGFuIHVubWFwcGVkIGhvbGUgaW4gdGhlIHNwZWNpZmllZCBtZW1vcnkgcmFuZ2Ugc3BlY2lmaWVk
-IGJ5IGFkZHIKPsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGFuZCBsZW4uCj4KPihJIGFzc3Vt
-ZSB0aGUgZmlyc3Qgc2VudGVuY2UgbWVhbnQgdG8gc2F5ICJzcGVjaWZpZWQgYnkgYWRkciBhbmQg
-bGVuIikKPiAKCnRoaXMgcGFydDrCoAoiT3IsIHRoZXJlIHdhcyBhbiB1bm1hcHBlZCBob2xlIGlu
-IHRoZSBzcGVjaWZpZWQgbWVtb3J5IHJhbmdlIHNwZWNpZmllZCBieSBhZGRyIAphbmQgbGVuLiIK
-aXMgY29uY2VybmVkIGJ5IG15IHBhdGNoLgoKPkkgYWdyZWUgd2l0aCB5b3VyIGludGVycHJldGF0
-aW9uLCBidXQgdGhlcmUncyBubyBtZW50aW9uIGhlcmUgdGhhdAo+TVBPTF9ERUZBVUxUIGlzIHRy
-ZWF0ZWQgZGlmZmVyZW50bHkgYW5kIEkgZG9uJ3Qgc2VlIHdoeSBpdCBzaG91bGQgYmUuCj4gClRo
-ZSBmaXJzdCBydWxlIG1hdGNoIHRoZSBtYW5wYWdlLCBidXQgdGhlIGN1cnJlbnQgbWVtcG9saWN5
-IGltcGxlbWVudGF0aW9uIG9ubHnCoApyZXBvcnRzIEVGQVVMVCBpZiBob2xlcyBhcmUgd2l0aGlu
-IHJhbmdlLCBvciBhdCB0aGUgaGVhZCBzaWRlIG9mIHJhbmdlLiBObyBFRkFVTFTCoApyZXBvcnRl
-ZCBpZiBob2xlIGF0IHRhaWwgc2lkZSBvZiByYW5nZS4gSSBzdXBwb3NlIHRoZSBmaXJzdCBydWxl
-IGhhcyB0byBiZSBmaXhlZC4KClRoZSBzZWNvbmRlIHJ1bGUsIHdoZW4gTVBPTF9ERUZBVUxUIGlz
-IHVzZWQsIHdhcyBzdW1tYXJpemVkIGJ5IG1lIGFjY29yZGluZ8KgCnRvIG1lbXBvbGljeSBpbXBs
-ZW1lbnRhdGlvbi4gQWN0dWFsbHksIHRoaXMgcnVsZSBkb2VzIG5vdCBmb2xsb3cgbWFucGFnZSBh
-bmQgZXhzaXRzwqAKZm9yIGxvbmcgZGF5cy4gSW4gbXkgdW5kZXJzdGFuZGluZywgdGhpcyBydWxl
-IGlzIHJlYXNvbmFibGUgKGluIGNvZGUsIMKgdGhlIGludGVybmFsIGZsYWcgCk1QT0xfTUZfRElT
-Q09OVElHX09LIGlzIHVzZWQgZm9yIHRoYXQgcHVycG9zZSwgdGhlcmUgaXMgY29tbWVudHMgZm9y
-IHJlYXNvbikgCmFuZCB3ZSdkIGJldHRlcsKga2VlcCBpdC4KCj4KPk1vcmUgYnJvYWRseSwgSSB3
-b3JyeSB0aGF0IGl0J3MgdG9vIGxhdGUgdG8gY2hhbmdlIHRoaXMgLSBleGlzdGluZwo+YXBwbGlj
-YXRpb25zIG1pZ2h0IGZhaWwgaWYgd2UgY2hhbmdlIHRoZSBpbXBsZW1lbnRhdGlvbiBpbiB0aGUg
-cHJvcG9zZWQKPmZhc2hpb24uwqAgU28gcGVyaGFwcyB3aGF0IHdlIHNob3VsZCBkbyBoZXJlIGlz
-IHRvIGNoYW5nZSB0aGUgbWFucGFnZSB0bwo+bWF0Y2ggcmVhbGl0eT8KPiAKSSBwcmVmZXIgYWRk
-IGRlc2NyaXB0aW9uIGluIG1hbnBhZ2UgZm9yIHRoZSBzZWNvbmQgcnVsZSwgc28gbm8gY2hhbmdl
-IHRvIG91ciBjb2RlLiAKT25seSBmaXggZm9yIGZpcnN0IHJ1bGUuCgo+SXMgdGhlIGN1cnJlbnQg
-YmVoYXZpb3IgY2F1c2luZyB5b3UgYW55IHByb2JsZW1zIGluIGEgcmVhbC13b3JsZCB1c2UKPmNh
-c2U/IApJIHdhcyB1c2luZyBtYmluZCgpIHdpdGjCoE1QT0xfREVGQVVMVChvciBNUE9MX0JJTkQp
-IHRvIHJlc2V0IGEgcmFuZ2Ugb2YgYWRkcmVzcyAKKHdoaWNoIG1heWJlIGNvbnRpZ3VvdXMgb3Ig
-bm90IGluIHRoZSB3aG9sZSByYW5nZSkgdG8gdGhlIGRlZmF1bHQgcG9saWN5ICh0byBhIHNwZWNp
-ZmljIApub2RlKSwgYW5kIG9ic2VydmVkIHRoaXMgaXNzdWUuIElmIG1iaW5kKCkgY2FsbCBmb3Ig
-ZWFjaCBtYXBwaW5nIG9uZSBieSBvbmUsIHdlIGRvbid0IHNlZSB0aGXCoAppc3N1ZS4KCi0gWGlu
-aGFpCgo=
+From: yuqi jin <jinyuqi@huawei.com>
+
+In the multi-processor and NUMA system, A device may have many numa
+nodes belonging to multiple cpus. When we get a local numa, it is better
+to find the node closest to the local numa node to return instead of
+going to the online cpu immediately.
+
+For example, In Huawei Kunpeng 920 system, there are 4 NUMA node(0 -3)
+in the 2-socket system(0 - 1). If the I/O device is in socket1
+and the local NUMA node is 2, we shall choose the non-local node3 in
+the same socket when cpu core in NUMA node2 is less that I/O requirements.
+If we directly pick one cpu core from all online ones, it may be in
+the another socket and it is not friendly for performance.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: yuqi jin <jinyuqi@huawei.com>
+Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+---
+Changes from RFC:
+     Address Michal Hocko's comment: Use GFP_ATOMIC instead of GFP_KERNEL
+
+ lib/cpumask.c | 76 ++++++++++++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 65 insertions(+), 11 deletions(-)
+
+diff --git a/lib/cpumask.c b/lib/cpumask.c
+index 0cb672eb107c..c92177b0e095 100644
+--- a/lib/cpumask.c
++++ b/lib/cpumask.c
+@@ -192,6 +192,33 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
+ }
+ #endif
+ 
++static void calc_node_distance(int *node_dist, int node)
++{
++	int i;
++
++	for (i = 0; i < nr_node_ids; i++)
++		node_dist[i] = node_distance(node, i);
++}
++
++static int find_nearest_node(int *node_dist, bool *used_flag)
++{
++	int i, min_dist = node_dist[0], node_id = -1;
++
++	for (i = 0; i < nr_node_ids; i++)
++		if (used_flag[i] == 0) {
++			min_dist = node_dist[i];
++			node_id = i;
++			break;
++		}
++	for (i = 0; i < nr_node_ids; i++)
++		if (node_dist[i] < min_dist && used_flag[i] == 0) {
++			min_dist = node_dist[i];
++			node_id = i;
++		}
++
++	return node_id;
++}
++
+ /**
+  * cpumask_local_spread - select the i'th cpu with local numa cpu's first
+  * @i: index number
+@@ -205,7 +232,8 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
+  */
+ unsigned int cpumask_local_spread(unsigned int i, int node)
+ {
+-	int cpu;
++	int cpu, j, id, *node_dist;
++	bool *used_flag;
+ 
+ 	/* Wrap: we always want a cpu. */
+ 	i %= num_online_cpus();
+@@ -215,19 +243,45 @@ unsigned int cpumask_local_spread(unsigned int i, int node)
+ 			if (i-- == 0)
+ 				return cpu;
+ 	} else {
+-		/* NUMA first. */
+-		for_each_cpu_and(cpu, cpumask_of_node(node), cpu_online_mask)
+-			if (i-- == 0)
+-				return cpu;
++		node_dist = kmalloc_array(nr_node_ids, sizeof(int), GFP_ATOMIC);
++		if (!node_dist)
++			for_each_cpu(cpu, cpu_online_mask)
++				if (i-- == 0)
++					return cpu;
+ 
+-		for_each_cpu(cpu, cpu_online_mask) {
+-			/* Skip NUMA nodes, done above. */
+-			if (cpumask_test_cpu(cpu, cpumask_of_node(node)))
+-				continue;
++		used_flag = kmalloc_array(nr_node_ids, sizeof(bool), GFP_ATOMIC);
++		if (!used_flag)
++			for_each_cpu(cpu, cpu_online_mask)
++				if (i-- == 0) {
++					kfree(node_dist);
++					return cpu;
++				}
++		memset(used_flag, 0, nr_node_ids * sizeof(bool));
+ 
+-			if (i-- == 0)
+-				return cpu;
++		calc_node_distance(node_dist, node);
++		for (j = 0; j < nr_node_ids; j++) {
++			id = find_nearest_node(node_dist, used_flag);
++			if (id < 0)
++				break;
++			for_each_cpu_and(cpu,
++				cpumask_of_node(id), cpu_online_mask)
++				if (i-- == 0) {
++					kfree(node_dist);
++					kfree(used_flag);
++					return cpu;
++				}
++			used_flag[id] = 1;
+ 		}
++
++		for_each_cpu(cpu, cpu_online_mask)
++			if (i-- == 0) {
++				kfree(node_dist);
++				kfree(used_flag);
++				return cpu;
++			}
++
++		kfree(node_dist);
++		kfree(used_flag);
+ 	}
+ 	BUG();
+ }
+-- 
+2.7.4
 
