@@ -2,411 +2,336 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FBECA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 03:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C886CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 03:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08E7320873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 03:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C6A2080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 03:37:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GoyVW9uw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jkb5eNI1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfJaDgU (ORCPT
+        id S1726912AbfJaDhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 23:36:20 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42029 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725909AbfJaDgU (ORCPT
+        Wed, 30 Oct 2019 23:37:39 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34768 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfJaDhi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 23:36:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572492978;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+jjghK9R0lMbuYITPwblyuIiknRGv+8dU2qzMWqZXIA=;
-        b=GoyVW9uwMArb6gwv4YuPFB/ljfk8qwdcLnY5xvdQBoC4m7tnKUKaEbYtLKasvKhdhTuu36
-        bEMFT7WC1m3x0k0g9pRuB/PwinR/N0zxfQSLnuSfiJsRV0kLAM3F9IlWoukdKccvmzCKp4
-        UX9eH/xbFX0hYshSKJkYH7WYcD3K3mI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-263-NyT3dB5xPXeEIHPKUG5xlQ-1; Wed, 30 Oct 2019 23:36:15 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4916A2B8;
-        Thu, 31 Oct 2019 03:36:06 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-12-31.pek2.redhat.com [10.72.12.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E634D5C1BB;
-        Thu, 31 Oct 2019 03:35:52 +0000 (UTC)
-From:   Lianbo Jiang <lijiang@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, bhe@redhat.com, dyoung@redhat.com, jgross@suse.com,
-        dhowells@redhat.com, Thomas.Lendacky@amd.com,
-        ebiederm@xmission.com, vgoyal@redhat.com, d.hatayama@fujitsu.com,
-        horms@verge.net.au, kexec@lists.infradead.org
-Subject: [PATCH 2/2 RESEND v8] x86/kdump: clean up all the code related to the backup region
-Date:   Thu, 31 Oct 2019 11:35:17 +0800
-Message-Id: <20191031033517.11282-3-lijiang@redhat.com>
-In-Reply-To: <20191031033517.11282-1-lijiang@redhat.com>
-References: <20191031033517.11282-1-lijiang@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: NyT3dB5xPXeEIHPKUG5xlQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        Wed, 30 Oct 2019 23:37:38 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e4so3020156pgs.1;
+        Wed, 30 Oct 2019 20:37:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mPsPUml0sNW+3Kwo6RoNazHiy7iLhREbWowwWS3FO18=;
+        b=Jkb5eNI1vtB6A2ccG7ogqa6y8nNNR6PClJKOXbUDVpOSGBDLkQBAa8ZxYC4DrCZCOP
+         e7Tso7UcXs9/sTyknAMWMWyK9zM65y87lFvguZRx2M//JW+XrQM9+gpIAiqCkAIkrVkT
+         rEswduWh+wbZc7q3v0n2G8Wkyq2gHbBo3DNvtlIG/q/WLbAMyNvaCjfHmAzbo9o7/F6k
+         V5oHtEV+rFvOj1PGoGGaxDS+AU1wJoL2fs7vRnJ5egr9pV+A/bD+ejrdsBpwaIfVoSnv
+         v/tQCGJorwYHL366BSff8ksMb6aeL8E5RmNZYzKXMBfhXBs2usLdiV2kIMNYkiXsFCzv
+         CfkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mPsPUml0sNW+3Kwo6RoNazHiy7iLhREbWowwWS3FO18=;
+        b=jds+wxC6XZ3t+7S0e8VOvBlRLCe6nwrf50hokuHIHczftGov29nBbv339gZblMyGvS
+         b+g9CzUTVw5fmsffcIejyZuNajXgdPW4UoJsT4JwNNUVMbPZs4+hniYPCV/1T2dJqXe7
+         YeHN2lzNEYIEa8Y2QuwzJIac9YXWXNZ6GnX/bbuWqGFD0afhFwqgfwBPs9NRnM/beT13
+         HKpNyAS5OuWkvp/unc32OWBMmQlbF1cUkQRiIbfR169LFxrw3Y9inmIoCW5LlHmJtTHZ
+         zmnnq2+YCjFV45W7ThSPhcVETvXjEbpik8q0Y73QKpRCufy/PCISWpC8Uf6+bVJZ0V0D
+         sgSw==
+X-Gm-Message-State: APjAAAXcGx6gY8mIA7WqFdaGtmg2kowtDfMrECh4dYVfsNEq/UameXoQ
+        dBIdY+IvRvrTBINIKDP07AOagkGC/1g=
+X-Google-Smtp-Source: APXvYqyKM8mcyT5PLsrbF+AZdF2jcPJxngsj4eAxW8Uv2kzTrTUBEifmibsijNPS6voTdyVfD2HspA==
+X-Received: by 2002:a17:90a:a00e:: with SMTP id q14mr3896734pjp.132.1572493056916;
+        Wed, 30 Oct 2019 20:37:36 -0700 (PDT)
+Received: from Gentoo ([103.231.91.67])
+        by smtp.gmail.com with ESMTPSA id e198sm1387121pfh.83.2019.10.30.20.37.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 30 Oct 2019 20:37:36 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 09:07:25 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     bfields@fieldses.org, yamada.masahiro@socionext.com,
+        michal.lkml@markovi.net, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scripts: prune-kernel:remove old kernels and modules dir
+ from system
+Message-ID: <20191031033722.GA7687@Gentoo>
+References: <20191030095445.912435-1-unixbhaskar@gmail.com>
+ <b8a12c03-1e17-61de-2cd9-a09650dc22b1@infradead.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
+Content-Disposition: inline
+In-Reply-To: <b8a12c03-1e17-61de-2cd9-a09650dc22b1@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the crashkernel kernel command line option is specified, the
-low 1M memory will always be reserved, which makes that the memory
-allocated later won't fall into the low 1M area, thereby, it's not
-necessary to create a backup region and also no need to copy the
-first 640k content to a backup region.
 
-Currently, the code related to the backup region can be safely
-removed, so lets clean up.
+--6TrnltStXW4iwmi0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- arch/x86/include/asm/kexec.h       | 10 ----
- arch/x86/include/asm/purgatory.h   | 10 ----
- arch/x86/kernel/crash.c            | 87 ++++--------------------------
- arch/x86/kernel/machine_kexec_64.c | 47 ----------------
- arch/x86/purgatory/purgatory.c     | 19 -------
- 5 files changed, 11 insertions(+), 162 deletions(-)
+Thank you Randy, my response are inline. Please look at it.I am
+wondering , what else I could do get this damn! thing going??
+Any clue??
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 5e7d6b46de97..6802c59e8252 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -66,10 +66,6 @@ struct kimage;
- # define KEXEC_ARCH KEXEC_ARCH_X86_64
- #endif
-=20
--/* Memory to backup during crash kdump */
--#define KEXEC_BACKUP_SRC_START=09(0UL)
--#define KEXEC_BACKUP_SRC_END=09(640 * 1024UL - 1)=09/* 640K */
--
- /*
-  * This function is responsible for capturing register states if coming
-  * via panic otherwise just fix up the ss and sp if coming via kernel
-@@ -154,12 +150,6 @@ struct kimage_arch {
- =09pud_t *pud;
- =09pmd_t *pmd;
- =09pte_t *pte;
--=09/* Details of backup region */
--=09unsigned long backup_src_start;
--=09unsigned long backup_src_sz;
--
--=09/* Physical address of backup segment */
--=09unsigned long backup_load_addr;
-=20
- =09/* Core ELF header buffer */
- =09void *elf_headers;
-diff --git a/arch/x86/include/asm/purgatory.h b/arch/x86/include/asm/purgat=
-ory.h
-index 92c34e517da1..5528e9325049 100644
---- a/arch/x86/include/asm/purgatory.h
-+++ b/arch/x86/include/asm/purgatory.h
-@@ -6,16 +6,6 @@
- #include <linux/purgatory.h>
-=20
- extern void purgatory(void);
--/*
-- * These forward declarations serve two purposes:
-- *
-- * 1) Make sparse happy when checking arch/purgatory
-- * 2) Document that these are required to be global so the symbol
-- *    lookup in kexec works
-- */
--extern unsigned long purgatory_backup_dest;
--extern unsigned long purgatory_backup_src;
--extern unsigned long purgatory_backup_sz;
- #endif=09/* __ASSEMBLY__ */
-=20
- #endif /* _ASM_PURGATORY_H */
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index db2301afade5..40b04b6eb675 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -188,8 +188,6 @@ void native_machine_crash_shutdown(struct pt_regs *regs=
-)
-=20
- #ifdef CONFIG_KEXEC_FILE
-=20
--static unsigned long crash_zero_bytes;
--
- static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
- {
- =09unsigned int *nr_ranges =3D arg;
-@@ -232,6 +230,11 @@ static int elf_header_exclude_ranges(struct crash_mem =
-*cmem)
- {
- =09int ret =3D 0;
-=20
-+=09/* Exclude the low 1M because it is always reserved */
-+=09ret =3D crash_exclude_mem_range(cmem, 0, 1<<20);
-+=09if (ret)
-+=09=09return ret;
-+
- =09/* Exclude crashkernel region */
- =09ret =3D crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end)=
-;
- =09if (ret)
-@@ -261,9 +264,7 @@ static int prepare_elf_headers(struct kimage *image, vo=
-id **addr,
- =09=09=09=09=09unsigned long *sz)
- {
- =09struct crash_mem *cmem;
--=09Elf64_Ehdr *ehdr;
--=09Elf64_Phdr *phdr;
--=09int ret, i;
-+=09int ret;
-=20
- =09cmem =3D fill_up_crash_elf_data();
- =09if (!cmem)
-@@ -282,22 +283,7 @@ static int prepare_elf_headers(struct kimage *image, v=
-oid **addr,
- =09/* By default prepare 64bit headers */
- =09ret =3D  crash_prepare_elf64_headers(cmem,
- =09=09=09=09IS_ENABLED(CONFIG_X86_64), addr, sz);
--=09if (ret)
--=09=09goto out;
-=20
--=09/*
--=09 * If a range matches backup region, adjust offset to backup
--=09 * segment.
--=09 */
--=09ehdr =3D (Elf64_Ehdr *)*addr;
--=09phdr =3D (Elf64_Phdr *)(ehdr + 1);
--=09for (i =3D 0; i < ehdr->e_phnum; phdr++, i++)
--=09=09if (phdr->p_type =3D=3D PT_LOAD &&
--=09=09=09=09phdr->p_paddr =3D=3D image->arch.backup_src_start &&
--=09=09=09=09phdr->p_memsz =3D=3D image->arch.backup_src_sz) {
--=09=09=09phdr->p_offset =3D image->arch.backup_load_addr;
--=09=09=09break;
--=09=09}
- out:
- =09vfree(cmem);
- =09return ret;
-@@ -336,19 +322,11 @@ static int memmap_exclude_ranges(struct kimage *image=
-, struct crash_mem *cmem,
- =09=09=09=09 unsigned long long mend)
- {
- =09unsigned long start, end;
--=09int ret =3D 0;
-=20
- =09cmem->ranges[0].start =3D mstart;
- =09cmem->ranges[0].end =3D mend;
- =09cmem->nr_ranges =3D 1;
-=20
--=09/* Exclude Backup region */
--=09start =3D image->arch.backup_load_addr;
--=09end =3D start + image->arch.backup_src_sz - 1;
--=09ret =3D crash_exclude_mem_range(cmem, start, end);
--=09if (ret)
--=09=09return ret;
--
- =09/* Exclude elf header region */
- =09start =3D image->arch.elf_load_addr;
- =09end =3D start + image->arch.elf_headers_sz - 1;
-@@ -371,11 +349,11 @@ int crash_setup_memmap_entries(struct kimage *image, =
-struct boot_params *params)
- =09memset(&cmd, 0, sizeof(struct crash_memmap_data));
- =09cmd.params =3D params;
-=20
--=09/* Add first 640K segment */
--=09ei.addr =3D image->arch.backup_src_start;
--=09ei.size =3D image->arch.backup_src_sz;
--=09ei.type =3D E820_TYPE_RAM;
--=09add_e820_entry(params, &ei);
-+=09/* Add the low 1M */
-+=09cmd.type =3D E820_TYPE_RAM;
-+=09flags =3D IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-+=09walk_iomem_res_desc(IORES_DESC_NONE, flags, 0, (1<<20)-1, &cmd,
-+=09=09=09memmap_entry_callback);
-=20
- =09/* Add ACPI tables */
- =09cmd.type =3D E820_TYPE_ACPI;
-@@ -424,55 +402,12 @@ int crash_setup_memmap_entries(struct kimage *image, =
-struct boot_params *params)
- =09return ret;
- }
-=20
--static int determine_backup_region(struct resource *res, void *arg)
--{
--=09struct kimage *image =3D arg;
--
--=09image->arch.backup_src_start =3D res->start;
--=09image->arch.backup_src_sz =3D resource_size(res);
--
--=09/* Expecting only one range for backup region */
--=09return 1;
--}
--
- int crash_load_segments(struct kimage *image)
- {
- =09int ret;
- =09struct kexec_buf kbuf =3D { .image =3D image, .buf_min =3D 0,
- =09=09=09=09  .buf_max =3D ULONG_MAX, .top_down =3D false };
-=20
--=09/*
--=09 * Determine and load a segment for backup area. First 640K RAM
--=09 * region is backup source
--=09 */
--
--=09ret =3D walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_EN=
-D,
--=09=09=09=09image, determine_backup_region);
--
--=09/* Zero or postive return values are ok */
--=09if (ret < 0)
--=09=09return ret;
--
--=09/* Add backup segment. */
--=09if (image->arch.backup_src_sz) {
--=09=09kbuf.buffer =3D &crash_zero_bytes;
--=09=09kbuf.bufsz =3D sizeof(crash_zero_bytes);
--=09=09kbuf.memsz =3D image->arch.backup_src_sz;
--=09=09kbuf.buf_align =3D PAGE_SIZE;
--=09=09/*
--=09=09 * Ideally there is no source for backup segment. This is
--=09=09 * copied in purgatory after crash. Just add a zero filled
--=09=09 * segment for now to make sure checksum logic works fine.
--=09=09 */
--=09=09ret =3D kexec_add_buffer(&kbuf);
--=09=09if (ret)
--=09=09=09return ret;
--=09=09image->arch.backup_load_addr =3D kbuf.mem;
--=09=09pr_debug("Loaded backup region at 0x%lx backup_start=3D0x%lx memsz=
-=3D0x%lx\n",
--=09=09=09 image->arch.backup_load_addr,
--=09=09=09 image->arch.backup_src_start, kbuf.memsz);
--=09}
--
- =09/* Prepare elf headers and add a segment */
- =09ret =3D prepare_elf_headers(image, &kbuf.buffer, &kbuf.bufsz);
- =09if (ret)
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_k=
-exec_64.c
-index 5dcd438ad8f2..16e125a50b33 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -298,48 +298,6 @@ static void load_segments(void)
- =09=09);
- }
-=20
--#ifdef CONFIG_KEXEC_FILE
--/* Update purgatory as needed after various image segments have been prepa=
-red */
--static int arch_update_purgatory(struct kimage *image)
--{
--=09int ret =3D 0;
--
--=09if (!image->file_mode)
--=09=09return 0;
--
--=09/* Setup copying of backup region */
--=09if (image->type =3D=3D KEXEC_TYPE_CRASH) {
--=09=09ret =3D kexec_purgatory_get_set_symbol(image,
--=09=09=09=09"purgatory_backup_dest",
--=09=09=09=09&image->arch.backup_load_addr,
--=09=09=09=09sizeof(image->arch.backup_load_addr), 0);
--=09=09if (ret)
--=09=09=09return ret;
--
--=09=09ret =3D kexec_purgatory_get_set_symbol(image,
--=09=09=09=09"purgatory_backup_src",
--=09=09=09=09&image->arch.backup_src_start,
--=09=09=09=09sizeof(image->arch.backup_src_start), 0);
--=09=09if (ret)
--=09=09=09return ret;
--
--=09=09ret =3D kexec_purgatory_get_set_symbol(image,
--=09=09=09=09"purgatory_backup_sz",
--=09=09=09=09&image->arch.backup_src_sz,
--=09=09=09=09sizeof(image->arch.backup_src_sz), 0);
--=09=09if (ret)
--=09=09=09return ret;
--=09}
--
--=09return ret;
--}
--#else /* !CONFIG_KEXEC_FILE */
--static inline int arch_update_purgatory(struct kimage *image)
--{
--=09return 0;
--}
--#endif /* CONFIG_KEXEC_FILE */
--
- int machine_kexec_prepare(struct kimage *image)
- {
- =09unsigned long start_pgtable;
-@@ -353,11 +311,6 @@ int machine_kexec_prepare(struct kimage *image)
- =09if (result)
- =09=09return result;
-=20
--=09/* update purgatory as needed */
--=09result =3D arch_update_purgatory(image);
--=09if (result)
--=09=09return result;
--
- =09return 0;
- }
-=20
-diff --git a/arch/x86/purgatory/purgatory.c b/arch/x86/purgatory/purgatory.=
-c
-index 3b95410ff0f8..2961234d0795 100644
---- a/arch/x86/purgatory/purgatory.c
-+++ b/arch/x86/purgatory/purgatory.c
-@@ -14,28 +14,10 @@
-=20
- #include "../boot/string.h"
-=20
--unsigned long purgatory_backup_dest __section(.kexec-purgatory);
--unsigned long purgatory_backup_src __section(.kexec-purgatory);
--unsigned long purgatory_backup_sz __section(.kexec-purgatory);
--
- u8 purgatory_sha256_digest[SHA256_DIGEST_SIZE] __section(.kexec-purgatory)=
-;
-=20
- struct kexec_sha_region purgatory_sha_regions[KEXEC_SEGMENT_MAX] __section=
-(.kexec-purgatory);
-=20
--/*
-- * On x86, second kernel requries first 640K of memory to boot. Copy
-- * first 640K to a backup region in reserved memory range so that second
-- * kernel can use first 640K.
-- */
--static int copy_backup_region(void)
--{
--=09if (purgatory_backup_dest) {
--=09=09memcpy((void *)purgatory_backup_dest,
--=09=09       (void *)purgatory_backup_src, purgatory_backup_sz);
--=09}
--=09return 0;
--}
--
- static int verify_sha256_digest(void)
- {
- =09struct kexec_sha_region *ptr, *end;
-@@ -66,7 +48,6 @@ void purgatory(void)
- =09=09for (;;)
- =09=09=09;
- =09}
--=09copy_backup_region();
- }
-=20
- /*
---=20
-2.17.1
+On 19:33 Wed 30 Oct 2019, Randy Dunlap wrote:
+>Hi,
+>
+>On 10/30/19 2:54 AM, Bhaskar Chowdhury wrote:
+>> This patch will remove old kernels and modules directorey related
+>> to that kernel from the system by interactively and silently.Here
+>> are few interactions with the scripts
+>>=20
+>> 1)
+>>=20
+>> =E2=9C=94 ~/git-linux/linux-kbuild [master|AM 1/1 =E2=86=91=C2=B759|=E2=
+=9C=94]
+>> 14:52 $ ./scripts/prune-kernel -h
+>> Usage: prune-kernel [ri]
+>>=20
+>>  -r | --remove kernel_ver modules_dir_name
+>>=20
+>>   -i | --interactive use as interactive way
+>>   =E2=9C=98-1 ~/git-linux/linux-kbuild [master|AM 1/1 =E2=86=91=C2=B759|=
+=E2=9C=94]
+>>  =20
+>>   14:52 $ ./scripts/prune-kernel --help
+>>   Usage: prune-kernel [ri]
+>
+>That "[ri]" is confusing to me.
+This are the options one has to pass with the script.Like below:
+>>=20
+>>    -r | --remove kernel_ver modules_dir_na]
+>>=20
+>>     -i | --interactive use as interactive way
+>>   =20
+>>  2)
+>>=20
+>>  =E2=9C=98-1 ~/git-linux/linux-kbuild [master|AM 1/1 =E2=86=91=C2=B759|=
+=E2=9C=94]
+>>  14:52 $ ./scripts/prune-kernel -r 5.3.3
+>>  You need to provide kernel version and modules dir name
+>> =20
+>>  =E2=9C=98-1 ~/git-linux/linux-kbuild [master|AM 1/1 =E2=86=91=C2=B759|=
+=E2=9C=94]
+>>  14:53 $ ./scripts/prune-kernel -r
+>>  You need to provide kernel version and modules dir name
+>> =20
+>>  =E2=9C=98-1 ~/git-linux/linux-kbuild [master|AM 1/1 =E2=86=91=C2=B759|=
+=E2=9C=94]
+>>  14:54 $ ./scripts/prune-kernel -r 5.3.3 5.3.3-foo
+>
+>This one above didn't remove any kernel files.
+>Needs more testing.
+It does remove but silently, as you and Bruce asked for this feature.
+>
+>> 3)
+>>=20
+>> $ ./scripts/prune-kernel --remove
+>> You need to provide kernel version and modules dir name
+>>=20
+>> =E2=9C=98-1 ~/git-linux/linux-kbuild [master|AM 1/1 =E2=86=91=C2=B759|=
+=E2=9C=94]
+>> 14:55 $ ./scripts/prune-kernel --remove 5.3.3
+>> You need to provide kernel version and modules dir name
+>>=20
+>> =E2=9C=98-1 ~/git-linux/linux-kbuild [master|AM 1/1 =E2=86=91=C2=B759|=
+=E2=9C=94]
+>> 14:55 $ ./scripts/prune-kernel --remove 5.3.3 5.3.3-foo
+>>=20
+>>=20
+>> 4)14:55 $ ./scripts/prune-kernel -i
+>>=20
+>> Enter kernel version to remove or blank/empty to exit:
+>>=20
+>>=20
+>> 5)14:57 $ ./scripts/prune-kernel --interactive
+>>=20
+>> Enter kernel version to remove or blank/empty to exit:
+>> =E2=9C=94 ~/git-linux/linux-kbuild [master|AM 1/1 =E2=86=91=C2=B759|=E2=
+=9C=94]
+>>=20
+>>=20
+>> 6)14:59 $ ./scripts/prune-kernel --interactive
+>>=20
+>> Enter kernel version to remove or blank/empty to exit:5.3.3
+>> Please give the full modules directory name to remove:5.3.3-foo
+>>=20
+>>=20
+>>=20
+>> Removed kernel version:5.3.3 and associated modules:5.3.3-foo ...Done.
+>>=20
+>>=20
+>> 7)15:00 $ ./scripts/prune-kernel -i
+>>=20
+>> Enter kernel version to remove or blank/empty to exit:5.3.3
+>> Please give the full modules directory name to remove:5.3.3-foo
+>>=20
+>>=20
+>>=20
+>> Removed kernel version:5.3.3 and associated modules:5.3.3-foo ...Done.
+>>=20
+>>=20
+>> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+>> ---
+>>  scripts/prune-kernel | 63 ++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 63 insertions(+)
+>>=20
+>> diff --git a/scripts/prune-kernel b/scripts/prune-kernel
+>> index a25aa2160d47..a91010d0e2af 100755
+>> --- a/scripts/prune-kernel
+>> +++ b/scripts/prune-kernel
+>> @@ -1,3 +1,66 @@
+>>  #!/bin/bash
+>>  # SPDX-License-Identifier: GPL-2.0
+>> +#This script will delete old kernels and modules directory related to it
+>> +#-h with the script will show you the help
+>> +#-r with the script take two parameter: kernel_ver and modules_dir_name
+>> +#-i with the script allow you do the removing interactive way
+>>=20
+>> +flag=3D$1
+>> +kernel_ver=3D$2
+>> +modules_dir_name=3D$3
+>> +boot_dir=3D/boot
+>> +modules_dir=3D/lib/modules
+>> +
+>> +remove_old_kernel() {
+>> +	cd $boot_dir
+>> +	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kern=
+el_version
+>> +	return 0
+>> +}
+>> +
+>> +remove_old_modules_dir() {
+>> +	cd $modules_dir
+>> +	rm -rf $modules_version
+>> +	return 0
+>> +}
+>> +
+>> +usage() {
+>> +	printf "Usage: $(basename $0) [ri] \n"
+>> +	printf "\n -r | --remove kernel_ver modules_dir_name \n"
+>> +	printf "\n -i | --interactive use as interactive way \n"
+>> +}
+>> +
+>> +for arg in "$@"
+>
+>what is the purpose (use) of "arg" here?
 
+This variable is used in case statement below.
+>what is the purpose of the for loop?
+>
+It scan through all the parameters pass .
+>Is any 'shift' needed to consume (or discard) the first 3 positional
+>command line arguments?
+Nope, that is not required. And I haven't use any.
+>
+>> +do
+>> +	case "$flag" in
+>> +		-i | --interactive)
+>> +			printf "\nEnter kernel version to remove or blank/empty to exit:%s"
+>> +			read kernel_version
+>> +			if [[ $kernel_version !=3D "" ]]; then
+>> +				remove_old_kernel
+>> +				printf "Please give the full modules directory name to remove:%s"
+>> +				read modules_version
+>> +				if [[ $modules_version !=3D "" ]]; then
+>> +					remove_old_modules_dir
+>> +					printf "\n\n\n Removed kernel version:$kernel_version and associat=
+ed modules:$modules_version ...Done. \n"
+>
+>This message is only printed if $modules_version is non-empty.  If it is e=
+mpty,
+>remove_old_kernel() has silently removed some kernel files (if they existe=
+d).
+it will fail to remove anything if the kernel_version or modules_version
+are empty and importantly exit.
+>
+>> +				else
+>> +					exit 1
+>> +				fi
+>> +			fi
+>> +			;;
+>> +		-h | --help)
+>> +			usage
+>> +			exit 1
+>> +			;;
+>> +		-r | --remove)
+>> +			if [[ $# -ne 3 ]]; then
+>> +				printf "You need to provide kernel version and modules dir name\n"
+>> +				exit 1
+>> +			else
+>> +				cd $boot_dir
+>> +				rm -f $kernel_ver
+>
+>That 'rm' doesn't remove any files.  Compare what remove_old_kernel() does.
+No,it is not using that function rather take the parameter from the
+commandline and get into boot dir match with it and remove it.
+>
+>> +				cd $modules_dir
+>> +				rm -rf $modules_dir_name
+>> +			fi
+>> +			;;
+>> +	esac
+>> +done
+>> --
+>
+>The script, after this patch is applied, still contains the old script's f=
+or-loop
+>at the end of the "new" prune-kernel script.
+
+Amazing! now it needs some explanation how I did...you probably want
+that ..here are the steps....
+1)fetch that prune-kernel file from repos , which contains Bruce's code
+in it.
+2) get inot it by editior, remove all except first two lines i.e bash
+interpreter and PSDX .
+3)Save and commit it locally.
+4) Write my own code
+5) save it and commit it locally.
+6) go one level up use checkpatch to see anything bad creeps in
+7) Fixed the damn things if it reports.
+8) create the patch
+9) test it
+10) Send it.
+
+Now, how the heck , that for loop is getting staying there is a mystry
+to me!! Look like that is ruin all the work.
+irk...
+>
+>Nack.
+>
+>--=20
+>~Randy
+
+--6TrnltStXW4iwmi0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl26VusACgkQsjqdtxFL
+KRU8Pwf/eIERMg8q3PZ5HJKHoCXv5QSSgU9JUSvOKb2djHo2igkrh/CaEbXhPUlO
+cx2bGWFlGuTEauqhtHQdjhINEjONAcniyHwgDwzuixUcjghuKH8CM/FSJvBQ1DjN
+Z4SheFRmZsEMwcuJwNqmtUr+soiM+yM2CHiUDT5RjPGlByGdlExaYeVarykiakC6
+P4e77eaP1N/Gz4pVQ7zetHBJLnnrYFmLPD/gfxs0F60MnHgyu2zGEmXI4mk3UZiR
+YMhO/lowLGYKdtKRgk8zXHdeuKKaE8RA++ow3trQcJ4Cz85JNyqWSIUzKTJkySBP
+j8OOJBfXmWFYpIlpwtsaSiIbyq/36g==
+=zL2g
+-----END PGP SIGNATURE-----
+
+--6TrnltStXW4iwmi0--
