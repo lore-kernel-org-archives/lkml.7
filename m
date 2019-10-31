@@ -2,114 +2,88 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EA7CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2DACA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C9C52087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399E620873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572528537;
-	bh=Vdsn3ouGQqdKJxg6rBIxYfacsyFRzG6/XTHAj2EWdFA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=rAtoKV5F5G/yT6/ywNOG5IC6AA/Xvw9fvoWV1Fi4A+Zn7jrY17uuBBpzUHzcxas0B
-	 YIhQ5L8KE389NwTOvgpGbw1e61Y6+p4HzHRLW6Tf1e3s41beBO5oF/wn0wNQj3+rvv
-	 rP8QGhrZPNTkOsIhb0uqTpV/Eo8fh2nd62Ju6OO0=
+	s=default; t=1572528561;
+	bh=CZwLCQC08Yd2rFJN0WaEwbxJ61oj5DVAAFsImEubPO4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oCMEahMYwZYwnXuAkH/uzrNBvAcNacJdHb5xnzADgNSpSX4FgXglVCQXbTJpAkVaV
+	 JuQ2PsA7gxqkvDMRsNWGIpThhIVqst+cxzyHxdeHeyj5uZ2PG8akf8I4AInHmhMLNC
+	 qxeoN3utqMr7yac08dOhTWqzBjdNqOMVaxd9oKoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfJaN24 (ORCPT
+        id S1727257AbfJaN3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:28:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40470 "EHLO mail.kernel.org"
+        Thu, 31 Oct 2019 09:29:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727003AbfJaN24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:28:56 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        id S1726836AbfJaN3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 09:29:19 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D376220862;
-        Thu, 31 Oct 2019 13:28:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34B5520862;
+        Thu, 31 Oct 2019 13:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572528535;
-        bh=Vdsn3ouGQqdKJxg6rBIxYfacsyFRzG6/XTHAj2EWdFA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ILRPGrHpRJTaD8MzLwhSMUGNfpsMQmgiCICKFXUcL7Sd7Y5UVPjrrH3NZlV8bvuIs
-         4NzTRlP4QCsShkbDl9wwBIFjR5aYDWNeqxPDqu0Z2T+yw5DWrXrMWCC16L/XgrHEB1
-         fKK/7X0bJ72f05QxiEgJhnqTCJclx+tHO8r9dgQ8=
-Date:   Thu, 31 Oct 2019 08:28:53 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jian-Hong Pan <jian-hong@endlessm.com>
-Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] Revert "nvme: Add quirk for Kingston NVME SSD running
- FW E8FK11.T"
-Message-ID: <20191031132853.GA46011@google.com>
+        s=default; t=1572528559;
+        bh=CZwLCQC08Yd2rFJN0WaEwbxJ61oj5DVAAFsImEubPO4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=brqxESrJ8f9jGx5TG2+yTUCdTfm7FBHUPr4S/hC9c9wHbr1cLV+wpLNLgH7jusJPs
+         9ttfVk4cbmaCG/yePe3MMuR2pXV3WfEJRQY9sOxPFxGpCYgGNAnJg9n2xwBOZjcewE
+         vhqOlEG0CzOxG0LyOLbZi+JCViuZtYUkaO8zG3VU=
+Date:   Thu, 31 Oct 2019 13:29:15 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>, jhugo@codeaurora.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: cpufeature: Enable Qualcomm Falkor errata 1009
+ for Kryo
+Message-ID: <20191031132914.GD27196@willie-the-truck>
+References: <20191029232738.1483923-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191031093408.9322-1-jian-hong@endlessm.com>
+In-Reply-To: <20191029232738.1483923-1-bjorn.andersson@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 05:34:09PM +0800, Jian-Hong Pan wrote:
-> Since commit 253eaf4faaaa ("PCI/MSI: Fix incorrect MSI-X masking on
-> resume") is merged, we can revert the previous quirk now.
+[+Jeffrey]
 
-253eaf4faaaa is pending on my pci/msi branch, planned to be merged
-during the v5.5 merge window.
-
-This revert patch must not be merged before 253eaf4faaaa.  The easiest
-way to do that would be for me to merge this one as well; otherwise
-we have to try to make things happen in the right order during the
-merge window.
-
-If the NVMe folks ack this idea and the patch, I'd be happy to merge
-it.
-
-> This reverts commit 19ea025e1d28c629b369c3532a85b3df478cc5c6.
+On Tue, Oct 29, 2019 at 04:27:38PM -0700, Bjorn Andersson wrote:
+> The Kryo cores share errata 1009 with Falkor, so add their model
+> definitions and enable it for them as well.
 > 
-> Fixes: 19ea025e1d28 ("nvme: Add quirk for Kingston NVME SSD running FW E8FK11.T")
-> Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204887
-> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-> Cc: stable@vger.kernel.org
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
-> v2:
->   Re-send for mailing failure
 > 
->  drivers/nvme/host/core.c | 10 ----------
->  1 file changed, 10 deletions(-)
-> 
-> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> index fa7ba09dca77..94bfbee1e5f7 100644
-> --- a/drivers/nvme/host/core.c
-> +++ b/drivers/nvme/host/core.c
-> @@ -2404,16 +2404,6 @@ static const struct nvme_core_quirk_entry core_quirks[] = {
->  		.vid = 0x14a4,
->  		.fr = "22301111",
->  		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
-> -	},
-> -	{
-> -		/*
-> -		 * This Kingston E8FK11.T firmware version has no interrupt
-> -		 * after resume with actions related to suspend to idle
-> -		 * https://bugzilla.kernel.org/show_bug.cgi?id=204887
-> -		 */
-> -		.vid = 0x2646,
-> -		.fr = "E8FK11.T",
-> -		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
->  	}
->  };
->  
-> -- 
-> 2.23.0
-> 
+> Changes since v1:
+> - Use is_kryo_midr(), rather than listing each individual model.
+
+Cheers, I've queued this up as a fix.
+
+I also updated the E1009 entry in silicon-errata.rst but, in doing so, I
+noticed that E1041 is listed there which apparently also affects
+Kry^H^H^HHydra [1].
+
+At which point, maybe we should rename both Kryo and Falkor in the tree
+so that we consistently refer to Hydra as the underlying micro-architecture.
+Obviously not something for 5.4, but it would sure help me to understand
+what's doing on here.
+
+Thoughts?
+
+Will
+
+[1] https://lore.kernel.org/kvmarm/20171115010505.GO11955@codeaurora.org/
