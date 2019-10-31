@@ -2,192 +2,110 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 951C6CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51456CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8F420659
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B5C2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:42:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eWiDdNXj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vyAZGLuQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbfJaRlx (ORCPT
+        id S1729121AbfJaRmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 13:41:53 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36853 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728561AbfJaRlw (ORCPT
+        Thu, 31 Oct 2019 13:42:31 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:34346 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728974AbfJaRma (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 13:41:52 -0400
-Received: by mail-pf1-f195.google.com with SMTP id v19so4852548pfm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 10:41:52 -0700 (PDT)
+        Thu, 31 Oct 2019 13:42:30 -0400
+Received: by mail-vs1-f68.google.com with SMTP id 127so1725399vsn.1
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 10:42:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DFxY9HZbAftkc6ZEf7DIO4SCG3jzu7OlqMydfjKW4pU=;
-        b=eWiDdNXjXm7b0tkJhXmJW29hx5jKtPuG/5ga1AQNcM+4BCNwzsLltNphqpnoZJV5h4
-         NlvsSh4M87vrh+o13iwst4Uso0yA3I9BE7bdOzzEAXmzEJ8rxMzhBlm41sjp/vU+9f6u
-         BB/Jm75OaBDHyhpSxf1NtlpsIec7WZaZXaU0A=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SpMt9swBFV/X7pJxY11yJxvoU/jl5TYZqkYEwxVo1zk=;
+        b=vyAZGLuQJaP6UmPU/5OivZeIeCWgYHlNvqLsuh7U3yYJqNwBg3VduUAZbxG7Wh6UWt
+         vR9hiusZOPdTKmpPzcbCdthcVtfAuVWCA/M8pStelbzfHpRETEdtgYoVIO74pLVcS5Aj
+         PDux1c/zr+9UcdqYc/u8vkoVsM0YeYHd9+PtmsdPd6I9nLItOy76IJT1irNZ7ZvnLPOp
+         Awz0G6XV3jDbzYKy0ICsWxla4idyK6XrPywrZoHibV+ewA3guRirwYmw7BYI3lR697k/
+         6y0spqBrB465HxukOz7+BvekqO5c7tmGdGe9sOFhPb3/TuqkcTuslnkiueSXTjL7kZ2a
+         Exew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DFxY9HZbAftkc6ZEf7DIO4SCG3jzu7OlqMydfjKW4pU=;
-        b=rfw0LEDfWsRbHWj5hdPzInEl9TTdVp9qGqMwtm8nH0Qhoz8nh41bk7IzWoYmbe7sOJ
-         Hy3vXZQ/9U9xBljn5VVEgeBAFwG/AZGAFq6JyaoP2LTqje/aIMPzl1jLeoMqYIRKtXr8
-         VxpvphRLM0jo05pjW/0E0RAS8VDNPEFPCqvDLk1gWBDSk/mRxkA8UxsS0rWxt21wo+4f
-         xKSjebh/j/kN4/gcZ2dMz8hvn2liiDJGYQYJgRRPzhcTp/+PBMz2+qdZVS2a8qOa/65T
-         eNas2/DEQ5ODkfsN17X3O/iRLLSVPAiVRvrIPfszk/KPTJUMbyctlUbbTDp5HdvKzfQY
-         fZcw==
-X-Gm-Message-State: APjAAAV9Sz44gYChCEFbeg0TGospipZWiKnyBuK7k+syjDYaXol1c5MY
-        R1UKZnNTLNCoT4P3p6oJ7ab1ZA==
-X-Google-Smtp-Source: APXvYqxaAic0W+0GltNXLrUaUFbKQaUKuojcLcEWtkxF1z781kp35xDw1V+TzemJKEpy0ZBkO/29BA==
-X-Received: by 2002:a17:90a:e90:: with SMTP id 16mr9046788pjx.65.1572543711707;
-        Thu, 31 Oct 2019 10:41:51 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id d14sm5531817pfh.36.2019.10.31.10.41.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 31 Oct 2019 10:41:51 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 10:41:49 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        eykumar Sankaran <jsanka@codeaurora.org>
-Subject: Re: [PATCH v4 5/5] clk: qcom: Add Global Clock controller (GCC)
- driver for SC7180
-Message-ID: <20191031174149.GD27773@google.com>
-References: <20191014102308.27441-1-tdas@codeaurora.org>
- <20191014102308.27441-6-tdas@codeaurora.org>
- <20191029175941.GA27773@google.com>
- <fa17b97d-bfc4-4e9c-78b5-c225e5b38946@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SpMt9swBFV/X7pJxY11yJxvoU/jl5TYZqkYEwxVo1zk=;
+        b=IT8QDTP1e0YpjKxRed1LY2jCSrvX63CvVZWqhTzDgYqSnVnSFjpkk9rKwT5xB6+HC+
+         RT9m6VzwegNqSho1574q1vN6dC9gXyAItLzIqa4OMtgkpcidNlDNkHZPKoXA6VGYx1rt
+         JPv9z/oVFDxsJDdaqLpUIZPQADSetGUizEgAaeu7sCKH0tWO9OlE/fjV4Yr2tZEpsYKX
+         GUAvcIwvzJx4ENlDZiT9waM+iXfomRaDTFXcQVM/3+27bU+4m9OOC/1j1YDHFOrZopS+
+         UxOmuwm0VEopqkkVLVZnGYo4jxm7Cb04efq67TlhKBhGZQecWA9CmoXlzKsU4BNNst60
+         HpXw==
+X-Gm-Message-State: APjAAAWg2rL4Atr29D+WNwX6faGyEdCDnDkH4GeFI8chbmwy4kUv2nlA
+        HmWmRU0v5TI0n0rH5RItYW+I6+hkyPQqagWXUkQy0Q==
+X-Google-Smtp-Source: APXvYqw74Dsa5tbwvZVY6ubm3mq6Ol0GpZBf3HyKWvRWHEbC8fAxc8l0X7gBK5dChGcDSWL/yjwxE6D5ZDxmwT29ntI=
+X-Received: by 2002:a67:ed8b:: with SMTP id d11mr3309159vsp.104.1572543748924;
+ Thu, 31 Oct 2019 10:42:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <fa17b97d-bfc4-4e9c-78b5-c225e5b38946@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191031164637.48901-1-samitolvanen@google.com> <20191031164637.48901-14-samitolvanen@google.com>
+ <CAKwvOd=kcPS1CU=AUjOPr7SAipPFhs-v_mXi=AbqW5Vp9XUaiw@mail.gmail.com>
+ <CABCJKudb2_OH5CRFm64rxv-VVnuOrO-ZOrXRHg8hR98Vj+BzVw@mail.gmail.com> <CAKwvOd=dO2QjiRWegjCtnMmVguaJ2YHacJRP3SbVVy9jhx-BWw@mail.gmail.com>
+In-Reply-To: <CAKwvOd=dO2QjiRWegjCtnMmVguaJ2YHacJRP3SbVVy9jhx-BWw@mail.gmail.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Thu, 31 Oct 2019 10:42:17 -0700
+Message-ID: <CABCJKueVVJNV2MibRkQGPbmpenK_b007kkHOoxfBHf1Wen2ENw@mail.gmail.com>
+Subject: Re: [PATCH v3 13/17] arm64: preserve x18 when CPU is suspended
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Taniya,
+On Thu, Oct 31, 2019 at 10:35 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Thu, Oct 31, 2019 at 10:27 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+> >
+> > On Thu, Oct 31, 2019 at 10:18 AM Nick Desaulniers
+> > <ndesaulniers@google.com> wrote:
+> > > > +#ifdef CONFIG_SHADOW_CALL_STACK
+> > > > +       ldr     x18, [x0, #96]
+> > > > +       str     xzr, [x0, #96]
+> > >
+> > > How come we zero out x0+#96, but not for other offsets? Is this str necessary?
+> >
+> > It clears the shadow stack pointer from the sleep state buffer, which
+> > is not strictly speaking necessary, but leaves one fewer place to find
+> > it.
+>
+> That sounds like a good idea.  Consider adding comments or to the
+> commit message so that the str doesn't get removed accidentally in the
+> future.
 
-On Thu, Oct 31, 2019 at 04:59:26PM +0530, Taniya Das wrote:
-> Hi Matthias,
-> 
-> Thanks for your comments.
-> 
-> On 10/29/2019 11:29 PM, Matthias Kaehlcke wrote:
-> > Hi Taniya,
-> > 
-> > On Mon, Oct 14, 2019 at 03:53:08PM +0530, Taniya Das wrote:
-> > > Add support for the global clock controller found on SC7180
-> > > based devices. This should allow most non-multimedia device
-> > > drivers to probe and control their clocks.
-> > > 
-> > > Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> 
-> > 
-> > v3 also had
-> > 
-> > +	[GCC_DISP_AHB_CLK] = &gcc_disp_ahb_clk.clkr,
-> > 
-> > Removing it makes the dpu_mdss driver unhappy:
-> > 
-> > [    2.999855] dpu_mdss_enable+0x2c/0x58->msm_dss_enable_clk: 'iface' is not available
-> > 
-> > because:
-> > 
-> >          mdss: mdss@ae00000 {
-> >      	        ...
-> > 
-> >   =>             clocks = <&gcc GCC_DISP_AHB_CLK>,
-> >                           <&gcc GCC_DISP_HF_AXI_CLK>,
-> >                           <&dispcc DISP_CC_MDSS_MDP_CLK>;
-> >                  clock-names = "iface", "gcc_bus", "core";
-> > 	};
-> > 
-> 
-> The basic idea as you mentioned below was to move the CRITICAL clocks to
-> probe. The clock provider to return NULL in case the clocks are not
-> registered.
-> This was discussed with Stephen on v3. Thus I submitted the below patch.
-> clk: qcom: common: Return NULL from clk_hw OF provider.
+Sure, I'll add a comment in the next version.
 
-I see. My assumption was that the entire clock hierarchy should be registered,
-but Stephen almost certainly knows better :)
-
-> Yes it would throw these warnings, but no functional issue is observed from
-> display. I have tested it on the cheza board.
-
-The driver considers it an error (uses DEV_ERR to log the message) and doesn't
-handle other clocks when one is found missing. I'm not really famililar with
-the dpu_mdss driver, but I imagine this can have some side effects. Added some
-of the authors/contributors to cc.
-
-> I guess we could fix the DRM driver to use the "devm_clk_get_optional()"
-> instead?
-
-It would also require a minor rework of the driver, which currently expects
-all specified clocks to be available.
-
-Another option could be to not list the clock in the device tree, then the
-driver won't notice it as missing.
-
-> > More clocks were removed in v4:
-> > 
-> > -       [GCC_CPUSS_GNOC_CLK] = &gcc_cpuss_gnoc_clk.clkr,
-> > -       [GCC_GPU_CFG_AHB_CLK] = &gcc_gpu_cfg_ahb_clk.clkr,
-> > -       [GCC_VIDEO_AHB_CLK] = &gcc_video_ahb_clk.clkr,
-> > 
-> > I guess this part of "remove registering the CRITICAL clocks to clock provider
-> > and leave them always ON from the GCC probe." (change log entry), but are you
-> > sure nobody is going to reference these clocks?
-> > 
-> 
-> Even if they are referenced clk provider would return NULL.
-> 
-> > > +static int gcc_sc7180_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct regmap *regmap;
-> > > +	int ret;
-> > > +
-> > > +	regmap = qcom_cc_map(pdev, &gcc_sc7180_desc);
-> > > +	if (IS_ERR(regmap))
-> > > +		return PTR_ERR(regmap);
-> > > +
-> > > +	/*
-> > > +	 * Disable the GPLL0 active input to MM blocks, NPU
-> > > +	 * and GPU via MISC registers.
-> > > +	 */
-> > > +	regmap_update_bits(regmap, 0x09ffc, 0x3, 0x3);
-> > > +	regmap_update_bits(regmap, 0x4d110, 0x3, 0x3);
-> > > +	regmap_update_bits(regmap, 0x71028, 0x3, 0x3);
-> > 
-> > In v3 this was:
-> > 
-> > 	regmap_update_bits(regmap, GCC_MMSS_MISC, 0x3, 0x3);
-> > 	regmap_update_bits(regmap, GCC_NPU_MISC, 0x3, 0x3);
-> > 	regmap_update_bits(regmap, GCC_GPU_MISC, 0x3, 0x3);
-> > 
-> > IMO register names seem preferable, why switch to literal addresses
-> > instead?
-> > 
-> 
-> :). These cleanups where done based on the comments I had received during
-> SDM845 review. If Stephen is fine moving them to names, I could submit them
-> in the next patch series.
-
-Ok, thanks
+Sami
