@@ -2,131 +2,174 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D16CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D536ECA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49B9B216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2FEC216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:37:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XNlZB+uF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbfJaShA (ORCPT
+        id S1729390AbfJaShv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:37:00 -0400
-Received: from mga14.intel.com ([192.55.52.115]:53184 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729027AbfJaSg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:36:59 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 11:36:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,252,1569308400"; 
-   d="scan'208";a="212547050"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga002.jf.intel.com with ESMTP; 31 Oct 2019 11:36:56 -0700
-Date:   Thu, 31 Oct 2019 11:36:56 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 03/19] goldish_pipe: rename local pin_user_pages() routine
-Message-ID: <20191031183656.GD14771@iweiny-DESK2.sc.intel.com>
-References: <20191030224930.3990755-1-jhubbard@nvidia.com>
- <20191030224930.3990755-4-jhubbard@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191030224930.3990755-4-jhubbard@nvidia.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+        Thu, 31 Oct 2019 14:37:51 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43132 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729266AbfJaShv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 14:37:51 -0400
+Received: by mail-pg1-f195.google.com with SMTP id l24so4587010pgh.10
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 11:37:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=2nYGKPeQWZBCF+i8MPNjPGjQ92pRq1yryrClg8ZxihQ=;
+        b=XNlZB+uFwf+YEk52zj5fYFrMl+TYfnxJ8l5OOnSz4fxogzmG9rh7I/aqY7IUN3I8iw
+         jHLvXy8BxL3FIYfzm9MzcEbBQHXG3T95PtNuEcm9xoQ2qOs+xGyk922A/y7a+JRTCURL
+         uNJzArQp3mvvB1qTE0qY3i/6R6fzMXFeHeKsZWW4JhcsArOpvov31yZE46vsuvO9BXUk
+         xkEoVt9J6mhcNdrPimKvSn4EgPwy0gs2+SUS28Agwpe28PfpHhh4YvoEochEJNabddb0
+         7wqZ2T4aG0erbXPS2/bBQUc/WgYQEIcUi2cglMBScG3Qd+hx/354PbWvZ73eogRM56lg
+         CTdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2nYGKPeQWZBCF+i8MPNjPGjQ92pRq1yryrClg8ZxihQ=;
+        b=AS1UiNZeedxSLtaW2x8rMA5/5NXKaEQaEn0eeaEnGAol+jFtZWa45EMS6P+v9ilTvU
+         M6R3WmzeQ43GMQAFdH57JoCoEGAHL702jzJLVTeBk6TyoPgLlsIRpy2KEKHVziIK4OiT
+         84KKh3zLmWz/ngkw7SuN0Tfc1aN2AvadOeeUMA+hXlCWdFdUwXN4NplIxJPtxauI/Tyl
+         EDmMblE/E3ej6wz18VXmDSps8fNKtLJlVtQZsAzjaashGRp1DEB/sakj+IPADUaKv7oF
+         FyF0PQme1lPHmPNJLNr2kASJuZCBbGUsPnencaY1AJBsPqE9/+JmgEHk4K0xDv4LQV5O
+         KfWQ==
+X-Gm-Message-State: APjAAAVajjmz9IWp3l+uZS23lyYVO3GzSgkwad/tJ18BdNssRGLDGYT4
+        YmJ1WNi2hfvSrkdR/G+kuQZ7rIvSy+MJ5A==
+X-Google-Smtp-Source: APXvYqyPHEkV60aWdkW+CKAXt0QX5BkXpxwo+C9E0ethNA36xWJaG6E5gnjBFVBSbHE6cXo1DdeHMQ==
+X-Received: by 2002:aa7:96bd:: with SMTP id g29mr8447978pfk.28.1572547069886;
+        Thu, 31 Oct 2019 11:37:49 -0700 (PDT)
+Received: from localhost ([49.248.58.234])
+        by smtp.gmail.com with ESMTPSA id w27sm4150620pgc.20.2019.10.31.11.37.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 31 Oct 2019 11:37:48 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
+        masneyb@onstation.org, swboyd@chromium.org, julia.lawall@lip6.fr,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH v7 00/15] thermal: qcom: tsens: Add interrupt support
+Date:   Fri,  1 Nov 2019 00:07:24 +0530
+Message-Id: <cover.1572526427.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 03:49:14PM -0700, John Hubbard wrote:
-> 1. Avoid naming conflicts: rename local static function from
-> "pin_user_pages()" to "pin_goldfish_pages()".
-> 
-> An upcoming patch will introduce a global pin_user_pages()
-> function.
-> 
+Daniel, only patch 15 needs to be changed in the tree being submitted
+to linux-next. But here is the entire series for completeness.
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Hi Thermal and MSM maintainers,
 
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  drivers/platform/goldfish/goldfish_pipe.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/platform/goldfish/goldfish_pipe.c b/drivers/platform/goldfish/goldfish_pipe.c
-> index cef0133aa47a..7ed2a21a0bac 100644
-> --- a/drivers/platform/goldfish/goldfish_pipe.c
-> +++ b/drivers/platform/goldfish/goldfish_pipe.c
-> @@ -257,12 +257,12 @@ static int goldfish_pipe_error_convert(int status)
->  	}
->  }
->  
-> -static int pin_user_pages(unsigned long first_page,
-> -			  unsigned long last_page,
-> -			  unsigned int last_page_size,
-> -			  int is_write,
-> -			  struct page *pages[MAX_BUFFERS_PER_COMMAND],
-> -			  unsigned int *iter_last_page_size)
-> +static int pin_goldfish_pages(unsigned long first_page,
-> +			      unsigned long last_page,
-> +			      unsigned int last_page_size,
-> +			      int is_write,
-> +			      struct page *pages[MAX_BUFFERS_PER_COMMAND],
-> +			      unsigned int *iter_last_page_size)
->  {
->  	int ret;
->  	int requested_pages = ((last_page - first_page) >> PAGE_SHIFT) + 1;
-> @@ -354,9 +354,9 @@ static int transfer_max_buffers(struct goldfish_pipe *pipe,
->  	if (mutex_lock_interruptible(&pipe->lock))
->  		return -ERESTARTSYS;
->  
-> -	pages_count = pin_user_pages(first_page, last_page,
-> -				     last_page_size, is_write,
-> -				     pipe->pages, &iter_last_page_size);
-> +	pages_count = pin_goldfish_pages(first_page, last_page,
-> +					 last_page_size, is_write,
-> +					 pipe->pages, &iter_last_page_size);
->  	if (pages_count < 0) {
->  		mutex_unlock(&pipe->lock);
->  		return pages_count;
-> -- 
-> 2.23.0
-> 
-> 
+I believe this series is now ready to be merged. The DT bindings and driver
+changes should go through the thermal tree and the changes to the DT files
+themselves should go through the MSM tree. There is no hard ordering
+dependency because we're adding a new property to the driver. It would help
+to soak in linux-next for a few weeks to catch anything on kernelci.org.
+
+1-4, 7, 14, 15 => thermal tree
+5, 6, 8-13 => msm tree (already applied by Andy)
+
+Regards,
+Amit
+
+Changes since v6:
+- Stephen reported a warning that only shows up with gcc 9.x
+  (https://lore.kernel.org/lkml/CAHLCerOkeOEEUgtJ=YgDKKXDiyFXHQ4LBdzg3-3VtKvpyceqFg@mail.gmail.com/). Include a patch to initialise the index variable to zero.
+
+Changes since v5:
+- Julia found a missing put_device() call in the success path of
+  tsens_register() while baking in linux-next. A single line change to
+  allow the error and success path to use the call to put_device(). Thanks
+  Julia and LKP.
+
+Changes since v4:
+- Change to of-thermal core[1] to force interrupts w/o changing polling-delay DT
+  parameter
+- Corresponding changes to DT files to remove the hunks setting the values
+  to 0
+- Collected reviews and acks
+
+Changes since v3:
+- Fix up the YAML definitions based on Rob's review
+
+Changes since v2:
+- Addressed Stephen's review comment
+- Moved the dt-bindings to yaml (This throws up some new warnings in various QCOM
+devicetrees. I'll send out a separate series to fix them up)
+- Collected reviews and acks
+- Added the dt-bindings to MAINTAINERS
+
+Changes since v1:
+- Collected reviews and acks
+- Addressed Stephen's review comments (hopefully I got them all).
+- Completely removed critical interrupt infrastructure from this series.
+  Will post that separately.
+- Fixed a bug in sign-extension of temperature.
+- Fixed DT bindings to use the name of the interrupt e.g. "uplow" and use
+  platform_get_irq_byname().
+
+Add interrupt support to TSENS. The first 6 patches are general fixes and
+cleanups to the driver before interrupt support is introduced.
+
+[1] https://lore.kernel.org/linux-arm-msm/1b53ef537203e629328285b4597a09e4a586d688.1571181041.git.amit.kucheria@linaro.org/
+
+
+Amit Kucheria (15):
+  drivers: thermal: tsens: Get rid of id field in tsens_sensor
+  drivers: thermal: tsens: Simplify code flow in tsens_probe
+  drivers: thermal: tsens: Add __func__ identifier to debug statements
+  drivers: thermal: tsens: Add debugfs support
+  arm: dts: msm8974: thermal: Add thermal zones for each sensor
+  arm64: dts: msm8916: thermal: Fixup HW ids for cpu sensors
+  dt-bindings: thermal: tsens: Convert over to a yaml schema
+  arm64: dts: sdm845: thermal: Add interrupt support
+  arm64: dts: msm8996: thermal: Add interrupt support
+  arm64: dts: msm8998: thermal: Add interrupt support
+  arm64: dts: qcs404: thermal: Add interrupt support
+  arm: dts: msm8974: thermal: Add interrupt support
+  arm64: dts: msm8916: thermal: Add interrupt support
+  drivers: thermal: tsens: Create function to return sign-extended
+    temperature
+  drivers: thermal: tsens: Add interrupt support
+
+ .../bindings/thermal/qcom-tsens.txt           |  55 --
+ .../bindings/thermal/qcom-tsens.yaml          | 168 ++++++
+ MAINTAINERS                                   |   1 +
+ arch/arm/boot/dts/qcom-msm8974.dtsi           |  92 +++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi         |   6 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         |   4 +
+ arch/arm64/boot/dts/qcom/msm8998.dtsi         |   6 +-
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |   2 +
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |   4 +
+ drivers/thermal/qcom/tsens-8960.c             |   4 +-
+ drivers/thermal/qcom/tsens-common.c           | 529 ++++++++++++++++--
+ drivers/thermal/qcom/tsens-v0_1.c             |  11 +
+ drivers/thermal/qcom/tsens-v1.c               |  29 +
+ drivers/thermal/qcom/tsens-v2.c               |  13 +
+ drivers/thermal/qcom/tsens.c                  |  59 +-
+ drivers/thermal/qcom/tsens.h                  | 286 ++++++++--
+ 16 files changed, 1102 insertions(+), 167 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+ create mode 100644 Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+
+-- 
+2.17.1
+
