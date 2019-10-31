@@ -2,89 +2,99 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB46CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FB3CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FDA32080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB3DC2080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 02:09:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fi803U72"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfJaCDg (ORCPT
+        id S1726554AbfJaCJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 22:03:36 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:38406 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726184AbfJaCDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 22:03:36 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 63DA9B70C12BC89C0E01;
-        Thu, 31 Oct 2019 10:03:32 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 31 Oct
- 2019 10:03:22 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: bio_alloc should never fail
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Gao Xiang <gaoxiang25@huawei.com>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <20191030035518.65477-1-gaoxiang25@huawei.com>
- <20aa40bd-280d-d223-9f73-d9ed7dbe4f29@huawei.com>
- <20191030091542.GA24976@architecture4>
- <19a417e6-8f0e-564e-bc36-59bfc883ec16@huawei.com>
- <20191030104345.GB170703@architecture4> <20191030151444.GC16197@mit.edu>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <61fc6d47-1cb3-4646-d155-444cff0b5b3e@huawei.com>
-Date:   Thu, 31 Oct 2019 10:03:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 30 Oct 2019 22:09:33 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37313 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbfJaCJd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 22:09:33 -0400
+Received: by mail-qt1-f196.google.com with SMTP id g50so6400656qtb.4;
+        Wed, 30 Oct 2019 19:09:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JEU7U39/Op5pg2LNZgsOwhOAxrwT9y+7EfdsgnrCvPI=;
+        b=fi803U72PttAWd2PzdFrAKhx7mGhy09H/K4lPwDfl05rZpKK3Og3MfkTUbOgpJSJbd
+         9FTYvRABpwcAGrgRfaZIGK7kHn5SVFo7YQf+zEQmHZmdv2PnKbEDI96z7+suMP8P14Em
+         KAdK56dvNLr9EZFbgm1VS6qgr1ZpFf++FFF3xR0RgCYtwQZZxYL5p3RfGF/yvKCS1XMn
+         zeCavCkhYFf4FuNRoClSu+9HiOArYBTO2IoPBWTYuSEM3n51lchqvS03XqSLKIeODRG9
+         1focFuibN0+u0mIwojFOahcapwUqNzQmJZGdDU1GZqgfg0SgSxl30fcNS0Jv3yBii6Go
+         Yuaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JEU7U39/Op5pg2LNZgsOwhOAxrwT9y+7EfdsgnrCvPI=;
+        b=AWLnUiOrx7eYV51hGtoD9M9ij7ZUMSD6igGnbNM9IbBUaA8R+ql+IxMLGCGvmEUBZB
+         sN2LVsdmOmMbR0dgCMna0PlxFqj4VjBPdIjia4Yv2YHOBs1VkL8Q14iE933IDVFG0lEx
+         mrK/zScON8IWx1xkj+t6ZGOyLg0zBozfU9yY+aH5k/YPGQwCgA7zaHyafe5mQy5rONQP
+         fOoyCsJeSarwl1+RIjUW3yf1uekbeqX6uvvHmdBuYfc6wq8lOfzFvbeL4wLaAY4pbEtz
+         UKxCVrR/Eyg7xZVMaNnB5WJh59YFv+IaYsbXAf26ojcRPqsAY2Ayoo9qoCKhMq5enhRH
+         7V8A==
+X-Gm-Message-State: APjAAAXEKYbCyNlv6CExfW/Zdi2SG3c0+JDEu14D4JOiejVX9CCOkWj0
+        E5GYPgTvwQNPbXK3CsXOz40=
+X-Google-Smtp-Source: APXvYqwWylfXZw723vis1t6dYgEYwvWVExz5bajzoGMfn9S84nnqu6pNLCgXoYgDxDPuZ1eLARYRSw==
+X-Received: by 2002:ac8:2d2d:: with SMTP id n42mr3258093qta.119.1572487772183;
+        Wed, 30 Oct 2019 19:09:32 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id z17sm1541316qtj.95.2019.10.30.19.09.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2019 19:09:31 -0700 (PDT)
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org
+Subject: [PATCH net-next v2 0/7] net: dsa: replace routing tables with a list
+Date:   Wed, 30 Oct 2019 22:09:12 -0400
+Message-Id: <20191031020919.139872-1-vivien.didelot@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191030151444.GC16197@mit.edu>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/30 23:14, Theodore Y. Ts'o wrote:
-> On Wed, Oct 30, 2019 at 06:43:45PM +0800, Gao Xiang wrote:
->>> You're right, in low memory scenario, allocation with bioset will be faster, as
->>> you mentioned offline, maybe we can add/use a priviate bioset like btrfs did
->>> rather than using global one, however, we'd better check how deadlock happen
->>> with a bioset mempool first ...
->>
->> Okay, hope to get hints from Jaegeuk and redo this patch then...
-> 
-> It's not at all clear to me that using a private bioset is a good idea
-> for f2fs.  That just means you're allocating a separate chunk of
-> memory just for f2fs, as opposed to using the global pool.  That's an
-> additional chunk of non-swapable kernel memory that's not going to be
-> available, in *addition* to the global mempool.  
-> 
-> Also, who else would you be contending for space with the global
-> mempool?  It's not like an mobile handset is going to have other users
-> of the global bio mempool.
-> 
-> On a low-end mobile handset, memory is at a premium, so wasting memory
-> to no good effect isn't going to be a great idea.
+This branch gets rid of the ds->rtable static arrays in favor of
+a single dst->rtable list. This allows us to move away from the
+DSA_MAX_SWITCHES limitation and simplify the switch fabric setup.
 
-You're right, it looks that the purpose that btrfs added private bioset is to
-avoid abusing bio internal fields (via commit 9be3395bcd4a), f2fs has no such
-reason to do that now.
+Changes in v2:
+  - fix the reverse christmas for David
 
-Thanks,
+Vivien Didelot (7):
+  net: dsa: list DSA links in the fabric
+  net: dsa: remove ds->rtable
+  net: dsa: remove switch routing table setup code
+  net: dsa: remove the dst->ds array
+  net: dsa: remove tree functions related to switches
+  net: dsa: remove limitation of switch index value
+  net: dsa: tag_8021q: clarify index limitation
 
-> 
-> Regards,
-> 
-> 						- Ted
-> .
-> 
+ drivers/net/dsa/mv88e6xxx/chip.c |   8 +-
+ include/net/dsa.h                |  39 +++++++---
+ net/dsa/dsa2.c                   | 121 +++++++++++++------------------
+ net/dsa/tag_8021q.c              |   5 +-
+ 4 files changed, 85 insertions(+), 88 deletions(-)
+
+-- 
+2.23.0
+
