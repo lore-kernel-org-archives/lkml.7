@@ -2,165 +2,255 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E9FCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A067CCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8FBC2087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:20:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572564053;
-	bh=yPaNXg7rVEUmYhJlagKrkpm6GOQfnu1T7GvUBG/ADnA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pof9yaty0bjS37r4jZsoLwljt9glLaphNxTcAedUScYpSlsq3bKwr0N+8fC2FxI3C
-	 5I2ZN51F0bgbOQXqyf/M0U+aQUaQHOulO6O6jwKeffykxnF8L/U5yjFeBIHM524RL4
-	 aGqqVq72UsPUI4pWq4FEuX6tWcNZDW9oiUP4/YgM=
+	by mail.kernel.org (Postfix) with ESMTP id 77BA92080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:25:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbfJaXUw (ORCPT
+        id S1727957AbfJaXZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 19:20:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35398 "EHLO mail.kernel.org"
+        Thu, 31 Oct 2019 19:25:50 -0400
+Received: from mga11.intel.com ([192.55.52.93]:50824 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726540AbfJaXUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 19:20:52 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B2582080F;
-        Thu, 31 Oct 2019 23:20:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572564050;
-        bh=yPaNXg7rVEUmYhJlagKrkpm6GOQfnu1T7GvUBG/ADnA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NdET+Wl6EXY+gsB+rwq78qtmLhnWNtrebAGY0ue+iOBdaOpcpGhCBIDLsa9MioC1q
-         PlhBqz3P4A955GEX821+G61N82B91g5Qmpbe7Uwif2q3+tN/TbQxU8DcWfefjZc4T+
-         7gbk9ZRyemxWrRv0Z9Lb3Ua0oJrSMcInpX1R/8mA=
-Date:   Thu, 31 Oct 2019 16:20:49 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Tejun Heo <tj@kernel.org>, Michal Hocko <mhocko@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux MM <linux-mm@kvack.org>, Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH v2] net: fix sk_page_frag() recursion from memory
- reclaim
-Message-Id: <20191031162049.27e54d9412214aea79acd2ea@linux-foundation.org>
-In-Reply-To: <CALvZod6=B-gMJJxhMRt6k5eRwB-3zdgJR5419orTq8-+36wbMQ@mail.gmail.com>
-References: <20191019170141.GQ18794@devbig004.ftw2.facebook.com>
-        <20191024205027.GF3622521@devbig004.ftw2.facebook.com>
-        <CALvZod6=B-gMJJxhMRt6k5eRwB-3zdgJR5419orTq8-+36wbMQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726540AbfJaXZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 19:25:49 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 16:25:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,253,1569308400"; 
+   d="scan'208";a="199676391"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga007.fm.intel.com with ESMTP; 31 Oct 2019 16:25:48 -0700
+Date:   Thu, 31 Oct 2019 16:25:48 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 07/19] infiniband: set FOLL_PIN, FOLL_LONGTERM via
+ pin_longterm_pages*()
+Message-ID: <20191031232546.GG14771@iweiny-DESK2.sc.intel.com>
+References: <20191030224930.3990755-1-jhubbard@nvidia.com>
+ <20191030224930.3990755-8-jhubbard@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030224930.3990755-8-jhubbard@nvidia.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 31 Oct 2019 10:35:21 -0700 Shakeel Butt <shakeelb@google.com> wrote:
-
-> +Michal Hocko
+On Wed, Oct 30, 2019 at 03:49:18PM -0700, John Hubbard wrote:
+> Convert infiniband to use the new wrapper calls, and stop
+> explicitly setting FOLL_LONGTERM at the call sites.
 > 
-> On Thu, Oct 24, 2019 at 1:50 PM Tejun Heo <tj@kernel.org> wrote:
-> >
-> > sk_page_frag() optimizes skb_frag allocations by using per-task
-> > skb_frag cache when it knows it's the only user.  The condition is
-> > determined by seeing whether the socket allocation mask allows
-> > blocking - if the allocation may block, it obviously owns the task's
-> > context and ergo exclusively owns current->task_frag.
-> >
-> > Unfortunately, this misses recursion through memory reclaim path.
-> > Please take a look at the following backtrace.
-> >
-> >  [2] RIP: 0010:tcp_sendmsg_locked+0xccf/0xe10
-> >      ...
-> >      tcp_sendmsg+0x27/0x40
-> >      sock_sendmsg+0x30/0x40
-> >      sock_xmit.isra.24+0xa1/0x170 [nbd]
-> >      nbd_send_cmd+0x1d2/0x690 [nbd]
-> >      nbd_queue_rq+0x1b5/0x3b0 [nbd]
-> >      __blk_mq_try_issue_directly+0x108/0x1b0
-> >      blk_mq_request_issue_directly+0xbd/0xe0
-> >      blk_mq_try_issue_list_directly+0x41/0xb0
-> >      blk_mq_sched_insert_requests+0xa2/0xe0
-> >      blk_mq_flush_plug_list+0x205/0x2a0
-> >      blk_flush_plug_list+0xc3/0xf0
-> >  [1] blk_finish_plug+0x21/0x2e
-> >      _xfs_buf_ioapply+0x313/0x460
-> >      __xfs_buf_submit+0x67/0x220
-> >      xfs_buf_read_map+0x113/0x1a0
-> >      xfs_trans_read_buf_map+0xbf/0x330
-> >      xfs_btree_read_buf_block.constprop.42+0x95/0xd0
-> >      xfs_btree_lookup_get_block+0x95/0x170
-> >      xfs_btree_lookup+0xcc/0x470
-> >      xfs_bmap_del_extent_real+0x254/0x9a0
-> >      __xfs_bunmapi+0x45c/0xab0
-> >      xfs_bunmapi+0x15/0x30
-> >      xfs_itruncate_extents_flags+0xca/0x250
-> >      xfs_free_eofblocks+0x181/0x1e0
-> >      xfs_fs_destroy_inode+0xa8/0x1b0
-> >      destroy_inode+0x38/0x70
-> >      dispose_list+0x35/0x50
-> >      prune_icache_sb+0x52/0x70
-> >      super_cache_scan+0x120/0x1a0
-> >      do_shrink_slab+0x120/0x290
-> >      shrink_slab+0x216/0x2b0
-> >      shrink_node+0x1b6/0x4a0
-> >      do_try_to_free_pages+0xc6/0x370
-> >      try_to_free_mem_cgroup_pages+0xe3/0x1e0
-> >      try_charge+0x29e/0x790
-> >      mem_cgroup_charge_skmem+0x6a/0x100
-> >      __sk_mem_raise_allocated+0x18e/0x390
-> >      __sk_mem_schedule+0x2a/0x40
-> >  [0] tcp_sendmsg_locked+0x8eb/0xe10
-> >      tcp_sendmsg+0x27/0x40
-> >      sock_sendmsg+0x30/0x40
-> >      ___sys_sendmsg+0x26d/0x2b0
-> >      __sys_sendmsg+0x57/0xa0
-> >      do_syscall_64+0x42/0x100
-> >      entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
-> > In [0], tcp_send_msg_locked() was using current->page_frag when it
+> The new pin_longterm_*() calls replace get_user_pages*()
+> calls, and set both FOLL_LONGTERM and a new FOLL_PIN
+> flag. The FOLL_PIN flag requires that the caller must
+> return the pages via put_user_page*() calls, but
+> infiniband was already doing that as part of an earlier
+> commit.
+> 
 
-"tcp_sendmsg_locked" and "current->task_frag".  Stuff like this makes
-review harder :(
+NOTE: I'm not 100% convinced that mixing the flags and new calls like this is
+good.  I think we are going to need a lot more documentation on which flags are
+"user" accessible vs not...
 
-> > called sk_wmem_schedule().  It already calculated how many bytes can
-> > be fit into current->page_frag.  Due to memory pressure,
-> > sk_wmem_schedule() called into memory reclaim path which called into
-> > xfs and then IO issue path.  Because the filesystem in question is
-> > backed by nbd, the control goes back into the tcp layer - back into
-> > tcp_sendmsg_locked().
-> >
-> > nbd sets sk_allocation to (GFP_NOIO | __GFP_MEMALLOC) which makes
-> > sense - it's in the process of freeing memory and wants to be able to,
-> > e.g., drop clean pages to make forward progress.  However, this
-> > confused sk_page_frag() called from [2].  Because it only tests
-> > whether the allocation allows blocking which it does, it now thinks
-> > current->page_frag can be used again although it already was being
-> > used in [0].
-> >
-> > After [2] used current->page_frag, the offset would be increased by
-> > the used amount.  When the control returns to [0],
-> > current->page_frag's offset is increased and the previously calculated
-> > number of bytes now may overrun the end of allocated memory leading to
-> > silent memory corruptions.
-> >
-> > Fix it by adding gfpflags_normal_context() which tests sleepable &&
-> > !reclaim and use it to determine whether to use current->task_frag.
-> >
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-Dumb-but-obvious question.  Rather than putzing with allocation modes,
-is it not feasible to change the net layer to copy the current value of
-current->task_frag into a local then restore its value when it has
-finished being used?
-
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  drivers/infiniband/core/umem.c              |  5 ++---
+>  drivers/infiniband/core/umem_odp.c          | 10 +++++-----
+>  drivers/infiniband/hw/hfi1/user_pages.c     |  4 ++--
+>  drivers/infiniband/hw/mthca/mthca_memfree.c |  3 +--
+>  drivers/infiniband/hw/qib/qib_user_pages.c  |  8 ++++----
+>  drivers/infiniband/hw/qib/qib_user_sdma.c   |  2 +-
+>  drivers/infiniband/hw/usnic/usnic_uiom.c    |  9 ++++-----
+>  drivers/infiniband/sw/siw/siw_mem.c         |  5 ++---
+>  8 files changed, 21 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/infiniband/core/umem.c b/drivers/infiniband/core/umem.c
+> index 24244a2f68cc..c5a78d3e674b 100644
+> --- a/drivers/infiniband/core/umem.c
+> +++ b/drivers/infiniband/core/umem.c
+> @@ -272,11 +272,10 @@ struct ib_umem *ib_umem_get(struct ib_udata *udata, unsigned long addr,
+>  
+>  	while (npages) {
+>  		down_read(&mm->mmap_sem);
+> -		ret = get_user_pages(cur_base,
+> +		ret = pin_longterm_pages(cur_base,
+>  				     min_t(unsigned long, npages,
+>  					   PAGE_SIZE / sizeof (struct page *)),
+> -				     gup_flags | FOLL_LONGTERM,
+> -				     page_list, NULL);
+> +				     gup_flags, page_list, NULL);
+>  		if (ret < 0) {
+>  			up_read(&mm->mmap_sem);
+>  			goto umem_release;
+> diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
+> index 163ff7ba92b7..a38b67b83db5 100644
+> --- a/drivers/infiniband/core/umem_odp.c
+> +++ b/drivers/infiniband/core/umem_odp.c
+> @@ -534,7 +534,7 @@ static int ib_umem_odp_map_dma_single_page(
+>  	} else if (umem_odp->page_list[page_index] == page) {
+>  		umem_odp->dma_list[page_index] |= access_mask;
+>  	} else {
+> -		pr_err("error: got different pages in IB device and from get_user_pages. IB device page: %p, gup page: %p\n",
+> +		pr_err("error: got different pages in IB device and from pin_longterm_pages. IB device page: %p, gup page: %p\n",
+>  		       umem_odp->page_list[page_index], page);
+>  		/* Better remove the mapping now, to prevent any further
+>  		 * damage. */
+> @@ -639,11 +639,11 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
+>  		/*
+>  		 * Note: this might result in redundent page getting. We can
+>  		 * avoid this by checking dma_list to be 0 before calling
+> -		 * get_user_pages. However, this make the code much more
+> -		 * complex (and doesn't gain us much performance in most use
+> -		 * cases).
+> +		 * pin_longterm_pages. However, this makes the code much
+> +		 * more complex (and doesn't gain us much performance in most
+> +		 * use cases).
+>  		 */
+> -		npages = get_user_pages_remote(owning_process, owning_mm,
+> +		npages = pin_longterm_pages_remote(owning_process, owning_mm,
+>  				user_virt, gup_num_pages,
+>  				flags, local_page_list, NULL, NULL);
+>  		up_read(&owning_mm->mmap_sem);
+> diff --git a/drivers/infiniband/hw/hfi1/user_pages.c b/drivers/infiniband/hw/hfi1/user_pages.c
+> index 469acb961fbd..9b55b0a73e29 100644
+> --- a/drivers/infiniband/hw/hfi1/user_pages.c
+> +++ b/drivers/infiniband/hw/hfi1/user_pages.c
+> @@ -104,9 +104,9 @@ int hfi1_acquire_user_pages(struct mm_struct *mm, unsigned long vaddr, size_t np
+>  			    bool writable, struct page **pages)
+>  {
+>  	int ret;
+> -	unsigned int gup_flags = FOLL_LONGTERM | (writable ? FOLL_WRITE : 0);
+> +	unsigned int gup_flags = (writable ? FOLL_WRITE : 0);
+>  
+> -	ret = get_user_pages_fast(vaddr, npages, gup_flags, pages);
+> +	ret = pin_longterm_pages_fast(vaddr, npages, gup_flags, pages);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> diff --git a/drivers/infiniband/hw/mthca/mthca_memfree.c b/drivers/infiniband/hw/mthca/mthca_memfree.c
+> index edccfd6e178f..beec7e4b8a96 100644
+> --- a/drivers/infiniband/hw/mthca/mthca_memfree.c
+> +++ b/drivers/infiniband/hw/mthca/mthca_memfree.c
+> @@ -472,8 +472,7 @@ int mthca_map_user_db(struct mthca_dev *dev, struct mthca_uar *uar,
+>  		goto out;
+>  	}
+>  
+> -	ret = get_user_pages_fast(uaddr & PAGE_MASK, 1,
+> -				  FOLL_WRITE | FOLL_LONGTERM, pages);
+> +	ret = pin_longterm_pages_fast(uaddr & PAGE_MASK, 1, FOLL_WRITE, pages);
+>  	if (ret < 0)
+>  		goto out;
+>  
+> diff --git a/drivers/infiniband/hw/qib/qib_user_pages.c b/drivers/infiniband/hw/qib/qib_user_pages.c
+> index 6bf764e41891..684a14e14d9b 100644
+> --- a/drivers/infiniband/hw/qib/qib_user_pages.c
+> +++ b/drivers/infiniband/hw/qib/qib_user_pages.c
+> @@ -108,10 +108,10 @@ int qib_get_user_pages(unsigned long start_page, size_t num_pages,
+>  
+>  	down_read(&current->mm->mmap_sem);
+>  	for (got = 0; got < num_pages; got += ret) {
+> -		ret = get_user_pages(start_page + got * PAGE_SIZE,
+> -				     num_pages - got,
+> -				     FOLL_LONGTERM | FOLL_WRITE | FOLL_FORCE,
+> -				     p + got, NULL);
+> +		ret = pin_longterm_pages(start_page + got * PAGE_SIZE,
+> +					 num_pages - got,
+> +					 FOLL_WRITE | FOLL_FORCE,
+> +					 p + got, NULL);
+>  		if (ret < 0) {
+>  			up_read(&current->mm->mmap_sem);
+>  			goto bail_release;
+> diff --git a/drivers/infiniband/hw/qib/qib_user_sdma.c b/drivers/infiniband/hw/qib/qib_user_sdma.c
+> index 05190edc2611..fd86a9d19370 100644
+> --- a/drivers/infiniband/hw/qib/qib_user_sdma.c
+> +++ b/drivers/infiniband/hw/qib/qib_user_sdma.c
+> @@ -670,7 +670,7 @@ static int qib_user_sdma_pin_pages(const struct qib_devdata *dd,
+>  		else
+>  			j = npages;
+>  
+> -		ret = get_user_pages_fast(addr, j, FOLL_LONGTERM, pages);
+> +		ret = pin_longterm_pages_fast(addr, j, 0, pages);
+>  		if (ret != j) {
+>  			i = 0;
+>  			j = ret;
+> diff --git a/drivers/infiniband/hw/usnic/usnic_uiom.c b/drivers/infiniband/hw/usnic/usnic_uiom.c
+> index 62e6ffa9ad78..6b90ca1c3771 100644
+> --- a/drivers/infiniband/hw/usnic/usnic_uiom.c
+> +++ b/drivers/infiniband/hw/usnic/usnic_uiom.c
+> @@ -141,11 +141,10 @@ static int usnic_uiom_get_pages(unsigned long addr, size_t size, int writable,
+>  	ret = 0;
+>  
+>  	while (npages) {
+> -		ret = get_user_pages(cur_base,
+> -				     min_t(unsigned long, npages,
+> -				     PAGE_SIZE / sizeof(struct page *)),
+> -				     gup_flags | FOLL_LONGTERM,
+> -				     page_list, NULL);
+> +		ret = pin_longterm_pages(cur_base,
+> +					 min_t(unsigned long, npages,
+> +					     PAGE_SIZE / sizeof(struct page *)),
+> +					 gup_flags, page_list, NULL);
+>  
+>  		if (ret < 0)
+>  			goto out;
+> diff --git a/drivers/infiniband/sw/siw/siw_mem.c b/drivers/infiniband/sw/siw/siw_mem.c
+> index e99983f07663..20e663d7ada8 100644
+> --- a/drivers/infiniband/sw/siw/siw_mem.c
+> +++ b/drivers/infiniband/sw/siw/siw_mem.c
+> @@ -426,9 +426,8 @@ struct siw_umem *siw_umem_get(u64 start, u64 len, bool writable)
+>  		while (nents) {
+>  			struct page **plist = &umem->page_chunk[i].plist[got];
+>  
+> -			rv = get_user_pages(first_page_va, nents,
+> -					    foll_flags | FOLL_LONGTERM,
+> -					    plist, NULL);
+> +			rv = pin_longterm_pages(first_page_va, nents,
+> +						foll_flags, plist, NULL);
+>  			if (rv < 0)
+>  				goto out_sem_up;
+>  
+> -- 
+> 2.23.0
+> 
