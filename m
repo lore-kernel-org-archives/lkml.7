@@ -2,445 +2,105 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C85FCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6596CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDBF02083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF2D2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:41:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TpBIzfwn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfJaGlK (ORCPT
+        id S1726893AbfJaGl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 02:41:10 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:43910
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726479AbfJaGlJ (ORCPT
+        Thu, 31 Oct 2019 02:41:29 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40973 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbfJaGl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 02:41:09 -0400
-X-IronPort-AV: E=Sophos;i="5.68,250,1569276000"; 
-   d="scan'208";a="325190695"
-Received: from abo-45-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.45])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 07:40:57 +0100
-Date:   Thu, 31 Oct 2019 07:40:57 +0100 (CET)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-cc:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
-        nishkadg.linux@gmail.com, kim.jamie.bradley@gmail.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-Subject: Re: [Outreachy kernel] [PATCH v3 1/3] staging: rts5208: Eliminate
- the use of Camel Case in files ms.{h,c}
-In-Reply-To: <20191030190514.10011-2-gabrielabittencourt00@gmail.com>
-Message-ID: <alpine.DEB.2.21.1910310740290.2718@hadrien>
-References: <20191030190514.10011-1-gabrielabittencourt00@gmail.com> <20191030190514.10011-2-gabrielabittencourt00@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 31 Oct 2019 02:41:29 -0400
+Received: by mail-oi1-f194.google.com with SMTP id e9so346595oif.8
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 23:41:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=M5aqfRUwMC8kkZNS08EKrqYaYUA7QXeP5u3u8FUlnsQ=;
+        b=TpBIzfwnhWtYz1ac0q/WtKeIOkg2bl0BExkdEvRboPM5W/ia7X63B/GeJPDjxwBAss
+         Vqv766ulgHm726Z5m+6TO78QFbj8V+z+59zcdUMmJZQs7li/AzHyfP3rdsXFyyJRNMsY
+         /h6ksG0cwjsN7tnrHVbLhufnD8yZ3uHfNq/pf1w8h/9Ro2i/Ng/7UF2hglXJ0MCfMf/4
+         O42JQN5VWgjTmE8LZeDtr2NFsuyA0ZNSry0g168qoLTHHjcFqbOAi8xxjbp2vWtlUhL4
+         D6fuVBKCfsscc0QXJ/5ao4RDNRDgWa+gSAe4yKrm+qbi9KVdQzvBTqNBGeAxQwGbjLru
+         elQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=M5aqfRUwMC8kkZNS08EKrqYaYUA7QXeP5u3u8FUlnsQ=;
+        b=VnNCKO9um/N7RwiBaPKU4jh8gS4PEWg5LoXsx7hslFYr8TakonDvmBGLpdzrnFPFNC
+         Dr8SFKNOr/U2YsbMsZoJ0AcrQADuQReAwHi2ApqOfgJD19yDZBqgVBucR3U39EPN84gz
+         ZkQ1PsQGANYAjPB3oi/GrnD7p1TnsNedXSV4iXfN4HjfWr6r5opkPz0wDzEfgzbUJ7dP
+         UG6LoAegO4/QerWaO8P19RpC/kyTnQ0tE7AhjthG8rOAsmXOBvOycokIKRHabMfURQQa
+         sux4Vv59KYG5jIQlSXBl1x4z3zcnpQFNA0TCryIyGYEzM43F6jGkTGsNFQMxALzcD6DJ
+         9gEA==
+X-Gm-Message-State: APjAAAWsVsClsO7clFiKyZjj4l2xRoSjevfA4kktAuPLv3TaRXfpfZFw
+        RPIPP+RbwBHHpRUnFxVg3EtMyOLQN4rYhgu9FK8OCA==
+X-Google-Smtp-Source: APXvYqziUkmRJkxhjBwfWg3KbrZSONgKs5i7yaP6xmaWXghCp4DmWaGD9OFRC20Q30jMl6QH5W9EwTOpi6/pu3qeyB8=
+X-Received: by 2002:aca:cc11:: with SMTP id c17mr2768954oig.147.1572504086843;
+ Wed, 30 Oct 2019 23:41:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20191006053916.8849-1-brgl@bgdev.pl> <CAMRc=Me3Q=67fCDrFM38LAGXCd+apJybLYVfyrfwmwYa5L1CmQ@mail.gmail.com>
+ <CAK8P3a3tUg4SBtO0xb2GAHfegp23WF4TLymzqFfra2-fGLRO7w@mail.gmail.com>
+ <CAMRc=Me8g2gFiag0UQwuu4UZONcowQw900+MUbGF+4-E0z09Zg@mail.gmail.com>
+ <CAK8P3a2mh+Eh+W1GFL2Mi5R3t55SRwWyXW_iBxXB-nBhdCO8LA@mail.gmail.com> <20191030213555.GA25515@infradead.org>
+In-Reply-To: <20191030213555.GA25515@infradead.org>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 31 Oct 2019 07:41:16 +0100
+Message-ID: <CAMpxmJXOANjxZgTcReRmd6TGaUKNi=8Cxwj4K69aRY=bF3jDiw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] drivers: add new variants of devm_platform_ioremap_resource()
+To:     Christoph Hellwig <hch@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+=C5=9Br., 30 pa=C5=BA 2019 o 22:35 Christoph Hellwig <hch@infradead.org> na=
+pisa=C5=82(a):
+>
+> On Mon, Oct 21, 2019 at 09:29:30PM +0200, Arnd Bergmann wrote:
+> > > Is Christoph's work in next? The series doesn't apply cleanly on next=
+,
+> > > I needed to fix a couple conflicts. What branch should I rebase it on
+> > > before resending?
+> >
+> > Not sure, maybe Christoph can comment.
+> >
+> > Your patches would best go through the char-misc tree and be based
+> > on top of that, for Christoph's I think the idea is to have some go
+> > through the architecture maintainer trees, and have whatever is
+> > left go through my asm-generic tree.
+>
+> Actually I thought of just doing an ioremap tree for this merge window.
+>
+> What kind of changes does Bartosz have?  I'm kinda missing the context
+> here.
 
+Just the series you've responded to here, but I don't think it should
+conflict with your changes (not very much anyway).
 
-On Wed, 30 Oct 2019, Gabriela Bittencourt wrote:
+Greg: can this be picked up into char-misc?
 
-> Cleans up checks of "Avoid CamelCase" in files ms.{h,c}
-
-I think that these should be converted to all upper case rather than all
-lower case.
-
-julia
-
->
-> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-> ---
->  drivers/staging/rts5208/ms.c | 86 ++++++++++++++++++------------------
->  drivers/staging/rts5208/ms.h | 70 ++++++++++++++---------------
->  2 files changed, 78 insertions(+), 78 deletions(-)
->
-> diff --git a/drivers/staging/rts5208/ms.c b/drivers/staging/rts5208/ms.c
-> index e853fa9cc950..5c7c13dfefa0 100644
-> --- a/drivers/staging/rts5208/ms.c
-> +++ b/drivers/staging/rts5208/ms.c
-> @@ -590,7 +590,7 @@ static int ms_identify_media_type(struct rtsx_chip *chip, int switch_8bit_bus)
->  	int retval, i;
->  	u8 val;
->
-> -	retval = ms_set_rw_reg_addr(chip, Pro_StatusReg, 6, SystemParm, 1);
-> +	retval = ms_set_rw_reg_addr(chip, pro_status_reg, 6, system_parm, 1);
->  	if (retval != STATUS_SUCCESS)
->  		return STATUS_FAIL;
->
-> @@ -840,7 +840,7 @@ static int msxc_change_power(struct rtsx_chip *chip, u8 mode)
->
->  	ms_cleanup_work(chip);
->
-> -	retval = ms_set_rw_reg_addr(chip, 0, 0, Pro_DataCount1, 6);
-> +	retval = ms_set_rw_reg_addr(chip, 0, 0, pro_data_count1, 6);
->  	if (retval != STATUS_SUCCESS)
->  		return STATUS_FAIL;
->
-> @@ -885,7 +885,7 @@ static int ms_read_attribute_info(struct rtsx_chip *chip)
->  	int found_sys_info = 0, found_model_name = 0;
->  #endif
->
-> -	retval = ms_set_rw_reg_addr(chip, Pro_IntReg, 2, Pro_SystemParm, 7);
-> +	retval = ms_set_rw_reg_addr(chip, pro_int_REG, 2, pro_system_parm, 7);
->  	if (retval != STATUS_SUCCESS)
->  		return STATUS_FAIL;
->
-> @@ -1232,7 +1232,7 @@ static int ms_read_status_reg(struct rtsx_chip *chip)
->  	int retval;
->  	u8 val[2];
->
-> -	retval = ms_set_rw_reg_addr(chip, StatusReg0, 2, 0, 0);
-> +	retval = ms_set_rw_reg_addr(chip, status_reg0, 2, 0, 0);
->  	if (retval != STATUS_SUCCESS)
->  		return STATUS_FAIL;
->
-> @@ -1255,8 +1255,8 @@ static int ms_read_extra_data(struct rtsx_chip *chip,
->  	int retval, i;
->  	u8 val, data[10];
->
-> -	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
-> -				    SystemParm, 6);
-> +	retval = ms_set_rw_reg_addr(chip, overwrite_flag, MS_EXTRA_SIZE,
-> +				    system_parm, 6);
->  	if (retval != STATUS_SUCCESS)
->  		return STATUS_FAIL;
->
-> @@ -1307,8 +1307,8 @@ static int ms_read_extra_data(struct rtsx_chip *chip,
->  			if (retval != STATUS_SUCCESS)
->  				return STATUS_FAIL;
->
-> -			retval = ms_set_rw_reg_addr(chip, OverwriteFlag,
-> -						    MS_EXTRA_SIZE, SystemParm,
-> +			retval = ms_set_rw_reg_addr(chip, overwrite_flag,
-> +						    MS_EXTRA_SIZE, system_parm,
->  						    6);
->  			if (retval != STATUS_SUCCESS)
->  				return STATUS_FAIL;
-> @@ -1339,8 +1339,8 @@ static int ms_write_extra_data(struct rtsx_chip *chip, u16 block_addr,
->  	if (!buf || (buf_len < MS_EXTRA_SIZE))
->  		return STATUS_FAIL;
->
-> -	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
-> -				    SystemParm, 6 + MS_EXTRA_SIZE);
-> +	retval = ms_set_rw_reg_addr(chip, overwrite_flag, MS_EXTRA_SIZE,
-> +				    system_parm, 6 + MS_EXTRA_SIZE);
->  	if (retval != STATUS_SUCCESS)
->  		return STATUS_FAIL;
->
-> @@ -1392,8 +1392,8 @@ static int ms_read_page(struct rtsx_chip *chip, u16 block_addr, u8 page_num)
->  	int retval;
->  	u8 val, data[6];
->
-> -	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
-> -				    SystemParm, 6);
-> +	retval = ms_set_rw_reg_addr(chip, overwrite_flag, MS_EXTRA_SIZE,
-> +				    system_parm, 6);
->  	if (retval != STATUS_SUCCESS)
->  		return STATUS_FAIL;
->
-> @@ -1465,8 +1465,8 @@ static int ms_set_bad_block(struct rtsx_chip *chip, u16 phy_blk)
->  	if (retval != STATUS_SUCCESS)
->  		return STATUS_FAIL;
->
-> -	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
-> -				    SystemParm, 7);
-> +	retval = ms_set_rw_reg_addr(chip, overwrite_flag, MS_EXTRA_SIZE,
-> +				    system_parm, 7);
->  	if (retval != STATUS_SUCCESS)
->  		return STATUS_FAIL;
->
-> @@ -1519,8 +1519,8 @@ static int ms_erase_block(struct rtsx_chip *chip, u16 phy_blk)
->  	int retval, i = 0;
->  	u8 val, data[6];
->
-> -	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
-> -				    SystemParm, 6);
-> +	retval = ms_set_rw_reg_addr(chip, overwrite_flag, MS_EXTRA_SIZE,
-> +				    system_parm, 6);
->  	if (retval != STATUS_SUCCESS)
->  		return STATUS_FAIL;
->
-> @@ -1579,7 +1579,7 @@ static void ms_set_page_status(u16 log_blk, u8 type, u8 *extra, int extra_len)
->
->  	memset(extra, 0xFF, MS_EXTRA_SIZE);
->
-> -	if (type == setPS_NG) {
-> +	if (type == set_PS_NG) {
->  		/* set page status as 1:NG,and block status keep 1:OK */
->  		extra[0] = 0xB8;
->  	} else {
-> @@ -1670,8 +1670,8 @@ static int ms_copy_page(struct rtsx_chip *chip, u16 old_blk, u16 new_blk,
->  		if (retval != STATUS_SUCCESS)
->  			return STATUS_FAIL;
->
-> -		retval = ms_set_rw_reg_addr(chip, OverwriteFlag,
-> -					    MS_EXTRA_SIZE, SystemParm, 6);
-> +		retval = ms_set_rw_reg_addr(chip, overwrite_flag,
-> +					    MS_EXTRA_SIZE, system_parm, 6);
->  		if (retval != STATUS_SUCCESS)
->  			return STATUS_FAIL;
->
-> @@ -1725,7 +1725,7 @@ static int ms_copy_page(struct rtsx_chip *chip, u16 old_blk, u16 new_blk,
->  					return STATUS_FAIL;
->
->  				if (uncorrect_flag) {
-> -					ms_set_page_status(log_blk, setPS_NG,
-> +					ms_set_page_status(log_blk, set_PS_NG,
->  							   extra,
->  							   MS_EXTRA_SIZE);
->  					if (i == 0)
-> @@ -1738,8 +1738,8 @@ static int ms_copy_page(struct rtsx_chip *chip, u16 old_blk, u16 new_blk,
->  						i, extra[0]);
->  					MS_SET_BAD_BLOCK_FLG(ms_card);
->
-> -					ms_set_page_status(log_blk, setPS_Error,
-> -							   extra,
-> +					ms_set_page_status(log_blk,
-> +							   set_PS_error, extra,
->  							   MS_EXTRA_SIZE);
->  					ms_write_extra_data(chip, new_blk, i,
->  							    extra,
-> @@ -1767,8 +1767,8 @@ static int ms_copy_page(struct rtsx_chip *chip, u16 old_blk, u16 new_blk,
->  			}
->  		}
->
-> -		retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
-> -					    SystemParm, (6 + MS_EXTRA_SIZE));
-> +		retval = ms_set_rw_reg_addr(chip, overwrite_flag, MS_EXTRA_SIZE,
-> +					    system_parm, (6 + MS_EXTRA_SIZE));
->
->  		ms_set_err_code(chip, MS_NO_ERROR);
->
-> @@ -1822,8 +1822,8 @@ static int ms_copy_page(struct rtsx_chip *chip, u16 old_blk, u16 new_blk,
->  		}
->
->  		if (i == 0) {
-> -			retval = ms_set_rw_reg_addr(chip, OverwriteFlag,
-> -						    MS_EXTRA_SIZE, SystemParm,
-> +			retval = ms_set_rw_reg_addr(chip, overwrite_flag,
-> +						    MS_EXTRA_SIZE, system_parm,
->  						    7);
->  			if (retval != STATUS_SUCCESS)
->  				return STATUS_FAIL;
-> @@ -1980,8 +1980,8 @@ static int reset_ms(struct rtsx_chip *chip)
->  	for (reg_addr = BLOCK_SIZE_0; reg_addr <= PAGE_SIZE_1; reg_addr++)
->  		rtsx_add_cmd(chip, READ_REG_CMD, reg_addr, 0, 0);
->
-> -	rtsx_add_cmd(chip, READ_REG_CMD, MS_Device_Type, 0, 0);
-> -	rtsx_add_cmd(chip, READ_REG_CMD, MS_4bit_Support, 0, 0);
-> +	rtsx_add_cmd(chip, READ_REG_CMD, MS_device_type, 0, 0);
-> +	rtsx_add_cmd(chip, READ_REG_CMD, MS_4bit_support, 0, 0);
->
->  	retval = rtsx_send_cmd(chip, MS_CARD, 100);
->  	if (retval < 0)
-> @@ -2057,7 +2057,7 @@ static int reset_ms(struct rtsx_chip *chip)
->
->  	/* Switch I/F Mode */
->  	if (ptr[15]) {
-> -		retval = ms_set_rw_reg_addr(chip, 0, 0, SystemParm, 1);
-> +		retval = ms_set_rw_reg_addr(chip, 0, 0, system_parm, 1);
->  		if (retval != STATUS_SUCCESS)
->  			return STATUS_FAIL;
->
-> @@ -2887,7 +2887,7 @@ int mspro_format(struct scsi_cmnd *srb, struct rtsx_chip *chip,
->  	if (retval != STATUS_SUCCESS)
->  		return STATUS_FAIL;
->
-> -	retval = ms_set_rw_reg_addr(chip, 0x00, 0x00, Pro_TPCParm, 0x01);
-> +	retval = ms_set_rw_reg_addr(chip, 0x00, 0x00, pro_TPC_parm, 0x01);
->  	if (retval != STATUS_SUCCESS)
->  		return STATUS_FAIL;
->
-> @@ -2970,8 +2970,8 @@ static int ms_read_multiple_pages(struct rtsx_chip *chip, u16 phy_blk,
->  		}
->  	}
->
-> -	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
-> -				    SystemParm, 6);
-> +	retval = ms_set_rw_reg_addr(chip, overwrite_flag, MS_EXTRA_SIZE,
-> +				    system_parm, 6);
->  	if (retval != STATUS_SUCCESS)
->  		return STATUS_FAIL;
->
-> @@ -3026,7 +3026,7 @@ static int ms_read_multiple_pages(struct rtsx_chip *chip, u16 phy_blk,
->  					if (!(chip->card_wp & MS_CARD)) {
->  						reset_ms(chip);
->  						ms_set_page_status
-> -							(log_blk, setPS_NG,
-> +							(log_blk, set_PS_NG,
->  							 extra,
->  							 MS_EXTRA_SIZE);
->  						ms_write_extra_data
-> @@ -3131,8 +3131,8 @@ static int ms_write_multiple_pages(struct rtsx_chip *chip, u16 old_blk,
->  	u8 *ptr;
->
->  	if (!start_page) {
-> -		retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
-> -					    SystemParm, 7);
-> +		retval = ms_set_rw_reg_addr(chip, overwrite_flag, MS_EXTRA_SIZE,
-> +					    system_parm, 7);
->  		if (retval != STATUS_SUCCESS)
->  			return STATUS_FAIL;
->
-> @@ -3165,8 +3165,8 @@ static int ms_write_multiple_pages(struct rtsx_chip *chip, u16 old_blk,
->  			return STATUS_FAIL;
->  	}
->
-> -	retval = ms_set_rw_reg_addr(chip, OverwriteFlag, MS_EXTRA_SIZE,
-> -				    SystemParm, (6 + MS_EXTRA_SIZE));
-> +	retval = ms_set_rw_reg_addr(chip, overwrite_flag, MS_EXTRA_SIZE,
-> +				    system_parm, (6 + MS_EXTRA_SIZE));
->  	if (retval != STATUS_SUCCESS)
->  		return STATUS_FAIL;
->
-> @@ -3773,9 +3773,9 @@ static int mg_set_tpc_para_sub(struct rtsx_chip *chip, int type,
->  	u8 buf[6];
->
->  	if (type == 0)
-> -		retval = ms_set_rw_reg_addr(chip, 0, 0, Pro_TPCParm, 1);
-> +		retval = ms_set_rw_reg_addr(chip, 0, 0, pro_TPC_parm, 1);
->  	else
-> -		retval = ms_set_rw_reg_addr(chip, 0, 0, Pro_DataCount1, 6);
-> +		retval = ms_set_rw_reg_addr(chip, 0, 0, pro_data_count1, 6);
->
->  	if (retval != STATUS_SUCCESS)
->  		return STATUS_FAIL;
-> @@ -4154,7 +4154,7 @@ int mg_set_ICV(struct scsi_cmnd *srb, struct rtsx_chip *chip)
->  		} else {
->  			set_sense_type(chip, lun, SENSE_TYPE_MG_WRITE_ERR);
->  		}
-> -		goto SetICVFinish;
-> +		goto set_ICV_finish;
->  	}
->
->  #ifdef MG_SET_ICV_SLOW
-> @@ -4195,7 +4195,7 @@ int mg_set_ICV(struct scsi_cmnd *srb, struct rtsx_chip *chip)
->  					       SENSE_TYPE_MG_WRITE_ERR);
->  			}
->  			retval = STATUS_FAIL;
-> -			goto SetICVFinish;
-> +			goto set_ICV_finish;
->  		}
->  	}
->  #else
-> @@ -4214,11 +4214,11 @@ int mg_set_ICV(struct scsi_cmnd *srb, struct rtsx_chip *chip)
->  		} else {
->  			set_sense_type(chip, lun, SENSE_TYPE_MG_WRITE_ERR);
->  		}
-> -		goto SetICVFinish;
-> +		goto set_ICV_finish;
->  	}
->  #endif
->
-> -SetICVFinish:
-> +set_ICV_finish:
->  	kfree(buf);
->  	return retval;
->  }
-> diff --git a/drivers/staging/rts5208/ms.h b/drivers/staging/rts5208/ms.h
-> index 952cc14dd079..dc7289ba9c4c 100644
-> --- a/drivers/staging/rts5208/ms.h
-> +++ b/drivers/staging/rts5208/ms.h
-> @@ -92,37 +92,37 @@
->  #define PRO_FORMAT		0x10
->  #define PRO_SLEEP		0x11
->
-> -#define	IntReg			0x01
-> -#define StatusReg0		0x02
-> -#define StatusReg1		0x03
-> -
-> -#define SystemParm		0x10
-> -#define BlockAdrs		0x11
-> -#define CMDParm			0x14
-> -#define PageAdrs		0x15
-> -
-> -#define OverwriteFlag		0x16
-> -#define ManagemenFlag		0x17
-> -#define LogicalAdrs		0x18
-> -#define ReserveArea		0x1A
-> -
-> -#define	Pro_IntReg		0x01
-> -#define Pro_StatusReg		0x02
-> -#define Pro_TypeReg		0x04
-> -#define	Pro_IFModeReg		0x05
-> -#define Pro_CatagoryReg		0x06
-> -#define Pro_ClassReg		0x07
-> -
-> -#define Pro_SystemParm		0x10
-> -#define Pro_DataCount1		0x11
-> -#define Pro_DataCount0		0x12
-> -#define Pro_DataAddr3		0x13
-> -#define Pro_DataAddr2		0x14
-> -#define Pro_DataAddr1		0x15
-> -#define Pro_DataAddr0		0x16
-> -
-> -#define Pro_TPCParm		0x17
-> -#define Pro_CMDParm		0x18
-> +#define int_REG			0x01
-> +#define status_reg0		0x02
-> +#define status_reg1		0x03
-> +
-> +#define system_parm		0x10
-> +#define block_adrs		0x11
-> +#define CMD_parm		0x14
-> +#define page_adrs		0x15
-> +
-> +#define overwrite_flag		0x16
-> +#define managemen_flag		0x17
-> +#define logical_adrs		0x18
-> +#define reserve_area		0x1A
-> +
-> +#define pro_int_REG		0x01
-> +#define pro_status_reg		0x02
-> +#define pro_type_reg		0x04
-> +#define pro_IF_mode_reg		0x05
-> +#define pro_category_reg	0x06
-> +#define pro_class_reg		0x07
-> +
-> +#define pro_system_parm		0x10
-> +#define pro_data_count1		0x11
-> +#define pro_data_count0		0x12
-> +#define pro_data_addr3		0x13
-> +#define pro_data_addr2		0x14
-> +#define pro_data_addr1		0x15
-> +#define pro_data_addr0		0x16
-> +
-> +#define pro_TPC_parm		0x17
-> +#define pro_CMD_parm		0x18
->
->  #define	INT_REG_CED		0x80
->  #define	INT_REG_ERR		0x40
-> @@ -152,12 +152,12 @@
->  #define	PAGE_SIZE_0		(PPBUF_BASE2 + 0x1a0 + 8)
->  #define	PAGE_SIZE_1		(PPBUF_BASE2 + 0x1a0 + 9)
->
-> -#define MS_Device_Type		(PPBUF_BASE2 + 0x1D8)
-> +#define MS_device_type		(PPBUF_BASE2 + 0x1D8)
->
-> -#define	MS_4bit_Support		(PPBUF_BASE2 + 0x1D3)
-> +#define MS_4bit_support		(PPBUF_BASE2 + 0x1D3)
->
-> -#define setPS_NG	1
-> -#define setPS_Error	0
-> +#define set_PS_NG	1
-> +#define set_PS_error	0
->
->  #define	PARALLEL_8BIT_IF	0x40
->  #define	PARALLEL_4BIT_IF	0x00
-> --
-> 2.20.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20191030190514.10011-2-gabrielabittencourt00%40gmail.com.
->
+Bart
