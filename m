@@ -4,45 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 161D9CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DB9CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E564621734
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DBB62173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:58:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbfJaL6R (ORCPT
+        id S1728009AbfJaL60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:58:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55281 "EHLO
+        Thu, 31 Oct 2019 07:58:26 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55234 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbfJaLzG (ORCPT
+        with ESMTP id S1726538AbfJaLzD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:55:06 -0400
+        Thu, 31 Oct 2019 07:55:03 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iQ92V-0002qc-O5; Thu, 31 Oct 2019 12:54:55 +0100
+        id 1iQ92a-0002vh-MF; Thu, 31 Oct 2019 12:55:00 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5E6251C0070;
-        Thu, 31 Oct 2019 12:54:55 +0100 (CET)
-Date:   Thu, 31 Oct 2019 11:54:55 -0000
-From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AFB2F1C03AD;
+        Thu, 31 Oct 2019 12:54:58 +0100 (CET)
+Date:   Thu, 31 Oct 2019 11:54:58 -0000
+From:   "tip-bot2 for Joel Fernandes (Google)" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] drivers/scsi: Replace rcu_swap_protected() with
- rcu_replace_pointer()
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+Subject: [tip: core/rcu] rcu: Ensure that ->rcu_urgent_qs is set before resched IPI
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Message-ID: <157252289509.29376.651547979200552176.tip-bot2@tip-bot2>
+Message-ID: <157252289837.29376.5576201849355844371.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,63 +55,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     c0eaf15cd5d39e79feb81a122975df0bb5a1c106
-Gitweb:        https://git.kernel.org/tip/c0eaf15cd5d39e79feb81a122975df0bb5a1c106
-Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Mon, 23 Sep 2019 15:26:28 -07:00
+Commit-ID:     05ef9e9eb3dade21413680f41eb0170778e8ae2b
+Gitweb:        https://git.kernel.org/tip/05ef9e9eb3dade21413680f41eb0170778e8ae2b
+Author:        Joel Fernandes (Google) <joel@joelfernandes.org>
+AuthorDate:    Thu, 15 Aug 2019 22:59:14 -04:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Wed, 30 Oct 2019 08:44:17 -07:00
+CommitterDate: Wed, 30 Oct 2019 08:34:35 -07:00
 
-drivers/scsi: Replace rcu_swap_protected() with rcu_replace_pointer()
+rcu: Ensure that ->rcu_urgent_qs is set before resched IPI
 
-This commit replaces the use of rcu_swap_protected() with the more
-intuitively appealing rcu_replace_pointer() as a step towards removing
-rcu_swap_protected().
+The RCU-specific resched_cpu() function sends a resched IPI to the
+specified CPU, which can be used to force the tick on for a given
+nohz_full CPU.  This is needed when this nohz_full CPU is looping in the
+kernel while blocking the current grace period.  However, for the tick
+to actually be forced on in all cases, that CPU's rcu_data structure's
+->rcu_urgent_qs flag must be set beforehand.  This commit therefore
+causes rcu_implicit_dynticks_qs() to set this flag prior to invoking
+resched_cpu() on a holdout nohz_full CPU.
 
-Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-[ paulmck: From rcu_replace() to rcu_replace_pointer() per Ingo Molnar. ]
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Acked-by: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: <linux-scsi@vger.kernel.org>
-Cc: <linux-kernel@vger.kernel.org>
 ---
- drivers/scsi/scsi.c       | 4 ++--
- drivers/scsi/scsi_sysfs.c | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ kernel/rcu/tree.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/scsi.c b/drivers/scsi/scsi.c
-index 1f5b5c8..7a1b6c7 100644
---- a/drivers/scsi/scsi.c
-+++ b/drivers/scsi/scsi.c
-@@ -434,8 +434,8 @@ static void scsi_update_vpd_page(struct scsi_device *sdev, u8 page,
- 		return;
- 
- 	mutex_lock(&sdev->inquiry_mutex);
--	rcu_swap_protected(*sdev_vpd_buf, vpd_buf,
--			   lockdep_is_held(&sdev->inquiry_mutex));
-+	vpd_buf = rcu_replace_pointer(*sdev_vpd_buf, vpd_buf,
-+				      lockdep_is_held(&sdev->inquiry_mutex));
- 	mutex_unlock(&sdev->inquiry_mutex);
- 
- 	if (vpd_buf)
-diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
-index 64c96c7..5adfcab 100644
---- a/drivers/scsi/scsi_sysfs.c
-+++ b/drivers/scsi/scsi_sysfs.c
-@@ -466,10 +466,10 @@ static void scsi_device_dev_release_usercontext(struct work_struct *work)
- 	sdev->request_queue = NULL;
- 
- 	mutex_lock(&sdev->inquiry_mutex);
--	rcu_swap_protected(sdev->vpd_pg80, vpd_pg80,
--			   lockdep_is_held(&sdev->inquiry_mutex));
--	rcu_swap_protected(sdev->vpd_pg83, vpd_pg83,
--			   lockdep_is_held(&sdev->inquiry_mutex));
-+	vpd_pg80 = rcu_replace_pointer(sdev->vpd_pg80, vpd_pg80,
-+				       lockdep_is_held(&sdev->inquiry_mutex));
-+	vpd_pg83 = rcu_replace_pointer(sdev->vpd_pg83, vpd_pg83,
-+				       lockdep_is_held(&sdev->inquiry_mutex));
- 	mutex_unlock(&sdev->inquiry_mutex);
- 
- 	if (vpd_pg83)
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 8110514..0d83b19 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -1073,6 +1073,7 @@ static int rcu_implicit_dynticks_qs(struct rcu_data *rdp)
+ 	if (tick_nohz_full_cpu(rdp->cpu) &&
+ 		   time_after(jiffies,
+ 			      READ_ONCE(rdp->last_fqs_resched) + jtsq * 3)) {
++		WRITE_ONCE(*ruqp, true);
+ 		resched_cpu(rdp->cpu);
+ 		WRITE_ONCE(rdp->last_fqs_resched, jiffies);
+ 	}
