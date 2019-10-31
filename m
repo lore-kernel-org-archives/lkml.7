@@ -2,173 +2,152 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DE9CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBF9CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C68D12087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5A5A208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:54:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PVK30HOR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728834AbfJaQx0 (ORCPT
+        id S1728727AbfJaQyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 12:53:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34782 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728750AbfJaQxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:53:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 27ED6B302;
-        Thu, 31 Oct 2019 16:53:12 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-realtek-soc@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v2 2/4] ARM: Prepare Realtek RTD1195
-Date:   Thu, 31 Oct 2019 17:53:05 +0100
-Message-Id: <20191031165308.14102-3-afaerber@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191031165308.14102-1-afaerber@suse.de>
-References: <20191031165308.14102-1-afaerber@suse.de>
+        Thu, 31 Oct 2019 12:54:54 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:52688 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728561AbfJaQyy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 12:54:54 -0400
+Received: from pendragon.ideasonboard.com (lns-bzn-54-82-251-103-167.adsl.proxad.net [82.251.103.167])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 53149320;
+        Thu, 31 Oct 2019 17:54:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1572540892;
+        bh=I0lsKlRo8h8+ZQ76HwSLs3FK8PL5qPzYqQsGyswPjrQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PVK30HORF1u/zgODSSTgbbsJBIHX/VA6zXrPDte4F/kTgR/MFFATBCBH00THDBx12
+         MUxE1wrz6ZuhyCCrMcjsnqz+7H25LEtqW5WF2PF2z2ZK68XsFTluV49bMoIaaY3eEI
+         GUdPbA0afhnRk+5nRdJMyIX+yzFDMClZIdYGIMYU=
+Date:   Thu, 31 Oct 2019 18:54:44 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
+ binding
+Message-ID: <20191031165444.GE5018@pendragon.ideasonboard.com>
+References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
+ <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
+ <20191031131538.GA9170@pendragon.ideasonboard.com>
+ <20191031134512.GB24273@mani>
+ <20191031141141.GD5018@pendragon.ideasonboard.com>
+ <20191031142817.GK6253@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191031142817.GK6253@valkosipuli.retiisi.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce ARCH_REALTEK Kconfig option also for 32-bit Arm.
+Hi Sakari,
 
-Override the text offset to cope with boot ROM occupying first 0xa800
-bytes and further reservations up to 0xf4000 (compare Device Tree).
+On Thu, Oct 31, 2019 at 04:28:17PM +0200, Sakari Ailus wrote:
+> On Thu, Oct 31, 2019 at 04:11:41PM +0200, Laurent Pinchart wrote:
+> > On Thu, Oct 31, 2019 at 07:15:12PM +0530, Manivannan Sadhasivam wrote:
+> >> On Thu, Oct 31, 2019 at 03:15:38PM +0200, Laurent Pinchart wrote:
+> >>> On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
+> >>>> Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
+> >>>> add MAINTAINERS entry for the binding and driver.
+> >>>> 
+> >>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >>>> ---
+> >>>>  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
+> >>>>  MAINTAINERS                                   |  8 ++
+> >>>>  2 files changed, 102 insertions(+)
+> >>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >>>> 
+> >>>> diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >>>> new file mode 100644
+> >>>> index 000000000000..c04ec2203268
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >>>> @@ -0,0 +1,94 @@
+> >>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> >>>> +%YAML 1.2
+> >>>> +---
+> >>>> +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
+> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>>> +
+> >>>> +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
+> >>>> +
+> >>>> +maintainers:
+> >>>> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >>>> +
+> >>>> +description: |-
+> >>>> +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
+> >>>> +  sensor with square pixel array and 1.58 M effective pixels. This chip
+> >>>> +  features a global shutter with variable charge-integration time. It is
+> >>>> +  programmable through I2C and 4-wire interfaces. The sensor output is
+> >>>> +  available via CSI-2 serial data output (1 Lane).
+> >>>> +
+> >>>> +properties:
+> >>>> +  compatible:
+> >>>> +    const: sony,imx296
+> >>>> +
+> >>>> +  reg:
+> >>>> +    maxItems: 1
+> >>>> +
+> >>>> +  clocks:
+> >>>> +    maxItems: 1
+> >>>> +
+> >>>> +  clock-names:
+> >>>> +    description:
+> >>>> +      Input clock for the sensor.
+> >>>> +    items:
+> >>>> +      - const: mclk
+> >>> 
+> >>> The pin is named INCK, let's name the clock accordingly.
+> >> 
+> >> Okay, I thought generic names are preferred here!
+> >>  
+> >>>> +  clock-frequency:
+> >>>> +    description:
+> >>>> +      Frequency of the mclk clock in Hertz.
+> >>> 
+> >>> This shouldn't be needed, you can retrieve the clock frequency at
+> >>> runtime from the clock source.
+> >> 
+> >> Unless the clock source is a fixed one! What if the clock source comes from
+> >> SoC? We need to set the rate, right?
+> > 
+> > In that case, if you want to hardcode the clock in DT, the preferred way
+> > is to use the assigned-clock-rates property. Otherwise, if the driver
+> > requires a specific clock frequency, it's better to hardcode it in the
+> > driver itself. In this specific case, I think assigned-clock-rates is
+> > best as the device can support three different clock frequencies.
+> 
+> Just note that if ACPI support is added to the sensor driver, you'll need
+> the clock-frequency property again, for that's the only way how the driver
+> will get the clock frequency.
 
-Add a custom machine_desc to enforce memory carveout for I/O registers.
+Why is so ? Why can't we implement of assigned-clock-rates for ACPI ?
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- v1 -> v2:
- * Dropped selection of COMMON_CLK (Arnd)
- * Dropped selection of AMBA, SCU, TWD
- * Added comment about text offset to distinguish from HTC comment above
- * Added machine_desc with .reserve to exclude peripheral spaces (Rob)
- 
- arch/arm/Kconfig                |  2 ++
- arch/arm/Makefile               |  3 +++
- arch/arm/mach-realtek/Kconfig   | 11 +++++++++++
- arch/arm/mach-realtek/Makefile  |  2 ++
- arch/arm/mach-realtek/rtd1195.c | 37 +++++++++++++++++++++++++++++++++++++
- 5 files changed, 55 insertions(+)
- create mode 100644 arch/arm/mach-realtek/Kconfig
- create mode 100644 arch/arm/mach-realtek/Makefile
- create mode 100644 arch/arm/mach-realtek/rtd1195.c
+> This is certainly not something that has to be taken into account in DT
+> bindings, but in any case it'll add some lines of code in the driver which
+> are not very useful.
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index b7dbeb652cb1..d800b3240790 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -700,6 +700,8 @@ source "arch/arm/mach-qcom/Kconfig"
- 
- source "arch/arm/mach-rda/Kconfig"
- 
-+source "arch/arm/mach-realtek/Kconfig"
-+
- source "arch/arm/mach-realview/Kconfig"
- 
- source "arch/arm/mach-rockchip/Kconfig"
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index db857d07114f..16d41efea7f2 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -148,6 +148,8 @@ head-y		:= arch/arm/kernel/head$(MMUEXT).o
- textofs-y	:= 0x00008000
- # We don't want the htc bootloader to corrupt kernel during resume
- textofs-$(CONFIG_PM_H1940)      := 0x00108000
-+# RTD1195 has Boot ROM at start of address space
-+textofs-$(CONFIG_ARCH_REALTEK)  := 0x00108000
- # SA1111 DMA bug: we don't want the kernel to live in precious DMA-able memory
- ifeq ($(CONFIG_ARCH_SA1100),y)
- textofs-$(CONFIG_SA1111) := 0x00208000
-@@ -207,6 +209,7 @@ machine-$(CONFIG_ARCH_PICOXCELL)	+= picoxcell
- machine-$(CONFIG_ARCH_PXA)		+= pxa
- machine-$(CONFIG_ARCH_QCOM)		+= qcom
- machine-$(CONFIG_ARCH_RDA)		+= rda
-+machine-$(CONFIG_ARCH_REALTEK)		+= realtek
- machine-$(CONFIG_ARCH_REALVIEW)		+= realview
- machine-$(CONFIG_ARCH_ROCKCHIP)		+= rockchip
- machine-$(CONFIG_ARCH_RPC)		+= rpc
-diff --git a/arch/arm/mach-realtek/Kconfig b/arch/arm/mach-realtek/Kconfig
-new file mode 100644
-index 000000000000..19fdcf093fd1
---- /dev/null
-+++ b/arch/arm/mach-realtek/Kconfig
-@@ -0,0 +1,11 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+menuconfig ARCH_REALTEK
-+	bool "Realtek SoCs"
-+	depends on ARCH_MULTI_V7
-+	select ARM_GIC
-+	select ARM_GLOBAL_TIMER
-+	select CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
-+	select GENERIC_IRQ_CHIP
-+	select RESET_CONTROLLER
-+	help
-+	  This enables support for the Realtek RTD1195 SoC family.
-diff --git a/arch/arm/mach-realtek/Makefile b/arch/arm/mach-realtek/Makefile
-new file mode 100644
-index 000000000000..5382d5bbdd3c
---- /dev/null
-+++ b/arch/arm/mach-realtek/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+obj-y += rtd1195.o
-diff --git a/arch/arm/mach-realtek/rtd1195.c b/arch/arm/mach-realtek/rtd1195.c
-new file mode 100644
-index 000000000000..99e5d3e96a8e
---- /dev/null
-+++ b/arch/arm/mach-realtek/rtd1195.c
-@@ -0,0 +1,37 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Realtek RTD1195
-+ *
-+ * Copyright (c) 2017-2019 Andreas Färber
-+ */
-+
-+#include <linux/memblock.h>
-+#include <asm/mach/arch.h>
-+
-+static void __init rtd1195_memblock_remove(phys_addr_t base, phys_addr_t size)
-+{
-+	int ret;
-+
-+	ret = memblock_remove(base, size);
-+	if (ret)
-+		pr_err("Failed to remove memblock %pa (%d)\n", &base, ret);
-+}
-+
-+static void __init rtd1195_reserve(void)
-+{
-+	/* Exclude peripheral register spaces from RAM */
-+	rtd1195_memblock_remove(0x18000000, 0x00100000);
-+	rtd1195_memblock_remove(0x18100000, 0x01000000);
-+}
-+
-+static const char *const rtd1195_dt_compat[] __initconst = {
-+	"realtek,rtd1195",
-+	NULL
-+};
-+
-+DT_MACHINE_START(rtd1195, "Realtek RTD1195")
-+	.dt_compat = rtd1195_dt_compat,
-+	.reserve = rtd1195_reserve,
-+	.l2c_aux_val = 0x0,
-+	.l2c_aux_mask = ~0x0,
-+MACHINE_END
 -- 
-2.16.4
+Regards,
 
+Laurent Pinchart
