@@ -2,145 +2,218 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D598CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF04CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFAA7208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 680152087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:28:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a0/sfJRT"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="2gRlBXP3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfJaMX6 (ORCPT
+        id S1726722AbfJaM17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 08:23:58 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45602 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727437AbfJaMX5 (ORCPT
+        Thu, 31 Oct 2019 08:27:59 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:46000 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfJaM17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 08:23:57 -0400
-Received: by mail-pg1-f193.google.com with SMTP id r1so3935597pgj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 05:23:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=3oVOdq8I07h/GCMR1jINzKAZkqhi2YtbfA6UhRaG+n8=;
-        b=a0/sfJRTsmfaNdczbP/UocpLZeZWofQtNcy/OCkKLyPFEzM62I2i+2UIUeRohI2Pzh
-         dJuAqpawZBwB5gf8KbLZvqBtZ66tXwq2oxP+j3mLWZj9WIvAfeeHLVRlv5iZRzYdIGY/
-         +BJkEgbFY56XdIUiDecypECQx/gY0Cw/rRF3Zk1aB6ci+f3XVrTAqSJbI/9gvnmt/0TW
-         Y9N42pwj+OY+n4tYx/ZGe85ChkV3wNss7JpiczK4K3v54hwlYdHYduIzEo/qO/rURc8w
-         tj1UPWzFILDZuc0MMFy/cm6aLQw95ceusZWQGBscvGtkPJgt+FVEIxblgYJ12ZkCJfQP
-         vwtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=3oVOdq8I07h/GCMR1jINzKAZkqhi2YtbfA6UhRaG+n8=;
-        b=bm1kqWIfwnVoCMWhBqjABwxw0foOjgd8/5HWmA38Ml9+FlSVGuBU/5P7m0A3Was44d
-         d5HcAm+wxy3zq66HnyNsoSoUoxvslT3uacK7kh1PmuVaAZnC1yqigs1+FwsJ8s260AD2
-         ZWFLM6cBpatfePjwDCNIPvOZHMXr9LUB7DW1CZjM2l/CHlKQDR0bPBeAMw36BeIdU650
-         xOZTH4g1iSzBIT13rH9U9JFh9hoSMT9IC9vtIZKLy7d6q1K6Xi5tVHAMs76GRhpMM3+V
-         D6tLAesX9GLxTkwzrH5uF+Z69KAVS/xbGR7vUCiQHGGuwmm0b5Q9sOO9MFZ+gSiIU6nN
-         LvRA==
-X-Gm-Message-State: APjAAAVFem9wOBFvMgN9u0k5qr1TXr3seCpzC+qIh1kZZeY11ZK6Dbi1
-        OS6JnCrd7b3djdHFaI63NKzZkw==
-X-Google-Smtp-Source: APXvYqwRsBatPyRPC6H5u3bNXQ3d9fpGbW7bwKpnEtOkZpwtidHIsC1wSk8dAdf1LqVvm7kugUi34w==
-X-Received: by 2002:a63:6d8b:: with SMTP id i133mr6165132pgc.241.1572524636826;
-        Thu, 31 Oct 2019 05:23:56 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id j25sm2983077pfi.113.2019.10.31.05.23.52
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 31 Oct 2019 05:23:55 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com,
-        baolin.wang@linaro.org, baolin.wang7@gmail.com,
-        zhang.lyra@gmail.com, orsonzhai@gmail.com
-Subject: [PATCH v2 5/5] power: supply: sc27xx: Calibrate the resistance of coulomb counter
-Date:   Thu, 31 Oct 2019 20:22:44 +0800
-Message-Id: <d32db383ed63c4775b92c30a129cb5f6b0929007.1572523415.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1572523415.git.baolin.wang@linaro.org>
-References: <cover.1572523415.git.baolin.wang@linaro.org>
-In-Reply-To: <cover.1572523415.git.baolin.wang@linaro.org>
-References: <cover.1572523415.git.baolin.wang@linaro.org>
+        Thu, 31 Oct 2019 08:27:59 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x9VCRk1R019613
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 21:27:47 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x9VCRk1R019613
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1572524867;
+        bh=5AXIdd7UsfrTbzkht+brzkU23R3pC3abzYYe6g7Phy8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2gRlBXP3mUuBGWdSj3R6uy4uuLJwDUUejn1OReylY6lwD0VoqDjv55+nBYJvW5uei
+         H0wabh1zSlNZwwfnGnVvS3Jgsj/N12U1QyD2DLtzMxkTye6MqlHdLm9kAAiC+Bn+1s
+         VL5u/1YD1JugZux31wNR2W6F+EcbpP6tgDLMnwTYC3xTSZXs2dcgIpzgy52BTAnrcH
+         qeaTZLkb+SowBelOrD9V6as/Sf2gIXNRZLK54+B3n3MltMscFCwn03w62/gX9jPSST
+         A0nNh4+5epIOUKEiTTgP0sdUUXM8jjzfANXfGhVgphobZI8xdJmsTLHOzQLr01v78s
+         V17xgNgdLv7+Q==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id w25so3951694vso.4
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 05:27:47 -0700 (PDT)
+X-Gm-Message-State: APjAAAVSruTLfq5XkzTtxQa4wl5bo0g31zTlW27gmkuIhAolmyMjbFMv
+        RBqjZ+pD14QYGZ+HgdkhHrr7HLFf7S7HpPzD/kM=
+X-Google-Smtp-Source: APXvYqyV7wuBrm0wsnqDPwu6LqfSd7yeDvlOl7R7GKBUBURL+ZR95hqppNgFVokciiWHhcelEJPL+bGYtdKHejgebrQ=
+X-Received: by 2002:a67:e290:: with SMTP id g16mr2518522vsf.54.1572524866065;
+ Thu, 31 Oct 2019 05:27:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191028151427.31612-1-jeyu@kernel.org> <20191028151427.31612-4-jeyu@kernel.org>
+ <CAK7LNAQ8WDQ3PX8iwQNj5eNQADFMnKNVo3+uC8dt3rCPWK8a-w@mail.gmail.com> <20191030161726.GA13413@linux-8ccs>
+In-Reply-To: <20191030161726.GA13413@linux-8ccs>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 31 Oct 2019 21:27:10 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR5vJExV9L+vO491V=ZRfJGiwDPd5rsZJe-4T5Dz1eh1A@mail.gmail.com>
+Message-ID: <CAK7LNAR5vJExV9L+vO491V=ZRfJGiwDPd5rsZJe-4T5Dz1eh1A@mail.gmail.com>
+Subject: Re: [PATCH 4/4] scripts/nsdeps: make sure to pass all module source
+ files to spatch
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Maennich <maennich@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some deviations between the real resistance and the ideal
-resistance of coulomb counter, which will affect the accuracy of
-the coulomb counter, thus calibrate the real resistance of coulomb
-counter to improve the accuracy.
+On Thu, Oct 31, 2019 at 1:17 AM Jessica Yu <jeyu@kernel.org> wrote:
+>
+> +++ Masahiro Yamada [29/10/19 21:57 +0900]:
+> >On Tue, Oct 29, 2019 at 12:14 AM Jessica Yu <jeyu@kernel.org> wrote:
+> >>
+> >> The nsdeps script passes a list of the module source files to
+> >> generate_deps_for_ns() as a space delimited string named $mod_source_f=
+iles,
+> >> which then passes it to spatch. But since $mod_source_files is not enc=
+ased
+> >> in quotes, each source file in that string is treated as a separate sh=
+ell
+> >> function argument (as $2, $3, $4, etc.).  However, the spatch invocati=
+on
+> >> only refers to $2, so only the first file out of $mod_source_files is
+> >> processed by spatch.
+> >>
+> >> This causes problems (namely, the MODULE_IMPORT_NS() statement doesn't
+> >> get inserted) when a module is composed of many source files and the
+> >> "main" module file containing the MODULE_LICENSE() statement is not th=
+e
+> >> first file listed in $mod_source_files. Fix this by encasing
+> >> $mod_source_files in quotes so that the entirety of the string is
+> >> treated as a single argument and can be referred to as $2.
+> >>
+> >> Signed-off-by: Jessica Yu <jeyu@kernel.org>
+> >> ---
+> >>  scripts/nsdeps | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/scripts/nsdeps b/scripts/nsdeps
+> >> index 9ddcd5cb96b1..5055b059a81b 100644
+> >> --- a/scripts/nsdeps
+> >> +++ b/scripts/nsdeps
+> >> @@ -36,7 +36,7 @@ generate_deps() {
+> >>                                               | sed -E "s%(^|\s)([^/][=
+^ ]*)%\1$srctree/\2%g"`
+> >>         for ns in `cat $ns_deps_file`; do
+> >>                 echo "Adding namespace $ns to module $mod_name (if nee=
+ded)."
+> >> -               generate_deps_for_ns $ns $mod_source_files
+> >> +               generate_deps_for_ns $ns "$mod_source_files"
+> >>                 # sort the imports
+> >>                 for source_file in $mod_source_files; do
+> >>                         sed '/MODULE_IMPORT_NS/Q' $source_file > ${sou=
+rce_file}.tmp
+> >
+> >I think this change is correct, but
+> >did you succeed in nsdeps for composite modules
+> >with this patch only?
+> >
+> >I think the following is needed too:
+> >
+> >
+> >diff --git a/scripts/nsdeps b/scripts/nsdeps
+> >index dda6fbac016e..5a23ea616446 100644
+> >--- a/scripts/nsdeps
+> >+++ b/scripts/nsdeps
+> >@@ -31,9 +31,9 @@ generate_deps() {
+> >        local mod_file=3D`echo $@ | sed -e 's/\.ko/\.mod/'`
+> >        local ns_deps_file=3D`echo $@ | sed -e 's/\.ko/\.ns_deps/'`
+> >        if [ ! -f "$ns_deps_file" ]; then return; fi
+> >-       local mod_source_files=3D`cat $mod_file | sed -n 1p             =
+         \
+> >+       local mod_source_files=3D"`cat $mod_file | sed -n 1p
+> >         \
+> >                                              | sed -e 's/\.o/\.c/g'    =
+       \
+> >-                                             | sed "s|[^ ]* *|${srctree=
+}/&|g"`
+> >+                                             | sed "s|[^ ]* *|${srctree=
+}/&|g"`"
+> >        for ns in `cat $ns_deps_file`; do
+> >                echo "Adding namespace $ns to module $mod_name (if neede=
+d)."
+> >                generate_deps_for_ns $ns $mod_source_files
+> >
+> >
+> >Without this, a module that consists of two files
+> >will be expanded to:
+> >
+> >local mod_source_files=3Dsource1.c source2.c
+>
+> Yes, I was able to have nsdeps work for composite modules with just my
+> patch. Without this patch applied, the script produces the following
+> expansion of the generate_deps_for_ns call, (I just added a test
+> namespace MODULE):
+>
+> Adding namespace MODULE to module fs/nfs/nfs.ko.
+> + generate_deps_for_ns MODULE /tmp/ppyu/linux/fs/nfs/client.c /tmp/ppyu/l=
+inux/fs/nfs/dir.c /tmp/ppyu/linux/fs/nfs/file.c /tmp/ppyu/linux/fs/nfs/getr=
+oot.c /tmp/ppyu/linux/fs/nfs/inode.c /tmp/ppyu/linux/fs/nfs/super.c /tmp/pp=
+yu/linux/fs/nfs/io.c /tmp/ppyu/linux/fs/nfs/direct.c /tmp/ppyu/linux/fs/nfs=
+/pagelist.c /tmp/ppyu/linux/fs/nfs/read.c /tmp/ppyu/linux/fs/nfs/symlink.c =
+/tmp/ppyu/linux/fs/nfs/unlink.c /tmp/ppyu/linux/fs/nfs/write.c /tmp/ppyu/li=
+nux/fs/nfs/namespace.c /tmp/ppyu/linux/fs/nfs/mount_clnt.c /tmp/ppyu/linux/=
+fs/nfs/nfstrace.c /tmp/ppyu/linux/fs/nfs/export.c /tmp/ppyu/linux/fs/nfs/sy=
+sfs.c /tmp/ppyu/linux/fs/nfs/sysctl.c /tmp/ppyu/linux/fs/nfs/fscache.c /tmp=
+/ppyu/linux/fs/nfs/fscache-index.c
+> + /usr/bin/spatch --very-quiet --in-place --sp-file /tmp/ppyu/linux/scrip=
+ts/coccinelle/misc/add_namespace.cocci -D ns=3DMODULE /tmp/ppyu/linux/fs/nf=
+s/client.c
+>
+> So only the first file got included in the spatch invocation. But the
+> spatch call gets fixed with all the files when quotes are added in the
+> call to generate_deps_for_ns.
+>
+> But we need to include your change anyway, to make the script more
+> robust.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- drivers/power/supply/sc27xx_fuel_gauge.c |   17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+Hmm.
+With this patch only, I see "bad variable name" error.
 
-diff --git a/drivers/power/supply/sc27xx_fuel_gauge.c b/drivers/power/supply/sc27xx_fuel_gauge.c
-index 221b6fb..951d5d1 100644
---- a/drivers/power/supply/sc27xx_fuel_gauge.c
-+++ b/drivers/power/supply/sc27xx_fuel_gauge.c
-@@ -62,6 +62,8 @@
- 
- #define SC27XX_FGU_CUR_BASIC_ADC	8192
- #define SC27XX_FGU_SAMPLE_HZ		2
-+/* micro Ohms */
-+#define SC27XX_FGU_IDEAL_RESISTANCE	20000
- 
- /*
-  * struct sc27xx_fgu_data: describe the FGU device
-@@ -84,6 +86,7 @@
-  * @resist_table_len: the resistance table length
-  * @cur_1000ma_adc: ADC value corresponding to 1000 mA
-  * @vol_1000mv_adc: ADC value corresponding to 1000 mV
-+ * @calib_resist: the real resistance of coulomb counter chip in mOhm
-  * @cap_table: capacity table with corresponding ocv
-  * @resist_table: resistance percent table with corresponding temperature
-  */
-@@ -108,6 +111,7 @@ struct sc27xx_fgu_data {
- 	int resist_table_len;
- 	int cur_1000ma_adc;
- 	int vol_1000mv_adc;
-+	int calib_resist;
- 	struct power_supply_battery_ocv_table *cap_table;
- 	struct power_supply_resistance_temp_table *resist_table;
- };
-@@ -900,7 +904,9 @@ static int sc27xx_fgu_calibration(struct sc27xx_fgu_data *data)
- 	 */
- 	cal_4200mv = (calib_data & 0x1ff) + 6963 - 4096 - 256;
- 	data->vol_1000mv_adc = DIV_ROUND_CLOSEST(cal_4200mv * 10, 42);
--	data->cur_1000ma_adc = data->vol_1000mv_adc * 4;
-+	data->cur_1000ma_adc =
-+		DIV_ROUND_CLOSEST(data->vol_1000mv_adc * 4 * data->calib_resist,
-+				  SC27XX_FGU_IDEAL_RESISTANCE);
- 
- 	kfree(buf);
- 	return 0;
-@@ -1079,6 +1085,15 @@ static int sc27xx_fgu_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	ret = device_property_read_u32(&pdev->dev,
-+				       "sprd,calib-resistance-micro-ohms",
-+				       &data->calib_resist);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"failed to get fgu calibration resistance\n");
-+		return ret;
-+	}
-+
- 	data->channel = devm_iio_channel_get(dev, "bat-temp");
- 	if (IS_ERR(data->channel)) {
- 		dev_err(dev, "failed to get IIO channel\n");
--- 
-1.7.9.5
 
+
+masahiro@grover:~/ref/linux$ make -j8  nsdeps
+  DESCEND  objtool
+  CALL    scripts/atomic/check-atomics.sh
+  CALL    scripts/checksyscalls.sh
+  CHK     include/generated/compile.h
+  Building modules, stage 2.
+  MODPOST 20 modules
+WARNING: module nfs uses symbol foo from namespace USB_STORAGE, but
+does not import it.
+  Building modules, stage 2.
+  MODPOST 20 modules
+./scripts/nsdeps: 34: local: ./fs/nfs/dir.c: bad variable name
+make: *** [Makefile;1689: nsdeps] Error 2
+
+
+
+
+> It would probably prevent more shell script related bugs in
+> the future (Like [1]). I can respin this patch only while the other
+> ones are superceded by your patchset.
+>
+> [1] https://unix.stackexchange.com/a/131767
+
+Anyway.
+
+Is this patch aiming for v5.4 (i.e. fixes) or v5.5-rc1 ?
+
+If you touch the mod_source_files line,
+we will have a conflict because
+https://patchwork.kernel.org/patch/11217839/
+is touching the same line.
+
+How should we organize the patch order?
+
+--
+Best Regards
+Masahiro Yamada
