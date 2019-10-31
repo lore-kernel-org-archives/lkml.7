@@ -2,174 +2,99 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BE0CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDAECA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49582087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:31:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="AXFvmehU"
+	by mail.kernel.org (Postfix) with ESMTP id A2C9B2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:31:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572525108;
+	bh=3gC0c8xf4sCBaS5ebtExC9nC8bUlZk2zHzDGkJobUkY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HpJGYAuqTTPknZzzABJxTFg4qm+4SNFFmyi3ubXQSpxioxrpTIQBdedXJAfk6tAMi
+	 8NgpVzvs8itXxfOfnlaocOwd8WciIK0YnHvw1eJj/mu7oP1uS/jJAIR80c8UPvOMgv
+	 GaCPnKegPN2zEvgTqscwzuN6SLx0xIGfzFAOX5Jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfJaMbS (ORCPT
+        id S1727110AbfJaMbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 08:31:18 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:53926 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726462AbfJaMbR (ORCPT
+        Thu, 31 Oct 2019 08:31:47 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36470 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbfJaMbq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 08:31:17 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9VCRQ5U030921;
-        Thu, 31 Oct 2019 13:30:54 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=RgvneSBRTilulYhN5amimgSanJ3OY7+cEr1+3gGNZwE=;
- b=AXFvmehUqvWgmAijEaStt+aCSiGdbb364k2EzKh67ktuGnrJlA7J56zQlRpeEereshnM
- 4ds9IfY053aIy6FwVBvyefxPpPKbxsswu5mK2s5+wmwIedmdoYHZRiovbCIUW06XUSbn
- 4O4ld/G22W4FMSURAFibeLWWZld3aIk5cN8YAV3uW+8M2IU8OBtdD2FaFtSLrj+EuIXs
- yUB4AQXxnwSravd6ko1xEbqdkPfBKQTSBHbDkWxzxTFnzQV4Mlnu1aM7kS+IV8hbTSNe
- 3ptJnBFFMCJVprjQ0tmeThdTtMjNU5XLeps0z+o6qg2AbOTiIzNynmxSBOluG82rvIps YQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vxwrnsrb3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 31 Oct 2019 13:30:54 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ACBAA100034;
-        Thu, 31 Oct 2019 13:30:50 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 98F0E2B7837;
-        Thu, 31 Oct 2019 13:30:50 +0100 (CET)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 31 Oct
- 2019 13:30:50 +0100
-Received: from localhost (10.201.20.122) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 31 Oct 2019 13:30:50
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
-        <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <lee.jones@linaro.org>,
-        <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
-        <benjamin.gaignard@st.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
+        Thu, 31 Oct 2019 08:31:46 -0400
+Received: by mail-ed1-f68.google.com with SMTP id f7so1524380edq.3;
+        Thu, 31 Oct 2019 05:31:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vls7ZE/ReY4sJGi7uI5GGsGPMcKXRM5Mo/neO76jsVQ=;
+        b=M9yJ+S1BxObJQHLnBu5f+lru0srve7kRgdcdJ2vxqjSzJezaRKp9oROYWOEQ8IXHV/
+         LalHTP3uzA8G1vRzR2Afy7akgHzTfODf7fB9otnBnBYn/BlYufvoH4IdgRECbtFurc1y
+         httZioRoq6vp3vXD7q9F+UVO+Ra+ty9Hxq3oti84WzRa2Qul4gu8a4DL4hihFDQM8q+n
+         IB4APNdioDKfBqHVydKQZfYA+ZqLGW4ZKZigPginRfN/uSnUn02lktWEWUo29NVChRn9
+         sviuhzWtFmfZ3ZfoByBVZRuPGU6UsIdxeHCTNRkrjKTxD98xNfZWxSB0F2ohuCuGdifj
+         i6tg==
+X-Gm-Message-State: APjAAAXAj7mhJD6Lkg+U7wVprbGF3MYeuPxs127RXFUTm6gxvwZBRocc
+        DxrEgPkhx1tpTDyV5llfmAc=
+X-Google-Smtp-Source: APXvYqxv+iB25I5NrbvVPiR7XWHGPnqcPx2J39IflRtWXVi/n7ge7s91adZiNxuKFrKu9WoulT7Cdw==
+X-Received: by 2002:a05:6402:110c:: with SMTP id u12mr5701239edv.127.1572525104909;
+        Thu, 31 Oct 2019 05:31:44 -0700 (PDT)
+Received: from pi3 ([194.230.155.180])
+        by smtp.googlemail.com with ESMTPSA id s16sm57296edd.39.2019.10.31.05.31.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 05:31:44 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 13:31:42 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>
-Subject: [PATCH 1/4] dt-bindings: counter: Convert stm32 counter bindings to json-schema
-Date:   Thu, 31 Oct 2019 13:30:37 +0100
-Message-ID: <20191031123040.26316-2-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20191031123040.26316-1-benjamin.gaignard@st.com>
-References: <20191031123040.26316-1-benjamin.gaignard@st.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 01/11] ARM: dts: imx6ul-kontron-n6310: Move common SoM
+ nodes to a separate file
+Message-ID: <20191031123142.GA27967@pi3>
+References: <20191029112655.15058-1-frieder.schrempf@kontron.de>
+ <20191029112655.15058-2-frieder.schrempf@kontron.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.20.122]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-31_05:2019-10-30,2019-10-31 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191029112655.15058-2-frieder.schrempf@kontron.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the STM32 counter binding to DT schema format using json-schema
+On Tue, Oct 29, 2019 at 11:27:44AM +0000, Schrempf Frieder wrote:
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> 
+> The Kontron N6311 and N6411 SoMs are very similar to N6310. In
+> preparation to add support for them, we move the common nodes to a
+> separate file imx6ul-kontron-n6x1x-som-common.dtsi.
+> 
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> ---
+>  .../boot/dts/imx6ul-kontron-n6310-som.dtsi    |  95 +---------------
+>  .../dts/imx6ul-kontron-n6x1x-som-common.dtsi  | 103 ++++++++++++++++++
+>  2 files changed, 104 insertions(+), 94 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- .../bindings/counter/st,stm32-timer-cnt.yaml       | 38 ++++++++++++++++++++++
- .../bindings/counter/stm32-timer-cnt.txt           | 31 ------------------
- 2 files changed, 38 insertions(+), 31 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/counter/st,stm32-timer-cnt.yaml
- delete mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-diff --git a/Documentation/devicetree/bindings/counter/st,stm32-timer-cnt.yaml b/Documentation/devicetree/bindings/counter/st,stm32-timer-cnt.yaml
-new file mode 100644
-index 000000000000..56192d613601
---- /dev/null
-+++ b/Documentation/devicetree/bindings/counter/st,stm32-timer-cnt.yaml
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/counter/st,stm32-timer-cnt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 Timers quadrature bindings
-+
-+description:
-+  STM32 Timer provides quadrature encoder to detect angular position
-+  and direction of rotary elements, from IN1 and IN2 input signals.
-+
-+maintainers:
-+  - Benjamin Gaignard <benjamin.gaignard@st.com>
-+  - Fabrice Gasnier <fabrice.gasnier@st.com>
-+
-+properties:
-+  counter:
-+    type: object
-+
-+    description:
-+      must be a sub-node of an STM32 Timer device tree node
-+
-+    properties:
-+      compatible:
-+        const: st,stm32-timer-counter
-+            
-+    required:
-+      - compatible
-+
-+examples:
-+  - |
-+    counter {
-+      compatible = "st,stm32-timer-counter";
-+    };
-+
-+...
-+
-diff --git a/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt b/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
-deleted file mode 100644
-index c52fcdd4bf6c..000000000000
---- a/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
-+++ /dev/null
-@@ -1,31 +0,0 @@
--STMicroelectronics STM32 Timer quadrature encoder
--
--STM32 Timer provides quadrature encoder to detect
--angular position and direction of rotary elements,
--from IN1 and IN2 input signals.
--
--Must be a sub-node of an STM32 Timer device tree node.
--See ../mfd/stm32-timers.txt for details about the parent node.
--
--Required properties:
--- compatible:		Must be "st,stm32-timer-counter".
--- pinctrl-names: 	Set to "default".
--- pinctrl-0: 		List of phandles pointing to pin configuration nodes,
--			to set CH1/CH2 pins in mode of operation for STM32
--			Timer input on external pin.
--
--Example:
--	timers@40010000 {
--		#address-cells = <1>;
--		#size-cells = <0>;
--		compatible = "st,stm32-timers";
--		reg = <0x40010000 0x400>;
--		clocks = <&rcc 0 160>;
--		clock-names = "int";
--
--		counter {
--			compatible = "st,stm32-timer-counter";
--			pinctrl-names = "default";
--			pinctrl-0 = <&tim1_in_pins>;
--		};
--	};
--- 
-2.15.0
+Best regards,
+Krzysztof
 
