@@ -4,94 +4,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26645CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C32CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0375A20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 712F820862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:08:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfJaLFW (ORCPT
+        id S1727143AbfJaLIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:05:22 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46804 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbfJaLFW (ORCPT
+        Thu, 31 Oct 2019 07:08:15 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:42819 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbfJaLIP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:05:22 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A672F28A49B;
-        Thu, 31 Oct 2019 11:05:20 +0000 (GMT)
-Date:   Thu, 31 Oct 2019 12:05:18 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     <Tudor.Ambarus@microchip.com>
-Cc:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 13/32] mtd: spi-nor: Print error messages inside Reg
- Ops methods
-Message-ID: <20191031120518.5bac1caa@collabora.com>
-In-Reply-To: <20191029111615.3706-14-tudor.ambarus@microchip.com>
-References: <20191029111615.3706-1-tudor.ambarus@microchip.com>
-        <20191029111615.3706-14-tudor.ambarus@microchip.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 31 Oct 2019 07:08:15 -0400
+X-Originating-IP: 91.217.168.176
+Received: from localhost (unknown [91.217.168.176])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 942B6FF810;
+        Thu, 31 Oct 2019 11:08:11 +0000 (UTC)
+Date:   Thu, 31 Oct 2019 12:08:11 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Kamel Bouhara <kamel.bouhara@bootlin.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?iso-8859-1?Q?K=E9vin?= RAYMOND <k.raymond@overkiz.com>,
+        Mickael GARDET <m.gardet@overkiz.com>
+Subject: Re: [PATCH 2/2] ARM: dts: at91: add a common kizboxmini dtsi file
+Message-ID: <20191031110811.GC2967@piout.net>
+References: <20191018140304.31547-1-kamel.bouhara@bootlin.com>
+ <20191018140304.31547-3-kamel.bouhara@bootlin.com>
+ <20191029123426.GB8412@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191029123426.GB8412@bogus>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 11:17:09 +0000
-<Tudor.Ambarus@microchip.com> wrote:
-
-> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+On 29/10/2019 07:34:26-0500, Rob Herring wrote:
+> On Fri, Oct 18, 2019 at 04:03:04PM +0200, Kamel Bouhara wrote:
+> > Split the Kizbox Mini boards into two board configuration, the
+> > Kizboxmini Mother board and the Kizboxmini RailDIN board.
+> > 
+> > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> > Signed-off-by: Kévin RAYMOND <k.raymond@overkiz.com>
+> > Signed-off-by: Mickael GARDET <m.gardet@overkiz.com>
+> > ---
+> >  arch/arm/boot/dts/Makefile                    |   2 +
+> >  arch/arm/boot/dts/at91-kizboxmini-mb.dts      |  38 ++++
+> >  arch/arm/boot/dts/at91-kizboxmini-rd.dts      |  54 ++++++
+> >  arch/arm/boot/dts/at91-kizboxmini_common.dtsi | 166 ++++++++++++++++++
+> >  4 files changed, 260 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/at91-kizboxmini-mb.dts
+> >  create mode 100644 arch/arm/boot/dts/at91-kizboxmini-rd.dts
+> >  create mode 100644 arch/arm/boot/dts/at91-kizboxmini_common.dtsi
+> > 
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index c976b72a4c94..6b3a65f3f6f8 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -38,6 +38,8 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
+> >  	at91-ariettag25.dtb \
+> >  	at91-cosino_mega2560.dtb \
+> >  	at91-kizboxmini.dtb \
+> > +	at91-kizboxmini-mb.dtb \
+> > +	at91-kizboxmini-rd.dtb \
+> >  	at91-wb45n.dtb \
+> >  	at91sam9g15ek.dtb \
+> >  	at91sam9g25ek.dtb \
+> > diff --git a/arch/arm/boot/dts/at91-kizboxmini-mb.dts b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
+> > new file mode 100644
+> > index 000000000000..52921f547dd6
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
+> > @@ -0,0 +1,38 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2015-2018 Overkiz SAS
+> > + *   Author: Mickael Gardet <m.gardet@overkiz.com>
+> > + *           Kévin Raymond <k.raymond@overkiz.com>
+> > + */
+> > +/dts-v1/;
+> > +#include "at91-kizboxmini_common.dtsi"
+> > +
+> > +/ {
+> > +	model = "Overkiz Kizbox Mini Mother Board";
+> > +	compatible = "overkiz,kizboxmini-mb", "atmel,at91sam9g25",
+> > +		     "atmel,at91sam9x5", "atmel,at91sam9";
+> > +
+> > +	clocks {
+> > +		slow_xtal {
 > 
-> Spare the callers of printing error messages by themselves.
+> Don't use '_' in node names.
 > 
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-> ---
->  drivers/mtd/spi-nor/spi-nor.c | 165 +++++++++++++++++++++++++++++++-----------
->  1 file changed, 123 insertions(+), 42 deletions(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index e5ed9012cd50..bc46b946ac77 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -394,6 +394,8 @@ static ssize_t spi_nor_write_data(struct spi_nor *nor, loff_t to, size_t len,
->   */
->  static int spi_nor_write_enable(struct spi_nor *nor)
->  {
-> +	int ret;
-> +
->  	if (nor->spimem) {
->  		struct spi_mem_op op =
->  			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_WREN, 1),
-> @@ -401,10 +403,16 @@ static int spi_nor_write_enable(struct spi_nor *nor)
->  				   SPI_MEM_OP_NO_DUMMY,
->  				   SPI_MEM_OP_NO_DATA);
->  
-> -		return spi_mem_exec_op(nor->spimem, &op);
-> +		ret = spi_mem_exec_op(nor->spimem, &op);
-> +	} else {
-> +		ret = nor->controller_ops->write_reg(nor, SPINOR_OP_WREN,
-> +						     NULL, 0);
->  	}
->  
-> -	return nor->controller_ops->write_reg(nor, SPINOR_OP_WREN, NULL, 0);
-> +	if (ret)
-> +		dev_err(nor->dev, "error %d on Write Enable\n", ret);
 
-I thought we agreed on using dev_err_once() here (applies to other
-dev_err() calls). If it fails once it's unlikely to succeed on
-subsequent calls, and I don't think spamming the kernel logs is very
-useful.
+We are stuck with that one until we change the dtsi.
 
-> +
-> +	return ret;
->  }
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
