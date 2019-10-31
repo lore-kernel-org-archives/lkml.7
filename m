@@ -2,120 +2,123 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC558CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E97CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A245B20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD27920650
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:28:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kW174yLM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gpOK87CJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbfJaR2R (ORCPT
+        id S1728996AbfJaR24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 13:28:17 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:6913 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728561AbfJaR2R (ORCPT
+        Thu, 31 Oct 2019 13:28:56 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42751 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728561AbfJaR24 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 13:28:17 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dbb19b70000>; Thu, 31 Oct 2019 10:28:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 31 Oct 2019 10:28:16 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 31 Oct 2019 10:28:16 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 31 Oct
- 2019 17:28:12 +0000
-Subject: Re: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191023195515.13168-1-rcampbell@nvidia.com>
- <20191023195515.13168-4-rcampbell@nvidia.com>
- <20191029175837.GS22766@mellanox.com>
- <3ffecdc6-625f-ebea-8fb4-984fe6ca90f3@nvidia.com>
- <20191029231255.GX22766@mellanox.com>
- <f42d06e2-ca08-acdd-948d-2803079a13c2@nvidia.com>
- <20191031124200.GJ22766@mellanox.com>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <a6b49a4e-a194-ce0b-685f-5e597072aeee@nvidia.com>
-Date:   Thu, 31 Oct 2019 10:28:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 31 Oct 2019 13:28:56 -0400
+Received: by mail-pl1-f194.google.com with SMTP id j12so1033881plt.9
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 10:28:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6m++fSIeBZqcJkeOt8/Shjtnuo+Q7rdlGD1c3YsGie4=;
+        b=gpOK87CJRb754Y2+vKxaKrfCJA4dCHJjEnrqUCTDyVh8ydN+OuHauU0RzeuaqcPPqz
+         8NeU4ITnb3rEWRmC3gSLVjVWnVesKGM1oyS/yh1NVuxjprhNF47oEx8mkDlnMjX5UGW5
+         JiROU1AiJ8h+8ySX34AX4ACrznfiflDYVAMZM4a1Ar3B/7Tg5JN2SEMWHv3bPcn4f9qv
+         R2QTmF9UEBbN86wcvkIxoBSkI67Kwa+sSYeRuJikIaYcxF+xfeewIHa6mGB7ZX5LMek1
+         44Q7BbPEQbga/h7AhHpE5nwsTjoLhikG9VeHjhjiil8JtMG8WHEWP49lOfvP4ttwUXFY
+         /yWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6m++fSIeBZqcJkeOt8/Shjtnuo+Q7rdlGD1c3YsGie4=;
+        b=q+RaEWHgZ0ZGTMhlQqCVxfNCrnZksG9SOCVIj4B2cKfMwW5N+OpPwhESIYDMDOmOFv
+         VgnAJ9TlPTk9uh9l+F/8/oV1Y0qtkSBhG+uNRGgqhCK7HlV9UGmJzqYDzLmbXd6ZG6ii
+         kZj0CblXk3apeTE88OKJL6bvUAi0GdrqG/vgSE6zXn45WAEbEbwxYjwapiWLBuehNHUS
+         b4ke01hIOjK5rVmCUf355tP0TXJcrQ0qSWeOQ6SEwB+Gaupq7N5BAmTIGsjHIhFwiDep
+         QOTtv0YEXm1LRSkhhuHkeN9F/OL+li0OKiP29K8xPjDct1SLQvM0zjrgNoRRopdJCUE9
+         ZNLA==
+X-Gm-Message-State: APjAAAXTKqNdd00gpst5zX1S2QQBG8j6bsVQjin7pK01aO/dckomkRXy
+        sH+xhi+6mZMfyLr/uDtnqqhhCcz+LWIe7ZVQv/pAWA==
+X-Google-Smtp-Source: APXvYqz/zaeuQgN6H9iXB6EC1IiRwlJeGkd2Ujt7JrblzBduB3a+f7TFswdMNV3RtEu438byzq5VFDkdG5vZyTUTeko=
+X-Received: by 2002:a17:902:9b83:: with SMTP id y3mr7530087plp.179.1572542935004;
+ Thu, 31 Oct 2019 10:28:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191031124200.GJ22766@mellanox.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572542903; bh=Wr3SVeuoH5XlM7NZPBlWqcbSTjspk3irIYRvlGi9yaI=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=kW174yLMG8IjxnIxZyGrbC9l4pJLEDIfwedwqdfEYw/0iC+ttgHPBJLMZkyCYUOr+
-         RmxUpyuuyis4YF6MLdl87jl0c7oyLblhWSadJUmnz1jEpOCgr23NZvbKblPTnLtGgs
-         F3C9AzLpFbe7EdbSmOJuem4Dc/OwsHeYevbSFMW2WlRNqRjQ0tLgmrujoxfb20sx1S
-         O7fLhLdjM5wM1kN93p9JjJXAvPayJPHH6IpfoERTCjwB492x//hykF6/MCqr0jmn7b
-         Q2/7fafKcaLwisg3k/YFqZ32xQkOEgoUivOon5ozWNgTbjxXT0nmbjOPmOykMNz16X
-         VpmUH5ZVPU//Q==
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191031164637.48901-1-samitolvanen@google.com> <20191031164637.48901-16-samitolvanen@google.com>
+In-Reply-To: <20191031164637.48901-16-samitolvanen@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 31 Oct 2019 10:28:43 -0700
+Message-ID: <CAKwvOdkAe9TeB-dVqrDT7ZRQG8U4nHkkHwiDcRRPPY8w-Q9wQQ@mail.gmail.com>
+Subject: Re: [PATCH v3 15/17] arm64: vdso: disable Shadow Call Stack
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 31, 2019 at 9:47 AM <samitolvanen@google.com> wrote:
+
+I've gotten slapped down before for -ENOCOMMITMSG; maybe include more
+info if there's a v4?  Maintainers can take the safe position of
+always saying "no," so it is useful to always provide an answer to the
+implicit question, "why should I take this patch?"
+
+>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  arch/arm64/kernel/vdso/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
+> index dd2514bb1511..a87a4f11724e 100644
+> --- a/arch/arm64/kernel/vdso/Makefile
+> +++ b/arch/arm64/kernel/vdso/Makefile
+> @@ -25,7 +25,7 @@ ccflags-y += -DDISABLE_BRANCH_PROFILING
+>
+>  VDSO_LDFLAGS := -Bsymbolic
+>
+> -CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) -Os
+> +CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) -Os $(CC_FLAGS_SCS)
+
+Looks like vgettimeofday is the only remaining source written in C, so
+we shouldn't need to strip it from other assembly source files.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+>  KBUILD_CFLAGS                  += $(DISABLE_LTO)
+>  KASAN_SANITIZE                 := n
+>  UBSAN_SANITIZE                 := n
+> --
+> 2.24.0.rc0.303.g954a862665-goog
+>
 
 
-On 10/31/19 5:42 AM, Jason Gunthorpe wrote:
-> On Wed, Oct 30, 2019 at 05:14:30PM -0700, Ralph Campbell wrote:
-> 
->>> Well, that is good, is it also under drivers/char? It kind feels like
->>> it should not be there...
->>
->> I think most of the test modules live in lib/ but I wasn't sure that
->> was the right place for the HMM test driver.
->> If you think that is better, I can easily move it.
-> 
-> It would be good to get the various test people involved in this, I
-> really don't know.
-
-OK.
-  
->>>>> It seems especially over-complicated to use a full page table layout
->>>>> for this, wouldn't something simple like an xarray be good enough for
->>>>> test purposes?
->>>>
->>>> Possibly. A page table is really just a lookup table from virtual address
->>>> to pfn/page. Part of the rationale was to mimic what a real device
->>>> might do.
->>>
->>> Well, but the details of the page table layout don't see really
->>> important to this testing, IMHO.
->>
->> One problem with XArray is that on 32-bit machines the value would
->> need to be u64 to hold a pfn which won't fit in a ULONG_MAX.
->> I guess we could make the driver 64-bit only.
-> 
-> Why would a 32 bit machine need a 64 bit pfn?
-> 
-> Jason
-> 
-
-On x86, Physical Address Extension (PAE) uses a 64 bit PTE.
-See arch/x86/include/asm/pgtable_32_types.h which includes
-arch/x86/include/asm/pgtable-3level_types.h.
+-- 
+Thanks,
+~Nick Desaulniers
