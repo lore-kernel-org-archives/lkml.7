@@ -2,118 +2,173 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C32CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EC1CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 712F820862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BF322086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:08:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572520101;
+	bh=SGpSH4Xl2KOfbwCQNK+JvV+z2ECgkq7GmuHKHVI9fzo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=2F+Xj2llR7rLlYiy2actvFjGmqlKGZys3F7UsLOCgqqS0lW7DL28YohK9TwJtrTXo
+	 ZApQ3d8OPuWBq+Y1eUJyyw20pu6vZZtquApf7yPIdq2qgm8nLnQHmDaFWa0Y9LQLy8
+	 s2kvNJ0A8FIFiG7YGY809IpVAW7K7bpG8R5VxV4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfJaLIP (ORCPT
+        id S1727360AbfJaLIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:08:15 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:42819 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbfJaLIP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:08:15 -0400
-X-Originating-IP: 91.217.168.176
-Received: from localhost (unknown [91.217.168.176])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 942B6FF810;
-        Thu, 31 Oct 2019 11:08:11 +0000 (UTC)
-Date:   Thu, 31 Oct 2019 12:08:11 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?iso-8859-1?Q?K=E9vin?= RAYMOND <k.raymond@overkiz.com>,
-        Mickael GARDET <m.gardet@overkiz.com>
-Subject: Re: [PATCH 2/2] ARM: dts: at91: add a common kizboxmini dtsi file
-Message-ID: <20191031110811.GC2967@piout.net>
-References: <20191018140304.31547-1-kamel.bouhara@bootlin.com>
- <20191018140304.31547-3-kamel.bouhara@bootlin.com>
- <20191029123426.GB8412@bogus>
+        Thu, 31 Oct 2019 07:08:20 -0400
+Received: from mga18.intel.com ([134.134.136.126]:55014 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727151AbfJaLIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 07:08:20 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 04:08:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
+   d="scan'208";a="206078265"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by FMSMGA003.fm.intel.com with ESMTP; 31 Oct 2019 04:08:17 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Roger Quadros <rogerq@ti.com>, gregkh@linuxfoundation.org,
+        pawell@cadence.com
+Cc:     peter.chen@nxp.com, nsekhar@ti.com, kurahul@cadence.com,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usb: cdns3: gadget: Fix g_audio use case when connected to Super-Speed host
+In-Reply-To: <86a7fbc4-136f-78bb-4677-784199842c9f@ti.com>
+References: <20191029151514.28495-1-rogerq@ti.com> <20191030121607.21739-1-rogerq@ti.com> <87pnide1k7.fsf@gmail.com> <44b07e90-a9de-ea99-25c6-dc72cf39bbe1@ti.com> <875zk5dw0m.fsf@gmail.com> <86a7fbc4-136f-78bb-4677-784199842c9f@ti.com>
+Date:   Thu, 31 Oct 2019 13:08:16 +0200
+Message-ID: <87zhhhcgv3.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191029123426.GB8412@bogus>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/10/2019 07:34:26-0500, Rob Herring wrote:
-> On Fri, Oct 18, 2019 at 04:03:04PM +0200, Kamel Bouhara wrote:
-> > Split the Kizbox Mini boards into two board configuration, the
-> > Kizboxmini Mother board and the Kizboxmini RailDIN board.
-> > 
-> > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > Signed-off-by: Kévin RAYMOND <k.raymond@overkiz.com>
-> > Signed-off-by: Mickael GARDET <m.gardet@overkiz.com>
-> > ---
-> >  arch/arm/boot/dts/Makefile                    |   2 +
-> >  arch/arm/boot/dts/at91-kizboxmini-mb.dts      |  38 ++++
-> >  arch/arm/boot/dts/at91-kizboxmini-rd.dts      |  54 ++++++
-> >  arch/arm/boot/dts/at91-kizboxmini_common.dtsi | 166 ++++++++++++++++++
-> >  4 files changed, 260 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/at91-kizboxmini-mb.dts
-> >  create mode 100644 arch/arm/boot/dts/at91-kizboxmini-rd.dts
-> >  create mode 100644 arch/arm/boot/dts/at91-kizboxmini_common.dtsi
-> > 
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index c976b72a4c94..6b3a65f3f6f8 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -38,6 +38,8 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
-> >  	at91-ariettag25.dtb \
-> >  	at91-cosino_mega2560.dtb \
-> >  	at91-kizboxmini.dtb \
-> > +	at91-kizboxmini-mb.dtb \
-> > +	at91-kizboxmini-rd.dtb \
-> >  	at91-wb45n.dtb \
-> >  	at91sam9g15ek.dtb \
-> >  	at91sam9g25ek.dtb \
-> > diff --git a/arch/arm/boot/dts/at91-kizboxmini-mb.dts b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
-> > new file mode 100644
-> > index 000000000000..52921f547dd6
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
-> > @@ -0,0 +1,38 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2015-2018 Overkiz SAS
-> > + *   Author: Mickael Gardet <m.gardet@overkiz.com>
-> > + *           Kévin Raymond <k.raymond@overkiz.com>
-> > + */
-> > +/dts-v1/;
-> > +#include "at91-kizboxmini_common.dtsi"
-> > +
-> > +/ {
-> > +	model = "Overkiz Kizbox Mini Mother Board";
-> > +	compatible = "overkiz,kizboxmini-mb", "atmel,at91sam9g25",
-> > +		     "atmel,at91sam9x5", "atmel,at91sam9";
-> > +
-> > +	clocks {
-> > +		slow_xtal {
-> 
-> Don't use '_' in node names.
-> 
 
-We are stuck with that one until we change the dtsi.
+Hi,
 
+Roger Quadros <rogerq@ti.com> writes:
+>>>>> Take into account gadget driver's speed limit when programming
+>>>>> controller speed.
+>>>>>
+>>>>> Fixes: commit 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
+>>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>>>> Acked-by: Peter Chen <peter.chen@nxp.com>
+>>>>> ---
+>>>>>
+>>>>> Changelog:
+>>>>> v2
+>>>>> - Add Fixes line
+>>>>>
+>>>>>    drivers/usb/cdns3/gadget.c | 31 ++++++++++++++++++++++++++-----
+>>>>>    1 file changed, 26 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+>>>>> index 40dad4e8d0dc..1c724c20d468 100644
+>>>>> --- a/drivers/usb/cdns3/gadget.c
+>>>>> +++ b/drivers/usb/cdns3/gadget.c
+>>>>> @@ -2338,9 +2338,35 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
+>>>>>    {
+>>>>>    	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
+>>>>>    	unsigned long flags;
+>>>>> +	enum usb_device_speed max_speed = driver->max_speed;
+>>>>>    
+>>>>>    	spin_lock_irqsave(&priv_dev->lock, flags);
+>>>>>    	priv_dev->gadget_driver = driver;
+>>>>> +
+>>>>> +	/* limit speed if necessary */
+>>>>> +	max_speed = min(driver->max_speed, gadget->max_speed);
+>>>>> +
+>>>>> +	switch (max_speed) {
+>>>>> +	case USB_SPEED_FULL:
+>>>>> +		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
+>> 
+>> so this forces the controller to FS
+>
+> Right.
+>
+>> 
+>>>>> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
+>> 
+>> and this disconnects in superspeed? What is this supposed to do?
+>> 
+>
+> It says "Disconnect USB device in SuperSpeed".
+>
+> We were asked to set that bit to limit it to HS.
+
+I wonder if by "Disconnect USB device in SuperSpeed" means tristating
+the PIPE3 interface, therefore forcing RX.Detect to fail.
+
+>>>>> +		break;
+>>>>> +	case USB_SPEED_HIGH:
+>>>>> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
+>>>>> +		break;
+>>>>> +	case USB_SPEED_SUPER:
+>>>>> +		break;
+>>>>> +	default:
+>>>>> +		dev_err(priv_dev->dev,
+>>>>> +			"invalid maximum_speed parameter %d\n",
+>>>>> +			max_speed);
+>>>>> +		/* fall through */
+>>>>> +	case USB_SPEED_UNKNOWN:
+>>>>> +		/* default to superspeed */
+>>>>> +		max_speed = USB_SPEED_SUPER;
+>>>>> +		break;
+>>>>> +	}
+>>>>
+>>>> I had suggested some simplification for this case statement.
+>>>>
+>>>
+>>> oops, looks like Greg picked this already.
+>>>
+>>> During more tests today I just observed that this patch causes
+>>> the following regression.
+>>>
+>>> Connect EVM to Super-Speed host
+>>> Load g_audio. (this enumerates as HS which is fine)
+>>> unload g_audio
+>>> load g_zero (this enumerates at HS instead of SS).
+>>>
+>>> This is because the speed limit that we set doesn't get cleared.
+>>>
+>>> Now the bits are write only and there is a way to undo USB_CONF_SFORCE_FS
+>>> by writing USB_CONF_CFORCE_FS, however there is no corresponding bit
+>>> to clear USB_CONF_USB3DIS. Only way seems to be USB_CFG_SWRST which
+>>> is a bit harsh IMO.
+>> 
+>> Isn't bit 0 enough?
+>> 
+>> /* Reset USB device configuration. */
+>> #define USB_CONF_CFGRST		BIT(0)
+>
+> Probably not, as explanation of USB3DIS bit says,
+> "To connect disconnected device, CPU performs
+> software reset (CFG.SWRST)." which is bit 7. "Device software reset.
+
+ouch
+
+> But I'll let Pawel comment on this.
+
+ok
+
+>> Also, now that I look at this more carefully, you should move that code
+>> to udc_set_speed().
+>> 
+>
+> Agreed. I'll revise the implementation to move it to udc_set_speed()
+> once I know how to undo the USB3DIS.
+
+Sure
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+balbi
