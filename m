@@ -2,84 +2,140 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08157CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F9BC47E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D47E720873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F4CA20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:27:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mtDewwg/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729591AbfJaT0o (ORCPT
+        id S1729613AbfJaT1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 15:26:44 -0400
-Received: from mga06.intel.com ([134.134.136.31]:49730 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729347AbfJaT0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 15:26:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 12:26:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,252,1569308400"; 
-   d="scan'208";a="400610761"
-Received: from spandruv-mobl3.jf.intel.com ([10.254.190.10])
-  by fmsmga005.fm.intel.com with ESMTP; 31 Oct 2019 12:26:43 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, cai@lca.pw
-Subject: [PATCH] cpufreq: intel_pstate: Fix Invalid EPB setting
-Date:   Thu, 31 Oct 2019 12:26:20 -0700
-Message-Id: <20191031192620.23482-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.17.2
+        Thu, 31 Oct 2019 15:27:45 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37471 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729347AbfJaT1o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 15:27:44 -0400
+Received: by mail-io1-f65.google.com with SMTP id 1so8076552iou.4;
+        Thu, 31 Oct 2019 12:27:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=B4jV3EnBBq5/1iaXnrQAt0NG52PBIas0sGtSMu6rBD8=;
+        b=mtDewwg/TLCLm7Hsns9t2qp9MDlqvS//iyppO5d6nWi63hFv2VV6CNhIMMf/jEIUoE
+         BooiTrj6VAdHlBSU/zrqShQRY5WDBHZdXfAkBMgFlipomCJb3n2ME5P8h2otxKr76mJa
+         EcHByfjllmmJtLjX9A9+mc+9pRjPvWhPXR81fUy1PrhnQKg2mBBMO8bvuWkNsZSCAza/
+         rYXDOU9MtKzpmKnCzD79IeCZxtB1KG3vpirsGX5EmeRBhJ5im8dHVxTNSjmiBvx3Ggk/
+         lyMtCGHXzCyMLVcn1L1+bjFQdvmP+4652pMoRVw+9mhHrZJ6De1jIGNkLkO0/7xwsG1K
+         XheA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=B4jV3EnBBq5/1iaXnrQAt0NG52PBIas0sGtSMu6rBD8=;
+        b=UfS/AxsrE+QBd4s7rWSIvnUnWVGOH7sdRwYgoALToJ6+GZhWwQ5kX6sCbzpbPlGvuH
+         Fh/4pqoH5NBNUDDlzOazC1RLAN+AatvpbqD8o/99OG0EZ5kCc3l4zyks3OIqaE7EW49c
+         yXMzy+QAqniO/0zvpEUob0S6+jyctpTFZ0R0vo5JyJFIqFjmue2gN19MZiJUbjchtT6e
+         Fr2NdTEjhoE8JNhPQsm1tHP1g+BZKHSscjDHlx+FQrpVwFbbVSfHuyGuLcQJWqGkOkC+
+         Qxxz2ZntjFrKRz6wQY5IzCy8iq4kU6ekqIFqxsFxtg52ocwmNB7mhKmscgZhLGGePnJM
+         zemg==
+X-Gm-Message-State: APjAAAUDyBrkYDxW9Lzlh5gIMfrLW++IaOX1IzGd8n5HreJUmiAgzrTl
+        bqZmHLfPBrLgKC5RZUyUjngdInqsHrbahjpdEeLzdDD8
+X-Google-Smtp-Source: APXvYqzpbGK9QDML4i9u/rZBSCaOHKfFsRoyUmn5YwTsiwj0GSCptKh6YEPsaOEgWkIsBSE/YGFsqAhJaM52OuTSOSo=
+X-Received: by 2002:a5d:9f02:: with SMTP id q2mr6698394iot.3.1572550062331;
+ Thu, 31 Oct 2019 12:27:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191031035514.20871-1-lsahlber@redhat.com>
+In-Reply-To: <20191031035514.20871-1-lsahlber@redhat.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Thu, 31 Oct 2019 14:27:31 -0500
+Message-ID: <CAH2r5mvLOs2dWVoCUzCubCbHgvEH4msAjeqCmnriCVxH-g2Phw@mail.gmail.com>
+Subject: Fwd: [PATCH] cifs: don't use 'pre:' for MODULE_SOFTDEP
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The max value of EPB can be only be 0x0F. Setting more than that results
-in "unchecked MSR access error". During CPU offline via cpufreq stop_cpu()
-callback, this error condition is triggered in the function
-intel_pstate_hwp_force_min_perf().
+I noticed that btrfs and ext4 have the same bug
 
-Instead, EPB corresponding to preference to maximize energy saving (0x0F),
-can be set. But this will conflict with the save/restore done in
-arch/x86/kernel/cpu/intel_epb.c. Based on the test, if 0x0F is set in the
-function intel_pstate_hwp_force_min_perf(), this gets restored during next
-CPU online operation. This is not desired.
+modprobe btrfs
+modprobe -r btrfs
 
-Hence don't set EPB in the offline path in this driver and let the
-processing in intel_epb.c handle EPB.
+returns
+"modprobe: FATAL: Module crc32c_intel is in use."
 
-Fixes: af3b7379e2d70 ("cpufreq: intel_pstate: Force HWP min perf before offline")
-Reported-by: Qian Cai <cai@lca.pw>
-Cc: 5.0+ <stable@vger.kernel.org> # 5.0+
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+(although the module is actually unloaded despite the 'FATAL' error)
+
+Should fs modules not use MODULE_SOFTDEP as Ronnie's patch suggests?
+---------- Forwarded message ---------
+From: Ronnie Sahlberg <lsahlber@redhat.com>
+Date: Wed, Oct 30, 2019 at 10:59 PM
+Subject: [PATCH] cifs: don't use 'pre:' for MODULE_SOFTDEP
+To: linux-cifs <linux-cifs@vger.kernel.org>
+Cc: Ronnie Sahlberg <lsahlber@redhat.com>
+
+
+It can cause
+to fail with
+modprobe: FATAL: Module <module> is builtin.
+
+RHBZ: 1767094
+
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
 ---
- drivers/cpufreq/intel_pstate.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ fs/cifs/cifsfs.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index 53a51c169451..8ab31702cf6a 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -847,11 +847,9 @@ static void intel_pstate_hwp_force_min_perf(int cpu)
- 	value |= HWP_MAX_PERF(min_perf);
- 	value |= HWP_MIN_PERF(min_perf);
- 
--	/* Set EPP/EPB to min */
-+	/* Set EPP to min */
- 	if (boot_cpu_has(X86_FEATURE_HWP_EPP))
- 		value |= HWP_ENERGY_PERF_PREFERENCE(HWP_EPP_POWERSAVE);
--	else
--		intel_pstate_set_epb(cpu, HWP_EPP_BALANCE_POWERSAVE);
- 
- 	wrmsrl_on_cpu(cpu, MSR_HWP_REQUEST, value);
- }
+diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
+index f8e201c45ccb..a578699ce63c 100644
+--- a/fs/cifs/cifsfs.c
++++ b/fs/cifs/cifsfs.c
+@@ -1677,17 +1677,17 @@ MODULE_DESCRIPTION
+        ("VFS to access SMB3 servers e.g. Samba, Macs, Azure and Windows (and "
+        "also older servers complying with the SNIA CIFS Specification)");
+ MODULE_VERSION(CIFS_VERSION);
+-MODULE_SOFTDEP("pre: ecb");
+-MODULE_SOFTDEP("pre: hmac");
+-MODULE_SOFTDEP("pre: md4");
+-MODULE_SOFTDEP("pre: md5");
+-MODULE_SOFTDEP("pre: nls");
+-MODULE_SOFTDEP("pre: aes");
+-MODULE_SOFTDEP("pre: cmac");
+-MODULE_SOFTDEP("pre: sha256");
+-MODULE_SOFTDEP("pre: sha512");
+-MODULE_SOFTDEP("pre: aead2");
+-MODULE_SOFTDEP("pre: ccm");
+-MODULE_SOFTDEP("pre: gcm");
++MODULE_SOFTDEP("ecb");
++MODULE_SOFTDEP("hmac");
++MODULE_SOFTDEP("md4");
++MODULE_SOFTDEP("md5");
++MODULE_SOFTDEP("nls");
++MODULE_SOFTDEP("aes");
++MODULE_SOFTDEP("cmac");
++MODULE_SOFTDEP("sha256");
++MODULE_SOFTDEP("sha512");
++MODULE_SOFTDEP("aead2");
++MODULE_SOFTDEP("ccm");
++MODULE_SOFTDEP("gcm");
+ module_init(init_cifs)
+ module_exit(exit_cifs)
+--
+2.13.6
+
+
+
 -- 
-2.17.2
+Thanks,
 
+Steve
