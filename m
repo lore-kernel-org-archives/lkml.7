@@ -2,203 +2,107 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4671CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C92CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82A71217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 969B52083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572506485;
-	bh=RgGczvcyhNK7hxRphi3qyXJOIQ77K2UxqTiZPdnelJw=;
+	s=default; t=1572506758;
+	bh=+EcIU3jhDkSxgTKIw2tuddqMGVSzQ3AmggDk+3PcM50=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FDdW5HR24uy2NeZIVgRohaFKcYCeDVQ0aEN+pISQHlTraOQwk/fUlcYoADDeGioaW
-	 bB+xpcdCqwkVwW0xf4BOQ17W4jBW6s9vk8mnr2bmSdFUbOUIjN1dqopPicKiiSdPVJ
-	 9doTR5ogH39J4115/jftM7LCTxvL/PwRFfOp5lxA=
+	b=NzIWRSx4VZr6E5Vn3sRv44sP/3/G7j8G99qX4hvmrgg7PiqKEJGofCzrwGmdDbeEy
+	 YMa9QAUymva+rV/y37mbwNLQODvgWumuP3PExN2P86E5I/90Vh6vyq/BQH88N8w6aa
+	 z63hF9HDTS/OPo3RCMkJoYVhwyoJfIHaQUS5H9D8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfJaHVY (ORCPT
+        id S1726789AbfJaHZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 03:21:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726596AbfJaHVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 03:21:24 -0400
-Received: from rapoport-lnx (190.228.71.37.rev.sfr.net [37.71.228.190])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B92D12083E;
-        Thu, 31 Oct 2019 07:21:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572506482;
-        bh=RgGczvcyhNK7hxRphi3qyXJOIQ77K2UxqTiZPdnelJw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DG2bDla3FI4L3kxCkdSpGIP1S/AUE+/J+wCL/HQOxOCjeZBUlB4V0IFhk6ov/GsMp
-         saxuC/x188Q2/LNGMCF2oqXem4Xj48zkvWNkvM+gsB1VKSoqa3UR/BznnvxKIjJJCh
-         FRVsiCPLjLZdiu2iXzPdSo3upZ6BwIWtuv/IACLY=
-Date:   Thu, 31 Oct 2019 08:21:13 +0100
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, X86 ML <x86@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user
- mappings
-Message-ID: <20191031072112.GA6990@rapoport-lnx>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org>
- <CA5C22D9-BC3E-4B69-8DD9-4D3B75E40BD5@amacapital.net>
- <20191029093254.GE18773@rapoport-lnx>
- <CALCETrUuuc4DS0cdMBtS550Wkp0x9ND3M3SgtaMgyRROnDR5Kg@mail.gmail.com>
- <20191030084005.GC20624@rapoport-lnx>
- <CALCETrXajrY+0SmzkL7t++ndYwRoYLLE9VPKwSGSyW8HZx-TeA@mail.gmail.com>
+        Thu, 31 Oct 2019 03:25:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44144 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726490AbfJaHZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 03:25:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DAE22AEAF;
+        Thu, 31 Oct 2019 07:25:55 +0000 (UTC)
+Date:   Thu, 31 Oct 2019 08:25:55 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/sparse: Consistently do not zero memmap
+Message-ID: <20191031072555.GA13102@dhcp22.suse.cz>
+References: <20191030131122.8256-1-vincent.whitchurch@axis.com>
+ <20191030132958.GD31513@dhcp22.suse.cz>
+ <20191030140216.i26n22asgafckfxy@axis.com>
+ <20191030141259.GE31513@dhcp22.suse.cz>
+ <CA+CK2bDObV=N1Y+LhDX=tYsTX3HZ+mbB=8aXT=fPX254hKEUBQ@mail.gmail.com>
+ <20191030153150.GI31513@dhcp22.suse.cz>
+ <CA+CK2bA3gM4pMSj-wDWgAPNoPtcjwd59_6VivKA2Uf2GriASsw@mail.gmail.com>
+ <20191030173123.GK31513@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALCETrXajrY+0SmzkL7t++ndYwRoYLLE9VPKwSGSyW8HZx-TeA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191030173123.GK31513@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 02:28:21PM -0700, Andy Lutomirski wrote:
-> On Wed, Oct 30, 2019 at 1:40 AM Mike Rapoport <rppt@kernel.org> wrote:
-> >
-> > On Tue, Oct 29, 2019 at 10:00:55AM -0700, Andy Lutomirski wrote:
-> > > On Tue, Oct 29, 2019 at 2:33 AM Mike Rapoport <rppt@kernel.org> wrote:
-> > > >
-> > > > On Mon, Oct 28, 2019 at 02:44:23PM -0600, Andy Lutomirski wrote:
-> > > > >
-> > > > > > On Oct 27, 2019, at 4:17 AM, Mike Rapoport <rppt@kernel.org> wrote:
-> > > > > >
-> > > > > > ﻿From: Mike Rapoport <rppt@linux.ibm.com>
-> > > > > >
-> > > > > > Hi,
-> > > > > >
-> > > > > > The patch below aims to allow applications to create mappins that have
-> > > > > > pages visible only to the owning process. Such mappings could be used to
-> > > > > > store secrets so that these secrets are not visible neither to other
-> > > > > > processes nor to the kernel.
-> > > > > >
-> > > > > > I've only tested the basic functionality, the changes should be verified
-> > > > > > against THP/migration/compaction. Yet, I'd appreciate early feedback.
-> > > > >
-> > > > > I’ve contemplated the concept a fair amount, and I think you should
-> > > > > consider a change to the API. In particular, rather than having it be a
-> > > > > MAP_ flag, make it a chardev.  You can, at least at first, allow only
-> > > > > MAP_SHARED, and admins can decide who gets to use it.  It might also play
-> > > > > better with the VM overall, and you won’t need a VM_ flag for it — you
-> > > > > can just wire up .fault to do the right thing.
-> > > >
-> > > > I think mmap()/mprotect()/madvise() are the natural APIs for such
-> > > > interface.
-> > >
-> > > Then you have a whole bunch of questions to answer.  For example:
-> > >
-> > > What happens if you mprotect() or similar when the mapping is already
-> > > in use in a way that's incompatible with MAP_EXCLUSIVE?
-> >
-> > Then we refuse to mprotect()? Like in any other case when vm_flags are not
-> > compatible with required madvise()/mprotect() operation.
-> >
-> 
-> I'm not talking about flags.  I'm talking about the case where one
-> thread (or RDMA or whatever) has get_user_pages()'d a mapping and
-> another thread mprotect()s it MAP_EXCLUSIVE.
-> 
-> > > Is it actually reasonable to malloc() some memory and then make it exclusive?
-> > >
-> > > Are you permitted to map a file MAP_EXCLUSIVE?  What does it mean?
-> >
-> > I'd limit MAP_EXCLUSIVE only to anonymous memory.
-> >
-> > > What does MAP_PRIVATE | MAP_EXCLUSIVE do?
-> >
-> > My preference is to have only mmap() and then the semantics is more clear:
-> >
-> > MAP_PRIVATE | MAP_EXCLUSIVE creates a pre-populated region, marks it locked
-> > and drops the pages in this region from the direct map.
-> > The pages are returned back on munmap().
-> > Then there is no way to change an existing area to be exclusive or vice
-> > versa.
-> 
-> And what happens if you fork()?  Limiting it to MAP_SHARED |
-> MAP_EXCLUSIVE would about this particular nasty question.
-> 
-> >
-> > > How does one pass exclusive memory via SCM_RIGHTS?  (If it's a
-> > > memfd-like or chardev interface, it's trivial.  mmap(), not so much.)
-> >
-> > Why passing such memory via SCM_RIGHTS would be useful?
-> 
-> Suppose I want to put a secret into exclusive memory and then send
-> that secret to some other process.  The obvious approach would be to
-> SCM_RIGHTS an fd over, but you can't do that with MAP_EXCLUSIVE as
-> you've defined it.  In general, there are lots of use cases for memfd
-> and other fd-backed memory.
-> 
-> >
-> > > And finally, there's my personal giant pet peeve: a major use of this
-> > > will be for virtualization.  I suspect that a lot of people would like
-> > > the majority of KVM guest memory to be unmapped from the host
-> > > pagetables.  But people might also like for guest memory to be
-> > > unmapped in *QEMU's* pagetables, and mmap() is a basically worthless
-> > > interface for this.  Getting fd-backed memory into a guest will take
-> > > some possibly major work in the kernel, but getting vma-backed memory
-> > > into a guest without mapping it in the host user address space seems
-> > > much, much worse.
-> >
-> > Well, in my view, the MAP_EXCLUSIVE is intended to keep small secrets
-> > rather than use it for the entire guest memory. I even considered adding a
-> > limit for the mapping size, but then I decided that since RLIMIT_MEMLOCK is
-> > anyway enforced there is no need for a new one.
-> >
-> > I agree that getting fd-backed memory into a guest would be less pain that
-> > VMA, but KVM can already use memory outside the control of the kernel via
-> > /dev/map [1].
-> 
-> That series doesn't address the problem I'm talking about at all.  I'm
-> saying that there is a legitimate use case where QEMU should *not*
-> have a mapping of the memory.  So QEMU would create some exclusive
-> memory using /dev/exclusive_memory and would tell KVM to map it into
-> the guest without mapping it into QEMU's address space at all.
-> 
-> (In fact, the way that SEV currently works is *functionally* like
-> this, except that there's a bogus incoherent mapping in the QEMU
-> process that is a giant can of worms.
-> 
-> 
-> IMO a major benefit of a chardev approach is that you don't need a new
-> VM_ flag and you don't need to worry about wiring it up everywhere in
-> the core mm code.
+Vincent, could you give this a try please? It would be even better if
+you could add some debugging to measure the overhead. Let me know if you
+need any help with a debugging patch.
 
-Ok, at last I'm starting to see your and Christoph's point.
+Thanks!
 
-Just to reiterate, we can use fd-backed memory using /dev/exclusive_memory
-chardev (or some other name we'll pick after long bikeshedding) and then
-the .mmap method of this character device can do interesting things with
-the backing physical memory. Since the memory is not VMA-mapped, we do not
-have to find all the places in the core that might require a check of a VM_
-flag to ensure there is no clashes with the exclusive memory.
-
-Still, whatever we do with the mapping  properties of this memory, we need
-a solution to the splitting of huge pages that map the direct map, but this
-is an orthogonal problem in a way.
+On Wed 30-10-19 18:31:23, Michal Hocko wrote:
+[...]
+> What about this? It still aligns to the size but that should be
+> correctly done to the section size level.
+> 
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 72f010d9bff5..ab1e6175ac9a 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -456,8 +456,7 @@ struct page __init *__populate_section_memmap(unsigned long pfn,
+>  	if (map)
+>  		return map;
+>  
+> -	map = memblock_alloc_try_nid(size,
+> -					  PAGE_SIZE, addr,
+> +	map = memblock_alloc_try_nid(size, size, addr,
+>  					  MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+>  	if (!map)
+>  		panic("%s: Failed to allocate %lu bytes align=0x%lx nid=%d from=%pa\n",
+> @@ -474,8 +473,13 @@ static void __init sparse_buffer_init(unsigned long size, int nid)
+>  {
+>  	phys_addr_t addr = __pa(MAX_DMA_ADDRESS);
+>  	WARN_ON(sparsemap_buf);	/* forgot to call sparse_buffer_fini()? */
+> +	/*
+> +	 * Pre-allocated buffer is mainly used by __populate_section_memmap
+> +	 * and we want it to be properly aligned to the section size - this is
+> +	 * especially the case for VMEMMAP which maps memmap to PMDs
+> +	 */
+>  	sparsemap_buf =
+> -		memblock_alloc_try_nid_raw(size, PAGE_SIZE,
+> +		memblock_alloc_try_nid_raw(size, section_map_size(),
+>  						addr,
+>  						MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+>  	sparsemap_buf_end = sparsemap_buf + size;
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
 
 -- 
-Sincerely yours,
-Mike.
+Michal Hocko
+SUSE Labs
