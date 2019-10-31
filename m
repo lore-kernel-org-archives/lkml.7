@@ -2,101 +2,88 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9360ACA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A613CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65D992087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:01:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="jUF9OEbk"
+	by mail.kernel.org (Postfix) with ESMTP id 393BE2087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfJaLBD (ORCPT
+        id S1727642AbfJaLCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:01:03 -0400
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:59372 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727279AbfJaLBD (ORCPT
+        Thu, 31 Oct 2019 07:02:11 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46784 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbfJaLCK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:01:03 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Thu, 31 Oct 2019 07:02:10 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6F0A2C08AE;
-        Thu, 31 Oct 2019 11:01:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1572519662; bh=evZvvLApro5hVwuymO7sh6uSbwgwXdDeSzUoyB4odvQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=jUF9OEbkEjXwuDbMHuZ70RnPxHxJgnjH9Rtt3C67/RLVpTT97kUPFnQ3WkBVSfEbB
-         3mimPr7Re3x1Uv7YdZXVbOWjITJznpZYTRp6+19A3m76FqITT8ouEvpTFZVGgnMYao
-         Iu0yiwG4U06FQ0B/rVoGUBTmCARqs4gIGDzvUCsNTLgD3QzP/Pyvw3TuZv8V/RrP88
-         +cYljxDzm32ACV/al8Mvg4pRyIGy0fAt2B7wH7Tfq60z7zMdFx5hXllXLqqxWgpiB0
-         2s7CteSSbdTLl3J2qOt5XacIqnA2wW6846eoixfulYUsiLH9P7LjbkE6IEKU5xDc1d
-         ymQBjUxPwJ/5Q==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id E4388A0065;
-        Thu, 31 Oct 2019 11:00:59 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net v2 02/10] net: stmmac: gmac4: bitrev32 returns u32
-Date:   Thu, 31 Oct 2019 12:00:40 +0100
-Message-Id: <897a8a6291b1533e6b64f2b85fc5a782983ccfe9.1572519070.git.Jose.Abreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1572519070.git.Jose.Abreu@synopsys.com>
-References: <cover.1572519070.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <cover.1572519070.git.Jose.Abreu@synopsys.com>
-References: <cover.1572519070.git.Jose.Abreu@synopsys.com>
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 18CD8290601;
+        Thu, 31 Oct 2019 11:02:07 +0000 (GMT)
+Date:   Thu, 31 Oct 2019 12:02:04 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     <Tudor.Ambarus@microchip.com>
+Cc:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 12/32] mtd: spi-nor: Void return type for
+ spi_nor_clear_sr/fsr()
+Message-ID: <20191031120204.5bd60bde@collabora.com>
+In-Reply-To: <20191029111615.3706-13-tudor.ambarus@microchip.com>
+References: <20191029111615.3706-1-tudor.ambarus@microchip.com>
+        <20191029111615.3706-13-tudor.ambarus@microchip.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bitrev32 function returns an u32 var, not an int. Fix it.
+On Tue, 29 Oct 2019 11:17:07 +0000
+<Tudor.Ambarus@microchip.com> wrote:
 
-Fixes: 477286b53f55 ("stmmac: add GMAC4 core support")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+> 
+> spi_nor_clear_sr() and spi_nor_clear_fsr() are called just in case
+> of errors. The callers didn't check their return value, make them
+> of type void.
+> 
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 365e607f07cd..40ca00e596dd 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -432,7 +432,7 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 			 * bits used depends on the hardware configuration
- 			 * selected at core configuration time.
- 			 */
--			int bit_nr = bitrev32(~crc32_le(~0, ha->addr,
-+			u32 bit_nr = bitrev32(~crc32_le(~0, ha->addr,
- 					ETH_ALEN)) >> (32 - mcbitslog2);
- 			/* The most significant bit determines the register to
- 			 * use (H/L) while the other 5 bits determine the bit
--- 
-2.7.4
+> ---
+>  drivers/mtd/spi-nor/spi-nor.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index 4a1ecf452a39..e5ed9012cd50 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -654,7 +654,7 @@ static int s3an_sr_ready(struct spi_nor *nor)
+>  	return !!(nor->bouncebuf[0] & XSR_RDY);
+>  }
+>  
+> -static int spi_nor_clear_sr(struct spi_nor *nor)
+> +static void spi_nor_clear_sr(struct spi_nor *nor)
+>  {
+>  	if (nor->spimem) {
+>  		struct spi_mem_op op =
+> @@ -690,7 +690,7 @@ static int spi_nor_sr_ready(struct spi_nor *nor)
+>  	return !(nor->bouncebuf[0] & SR_WIP);
+>  }
+>  
+> -static int spi_nor_clear_fsr(struct spi_nor *nor)
+> +static void spi_nor_clear_fsr(struct spi_nor *nor)
+>  {
+>  	if (nor->spimem) {
+>  		struct spi_mem_op op =
 
