@@ -2,131 +2,224 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 759E1CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A922CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4931521734
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 632B920856
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:14:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="U+o6y/sW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MWJCdQBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbfJaANZ (ORCPT
+        id S1727009AbfJaAOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 20:13:25 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47887 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726683AbfJaANZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 20:13:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 473QlQ0XW3z9sPj;
-        Thu, 31 Oct 2019 11:13:22 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572480802;
-        bh=j2atfhGE6NXcq9SsnucOtdA7E+v4LMToTw1N5o0kYFc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=U+o6y/sWnw3QXAj6lJxJeJOr85tZ3DbGK9PzvjHzQvWQNVE6rQJG2PKsBofyfz96j
-         m4ZO0wH5C7kojPUJu5z98mXAwggN2Pv/s+KQBmH7ZtMUG6GesNzsNYYPCjcqpyxqsE
-         8B91ZSQ3VYXuN0GRe7Rr00R5ji56SuBPqFBHiY/ToPRqnGIIIbxH9MkVo9lI5sjBFr
-         ynOfRe4y+kbe7o3zV+ahIiu+9rSFW5oitCN+LA8aTQkYd7GTTKJasSVAKwEU8H5lC7
-         kQ/9cBsMD2S9xRI411Eh4M6w7dG9s58T9mxWCDR29Tsp4uDSSxZoS5trqj4/JvNiLR
-         r8paC7YEqUdpg==
-Date:   Thu, 31 Oct 2019 11:13:03 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        Wireless <linux-wireless@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ayala Beker <ayala.beker@intel.com>,
-        Tova Mussai <tova.mussai@intel.com>
-Subject: linux-next: manual merge of the wireless-drivers-next tree with the
- wireless-drivers tree
-Message-ID: <20191031111242.50ab1eca@canb.auug.org.au>
+        Wed, 30 Oct 2019 20:14:36 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17399 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbfJaAOf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 20:14:35 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dba276f0000>; Wed, 30 Oct 2019 17:14:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 30 Oct 2019 17:14:33 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 30 Oct 2019 17:14:33 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 31 Oct
+ 2019 00:14:31 +0000
+Subject: Re: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
+To:     Jason Gunthorpe <jgg@mellanox.com>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191023195515.13168-1-rcampbell@nvidia.com>
+ <20191023195515.13168-4-rcampbell@nvidia.com>
+ <20191029175837.GS22766@mellanox.com>
+ <3ffecdc6-625f-ebea-8fb4-984fe6ca90f3@nvidia.com>
+ <20191029231255.GX22766@mellanox.com>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <f42d06e2-ca08-acdd-948d-2803079a13c2@nvidia.com>
+Date:   Wed, 30 Oct 2019 17:14:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/o6YZWLscK0mtaqIJjxT09ev";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20191029231255.GX22766@mellanox.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572480879; bh=aQDvoiizFwVElu/+JB2LeJEv2uD96Wkmo0qAhVBooQc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=MWJCdQBYV5wFB7p92/YoCvnFMvaW5Z0IBrW0xE5hxmWN/aZqJV2A1iGIWrIIsAsV8
+         5VbUwe/ni8bh+UdPANC3o40XMQmti2jPniyG+kfKXopV2o92ZsH5WErJY0bTCkzbaq
+         Uv2d9ejyWGNHiGyn+USoMYCdZGkZjaf1R1TKpH3UAg2J2+/Vihh1G5u/xoT1MrefGQ
+         afjBFP8F4s4qdv4EK4vntC3rY/27ToshvjCbJrew79wgoor/yef38armEhFyhEvIAO
+         ruemKtXzYLn3lyFMiFLsaf9rlg03HrmcImjcDUjHfi1/TdGEdrlMlA1xfixlHdVgdW
+         DsWeazFXfVoKA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/o6YZWLscK0mtaqIJjxT09ev
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 10/29/19 4:12 PM, Jason Gunthorpe wrote:
+> On Tue, Oct 29, 2019 at 02:16:05PM -0700, Ralph Campbell wrote:
+> 
+>>> Frankly, I'm not super excited about the idea of a 'test driver', it
+>>> seems more logical for testing to have some way for a test harness to
+>>> call hmm_range_fault() under various conditions and check the results?
+>>
+>> test_vmalloc.sh at least uses a test module(s).
+> 
+> Well, that is good, is it also under drivers/char? It kind feels like
+> it should not be there...
 
-Today's linux-next merge of the wireless-drivers-next tree got a
-conflict in:
+I think most of the test modules live in lib/ but I wasn't sure that
+was the right place for the HMM test driver.
+If you think that is better, I can easily move it.
 
-  drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
+>>> It seems especially over-complicated to use a full page table layout
+>>> for this, wouldn't something simple like an xarray be good enough for
+>>> test purposes?
+>>
+>> Possibly. A page table is really just a lookup table from virtual address
+>> to pfn/page. Part of the rationale was to mimic what a real device
+>> might do.
+> 
+> Well, but the details of the page table layout don't see really
+> important to this testing, IMHO.
 
-between commit:
+One problem with XArray is that on 32-bit machines the value would
+need to be u64 to hold a pfn which won't fit in a ULONG_MAX.
+I guess we could make the driver 64-bit only.
 
-  3d206e6899a0 ("iwlwifi: fw api: support new API for scan config cmd")
+>>>> +	for (addr = start; addr < end; ) {
+>>>> +		long count;
+>>>> +
+>>>> +		next = min(addr + (ARRAY_SIZE(pfns) << PAGE_SHIFT), end);
+>>>> +		range.start = addr;
+>>>> +		range.end = next;
+>>>> +
+>>>> +		down_read(&mm->mmap_sem);
+> 
+> Also, did we get a mmget() before doing this down_read?
+> 
+>>>> +
+>>>> +		ret = hmm_range_register(&range, &dmirror->mirror);
+>>>> +		if (ret) {
+>>>> +			up_read(&mm->mmap_sem);
+>>>> +			break;
+>>>> +		}
+>>>> +
+>>>> +		if (!hmm_range_wait_until_valid(&range,
+>>>> +						DMIRROR_RANGE_FAULT_TIMEOUT)) {
+>>>> +			hmm_range_unregister(&range);
+>>>> +			up_read(&mm->mmap_sem);
+>>>> +			continue;
+>>>> +		}
+>>>> +
+>>>> +		count = hmm_range_fault(&range, 0);
+>>>> +		if (count < 0) {
+>>>> +			ret = count;
+>>>> +			hmm_range_unregister(&range);
+>>>> +			up_read(&mm->mmap_sem);
+>>>> +			break;
+>>>> +		}
+>>>> +
+>>>> +		if (!hmm_range_valid(&range)) {
+>>>
+>>> There is no 'driver lock' being held here, how does this work?
+>>> Shouldn't it hold dmirror->mutex for this sequence?
+>>
+>> I have a modified version of this driver that's based on your series
+>> removing hmm_mirror_register() which uses a mutex.
+>> Otherwise, it looks similar to the changes in nouveau.
+> 
+> Well, that locking pattern is required even for original hmm calls..
 
-from the wireless-drivers tree and commit:
+Will be fixed in v4.
 
-  65b9425ce9aa ("iwlwifi: rx: use new api to get band from rx mpdu")
+> 
+>>>> +static int dmirror_read(struct dmirror *dmirror,
+>>>> +			struct hmm_dmirror_cmd *cmd)
+>>>> +{
+>>>
+>>> Why not just use pread()/pwrite() for this instead of an ioctl?
+>>
+>> pread()/pwrite() could certainly be implemented.
+>> I think the idea was that the read/write is actually the "device"
+>> doing read/write and making that clearly different from a program
+>> reading/writing the device. Also, the ioctl() allows information
+>> about what faults or events happened during the operation. I only
+>> have number of pages and number of page faults returned at the moment,
+>> but one of Jerome's version of this driver had other counters being
+>> returned.
+> 
+> Makes sense I guess
+> 
+>>>> +static struct platform_driver dmirror_device_driver = {
+>>>> +	.probe		= dmirror_probe,
+>>>> +	.remove		= dmirror_remove,
+>>>> +	.driver		= {
+>>>> +		.name	= "HMM_DMIRROR",
+>>>> +	},
+>>>> +};
+>>>
+>>> This presence of a platform_driver and device is very confusing. I'm
+>>> sure Greg KH would object to this as a misuse of platform drivers.
+>>>
+>>> A platform device isn't needed to create a char dev, so what is this for?
+>>
+>> The devm_request_free_mem_region() and devm_memremap_pages() calls for
+>> creating the ZONE_DEVICE private pages tie into the devm* clean up framework.
+>> I thought a platform_driver was the simplest way to also be able to call
+>> devm_add_action_or_reset() to clean up on module unload and be compatible
+>> with the private page clean up.
+> 
+> IIRC Christoph recently fixed things so there was a non devm version
+> of these functions. Certainly we should not be making fake
+> platform_devices just to call devm.
+> 
+> There is also a struct device inside the cdev, maybe that could be
+> arrange to be devm compatible if it was *really* needed.
 
-from the wireless-drivers-next tree.
+Will be fixed in v4.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+>>>> diff --git a/include/Kbuild b/include/Kbuild
+>>>> index ffba79483cc5..6ffb44a45957 100644
+>>>> +++ b/include/Kbuild
+>>>> @@ -1063,6 +1063,7 @@ header-test-			+= uapi/linux/coda_psdev.h
+>>>>    header-test-			+= uapi/linux/errqueue.h
+>>>>    header-test-			+= uapi/linux/eventpoll.h
+>>>>    header-test-			+= uapi/linux/hdlc/ioctl.h
+>>>> +header-test-			+= uapi/linux/hmm_dmirror.h
+>>>
+>>> Why? This list should only be updated if the header is broken in some
+>>> way.
+>>
+>> Should this be in include/linux/ instead?
+>> I wasn't sure where the "right" place was to put the header.
+> 
+> No, it is right, it just shouldn't be in this makefile.
+> 
+> Jason
 
---=20
-Cheers,
-Stephen Rothwell
+Will be fixed in v4.
 
-diff --cc drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-index 5ca50f39a023,a25712cce4ab..000000000000
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-@@@ -1405,12 -1409,12 +1409,18 @@@ static inline bool iwl_mvm_is_scan_ext_
-  			  IWL_UCODE_TLV_API_SCAN_EXT_CHAN_VER);
-  }
- =20
- +static inline bool iwl_mvm_is_reduced_config_scan_supported(struct iwl_mv=
-m *mvm)
- +{
- +	return fw_has_api(&mvm->fw->ucode_capa,
- +			  IWL_UCODE_TLV_API_REDUCED_SCAN_CONFIG);
- +}
- +
-+ static inline bool iwl_mvm_is_band_in_rx_supported(struct iwl_mvm *mvm)
-+ {
-+ 	return fw_has_api(&mvm->fw->ucode_capa,
-+ 			   IWL_UCODE_TLV_API_BAND_IN_RX_DATA);
-+ }
-+=20
-  static inline bool iwl_mvm_has_new_rx_stats_api(struct iwl_mvm *mvm)
-  {
-  	return fw_has_api(&mvm->fw->ucode_capa,
-
---Sig_/o6YZWLscK0mtaqIJjxT09ev
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl26Jw8ACgkQAVBC80lX
-0Gzangf+PVr7ZAapuPg08fLs9Ey4KAD9IZj69wOiWkwcAgzfmNfMOU2fZEhehMSn
-acO+G7BoN3n/2NnlxcASOz+Vq3r86yyidVXQASvYDnLsC7/l7LGgL+L/HcpyfC3a
-CHxdZyFPf/GtzQSRtwkpBllqr9LhkyzqCZwPswDHj6u8KN4F1kcJlVj3JyspALxY
-pfOCE0bSMaXCNCGuYkGiyjUCksNq5lOUCbW5e3dHk2H8aTqVbySDM0lA/shcduBX
-TW8awsQ/PwHloI9Hu6eJeF2yZ7kP234C4bmuCP1bP0v4qw831DrL3MsNvIGUO2oh
-MW9Hd/RHZVwkkvxKGnJnuu9NUcVvkQ==
-=Idae
------END PGP SIGNATURE-----
-
---Sig_/o6YZWLscK0mtaqIJjxT09ev--
+Thanks for the review, the code is much simpler now.
