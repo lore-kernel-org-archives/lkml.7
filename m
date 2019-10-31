@@ -2,59 +2,59 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 502AFCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B520CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 239DB2087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04FED208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:59:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vQtn5epM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tf+KATEy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfJaN7u (ORCPT
+        id S1727895AbfJaN75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:59:50 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38744 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727855AbfJaN7s (ORCPT
+        Thu, 31 Oct 2019 09:59:57 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35534 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727855AbfJaN75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:59:48 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w8so2748470plq.5
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 06:59:48 -0700 (PDT)
+        Thu, 31 Oct 2019 09:59:57 -0400
+Received: by mail-pf1-f194.google.com with SMTP id d13so4454013pfq.2
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 06:59:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=rBi9pDvmSRW/gfGz1S5LaiY/M3/1mDENiO/ALWeCgpk=;
-        b=vQtn5epM7BmXndczOajGVGAnDDTih0deQtjDHqOZaIno2sYSm5HgUpe9M/7tqsey17
-         JcgSTwFY/6xWrV+8iWqWzgWyz0OJ1KQ8VkRfHUX2V9qiUlAp1qHQCPlRPO3VZjqPglme
-         iDFSD+n12Tl45aTDsljHPGU1HSJZQH0J8DDYa7iVWrhovtRN1+WcIknfWRrt5npqTisz
-         qjYz+EqFAjDFNwFzeb2uxMlGTvMUNBpgN/uHLEcIhsUhQ3P0jCVsW6GLSldnblMq82fu
-         ltdsXfA3qM4hFrffaFAyC70OkJ8YQVOci0NA28T1yGIBut65i64DP9fivni/267D/coO
-         +C1Q==
+        bh=E3OJFxf+mUWoz3h8BXrLdL53qyDG3CcJuYs/0iyxKF4=;
+        b=tf+KATEyMKScBhe2rDxFmvhHdhpJvsG8Ppi+Ok6s+1JY+Ck0LsQI6EgbXGwk6Gxns2
+         PBhFeVi79K6keCg6KQopPP+74YLxVly8VZb6Lkf1BGv+ATKanKjaohe+f55adgBuMttF
+         ghSDNFsV11Nb21uJw86b7GMyPRXXuWo3nSS9se6Vt7rIUg3OvajwiDKd2Byp1nMqXkx6
+         RLI18VC7Bc7ONNECHSTu/fq24VhTJJYi4wjTUIJfJ7zE+NM+fU/oyzFLdPiRdKQgL9qR
+         NVu9qVxDVu59qNFL7TyaD+bkES5v9TlqyZ9mHlOmkX4lzMqpiLj8bfpJmBr8MVXkfcQW
+         HHUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=rBi9pDvmSRW/gfGz1S5LaiY/M3/1mDENiO/ALWeCgpk=;
-        b=cQ2PINZRD6aA1o/0eX2yak3KtFvgDT7/Mmmx2ExlWJgqoLbkMvkMwsRX+ebM9Cw1Dx
-         2WorAU35sWpiUEaJeGu1J3qINKs1VuB2tUs/mRb/5bh+iIDKmpEh+FFtSZiyK6V/ET4/
-         4RyH1pmCXpPzX6CbuYtjCHYpQj2GrTK3R8+UaW43ayZWfi2V+BmpXfvSAi1ScA00G3Ob
-         RnzcNkwWE05PCiivdYNXdd8JBbexCrxsHRt2n/wVgMD6XbpfXu9pf+Dq9AfGJfIp7fA/
-         9GAGinechucKfw4vzYUqwpJVcakBwkHE7FReS8xlyF9wVKNbffbUaIi1uMZluXoKg1C2
-         qFnw==
-X-Gm-Message-State: APjAAAVwZf/j1sPT9sNnfdxAHgeSFxX336FOMdMmbqQFYJ9vuQrU5m6e
-        yMFoznhaxDgXIkAHjXqkiqmfvw==
-X-Google-Smtp-Source: APXvYqxvxuXZl/u6hfe9tV8jGqosv3YQ51/spMygFoU8LspT81JCa6iermf94WbaR84nA4XCB+w3XA==
-X-Received: by 2002:a17:902:d705:: with SMTP id w5mr6386152ply.142.1572530388055;
-        Thu, 31 Oct 2019 06:59:48 -0700 (PDT)
+        bh=E3OJFxf+mUWoz3h8BXrLdL53qyDG3CcJuYs/0iyxKF4=;
+        b=pdB0A/x6x3jGIPxoesmNPjn6PcX6GR+1SLYlNyOYIwAbqCCUR9uWvY6LS1NbtdHeb0
+         6xff1ktcvjRSxfh1JISZoQIfaIIcRG+RiE4MUu0mgG/A0ea9VhlddUsML5GAdwR6ckFT
+         q5oBHsg9Vy/VeXkrtSmRsG1xTg2y3jUGYrkQlnvMBLBhy/yu3h5jXGiPI32PWPaxpWXk
+         uDnB73K1ICud76frtJe++HfmOg7Sx2yDxxZHai7ryzVe9H2UraYX85FjmJ8OukPbR8/e
+         2kL95wj8r0lb3Uq8Qzxb//DSOyBSP14NAgBamuNTvDFR0S5rxo3C6UMP0o4VONkItPtG
+         +GSA==
+X-Gm-Message-State: APjAAAU5ICrYFsaiI82VDHz5xFUa0+QbLC80dhvwcb2dWKxNka4KggS7
+        lKw0NQcuyw107yQsJLZ6TSHTsw==
+X-Google-Smtp-Source: APXvYqx6w3fK7udP850k+SVSjxTClJG1BWGTayyOqKUy8HcRBFjYN6ROvTumbYp2kjoyQbEiFFSOdg==
+X-Received: by 2002:a63:fe0c:: with SMTP id p12mr6825858pgh.121.1572530396394;
+        Thu, 31 Oct 2019 06:59:56 -0700 (PDT)
 Received: from localhost.localdomain ([117.252.69.143])
-        by smtp.gmail.com with ESMTPSA id i16sm3522441pfa.184.2019.10.31.06.59.40
+        by smtp.gmail.com with ESMTPSA id i16sm3522441pfa.184.2019.10.31.06.59.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 31 Oct 2019 06:59:47 -0700 (PDT)
+        Thu, 31 Oct 2019 06:59:55 -0700 (PDT)
 From:   Sumit Garg <sumit.garg@linaro.org>
 To:     jens.wiklander@linaro.org, jarkko.sakkinen@linux.intel.com,
         dhowells@redhat.com
@@ -66,9 +66,9 @@ Cc:     corbet@lwn.net, jejb@linux.ibm.com, zohar@linux.ibm.com,
         linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         tee-dev@lists.linaro.org, Sumit Garg <sumit.garg@linaro.org>
-Subject: [Patch v3 2/7] tee: enable support to register kernel memory
-Date:   Thu, 31 Oct 2019 19:28:38 +0530
-Message-Id: <1572530323-14802-3-git-send-email-sumit.garg@linaro.org>
+Subject: [Patch v3 3/7] tee: add private login method for kernel clients
+Date:   Thu, 31 Oct 2019 19:28:39 +0530
+Message-Id: <1572530323-14802-4-git-send-email-sumit.garg@linaro.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1572530323-14802-1-git-send-email-sumit.garg@linaro.org>
 References: <1572530323-14802-1-git-send-email-sumit.garg@linaro.org>
@@ -77,84 +77,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable support to register kernel memory reference with TEE. This change
-will allow TEE bus drivers to register memory references.
+There are use-cases where user-space shouldn't be allowed to communicate
+directly with a TEE device which is dedicated to provide a specific
+service for a kernel client. So add a private login method for kernel
+clients and disallow user-space to open-session using GP implementation
+defined login method range: (0x80000000 - 0xFFFFFFFF).
 
 Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 ---
- drivers/tee/tee_shm.c   | 26 ++++++++++++++++++++++++--
- include/linux/tee_drv.h |  1 +
- 2 files changed, 25 insertions(+), 2 deletions(-)
+ drivers/tee/tee_core.c   | 6 ++++++
+ include/uapi/linux/tee.h | 8 ++++++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-index 09ddcd0..1ec1577 100644
---- a/drivers/tee/tee_shm.c
-+++ b/drivers/tee/tee_shm.c
-@@ -9,6 +9,7 @@
- #include <linux/sched.h>
- #include <linux/slab.h>
- #include <linux/tee_drv.h>
-+#include <linux/uio.h>
- #include "tee_private.h"
- 
- static void tee_shm_release(struct tee_shm *shm)
-@@ -224,13 +225,14 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
- {
- 	struct tee_device *teedev = ctx->teedev;
- 	const u32 req_flags = TEE_SHM_DMA_BUF | TEE_SHM_USER_MAPPED;
-+	const u32 req_ker_flags = TEE_SHM_DMA_BUF | TEE_SHM_KERNEL_MAPPED;
- 	struct tee_shm *shm;
- 	void *ret;
- 	int rc;
- 	int num_pages;
- 	unsigned long start;
- 
--	if (flags != req_flags)
-+	if (flags != req_flags && flags != req_ker_flags)
- 		return ERR_PTR(-ENOTSUPP);
- 
- 	if (!tee_device_get(teedev))
-@@ -265,7 +267,27 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
- 		goto err;
+diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+index 0f16d9f..2c2f646 100644
+--- a/drivers/tee/tee_core.c
++++ b/drivers/tee/tee_core.c
+@@ -334,6 +334,12 @@ static int tee_ioctl_open_session(struct tee_context *ctx,
+ 			goto out;
  	}
  
--	rc = get_user_pages_fast(start, num_pages, FOLL_WRITE, shm->pages);
-+	if (flags & TEE_SHM_USER_MAPPED) {
-+		rc = get_user_pages_fast(start, num_pages, FOLL_WRITE,
-+					 shm->pages);
-+	} else {
-+		struct kvec *kiov;
-+		int i;
-+
-+		kiov = kcalloc(num_pages, sizeof(*kiov), GFP_KERNEL);
-+		if (!kiov) {
-+			ret = ERR_PTR(-ENOMEM);
-+			goto err;
-+		}
-+
-+		for (i = 0; i < num_pages; i++) {
-+			kiov[i].iov_base = (void *)(start + i * PAGE_SIZE);
-+			kiov[i].iov_len = PAGE_SIZE;
-+		}
-+
-+		rc = get_kernel_pages(kiov, num_pages, 0, shm->pages);
-+		kfree(kiov);
++	if (arg.clnt_login & TEE_IOCTL_LOGIN_MASK) {
++		pr_debug("login method not allowed for user-space client\n");
++		rc = -EPERM;
++		goto out;
 +	}
- 	if (rc > 0)
- 		shm->num_pages = rc;
- 	if (rc != num_pages) {
-diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
-index 7a03f68..dedf8fa 100644
---- a/include/linux/tee_drv.h
-+++ b/include/linux/tee_drv.h
-@@ -26,6 +26,7 @@
- #define TEE_SHM_REGISTER	BIT(3)  /* Memory registered in secure world */
- #define TEE_SHM_USER_MAPPED	BIT(4)  /* Memory mapped in user space */
- #define TEE_SHM_POOL		BIT(5)  /* Memory allocated from pool */
-+#define TEE_SHM_KERNEL_MAPPED	BIT(6)  /* Memory mapped in kernel space */
++
+ 	rc = ctx->teedev->desc->ops->open_session(ctx, &arg, params);
+ 	if (rc)
+ 		goto out;
+diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
+index 4b9eb06..a0a3d52 100644
+--- a/include/uapi/linux/tee.h
++++ b/include/uapi/linux/tee.h
+@@ -172,6 +172,14 @@ struct tee_ioctl_buf_data {
+ #define TEE_IOCTL_LOGIN_APPLICATION		4
+ #define TEE_IOCTL_LOGIN_USER_APPLICATION	5
+ #define TEE_IOCTL_LOGIN_GROUP_APPLICATION	6
++/*
++ * Disallow user-space to use GP implementation specific login
++ * method range (0x80000000 - 0xFFFFFFFF). This range is rather
++ * being reserved for REE kernel clients or TEE implementation.
++ */
++#define TEE_IOCTL_LOGIN_MASK			0x80000000
++/* Private login method for REE kernel clients */
++#define TEE_IOCTL_LOGIN_REE_KERNEL		0x80000000
  
- struct device;
- struct tee_device;
+ /**
+  * struct tee_ioctl_param - parameter
 -- 
 2.7.4
 
