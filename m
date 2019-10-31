@@ -2,157 +2,127 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39821CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F917CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 018D8208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03BA2208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:57:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FbOWUF6V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHZMltmu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729483AbfJaS5X (ORCPT
+        id S1729500AbfJaS5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:57:23 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51922 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729444AbfJaS5W (ORCPT
+        Thu, 31 Oct 2019 14:57:24 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43307 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729449AbfJaS5W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 31 Oct 2019 14:57:22 -0400
-Received: by mail-wm1-f68.google.com with SMTP id q70so7087823wme.1;
-        Thu, 31 Oct 2019 11:57:20 -0700 (PDT)
+Received: by mail-pg1-f195.google.com with SMTP id l24so4625645pgh.10;
+        Thu, 31 Oct 2019 11:57:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6sNK0GnkALxg6Lm9PdVrgkH3S8XIei9TfZL+fReqUHc=;
-        b=FbOWUF6VW8HdNEtIjfT4K6xkOu4m7KXFMQCqcgEu/mbBW3OT8GGxdkgSTwouLn/Bck
-         AyV4yBhD+O0de/frV5L1HmfjawYhYEbWeqY0nUD1BGaxwf2Mj/JdzFZn1s4aAEWEVhns
-         tOtqnEyF7DYmj3FBiYbzOq0NzYV9gkUBnyHpGe3xNk28rC72Hn+YMJvezMid2ZGdqAKb
-         dDyfXGnoPjsvLC9BZhnhvl+ZBJTuGwJIra5tWurj/uN34c0NvuWxQfeRwkXoCzw7BEtC
-         XF2siWfMoY6KjvLuFUlIdoJq+JuPpUGLiU5jog7USICBLwD7eu/QC62fCNHlaT0laNuF
-         p3BA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Hwivt2QaT2reDFA/i4CNRv6b//VFZ+Pr2+rJ26/VMuo=;
+        b=UHZMltmuREk7VrkYOBkMqMXOM6cIfVpk/UfNwK6IdUHWJ17SeOSEl0jXpY27VztQ9u
+         hRsSXK1zA9+s7fvcIa3gR7Nn6DQB/k8KKeuqSms3szB0bksnq4TbHqJc93SHIvg0jO9i
+         fh1PoTE2bOnGK1n/Ci5qzhathMpyLiQTeGp8evC6WElzYWD5TL9A6CSRLUOgNRHo/8az
+         LNh47zI2LvDiArO7MzdWfiq2dn2PfJKB1w0ugHUPHcl3rPKbt7Eae6j4x/2hoOxbkIFe
+         BjOtpnDLvVNy5dN3VzRVdIlcRpsQ19husDGyqo86UIoiiUXOJkePLNK3SUidbJ4CEMU0
+         JWZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=6sNK0GnkALxg6Lm9PdVrgkH3S8XIei9TfZL+fReqUHc=;
-        b=k97Qeaqnoo+2q5AFLSscD6LG+UJ4dsD/WhVowN3IZKZuS2a7bzW2vplOSHfpMgpjdE
-         h/3LpcxDvgH8YHlWvi62IQOYUkqUdCJa7K86BP8yHr81mIYM0SrQHMxi9aauFhFHGb3o
-         ScQvvwP+VIUpSt43Tj5fgal6HMTFodR9K5lWtyv+AYJSYTqchmmdL7SSDJI+Stbig236
-         utxqk/GMsi1M6MI9MVkYwt7miJAIZLh9e3ur8NdCUYE9cNztftLUJhO64ywVkc0JG8FP
-         RFGlh5hs8uGoP9jVbIzjO2iTzWv4QZ9GfRmV0X3thcMgQPtsIshNG8va02VTIgi52kEv
-         SiMw==
-X-Gm-Message-State: APjAAAUz0qU1C9yBIzVYo45on+00hv+NeQi8tq2y0lyZCceWbqMudgk7
-        G3FBdO9AglkwfSuihSz145MwYnzv
-X-Google-Smtp-Source: APXvYqxG+wupgQQrW9egKG3NJh1MvQp79icnnFwhgkIR5s/c8Juzz1zlrUhMafiYxX8TFjjkZNm9eQ==
-X-Received: by 2002:a1c:4089:: with SMTP id n131mr6857266wma.86.1572548239937;
-        Thu, 31 Oct 2019 11:57:19 -0700 (PDT)
-Received: from [10.67.51.137] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id j19sm5715835wre.0.2019.10.31.11.57.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 31 Oct 2019 11:57:19 -0700 (PDT)
-Subject: Re: [PATCH net 3/4] net: bcmgenet: soft reset 40nm EPHYs before MAC
- init
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1571267192-16720-1-git-send-email-opendmb@gmail.com>
- <1571267192-16720-4-git-send-email-opendmb@gmail.com>
- <3dbd4dbd-2ea5-e234-0cdc-81f0f3126173@gmail.com>
-From:   Doug Berger <opendmb@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=opendmb@gmail.com; prefer-encrypt=mutual; keydata=
- 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 YVs=
-Message-ID: <4f1c2d73-66b8-62c3-d1bd-8b4aec2cf1d7@gmail.com>
-Date:   Thu, 31 Oct 2019 11:57:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <3dbd4dbd-2ea5-e234-0cdc-81f0f3126173@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Hwivt2QaT2reDFA/i4CNRv6b//VFZ+Pr2+rJ26/VMuo=;
+        b=Iwm2DqF1FShT9KlQZFlfYmgmDs4Qxwf/jSOIQVOWUtZVZqK9PLO6hoUNzfsRhbIrXs
+         wFf4cyVRoxNub/lq+N9nGbzEmes8Kr5j/znhAxz4iv5MAjuEJWw8w1qExrFDSypj3Tsx
+         lXYiQzn+DQk6AjfRq3CrUjmflnGARrYM+f0BE3Z/HYlY+c2OUCwWUgjKoRGAq0CaSfjQ
+         EoA0FYfntIsT/jtmp9AzSQU478J92Kp3IwvLuvoi4PeuBWklnrGou7Ud8Pd54GaDd4si
+         hTkbm9Nwckmt25UU/lHSIpaqn9Ebnex9HApUEdEUFIBQvk7u0T8eYrqV05tGY9umwMMD
+         LUcw==
+X-Gm-Message-State: APjAAAUZr4CCcJkLEbDZnmO3ZQmXNKmngJ7PGfj5lYg6WojNvXwTN9oY
+        4W/90t9G3fwfki/0RvMqC3o=
+X-Google-Smtp-Source: APXvYqzIsKzJmoGTaVa035vrBCC4+AFGQUELVMXeGxMZLF1+Tq0c23uxzv1aoAs21UxDHkK7JFT5wA==
+X-Received: by 2002:a63:1b59:: with SMTP id b25mr8435157pgm.267.1572548241313;
+        Thu, 31 Oct 2019 11:57:21 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id j186sm3130951pfg.161.2019.10.31.11.57.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 11:57:20 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     bjorn.andersson@linaro.org, mturquette@baylibre.com,
+        sboyd@kernel.org
+Cc:     agross@kernel.org, marc.w.gonzalez@free.fr,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v5 1/3] clk: qcom: Allow constant ratio freq tables for rcg
+Date:   Thu, 31 Oct 2019 11:57:15 -0700
+Message-Id: <20191031185715.15504-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191031185538.15402-1-jeffrey.l.hugo@gmail.com>
+References: <20191031185538.15402-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/16/19 8:53 PM, Florian Fainelli wrote:
-> 
-> 
-> On 10/16/2019 4:06 PM, Doug Berger wrote:
->> It turns out that the "Workaround for putting the PHY in IDDQ mode"
->> used by the internal EPHYs on 40nm Set-Top Box chips when powering
->> down puts the interface to the GENET MAC in a state that can cause
->> subsequent MAC resets to be incomplete.
->>
->> Rather than restore the forced soft reset when powering up internal
->> PHYs, this commit moves the invocation of phy_init_hw earlier in
->> the MAC initialization sequence to just before the MAC reset in the
->> open and resume functions. This allows the interface to be stable
->> and allows the MAC resets to be successful.
->>
->> The bcmgenet_mii_probe() function is split in two to accommodate
->> this. The new function bcmgenet_mii_connect() handles the first
->> half of the functionality before the MAC initialization, and the
->> bcmgenet_mii_config() function is extended to provide the remaining
->> PHY configuration following the MAC initialization.
->>
->> Fixes: 484bfa1507bf ("Revert "net: bcmgenet: Software reset EPHY after power on"")
->> Signed-off-by: Doug Berger <opendmb@gmail.com>
-> 
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> We will have to see how difficult it might be to back port towards
-> stable trees of interest, hopefully not too difficult.
-> 
+Some RCGs (the gfx_3d_src_clk in msm8998 for example) are basically just
+some constant ratio from the input across the entire frequency range.  It
+would be great if we could specify the frequency table as a single entry
+constant ratio instead of a long list, ie:
 
-There is more going on here with the MAC reset than this commit resolves
-and I am actively investigating a different approach that may include
-the reversion of this commit.
+	{ .src = P_GPUPLL0_OUT_EVEN, .pre_div = 3 },
+        { }
 
-Therefore, I would recommend not spending effort attempting to backport
-this specific commit until I have submitted a more complete solution
-(hopefully in the near future :).
+So, lets support that.
 
-Sorry for any confusion this creates.
-    Doug
+We need to fix a corner case in qcom_find_freq() where if the freq table
+is non-null, but has no frequencies, we end up returning an "entry" before
+the table array, which is bad.  Then, we need ignore the freq from the
+table, and instead base everything on the requested freq.
+
+Suggested-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/clk/qcom/clk-rcg2.c | 2 ++
+ drivers/clk/qcom/common.c   | 3 +++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
+index b98b81ef43a1..5a89ed88cc27 100644
+--- a/drivers/clk/qcom/clk-rcg2.c
++++ b/drivers/clk/qcom/clk-rcg2.c
+@@ -220,6 +220,8 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw, const struct freq_tbl *f,
+ 	if (clk_flags & CLK_SET_RATE_PARENT) {
+ 		rate = f->freq;
+ 		if (f->pre_div) {
++			if (!rate)
++				rate = req->rate;
+ 			rate /= 2;
+ 			rate *= f->pre_div + 1;
+ 		}
+diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
+index 28ddc747d703..f1a32c5fcb8d 100644
+--- a/drivers/clk/qcom/common.c
++++ b/drivers/clk/qcom/common.c
+@@ -29,6 +29,9 @@ struct freq_tbl *qcom_find_freq(const struct freq_tbl *f, unsigned long rate)
+ 	if (!f)
+ 		return NULL;
+ 
++	if(!f->freq)
++		return f;
++
+ 	for (; f->freq; f++)
+ 		if (rate <= f->freq)
+ 			return f;
+-- 
+2.17.1
+
