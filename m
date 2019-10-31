@@ -2,155 +2,366 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9ECCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F62BCA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7AFC208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:31:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572532282;
-	bh=kFk+rWG7J2BMqNZJiollmdbDl2nEfZWnzteJj+4Ol8M=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=YqZdFGt/P1edNtao6wRHoXCB4V3HWCKxXkopaaTr9dL09r7w2v7NtkSLG09Lg2OjL
-	 31hMRZ+FXLj3nRcthuxNcMdohvmp5HUoJ326LAxXKUILpB2tG6zMqED3KjB2CutOTw
-	 wiO6+Jd7B9wGFkZ1jDhhr8vECUWwd8ZRPjM8JGJs=
+	by mail.kernel.org (Postfix) with ESMTP id E6B6720873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:31:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h1NgIWr6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbfJaObV (ORCPT
+        id S1728300AbfJaObr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 10:31:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59258 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727905AbfJaObV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 10:31:21 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 31 Oct 2019 10:31:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58071 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728088AbfJaObr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 10:31:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572532305;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HXgmR6g2tIZfYZi6fS/3SBKnBgtJVR9MnRCGBfCykuE=;
+        b=h1NgIWr67LENrhGqjrMNH+NjHHB9J/zSzF7rsUKFJ7DsrQ5rDf/o5+WSSQYq/61qsQ80nP
+        +1u4US+iLIyor1RtdkYl3rfqsESSTfr/AX7gsKbDWrLF02w2ZG6jKmWKA2KCj9s6XYXkQj
+        qENNHIe6DZmiueXiWIksarnwA2xRMRA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-207-siY2niPOPGummLNb_s4kvg-1; Thu, 31 Oct 2019 10:30:29 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D68D02087E;
-        Thu, 31 Oct 2019 14:31:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572532279;
-        bh=kFk+rWG7J2BMqNZJiollmdbDl2nEfZWnzteJj+4Ol8M=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=PEFFdBRHlenux1jomkA3Ry8xxPtd3d+2c+vVHiCR3143rhz/XZmWrNpkfzmz6Yaqv
-         7YdMvWm3+TnD6TXRATiOjEQuShvrP6Erp+kL00fNLTOl3doW1XAuou6SjjEvZsqWVe
-         Emm40IDsVwkW5kHIyFzQgLBAC5O1WiRYp57Yjb6U=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id AA77D3520744; Thu, 31 Oct 2019 07:31:19 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 07:31:19 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Lai Jiangshan <laijs@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH 02/11] rcu: fix bug when rcu_exp_handler() in nested
- interrupt
-Message-ID: <20191031143119.GA15954@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191031100806.1326-1-laijs@linux.alibaba.com>
- <20191031100806.1326-3-laijs@linux.alibaba.com>
- <20191031134731.GP20975@paulmck-ThinkPad-P72>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E829A107ACC2;
+        Thu, 31 Oct 2019 14:30:26 +0000 (UTC)
+Received: from t460s.redhat.com (unknown [10.36.118.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 818A55D6D8;
+        Thu, 31 Oct 2019 14:30:22 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Anshuman Khandual <khandual@linux.vnet.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Arun KS <arunks@codeaurora.org>, Todd Kjos <tkjos@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Gao Xiang <xiang@kernel.org>,
+        Greg Hackmann <ghackmann@google.com>,
+        David Howells <dhowells@redhat.com>
+Subject: [PATCH v1 08/12] powerpc/pseries: CMM: Implement balloon compaction
+Date:   Thu, 31 Oct 2019 15:29:29 +0100
+Message-Id: <20191031142933.10779-9-david@redhat.com>
+In-Reply-To: <20191031142933.10779-1-david@redhat.com>
+References: <20191031142933.10779-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031134731.GP20975@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: siY2niPOPGummLNb_s4kvg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 06:47:31AM -0700, Paul E. McKenney wrote:
-> On Thu, Oct 31, 2019 at 10:07:57AM +0000, Lai Jiangshan wrote:
-> > These is a possible bug (although which I can't triger yet)
-> > since 2015 8203d6d0ee78
-> > (rcu: Use single-stage IPI algorithm for RCU expedited grace period)
-> > 
-> >  rcu_read_unlock()
-> >   ->rcu_read_lock_nesting = -RCU_NEST_BIAS;
-> >   interrupt(); // before or after rcu_read_unlock_special()
-> >    rcu_read_lock()
-> >     fetch some rcu protected pointers
-> >     // exp GP starts in other cpu.
-> >     some works
-> >     NESTED interrupt for rcu_exp_handler();
+We can now get rid of the cmm_lock and completely rely on the balloon
+compaction internals, which now also manage the page list and the lock.
 
-Also, which platforms support nested interrupts?  Last I knew, this was
-prohibited.
+Inflated/"loaned" pages are now movable. Memory blocks that contain
+such apges can get offlined. Also, all such pages will be marked
+PageOffline() and can therefore be excluded in memory dumps using recent
+versions of makedumpfile.
 
-> >       report exp qs! BUG!
-> 
-> Why would a quiescent state for the expedited grace period be reported
-> here?  This CPU is still in an RCU read-side critical section, isn't it?
+Don't switch to balloon_page_alloc() yet (due to the GFP_NOIO). Will
+do that separately to discuss this change in detail.
 
-And I now see what you were getting at here.  Yes, the current code
-assumes that interrupt-disabled regions, like hardware interrupt
-handlers, cannot be interrupted.  But if interrupt-disabled regions such
-as hardware interrupt handlers can be interrupted (as opposed to being
-NMIed), wouldn't that break a whole lot of stuff all over the place in
-the kernel?  So that sounds like an arch bug to me.
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Anshuman Khandual <khandual@linux.vnet.ibm.com>
+Cc: "Oliver O'Halloran" <oohall@gmail.com>
+Cc: Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc: "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Arun KS <arunks@codeaurora.org>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Christian Brauner <christian@brauner.io>
+Cc: Gao Xiang <xiang@kernel.org>
+Cc: Greg Hackmann <ghackmann@google.com>
+Cc: David Howells <dhowells@redhat.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ arch/powerpc/platforms/pseries/Kconfig |   1 +
+ arch/powerpc/platforms/pseries/cmm.c   | 132 ++++++++++++++++++++++---
+ include/uapi/linux/magic.h             |   1 +
+ 3 files changed, 120 insertions(+), 14 deletions(-)
 
-							Thanx, Paul
+diff --git a/arch/powerpc/platforms/pseries/Kconfig b/arch/powerpc/platform=
+s/pseries/Kconfig
+index 9e35cddddf73..595e9f8a6539 100644
+--- a/arch/powerpc/platforms/pseries/Kconfig
++++ b/arch/powerpc/platforms/pseries/Kconfig
+@@ -108,6 +108,7 @@ config PPC_SMLPAR
+ config CMM
+ =09tristate "Collaborative memory management"
+ =09depends on PPC_SMLPAR
++=09select MEMORY_BALLOON
+ =09default y
+ =09help
+ =09  Select this option, if you want to enable the kernel interface
+diff --git a/arch/powerpc/platforms/pseries/cmm.c b/arch/powerpc/platforms/=
+pseries/cmm.c
+index 3a55dd1fdd39..235fd7fe9df1 100644
+--- a/arch/powerpc/platforms/pseries/cmm.c
++++ b/arch/powerpc/platforms/pseries/cmm.c
+@@ -19,6 +19,10 @@
+ #include <linux/stringify.h>
+ #include <linux/swap.h>
+ #include <linux/device.h>
++#include <linux/mount.h>
++#include <linux/pseudo_fs.h>
++#include <linux/magic.h>
++#include <linux/balloon_compaction.h>
+ #include <asm/firmware.h>
+ #include <asm/hvcall.h>
+ #include <asm/mmu.h>
+@@ -77,13 +81,11 @@ static atomic_long_t loaned_pages;
+ static unsigned long loaned_pages_target;
+ static unsigned long oom_freed_pages;
+=20
+-static LIST_HEAD(cmm_page_list);
+-static DEFINE_SPINLOCK(cmm_lock);
+-
+ static DEFINE_MUTEX(hotplug_mutex);
+ static int hotplug_occurred; /* protected by the hotplug mutex */
+=20
+ static struct task_struct *cmm_thread_ptr;
++static struct balloon_dev_info b_dev_info;
+=20
+ static long plpar_page_set_loaned(struct page *page)
+ {
+@@ -149,19 +151,16 @@ static long cmm_alloc_pages(long nr)
+ =09=09=09=09  __GFP_NOMEMALLOC);
+ =09=09if (!page)
+ =09=09=09break;
+-=09=09spin_lock(&cmm_lock);
+ =09=09rc =3D plpar_page_set_loaned(page);
+ =09=09if (rc) {
+ =09=09=09pr_err("%s: Can not set page to loaned. rc=3D%ld\n", __func__, rc=
+);
+-=09=09=09spin_unlock(&cmm_lock);
+ =09=09=09__free_page(page);
+ =09=09=09break;
+ =09=09}
+=20
+-=09=09list_add(&page->lru, &cmm_page_list);
++=09=09balloon_page_enqueue(&b_dev_info, page);
+ =09=09atomic_long_inc(&loaned_pages);
+ =09=09adjust_managed_page_count(page, -1);
+-=09=09spin_unlock(&cmm_lock);
+ =09=09nr--;
+ =09}
+=20
+@@ -178,21 +177,19 @@ static long cmm_alloc_pages(long nr)
+  **/
+ static long cmm_free_pages(long nr)
+ {
+-=09struct page *page, *tmp;
++=09struct page *page;
+=20
+ =09cmm_dbg("Begin free of %ld pages.\n", nr);
+-=09spin_lock(&cmm_lock);
+-=09list_for_each_entry_safe(page, tmp, &cmm_page_list, lru) {
+-=09=09if (!nr)
++=09while (nr) {
++=09=09page =3D balloon_page_dequeue(&b_dev_info);
++=09=09if (!page)
+ =09=09=09break;
+ =09=09plpar_page_set_active(page);
+-=09=09list_del(&page->lru);
+ =09=09adjust_managed_page_count(page, 1);
+ =09=09__free_page(page);
+ =09=09atomic_long_dec(&loaned_pages);
+ =09=09nr--;
+ =09}
+-=09spin_unlock(&cmm_lock);
+ =09cmm_dbg("End request with %ld pages unfulfilled\n", nr);
+ =09return nr;
+ }
+@@ -484,6 +481,105 @@ static struct notifier_block cmm_mem_nb =3D {
+ =09.priority =3D CMM_MEM_HOTPLUG_PRI
+ };
+=20
++#ifdef CONFIG_BALLOON_COMPACTION
++static struct vfsmount *balloon_mnt;
++
++static int cmm_init_fs_context(struct fs_context *fc)
++{
++=09return init_pseudo(fc, PPC_CMM_MAGIC) ? 0 : -ENOMEM;
++}
++
++static struct file_system_type balloon_fs =3D {
++=09.name =3D "ppc-cmm",
++=09.init_fs_context =3D cmm_init_fs_context,
++=09.kill_sb =3D kill_anon_super,
++};
++
++static int cmm_migratepage(struct balloon_dev_info *b_dev_info,
++=09=09=09   struct page *newpage, struct page *page,
++=09=09=09   enum migrate_mode mode)
++{
++=09unsigned long flags;
++
++=09/*
++=09 * loan/"inflate" the newpage first.
++=09 *
++=09 * We might race against the cmm_thread who might discover after our
++=09 * loan request that another page is to be unloaned. However, once
++=09 * the cmm_thread runs again later, this error will automatically
++=09 * be corrected.
++=09 */
++=09if (plpar_page_set_loaned(newpage)) {
++=09=09/* Unlikely, but possible. Tell the caller not to retry now. */
++=09=09pr_err_ratelimited("%s: Cannot set page to loaned.", __func__);
++=09=09return -EBUSY;
++=09}
++
++=09/* balloon page list reference */
++=09get_page(newpage);
++
++=09spin_lock_irqsave(&b_dev_info->pages_lock, flags);
++=09balloon_page_insert(b_dev_info, newpage);
++=09balloon_page_delete(page);
++=09spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
++
++=09/*
++=09 * activate/"deflate" the old page. We ignore any errors just like the
++=09 * other callers.
++=09 */
++=09plpar_page_set_active(page);
++
++=09/* balloon page list reference */
++=09put_page(page);
++
++=09return MIGRATEPAGE_SUCCESS;
++}
++
++static int cmm_balloon_compaction_init(void)
++{
++=09int rc;
++
++=09balloon_devinfo_init(&b_dev_info);
++=09b_dev_info.migratepage =3D cmm_migratepage;
++
++=09balloon_mnt =3D kern_mount(&balloon_fs);
++=09if (IS_ERR(balloon_mnt)) {
++=09=09rc =3D PTR_ERR(balloon_mnt);
++=09=09balloon_mnt =3D NULL;
++=09=09return rc;
++=09}
++
++=09b_dev_info.inode =3D alloc_anon_inode(balloon_mnt->mnt_sb);
++=09if (IS_ERR(b_dev_info.inode)) {
++=09=09rc =3D PTR_ERR(b_dev_info.inode);
++=09=09b_dev_info.inode =3D NULL;
++=09=09kern_unmount(balloon_mnt);
++=09=09balloon_mnt =3D NULL;
++=09=09return rc;
++=09}
++
++=09b_dev_info.inode->i_mapping->a_ops =3D &balloon_aops;
++=09return 0;
++}
++static void cmm_balloon_compaction_deinit(void)
++{
++=09if (b_dev_info.inode)
++=09=09iput(b_dev_info.inode);
++=09b_dev_info.inode =3D NULL;
++=09kern_unmount(balloon_mnt);
++=09balloon_mnt =3D NULL;
++}
++#else /* CONFIG_BALLOON_COMPACTION */
++static int cmm_balloon_compaction_init(void)
++{
++=09return 0;
++}
++
++static void cmm_balloon_compaction_deinit(void)
++{
++}
++#endif /* CONFIG_BALLOON_COMPACTION */
++
+ /**
+  * cmm_init - Module initialization
+  *
+@@ -497,9 +593,14 @@ static int cmm_init(void)
+ =09if (!firmware_has_feature(FW_FEATURE_CMO))
+ =09=09return -EOPNOTSUPP;
+=20
+-=09if ((rc =3D register_oom_notifier(&cmm_oom_nb)) < 0)
++=09rc =3D cmm_balloon_compaction_init();
++=09if (rc)
+ =09=09return rc;
+=20
++=09rc =3D register_oom_notifier(&cmm_oom_nb);
++=09if (rc < 0)
++=09=09goto out_balloon_compaction;
++
+ =09if ((rc =3D register_reboot_notifier(&cmm_reboot_nb)))
+ =09=09goto out_oom_notifier;
+=20
+@@ -527,6 +628,8 @@ static int cmm_init(void)
+ =09unregister_reboot_notifier(&cmm_reboot_nb);
+ out_oom_notifier:
+ =09unregister_oom_notifier(&cmm_oom_nb);
++out_balloon_compaction:
++=09cmm_balloon_compaction_deinit();
+ =09return rc;
+ }
+=20
+@@ -545,6 +648,7 @@ static void cmm_exit(void)
+ =09unregister_memory_notifier(&cmm_mem_nb);
+ =09cmm_free_pages(atomic_long_read(&loaned_pages));
+ =09cmm_unregister_sysfs(&cmm_dev);
++=09cmm_balloon_compaction_deinit();
+ }
+=20
+ /**
+diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
+index 903cc2d2750b..3ac436376d79 100644
+--- a/include/uapi/linux/magic.h
++++ b/include/uapi/linux/magic.h
+@@ -94,5 +94,6 @@
+ #define ZSMALLOC_MAGIC=09=090x58295829
+ #define DMA_BUF_MAGIC=09=090x444d4142=09/* "DMAB" */
+ #define Z3FOLD_MAGIC=09=090x33
++#define PPC_CMM_MAGIC=09=090xc7571590
+=20
+ #endif /* __LINUX_MAGIC_H__ */
+--=20
+2.21.0
 
-> >     // exp GP completes and pointers are freed in other cpu
-> >     some works with the pointers. BUG
-> >    rcu_read_unlock();
-> >   ->rcu_read_lock_nesting = 0;
-> > 
-> > Although rcu_sched_clock_irq() can be in nested interrupt,
-> > there is no such similar bug since special.b.need_qs
-> > can only be set when ->rcu_read_lock_nesting > 0
-> > 
-> > Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
-> > ---
-> >  kernel/rcu/tree_exp.h    | 5 +++--
-> >  kernel/rcu/tree_plugin.h | 9 ++++++---
-> >  2 files changed, 9 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-> > index 6dec21909b30..c0d06bce35ea 100644
-> > --- a/kernel/rcu/tree_exp.h
-> > +++ b/kernel/rcu/tree_exp.h
-> > @@ -664,8 +664,9 @@ static void rcu_exp_handler(void *unused)
-> >  	 * Otherwise, force a context switch after the CPU enables everything.
-> >  	 */
-> >  	rdp->exp_deferred_qs = true;
-> > -	if (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
-> > -	    WARN_ON_ONCE(rcu_dynticks_curr_cpu_in_eqs())) {
-> > +	if (rcu_preempt_need_deferred_qs(t) &&
-> > +	    (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
-> > +	    WARN_ON_ONCE(rcu_dynticks_curr_cpu_in_eqs()))) {
-> >  		rcu_preempt_deferred_qs(t);
-> >  	} else {
-> >  		set_tsk_need_resched(t);
-> > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> > index d4c482490589..59ef10da1e39 100644
-> > --- a/kernel/rcu/tree_plugin.h
-> > +++ b/kernel/rcu/tree_plugin.h
-> > @@ -549,9 +549,12 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
-> >   */
-> >  static bool rcu_preempt_need_deferred_qs(struct task_struct *t)
-> >  {
-> > -	return (__this_cpu_read(rcu_data.exp_deferred_qs) ||
-> > -		READ_ONCE(t->rcu_read_unlock_special.s)) &&
-> > -	       t->rcu_read_lock_nesting <= 0;
-> > +	return (__this_cpu_read(rcu_data.exp_deferred_qs) &&
-> > +		(!t->rcu_read_lock_nesting ||
-> > +		 t->rcu_read_lock_nesting == -RCU_NEST_BIAS))
-> > +		||
-> > +		(READ_ONCE(t->rcu_read_unlock_special.s) &&
-> > +		 t->rcu_read_lock_nesting <= 0);
-> >  }
-> >  
-> >  /*
-> > -- 
-> > 2.20.1
-> > 
