@@ -2,315 +2,313 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D35CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE61CCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA6F9216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA9C92086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:07:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qUBB/RAx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/94vjp3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbfJaRF4 (ORCPT
+        id S1728760AbfJaRHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 13:05:56 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:58696 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728597AbfJaRF4 (ORCPT
+        Thu, 31 Oct 2019 13:07:51 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34401 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728597AbfJaRHv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 13:05:56 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9VH4K7c143756;
-        Thu, 31 Oct 2019 17:05:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=6zeZQCt5KSy9iY879DP3c25YYnvX1B7KZZYOEc5BkVU=;
- b=qUBB/RAxFO/7T6CQHP8JhtlkO1VYLIAxwAHOqa2whguFg10nnjeoXiPilKlSHOmPhb4m
- FTFYiAwxzRyF6tOmIqY2pfAg69j8RUaZl58xSaDBJqbBJCOc3D5TTQfavPhdyTJw2QNa
- s1Fbo94ZeH4OiFdJIwRK4PpdSnBlu/2PMXXq+Tmh3QNGScTRCwLaUocwrt7Lelvlp/Vg
- Jv9hKkigkMBm/HiRg8bALRNub1XBTUpD+U3WlRNttuXxSZzojy+9ATdvtenSyKomCPt/
- k+S5gtHO+k5CMOjszDQ0SZZLREsbdH+n7dzLy9lWcVtceNPe7t2dzAJelycGEAEvVM5O SQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2vxwhfvq9n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Oct 2019 17:05:30 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9VH4BWK045372;
-        Thu, 31 Oct 2019 17:05:29 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2vysburqhh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Oct 2019 17:05:29 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9VH5Qt7008367;
-        Thu, 31 Oct 2019 17:05:27 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 31 Oct 2019 10:05:26 -0700
-Subject: Re: [PATCH v7 5/9] hugetlb: disable region_add file_region coalescing
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        cgroups@vger.kernel.org,
-        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
-References: <20191024202858.95342-1-almasrymina@google.com>
- <20191024202858.95342-5-almasrymina@google.com>
- <c3d9f0aa-3d9b-f46e-ecb1-bdea99be82c7@oracle.com>
- <CAHS8izM36yfP2jNe=S83MSzo6b1KzHVwWrngVUNh_H1WSHj63w@mail.gmail.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <d810e0dc-0bcd-9882-b1d6-1d6da112d558@oracle.com>
-Date:   Thu, 31 Oct 2019 10:05:24 -0700
+        Thu, 31 Oct 2019 13:07:51 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 139so7469639ljf.1;
+        Thu, 31 Oct 2019 10:07:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xKp3WfNzfRPprkwSMJmaH7UF6M0QGd/6mj3T8rfzGeA=;
+        b=g/94vjp3DxJKC4lpG7ZfRbS/LB/xMrDY/KGRdyNllSqD77GRT+A6/HUVDXfFuoZHDc
+         srl4MMUeR/oY/P8mcNqpwaYGsFnhm2KFxfk8ZKWi17QvlK+Dl76WvczZ7DhvedD0Wgba
+         A3L1NT1o+fA4L62RD0f/0n2ZwplZskiAbmWprihupOkZMzR6QcaQhPcD0nFuK1oPlzzK
+         f/7GxwX9eraTh5cl3mV2g2fHbi5BdHWxT8z73v1HozhBDRGDHSPwxYxiJUcxDNVuba92
+         GYGuqp53Utj5viWUgXD587JZEaGuGHUf3wbqCouQ9Dlkrq3MV9yL8pan7u5yXA3FGAQG
+         oDUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xKp3WfNzfRPprkwSMJmaH7UF6M0QGd/6mj3T8rfzGeA=;
+        b=apJBo4KYEM3QdiqgpFLrpJ9olQcu6BSel7vNoQRl1qn/OskImft5oWYhY1LR1AQV28
+         isJWSQgxmW3AF6kZ6Tapsyl78lbRSd6uhO79ivHp3GQRtrppTIeRUcDtTAIFmu/zUftf
+         6hrbyAFyT0qL8YkO9koxiGAvSTVKXE9g6Tq/uSBF5soLOpAysyTFsLq91woU3nJFxq9D
+         bISpAFxs0u6DxN9NxYh59yk5cF8A2nK6swzyTEKAShEAAhqhthSqIbBZvj5bTkV5otaL
+         DaEThaqu4szUCAmdbHBZsEQIIlS2lqDh9T14U/PUoPrcWQkbjLiQXrQpzliN8LEa8WZu
+         HXog==
+X-Gm-Message-State: APjAAAW9guW4JhD5m/klFGFX4Ioc006Us9QT635z0LwP9IV9w2iEWNHm
+        r47I1MuzyEnPH4f9aGx5jDrYXTvD
+X-Google-Smtp-Source: APXvYqxkyxPnYuZ6K5jJWpVjKNj99Ixk735u6swPjP+FCJR+/J3a75ogeSssFbIBeMTu30lUzJvNSw==
+X-Received: by 2002:a2e:8e88:: with SMTP id z8mr4883420ljk.56.1572541666839;
+        Thu, 31 Oct 2019 10:07:46 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id g26sm1924040lfh.1.2019.10.31.10.07.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 31 Oct 2019 10:07:45 -0700 (PDT)
+Subject: Re: [PATCH v3 01/10] clk: tegra: Add custom CCLK implementation
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191030213400.29434-1-digetx@gmail.com>
+ <20191030213400.29434-2-digetx@gmail.com>
+Message-ID: <50651277-d8db-0a38-3ca8-c991480c1e6a@gmail.com>
+Date:   Thu, 31 Oct 2019 20:07:44 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <CAHS8izM36yfP2jNe=S83MSzo6b1KzHVwWrngVUNh_H1WSHj63w@mail.gmail.com>
+In-Reply-To: <20191030213400.29434-2-digetx@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9427 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910310168
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9427 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910310168
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/29/19 6:38 PM, Mina Almasry wrote:
-> On Fri, Oct 25, 2019 at 2:37 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->>
->> On 10/24/19 1:28 PM, Mina Almasry wrote:
->>>  static long add_reservation_in_range(struct resv_map *resv, long f, long t,
->>> -                                  bool count_only)
->>> +                                  long *regions_needed, bool count_only)
->>>  {
->>> -     long chg = 0;
->>> +     long add = 0;
->>>       struct list_head *head = &resv->regions;
->>> +     long last_accounted_offset = f;
->>>       struct file_region *rg = NULL, *trg = NULL, *nrg = NULL;
->>>
->>> -     /* Locate the region we are before or in. */
->>> -     list_for_each_entry (rg, head, link)
->>> -             if (f <= rg->to)
->>> -                     break;
->>> -
->>> -     /* Round our left edge to the current segment if it encloses us. */
->>> -     if (f > rg->from)
->>> -             f = rg->from;
->>> +     if (regions_needed)
->>> +             *regions_needed = 0;
->>>
->>> -     chg = t - f;
->>> +     /* In this loop, we essentially handle an entry for the range
->>> +      * last_accounted_offset -> rg->from, at every iteration, with some
->>> +      * bounds checking.
->>> +      */
->>> +     list_for_each_entry_safe(rg, trg, head, link) {
->>> +             /* Skip irrelevant regions that start before our range. */
->>> +             if (rg->from < f) {
->>> +                     /* If this region ends after the last accounted offset,
->>> +                      * then we need to update last_accounted_offset.
->>> +                      */
->>> +                     if (rg->to > last_accounted_offset)
->>> +                             last_accounted_offset = rg->to;
->>> +                     continue;
->>> +             }
->>>
->>> -     /* Check for and consume any regions we now overlap with. */
->>> -     nrg = rg;
->>> -     list_for_each_entry_safe (rg, trg, rg->link.prev, link) {
->>> -             if (&rg->link == head)
->>> -                     break;
->>> +             /* When we find a region that starts beyond our range, we've
->>> +              * finished.
->>> +              */
->>>               if (rg->from > t)
->>>                       break;
->>>
->>> -             /* We overlap with this area, if it extends further than
->>> -              * us then we must extend ourselves.  Account for its
->>> -              * existing reservation.
->>> +             /* Add an entry for last_accounted_offset -> rg->from, and
->>> +              * update last_accounted_offset.
->>>                */
->>> -             if (rg->to > t) {
->>> -                     chg += rg->to - t;
->>> -                     t = rg->to;
->>> +             if (rg->from > last_accounted_offset) {
->>
->> After the above checks, can this condition ever be false?
->>
+31.10.2019 00:33, Dmitry Osipenko пишет:
+> CCLK stands for "CPU Clock", CPU core is running off CCLK. CCLK supports
+> multiple parents, it has internal clock divider and a clock skipper.
+> PLLX is the main CCLK parent that provides clock rates above 1GHz and it
+> has special property such that the CCLK's internal divider is set into
+> bypass mode when PLLX is selected as a parent for CCLK.
 > 
-> rg->from can be == to last_accounted_offset, no? We only want to add a
-> region when there is a gap between rg->from and last_accounted_offset.
-
-Yes, you are correct.  I had to write out the logic. :)
-
-<snip>
->>> +      * Check for sufficient descriptors in the cache to accommodate
->>> +      * this add operation.
->>>        */
->>> -     if (&rg->link == head || t < rg->from) {
->>> -             VM_BUG_ON(resv->region_cache_count <= 0);
->>> -
->>> -             resv->region_cache_count--;
->>> -             nrg = list_first_entry(&resv->region_cache, struct file_region,
->>> -                                     link);
->>> -             list_del(&nrg->link);
->>> -
->>> -             nrg->from = f;
->>> -             nrg->to = t;
->>> -             list_add(&nrg->link, rg->link.prev);
->>> +     if (resv->region_cache_count < actual_regions_needed) {
->>> +             /* region_add operation of range 1 should never need to
->>> +              * allocate file_region entries.
->>> +              */
->>> +             VM_BUG_ON(t - f <= 1);
->>
->> Should we instead compare actual_regions_needed to in_regions_needed and
->> allocate if more regions are actually needed?  If not, the loop below only
->> brings the cache up to the number of regions needed for this operation.
->> There could be an operation with range of one in progress and this operation
->> will consume all operation in the cache which will cause us to hit the BUG.
->>
+> This patch forks generic Super Clock into CCLK implementation which takes
+> into account all CCLK specifics. The proper CCLK implementation is needed
+> by the upcoming Tegra20 CPUFreq driver update that will allow to utilize
+> the generic cpufreq-dt driver by moving intermediate clock selection into
+> the clock driver.
 > 
-> Great catch, thanks! Fixed in v8!
+> Note that technically this patch could be squashed into clk-super.c, but
+> it is cleaner to have a separate source file. Also note that currently all
+> CCLKLP bits are left in the clk-super.c and only CCLKG is supported by
+> clk-tegra-super-cclk. It shouldn't be difficult to move the CCLKLP bits,
+> but CCLKLP is not used by anything in kernel and thus better not to touch
+> it for now.
 > 
-> I think the correct condition is:
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/clk/tegra/Makefile               |   1 +
+>  drivers/clk/tegra/clk-tegra-super-cclk.c | 176 +++++++++++++++++++++++
+>  drivers/clk/tegra/clk.h                  |  11 +-
+>  3 files changed, 186 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/clk/tegra/clk-tegra-super-cclk.c
 > 
-> region_cache_count == (adds_in_progress + (actual_regions_needed -
-> in_regions_needed))
-> 
-> That means the region_cache_count has enough for all the current adds
-> in progress plus the ones we discovered are needed extra.
-> 
+> diff --git a/drivers/clk/tegra/Makefile b/drivers/clk/tegra/Makefile
+> index df966ca06788..f04b490f5416 100644
+> --- a/drivers/clk/tegra/Makefile
+> +++ b/drivers/clk/tegra/Makefile
+> @@ -14,6 +14,7 @@ obj-y					+= clk-tegra-audio.o
+>  obj-y					+= clk-tegra-periph.o
+>  obj-y					+= clk-tegra-pmc.o
+>  obj-y					+= clk-tegra-fixed.o
+> +obj-y					+= clk-tegra-super-cclk.o
+>  obj-y					+= clk-tegra-super-gen4.o
+>  obj-$(CONFIG_TEGRA_CLK_EMC)		+= clk-emc.o
+>  obj-$(CONFIG_ARCH_TEGRA_2x_SOC)         += clk-tegra20.o
+> diff --git a/drivers/clk/tegra/clk-tegra-super-cclk.c b/drivers/clk/tegra/clk-tegra-super-cclk.c
+> new file mode 100644
+> index 000000000000..5cff8363c978
+> --- /dev/null
+> +++ b/drivers/clk/tegra/clk-tegra-super-cclk.c
+> @@ -0,0 +1,176 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Based on clk-super.c
+> + * Copyright (c) 2012, NVIDIA CORPORATION.  All rights reserved.
+> + *
+> + * Based on older tegra20-cpufreq driver by Colin Cross <ccross@google.com>
+> + * Copyright (C) 2010 Google, Inc.
+> + *
+> + * Author: Dmitry Osipenko <digetx@gmail.com>
+> + * Copyright (C) 2019 GRATE-DRIVER project
+> + */
+> +
+> +#include <linux/bits.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/slab.h>
+> +#include <linux/types.h>
+> +
+> +#include "clk.h"
+> +
+> +#define PLLP_INDEX		4
+> +#define PLLX_INDEX		8
+> +
+> +#define SUPER_CDIV_ENB		BIT(31)
+> +
+> +static u8 cclk_super_get_parent(struct clk_hw *hw)
+> +{
+> +	return tegra_clk_super_ops.get_parent(hw);
+> +}
+> +
+> +static int cclk_super_set_parent(struct clk_hw *hw, u8 index)
+> +{
+> +	return tegra_clk_super_ops.set_parent(hw, index);
+> +}
+> +
+> +static int cclk_super_set_rate(struct clk_hw *hw, unsigned long rate,
+> +			       unsigned long parent_rate)
+> +{
+> +	return tegra_clk_super_ops.set_rate(hw, rate, parent_rate);
+> +}
+> +
+> +static unsigned long cclk_super_recalc_rate(struct clk_hw *hw,
+> +					    unsigned long parent_rate)
+> +{
+> +	if (cclk_super_get_parent(hw) == PLLX_INDEX)
+> +		return parent_rate;
+> +
+> +	return tegra_clk_super_ops.recalc_rate(hw, parent_rate);
+> +}
+> +
+> +static int cclk_super_determine_rate(struct clk_hw *hw,
+> +				     struct clk_rate_request *req)
+> +{
+> +	struct clk_hw *pllp_hw = clk_hw_get_parent_by_index(hw, PLLP_INDEX);
+> +	struct clk_hw *pllx_hw = clk_hw_get_parent_by_index(hw, PLLX_INDEX);
+> +	struct tegra_clk_super_mux *super = to_clk_super_mux(hw);
+> +	unsigned long pllp_rate;
+> +	long rate = req->rate;
+> +
+> +	if (WARN_ON_ONCE(!pllp_hw || !pllx_hw))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Switch parent to PLLP for all CCLK rates that are suitable for PLLP.
+> +	 * PLLX will be disabled in this case, saving some power.
+> +	 */
+> +	pllp_rate = clk_hw_get_rate(pllp_hw);
+> +
+> +	if (rate <= pllp_rate) {
+> +		if (super->flags & TEGRA20_SUPER_CLK)
+> +			rate = pllp_rate;
+> +		else
+> +			rate = tegra_clk_super_ops.round_rate(hw, rate,
+> +							      &pllp_rate);
+> +
+> +		req->best_parent_rate = pllp_rate;
+> +		req->best_parent_hw = pllp_hw;
+> +		req->rate = rate;
+> +	} else {
+> +		rate = clk_hw_round_rate(pllx_hw, rate);
+> +		req->best_parent_rate = rate;
+> +		req->best_parent_hw = pllx_hw;
+> +		req->rate = rate;
+> +	}
+> +
+> +	if (WARN_ON_ONCE(rate <= 0))
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct clk_ops tegra_cclk_super_ops = {
+> +	.get_parent = cclk_super_get_parent,
+> +	.set_parent = cclk_super_set_parent,
+> +	.set_rate = cclk_super_set_rate,
+> +	.recalc_rate = cclk_super_recalc_rate,
+> +	.determine_rate = cclk_super_determine_rate,
+> +};
+> +
+> +static const struct clk_ops tegra_cclk_super_mux_ops = {
+> +	.get_parent = cclk_super_get_parent,
+> +	.set_parent = cclk_super_set_parent,
+> +	.determine_rate = cclk_super_determine_rate,
+> +};
+> +
+> +struct clk *tegra_clk_register_super_cclk(const char *name,
+> +		const char * const *parent_names, u8 num_parents,
+> +		unsigned long flags, void __iomem *reg, u8 clk_super_flags,
+> +		spinlock_t *lock)
+> +{
+> +	struct tegra_clk_super_mux *super;
+> +	struct clk *clk;
+> +	struct clk_init_data init;
+> +	u32 val;
+> +
+> +	super = kzalloc(sizeof(*super), GFP_KERNEL);
+> +	if (!super)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	init.name = name;
+> +	init.flags = flags;
+> +	init.parent_names = parent_names;
+> +	init.num_parents = num_parents;
+> +
+> +	super->reg = reg;
+> +	super->lock = lock;
+> +	super->width = 4;
+> +	super->flags = clk_super_flags;
+> +	super->hw.init = &init;
+> +
+> +	if (super->flags & TEGRA20_SUPER_CLK) {
+> +		init.ops = &tegra_cclk_super_mux_ops;
+> +	} else {
+> +		init.ops = &tegra_cclk_super_ops;
+> +
+> +		super->frac_div.reg = reg + 4;
+> +		super->frac_div.shift = 16;
+> +		super->frac_div.width = 8;
+> +		super->frac_div.frac_width = 1;
+> +		super->frac_div.lock = lock;
+> +		super->div_ops = &tegra_clk_frac_div_ops;
+> +	}
+> +
+> +	/*
+> +	 * Tegra30+ has the following CPUG clock topology:
+> +	 *
+> +	 *                                              OVERHEAT+----+
+> +	 *        +---+  +-------+  +---+                            |
+> +	 * PLLP+->+   +->+DIVIDER+->+0  |                            v
+> +	 *        |   |  +-------+  |   |  +-------+               +-+-+
+> +	 * PLLC+->+MUX|             |OUT+->+SKIPPER+-+------------>+0  |
+> +	 *  ...   |   |             |   |  +-------+ |             |   |
+> +	 * PLLX+->+-->+------------>+1  |            |             |OUT|->+CPU
+> +	 *        +---+             +-+-+            |  +-------+  |   |
+> +	 *                            ^              +->+ DIV2  +->+1  |
+> +	 *                            |                 |SKIPPER|  +---+
+> +	 *                PLLX_SEL+---+                 +-------+
 
-Yes, the idea is that you want to make sure you do niot deplete the
-cache beyond the adds in progress.  This is especially important if we
-want to guarantee success of region_add for a single page.
+Probably this will be a bit better:
 
->>> +             while (resv->region_cache_count < actual_regions_needed) {
->>> +                     /* Must drop lock to allocate a new descriptor. */
->>
->> It would be better to drop the lock,  try to allocate all the needed
->> descriptors, and then reacquire lock instead of dropping and acquiring
->> lock in a loop.
->>
-> 
-> Fixed in v8.
+       +---+  +-------+  +-+            +-+                +-+
+PLLP+->+   +->+DIVIDER+->+0|  +-------->+0|  ------------->+0|
+       |   |  +-------+  | |  |  +---+  | |  |             | |
+PLLC+->+MUX|             | +->+  | S |  | +->+             | +>
+ ...   |   |             | |  |  | K |  | |  |  +-------+  | |
+PLLX+->+-->+------------>+1|  +->+ I +->+1|  +->+ DIV2  +->+1|
+       +---+             +++     | P |  +++     |SKIPPER|  +++
+                          ^      | P |   ^      +-------+   ^
+                          |      | E |   |                  |
+               PLLX_SEL+--+      | R |   |       OVERHEAT+--+
+                                 +---+   |
+                                         |
+                        SUPER_CDIV_ENB+--+
 
-I would not expect this to be the common case.  We will only be doing
-allocations here in the case of races.  Similiar code in region_chg
-would be the more expected place to perform multiple allocations.
-
->>> +                     spin_unlock(&resv->lock);
->>> +                     trg = kmalloc(sizeof(*trg), GFP_KERNEL);
->>> +                     if (!trg)
->>> +                             return -ENOMEM;
->>> +
->>> +                     spin_lock(&resv->lock);
->>> +                     list_add(&trg->link, &resv->region_cache);
->>> +                     resv->region_cache_count++;
->>> +             }
->>>
->>> -             add += t - f;
->>> -             goto out_locked;
->>> +             goto retry;
->>>       }
->>>
->>> -     add = add_reservation_in_range(resv, f, t, false);
->>> +     add = add_reservation_in_range(resv, f, t, NULL, false);
->>> +
->>> +     resv->adds_in_progress -= in_regions_needed;
->>
->> Ok, so adds_in_progress really becomes regions in the process of being added.
->> I think we would then like to keep number of entries in the cache equal to
->> adds_in_progress?
->>
-> 
-> Excess cache entries will be re-used by the next region_chg call. Is that ok?
-> 
-> Deallocating the excess entries so that the next region_chg entry has
-> to allocate its own is doable too, but it's quite annoying. Some
-> codepaths are made simpler by not worrying about 'cleaning up' excess
-> cache entries. For example, region_add doesn't need to handle what if
-> the actual_regions_needed is less than the in_regions_needed because
-> it can just leave the extra cache entries for later use.
-
-Ok, I agree that we can keep excess entries in the cache.  Just wanted to
-make sure we covered the case of depleting the cache such that we could not
-provide guarantees for region_add success of single pages.
-
->>>       /*
->>>        * Check for sufficient descriptors in the cache to accommodate
->>>        * the number of in progress add operations.
->>>        */
->>> -     if (resv->adds_in_progress > resv->region_cache_count) {
->>> -             struct file_region *trg;
->>> -
->>> -             VM_BUG_ON(resv->adds_in_progress - resv->region_cache_count > 1);
->>> +     while (resv->region_cache_count < resv->adds_in_progress) {
->>
->> I think we always want to add out_regions_needed to the cache?
->>
-> 
-> Current code adds out_regions_needed to adds_in_progress while holding
-> the lock, then brings up region_cache_count to adds_in_prorgess. There
-> shouldn't be a race here, since other region_chg/add calls hold the
-> lock to modify the adds_in_progress value. The effect here is that we
-> re-use excess cache entries.
-> 
-> What I fixed in v8 is that when region_add finds out it needs more
-> entries, it should make sure there is enough for the adds_in_progress
-> plus the extra regions that operation needs.
-
-Great.  Will be reviewing V8 shortly.
-
->>> -static long __vma_reservation_common(struct hstate *h,
->>> -                             struct vm_area_struct *vma, unsigned long addr,
->>> -                             enum vma_resv_mode mode)
->>> +static long
->>> +__vma_reservation_common(struct hstate *h, struct vm_area_struct *vma,
->>> +                      unsigned long addr, enum vma_resv_mode mode,
->>> +                      long *out_regions_needed, long in_regions_needed)
->>
->> All of the vma_*_reservation routines operate on a single page.  As a result,
->> region_chg will always set out_regions_needed to 1 and in_regions_needed
->> will always be 1.  With this in mind, can we just hard code the value 1 in
->> these calls within __vma_reservation_common and avoid any changes to the
->> vma_*_reservation routines?  If yes, let's put a big fat comment in
->> region_chg/region_add about the assumptions and a reminder to change this
->> code if those assumptions change.
->>
-> 
-> Fixed.
-
-Great.  I am glad this works.
-
-<snip>
-> 
-> Should be sending out v8 with these fixes shortly.
-> 
-
-Thanks, I'll take a look.
-
--- 
-Mike Kravetz
+[snip]
