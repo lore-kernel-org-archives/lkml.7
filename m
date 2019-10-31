@@ -2,76 +2,155 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EF2CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F308CCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4BD62086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E6220862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572519342;
+	bh=G4Y8YzHrggLeNgnUi0UECljK9O/sMy9Pp/UIBx7RfEM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=2QoWoxA+SeqgBTKyLTmRnODm4Ypdg0d4kVDkWdKKdNGvrCgFOkA0gHECA4XYntQ/t
+	 4MqmcfRprAvqqI1AWzmsOO24o5kXRpov4pgHnKP6e8tohl5KKy8XWq1jHf1qJts2va
+	 ZvmCZkNENCLeqBXP24V3wbYf2MyDN57iSOyXVZAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfJaKyY (ORCPT
+        id S1727267AbfJaKzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:54:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:47008 "EHLO foss.arm.com"
+        Thu, 31 Oct 2019 06:55:41 -0400
+Received: from mga02.intel.com ([134.134.136.20]:52219 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726897AbfJaKyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:54:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B7B11F1;
-        Thu, 31 Oct 2019 03:54:24 -0700 (PDT)
-Received: from [172.20.53.248] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7465B3F719;
-        Thu, 31 Oct 2019 03:54:20 -0700 (PDT)
-Subject: Re: NULL pointer dereference in pick_next_task_fair
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Ram Muthiah <rammuthiah@google.com>,
-        Quentin Perret <qperret@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, aaron.lwe@gmail.com,
-        mingo@kernel.org, pauld@redhat.com, jdesfossez@digitalocean.com,
-        naravamudan@digitalocean.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        kernel-team@android.com, john.stultz@linaro.org
-References: <20191028174603.GA246917@google.com>
- <20191029113411.GP4643@worktop.programming.kicks-ass.net>
- <20191029115000.GA11194@google.com>
- <CA+CXyWsoW8ann52pcR66ejRmjJ=4QmoaHTRVhb3=ohe0ZDnm-A@mail.gmail.com>
- <75e99374-0bd6-a7d7-581e-9360a1f90103@arm.com>
-Message-ID: <8d8fe4e9-1905-cde1-9ced-0a860e5a961b@arm.com>
-Date:   Thu, 31 Oct 2019 11:54:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726892AbfJaKzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 06:55:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 03:55:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
+   d="scan'208";a="400456526"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga005.fm.intel.com with ESMTP; 31 Oct 2019 03:55:38 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Roger Quadros <rogerq@ti.com>, gregkh@linuxfoundation.org,
+        pawell@cadence.com
+Cc:     peter.chen@nxp.com, nsekhar@ti.com, kurahul@cadence.com,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usb: cdns3: gadget: Fix g_audio use case when connected to Super-Speed host
+In-Reply-To: <44b07e90-a9de-ea99-25c6-dc72cf39bbe1@ti.com>
+References: <20191029151514.28495-1-rogerq@ti.com> <20191030121607.21739-1-rogerq@ti.com> <87pnide1k7.fsf@gmail.com> <44b07e90-a9de-ea99-25c6-dc72cf39bbe1@ti.com>
+Date:   Thu, 31 Oct 2019 12:55:37 +0200
+Message-ID: <875zk5dw0m.fsf@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <75e99374-0bd6-a7d7-581e-9360a1f90103@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/10/2019 02:33, Valentin Schneider wrote:
-> For wakeups, select_task_rq_fair() can only ever pick prev_cpu or this_cpu
-> since there are no sched domains. I don't see many candidates that could
-> wakeup on a secondary (thus have non-zero this_cpu) this early there. Perhaps
-> the smpboot threads, but from a quick look they are first created *after*
-> sched_init_smp(), so they couldn't exist during (boot-time) secondary bringup.
 
-Scratch that, I can't read. The registration is done in early initcalls (and
-we have the unpark in the secondary bringup anyway), so when we spool up the
-secondaries we'll get wakeups for the smpboot threads. AFAIR only softirqd
-and cpuhp are CFS, but while this satisfied some of my curiosity this doesn't
-seem super helpful on its own.
+Hi,
 
-> Seems to be the same for IRQ threads (and they're setscheduler'd to FIFO
-> anyway).
-> 
-> So now I'm even more curious as to what CFS task could be enqueued on a
-> secondary CPU rq before sched_init_smp(). Have you been sending stuff to space
-> without any shielding lately?
-> 
+Roger Quadros <rogerq@ti.com> writes:
+
+> Hi,
+>
+> On 31/10/2019 10:55, Felipe Balbi wrote:
+>> 
+>> Hi,
+>> 
+>> Roger Quadros <rogerq@ti.com> writes:
+>> 
+>>> Take into account gadget driver's speed limit when programming
+>>> controller speed.
+>>>
+>>> Fixes: commit 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
+>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>> Acked-by: Peter Chen <peter.chen@nxp.com>
+>>> ---
+>>>
+>>> Changelog:
+>>> v2
+>>> - Add Fixes line
+>>>
+>>>   drivers/usb/cdns3/gadget.c | 31 ++++++++++++++++++++++++++-----
+>>>   1 file changed, 26 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+>>> index 40dad4e8d0dc..1c724c20d468 100644
+>>> --- a/drivers/usb/cdns3/gadget.c
+>>> +++ b/drivers/usb/cdns3/gadget.c
+>>> @@ -2338,9 +2338,35 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
+>>>   {
+>>>   	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
+>>>   	unsigned long flags;
+>>> +	enum usb_device_speed max_speed = driver->max_speed;
+>>>   
+>>>   	spin_lock_irqsave(&priv_dev->lock, flags);
+>>>   	priv_dev->gadget_driver = driver;
+>>> +
+>>> +	/* limit speed if necessary */
+>>> +	max_speed = min(driver->max_speed, gadget->max_speed);
+>>> +
+>>> +	switch (max_speed) {
+>>> +	case USB_SPEED_FULL:
+>>> +		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
+
+so this forces the controller to FS
+
+>>> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
+
+and this disconnects in superspeed? What is this supposed to do?
+
+>>> +		break;
+>>> +	case USB_SPEED_HIGH:
+>>> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
+>>> +		break;
+>>> +	case USB_SPEED_SUPER:
+>>> +		break;
+>>> +	default:
+>>> +		dev_err(priv_dev->dev,
+>>> +			"invalid maximum_speed parameter %d\n",
+>>> +			max_speed);
+>>> +		/* fall through */
+>>> +	case USB_SPEED_UNKNOWN:
+>>> +		/* default to superspeed */
+>>> +		max_speed = USB_SPEED_SUPER;
+>>> +		break;
+>>> +	}
+>> 
+>> I had suggested some simplification for this case statement.
+>> 
+>
+> oops, looks like Greg picked this already.
+>
+> During more tests today I just observed that this patch causes
+> the following regression.
+>
+> Connect EVM to Super-Speed host
+> Load g_audio. (this enumerates as HS which is fine)
+> unload g_audio
+> load g_zero (this enumerates at HS instead of SS).
+>
+> This is because the speed limit that we set doesn't get cleared.
+>
+> Now the bits are write only and there is a way to undo USB_CONF_SFORCE_FS
+> by writing USB_CONF_CFORCE_FS, however there is no corresponding bit
+> to clear USB_CONF_USB3DIS. Only way seems to be USB_CFG_SWRST which
+> is a bit harsh IMO.
+
+Isn't bit 0 enough?
+
+/* Reset USB device configuration. */
+#define USB_CONF_CFGRST		BIT(0)
+
+Also, now that I look at this more carefully, you should move that code
+to udc_set_speed().
+
+-- 
+balbi
