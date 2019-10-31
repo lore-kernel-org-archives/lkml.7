@@ -2,115 +2,95 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 635CDCA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE349CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A2D20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD8A72087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 21:09:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572556151;
+	bh=NrGgjyhNy2XdFzwav441l2E0+4ygqgCiThCMrn4g7pY=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=uzrCZ9DILybzJr7tJ3NTohUQUnWQxonXWSrCkmDNpPX4fjNiFbHSeerZ+aD/nGV+t
+	 A3K3cPvhV1GU8Phg3dbPPSzsGuMDBGowlEOlCplYJBcMtjbcJxvRDbNXWpmQCsWBGa
+	 L9gcKfaeiLBiVTfxVm6yIHAZo8lsAXed9f8dl4ZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbfJaVEm (ORCPT
+        id S1729847AbfJaVJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 17:04:42 -0400
-Received: from mga05.intel.com ([192.55.52.43]:18371 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726680AbfJaVEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 17:04:41 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 14:04:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,253,1569308400"; 
-   d="scan'208";a="231008754"
-Received: from epobrien-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.10.103])
-  by fmsmga002.fm.intel.com with ESMTP; 31 Oct 2019 14:04:38 -0700
-Date:   Thu, 31 Oct 2019 23:04:37 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
-        Peter Huewe <peterhuewe@gmx.de>,
-        linux-integrity@vger.kernel.org
-Subject: Re: [PATCH v2] tpm: Add major_version sysfs file
-Message-ID: <20191031210437.GB10507@linux.intel.com>
-References: <20191025193103.30226-1-jsnitsel@redhat.com>
- <20191028205313.GH8279@linux.intel.com>
- <20191028210507.7i6d6b5olw72shm3@cantor>
- <20191029091731.GC9896@linux.intel.com>
- <20191029124342.GB6128@ziepe.ca>
- <20191029142225.GC7415@linux.intel.com>
- <1572361008.4812.2.camel@HansenPartnership.com>
+        Thu, 31 Oct 2019 17:09:10 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37718 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727957AbfJaVJK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 17:09:10 -0400
+Received: by mail-oi1-f193.google.com with SMTP id y194so6478808oie.4;
+        Thu, 31 Oct 2019 14:09:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=OeM65qzQlCMGxnDQEqx3A4bb6MsrgL6yvE3aZD4ZDCc=;
+        b=dW7g2eBJDkHplEhCqrlvwA10d1mKm313R/35IGodio88xbo1iniv7xtZcPT4XfrHD6
+         RMWQezkqA06dZtSdSOly/oKJyxnoa/uvZjRfhhWr4zK6Hu+rNMCsAqOF+v0Q4wH61O1l
+         5xUxwnrbbS+ZNikQ65HgPPq2aRc+J5MZtvf1pyqVC8PA/lc4gZWTQvoYAed/G/rDhb+m
+         fbtL+eE/+9jgw23a1HCATAr2TOlUo0A5IB4PNib70GC+AWypVAhkfovuxi7hPwKymmfp
+         fDkgew/H0Sexn+QElnhkNXpVngRpFonXENWzRN1qA6TzC3TZlO1DBeibIJvhKaAKaXV2
+         1hrA==
+X-Gm-Message-State: APjAAAXrsRTt987EbwpCqChI10yfM5Jliaa3qsqw23Ir9fE7D+X/ryCe
+        6y3iGgOCG8ylntzseuHUWmprR+ui8ewi+xPJBWcj6ULhXNE=
+X-Google-Smtp-Source: APXvYqzGQWTo4sfQ84u/7FyPH4asPCHM/cbRLhyZmcDAqE9JZ1pjBLbCtms4+t5vPsqQgLdGcvF6jWb6sdv5e3gblCc=
+X-Received: by 2002:a05:6808:84:: with SMTP id s4mr2371555oic.115.1572556149657;
+ Thu, 31 Oct 2019 14:09:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572361008.4812.2.camel@HansenPartnership.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 31 Oct 2019 22:08:58 +0100
+Message-ID: <CAJZ5v0gSz1Pk=7u0s-cgjc9_0ibCyA6RNCcVHw7+GLWWoCj22g@mail.gmail.com>
+Subject: [GIT PULL] Power management fix for v5.4-rc6
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 07:56:48AM -0700, James Bottomley wrote:
-> On Tue, 2019-10-29 at 16:22 +0200, Jarkko Sakkinen wrote:
-> > On Tue, Oct 29, 2019 at 09:43:42AM -0300, Jason Gunthorpe wrote:
-> > > On Tue, Oct 29, 2019 at 11:17:31AM +0200, Jarkko Sakkinen wrote:
-> > > > On Mon, Oct 28, 2019 at 02:05:07PM -0700, Jerry Snitselaar wrote:
-> > > > > On Mon Oct 28 19, Jarkko Sakkinen wrote:
-> > > > > > On Fri, Oct 25, 2019 at 12:31:03PM -0700, Jerry Snitselaar
-> > > > > > wrote:
-> > > > > > > +	return sprintf(buf, "%s\n", chip->flags &
-> > > > > > > TPM_CHIP_FLAG_TPM2
-> > > > > > > +		       ? "2.0" : "1.2");
-> > > > > > 
-> > > > > > This is not right. Should be either "1" or "2".
-> > > > > > 
-> > > > > > /Jarkko
-> > > > > 
-> > > > > Okay I will fix that up. Do we have a final decision on the
-> > > > > file name,
-> > > > > major_version versus version_major?
-> > > > 
-> > > > Well, I don't see how major_version would make any sense. It is
-> > > > not as future proof as version_major. Still waiting for Jason's
-> > > > feedback for this.
-> > > 
-> > > $ find /sys/ -name  "*version*"
-> > > /sys/devices/pci0000:00/0000:00:17.0/ata1/host0/scsi_host/host0/ahc
-> > > i_host_version
-> > > /sys/devices/virtual/net/docker0/bridge/multicast_mld_version
-> > > /sys/devices/virtual/net/docker0/bridge/multicast_igmp_version
-> > > /sys/firmware/efi/esrt/entries/entry0/lowest_supported_fw_version
-> > > /sys/firmware/efi/esrt/entries/entry0/last_attempt_version
-> > > /sys/firmware/efi/esrt/entries/entry0/fw_version
-> > > /sys/module/acpi/parameters/acpica_version
-> > > 
-> > > etc..
-> > > 
-> > > Not a single example of the backward version.
-> > > 
-> > > Most likely it should be called 'tpm_version'
-> > 
-> > The postfix gives tells the part of the version number that the file
-> > reports. If you really want to add the prefix, then the appropriate
-> > name would be tpm_version_major.
-> > 
-> > I'd still go with just version_major as tpm_ prefix is somewhat
-> > redundant.
-> 
-> You have to be careful with overly generic names in sysfs ... this is
-> what happened to us in SCSI:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=42caa0edabd6a0a392ec36a5f0943924e4954311
-> 
-> That's not to say version_major is wrong ... plenty of sysfs files have
-> generic names like this, it's just that tpm_version_major might be more
-> future proof.
+Hi Linus,
 
-I'm cool with that name as long as the postfix also stays.
+Please pull from the tag
 
-/Jarkko
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.4-rc6
+
+with top-most commit e82b7457909afd2e973ebd251ad79945d04ca376
+
+ Merge branch 'pm-cpufreq'
+
+on top of commit 767d2d710e9066c47919a4e5f05a21e1ad40ddc4
+
+ Merge branches 'pm-cpuidle' and 'pm-opp'
+
+to receive a power management fix for 5.4-rc6.
+
+This fixes a recently introduced (mostly theoretical) issue that the
+requests to confine the maximum CPU frequency coming from the platform
+firmware may not be taken into account if multiple CPUs are covered
+by one cpufreq policy on a system with ACPI.
+
+Thanks!
+
+
+---------------
+
+Rafael J. Wysocki (1):
+      ACPI: processor: Add QoS requests for all CPUs
+
+---------------
+
+ drivers/acpi/processor_perflib.c | 34 +++++++++++++++++++++-------------
+ drivers/acpi/processor_thermal.c | 34 +++++++++++++++++++++-------------
+ 2 files changed, 42 insertions(+), 26 deletions(-)
