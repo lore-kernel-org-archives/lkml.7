@@ -2,152 +2,91 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD298CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DCCCA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2AB2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15B72087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:03:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572523414;
+	bh=PCgpgl5TvROz0Gbm25l3kuycLpN7y37Y2PSEmcK//es=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=tjhfLaufiWaPwtDMyywd1dK6s3ZZOI8aWnSTQ+gFRKvgaPE2jVjjC2a0mXPwuNU3w
+	 7YJ+wWO9lkZRXTSDRwjexbRT7llfEJwWp5qHTZwaq1DPbt+4GslgK3XsOhLqBGuRfb
+	 IzZD+n8Uvbh8IkD4GdPChChbevXkQPOmP5XbqHY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfJaMCh (ORCPT
+        id S1726878AbfJaMDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 08:02:37 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:57186 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726540AbfJaMCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 08:02:37 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 35D97779D44FF684F7B9;
-        Thu, 31 Oct 2019 20:02:35 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 31 Oct 2019
- 20:02:26 +0800
-Subject: Re: [PATCH v2 09/36] irqchip/gic-v3: Add GICv4.1 VPEID size discovery
-To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-kernel@vger.kernel.org>
-CC:     Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Andrew Murray" <Andrew.Murray@arm.com>,
-        Jayachandran C <jnair@marvell.com>,
-        "Robert Richter" <rrichter@marvell.com>
-References: <20191027144234.8395-1-maz@kernel.org>
- <20191027144234.8395-10-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <ec979d9b-cfe8-bfd8-fc4c-c41a602b2494@huawei.com>
-Date:   Thu, 31 Oct 2019 20:02:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 31 Oct 2019 08:03:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbfJaMDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 08:03:33 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97D3A2086D;
+        Thu, 31 Oct 2019 12:03:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572523412;
+        bh=PCgpgl5TvROz0Gbm25l3kuycLpN7y37Y2PSEmcK//es=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=cES5yBB/8oCqueLi5bsvAcXmS39D5iPrOpxzDP624XUXSRf31gQ8Eq1XNIxWwWpx0
+         zHeCfsdTPGGAG9UT2U1uTiJLtK7U3/b9WSHEu6JQNf3JVa9BUrxGtG5+FatO9RJuC6
+         OcUF/8sJ7Qd4ScxdaqU8v64N8WjOx+RD4iIZxx6Q=
+Date:   Thu, 31 Oct 2019 12:03:28 +0000
+From:   Will Deacon <will@kernel.org>
+To:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 6/7] Revert "iommu/arm-smmu: Make arm-smmu explicitly
+ non-modular"
+Message-ID: <20191031120327.GD26059@willie-the-truck>
+References: <20191030145112.19738-1-will@kernel.org>
+ <20191030145112.19738-7-will@kernel.org>
+ <20191030230941.GA8188@jcrouse1-lnx.qualcomm.com>
 MIME-Version: 1.0
-In-Reply-To: <20191027144234.8395-10-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030230941.GA8188@jcrouse1-lnx.qualcomm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On 2019/10/27 22:42, Marc Zyngier wrote:
-> While GICv4.0 mandates 16 bit worth of VPEIDs, GICv4.1 allows smaller
-> implementations to be built. Add the required glue to dynamically
-> compute the limit.
+On Wed, Oct 30, 2019 at 05:09:41PM -0600, Jordan Crouse wrote:
+> On Wed, Oct 30, 2019 at 02:51:11PM +0000, Will Deacon wrote:
+> > @@ -2235,12 +2237,16 @@ static const struct dev_pm_ops arm_smmu_pm_ops = {
+> >  
+> >  static struct platform_driver arm_smmu_driver = {
+> >  	.driver	= {
+> > -		.name			= "arm-smmu",
+> > -		.of_match_table		= of_match_ptr(arm_smmu_of_match),
+> > -		.pm			= &arm_smmu_pm_ops,
+> > -		.suppress_bind_attrs	= true,
+> > +		.name		= "arm-smmu",
+> > +		.of_match_table	= of_match_ptr(arm_smmu_of_match),
+> > +		.pm		= &arm_smmu_pm_ops,
+> >  	},
+> >  	.probe	= arm_smmu_device_probe,
+> > +	.remove	= arm_smmu_device_remove,
+> >  	.shutdown = arm_smmu_device_shutdown,
+> >  };
+> > -builtin_platform_driver(arm_smmu_driver);
+> > +module_platform_driver(arm_smmu_driver);
 > 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->   drivers/irqchip/irq-gic-v3-its.c   | 11 ++++++++++-
->   drivers/irqchip/irq-gic-v3.c       |  3 +++
->   include/linux/irqchip/arm-gic-v3.h |  5 +++++
->   3 files changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index 94c9c2e9f917..40912b3fb0e1 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -121,7 +121,16 @@ struct its_node {
->   #define ITS_ITT_ALIGN		SZ_256
->   
->   /* The maximum number of VPEID bits supported by VLPI commands */
-> -#define ITS_MAX_VPEID_BITS	(16)
-> +#define ITS_MAX_VPEID_BITS						\
-> +	({								\
-> +		int nvpeid = 16;					\
-> +		if (gic_rdists->has_rvpeid &&				\
-> +		    gic_rdists->gicd_typer2 & GICD_TYPER2_VIL)		\
-> +			nvpeid = 1 + (gic_rdists->gicd_typer2 &		\
-> +				      GICD_TYPER2_VID);			\
+> I know this is a revert, but wouldn't you still want to be at device_init()
+> level for built in drivers? It always preferable to not defer if given the
+> choice to do so and device_init() is the right level for this driver IMO.
 
-Does it make sense to let nvpeid not more than 16 here? As the spec says
-"Values above 0x0F are RESERVED". But I don't know why should we have
-this restriction ;-)
+Hmm, not sure I'm following you completely here. With this change,
+module_init() is used to invoke platform_driver_register(). For builtin
+drivers, module_initx() expands to __initcall(x), which itself expands
+to device_initcall(x). Or are you referrring to something else?
 
-Either way,
-
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-
-
-Thanks
-
-> +									\
-> +		nvpeid;							\
-> +	})
->   #define ITS_MAX_VPEID		(1 << (ITS_MAX_VPEID_BITS))
->   
->   /* Convert page order to size in bytes */
-> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-> index 4f20caf9bc88..50538709bd49 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -1556,6 +1556,9 @@ static int __init gic_init_bases(void __iomem *dist_base,
->   
->   	pr_info("%d SPIs implemented\n", GIC_LINE_NR - 32);
->   	pr_info("%d Extended SPIs implemented\n", GIC_ESPI_NR);
-> +
-> +	gic_data.rdists.gicd_typer2 = readl_relaxed(gic_data.dist_base + GICD_TYPER2);
-> +
->   	gic_data.domain = irq_domain_create_tree(handle, &gic_irq_domain_ops,
->   						 &gic_data);
->   	irq_domain_update_bus_token(gic_data.domain, DOMAIN_BUS_WIRED);
-> diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-> index c98f34296599..8c6be56da7e9 100644
-> --- a/include/linux/irqchip/arm-gic-v3.h
-> +++ b/include/linux/irqchip/arm-gic-v3.h
-> @@ -13,6 +13,7 @@
->   #define GICD_CTLR			0x0000
->   #define GICD_TYPER			0x0004
->   #define GICD_IIDR			0x0008
-> +#define GICD_TYPER2			0x000C
->   #define GICD_STATUSR			0x0010
->   #define GICD_SETSPI_NSR			0x0040
->   #define GICD_CLRSPI_NSR			0x0048
-> @@ -89,6 +90,9 @@
->   #define GICD_TYPER_ESPIS(typer)						\
->   	(((typer) & GICD_TYPER_ESPI) ? GICD_TYPER_SPIS((typer) >> 27) : 0)
->   
-> +#define GICD_TYPER2_VIL			(1U << 7)
-> +#define GICD_TYPER2_VID			GENMASK(4, 0)
-> +
->   #define GICD_IROUTER_SPI_MODE_ONE	(0U << 31)
->   #define GICD_IROUTER_SPI_MODE_ANY	(1U << 31)
->   
-> @@ -613,6 +617,7 @@ struct rdists {
->   	void			*prop_table_va;
->   	u64			flags;
->   	u32			gicd_typer;
-> +	u32			gicd_typer2;
->   	bool			has_vlpis;
->   	bool			has_rvpeid;
->   	bool			has_direct_lpi;
-> 
-
+Will
