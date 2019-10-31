@@ -2,132 +2,92 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51066CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDEECA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29969208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314CC2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:58:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e4fwxynf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbfJaOw2 (ORCPT
+        id S1728162AbfJaO6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 10:52:28 -0400
-Received: from verein.lst.de ([213.95.11.211]:51479 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728021AbfJaOw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 10:52:28 -0400
-Received: by verein.lst.de (Postfix, from userid 2005)
-        id 0102D68BE1; Thu, 31 Oct 2019 15:52:24 +0100 (CET)
-Date:   Thu, 31 Oct 2019 15:52:24 +0100
-From:   Torsten Duwe <duwe@lst.de>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>,
+        Thu, 31 Oct 2019 10:58:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27416 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728066AbfJaO6D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 10:58:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572533880;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cjgEzJVzo2lJMUc77CuSCNztlH8vIEi00dABVngX7OE=;
+        b=e4fwxynfN873ScbRWNY4kSCMFyB4tGHkp5i+shBPRx4TjNbYt7BGodHzmrZap7CiT8PL/A
+        eGGl1Je386gfzMmRxfOeh2ZZCgd1C6RmobgC9pqGaLk2MM9zv5PhV8/Wr+gMynRCGSuFqw
+        tNDdOHs184es5DZfkOCAT7jPAd1h3mU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-216-_BdLQb6yOlu3p54wnvo9Pg-1; Thu, 31 Oct 2019 10:57:56 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 92BE11800D6B;
+        Thu, 31 Oct 2019 14:57:54 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-40.rdu2.redhat.com [10.10.121.40])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E40665D6D6;
+        Thu, 31 Oct 2019 14:57:51 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wh7cf3ANq-G9MmwSQiUK2d-=083C0HV_8hTGe2Mb4X7JA@mail.gmail.com>
+References: <CAHk-=wh7cf3ANq-G9MmwSQiUK2d-=083C0HV_8hTGe2Mb4X7JA@mail.gmail.com> <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk> <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 6/7] dt-bindings: Add ANX6345 DP/eDP transmitter
- binding
-Message-ID: <20191031145224.GA5973@lst.de>
-References: <20191029153815.C631668C4E@verein.lst.de> <20191029153953.8EE9B68D04@verein.lst.de> <20191031125100.qprbdaaysg3tmhif@hendrix>
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring, not cursor and length [ver #2]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031125100.qprbdaaysg3tmhif@hendrix>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-ID: <24074.1572533871.1@warthog.procyon.org.uk>
+Date:   Thu, 31 Oct 2019 14:57:51 +0000
+Message-ID: <24075.1572533871@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: _BdLQb6yOlu3p54wnvo9Pg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 01:51:00PM +0100, Maxime Ripard wrote:
-> On Tue, Oct 29, 2019 at 01:16:57PM +0100, Torsten Duwe wrote:
-> > +
-> > +  ports:
-> > +    anyOf:
-> > +      - port@0:
-> > +        description: Video port for LVTTL input
-> > +      - port@1:
-> > +        description: Video port for eDP output (panel or connector).
-> > +                     May be omitted if EDID works reliably.
-> > +    required:
-> > +      - port@0
-> 
-> Have you tried to validate those two ports in a DT?
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Yes, it validates as expected, like I wrote. Various sources told me that
-json-schema is not always straightforward so I assumed anyOf was OK.
+> It's shorter and more obvious to just write
+>=20
+>    pipe->head =3D head;
+>=20
+> than it is to write
+>=20
+>    pipe_commit_write(pipe, head);
 
-> I'm not quite sure what you wanted to express with that anyOf, but if
-> it was something like port@0 is mandatory, and port@1 is optional, it
-> should be something like this:
-> 
-> properties:
-> 
->   ...
-> 
->   ports:
->     type: object
-> 
->     properties:
->       port@0:
->         type: object
->         description: |
-> 	  Video port for LVTTL input
-> 
->       port@1:
->         type: object
->         description: |
-> 	  Video port for eDP output (..)
-> 
->     required:
->       - port@0
-> 
-> This way, you express that both port@0 and port@1 must by nodes, under
-> a node called ports, and port@0 is mandatory.
+But easier to find the latter.  But whatever.
 
-That validates, too. Looks better, admittedly. I don't have a strong
-opinion here. It's just that Rob wrote in
-<CAL_JsqKAU3WG3L=KP8A8u4vW=q_BQWPN-m_c+ADOwTioJ2-cmg@mail.gmail.com>:
-
-| For this case specifically, we do need to define a common graph
-| schema, but haven't yet. You can assume we do and only really need to    
-| capture what Maxime said above.
-(your points back then were port@N descriptions and neccessity for port@0)
-
-Are you sure that "object" is specific enough?
-
-> You should even push this a bit further by adding
-> additionalProperties: false to prevent a DT from having undocumented
-> properties and children for the main node and ports node.
-
-You mean like
-
-| jsonschema.exceptions.SchemaError: Additional properties are not allowed ('unevaluatedProperties' was unexpected)
-[...]
-| On schema:
-|    {'$id': 'http://devicetree.org/schemas/watchdog/allwinner,sun4i-a10-wdt.yaml#',
-[...]
-|      'unevaluatedProperties': False}
-
-? ;-)
-
-But yes, this patch series passes even with additionalProperties: false.
-
-In which form would you like to receive the update?
-
-	Torsten
+David
 
