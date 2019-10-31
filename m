@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C6FCA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2568ACA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 265582087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF76A2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:08:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727332AbfJaKIg (ORCPT
+        id S1727351AbfJaKIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:08:36 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:6317 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726867AbfJaKIf (ORCPT
+        Thu, 31 Oct 2019 06:08:39 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:60654 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726864AbfJaKIi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:08:35 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R231e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TgmBgR._1572516510;
-Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0TgmBgR._1572516510)
+        Thu, 31 Oct 2019 06:08:38 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TgmAXpl_1572516509;
+Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0TgmAXpl_1572516509)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 31 Oct 2019 18:08:30 +0800
+          Thu, 31 Oct 2019 18:08:29 +0800
 From:   Lai Jiangshan <laijs@linux.alibaba.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
@@ -34,9 +34,9 @@ Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Lai Jiangshan <jiangshanlai@gmail.com>,
         Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-Subject: [PATCH 02/11] rcu: fix bug when rcu_exp_handler() in nested interrupt
-Date:   Thu, 31 Oct 2019 10:07:57 +0000
-Message-Id: <20191031100806.1326-3-laijs@linux.alibaba.com>
+Subject: [PATCH 01/11] rcu: avoid leaking exp_deferred_qs into next GP
+Date:   Thu, 31 Oct 2019 10:07:56 +0000
+Message-Id: <20191031100806.1326-2-laijs@linux.alibaba.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191031100806.1326-1-laijs@linux.alibaba.com>
 References: <20191031100806.1326-1-laijs@linux.alibaba.com>
@@ -47,70 +47,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These is a possible bug (although which I can't triger yet)
-since 2015 8203d6d0ee78
-(rcu: Use single-stage IPI algorithm for RCU expedited grace period)
-
- rcu_read_unlock()
-  ->rcu_read_lock_nesting = -RCU_NEST_BIAS;
-  interrupt(); // before or after rcu_read_unlock_special()
-   rcu_read_lock()
-    fetch some rcu protected pointers
-    // exp GP starts in other cpu.
-    some works
-    NESTED interrupt for rcu_exp_handler();
-      report exp qs! BUG!
-    // exp GP completes and pointers are freed in other cpu
-    some works with the pointers. BUG
-   rcu_read_unlock();
-  ->rcu_read_lock_nesting = 0;
-
-Although rcu_sched_clock_irq() can be in nested interrupt,
-there is no such similar bug since special.b.need_qs
-can only be set when ->rcu_read_lock_nesting > 0
+If exp_deferred_qs is incorrectly set and leaked to the next
+exp GP, it may cause the next GP to be incorrectly prematurely
+completed.
 
 Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
 ---
- kernel/rcu/tree_exp.h    | 5 +++--
- kernel/rcu/tree_plugin.h | 9 ++++++---
- 2 files changed, 9 insertions(+), 5 deletions(-)
+ kernel/rcu/tree_exp.h | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
 diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-index 6dec21909b30..c0d06bce35ea 100644
+index a0e1e51c51c2..6dec21909b30 100644
 --- a/kernel/rcu/tree_exp.h
 +++ b/kernel/rcu/tree_exp.h
-@@ -664,8 +664,9 @@ static void rcu_exp_handler(void *unused)
- 	 * Otherwise, force a context switch after the CPU enables everything.
- 	 */
- 	rdp->exp_deferred_qs = true;
--	if (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
--	    WARN_ON_ONCE(rcu_dynticks_curr_cpu_in_eqs())) {
-+	if (rcu_preempt_need_deferred_qs(t) &&
-+	    (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
-+	    WARN_ON_ONCE(rcu_dynticks_curr_cpu_in_eqs()))) {
- 		rcu_preempt_deferred_qs(t);
- 	} else {
- 		set_tsk_need_resched(t);
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index d4c482490589..59ef10da1e39 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -549,9 +549,12 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
-  */
- static bool rcu_preempt_need_deferred_qs(struct task_struct *t)
- {
--	return (__this_cpu_read(rcu_data.exp_deferred_qs) ||
--		READ_ONCE(t->rcu_read_unlock_special.s)) &&
--	       t->rcu_read_lock_nesting <= 0;
-+	return (__this_cpu_read(rcu_data.exp_deferred_qs) &&
-+		(!t->rcu_read_lock_nesting ||
-+		 t->rcu_read_lock_nesting == -RCU_NEST_BIAS))
-+		||
-+		(READ_ONCE(t->rcu_read_unlock_special.s) &&
-+		 t->rcu_read_lock_nesting <= 0);
- }
+@@ -603,6 +603,18 @@ static void rcu_exp_handler(void *unused)
+ 	struct rcu_node *rnp = rdp->mynode;
+ 	struct task_struct *t = current;
  
- /*
++	/*
++	 * Note that there is a large group of race conditions that
++	 * can have caused this quiescent state to already have been
++	 * reported, so we really do need to check ->expmask first.
++	 */
++	raw_spin_lock_irqsave_rcu_node(rnp, flags);
++	if (!(rnp->expmask & rdp->grpmask)) {
++		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
++		return;
++	}
++	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
++
+ 	/*
+ 	 * First, the common case of not being in an RCU read-side
+ 	 * critical section.  If also enabled or idle, immediately
+@@ -628,17 +640,10 @@ static void rcu_exp_handler(void *unused)
+ 	 * a future context switch.  Either way, if the expedited
+ 	 * grace period is still waiting on this CPU, set ->deferred_qs
+ 	 * so that the eventual quiescent state will be reported.
+-	 * Note that there is a large group of race conditions that
+-	 * can have caused this quiescent state to already have been
+-	 * reported, so we really do need to check ->expmask.
+ 	 */
+ 	if (t->rcu_read_lock_nesting > 0) {
+-		raw_spin_lock_irqsave_rcu_node(rnp, flags);
+-		if (rnp->expmask & rdp->grpmask) {
+-			rdp->exp_deferred_qs = true;
+-			t->rcu_read_unlock_special.b.exp_hint = true;
+-		}
+-		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
++		rdp->exp_deferred_qs = true;
++		WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
+ 		return;
+ 	}
+ 
 -- 
 2.20.1
 
