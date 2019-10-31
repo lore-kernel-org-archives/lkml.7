@@ -2,149 +2,335 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F75CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCC1CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A19CB2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B9620650
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:04:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="3F5spoqk"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="X6k6s15e";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EXnfgm3S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbfJaO6t (ORCPT
+        id S1728258AbfJaPEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 10:58:49 -0400
-Received: from mail-eopbgr800050.outbound.protection.outlook.com ([40.107.80.50]:46305
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728029AbfJaO6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 10:58:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hKsK6QWJS9WmUDXE9g76nQFkjfegVW/vVeEAP71vSfgp3rkCdz5DGgO3Z4vlpcXG/GSG1piwj+L5gEN40jtYBNSB8/EFWCiC8yK/FYu4wa1lRrupEm3nbZ+dQgzj/e+xs+hAUi81/tDNNayRk6KbWyWqxcAjUy72CrKw2FR4RqcgYUQ0VD43PBmY28avJPbYkjOMXk4cdNXWDF8t3NsU8ZRPP+ILZf8aj9msLCNpHTQKRbCrtt9KOgtvICNj68txx8Nn2y3mUTjIUJIx8nPBpBhKDqTW0Q57EibKGZ025ppYQydlG6s48EC6kztJdUNKUCBIjEjYniY45jnW/7htnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k8iv69vb6pJiJhjUBu+u5EPTr8o5fyXpKcDTmKasnpk=;
- b=NpTJclkgFZkwZx1/sRAA3tqC4wSc/3E/dtONLXtrYV9UDEg/K52+w9bPzsCtK5bE/ujmQdrBXcrySMF57bmVfs4F5XW7PQE/Y9AuBVfA0fra0aknLGt6ygX8jpGiCohLmvBFQi72vpORgebhYGtdacSEqo/dgIQe0SCIWfPZ9A3aL7sXbsn3aBnKGqQ0Ecta1XraOBhBhvx+u5ht2qC7BbvQZXnYApyfhlAmG+DFNu/1yf+uc4NvG5EPy06n9eo5d+ol0KmNrEyYApDH29G6vI6LzGwSR6wLBWIFQw8IVhusAubw0z8hQvGy0LsQVJUaRMRh+wARZpE0qyDminkV2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k8iv69vb6pJiJhjUBu+u5EPTr8o5fyXpKcDTmKasnpk=;
- b=3F5spoqkzvYzYiApTOXPFoZ9lvsyy7wgFJ10EJq6VTwaOke8WRcBp3pd9z91y/fJI/vxS45LEYSDzFwD6ALtEAennLIoMHxW6GeokNLo78JuRjwUcXwWQNVPGpJuC4/cI+OtbEYFGeOln4CBzpCKVlbCB3dx0iadt0RdipF5qQA=
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
- SN6PR12MB2766.namprd12.prod.outlook.com (52.135.107.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.24; Thu, 31 Oct 2019 14:58:45 +0000
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::ac86:15de:e8d6:61c8]) by SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::ac86:15de:e8d6:61c8%7]) with mapi id 15.20.2387.028; Thu, 31 Oct 2019
- 14:58:45 +0000
-From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-CC:     Tony Luck <tony.luck@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: RE: [PATCH] x86/MCE/AMD: fix warning about sleep-in-atomic at early
- boot
-Thread-Topic: [PATCH] x86/MCE/AMD: fix warning about sleep-in-atomic at early
- boot
-Thread-Index: AQHVj+vKM1/xat6HGkejerE7UOI1HKd0z3yAgAAFsgA=
-Date:   Thu, 31 Oct 2019 14:58:45 +0000
-Message-ID: <SN6PR12MB2639DBDA3897067733D6C669F8630@SN6PR12MB2639.namprd12.prod.outlook.com>
-References: <157252708836.3876.4604398213417262402.stgit@buzz>
- <20191031142955.GA23693@nazgul.tnic>
-In-Reply-To: <20191031142955.GA23693@nazgul.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Yazen.Ghannam@amd.com; 
-x-originating-ip: [165.204.77.11]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8d996fe8-2cf1-4b5a-f63f-08d75e12d434
-x-ms-traffictypediagnostic: SN6PR12MB2766:
-x-microsoft-antispam-prvs: <SN6PR12MB2766171892A0B646E2D2F189F8630@SN6PR12MB2766.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 02070414A1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(376002)(136003)(366004)(39860400002)(13464003)(189003)(199004)(2906002)(11346002)(76176011)(14454004)(486006)(5660300002)(71200400001)(33656002)(305945005)(7696005)(229853002)(316002)(476003)(99286004)(52536014)(6436002)(7736002)(71190400001)(55016002)(54906003)(14444005)(110136005)(446003)(4326008)(6116002)(6246003)(81156014)(76116006)(86362001)(8676002)(66446008)(66946007)(256004)(25786009)(64756008)(186003)(53546011)(81166006)(9686003)(6506007)(66066001)(478600001)(74316002)(3846002)(26005)(8936002)(66476007)(102836004)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2766;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bI6AKK503RDSeBe8/iA/IFn9AgJ4AIihSnN4DAfZrzqaPYMBodAL9GWcYQ9toS9J04ehOMXeidLOxOhcSh1bHRls4a0CbNt5WYIlMmN852RJxORXcUxK+rTBL+4IrAFU5CV3dX6GaDlrGncArXFrsJIuOo/28JGTFFcMXVefO8/W5Su+XhSjhevD9DPal6awmf0tbhmkedk9syCz3nGugs6F24kMDpLW2W1QJFgX33G1u3PPQRSJn8MjTlvxA3LE8CB6gGMBU/1JHwmdhhuxPOX/T8o+YakhuXrR2hnKUjQiVVUTJj0AbZDEaeCLQyMhp9GTSQopRObS06JrgFcQcu+sYZ3zvuFaXY7YGH+UTdw0acHHz/7DBtMPpaenpT3wSc82UBorkYL5Q+Pj1u2PY8+iR+V+DrJqtbUqg8cZCJhf5V/KDc8c8lma17VYgvm3
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 31 Oct 2019 11:04:24 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:36726 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728025AbfJaPEY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 11:04:24 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 897E160397; Thu, 31 Oct 2019 15:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572534262;
+        bh=piPv6KljSbF/JOYPJvzQleKy8QgMYBVVrd7JnibL0NQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=X6k6s15e/m2NEUeIyI4nleAVJFlpkd8xDgOAwZ4mLvZXpMwhtxEocP/AuQ5Gxgeq3
+         8H06jSW14UOYQBSt7b5A4rxisvKWivHiPdjZaPeaN3V7z+n+yhaykaakFmkxTzWcUJ
+         qzrlS2UM+HICPZbihyUD9yw2K/uc6yZLPRoMzgOY=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 155A7603A3;
+        Thu, 31 Oct 2019 15:04:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572534261;
+        bh=piPv6KljSbF/JOYPJvzQleKy8QgMYBVVrd7JnibL0NQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EXnfgm3SHhZOBJ/7lA5iOVzov75VUvVkJoNMAE2vULU9k0LUjSQ15M3wMQUBr3N9J
+         ZuA8RVcwVd+YeiAfBFk5ceFWJttEcTE1htWC6b+vdYmjVBm84d/2W6dWi5/EbXyZs/
+         iivYNhKo5TfPzxa38dCSBfnOdl6xLYfF78Nd0ZdU=
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d996fe8-2cf1-4b5a-f63f-08d75e12d434
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Oct 2019 14:58:45.7578
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9qS2F6ryfw9xZITaYB4aiKGU+Y/tu5+HTmZu2bfpjmmj7c9L5Q7jwYFOuisaU6T2SySq0M9oOjmoeb1VuCykpQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2766
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 31 Oct 2019 20:34:21 +0530
+From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To:     Claire Chang <tientzu@chromium.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>, rjliao@codeaurora.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Hemantg <hemantg@codeaurora.org>
+Subject: Re: [PATCH] Bluetooth: hci_qca: add PM support
+In-Reply-To: <20191031104614.165120-1-tientzu@chromium.org>
+References: <20191031104614.165120-1-tientzu@chromium.org>
+Message-ID: <40b0f2f7061cce48fc417f5e4593dddf@codeaurora.org>
+X-Sender: bgodavar@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCb3Jpc2xhdiBQZXRrb3YgPGJw
-QGFsaWVuOC5kZT4NCj4gU2VudDogVGh1cnNkYXksIE9jdG9iZXIgMzEsIDIwMTkgMTA6MzAgQU0N
-Cj4gVG86IEtvbnN0YW50aW4gS2hsZWJuaWtvdiA8a2hsZWJuaWtvdkB5YW5kZXgtdGVhbS5ydT47
-IEdoYW5uYW0sIFlhemVuIDxZYXplbi5HaGFubmFtQGFtZC5jb20+DQo+IENjOiBUb255IEx1Y2sg
-PHRvbnkubHVja0BpbnRlbC5jb20+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC1lZGFjQHZnZXIua2VybmVsLm9yZzsgeDg2QGtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQ
-QVRDSF0geDg2L01DRS9BTUQ6IGZpeCB3YXJuaW5nIGFib3V0IHNsZWVwLWluLWF0b21pYyBhdCBl
-YXJseSBib290DQo+IA0KPiBPbiBUaHUsIE9jdCAzMSwgMjAxOSBhdCAwNDowNDo0OFBNICswMzAw
-LCBLb25zdGFudGluIEtobGVibmlrb3Ygd3JvdGU6DQo+ID4gRnVuY3Rpb24gc21jYV9jb25maWd1
-cmUoKSBpcyBjYWxsZWQgb25seSBmb3IgY3VycmVudCBjcHUgdGh1cw0KPiA+IHJkbXNyX3NhZmVf
-b25fY3B1KCkgY291bGQgYmUgcmVwbGFjZWQgd2l0aCBhdG9taWMgcmRtc3Jfc2FmZSgpLg0KPiA+
-DQo+ID4gIEJVRzogc2xlZXBpbmcgZnVuY3Rpb24gY2FsbGVkIGZyb20gaW52YWxpZCBjb250ZXh0
-IGF0IGtlcm5lbC9zY2hlZC9jb21wbGV0aW9uLmM6OTkNCj4gPiAgaW5fYXRvbWljKCk6IDEsIGly
-cXNfZGlzYWJsZWQoKTogMSwgcGlkOiAwLCBuYW1lOiBzd2FwcGVyLzENCj4gPiAgQ1BVOiAxIFBJ
-RDogMCBDb21tOiBzd2FwcGVyLzEgTm90IHRhaW50ZWQgNC4xOS43OS0xNiAjMQ0KPiAJCQkJCSAg
-ICAgXl5eXl5eXl5eXg0KPiANCj4gSSdtIGFzc3VtaW5nIHlvdSBoaXQgdGhpcyBvbiBsYXRlc3Qg
-dXBzdHJlYW0gdG9vPw0KPiANCj4gPiAgSGFyZHdhcmUgbmFtZTogR0lHQUJZVEUgUjE4MS1aOTAt
-MDAvTVo5MS1GUzAtMDAsIEJJT1MgUjExIDEwLzI1LzIwMTkNCj4gPiAgQ2FsbCBUcmFjZToNCj4g
-PiAgIGR1bXBfc3RhY2srMHg1Yy8weDdiDQo+ID4gICBfX19taWdodF9zbGVlcCsweGVjLzB4MTEw
-DQo+ID4gICB3YWl0X2Zvcl9jb21wbGV0aW9uKzB4MzkvMHgxNjANCj4gPiAgID8gX19yZG1zcl9z
-YWZlX29uX2NwdSsweDQ1LzB4NjANCj4gPiAgIHJkbXNyX3NhZmVfb25fY3B1KzB4YWUvMHhmMA0K
-PiA+ICAgPyB3cm1zcl9vbl9jcHVzKzB4MjAvMHgyMA0KPiA+ICAgPyBtYWNoaW5lX2NoZWNrX3Bv
-bGwrMHhmZC8weDFmMA0KPiA+ICAgPyBtY2VfYW1kX2ZlYXR1cmVfaW5pdCsweDE5MC8weDJkMA0K
-PiA+ICAgbWNlX2FtZF9mZWF0dXJlX2luaXQrMHgxOTAvMHgyZDANCj4gPiAgIG1jaGVja19jcHVf
-aW5pdCsweDExYS8weDQ2MA0KPiA+ICAgaWRlbnRpZnlfY3B1KzB4M2UyLzB4NTYwDQo+ID4gICBp
-ZGVudGlmeV9zZWNvbmRhcnlfY3B1KzB4MTMvMHg4MA0KPiA+ICAgc21wX3N0b3JlX2NwdV9pbmZv
-KzB4NDUvMHg1MA0KPiA+ICAgc3RhcnRfc2Vjb25kYXJ5KzB4YWEvMHgyMDANCj4gPiAgIHNlY29u
-ZGFyeV9zdGFydHVwXzY0KzB4YTQvMHhiMA0KPiA+DQo+ID4gRXhjZXB0IHdhcm5pbmcgaW4ga2Vy
-bmVsIGxvZyBldmVyeXRoaW5nIHdvcmtzIGZpbmUuDQo+ID4NCj4gPiBGaXhlczogNTg5NjgyMGUw
-YWEzICgieDg2L21jZS9BTUQsIEVEQUMvbWNlX2FtZDogRGVmaW5lIGFuZCB1c2UgdGFibGVzIGZv
-ciBrbm93biBTTUNBIElQIHR5cGVzIikNCj4gPiBTaWduZWQtb2ZmLWJ5OiBLb25zdGFudGluIEto
-bGVibmlrb3YgPGtobGVibmlrb3ZAeWFuZGV4LXRlYW0ucnU+DQo+ID4gLS0tDQo+ID4gIGFyY2gv
-eDg2L2tlcm5lbC9jcHUvbWNlL2FtZC5jIHwgICAgMiArLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwg
-MSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNo
-L3g4Ni9rZXJuZWwvY3B1L21jZS9hbWQuYyBiL2FyY2gveDg2L2tlcm5lbC9jcHUvbWNlL2FtZC5j
-DQo+ID4gaW5kZXggNmVhN2ZkYzgyZjNjLi5jN2FiMGQzOGFmNzkgMTAwNjQ0DQo+ID4gLS0tIGEv
-YXJjaC94ODYva2VybmVsL2NwdS9tY2UvYW1kLmMNCj4gPiArKysgYi9hcmNoL3g4Ni9rZXJuZWwv
-Y3B1L21jZS9hbWQuYw0KPiA+IEBAIC0yNjksNyArMjY5LDcgQEAgc3RhdGljIHZvaWQgc21jYV9j
-b25maWd1cmUodW5zaWduZWQgaW50IGJhbmssIHVuc2lnbmVkIGludCBjcHUpDQo+ID4gIAlpZiAo
-c21jYV9iYW5rc1tiYW5rXS5od2lkKQ0KPiA+ICAJCXJldHVybjsNCj4gPg0KPiA+IC0JaWYgKHJk
-bXNyX3NhZmVfb25fY3B1KGNwdSwgTVNSX0FNRDY0X1NNQ0FfTUN4X0lQSUQoYmFuayksICZsb3cs
-ICZoaWdoKSkgew0KPiA+ICsJaWYgKHJkbXNyX3NhZmUoTVNSX0FNRDY0X1NNQ0FfTUN4X0lQSUQo
-YmFuayksICZsb3csICZoaWdoKSkgew0KPiANCj4gWWF6ZW4sIGFueSBvYmplY3Rpb25zPw0KPiAN
-Cg0KVGhpcyBsb29rcyBnb29kIHRvIG1lLg0KDQpXZSBjYW4gZ28gZnVydGhlciBhbmQgcmVtb3Zl
-IHRoZSAiY3B1IiBwYXJhbWV0ZXIgZnJvbSB0aGlzIGVudGlyZSBmdW5jdGlvbi4NCkJ1dCB0aGF0
-IGNhbiBiZSBhbm90aGVyIHBhdGNoLg0KDQpSZXZpZXdlZC1ieTogWWF6ZW4gR2hhbm5hbSA8eWF6
-ZW4uZ2hhbm5hbUBhbWQuY29tPg0KDQpUaGFua3MsDQpZYXplbg0K
++ Matthias,
+
+On 2019-10-31 16:16, Claire Chang wrote:
+> Add PM suspend/resume callbacks for hci_qca driver.
+> 
+> BT host will make sure both Rx and Tx go into sleep state in
+> qca_suspend. Without this, Tx may still remain in awake state, which
+> prevents BTSOC from entering deep sleep. For example, BlueZ will send
+> Set Event Mask to device when suspending and this will wake the device
+> Rx up. However, the Tx idle timeout on the host side is 2000 ms. If the
+> host is suspended before its Tx idle times out, it won't send
+> HCI_IBS_SLEEP_IND to the device and the device Rx will remain awake.
+> 
+> We implement this by canceling relevant work in workqueue, sending
+> HCI_IBS_SLEEP_IND to the device and then waiting HCI_IBS_SLEEP_IND sent
+> by the device.
+> 
+> In order to prevent the device from being awaken again after 
+> qca_suspend
+> is called, we introduce QCA_SUSPEND flag. QCA_SUSPEND is set in the
+> beginning of qca_suspend to indicate system is suspending and that we'd
+> like to ignore any further wake events.
+> 
+> With QCA_SUSPEND and spinlock, we can avoid race condition, e.g. if
+> qca_enqueue acquires qca->hci_ibs_lock before qca_suspend calls
+> cancel_work_sync and then qca_enqueue adds a new qca->ws_awake_device
+> work after the previous one is cancelled.
+> 
+> If BTSOC wants to wake the whole system up after qca_suspend is called,
+> it will keep sending HCI_IBS_WAKE_IND and uart driver will take care of
+> waking the system. For example, uart driver will reconfigure its Rx pin
+> to a normal GPIO pin and enable irq wake on that pin when suspending.
+> Once host detects Rx falling, the system will begin resuming. Then, the
+> BT host clears QCA_SUSPEND flag in qca_resume and begins dealing with
+> normal HCI packets. By doing so, only a few HCI_IBS_WAKE_IND packets 
+> are
+> lost and there is no data packet loss.
+> 
+> Signed-off-by: Claire Chang <tientzu@chromium.org>
+> ---
+>  drivers/bluetooth/hci_qca.c | 127 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 124 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index c591a8ba9d93..c2062087b46b 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -43,7 +43,8 @@
+>  #define HCI_MAX_IBS_SIZE	10
+> 
+>  #define IBS_WAKE_RETRANS_TIMEOUT_MS	100
+> -#define IBS_TX_IDLE_TIMEOUT_MS		2000
+> +#define IBS_BTSOC_TX_IDLE_TIMEOUT_MS	40
+> +#define IBS_HOST_TX_IDLE_TIMEOUT_MS	2000
+>  #define CMD_TRANS_TIMEOUT_MS		100
+> 
+>  /* susclk rate */
+> @@ -55,6 +56,7 @@
+>  enum qca_flags {
+>  	QCA_IBS_ENABLED,
+>  	QCA_DROP_VENDOR_EVENT,
+> +	QCA_SUSPENDING,
+>  };
+> 
+>  /* HCI_IBS transmit side sleep protocol states */
+> @@ -100,6 +102,7 @@ struct qca_data {
+>  	struct work_struct ws_tx_vote_off;
+>  	unsigned long flags;
+>  	struct completion drop_ev_comp;
+> +	wait_queue_head_t suspend_wait_q;
+> 
+>  	/* For debugging purpose */
+>  	u64 ibs_sent_wacks;
+> @@ -437,6 +440,12 @@ static void hci_ibs_wake_retrans_timeout(struct
+> timer_list *t)
+>  	spin_lock_irqsave_nested(&qca->hci_ibs_lock,
+>  				 flags, SINGLE_DEPTH_NESTING);
+> 
+> +	/* Don't retransmit the HCI_IBS_WAKE_IND when suspending. */
+> +	if (test_bit(QCA_SUSPENDING, &qca->flags)) {
+> +		spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
+> +		return;
+> +	}
+> +
+>  	switch (qca->tx_ibs_state) {
+>  	case HCI_IBS_TX_WAKING:
+>  		/* No WAKE_ACK, retransmit WAKE */
+> @@ -496,6 +505,8 @@ static int qca_open(struct hci_uart *hu)
+>  	INIT_WORK(&qca->ws_rx_vote_off, qca_wq_serial_rx_clock_vote_off);
+>  	INIT_WORK(&qca->ws_tx_vote_off, qca_wq_serial_tx_clock_vote_off);
+> 
+> +	init_waitqueue_head(&qca->suspend_wait_q);
+> +
+>  	qca->hu = hu;
+>  	init_completion(&qca->drop_ev_comp);
+> 
+> @@ -532,7 +543,7 @@ static int qca_open(struct hci_uart *hu)
+>  	qca->wake_retrans = IBS_WAKE_RETRANS_TIMEOUT_MS;
+> 
+>  	timer_setup(&qca->tx_idle_timer, hci_ibs_tx_idle_timeout, 0);
+> -	qca->tx_idle_delay = IBS_TX_IDLE_TIMEOUT_MS;
+> +	qca->tx_idle_delay = IBS_HOST_TX_IDLE_TIMEOUT_MS;
+> 
+>  	BT_DBG("HCI_UART_QCA open, tx_idle_delay=%u, wake_retrans=%u",
+>  	       qca->tx_idle_delay, qca->wake_retrans);
+> @@ -647,6 +658,12 @@ static void device_want_to_wakeup(struct hci_uart 
+> *hu)
+> 
+>  	qca->ibs_recv_wakes++;
+> 
+> +	/* Don't wake the rx up when suspending. */
+> +	if (test_bit(QCA_SUSPENDING, &qca->flags)) {
+> +		spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
+> +		return;
+> +	}
+> +
+>  	switch (qca->rx_ibs_state) {
+>  	case HCI_IBS_RX_ASLEEP:
+>  		/* Make sure clock is on - we may have turned clock off since
+> @@ -711,6 +728,8 @@ static void device_want_to_sleep(struct hci_uart 
+> *hu)
+>  		break;
+>  	}
+> 
+> +	wake_up_interruptible(&qca->suspend_wait_q);
+> +
+>  	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
+>  }
+> 
+> @@ -728,6 +747,12 @@ static void device_woke_up(struct hci_uart *hu)
+> 
+>  	qca->ibs_recv_wacks++;
+> 
+> +	/* Don't react to the wake-up-acknowledgment when suspending. */
+> +	if (test_bit(QCA_SUSPENDING, &qca->flags)) {
+> +		spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
+> +		return;
+> +	}
+> +
+>  	switch (qca->tx_ibs_state) {
+>  	case HCI_IBS_TX_AWAKE:
+>  		/* Expect one if we send 2 WAKEs */
+> @@ -780,8 +805,10 @@ static int qca_enqueue(struct hci_uart *hu,
+> struct sk_buff *skb)
+> 
+>  	/* Don't go to sleep in middle of patch download or
+>  	 * Out-Of-Band(GPIOs control) sleep is selected.
+> +	 * Don't wake the device up when suspending.
+>  	 */
+> -	if (!test_bit(QCA_IBS_ENABLED, &qca->flags)) {
+> +	if (!test_bit(QCA_IBS_ENABLED, &qca->flags) ||
+> +	    test_bit(QCA_SUSPENDING, &qca->flags)) {
+>  		skb_queue_tail(&qca->txq, skb);
+>  		spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
+>  		return 0;
+> @@ -1539,6 +1566,99 @@ static void qca_serdev_remove(struct
+> serdev_device *serdev)
+>  	hci_uart_unregister_device(&qcadev->serdev_hu);
+>  }
+> 
+> +static int __maybe_unused qca_suspend(struct device *dev)
+> +{
+> +	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
+> +	struct hci_uart *hu = hci_get_drvdata(hdev);
+> +	struct qca_data *qca = hu->priv;
+> +	unsigned long flags;
+> +	int ret = 0;
+> +	u8 cmd;
+> +
+> +	set_bit(QCA_SUSPENDING, &qca->flags);
+> +
+> +	/* Device is downloading patch or doesn't support in-band sleep. */
+> +	if (!test_bit(QCA_IBS_ENABLED, &qca->flags))
+> +		return 0;
+> +
+> +	cancel_work_sync(&qca->ws_awake_device);
+> +	cancel_work_sync(&qca->ws_awake_rx);
+> +
+> +	spin_lock_irqsave_nested(&qca->hci_ibs_lock,
+> +				 flags, SINGLE_DEPTH_NESTING);
+> +
+> +	switch (qca->tx_ibs_state) {
+> +	case HCI_IBS_TX_WAKING:
+> +		del_timer(&qca->wake_retrans_timer);
+> +		/* Fall through */
+> +	case HCI_IBS_TX_AWAKE:
+> +		del_timer(&qca->tx_idle_timer);
+> +
+> +		serdev_device_write_flush(hu->serdev);
+> +		cmd = HCI_IBS_SLEEP_IND;
+> +		ret = serdev_device_write_buf(hu->serdev, &cmd, sizeof(cmd));
+> +
+> +		if (ret < 0) {
+> +			BT_ERR("Failed to send SLEEP to device");
+> +			break;
+> +		}
+> +
+> +		qca->tx_ibs_state = HCI_IBS_TX_ASLEEP;
+> +		qca->ibs_sent_slps++;
+> +
+> +		qca_wq_serial_tx_clock_vote_off(&qca->ws_tx_vote_off);
+> +		break;
+> +
+> +	case HCI_IBS_TX_ASLEEP:
+> +		break;
+> +
+> +	default:
+> +		BT_ERR("Spurious tx state %d", qca->tx_ibs_state);
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
+> +
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	serdev_device_wait_until_sent(hu->serdev,
+> +				      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
+> +
+> +	/* Wait for HCI_IBS_SLEEP_IND sent by device to indicate its Tx is 
+> going
+> +	 * to sleep, so that the packet does not wake the system later.
+> +	 */
+> +
+> +	ret = wait_event_interruptible_timeout(qca->suspend_wait_q,
+> +			qca->rx_ibs_state == HCI_IBS_RX_ASLEEP,
+> +			msecs_to_jiffies(IBS_BTSOC_TX_IDLE_TIMEOUT_MS));
+> +
+> +	if (ret > 0)
+> +		return 0;
+> +
+> +	if (ret == 0)
+> +		ret = -ETIMEDOUT;
+> +
+> +error:
+> +	clear_bit(QCA_SUSPENDING, &qca->flags);
+> +
+> +	return ret;
+> +}
+> +
+> +static int __maybe_unused qca_resume(struct device *dev)
+> +{
+> +	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
+> +	struct hci_uart *hu = hci_get_drvdata(hdev);
+> +	struct qca_data *qca = hu->priv;
+> +
+> +	clear_bit(QCA_SUSPENDING, &qca->flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(qca_pm_ops, qca_suspend, qca_resume);
+> +
+>  static const struct of_device_id qca_bluetooth_of_match[] = {
+>  	{ .compatible = "qcom,qca6174-bt" },
+>  	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data_wcn3990},
+> @@ -1553,6 +1673,7 @@ static struct serdev_device_driver 
+> qca_serdev_driver = {
+>  	.driver = {
+>  		.name = "hci_uart_qca",
+>  		.of_match_table = qca_bluetooth_of_match,
+> +		.pm = &qca_pm_ops,
+>  	},
+>  };
+
+-- 
+Regards
+Balakrishna.
