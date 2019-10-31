@@ -2,90 +2,100 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88437CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2726CCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62C63216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 019C8216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:29:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NKYTn0BI";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gV8XTUJO"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ks8JAuSY";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ks8JAuSY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729261AbfJaS26 (ORCPT
+        id S1729280AbfJaS3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:28:58 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:33594 "EHLO
+        Thu, 31 Oct 2019 14:29:00 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:33664 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbfJaS26 (ORCPT
+        with ESMTP id S1726602AbfJaS27 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:28:58 -0400
+        Thu, 31 Oct 2019 14:28:59 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5FCA060A37; Thu, 31 Oct 2019 18:28:57 +0000 (UTC)
+        id A323A60B10; Thu, 31 Oct 2019 18:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572546537;
-        bh=S6A2Si/RaS/yk+h2BddahYmgAhOEzg6pGsjlpTqZxRA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=NKYTn0BIAQpG4Rbn/30sSHLARrUhEb59xdwQl8AYANOuuLInfC3ypNJUtMgsApt/Y
-         wohWDNV03E9kFIJ9c9rkfOZNtc4OWe8NWWjor6Ys6QbGJR4K6qn+kH+kuPz4ejbLOk
-         3nRm2oMBJpryNC3IDcp+E2YCFphK1smKIHFt6aXQ=
+        s=default; t=1572546538;
+        bh=H2Iz/pUnQMf04bxJGH12r7cX3YO7brMgUFKejUjQM1s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ks8JAuSYi1huOoPvddManF0RgPajJThPTbqNIc1Fl5V+fjV2V/XxThvza//5KxOKs
+         Fl0cZiwgnXNW3/5RLwWPLP8g+dVbGdasxaJ1X6vHuak8ByeICBxaBD1vAuiNA/cpEN
+         Ox3Hj/j/mhX/JL4hrB7F1u/uSowzKCzMpx+Hg/Ow=
 Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 40A2B60A23;
-        Thu, 31 Oct 2019 18:28:56 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E5F8C60913;
+        Thu, 31 Oct 2019 18:28:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572546536;
-        bh=S6A2Si/RaS/yk+h2BddahYmgAhOEzg6pGsjlpTqZxRA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gV8XTUJOcv1m0B0ENLyxJe9BVSFTMF9nGog+AZSTQ8DZUp170VLotcKxbMpCb+zyz
-         mPWD4vcxbP6DfLpdiCfVV/51jJHEfHI113Aem/SmZ7c9cUirojbX9o5NDNKMtUN9u7
-         8XfPFEtmgGj/7qpjroBontMtZDm90+j7R6Gv1iC8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 40A2B60A23
+        s=default; t=1572546538;
+        bh=H2Iz/pUnQMf04bxJGH12r7cX3YO7brMgUFKejUjQM1s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ks8JAuSYi1huOoPvddManF0RgPajJThPTbqNIc1Fl5V+fjV2V/XxThvza//5KxOKs
+         Fl0cZiwgnXNW3/5RLwWPLP8g+dVbGdasxaJ1X6vHuak8ByeICBxaBD1vAuiNA/cpEN
+         Ox3Hj/j/mhX/JL4hrB7F1u/uSowzKCzMpx+Hg/Ow=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E5F8C60913
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
 To:     Georgi Djakov <georgi.djakov@linaro.org>
 Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH v1 0/2] interconnect: Move qcom interconnect drivers to core_initcall
-Date:   Thu, 31 Oct 2019 12:28:50 -0600
-Message-Id: <1572546532-19248-1-git-send-email-jcrouse@codeaurora.org>
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH v1 2/2] interconnect: Remove unused module exit code from core
+Date:   Thu, 31 Oct 2019 12:28:52 -0600
+Message-Id: <1572546532-19248-3-git-send-email-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1572546532-19248-1-git-send-email-jcrouse@codeaurora.org>
+References: <1572546532-19248-1-git-send-email-jcrouse@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently all the qcom interconnect drivers initialize at the device_initcall
-level when they are built-in which is a problem since nearly all the frameworks
-and leaf drivers in the SoC depend on interconnect in some fashion. While those
-frameworks and drivers should be properly PROBE_DEFER aware it is in our best
-interest to try not to defer just because we can. Move all the drivers to
-core_initcall when built to increase the chance that they will be available when
-their dependent drivers need them.
+The interconnect core is currently always built in:
 
-I also tossed on a quick cleanup patch to remove unneeded module exit code from
-the core file since it is always built in.
+ menuconfig INTERCONNECT
+	bool "On-Chip Interconnect management support"
 
-Regards,
-Jordan
+So remove the module_exit function and symbolically rename module_init
+to device_initcall to drive home the point.
 
-Jordan Crouse (2):
-  interconnect: Move interconnect drivers to core_initcall
-  interconnect: Remove unused module exit code from core
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+---
 
- drivers/interconnect/core.c         |  7 +------
- drivers/interconnect/qcom/msm8974.c | 14 +++++++++++++-
- drivers/interconnect/qcom/qcs404.c  | 14 +++++++++++++-
- drivers/interconnect/qcom/sdm845.c  | 13 ++++++++++++-
- 4 files changed, 39 insertions(+), 9 deletions(-)
+ drivers/interconnect/core.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
+diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+index c498796..61aba50 100644
+--- a/drivers/interconnect/core.c
++++ b/drivers/interconnect/core.c
+@@ -805,12 +805,7 @@ static int __init icc_init(void)
+ 	return 0;
+ }
+ 
+-static void __exit icc_exit(void)
+-{
+-	debugfs_remove_recursive(icc_debugfs_dir);
+-}
+-module_init(icc_init);
+-module_exit(icc_exit);
++device_initcall(icc_init);
+ 
+ MODULE_AUTHOR("Georgi Djakov <georgi.djakov@linaro.org>");
+ MODULE_DESCRIPTION("Interconnect Driver Core");
 -- 
 2.7.4
 
