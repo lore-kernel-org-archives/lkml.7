@@ -2,113 +2,133 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 081A8CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB68CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0BA020873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5585E20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:30:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Xeo3HsCI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EgyADGXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbfJaOaN (ORCPT
+        id S1728230AbfJaOaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 31 Oct 2019 10:30:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51950 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728193AbfJaOaN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 31 Oct 2019 10:30:13 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:37112 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728173AbfJaOaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 10:30:11 -0400
-Received: from nazgul.tnic (unknown [91.217.168.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 05F6D1EC0CDD;
-        Thu, 31 Oct 2019 15:30:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1572532209;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572532213;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=sqyP3VfoTbEL895VJ1+f3tSVuCaoBE2+04xz1AAnFOg=;
-        b=Xeo3HsCIcfJmvYZOJCPPipEJ1ibs+bfYoPo6eun1uVpM5jPUhxWCHrzLZzQJoh98HR7IQZ
-        smtEPthP2lAwmLWh7hXd7NZ8MrzA7oiSsoa6uMTM5RvwsZj4nf38Y1Unws7lfAXx3EMgUJ
-        IJuwCAFqZ3wG0ountN7Fah5+HiXgZ8w=
-Date:   Thu, 31 Oct 2019 15:29:55 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Yazen Ghannam <Yazen.Ghannam@amd.com>
-Cc:     Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
-        linux-edac@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH] x86/MCE/AMD: fix warning about sleep-in-atomic at early
- boot
-Message-ID: <20191031142955.GA23693@nazgul.tnic>
-References: <157252708836.3876.4604398213417262402.stgit@buzz>
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bOUVT0tM1Rk0k66JwJCEU8B49lHWoxKSNJNje7XME9Y=;
+        b=EgyADGXPYilyBPaHem5qxDAMIc+B67g2PmMM8h55JEizVr5HZB31Ae+aeiKMnoLdJlUzqu
+        Bphu+veCSTFjzIA6atBxgSzGW/EnsAf+fW93S6OcjVHvTcoNtarU6khVeyXUN8Qz/yWNX2
+        0GTgv883tlu4RDxdypUP7aCd/HocOVw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-408-QQBS-wraPk-5GELsDba4IA-1; Thu, 31 Oct 2019 10:30:08 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BEE3D2EDC;
+        Thu, 31 Oct 2019 14:30:06 +0000 (UTC)
+Received: from t460s.redhat.com (unknown [10.36.118.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E1C25D6D6;
+        Thu, 31 Oct 2019 14:29:59 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arun KS <arunks@codeaurora.org>
+Subject: [PATCH v1 05/12] powerpc/pseries: CMM: Use adjust_managed_page_count() insted of totalram_pages_*
+Date:   Thu, 31 Oct 2019 15:29:26 +0100
+Message-Id: <20191031142933.10779-6-david@redhat.com>
+In-Reply-To: <20191031142933.10779-1-david@redhat.com>
+References: <20191031142933.10779-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <157252708836.3876.4604398213417262402.stgit@buzz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: QQBS-wraPk-5GELsDba4IA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 04:04:48PM +0300, Konstantin Khlebnikov wrote:
-> Function smca_configure() is called only for current cpu thus
-> rdmsr_safe_on_cpu() could be replaced with atomic rdmsr_safe().
-> 
->  BUG: sleeping function called from invalid context at kernel/sched/completion.c:99
->  in_atomic(): 1, irqs_disabled(): 1, pid: 0, name: swapper/1
->  CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.19.79-16 #1
-					     ^^^^^^^^^^
+adjust_managed_page_count() performs a totalram_pages_add(), but also
+adjust the managed pages of the zone. Let's use that instead, similar to
+virtio-balloon. Use it before freeing a page.
 
-I'm assuming you hit this on latest upstream too?
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Richard Fontana <rfontana@redhat.com>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Arun KS <arunks@codeaurora.org>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ arch/powerpc/platforms/pseries/cmm.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
->  Hardware name: GIGABYTE R181-Z90-00/MZ91-FS0-00, BIOS R11 10/25/2019
->  Call Trace:
->   dump_stack+0x5c/0x7b
->   ___might_sleep+0xec/0x110
->   wait_for_completion+0x39/0x160
->   ? __rdmsr_safe_on_cpu+0x45/0x60
->   rdmsr_safe_on_cpu+0xae/0xf0
->   ? wrmsr_on_cpus+0x20/0x20
->   ? machine_check_poll+0xfd/0x1f0
->   ? mce_amd_feature_init+0x190/0x2d0
->   mce_amd_feature_init+0x190/0x2d0
->   mcheck_cpu_init+0x11a/0x460
->   identify_cpu+0x3e2/0x560
->   identify_secondary_cpu+0x13/0x80
->   smp_store_cpu_info+0x45/0x50
->   start_secondary+0xaa/0x200
->   secondary_startup_64+0xa4/0xb0
-> 
-> Except warning in kernel log everything works fine.
-> 
-> Fixes: 5896820e0aa3 ("x86/mce/AMD, EDAC/mce_amd: Define and use tables for known SMCA IP types")
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> ---
->  arch/x86/kernel/cpu/mce/amd.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-> index 6ea7fdc82f3c..c7ab0d38af79 100644
-> --- a/arch/x86/kernel/cpu/mce/amd.c
-> +++ b/arch/x86/kernel/cpu/mce/amd.c
-> @@ -269,7 +269,7 @@ static void smca_configure(unsigned int bank, unsigned int cpu)
->  	if (smca_banks[bank].hwid)
->  		return;
->  
-> -	if (rdmsr_safe_on_cpu(cpu, MSR_AMD64_SMCA_MCx_IPID(bank), &low, &high)) {
-> +	if (rdmsr_safe(MSR_AMD64_SMCA_MCx_IPID(bank), &low, &high)) {
+diff --git a/arch/powerpc/platforms/pseries/cmm.c b/arch/powerpc/platforms/=
+pseries/cmm.c
+index 33d31e48ec15..f82c468ca2c4 100644
+--- a/arch/powerpc/platforms/pseries/cmm.c
++++ b/arch/powerpc/platforms/pseries/cmm.c
+@@ -164,7 +164,7 @@ static long cmm_alloc_pages(long nr)
+=20
+ =09=09list_add(&page->lru, &cmm_page_list);
+ =09=09loaned_pages++;
+-=09=09totalram_pages_dec();
++=09=09adjust_managed_page_count(page, -1);
+ =09=09spin_unlock(&cmm_lock);
+ =09=09nr--;
+ =09}
+@@ -191,10 +191,10 @@ static long cmm_free_pages(long nr)
+ =09=09=09break;
+ =09=09plpar_page_set_active(page);
+ =09=09list_del(&page->lru);
++=09=09adjust_managed_page_count(page, 1);
+ =09=09__free_page(page);
+ =09=09loaned_pages--;
+ =09=09nr--;
+-=09=09totalram_pages_inc();
+ =09}
+ =09spin_unlock(&cmm_lock);
+ =09cmm_dbg("End request with %ld pages unfulfilled\n", nr);
+@@ -518,10 +518,10 @@ static int cmm_mem_going_offline(void *arg)
+ =09=09=09continue;
+ =09=09plpar_page_set_active(page);
+ =09=09list_del(&page->lru);
++=09=09adjust_managed_page_count(page, 1);
+ =09=09__free_page(page);
+ =09=09freed++;
+ =09=09loaned_pages--;
+-=09=09totalram_pages_inc();
+ =09}
+=20
+ =09spin_unlock(&cmm_lock);
+--=20
+2.21.0
 
-Yazen, any objections?
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
