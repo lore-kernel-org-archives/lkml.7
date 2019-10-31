@@ -2,120 +2,123 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B70DCA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DD1CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4BF2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8BFE2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbfJaPho (ORCPT
+        id S1728364AbfJaPid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 11:37:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6392 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726735AbfJaPho (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 11:37:44 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9VFaxQF038658
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 11:37:42 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w02ab87j9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 11:37:42 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 31 Oct 2019 15:37:40 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 31 Oct 2019 15:37:36 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9VFbZ0f31653994
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Oct 2019 15:37:35 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6904452069;
-        Thu, 31 Oct 2019 15:37:35 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.194.174])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 40B7B52067;
-        Thu, 31 Oct 2019 15:37:34 +0000 (GMT)
-Subject: Re: [PATCH v3 1/9] KEYS: Defined an IMA hook to measure keys on key
- create or update
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Sasha Levin <sashal@kernel.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     dhowells@redhat.com, matthewgarrett@google.com,
-        jamorris@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        prsriva@linux.microsoft.com
-Date:   Thu, 31 Oct 2019 11:37:33 -0400
-In-Reply-To: <20191031152730.GQ1554@sasha-vm>
-References: <20191031011910.2574-1-nramas@linux.microsoft.com>
-         <20191031011910.2574-2-nramas@linux.microsoft.com>
-         <1572523831.5028.43.camel@linux.ibm.com>
-         <b83bd7ef-ce7f-e750-e30b-30d5a6469a28@linux.microsoft.com>
-         <20191031152730.GQ1554@sasha-vm>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19103115-0012-0000-0000-0000035F8748
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19103115-0013-0000-0000-0000219AD2A2
-Message-Id: <1572536253.5028.50.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-31_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910310157
+        Thu, 31 Oct 2019 11:38:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:50604 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726739AbfJaPid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 11:38:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE9AA1F1;
+        Thu, 31 Oct 2019 08:38:32 -0700 (PDT)
+Received: from [192.168.1.20] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 964123F71E;
+        Thu, 31 Oct 2019 08:38:30 -0700 (PDT)
+Subject: Re: [Patch v4 4/6] sched/fair: update cpu_capcity to reflect thermal
+ pressure
+To:     Qais Yousef <qais.yousef@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
+        ionela.voinescu@arm.com, vincent.guittot@linaro.org,
+        rui.zhang@intel.com, edubezval@gmail.com, qperret@google.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, daniel.lezcano@linaro.org
+References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
+ <1571776465-29763-5-git-send-email-thara.gopinath@linaro.org>
+ <20191023122252.dz7obopab6iizy4s@e107158-lin.cambridge.arm.com>
+ <20191028153010.GE4097@hirez.programming.kicks-ass.net>
+ <20191031105342.b3sl5xhysldfla3g@e107158-lin.cambridge.arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <e875ef90-d561-4eee-4951-6556ac89c6a2@arm.com>
+Date:   Thu, 31 Oct 2019 16:38:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191031105342.b3sl5xhysldfla3g@e107158-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-31 at 11:27 -0400, Sasha Levin wrote:
-> On Thu, Oct 31, 2019 at 08:08:48AM -0700, Lakshmi Ramasubramanian wrote:
-> >On 10/31/19 5:10 AM, Mimi Zohar wrote:
-> >
-> >>On Wed, 2019-10-30 at 18:19 -0700, Lakshmi Ramasubramanian wrote:
-> >>>Asymmetric keys used for verifying file signatures or certificates
-> >>>are currently not included in the IMA measurement list.
-> >>>
-> >>>This patch defines a new IMA hook namely ima_post_key_create_or_update()
-> >>>to measure asymmetric keys.
-> >>
-> >>It's not enough for the kernel to be able to compile the kernel after
-> >>applying all the patches in a patch set.  After applying each patch,
-> >>the kernel should build properly, otherwise it is not bi-sect safe.
-> >>  Refer to "3) Separate your changes" of
-> >>"Documentation/process/submitting-patches.rst.
-> >
-> >I started with kernel version 5.3 for this patch set.
-> >I applied Nayna's process_buffer_measurement() patch and then built my 
-> >changes on top of that.
-> >This patch has no other dependency as far as I know.
-> >
-> >Are you seeing a build break after applying this patch alone?
-> >
-> >(PATCH v3 1/9) KEYS: Defined an IMA hook to measure keys on key create 
-> >or update
+On 31.10.19 11:53, Qais Yousef wrote:
+> On 10/28/19 16:30, Peter Zijlstra wrote:
+>> On Wed, Oct 23, 2019 at 01:28:40PM +0100, Qais Yousef wrote:
+>>> On 10/22/19 16:34, Thara Gopinath wrote:
+>>>> cpu_capacity relflects the maximum available capacity of a cpu. Thermal
+>>>> pressure on a cpu means this maximum available capacity is reduced. This
+>>>> patch reduces the average thermal pressure for a cpu from its maximum
+>>>> available capacity so that cpu_capacity reflects the actual
+>>>> available capacity.
+>>>>
+>>>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+>>>> ---
+>>>>  kernel/sched/fair.c | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>>>> index 4f9c2cb..be3e802 100644
+>>>> --- a/kernel/sched/fair.c
+>>>> +++ b/kernel/sched/fair.c
+>>>> @@ -7727,6 +7727,7 @@ static unsigned long scale_rt_capacity(struct sched_domain *sd, int cpu)
+>>>>  
+>>>>  	used = READ_ONCE(rq->avg_rt.util_avg);
+>>>>  	used += READ_ONCE(rq->avg_dl.util_avg);
+>>>> +	used += READ_ONCE(rq->avg_thermal.load_avg);
+>>>
+>>> Maybe a naive question - but can we add util_avg with load_avg without
+>>> a conversion? I thought the 2 signals have different properties.
+>>
+>> Changelog of patch #1 explains, it's in that dense blob of text.
+>>
+>> But yes, you're quite right that that wants a comment here.
 > 
-> I couldn't even apply this patch: Nayna's series (v10) doesn't apply on
-> top of 5.3 to begin with, and while it does apply on mainline, this
-> first patch wouldn't apply on top.
+> Thanks for the pointer! A comment would be nice indeed.
+> 
+> To make sure I got this correctly - it's because avg_thermal.load_avg
+> represents delta_capacity which is already a 'converted' form of load. So this
+> makes avg_thermal.load_avg a util_avg really. Correct?
+> 
+> If I managed to get it right somehow. It'd be nice if we can do inverse
+> conversion on delta_capacity so that avg_thermal.{load_avg, util_avg} meaning
+> is consistent across the board. But I don't feel strongly about it if this gets
+> documented properly.
 
-Lakshmi, development is always on top of mainline.  In this case,
- please use 5.4.0-rc3 and apply Nayna's v10 patch set.
+So why can't we use rq->avg_thermal.util_avg here? Since capacity is
+closer to util than to load?
 
-Mimi
+Is it because you want to use the influence of ___update_load_sum(...,
+unsigned long load eq. per-cpu delta_capacity in your signal?
 
+Why not call it this way then?
+
+diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+index 38210691c615..d3035457483f 100644
+--- a/kernel/sched/pelt.c
++++ b/kernel/sched/pelt.c
+@@ -357,9 +357,9 @@ int update_thermal_load_avg(u64 now, struct rq *rq,
+u64 capacity)
+ {
+        if (___update_load_sum(now, &rq->avg_thermal,
+                               capacity,
+-                              capacity,
+-                              capacity)) {
+-               ___update_load_avg(&rq->avg_thermal, 1, 1);
++                              0,
++                              0)) {
++               ___update_load_avg(&rq->avg_thermal, 1, 0);
+                return 1;
+        }
