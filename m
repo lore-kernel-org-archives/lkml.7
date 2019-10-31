@@ -2,86 +2,155 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 942B2CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E677CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564B620873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:27:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="S8uM4Cu6"
+	by mail.kernel.org (Postfix) with ESMTP id 3F973208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:29:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572535740;
+	bh=3Fy76G15PXb8LcDmK2CX1fWHFEEza+FfjYy5AOkePTk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=NBzmUKedN/XcjWPEYZ4ck/CXS724uoqcQSQx83Oty1MyzdQVQ1DhLj3IC4pNC1psT
+	 mnbrGCNsv+5CxA/wrrrURLV/CiYpKTlek9SxZts57O0mqn6zh8j2FRSXsvs9+tixlK
+	 MPBW4zwCurAiYKTewzm+W24sz/wNqBNXqsyPx4nE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbfJaP1t (ORCPT
+        id S1728360AbfJaP27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 11:27:49 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:49938 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728274AbfJaP1t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 11:27:49 -0400
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 3414920B7192;
-        Thu, 31 Oct 2019 08:27:48 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3414920B7192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1572535668;
-        bh=PSOfNbhonJxnlQ8FQZ6akUmZvFLh3Q/fwlVELiDODGs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=S8uM4Cu6ZThFH0ta8hY1CBsCcxeittxOpA2tkQJciOM57UWWwgifMp+XbxJrwPbKQ
-         Tzakp2WTibrZ38y5COPyO/bGmzfqY+kdXKkmp80AcjnogM94/G7d8KPHMaAzuKCNiA
-         BbcoWzddT5ed8PKKDW72RS4VxM+okx4/FCK/0eTc=
-Subject: Re: [PATCH v3 1/9] KEYS: Defined an IMA hook to measure keys on key
- create or update
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     zohar@linux.ibm.com, dhowells@redhat.com,
-        matthewgarrett@google.com, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        prsriva@linux.microsoft.com
-References: <20191031011910.2574-1-nramas@linux.microsoft.com>
- <20191031011910.2574-2-nramas@linux.microsoft.com>
- <20191031091041.GO1554@sasha-vm>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <af591616-ac80-c862-6822-d11addeabb91@linux.microsoft.com>
-Date:   Thu, 31 Oct 2019 08:27:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 31 Oct 2019 11:28:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726602AbfJaP26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 11:28:58 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F86020873;
+        Thu, 31 Oct 2019 15:28:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572535737;
+        bh=3Fy76G15PXb8LcDmK2CX1fWHFEEza+FfjYy5AOkePTk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Rrnyxt5l5ZYI0bR9uuyL1BPMvPDN4eidQi38MY4CsARlIPik+bSdlt3qTq671WTn8
+         KxXtu7vnpvLTBXiAluRcNFBTAGeVSg/6HHDP73MYk7VHDfJSMGqhIw28YdTuGJ1Bof
+         I/wpmFgDGXAP35meQ34unk4P5gxI5meW500GkvFs=
+Message-ID: <59ac4d5bebe67f66f072bf6d3e9fa7f0d0b38d0c.camel@kernel.org>
+Subject: Re: [PATCH] ceph: don't allow copy_file_range when stripe_count != 1
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 31 Oct 2019 11:28:55 -0400
+In-Reply-To: <20191031114939.24462-1-lhenriques@suse.com>
+References: <20191031114939.24462-1-lhenriques@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20191031091041.GO1554@sasha-vm>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/31/19 2:10 AM, Sasha Levin wrote:
-
-Hi Sasha,
-
-> On Wed, Oct 30, 2019 at 06:19:02PM -0700, Lakshmi Ramasubramanian wrote:
->> Asymmetric keys used for verifying file signatures or certificates
->> are currently not included in the IMA measurement list.
->>
->> This patch defines a new IMA hook namely ima_post_key_create_or_update()
->> to measure asymmetric keys.
->>
->> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+On Thu, 2019-10-31 at 11:49 +0000, Luis Henriques wrote:
+> copy_file_range tries to use the OSD 'copy-from' operation, which simply
+> performs a full object copy.  Unfortunately, the implementation of this
+> system call assumes that stripe_count is always set to 1 and doesn't take
+> into account that the data may be striped across an object set.  If the
+> file layout has stripe_count different from 1, then the destination file
+> data will be corrupted.
 > 
-> What are the prerequisites for this patch?
+> For example:
+> 
+> Consider a 8 MiB file with 4 MiB object size, stripe_count of 2 and
+> stripe_size of 2 MiB; the first half of the file will be filled with 'A's
+> and the second half will be filled with 'B's:
+> 
+>                0      4M     8M       Obj1     Obj2
+>                +------+------+       +----+   +----+
+>         file:  | AAAA | BBBB |       | AA |   | AA |
+>                +------+------+       |----|   |----|
+>                                      | BB |   | BB |
+>                                      +----+   +----+
+> 
+> If we copy_file_range this file into a new file (which needs to have the
+> same file layout!), then it will start by copying the object starting at
+> file offset 0 (Obj1).  And then it will copy the object starting at file
+> offset 4M -- which is Obj1 again.
+> 
+> Unfortunately, the solution for this is to not allow remote object copies
+> to be performed when the file layout stripe_count is not 1 and simply
+> fallback to the default (VFS) copy_file_range implementation.
+> 
+> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> ---
+> Hi Jeff,
+> 
+> I hope my understanding of the whole file striping in CephFS is correct;
+> I had to go re-read the whole thing to refresh my memory.
+> 
+> Anyway, I guess that this is not really the only solution to this
+> problem, but it's definitely the simplest one.  copy_file_range is
+> already way more complex that I had ever anticipated.  I would rather
+> keep this simple solution instead of adding more complexity and cover
+> more corner cases.  But yeah, we may want to revisit this in the
+> future...
+> 
+> [OOT: files layout is probably one of the biggest headaches to sort out
+>  the day we want to implement something like FIEMAP on CephFS ;-) ]
+> 
+> Cheers,
+> --
+> Luis
+> 
+>  fs/ceph/file.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> index d277f71abe0b..3b0e6f9eb6a6 100644
+> --- a/fs/ceph/file.c
+> +++ b/fs/ceph/file.c
+> @@ -1957,9 +1957,12 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>  		return -EOPNOTSUPP;
+>  
+>  	if ((src_ci->i_layout.stripe_unit != dst_ci->i_layout.stripe_unit) ||
+> -	    (src_ci->i_layout.stripe_count != dst_ci->i_layout.stripe_count) ||
+> -	    (src_ci->i_layout.object_size != dst_ci->i_layout.object_size))
+> +	    (src_ci->i_layout.stripe_count != 1) ||
+> +	    (dst_ci->i_layout.stripe_count != 1) ||
+> +	    (src_ci->i_layout.object_size != dst_ci->i_layout.object_size)) {
+> +		dout("Invalid src/dst files layout\n");
+>  		return -EOPNOTSUPP;
+> +	}
+>  
+>  	if (len < src_ci->i_layout.object_size)
+>  		return -EOPNOTSUPP; /* no remote copy will be done */
 
-I built this patch set on kernel v5.3
+I'm fine with restricting CFR to very simple cases, at least initially.
+We can always expand it later once the need becomes clear.
 
-I applied the following patch provided by Nayna Jain@IBM and then added 
-my changes:
+That said, we should probably add a comment explaining why we're
+excluding cases where the stripe count != 1 here. It doesn't need to
+contain the whole commit log message you wrote, but anyone that does
+want to improve this later might appreciate some breadcrumbs.
 
-	[PATCH v9 5/8] ima: make process_buffer_measurement() generic
+Maybe something like:
 
-thanks,
-  -lakshmi
+/*
+ * Striped file layouts require that we copy partial objects,
+ * but the OSD copy-from operation only supports full-object copies.
+ * Limit this to non-striped file layouts for now.
+ */
+
+If that sounds ok, I'll add that in and merge this later today.
+
+Thanks,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
