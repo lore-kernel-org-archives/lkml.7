@@ -2,148 +2,180 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E88CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F364ECA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 132D52083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:41:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UiNMy1tM"
+	by mail.kernel.org (Postfix) with ESMTP id D23732086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:44:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfJaJlI (ORCPT
+        id S1727192AbfJaJoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 05:41:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32400 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726864AbfJaJlH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 05:41:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572514865;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FphYlGHf0GOBbNL99gSzHiqeOzgs9Hepno3U9ekZfgk=;
-        b=UiNMy1tM15M00E9bwA6cbRF4S/yXCJrmsU0yrXJeFWuQR2kVX+uk2Zm3/rS2xTfxbZ0Gsg
-        6fc6ayNxLPn7tr+xEtiPrBP49NTJGlP4f7NGfOzQfh3qCVbCM5ja4IXMVcuGW+o71IwQS4
-        uTC2eLdz3dfE8ZGFDv4AAaIqeRXtvkQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-148-FFvMLDcLMMOOAmBqX6VMqQ-1; Thu, 31 Oct 2019 05:41:01 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 91647800D49;
-        Thu, 31 Oct 2019 09:40:59 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-31.pek2.redhat.com [10.72.12.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 339045D6A3;
-        Thu, 31 Oct 2019 09:40:39 +0000 (UTC)
-Subject: Re: [PATCH 1/2 RESEND v8] x86/kdump: always reserve the low 1M when
- the crashkernel option is specified
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, x86@kernel.org, bhe@redhat.com, dyoung@redhat.com,
-        jgross@suse.com, dhowells@redhat.com, Thomas.Lendacky@amd.com,
-        ebiederm@xmission.com, vgoyal@redhat.com, d.hatayama@fujitsu.com,
-        horms@verge.net.au, kexec@lists.infradead.org
-References: <20191031033517.11282-1-lijiang@redhat.com>
- <20191031033517.11282-2-lijiang@redhat.com>
- <20191031071345.GA17248@nazgul.tnic>
-From:   lijiang <lijiang@redhat.com>
-Message-ID: <fe68b796-c483-20c4-623c-2671c52a3bf9@redhat.com>
-Date:   Thu, 31 Oct 2019 17:40:35 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 31 Oct 2019 05:44:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:46318 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726949AbfJaJoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 05:44:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF3531F1;
+        Thu, 31 Oct 2019 02:44:22 -0700 (PDT)
+Received: from localhost (e108754-lin.cambridge.arm.com [10.1.199.68])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F5FE3F719;
+        Thu, 31 Oct 2019 02:44:22 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 09:44:20 +0000
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
+        rui.zhang@intel.com, edubezval@gmail.com, qperret@google.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, daniel.lezcano@linaro.org
+Subject: Re: [Patch v4 0/6] Introduce Thermal Pressure
+Message-ID: <20191031094420.GA19197@e108754-lin>
+References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20191031071345.GA17248@nazgul.tnic>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: FFvMLDcLMMOOAmBqX6VMqQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E5=9C=A8 2019=E5=B9=B410=E6=9C=8831=E6=97=A5 15:13, Borislav Petkov =E5=86=
-=99=E9=81=93:
-> Please do not merge a 0day bot fix with another patch of yours which
-> does not cause it in the first place. When you look at this patch alone,
-> what do you think the Reported-by tag means, if anything at all?
->=20
-Thanks for your suggestions.
+Hi Thara,
 
-Maybe it should be a separate patch to fix the old compile warnings as foll=
-ow.
-And i should put the patch into this series.
+On Tuesday 22 Oct 2019 at 16:34:19 (-0400), Thara Gopinath wrote:
+> Thermal governors can respond to an overheat event of a cpu by
+> capping the cpu's maximum possible frequency. This in turn
+> means that the maximum available compute capacity of the
+> cpu is restricted. But today in the kernel, task scheduler is 
+> not notified of capping of maximum frequency of a cpu.
+> In other words, scheduler is unware of maximum capacity
 
+Nit: s/unware/unaware
 
-commit d2091d1f4f67f1c38293b0e93fdbfefa766940cf (HEAD -> master)
-Author: Lianbo Jiang <lijiang@redhat.com>
-Date:   Thu Oct 31 15:48:02 2019 +0800
+> restrictions placed on a cpu due to thermal activity.
+> This patch series attempts to address this issue.
+> The benefits identified are better task placement among available
+> cpus in event of overheating which in turn leads to better
+> performance numbers.
+> 
+> The reduction in the maximum possible capacity of a cpu due to a 
+> thermal event can be considered as thermal pressure. Instantaneous
+> thermal pressure is hard to record and can sometime be erroneous
+> as there can be mismatch between the actual capping of capacity
+> and scheduler recording it. Thus solution is to have a weighted
+> average per cpu value for thermal pressure over time.
+> The weight reflects the amount of time the cpu has spent at a
+> capped maximum frequency. Since thermal pressure is recorded as
+> an average, it must be decayed periodically. Exisiting algorithm
+> in the kernel scheduler pelt framework is re-used to calculate
+> the weighted average. This patch series also defines a sysctl
+> inerface to allow for a configurable decay period.
+> 
+> Regarding testing, basic build, boot and sanity testing have been
+> performed on db845c platform with debian file system.
+> Further, dhrystone and hackbench tests have been
+> run with the thermal pressure algorithm. During testing, due to
+> constraints of step wise governor in dealing with big little systems,
+> trip point 0 temperature was made assymetric between cpus in little
+> cluster and big cluster; the idea being that
+> big core will heat up and cpu cooling device will throttle the
+> frequency of the big cores faster, there by limiting the maximum available
+> capacity and the scheduler will spread out tasks to little cores as well.
+>
 
-    kexec: Fix i386 build warnings that missed declaration of struct kimage
-   =20
-    Kbuild test robot reported some build warnings, please refer to the
-    Link below for details.
-   =20
-    Add a declaration of struct kimage to fix these compile warnings.
-   =20
-    Fixes: dd5f726076cc ("kexec: support for kexec on panic using new syste=
-m call")
-    Reported-by: kbuild test robot <lkp@intel.com>
-    Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-    Link: https://lkml.org/lkml/2019/10/30/833
+Can you please share the changes you've made to sdm845.dtsi and a kernel
+base on top of which to apply your patches? I would like to reproduce
+your results and run more tests and it would be good if our setups were
+as close as possible.
 
-diff --git a/arch/x86/include/asm/crash.h b/arch/x86/include/asm/crash.h
-index 0acf5ee45a21..ef5638f641f2 100644
---- a/arch/x86/include/asm/crash.h
-+++ b/arch/x86/include/asm/crash.h
-@@ -2,6 +2,8 @@
- #ifndef _ASM_X86_CRASH_H
- #define _ASM_X86_CRASH_H
-=20
-+struct kimage;
-+
- int crash_load_segments(struct kimage *image);
- int crash_copy_backup_region(struct kimage *image);
- int crash_setup_memmap_entries(struct kimage *image,
+> Test Results
+> 
+> Hackbench: 1 group , 30000 loops, 10 runs       
+>                                                Result         SD             
+>                                                (Secs)     (% of mean)     
+>  No Thermal Pressure                            14.03       2.69%           
+>  Thermal Pressure PELT Algo. Decay : 32 ms      13.29       0.56%         
+>  Thermal Pressure PELT Algo. Decay : 64 ms      12.57       1.56%           
+>  Thermal Pressure PELT Algo. Decay : 128 ms     12.71       1.04%         
+>  Thermal Pressure PELT Algo. Decay : 256 ms     12.29       1.42%           
+>  Thermal Pressure PELT Algo. Decay : 512 ms     12.42       1.15%  
+> 
+> Dhrystone Run Time  : 20 threads, 3000 MLOOPS
+>                                                  Result      SD             
+>                                                  (Secs)    (% of mean)     
+>  No Thermal Pressure                              9.452      4.49%
+>  Thermal Pressure PELT Algo. Decay : 32 ms        8.793      5.30%
+>  Thermal Pressure PELT Algo. Decay : 64 ms        8.981      5.29%
+>  Thermal Pressure PELT Algo. Decay : 128 ms       8.647      6.62%
+>  Thermal Pressure PELT Algo. Decay : 256 ms       8.774      6.45%
+>  Thermal Pressure PELT Algo. Decay : 512 ms       8.603      5.41%  
+>
 
-> Also, it is not a "RESEND" if you change them. You can call them v8.1 or
-> whatever to denote that the change is small.
->=20
-Thanks for your explanation in detail.
+Do you happen to know by how much the CPUs were capped during these
+experiments?
 
-> Also, do not send v9 or v8.1 or whatever, immediately but wait for other
-> reviews.
+Thanks,
+Ionela.
 
-OK. Lets wait a week or more.
-
-> You have sent these patches 4(!) times in this week alone. How
-> would you feel if I hammer your inbox with patches on a daily basis?
->Probably because the change is small.
-
-Anyway, so sorry, it seems inconsiderate.
-
-> You can read
->=20
-> https://www.kernel.org/doc/html/latest/process/submitting-patches.html
->=20
-> in the meantime, especially section
->=20
-> "9) Don't get discouraged - or impatient"
->=20
-> while waiting.
-
-OK. Thanks.
-
-Lianbo
-
+> A Brief History
+> 
+> The first version of this patch-series was posted with resuing
+> PELT algorithm to decay thermal pressure signal. The discussions
+> that followed were around whether intanteneous thermal pressure
+> solution is better and whether a stand-alone algortihm to accumulate
+> and decay thermal pressure is more appropriate than re-using the
+> PELT framework. 
+> Tests on Hikey960 showed the stand-alone algorithm performing slightly
+> better than resuing PELT algorithm and V2 was posted with the stand
+> alone algorithm. Test results were shared as part of this series.
+> Discussions were around re-using PELT algorithm and running
+> further tests with more granular decay period.
+> 
+> For some time after this development was impeded due to hardware
+> unavailability, some other unforseen and possibly unfortunate events.
+> For this version, h/w was switched from hikey960 to db845c.
+> Also Instantaneous thermal pressure was never tested as part of this
+> cycle as it is clear that weighted average is a better implementation.
+> The non-PELT algorithm never gave any conclusive results to prove that it
+> is better than reusing PELT algorithm, in this round of testing.
+> Also reusing PELT algorithm means thermal pressure tracks the
+> other utilization signals in the scheduler.
+> 
+> v3->v4:
+> 	- "Patch 3/7:sched: Initialize per cpu thermal pressure structure"
+> 	   is dropped as it is no longer needed following changes in other
+> 	   other patches.
+> 	- rest of the change log mentioned in specific patches.
+> 
+> Thara Gopinath (6):
+>   sched/pelt.c: Add support to track thermal pressure
+>   sched: Add infrastructure to store and update instantaneous thermal
+>     pressure
+>   sched/fair: Enable CFS periodic tick to update thermal pressure
+>   sched/fair: update cpu_capcity to reflect thermal pressure
+>   thermal/cpu-cooling: Update thermal pressure in case of a maximum
+>     frequency capping
+>   sched: thermal: Enable tuning of decay period
+> 
+>  Documentation/admin-guide/kernel-parameters.txt |  5 ++
+>  drivers/thermal/cpu_cooling.c                   | 31 ++++++++++-
+>  include/linux/sched.h                           |  8 +++
+>  kernel/sched/Makefile                           |  2 +-
+>  kernel/sched/fair.c                             |  6 +++
+>  kernel/sched/pelt.c                             | 13 +++++
+>  kernel/sched/pelt.h                             |  7 +++
+>  kernel/sched/sched.h                            |  1 +
+>  kernel/sched/thermal.c                          | 68 +++++++++++++++++++++++++
+>  kernel/sched/thermal.h                          | 13 +++++
+>  10 files changed, 151 insertions(+), 3 deletions(-)
+>  create mode 100644 kernel/sched/thermal.c
+>  create mode 100644 kernel/sched/thermal.h
+> 
+> -- 
+> 2.1.4
+> 
