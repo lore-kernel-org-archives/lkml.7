@@ -6,48 +6,54 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AEDCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC05CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDDE520862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8916620862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbfJaNjZ (ORCPT
+        id S1727573AbfJaNkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:39:25 -0400
-Received: from verein.lst.de ([213.95.11.211]:51051 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727051AbfJaNjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:39:25 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9831E68BE1; Thu, 31 Oct 2019 14:39:21 +0100 (CET)
-Date:   Thu, 31 Oct 2019 14:39:21 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Charles Machalow <csm10495@gmail.com>
-Cc:     linux-nvme@lists.infradead.org, marta.rybczynska@kalray.eu,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nvme: change nvme_passthru_cmd64's result field.
-Message-ID: <20191031133921.GA4763@lst.de>
-References: <20191031050338.12700-1-csm10495@gmail.com>
+        Thu, 31 Oct 2019 09:40:47 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40512 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726803AbfJaNkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 09:40:47 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 670877ED1617A348749B;
+        Thu, 31 Oct 2019 21:40:43 +0800 (CST)
+Received: from [127.0.0.1] (10.133.219.218) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 31 Oct 2019
+ 21:40:38 +0800
+Message-ID: <5DBAE455.30406@huawei.com>
+Date:   Thu, 31 Oct 2019 21:40:37 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031050338.12700-1-csm10495@gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+To:     Mark Brown <broonie@kernel.org>
+CC:     <bardliao@realtek.com>, <oder_chiou@realtek.com>,
+        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: rt5677: Make rt5677_spi_pcm_page static
+References: <1571919319-4205-1-git-send-email-zhongjiang@huawei.com> <20191031132010.GR4568@sirena.org.uk>
+In-Reply-To: <20191031132010.GR4568@sirena.org.uk>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.219.218]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 10:03:38PM -0700, Charles Machalow wrote:
-> Changing nvme_passthru_cmd64's result field to be backwards compatible
-> with the nvme_passthru_cmd/nvme_admin_cmd struct in terms of the result
-> field. With this change the first 32 bits of result in either case
-> point to CQE DW0. This allows userspace tools to use the new structure
-> when using the old ADMIN/IO_CMD ioctls or new ADMIN/IO_CMD64 ioctls.
+On 2019/10/31 21:20, Mark Brown wrote:
+> On Thu, Oct 24, 2019 at 08:15:19PM +0800, zhong jiang wrote:
+>> The GCC complains the following warning.
+>>
+>> sound/soc/codecs/rt5677-spi.c:365:13: warning: symbol 'rt5677_spi_pcm_page' was not declared. Should it be static?
+> It looks like this has been fixed already in the latest code.
+Yes,  I has noticed that. 
 
-All that casting is a pretty bad idea.  please just add an explicit
-reserved field before the result, and check that it always is zero
-in the ioctl handler.
+Thanks,
+zhong jiang
+
