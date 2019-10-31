@@ -2,135 +2,140 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922FCCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A2FCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A4620873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:23:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572528230;
-	bh=P3Rii6c7SAQxMHQQILmOf1SC2L267cmZkQ9U08b8l8c=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=cCYW7e843q7oIqxJ7mTo2cyD/qXhv1rZsjEOpOYg1ZMX3FmJz/bJXuo7WtH+kb3my
-	 kG56xhQbTKkM8l0cyUzyy1xUlOPZKKUoJV0OMj6wsyVpCJQV20tbl2/3+/XqYxR8cG
-	 FBwuec/VjhhH0I/U3WEkFLo6hXTaHbQKUiJnvj7M=
+	by mail.kernel.org (Postfix) with ESMTP id 5D06E2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:24:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bRmgPup5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfJaNXt (ORCPT
+        id S1727405AbfJaNYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:23:49 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56112 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfJaNXs (ORCPT
+        Thu, 31 Oct 2019 09:24:02 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38579 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbfJaNYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:23:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=cX2GQwx79KGhyI+8o2ddFRP7SU55uxLjju8Bx0zNqbU=; b=w1GXU7OLZ6V9
-        NOlCeGWK+uVSClvkjcRzuo/o3l28fh9fTqmntUC3CxAMXZbyyEhVLz8thrd9JSq8WC+IZJcgUheOy
-        AswowT/c5ZDEURBcNqn1LcApNg7ae2XT2Rahmf+6bGkCr7jeSdXSFfIcLmWo8tdC2FrqIB2gHcbzX
-        fViD0=;
-Received: from [91.217.168.176] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1iQAQQ-0007p7-C8; Thu, 31 Oct 2019 13:23:42 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 100F1D020AA; Thu, 31 Oct 2019 13:23:42 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Luhua Xu <luhua.xu@mediatek.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        wsd_upstream@mediatek.com
-Subject: Applied "spi: add power control when set_cs" to the spi tree
-In-Reply-To: <1572426234-30019-1-git-send-email-luhua.xu@mediatek.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20191031132342.100F1D020AA@fitzroy.sirena.org.uk>
-Date:   Thu, 31 Oct 2019 13:23:42 +0000 (GMT)
+        Thu, 31 Oct 2019 09:24:02 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c13so4376102pfp.5
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 06:24:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3/3zefGdd/m7PrcI6IIG3Bg/D+mngne/UflLyB/7dd8=;
+        b=bRmgPup583Mc6OobDi/6C5sQsjDtV2HyjRVNLtJtqZ4S0SRGxQYqnKcIiBTJfjxTde
+         9RNI0VlfO0aYbT0P/KtvSXja9GmpA9OkorPOD2UvwTIL9dLdSl8PWSwgFwFl43VhD8DY
+         XqZZha0G9zgo79ITCjc5VL1KOtqkBFYVLgMLsio+vdnggwYRyGzPcgdgRnQWbKARadTc
+         WGKuTK5tDnFNP8vhICOtWb7mqYAphf4pt6Zc29T+O7U+QjcPSezoCqxWSzSZoVE9Joy9
+         OAE8B7zHEYbTP3ruUpx7UNfkqsIPfBkp/H99wgigHfXjsx9i25ot7RLsQ1uExSmKPSLY
+         +7rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3/3zefGdd/m7PrcI6IIG3Bg/D+mngne/UflLyB/7dd8=;
+        b=qetFSvcgcbSZPlH7jwstClIdGGe6q695rhhqo1cA1bPhMuoqvP8I4+ynqxMh4qapqX
+         GCPVne0FIYWB8zP5UN6Fxyv2Cq4kGOOWCUtDYRBVcELUB4MIxYXwozQWiYdvhUZuSUKi
+         n2nUiWDvW8Bjt6ZNzK7/NzdXnlXNdNNfgEJJE8fzNJMaLs4Xp569XQYcWUk7PbDX0TZV
+         YN8SrxRLlAfMq3QpFRs5e8sAKCDgyP0SJu3nsQvAFbr2chCxez3GJUCfqO4kGpHWaKIZ
+         9+QzjPOdCvYvoiT6H9+pHdvC17Dj00vVKvrHoYU7TlgWDftsbPrx4X9+ya4u14ePvzYm
+         GkzA==
+X-Gm-Message-State: APjAAAUANBBeMdwGWY0N5qbC694TOb3ky4AqenLSDwwGZsgvFHkMQOBc
+        CzNzJ7B0+ieT7FrgLOfU6jCl
+X-Google-Smtp-Source: APXvYqyPg398pV24unnlRJA8FSF5mvJIArjEkUPaba1ia8tYVRPfcaewJy2LErl1WsFc3V1vvL88Nw==
+X-Received: by 2002:a17:90a:eac8:: with SMTP id ev8mr7184114pjb.99.1572528241163;
+        Thu, 31 Oct 2019 06:24:01 -0700 (PDT)
+Received: from mani ([103.59.133.81])
+        by smtp.gmail.com with ESMTPSA id q11sm3173306pgq.71.2019.10.31.06.23.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 31 Oct 2019 06:24:00 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 18:53:52 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org, sakari.ailus@iki.fi,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v4 0/2] Add IMX296 CMOS image sensor support
+Message-ID: <20191031132352.GA24273@mani>
+References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
+ <20191031131644.GA8917@pendragon.ideasonboard.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031131644.GA8917@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hi Laurent,
+On Thu, Oct 31, 2019 at 03:16:44PM +0200, Laurent Pinchart wrote:
+> Hi Mani,
+> 
+> Thank you for the patches.
+> 
+> On Wed, Oct 30, 2019 at 03:19:00PM +0530, Manivannan Sadhasivam wrote:
+> > Hello,
+> > 
+> > This patchset adds support for IMX296 CMOS image sensor from Sony.
+> > Sensor can be programmed through I2C and 4-wire interface but the
+> > current driver only supports I2C interface. The sensor is
+> > capable of outputting frames in CSI2 format (1 Lane). In the case
+> > of sensor resolution, driver only supports 1440x1088 at 30 FPS.
+> > 
+> > The driver has been validated using Framos IMX296 module interfaced to
+> > 96Boards Dragonboard410c.
+> 
+> I've just been made aware of your work. I also worked on an IMX296
+> sensor driver in parallel, which I will post to the list. My driver
+> doesn't hardcode the resolution but computes register values at runtime,
+> so I wonder if it could be a better option. I'll post it now.
+> 
 
-   spi: add power control when set_cs
+I'm fine with it. The reason the driver is simple in the first place is, that's
+how my usual workflow is. Start small and build it big ;-)
 
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Anyway, I'm happy if your driver gets in.
 
 Thanks,
-Mark
+Mani
 
-From d948e6ca189985495a21cd622c31e30e72b6b688 Mon Sep 17 00:00:00 2001
-From: Luhua Xu <luhua.xu@mediatek.com>
-Date: Wed, 30 Oct 2019 17:03:54 +0800
-Subject: [PATCH] spi: add power control when set_cs
-
-As to set_cs takes effect immediately, power spi
-is needed when setup spi.
-
-Cc: Mark Brown <broonie@kernel.org>
-Signed-off-by: Luhua Xu <luhua.xu@mediatek.com>
-Link: https://lore.kernel.org/r/1572426234-30019-1-git-send-email-luhua.xu@mediatek.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 5ba19ef809c2..294d0038eea6 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -3261,7 +3261,20 @@ int spi_setup(struct spi_device *spi)
- 	if (spi->controller->setup)
- 		status = spi->controller->setup(spi);
- 
--	spi_set_cs(spi, false);
-+	if (spi->controller->auto_runtime_pm && spi->controller->set_cs) {
-+		status = pm_runtime_get_sync(spi->controller->dev.parent);
-+		if (status < 0) {
-+			pm_runtime_put_noidle(spi->controller->dev.parent);
-+			dev_err(&spi->controller->dev, "Failed to power device: %d\n",
-+				status);
-+			return status;
-+		}
-+		spi_set_cs(spi, false);
-+		pm_runtime_mark_last_busy(spi->controller->dev.parent);
-+		pm_runtime_put_autosuspend(spi->controller->dev.parent);
-+	} else {
-+		spi_set_cs(spi, false);
-+	}
- 
- 	if (spi->rt && !spi->controller->rt) {
- 		spi->controller->rt = true;
--- 
-2.20.1
-
+> > Changes in v4:
+> > 
+> > * Fixed issues related to gain settings and few misc cleanups in driver
+> > * Documented port node and removed maxItems, default prop from dt binding
+> >   as per the review
+> > 
+> > Changes in v3:
+> > 
+> > * Fixed the reference to video-interfaces.txt in binding.
+> > 
+> > Changes in v2:
+> > 
+> > * Switched to YAML binding
+> > 
+> > Manivannan Sadhasivam (2):
+> >   dt-bindings: media: i2c: Add IMX296 CMOS sensor binding
+> >   media: i2c: Add IMX296 CMOS image sensor driver
+> > 
+> >  .../devicetree/bindings/media/i2c/imx296.yaml |  94 +++
+> >  MAINTAINERS                                   |   8 +
+> >  drivers/media/i2c/Kconfig                     |  11 +
+> >  drivers/media/i2c/Makefile                    |   1 +
+> >  drivers/media/i2c/imx296.c                    | 715 ++++++++++++++++++
+> >  5 files changed, 829 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >  create mode 100644 drivers/media/i2c/imx296.c
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
