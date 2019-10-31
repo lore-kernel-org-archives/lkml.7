@@ -2,72 +2,87 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13710CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF04CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E18AF208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA20217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 15:11:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bF10RdFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbfJaPJz (ORCPT
+        id S1728138AbfJaPLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 11:09:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49684 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726540AbfJaPJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 11:09:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C1D0DB6A3;
-        Thu, 31 Oct 2019 15:09:53 +0000 (UTC)
-Date:   Thu, 31 Oct 2019 16:09:52 +0100
-From:   Petr Mladek <pmladek@suse.com>
+        Thu, 31 Oct 2019 11:11:40 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23461 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726540AbfJaPLj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 11:11:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572534698;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0VSvvKijFyEH1t8VcmSOVjO1qeKSdmMeXOa2d+3aPNU=;
+        b=bF10RdFcKMbwzfOuKbcmZMbmc96bFYHLyzbuVYIQPghzHW2bkGhRf/zkwLVspTrEqxPxOH
+        KsxMB8dOWhd5p0MxPAbI0vhrukYLap0QJDV29vIRNqDShzq80Sgy/OZFnkCXjc4aLWUMr/
+        p9opYneY/SKjt6ol/inRREzD82gTaj4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-25-0p8D1KgMMzyGyZWARpBKrw-1; Thu, 31 Oct 2019 11:11:32 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE7A51800D6B;
+        Thu, 31 Oct 2019 15:11:30 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-40.rdu2.redhat.com [10.10.121.40])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DED1360852;
+        Thu, 31 Oct 2019 15:11:27 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <4892d186-8eb0-a282-e7e6-e79958431a54@rasmusvillemoes.dk>
+References: <4892d186-8eb0-a282-e7e6-e79958431a54@rasmusvillemoes.dk> <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk> <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk> <CAOi1vP97DMX8zweOLfBDOFstrjC78=6RgxK3PPj_mehCOSeoaw@mail.gmail.com>
 To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
-        Joe Perches <joe@perches.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH] MAINTAINERS: Add VSPRINTF
-Message-ID: <20191031150952.3ag6qa5y4wvikd76@pathway.suse.cz>
-References: <20191031133337.9306-1-pmladek@suse.com>
- <975eccc7-897c-fd14-ef4f-2486729eb67c@rasmusvillemoes.dk>
- <20191031145112.thphlpnjvnykbzyy@pathway.suse.cz>
+Cc:     dhowells@redhat.com, Ilya Dryomov <idryomov@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-api@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring, not cursor and length [ver #2]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031145112.thphlpnjvnykbzyy@pathway.suse.cz>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-ID: <16619.1572534687.1@warthog.procyon.org.uk>
+Date:   Thu, 31 Oct 2019 15:11:27 +0000
+Message-ID: <16620.1572534687@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: 0p8D1KgMMzyGyZWARpBKrw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-10-31 15:51:12, Petr Mladek wrote:
-> On Thu 2019-10-31 14:51:24, Rasmus Villemoes wrote:
-> > On 31/10/2019 14.33, Petr Mladek wrote:
-> > > printk maintainers have been reviewing patches against vsprintf code last
-> > > few years. Most changes have been committed via printk.git last two years.
-> > > 
-> > > New group is used because printk() is not the only vsprintf() user.
-> > > Also the group of interested people is not the same.
-> > 
-> > Can you add
-> > 
-> > R: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> 
-> Sure. The more reviewers the better :-)
+How about:
 
-I acutally wanted to add also
+ * We use head and tail indices that aren't masked off, except at the
+ * point of dereference, but rather they're allowed to wrap naturally.
+ * This means there isn't a dead spot in the buffer, provided the ring
+ * size is a power of two and <=3D 2^31.
 
-R: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+David
 
-Best Regards,
-Petr
