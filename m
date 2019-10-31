@@ -2,163 +2,134 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4ACDCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63B3CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8252086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 811A4208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:51:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="YhpkCoNh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U2TKDuN0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbfJaSuf (ORCPT
+        id S1729362AbfJaSvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:50:35 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46006 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729212AbfJaSuf (ORCPT
+        Thu, 31 Oct 2019 14:51:01 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46910 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729212AbfJaSvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:50:35 -0400
-Received: by mail-qk1-f196.google.com with SMTP id q70so8062212qke.12
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 11:50:34 -0700 (PDT)
+        Thu, 31 Oct 2019 14:51:00 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f19so4601953pgn.13
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 11:51:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HL/+3TtlUY1A9lUd/n5KjV5oIbKxu8POm6GzA/Cv8p0=;
-        b=YhpkCoNhtZs5VLLKPePnAM8a5lfYvgFg/34vWbBuBAldDoGvbi2CvVKJ8y4/il/p+1
-         CuLKmvZ7smzN3gY9z2QqP716U8OIEQFad4Ni6dqMkGr7ZGm8cvfywxxCkw9lQGcpGUBi
-         iYCOAYWYpQmtOkRgiY66Dpt7+BzecLM5VyxLrNVKU3b1pb3UDfdwgLJSOmiBatIR5liT
-         fcDzadRoupTCNGIg7CClpjz/5u4j8MRjvfPWVIRjKB+xhOSyToGd7bcpqwSFL5mxrjoa
-         c2aWxokVVj5Wtt6Qz80jQXpzwccDvURy19xxRd8TwXFNBEXWsVBe2YAPGi5hyUKtOVHY
-         2QRg==
+         :content-disposition:in-reply-to;
+        bh=XLz57lIGfqKC3M6vFm45BqnBpRbJgKKmWPNYd03gHyA=;
+        b=U2TKDuN0RJmVAnuvG7Px5NI6yW31xNfitR+DvSRcuEo5LiNb1Uc0TjnEQoBYpL89In
+         PMO11+PznOEDVzggBnrEOQBNo+Of9EO+hD1mPT70iqm/4Jos47wL6/oQvFtLUA3rGY0v
+         ZkbaqfaS9F6hE8KYe0TrXClhTCqM2mdOESFW0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HL/+3TtlUY1A9lUd/n5KjV5oIbKxu8POm6GzA/Cv8p0=;
-        b=Vauyuzhv71CLdChGZatUHS6VK19Oi62m+tnnHPeO878ucMBuCIxsWagF9UR2MOOT8s
-         SToeIokxd1GgtN1c/E1oiIFpEvSnpPSnv90AQF20ItlQltkc3d3tf5IsUrwgyuYTEDvd
-         5XD3HA4Ri0HPAZvKzoVu4GdfHhbf0CGR9rT1smtSciSzZkcqt7Y8ELU2tmo842MkjisC
-         4DYYZSV9x7EpCmB9BBVMAxRvYbdBKChvwmKH5UM1UwNgdb5ab4Wk3B5/F4nRpu8Sq8yG
-         eja7374T5IOKgt+iS9J1lvCUCE015/7lduxliqhp3a7LDrktn4DZuolC4exYql3Bbmpv
-         IzYA==
-X-Gm-Message-State: APjAAAWoqo+Mfv8iggYKAC0nCrGmQAejRzrsCJOnGivfkXobkwvIxthD
-        INRycwq14LJoIf6DVIsfFE/9UQ==
-X-Google-Smtp-Source: APXvYqxnmZOz/ielTPeFGF2sbPd5pdCpbBKEFlugYKLvQZP5x9D9kJ3scuNqyAvkcJ5ASoNvEtNpyg==
-X-Received: by 2002:a05:620a:1498:: with SMTP id w24mr1167645qkj.170.1572547833941;
-        Thu, 31 Oct 2019 11:50:33 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:d5b5])
-        by smtp.gmail.com with ESMTPSA id a28sm2178209qkn.126.2019.10.31.11.50.32
+         :mime-version:content-disposition:in-reply-to;
+        bh=XLz57lIGfqKC3M6vFm45BqnBpRbJgKKmWPNYd03gHyA=;
+        b=KO7Q6XELE/wtvLpe4xyg2pHgFkBFoNFLOtwA+/iyiBl+E1rqRq5aJQilC9erWoXN9d
+         XVv88uo0T9UBUUXwEF30O1tQA2cA4smkKYat1u9T7JT3mLIMPP4meUt6QyzrAbdfaAA/
+         j9BOhYB7xLXg65XgBmBDQ+iLTGckc3mhMWnbr0ScLFh8jx48YarsQTnfxf79XNyXkPem
+         jkQQUaTVyTfejWlWt9De4m6xUzOX5TP09tqplwnyUJwXijHDwEMDvUtMzPQyVurUJ1Yc
+         Um6acgwXdfpIQiPMbHNkaNw68KI1ccz3K8xFNiZT+OkUrYgU56CcBRugr0Sc76LKgVWG
+         Vg+g==
+X-Gm-Message-State: APjAAAVwjsuv2FHLTPW+G/lB31owKOFlvmDUVZ7f4cxIYpQzcT/RXBem
+        +jVjn6yNpk3bfieDkwtNcnOvzg==
+X-Google-Smtp-Source: APXvYqy6Rf9fLSwdIeGxw8kzB8nNEzmnFTm4ZIojbb8zLzUa2oSwwGyY1z7HPIyiiZQuSZXZ/iUObg==
+X-Received: by 2002:a17:90a:b942:: with SMTP id f2mr9189734pjw.83.1572547860187;
+        Thu, 31 Oct 2019 11:51:00 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a6sm5009461pja.30.2019.10.31.11.50.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 11:50:33 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 14:50:32 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Waiman Long <longman@redhat.com>,
-        Christoph Lameter <cl@linux.com>
-Subject: Re: [PATCH 09/16] mm: memcg/slab: charge individual slab objects
- instead of pages
-Message-ID: <20191031185032.GA2337@cmpxchg.org>
-References: <20191018002820.307763-1-guro@fb.com>
- <20191018002820.307763-10-guro@fb.com>
- <20191025194118.GA393641@cmpxchg.org>
- <20191031015238.GA21323@castle.DHCP.thefacebook.com>
- <20191031144151.GB1168@cmpxchg.org>
- <20191031150657.GA31765@tower.DHCP.thefacebook.com>
+        Thu, 31 Oct 2019 11:50:59 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 11:50:58 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     David Gow <davidgow@google.com>
+Cc:     shuah@kernel.org, brendanhiggins@google.com,
+        akpm@linux-foundation.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        dan.carpenter@oracle.com
+Subject: Re: [PATCH linux-kselftest/test v6] lib/list-test: add a test for
+ the 'list' doubly linked list
+Message-ID: <201910311147.FA6A822@keescook>
+References: <20191024224631.118656-1-davidgow@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191031150657.GA31765@tower.DHCP.thefacebook.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191024224631.118656-1-davidgow@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 03:07:02PM +0000, Roman Gushchin wrote:
-> On Thu, Oct 31, 2019 at 10:41:51AM -0400, Johannes Weiner wrote:
-> > On Thu, Oct 31, 2019 at 01:52:44AM +0000, Roman Gushchin wrote:
-> > > On Fri, Oct 25, 2019 at 03:41:18PM -0400, Johannes Weiner wrote:
-> > > > @@ -3117,15 +3095,24 @@ void __memcg_kmem_uncharge(struct page *page, int order)
-> > > >  	css_put_many(&memcg->css, nr_pages);
-> > > >  }
-> > > >  
-> > > > -int __memcg_kmem_charge_subpage(struct mem_cgroup *memcg, size_t size,
-> > > > -				gfp_t gfp)
-> > > > +int obj_cgroup_charge(struct obj_cgroup *objcg, size_t size, gfp_t gfp)
-> > > >  {
-> > > > -	return try_charge(memcg, gfp, size, true);
-> > > > +	int ret;
-> > > > +
-> > > > +	if (consume_obj_stock(objcg, nr_bytes))
-> > > > +		return 0;
-> > > > +
-> > > > +	ret = try_charge(objcg->memcg, gfp, 1);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > 
-> > > The second problem is also here. If a task belonging to a different memcg
-> > > is scheduled on this cpu, most likely we will need to refill both stocks,
-> > > even if we need only a small temporarily allocation.
-> > 
-> > Yes, that's a good thing. The reason we have the per-cpu caches in the
-> > first place is because most likely the same cgroup will perform
-> > several allocations. Both the slab allocator and the page allocator
-> > have per-cpu caches for the same reason. I don't really understand
-> > what the argument is.
-> 
-> I mean it seems strange (and most likely will show up in perf numbers)
-> to move a page from one stock to another. Is there a reason why do you want
-> to ask try_charge() and stock only a single page?
->
-> Can we do the following instead?
-> 
-> 1) add a boolean argument to try_charge() to bypass the consume_stock() call
-> at the beginning and just go slow path immediately
-> 2) use try_charge() with this argument set to true to fill the objc/subpage
-> stock with MEMCG_CHARGE_BATCH pages
+On Thu, Oct 24, 2019 at 03:46:31PM -0700, David Gow wrote:
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 7ef985e01457..f3d0c6e42b97 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9504,6 +9504,13 @@ F:	Documentation/misc-devices/lis3lv02d.rst
+>  F:	drivers/misc/lis3lv02d/
+>  F:	drivers/platform/x86/hp_accel.c
+>  
+> +LIST KUNIT TEST
+> +M:	David Gow <davidgow@google.com>
+> +L:	linux-kselftest@vger.kernel.org
+> +L:	kunit-dev@googlegroups.com
+> +S:	Maintained
+> +F:	lib/list-test.c
 
-No, think this through.
+Should KUnit be the first name here? Then all KUnit tests appear in the
+same location in the MAINTAINERS file, or should it be like it is here,
+so that KUnit tests are close to the same-named area?
 
-If you have disjunct caches for the page_counter, it means the cache
-work cannot be shared. A slab allocation has to hit the page_counter,
-and a subsequent page allocation has to hit it again; likewise, a slab
-allocation cannot benefit from the caching of prior page allocations.
+> +
+>  LIVE PATCHING
+>  M:	Josh Poimboeuf <jpoimboe@redhat.com>
+>  M:	Jiri Kosina <jikos@kernel.org>
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index a3017a5dadcd..6c1be6181e38 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -1961,6 +1961,24 @@ config SYSCTL_KUNIT_TEST
+>  
+>  	  If unsure, say N.
+>  
+> +config LIST_KUNIT_TEST
 
-You're trading cheap, unlocked, cpu-local subtractions against costly
-atomic RMW ops on shared cachelines. You also double the amount of
-cached per-cpu memory and introduce a layering violation.
+Similarly for the Kconfig name. (Also aren't KUNIT and TEST redundant?)
 
-Hotpath (bytes cached)
+config KUNIT_LIST
 
-	stacked:				disjunct:
-	consume_subpage_stock()			try_charge()
-						  consume_subpage_stock()
+?
 
-Warmpath (pages cached)
+config LIST_KUNIT
 
-	stacked:				disjunct:
-	consume_subpage_stock()			try_charge()
-	  try_charge()				  consume_subpage_stock()
-	    consume_stock()			  page_counter_charge()
-	refill_subpage_stock()			  refill_subpage_stock()
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -292,3 +292,6 @@ obj-$(CONFIG_GENERIC_LIB_MULDI3) += muldi3.o
+>  obj-$(CONFIG_GENERIC_LIB_CMPDI2) += cmpdi2.o
+>  obj-$(CONFIG_GENERIC_LIB_UCMPDI2) += ucmpdi2.o
+>  obj-$(CONFIG_OBJAGG) += objagg.o
+> +
+> +# KUnit tests
+> +obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
 
-Coldpath (nothing cached)
+And again, list-kunit.o? Other things have -test (or more commonly
+_test) suffixes. (So maybe list_kunit.o?)
 
-	stacked:				disjunct
-	consume_subpage_stock()			try_charge()
-	  try_charge()				  consume_subpage_stock()
-	    consume_stock()			  page_counter_charge()
-	    page_counter_charge()		  refill_subpage_stock()
-	    refill_stock()
-	refill_subpage_stock()
+But as I said last time, I'll live with whatever, I'd just like a
+documented best-practice with a reasonable rationale. :)
+
+-- 
+Kees Cook
