@@ -2,116 +2,67 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0AACA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A918FCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C04CC208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:51:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QRUNOzgg"
+	by mail.kernel.org (Postfix) with ESMTP id 7DC822086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 14:51:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbfJaOvT (ORCPT
+        id S1728269AbfJaOvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 10:51:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40535 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727995AbfJaOvS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 10:51:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572533476;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3K6sCYQs8K5ApEcQ+TEBEBei1xOeMj1fQR7m/w4Dyos=;
-        b=QRUNOzggGbN5+k5bXOwQAKgFPb9ESz4KSnbo1rWcI4zzoYKewrrAR9XivJjs0jda4rrH8a
-        Q3q3MKYRUAHdqLouGOoGKygRbuwRNwaRabaIiMxfBON6CRCOn9rifNH8UMEaF3KXNj0A44
-        FPDRhW2FIaMaDMbSThg0Si7YE4YP0wY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-230-piStzJfuPfqkyHSzRDB-TQ-1; Thu, 31 Oct 2019 10:51:14 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 13D9E1800D6B;
-        Thu, 31 Oct 2019 14:51:13 +0000 (UTC)
-Received: from x2.localnet (ovpn-117-13.phx2.redhat.com [10.3.117.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B3E160878;
-        Thu, 31 Oct 2019 14:50:58 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V7 20/21] audit: add capcontid to set contid outside init_user_ns
-Date:   Thu, 31 Oct 2019 10:50:57 -0400
-Message-ID: <3677995.NTHC7m0fHc@x2>
-Organization: Red Hat
-In-Reply-To: <20191030220320.tnwkaj5gbzchcn7j@madcap2.tricolour.ca>
-References: <cover.1568834524.git.rgb@redhat.com> <CAHC9VhRDoX9du4XbCnBtBzsNPMGOsb-TKM1CC+sCL7HP=FuTRQ@mail.gmail.com> <20191030220320.tnwkaj5gbzchcn7j@madcap2.tricolour.ca>
+        Thu, 31 Oct 2019 10:51:31 -0400
+Received: from verein.lst.de ([213.95.11.211]:51457 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728134AbfJaOva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 10:51:30 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id B76EF68C4E; Thu, 31 Oct 2019 15:51:27 +0100 (CET)
+Date:   Thu, 31 Oct 2019 15:51:27 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Daniel Wagner <dwagner@suse.de>
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Johannes Thumshirn <jthumshirn@suse.de>
+Subject: Re: [RFC] nvmet: Always remove processed AER elements from list
+Message-ID: <20191031145127.GC6024@lst.de>
+References: <20191030152418.23753-1-dwagner@suse.de>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: piStzJfuPfqkyHSzRDB-TQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030152418.23753-1-dwagner@suse.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Oct 30, 2019 at 04:24:18PM +0100, Daniel Wagner wrote:
+> All async events are enqueued via nvmet_add_async_event() which
+> updates the ctrl->async_event_cmds[] array and additionally an struct
+> nvmet_async_event is added to the ctrl->async_events list.
+> 
+> Under normal operations the nvmet_async_event_work() updates again the
+> ctrl->async_event_cmds and removes the corresponding struct
+> nvmet_async_event from the list again. Though nvmet_sq_destroy() could
+> be called which calles nvmet_async_events_free() which only updates
+> the ctrl->async_event_cmds[] array.
+> 
+> Add a new function nvmet_async_events_process() which processes the
+> async events and updates both array and the list. With this we avoid
+> having two places where the array and list are modified.
 
-TLDR;  I see a lot of benefit to switching away from procfs for setting auid & 
-sessionid.
+I don't think this patch is correct.  We can have AEN commands pending
+that aren't used - that is the host sent the command, but the target
+did not have even event yet.  That means the command sits in
+async_event_cmds, but there is no entry in >async_events for it yet.
 
-On Wednesday, October 30, 2019 6:03:20 PM EDT Richard Guy Briggs wrote:
-> > Also, for the record, removing the audit loginuid from procfs is not
-> > something to take lightly, if at all; like it or not, it's part of the
-> > kernel API.
-
-It can also be used by tools to iterate processes related to one user or 
-session. I use this in my Intrusion Prevention System which will land in 
-audit user space at some point in the future.
-
-
-> Oh, I'm quite aware of how important this change is and it was discussed
-> with Steve Grubb who saw the concern and value of considering such a
-> disruptive change.
-
-Actually, I advocated for syscall. I think the gist of Eric's idea was that /
-proc is the intersection of many nasty problems. By relying on it, you can't 
-simplify the API to reduce the complexity. Almost no program actually needs 
-access to /proc. ps does. But almost everything else is happy without it. For 
-example, when you setup chroot jails, you may have to add /dev/random or /
-dev/null, but almost never /proc. What does force you to add /proc is any 
-entry point daemon like sshd because it needs to set the loginuid. If we 
-switch away from /proc, then sshd or crond will no longer /require/ procfs to 
-be available which again simplifies the system design.
-
-
-> Removing proc support for auid/ses would be a
-> long-term deprecation if accepted.
-
-It might need to just be turned into readonly for a while. But then again, 
-perhaps auid and session should be part of /proc/<pid>/status? Maybe this can 
-be done independently and ahead of the container work so there is a migration 
-path for things that read auid or session. TBH, maybe this should have been 
-done from the beginning.
-
--Steve
-
-
-
+That being said I think what we want is to do the loop in your new
+nvmet_async_events_free first, but after that still call the loop in
+the existing nvmet_async_events_free after that.  That ensures we first
+flush out everything in ->async_events, and then also return any
+potential remaining entry.
