@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A67CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AD2CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB2220873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE4920873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbfJaXqc (ORCPT
+        id S1729550AbfJaXrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 19:46:32 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:39711 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728207AbfJaXqZ (ORCPT
+        Thu, 31 Oct 2019 19:47:37 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:56153 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728648AbfJaXqc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 19:46:25 -0400
+        Thu, 31 Oct 2019 19:46:32 -0400
 Received: from dread.disaster.area (pa49-180-67-183.pa.nsw.optusnet.com.au [49.180.67.183])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 692A27EA8CC;
-        Fri,  1 Nov 2019 10:46:20 +1100 (AEDT)
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 547253A01A1;
+        Fri,  1 Nov 2019 10:46:25 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1iQK8x-0007Bw-0I; Fri, 01 Nov 2019 10:46:19 +1100
+        id 1iQK8x-0007Ci-RT; Fri, 01 Nov 2019 10:46:19 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1iQK8w-00041C-Te; Fri, 01 Nov 2019 10:46:18 +1100
+        id 1iQK8x-00042N-Oz; Fri, 01 Nov 2019 10:46:19 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 01/28] xfs: Lower CIL flush limit for large logs
-Date:   Fri,  1 Nov 2019 10:45:51 +1100
-Message-Id: <20191031234618.15403-2-david@fromorbit.com>
+Subject: [PATCH 25/28] xfs: remove unusued old inode reclaim code
+Date:   Fri,  1 Nov 2019 10:46:15 +1100
+Message-Id: <20191031234618.15403-26-david@fromorbit.com>
 X-Mailer: git-send-email 2.24.0.rc0
 In-Reply-To: <20191031234618.15403-1-david@fromorbit.com>
 References: <20191031234618.15403-1-david@fromorbit.com>
@@ -46,7 +46,7 @@ X-Optus-CM-Score: 0
 X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
         a=3wLbm4YUAFX2xaPZIabsgw==:117 a=3wLbm4YUAFX2xaPZIabsgw==:17
         a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=MeAgGD-zjQ4A:10 a=20KFwNOVAAAA:8
-        a=yPCof4ZbAAAA:8 a=UuDO-KUg2xYWwgiXHJ0A:9
+        a=Mk_DjsQrHyw8X3MnIygA:9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -54,91 +54,234 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-The current CIL size aggregation limit is 1/8th the log size. This
-means for large logs we might be aggregating at least 250MB of dirty objects
-in memory before the CIL is flushed to the journal. With CIL shadow
-buffers sitting around, this means the CIL is often consuming >500MB
-of temporary memory that is all allocated under GFP_NOFS conditions.
-
-Flushing the CIL can take some time to do if there is other IO
-ongoing, and can introduce substantial log force latency by itself.
-It also pins the memory until the objects are in the AIL and can be
-written back and reclaimed by shrinkers. Hence this threshold also
-tends to determine the minimum amount of memory XFS can operate in
-under heavy modification without triggering the OOM killer.
-
-Modify the CIL space limit to prevent such huge amounts of pinned
-metadata from aggregating. We can have 2MB of log IO in flight at
-once, so limit aggregation to 16x this size. This threshold was
-chosen as it little impact on performance (on 16-way fsmark) or log
-traffic but pins a lot less memory on large logs especially under
-heavy memory pressure.  An aggregation limit of 8x had 5-10%
-performance degradation and a 50% increase in log throughput for
-the same workload, so clearly that was too small for highly
-concurrent workloads on large logs.
-
-This was found via trace analysis of AIL behaviour. e.g. insertion
-from a single CIL flush:
-
-xfs_ail_insert: old lsn 0/0 new lsn 1/3033090 type XFS_LI_INODE flags IN_AIL
-
-$ grep xfs_ail_insert /mnt/scratch/s.t |grep "new lsn 1/3033090" |wc -l
-1721823
-$
-
-So there were 1.7 million objects inserted into the AIL from this
-CIL checkpoint, the first at 2323.392108, the last at 2325.667566 which
-was the end of the trace (i.e. it hadn't finished). Clearly a major
-problem.
+Now that the custom AG radix tree walker has been replaced and
+removed, we don't need the radix tree tags anymore, nor the reclaim
+cursors or the locks taht protect it. Remove all remaining traces of
+these things.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_log_priv.h | 29 +++++++++++++++++++++++------
- 1 file changed, 23 insertions(+), 6 deletions(-)
+ fs/xfs/xfs_icache.c | 82 +--------------------------------------------
+ fs/xfs/xfs_icache.h |  7 ++--
+ fs/xfs/xfs_mount.c  |  4 ---
+ fs/xfs/xfs_mount.h  |  3 --
+ fs/xfs/xfs_super.c  |  5 +--
+ 5 files changed, 6 insertions(+), 95 deletions(-)
 
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index 4f19375f6592..abd382cfffe3 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -318,13 +318,30 @@ struct xfs_cil {
-  * tries to keep 25% of the log free, so we need to keep below that limit or we
-  * risk running out of free log space to start any new transactions.
-  *
-- * In order to keep background CIL push efficient, we will set a lower
-- * threshold at which background pushing is attempted without blocking current
-- * transaction commits.  A separate, higher bound defines when CIL pushes are
-- * enforced to ensure we stay within our maximum checkpoint size bounds.
-- * threshold, yet give us plenty of space for aggregation on large logs.
-+ * In order to keep background CIL push efficient, we only need to ensure the
-+ * CIL is large enough to maintain sufficient in-memory relogging to avoid
-+ * repeated physical writes of frequently modified metadata. If we allow the CIL
-+ * to grow to a substantial fraction of the log, then we may be pinning hundreds
-+ * of megabytes of metadata in memory until the CIL flushes. This can cause
-+ * issues when we are running low on memory - pinned memory cannot be reclaimed,
-+ * and the CIL consumes a lot of memory. Hence we need to set an upper physical
-+ * size limit for the CIL that limits the maximum amount of memory pinned by the
-+ * CIL but does not limit performance by reducing relogging efficiency
-+ * significantly.
-+ *
-+ * As such, the CIL push threshold ends up being the smaller of two thresholds:
-+ * - a threshold large enough that it allows CIL to be pushed and progress to be
-+ *   made without excessive blocking of incoming transaction commits. This is
-+ *   defined to be 12.5% of the log space - half the 25% push threshold of the
-+ *   AIL.
-+ * - small enough that it doesn't pin excessive amounts of memory but maintains
-+ *   close to peak relogging efficiency. This is defined to be 16x the iclog
-+ *   buffer window (32MB) as measurements have shown this to be roughly the
-+ *   point of diminishing performance increases under highly concurrent
-+ *   modification workloads.
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index 05dd292bfdb6..71a729e29260 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -139,83 +139,6 @@ xfs_inode_free(
+ 	__xfs_inode_free(ip);
+ }
+ 
+-static void
+-xfs_perag_set_reclaim_tag(
+-	struct xfs_perag	*pag)
+-{
+-	struct xfs_mount	*mp = pag->pag_mount;
+-
+-	lockdep_assert_held(&pag->pag_ici_lock);
+-	if (pag->pag_ici_reclaimable++)
+-		return;
+-
+-	/* propagate the reclaim tag up into the perag radix tree */
+-	spin_lock(&mp->m_perag_lock);
+-	radix_tree_tag_set(&mp->m_perag_tree, pag->pag_agno,
+-			   XFS_ICI_RECLAIM_TAG);
+-	spin_unlock(&mp->m_perag_lock);
+-
+-	trace_xfs_perag_set_reclaim(mp, pag->pag_agno, -1, _RET_IP_);
+-}
+-
+-static void
+-xfs_perag_clear_reclaim_tag(
+-	struct xfs_perag	*pag)
+-{
+-	struct xfs_mount	*mp = pag->pag_mount;
+-
+-	lockdep_assert_held(&pag->pag_ici_lock);
+-	if (--pag->pag_ici_reclaimable)
+-		return;
+-
+-	/* clear the reclaim tag from the perag radix tree */
+-	spin_lock(&mp->m_perag_lock);
+-	radix_tree_tag_clear(&mp->m_perag_tree, pag->pag_agno,
+-			     XFS_ICI_RECLAIM_TAG);
+-	spin_unlock(&mp->m_perag_lock);
+-	trace_xfs_perag_clear_reclaim(mp, pag->pag_agno, -1, _RET_IP_);
+-}
+-
+-
+-/*
+- * We set the inode flag atomically with the radix tree tag.
+- * Once we get tag lookups on the radix tree, this inode flag
+- * can go away.
+- */
+-void
+-xfs_inode_set_reclaim_tag(
+-	struct xfs_inode	*ip)
+-{
+-	struct xfs_mount	*mp = ip->i_mount;
+-	struct xfs_perag	*pag;
+-
+-	pag = xfs_perag_get(mp, XFS_INO_TO_AGNO(mp, ip->i_ino));
+-	spin_lock(&pag->pag_ici_lock);
+-	spin_lock(&ip->i_flags_lock);
+-
+-	radix_tree_tag_set(&pag->pag_ici_root, XFS_INO_TO_AGINO(mp, ip->i_ino),
+-			   XFS_ICI_RECLAIM_TAG);
+-	xfs_perag_set_reclaim_tag(pag);
+-	__xfs_iflags_set(ip, XFS_IRECLAIMABLE);
+-
+-	list_lru_add(&mp->m_inode_lru, &VFS_I(ip)->i_lru);
+-
+-	spin_unlock(&ip->i_flags_lock);
+-	spin_unlock(&pag->pag_ici_lock);
+-	xfs_perag_put(pag);
+-}
+-
+-STATIC void
+-xfs_inode_clear_reclaim_tag(
+-	struct xfs_perag	*pag,
+-	xfs_ino_t		ino)
+-{
+-	radix_tree_tag_clear(&pag->pag_ici_root,
+-			     XFS_INO_TO_AGINO(pag->pag_mount, ino),
+-			     XFS_ICI_RECLAIM_TAG);
+-	xfs_perag_clear_reclaim_tag(pag);
+-}
+-
+ static void
+ xfs_inew_wait(
+ 	struct xfs_inode	*ip)
+@@ -397,18 +320,16 @@ xfs_iget_cache_hit(
+ 			goto out_error;
+ 		}
+ 
+-		spin_lock(&pag->pag_ici_lock);
+-		spin_lock(&ip->i_flags_lock);
+ 
+ 		/*
+ 		 * Clear the per-lifetime state in the inode as we are now
+ 		 * effectively a new inode and need to return to the initial
+ 		 * state before reuse occurs.
+ 		 */
++		spin_lock(&ip->i_flags_lock);
+ 		ip->i_flags &= ~XFS_IRECLAIM_RESET_FLAGS;
+ 		ip->i_flags |= XFS_INEW;
+ 		list_lru_del(&mp->m_inode_lru, &inode->i_lru);
+-		xfs_inode_clear_reclaim_tag(pag, ip->i_ino);
+ 		inode->i_state = I_NEW;
+ 		ip->i_sick = 0;
+ 		ip->i_checked = 0;
+@@ -417,7 +338,6 @@ xfs_iget_cache_hit(
+ 		init_rwsem(&inode->i_rwsem);
+ 
+ 		spin_unlock(&ip->i_flags_lock);
+-		spin_unlock(&pag->pag_ici_lock);
+ 	} else {
+ 		/* If the VFS inode is being torn down, pause and try again. */
+ 		if (!igrab(inode)) {
+diff --git a/fs/xfs/xfs_icache.h b/fs/xfs/xfs_icache.h
+index 86e858e4a281..ec646b9e88b7 100644
+--- a/fs/xfs/xfs_icache.h
++++ b/fs/xfs/xfs_icache.h
+@@ -25,9 +25,8 @@ struct xfs_eofblocks {
   */
--#define XLOG_CIL_SPACE_LIMIT(log)	(log->l_logsize >> 3)
-+#define XLOG_CIL_SPACE_LIMIT(log)	\
-+	min_t(int, (log)->l_logsize >> 3, BBTOB(XLOG_TOTAL_REC_SHIFT(log)) << 4)
+ #define XFS_ICI_NO_TAG		(-1)	/* special flag for an untagged lookup
+ 					   in xfs_inode_ag_iterator */
+-#define XFS_ICI_RECLAIM_TAG	0	/* inode is to be reclaimed */
+-#define XFS_ICI_EOFBLOCKS_TAG	1	/* inode has blocks beyond EOF */
+-#define XFS_ICI_COWBLOCKS_TAG	2	/* inode can have cow blocks to gc */
++#define XFS_ICI_EOFBLOCKS_TAG	0	/* inode has blocks beyond EOF */
++#define XFS_ICI_COWBLOCKS_TAG	1	/* inode can have cow blocks to gc */
  
  /*
-  * ticket grant locks, queues and accounting have their own cachlines
+  * Flags for xfs_iget()
+@@ -68,8 +67,6 @@ enum lru_status xfs_inode_reclaim_isolate(struct list_head *item,
+ void xfs_dispose_inodes(struct list_head *freeable);
+ void xfs_reclaim_all_inodes(struct xfs_mount *mp);
+ 
+-void xfs_inode_set_reclaim_tag(struct xfs_inode *ip);
+-
+ void xfs_inode_set_eofblocks_tag(struct xfs_inode *ip);
+ void xfs_inode_clear_eofblocks_tag(struct xfs_inode *ip);
+ int xfs_icache_free_eofblocks(struct xfs_mount *, struct xfs_eofblocks *);
+diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+index 5f3fd1d8f63f..9d60a4e033a0 100644
+--- a/fs/xfs/xfs_mount.c
++++ b/fs/xfs/xfs_mount.c
+@@ -148,7 +148,6 @@ xfs_free_perag(
+ 		ASSERT(atomic_read(&pag->pag_ref) == 0);
+ 		xfs_iunlink_destroy(pag);
+ 		xfs_buf_hash_destroy(pag);
+-		mutex_destroy(&pag->pag_ici_reclaim_lock);
+ 		call_rcu(&pag->rcu_head, __xfs_free_perag);
+ 	}
+ }
+@@ -200,7 +199,6 @@ xfs_initialize_perag(
+ 		pag->pag_agno = index;
+ 		pag->pag_mount = mp;
+ 		spin_lock_init(&pag->pag_ici_lock);
+-		mutex_init(&pag->pag_ici_reclaim_lock);
+ 		INIT_RADIX_TREE(&pag->pag_ici_root, GFP_ATOMIC);
+ 		if (xfs_buf_hash_init(pag))
+ 			goto out_free_pag;
+@@ -242,7 +240,6 @@ xfs_initialize_perag(
+ out_hash_destroy:
+ 	xfs_buf_hash_destroy(pag);
+ out_free_pag:
+-	mutex_destroy(&pag->pag_ici_reclaim_lock);
+ 	kmem_free(pag);
+ out_unwind_new_pags:
+ 	/* unwind any prior newly initialized pags */
+@@ -252,7 +249,6 @@ xfs_initialize_perag(
+ 			break;
+ 		xfs_buf_hash_destroy(pag);
+ 		xfs_iunlink_destroy(pag);
+-		mutex_destroy(&pag->pag_ici_reclaim_lock);
+ 		kmem_free(pag);
+ 	}
+ 	return error;
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index 4f153ee17e18..dea05cd867bf 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -343,9 +343,6 @@ typedef struct xfs_perag {
+ 
+ 	spinlock_t	pag_ici_lock;	/* incore inode cache lock */
+ 	struct radix_tree_root pag_ici_root;	/* incore inode cache root */
+-	int		pag_ici_reclaimable;	/* reclaimable inodes */
+-	struct mutex	pag_ici_reclaim_lock;	/* serialisation point */
+-	unsigned long	pag_ici_reclaim_cursor;	/* reclaim restart point */
+ 
+ 	/* buffer cache index */
+ 	spinlock_t	pag_buf_lock;	/* lock for pag_buf_hash */
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 096ae31b5436..d2200fbce139 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -916,7 +916,6 @@ xfs_fs_destroy_inode(
+ 	spin_lock(&ip->i_flags_lock);
+ 	ASSERT_ALWAYS(!__xfs_iflags_test(ip, XFS_IRECLAIMABLE));
+ 	ASSERT_ALWAYS(!__xfs_iflags_test(ip, XFS_IRECLAIM));
+-	spin_unlock(&ip->i_flags_lock);
+ 
+ 	/*
+ 	 * We always use background reclaim here because even if the
+@@ -925,7 +924,9 @@ xfs_fs_destroy_inode(
+ 	 * this more efficiently than we can here, so simply let background
+ 	 * reclaim tear down all inodes.
+ 	 */
+-	xfs_inode_set_reclaim_tag(ip);
++	__xfs_iflags_set(ip, XFS_IRECLAIMABLE);
++	list_lru_add(&mp->m_inode_lru, &VFS_I(ip)->i_lru);
++	spin_unlock(&ip->i_flags_lock);
+ }
+ 
+ static void
 -- 
 2.24.0.rc0
 
