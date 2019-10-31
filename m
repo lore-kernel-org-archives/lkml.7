@@ -2,123 +2,143 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E97CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC31CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD27920650
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D4A22087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:34:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gpOK87CJ"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ejy2Waqe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbfJaR24 (ORCPT
+        id S1729001AbfJaRes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 13:28:56 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42751 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728561AbfJaR24 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 13:28:56 -0400
-Received: by mail-pl1-f194.google.com with SMTP id j12so1033881plt.9
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 10:28:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6m++fSIeBZqcJkeOt8/Shjtnuo+Q7rdlGD1c3YsGie4=;
-        b=gpOK87CJRb754Y2+vKxaKrfCJA4dCHJjEnrqUCTDyVh8ydN+OuHauU0RzeuaqcPPqz
-         8NeU4ITnb3rEWRmC3gSLVjVWnVesKGM1oyS/yh1NVuxjprhNF47oEx8mkDlnMjX5UGW5
-         JiROU1AiJ8h+8ySX34AX4ACrznfiflDYVAMZM4a1Ar3B/7Tg5JN2SEMWHv3bPcn4f9qv
-         R2QTmF9UEBbN86wcvkIxoBSkI67Kwa+sSYeRuJikIaYcxF+xfeewIHa6mGB7ZX5LMek1
-         44Q7BbPEQbga/h7AhHpE5nwsTjoLhikG9VeHjhjiil8JtMG8WHEWP49lOfvP4ttwUXFY
-         /yWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6m++fSIeBZqcJkeOt8/Shjtnuo+Q7rdlGD1c3YsGie4=;
-        b=q+RaEWHgZ0ZGTMhlQqCVxfNCrnZksG9SOCVIj4B2cKfMwW5N+OpPwhESIYDMDOmOFv
-         VgnAJ9TlPTk9uh9l+F/8/oV1Y0qtkSBhG+uNRGgqhCK7HlV9UGmJzqYDzLmbXd6ZG6ii
-         kZj0CblXk3apeTE88OKJL6bvUAi0GdrqG/vgSE6zXn45WAEbEbwxYjwapiWLBuehNHUS
-         b4ke01hIOjK5rVmCUf355tP0TXJcrQ0qSWeOQ6SEwB+Gaupq7N5BAmTIGsjHIhFwiDep
-         QOTtv0YEXm1LRSkhhuHkeN9F/OL+li0OKiP29K8xPjDct1SLQvM0zjrgNoRRopdJCUE9
-         ZNLA==
-X-Gm-Message-State: APjAAAXTKqNdd00gpst5zX1S2QQBG8j6bsVQjin7pK01aO/dckomkRXy
-        sH+xhi+6mZMfyLr/uDtnqqhhCcz+LWIe7ZVQv/pAWA==
-X-Google-Smtp-Source: APXvYqz/zaeuQgN6H9iXB6EC1IiRwlJeGkd2Ujt7JrblzBduB3a+f7TFswdMNV3RtEu438byzq5VFDkdG5vZyTUTeko=
-X-Received: by 2002:a17:902:9b83:: with SMTP id y3mr7530087plp.179.1572542935004;
- Thu, 31 Oct 2019 10:28:55 -0700 (PDT)
+        Thu, 31 Oct 2019 13:34:48 -0400
+Received: from mail-eopbgr70079.outbound.protection.outlook.com ([40.107.7.79]:17415
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728742AbfJaRer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 13:34:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LyDVHc9u4ojQxUHloUhl4xtKdMjsIsVyUFwQgOPp01FlAywTYzFg738/jdCR7p1QH/zCf32Il+9gBUWHCZMWwVsl3elSRGj4Cij0n9HLdYLHHg/5k2OjHWHURjOBPCml+4rdTph+Ojt2k6Bk9RGwKhjJupYcQzP8BXyd39/BEgJayiU2ubKI49HR90SUfDsboUlTFJHymDblXYJERjnFDmzyUEEQIm/LyxcNGrdf/len+vk+zmxk1ygQkKfsSDyEEu4feCcZeIVQkWvDgO7myfnjz/4Ua2Z4xxG1vzLx6U8xABKAelebRyjYGAPE1K4JaLzsmxhc4q4vUm0AWOS78Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lBtQzx54/3eZlsu3gdbnLEXdBp6ghsGP/eNaHUgtYsU=;
+ b=Yx93msjxTlfZaNb/pwzOLDnI/flCVcoB7TwOyP1gKZVnbFeECTp1Xle+ZoiKbo1AqEBtxLBNzNiso3C4o+pJDwPgQoDMgAZvkrQhd7nvvNxR8LLltOy4YKjjZ4IzBDVJj3uDinTiejx08qjvLxmKOUVPSqnX5ix8eBo1QtDsFSXMyboI67cuSQIhR3e6nKZoPBsyhKl+5xQpjqolIXBGq1qF7Sj6L6H58LL2fD+oPt9zdUJRjR+C0tvJ8QcU0Cx6Ol+Cj31GMtzV0g4PttEfhdPewCbp2wd/iz/mCQlwETSpOM6WroUmq2/t6OzHeuriaMiL6UUR/a/wceH+w+VnlQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lBtQzx54/3eZlsu3gdbnLEXdBp6ghsGP/eNaHUgtYsU=;
+ b=ejy2WaqecyooCZU5PephBr/QvnaLKI7+1yyylG+EzBwDEWMZ4MbVT7ks0aHuMBSayupXtp1zpu6GSXCbSeDE6/PuO7d7pfKgnkuF90AEj8QRKQPhN29qNIBC2/J2zKS4w+/DGathIvDZh5DAICNlz4LCf1NIm2DY5K3bpMH7oB4=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB4671.eurprd05.prod.outlook.com (20.176.3.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.22; Thu, 31 Oct 2019 17:34:42 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::b179:e8bf:22d4:bf8d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::b179:e8bf:22d4:bf8d%5]) with mapi id 15.20.2387.028; Thu, 31 Oct 2019
+ 17:34:42 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
+Thread-Topic: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
+Thread-Index: AQHVidvRl0DiLfVRckS4hHS5dqmJyadx8UKAgAA3LICAACCkgIABo4oAgADQ2QCAAE/3AIAAAcwA
+Date:   Thu, 31 Oct 2019 17:34:42 +0000
+Message-ID: <20191031173438.GL22766@mellanox.com>
+References: <20191023195515.13168-1-rcampbell@nvidia.com>
+ <20191023195515.13168-4-rcampbell@nvidia.com>
+ <20191029175837.GS22766@mellanox.com>
+ <3ffecdc6-625f-ebea-8fb4-984fe6ca90f3@nvidia.com>
+ <20191029231255.GX22766@mellanox.com>
+ <f42d06e2-ca08-acdd-948d-2803079a13c2@nvidia.com>
+ <20191031124200.GJ22766@mellanox.com>
+ <a6b49a4e-a194-ce0b-685f-5e597072aeee@nvidia.com>
+In-Reply-To: <a6b49a4e-a194-ce0b-685f-5e597072aeee@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR05CA0022.namprd05.prod.outlook.com
+ (2603:10b6:208:c0::35) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.162.113.180]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3434cb44-4f17-427b-931a-08d75e289cd3
+x-ms-traffictypediagnostic: VI1PR05MB4671:
+x-microsoft-antispam-prvs: <VI1PR05MB467156EAAEA441F7125EE3BACF630@VI1PR05MB4671.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 02070414A1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(376002)(136003)(346002)(396003)(189003)(199004)(6436002)(4326008)(36756003)(186003)(66476007)(476003)(66556008)(64756008)(6916009)(66446008)(6506007)(33656002)(66946007)(26005)(316002)(6246003)(11346002)(446003)(2616005)(486006)(66066001)(102836004)(25786009)(229853002)(6486002)(14444005)(6116002)(478600001)(99286004)(14454004)(54906003)(256004)(386003)(6512007)(3846002)(71200400001)(76176011)(71190400001)(86362001)(1076003)(305945005)(52116002)(7736002)(81166006)(81156014)(8676002)(2906002)(5660300002)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4671;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qfPtVM8E9Aj187lYTgVJ6BVN6t/xNP1eUbG5C24IqkRVhkzw05cywjPexGDLeqrzjvBrfkxFiOfBuzgqN7XbJD3DUxpuNJEhDL+Ycf/H8Un+84CYaoTrKGAYjYO3EL04Pj9h482rX0zV2j/JB5OjryUxzWMlBhB+Mb6gipho3ho1hvs/J/WLip4xYb0LBb5RMEGduPMbohls8J9XMKcqc354rWwhdYN59KgnC3huEOGUcZOvz5IA2LliU1LBuVapwMH7syOLWzfu5jZB16if7bcHdhiFLyw+QldtrJ6N1GeGKbZ1LooFDRbeark54hxjQh2TlEPLipWWhO/WGpkWJEeR3LVh83eibfK6bNV9yXJurSMv1n23K9pEEn5Yc+jhUrvxdumuSy4cEkZVQdJQGxDmYyhpkyNZpdaiTpeT4w8AYOZM19VIBTRq76F0QfHT
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7B4A1F8CF57DCC4C90A11D864E35D0FD@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191031164637.48901-1-samitolvanen@google.com> <20191031164637.48901-16-samitolvanen@google.com>
-In-Reply-To: <20191031164637.48901-16-samitolvanen@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 31 Oct 2019 10:28:43 -0700
-Message-ID: <CAKwvOdkAe9TeB-dVqrDT7ZRQG8U4nHkkHwiDcRRPPY8w-Q9wQQ@mail.gmail.com>
-Subject: Re: [PATCH v3 15/17] arm64: vdso: disable Shadow Call Stack
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3434cb44-4f17-427b-931a-08d75e289cd3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Oct 2019 17:34:42.1157
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rfrxOddc/pWv6ibOW6NX7zTWWW7a0fxNSQ0UBhFAgmZ3bWPY8xFgyTr5WKmflj9FPLf0tMqP/7FXQpWghtw81w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4671
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 9:47 AM <samitolvanen@google.com> wrote:
+On Thu, Oct 31, 2019 at 10:28:12AM -0700, Ralph Campbell wrote:
+> > > > > > It seems especially over-complicated to use a full page table l=
+ayout
+> > > > > > for this, wouldn't something simple like an xarray be good enou=
+gh for
+> > > > > > test purposes?
+> > > > >=20
+> > > > > Possibly. A page table is really just a lookup table from virtual=
+ address
+> > > > > to pfn/page. Part of the rationale was to mimic what a real devic=
+e
+> > > > > might do.
+> > > >=20
+> > > > Well, but the details of the page table layout don't see really
+> > > > important to this testing, IMHO.
+> > >=20
+> > > One problem with XArray is that on 32-bit machines the value would
+> > > need to be u64 to hold a pfn which won't fit in a ULONG_MAX.
+> > > I guess we could make the driver 64-bit only.
+> >=20
+> > Why would a 32 bit machine need a 64 bit pfn?
+> >=20
+>=20
+> On x86, Physical Address Extension (PAE) uses a 64 bit PTE.
+> See arch/x86/include/asm/pgtable_32_types.h which includes
+> arch/x86/include/asm/pgtable-3level_types.h.
 
-I've gotten slapped down before for -ENOCOMMITMSG; maybe include more
-info if there's a v4?  Maintainers can take the safe position of
-always saying "no," so it is useful to always provide an answer to the
-implicit question, "why should I take this patch?"
+That is the content of the PTE, not the address of the PTE. In this
+case the xarray index is the 'virtual' address of the fictional device
+and it can easily be 32 bits with no problem
 
->
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> ---
->  arch/arm64/kernel/vdso/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
-> index dd2514bb1511..a87a4f11724e 100644
-> --- a/arch/arm64/kernel/vdso/Makefile
-> +++ b/arch/arm64/kernel/vdso/Makefile
-> @@ -25,7 +25,7 @@ ccflags-y += -DDISABLE_BRANCH_PROFILING
->
->  VDSO_LDFLAGS := -Bsymbolic
->
-> -CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) -Os
-> +CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) -Os $(CC_FLAGS_SCS)
-
-Looks like vgettimeofday is the only remaining source written in C, so
-we shouldn't need to strip it from other assembly source files.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
->  KBUILD_CFLAGS                  += $(DISABLE_LTO)
->  KASAN_SANITIZE                 := n
->  UBSAN_SANITIZE                 := n
-> --
-> 2.24.0.rc0.303.g954a862665-goog
->
-
-
--- 
-Thanks,
-~Nick Desaulniers
+Jason
