@@ -2,115 +2,87 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D74ACA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5958CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260682083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:55:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572512158;
-	bh=bwH2lGBSgTbwBF/XaBAjPMDyWxkpYJ4k5ZkDsu7mIzI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=RSAKHMeW/fDFewaZ833JKB6X2jlGIYRw7h75QXuZobyFEHrRe70naalIN24oMQJ5U
-	 dgJ1ufAvoQGZqs9nwGfIChXqnipNS29vnzPsjLN+pa3a2tQCFDJzJwxMeIwgp8eF/0
-	 CNqMO2cF2Vxy9s9A2D5i+FN0E8foe8jcSJY7B22Y=
+	by mail.kernel.org (Postfix) with ESMTP id A244C2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:56:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tvdh0va1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfJaIz5 (ORCPT
+        id S1727269AbfJaI4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 04:55:57 -0400
-Received: from mga11.intel.com ([192.55.52.93]:45690 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727005AbfJaIz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 04:55:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 01:55:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
-   d="scan'208";a="190558319"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga007.jf.intel.com with ESMTP; 31 Oct 2019 01:55:53 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Roger Quadros <rogerq@ti.com>, gregkh@linuxfoundation.org
-Cc:     pawell@cadence.com, peter.chen@nxp.com, nsekhar@ti.com,
-        kurahul@cadence.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2] usb: cdns3: gadget: Fix g_audio use case when connected to Super-Speed host
-In-Reply-To: <20191030121607.21739-1-rogerq@ti.com>
-References: <20191029151514.28495-1-rogerq@ti.com> <20191030121607.21739-1-rogerq@ti.com>
-Date:   Thu, 31 Oct 2019 10:55:52 +0200
-Message-ID: <87pnide1k7.fsf@gmail.com>
+        Thu, 31 Oct 2019 04:56:06 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:41602 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbfJaI4G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 04:56:06 -0400
+Received: by mail-il1-f193.google.com with SMTP id z10so4667780ilo.8
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 01:56:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kFfdHfuhP+nEEQfQbC0Ba4Z+OQ9QN7a/luiGoxHZNKI=;
+        b=tvdh0va1KgpZTtjmMZNglpPZI03tvtnGrO5YO4cTV4BiVYA+11jNi3bTMfInJ1Up0a
+         aoVUaXwQWYabwxtf4Ll8mfoLG2JyLcMYt0mam5/o6dAfujWHFAcY/46v7Oq6GsABGJ0M
+         +Sds7J3eBBKmtI3m8OcMFpGgLP7p1VD1LZOFdfuKKY9IhTqlufbq0ZTaKFZ1OFbDTMeP
+         wt5HuQunjysLqwvbwBOoStV1dcahtv0duyWC0YgjtTkXgEto0XoPkk72ntb5A93L/tE8
+         itwFWMXuQOEeNIjk7rzz9dcNdf6oJotXCzlx94WWlSxwuvaLnbjM1f6Xg4BI8Xx9Mhky
+         Kh6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kFfdHfuhP+nEEQfQbC0Ba4Z+OQ9QN7a/luiGoxHZNKI=;
+        b=jvQ4JE/tU0PHzinWnCJa5gwwBsBSDGVfM4HbYoS0OVbUMfOWFbhfBbzg1xUBsDqaNh
+         SJpcXX9605IjvQD9hBncywP1TlQhqG2+VnPWrOCeLEKJOonTkzAWj8gGNGcBYZjMSscM
+         9RYtD2Z5KHax93cTHgfaWyhIghuzfX4cWjNwosacM8yVG44QBI//BBTR6rEIpSZIirY9
+         uA5ApyslU304weVXvngfctm2TifoX2q3t6hdagzngZpDrzQkMrFS89bFBMrnIKnF2/9k
+         LEbUdz7vS9T1oUTf21meaNwVxx5VFxnk0Y5ow9QGlVxL65nahFUQmsGQzah69bGkJYaf
+         37PA==
+X-Gm-Message-State: APjAAAVdzEHk1X+BRxRTjcW0Jq8ipOU1pu1fF2k6aSdLl4x9FiQwEp/j
+        0YQ97i3fgYxGOsdU3uag6rKeYaOlTOQbzLCR/wZsAg==
+X-Google-Smtp-Source: APXvYqwfX3ZfmayVc1DkCMbcevGUQ3Zmtj89LujmSEYYk2OKKpmSKfIAH39CJHL+4amH5NwNeo9lS0jhOjQEwNOQDnM=
+X-Received: by 2002:a92:af19:: with SMTP id n25mr5445478ili.138.1572512164205;
+ Thu, 31 Oct 2019 01:56:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20191030091038.678-1-daniel.lezcano@linaro.org>
+In-Reply-To: <20191030091038.678-1-daniel.lezcano@linaro.org>
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+Date:   Thu, 31 Oct 2019 14:25:52 +0530
+Message-ID: <CAKohpomW1CHrHZmXTmOAw9Oj2YauLPQmrL0Tw-j92qZ2YqK_Bw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] thermal: cpu_cooling: Remove pointless dependency on CONFIG_OF
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "open list:THERMAL/CPU_COOLING" <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi,
-
-Roger Quadros <rogerq@ti.com> writes:
-
-> Take into account gadget driver's speed limit when programming
-> controller speed.
+On Wed, 30 Oct 2019 at 14:41, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
 >
-> Fixes: commit 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Acked-by: Peter Chen <peter.chen@nxp.com>
+> The option CONFIG_CPU_THERMAL depends on CONFIG_OF in the Kconfig.
+>
+> It it pointless to check if CONFIG_OF is set in the header file as
+> this is always true if CONFIG_CPU_THERMAL is true. Remove it.
+>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 > ---
->
-> Changelog:
-> v2
-> - Add Fixes line
->
->  drivers/usb/cdns3/gadget.c | 31 ++++++++++++++++++++++++++-----
->  1 file changed, 26 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
-> index 40dad4e8d0dc..1c724c20d468 100644
-> --- a/drivers/usb/cdns3/gadget.c
-> +++ b/drivers/usb/cdns3/gadget.c
-> @@ -2338,9 +2338,35 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
->  {
->  	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
->  	unsigned long flags;
-> +	enum usb_device_speed max_speed = driver->max_speed;
->  
->  	spin_lock_irqsave(&priv_dev->lock, flags);
->  	priv_dev->gadget_driver = driver;
-> +
-> +	/* limit speed if necessary */
-> +	max_speed = min(driver->max_speed, gadget->max_speed);
-> +
-> +	switch (max_speed) {
-> +	case USB_SPEED_FULL:
-> +		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
-> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
-> +		break;
-> +	case USB_SPEED_HIGH:
-> +		writel(USB_CONF_USB3DIS, &priv_dev->regs->usb_conf);
-> +		break;
-> +	case USB_SPEED_SUPER:
-> +		break;
-> +	default:
-> +		dev_err(priv_dev->dev,
-> +			"invalid maximum_speed parameter %d\n",
-> +			max_speed);
-> +		/* fall through */
-> +	case USB_SPEED_UNKNOWN:
-> +		/* default to superspeed */
-> +		max_speed = USB_SPEED_SUPER;
-> +		break;
-> +	}
+>  include/linux/cpu_cooling.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-I had suggested some simplification for this case statement.
-
--- 
-balbi
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
