@@ -2,100 +2,92 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF386CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BAACA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE077216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0625E2080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:10:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="Y5t65ROV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728638AbfJaXJD (ORCPT
+        id S1728598AbfJaXKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 19:09:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53380 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728416AbfJaXJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 19:09:03 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E88138665A
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 23:09:02 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id f8so1598561wrq.6
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 16:09:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mATxAs5QUuHhGLu4F5uya27TIQoq4oCslUyJ/ewXecc=;
-        b=Bx7Lk8Tyk5KYKRHYPLC5cBUYmhewssQNFGmSJPPLsFhNOZpVqZIIjcDXooHnEtTXkM
-         ZR68IIdCfQdBJfi1iYcORajoi33/Uq3mDIXaLiljpjLAPx0ZWUg2pktLoWgyIQn1R+5I
-         1OU+OcLFN9MBV1g9OB/nPPHGvkNwIbdQRbg84Vkl9W7nDfgKeL090okdy62L2JZnbbma
-         IdFHYzhV53O8N8z+dufu0IsoWrUFunIlV5r+1vh//sU+yqfcHXjAGfGSrIhDW0q80jxL
-         qDezuZ9jUtrHywOS+B19tgn3WlMZ09xYmra8QZPHmGk4+IR1JvEq5tri1KFK7OcIn8S/
-         zXqQ==
-X-Gm-Message-State: APjAAAVLETLN44WjQvhwF7nnc5cXYAR3i2dOM7vyd4ttU/PLdCXwDzkZ
-        9wV4gRr3assqebYYFzm0aOFy9cE55ZZ6UO2pmgofLcHF+AsCeufJaQgOqAUR0Z4PG5+ErtbUXe4
-        B96Dkg1bedz5i7dQLROtj+iCp
-X-Received: by 2002:a5d:526a:: with SMTP id l10mr4422739wrc.72.1572563341599;
-        Thu, 31 Oct 2019 16:09:01 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzHKNAtsHbJkc9+5ud92PKvpwuft/n6upWOztoYCIkE5v3ubSmQnx0vJT0OfWCTVMMKSJrLyg==
-X-Received: by 2002:a5d:526a:: with SMTP id l10mr4422722wrc.72.1572563341337;
-        Thu, 31 Oct 2019 16:09:01 -0700 (PDT)
-Received: from [192.168.20.72] (94.222.26.109.rev.sfr.net. [109.26.222.94])
-        by smtp.gmail.com with ESMTPSA id u187sm5035303wme.15.2019.10.31.16.09.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 31 Oct 2019 16:09:00 -0700 (PDT)
-Subject: Re: [PATCH v3 15/16] kvm: x86: ioapic: Lazy update IOAPIC EOI
-To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Cc:     "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "graf@amazon.com" <graf@amazon.com>,
-        "jschoenh@amazon.de" <jschoenh@amazon.de>,
-        "karahmed@amazon.de" <karahmed@amazon.de>,
-        "rimasluk@amazon.com" <rimasluk@amazon.com>,
-        "Grimm, Jon" <Jon.Grimm@amd.com>
-References: <1568401242-260374-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1568401242-260374-16-git-send-email-suravee.suthikulpanit@amd.com>
- <3771e33d-365b-c214-3d40-bca67c2fa841@redhat.com>
- <5581f203-b9de-7f33-8afc-0d7026387a46@amd.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <46754b8f-ed86-f622-0f9a-0fc1ffb2cb0c@redhat.com>
-Date:   Fri, 1 Nov 2019 00:09:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 31 Oct 2019 19:10:08 -0400
+Received: from mx1.cock.li ([185.10.68.5]:42793 "EHLO cock.li"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728397AbfJaXKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 19:10:08 -0400
 MIME-Version: 1.0
-In-Reply-To: <5581f203-b9de-7f33-8afc-0d7026387a46@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
+        t=1572562966; bh=ZEDAU4OLNqqsQbxbWvlIESgmeMLSiwy214XPoMthBZ0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Y5t65ROVAd/DtK0n0NGJ2dKwH9tvQDJxJNt3UNDbRpCPRIitQXIvh0zZgeq5NJjg+
+         Vt3FJUVth4baoMTCtX0r/HbjnAL7bslwcpDRiu+egY4WkkKAYHuNKqTkCNrHEk3ir0
+         6UoCg/Ct4mNsRJUx87i3AwbuHJUzp0WKU7fUmcV00CsIOQr+8Np38isF9PSJbJ6fmq
+         qezkLmCzZlpObf5yQD9YhfcPwbeIAijiLrI7GanPfI7UkOvL3iujHN1CfKYYB5AnDT
+         NjHrvrOnUQmJWZApB2BMoHbXXYNiDl5UzbSsLyOQn5CXarZwXBiG913hCyoU4jYNUo
+         l6p+RWAKcXgzA==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Thu, 31 Oct 2019 23:02:42 +0000
+From:   gameonlinux@redchan.it
+To:     gnu-system-discuss@gnu.org
+Cc:     bruce@perens.com, rms@gnu.org, esr@thyrsus.com,
+        torvalds@linux-foundation.org, bugs@gnu.support, ams@gnu.org,
+        linux-kernel@vger.kernel.org
+Subject: (Censored) Why will no-one sue GrSecurity for their blatant GPL
+ violation (of GCC and the linux kernel)?
+Message-ID: <e3a6a2070e2182be00b9720b4a1c591f@redchan.it>
+X-Sender: gameonlinux@redchan.it
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/10/19 16:17, Suthikulpanit, Suravee wrote:
-> What if we change kvm->arch.apicv_state to kvm->arch.apicv_disable_mask 
-> and have each bit representing the reason for deactivating APICv.
-> 
-> For example:
->      #define APICV_DISABLE_MASK_IRQWIN        0
->      #define APICV_DISABLE_MASK_HYPERV        1
->      #define APICV_DISABLE_MASK_PIT_REINJ     2
->      #define APICV_DISABLE_MASK_NESTED        3
-> 
-> In this case, we activate APICv only if kvm->arch.apicv_disable_mask == 
-> 0. This way, we can find out why APICv is deactivated on a particular VM 
-> at a particular point in time.
+I tried to send this to the list, but it was dropped as "spam", which is 
+no surprise since the some want to screen communications to RMS and thus 
+control him.
 
-Yes, that also works for me if it makes for an easier implementation.
+RMS:
+Could you share your thoughts, if any, of why no one will sue GrSecurity 
+("Open Source Security" (a Pennsylvania company)) for their blatant 
+violation of section 6 of version 2 of the GNU General Public License?
 
-Paolo
+Both regarding their GCC plugins and their Linux-Kernel patch which is a 
+non-separable derivative work?
+
+They distribute such under a no-redistribution agreement to paying 
+customers (the is the only distribution they do). If the customer 
+redistributes the derivative works they are punished.
+
+That is: GrSecurity (OSS) has created a contract to /Defeat/ the GPL and 
+has done so successfully so far. Very successfully. The GPL is basically 
+the BSD license now, since such as been allowed to stand.
+
+This is how businesses see the GPL. They are no longer afraid: They will 
+simply do what GrSecurity has done. Something that was supposed to stay 
+liberated: a security patch that helped users maintain their privacy by 
+not being immediately rooted when using a linux kernel on a GNU system; 
+is now non-free.
+
+With this the GPL _fails_.
+
+NO ONE has sued GrSecurity. Thus they are seen as "having it right" 
+"correct" "we can do this".
+
+Wouldn't the FSF have standing regarding the GCC plugins atleast?
+Couldn't you all rally linux-kernel copyright holders to bring a joint 
+action?
+
+References:
+perens.com/2017/06/28/warning-grsecurity-potential-contributory-infringement-risk-for-customers/
+
+perens.com/static/OSS_Spenger_v_Perens/0_2018cv15189/docs1/pdf/18.pdf
+(Page 10 onward of this brief gives a good recitation of the facts and 
+issues
