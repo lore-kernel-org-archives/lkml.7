@@ -2,140 +2,106 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A2FCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF763CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D06E2087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C68D20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 13:25:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bRmgPup5"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MV7E6u1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfJaNYC (ORCPT
+        id S1727319AbfJaNZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 09:24:02 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38579 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbfJaNYC (ORCPT
+        Thu, 31 Oct 2019 09:25:19 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:46466 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbfJaNZT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 09:24:02 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c13so4376102pfp.5
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 06:24:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3/3zefGdd/m7PrcI6IIG3Bg/D+mngne/UflLyB/7dd8=;
-        b=bRmgPup583Mc6OobDi/6C5sQsjDtV2HyjRVNLtJtqZ4S0SRGxQYqnKcIiBTJfjxTde
-         9RNI0VlfO0aYbT0P/KtvSXja9GmpA9OkorPOD2UvwTIL9dLdSl8PWSwgFwFl43VhD8DY
-         XqZZha0G9zgo79ITCjc5VL1KOtqkBFYVLgMLsio+vdnggwYRyGzPcgdgRnQWbKARadTc
-         WGKuTK5tDnFNP8vhICOtWb7mqYAphf4pt6Zc29T+O7U+QjcPSezoCqxWSzSZoVE9Joy9
-         OAE8B7zHEYbTP3ruUpx7UNfkqsIPfBkp/H99wgigHfXjsx9i25ot7RLsQ1uExSmKPSLY
-         +7rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3/3zefGdd/m7PrcI6IIG3Bg/D+mngne/UflLyB/7dd8=;
-        b=qetFSvcgcbSZPlH7jwstClIdGGe6q695rhhqo1cA1bPhMuoqvP8I4+ynqxMh4qapqX
-         GCPVne0FIYWB8zP5UN6Fxyv2Cq4kGOOWCUtDYRBVcELUB4MIxYXwozQWiYdvhUZuSUKi
-         n2nUiWDvW8Bjt6ZNzK7/NzdXnlXNdNNfgEJJE8fzNJMaLs4Xp569XQYcWUk7PbDX0TZV
-         YN8SrxRLlAfMq3QpFRs5e8sAKCDgyP0SJu3nsQvAFbr2chCxez3GJUCfqO4kGpHWaKIZ
-         9+QzjPOdCvYvoiT6H9+pHdvC17Dj00vVKvrHoYU7TlgWDftsbPrx4X9+ya4u14ePvzYm
-         GkzA==
-X-Gm-Message-State: APjAAAUANBBeMdwGWY0N5qbC694TOb3ky4AqenLSDwwGZsgvFHkMQOBc
-        CzNzJ7B0+ieT7FrgLOfU6jCl
-X-Google-Smtp-Source: APXvYqyPg398pV24unnlRJA8FSF5mvJIArjEkUPaba1ia8tYVRPfcaewJy2LErl1WsFc3V1vvL88Nw==
-X-Received: by 2002:a17:90a:eac8:: with SMTP id ev8mr7184114pjb.99.1572528241163;
-        Thu, 31 Oct 2019 06:24:01 -0700 (PDT)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id q11sm3173306pgq.71.2019.10.31.06.23.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 31 Oct 2019 06:24:00 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 18:53:52 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, sakari.ailus@iki.fi,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v4 0/2] Add IMX296 CMOS image sensor support
-Message-ID: <20191031132352.GA24273@mani>
-References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
- <20191031131644.GA8917@pendragon.ideasonboard.com>
+        Thu, 31 Oct 2019 09:25:19 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9VDNNOg099567;
+        Thu, 31 Oct 2019 13:25:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=4EaenIUUVj/5ysEKkiJddwhA1/DDa77ctlLESSIuFlg=;
+ b=MV7E6u1Dh3gksNYOSvZg2+3+NMPZI6Jv6EHle7fh/krrlnNSLc1zolutX9ZnzLk+wRPR
+ ijTM4emqVxu4T3dM92ly/RiXG1/k8ICQaey5YYgMMnYW+7/CoaDPqYTnQdUCOCryJoqb
+ BFwj9COYwvEed6vW/eu7yJn1JohPcYOq6Nw5OiMaab8aPZ0DkG/dsX4TbtX0eP24CtQG
+ ksWwbrjnqZRSuEflA+w+sfl9WooXpuOnNLO1BoIA/iV6Gz1FF+w+1vR/S20jcdYO/RKf
+ j6eTIIo0Kb4TfC37VuZ2Swtv2KmsNHBDZZiFEFwFFKlwJr92T5wU9pORbSzGQWjXsGL0 2Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2vxwhfu723-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 31 Oct 2019 13:25:13 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9VDMY4i063251;
+        Thu, 31 Oct 2019 13:25:13 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2vyqpe3t63-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 31 Oct 2019 13:25:13 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9VDPCDj006216;
+        Thu, 31 Oct 2019 13:25:12 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 31 Oct 2019 06:25:12 -0700
+Date:   Thu, 31 Oct 2019 16:25:03 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Roi Martin <jroi.martin@gmail.com>
+Cc:     valdis.kletnieks@vt.edu, devel@driverdev.osuosl.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] staging: exfat: replace kmalloc with kmalloc_array
+Message-ID: <20191031132503.GD1705@kadam>
+References: <20191031123139.32361-1-jroi.martin@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191031131644.GA8917@pendragon.ideasonboard.com>
+In-Reply-To: <20191031123139.32361-1-jroi.martin@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=929
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910310139
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910310139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
-On Thu, Oct 31, 2019 at 03:16:44PM +0200, Laurent Pinchart wrote:
-> Hi Mani,
-> 
-> Thank you for the patches.
-> 
-> On Wed, Oct 30, 2019 at 03:19:00PM +0530, Manivannan Sadhasivam wrote:
-> > Hello,
-> > 
-> > This patchset adds support for IMX296 CMOS image sensor from Sony.
-> > Sensor can be programmed through I2C and 4-wire interface but the
-> > current driver only supports I2C interface. The sensor is
-> > capable of outputting frames in CSI2 format (1 Lane). In the case
-> > of sensor resolution, driver only supports 1440x1088 at 30 FPS.
-> > 
-> > The driver has been validated using Framos IMX296 module interfaced to
-> > 96Boards Dragonboard410c.
-> 
-> I've just been made aware of your work. I also worked on an IMX296
-> sensor driver in parallel, which I will post to the list. My driver
-> doesn't hardcode the resolution but computes register values at runtime,
-> so I wonder if it could be a better option. I'll post it now.
-> 
+On Thu, Oct 31, 2019 at 01:31:39PM +0100, Roi Martin wrote:
+> diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
+> index f71235c6a338..f4f82aecc05d 100644
+> --- a/drivers/staging/exfat/exfat_core.c
+> +++ b/drivers/staging/exfat/exfat_core.c
+> @@ -713,8 +713,8 @@ static s32 __load_upcase_table(struct super_block *sb, sector_t sector,
+>  
+>  	u32 checksum = 0;
+>  
+> -	upcase_table = p_fs->vol_utbl = kmalloc(UTBL_COL_COUNT * sizeof(u16 *),
+> -						GFP_KERNEL);
+> +	upcase_table = kmalloc_array(UTBL_COL_COUNT, sizeof(u16 *), GFP_KERNEL);
+> +	p_fs->vol_utbl = upcase_table;
 
-I'm fine with it. The reason the driver is simple in the first place is, that's
-how my usual workflow is. Start small and build it big ;-)
+This patch is fine, but one idea for future patches is that you could
+remove the "upcase_table" variable and use "p_fs->vol_utbl" everywhere
+instead.
 
-Anyway, I'm happy if your driver gets in.
+>  	if (!upcase_table)
+>  		return -ENOMEM;
 
-Thanks,
-Mani
+regards,
+dan carpenter
 
-> > Changes in v4:
-> > 
-> > * Fixed issues related to gain settings and few misc cleanups in driver
-> > * Documented port node and removed maxItems, default prop from dt binding
-> >   as per the review
-> > 
-> > Changes in v3:
-> > 
-> > * Fixed the reference to video-interfaces.txt in binding.
-> > 
-> > Changes in v2:
-> > 
-> > * Switched to YAML binding
-> > 
-> > Manivannan Sadhasivam (2):
-> >   dt-bindings: media: i2c: Add IMX296 CMOS sensor binding
-> >   media: i2c: Add IMX296 CMOS image sensor driver
-> > 
-> >  .../devicetree/bindings/media/i2c/imx296.yaml |  94 +++
-> >  MAINTAINERS                                   |   8 +
-> >  drivers/media/i2c/Kconfig                     |  11 +
-> >  drivers/media/i2c/Makefile                    |   1 +
-> >  drivers/media/i2c/imx296.c                    | 715 ++++++++++++++++++
-> >  5 files changed, 829 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> >  create mode 100644 drivers/media/i2c/imx296.c
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
