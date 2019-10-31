@@ -2,93 +2,82 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7494BCA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24466CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BEA42086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:36:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TG0m/7QF";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YH39skNb"
+	by mail.kernel.org (Postfix) with ESMTP id EA78120873
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:36:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfJaJgS (ORCPT
+        id S1727244AbfJaJgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 05:36:18 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59296 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbfJaJgS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 05:36:18 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1310160A23; Thu, 31 Oct 2019 09:36:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572514577;
-        bh=ElpHY+Pw9KljO9ycv8UWQZ6MM4ZLSnXJZHKG7Oz0lVs=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=TG0m/7QFITD5tQmmFINnrMt39Ms/2qp3n+WRleDnZ3dhUU9Fpnn6c/OPY/IMhOlIy
-         +zSPTzlTHxKvx0EUTuRwZljCNCVPGdwsMlN8KQR4a6YmZ4ZThApbSCUJY9hMqvDzHJ
-         CDyWR9SJaaWNBzwll7dFOUxX7j/AbIklya+Vh6IY=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2149B60927;
-        Thu, 31 Oct 2019 09:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572514575;
-        bh=ElpHY+Pw9KljO9ycv8UWQZ6MM4ZLSnXJZHKG7Oz0lVs=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=YH39skNbBlQgpF9XkRtvBYpar+AanvXexmbH5KRKfmYX3g1YNovInYEV8g+nAm+E5
-         MpjxqYf/gcvUXgqQ0K2Uw3ZdyRT8zgnGhmTltm7pBNJwGFNg64UV/nVqIpEmdvuXwA
-         0rt45R9DlXh9tcQ0DhTPG6xmgzzPZXSjI1SVuekU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2149B60927
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Wireless <linux-wireless@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ayala Beker <ayala.beker@intel.com>,
-        Tova Mussai <tova.mussai@intel.com>
-Subject: Re: linux-next: manual merge of the wireless-drivers-next tree with the wireless-drivers tree
-References: <20191031111242.50ab1eca@canb.auug.org.au>
-Date:   Thu, 31 Oct 2019 11:36:11 +0200
-In-Reply-To: <20191031111242.50ab1eca@canb.auug.org.au> (Stephen Rothwell's
-        message of "Thu, 31 Oct 2019 11:13:03 +1100")
-Message-ID: <87pnid1cl0.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Thu, 31 Oct 2019 05:36:42 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5659 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726937AbfJaJgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 05:36:41 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A1E09484ACD35FA8B583;
+        Thu, 31 Oct 2019 17:36:38 +0800 (CST)
+Received: from localhost.localdomain (10.90.53.225) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 31 Oct 2019 17:36:29 +0800
+From:   Chen Wandun <chenwandun@huawei.com>
+To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <sean@poorly.run>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     <chenwandun@huawei.com>
+Subject: [PATCH] drm/dp_mst :fix gcc compile error
+Date:   Thu, 31 Oct 2019 17:43:49 +0800
+Message-ID: <1572515029-42087-1-git-send-email-chenwandun@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> writes:
+From: Chenwandun <chenwandun@huawei.com>
 
-> Today's linux-next merge of the wireless-drivers-next tree got a
-> conflict in:
->
->   drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
->
-> between commit:
->
->   3d206e6899a0 ("iwlwifi: fw api: support new API for scan config cmd")
->
-> from the wireless-drivers tree and commit:
->
->   65b9425ce9aa ("iwlwifi: rx: use new api to get band from rx mpdu")
->
-> from the wireless-drivers-next tree.
+drivers/gpu/drm/drm_dp_mst_topology.c: In function __topology_ref_save:
+drivers/gpu/drm/drm_dp_mst_topology.c:1424:6: error: implicit declaration of function stack_trace_save; did you mean stack_depot_save? [-Werror=implicit-function-declaration]
+  n = stack_trace_save(stack_entries, ARRAY_SIZE(stack_entries), 1);
+      ^~~~~~~~~~~~~~~~
+      stack_depot_save
+drivers/gpu/drm/drm_dp_mst_topology.c: In function __dump_topology_ref_history:
+drivers/gpu/drm/drm_dp_mst_topology.c:1513:3: error: implicit declaration of function stack_trace_snprint; did you mean acpi_trace_point? [-Werror=implicit-function-declaration]
+   stack_trace_snprint(buf, PAGE_SIZE, entries, nr_entries, 4);
+   ^~~~~~~~~~~~~~~~~~~
+   acpi_trace_point
 
-Thanks, the resolution looked simple enough so I'm not taking any extra
-actions because of this (for example merging wireless-drivers to
-wireless-drivers-next etc).
+stack_trace_save and stack_trace_snprint are declared in <linux/stacktrace.h>,
+so there is need to include it, and <linux/stackdepot.h> is already included
+by practices, so just replace <linux/stackdepot.h> by <linux/stacktrace.h>.
 
+Signed-off-by: Chenwandun <chenwandun@huawei.com>
+---
+ drivers/gpu/drm/drm_dp_mst_topology.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 85bef73..11adc4b 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -29,7 +29,7 @@
+ #include <linux/seq_file.h>
+ 
+ #if IS_ENABLED(CONFIG_DRM_DEBUG_DP_MST_TOPOLOGY_REFS)
+-#include <linux/stackdepot.h>
++#include <linux/stacktrace.h>
+ #include <linux/sort.h>
+ #include <linux/timekeeping.h>
+ #include <linux/math64.h>
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.7.4
+
