@@ -2,304 +2,102 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F953CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1354DCA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 424352086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2E022086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:36:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572546964;
+	bh=+GGvRJQDbSECjkJorvzm1EDXq/8N+0xaa3y4BFOmR84=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WreikUAxMElO2Ciqi69ZDeUsod+4sfoMU3Cgc6LwLmKeaSi4nB/t/MbcTIElIcghe
+	 IbBcXQ7iQiPxgfn77g56mLsLgXb2Aecrlk8U5RpTKW+tUBhwVPkl1EXkXJgVwkbCFQ
+	 CU7fHtMZvSX6Y2LFHrPlbbo+DPKAtNzcHLj+K6JE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbfJaSfv (ORCPT
+        id S1729364AbfJaSgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:35:51 -0400
-Received: from mga12.intel.com ([192.55.52.136]:38691 "EHLO mga12.intel.com"
+        Thu, 31 Oct 2019 14:36:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729027AbfJaSfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:35:50 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 11:35:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,252,1569308400"; 
-   d="scan'208";a="230963750"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga002.fm.intel.com with ESMTP; 31 Oct 2019 11:35:49 -0700
-Date:   Thu, 31 Oct 2019 11:35:49 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Subject: Re: [PATCH 02/19] mm/gup: factor out duplicate code from four
- routines
-Message-ID: <20191031183549.GC14771@iweiny-DESK2.sc.intel.com>
-References: <20191030224930.3990755-1-jhubbard@nvidia.com>
- <20191030224930.3990755-3-jhubbard@nvidia.com>
+        id S1729027AbfJaSgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 14:36:01 -0400
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 014A021906;
+        Thu, 31 Oct 2019 18:36:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572546961;
+        bh=+GGvRJQDbSECjkJorvzm1EDXq/8N+0xaa3y4BFOmR84=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DJgoTfOWutCHY+BK7DpMbXu0zgkmPAGOEQ50jcksR2SZp/LK0PBP57EW9+ZuP8p/b
+         hi3viyM1d60/UHdam+qxXkqhetfFvaeKRbL7vO7ue8cP8uD9AR0WbRwjeB/TI1SRUC
+         eS9QX3zbPO3U1Dyg6vGDpDIkxDfwmXM9ohXwpGWo=
+Received: by mail-qk1-f170.google.com with SMTP id 205so6736488qkk.1;
+        Thu, 31 Oct 2019 11:36:00 -0700 (PDT)
+X-Gm-Message-State: APjAAAWaP1FGRZKtOPDZRVtBLSCL9q+V5rAvgr5+y7cGp+yDXNPab9qb
+        fjrIXD/gQYvDPqZZCAzwSv0KIqmWxLovsMR91Q==
+X-Google-Smtp-Source: APXvYqwFhgHT1SMXl79Xzh/JwuzRY9uTKEqBRGw/ukoS3FcMI33qXLJFkSMSVcxVqiKW9GQY49Vk46zwzi8XNcVs2Io=
+X-Received: by 2002:a37:f703:: with SMTP id q3mr6799002qkj.254.1572546960078;
+ Thu, 31 Oct 2019 11:36:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191030224930.3990755-3-jhubbard@nvidia.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <cover.1571638827.git.eswara.kota@linux.intel.com>
+ <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
+ <20191025165352.GA30602@bogus> <72d46086-0918-a5af-d798-7488b55a8e07@linux.intel.com>
+ <24f17c73-6e90-ae7e-72a7-5223f0f5b5fd@linux.intel.com>
+In-Reply-To: <24f17c73-6e90-ae7e-72a7-5223f0f5b5fd@linux.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 31 Oct 2019 13:35:48 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKhCY-z+1qzLeZrfYQf0GWe6H9s4PHLa_L_qSiQheBmCA@mail.gmail.com>
+Message-ID: <CAL_JsqKhCY-z+1qzLeZrfYQf0GWe6H9s4PHLa_L_qSiQheBmCA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 03:49:13PM -0700, John Hubbard wrote:
-> There are four locations in gup.c that have a fair amount of code
-> duplication. This means that changing one requires making the same
-> changes in four places, not to mention reading the same code four
-> times, and wondering if there are subtle differences.
-> 
-> Factor out the common code into static functions, thus reducing the
-> overall line count and the code's complexity.
-> 
-> Also, take the opportunity to slightly improve the efficiency of the
-> error cases, by doing a mass subtraction of the refcount, surrounded
-> by get_page()/put_page().
-> 
-> Also, further simplify (slightly), by waiting until the the successful
-> end of each routine, to increment *nr.
+On Thu, Oct 31, 2019 at 5:51 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+>
+>
+> On 10/29/2019 4:34 PM, Dilip Kota wrote:
+> >
+> > On 10/26/2019 12:53 AM, Rob Herring wrote:
+> >> On Mon, Oct 21, 2019 at 02:39:18PM +0800, Dilip Kota wrote:
+> >>> Add YAML shcemas for PCIe RC controller on Intel Gateway SoCs
+> >>> which is Synopsys DesignWare based PCIe core.
+> >>>
+> [...]
+> >>>
+> >>
+> >> +
+> >> +  linux,pci-domain:
+> >> +    $ref: /schemas/types.yaml#/definitions/uint32
+> >> +    description: PCI domain ID.
+> >> Just a value of 'true' is fine here.
+> > Ok.
+> dt_binding_check is failing for adding 'true' alone.
+> It is passing only if "$ref" is mentioned.
 
-Overall it seems like a pretty good clean up.  It did take a bit of review but
-I _think_ it is correct.  A couple of comments below.
+Update dtschema. That should be fixed.
 
-> 
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  mm/gup.c | 113 ++++++++++++++++++++++---------------------------------
->  1 file changed, 46 insertions(+), 67 deletions(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 85caf76b3012..8fb0d9cdfaf5 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1969,6 +1969,35 @@ static int __gup_device_huge_pud(pud_t pud, pud_t *pudp, unsigned long addr,
->  }
->  #endif
->  
-> +static int __record_subpages(struct page *page, unsigned long addr,
-> +			     unsigned long end, struct page **pages, int nr)
-> +{
-> +	int nr_recorded_pages = 0;
-> +
-> +	do {
-> +		pages[nr] = page;
-> +		nr++;
-> +		page++;
-> +		nr_recorded_pages++;
-> +	} while (addr += PAGE_SIZE, addr != end);
-> +	return nr_recorded_pages;
-> +}
-> +
-> +static void __remove_refs_from_head(struct page *page, int refs)
-> +{
-> +	/* Do a get_page() first, in case refs == page->_refcount */
-> +	get_page(page);
-> +	page_ref_sub(page, refs);
-> +	put_page(page);
-> +}
-
-I wonder if this is better implemented as "put_compound_head()"?  To match the
-try_get_compound_head() call below?
-
-> +
-> +static int __huge_pt_done(struct page *head, int nr_recorded_pages, int *nr)
-> +{
-> +	*nr += nr_recorded_pages;
-> +	SetPageReferenced(head);
-> +	return 1;
-
-When will this return anything but 1?
-
-Ira
-
-> +}
-> +
->  #ifdef CONFIG_ARCH_HAS_HUGEPD
->  static unsigned long hugepte_addr_end(unsigned long addr, unsigned long end,
->  				      unsigned long sz)
-> @@ -1998,34 +2027,19 @@ static int gup_hugepte(pte_t *ptep, unsigned long sz, unsigned long addr,
->  	/* hugepages are never "special" */
->  	VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
->  
-> -	refs = 0;
->  	head = pte_page(pte);
-> -
->  	page = head + ((addr & (sz-1)) >> PAGE_SHIFT);
-> -	do {
-> -		VM_BUG_ON(compound_head(page) != head);
-> -		pages[*nr] = page;
-> -		(*nr)++;
-> -		page++;
-> -		refs++;
-> -	} while (addr += PAGE_SIZE, addr != end);
-> +	refs = __record_subpages(page, addr, end, pages, *nr);
->  
->  	head = try_get_compound_head(head, refs);
-> -	if (!head) {
-> -		*nr -= refs;
-> +	if (!head)
->  		return 0;
-> -	}
->  
->  	if (unlikely(pte_val(pte) != pte_val(*ptep))) {
-> -		/* Could be optimized better */
-> -		*nr -= refs;
-> -		while (refs--)
-> -			put_page(head);
-> +		__remove_refs_from_head(head, refs);
->  		return 0;
->  	}
-> -
-> -	SetPageReferenced(head);
-> -	return 1;
-> +	return __huge_pt_done(head, refs, nr);
->  }
->  
->  static int gup_huge_pd(hugepd_t hugepd, unsigned long addr,
-> @@ -2071,30 +2085,18 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
->  					     pages, nr);
->  	}
->  
-> -	refs = 0;
->  	page = pmd_page(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
-> -	do {
-> -		pages[*nr] = page;
-> -		(*nr)++;
-> -		page++;
-> -		refs++;
-> -	} while (addr += PAGE_SIZE, addr != end);
-> +	refs = __record_subpages(page, addr, end, pages, *nr);
->  
->  	head = try_get_compound_head(pmd_page(orig), refs);
-> -	if (!head) {
-> -		*nr -= refs;
-> +	if (!head)
->  		return 0;
-> -	}
->  
->  	if (unlikely(pmd_val(orig) != pmd_val(*pmdp))) {
-> -		*nr -= refs;
-> -		while (refs--)
-> -			put_page(head);
-> +		__remove_refs_from_head(head, refs);
->  		return 0;
->  	}
-> -
-> -	SetPageReferenced(head);
-> -	return 1;
-> +	return __huge_pt_done(head, refs, nr);
->  }
->  
->  static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
-> @@ -2114,30 +2116,18 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
->  					     pages, nr);
->  	}
->  
-> -	refs = 0;
->  	page = pud_page(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
-> -	do {
-> -		pages[*nr] = page;
-> -		(*nr)++;
-> -		page++;
-> -		refs++;
-> -	} while (addr += PAGE_SIZE, addr != end);
-> +	refs = __record_subpages(page, addr, end, pages, *nr);
->  
->  	head = try_get_compound_head(pud_page(orig), refs);
-> -	if (!head) {
-> -		*nr -= refs;
-> +	if (!head)
->  		return 0;
-> -	}
->  
->  	if (unlikely(pud_val(orig) != pud_val(*pudp))) {
-> -		*nr -= refs;
-> -		while (refs--)
-> -			put_page(head);
-> +		__remove_refs_from_head(head, refs);
->  		return 0;
->  	}
-> -
-> -	SetPageReferenced(head);
-> -	return 1;
-> +	return __huge_pt_done(head, refs, nr);
->  }
->  
->  static int gup_huge_pgd(pgd_t orig, pgd_t *pgdp, unsigned long addr,
-> @@ -2151,30 +2141,19 @@ static int gup_huge_pgd(pgd_t orig, pgd_t *pgdp, unsigned long addr,
->  		return 0;
->  
->  	BUILD_BUG_ON(pgd_devmap(orig));
-> -	refs = 0;
-> +
->  	page = pgd_page(orig) + ((addr & ~PGDIR_MASK) >> PAGE_SHIFT);
-> -	do {
-> -		pages[*nr] = page;
-> -		(*nr)++;
-> -		page++;
-> -		refs++;
-> -	} while (addr += PAGE_SIZE, addr != end);
-> +	refs = __record_subpages(page, addr, end, pages, *nr);
->  
->  	head = try_get_compound_head(pgd_page(orig), refs);
-> -	if (!head) {
-> -		*nr -= refs;
-> +	if (!head)
->  		return 0;
-> -	}
->  
->  	if (unlikely(pgd_val(orig) != pgd_val(*pgdp))) {
-> -		*nr -= refs;
-> -		while (refs--)
-> -			put_page(head);
-> +		__remove_refs_from_head(head, refs);
->  		return 0;
->  	}
-> -
-> -	SetPageReferenced(head);
-> -	return 1;
-> +	return __huge_pt_done(head, refs, nr);
->  }
->  
->  static int gup_pmd_range(pud_t pud, unsigned long addr, unsigned long end,
-> -- 
-> 2.23.0
-> 
-> 
+Rob
