@@ -2,185 +2,129 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B77CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B688BCA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F31002083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88CEE20650
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 06:11:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PXqyOsFp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfJaGDe (ORCPT
+        id S1726552AbfJaGL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 02:03:34 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54876 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726370AbfJaGDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 02:03:33 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2116CB2439A51576775E;
-        Thu, 31 Oct 2019 14:03:31 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 31 Oct 2019 14:03:20 +0800
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     yuqi jin <jinyuqi@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>
-Subject: [PATCH] lib: optimize cpumask_local_spread()
-Date:   Thu, 31 Oct 2019 14:03:33 +0800
-Message-ID: <1572501813-2125-1-git-send-email-zhangshaokun@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 31 Oct 2019 02:11:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41726 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbfJaGL0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 02:11:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ekyP2u6hl4dU0Fr2OI4p0LhZwndQzmbkhUAM9FQpt6M=; b=PXqyOsFpyMZnvidiE7SgWVtw8
+        TGABJjEmsr0FJaZO9i3CAgkERYuCZ2rPcmLXB+TYnGKBycqGUm96Ptkb40GOFo78CRG4bcWLppCDj
+        up6QW46OxyR0oRi5Cdzy8ydYnHJk+B8RLVmGuUG2eMpRJoURwC9qYeznY3k1QcS/IxysxvhH2erUp
+        svIAwgeXMmUmOmnHel7rCm3VOoA2QNkIfyLF9BFIb/3O2bsF1voqIfvpUwTE9HlEwaQEFknRi36HS
+        p4/YFOf/Y1CmqiV65yCvmvcW5cS6bnniZ/wqVAQ2GSuXLc8yq9V8T+vEtNl+m8jqIcMENU/d3+XX4
+        cFZDWuCbg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iQ3g2-0008CD-9k; Thu, 31 Oct 2019 06:11:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1411C30025A;
+        Thu, 31 Oct 2019 07:10:17 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 866B12B40326C; Thu, 31 Oct 2019 07:11:18 +0100 (CET)
+Date:   Thu, 31 Oct 2019 07:11:18 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Will Deacon <will.deacon@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
+        juri.lelli@redhat.com, williams@redhat.com, bristot@redhat.com,
+        longman@redhat.com, dave@stgolabs.net, jack@suse.com
+Subject: Re: [PATCH] locking/percpu_rwsem: Rewrite to not use rwsem
+Message-ID: <20191031061118.GH5671@hirez.programming.kicks-ass.net>
+References: <20190805140241.GI2332@hirez.programming.kicks-ass.net>
+ <20190806161741.GC21454@redhat.com>
+ <20190806171515.GR2349@hirez.programming.kicks-ass.net>
+ <20190807095657.GA24112@redhat.com>
+ <20191029184739.GA3079@worktop.programming.kicks-ass.net>
+ <20191030175231.GF5671@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030175231.GF5671@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yuqi jin <jinyuqi@huawei.com>
+On Wed, Oct 30, 2019 at 06:52:31PM +0100, Peter Zijlstra wrote:
+> +enum wake_state {
+> +	unknown = -1,
+> +	writer = 0,
+> +	reader = 1,
+> +};
+> +
+> +/*
+> + * percpu_rwsem_wake_function -- provide FIFO fair reader/writer wakeups
+> + *
+> + * As per percpu_rwsem_wait() all waiters are queued exclusive (tail/FIFO)
+> + * without autoremove to preserve FIFO order.
+> + */
+> +static int percpu_rwsem_wake_function(struct wait_queue_entry *wq_entry,
+> +				      unsigned int mode, int wake_flags,
+> +				      void *key)
+> +{
+> +	enum wake_state state = (wq_entry->flags & WQ_FLAG_CUSTOM) ? reader : writer;
+> +	enum wake_state *statep = key;
+> +
+> +	if (*statep != unknown && (*statep == writer || state == writer))
+> +		return 1; /* stop; woken 1 writer or exhausted readers */
+> +
+> +	if (default_wake_function(wq_entry, mode, wake_flags, NULL))
+> +		*statep = state;
+> +
+> +	return 0; /* continue waking */
+> +}
+> +
+> +#define percpu_rwsem_wait(sem, reader, cond)				\
+> +do {									\
+> +	DEFINE_WAIT_FUNC(wq_entry, percpu_rwsem_wake_function);		\
+> +									\
+> +	if (reader)							\
+> +		wq_entry.flags |= WQ_FLAG_CUSTOM;			\
+> +									\
+> +	add_wait_queue_exclusive(&(sem)->waiters, &wq_entry);		\
+> +	for (;;) {							\
+> +		set_current_state(TASK_UNINTERRUPTIBLE);		\
+> +		if (cond)						\
+> +			break;						\
+> +		schedule();						\
+> +	}								\
+> +	__set_current_state(TASK_RUNNING);				\
+> +	remove_wait_queue(&(sem)->waiters, &wq_entry);			\
+> +} while (0)
+> +
+> +#define percpu_rwsem_wake(sem)						\
+> +do {									\
+> +	enum wake_state ____state = unknown;				\
+> +	__wake_up(&(sem)->waiters, TASK_NORMAL, 1, &____state);		\
+> +} while (0)
 
-In the multi-processor and NUMA system, A device may have many numa
-nodes belonging to multiple cpus. When we get a local numa, it is better
-to find the node closest to the local numa node to return instead of
-going to the online cpu immediately.
+That isn't quite right, when it has readers and a pending writer, things
+go sideways.
 
-For example, In Huawei Kunpeng 920 system, there are 4 NUMA node(0 -3)
-in the 2-socket system(0 - 1). If the I/O device is in socket1
-and the local NUMA node is 2, we shall choose the non-local node3 in
-the same socket when cpu core in NUMA node2 is less that I/O requirements.
-If we directly pick one cpu core from all online ones, it may be in
-the another socket and it is not friendly for performance.
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: yuqi jin <jinyuqi@huawei.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
----
-Changes from RFC:
-     Address Michal Hocko's comment: Use GFP_ATOMIC instead of GFP_KERNEL
-
- lib/cpumask.c | 76 ++++++++++++++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 65 insertions(+), 11 deletions(-)
-
-diff --git a/lib/cpumask.c b/lib/cpumask.c
-index 0cb672eb107c..c92177b0e095 100644
---- a/lib/cpumask.c
-+++ b/lib/cpumask.c
-@@ -192,6 +192,33 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
- }
- #endif
- 
-+static void calc_node_distance(int *node_dist, int node)
-+{
-+	int i;
-+
-+	for (i = 0; i < nr_node_ids; i++)
-+		node_dist[i] = node_distance(node, i);
-+}
-+
-+static int find_nearest_node(int *node_dist, bool *used_flag)
-+{
-+	int i, min_dist = node_dist[0], node_id = -1;
-+
-+	for (i = 0; i < nr_node_ids; i++)
-+		if (used_flag[i] == 0) {
-+			min_dist = node_dist[i];
-+			node_id = i;
-+			break;
-+		}
-+	for (i = 0; i < nr_node_ids; i++)
-+		if (node_dist[i] < min_dist && used_flag[i] == 0) {
-+			min_dist = node_dist[i];
-+			node_id = i;
-+		}
-+
-+	return node_id;
-+}
-+
- /**
-  * cpumask_local_spread - select the i'th cpu with local numa cpu's first
-  * @i: index number
-@@ -205,7 +232,8 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
-  */
- unsigned int cpumask_local_spread(unsigned int i, int node)
- {
--	int cpu;
-+	int cpu, j, id, *node_dist;
-+	bool *used_flag;
- 
- 	/* Wrap: we always want a cpu. */
- 	i %= num_online_cpus();
-@@ -215,19 +243,45 @@ unsigned int cpumask_local_spread(unsigned int i, int node)
- 			if (i-- == 0)
- 				return cpu;
- 	} else {
--		/* NUMA first. */
--		for_each_cpu_and(cpu, cpumask_of_node(node), cpu_online_mask)
--			if (i-- == 0)
--				return cpu;
-+		node_dist = kmalloc_array(nr_node_ids, sizeof(int), GFP_ATOMIC);
-+		if (!node_dist)
-+			for_each_cpu(cpu, cpu_online_mask)
-+				if (i-- == 0)
-+					return cpu;
- 
--		for_each_cpu(cpu, cpu_online_mask) {
--			/* Skip NUMA nodes, done above. */
--			if (cpumask_test_cpu(cpu, cpumask_of_node(node)))
--				continue;
-+		used_flag = kmalloc_array(nr_node_ids, sizeof(bool), GFP_ATOMIC);
-+		if (!used_flag)
-+			for_each_cpu(cpu, cpu_online_mask)
-+				if (i-- == 0) {
-+					kfree(node_dist);
-+					return cpu;
-+				}
-+		memset(used_flag, 0, nr_node_ids * sizeof(bool));
- 
--			if (i-- == 0)
--				return cpu;
-+		calc_node_distance(node_dist, node);
-+		for (j = 0; j < nr_node_ids; j++) {
-+			id = find_nearest_node(node_dist, used_flag);
-+			if (id < 0)
-+				break;
-+			for_each_cpu_and(cpu,
-+				cpumask_of_node(id), cpu_online_mask)
-+				if (i-- == 0) {
-+					kfree(node_dist);
-+					kfree(used_flag);
-+					return cpu;
-+				}
-+			used_flag[id] = 1;
- 		}
-+
-+		for_each_cpu(cpu, cpu_online_mask)
-+			if (i-- == 0) {
-+				kfree(node_dist);
-+				kfree(used_flag);
-+				return cpu;
-+			}
-+
-+		kfree(node_dist);
-+		kfree(used_flag);
- 	}
- 	BUG();
- }
--- 
-2.7.4
-
+I'm going to have to poke a little more at this.
