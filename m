@@ -2,111 +2,159 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8F8CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2806C47E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 534E32080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E6D2080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 08:01:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="IRBmdR7d"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z82auzUS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfJaIA2 (ORCPT
+        id S1727060AbfJaIBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 04:00:28 -0400
-Received: from dvalin.narfation.org ([213.160.73.56]:53626 "EHLO
-        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfJaIA1 (ORCPT
+        Thu, 31 Oct 2019 04:01:05 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35736 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfJaIBF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 04:00:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-        s=20121; t=1572508825;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ia3172o3/jD2ekntHB/GkBV4C7wIggs5s/Ni/QTMMRI=;
-        b=IRBmdR7dNASrVBhBhvK6MA6irw6Nb6bC//pd3DoPAsobpxxI2+oWjxkqoytud7ilnB3P5m
-        r7HjTJ367tS1+ezqogDhtfm7ecD5rHhbpqpvmrTxHCS/CCb2Vvs2DzwKmneMZNeEm9S0/7
-        x4VDfO47VaWNDVgW1zcJWeB82zRhyi8=
-From:   Sven Eckelmann <sven@narfation.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     davem@davemloft.net, mareklindner@neomailbox.ch,
-        sw@simonwunderlich.de, a@unstable.cc,
-        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] batman-adv: Simplify 'batadv_v_ogm_aggr_list_free()'
-Date:   Thu, 31 Oct 2019 09:00:21 +0100
-Message-ID: <3535726.AjB5hMM71F@sven-edge>
-In-Reply-To: <20191031074255.3234-1-christophe.jaillet@wanadoo.fr>
-References: <20191031074255.3234-1-christophe.jaillet@wanadoo.fr>
+        Thu, 31 Oct 2019 04:01:05 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9V80tYr099287;
+        Thu, 31 Oct 2019 03:00:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572508855;
+        bh=TKe46EoF1J60ShuFHgR4qomu3QEwz48sNCBTYx/91/g=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Z82auzUS36CE6SDIajfIV5GVqXyvm0MdUM2vZQwy7QPNnOg7JRHukjfaOarY/WBY5
+         iQh3/UuGeO55Qlkz/v23GMqgbe4oBFuaJa/fnJt3sBs+p6ipEwo9jCN1YENffpxO+S
+         zKUZkRnJQ2yT2AORtx6k2wFA686JgUYWYe1YRkys=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9V80sEM067010
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 31 Oct 2019 03:00:55 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 31
+ Oct 2019 03:00:54 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 31 Oct 2019 03:00:54 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9V80pDA057797;
+        Thu, 31 Oct 2019 03:00:52 -0500
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <devicetree@vger.kernel.org>
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+ <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+ <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
+ <20191030141736.GN4568@sirena.org.uk>
+ <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
+ <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com>
+Date:   Thu, 31 Oct 2019 10:01:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart6722122.X2YU2N7q37"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+In-Reply-To: <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nextPart6722122.X2YU2N7q37
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
 
-On Thursday, 31 October 2019 08:42:55 CET Christophe JAILLET wrote:
-> Use 'skb_queue_purge()' instead of re-implementing it.
+
+On 30/10/2019 20.49, Rob Herring wrote:
+> On Wed, Oct 30, 2019 at 9:30 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>>
+>>
+>>
+>> On 30/10/2019 16.17, Mark Brown wrote:
+>>> On Wed, Oct 30, 2019 at 03:32:09PM +0200, Peter Ujfalusi wrote:
+>>>> On 30/10/2019 15.12, Rob Herring wrote:
+>>>
+>>>>> Why can't we just add a shared flag like we have for interrupts?
+>>>>> Effectively, we have that for resets too, it's just hardcoded in the
+>>>>> the drivers.
+>>>
+>>>> This would be kind of the same thing what the
+>>>> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
+>>>> fixed-regulators afaik.
+>>>
+>>> The theory with that was that any usage of this would need the
+>>> higher level code using the GPIO to cooperate so they didn't step
+>>> on each other's toes so the GPIO code should just punt to it.
+>>
+>> But from the client driver point of view a GPIO is still GPIO and if the
+>> components are unrelated then it is hard to patch things together from
+>> the top.
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> You can't escape a driver being aware. If a driver depends on that
+> GPIO to actually be set to states the driver says, then it can't be
+> guaranteed to work. For example, maybe the driver assumes the device
+> is in reset state after toggling reset and doesn't work if not in
+> reset state. The driver has to be aware no matter what you do in DT.
 
-Consider this patch applied. I just have to leave now and thus I will only 
-apply after my return.
+That's true for some device, but it is also true that some can not
+tolerate being reset without them knowing it.
 
-> ---
-> BTW, I don't really see the need of 'aggr_list_lock'. I think that the code
-> could be refactored to drop 'aggr_list_lock' and use the already existing
-> 'aggr_list.lock'.
-> This would require to use the lock-free __skb_... variants when working on
-> 'aggr_list'.
->
-> As far as I understand, the use of 'aggr_list' and 'aggr_list_lock' is
-> limited to bat_v_ogm.c'. So the impact would be limited.
-> This would avoid a useless locking that never fails, so the performance
-> gain should be really limited.
-> 
-> So, I'm not sure this would be more readable and/or future proof, so
-> I just note it here to open the discussion.
-> 
-> If interested, I have a (compiled tested only) patch that implements this
-> change.
+If all users of the shared GPIO have full control over it then they can
+just toggle it whatever way they want. How would a regulator, codec,
+amplifier would negotiate on what to do with the shared GPIO?
 
-Yes, please send it over.
+Another not uncommon setup is when the two components needs different level:
+C1: ENABLE is high active
+C2: RESET is high active
 
-Kind regards,
-	Sven
+To enable C1, the GPIO should be high. To enable C2 the GPIO must be low.
+In the board one of the branch of the shared GPIO needs (and have) a
+logic inverter.
 
---nextPart6722122.X2YU2N7q37
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+If they both control the same GPIO then they must have requested it with
+different GPIO_ACTIVE_ since the drivers are written according to chip
+spec, so C1 sets the GPIO to 1, C2 sets it to 0, the inversion for one
+of them must happen in gpio core, right?
 
------BEGIN PGP SIGNATURE-----
+It should be possible to add pass-through mode for gpio-shared so that
+all requests would propagate to the root GPIO if that's what needed for
+some setups.
 
-iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl26lJUACgkQXYcKB8Em
-e0YLkg//SFeu7zgzY5RZPY5HcftrEK1rjC2M7A8sCfKGM1M8vzzTA3tloEHUCNxD
-EbJLxaVmG24RWkBL6vthM2PT1lvjHRFUphtpYa5z1uyXJFEoO2YRp8hDgIOw+/+1
-OckzUOWC0Lq5OokHISYtWp673ZBLSNmshZY5eAZLec7p42UE3xnrWr7OOTGs6yTQ
-nwb734FvWvmi44PUs5DGPaW7gpUYXFY9EWyAbpJD7uuifshVIaY7ql5LAfF2VL71
-6hJ4rYPGtFN6wxMuh8QehYwiWG+Ze95uYl4oS05YdhsXGNuhFjN5Q2iOU4R4WBFD
-g+ztkU7BitUMoaZz3ICi1T31QFUFzy5OPmUo97bX7BId9aTtVMwPvW06aJU/dBZc
-pXI9vps1QPoGfTzNn+N12S5GB8ZFYJ+3ycaQjqb69uE3c8EsHVa42qoSiieaqsln
-TiYMCK67jcB+cOYR/zbsw6YRr+ZTWxPJMN9ZVEFxswbHl1H677oTBpuC0eyTil/L
-qscb04MIE0r11DJA1S4oWnidM+9zn7bGG7tVzMNsKCgvUaXkTWewahJR0ynTI/6j
-XfbztcvAlMswIcb6Mk4f5LtARZ+l3BlXll/+WMzxLSZwwWU7yAwp0QxQJwXyKafV
-PEps/jYve9O423rfIIwanNJIWi2Ab1sprc5Ka/iSmciz6hswmNk=
-=3utl
------END PGP SIGNATURE-----
+That way the gpio-shared would nicely handle the GPIO inversions, would
+be able to handle cases to avoid unwanted reset/enable of components or
+allow components to be ninja-reset.
 
---nextPart6722122.X2YU2N7q37--
+I think it would be possible to add gpiod_is_shared(struct gpio_desc
+*desc) so users can check if the GPIO is shared - it would only return
+true if the gpio-shared is not in pass-through mode so they can know
+that the state they see on their gpio desc is not necessary matching
+with reality.
+Probably another gpiod_shared_get_root_value() to fetch the root's state?
 
+I intentionally not returning that in the driver as clients might skip a
+gpio_set_value() seeing that the GPIO line is already in a state they
+would want it, but that would not register their needs for the level.
 
+- Péter
 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
