@@ -2,91 +2,101 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A8DCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A63CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566C520862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:42:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vZ6B5btc"
+	by mail.kernel.org (Postfix) with ESMTP id 0A0FB20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:43:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfJaKmQ (ORCPT
+        id S1727126AbfJaKnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:42:16 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59576 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfJaKmP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:42:15 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9VAgDDo034865;
-        Thu, 31 Oct 2019 05:42:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572518533;
-        bh=gO70mmf9IcQUlslo7qjHE3n0N/IXcdjUkVz4JHG/ARU=;
-        h=From:To:CC:Subject:Date;
-        b=vZ6B5btco0icM2RvPA2GvrDsNC8vYz61kUNrh3rjVn2Nwi8NuVZc08IKolknZXEzx
-         0JLettfzXHF6HWxz0TNXqoB58glpP1hFQM+Wl+1kvNilTT+fGpJWhFR8m4vdq/GJlv
-         etCE8rAAmsbdHd59bie/sObhoFU15Z4ObgWFQp7Q=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9VAgDuI085979
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 31 Oct 2019 05:42:13 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 31
- Oct 2019 05:41:59 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 31 Oct 2019 05:41:59 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9VAgA3U084883;
-        Thu, 31 Oct 2019 05:42:11 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>
-CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>
-Subject: [PATCH] usb: gadget: legacy: multi: set max speed to super-speed
-Date:   Thu, 31 Oct 2019 12:42:09 +0200
-Message-ID: <20191031104209.25451-1-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 31 Oct 2019 06:43:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56310 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726867AbfJaKnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 06:43:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D0DD1B337;
+        Thu, 31 Oct 2019 10:43:43 +0000 (UTC)
+Message-ID: <51101de0f3b0fc5a3678c1ee0c723b131471f1b6.camel@suse.de>
+Subject: Re: [PATCH v2 2/2] x86/PCI: sta2x11: use default DMA address
+ translation
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Christoph Hellwig <hch@infradead.org>, rubini <rubini@gnudd.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, helgaas@kernel.org,
+        linux-pci@vger.kernel.org
+Date:   Thu, 31 Oct 2019 11:43:40 +0100
+In-Reply-To: <20191030214548.GC25515@infradead.org>
+References: <20191018110044.22062-1-nsaenzjulienne@suse.de>
+         <20191018110044.22062-3-nsaenzjulienne@suse.de>
+         <20191030214548.GC25515@infradead.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-bbEBxDInIIIWgIikHBah"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-multi uses ACM, ECM/RNDIS and mass storage interfaces, all
-of which support super-speed. Let's not limit g_multi
-to high-speed.
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- drivers/usb/gadget/legacy/multi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--=-bbEBxDInIIIWgIikHBah
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/usb/gadget/legacy/multi.c b/drivers/usb/gadget/legacy/multi.c
-index 50515f9e1022..ec9749845660 100644
---- a/drivers/usb/gadget/legacy/multi.c
-+++ b/drivers/usb/gadget/legacy/multi.c
-@@ -482,7 +482,7 @@ static struct usb_composite_driver multi_driver = {
- 	.name		= "g_multi",
- 	.dev		= &device_desc,
- 	.strings	= dev_strings,
--	.max_speed	= USB_SPEED_HIGH,
-+	.max_speed	= USB_SPEED_SUPER,
- 	.bind		= multi_bind,
- 	.unbind		= multi_unbind,
- 	.needs_serial	= 1,
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+On Wed, 2019-10-30 at 14:45 -0700, Christoph Hellwig wrote:
+> On Fri, Oct 18, 2019 at 01:00:44PM +0200, Nicolas Saenz Julienne wrote:
+> > The devices found behind this PCIe chip have unusual DMA mapping
+> > constraints as there is an AMBA interconnect placed in between them and
+> > the different PCI endpoints. The offset between physical memory
+> > addresses and AMBA's view is provided by reading a PCI config register,
+> > which is saved and used whenever DMA mapping is needed.
+> >=20
+> > It turns out that this DMA setup can be represented by properly setting
+> > 'dma_pfn_offset', 'dma_bus_mask' and 'dma_mask' during the PCI device
+> > enable fixup. And ultimately allows us to get rid of this device's
+> > custom DMA functions.
+> >=20
+> > Aside from the code deletion and DMA setup, sta2x11_pdev_to_mapping() i=
+s
+> > moved to avoid warnings whenever CONFIG_PM is not enabled.
+>=20
+> Looks sensible to me:
+>=20
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>=20
+> But I can't tested it either, and kinda wonder if this code is actually
+> still used by anyone..
+
+Maybe Alessandro can shine some light on this (though I wonder his mail is =
+stil
+valid).
+
+
+--=-bbEBxDInIIIWgIikHBah
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl26utwACgkQlfZmHno8
+x/5LdQf+NbC/ulCg/psnqPVhawPBGEveu8OIRa8NXE28iGjBsmKrzd7vEIVEypbC
+Sw8rUc2flbEyE88NX6sNKmDqFn8ydOU7IxtM4CFJV/XS3UjSLccTVJDyvB1afF67
+roBReMJNAqGkE/sV3n0gGMUuvK7Vv1Z3uLRvsNM8refMHm2+62ochGBWPiB0Th3v
+X7djIjJ9qsnvjKeIadD6OIUqooHSnpgWlRBOxTYmc5B8fJdl8Hv7iKwMdkp2Ffdr
+VRinylQj0Gzj+UWyQmlaxeSUNw/35uKRsyNnOQbLO2C270IUEPmnsyS46DtTxz0F
+vcxXHYj8h41TqtqdM78XSj6A31RcYQ==
+=wltj
+-----END PGP SIGNATURE-----
+
+--=-bbEBxDInIIIWgIikHBah--
 
