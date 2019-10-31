@@ -2,152 +2,174 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBF9CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE71C47E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5A5A208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:54:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PVK30HOR"
+	by mail.kernel.org (Postfix) with ESMTP id 81205208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 16:54:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572540899;
+	bh=OZrErChAGs00qAHYyPBCWqxK7o5kPOgyp3wi9HrAQIc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uVZOJHz4TBz7P0rbib50nfswTJ4uRyXDz2SpYhcN2c7qNq+Q0pWIq4lw+deUU3ggN
+	 hONozj1TC1sqVHoqs0PxrKLr1C3ucv5q3g5sBz/NZjlEKrovUQns+GG6T7bOcAq1lv
+	 xh0UQBRnFPYIBqT9AUrAa98orl+KnD54MXSNIQyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbfJaQyy (ORCPT
+        id S1728816AbfJaQy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 12:54:54 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:52688 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728561AbfJaQyy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 12:54:54 -0400
-Received: from pendragon.ideasonboard.com (lns-bzn-54-82-251-103-167.adsl.proxad.net [82.251.103.167])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 53149320;
-        Thu, 31 Oct 2019 17:54:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1572540892;
-        bh=I0lsKlRo8h8+ZQ76HwSLs3FK8PL5qPzYqQsGyswPjrQ=;
+        Thu, 31 Oct 2019 12:54:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728561AbfJaQy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 12:54:57 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF0952087F;
+        Thu, 31 Oct 2019 16:54:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572540896;
+        bh=OZrErChAGs00qAHYyPBCWqxK7o5kPOgyp3wi9HrAQIc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PVK30HORF1u/zgODSSTgbbsJBIHX/VA6zXrPDte4F/kTgR/MFFATBCBH00THDBx12
-         MUxE1wrz6ZuhyCCrMcjsnqz+7H25LEtqW5WF2PF2z2ZK68XsFTluV49bMoIaaY3eEI
-         GUdPbA0afhnRk+5nRdJMyIX+yzFDMClZIdYGIMYU=
-Date:   Thu, 31 Oct 2019 18:54:44 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
- binding
-Message-ID: <20191031165444.GE5018@pendragon.ideasonboard.com>
-References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
- <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
- <20191031131538.GA9170@pendragon.ideasonboard.com>
- <20191031134512.GB24273@mani>
- <20191031141141.GD5018@pendragon.ideasonboard.com>
- <20191031142817.GK6253@valkosipuli.retiisi.org.uk>
+        b=RIP6UX/m7Jn92SmAMwX5+rlm4MZS5frptt7p6ev7IHTt3paaicKA0sAikpAwyGmd/
+         doxRRQrIO8OlGIcICs0GTNfSzK0bWMHzVQl2ktvhjFkUdhYgCWHF6ZtBYHWWaVBIaj
+         VV4kg3eooa9hxr+lt0Js6kDMp7XGsZH5sOgKy4ow=
+Date:   Thu, 31 Oct 2019 16:54:51 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Michel =?iso-8859-1?Q?D=E4nzer?= <michel@daenzer.net>
+Cc:     amd-gfx@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Nicolas Waisman <nico@semmle.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Subject: Re: [PATCH] drm/radeon: Handle workqueue allocation failure
+Message-ID: <20191031165450.GA28461@willie-the-truck>
+References: <20191025110450.10474-1-will@kernel.org>
+ <5d6a88a2-2719-a859-04df-10b0d893ff39@daenzer.net>
+ <20191025161804.GA12335@willie-the-truck>
+ <e2f87ecc-0a8e-253d-107c-5cf6486c4b6a@daenzer.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191031142817.GK6253@valkosipuli.retiisi.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e2f87ecc-0a8e-253d-107c-5cf6486c4b6a@daenzer.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
-
-On Thu, Oct 31, 2019 at 04:28:17PM +0200, Sakari Ailus wrote:
-> On Thu, Oct 31, 2019 at 04:11:41PM +0200, Laurent Pinchart wrote:
-> > On Thu, Oct 31, 2019 at 07:15:12PM +0530, Manivannan Sadhasivam wrote:
-> >> On Thu, Oct 31, 2019 at 03:15:38PM +0200, Laurent Pinchart wrote:
-> >>> On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
-> >>>> Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
-> >>>> add MAINTAINERS entry for the binding and driver.
-> >>>> 
-> >>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> >>>> ---
-> >>>>  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
-> >>>>  MAINTAINERS                                   |  8 ++
-> >>>>  2 files changed, 102 insertions(+)
-> >>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> >>>> 
-> >>>> diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> >>>> new file mode 100644
-> >>>> index 000000000000..c04ec2203268
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
-> >>>> @@ -0,0 +1,94 @@
-> >>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> >>>> +%YAML 1.2
-> >>>> +---
-> >>>> +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
-> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >>>> +
-> >>>> +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
-> >>>> +
-> >>>> +maintainers:
-> >>>> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> >>>> +
-> >>>> +description: |-
-> >>>> +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
-> >>>> +  sensor with square pixel array and 1.58 M effective pixels. This chip
-> >>>> +  features a global shutter with variable charge-integration time. It is
-> >>>> +  programmable through I2C and 4-wire interfaces. The sensor output is
-> >>>> +  available via CSI-2 serial data output (1 Lane).
-> >>>> +
-> >>>> +properties:
-> >>>> +  compatible:
-> >>>> +    const: sony,imx296
-> >>>> +
-> >>>> +  reg:
-> >>>> +    maxItems: 1
-> >>>> +
-> >>>> +  clocks:
-> >>>> +    maxItems: 1
-> >>>> +
-> >>>> +  clock-names:
-> >>>> +    description:
-> >>>> +      Input clock for the sensor.
-> >>>> +    items:
-> >>>> +      - const: mclk
-> >>> 
-> >>> The pin is named INCK, let's name the clock accordingly.
-> >> 
-> >> Okay, I thought generic names are preferred here!
-> >>  
-> >>>> +  clock-frequency:
-> >>>> +    description:
-> >>>> +      Frequency of the mclk clock in Hertz.
-> >>> 
-> >>> This shouldn't be needed, you can retrieve the clock frequency at
-> >>> runtime from the clock source.
-> >> 
-> >> Unless the clock source is a fixed one! What if the clock source comes from
-> >> SoC? We need to set the rate, right?
+On Fri, Oct 25, 2019 at 06:20:01PM +0200, Michel Dänzer wrote:
+> On 2019-10-25 6:18 p.m., Will Deacon wrote:
+> > On Fri, Oct 25, 2019 at 06:06:26PM +0200, Michel Dänzer wrote:
+> >> On 2019-10-25 1:04 p.m., Will Deacon wrote:
+> >>> In the highly unlikely event that we fail to allocate the "radeon-crtc"
+> >>> workqueue, we should bail cleanly rather than blindly march on with a
+> >>> NULL pointer installed for the 'flip_queue' field of the 'radeon_crtc'
+> >>> structure.
+> >>>
+> >>> This was reported previously by Nicolas, but I don't think his fix was
+> >>> correct:
+> >>
+> >> Neither is this one I'm afraid. See my feedback on
+> >> https://patchwork.freedesktop.org/patch/331534/ .
 > > 
-> > In that case, if you want to hardcode the clock in DT, the preferred way
-> > is to use the assigned-clock-rates property. Otherwise, if the driver
-> > requires a specific clock frequency, it's better to hardcode it in the
-> > driver itself. In this specific case, I think assigned-clock-rates is
-> > best as the device can support three different clock frequencies.
+> > Thanks. Although I agree with you wrt the original patch, I don't think
+> > the workqueue allocation failure is distinguishable from the CRTC allocation
+> > failure with my patch. Are you saying that the error path there is broken
+> > too?
 > 
-> Just note that if ACPI support is added to the sensor driver, you'll need
-> the clock-frequency property again, for that's the only way how the driver
-> will get the clock frequency.
+> The driver won't actually work if radeon_crtc_init bails silently, it'll
+> just fall over at some later point.
 
-Why is so ? Why can't we implement of assigned-clock-rates for ACPI ?
+Ok, so how about fleshing it out as per below?
 
-> This is certainly not something that has to be taken into account in DT
-> bindings, but in any case it'll add some lines of code in the driver which
-> are not very useful.
+Will
 
--- 
-Regards,
+--->8
 
-Laurent Pinchart
+diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
+index e81b01f8db90..177acee06620 100644
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -668,21 +668,29 @@ static const struct drm_crtc_funcs radeon_crtc_funcs = {
+ 	.page_flip_target = radeon_crtc_page_flip_target,
+ };
+ 
+-static void radeon_crtc_init(struct drm_device *dev, int index)
++static int radeon_crtc_init(struct drm_device *dev, int index)
+ {
+ 	struct radeon_device *rdev = dev->dev_private;
+ 	struct radeon_crtc *radeon_crtc;
++	struct workqueue_struct *wq;
+ 	int i;
+ 
+ 	radeon_crtc = kzalloc(sizeof(struct radeon_crtc) + (RADEONFB_CONN_LIMIT * sizeof(struct drm_connector *)), GFP_KERNEL);
+ 	if (radeon_crtc == NULL)
+-		return;
++		return -ENOMEM;
++
++	wq = alloc_workqueue("radeon-crtc", WQ_HIGHPRI, 0);
++	if (unlikely(!wq)) {
++		kfree(radeon_crtc);
++		return - ENOMEM;
++	}
+ 
+ 	drm_crtc_init(dev, &radeon_crtc->base, &radeon_crtc_funcs);
+ 
+ 	drm_mode_crtc_set_gamma_size(&radeon_crtc->base, 256);
+ 	radeon_crtc->crtc_id = index;
+-	radeon_crtc->flip_queue = alloc_workqueue("radeon-crtc", WQ_HIGHPRI, 0);
++	radeon_crtc->flip_queue = wq;
++
+ 	rdev->mode_info.crtcs[index] = radeon_crtc;
+ 
+ 	if (rdev->family >= CHIP_BONAIRE) {
+@@ -711,6 +719,8 @@ static void radeon_crtc_init(struct drm_device *dev, int index)
+ 		radeon_atombios_init_crtc(dev, radeon_crtc);
+ 	else
+ 		radeon_legacy_init_crtc(dev, radeon_crtc);
++
++	return 0;
+ }
+ 
+ static const char *encoder_names[38] = {
+@@ -1602,9 +1612,8 @@ int radeon_modeset_init(struct radeon_device *rdev)
+ 	rdev->ddev->mode_config.fb_base = rdev->mc.aper_base;
+ 
+ 	ret = radeon_modeset_create_props(rdev);
+-	if (ret) {
+-		return ret;
+-	}
++	if (ret)
++		goto err_drm_mode_config_cleanup;
+ 
+ 	/* init i2c buses */
+ 	radeon_i2c_init(rdev);
+@@ -1617,7 +1626,9 @@ int radeon_modeset_init(struct radeon_device *rdev)
+ 
+ 	/* allocate crtcs */
+ 	for (i = 0; i < rdev->num_crtc; i++) {
+-		radeon_crtc_init(rdev->ddev, i);
++		ret = radeon_crtc_init(rdev->ddev, i);
++		if (ret)
++			goto err_drm_mode_config_cleanup;
+ 	}
+ 
+ 	/* okay we should have all the bios connectors */
+@@ -1645,6 +1656,10 @@ int radeon_modeset_init(struct radeon_device *rdev)
+ 	ret = radeon_pm_late_init(rdev);
+ 
+ 	return 0;
++
++err_drm_mode_config_cleanup:
++	drm_mode_config_cleanup(rdev->ddev);
++	return ret;
+ }
+ 
+ void radeon_modeset_fini(struct radeon_device *rdev)
