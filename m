@@ -2,84 +2,333 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F82CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE107CA9EC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72C9208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80FAB20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 10:51:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfJaKvV (ORCPT
+        id S1727186AbfJaKvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 06:51:21 -0400
-Received: from mga06.intel.com ([134.134.136.31]:11209 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726897AbfJaKvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 06:51:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 03:51:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
-   d="scan'208";a="283852650"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 31 Oct 2019 03:51:20 -0700
-Received: from [10.226.39.46] (unknown [10.226.39.46])
-        by linux.intel.com (Postfix) with ESMTP id D33025802C8;
-        Thu, 31 Oct 2019 03:51:17 -0700 (PDT)
-Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, andrew.murray@arm.com,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-References: <cover.1571638827.git.eswara.kota@linux.intel.com>
- <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
- <20191025165352.GA30602@bogus>
- <72d46086-0918-a5af-d798-7488b55a8e07@linux.intel.com>
-Message-ID: <24f17c73-6e90-ae7e-72a7-5223f0f5b5fd@linux.intel.com>
-Date:   Thu, 31 Oct 2019 18:51:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 31 Oct 2019 06:51:43 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46638 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbfJaKvn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 06:51:43 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 673C728FDEA;
+        Thu, 31 Oct 2019 10:51:40 +0000 (GMT)
+Date:   Thu, 31 Oct 2019 11:51:37 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     <Tudor.Ambarus@microchip.com>
+Cc:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 08/32] mtd: spi-nor: Pointer parameter for SR in
+ spi_nor_read_sr()
+Message-ID: <20191031115137.56127404@collabora.com>
+In-Reply-To: <20191029111615.3706-9-tudor.ambarus@microchip.com>
+References: <20191029111615.3706-1-tudor.ambarus@microchip.com>
+        <20191029111615.3706-9-tudor.ambarus@microchip.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <72d46086-0918-a5af-d798-7488b55a8e07@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 29 Oct 2019 11:17:00 +0000
+<Tudor.Ambarus@microchip.com> wrote:
 
-On 10/29/2019 4:34 PM, Dilip Kota wrote:
->
-> On 10/26/2019 12:53 AM, Rob Herring wrote:
->> On Mon, Oct 21, 2019 at 02:39:18PM +0800, Dilip Kota wrote:
->>> Add YAML shcemas for PCIe RC controller on Intel Gateway SoCs
->>> which is Synopsys DesignWare based PCIe core.
->>>
-[...]
->>>
->>
->> +
->> +  linux,pci-domain:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: PCI domain ID.
->> Just a value of 'true' is fine here.
-> Ok.
-dt_binding_check is failing for adding 'true' alone.
-It is passing only if "$ref" is mentioned.
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+> 
+> Let the callers pass the pointer to the DMA-able buffer where
+> the value of the Status Register will be written. This way we
+> avoid the casts between int and u8, which can be confusing.
+> 
+> Callers stop compare the return value of spi_nor_read_sr() with negative,
+> spi_nor_read_sr() returns 0 on success and -errno otherwise.
+> 
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-Regards,
-Dilip
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+
+> ---
+>  drivers/mtd/spi-nor/spi-nor.c | 117 +++++++++++++++++++++++-------------------
+>  1 file changed, 64 insertions(+), 53 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index 1a00438fd061..dc44d1206f77 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -425,12 +425,15 @@ static int spi_nor_write_disable(struct spi_nor *nor)
+>  	return nor->controller_ops->write_reg(nor, SPINOR_OP_WRDI, NULL, 0);
+>  }
+>  
+> -/*
+> - * Read the status register, returning its value in the location
+> - * Return the status register value.
+> - * Returns negative if error occurred.
+> +/**
+> + * spi_nor_read_sr() - Read the Status Register.
+> + * @nor:	pointer to 'struct spi_nor'.
+> + * @sr:		pointer to a DMA-able buffer where the value of the
+> + *              Status Register will be written.
+> + *
+> + * Return: 0 on success, -errno otherwise.
+>   */
+> -static int spi_nor_read_sr(struct spi_nor *nor)
+> +static int spi_nor_read_sr(struct spi_nor *nor, u8 *sr)
+>  {
+>  	int ret;
+>  
+> @@ -439,20 +442,18 @@ static int spi_nor_read_sr(struct spi_nor *nor)
+>  			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_RDSR, 1),
+>  				   SPI_MEM_OP_NO_ADDR,
+>  				   SPI_MEM_OP_NO_DUMMY,
+> -				   SPI_MEM_OP_DATA_IN(1, nor->bouncebuf, 1));
+> +				   SPI_MEM_OP_DATA_IN(1, sr, 1));
+>  
+>  		ret = spi_mem_exec_op(nor->spimem, &op);
+>  	} else {
+>  		ret = nor->controller_ops->read_reg(nor, SPINOR_OP_RDSR,
+> -						    nor->bouncebuf, 1);
+> +						    sr, 1);
+>  	}
+>  
+> -	if (ret) {
+> +	if (ret)
+>  		dev_err(nor->dev, "error %d reading SR\n", ret);
+> -		return ret;
+> -	}
+>  
+> -	return nor->bouncebuf[0];
+> +	return ret;
+>  }
+>  
+>  /*
+> @@ -668,12 +669,14 @@ static int spi_nor_clear_sr(struct spi_nor *nor)
+>  
+>  static int spi_nor_sr_ready(struct spi_nor *nor)
+>  {
+> -	int sr = spi_nor_read_sr(nor);
+> -	if (sr < 0)
+> -		return sr;
+> +	int ret = spi_nor_read_sr(nor, &nor->bouncebuf[0]);
+>  
+> -	if (nor->flags & SNOR_F_USE_CLSR && sr & (SR_E_ERR | SR_P_ERR)) {
+> -		if (sr & SR_E_ERR)
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (nor->flags & SNOR_F_USE_CLSR &&
+> +	    nor->bouncebuf[0] & (SR_E_ERR | SR_P_ERR)) {
+> +		if (nor->bouncebuf[0] & SR_E_ERR)
+>  			dev_err(nor->dev, "Erase Error occurred\n");
+>  		else
+>  			dev_err(nor->dev, "Programming Error occurred\n");
+> @@ -682,7 +685,7 @@ static int spi_nor_sr_ready(struct spi_nor *nor)
+>  		return -EIO;
+>  	}
+>  
+> -	return !(sr & SR_WIP);
+> +	return !(nor->bouncebuf[0] & SR_WIP);
+>  }
+>  
+>  static int spi_nor_clear_fsr(struct spi_nor *nor)
+> @@ -831,11 +834,11 @@ static int spi_nor_write_sr_and_check(struct spi_nor *nor, u8 status_new,
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = spi_nor_read_sr(nor);
+> -	if (ret < 0)
+> +	ret = spi_nor_read_sr(nor, &nor->bouncebuf[0]);
+> +	if (ret)
+>  		return ret;
+>  
+> -	return ((ret & mask) != (status_new & mask)) ? -EIO : 0;
+> +	return ((nor->bouncebuf[0] & mask) != (status_new & mask)) ? -EIO : 0;
+>  }
+>  
+>  static int spi_nor_write_sr2(struct spi_nor *nor, u8 *sr2)
+> @@ -1510,16 +1513,18 @@ static int stm_is_unlocked_sr(struct spi_nor *nor, loff_t ofs, uint64_t len,
+>  static int stm_lock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+>  {
+>  	struct mtd_info *mtd = &nor->mtd;
+> -	int status_old, status_new;
+> +	int ret, status_old, status_new;
+>  	u8 mask = SR_BP2 | SR_BP1 | SR_BP0;
+>  	u8 shift = ffs(mask) - 1, pow, val;
+>  	loff_t lock_len;
+>  	bool can_be_top = true, can_be_bottom = nor->flags & SNOR_F_HAS_SR_TB;
+>  	bool use_top;
+>  
+> -	status_old = spi_nor_read_sr(nor);
+> -	if (status_old < 0)
+> -		return status_old;
+> +	ret = spi_nor_read_sr(nor, &nor->bouncebuf[0]);
+> +	if (ret)
+> +		return ret;
+> +
+> +	status_old = nor->bouncebuf[0];
+>  
+>  	/* If nothing in our range is unlocked, we don't need to do anything */
+>  	if (stm_is_locked_sr(nor, ofs, len, status_old))
+> @@ -1590,16 +1595,18 @@ static int stm_lock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+>  static int stm_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+>  {
+>  	struct mtd_info *mtd = &nor->mtd;
+> -	int status_old, status_new;
+> +	int ret, status_old, status_new;
+>  	u8 mask = SR_BP2 | SR_BP1 | SR_BP0;
+>  	u8 shift = ffs(mask) - 1, pow, val;
+>  	loff_t lock_len;
+>  	bool can_be_top = true, can_be_bottom = nor->flags & SNOR_F_HAS_SR_TB;
+>  	bool use_top;
+>  
+> -	status_old = spi_nor_read_sr(nor);
+> -	if (status_old < 0)
+> -		return status_old;
+> +	ret = spi_nor_read_sr(nor, &nor->bouncebuf[0]);
+> +	if (ret)
+> +		return ret;
+> +
+> +	status_old = nor->bouncebuf[0];
+>  
+>  	/* If nothing in our range is locked, we don't need to do anything */
+>  	if (stm_is_unlocked_sr(nor, ofs, len, status_old))
+> @@ -1674,13 +1681,13 @@ static int stm_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+>   */
+>  static int stm_is_locked(struct spi_nor *nor, loff_t ofs, uint64_t len)
+>  {
+> -	int status;
+> +	int ret;
+>  
+> -	status = spi_nor_read_sr(nor);
+> -	if (status < 0)
+> -		return status;
+> +	ret = spi_nor_read_sr(nor, &nor->bouncebuf[0]);
+> +	if (ret)
+> +		return ret;
+>  
+> -	return stm_is_locked_sr(nor, ofs, len, status);
+> +	return stm_is_locked_sr(nor, ofs, len, nor->bouncebuf[0]);
+>  }
+>  
+>  static const struct spi_nor_locking_ops stm_locking_ops = {
+> @@ -1746,24 +1753,28 @@ static int spi_nor_is_locked(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+>   */
+>  static int macronix_quad_enable(struct spi_nor *nor)
+>  {
+> -	int ret, val;
+> +	int ret;
+> +
+> +	ret = spi_nor_read_sr(nor, &nor->bouncebuf[0]);
+> +	if (ret)
+> +		return ret;
+>  
+> -	val = spi_nor_read_sr(nor);
+> -	if (val < 0)
+> -		return val;
+> -	if (val & SR_QUAD_EN_MX)
+> +	if (nor->bouncebuf[0] & SR_QUAD_EN_MX)
+>  		return 0;
+>  
+>  	spi_nor_write_enable(nor);
+>  
+> -	spi_nor_write_sr(nor, val | SR_QUAD_EN_MX);
+> +	spi_nor_write_sr(nor, nor->bouncebuf[0] | SR_QUAD_EN_MX);
+>  
+>  	ret = spi_nor_wait_till_ready(nor);
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = spi_nor_read_sr(nor);
+> -	if (!(ret > 0 && (ret & SR_QUAD_EN_MX))) {
+> +	ret = spi_nor_read_sr(nor, &nor->bouncebuf[0]);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!(nor->bouncebuf[0] & SR_QUAD_EN_MX)) {
+>  		dev_err(nor->dev, "Macronix Quad bit not set\n");
+>  		return -EINVAL;
+>  	}
+> @@ -1835,12 +1846,12 @@ static int spansion_no_read_cr_quad_enable(struct spi_nor *nor)
+>  	int ret;
+>  
+>  	/* Keep the current value of the Status Register. */
+> -	ret = spi_nor_read_sr(nor);
+> -	if (ret < 0) {
+> +	ret = spi_nor_read_sr(nor, &sr_cr[0]);
+> +	if (ret) {
+>  		dev_err(nor->dev, "error while reading status register\n");
+>  		return ret;
+>  	}
+> -	sr_cr[0] = ret;
+> +
+>  	sr_cr[1] = CR_QUAD_EN_SPAN;
+>  
+>  	return spi_nor_write_sr_cr(nor, sr_cr);
+> @@ -1878,12 +1889,11 @@ static int spansion_read_cr_quad_enable(struct spi_nor *nor)
+>  	sr_cr[1] = ret | CR_QUAD_EN_SPAN;
+>  
+>  	/* Keep the current value of the Status Register. */
+> -	ret = spi_nor_read_sr(nor);
+> -	if (ret < 0) {
+> +	ret = spi_nor_read_sr(nor, &sr_cr[0]);
+> +	if (ret) {
+>  		dev_err(dev, "error while reading status register\n");
+>  		return ret;
+>  	}
+> -	sr_cr[0] = ret;
+>  
+>  	ret = spi_nor_write_sr_cr(nor, sr_cr);
+>  	if (ret)
+> @@ -1967,15 +1977,15 @@ static int spi_nor_clear_sr_bp(struct spi_nor *nor)
+>  	int ret;
+>  	u8 mask = SR_BP2 | SR_BP1 | SR_BP0;
+>  
+> -	ret = spi_nor_read_sr(nor);
+> -	if (ret < 0) {
+> +	ret = spi_nor_read_sr(nor, &nor->bouncebuf[0]);
+> +	if (ret) {
+>  		dev_err(nor->dev, "error while reading status register\n");
+>  		return ret;
+>  	}
+>  
+>  	spi_nor_write_enable(nor);
+>  
+> -	ret = spi_nor_write_sr(nor, ret & ~mask);
+> +	ret = spi_nor_write_sr(nor, nor->bouncebuf[0] & ~mask);
+>  	if (ret) {
+>  		dev_err(nor->dev, "write to status register failed\n");
+>  		return ret;
+> @@ -2021,13 +2031,14 @@ static int spi_nor_spansion_clear_sr_bp(struct spi_nor *nor)
+>  	if (ret & CR_QUAD_EN_SPAN) {
+>  		sr_cr[1] = ret;
+>  
+> -		ret = spi_nor_read_sr(nor);
+> -		if (ret < 0) {
+> +		ret = spi_nor_read_sr(nor, &sr_cr[0]);
+> +		if (ret) {
+>  			dev_err(nor->dev,
+>  				"error while reading status register\n");
+>  			return ret;
+>  		}
+> -		sr_cr[0] = ret & ~mask;
+> +
+> +		sr_cr[0] &= ~mask;
+>  
+>  		ret = spi_nor_write_sr_cr(nor, sr_cr);
+>  		if (ret)
 
