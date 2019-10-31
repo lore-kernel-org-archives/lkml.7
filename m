@@ -2,161 +2,92 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C1BCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756C9CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98FA2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4306F2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 17:22:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Vc1TOFMb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbfJaRWx (ORCPT
+        id S1728948AbfJaRW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 13:22:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:52794 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728655AbfJaRWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 13:22:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C50F11FB;
-        Thu, 31 Oct 2019 10:22:51 -0700 (PDT)
-Received: from arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFE213F6C4;
-        Thu, 31 Oct 2019 10:22:48 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 17:22:43 +0000
-From:   Steven Price <steven.price@arm.com>
-To:     lkp report check <lkp@intel.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <James.Morse@arm.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Zong Li <zong.li@sifive.com>,
-        "lkp@lists.01.org" <lkp@lists.01.org>,
-        "ltp@lists.linux.it" <ltp@lists.linux.it>
-Subject: Re: [mm] 9343f6818b: BUG:kernel_NULL_pointer_dereference,address
-Message-ID: <20191031172241.GA54073@arm.com>
-References: <20191028135910.33253-13-steven.price@arm.com>
- <20191031151510.GA16405@xsang-OptiPlex-9020>
+        Thu, 31 Oct 2019 13:22:58 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:38451 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728655AbfJaRW5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 13:22:57 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id F3D4922487;
+        Thu, 31 Oct 2019 18:22:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
+        s=mail2016061301; t=1572542573;
+        bh=0fQn8J+Kg8/qf+a/0vkp3JOugLpSh1Dl2VWX2whBuF4=;
+        h=Date:From:To:Subject:In-Reply-To:References:From;
+        b=Vc1TOFMbc7wpbIIG8zLgOB3I0KhAi4uO1/wBcuW3szUioH68leIr78gX6t69rkAnU
+         jb4OjfId/UqtNw7H44PmvTgYjLzVThaaOq/bC/ht7IqjrYhzNCwXeSwuQH/tBLOl5G
+         pFaoUquAy00L2OmBODOgUHjpmyYdUhyEpaHeh5Yo=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031151510.GA16405@xsang-OptiPlex-9020>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 31 Oct 2019 18:22:52 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [RFC PATCH 3/3] net: phy: at803x: add device tree binding
+In-Reply-To: <B3B13FB8-42D9-42F9-8106-536F574FA35B@walle.cc>
+References: <20191030224251.21578-1-michael@walle.cc>
+ <20191030224251.21578-4-michael@walle.cc>
+ <754a493b-a557-c369-96e1-6701ba5d5a30@gmail.com>
+ <B3B13FB8-42D9-42F9-8106-536F574FA35B@walle.cc>
+Message-ID: <e867d1a9a1e4b878aa0dafe413e9a6f7@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.2.3
+X-Virus-Scanned: clamav-milter 0.101.4 at web
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 03:15:10PM +0000, kernel test robot wrote:
-> FYI, we noticed the following commit (built with gcc-7):
+Am 2019-10-31 00:59, schrieb Michael Walle:
+>>> +
+>>> +	if (of_property_read_bool(node, "atheros,keep-pll-enabled"))
+>>> +		priv->flags |= AT803X_KEEP_PLL_ENABLED;
+>> 
+>> This should probably be a PHY tunable rather than a Device Tree
+>> property
+>> as this delves more into the policy than the pure hardware 
+>> description.
 > 
-> commit: 9343f6818bb98cf0c982bfff6ed89b2c7176bcf9 ("[PATCH v14 12/22] mm: pagewalk: Allow walking without vma")
-> url: https://github.com/0day-ci/linux/commits/Steven-Price/Generic-page-walk-and-ptdump/20191030-085205
-> 
-[...]
-> 
-> [   36.010874] BUG: kernel NULL pointer dereference, address: 0000000000000053
-> [   36.012644] #PF: supervisor read access in kernel mode
-> [   36.014074] #PF: error_code(0x0000) - not-present page
-> [   36.015481] PGD 0 P4D 0 
-> [   36.016433] Oops: 0000 [#1] SMP PTI
-> [   36.017561] CPU: 1 PID: 2376 Comm: mmap12 Not tainted 5.4.0-rc5-00046-g9343f6818bb98 #1
-> [   36.019340] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-> [   36.021250] RIP: 0010:pagemap_pmd_range+0x5ae/0x7b0
+> To be frank. I'll first need to look into PHY tunables before answering 
+> ;)
+> But keep in mind that this clock output might be used anywhere on the
+> board. It must not have something to do with networking. The PHY has a
+> crystal and it can generate these couple of frequencies regardless of
+> its network operation.
 
-So it looks like this has broken /proc/<pid>/pagemap because we can now
-call the callbacks with a NULL vma if the region passed into
-walk_page_range is (partially) outside the VMA range.
+Although it could be used to provide any clock on the board, I don't 
+know
+if that is possible at the moment, because the PHY is configured in
+config_init() which is only called when someone brings the interface up,
+correct?
 
-Somehow, in this situation, there is a region which has a PMD entry but
-no corresponding VMA. So the pmd_entry callback is called but with
-walk->vma==NULL.
+Anyway, I don't know if that is worth the hassle because in almost all
+cases the use case is to provide a fixed clock to the MAC for an RGMII
+interface. I don't know if that really fits a PHY tunable, because in
+the worst case the link won't work at all if the SoC expects an
+always-on clock.
 
-The options for fixing this seem to be:
- a) Make the pagemap callback robust against a PMD entry without a VMA.
-    For example treating it as a hole (as it would have been before this
-    patch):
-
----8<---
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 9442631fd4af..b6d819c4bbb2 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -1369,6 +1369,9 @@ static int pagemap_pmd_range(pmd_t *pmdp, unsigned long addr, unsigned long end,
- 	pte_t *pte, *orig_pte;
- 	int err = 0;
- 
-+	if (!vma)
-+		return pagemap_pte_hole(addr, end, walk);
-+
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 	ptl = pmd_trans_huge_lock(pmdp, vma);
- 	if (ptl) {
----8<---
-
- b) Provide a flag (or another function) for walk_page_range() which
-    restores the previous behaviour. Only those users that want to walk
-    ranges without VMAs would then need to deal with NULL-vma returns.
-
----8<---
-diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
-index 12004b097eae..519258e8fffa 100644
---- a/include/linux/pagewalk.h
-+++ b/include/linux/pagewalk.h
-@@ -61,6 +61,7 @@ struct mm_walk {
- 	const struct mm_walk_ops *ops;
- 	struct mm_struct *mm;
- 	struct vm_area_struct *vma;
-+	bool ignore_vma;
- 	void *private;
- };
-
-diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index 4139e9163aee..f2fccbc3cba8 100644
---- a/mm/pagewalk.c
-+++ b/mm/pagewalk.c
-@@ -38,7 +38,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
- 	do {
- again:
- 		next = pmd_addr_end(addr, end);
--		if (pmd_none(*pmd)) {
-+		if (pmd_none(*pmd) || (!walk->vma && walk->ignore_vma)) {
- 			if (ops->pte_hole)
- 				err = ops->pte_hole(addr, next, walk);
- 			if (err)
-@@ -89,7 +89,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
- 	do {
-  again:
- 		next = pud_addr_end(addr, end);
--		if (pud_none(*pud)) {
-+		if (pud_none(*pud) || (!walk->vma && !walk->ignore_vma)) {
- 			if (ops->pte_hole)
- 				err = ops->pte_hole(addr, next, walk);
- 			if (err)
----8<---
-
-I'm currently inclined towards the latter because I don't want to have
-to try to audit all existing users in case there's anything similar
-lurking in another user of walk_page_range().
-
-Steve
-
+-- 
+-michael
