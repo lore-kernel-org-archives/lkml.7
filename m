@@ -2,113 +2,88 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 541C3CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3DDCA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2510420873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8992E20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 09:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfJaJ4v (ORCPT
+        id S1727129AbfJaJ7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 05:56:51 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37968 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726864AbfJaJ4u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 05:56:50 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9V9o3AE101836
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 05:56:49 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vyu6pw0bq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 05:56:48 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <iii@linux.ibm.com>;
-        Thu, 31 Oct 2019 09:56:47 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 31 Oct 2019 09:56:44 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9V9uhe541287908
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Oct 2019 09:56:43 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 386DB11C05C;
-        Thu, 31 Oct 2019 09:56:43 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EDB9711C050;
-        Thu, 31 Oct 2019 09:56:42 +0000 (GMT)
-Received: from dyn-9-152-96-251.boeblingen.de.ibm.com (unknown [9.152.96.251])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 31 Oct 2019 09:56:42 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
-Subject: Re: [PATCH] scripts/gdb: fix debugging modules compiled with hot/cold
- partitioning
-From:   Ilya Leoshkevich <iii@linux.ibm.com>
-In-Reply-To: <130e31f0-ce38-77cb-58a9-cedf3b0f8113@siemens.com>
-Date:   Thu, 31 Oct 2019 10:56:42 +0100
-Cc:     Kieran Bingham <kbingham@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Content-Transfer-Encoding: 7bit
-References: <20191028152734.13065-1-iii@linux.ibm.com>
- <130e31f0-ce38-77cb-58a9-cedf3b0f8113@siemens.com>
-To:     Jan Kiszka <jan.kiszka@siemens.com>
-X-Mailer: Apple Mail (2.3594.4.19)
-X-TM-AS-GCONF: 00
-x-cbid: 19103109-0020-0000-0000-000003814697
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19103109-0021-0000-0000-000021D75B92
-Message-Id: <565ED332-3D0E-4741-BB82-3E82371C7054@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-31_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910310098
+        Thu, 31 Oct 2019 05:59:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34178 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726864AbfJaJ7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 05:59:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 231A9B12E;
+        Thu, 31 Oct 2019 09:59:47 +0000 (UTC)
+From:   Jiri Slaby <jslaby@suse.cz>
+To:     axboe@kernel.dk
+Cc:     linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH v2 -resend 1/4] ata: Documentation, fix function names
+Date:   Thu, 31 Oct 2019 10:59:43 +0100
+Message-Id: <20191031095946.7070-1-jslaby@suse.cz>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Am 30.10.2019 um 19:29 schrieb Jan Kiszka <jan.kiszka@siemens.com>:
-> 
-> On 28.10.19 16:27, Ilya Leoshkevich wrote:
->> gcc's -freorder-blocks-and-partition option makes it group frequently
->> and infrequently used code in .text.hot and .text.unlikely sections
->> respectively. At least when building modules on s390, this option is
->> used by default.
->> 
->> gdb assumes that all code is located in .text section, and that .text
->> section is located at module load address. With such modules this is no
->> longer the case: there is code in .text.hot and .text.unlikely, and
->> either of them might precede .text.
->> 
->> Fix by explicitly telling gdb the addresses of code sections.
->> 
->> It might be tempting to do this for all sections, not only the ones in
->> the white list. Unfortunately, gdb appears to have an issue, when telling
->> it about e.g. loadable .note.gnu.build-id section causes it to think that
->> non-loadable .note.Linux section is loaded at address 0, which in turn
->> causes NULL pointers to be resolved to bogus symbols. So keep using the
->> white list approach for the time being.
-> 
-> Did you report this to gdb?
+ata_qc_prep no longer exists, there are ata_bmdma_qc_prep and
+ata_bmdma_dumb_qc_prep instead. And most drivers do not use them, so
+reword the paragraph.
 
-Yes: https://sourceware.org/bugzilla/show_bug.cgi?id=25152
+ata_qc_issue_prot was renamed to ata_sff_qc_issue. ->tf_load is now
+->sff_tf_load. Fix them.
 
-Best regards,
-Ilya
+And fix spelling supercede -> supersede.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-ide@vger.kernel.org
+---
+ Documentation/driver-api/libata.rst | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/driver-api/libata.rst b/Documentation/driver-api/libata.rst
+index 70e180e6b93d..c2ee38098e85 100644
+--- a/Documentation/driver-api/libata.rst
++++ b/Documentation/driver-api/libata.rst
+@@ -254,19 +254,19 @@ High-level taskfile hooks
+     int (*qc_issue) (struct ata_queued_cmd *qc);
+ 
+ 
+-Higher-level hooks, these two hooks can potentially supercede several of
++Higher-level hooks, these two hooks can potentially supersede several of
+ the above taskfile/DMA engine hooks. ``->qc_prep`` is called after the
+ buffers have been DMA-mapped, and is typically used to populate the
+-hardware's DMA scatter-gather table. Most drivers use the standard
+-:c:func:`ata_qc_prep` helper function, but more advanced drivers roll their
+-own.
++hardware's DMA scatter-gather table. Some drivers use the standard
++:c:func:`ata_bmdma_qc_prep` and :c:func:`ata_bmdma_dumb_qc_prep` helper
++functions, but more advanced drivers roll their own.
+ 
+ ``->qc_issue`` is used to make a command active, once the hardware and S/G
+ tables have been prepared. IDE BMDMA drivers use the helper function
+-:c:func:`ata_qc_issue_prot` for taskfile protocol-based dispatch. More
++:c:func:`ata_sff_qc_issue` for taskfile protocol-based dispatch. More
+ advanced drivers implement their own ``->qc_issue``.
+ 
+-:c:func:`ata_qc_issue_prot` calls ``->tf_load()``, ``->bmdma_setup()``, and
++:c:func:`ata_sff_qc_issue` calls ``->sff_tf_load()``, ``->bmdma_setup()``, and
+ ``->bmdma_start()`` as necessary to initiate a transfer.
+ 
+ Exception and probe handling (EH)
+-- 
+2.23.0
 
