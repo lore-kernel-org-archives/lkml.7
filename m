@@ -2,106 +2,117 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D061CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 610FCCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5022080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:04:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMivkkZ5"
+	by mail.kernel.org (Postfix) with ESMTP id 2D2C82087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:05:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572563138;
+	bh=4z2WuELNukNwKuKrFR1f3kQfDOncbIyk/+Kn5OAHdec=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=nZBdiwU+XT+7zTdBIdj14h8lt9oWN3YP8DWXoA8MJn4lFSlrw60NTNlCrXqAzhowa
+	 WTH2MoqcovhCBBM0na+E8w5Rrs04Kl3m8UjP7Xl5fqiwk1HfIV2VImMhM5dnCiaePG
+	 P4/ZGNVqq5CJ4Dq/3sxgFnbdpz+nQ8PXyPPCGWzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728456AbfJaXDc (ORCPT
+        id S1728492AbfJaXFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 19:03:32 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36318 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbfJaXDc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 19:03:32 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y10so3975616qto.3
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 16:03:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=w1lv6i5WMZhr+LJHUYk12uXR0Zf+Nge4dShOz7QCLY4=;
-        b=gMivkkZ54O49XnNT6ktSMTgKwQeUd9Pjiy2DBrSJ9BCNsak1LylpmxHg8bqyZaBJBq
-         fAXl5C+HkhUS9PBr7QFiApn1HVtf1UKky3vnp1q/FfTM6nsfDLa57Ugzkt+KRmjk7BI2
-         eljn/NRnMtydKl2yk9BHWAOpVNodeDERcwWv6I5obW2farhTreah+/1gC4iAVuYa6Vuk
-         FkPNhjXYAwTUtNdwyQNUA4TDPBtJCBFTj3zJtxq9YCbBfb9+q0X1I926tSdPwuVqoYa2
-         An8hZjAhbIiIleUo/lC2P3NLHqdtKszSqc9rg82KLDoGoLgVY4ytoGx3h9dF5nSRmPcj
-         EsPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=w1lv6i5WMZhr+LJHUYk12uXR0Zf+Nge4dShOz7QCLY4=;
-        b=ja5Wf+15GajG6ek1fk0pO2V6Mtr27tpl8QTgcZCJJDRrP5wjmJKtTTEfdutZcDXNFx
-         h8/SexzRESgAWb85u/+4qHY0sczBERpbVyUFE2Rrd/EvGc7+rLUViTxEFOJz0C+lQbHe
-         nxdt7l8hCMZ63116UeRXPVoaFzl3LzJO/ro/D9TX1K60igFqyNgAwUby0kceceDeoeJn
-         xsYIX9eKM1IrWHlEYdIKDA6JNDQZ4Z6P/WtQ1lX+tb11prX/TfaHdDKQE+89vLE5vpKs
-         eGh96NCSfxk+hn7ocNmONaMYOrOzdnusMPgerVV++F/8DJTGah0fMfEOhqsKJ4/pI4xJ
-         ag3g==
-X-Gm-Message-State: APjAAAWdUwRSkcY49YtFDQ+05O+mxWVUcipSRb0FKY0MX4XT9mnIdkNM
-        7d4D0OgDAYaVtDrx1WnDs1Q=
-X-Google-Smtp-Source: APXvYqxnW2g3AzvIUkcvZbFqLXCygMYsIlDZ1TD8IYQ0y48FZF5RQ8h5I08Rno3FcRXBeNUBY7KUVg==
-X-Received: by 2002:a0c:936e:: with SMTP id e43mr7260553qve.73.1572563011216;
-        Thu, 31 Oct 2019 16:03:31 -0700 (PDT)
-Received: from localhost.localdomain ([187.106.44.83])
-        by smtp.gmail.com with ESMTPSA id s67sm2633875qkh.70.2019.10.31.16.03.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 16:03:30 -0700 (PDT)
-From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-To:     outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
-        kim.jamie.bradley@gmail.com, nishkadg.linux@gmail.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-Subject: [PATCH v4 3/3] staging: rts5208: Eliminate the use of Camel Case in file sd.h
-Date:   Thu, 31 Oct 2019 20:02:43 -0300
-Message-Id: <20191031230243.3462-4-gabrielabittencourt00@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191031230243.3462-1-gabrielabittencourt00@gmail.com>
-References: <20191031230243.3462-1-gabrielabittencourt00@gmail.com>
+        Thu, 31 Oct 2019 19:05:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726602AbfJaXFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 19:05:35 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 469D62080F;
+        Thu, 31 Oct 2019 23:05:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572563134;
+        bh=4z2WuELNukNwKuKrFR1f3kQfDOncbIyk/+Kn5OAHdec=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=L3xc+mry460+mKLDYMYkBOhGK+f+eRRMzhLD3aBVcDSwHy5hy+uJ44c7lwaBi7qoB
+         5h4rUMRCnK4Mv96EKpJWUkIToZgZiAhhwC67d28eUGe20yFziukgpXzAiE0veeh28K
+         42ADyhYQRSM6yuofTjj2JfBrWqYYQCAv8XwBwXOQ=
+Date:   Thu, 31 Oct 2019 18:05:32 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kar Hin Ong <kar.hin.ong@ni.com>
+Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-x86_64@vger.kernel.org, linux-pci@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: "oneshot" interrupt causes another interrupt to be fired
+ erroneously in Haswell system
+Message-ID: <20191031230532.GA170712@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MN2PR04MB625541BF4ADC84690B5C45E9C3630@MN2PR04MB6255.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleans up checks of "Avoid CamelCase" in file sd.h
-Even though the constant "DCM_LOW_FREQUENCY_MODE_SET" is defined and never used,
-it's useful to keep it because it documents the device.
+[+cc Thomas, IRQ maintainer]
 
-Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+On Thu, Oct 31, 2019 at 03:53:50AM +0000, Kar Hin Ong wrote:
+> Hi,
+> 
+> I've an Intel Haswell system running Linux kernel v4.14 with
+> preempt_rt patch. The system contain 2 IOAPICs: IOAPIC 1 is on the
+> PCH where IOAPIC 2 is on the CPU.
+> 
+> I observed that whenever a PCI device is firing interrupt (INTx) to
+> Pin 20 of IOAPIC 2 (GSI 44); the kernel will receives 2 interrupts: 
+>    1. Interrupt from Pin 20 of IOAPIC 2  -> Expected
+>    2. Interrupt from Pin 19 of IOAPIC 1  -> UNEXPECTED, erroneously
+>       triggered
+> 
+> The unexpected interrupt is unhandled eventually. When this scenario
+> happen more than 99,000 times, kernel disables the interrupt line
+> (Pin 19 of IOAPIC 1) and causing device that has requested it become
+> malfunction.
+> 
+> I managed to also reproduced this issue on RHEL 8 and Ubuntu 19-04
+> (without preempt_rt patch) after added "threadirqs" to the kernel
+> command line.
+> 
+> After digging further, I noticed that the said issue is happened
+> whenever an interrupt pin on IOAPIC 2 is masked:
+>  - Masking Pin 20 of IOAPIC 2 triggers Pin 19 of IOAPIC 1  
+>  - Masking Pin 22 of IOAPIC 2 triggers Pin 18 of IOAPIC 1  
+> 
+> I also noticed that kernel will explicitly mask a specific interrupt
+> pin before execute its handler, if the interrupt is configured as
+> "oneshot" (i.e. threaded). See
+> https://elixir.bootlin.com/linux/v4.14/source/kernel/irq/chip.c#L695
+> This explained why it only happened on RTOS and Desktop Linux with
+> "threadirqs" flag, because these configurations force the interrupt
+> handler to be threaded.
+> 
+> From Intel Xeon Processor E5/E7 v3 Product Family External Design
+> Specification (EDS), Volume One: Architecture, section 13.1 (Legacy
+> PCI Interrupt Handling), it mention: "If the I/OxAPIC entry is
+> masked (via the 'mask' bit in the corresponding Redirection Table
+> Entry), then the corresponding PCI Express interrupt(s) is forwarded
+> to the legacy PCH"
+> 
+> My interpretation is: when kernel receive a "oneshot" interrupt, it
+> mask the line before start handling it (or sending the eoi signal).
+> At this moment, if the interrupt line is still asserting, then the
+> interrupt signal will be routed to the IOAPIC in PCH, and hence
+> causing another interrupt to be fired erroneously.  
+> 
+> I would like to understand if my interpretation is make sense. If
+> yes, should the "oneshot" algorithm need to be updated to support
+> Haswell system?
 
----
-Changes in v4:
-- Explain the reason of keeping a constant that is defined and not used
----
- drivers/staging/rts5208/sd.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Just to make sure this hasn't already been fixed, can you reproduce
+the problem on a current kernel, e.g., v5.3 or v5.4-rc5?
 
-diff --git a/drivers/staging/rts5208/sd.h b/drivers/staging/rts5208/sd.h
-index dc9e8cad7a74..f4ff62653b56 100644
---- a/drivers/staging/rts5208/sd.h
-+++ b/drivers/staging/rts5208/sd.h
-@@ -232,7 +232,7 @@
- #define DCM_LOW_FREQUENCY_MODE   0x01
- 
- #define DCM_HIGH_FREQUENCY_MODE_SET  0x0C
--#define DCM_Low_FREQUENCY_MODE_SET   0x00
-+#define DCM_LOW_FREQUENCY_MODE_SET   0x00
- 
- #define MULTIPLY_BY_1    0x00
- #define MULTIPLY_BY_2    0x01
--- 
-2.20.1
-
+Bjorn
