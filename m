@@ -2,103 +2,147 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91136CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3579DC47E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 633742080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C9121734
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:35:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XzWHPNa9"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="F7Q+3Waz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729624AbfJaT3y (ORCPT
+        id S1727514AbfJaTfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 15:29:54 -0400
-Received: from mail-io1-f54.google.com ([209.85.166.54]:36726 "EHLO
-        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbfJaT3y (ORCPT
+        Thu, 31 Oct 2019 15:35:38 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:41041 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbfJaTfi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 15:29:54 -0400
-Received: by mail-io1-f54.google.com with SMTP id s3so4246719ioe.3
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 12:29:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=ps9mIWZL6I4lt3cKBlCNZFVxrfgS2HQqXQheS1VhANc=;
-        b=XzWHPNa9zlkb/3BPgBxi8pnviBHJE8YC5j2rV4X3/iFDVc/vTJyS8zUGIi3MEUf14u
-         BWRGXbNjc1dXRhDzIfNdPuC2L8EfTJfsB/idFuJBVzfRDdQ4bp+thdbbQM9rsgNoymKk
-         OxzDrzhcHFAVu/EK027/3Y0ud/pMYD6x3CFPpsWOA95kh5FLxjSUyX6NDSjt/fhqyNZM
-         a1ldEorqYXclz7PPLviY2YnF+7YZOPJtMlfGSyyjGT3nZoXCP/V90hxfTuaMnG6SYu/d
-         nufF+cQRjKbMG9VqqJxVV89krnxzoELhpLDfaC63PNVj7IZvfnJLoUVsrn9zeRauA1Pw
-         N/xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=ps9mIWZL6I4lt3cKBlCNZFVxrfgS2HQqXQheS1VhANc=;
-        b=BDiGRzSiC+CHg3bK6eIkbSDiWu8ROk22jY2aG5ugUgHXw0FAKxOJaXqhtvx9NbAq3d
-         diYemaMCkfi3NNQUIZ9nhZAWqUaXZ1jwNRkHasJ3gzye70i7HCP+h7z8y0K3PU3a5Jfl
-         OkfQxPSK4JtU3xb6/pz6kzEfmxFyKD20wHs/dlWnw+H2q1kQKqGC20BuxWn1Unq2l6HG
-         3lL0BRrEik0yZf2zwDXY+WGbFW+RSAypPR0ivUBuloQ0JuD7vnUuFHjHIn4w8RDZ4nT0
-         oHqBX2A77NhHlRSejjWlWwuOvMUWAcwfXgRI7qp39PnIIu6kOMEdL8Mg82oYW0JwfNiB
-         iFXA==
-X-Gm-Message-State: APjAAAXLhpI4xXPHU55W6KeMq87CwjbE5r2c46UbhziTSf/c0FatMnU2
-        tAhfNQFIL8aBu0Lr9glGwPr8Pw==
-X-Google-Smtp-Source: APXvYqwuUBD1GtseY327OIvcq+SpT+2E+Z53XNLIt4/i9Xs32ZGpLdq2+5z5898PYsIrf3ahdzC5QA==
-X-Received: by 2002:a5d:9712:: with SMTP id h18mr5049544iol.256.1572550193215;
-        Thu, 31 Oct 2019 12:29:53 -0700 (PDT)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id y5sm350498ilk.83.2019.10.31.12.29.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 12:29:52 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 12:29:49 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Anup Patel <anup@brainfault.org>
-cc:     linux-riscv <linux-riscv@lists.infradead.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Experimental branch
-In-Reply-To: <CAAhSdy3Y1W_8Uu00F66jVM=ObFouxw1C_z4-MVkLh0+s5Wx3HQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.9999.1910311223050.16921@viisi.sifive.com>
-References: <alpine.DEB.2.21.9999.1910311101480.23683@viisi.sifive.com> <CAAhSdy3Y1W_8Uu00F66jVM=ObFouxw1C_z4-MVkLh0+s5Wx3HQ@mail.gmail.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Thu, 31 Oct 2019 15:35:38 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 7FC5E886BF;
+        Fri,  1 Nov 2019 08:35:33 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1572550533;
+        bh=E93uVfw+8Sv9aFniBPMkATe9ycroU/eB0+p7RpM6SlA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=F7Q+3WazE4DEFImOB2xZ4pivLcl6lyZDOa051lMUsnuJjiDOnLZqYdJB2InfY74Kw
+         d+WMefMFl20rEyIL5JZCP4Yh0RAYAxQhOpIJbMWV2edqp7fkjiw3txEIuO+u4Ei7qm
+         spAmx5eRqXnoC/3/rjAW14AWozrfUOrc7pvnKKsFrtQqsMJYpeIo3B0XtUufTB82gD
+         4SLwNZHjmU761wfyV+eg1CabIjsNy/Bd5Kc2hWe7gINE5L79DE67K6zQSdR5tfroEs
+         hf8tJOMxgOkhtWsI+qTFbkvqbZTAzqxtja04Wvn5cFtblGoMNJPNiNDL5MnA1+o8Rs
+         6nFEovFHVG7Jw==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5dbb37840000>; Fri, 01 Nov 2019 08:35:32 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1156.6; Fri, 1 Nov 2019 08:35:31 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Fri, 1 Nov 2019 08:35:31 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "tomeu.vizoso@collabora.com" <tomeu.vizoso@collabora.com>,
+        "mgalka@collabora.com" <mgalka@collabora.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "matthew.hart@linaro.org" <matthew.hart@linaro.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "bot@kernelci.org" <bot@kernelci.org>,
+        "khilman@baylibre.com" <khilman@baylibre.com>,
+        "guillaume.tucker@collabora.com" <guillaume.tucker@collabora.com>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>
+Subject: Re: linusw/devel boot bisection: v5.4-rc1-31-g6a41b6c5fc20 on
+ rk3399-puma-haikou
+Thread-Topic: linusw/devel boot bisection: v5.4-rc1-31-g6a41b6c5fc20 on
+ rk3399-puma-haikou
+Thread-Index: AQHVkBrPgYhki3sbH0mOvdKD5EMjb6d0SpEA
+Date:   Thu, 31 Oct 2019 19:35:30 +0000
+Message-ID: <9d1a6cba9687f94b2d36a82f42f5d4be2b16e7a6.camel@alliedtelesis.co.nz>
+References: <5dbb2acf.1c69fb81.54ce2.2f48@mx.google.com>
+In-Reply-To: <5dbb2acf.1c69fb81.54ce2.2f48@mx.google.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:f9a5:3a1:c94b:a6f5]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <007B585A5A5044459D519245F35A99C3@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 Nov 2019, Anup Patel wrote:
-
-> You can drop the KVM RISC-V patches from your experimental branch.
-
-We're not only doing it for you ;-)
-
-> We are already maintaining KVM RISC-V patches (and dependent patches)
-> in the official KVM RISC-V gitrepo at: https://github.com/kvm-riscv/linux.git
-> 
-> All KVM RISC-V related work will go through above mentioned gitrepo
-> in-future. This gitrepo is co-maintained by me and Atish.
-
-It's great that you guys have your own git repository for KVM patch 
-development!
-
-For upstreaming, all of the RISC-V KVM changes under arch/riscv need to go 
-up via the arch/riscv maintainers to ensure a coherent maintenance 
-approach across arch/riscv.  We may work out something with Paolo in the 
-future.
-
-
-thanks,
-
-- Paul
+T24gVGh1LCAyMDE5LTEwLTMxIGF0IDExOjQxIC0wNzAwLCBrZXJuZWxjaS5vcmcgYm90IHdyb3Rl
+Og0KPiAqICogKiAqICogKiAqICogKiAqICogKiAqICogKiAqICogKiAqICogKiAqICogKiAqICog
+KiAqICogKiAqICogKg0KPiAqIFRoaXMgYXV0b21hdGVkIGJpc2VjdGlvbiByZXBvcnQgd2FzIHNl
+bnQgdG8geW91IG9uIHRoZSBiYXNpcyAgKg0KPiAqIHRoYXQgeW91IG1heSBiZSBpbnZvbHZlZCB3
+aXRoIHRoZSBicmVha2luZyBjb21taXQgaXQgaGFzICAgICAgKg0KPiAqIGZvdW5kLiAgTm8gbWFu
+dWFsIGludmVzdGlnYXRpb24gaGFzIGJlZW4gZG9uZSB0byB2ZXJpZnkgaXQsICAgKg0KPiAqIGFu
+ZCB0aGUgcm9vdCBjYXVzZSBvZiB0aGUgcHJvYmxlbSBtYXkgYmUgc29tZXdoZXJlIGVsc2UuICAg
+ICAgKg0KPiAqICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgKg0KPiAqIElmIHlvdSBkbyBzZW5kIGEgZml4LCBwbGVhc2UgaW5jbHVk
+ZSB0aGlzIHRyYWlsZXI6ICAgICAgICAgICAgKg0KPiAqICAgUmVwb3J0ZWQtYnk6ICJrZXJuZWxj
+aS5vcmcgYm90IiA8Ym90QGtlcm5lbGNpLm9yZz4gICAgICAgICAgKg0KPiAqICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKg0KPiAq
+IEhvcGUgdGhpcyBoZWxwcyEgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgKg0KPiAqICogKiAqICogKiAqICogKiAqICogKiAqICogKiAqICogKiAqICogKiAqICog
+KiAqICogKiAqICogKiAqICogKg0KPiANCj4gbGludXN3L2RldmVsIGJvb3QgYmlzZWN0aW9uOiB2
+NS40LXJjMS0zMS1nNmE0MWI2YzVmYzIwIG9uIHJrMzM5OS1wdW1hLWhhaWtvdQ0KPiANCj4gU3Vt
+bWFyeToNCj4gICBTdGFydDogICAgICA2YTQxYjZjNWZjMjAgZ3BpbzogQWRkIHhncy1pcHJvYyBk
+cml2ZXINCj4gICBEZXRhaWxzOiAgICBodHRwczovL2tlcm5lbGNpLm9yZy9ib290L2lkLzVkYmIx
+MmJmNTliNTE0NDA0ZjYwZWU3OQ0KPiAgIFBsYWluIGxvZzogIGh0dHBzOi8vc3RvcmFnZS5rZXJu
+ZWxjaS5vcmcvL2xpbnVzdy9kZXZlbC92NS40LXJjMS0zMS1nNmE0MWI2YzVmYzIwL2FybTY0L2Rl
+ZmNvbmZpZy9nY2MtOC9sYWItdGhlb2Jyb21hLXN5c3RlbXMvYm9vdC1yazMzOTktcHVtYS1oYWlr
+b3UudHh0DQo+ICAgSFRNTCBsb2c6ICAgaHR0cHM6Ly9zdG9yYWdlLmtlcm5lbGNpLm9yZy8vbGlu
+dXN3L2RldmVsL3Y1LjQtcmMxLTMxLWc2YTQxYjZjNWZjMjAvYXJtNjQvZGVmY29uZmlnL2djYy04
+L2xhYi10aGVvYnJvbWEtc3lzdGVtcy9ib290LXJrMzM5OS1wdW1hLWhhaWtvdS5odG1sDQo+ICAg
+UmVzdWx0OiAgICAgNmE0MWI2YzVmYzIwIGdwaW86IEFkZCB4Z3MtaXByb2MgZHJpdmVyDQo+IA0K
+PiBDaGVja3M6DQo+ICAgcmV2ZXJ0OiAgICAgUEFTUw0KPiAgIHZlcmlmeTogICAgIFBBU1MNCj4g
+DQo+IFBhcmFtZXRlcnM6DQo+ICAgVHJlZTogICAgICAgbGludXN3DQo+ICAgVVJMOiAgICAgICAg
+aHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvbGludXN3L2xp
+bnV4LWdwaW8uZ2l0Lw0KPiAgIEJyYW5jaDogICAgIGRldmVsDQo+ICAgVGFyZ2V0OiAgICAgcmsz
+Mzk5LXB1bWEtaGFpa291DQo+ICAgQ1BVIGFyY2g6ICAgYXJtNjQNCj4gICBMYWI6ICAgICAgICBs
+YWItdGhlb2Jyb21hLXN5c3RlbXMNCj4gICBDb21waWxlcjogICBnY2MtOA0KPiAgIENvbmZpZzog
+ICAgIGRlZmNvbmZpZw0KPiAgIFRlc3Qgc3VpdGU6IGJvb3QNCj4gDQo+IEJyZWFraW5nIGNvbW1p
+dCBmb3VuZDoNCj4gDQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gY29tbWl0IDZhNDFiNmM1
+ZmMyMGFiY2VkODhmYTBlZWQ0MmFlNWU1Y2I3MGIyODANCj4gQXV0aG9yOiBDaHJpcyBQYWNraGFt
+IDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+DQo+IERhdGU6ICAgRnJpIE9jdCAy
+NSAwOToyNzowMyAyMDE5ICsxMzAwDQo+IA0KPiAgICAgZ3BpbzogQWRkIHhncy1pcHJvYyBkcml2
+ZXINCj4gICAgIA0KPiAgICAgVGhpcyBkcml2ZXIgc3VwcG9ydHMgdGhlIENoaXAgQ29tbW9uIEEg
+R1BJTyBjb250cm9sbGVyIHByZXNlbnQgb24gYQ0KPiAgICAgbnVtYmVyIG9mIEJyb2FkY29tIHN3
+aXRjaCBBU0lDcyB3aXRoIGludGVncmF0ZWQgU29Dcy4gVGhlIGNvbnRyb2xsZXIgaXMNCj4gICAg
+IHNpbWlsYXIgdG8gdGhlIHBpbmN0cmwtbnNwLWdwaW8gYW5kIHBpbmN0cmwtaXByb2MtZ3BpbyBi
+bG9ja3MgYnV0DQo+ICAgICBkaWZmZXJlbnQgZW5vdWdoIHRoYXQgYSBzZXBhcmF0ZSBkcml2ZXIg
+aXMgcmVxdWlyZWQuDQo+ICAgICANCj4gICAgIFRoaXMgaGFzIGJlZW4gcG9ydGVkIGZyb20gQnJv
+YWRjb20ncyBYTERLIDUuMC4zIHJldGFpbmluZyBvbmx5IHRoZSBDQ0ENCj4gICAgIHN1cHBvcnQg
+KHBpbmN0cmwtaXByb2MtZ3BpbyBjb3ZlcnMgQ0NCKS4NCj4gICAgIA0KPiAgICAgU2lnbmVkLW9m
+Zi1ieTogQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56Pg0K
+PiAgICAgTGluazogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvci8yMDE5MTAyNDIwMjcwMy44MDE3
+LTMtY2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56DQo+ICAgICBBY2tlZC1ieTogU2Nv
+dHQgQnJhbmRlbiA8c2NvdHQuYnJhbmRlbkBicm9hZGNvbS5jb20+DQo+ICAgICBTaWduZWQtb2Zm
+LWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+DQoNCkhtbSwNCg0K
+SSBkb24ndCBzZWUgaG93IHRoaXMgY29tbWl0IHdvdWxkIGhhdmUgY2F1c2VkIHRoZSBvb3BzLiBU
+aGUgbmV3IGRyaXZlcg0Kc2hvdWxkbid0IChhbmQgZG9lc24ndCBhcHBlYXIgdG8gYmUpIHJ1biBv
+biBhbnkgcGxhdGZvcm0gYXMgbm90aGluZw0KZGVjbGFyZXMgLmNvbXBhdGlibGUgPSAiYnJjbSxp
+cHJvYy1ncGlvLWNjYSIgKHlldCkuDQoNCg==
