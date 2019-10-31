@@ -2,91 +2,103 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89C8CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879C0CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9965C20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D85420862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 07:44:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iI4lBDdy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfJaHnO (ORCPT
+        id S1726979AbfJaHoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 03:43:14 -0400
-Received: from smtp10.smtpout.orange.fr ([80.12.242.132]:36087 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbfJaHnO (ORCPT
+        Thu, 31 Oct 2019 03:44:25 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:47878 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbfJaHoZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 03:43:14 -0400
-Received: from localhost.localdomain ([93.23.12.90])
-        by mwinf5d87 with ME
-        id L7j9210091waAWt037j9B8; Thu, 31 Oct 2019 08:43:12 +0100
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 31 Oct 2019 08:43:12 +0100
-X-ME-IP: 93.23.12.90
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     davem@davemloft.net, mareklindner@neomailbox.ch,
-        sw@simonwunderlich.de, a@unstable.cc, sven@narfation.org
-Cc:     b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] batman-adv: Simplify 'batadv_v_ogm_aggr_list_free()'
-Date:   Thu, 31 Oct 2019 08:42:55 +0100
-Message-Id: <20191031074255.3234-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Thu, 31 Oct 2019 03:44:25 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9V7i7Re029589;
+        Thu, 31 Oct 2019 07:44:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=UJq0GuSeiAGq0pMGkmaU4zIL7MNZOdSl8Rq18xN+PfQ=;
+ b=iI4lBDdyIAzBxP0cileGIQzISELbfAoNv23ij4kqk+CtjgML0U2FdpE5LzklOiUlmcrl
+ HGG++KbBrFe5QcgWfujcAsEyO0Ci0VYI8jBlZRBQ2NNtUf9F5rV6u31dx5STvIAaBZgA
+ Pd9vsYF5KkANXB/DPTFVA/KmXwqCHc+sB46BYztcra7GteAbAsWLZlxZLWnUVIqq6uxE
+ 2HIyttXLMjoa0WzoItKjGMukhkHD3e8++zV3gepFkOeuGi6/+R8fnbXeT6TBnCOqcZVZ
+ U1IT1qxXr/OB2IDBtbPHRSgWlwN7YJ4U8ml5rwi/nec6Mr/03FPnYlXh1vZMRsRwbGKU Yw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2vxwhfsb8j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 31 Oct 2019 07:44:15 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9V7i2E5058050;
+        Thu, 31 Oct 2019 07:44:14 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2vysbtnwu7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 31 Oct 2019 07:44:14 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9V7h7jb028429;
+        Thu, 31 Oct 2019 07:43:07 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 31 Oct 2019 00:43:06 -0700
+Date:   Thu, 31 Oct 2019 10:42:56 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     David Gow <davidgow@google.com>
+Cc:     Joe Perches <joe@perches.com>, shuah <shuah@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH linux-kselftest/test v6] lib/list-test: add a test for
+ the 'list' doubly linked list
+Message-ID: <20191031074256.GE18421@kadam>
+References: <20191024224631.118656-1-davidgow@google.com>
+ <0cb1d948-0da3-eb0f-c58f-ae3a785dd0dd@kernel.org>
+ <CABVgOSmCHbGjZBjeWSbPEZbJw22SaBQnoO77xxNzN_ugAwzNiQ@mail.gmail.com>
+ <20191030104217.GA18421@kadam>
+ <42a8270d-ed6f-d29f-5e71-7b76a074b63e@kernel.org>
+ <20191030191255.GD18421@kadam>
+ <f665ec7b21527c7095a61dd5c2f48fd00df0d5c9.camel@perches.com>
+ <CABVgOSkKCXodwi=RcmRpB+t157surmEjq2b+92VQQD2Cy0WTvA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABVgOSkKCXodwi=RcmRpB+t157surmEjq2b+92VQQD2Cy0WTvA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=952
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910310077
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9426 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910310077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use 'skb_queue_purge()' instead of re-implementing it.
+David, this is an easy question to answer.  I think Shuah is the
+maintainer here?  You don't have to make everyone happy, you just have
+to make Shuah happy.  Joe and I have very little emotional investment in
+this code and we don't care what you do and even if we did, it wouldn't
+matter.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-BTW, I don't really see the need of 'aggr_list_lock'. I think that the code
-could be refactored to drop 'aggr_list_lock' and use the already existing
-'aggr_list.lock'.
-This would require to use the lock-free __skb_... variants when working on
-'aggr_list'.
-
-As far as I understand, the use of 'aggr_list' and 'aggr_list_lock' is
-limited to bat_v_ogm.c'. So the impact would be limited.
-This would avoid a useless locking that never fails, so the performance
-gain should be really limited.
-
-So, I'm not sure this would be more readable and/or future proof, so
-I just note it here to open the discussion.
-
-If interested, I have a (compiled tested only) patch that implements this
-change.
----
- net/batman-adv/bat_v_ogm.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/net/batman-adv/bat_v_ogm.c b/net/batman-adv/bat_v_ogm.c
-index dc4f7430cb5a..b841c83d9c3b 100644
---- a/net/batman-adv/bat_v_ogm.c
-+++ b/net/batman-adv/bat_v_ogm.c
-@@ -177,13 +177,9 @@ static bool batadv_v_ogm_queue_left(struct sk_buff *skb,
-  */
- static void batadv_v_ogm_aggr_list_free(struct batadv_hard_iface *hard_iface)
- {
--	struct sk_buff *skb;
--
- 	lockdep_assert_held(&hard_iface->bat_v.aggr_list_lock);
- 
--	while ((skb = skb_dequeue(&hard_iface->bat_v.aggr_list)))
--		kfree_skb(skb);
--
-+	skb_queue_purge(&hard_iface->bat_v.aggr_list);
- 	hard_iface->bat_v.aggr_len = 0;
- }
- 
--- 
-2.20.1
-
+regards,
+dan carpenter
