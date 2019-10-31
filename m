@@ -2,82 +2,100 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8620ECA9EC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2E5CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C6220856
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E829420856
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 00:07:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="X7kLrYAY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ab6FjmnA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbfJaAF7 (ORCPT
+        id S1727940AbfJaAHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 20:05:59 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:58225 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727868AbfJaAF6 (ORCPT
+        Wed, 30 Oct 2019 20:07:32 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:10945 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbfJaAHb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 20:05:58 -0400
-Received: from [IPv6:2a02:810c:c200:2e91:e1c6:7ce1:572b:20f1] (unknown [IPv6:2a02:810c:c200:2e91:e1c6:7ce1:572b:20f1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 8D7ED22178;
-        Thu, 31 Oct 2019 01:05:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1572480352;
-        bh=7r3BGnQA4+151Uxptt1Woyr7NW3uh+DNEfMRBvdDzvQ=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=X7kLrYAYrx/bu6HDba4rWNiHShosbkLNny5+IuCMkB3p+WGdapMlPjRX+Q6xWoKZ6
-         M3fowkJM4K2G/amLipO8/q5iI65iyhyR1XwncS1jPQ4k1UgS4powtcvdo89zja08nU
-         T/kN9NOrt9DiP33KMsyZQ+n7syEM6ARwEkbRx2eY=
-Date:   Thu, 31 Oct 2019 01:05:50 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <7dc930c9-0e95-7310-5e01-762276e780e6@gmail.com>
-References: <20191030224251.21578-1-michael@walle.cc> <20191030224251.21578-2-michael@walle.cc> <0a42b1d6-b60d-b8a0-2264-54df155bcb3b@gmail.com> <20191030231801.GH10555@lunn.ch> <7dc930c9-0e95-7310-5e01-762276e780e6@gmail.com>
+        Wed, 30 Oct 2019 20:07:31 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dba25c90000>; Wed, 30 Oct 2019 17:07:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 30 Oct 2019 17:07:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 30 Oct 2019 17:07:30 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 31 Oct
+ 2019 00:07:29 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 31 Oct 2019 00:07:30 +0000
+Received: from vdumpa-ubuntu.nvidia.com (Not Verified[172.17.173.140]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dba25c10003>; Wed, 30 Oct 2019 17:07:29 -0700
+From:   Krishna Reddy <vdumpa@nvidia.com>
+CC:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <treding@nvidia.com>,
+        <yhsu@nvidia.com>, <snikam@nvidia.com>, <praithatha@nvidia.com>,
+        <talho@nvidia.com>, <avanbrunt@nvidia.com>, <bbiswas@nvidia.com>,
+        <olof@lixom.net>, <jtukkinen@nvidia.com>, <mperttunen@nvidia.com>,
+        <nicolinc@nvidia.com>, Krishna Reddy <vdumpa@nvidia.com>
+Subject: [PATCH v4 2/6] dt-bindings: arm-smmu: Add binding for Tegra194 SMMU
+Date:   Wed, 30 Oct 2019 17:07:13 -0700
+Message-ID: <1572480437-28449-3-git-send-email-vdumpa@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1572480437-28449-1-git-send-email-vdumpa@nvidia.com>
+References: <1572480437-28449-1-git-send-email-vdumpa@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [RFC PATCH 1/3] net: phy: at803x: fix Kconfig description
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>
-CC:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org
-From:   Michael Walle <michael@walle.cc>
-Message-ID: <D615CB94-38A8-44E2-99CB-00FB1737FC5E@walle.cc>
-X-Virus-Scanned: clamav-milter 0.101.4 at web
-X-Virus-Status: Clean
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572480457; bh=ByDeYb07Rte9DOsd9vU8TTDm9OtxaU1VF0XSEUNhBRQ=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=Ab6FjmnAu/ey/xbDiaeeUmobNdpKbr+oIPdhf9eZ0LUMowGy1rXKNG8ic9tkTxm0C
+         9mQKhKGqbDfbGc19AuKiFaYaQLBLmU6mYH3i4sJzeJoPuBGvQrUSl+0xOA994KPYn3
+         7eqlXcGRAjK3ktPZX+6U/nMsHT7zUwpLAHl+vnVXZ5eV3Rl0jqoFgMxo3nAt3XJoI+
+         ayl6cEKLyqNUbi+qvYm0/RVhZe2jFx+/U0TZhZ6HmaeHutUhV5Q0BQKPayztWrUFbu
+         c9KkmBrFZRLo8QB/pY6uqM19ixT30aDl25ODVqGfrb1mjugqUQIhBDjhKdTSomPt1H
+         52e80uaPUN64g==
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 31=2E Oktober 2019 00:32:15 MEZ schrieb Florian Fainelli <f=2Efainelli@g=
-mail=2Ecom>:
->On 10/30/19 4:18 PM, Andrew Lunn wrote:
->> On Wed, Oct 30, 2019 at 04:16:01PM -0700, Florian Fainelli wrote:
->>> On 10/30/19 3:42 PM, Michael Walle wrote:
->>>> The name of the PHY is actually AR803x not AT803x=2E Additionally,
->add the
->>>> name of the vendor and mention the AR8031 support=2E
->>>
->>> Should not the vendor be QCA these days, or Qualcomm Atheros?
->>=20
->> Atheros Qualcomm would work best in terms of not upsetting the sort
->> order=2E
->
->Yes except the company is actually named Qualcomm Atheros:
->
->https://en=2Ewikipedia=2Eorg/wiki/Qualcomm_Atheros
+Add binding for NVIDIA's Tegra194 Soc SMMU that is based
+on ARM MMU-500.
 
-Correct=2E=2E my bad=2E also the atheros prefix is wrong then=2E=2E becaus=
-e there is already a qca prefix=2E
+Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+---
+ Documentation/devicetree/bindings/iommu/arm,smmu.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-but=2E=2E should i also reorder the entry in the Kconfig then?=20
-
--michael=20
+diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+index 3133f3b..1d72fac 100644
+--- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
++++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+@@ -31,6 +31,10 @@ conditions.
+                   as below, SoC-specific compatibles:
+                   "qcom,sdm845-smmu-500", "arm,mmu-500"
+ 
++                  NVIDIA SoCs that use more than one ARM MMU-500 together
++                  needs following SoC-specific compatibles along with "arm,mmu-500":
++                  "nvidia,tegra194-smmu"
++
+ - reg           : Base address and size of the SMMU.
+ 
+ - #global-interrupts : The number of global interrupts exposed by the
+-- 
+2.7.4
 
