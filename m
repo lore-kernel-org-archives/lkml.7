@@ -2,113 +2,133 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54FACA9EAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 03:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04949CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 03:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D385205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 03:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6310205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 03:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfJaDRK (ORCPT
+        id S1726673AbfJaD0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 23:17:10 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:34672 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726465AbfJaDRJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 23:17:09 -0400
-Received: from mr6.cc.vt.edu (mr6.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x9V3H7vc010072
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 23:17:07 -0400
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x9V3H2nh008616
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 23:17:07 -0400
-Received: by mail-qt1-f199.google.com with SMTP id v23so4748230qth.20
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 20:17:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=UjwFl/5kyrrhReHkQKPm1SCGM6jwLyZlLmQqSsl7mww=;
-        b=Ur5VnuaQ+Gz6FC61c9ZGzlNBHNsgq6IoCWPXWYAVGFjxKnD93iRgs4iP4vZCT/8wVS
-         Y/UqZ/1NIrz3LL+CUrIZszPNeTfN8EywYF7RXLF+WjrBBZVb59SzAiT6+PNFPwkI2rst
-         l997tJm9SoPy5p6Z6XJcviHkPl4qiZF7dMpJICzpZW/RxKjMKUAf+eej8l3mMsYbznHe
-         rHMhtRRkw+DoKRvBx7e35OFply3ePEqHkskRgAhA34CIPg4N5kd4qqJJgIoiN4KtDW0o
-         /qhFyfDAl1uR8C+inkEoapiJ1skQ7g5NfY1aTEpb56H/t+Dp8gFrq4nzJUUenhWVfNFV
-         Eq6g==
-X-Gm-Message-State: APjAAAU0cq00FbZc2qtupB7SheQKDrI/Hfutj8QmY367Fmx5BWAohznr
-        rbyAySJzQtPYi5jiIaWyGkROB91iWrpByeFypCEk8g+vhyybn1KRkJtPBh3dmZWxhER3aTFTYwD
-        jb66o1w9P3cMrVZwSh2AFdcanBgyC/zfVfYc=
-X-Received: by 2002:a37:bf02:: with SMTP id p2mr3402559qkf.42.1572491822463;
-        Wed, 30 Oct 2019 20:17:02 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyBRYNvJgULHc6/HirPX/JJlwuT5MkpOcps7z7Wgn9SXa/v+KbkipNm/PXten1R1WQp8wUltQ==
-X-Received: by 2002:a37:bf02:: with SMTP id p2mr3402548qkf.42.1572491822161;
-        Wed, 30 Oct 2019 20:17:02 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id t132sm1220848qke.51.2019.10.30.20.16.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2019 20:17:00 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, linux-xfs@vger.kernel.org,
-        Jan Kara <jack@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-arch@vger.kernel.org
-Subject: Re: [RFC] errno.h: Provide EFSCORRUPTED for everybody
-In-Reply-To: <20191031030449.GV15222@magnolia>
-References: <20191031010736.113783-1-Valdis.Kletnieks@vt.edu>
- <20191031030449.GV15222@magnolia>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1572491818_4623P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
+        Wed, 30 Oct 2019 23:26:11 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60838 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726336AbfJaD0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 30 Oct 2019 23:26:10 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A11698C8659FB5227AE0;
+        Thu, 31 Oct 2019 11:26:07 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 31 Oct 2019
+ 11:26:05 +0800
+Subject: Re: [PATCH v7] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
+        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
+        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
+        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
+        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
+        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
+        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
+        <rafael@kernel.org>, <mhocko@kernel.org>,
+        <gregkh@linuxfoundation.org>, <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <lenb@kernel.org>, <linux-acpi@vger.kernel.org>
+References: <1572428068-180880-1-git-send-email-linyunsheng@huawei.com>
+ <20191030101449.GW4097@hirez.programming.kicks-ass.net>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <f7aa833e-3ed3-aba0-8c6e-8753a68182c2@huawei.com>
+Date:   Thu, 31 Oct 2019 11:26:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
+MIME-Version: 1.0
+In-Reply-To: <20191030101449.GW4097@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 30 Oct 2019 23:16:59 -0400
-Message-ID: <120748.1572491819@turing-police>
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1572491818_4623P
-Content-Type: text/plain; charset=us-ascii
+On 2019/10/30 18:14, Peter Zijlstra wrote:
+> On Wed, Oct 30, 2019 at 05:34:28PM +0800, Yunsheng Lin wrote:
+>> When passing the return value of dev_to_node() to cpumask_of_node()
+>> without checking if the device's node id is NUMA_NO_NODE, there is
+>> global-out-of-bounds detected by KASAN.
+>>
+>> From the discussion [1], NUMA_NO_NODE really means no node affinity,
+>> which also means all cpus should be usable. So the cpumask_of_node()
+>> should always return all cpus online when user passes the node id as
+>> NUMA_NO_NODE, just like similar semantic that page allocator handles
+>> NUMA_NO_NODE.
+>>
+>> But we cannot really copy the page allocator logic. Simply because the
+>> page allocator doesn't enforce the near node affinity. It just picks it
+>> up as a preferred node but then it is free to fallback to any other numa
+>> node. This is not the case here and node_to_cpumask_map will only restrict
+>> to the particular node's cpus which would have really non deterministic
+>> behavior depending on where the code is executed. So in fact we really
+>> want to return cpu_online_mask for NUMA_NO_NODE.
+>>
+>> Also there is a debugging version of node_to_cpumask_map() for x86 and
+>> arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
+>> patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
+>>
+>> [1] https://lkml.org/lkml/2019/9/11/66
+>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+>> Suggested-by: Michal Hocko <mhocko@kernel.org>
+>> Acked-by: Michal Hocko <mhocko@suse.com>
+>> Acked-by: Paul Burton <paul.burton@mips.com> # MIPS bits
+> 
+> Still:
+> 
+> Nacked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-On Wed, 30 Oct 2019 20:04:49 -0700, "Darrick J. Wong" said:
+It seems I still misunderstood your meaning by "We must not silently accept
+NO_NODE there" in [1].
 
-> I would add (d) can we do the same to EFSBADCRC, seeing as f2fs,
-> ext4, xfs, and jbd2 all define it the same way?
+I am not sure if there is still disagreement that the NO_NODE state for
+dev->numa_node should exist at all.
 
-If this one flies, that's a good candidate for a second patch....
+From the previous disscussion [2], you seem to propose to do "wild guess" or
+"fixup" for all devices(including virtual and physcial) with NO_NODE, which means
+the NO_NODE is needed anymore and should be removed when the "wild guess" or "fixup"
+is done. So maybe the reason for your nack here it is that there should be no other
+NO_NODE handling or fixing related to NO_NODE before the "wild guess" or "fixup"
+process is finished, so making node_to_cpumask_map() NUMA_NO_NODE aware is unnecessary.
 
---==_Exmh_1572491818_4623P
-Content-Type: application/pgp-signature
+Or your reason for the nack is still specific to the pcie device without a numa node,
+the "wild guess" need to be done for this case before making node_to_cpumask_map()
+NUMA_NO_NODE?
 
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
+Please help to clarify the reason for nack. Or is there still some other reason for the
+nack I missed from the previous disscussion?
 
-iQIVAwUBXbpSKgdmEQWDXROgAQJYmA/+PTG0+FXdOKpnGaoDDFNKM1tIitWpnoi9
-02VrxRtAXg+D3lFix+ADGPwdAI9qKi2oMzxnOdTY81JCchjmp2rN4y1iABx5+Vy1
-8eS3gGF2xihheSUp/wLsq4tQx7mY4DkcWIRsuRSmj3PPEZotxvNMkLFox/+xHCSk
-RXdXLU/kO9LZjdFdlxQ26/X9pwhTn6USWRD73f5lVzQ49IChhB+Ww3UJj2RUm4vK
-hkzocyTyA+tGSKEqh3b508buuxiUjWjYFFr8KWUzkd5Of/zgoddbTGXG117ILwDO
-V+kQgt2ZAIESvyDXpBDnkPDclJPgv9aQgkAKdSb94BoMqiry75amO2JuxCNaZcnr
-usLK+H7vWv++FXsA7BPhPAM0xuQRBbWA0sByEcKuHZEP5Z3LKjzIG8UqcbzJsRh4
-ZbmqnW34sqYegs16RUj6Uv3CpRQmNwgit0m4lovTVfHTv+5ZK65e2O615RJajHpE
-KKmSLCZCbLPN9TSAGm+p3m0aIoDH4+b5rp6KQDjfXJR3I8o0um8cLA6ejWmzhdVc
-NMJSDVYw/px/5FU35XocFQERd9DCHYmTtNg2PhPffAKY2Og0YTzyxqxu2aT1ao5S
-xLKZ1MHhLpDGdYhkJDvDHZPypg5kjtJN47yNF7naKgY7Xnt9i4s++1xoSSUVsj1a
-8rFfLA7uEbY=
-=RvfI
------END PGP SIGNATURE-----
+Thanks.
 
---==_Exmh_1572491818_4623P--
+[1] https://lore.kernel.org/lkml/20191011111539.GX2311@hirez.programming.kicks-ass.net/
+[2] https://lore.kernel.org/lkml/20191014094912.GY2311@hirez.programming.kicks-ass.net/
+> 
+> .
+> 
+
