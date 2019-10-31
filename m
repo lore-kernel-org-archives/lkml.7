@@ -2,91 +2,142 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAB6CA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2774CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED66C20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73FC20650
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 12:42:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="KW35GtCH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfJaMlC (ORCPT
+        id S1727031AbfJaMmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 08:41:02 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5239 "EHLO huawei.com"
+        Thu, 31 Oct 2019 08:42:08 -0400
+Received: from mail-eopbgr30044.outbound.protection.outlook.com ([40.107.3.44]:59538
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726506AbfJaMlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 08:41:02 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A561FB17EB8437135711;
-        Thu, 31 Oct 2019 20:40:59 +0800 (CST)
-Received: from [127.0.0.1] (10.133.219.218) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 31 Oct 2019
- 20:40:54 +0800
-Message-ID: <5DBAD655.8060108@huawei.com>
-Date:   Thu, 31 Oct 2019 20:40:53 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
+        id S1726506AbfJaMmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 08:42:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UeOq8C9g0kdZUjjczHs7Xad72XIL80YIY571PEOMRpiAKmCHKdpIVYEsJbMd5ru2q3MCRMzmkkocBnehOLzWkTovdKDtZYoDQJiUVx5bA9uH6MxQsIPV8PUvgAz/md4QY+WUPGxTNsk9++sydcr2pQ3fmS2hQF5pSlEuX7GpjEGqfEm3ZO+yBZKCs477AWOkFI1R98WQmCiBO49C9s0fhyIiidF21I3hl6XO9TPaNjroNX0Q8wmaPSa4JUSVURh186RaasPscnbuZY9W/bD/V+lFj2wbOkH0CZagXJ3eexWZAY+XHwiB+pEw9FbnfdFMFevb/ZL5phz7rK63jCDFFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g4+BqV5ABwCFwJ4oVNgRoZ1Nbe1WjCm6P0NnqGhgMK4=;
+ b=E9WC2BnvyUZAGz/n9baw+t6sQ/aMD7vJ/pvkdt7YcxvYz9v6FQhmQOyyqbTLq/PrFu07Jt1ZsDLHNfT0BnduX61g8ebnvR1iiDfyRGUhuFQtNHkjww6NZVILUxQq6B+29eS6FH4W169087Bulkui622TIyXoMGXna+ePf6OJJ9gZzABx70xZIw3b13rVQ0mIN7CAO2IvRiGZh5O13/MNDyMXyVQEAZtYeJAlFkrhEqAVN5+XM/ClTc0ddYK/DdJQZ/ZvtpPpcEiDYTfJP+kkyn36Z9a3XlKRw32kDFKppqmXQRyMuDupSyEI6tfIWz4YvgcQrvP5AQ5s1s72VZWpXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g4+BqV5ABwCFwJ4oVNgRoZ1Nbe1WjCm6P0NnqGhgMK4=;
+ b=KW35GtCHtISOl+Kk8nlRCHUVNCeYcoZ0HVMopzupFGSpfJXklzQ1xLNL3QwT4tkW/lPihnOc8rOMI7/bk4ueAHHhCy5IcgTJL9GOW8AJvxgj+kWmMSX9nsR1J+zUdSV3uRe0WgPa4YsEdxZx40LZkrlMzu1mu8ukedoSaZf6WKA=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB5840.eurprd05.prod.outlook.com (20.178.123.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.23; Thu, 31 Oct 2019 12:42:04 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::b179:e8bf:22d4:bf8d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::b179:e8bf:22d4:bf8d%5]) with mapi id 15.20.2387.028; Thu, 31 Oct 2019
+ 12:42:04 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
+Thread-Topic: [PATCH v3 3/3] mm/hmm/test: add self tests for HMM
+Thread-Index: AQHVidvRl0DiLfVRckS4hHS5dqmJyadx8UKAgAA3LICAACCkgIABo4oAgADQ2QA=
+Date:   Thu, 31 Oct 2019 12:42:03 +0000
+Message-ID: <20191031124200.GJ22766@mellanox.com>
+References: <20191023195515.13168-1-rcampbell@nvidia.com>
+ <20191023195515.13168-4-rcampbell@nvidia.com>
+ <20191029175837.GS22766@mellanox.com>
+ <3ffecdc6-625f-ebea-8fb4-984fe6ca90f3@nvidia.com>
+ <20191029231255.GX22766@mellanox.com>
+ <f42d06e2-ca08-acdd-948d-2803079a13c2@nvidia.com>
+In-Reply-To: <f42d06e2-ca08-acdd-948d-2803079a13c2@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BL0PR02CA0081.namprd02.prod.outlook.com
+ (2603:10b6:208:51::22) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.162.113.180]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c76b79f7-458c-4f91-ec16-08d75dffbb67
+x-ms-traffictypediagnostic: VI1PR05MB5840:
+x-microsoft-antispam-prvs: <VI1PR05MB5840721564872BC513288BFFCF630@VI1PR05MB5840.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 02070414A1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(376002)(346002)(396003)(189003)(199004)(36756003)(71200400001)(71190400001)(476003)(14444005)(446003)(11346002)(2906002)(2616005)(256004)(86362001)(33656002)(1076003)(6116002)(5660300002)(6916009)(486006)(316002)(3846002)(6512007)(229853002)(6436002)(54906003)(4326008)(6486002)(26005)(8676002)(186003)(25786009)(99286004)(6246003)(305945005)(52116002)(81166006)(81156014)(7736002)(386003)(76176011)(6506007)(478600001)(102836004)(8936002)(66446008)(66066001)(14454004)(66946007)(66476007)(64756008)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5840;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +pvlvGR4nSEsPJ3TrSyWLzaW9U3MwNNBia1b+okW0wcfwsetP35xdywwPNUruqPxmFRJJhfIJgzftznThKbaHcuXZhk8w51F6QNgWFIUZgHj3YZy4mVbp7sUUG7hff/mv//TN+0/u1GhtyV27bTz6vWngJakDjf3xiDNrrDf9bGCVEvR1zlvqzxju9yWhOhbdEeMvxgPvnMNOv+U2cKzPu22+pwmeuJvOxguPAqnII7wRGwR2DIJuR6hKe+ZKCLRPrBSajXX6KFplOnRyq/mkvNei28Rb3PTqbVbqagHNF2JmQUi4+1Bcj4C6MbGxMDZ6R1Wf/zbjh6i/IApDn6h+3RXP+UQgb66uPPYs2nk7NHIljijKV3vGUvl8NiqRkvReb93LkRFy9juwZTeuG4vd5TZQvlfOII16GvyTxvq/btWtCJgCmzdLz7PKndiZ4M7
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <20704D111969E44091B76631E43CF7B2@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-To:     Joe Perches <joe@perches.com>
-CC:     Borislav Petkov <bp@alien8.de>, <peterz@infradead.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>,
-        <dave.hansen@linux.intel.com>, <hpa@zytor.com>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm/ioremap: Use WARN_ONCE instead of printk() + WARN_ON_ONCE()
-References: <1572425838-39158-1-git-send-email-zhongjiang@huawei.com>  <20191031110304.GE21133@nazgul.tnic> <5DBAC74E.5080001@huawei.com> <be4803c67e2e1f9e91e59bfd7b23f938619f66e8.camel@perches.com>
-In-Reply-To: <be4803c67e2e1f9e91e59bfd7b23f938619f66e8.camel@perches.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.219.218]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c76b79f7-458c-4f91-ec16-08d75dffbb67
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Oct 2019 12:42:04.1106
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: irErugRJVLgiMcxkh1a3QVBjvIfaKXWSpTu1mBDKGJHz+uysgSNHi0D+Hk7nt7IsGvpSN3FPSEef6vxO/Xim0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5840
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/31 20:00, Joe Perches wrote:
-> On Thu, 2019-10-31 at 19:36 +0800, zhong jiang wrote:
->> On 2019/10/31 19:03, Borislav Petkov wrote:
->>> On Wed, Oct 30, 2019 at 04:57:18PM +0800, zhong jiang wrote:
->>>> WARN_ONCE is more clear and simpler. Just replace it.
-> []
->>>> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-> []
->>>> @@ -172,9 +172,8 @@ static void __ioremap_check_mem(resource_size_t addr, unsigned long size,
->>>>  		return NULL;
->>>>  
->>>>  	if (!phys_addr_valid(phys_addr)) {
->>>> -		printk(KERN_WARNING "ioremap: invalid physical address %llx\n",
->>>> -		       (unsigned long long)phys_addr);
->>>> -		WARN_ON_ONCE(1);
->>>> +		WARN_ONCE(1, "ioremap: invalid physical address %llx\n",
->>>> +			  (unsigned long long)phys_addr);
->>> Does
->>> 	WARN_ONCE(!phys_addr_valid(phys_addr),
->>> 		  "ioremap: invalid physical address %llx\n",
->>> 		  (unsigned long long)phys_addr);
->>>
->>> work too?
->>>
->> Thanks, That is better. Will repost.
-> Perhaps this is not good patch concept as now each
-> invalid physical address will not be emitted.
->
-> Before:
-> 	each invalid physical address printed
-> 	one stack dump
->
-> After:
-> 	one stck dump with first invalid physical address.
->
-Yes,  I  has told that. 
+On Wed, Oct 30, 2019 at 05:14:30PM -0700, Ralph Campbell wrote:
 
-How you think my above patch in the mail.  Thanks
->
-> .
->
+> > Well, that is good, is it also under drivers/char? It kind feels like
+> > it should not be there...
+>=20
+> I think most of the test modules live in lib/ but I wasn't sure that
+> was the right place for the HMM test driver.
+> If you think that is better, I can easily move it.
 
+It would be good to get the various test people involved in this, I
+really don't know.
+=20
+> > > > It seems especially over-complicated to use a full page table layou=
+t
+> > > > for this, wouldn't something simple like an xarray be good enough f=
+or
+> > > > test purposes?
+> > >=20
+> > > Possibly. A page table is really just a lookup table from virtual add=
+ress
+> > > to pfn/page. Part of the rationale was to mimic what a real device
+> > > might do.
+> >=20
+> > Well, but the details of the page table layout don't see really
+> > important to this testing, IMHO.
+>=20
+> One problem with XArray is that on 32-bit machines the value would
+> need to be u64 to hold a pfn which won't fit in a ULONG_MAX.
+> I guess we could make the driver 64-bit only.
 
+Why would a 32 bit machine need a 64 bit pfn?
+
+Jason
