@@ -2,399 +2,235 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	TVD_PH_BODY_ACCOUNTS_PRE,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C54EFCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 03:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E679ACA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 03:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4D92080F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 03:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31502080F
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 03:31:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfJaDb2 (ORCPT
+        id S1726810AbfJaDbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 30 Oct 2019 23:31:28 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:36514 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726336AbfJaDb2 (ORCPT
+        Wed, 30 Oct 2019 23:31:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12818 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726336AbfJaDbt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 30 Oct 2019 23:31:28 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TgkVYbQ_1572492684;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TgkVYbQ_1572492684)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 31 Oct 2019 11:31:25 +0800
-Subject: Re: [PATCH] sched/numa: advanced per-cgroup numa statistic
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, linux-kernel@vger.kernel.org
-References: <46b0fd25-7b73-aa80-372a-9fcd025154cb@linux.alibaba.com>
- <20191030095505.GF28938@suse.de>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Message-ID: <6f5e43db-24f1-5283-0881-f264b0d5f835@linux.alibaba.com>
-Date:   Thu, 31 Oct 2019 11:31:24 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191030095505.GF28938@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 30 Oct 2019 23:31:49 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9V3Rbva080733
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 23:31:48 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vyqk1g9p5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Oct 2019 23:31:47 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 31 Oct 2019 03:31:45 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 31 Oct 2019 03:31:41 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9V3VeBN43516074
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 31 Oct 2019 03:31:40 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2A80BA4060;
+        Thu, 31 Oct 2019 03:31:40 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8486CA405B;
+        Thu, 31 Oct 2019 03:31:38 +0000 (GMT)
+Received: from localhost.ibm.com (unknown [9.85.201.217])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 31 Oct 2019 03:31:38 +0000 (GMT)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Cc:     Mimi Zohar <zohar@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH v10 0/9] powerpc: Enabling IMA arch specific secure boot policies
+Date:   Wed, 30 Oct 2019 23:31:25 -0400
+X-Mailer: git-send-email 2.7.5
+X-TM-AS-GCONF: 00
+x-cbid: 19103103-4275-0000-0000-00000379641C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19103103-4276-0000-0000-0000388CA068
+Message-Id: <1572492694-6520-1-git-send-email-zohar@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-31_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910310031
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Mel
+This patchset extends the previous version[1] by adding support for
+checking against a blacklist of binary hashes.
 
-Thanks for the comments :-)
+The IMA subsystem supports custom, built-in, arch-specific policies to
+define the files to be measured and appraised. These policies are honored
+based on priority, where arch-specific policy is the highest and custom
+is the lowest.
 
-On 2019/10/30 下午5:55, Mel Gorman wrote:
-[snip]
->> In order to address this, we introduced new per-cgroup statistic
->> for numa:
->>   * the numa locality to imply the numa balancing efficiency
-> 
-> That is clear to some extent with the obvious caveat that a cgroup bound
-> to a memory node will report this as being nearly 100% with shared pages
-> being a possible exception.Locality might be fine but there could be
-> large latencies due to reclaim if the cgroup limits are exceeded or the
-> NUMA node is too small. It can give an artifical sense of benefit.
+PowerNV system uses a Linux-based bootloader to kexec the OS. The
+bootloader kernel relies on IMA for signature verification of the OS
+kernel before doing the kexec. This patchset adds support for powerpc
+arch-specific IMA policies that are conditionally defined based on a
+system's secure boot and trusted boot states. The OS secure boot and
+trusted boot states are determined via device-tree properties.
 
-Currently we rely on locality on telling whether there are issues rather
-than the benefit, mostly the deployment and configuration issues.
+The verification needs to be performed only for binaries that are not
+blacklisted. The kernel currently only checks against the blacklist of
+keys. However, doing so results in blacklisting all the binaries that
+are signed by the same key. In order to prevent just one particular
+binary from being loaded, it must be checked against a blacklist of
+binary hashes. This patchset also adds support to IMA for checking
+against a hash blacklist for files. signed by appended signature.
 
-For example, tasks bind to the cpus of node_0 could have their memory on
-node_1 when node_0 almost run out of memory, numa balancing may not be
-able to help in this case, while by reading locality we could know how
-critical the problem is, and may take action to rebind cpus to node_1 or
-reclaim the memory of node_0.
+[1] http://patchwork.ozlabs.org/cover/1149262/ 
 
-> 
->>   * the numa execution time on each node
->>
-> 
-> This is less obvious because it does not define what NUMA execution time
-> is and it's not documented by the patch.
-> 
->> The task locality is the local page accessing ratio traced on numa
->> balancing PF, and the group locality is the topology of task execution
->> time, sectioned by the locality into 8 regions.
->>
-> 
-> This is another important limitation. Disabling NUMA balancing will also
-> disable the stats which may be surprising to some users. It's not a
-> show-stopper but arguably the file should be non-existant or always
-> zeros if NUMA balancing is disabled.
+Changelog:
 
-Maybe a check on sched_numa_balancing before showing the data could
-be helpful? when user turn off numa balancing dynamically, we no longer
-showing the data.
+v10: (Mimi posting patch set on Nayna's behalf)
+- Minor patch description changes
+- Include comment in process_buffer_measurement()
+- Additional patch: Enforcing kernel module appended signatures should
+be reflected in "/sys/module/module/parameters/sig_enforce".
+- Trimmed Cc list.
 
-> 
->> For example the new entry 'cpu.numa_stat' show:
->>   locality 15393 21259 13023 44461 21247 17012 28496 145402
->>   exectime 311900 407166
->>
->> Here we know the workloads executed 311900ms on node_0 and 407166ms
->> on node_1, tasks with locality around 0~12% executed for 15393 ms, and
->> tasks with locality around 88~100% executed for 145402 ms, which imply
->> most of the memory access is local access, for the workloads of this
->> group.
->>
-> 
-> This needs documentation because it's not obvious at all that the
-> locality values are roughly percentiles. It's also not obvious what a
-> sysadmin would *do* with this information.
+v9:
+* Includes feedbacks from Michael
+  * fix the missing of_node_put()
+* Includes Mimi's feedbacks
+  * fix the policy show() function to display check_blacklist
+  * fix the other comment related and patch description
+  * add the example of blacklist in the Patch 7/8
+Note: Patch 7/8 is giving errors when checkpatch.pl is run because
+of the format of showing measurement record as part of the example. I am
+not very sure if that can be fixed as we need to represent the
+measurements as is.
 
-Make sense, I'll draft a doc regarding how to read and handle these
-data then.
+v8:
+* Updates the Patch Description as per Michael's and Mimi's feedback
+* Includes feedbacks from Michael for the device tree and policies
+  * removes the arch-policy hack by defining three arrays.
+  * fixes related to device-tree calls 
+  * other code specific feedbacks
+* Includes feedbacks from Mimi on the blacklist
+  * generic blacklist function is modified than previous version
+  * other coding fixes
 
-> 
->> By monitoring the new statistic, we will be able to know the numa
->> efficiency of each per-cgroup workloads on machine, whatever they
->> sharing the CPUs or not, we will be able to find out which one
->> introduced the remote access mostly.
->>
->> Besides, per-node memory topology from 'memory.numa_stat' become
->> more useful when we have the per-node execution time, workloads
->> always executing on node_0 while it's memory is all on node_1 is
->> usually a bad case.
->>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Michal Koutný <mkoutny@suse.com>
->> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
-> 
-> So, superficially, I'm struggling to see what action a sysadmin would take,
-> if any, with this information. It makes sense to track what individual
-> tasks are doing but this can be done with ftrace if required.
+v7:
+* Removes patch related to dt-bindings as per input from Rob Herring. 
+* fixes Patch 1/8 to use new device-tree updates as per Oliver
+  feedback to device-tree documentation in skiboot mailing list.
+(https://lists.ozlabs.org/pipermail/skiboot/2019-September/015329.html)
+* Includes feedbacks from Mimi, Thiago
+  * moves function get_powerpc_fw_sb_node() from Patch 1 to Patch 3 
+  * fixes Patch 2/8 to use CONFIG_MODULE_SIG_FORCE.
+  * updates Patch description in Patch 5/8
+  * adds a new patch to add wrapper is_binary_blacklisted()
+  * removes the patch that deprecated permit_directio
 
-The idea here is to give user the ability of monitoring numa efficiency
-per-cgroup, just like monitoring per-cgroup CPU or memory usages, ftrace
-is a good way of further debugging, while IMHO not that suitable for
-daily monitoring.
+v6:
+* includes feedbacks from Michael Ellerman on the patchset v5
+  * removed email ids from comments
+  * add the doc for the device-tree
+  * renames the secboot.c to secure_boot.c and secboot.h to secure_boot.h
+  * other code specific fixes
+* split the patches to differentiate between secureboot and trustedboot
+state of the system
+* adds the patches to support the blacklisting of the binary hash.
 
-One common usecase is to alarm user when some cgroup's locality is
-always low, and usually this is caused by wrong memory policy, or
-exhausted numa node, then user can adjust the policy or binding other
-nodes, or reclaim the exhausted node.
+v5:
+* secureboot state is now read via device tree entry rather than OPAL
+secure variables
+* ima arch policies are updated to use policy based template for
+measurement rules
 
-> 
->> ---
->>  include/linux/sched.h |  8 ++++++-
->>  kernel/sched/core.c   | 59 +++++++++++++++++++++++++++++++++++++++++++++++++++
->>  kernel/sched/debug.c  |  7 ++++++
->>  kernel/sched/fair.c   | 51 ++++++++++++++++++++++++++++++++++++++++++++
->>  kernel/sched/sched.h  | 29 +++++++++++++++++++++++++
->>  5 files changed, 153 insertions(+), 1 deletion(-)
->>
->> diff --git a/include/linux/sched.h b/include/linux/sched.h
->> index 263cf089d1b3..46995be622c1 100644
->> --- a/include/linux/sched.h
->> +++ b/include/linux/sched.h
->> @@ -1114,8 +1114,14 @@ struct task_struct {
->>  	 * scan window were remote/local or failed to migrate. The task scan
->>  	 * period is adapted based on the locality of the faults with different
->>  	 * weights depending on whether they were shared or private faults
->> +	 *
->> +	 * 0 -- remote faults
->> +	 * 1 -- local faults
->> +	 * 2 -- page migration failure
->> +	 * 3 -- remote page accessing
->> +	 * 4 -- local page accessing
->>  	 */
->> -	unsigned long			numa_faults_locality[3];
->> +	unsigned long			numa_faults_locality[5];
->>
-> 
-> Not clear from the comment what the difference between a remote fault
-> and a remote page access is. Superficially, they're the same thing.
+v4:
+* Fixed the build issue as reported by Satheesh Rajendran.
 
-The 'fault' is recording before page migration while 'accessing'
-is after, they could be different when the page has been migrated.
+v3:
+* OPAL APIs in Patch 1 are updated to provide generic interface based on
+key/keylen. This patchset updates kernel OPAL APIs to be compatible with
+generic interface.
+* Patch 2 is cleaned up to use new OPAL APIs.
+* Since OPAL can support different types of backend which can vary in the
+variable interpretation, the Patch 2 is updated to add a check for the
+backend version
+* OPAL API now expects consumer to first check the supported backend version
+before calling other secvar OPAL APIs. This check is now added in patch 2.
+* IMA policies in Patch 3 is updated to specify appended signature and
+per policy template.
+* The patches now are free of any EFIisms.
 
-> 
->>  	unsigned long			numa_pages_migrated;
-[snip]
->>  	unsigned long ptr = 0;
->> @@ -6593,6 +6597,10 @@ void __init sched_init(void)
->>  	init_defrootdomain();
->>  #endif
->>
->> +#ifdef CONFIG_NUMA_BALANCING
->> +	root_task_group.numa_stat = &root_numa_stat;
->> +#endif
->> +
->>  #ifdef CONFIG_RT_GROUP_SCHED
->>  	init_rt_bandwidth(&root_task_group.rt_bandwidth,
->>  			global_rt_period(), global_rt_runtime());
-> 
-> This is an indication that there is a universal hit to collect this data
-> whether cgroups are enabled or not. That hits the same problem I had
-> with PSI when it was first introduced. For users that care, the
-> information is useful, particularly as they generally have an
-> application consuming the data>
->> @@ -6918,6 +6926,7 @@ static inline void alloc_uclamp_sched_group(struct task_group *tg,
->>
->>  static void sched_free_group(struct task_group *tg)
->>  {
->> +	free_tg_numa_stat(tg);
->>  	free_fair_sched_group(tg);
->>  	free_rt_sched_group(tg);
->>  	autogroup_free(tg);
->> @@ -6933,6 +6942,9 @@ struct task_group *sched_create_group(struct task_group *parent)
->>  	if (!tg)
->>  		return ERR_PTR(-ENOMEM);
->>
->> +	if (!alloc_tg_numa_stat(tg))
->> +		goto err;
->> +
->>  	if (!alloc_fair_sched_group(tg, parent))
->>  		goto err;
->>
-> 
-> While this is very unlikely to fail, I find it odd to think that an
-> entire cgroup could fail to be created simply because stats cannot be
-> collected, particularly when no userspace component may care at all.
+v2:
 
-We have rework the implementation in v2 (sent) and put the data into cfs_rq,
-all these init works have been saved :-)
+* Removed Patch 1: powerpc/include: Override unneeded early ioremap
+functions
+* Updated Subject line and patch description of the Patch 1 of this series
+* Removed dependency of OPAL_SECVAR on EFI, CPU_BIG_ENDIAN and UCS2_STRING
+* Changed OPAL APIs from static to non-static. Added opal-secvar.h for the
+same
+* Removed EFI hooks from opal_secvar.c
+* Removed opal_secvar_get_next(), opal_secvar_enqueue() and
+opal_query_variable_info() function
+* get_powerpc_sb_mode() in secboot.c now directly calls OPAL Runtime API
+rather than via EFI hooks.
+* Fixed log messages in get_powerpc_sb_mode() function.
+* Added dependency for PPC_SECURE_BOOT on configs PPC64 and OPAL_SECVAR
+* Replaced obj-$(CONFIG_IMA) with obj-$(CONFIG_PPC_SECURE_BOOT) in
+arch/powerpc/kernel/Makefile
 
-> 
-[snip]>> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
->> index f7e4579e746c..a22b2a62aee2 100644
->> --- a/kernel/sched/debug.c
->> +++ b/kernel/sched/debug.c
->> @@ -848,6 +848,13 @@ static void sched_show_numa(struct task_struct *p, struct seq_file *m)
->>  	P(total_numa_faults);
->>  	SEQ_printf(m, "current_node=%d, numa_group_id=%d\n",
->>  			task_node(p), task_numa_group_id(p));
->> +	SEQ_printf(m, "faults_locality local=%lu remote=%lu failed=%lu ",
->> +			p->numa_faults_locality[1],
->> +			p->numa_faults_locality[0],
->> +			p->numa_faults_locality[2]);
-> 
-> This should be a separate patch. "failed=" does not tell much. It should
-> be at least migfailed to give some indication it's about failed
-> migrations.
+Mimi Zohar (1):
+  powerpc/ima: indicate kernel modules appended signatures are enforced
 
-I'm always doing bad on naming :-P
+Nayna Jain (8):
+  powerpc: detect the secure boot mode of the system
+  powerpc/ima: add support to initialize ima policy rules
+  powerpc: detect the trusted boot state of the system
+  powerpc/ima: define trusted boot policy
+  ima: make process_buffer_measurement() generic
+  certs: add wrapper function to check blacklisted binary hash
+  ima: check against blacklisted hashes for files with modsig
+  powerpc/ima: update ima arch policy to check for blacklist
 
-> 
-> It might still be misleading because the failure could be due to lack of
-> memory or because the page is pinned. However, I would not worry about
-> that in this case.
-> 
-> What *does* make this dangerous is that numa_faults_locality is often
-> cleared. A user could easily think that this data somehow accumulates
-> over time but it does not. This exposes implementation details as
-> numa_faults_locality could change its behaviour in the future and tools
-> should not rely on the contents being stable. While I recognise that
-> some numa balancing information is already exposed in that file, it's
-> relatively harmless with the possible exception of numa_scan_seq but
-> at least that value is almost worthless (other than detecting if NUMA
-> balancing is completely broken) and very unlikely to change behaviour.
+ Documentation/ABI/testing/ima_policy   |  4 ++
+ arch/powerpc/Kconfig                   | 11 +++++
+ arch/powerpc/include/asm/secure_boot.h | 29 +++++++++++++
+ arch/powerpc/kernel/Makefile           |  2 +
+ arch/powerpc/kernel/ima_arch.c         | 78 ++++++++++++++++++++++++++++++++++
+ arch/powerpc/kernel/secure_boot.c      | 58 +++++++++++++++++++++++++
+ certs/blacklist.c                      |  9 ++++
+ include/keys/system_keyring.h          |  6 +++
+ include/linux/ima.h                    |  3 +-
+ security/integrity/ima/ima.h           | 11 +++++
+ security/integrity/ima/ima_appraise.c  | 33 ++++++++++++++
+ security/integrity/ima/ima_main.c      | 70 ++++++++++++++++++++----------
+ security/integrity/ima/ima_policy.c    | 12 +++++-
+ security/integrity/integrity.h         |  1 +
+ 14 files changed, 302 insertions(+), 25 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/secure_boot.h
+ create mode 100644 arch/powerpc/kernel/ima_arch.c
+ create mode 100644 arch/powerpc/kernel/secure_boot.c
 
-Yeah, each new scan will drop the faults data of last scan, which is
-important for group locality accumulation since we don't want to tracing
-the out dated data for too long.
+-- 
+2.7.5
 
-I think I get your point, these per-task faults are not accumulated, so they
-are meaningless on period checking, actually they are not so helpful when
-we consider cgroup as a unit for numa adapting, will remove them in next
-version then.
-
-> 
->> +	SEQ_printf(m, "lhit=%lu rhit=%lu\n",
->> +			p->numa_faults_locality[4],
->> +			p->numa_faults_locality[3]);
->>  	show_numa_stats(p, m);
->>  	mpol_put(pol);
->>  #endif
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->> index a81c36472822..4ba3a41cdca3 100644
->> --- a/kernel/sched/fair.c
->> +++ b/kernel/sched/fair.c
->> @@ -2466,6 +2466,12 @@ void task_numa_fault(int last_cpupid, int mem_node, int pages, int flags)
->>  	p->numa_faults[task_faults_idx(NUMA_MEMBUF, mem_node, priv)] += pages;
->>  	p->numa_faults[task_faults_idx(NUMA_CPUBUF, cpu_node, priv)] += pages;
->>  	p->numa_faults_locality[local] += pages;
->> +	/*
->> +	 * We want to have the real local/remote page access statistic
->> +	 * here, so use 'mem_node' which is the real residential node of
->> +	 * page after migrate_misplaced_page().
->> +	 */
->> +	p->numa_faults_locality[3 + !!(mem_node == numa_node_id())] += pages;
->>  }
->>
-> 
-> This may be misleading if a task is using a preferred node policy that
-> happens to be remote. It'll report bad locality but it's how the task
-> waqs configured. Similarly, shared pages that are interleaves will show
-> as remote accesses which is not necessarily bad. It goes back to "what
-> does a sysadmin do with this information?"
-
-IMHO a very important usage of these data is to tell the numa users
-"something maybe going wrong", could be on purpose or really a setting
-issue, users could then try to figure out whether this is a false alarm
-or not.
-
-Maybe we could give some hints for users on how to handle it when seeing
-the downturn locality, in the coming docs :-)
-
-> 
->>  static void reset_ptenuma_scan(struct task_struct *p)
-[snip]
->> +void free_tg_numa_stat(struct task_group *tg)
->> +{
->> +	free_percpu(tg->numa_stat);
->> +}
->> +
->> +static void update_tg_numa_stat(struct task_struct *p)
->> +{
->> +	struct task_group *tg;
->> +	unsigned long remote = p->numa_faults_locality[3];
->> +	unsigned long local = p->numa_faults_locality[4];
->> +	int idx = -1;
->> +
->> +	/* Tobe scaled? */
->> +	if (remote || local)
->> +		idx = NR_NL_INTERVAL * local / (remote + local + 1);
->> +
->> +	rcu_read_lock();
->> +
->> +	tg = task_group(p);
->> +	while (tg) {
->> +		/* skip account when there are no faults records */
->> +		if (idx != -1)
->> +			this_cpu_inc(tg->numa_stat->locality[idx]);
->> +
->> +		this_cpu_inc(tg->numa_stat->jiffies);
->> +
->> +		tg = tg->parent;
->> +	}
->> +
->> +	rcu_read_unlock();
->> +}
->> +
-> 
-> This is potentially a long walk to do in the task tick context if there
-> are a lot of groups. Also, if no faults are recorded because the scanner is
-> running slowly, what does that mean for detecting locality? The information
-> could be way off if a lot of accesses are remote and simply not caught
-> by faults because of recent changes.
-
-We have merge the work into entity_tick() in V2, which just add few
-lines to the existed hierarchy updating.
-
-As you point out, locality assume the task-page node position won't
-change too much between each scan, which is definitely not true all
-the times.
-
-However, scan period adapting it self based on the faults info, which
-means when it getting longer, the task-page node relationship are
-becoming stable, the locality are more reliable, and when it getting
-shorter, the updating of faults becoming rapidly, which also make the
-locality more accurate.
-
-Anyway, locality is not supposed to be accurate all the times, but
-should always telling the right tendency, if one found the locality
-is always low, it can't be a good task-page node relationship in there.
-
-> 
-> So, overall, I see the general intent that you want to identify cgroups
-> that have bad locality but it incurs a universal cost regardless of
-> whether the user wants it or not. The documentation is non-existant but
-> the biggest kicker is that it's unclear how a sysadmin would consume this
-> information. The problem is compounded by the fact that interpreting
-> the data accurately and making a decision requires knowledge of the
-> implementation and that severely limits who can benefit.  In my mind, it
-> makes more sense to track the locality and NUMA behaviour of individual
-> tasks which can be already done with ftrace. If cgroup tracking was
-> required, a userspace application using ftrace could correlate task
-> activity with what cgroup it belongs to and collect the data from userspace
-> -- this is not necessarily easy and tracepoints might need updating, but
-> it makes more sense to track this in userspace instead of in the kernel
-> which never consumes the data
-Yeah, per-cgroup ftrace tracing may could work, but IMHO it also introduce
-overhead (maybe even more), and not very likely a general monitoring way,
-I suppose locality could be something similar to load_1/5/15, not so accurate
-but help to warn the possible issues.
-
-We have sent v2 which reworked the implementation according to Peter's
-suggestions, would be very appreciate if you could help review to see if
-the overhead concern has been addressed, and we will:
- * stop showing the per-task faults info
- * add checks for sched_numa_balancing before showing locality
-in next version, also doc is on the way ;-)
-
-Best Regards,
-Michael Wang
-
-> 
