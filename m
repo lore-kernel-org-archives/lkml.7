@@ -2,154 +2,171 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15226CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04107CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF1721734
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1FDE2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 18:30:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Tss01mpS";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ggGVru41"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="amiQUKxQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729295AbfJaS3D (ORCPT
+        id S1729301AbfJaSas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 14:29:03 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:33632 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729149AbfJaS27 (ORCPT
+        Thu, 31 Oct 2019 14:30:48 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38270 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729197AbfJaSar (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:28:59 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 255E360A23; Thu, 31 Oct 2019 18:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572546538;
-        bh=28gXZHObDLcaUnkvLy2J2bRGCEy8fMDphUJiu2quWxY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tss01mpSM/zZeGnOKAGrJSCo/3ABRZg+vdOJCk63tV1ZpoYCqAQ2hfMqYwtpu1+7v
-         LkNyjzlkAmmGWa6AF/kRj1qVztb5h8Mz+dp0etjgPHuXeozgc7/wXyFKsKwFYJCYOk
-         b7ipUlhi4OKA6EWUIxzl1715XmMgyQu1SFJPzXMo=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 139DE60ACF;
-        Thu, 31 Oct 2019 18:28:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572546537;
-        bh=28gXZHObDLcaUnkvLy2J2bRGCEy8fMDphUJiu2quWxY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ggGVru41wLxORxdTapQHvpButnQCFEmnDuZUSnnKPaLBHeBuex/sP+WIFet3z+F87
-         rHO4JkkJOI2mHcpCviOj+ThLpAV+BoYRKreuKTDVEHnEm3JMtVDgrMDAEJFMw1ElmB
-         UlknnN6fsK2qY5uUF426sA+PGOHsyS/EtdNM5QTE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 139DE60ACF
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH v1 1/2] interconnect: Move interconnect drivers to core_initcall
-Date:   Thu, 31 Oct 2019 12:28:51 -0600
-Message-Id: <1572546532-19248-2-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572546532-19248-1-git-send-email-jcrouse@codeaurora.org>
+        Thu, 31 Oct 2019 14:30:47 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w8so3064435plq.5
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 11:30:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zDLgnjlfCqOct3IUAYiTtJNr4GeoIF5s9l08Zwa0OD8=;
+        b=amiQUKxQ8r5QD8yO0TrYXU2yeIQl4u48G7fpD9hounWYf8T9OMfb3TQWB/cnODIHL8
+         NAbpSQ9dAfyFoyaN6nK6C9Hi7zr0FGqbnNCZnTWMUn7+PjNm7/4HxiBpO4kBWWSlOB0W
+         ofzmOWbTOZmhNHgs/QrMb7j3/jNC5OIzDk5CALHfSoxiJ89gDMWRlnNRVzbuJQHpDwfQ
+         IxFUJw/uUkXrFOdwLV95N8K0cGuMo13ZZOpWtQJmaVIZ/1rp+BDaiqEYYr83SRrc18HI
+         F4+0pb3zoXOj1AEJbidQlAH6IbD1oCkc/Tn7Z8p1tDlz2ZD/qTAHV9vAM89hz4bjB3d8
+         J3zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zDLgnjlfCqOct3IUAYiTtJNr4GeoIF5s9l08Zwa0OD8=;
+        b=SmfkMqyWQlD2ZqO3YA0r3z57WY6oN6UPsoTpRcsfudzdfpPta0s4riaG5rVFQ+sffE
+         YAMR4EWqSAJHddq+xb+sA04BddCVbjl0pq9ybqjcCBgFQ4eELS6B3Vy0tgbCtvE5AnKr
+         JvPpPj9UaR496YUxxZVYwmKaR5ceHlVzbQf7cS2a8aqpY87tpfuSfcjLQr8FIy7Lqjpg
+         kmb+ZQAivCx9CRazlqr2994G9VuTQc3K0+HKngfnNbaDtFTFWjRrN8vwE5HlOWFfjjBJ
+         Rx6jOARdj0LE+7Xf5P/NZr0RB5U+yh+g9j21CduaDMxWEAZKsBtcQlB6T2s2YXsCuJap
+         lj7g==
+X-Gm-Message-State: APjAAAUmC0FSjTM6582NlUpkLts019cGYHrJlg66mlG4u5fYe7qNmvSI
+        lpzkiaDOK8RnfvbJS5fdQF4tMA==
+X-Google-Smtp-Source: APXvYqyvfpgoDyKhy38LVc7UX/Did4CiGoO2WTFO2f+HTSlsF788bmvCRJj5GrHyKgKPxF1mxfcvYQ==
+X-Received: by 2002:a17:902:ab89:: with SMTP id f9mr7925359plr.295.1572546646384;
+        Thu, 31 Oct 2019 11:30:46 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g9sm5760292pjl.20.2019.10.31.11.30.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 11:30:45 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 11:30:43 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] interconnect: Move interconnect drivers to
+ core_initcall
+Message-ID: <20191031183043.GL1929@tuxbook-pro>
 References: <1572546532-19248-1-git-send-email-jcrouse@codeaurora.org>
+ <1572546532-19248-2-git-send-email-jcrouse@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572546532-19248-2-git-send-email-jcrouse@codeaurora.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The interconnect drivers are essential to nearly every leaf driver and
-subcomponent in the SoC. Initialize them at the core_initcall level
-so that they are available to their dependent drivers when built in.
+On Thu 31 Oct 11:28 PDT 2019, Jordan Crouse wrote:
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+> The interconnect drivers are essential to nearly every leaf driver and
+> subcomponent in the SoC. Initialize them at the core_initcall level
+> so that they are available to their dependent drivers when built in.
+> 
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 
- drivers/interconnect/qcom/msm8974.c | 14 +++++++++++++-
- drivers/interconnect/qcom/qcs404.c  | 14 +++++++++++++-
- drivers/interconnect/qcom/sdm845.c  | 13 ++++++++++++-
- 3 files changed, 38 insertions(+), 3 deletions(-)
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-diff --git a/drivers/interconnect/qcom/msm8974.c b/drivers/interconnect/qcom/msm8974.c
-index c70ac58..9386d5c 100644
---- a/drivers/interconnect/qcom/msm8974.c
-+++ b/drivers/interconnect/qcom/msm8974.c
-@@ -778,7 +778,19 @@ static struct platform_driver msm8974_noc_driver = {
- 		.of_match_table = msm8974_noc_of_match,
- 	},
- };
--module_platform_driver(msm8974_noc_driver);
-+
-+static int __init msm8974_noc_driver_init(void)
-+{
-+	return platform_driver_register(&msm8974_noc_driver);
-+}
-+core_initcall(msm8974_noc_driver_init);
-+
-+static void __exit msm8974_noc_driver_exit(void)
-+{
-+	platform_driver_unregister(&msm8974_noc_driver);
-+}
-+module_exit(msm8974_noc_driver_exit);
-+
- MODULE_DESCRIPTION("Qualcomm MSM8974 NoC driver");
- MODULE_AUTHOR("Brian Masney <masneyb@onstation.org>");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/interconnect/qcom/qcs404.c b/drivers/interconnect/qcom/qcs404.c
-index b4966d8..7dd3e76 100644
---- a/drivers/interconnect/qcom/qcs404.c
-+++ b/drivers/interconnect/qcom/qcs404.c
-@@ -535,6 +535,18 @@ static struct platform_driver qcs404_noc_driver = {
- 		.of_match_table = qcs404_noc_of_match,
- 	},
- };
--module_platform_driver(qcs404_noc_driver);
-+
-+static int __init qcs404_noc_driver_init(void)
-+{
-+	return platform_driver_register(&qcs404_noc_driver);
-+}
-+core_initcall(qcs404_noc_driver_init);
-+
-+static void __exit qcs404_noc_driver_exit(void)
-+{
-+	platform_driver_unregister(&qcs404_noc_driver);
-+}
-+module_exit(qcs404_noc_driver_exit);
-+
- MODULE_DESCRIPTION("Qualcomm QCS404 NoC driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
-index 502a6c2..4dab92a 100644
---- a/drivers/interconnect/qcom/sdm845.c
-+++ b/drivers/interconnect/qcom/sdm845.c
-@@ -892,7 +892,18 @@ static struct platform_driver qnoc_driver = {
- 		.of_match_table = qnoc_of_match,
- 	},
- };
--module_platform_driver(qnoc_driver);
-+
-+static int __init qnoc_driver_init(void)
-+{
-+	return platform_driver_register(&qnoc_driver);
-+}
-+core_initcall(qnoc_driver_init);
-+
-+static void __exit qnoc_driver_exit(void)
-+{
-+	platform_driver_unregister(&qnoc_driver);
-+}
-+module_exit(qnoc_driver_exit);
- 
- MODULE_AUTHOR("David Dai <daidavid1@codeaurora.org>");
- MODULE_DESCRIPTION("Qualcomm sdm845 NoC driver");
--- 
-2.7.4
-
+> ---
+> 
+>  drivers/interconnect/qcom/msm8974.c | 14 +++++++++++++-
+>  drivers/interconnect/qcom/qcs404.c  | 14 +++++++++++++-
+>  drivers/interconnect/qcom/sdm845.c  | 13 ++++++++++++-
+>  3 files changed, 38 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/interconnect/qcom/msm8974.c b/drivers/interconnect/qcom/msm8974.c
+> index c70ac58..9386d5c 100644
+> --- a/drivers/interconnect/qcom/msm8974.c
+> +++ b/drivers/interconnect/qcom/msm8974.c
+> @@ -778,7 +778,19 @@ static struct platform_driver msm8974_noc_driver = {
+>  		.of_match_table = msm8974_noc_of_match,
+>  	},
+>  };
+> -module_platform_driver(msm8974_noc_driver);
+> +
+> +static int __init msm8974_noc_driver_init(void)
+> +{
+> +	return platform_driver_register(&msm8974_noc_driver);
+> +}
+> +core_initcall(msm8974_noc_driver_init);
+> +
+> +static void __exit msm8974_noc_driver_exit(void)
+> +{
+> +	platform_driver_unregister(&msm8974_noc_driver);
+> +}
+> +module_exit(msm8974_noc_driver_exit);
+> +
+>  MODULE_DESCRIPTION("Qualcomm MSM8974 NoC driver");
+>  MODULE_AUTHOR("Brian Masney <masneyb@onstation.org>");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/interconnect/qcom/qcs404.c b/drivers/interconnect/qcom/qcs404.c
+> index b4966d8..7dd3e76 100644
+> --- a/drivers/interconnect/qcom/qcs404.c
+> +++ b/drivers/interconnect/qcom/qcs404.c
+> @@ -535,6 +535,18 @@ static struct platform_driver qcs404_noc_driver = {
+>  		.of_match_table = qcs404_noc_of_match,
+>  	},
+>  };
+> -module_platform_driver(qcs404_noc_driver);
+> +
+> +static int __init qcs404_noc_driver_init(void)
+> +{
+> +	return platform_driver_register(&qcs404_noc_driver);
+> +}
+> +core_initcall(qcs404_noc_driver_init);
+> +
+> +static void __exit qcs404_noc_driver_exit(void)
+> +{
+> +	platform_driver_unregister(&qcs404_noc_driver);
+> +}
+> +module_exit(qcs404_noc_driver_exit);
+> +
+>  MODULE_DESCRIPTION("Qualcomm QCS404 NoC driver");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
+> index 502a6c2..4dab92a 100644
+> --- a/drivers/interconnect/qcom/sdm845.c
+> +++ b/drivers/interconnect/qcom/sdm845.c
+> @@ -892,7 +892,18 @@ static struct platform_driver qnoc_driver = {
+>  		.of_match_table = qnoc_of_match,
+>  	},
+>  };
+> -module_platform_driver(qnoc_driver);
+> +
+> +static int __init qnoc_driver_init(void)
+> +{
+> +	return platform_driver_register(&qnoc_driver);
+> +}
+> +core_initcall(qnoc_driver_init);
+> +
+> +static void __exit qnoc_driver_exit(void)
+> +{
+> +	platform_driver_unregister(&qnoc_driver);
+> +}
+> +module_exit(qnoc_driver_exit);
+>  
+>  MODULE_AUTHOR("David Dai <daidavid1@codeaurora.org>");
+>  MODULE_DESCRIPTION("Qualcomm sdm845 NoC driver");
+> -- 
+> 2.7.4
+> 
