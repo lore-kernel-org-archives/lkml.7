@@ -2,147 +2,91 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3579DC47E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215BECA9ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2C9121734
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBF3C20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 19:36:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="F7Q+3Waz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QASbPTpQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbfJaTfi (ORCPT
+        id S1727684AbfJaTg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 15:35:38 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:41041 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbfJaTfi (ORCPT
+        Thu, 31 Oct 2019 15:36:57 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:42664 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbfJaTg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 15:35:38 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 7FC5E886BF;
-        Fri,  1 Nov 2019 08:35:33 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1572550533;
-        bh=E93uVfw+8Sv9aFniBPMkATe9ycroU/eB0+p7RpM6SlA=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=F7Q+3WazE4DEFImOB2xZ4pivLcl6lyZDOa051lMUsnuJjiDOnLZqYdJB2InfY74Kw
-         d+WMefMFl20rEyIL5JZCP4Yh0RAYAxQhOpIJbMWV2edqp7fkjiw3txEIuO+u4Ei7qm
-         spAmx5eRqXnoC/3/rjAW14AWozrfUOrc7pvnKKsFrtQqsMJYpeIo3B0XtUufTB82gD
-         4SLwNZHjmU761wfyV+eg1CabIjsNy/Bd5Kc2hWe7gINE5L79DE67K6zQSdR5tfroEs
-         hf8tJOMxgOkhtWsI+qTFbkvqbZTAzqxtja04Wvn5cFtblGoMNJPNiNDL5MnA1+o8Rs
-         6nFEovFHVG7Jw==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5dbb37840000>; Fri, 01 Nov 2019 08:35:32 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Fri, 1 Nov 2019 08:35:31 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Fri, 1 Nov 2019 08:35:31 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "tomeu.vizoso@collabora.com" <tomeu.vizoso@collabora.com>,
-        "mgalka@collabora.com" <mgalka@collabora.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "matthew.hart@linaro.org" <matthew.hart@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "bot@kernelci.org" <bot@kernelci.org>,
-        "khilman@baylibre.com" <khilman@baylibre.com>,
-        "guillaume.tucker@collabora.com" <guillaume.tucker@collabora.com>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "rjui@broadcom.com" <rjui@broadcom.com>
-Subject: Re: linusw/devel boot bisection: v5.4-rc1-31-g6a41b6c5fc20 on
- rk3399-puma-haikou
-Thread-Topic: linusw/devel boot bisection: v5.4-rc1-31-g6a41b6c5fc20 on
- rk3399-puma-haikou
-Thread-Index: AQHVkBrPgYhki3sbH0mOvdKD5EMjb6d0SpEA
-Date:   Thu, 31 Oct 2019 19:35:30 +0000
-Message-ID: <9d1a6cba9687f94b2d36a82f42f5d4be2b16e7a6.camel@alliedtelesis.co.nz>
-References: <5dbb2acf.1c69fb81.54ce2.2f48@mx.google.com>
-In-Reply-To: <5dbb2acf.1c69fb81.54ce2.2f48@mx.google.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:f9a5:3a1:c94b:a6f5]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <007B585A5A5044459D519245F35A99C3@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Thu, 31 Oct 2019 15:36:57 -0400
+Received: by mail-il1-f194.google.com with SMTP id o16so6466975ilq.9;
+        Thu, 31 Oct 2019 12:36:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8hKiZ0BGQD5nx5BySHMaCs45A5ymyfaXhrQ8avV6SgE=;
+        b=QASbPTpQ1UN0fSYhWrwvLsDfPcrd17dZWg6iePOP0jlDVLqseQmO3Vi60YBpfBHMgZ
+         /gYrtXo4l0wYUwWQA8A20rqPAyyXKQ9SoKwgCcYcCzyARJgY/L1E/DYPFGzhCdyuwDtG
+         tGkGXP5ejLlBJua0Kt1W+FqaBaMgW2nKmOkyTHSjIO5e6MHnTI3SwAY3kRJ5VUVaGjhU
+         LLGqPxxJFY+vZU8BtHlAq5zum1HCeloe40L0iMcMyplMJwLHnZbBHcCfyyWLaIQ6jY9T
+         HZj4mm1xBgCnyRVnHcbEVCNYmF9RkbRRUEThrJbDnhfPm9Bnm29E+f5u1Dqsl7IRKZyc
+         8VDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8hKiZ0BGQD5nx5BySHMaCs45A5ymyfaXhrQ8avV6SgE=;
+        b=o0LqQ7g4aPuCWY3Yv6dtwjfznQ/hj4LUjtgElk13+hB1CseLQAiEhmfjALJAh6v2n3
+         b/z+Ivj5iaXdwVG0FrRnicknUkbzamH5guV+LNoQ+rPNAer6oa4gslGl6u+cP+lmzj+1
+         3RlhVGo652MKkXp1qOafAp71QK+Ma7rjDGJBdIXfpVyL4ORAfJAN2R4JfAHbu5UEoPU8
+         6dUKTLlrU8EC+oDY1MiWxwm+RMwnxNdcFWs0hCPiN9qj9xBoT0wYtgroWylLnLxsYhiz
+         mzt+XhaxCVkAddXvTa1cnxQvtzIjAfUEGaHYC/9b/tgKqk1DNVpkwifmQBq9LRtBXnQu
+         tbhA==
+X-Gm-Message-State: APjAAAXpHHAdNL0k/PfWGF7YF+tBHO5pnEKze0pZalEbwsNcB73awdjx
+        lhXu70gSH6fNZZn8y4meVu+o/bmLavjBe/1BBdI=
+X-Google-Smtp-Source: APXvYqx2VJtS/SdW21beW5VwH9Lu+WwCGYimDaoxk9YrwjUbTAo501haM6105RK1xvP88EE1CDQyVkFFxg7L0k2aSLs=
+X-Received: by 2002:a92:1d51:: with SMTP id d78mr8479316ild.166.1572550616674;
+ Thu, 31 Oct 2019 12:36:56 -0700 (PDT)
 MIME-Version: 1.0
+References: <20191031184632.2938295-1-bjorn.andersson@linaro.org> <20191031184632.2938295-2-bjorn.andersson@linaro.org>
+In-Reply-To: <20191031184632.2938295-2-bjorn.andersson@linaro.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Thu, 31 Oct 2019 13:36:45 -0600
+Message-ID: <CAOCk7Noq8dvKsWzAfAXRGhmoMG4_tHD0kw8_KVEBvyjm_fGc5A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] remoteproc: qcom_q6v5_mss: Don't reassign mpss region
+ on shutdown
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTEwLTMxIGF0IDExOjQxIC0wNzAwLCBrZXJuZWxjaS5vcmcgYm90IHdyb3Rl
-Og0KPiAqICogKiAqICogKiAqICogKiAqICogKiAqICogKiAqICogKiAqICogKiAqICogKiAqICog
-KiAqICogKiAqICogKg0KPiAqIFRoaXMgYXV0b21hdGVkIGJpc2VjdGlvbiByZXBvcnQgd2FzIHNl
-bnQgdG8geW91IG9uIHRoZSBiYXNpcyAgKg0KPiAqIHRoYXQgeW91IG1heSBiZSBpbnZvbHZlZCB3
-aXRoIHRoZSBicmVha2luZyBjb21taXQgaXQgaGFzICAgICAgKg0KPiAqIGZvdW5kLiAgTm8gbWFu
-dWFsIGludmVzdGlnYXRpb24gaGFzIGJlZW4gZG9uZSB0byB2ZXJpZnkgaXQsICAgKg0KPiAqIGFu
-ZCB0aGUgcm9vdCBjYXVzZSBvZiB0aGUgcHJvYmxlbSBtYXkgYmUgc29tZXdoZXJlIGVsc2UuICAg
-ICAgKg0KPiAqICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgKg0KPiAqIElmIHlvdSBkbyBzZW5kIGEgZml4LCBwbGVhc2UgaW5jbHVk
-ZSB0aGlzIHRyYWlsZXI6ICAgICAgICAgICAgKg0KPiAqICAgUmVwb3J0ZWQtYnk6ICJrZXJuZWxj
-aS5vcmcgYm90IiA8Ym90QGtlcm5lbGNpLm9yZz4gICAgICAgICAgKg0KPiAqICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKg0KPiAq
-IEhvcGUgdGhpcyBoZWxwcyEgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgKg0KPiAqICogKiAqICogKiAqICogKiAqICogKiAqICogKiAqICogKiAqICogKiAqICog
-KiAqICogKiAqICogKiAqICogKg0KPiANCj4gbGludXN3L2RldmVsIGJvb3QgYmlzZWN0aW9uOiB2
-NS40LXJjMS0zMS1nNmE0MWI2YzVmYzIwIG9uIHJrMzM5OS1wdW1hLWhhaWtvdQ0KPiANCj4gU3Vt
-bWFyeToNCj4gICBTdGFydDogICAgICA2YTQxYjZjNWZjMjAgZ3BpbzogQWRkIHhncy1pcHJvYyBk
-cml2ZXINCj4gICBEZXRhaWxzOiAgICBodHRwczovL2tlcm5lbGNpLm9yZy9ib290L2lkLzVkYmIx
-MmJmNTliNTE0NDA0ZjYwZWU3OQ0KPiAgIFBsYWluIGxvZzogIGh0dHBzOi8vc3RvcmFnZS5rZXJu
-ZWxjaS5vcmcvL2xpbnVzdy9kZXZlbC92NS40LXJjMS0zMS1nNmE0MWI2YzVmYzIwL2FybTY0L2Rl
-ZmNvbmZpZy9nY2MtOC9sYWItdGhlb2Jyb21hLXN5c3RlbXMvYm9vdC1yazMzOTktcHVtYS1oYWlr
-b3UudHh0DQo+ICAgSFRNTCBsb2c6ICAgaHR0cHM6Ly9zdG9yYWdlLmtlcm5lbGNpLm9yZy8vbGlu
-dXN3L2RldmVsL3Y1LjQtcmMxLTMxLWc2YTQxYjZjNWZjMjAvYXJtNjQvZGVmY29uZmlnL2djYy04
-L2xhYi10aGVvYnJvbWEtc3lzdGVtcy9ib290LXJrMzM5OS1wdW1hLWhhaWtvdS5odG1sDQo+ICAg
-UmVzdWx0OiAgICAgNmE0MWI2YzVmYzIwIGdwaW86IEFkZCB4Z3MtaXByb2MgZHJpdmVyDQo+IA0K
-PiBDaGVja3M6DQo+ICAgcmV2ZXJ0OiAgICAgUEFTUw0KPiAgIHZlcmlmeTogICAgIFBBU1MNCj4g
-DQo+IFBhcmFtZXRlcnM6DQo+ICAgVHJlZTogICAgICAgbGludXN3DQo+ICAgVVJMOiAgICAgICAg
-aHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvbGludXN3L2xp
-bnV4LWdwaW8uZ2l0Lw0KPiAgIEJyYW5jaDogICAgIGRldmVsDQo+ICAgVGFyZ2V0OiAgICAgcmsz
-Mzk5LXB1bWEtaGFpa291DQo+ICAgQ1BVIGFyY2g6ICAgYXJtNjQNCj4gICBMYWI6ICAgICAgICBs
-YWItdGhlb2Jyb21hLXN5c3RlbXMNCj4gICBDb21waWxlcjogICBnY2MtOA0KPiAgIENvbmZpZzog
-ICAgIGRlZmNvbmZpZw0KPiAgIFRlc3Qgc3VpdGU6IGJvb3QNCj4gDQo+IEJyZWFraW5nIGNvbW1p
-dCBmb3VuZDoNCj4gDQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gY29tbWl0IDZhNDFiNmM1
-ZmMyMGFiY2VkODhmYTBlZWQ0MmFlNWU1Y2I3MGIyODANCj4gQXV0aG9yOiBDaHJpcyBQYWNraGFt
-IDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+DQo+IERhdGU6ICAgRnJpIE9jdCAy
-NSAwOToyNzowMyAyMDE5ICsxMzAwDQo+IA0KPiAgICAgZ3BpbzogQWRkIHhncy1pcHJvYyBkcml2
-ZXINCj4gICAgIA0KPiAgICAgVGhpcyBkcml2ZXIgc3VwcG9ydHMgdGhlIENoaXAgQ29tbW9uIEEg
-R1BJTyBjb250cm9sbGVyIHByZXNlbnQgb24gYQ0KPiAgICAgbnVtYmVyIG9mIEJyb2FkY29tIHN3
-aXRjaCBBU0lDcyB3aXRoIGludGVncmF0ZWQgU29Dcy4gVGhlIGNvbnRyb2xsZXIgaXMNCj4gICAg
-IHNpbWlsYXIgdG8gdGhlIHBpbmN0cmwtbnNwLWdwaW8gYW5kIHBpbmN0cmwtaXByb2MtZ3BpbyBi
-bG9ja3MgYnV0DQo+ICAgICBkaWZmZXJlbnQgZW5vdWdoIHRoYXQgYSBzZXBhcmF0ZSBkcml2ZXIg
-aXMgcmVxdWlyZWQuDQo+ICAgICANCj4gICAgIFRoaXMgaGFzIGJlZW4gcG9ydGVkIGZyb20gQnJv
-YWRjb20ncyBYTERLIDUuMC4zIHJldGFpbmluZyBvbmx5IHRoZSBDQ0ENCj4gICAgIHN1cHBvcnQg
-KHBpbmN0cmwtaXByb2MtZ3BpbyBjb3ZlcnMgQ0NCKS4NCj4gICAgIA0KPiAgICAgU2lnbmVkLW9m
-Zi1ieTogQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56Pg0K
-PiAgICAgTGluazogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvci8yMDE5MTAyNDIwMjcwMy44MDE3
-LTMtY2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56DQo+ICAgICBBY2tlZC1ieTogU2Nv
-dHQgQnJhbmRlbiA8c2NvdHQuYnJhbmRlbkBicm9hZGNvbS5jb20+DQo+ICAgICBTaWduZWQtb2Zm
-LWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+DQoNCkhtbSwNCg0K
-SSBkb24ndCBzZWUgaG93IHRoaXMgY29tbWl0IHdvdWxkIGhhdmUgY2F1c2VkIHRoZSBvb3BzLiBU
-aGUgbmV3IGRyaXZlcg0Kc2hvdWxkbid0IChhbmQgZG9lc24ndCBhcHBlYXIgdG8gYmUpIHJ1biBv
-biBhbnkgcGxhdGZvcm0gYXMgbm90aGluZw0KZGVjbGFyZXMgLmNvbXBhdGlibGUgPSAiYnJjbSxp
-cHJvYy1ncGlvLWNjYSIgKHlldCkuDQoNCg==
+On Thu, Oct 31, 2019 at 12:48 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> Trying to reclaim mpss memory while the mba is not running causes the
+> system to crash on devices with security fuses blown, so leave it
+> assigned to the remote on shutdown and recover it on a subsequent boot.
+>
+> Fixes: 6c5a9dc2481b ("remoteproc: qcom: Make secure world call for mem ownership switch")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+
+Excellent.  This addresses the issue I was seeing with the Lenovo Miix 630
+
+Reviewed-by: Jeffrey Hugo<jeffrey.l.hugo@gmail.com>
+Tested-by: Jeffrey Hugo<jeffrey.l.hugo@gmail.com>
