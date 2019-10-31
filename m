@@ -5,42 +5,42 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A7DCA9EC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88967CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D8C20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E632086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 11:01:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="lJaxQbkz"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ZK5LoStk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfJaLBF (ORCPT
+        id S1727591AbfJaLBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 07:01:05 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:59348 "EHLO
+        Thu, 31 Oct 2019 07:01:36 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:59474 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727189AbfJaLBD (ORCPT
+        by vger.kernel.org with ESMTP id S1727366AbfJaLBF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 07:01:03 -0400
+        Thu, 31 Oct 2019 07:01:05 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5E1DCC08A9;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 66806C08AA;
         Thu, 31 Oct 2019 11:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1572519662; bh=zbdUkdCwazmoCsthT9nKk/TAMzcgQzGGNjyeeOr0eTU=;
+        t=1572519662; bh=Q+UDeno5GnhmSyT5W8M9Y8gTmSOsEE9Q4RrmGSlZXyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=lJaxQbkzW4twT3uym2EW9DfKtW7HjUhHQxN+X21Eh3m0xQ+rHrPXwVdMW8kuL0TUX
-         hF3qUiv596iw1gjliRHVXtM69Dg49sGysy39nqft9IiM/VPKlFykn2Po7voU8PkyTq
-         Hwwwg1fZ5YShC/9697lgW10bpT4uUFANr2ZF4EydeY6FkFr9YOeqyS9r+9nsloFj+O
-         nemSKx2nOrhHUwmVHghhC2S4tobhdJktOxqtsULIYO0moFikf8ZllS5MSJyr8/kI8o
-         1ORliq4zRZA9X4bfgdc0A12FOjNU0r6zXxlLH4NxuoEGRSl6b0K/nzlIarcG7XERXq
-         PSD+qUqhR8iMg==
+        b=ZK5LoStkqnbplKc8x9GSOGsuW2/ACUvLLh1+iWqHyzq951If9HCC4BO7kMmgOWGG6
+         E963/BaYB8gy2oSXL6VkPvDwMy2GwGErebq26WgRb23+jk7SeXJPFBifEloP6TvFjR
+         dUB9RHtMtQQXx6o14wBglNh5j4Tk9lTxAAdkdGxkT16/ByhXSCGrrdk3wdjcY2nspH
+         A3brGQsGJAmVTt2s/BKq3qUCVA5p4EWw2tgxJcExmnn94Ho4zAyr7B2rA4IE5koteL
+         f+u3A/EAvW8TYIhjfLmr4pRoOKycvun5GYGKImFYnOu+CiNq+dpCi5vCKrCU+kow+D
+         OiG4na/hm/VAQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id DADF4A0061;
-        Thu, 31 Oct 2019 11:00:59 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 17088A006E;
+        Thu, 31 Oct 2019 11:01:00 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net v2 01/10] net: stmmac: Fix sparse warning
-Date:   Thu, 31 Oct 2019 12:00:39 +0100
-Message-Id: <e2f11aad32bb264a31074877b5a568f1dd1383ee.1572519070.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net v2 04/10] net: stmmac: selftests: Prevent false positives in filter tests
+Date:   Thu, 31 Oct 2019 12:00:42 +0100
+Message-Id: <dc16b10c11279308be7ac462980c9c67962d5bde.1572519070.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1572519070.git.Jose.Abreu@synopsys.com>
 References: <cover.1572519070.git.Jose.Abreu@synopsys.com>
@@ -65,10 +65,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VID is converted to le16 so the variable must be __le16 type.
+In L2 tests that filter packets by destination MAC address we need to
+prevent false positives that can occur if we add an address that
+collides with the existing ones.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Fixes: c7ab0b8088d7 ("net: stmmac: Fallback to VLAN Perfect filtering if HASH is not available")
+To fix this, lets manually check if the new address to be added is
+already present in the NIC and use a different one if so. For Hash
+filtering this also envolves converting the address to the hash.
+
+Fixes: 091810dbded9 ("net: stmmac: Introduce selftests support")
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
@@ -82,77 +87,229 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c   | 2 +-
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 2 +-
- drivers/net/ethernet/stmicro/stmmac/hwif.h          | 2 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c   | 5 +++--
- 4 files changed, 6 insertions(+), 5 deletions(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 134 +++++++++++++++------
+ 1 file changed, 94 insertions(+), 40 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index bec929daf703..365e607f07cd 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -733,7 +733,7 @@ static void dwmac4_set_mac_loopback(void __iomem *ioaddr, bool enable)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index 0b5db52149bc..f3d8b9336b8e 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -6,7 +6,9 @@
+  * Author: Jose Abreu <joabreu@synopsys.com>
+  */
+ 
++#include <linux/bitrev.h>
+ #include <linux/completion.h>
++#include <linux/crc32.h>
+ #include <linux/ethtool.h>
+ #include <linux/ip.h>
+ #include <linux/phy.h>
+@@ -485,12 +487,48 @@ static int stmmac_filter_check(struct stmmac_priv *priv)
+ 	return -EOPNOTSUPP;
  }
  
- static void dwmac4_update_vlan_hash(struct mac_device_info *hw, u32 hash,
--				    u16 perfect_match, bool is_double)
-+				    __le16 perfect_match, bool is_double)
++static bool stmmac_hash_check(struct stmmac_priv *priv, unsigned char *addr)
++{
++	int mc_offset = 32 - priv->hw->mcast_bits_log2;
++	struct netdev_hw_addr *ha;
++	u32 hash, hash_nr;
++
++	/* First compute the hash for desired addr */
++	hash = bitrev32(~crc32_le(~0, addr, 6)) >> mc_offset;
++	hash_nr = hash >> 5;
++	hash = 1 << (hash & 0x1f);
++
++	/* Now, check if it collides with any existing one */
++	netdev_for_each_mc_addr(ha, priv->dev) {
++		u32 nr = bitrev32(~crc32_le(~0, ha->addr, ETH_ALEN)) >> mc_offset;
++		if (((nr >> 5) == hash_nr) && ((1 << (nr & 0x1f)) == hash))
++			return false;
++	}
++
++	/* No collisions, address is good to go */
++	return true;
++}
++
++static bool stmmac_perfect_check(struct stmmac_priv *priv, unsigned char *addr)
++{
++	struct netdev_hw_addr *ha;
++
++	/* Check if it collides with any existing one */
++	netdev_for_each_uc_addr(ha, priv->dev) {
++		if (!memcmp(ha->addr, addr, ETH_ALEN))
++			return false;
++	}
++
++	/* No collisions, address is good to go */
++	return true;
++}
++
+ static int stmmac_test_hfilt(struct stmmac_priv *priv)
  {
- 	void __iomem *ioaddr = hw->pcsr;
+-	unsigned char gd_addr[ETH_ALEN] = {0x01, 0xee, 0xdd, 0xcc, 0xbb, 0xaa};
+-	unsigned char bd_addr[ETH_ALEN] = {0x01, 0x01, 0x02, 0x03, 0x04, 0x05};
++	unsigned char gd_addr[ETH_ALEN] = {0xf1, 0xee, 0xdd, 0xcc, 0xbb, 0xaa};
++	unsigned char bd_addr[ETH_ALEN] = {0xf1, 0xff, 0xff, 0xff, 0xff, 0xff};
+ 	struct stmmac_packet_attrs attr = { };
+-	int ret;
++	int ret, tries = 256;
  
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 5cda360d5d07..e24382d00e62 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -555,7 +555,7 @@ static int dwxgmac2_rss_configure(struct mac_device_info *hw,
+ 	ret = stmmac_filter_check(priv);
+ 	if (ret)
+@@ -499,6 +537,16 @@ static int stmmac_test_hfilt(struct stmmac_priv *priv)
+ 	if (netdev_mc_count(priv->dev) >= priv->hw->multicast_filter_bins)
+ 		return -EOPNOTSUPP;
+ 
++	while (--tries) {
++		/* We only need to check the bd_addr for collisions */
++		bd_addr[ETH_ALEN - 1] = tries;
++		if (stmmac_hash_check(priv, bd_addr))
++			break;
++	}
++
++	if (!tries)
++		return -EOPNOTSUPP;
++
+ 	ret = dev_mc_add(priv->dev, gd_addr);
+ 	if (ret)
+ 		return ret;
+@@ -523,13 +571,25 @@ static int stmmac_test_hfilt(struct stmmac_priv *priv)
+ 
+ static int stmmac_test_pfilt(struct stmmac_priv *priv)
+ {
+-	unsigned char gd_addr[ETH_ALEN] = {0x00, 0x01, 0x44, 0x55, 0x66, 0x77};
+-	unsigned char bd_addr[ETH_ALEN] = {0x08, 0x00, 0x22, 0x33, 0x44, 0x55};
++	unsigned char gd_addr[ETH_ALEN] = {0xf0, 0x01, 0x44, 0x55, 0x66, 0x77};
++	unsigned char bd_addr[ETH_ALEN] = {0xf0, 0xff, 0xff, 0xff, 0xff, 0xff};
+ 	struct stmmac_packet_attrs attr = { };
+-	int ret;
++	int ret, tries = 256;
+ 
+ 	if (stmmac_filter_check(priv))
+ 		return -EOPNOTSUPP;
++	if (netdev_uc_count(priv->dev) >= priv->hw->unicast_filter_entries)
++		return -EOPNOTSUPP;
++
++	while (--tries) {
++		/* We only need to check the bd_addr for collisions */
++		bd_addr[ETH_ALEN - 1] = tries;
++		if (stmmac_perfect_check(priv, bd_addr))
++			break;
++	}
++
++	if (!tries)
++		return -EOPNOTSUPP;
+ 
+ 	ret = dev_uc_add(priv->dev, gd_addr);
+ 	if (ret)
+@@ -553,39 +613,31 @@ static int stmmac_test_pfilt(struct stmmac_priv *priv)
+ 	return ret;
  }
  
- static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
--				      u16 perfect_match, bool is_double)
-+				      __le16 perfect_match, bool is_double)
+-static int stmmac_dummy_sync(struct net_device *netdev, const u8 *addr)
+-{
+-	return 0;
+-}
+-
+-static void stmmac_test_set_rx_mode(struct net_device *netdev)
+-{
+-	/* As we are in test mode of ethtool we already own the rtnl lock
+-	 * so no address will change from user. We can just call the
+-	 * ndo_set_rx_mode() callback directly */
+-	if (netdev->netdev_ops->ndo_set_rx_mode)
+-		netdev->netdev_ops->ndo_set_rx_mode(netdev);
+-}
+-
+ static int stmmac_test_mcfilt(struct stmmac_priv *priv)
  {
- 	void __iomem *ioaddr = hw->pcsr;
+-	unsigned char uc_addr[ETH_ALEN] = {0x00, 0x01, 0x44, 0x55, 0x66, 0x77};
+-	unsigned char mc_addr[ETH_ALEN] = {0x01, 0x01, 0x44, 0x55, 0x66, 0x77};
++	unsigned char uc_addr[ETH_ALEN] = {0xf0, 0xff, 0xff, 0xff, 0xff, 0xff};
++	unsigned char mc_addr[ETH_ALEN] = {0xf1, 0xff, 0xff, 0xff, 0xff, 0xff};
+ 	struct stmmac_packet_attrs attr = { };
+-	int ret;
++	int ret, tries = 256;
  
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index 1303d1e9a18f..509daeefdb79 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -357,7 +357,7 @@ struct stmmac_ops {
- 			     struct stmmac_rss *cfg, u32 num_rxq);
- 	/* VLAN */
- 	void (*update_vlan_hash)(struct mac_device_info *hw, u32 hash,
--				 u16 perfect_match, bool is_double);
-+				 __le16 perfect_match, bool is_double);
- 	void (*enable_vlan)(struct mac_device_info *hw, u32 type);
- 	/* TX Timestamp */
- 	int (*get_mac_tx_timestamp)(struct mac_device_info *hw, u64 *ts);
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 28705dbe5801..063b0ecd244b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4207,6 +4207,7 @@ static u32 stmmac_vid_crc32_le(__le16 vid_le)
- static int stmmac_vlan_update(struct stmmac_priv *priv, bool is_double)
- {
- 	u32 crc, hash = 0;
-+	__le16 pmatch = 0;
- 	int count = 0;
- 	u16 vid = 0;
+ 	if (stmmac_filter_check(priv))
+ 		return -EOPNOTSUPP;
+-	if (!priv->hw->multicast_filter_bins)
++	if (netdev_uc_count(priv->dev) >= priv->hw->unicast_filter_entries)
+ 		return -EOPNOTSUPP;
  
-@@ -4221,11 +4222,11 @@ static int stmmac_vlan_update(struct stmmac_priv *priv, bool is_double)
- 		if (count > 2) /* VID = 0 always passes filter */
- 			return -EOPNOTSUPP;
+-	/* Remove all MC addresses */
+-	__dev_mc_unsync(priv->dev, NULL);
+-	stmmac_test_set_rx_mode(priv->dev);
++	while (--tries) {
++		/* We only need to check the mc_addr for collisions */
++		mc_addr[ETH_ALEN - 1] = tries;
++		if (stmmac_hash_check(priv, mc_addr))
++			break;
++	}
++
++	if (!tries)
++		return -EOPNOTSUPP;
  
--		vid = cpu_to_le16(vid);
-+		pmatch = cpu_to_le16(vid);
- 		hash = 0;
- 	}
+ 	ret = dev_uc_add(priv->dev, uc_addr);
+ 	if (ret)
+-		goto cleanup;
++		return ret;
  
--	return stmmac_update_vlan_hash(priv, priv->hw, hash, vid, is_double);
-+	return stmmac_update_vlan_hash(priv, priv->hw, hash, pmatch, is_double);
+ 	attr.dst = uc_addr;
+ 
+@@ -602,30 +654,34 @@ static int stmmac_test_mcfilt(struct stmmac_priv *priv)
+ 
+ cleanup:
+ 	dev_uc_del(priv->dev, uc_addr);
+-	__dev_mc_sync(priv->dev, stmmac_dummy_sync, NULL);
+-	stmmac_test_set_rx_mode(priv->dev);
+ 	return ret;
  }
  
- static int stmmac_vlan_rx_add_vid(struct net_device *ndev, __be16 proto, u16 vid)
+ static int stmmac_test_ucfilt(struct stmmac_priv *priv)
+ {
+-	unsigned char uc_addr[ETH_ALEN] = {0x00, 0x01, 0x44, 0x55, 0x66, 0x77};
+-	unsigned char mc_addr[ETH_ALEN] = {0x01, 0x01, 0x44, 0x55, 0x66, 0x77};
++	unsigned char uc_addr[ETH_ALEN] = {0xf0, 0xff, 0xff, 0xff, 0xff, 0xff};
++	unsigned char mc_addr[ETH_ALEN] = {0xf1, 0xff, 0xff, 0xff, 0xff, 0xff};
+ 	struct stmmac_packet_attrs attr = { };
+-	int ret;
++	int ret, tries = 256;
+ 
+ 	if (stmmac_filter_check(priv))
+ 		return -EOPNOTSUPP;
+-	if (!priv->hw->multicast_filter_bins)
++	if (netdev_mc_count(priv->dev) >= priv->hw->multicast_filter_bins)
+ 		return -EOPNOTSUPP;
+ 
+-	/* Remove all UC addresses */
+-	__dev_uc_unsync(priv->dev, NULL);
+-	stmmac_test_set_rx_mode(priv->dev);
++	while (--tries) {
++		/* We only need to check the uc_addr for collisions */
++		uc_addr[ETH_ALEN - 1] = tries;
++		if (stmmac_perfect_check(priv, uc_addr))
++			break;
++	}
++
++	if (!tries)
++		return -EOPNOTSUPP;
+ 
+ 	ret = dev_mc_add(priv->dev, mc_addr);
+ 	if (ret)
+-		goto cleanup;
++		return ret;
+ 
+ 	attr.dst = mc_addr;
+ 
+@@ -642,8 +698,6 @@ static int stmmac_test_ucfilt(struct stmmac_priv *priv)
+ 
+ cleanup:
+ 	dev_mc_del(priv->dev, mc_addr);
+-	__dev_uc_sync(priv->dev, stmmac_dummy_sync, NULL);
+-	stmmac_test_set_rx_mode(priv->dev);
+ 	return ret;
+ }
+ 
 -- 
 2.7.4
 
