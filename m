@@ -2,139 +2,109 @@ Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A23CCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 884A3CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4482220862
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55DBC20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 22:01:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ikqeCXUq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UYmNphie"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387422AbfJaWBP (ORCPT
+        id S2387433AbfJaWBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 18:01:15 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:14553 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728345AbfJaWBN (ORCPT
+        Thu, 31 Oct 2019 18:01:32 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46196 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729386AbfJaWBb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 18:01:13 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dbb59aa0000>; Thu, 31 Oct 2019 15:01:14 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 31 Oct 2019 15:01:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 31 Oct 2019 15:01:08 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 31 Oct
- 2019 22:01:07 +0000
-Subject: Re: [PATCH 02/19] mm/gup: factor out duplicate code from four
- routines
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-References: <20191030224930.3990755-1-jhubbard@nvidia.com>
- <20191030224930.3990755-3-jhubbard@nvidia.com>
- <20191031183549.GC14771@iweiny-DESK2.sc.intel.com>
- <75b557f7-24b2-740c-2640-2f914d131600@nvidia.com>
- <20191031210954.GE14771@iweiny-DESK2.sc.intel.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <5cb84804-be12-82e8-11d8-7e593fd05619@nvidia.com>
-Date:   Thu, 31 Oct 2019 15:01:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191031210954.GE14771@iweiny-DESK2.sc.intel.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572559274; bh=St3Rf/REgq/1do28NhYtGJF/+ie61nX3HJRKUe+Kv+8=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ikqeCXUqsTwoQB5CbB+62UgGOxuiKLZDrBsuVMEaD9IjjDxXb09OkVp8xOPRF5wct
-         ee5DhXFx3ncNZEuTcZeSOQivxIJokuWUNeY+2vtv3ZOkk1HWJjkj1h2EH0AXlwb+WX
-         k+12VWYeIpYnIAMc/9Jx/3qdPSGK+huRjsgTXXwezXTbb/FzDozYDlQdAsy+QX8f3z
-         guPaB2LcynNr/sr3xHEr7wV68E214NkgY5BRukBI2Kt+YqGU/HP5jxWqLsbWsS/eGt
-         xEDw4hf53LcGHOIM9YJEHjAqS/wG8o7OePI2ydIId+OliMRlMyINElUiwkTZonGlbb
-         If9KlbJQJnB+Q==
+        Thu, 31 Oct 2019 18:01:31 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b3so2109835wrs.13
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 15:01:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=TSWfpuHlmZHBiZrAWDxgOb4uOk4kRce+AnQCKIxwQCA=;
+        b=UYmNphie/gQPdtCpL+hIWLXiLGsjYbKuHWIKg2Ek8H5e8tWfy7gevZIMPHNPG8C11z
+         lsJlMQ5hNr7TBkGgF/XR5L+T8OU6+oAiGiLN48KHunq1bmTmrDQ4y2Xo4iG2PvF2sB8+
+         SJdUBnYF4dxhqC5s8yLtehKA4sTKNanVW3fBLXlzMF6QW+lAvZ2WkJanznmtfJk9cgeH
+         8taZMEJmQtP57TIWusOYJDdNA4r0lx0IyqqjJ8iMCSCasiGv7VE74m9u9ukY23Ch6VP0
+         7rKcz27gQ9FWanmFF6wGeLyZRtDH98JI/VDYzu7cQU/iRCiXByBoLyeFv53Nq+c4wvDT
+         L8jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TSWfpuHlmZHBiZrAWDxgOb4uOk4kRce+AnQCKIxwQCA=;
+        b=Lx7y/+ThJ7zeYGb54IhC6E2bkDgZeXAbz28TqmjGw129VKnsiL7WxnxMZ/nauBn6zx
+         iw8nPr21IMFK/QoN7UOKn14WFl6ud2pReQOq+oEM+CChrKPzThyqoKbfbhp8QyVuHPpB
+         sNXQhQZLLlZFIZicGorHjglq0f9CiD87ZSUeOL4LKobeQB0xkCZOnpt5MbdNZGodasfL
+         KlLNZfM1xuECw2yEha3Re4woRCAH24J32+pqxio+dCy0b+DNJPmCxenk3jztPuEvltw8
+         HgyP5QJ1IFzrCqADdZ31z5N3e/alTUK99wx2Ipwmd2qq1qZpCMROxfjOD/zSbMQ0H4l5
+         B9hw==
+X-Gm-Message-State: APjAAAX4usIaAf9SNYWZUVc/kYjrYU8mc/vAlfDyhuT9yZ+KT+WYatWo
+        PA+TfZONsRHPSjNxlojgqCw=
+X-Google-Smtp-Source: APXvYqyLIoyqUyRVy0CLKSm5HCoIrvAuvATFFRdjjXa27GCEStef7EHk7MkbTQKmJWpNw/KX0PRu5g==
+X-Received: by 2002:a5d:4644:: with SMTP id j4mr8245262wrs.355.1572559289699;
+        Thu, 31 Oct 2019 15:01:29 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d4sm7514172wrc.54.2019.10.31.15.01.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 15:01:28 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     bcm-kernel-feedback-list@broadcom.com, catalin.marinas@arm.com,
+        will@kernel.org, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ARM: spectre-v2: remove Brahma-B53 from hardening
+Date:   Thu, 31 Oct 2019 15:00:51 -0700
+Message-Id: <20191031220053.2720-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/31/19 2:09 PM, Ira Weiny wrote:
-> On Thu, Oct 31, 2019 at 11:43:37AM -0700, John Hubbard wrote:
->> On 10/31/19 11:35 AM, Ira Weiny wrote:
->>> On Wed, Oct 30, 2019 at 03:49:13PM -0700, John Hubbard wrote:
->> ...
->>>> +
->>>> +static int __huge_pt_done(struct page *head, int nr_recorded_pages, int *nr)
->>>> +{
->>>> +	*nr += nr_recorded_pages;
->>>> +	SetPageReferenced(head);
->>>> +	return 1;
->>>
->>> When will this return anything but 1?
->>>
->>
->> Never, but it saves a line at all four call sites, by having it return like that.
->>
->> I could see how maybe people would prefer to just have it be a void function,
->> and return 1 directly at the call sites. Since this was a lower line count I
->> thought maybe it would be slightly better, but it's hard to say really.
-> 
-> It is a NIT perhaps but I feel like the signature of a function should stand on
-> it's own.  What this does is mix the meaning of this function with those
-> calling it.  Which IMO is not good style.
-> 
-> We can see what others say.
-> 
+From: Doug Berger <opendmb@gmail.com>
 
-Sure. I'll plan on changing it to a void return type, then, unless someone else
-pipes up.
+When the default processor handling was added to the function
+cpu_v7_spectre_init() it only excluded other ARM implemented processor
+cores. The Broadcom Brahma B53 core is not implemented by ARM so it
+ended up falling through into the set of processors that attempt to use
+the ARM_SMCCC_ARCH_WORKAROUND_1 service to harden the branch predictor.
 
+Since this workaround is not necessary for the Brahma-B53 this commit
+explicitly checks for it and prevents it from applying a branch
+predictor hardening workaround.
 
-thanks,
+Fixes: 10115105cb3a ("ARM: spectre-v2: add firmware based hardening")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ arch/arm/mm/proc-v7-bugs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-John Hubbard
-NVIDIA
+diff --git a/arch/arm/mm/proc-v7-bugs.c b/arch/arm/mm/proc-v7-bugs.c
+index 9a07916af8dd..a6554fdb56c5 100644
+--- a/arch/arm/mm/proc-v7-bugs.c
++++ b/arch/arm/mm/proc-v7-bugs.c
+@@ -65,6 +65,9 @@ static void cpu_v7_spectre_init(void)
+ 		break;
+ 
+ #ifdef CONFIG_ARM_PSCI
++	case ARM_CPU_PART_BRAHMA_B53:
++		/* Requires no workaround */
++		break;
+ 	default:
+ 		/* Other ARM CPUs require no workaround */
+ 		if (read_cpuid_implementor() == ARM_CPU_IMP_ARM)
+-- 
+2.17.1
+
