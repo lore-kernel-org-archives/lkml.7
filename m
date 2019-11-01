@@ -2,167 +2,109 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E52ECA9EC9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 07:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244ACCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 07:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07AD420679
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 07:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD9B521734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 07:45:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Qx/I6aL0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DGeGBbSB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730031AbfKAHkT (ORCPT
+        id S1729951AbfKAHpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 03:40:19 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:35694 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727383AbfKAHkS (ORCPT
+        Fri, 1 Nov 2019 03:45:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39659 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfKAHpX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 03:40:18 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191101074012epoutp033fd9f3e6525d906b308713e8eb199058~S_ewoykKc1594515945epoutp03C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 Nov 2019 07:40:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191101074012epoutp033fd9f3e6525d906b308713e8eb199058~S_ewoykKc1594515945epoutp03C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1572594012;
-        bh=FfrdmjGOwmokPiYT/n5Vgvnle4bdpTM1mCEMhI9JHKI=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Qx/I6aL0YuJ/nTGvZg3eVGsbOxLzb/QJSuPKRX4iXT2/GTtl2+1l0FKTEql3suvhh
-         pTMltrz70TXeSrJ6pyCwPINycFFqkhkALuUGVAUk/D9bdxeu5F4k4P6Mv3VSxD/KKN
-         OXtMLGGsnnzSFIU+YQpIhW7FizXRHEIGUGBUXRTw=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191101074011epcas1p17256087238c0314607abe70eb64a71e7~S_ev4LJ042542625426epcas1p1_;
-        Fri,  1 Nov 2019 07:40:11 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.155]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 474DcV59SNzMqYkh; Fri,  1 Nov
-        2019 07:40:10 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        8D.64.04135.A51EBBD5; Fri,  1 Nov 2019 16:40:10 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191101074009epcas1p3c721e4a90fca071f8722f4586fc8b48c~S_ethhmEB0908309083epcas1p3q;
-        Fri,  1 Nov 2019 07:40:09 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191101074009epsmtrp2643ef028aef5af36bb6b2e9cfcbbe24a~S_etgqmNj2501525015epsmtrp2G;
-        Fri,  1 Nov 2019 07:40:09 +0000 (GMT)
-X-AuditID: b6c32a36-c51679c000001027-dd-5dbbe15a8438
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        BD.9C.24756.951EBBD5; Fri,  1 Nov 2019 16:40:09 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191101074009epsmtip1bc1fca3bdbfd369bcccbd23006c86cdd~S_etT5_JF1431514315epsmtip1T;
-        Fri,  1 Nov 2019 07:40:09 +0000 (GMT)
-Subject: Re: [PATCH v7 18/19] PM / devfreq: tegra30: Tune up MCCPU
- boost-down coefficient
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Peter Geis <pgwipeout@gmail.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <99a90972-2170-ebcb-7bff-cd9ba8b0b0d1@samsung.com>
-Date:   Fri, 1 Nov 2019 16:45:40 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191029220019.26773-19-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrEJsWRmVeSWpSXmKPExsWy7bCmvm7Uw92xBlsuaFms/viY0aJl1iIW
-        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFrcbV7BZnH3mbfFz1zwWi761l9gcuDx23F3C6LFz1l12
-        j97md2wefVtWMXp83iQXwBqVbZORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCX
-        mJtqq+TiE6DrlpkDdJSSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8CyQK84Mbe4
-        NC9dLzk/18rQwMDIFKgwITtj652vTAVLeCr+tLaxNjD+5exi5OSQEDCRWL28ia2LkYtDSGAH
-        o8Tj+U+YIZxPQM7vC6wQzjdGiR0bZjPCtNyfNJ8dIrGXUeLlrq+MEM57RokN/xpYQaqEBaIl
-        Xh+7BjZYRGARk8Tao9uZQRLMApESh3euZgKx2QS0JPa/uMEGYvMLKEpc/fEYaBIHB6+AncST
-        E/4gYRYBFYlfc9ewgYRFBSIkTn9NBAnzCghKnJz5hAXE5hQwl3ix9BArxHRxiVtP5jNB2PIS
-        zVtng70jIdDOLnH9RBMLyBwJAReJSR8KIJ4Rlnh1fAs7hC0l8fndXjYIu1pi5ckjbBC9HYwS
-        W/ZfYIVIGEvsXzqZCWQOs4CmxPpd+hBhRYmdv+cyQuzlk3j3tYcVYhWvREebEESJssTlB3eZ
-        IGxJicXtnWwTGJVmIflmFpIPZiH5YBbCsgWMLKsYxVILinPTU4sNC4yQI3sTIzi9apntYFx0
-        zucQowAHoxIP74yu3bFCrIllxZW5hxglOJiVRHi3rwMK8aYkVlalFuXHF5XmpBYfYjQFhvVE
-        ZinR5Hxg6s8riTc0NTI2NrYwMTQzNTRUEud1XL40VkggPbEkNTs1tSC1CKaPiYNTqoFxjWfu
-        6+DC2+qXo/6ezLjyvfX83ncW9TfuXln4fnts9uGaKfUCS7aefv2k6rTYmw296kpvKrR+7p1V
-        7r2L/5IVh/zErdrhZ0UdFspyKWSt+HPcMvNWuFrBqynSS/uzK+9Xf187n7n5/OOGqQGved7r
-        x8l0vLBhUEkXD59V7aEfen37q5vC/PrrlFiKMxINtZiLihMBnxNzrsUDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsWy7bCSnG7kw92xBlf6OS1Wf3zMaNEyaxGL
-        xdmmN+wWl3fNYbP43HuE0aLzyyw2i9uNK9gszj7ztvi5ax6LRd/aS2wOXB477i5h9Ng56y67
-        R2/zOzaPvi2rGD0+b5ILYI3isklJzcksSy3St0vgyth65ytTwRKeij+tbawNjH85uxg5OSQE
-        TCTuT5rP3sXIxSEksJtR4sjKB2wQCUmJaRePMncxcgDZwhKHDxdD1LxllLiybRorSI2wQLTE
-        xidtYM0iAkuYJM5+Wc4MkmAWiJTombuFDaJjG6NEw46JTCAJNgEtif0vboBt4BdQlLj64zEj
-        yAZeATuJJyf8QcIsAioSv+auASsRFYiQeL79BiOIzSsgKHFy5hMWEJtTwFzixdJDrBC71CX+
-        zLsEtVdc4taT+UwQtrxE89bZzBMYhWchaZ+FpGUWkpZZSFoWMLKsYpRMLSjOTc8tNiwwzEst
-        1ytOzC0uzUvXS87P3cQIjjUtzR2Ml5fEH2IU4GBU4uGd0bU7Vog1say4MvcQowQHs5II7/Z1
-        QCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8T/OORQoJpCeWpGanphakFsFkmTg4pRoY/b8IWb/r
-        t/7mPs151p/KzwqFBuKOGjscGy/wLdxcMLHuwOm702q39X2V+3oxYtdlm/92jK5Opm+rhC7v
-        WcazPSTg7vSCRUL+e849npnXbFOg0+FvlLj1vvn11ufOx7JWawUs5ZmVo8ptHLv1ZgdD44qp
-        Ngcnv5b6mb2GU6kk1XHyRKYioZB0JZbijERDLeai4kQA0V0hbbECAAA=
-X-CMS-MailID: 20191101074009epcas1p3c721e4a90fca071f8722f4586fc8b48c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191029220656epcas2p4b19cb854054ebce6132c7111f52cada4
-References: <20191029220019.26773-1-digetx@gmail.com>
-        <CGME20191029220656epcas2p4b19cb854054ebce6132c7111f52cada4@epcas2p4.samsung.com>
-        <20191029220019.26773-19-digetx@gmail.com>
+        Fri, 1 Nov 2019 03:45:23 -0400
+Received: by mail-wr1-f66.google.com with SMTP id a11so8795160wra.6
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 00:45:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=to/Y/QniUKkmMiWX6pjQcsRGKsnCzLq5ufaQQdqWZaY=;
+        b=DGeGBbSBF3XBgQkPzpHmCQeFeB+An6cAw2pADw8jObNdktR2wAJYZyaNvNypUUSyzt
+         3RbLP0F6s/LWdjQ2cyscdEqHYHFEUtbMNkOfeQfvJhKU/DXlesWfI62+9UIsQ2tccQn9
+         OWp/fMADkVTtJjkM8ktM5ey74wSv2owi1hbyy8xdt5E9ap2yunxrhdcyTLVaC6Skea2U
+         vT8pEVhFT39RWjnZ7upwYsYng+82rk1hWMZxGOLjhx3483Anr/FcD9Z5pienGvAx8/i9
+         l6gVFD1OFIVMLPnKxE1mvr0oy4Wb86BHYaxly8EacH/EQKrFNXyCqimqN6uL+JyEcqmv
+         hvPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=to/Y/QniUKkmMiWX6pjQcsRGKsnCzLq5ufaQQdqWZaY=;
+        b=mrK0D7vbGrTwpeD3uCWl5cKjU0aa+nXbEGZTutAl2FaRcBWNhYV08rujaXVuZGkZDx
+         aYTPGlHiYoG/Zt8B5cm7V9Q9EqXzkRwjJyoqjySyi+rJwyN4BrXp/bMuJAXP7skHXOai
+         nZeU38c12nguQugjQ2OkGYqRl4fcK5DGa2ywPBmU33m8HS3SCFsEPi0rJ+iI3HnMWEHi
+         hZouD1opI3J8hWcHuHEETXx9LTK3lgHHkJjF/3a+pARjCK6IG3ZNh26v1fzOzzV4+nZI
+         jH7ERj+VnKC0N650Gv9YIdDy1xnezuVqXmlA3Es8rpSARLreW1hV+fl/qRQR7mruHJXr
+         plYw==
+X-Gm-Message-State: APjAAAXKNd6+OBy7LSvKl4pHW28FRCSeERXQddxf0IXyzxGrpsNjA34z
+        63tJYGs0pn82Gk+Ux1cGAqIbOg==
+X-Google-Smtp-Source: APXvYqyxjoV/SqOqmBnZZX6r+ePMAOXdffQ7T9WX/+gdTSuCsEL054iIAv0sY38n9RTh2JKXTN0IVg==
+X-Received: by 2002:a5d:5288:: with SMTP id c8mr2412711wrv.1.1572594321520;
+        Fri, 01 Nov 2019 00:45:21 -0700 (PDT)
+Received: from localhost.localdomain ([2.31.163.64])
+        by smtp.gmail.com with ESMTPSA id b1sm576215wrw.77.2019.11.01.00.45.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 00:45:20 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     daniel.thompson@linaro.org, broonie@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de, linus.walleij@linaro.org, baohua@kernel.org,
+        stephan@gerhold.net, Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v4 00/10] Simplify MFD Core
+Date:   Fri,  1 Nov 2019 07:45:08 +0000
+Message-Id: <20191101074518.26228-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 10. 30. 오전 7:00, Dmitry Osipenko wrote:
-> MCCPU boosts up very aggressively by 800% and boosts down very mildly by
-> 10%. This doesn't work well when system is idling because the very slow
-> de-boosting results in lots of consecutive-down interrupts, in result
-> memory stays clocked high and CPU doesn't enter deepest idling state
-> instead of keeping memory at lowest freq and having CPU cluster turned
-> off. A more faster de-boosting fixes the case of idling system and doesn't
-> affect the case of an active system.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra30-devfreq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index d0dd42856e5b..9a21a29198ee 100644
-> --- a/drivers/devfreq/tegra30-devfreq.c
-> +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -123,7 +123,7 @@ static const struct tegra_devfreq_device_config actmon_device_configs[] = {
->  		.offset = 0x200,
->  		.irq_mask = 1 << 25,
->  		.boost_up_coeff = 800,
-> -		.boost_down_coeff = 90,
-> +		.boost_down_coeff = 40,
->  		.boost_up_threshold = 27,
->  		.boost_down_threshold = 10,
->  		.avg_dependency_threshold = 50000,
-> 
+MFD currently has one over-complicated user. CS5535 uses a mixture of
+cell cloning, reference counting and subsystem-level call-backs to
+achieve its goal of requesting an IO memory region only once across 3
+consumers. The same can be achieved by handling the region centrally
+during the parent device's .probe() sequence. Releasing can be handed
+in a similar way during .remove().
+ 
+While we're here, take the opportunity to provide some clean-ups and
+error checking to issues noticed along the way.
+ 
+This also paves the way for clean cell disabling via Device Tree being
+discussed at [0].
+ 
+[0] https://lkml.org/lkml/2019/10/18/612.
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Lee Jones (10):
+  mfd: cs5535-mfd: Use PLATFORM_DEVID_* defines and tidy error message
+  mfd: cs5535-mfd: Remove mfd_cell->id hack
+  mfd: cs5535-mfd: Request shared IO regions centrally
+  mfd: cs5535-mfd: Register clients using their own dedicated MFD cell
+    entries
+  mfd: mfd-core: Protect against NULL call-back function pointer
+  mfd: mfd-core: Remove mfd_clone_cell()
+  x86: olpc-xo1-pm: Remove invocation of MFD's .enable()/.disable()
+    call-backs
+  x86: olpc-xo1-sci: Remove invocation of MFD's .enable()/.disable()
+    call-backs
+  mfd: mfd-core: Remove usage counting for .{en,dis}able() call-backs
+  mfd: mfd-core: Move pdev->mfd_cell creation back into mfd_add_device()
 
-IMO, I think that it is not good to change the threshold value
-on device driver directly when some requirement happen.
-Instead, better to get the threshold value from device-tree file.
-
+ arch/x86/platform/olpc/olpc-xo1-pm.c  |   8 --
+ arch/x86/platform/olpc/olpc-xo1-sci.c |   6 --
+ drivers/mfd/cs5535-mfd.c              | 108 +++++++++++-------------
+ drivers/mfd/mfd-core.c                | 113 +++++---------------------
+ include/linux/mfd/core.h              |  20 -----
+ 5 files changed, 68 insertions(+), 187 deletions(-)
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
- 
+2.17.1
+
