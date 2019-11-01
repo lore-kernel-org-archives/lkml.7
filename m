@@ -2,198 +2,112 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F42ACA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57B4CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5112920650
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD0DD217F9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:34:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572622497;
+	bh=IvThiZwVHnMzgD+APW+Z07boNS0/SJNrneDiPxdkxFs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RiBwVgUmzB7BBKtvjPSaRSNgo1o7UIyw5HZa8ymoUPtHgjWmKsjt9jE+kSYyTc6zB
+	 Ngun+KQB0qJSv0O8qZqysIKxQBM8wq8BzxSzZt1K1yzAZ0c47X5sZCGeH5vEHHT9t1
+	 TattFz9TXW42duS1kSE7DvaeYhzsoo+EUEuvUwpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbfKAPcx (ORCPT
+        id S1728767AbfKAPe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 11:32:53 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:16687 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727100AbfKAPcx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 11:32:53 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0TgwtKF2_1572622352;
-Received: from 192.168.2.229(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0TgwtKF2_1572622352)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 01 Nov 2019 23:32:34 +0800
-Subject: Re: [PATCH 11/11] x86,rcu: use percpu rcu_preempt_depth
-To:     paulmck@kernel.org, Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Babu Moger <Babu.Moger@amd.com>,
-        Rik van Riel <riel@surriel.com>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Jann Horn <jannh@google.com>,
-        David Windsor <dwindsor@gmail.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Yuyang Du <duyuyang@gmail.com>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Dmitry V. Levin" <ldv@altlinux.org>, rcu@vger.kernel.org
-References: <20191031100806.1326-1-laijs@linux.alibaba.com>
- <20191031100806.1326-12-laijs@linux.alibaba.com>
- <20191101125816.GD17910@paulmck-ThinkPad-P72>
- <20191101131315.GY4131@hirez.programming.kicks-ass.net>
- <20191101143036.GM20975@paulmck-ThinkPad-P72>
-From:   Lai Jiangshan <laijs@linux.alibaba.com>
-Message-ID: <06b15cfa-620f-d6b1-61d1-8ddfba74a2c8@linux.alibaba.com>
-Date:   Fri, 1 Nov 2019 23:32:32 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Fri, 1 Nov 2019 11:34:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727100AbfKAPe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 11:34:56 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E32CB20650;
+        Fri,  1 Nov 2019 15:34:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572622495;
+        bh=IvThiZwVHnMzgD+APW+Z07boNS0/SJNrneDiPxdkxFs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LjLtnm99UNkajjroI/nKDAD5Lkxp7VQb3KbdYvNYhorGqUfSZEbvg6t4AjDFw9u5y
+         pJnlFvZ1qXSTxmI4v7a+Pb5d4EItxhqFUlLOEkUZWKQYAmO304hngxZQUPaNGyAxB/
+         RLcKLY5HmdelxbP7BDdWLCfknHS3oD0Wk+KKtOhw=
+Date:   Fri, 1 Nov 2019 15:53:43 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     zhong jiang <zhongjiang@huawei.com>
+Cc:     broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: sun4i: Use PTR_ERR_OR_ZERO to simplify the code
+Message-ID: <20191101145343.4nazxxztj5sfcuxm@hendrix>
+References: <1572530979-27595-1-git-send-email-zhongjiang@huawei.com>
+ <20191101091355.ibbet6a2zb23bpjn@hendrix>
+ <5DBC1D3E.8080705@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20191101143036.GM20975@paulmck-ThinkPad-P72>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fghmn2akruuf7rkm"
+Content-Disposition: inline
+In-Reply-To: <5DBC1D3E.8080705@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--fghmn2akruuf7rkm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2019/11/1 10:30 下午, Paul E. McKenney wrote:
-> On Fri, Nov 01, 2019 at 02:13:15PM +0100, Peter Zijlstra wrote:
->> On Fri, Nov 01, 2019 at 05:58:16AM -0700, Paul E. McKenney wrote:
->>> On Thu, Oct 31, 2019 at 10:08:06AM +0000, Lai Jiangshan wrote:
->>>> +/* We mask the RCU_NEED_SPECIAL bit so that it return real depth */
->>>> +static __always_inline int rcu_preempt_depth(void)
->>>> +{
->>>> +	return raw_cpu_read_4(__rcu_preempt_depth) & ~RCU_NEED_SPECIAL;
->>>
->>> Why not raw_cpu_generic_read()?
->>>
->>> OK, OK, I get that raw_cpu_read_4() translates directly into an "mov"
->>> instruction on x86, but given that x86 percpu_from_op() is able to
->>> adjust based on operand size, why doesn't something like raw_cpu_read()
->>> also have an x86-specific definition that adjusts based on operand size?
->>
->> The reason for preempt.h was header recursion hell.
-> 
-> Fair enough, being as that is also the reason for _rcu_read_lock()
-> not being inlined.  :-/
-> 
->>>> +}
->>>> +
->>>> +static __always_inline void rcu_preempt_depth_set(int pc)
->>>> +{
->>>> +	int old, new;
->>>> +
->>>> +	do {
->>>> +		old = raw_cpu_read_4(__rcu_preempt_depth);
->>>> +		new = (old & RCU_NEED_SPECIAL) |
->>>> +			(pc & ~RCU_NEED_SPECIAL);
->>>> +	} while (raw_cpu_cmpxchg_4(__rcu_preempt_depth, old, new) != old);
->>>
->>> Ummm...
->>>
->>> OK, as you know, I have long wanted _rcu_read_lock() to be inlineable.
->>> But are you -sure- that an x86 cmpxchg is faster than a function call
->>> and return?  I have strong doubts on that score.
->>
->> This is a regular CMPXCHG instruction, not a LOCK prefixed one, and that
->> should make all the difference
-> 
-> Yes, understood, but this is also adding some arithmetic, a comparison,
-> and a conditional branch.  Are you -sure- that this is cheaper than
-> an unconditional call and return?
+On Fri, Nov 01, 2019 at 07:55:42PM +0800, zhong jiang wrote:
+> On 2019/11/1 17:13, Maxime Ripard wrote:
+> > On Thu, Oct 31, 2019 at 10:09:39PM +0800, zhong jiang wrote:
+> >> It is better to use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR.
+> >>
+> >> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+> >> ---
+> >>  sound/soc/sunxi/sun4i-i2s.c | 4 +---
+> >>  1 file changed, 1 insertion(+), 3 deletions(-)
+> >>
+> >> diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+> >> index d0a8d58..72012a6 100644
+> >> --- a/sound/soc/sunxi/sun4i-i2s.c
+> >> +++ b/sound/soc/sunxi/sun4i-i2s.c
+> >> @@ -1174,10 +1174,8 @@ static int sun4i_i2s_init_regmap_fields(struct device *dev,
+> >>  	i2s->field_fmt_sr =
+> >>  			devm_regmap_field_alloc(dev, i2s->regmap,
+> >>  						i2s->variant->field_fmt_sr);
+> >> -	if (IS_ERR(i2s->field_fmt_sr))
+> >> -		return PTR_ERR(i2s->field_fmt_sr);
+> >>
+> >> -	return 0;
+> >> +	return PTR_ERR_OR_ZERO(i2s->field_fmt_sr);
+> > I don't find it "better". This couples the error handling and the
+> > success case, and it makes it harder to extend in the future.
+>
+> PTR_ERR_OR_ZERO has implemented the if(IS_ERR(...)) + PTR_ERR. It is
+> feasible to replace it and more readable at least now.
+>
+> As you said,  PTR_ERR_OR_ZERO should be removed ? :-(
 
-rcu_preempt_depth_set() is used only for exit_rcu().
-The performance doesn't matter here. And since RCU_NEED_SPECIAL
-bit is allowed to lost in exit_rcu(), rcu_preempt_depth_set()
-can be a single raw_cpu_write_4() if the performance is matter.
+No, I'm saying that in this context, this change isn't necessary.
 
-(This complex code is copied from preempt.h and I can't expect
-how will rcu_preempt_depth_set() be used in the feture
-so I keep it unchanged.)
+Maxime
 
+--fghmn2akruuf7rkm
+Content-Type: application/pgp-signature; name="signature.asc"
 
-+static __always_inline void rcu_preempt_depth_inc(void)
-+{
-+	raw_cpu_add_4(__rcu_preempt_depth, 1);
-+}
+-----BEGIN PGP SIGNATURE-----
 
-This one is for read_read_lock(). ONE instruction.
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXbxG9wAKCRDj7w1vZxhR
+xZ42AQDQlwiNlRaoXcmwlcL4rb+Xeg2H3yhdzRa5fc61mvBkgwD9HIeK126LjhXW
+5Zhap6t6j9ek4YsuLZExdBqcUv9jfg0=
+=d28i
+-----END PGP SIGNATURE-----
 
-+
-+static __always_inline bool rcu_preempt_depth_dec_and_test(void)
-+{
-+	return GEN_UNARY_RMWcc("decl", __rcu_preempt_depth, e, 
-__percpu_arg([var]));
-+}
-
-This one is for read_read_unlock() which will be 2 instructions
-("decl" and "je"), which is the same as preempt_enable().
-
-In news days, preempt_disable() is discouraged unless it is
-really necessary and rcu is always encouraged. Low overhead
-read_read_[un]lock() is essential.
-
-
-> 
->>> Plus multiplying the x86-specific code by 26 doesn't look good.
->>>
->>> And the RCU read-side nesting depth really is a per-task thing.  Copying
->>> it to and from the task at context-switch time might make sense if we
->>> had a serious optimization, but it does not appear that we do.
-
-Once upon a time, __preempt_count is also being copied to and from the
-task at context-switch, and worked well.
-
->>>
->>> You original patch some years back, ill-received though it was at the
->>> time, is looking rather good by comparison.  Plus it did not require
->>> architecture-specific code!
->>
->> Right, so the per-cpu preempt_count code relies on the preempt_count
->> being invariant over context switches. That means we never have to
->> save/restore the thing.
->>
->> For (preemptible) rcu, this is 'obviously' not the case.
->>
->> That said, I've not looked over this patch series, I only got 1 actual
->> patch, not the whole series, and I've not had time to go dig out the
->> rest..
-> 
-> I have taken a couple of the earlier patches in the series.
-> 
-> Perhaps inlining these things is instead a job for the long anticipated
-> GCC LTO?  ;-)
-
-Adding a kenerl/offset.c and some Mafefile stuff will help inlining
-these things. But I don't think Linus will happy with introducing
-kenerl/offset.c. There will be 3 instructions for rcu_read_lock()
-and 5 for rcu_read_unlock(), which doesn't taste so delicious.
-
-Moving rcu_read_lock_nesting to struct thread_info is another
-possible way. The number of instructions is also 3 and 5.
-
-Thanks
-Lai
+--fghmn2akruuf7rkm--
