@@ -2,514 +2,406 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2188DCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39418CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A731C208CB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:05:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="aZ+jdaP2"
+	by mail.kernel.org (Postfix) with ESMTP id 00497208CB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:06:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfKAVFX (ORCPT
+        id S1726946AbfKAVGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 17:05:23 -0400
-Received: from mail.kmu-office.ch ([178.209.48.109]:41918 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfKAVFX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 17:05:23 -0400
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id 13B4C5C2BE5;
-        Fri,  1 Nov 2019 22:05:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1572642318;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tZ0h3EbFObpMXriwNz6TxLUzEv415VpeQRqv5BkyAzM=;
-        b=aZ+jdaP2fbJVvi7Ct9ffPndXM1r43BGv6pQuKmuFKcBj4RM4OsE/vLAZTe0ZAYd6+psrvq
-        LN9fVToPoJkjs5IeFN4swvLqyoebECM0HMf1K9tzVMM0MEKlHCkr2kelkUZPY6LQXyGeAl
-        PIk9EPsaaqK6Eo9s3coSxBh6OTWq2vU=
+        Fri, 1 Nov 2019 17:06:03 -0400
+Received: from mga03.intel.com ([134.134.136.65]:51337 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726023AbfKAVGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 17:06:03 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 14:06:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,257,1569308400"; 
+   d="scan'208";a="212891542"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga002.jf.intel.com with ESMTP; 01 Nov 2019 14:06:02 -0700
+Date:   Fri, 1 Nov 2019 14:10:28 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v7 07/11] iommu/vt-d: Add nested translation helper
+ function
+Message-ID: <20191101141028.38798894@jacob-builder>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDD3C@SHSMSX104.ccr.corp.intel.com>
+References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1571946904-86776-8-git-send-email-jacob.jun.pan@linux.intel.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDD3C@SHSMSX104.ccr.corp.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 01 Nov 2019 22:05:17 +0100
-From:   Stefan Agner <stefan@agner.ch>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     linux@armlinux.org.uk, Fangrui Song <maskray@google.com>,
-        Jian Cai <jiancai@google.com>,
-        Peter Smith <peter.smith@linaro.org>,
-        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Roy Franz <rfranz@marvell.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Allison Randal <allison@lohutok.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Sonny Rao <sonnyrao@chromium.org>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] arm: replace Sun/Solaris style flag on section directive
-In-Reply-To: <20191030174429.248697-1-ndesaulniers@google.com>
-References: <20191030174429.248697-1-ndesaulniers@google.com>
-Message-ID: <fa4e28a9a16c54319916be005159e250@agner.ch>
-X-Sender: stefan@agner.ch
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
+On Fri, 25 Oct 2019 07:04:28 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-On 2019-10-30 18:44, Nick Desaulniers wrote:
-> It looks like a section directive was using "Solaris style" to declare
-> the section flags. Replace this with the GNU style so that Clang's
-> integrated assembler can assemble this directive.
+> > From: Jacob Pan [mailto:jacob.jun.pan@linux.intel.com]
+> > Sent: Friday, October 25, 2019 3:55 AM
+> > 
+> > Nested translation mode is supported in VT-d 3.0 Spec.CH 3.8.
+> > With PASID granular translation type set to 0x11b, translation
+> > result from the first level(FL) also subject to a second level(SL)
+> > page table translation. This mode is used for SVA virtualization,
+> > where FL performs guest virtual to guest physical translation and
+> > SL performs guest physical to host physical translation.  
 > 
-> The modified instances were identified via:
-> $ ag \\.section | grep \#
-
-I actually have the *very same* patch on my tree, just did not cleanup
-the commit message and submit :-(
-
-Anyways, this looks good to me:
-
-Reviewed-by: Stefan Agner <stefan@agner.ch>
-
---
-Stefan
-
-
+> I think we really differentiate what is the common logic for
+> first-level usages (GVA, GIOVA, etc.) in scalable mode, and
+> what is specific to SVA. I have the feeling that SVA is over-used
+> to cause confusing interpretation.
 > 
-> Link:
-> https://ftp.gnu.org/old-gnu/Manuals/gas-2.9.1/html_chapter/as_7.html#SEC119
-> Link: https://github.com/ClangBuiltLinux/linux/issues/744
-> Link: https://bugs.llvm.org/show_bug.cgi?id=43759
-> Link: https://reviews.llvm.org/D69296
-> Suggested-by: Fangrui Song <maskray@google.com>
-> Suggested-by: Jian Cai <jiancai@google.com>
-> Suggested-by: Peter Smith <peter.smith@linaro.org>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
->  arch/arm/boot/bootp/init.S            | 2 +-
->  arch/arm/boot/compressed/big-endian.S | 2 +-
->  arch/arm/boot/compressed/head.S       | 2 +-
->  arch/arm/boot/compressed/piggy.S      | 2 +-
->  arch/arm/mm/proc-arm1020.S            | 2 +-
->  arch/arm/mm/proc-arm1020e.S           | 2 +-
->  arch/arm/mm/proc-arm1022.S            | 2 +-
->  arch/arm/mm/proc-arm1026.S            | 2 +-
->  arch/arm/mm/proc-arm720.S             | 2 +-
->  arch/arm/mm/proc-arm740.S             | 2 +-
->  arch/arm/mm/proc-arm7tdmi.S           | 2 +-
->  arch/arm/mm/proc-arm920.S             | 2 +-
->  arch/arm/mm/proc-arm922.S             | 2 +-
->  arch/arm/mm/proc-arm925.S             | 2 +-
->  arch/arm/mm/proc-arm926.S             | 2 +-
->  arch/arm/mm/proc-arm940.S             | 2 +-
->  arch/arm/mm/proc-arm946.S             | 2 +-
->  arch/arm/mm/proc-arm9tdmi.S           | 2 +-
->  arch/arm/mm/proc-fa526.S              | 2 +-
->  arch/arm/mm/proc-feroceon.S           | 2 +-
->  arch/arm/mm/proc-mohawk.S             | 2 +-
->  arch/arm/mm/proc-sa110.S              | 2 +-
->  arch/arm/mm/proc-sa1100.S             | 2 +-
->  arch/arm/mm/proc-v6.S                 | 2 +-
->  arch/arm/mm/proc-v7.S                 | 2 +-
->  arch/arm/mm/proc-v7m.S                | 4 ++--
->  arch/arm/mm/proc-xsc3.S               | 2 +-
->  arch/arm/mm/proc-xscale.S             | 2 +-
->  28 files changed, 29 insertions(+), 29 deletions(-)
+Good point, it should be clearly stated that nest mode is not for gSVA
+only, gIOVA shares this common code.
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+> > ---
+> >  drivers/iommu/intel-pasid.c | 207
+> > ++++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/iommu/intel-pasid.h |  12 +++
+> >  2 files changed, 219 insertions(+)
+> > 
+> > diff --git a/drivers/iommu/intel-pasid.c
+> > b/drivers/iommu/intel-pasid.c index ffbd416ed3b8..f846a907cfcf
+> > 100644 --- a/drivers/iommu/intel-pasid.c
+> > +++ b/drivers/iommu/intel-pasid.c
+> > @@ -415,6 +415,76 @@ pasid_set_flpm(struct pasid_entry *pe, u64
+> > value) pasid_set_bits(&pe->val[2], GENMASK_ULL(3, 2), value << 2);
+> >  }
+> > 
+> > +/*
+> > + * Setup the Extended Memory Type(EMT) field (Bits 91-93)
+> > + * of a scalable mode PASID entry.
+> > + */
+> > +static inline void
+> > +pasid_set_emt(struct pasid_entry *pe, u64 value)
+> > +{
+> > +	pasid_set_bits(&pe->val[1], GENMASK_ULL(29, 27), value <<
+> > 27); +}
+> > +
+> > +/*
+> > + * Setup the Page Attribute Table (PAT) field (Bits 96-127)
+> > + * of a scalable mode PASID entry.
+> > + */
+> > +static inline void
+> > +pasid_set_pat(struct pasid_entry *pe, u64 value)
+> > +{
+> > +	pasid_set_bits(&pe->val[1], GENMASK_ULL(63, 32), value <<
+> > 27); +}
+> > +
+> > +/*
+> > + * Setup the Cache Disable (CD) field (Bit 89)
+> > + * of a scalable mode PASID entry.
+> > + */
+> > +static inline void
+> > +pasid_set_cd(struct pasid_entry *pe)
+> > +{
+> > +	pasid_set_bits(&pe->val[1], 1 << 25, 1);
+> > +}
+> > +
+> > +/*
+> > + * Setup the Extended Memory Type Enable (EMTE) field (Bit 90)
+> > + * of a scalable mode PASID entry.
+> > + */
+> > +static inline void
+> > +pasid_set_emte(struct pasid_entry *pe)
+> > +{
+> > +	pasid_set_bits(&pe->val[1], 1 << 26, 1);
+> > +}
+> > +
+> > +/*
+> > + * Setup the Extended Access Flag Enable (EAFE) field (Bit 135)
+> > + * of a scalable mode PASID entry.
+> > + */
+> > +static inline void
+> > +pasid_set_eafe(struct pasid_entry *pe)
+> > +{
+> > +	pasid_set_bits(&pe->val[2], 1 << 7, 1);
+> > +}
+> > +
+> > +/*
+> > + * Setup the Page-level Cache Disable (PCD) field (Bit 95)
+> > + * of a scalable mode PASID entry.
+> > + */
+> > +static inline void
+> > +pasid_set_pcd(struct pasid_entry *pe)
+> > +{
+> > +	pasid_set_bits(&pe->val[1], 1 << 31, 1);
+> > +}
+> > +
+> > +/*
+> > + * Setup the Page-level Write-Through (PWT)) field (Bit 94)
+> > + * of a scalable mode PASID entry.
+> > + */
+> > +static inline void
+> > +pasid_set_pwt(struct pasid_entry *pe)
+> > +{
+> > +	pasid_set_bits(&pe->val[1], 1 << 30, 1);
+> > +}
+> > +
+> >  static void
+> >  pasid_cache_invalidation_with_pasid(struct intel_iommu *iommu,
+> >  				    u16 did, int pasid)
+> > @@ -647,3 +717,140 @@ int intel_pasid_setup_pass_through(struct
+> > intel_iommu *iommu,
+> > 
+> >  	return 0;
+> >  }
+> > +
+> > +static int intel_pasid_setup_bind_data(struct intel_iommu *iommu,
+> > +				struct pasid_entry *pte,
+> > +				struct iommu_gpasid_bind_data_vtd
+> > *pasid_data)
+> > +{
+> > +	/*
+> > +	 * Not all guest PASID table entry fields are passed down
+> > during bind,
+> > +	 * here we only set up the ones that are dependent on guest
+> > settings.
+> > +	 * Execution related bits such as NXE, SMEP are not
+> > meaningful to IOMMU,
+> > +	 * therefore not set. Other fields, such as snoop related,
+> > are set based
+> > +	 * on host needs regardless of  guest settings.
+> > +	 */
+> > +	if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_SRE) {
+> > +		if (!ecap_srs(iommu->ecap)) {
+> > +			pr_err("No supervisor request support on
+> > %s\n",
+> > +			       iommu->name);
+> > +			return -EINVAL;
+> > +		}
+> > +		pasid_set_sre(pte);
+> > +	}
+> > +
+> > +	if ((pasid_data->flags & IOMMU_SVA_VTD_GPASID_EAFE) &&
+> > ecap_eafs(iommu->ecap))
+> > +		pasid_set_eafe(pte);
+> > +
+> > +	if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_EMTE) {
+> > +		pasid_set_emte(pte);
+> > +		pasid_set_emt(pte, pasid_data->emt);
+> > +	}  
 > 
-> diff --git a/arch/arm/boot/bootp/init.S b/arch/arm/boot/bootp/init.S
-> index 5c476bd2b4ce..b562da2f7040 100644
-> --- a/arch/arm/boot/bootp/init.S
-> +++ b/arch/arm/boot/bootp/init.S
-> @@ -13,7 +13,7 @@
->   *  size immediately following the kernel, we could build this into
->   *  a binary blob, and concatenate the zImage using the cat command.
->   */
-> -		.section .start,#alloc,#execinstr
-> +		.section .start, "ax"
->  		.type	_start, #function
->  		.globl	_start
->  
-> diff --git a/arch/arm/boot/compressed/big-endian.S
-> b/arch/arm/boot/compressed/big-endian.S
-> index 88e2a88d324b..0e092c36da2f 100644
-> --- a/arch/arm/boot/compressed/big-endian.S
-> +++ b/arch/arm/boot/compressed/big-endian.S
-> @@ -6,7 +6,7 @@
->   *  Author: Nicolas Pitre
->   */
->  
-> -	.section ".start", #alloc, #execinstr
-> +	.section ".start", "ax"
->  
->  	mrc	p15, 0, r0, c1, c0, 0	@ read control reg
->  	orr	r0, r0, #(1 << 7)	@ enable big endian mode
-> diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
-> index 93dffed0ac6e..15ecad944847 100644
-> --- a/arch/arm/boot/compressed/head.S
-> +++ b/arch/arm/boot/compressed/head.S
-> @@ -140,7 +140,7 @@
->  #endif
->  		.endm
->  
-> -		.section ".start", #alloc, #execinstr
-> +		.section ".start", "ax"
->  /*
->   * sort out different calling conventions
->   */
-> diff --git a/arch/arm/boot/compressed/piggy.S b/arch/arm/boot/compressed/piggy.S
-> index 0284f84dcf38..27577644ee72 100644
-> --- a/arch/arm/boot/compressed/piggy.S
-> +++ b/arch/arm/boot/compressed/piggy.S
-> @@ -1,5 +1,5 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
-> -	.section .piggydata,#alloc
-> +	.section .piggydata, "a"
->  	.globl	input_data
->  input_data:
->  	.incbin	"arch/arm/boot/compressed/piggy_data"
-> diff --git a/arch/arm/mm/proc-arm1020.S b/arch/arm/mm/proc-arm1020.S
-> index 4fa5371bc662..2785da387c91 100644
-> --- a/arch/arm/mm/proc-arm1020.S
-> +++ b/arch/arm/mm/proc-arm1020.S
-> @@ -491,7 +491,7 @@ cpu_arm1020_name:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  	.type	__arm1020_proc_info,#object
->  __arm1020_proc_info:
-> diff --git a/arch/arm/mm/proc-arm1020e.S b/arch/arm/mm/proc-arm1020e.S
-> index 5d8a8339e09a..e9ea237ed785 100644
-> --- a/arch/arm/mm/proc-arm1020e.S
-> +++ b/arch/arm/mm/proc-arm1020e.S
-> @@ -449,7 +449,7 @@ arm1020e_crval:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  	.type	__arm1020e_proc_info,#object
->  __arm1020e_proc_info:
-> diff --git a/arch/arm/mm/proc-arm1022.S b/arch/arm/mm/proc-arm1022.S
-> index b3dd95c345e4..920c279e7879 100644
-> --- a/arch/arm/mm/proc-arm1022.S
-> +++ b/arch/arm/mm/proc-arm1022.S
-> @@ -443,7 +443,7 @@ arm1022_crval:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  	.type	__arm1022_proc_info,#object
->  __arm1022_proc_info:
-> diff --git a/arch/arm/mm/proc-arm1026.S b/arch/arm/mm/proc-arm1026.S
-> index ac5afde12f35..10e21012380b 100644
-> --- a/arch/arm/mm/proc-arm1026.S
-> +++ b/arch/arm/mm/proc-arm1026.S
-> @@ -437,7 +437,7 @@ arm1026_crval:
->  	string	cpu_arm1026_name, "ARM1026EJ-S"
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  	.type	__arm1026_proc_info,#object
->  __arm1026_proc_info:
-> diff --git a/arch/arm/mm/proc-arm720.S b/arch/arm/mm/proc-arm720.S
-> index c99d24363f32..39361e196d61 100644
-> --- a/arch/arm/mm/proc-arm720.S
-> +++ b/arch/arm/mm/proc-arm720.S
-> @@ -172,7 +172,7 @@ arm720_crval:
->   * See <asm/procinfo.h> for a definition of this structure.
->   */
->  
-> -		.section ".proc.info.init", #alloc
-> +		.section ".proc.info.init", "a"
->  
->  .macro arm720_proc_info name:req, cpu_val:req, cpu_mask:req,
-> cpu_name:req, cpu_flush:req
->  		.type	__\name\()_proc_info,#object
-> diff --git a/arch/arm/mm/proc-arm740.S b/arch/arm/mm/proc-arm740.S
-> index 1b4a3838393f..1a94bbf6e53f 100644
-> --- a/arch/arm/mm/proc-arm740.S
-> +++ b/arch/arm/mm/proc-arm740.S
-> @@ -128,7 +128,7 @@ __arm740_setup:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  	.type	__arm740_proc_info,#object
->  __arm740_proc_info:
->  	.long	0x41807400
-> diff --git a/arch/arm/mm/proc-arm7tdmi.S b/arch/arm/mm/proc-arm7tdmi.S
-> index 17a4687065c7..52b66cf0259e 100644
-> --- a/arch/arm/mm/proc-arm7tdmi.S
-> +++ b/arch/arm/mm/proc-arm7tdmi.S
-> @@ -72,7 +72,7 @@ __arm7tdmi_setup:
->  
->  		.align
->  
-> -		.section ".proc.info.init", #alloc
-> +		.section ".proc.info.init", "a"
->  
->  .macro arm7tdmi_proc_info name:req, cpu_val:req, cpu_mask:req, cpu_name:req, \
->  	extra_hwcaps=0
-> diff --git a/arch/arm/mm/proc-arm920.S b/arch/arm/mm/proc-arm920.S
-> index 298c76b47749..31ac8acc34dc 100644
-> --- a/arch/arm/mm/proc-arm920.S
-> +++ b/arch/arm/mm/proc-arm920.S
-> @@ -434,7 +434,7 @@ arm920_crval:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  	.type	__arm920_proc_info,#object
->  __arm920_proc_info:
-> diff --git a/arch/arm/mm/proc-arm922.S b/arch/arm/mm/proc-arm922.S
-> index 824be3a0bc23..ca2c7ca8af21 100644
-> --- a/arch/arm/mm/proc-arm922.S
-> +++ b/arch/arm/mm/proc-arm922.S
-> @@ -412,7 +412,7 @@ arm922_crval:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  	.type	__arm922_proc_info,#object
->  __arm922_proc_info:
-> diff --git a/arch/arm/mm/proc-arm925.S b/arch/arm/mm/proc-arm925.S
-> index d40cff8f102c..a381a0c9f109 100644
-> --- a/arch/arm/mm/proc-arm925.S
-> +++ b/arch/arm/mm/proc-arm925.S
-> @@ -477,7 +477,7 @@ arm925_crval:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  .macro arm925_proc_info name:req, cpu_val:req, cpu_mask:req,
-> cpu_name:req, cache
->  	.type	__\name\()_proc_info,#object
-> diff --git a/arch/arm/mm/proc-arm926.S b/arch/arm/mm/proc-arm926.S
-> index f3cd08f353f0..3188ab2bac61 100644
-> --- a/arch/arm/mm/proc-arm926.S
-> +++ b/arch/arm/mm/proc-arm926.S
-> @@ -460,7 +460,7 @@ arm926_crval:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  	.type	__arm926_proc_info,#object
->  __arm926_proc_info:
-> diff --git a/arch/arm/mm/proc-arm940.S b/arch/arm/mm/proc-arm940.S
-> index 1c26d991386d..4b8a00220cc9 100644
-> --- a/arch/arm/mm/proc-arm940.S
-> +++ b/arch/arm/mm/proc-arm940.S
-> @@ -340,7 +340,7 @@ __arm940_setup:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  	.type	__arm940_proc_info,#object
->  __arm940_proc_info:
-> diff --git a/arch/arm/mm/proc-arm946.S b/arch/arm/mm/proc-arm946.S
-> index 2dc1c75a4fd4..555becf9c758 100644
-> --- a/arch/arm/mm/proc-arm946.S
-> +++ b/arch/arm/mm/proc-arm946.S
-> @@ -395,7 +395,7 @@ __arm946_setup:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  	.type	__arm946_proc_info,#object
->  __arm946_proc_info:
->  	.long	0x41009460
-> diff --git a/arch/arm/mm/proc-arm9tdmi.S b/arch/arm/mm/proc-arm9tdmi.S
-> index 913c06e590af..ef517530130b 100644
-> --- a/arch/arm/mm/proc-arm9tdmi.S
-> +++ b/arch/arm/mm/proc-arm9tdmi.S
-> @@ -66,7 +66,7 @@ __arm9tdmi_setup:
->  
->  		.align
->  
-> -		.section ".proc.info.init", #alloc
-> +		.section ".proc.info.init", "a"
->  
->  .macro arm9tdmi_proc_info name:req, cpu_val:req, cpu_mask:req, cpu_name:req
->  		.type	__\name\()_proc_info, #object
-> diff --git a/arch/arm/mm/proc-fa526.S b/arch/arm/mm/proc-fa526.S
-> index 8120b6f4dbb8..dddf833fe000 100644
-> --- a/arch/arm/mm/proc-fa526.S
-> +++ b/arch/arm/mm/proc-fa526.S
-> @@ -185,7 +185,7 @@ fa526_cr1_set:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  	.type	__fa526_proc_info,#object
->  __fa526_proc_info:
-> diff --git a/arch/arm/mm/proc-feroceon.S b/arch/arm/mm/proc-feroceon.S
-> index bb6dc34d42a3..b12b76bc8d30 100644
-> --- a/arch/arm/mm/proc-feroceon.S
-> +++ b/arch/arm/mm/proc-feroceon.S
-> @@ -571,7 +571,7 @@ feroceon_crval:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  .macro feroceon_proc_info name:req, cpu_val:req, cpu_mask:req,
-> cpu_name:req, cache:req
->  	.type	__\name\()_proc_info,#object
-> diff --git a/arch/arm/mm/proc-mohawk.S b/arch/arm/mm/proc-mohawk.S
-> index f08308578885..d47d6c5cee63 100644
-> --- a/arch/arm/mm/proc-mohawk.S
-> +++ b/arch/arm/mm/proc-mohawk.S
-> @@ -416,7 +416,7 @@ mohawk_crval:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  	.type	__88sv331x_proc_info,#object
->  __88sv331x_proc_info:
-> diff --git a/arch/arm/mm/proc-sa110.S b/arch/arm/mm/proc-sa110.S
-> index d5bc5d702563..baba503ba816 100644
-> --- a/arch/arm/mm/proc-sa110.S
-> +++ b/arch/arm/mm/proc-sa110.S
-> @@ -196,7 +196,7 @@ sa110_crval:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  	.type	__sa110_proc_info,#object
->  __sa110_proc_info:
-> diff --git a/arch/arm/mm/proc-sa1100.S b/arch/arm/mm/proc-sa1100.S
-> index be7b611c76c7..75ebacc8e4e5 100644
-> --- a/arch/arm/mm/proc-sa1100.S
-> +++ b/arch/arm/mm/proc-sa1100.S
-> @@ -239,7 +239,7 @@ sa1100_crval:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  .macro sa1100_proc_info name:req, cpu_val:req, cpu_mask:req, cpu_name:req
->  	.type	__\name\()_proc_info,#object
-> diff --git a/arch/arm/mm/proc-v6.S b/arch/arm/mm/proc-v6.S
-> index c1c85eb3484f..1dd0d5ca27da 100644
-> --- a/arch/arm/mm/proc-v6.S
-> +++ b/arch/arm/mm/proc-v6.S
-> @@ -261,7 +261,7 @@ v6_crval:
->  	string	cpu_elf_name, "v6"
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  	/*
->  	 * Match any ARMv6 processor core.
-> diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
-> index c4e8006a1a8c..48e0ef6f0dcc 100644
-> --- a/arch/arm/mm/proc-v7.S
-> +++ b/arch/arm/mm/proc-v7.S
-> @@ -644,7 +644,7 @@ __v7_setup_stack:
->  	string	cpu_elf_name, "v7"
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  	/*
->  	 * Standard v7 proc info content
-> diff --git a/arch/arm/mm/proc-v7m.S b/arch/arm/mm/proc-v7m.S
-> index 1a49d503eafc..84459c1d31b8 100644
-> --- a/arch/arm/mm/proc-v7m.S
-> +++ b/arch/arm/mm/proc-v7m.S
-> @@ -93,7 +93,7 @@ ENTRY(cpu_cm7_proc_fin)
->  	ret	lr
->  ENDPROC(cpu_cm7_proc_fin)
->  
-> -	.section ".init.text", #alloc, #execinstr
-> +	.section ".init.text", "ax"
->  
->  __v7m_cm7_setup:
->  	mov	r8, #(V7M_SCB_CCR_DC | V7M_SCB_CCR_IC| V7M_SCB_CCR_BP)
-> @@ -177,7 +177,7 @@ ENDPROC(__v7m_setup)
->  	string cpu_elf_name "v7m"
->  	string cpu_v7m_name "ARMv7-M"
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  .macro __v7m_proc name, initfunc, cache_fns = nop_cache_fns, hwcaps =
-> 0,  proc_fns = v7m_processor_functions
->  	.long	0			/* proc_info_list.__cpu_mm_mmu_flags */
-> diff --git a/arch/arm/mm/proc-xsc3.S b/arch/arm/mm/proc-xsc3.S
-> index 1ac0fbbe9f12..42eaecc43cfe 100644
-> --- a/arch/arm/mm/proc-xsc3.S
-> +++ b/arch/arm/mm/proc-xsc3.S
-> @@ -496,7 +496,7 @@ xsc3_crval:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  .macro xsc3_proc_info name:req, cpu_val:req, cpu_mask:req
->  	.type	__\name\()_proc_info,#object
-> diff --git a/arch/arm/mm/proc-xscale.S b/arch/arm/mm/proc-xscale.S
-> index bdb2b7749b03..18ac5a1f8922 100644
-> --- a/arch/arm/mm/proc-xscale.S
-> +++ b/arch/arm/mm/proc-xscale.S
-> @@ -610,7 +610,7 @@ xscale_crval:
->  
->  	.align
->  
-> -	.section ".proc.info.init", #alloc
-> +	.section ".proc.info.init", "a"
->  
->  .macro xscale_proc_info name:req, cpu_val:req, cpu_mask:req,
-> cpu_name:req, cache
->  	.type	__\name\()_proc_info,#object
+> above conditional checks are not consistent. The 1st check may
+> return error but latter two don't. Can you confirm whether it's
+> desired way?
+> 
+should be consistent and under the check of host MTS capability. Will
+change.
+> > +
+> > +	/*
+> > +	 * Memory type is only applicable to devices inside
+> > processor coherent
+> > +	 * domain. PCIe devices are not included. We can skip the
+> > rest of the
+> > +	 * flags if IOMMU does not support MTS.
+> > +	 */
+> > +	if (!ecap_mts(iommu->ecap)) {
+> > +		pr_info("%s does not support memory type bind guest
+> > PASID\n",
+> > +			iommu->name);
+> > +		return 0;  
+> 
+> why not -EINVAL?
+> 
+right, if host does not support MTS and guest wants to set MTS related
+bits, -EINVAL should be returned.
+
+> > +	}
+> > +
+> > +	if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_PCD)
+> > +		pasid_set_pcd(pte);
+> > +	if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_PWT)
+> > +		pasid_set_pwt(pte);
+> > +	if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_CD)
+> > +		pasid_set_cd(pte);
+> > +	pasid_set_pat(pte, pasid_data->pat);
+> > +
+> > +	return 0;
+> > +
+> > +}
+> > +
+> > +/**
+> > + * intel_pasid_setup_nested() - Set up PASID entry for nested
+> > translation
+> > + * which is used for vSVA. The first level page tables are used for
+> > + * GVA-GPA translation in the guest, second level page tables are
+> > used
+> > + * for GPA to HPA translation.  
+> 
+> It's too restricting on how 1st level is used by guest.
+> 
+will fix. stating FL can be used for gIOVA in nested mode.
+> > + *
+> > + * @iommu:      Iommu which the device belong to
+> > + * @dev:        Device to be set up for translation
+> > + * @gpgd:       FLPTPTR: First Level Page translation pointer in
+> > GPA
+> > + * @pasid:      PASID to be programmed in the device PASID table
+> > + * @pasid_data: Additional PASID info from the guest bind request
+> > + * @domain:     Domain info for setting up second level page tables
+> > + * @addr_width: Address width of the first level (guest)
+> > + */
+> > +int intel_pasid_setup_nested(struct intel_iommu *iommu,
+> > +			struct device *dev, pgd_t *gpgd,
+> > +			int pasid, struct
+> > iommu_gpasid_bind_data_vtd *pasid_data,
+> > +			struct dmar_domain *domain,
+> > +			int addr_width)
+> > +{
+> > +	struct pasid_entry *pte;
+> > +	struct dma_pte *pgd;
+> > +	u64 pgd_val;
+> > +	int agaw;
+> > +	u16 did;
+> > +
+> > +	if (!ecap_nest(iommu->ecap)) {
+> > +		pr_err("IOMMU: %s: No nested translation
+> > support\n",
+> > +		       iommu->name);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	pte = intel_pasid_get_entry(dev, pasid);
+> > +	if (WARN_ON(!pte))
+> > +		return -EINVAL;
+> > +
+> > +	pasid_clear_entry(pte);
+> > +
+> > +	/* Sanity checking performed by caller to make sure address
+> > +	 * width matching in two dimensions:
+> > +	 * 1. CPU vs. IOMMU
+> > +	 * 2. Guest vs. Host.
+> > +	 */
+> > +	switch (addr_width) {
+> > +	case 57:  
+> 
+> AW_5LEVEL
+> 
+> > +		pasid_set_flpm(pte, 1);
+> > +		break;
+> > +	case 48:  
+> 
+> AW_4LEVEL
+> 
+will add macros
+
+> > +		pasid_set_flpm(pte, 0);
+> > +		break;
+> > +	default:
+> > +		dev_err(dev, "Invalid paging mode %d\n",
+> > addr_width);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	pasid_set_flptr(pte, (u64)gpgd);
+> > +
+> > +	intel_pasid_setup_bind_data(iommu, pte, pasid_data);
+> > +
+> > +	/* Setup the second level based on the given domain */
+> > +	pgd = domain->pgd;
+> > +
+> > +	for (agaw = domain->agaw; agaw != iommu->agaw; agaw--) {
+> > +		pgd = phys_to_virt(dma_pte_addr(pgd));
+> > +		if (!dma_pte_present(pgd)) {
+> > +			dev_err(dev, "Invalid domain page
+> > table\n");  
+> 
+> pasid_clear_entry?
+> 
+right, even though present bit is not set still a good practice to
+clear.
+
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> > +	pgd_val = virt_to_phys(pgd);
+> > +	pasid_set_slptr(pte, pgd_val);
+> > +	pasid_set_fault_enable(pte);
+> > +
+> > +	did = domain->iommu_did[iommu->seq_id];
+> > +	pasid_set_domain_id(pte, did);
+> > +
+> > +	pasid_set_address_width(pte, agaw);
+> > +	pasid_set_page_snoop(pte, !!ecap_smpwc(iommu->ecap));
+> > +
+> > +	pasid_set_translation_type(pte, PASID_ENTRY_PGTT_NESTED);
+> > +	pasid_set_present(pte);
+> > +	pasid_flush_caches(iommu, pte, pasid, did);
+> > +
+> > +	return 0;
+> > +}
+> > diff --git a/drivers/iommu/intel-pasid.h
+> > b/drivers/iommu/intel-pasid.h index e413e884e685..09c85db73b77
+> > 100644 --- a/drivers/iommu/intel-pasid.h
+> > +++ b/drivers/iommu/intel-pasid.h
+> > @@ -46,6 +46,7 @@
+> >   * to vmalloc or even module mappings.
+> >   */
+> >  #define PASID_FLAG_SUPERVISOR_MODE	BIT(0)
+> > +#define PASID_FLAG_NESTED		BIT(1)
+> > 
+> >  struct pasid_dir_entry {
+> >  	u64 val;
+> > @@ -55,6 +56,11 @@ struct pasid_entry {
+> >  	u64 val[8];
+> >  };
+> > 
+> > +#define PASID_ENTRY_PGTT_FL_ONLY	(1)
+> > +#define PASID_ENTRY_PGTT_SL_ONLY	(2)
+> > +#define PASID_ENTRY_PGTT_NESTED		(3)
+> > +#define PASID_ENTRY_PGTT_PT		(4)
+> > +
+> >  /* The representative of a PASID table */
+> >  struct pasid_table {
+> >  	void			*table;		/*
+> > pasid table pointer */ @@ -103,6 +109,12 @@ int
+> > intel_pasid_setup_second_level(struct intel_iommu *iommu,
+> >  int intel_pasid_setup_pass_through(struct intel_iommu *iommu,
+> >  				   struct dmar_domain *domain,
+> >  				   struct device *dev, int pasid);
+> > +int intel_pasid_setup_nested(struct intel_iommu *iommu,
+> > +			struct device *dev, pgd_t *pgd,
+> > +			int pasid,
+> > +			struct iommu_gpasid_bind_data_vtd
+> > *pasid_data,
+> > +			struct dmar_domain *domain,
+> > +			int addr_width);
+> >  void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
+> >  				 struct device *dev, int pasid);
+> >  int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int
+> > *pasid); --
+> > 2.7.4  
+> 
+
+[Jacob Pan]
