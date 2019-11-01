@@ -2,88 +2,110 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2EACA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0801DCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C505C20656
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE96820656
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:29:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="aVhErQnj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbfKAQ3M (ORCPT
+        id S1728979AbfKAQ3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 12:29:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:38210 "EHLO foss.arm.com"
+        Fri, 1 Nov 2019 12:29:46 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:59606 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726701AbfKAQ3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 12:29:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A11591FB;
-        Fri,  1 Nov 2019 09:29:11 -0700 (PDT)
-Received: from blommer (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5829C3F719;
-        Fri,  1 Nov 2019 09:29:08 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 16:28:58 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Sven Schnelle <svens@stackframe.org>
-Cc:     jthierry@redhat.com, linux-parisc@vger.kernel.org,
-        peterz@infradead.org, catalin.marinas@arm.com, deller@gmx.de,
-        jpoimboe@redhat.com, linux-kernel@vger.kernel.org,
-        rostedt@goodmis.org, James.Bottomley@HansenPartnership.com,
-        takahiro.akashi@linaro.org, mingo@redhat.com, james.morse@arm.com,
-        jeyu@kernel.org, amit.kachhap@arm.com, will@kernel.org,
-        duwe@suse.de, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCHv2 0/8] arm64: ftrace cleanup + FTRACE_WITH_REGS
-Message-ID: <20191101162847.GA3677@blommer>
-References: <20191029165832.33606-1-mark.rutland@arm.com>
- <20191101153929.GA9053@t470p.stackframe.org>
+        id S1726701AbfKAQ3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 12:29:46 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 474SMW5qjrz9v2yn;
+        Fri,  1 Nov 2019 17:29:43 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=aVhErQnj; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id kQdkFGodO6U4; Fri,  1 Nov 2019 17:29:43 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 474SMW4n7qz9v2ym;
+        Fri,  1 Nov 2019 17:29:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1572625783; bh=sO50Jxi/6qCHwc0AfimOF6Zwlkx4COhWtKxf+QPTqKM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=aVhErQnjTF3qahziN3iZTdW4hERQNqbN6AMsA5ZDNSKR0RiIbk3UuTKoxbv+Og84m
+         wPCPsR6Pb28lWx/OvbesOYQwySgR8i2qfmkZZwaTcSIjTehYfdS0o1sdzwTfIqAZgl
+         AiJtQaCT8tDNVDx6tv+0jEN/ruZrQGchWBd6Rl5s=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3D1398B8F6;
+        Fri,  1 Nov 2019 17:29:45 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id mVNcyjLDRV0F; Fri,  1 Nov 2019 17:29:45 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CCD838B7C2;
+        Fri,  1 Nov 2019 17:29:44 +0100 (CET)
+Subject: Re: [PATCH v3 35/36] net/wan: make FSL_UCC_HDLC explicitly depend on
+ PPC32
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Scott Wood <oss@buserror.net>, netdev@vger.kernel.org
+References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
+ <20191101124210.14510-1-linux@rasmusvillemoes.dk>
+ <20191101124210.14510-36-linux@rasmusvillemoes.dk>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <4e2ac670-2bf4-fb47-2130-c0120bcf0111@c-s.fr>
+Date:   Fri, 1 Nov 2019 17:29:44 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191101153929.GA9053@t470p.stackframe.org>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20191101124210.14510-36-linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 04:39:30PM +0100, Sven Schnelle wrote:
-> On Tue, Oct 29, 2019 at 04:58:24PM +0000, Mark Rutland wrote:
-> > This series is a reworked version of Torsten's FTRACE_WITH_REGS series
-> > [1]. I've tried to rework the existing code in preparatory patches so
-> > that the patchable-function-entry bits slot in with fewer surprises.
-> > This version is based on v5.4-rc3, and can be found in my
-> > arm64/ftrace-with-regs branch [2].
-> > 
-> > Patch 1 adds an (optional) ftrace_init_nop(), which the core code uses
-> > to initialize callsites. This allows us to avoid a synthetic MCOUNT_ADDR
-> > symbol, and more cleanly separates the one-time initialization of the
-> > callsite from dynamic NOP<->CALL modification. Architectures which don't
-> > implement this get the existing ftrace_make_nop() with MCOUNT_ADDR.
-> > 
-> > Recently parisc gained ftrace support using patchable-function-entry.
-> > Patch 2 makes the handling of module callsite locations common in
-> > kernel/module.c with a new FTRACE_CALLSITE_SECTION definition, and
-> > removed the newly redundant bits from arch/parisc.
 
-> > Since v1 [3]:
-> > * Add a couple of people to Cc
-> > * Fold in Ard's Reviewed-by tag
-> > * Rename ftrace_code_init_disabled() to ftrace_nop_initialize()
-> > * Move ftrace_init_nop() to <linux/ftrace.h>, with kerneldoc
-> > * Update kerneldoc for rec parameters
-> [..]
+
+Le 01/11/2019 à 13:42, Rasmus Villemoes a écrit :
+> Currently, FSL_UCC_HDLC depends on QUICC_ENGINE, which in turn depends
+> on PPC32. As preparation for removing the latter and thus allowing the
+> core QE code to be built for other architectures, make FSL_UCC_HDLC
+> explicitly depend on PPC32.
+
+Is that really powerpc specific ? Can't the ARM QE perform HDLC on UCC ?
+
+Christophe
+
 > 
-> I tested this series on parisc both with ftracing kernel internal functions and
-> module functions. Both are working fine, so feel free to add my
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
+>   drivers/net/wan/Kconfig | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Tested-by: Sven Schnelle <svens@stackframe.org>
-
-Thanks! That's much appreciated.
-
-I've applied that to patches 1 and 2, since the remainder of the series was
-confined to arch/arm64/.
-
-Mark.
+> diff --git a/drivers/net/wan/Kconfig b/drivers/net/wan/Kconfig
+> index dd1a147f2971..78785d790bcc 100644
+> --- a/drivers/net/wan/Kconfig
+> +++ b/drivers/net/wan/Kconfig
+> @@ -270,7 +270,7 @@ config FARSYNC
+>   config FSL_UCC_HDLC
+>   	tristate "Freescale QUICC Engine HDLC support"
+>   	depends on HDLC
+> -	depends on QUICC_ENGINE
+> +	depends on QUICC_ENGINE && PPC32
+>   	help
+>   	  Driver for Freescale QUICC Engine HDLC controller. The driver
+>   	  supports HDLC in NMSI and TDM mode.
+> 
