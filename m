@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EB7CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00D3CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE17D21A4A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE16B21A4A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfKAIuI (ORCPT
+        id S1726843AbfKAIuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 04:50:08 -0400
-Received: from mga14.intel.com ([192.55.52.115]:34456 "EHLO mga14.intel.com"
+        Fri, 1 Nov 2019 04:50:15 -0400
+Received: from mga14.intel.com ([192.55.52.115]:34433 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727415AbfKAIuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 04:50:03 -0400
+        id S1725904AbfKAIt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 04:49:59 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 01:50:03 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 01:49:59 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,254,1569308400"; 
-   d="scan'208";a="194606644"
+   d="scan'208";a="194606620"
 Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by orsmga008.jf.intel.com with ESMTP; 01 Nov 2019 01:50:00 -0700
+  by orsmga008.jf.intel.com with ESMTP; 01 Nov 2019 01:49:57 -0700
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         pbonzini@redhat.com, sean.j.christopherson@intel.com
 Cc:     jmattson@google.com, yu.c.zhang@linux.intel.com,
         yu-cheng.yu@intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v8 7/7] KVM: X86: Add user-space access interface for CET MSRs
-Date:   Fri,  1 Nov 2019 16:52:22 +0800
-Message-Id: <20191101085222.27997-8-weijiang.yang@intel.com>
+Subject: [PATCH v8 5/7] KVM: X86: Enable CET bits update in IA32_XSS
+Date:   Fri,  1 Nov 2019 16:52:20 +0800
+Message-Id: <20191101085222.27997-6-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20191101085222.27997-1-weijiang.yang@intel.com>
 References: <20191101085222.27997-1-weijiang.yang@intel.com>
@@ -44,197 +44,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There're two different places storing Guest CET states, states
-managed with XSAVES/XRSTORS, as restored/saved
-in previous patch, can be read/write directly from/to the MSRs.
-For those stored in VMCS fields, they're access via vmcs_read/
-vmcs_write.
+Previously, KVM did not support setting any bits in XSS
+so it's hardcoded to check and inject a #GP if Guest
+attempted to write a non-zero value to XSS, now it supports
+CET related bits setting.
 
+Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 140 +++++++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/x86.c     |   3 +
- 2 files changed, 143 insertions(+)
+ arch/x86/include/asm/kvm_host.h |  1 +
+ arch/x86/kvm/cpuid.c            | 12 ++++++++++--
+ arch/x86/kvm/vmx/vmx.c          |  6 +-----
+ 3 files changed, 12 insertions(+), 7 deletions(-)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index f1e6cebaeb15..8f97269d6d9f 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -624,6 +624,7 @@ struct kvm_vcpu_arch {
+ 
+ 	u64 xcr0;
+ 	u64 guest_supported_xcr0;
++	u64 guest_supported_xss;
+ 	u32 guest_xstate_size;
+ 
+ 	struct kvm_pio_request pio;
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 4166c4fcad1e..eafb66da86fe 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -125,8 +125,16 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+ 	}
+ 
+ 	best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
+-	if (best && (best->eax & (F(XSAVES) | F(XSAVEC))))
+-		best->ebx = xstate_required_size(vcpu->arch.xcr0, true);
++	if (best && (best->eax & (F(XSAVES) | F(XSAVEC)))) {
++		u64 xstate = vcpu->arch.xcr0 | vcpu->arch.ia32_xss;
++
++		best->ebx = xstate_required_size(xstate, true);
++		vcpu->arch.guest_supported_xss =
++			(best->ecx | ((u64)best->edx << 32)) &
++			kvm_supported_xss();
++	} else {
++		vcpu->arch.guest_supported_xss = 0;
++	}
+ 
+ 	/*
+ 	 * The existing code assumes virtual address is 48-bit or 57-bit in the
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index bfb1b922a9ac..71aba264b5d2 100644
+index e392e818e7eb..bfb1b922a9ac 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1671,6 +1671,98 @@ static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
- 	return 0;
- }
- 
-+#define CET_MSR_RSVD_BITS_1    0x3
-+#define CET_MSR_RSVD_BITS_2   (0xF << 6)
-+
-+static bool cet_msr_write_allowed(struct kvm_vcpu *vcpu, struct msr_data *msr)
-+{
-+	u32 index = msr->index;
-+	u64 data = msr->data;
-+	u32 high_word = data >> 32;
-+
-+	if ((index == MSR_IA32_U_CET || index == MSR_IA32_S_CET) &&
-+	    (data & CET_MSR_RSVD_BITS_2))
-+		return false;
-+
-+	if (is_64_bit_mode(vcpu)) {
-+		if (is_noncanonical_address(data & PAGE_MASK, vcpu))
-+			return false;
-+		else if ((index == MSR_IA32_PL0_SSP ||
-+			  index == MSR_IA32_PL1_SSP ||
-+			  index == MSR_IA32_PL2_SSP ||
-+			  index == MSR_IA32_PL3_SSP) &&
-+			  (data & CET_MSR_RSVD_BITS_1))
-+			return false;
-+	} else {
-+		if (msr->index == MSR_IA32_INT_SSP_TAB)
-+			return false;
-+		else if ((index == MSR_IA32_U_CET ||
-+			  index == MSR_IA32_S_CET ||
-+			  index == MSR_IA32_PL0_SSP ||
-+			  index == MSR_IA32_PL1_SSP ||
-+			  index == MSR_IA32_PL2_SSP ||
-+			  index == MSR_IA32_PL3_SSP) &&
-+			  (high_word & ~0ul))
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
-+static bool cet_msr_access_allowed(struct kvm_vcpu *vcpu, struct msr_data *msr)
-+{
-+	u64 kvm_xss;
-+	u32 index = msr->index;
-+
-+	if (is_guest_mode(vcpu))
-+		return false;
-+
-+	kvm_xss = kvm_supported_xss();
-+
-+	switch (index) {
-+	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-+		if (!boot_cpu_has(X86_FEATURE_SHSTK))
-+			return false;
-+		if (!msr->host_initiated) {
-+			if (!guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
-+				return false;
-+		} else {
-+			if (index == MSR_IA32_PL3_SSP) {
-+				if (!(kvm_xss & XFEATURE_MASK_CET_USER))
-+					return false;
-+			} else {
-+				if (!(kvm_xss & XFEATURE_MASK_CET_KERNEL))
-+					return false;
-+			}
-+		}
-+		break;
-+	case MSR_IA32_U_CET:
-+	case MSR_IA32_S_CET:
-+		if (!boot_cpu_has(X86_FEATURE_SHSTK) &&
-+		    !boot_cpu_has(X86_FEATURE_IBT))
-+			return false;
-+
-+		if (!msr->host_initiated) {
-+			if (!guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) &&
-+			    !guest_cpuid_has(vcpu, X86_FEATURE_IBT))
-+				return false;
-+		} else if (index == MSR_IA32_U_CET &&
-+			   !(kvm_xss & XFEATURE_MASK_CET_USER))
-+			return false;
-+		break;
-+	case MSR_IA32_INT_SSP_TAB:
-+		if (!boot_cpu_has(X86_FEATURE_SHSTK))
-+			return false;
-+
-+		if (!msr->host_initiated &&
-+		    !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
-+			return false;
-+		break;
-+	default:
-+		return false;
-+	}
-+	return true;
-+}
- /*
-  * Reads an msr value (of 'msr_index') into 'pdata'.
-  * Returns 0 on success, non-0 otherwise.
-@@ -1788,6 +1880,26 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		else
- 			msr_info->data = vmx->pt_desc.guest.addr_a[index / 2];
- 		break;
-+	case MSR_IA32_S_CET:
-+		if (!cet_msr_access_allowed(vcpu, msr_info))
-+			return 1;
-+		msr_info->data = vmcs_readl(GUEST_S_CET);
-+		break;
-+	case MSR_IA32_INT_SSP_TAB:
-+		if (!cet_msr_access_allowed(vcpu, msr_info))
-+			return 1;
-+		msr_info->data = vmcs_readl(GUEST_INTR_SSP_TABLE);
-+		break;
-+	case MSR_IA32_U_CET:
-+		if (!cet_msr_access_allowed(vcpu, msr_info))
-+			return 1;
-+		rdmsrl(MSR_IA32_U_CET, msr_info->data);
-+		break;
-+	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-+		if (!cet_msr_access_allowed(vcpu, msr_info))
-+			return 1;
-+		rdmsrl(msr_info->index, msr_info->data);
-+		break;
- 	case MSR_TSC_AUX:
- 		if (!msr_info->host_initiated &&
- 		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
-@@ -2039,6 +2151,34 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		else
- 			vmx->pt_desc.guest.addr_a[index / 2] = data;
- 		break;
-+	case MSR_IA32_S_CET:
-+		if (!cet_msr_access_allowed(vcpu, msr_info))
-+			return 1;
-+		if (!cet_msr_write_allowed(vcpu, msr_info))
-+			return 1;
-+		vmcs_writel(GUEST_S_CET, data);
-+		break;
-+	case MSR_IA32_INT_SSP_TAB:
-+		if (!cet_msr_access_allowed(vcpu, msr_info))
-+			return 1;
-+		if (!cet_msr_write_allowed(vcpu, msr_info))
-+			return 1;
-+		vmcs_writel(GUEST_INTR_SSP_TABLE, data);
-+		break;
-+	case MSR_IA32_U_CET:
-+		if (!cet_msr_access_allowed(vcpu, msr_info))
-+			return 1;
-+		if (!cet_msr_write_allowed(vcpu, msr_info))
-+			return 1;
-+		wrmsrl(MSR_IA32_U_CET, data);
-+		break;
-+	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-+		if (!cet_msr_access_allowed(vcpu, msr_info))
-+			return 1;
-+		if (!cet_msr_write_allowed(vcpu, msr_info))
-+			return 1;
-+		wrmsrl(msr_info->index, data);
-+		break;
- 	case MSR_TSC_AUX:
- 		if (!msr_info->host_initiated &&
- 		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 6275a75d5802..1bbe4550da90 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1143,6 +1143,9 @@ static u32 msrs_to_save[] = {
- 	MSR_IA32_RTIT_ADDR1_A, MSR_IA32_RTIT_ADDR1_B,
- 	MSR_IA32_RTIT_ADDR2_A, MSR_IA32_RTIT_ADDR2_B,
- 	MSR_IA32_RTIT_ADDR3_A, MSR_IA32_RTIT_ADDR3_B,
-+	MSR_IA32_XSS, MSR_IA32_U_CET, MSR_IA32_S_CET,
-+	MSR_IA32_PL0_SSP, MSR_IA32_PL1_SSP, MSR_IA32_PL2_SSP,
-+	MSR_IA32_PL3_SSP, MSR_IA32_INT_SSP_TAB,
- };
- 
- static unsigned num_msrs_to_save;
+@@ -1973,11 +1973,7 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		     !(guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) &&
+ 		       guest_cpuid_has(vcpu, X86_FEATURE_XSAVES))))
+ 			return 1;
+-		/*
+-		 * The only supported bit as of Skylake is bit 8, but
+-		 * it is not supported on KVM.
+-		 */
+-		if (data != 0)
++		if (data & ~vcpu->arch.guest_supported_xss)
+ 			return 1;
+ 		vcpu->arch.ia32_xss = data;
+ 		if (vcpu->arch.ia32_xss != host_xss)
 -- 
 2.17.2
 
