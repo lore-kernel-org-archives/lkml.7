@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DEACA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CCFCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91FC921897
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC33222D1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbfKAOKc (ORCPT
+        id S1728452AbfKAOKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 10:10:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:36140 "EHLO foss.arm.com"
+        Fri, 1 Nov 2019 10:10:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:36202 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728336AbfKAOKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 10:10:24 -0400
+        id S1728310AbfKAOK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 10:10:29 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B213337;
-        Fri,  1 Nov 2019 07:10:23 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 624747CD;
+        Fri,  1 Nov 2019 07:10:29 -0700 (PDT)
 Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0BBD13F718;
-        Fri,  1 Nov 2019 07:10:20 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B9B553F718;
+        Fri,  1 Nov 2019 07:10:26 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -43,9 +44,9 @@ Cc:     Steven Price <steven.price@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: [PATCH v15 10/23] x86: mm: Add p?d_leaf() definitions
-Date:   Fri,  1 Nov 2019 14:09:29 +0000
-Message-Id: <20191101140942.51554-11-steven.price@arm.com>
+Subject: [PATCH v15 12/23] mm: pagewalk: Allow walking without vma
+Date:   Fri,  1 Nov 2019 14:09:31 +0000
+Message-Id: <20191101140942.51554-13-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191101140942.51554-1-steven.price@arm.com>
 References: <20191101140942.51554-1-steven.price@arm.com>
@@ -56,63 +57,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-walk_page_range() is going to be allowed to walk page tables other than
-those of user space. For this it needs to know when it has reached a
-'leaf' entry in the page tables. This information is provided by the
-p?d_leaf() functions/macros.
+Since 48684a65b4e3: "mm: pagewalk: fix misbehavior of walk_page_range
+for vma(VM_PFNMAP)", page_table_walk() will report any kernel area as
+a hole, because it lacks a vma.
 
-For x86 we already have p?d_large() functions, so simply add macros to
-provide the generic p?d_leaf() names for the generic code.
+This means each arch has re-implemented page table walking when needed,
+for example in the per-arch ptdump walker.
+
+Remove the requirement to have a vma in the generic code and add a new
+function walk_page_range_novma() which ignores the VMAs and simply walks
+the page tables.
 
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- arch/x86/include/asm/pgtable.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ include/linux/pagewalk.h |  5 +++++
+ mm/pagewalk.c            | 44 ++++++++++++++++++++++++++++++++--------
+ 2 files changed, 41 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 0bc530c4eb13..6986a451619e 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -239,6 +239,7 @@ static inline unsigned long pgd_pfn(pgd_t pgd)
- 	return (pgd_val(pgd) & PTE_PFN_MASK) >> PAGE_SHIFT;
+diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
+index 12004b097eae..ed2bb399fac2 100644
+--- a/include/linux/pagewalk.h
++++ b/include/linux/pagewalk.h
+@@ -53,6 +53,7 @@ struct mm_walk_ops {
+  * @ops:	operation to call during the walk
+  * @mm:		mm_struct representing the target process of page table walk
+  * @vma:	vma currently walked (NULL if walking outside vmas)
++ * @no_vma:	walk ignoring vmas (vma will always be NULL)
+  * @private:	private data for callbacks' usage
+  *
+  * (see the comment on walk_page_range() for more details)
+@@ -61,12 +62,16 @@ struct mm_walk {
+ 	const struct mm_walk_ops *ops;
+ 	struct mm_struct *mm;
+ 	struct vm_area_struct *vma;
++	bool no_vma;
+ 	void *private;
+ };
+ 
+ int walk_page_range(struct mm_struct *mm, unsigned long start,
+ 		unsigned long end, const struct mm_walk_ops *ops,
+ 		void *private);
++int walk_page_range_novma(struct mm_struct *mm, unsigned long start,
++			  unsigned long end, const struct mm_walk_ops *ops,
++			  void *private);
+ int walk_page_vma(struct vm_area_struct *vma, const struct mm_walk_ops *ops,
+ 		void *private);
+ 
+diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+index fc4d98a3a5a0..626e7fdb0508 100644
+--- a/mm/pagewalk.c
++++ b/mm/pagewalk.c
+@@ -38,7 +38,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+ 	do {
+ again:
+ 		next = pmd_addr_end(addr, end);
+-		if (pmd_none(*pmd) || !walk->vma) {
++		if (pmd_none(*pmd) || (!walk->vma && !walk->no_vma)) {
+ 			if (ops->pte_hole)
+ 				err = ops->pte_hole(addr, next, walk);
+ 			if (err)
+@@ -61,9 +61,14 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+ 		if (!ops->pte_entry)
+ 			continue;
+ 
+-		split_huge_pmd(walk->vma, pmd, addr);
+-		if (pmd_trans_unstable(pmd))
+-			goto again;
++		if (walk->vma) {
++			split_huge_pmd(walk->vma, pmd, addr);
++			if (pmd_trans_unstable(pmd))
++				goto again;
++		} else if (pmd_leaf(*pmd)) {
++			continue;
++		}
++
+ 		err = walk_pte_range(pmd, addr, next, walk);
+ 		if (err)
+ 			break;
+@@ -84,7 +89,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+ 	do {
+  again:
+ 		next = pud_addr_end(addr, end);
+-		if (pud_none(*pud) || !walk->vma) {
++		if (pud_none(*pud) || (!walk->vma && !walk->no_vma)) {
+ 			if (ops->pte_hole)
+ 				err = ops->pte_hole(addr, next, walk);
+ 			if (err)
+@@ -98,9 +103,13 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+ 				break;
+ 		}
+ 
+-		split_huge_pud(walk->vma, pud, addr);
+-		if (pud_none(*pud))
+-			goto again;
++		if (walk->vma) {
++			split_huge_pud(walk->vma, pud, addr);
++			if (pud_none(*pud))
++				goto again;
++		} else if (pud_leaf(*pud)) {
++			continue;
++		}
+ 
+ 		if (ops->pmd_entry || ops->pte_entry)
+ 			err = walk_pmd_range(pud, addr, next, walk);
+@@ -358,6 +367,25 @@ int walk_page_range(struct mm_struct *mm, unsigned long start,
+ 	return err;
  }
  
-+#define p4d_leaf	p4d_large
- static inline int p4d_large(p4d_t p4d)
++int walk_page_range_novma(struct mm_struct *mm, unsigned long start,
++			  unsigned long end, const struct mm_walk_ops *ops,
++			  void *private)
++{
++	struct mm_walk walk = {
++		.ops		= ops,
++		.mm		= mm,
++		.private	= private,
++		.no_vma		= true
++	};
++
++	if (start >= end || !walk.mm)
++		return -EINVAL;
++
++	lockdep_assert_held(&walk.mm->mmap_sem);
++
++	return __walk_page_range(start, end, &walk);
++}
++
+ int walk_page_vma(struct vm_area_struct *vma, const struct mm_walk_ops *ops,
+ 		void *private)
  {
- 	/* No 512 GiB pages yet */
-@@ -247,6 +248,7 @@ static inline int p4d_large(p4d_t p4d)
- 
- #define pte_page(pte)	pfn_to_page(pte_pfn(pte))
- 
-+#define pmd_leaf	pmd_large
- static inline int pmd_large(pmd_t pte)
- {
- 	return pmd_flags(pte) & _PAGE_PSE;
-@@ -874,6 +876,7 @@ static inline pmd_t *pmd_offset(pud_t *pud, unsigned long address)
- 	return (pmd_t *)pud_page_vaddr(*pud) + pmd_index(address);
- }
- 
-+#define pud_leaf	pud_large
- static inline int pud_large(pud_t pud)
- {
- 	return (pud_val(pud) & (_PAGE_PSE | _PAGE_PRESENT)) ==
-@@ -885,6 +888,7 @@ static inline int pud_bad(pud_t pud)
- 	return (pud_flags(pud) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
- }
- #else
-+#define pud_leaf	pud_large
- static inline int pud_large(pud_t pud)
- {
- 	return 0;
-@@ -1233,6 +1237,7 @@ static inline bool pgdp_maps_userspace(void *__ptr)
- 	return (((ptr & ~PAGE_MASK) / sizeof(pgd_t)) < PGD_KERNEL_START);
- }
- 
-+#define pgd_leaf	pgd_large
- static inline int pgd_large(pgd_t pgd) { return 0; }
- 
- #ifdef CONFIG_PAGE_TABLE_ISOLATION
 -- 
 2.20.1
 
