@@ -2,115 +2,86 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FF7CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC4BCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F5B21835
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:08:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="D6/bx9Qt"
+	by mail.kernel.org (Postfix) with ESMTP id 8864D217F9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729532AbfKAKIw (ORCPT
+        id S1729572AbfKAKI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 06:08:52 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41643 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728048AbfKAKIw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 06:08:52 -0400
-Received: by mail-qt1-f194.google.com with SMTP id o3so12262868qtj.8;
-        Fri, 01 Nov 2019 03:08:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dixvlRxBe1XqqJqVc1zgKXwNqGAEbJcLWXze4Juxj/A=;
-        b=D6/bx9Qt4Sz4Zl1m7/iyiTMXK4O//gXhNKiXB2chqIP3aluDGN2fva+Y6wVKBDNG0P
-         Li4oORgU/Hq8vdPn77G6Hk377QzmddzW+CNPZ9pO+TM2ikk2UmEM/qXJryAK1BMRT+/f
-         4kl53gQeEIhRpSQ2xOi1McdZWP5sJpnLuRBcI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dixvlRxBe1XqqJqVc1zgKXwNqGAEbJcLWXze4Juxj/A=;
-        b=XXZGWPBebJbuv9N3iytPGKYictHNdu8vBThWxQxklk36q6vo4c3fvECl2TVU0el6m5
-         f5cjaT03wEpcGQeAGw64KFkmu8/ML+jV+N43JGoFk051prb5+CZz+3MmNaEfyX2NpanX
-         Ncw4hTk/v+clYDO//wbdFS5Ubi0AP6olTIfD+W96x99Rg330AJHkCsF9wTyOnfnIzLq0
-         tr90fzv8Pq77Quxl97S94GLFcOziIrkLQNOc02j1wSXHHjD8EpWSeJz96kCiEIrE/hvY
-         Foz9qhsQ5PnU+IixVkbx+Qnw+5gSbE0Xj8x0+BWbCvVVGehCflxwVwYH4ypHaU2mgUt+
-         cceA==
-X-Gm-Message-State: APjAAAUErNBBCm3D3N7hG4RtQouHEuE5WJs2JQkzCQZM7qRjoohkz/7F
-        Dg0DEI8dHqoNYHKeDcAMYTAmBHrYMx4HanO2U/M=
-X-Google-Smtp-Source: APXvYqy0Z22TcpdNer9jICrspqvBdfKr5qP78g1hshmD7TQOwlJJKb1RCeY5BVLa6y96G8jOc0taqrKjoAq9DFAyCus=
-X-Received: by 2002:ac8:e03:: with SMTP id a3mr9899612qti.169.1572602929835;
- Fri, 01 Nov 2019 03:08:49 -0700 (PDT)
+        Fri, 1 Nov 2019 06:08:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46216 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728048AbfKAKI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 06:08:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 08099B4CD;
+        Fri,  1 Nov 2019 10:08:55 +0000 (UTC)
+Date:   Fri, 1 Nov 2019 11:08:50 +0100
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
+        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        Dietmar.Eggemann@arm.com, morten.rasmussen@arm.com,
+        qperret@google.com, stable@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] sched/topology: Don't try to build empty sched
+ domains
+Message-ID: <20191101100850.GA16165@blackbody.suse.cz>
+References: <20191023153745.19515-1-valentin.schneider@arm.com>
+ <20191023153745.19515-2-valentin.schneider@arm.com>
+ <20191031162334.GA18570@blackbody.suse.cz>
+ <3752bca9-a670-f415-4aaa-e8ff75ea6fcc@arm.com>
 MIME-Version: 1.0
-References: <20191021194820.293556-1-taoren@fb.com>
-In-Reply-To: <20191021194820.293556-1-taoren@fb.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 1 Nov 2019 10:08:35 +0000
-Message-ID: <CACPK8XcNxs5T=ZC_mRnvkOF_kqS1AvP=9PvMB6w9Fgn_XbtZQw@mail.gmail.com>
-Subject: Re: [PATCH 0/4] ARM: dts: aspeed: add dtsi for Facebook AST2500
- Network BMCs
-To:     Tao Ren <taoren@fb.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
+Content-Disposition: inline
+In-Reply-To: <3752bca9-a670-f415-4aaa-e8ff75ea6fcc@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tao,
 
-On Mon, 21 Oct 2019 at 19:49, Tao Ren <taoren@fb.com> wrote:
->
-> The patch series adds "facebook-netbmc-ast2500-common.dtsi" which defines
-> devices that are common cross all Facebook AST2500 Network BMC platforms.
-> The major purpose is to minimize duplicated device entries among Facebook
-> Network BMC dts files.
->
-> Patch #1 (of 4) adds "facebook-netbmc-ast2500-common.dtsi" file, and the
-> remaining 3 patches update CMM, Minipack and Yamp device tree to consume
-> the new dtsi file.
+--M9NhX3UHpAaciwkO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The patches look okay to me. I modified the file name to match the
-convention used by other device trees in the arm directory, where it
-includes the SOC name first.
+On Thu, Oct 31, 2019 at 06:23:12PM +0100, Valentin Schneider <valentin.schn=
+eider@arm.com> wrote:
+> Do you reckon the following would work?=20
+LGTM (i.e. cpuset will be skipped if no CPUs taking part in load
+balancing remain in it after hot(un)plug event).
 
-I also reworded the commit messages a little.
+Michal
 
-They have been merged into the aspeed tree for submission to 5.5.
+--M9NhX3UHpAaciwkO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Thanks!
+-----BEGIN PGP SIGNATURE-----
 
-Joel
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl28BC0ACgkQia1+riC5
+qShiWQ//coKu7sUzL9S712rBkjJuuZTbEgiG4vayWNJkI6CiV4/kPvqoRqqHW6jx
+tqjaJc8WnvcGPzviRbO2MxxSolez/lV3YBsEG7yxAWEOqEl8KLTAiYXk//muLupK
+e95/iLA/abTMER+gTOLi4qqMsKBtnH433QTCP/c9jzxaQjlXlo/T5D9s0lDD0bEN
++/wkfUdHyQyOB2+LZpufCjaPdQSKkjsa1o29J48VV5lBaIb86rX1AWmcz5woCULP
+R4b3sO2lvcUwalH/ri6n7soF8Vm/IivPawNqSwVbK84te6SKzqSfnHO75gCalCWW
+6W+kilNsX2A9pDPj3omTvC4LzCNkeeXW7UQyOYmEOikDhj5aVAUcJDeeuCPiUXMW
+/WeQD6dT8adPMBAJEnN/GwsPW2QLAy5jXtbVJBonOD6syF7oSGLONMVl8LDMA2Es
+PHpyRCKcvZGPmpjXA65ooE9ZV52732RHlGGqxnsgN6iXns6XRxD7H9M37NIIc+FK
+8c61qsrcMVZEtxBehdchoXe6vcvdmS8Ic4o8auQWzVJjoa1BYNJcWo7YYnMsdMW4
+cBbg9JlUeuIiCg8I016NtBUOwkRa656L/3OtroXD5Xqbq2/T9k0UVbVM2r16wLMD
+xDouMZUIBFUaPspkEqS1PQwgXGt8D/7dNtFP4iiVNHMDhhc1xO4=
+=bZv+
+-----END PGP SIGNATURE-----
 
->
-> Tao Ren (4):
->   ARM: dts: aspeed: add dtsi for Facebook AST2500 Network BMCs
->   ARM: dts: aspeed: cmm: include dtsi for common network BMC devices
->   ARM: dts: aspeed: minipack: include dtsi for common network BMC
->     devices
->   ARM: dts: aspeed: yamp: include dtsi for common network BMC devices
->
->  arch/arm/boot/dts/aspeed-bmc-facebook-cmm.dts | 66 ++++---------
->  .../boot/dts/aspeed-bmc-facebook-minipack.dts | 59 ++++--------
->  .../arm/boot/dts/aspeed-bmc-facebook-yamp.dts | 62 +-----------
->  .../dts/facebook-netbmc-ast2500-common.dtsi   | 96 +++++++++++++++++++
->  4 files changed, 136 insertions(+), 147 deletions(-)
->  create mode 100644 arch/arm/boot/dts/facebook-netbmc-ast2500-common.dtsi
->
-> --
-> 2.17.1
->
+--M9NhX3UHpAaciwkO--
