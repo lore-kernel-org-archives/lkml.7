@@ -2,110 +2,93 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0801DCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7212ECA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE96820656
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:29:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="aVhErQnj"
+	by mail.kernel.org (Postfix) with ESMTP id 4579921734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572625904;
+	bh=lcwuDtMMVht6znRRW2+vxRC911paPSnMy5ommgfPMo0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TH0r8IsVjFx/ERy7jUjsftmoltSWfe7zyx5zXZF0gMZ6RDd9lI7DfFsQGTr4Tncvh
+	 1EOAEd8qgURH04RojZ1kLVckq3VHZ1kM0HRQhFYusOhcowXmE4xxn/tuzrxFL6i92M
+	 v4ksMHOkoSbfnH4mpoUHI5JaIEx7OF0D7/o7w0Rc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbfKAQ3q (ORCPT
+        id S1728670AbfKAQbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 12:29:46 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:59606 "EHLO pegase1.c-s.fr"
+        Fri, 1 Nov 2019 12:31:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726701AbfKAQ3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 12:29:46 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 474SMW5qjrz9v2yn;
-        Fri,  1 Nov 2019 17:29:43 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=aVhErQnj; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id kQdkFGodO6U4; Fri,  1 Nov 2019 17:29:43 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 474SMW4n7qz9v2ym;
-        Fri,  1 Nov 2019 17:29:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1572625783; bh=sO50Jxi/6qCHwc0AfimOF6Zwlkx4COhWtKxf+QPTqKM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=aVhErQnjTF3qahziN3iZTdW4hERQNqbN6AMsA5ZDNSKR0RiIbk3UuTKoxbv+Og84m
-         wPCPsR6Pb28lWx/OvbesOYQwySgR8i2qfmkZZwaTcSIjTehYfdS0o1sdzwTfIqAZgl
-         AiJtQaCT8tDNVDx6tv+0jEN/ruZrQGchWBd6Rl5s=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3D1398B8F6;
-        Fri,  1 Nov 2019 17:29:45 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id mVNcyjLDRV0F; Fri,  1 Nov 2019 17:29:45 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id CCD838B7C2;
-        Fri,  1 Nov 2019 17:29:44 +0100 (CET)
-Subject: Re: [PATCH v3 35/36] net/wan: make FSL_UCC_HDLC explicitly depend on
- PPC32
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Scott Wood <oss@buserror.net>, netdev@vger.kernel.org
-References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
- <20191101124210.14510-1-linux@rasmusvillemoes.dk>
- <20191101124210.14510-36-linux@rasmusvillemoes.dk>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <4e2ac670-2bf4-fb47-2130-c0120bcf0111@c-s.fr>
-Date:   Fri, 1 Nov 2019 17:29:44 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1727737AbfKAQbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 12:31:42 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0798621855;
+        Fri,  1 Nov 2019 16:31:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572625902;
+        bh=lcwuDtMMVht6znRRW2+vxRC911paPSnMy5ommgfPMo0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WyGXyw2KNWgeMv/p+9wB4TlQogOYBPuCDvs/wMc3yEFpca+YjfRX24yiOHCWwrYhy
+         SGS8W7od9h4yQTvj9ZgCLshp3CPe6la+7U/LLWOsZJWI+9JXZXqE2YacivSJfSoilJ
+         MXowa3plebKou/xRmn1lhQyUCPFqgoseP/v/s2GU=
+Date:   Fri, 1 Nov 2019 16:31:36 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        agross@kernel.org
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCHv7 0/3] QCOM smmu-500 wait-for-safe handling for sdm845
+Message-ID: <20191101163136.GC3603@willie-the-truck>
+References: <cover.1568966170.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20191101124210.14510-36-linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1568966170.git.saiprakash.ranjan@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 01/11/2019 à 13:42, Rasmus Villemoes a écrit :
-> Currently, FSL_UCC_HDLC depends on QUICC_ENGINE, which in turn depends
-> on PPC32. As preparation for removing the latter and thus allowing the
-> core QE code to be built for other architectures, make FSL_UCC_HDLC
-> explicitly depend on PPC32.
-
-Is that really powerpc specific ? Can't the ARM QE perform HDLC on UCC ?
-
-Christophe
-
+On Fri, Sep 20, 2019 at 01:34:26PM +0530, Sai Prakash Ranjan wrote:
+> Previous version of the patches are at [1]:
 > 
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> ---
->   drivers/net/wan/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> QCOM's implementation of smmu-500 on sdm845 adds a hardware logic called
+> wait-for-safe. This logic helps in meeting the invalidation requirements
+> from 'real-time clients', such as display and camera. This wait-for-safe
+> logic ensures that the invalidations happen after getting an ack from these
+> devices.
+> In this patch-series we are disabling this wait-for-safe logic from the
+> arm-smmu driver's probe as with this enabled the hardware tries to
+> throttle invalidations from 'non-real-time clients', such as USB and UFS.
 > 
-> diff --git a/drivers/net/wan/Kconfig b/drivers/net/wan/Kconfig
-> index dd1a147f2971..78785d790bcc 100644
-> --- a/drivers/net/wan/Kconfig
-> +++ b/drivers/net/wan/Kconfig
-> @@ -270,7 +270,7 @@ config FARSYNC
->   config FSL_UCC_HDLC
->   	tristate "Freescale QUICC Engine HDLC support"
->   	depends on HDLC
-> -	depends on QUICC_ENGINE
-> +	depends on QUICC_ENGINE && PPC32
->   	help
->   	  Driver for Freescale QUICC Engine HDLC controller. The driver
->   	  supports HDLC in NMSI and TDM mode.
+> For detailed information please refer to patch [3/4] in this series.
+> I have included the device tree patch too in this series for someone who
+> would like to test out this. Here's a branch [2] that gets display on MTP
+> SDM845 device.
 > 
+> This patch series is inspired from downstream work to handle under-performance
+> issues on real-time clients on sdm845. In downstream we add separate page table
+> ops to handle TLB maintenance and toggle wait-for-safe in tlb_sync call so that
+> achieve required performance for display and camera [3, 4].
+
+What's the plan for getting this merged? I'm not happy taking the firmware
+bits without Andy's ack, but I also think the SMMU changes should go via
+the IOMMU tree to avoid conflicts.
+
+Andy?
+
+Will
