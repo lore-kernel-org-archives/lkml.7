@@ -2,723 +2,346 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50527CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D660CCA9ED2
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 091C8217F9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:40:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572597645;
-	bh=Q3khmxvYd61yvW8EYb26Lu3Ijuiamz0W4Mfet6pke3k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f2C17/nmnG4qDMS/qIbgPD1JcgJGIy0QQxHfxCDvG8tK5Q3e2uRbRj0iBkW37Wgtq
-	 5WRTg6p6bkHayInhcG9jjJsl55WMc9cae/FowdvBbOK9BVVkWZENpXBK9+L2NCH4Dv
-	 FiDnZyRmD7+0p9kV90JFxhaYDEPWkEWJMQ+H53c4=
+	by mail.kernel.org (Postfix) with ESMTP id A3695217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:40:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nJv0VLLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfKAIko (ORCPT
+        id S1727391AbfKAIkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 04:40:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726722AbfKAIkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 04:40:43 -0400
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0440F218AC;
-        Fri,  1 Nov 2019 08:40:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572597641;
-        bh=Q3khmxvYd61yvW8EYb26Lu3Ijuiamz0W4Mfet6pke3k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mP6tLmWQyjNffW/j1xmlQwzisC7JMo6MOWGBVqWMWgME7gkVn0RG1dhdO2yPcrH3u
-         PRcvAMrl92Rph9ZDhaY6um0tAOIJSdHUoeSIFibknXDcVerxOLm1WN2ACZoA+dnMwE
-         /3+5lFBQ8zAHfVOIVAlX8QUzZaZwA7wXk0jxONjI=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Helge Deller <deller@gmx.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Salter <msalter@redhat.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
-        Richard Weinberger <richard@nod.at>,
-        Rolf Eike Beer <eike-kernel@sf-tec.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Mike Rapoport <rppt@kernel.org>, linux-alpha@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org,
-        linux-um@lists.infradead.org, sparclinux@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH v2 05/13] m68k: mm: use pgtable-nopXd instead of 4level-fixup
-Date:   Fri,  1 Nov 2019 10:39:36 +0200
-Message-Id: <1572597584-6390-6-git-send-email-rppt@kernel.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572597584-6390-1-git-send-email-rppt@kernel.org>
-References: <1572597584-6390-1-git-send-email-rppt@kernel.org>
+        Fri, 1 Nov 2019 04:40:45 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50102 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727329AbfKAIkp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 04:40:45 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA18eVbb129956;
+        Fri, 1 Nov 2019 03:40:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572597631;
+        bh=hpB4/pfwqA0v+aI/DxgXbZDYFtREfksT2VZBIVXiZ0s=;
+        h=From:To:CC:Subject:Date;
+        b=nJv0VLLZxn9GgZdUhNo7iBbHauw5PUH0oEDWsdA0rIJ1LQD0xA25iuWW8gDABAeyk
+         1mWnmxgHTPJoOWp+zNecH4ehtb8uxBNkinTZe9kobQskRV4tWxIOf5qJWX2/oKouWs
+         34rRLyyPWBWHk5C1o4o8hqbEZWVxN/p9yXg4WClU=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA18eVDH121547;
+        Fri, 1 Nov 2019 03:40:31 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 1 Nov
+ 2019 03:40:16 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 1 Nov 2019 03:40:29 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA18eP8Z036903;
+        Fri, 1 Nov 2019 03:40:26 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+Subject: [PATCH v4 00/15] dmaengine/soc: Add Texas Instruments UDMA support
+Date:   Fri, 1 Nov 2019 10:41:20 +0200
+Message-ID: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+Hi,
 
-m68k has two or three levels of page tables and can use appropriate
-pgtable-nopXd and folding of the upper layers.
+Changes since v3
+(https://patchwork.kernel.org/project/linux-dmaengine/list/?series=180679&state=*):
+- Based on 5.4-rc5
+- Fixed typos pointed out by Tero
+- Added reviewed-by tags from Tero
 
-Replace usage of include/asm-generic/4level-fixup.h and explicit
-definitions of __PAGETABLE_PxD_FOLDED in m68k with
-include/asm-generic/pgtable-nopmd.h for two-level configurations and with
-include/asm-generic/pgtable-nopud.h for three-lelve configurations and
-adjust page table manipulation macros and functions accordingly.
+- ring accelerator driver
+ - TODO_GS is removed from the header
+ - pm_runtime removed as NAVSS and it's components are always on
+ - Check validity of Message mode setup (element size > 8 bytes must use proxy)
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Acked-by: Greg Ungerer <gerg@linux-m68k.org>
+- cppi5 header
+ - add commit message
+
+- UDMAP DT bindings
+ - Drop the psil-config node use on the remote PSI-L side and use only one cell
+   which is the remote threadID:
+
+     dmas = <&main_udmap 0xc400>, <&main_udmap 0x4400>;
+     dma-names = "tx", "rx";
+
+ - The PSI-L thread configuration description is moved to kernel as a new module:
+   k3-psil/k3-psil-am654/k3-psil-j721e
+ - ti,psil-base has been removed and moved to kernel
+ - removed the no longer needed dt-bindings/dma/k3-udma.h
+ - Convert the document to schema (yaml)
+
+- NEW PSI-L endpoint configuration database
+ - a simple database holding the remote end's configuration needed for UDMAP
+   configuration. All previous parameters from DT has been moved here and merged
+   with the linux only tr mode channel flag.
+ - Client drivers can update the remote endpoint configuration as it can be
+   different based on system configuration and the endpoint itself is under the
+   control of the peripheral driver.
+ - database for am654 and j721e
+
+- UDMAP DMAengine driver
+ - pm_runtime removed as NAVSS and it's components are always on
+ - rchan_oes_offset added to MSI dommain allocation
+ - Use the new PSI-L endpoint database for UDMAP configuration
+ - Support for waiting for PDMA teardown completion on j721e instead of
+   returning right away. depends on:
+   https://lkml.org/lkml/2019/10/25/189
+   Not included in this series, but it is in the branch I have prepared.
+ - psil-base is moved from DT to be part of udma_match_data
+ - tr_thread maps is removed and using the PSI-L endpoint configuration for it
+
+- UDMAP glue layer
+ - pm_runtime removed as NAVSS and it's components are always on
+ - Use the new PSI-L endpoint database for UDMAP configuration
+
+Changes since v2
+(https://patchwork.kernel.org/project/linux-dmaengine/list/?series=152609&state=*)
+- Based on 5.4-rc1
+- Support for Flow only data transfer for the glue layer
+
+- cppi5 header
+ - comments converted to kernel-doc style
+ - Remove the excessive WARN_ONs and rely on the user for sanity
+ - new macro for checking TearDown Completion Message
+
+- ring accelerator driver
+ - fixed up th commit message (SoB, TI-SCI)
+ - fixed ring reset
+ - CONFIG_TI_K3_RINGACC_DEBUG is removed along with the dbg_write/read functions
+   and use dev_dbg()
+ - k3_ringacc_ring_dump() is moved to static
+ - step numbering removed from k3_ringacc_ring_reset_dma()
+ - Add clarification comment for shared ring usage in k3_ringacc_ring_cfg()
+ - Magic shift values in k3_ringacc_ring_cfg_proxy() got defined
+ - K3_RINGACC_RING_MODE_QM is removed as it is not supported
+
+- UDMAP DT bindings
+ - Fix property prefixing: s/pdma,/ti,pdma-
+ - Add ti,notdpkt property to suppress teardown completion message on tchan
+ - example updated accordingly
+
+- UDMAP DMAengine driver
+ - Change __raw_readl/writel to readl/writel
+ - Split up the udma_tisci_channel_config() into m2m, tx and rx tisci
+   configuration functions for clarity
+ - DT bindings change: s/pdma,/ti,pdma-
+ - Cleanup of udma_tx_status():
+  - residue calculation fix for m2m
+  - no need to read packet counter as it is not used
+  - peer byte counter only available in PDMAs
+  - Proper locking to avoid race with interrupt handler (polled m2m fix)
+ - Support for ti,notdpkt
+ - RFLOW management rework to support data movement without channel:
+  - the channel is not controlled by Linux but other core and we only have
+    rflows and rings to do the DMA transfers.
+    This mode is only supported by the Glue layer for now.
+
+- UDMAP glue layer
+ - Debug print improvements
+ - Support for rflow/ring only data movement
+
+Changes since v1
+(https://patchwork.kernel.org/project/linux-dmaengine/list/?series=114105&state=*)
+- Added support for j721e
+- Based on 5.3-rc2
+- dropped ti_sci API patch for RM management as it is already upstream
+- dropped dmadev_get_slave_channel() patch, using __dma_request_channel()
+- Added Rob's Reviewed-by to ringacc DT binding document patch
+- DT bindings changes:
+ - linux,udma-mode is gone, I have a simple lookup table in the driver to flag
+   TR channels.
+ - Support for j721e
+- Fix bug in of_node_put() handling in xlate function
+
+Changes since RFC (https://patchwork.kernel.org/cover/10612465/):
+- Based on linux-next (20190506) which now have the ti_sci interrupt support
+- The series can be applied and the UDMA via DMAengine API will be functional
+- Included in the series: ti_sci Resource management API, cppi5 header and
+  driver for the ring accelerator.
+- The DMAengine core patches have been updated as per the review comments for
+  earlier submittion.
+- The DMAengine driver patch is artificially split up to 6 smaller patches
+
+The k3-udma driver implements the Data Movement Architecture described in
+AM65x TRM (http://www.ti.com/lit/pdf/spruid7) and
+j721e TRM (http://www.ti.com/lit/pdf/spruil1)
+
+This DMA architecture is a big departure from 'traditional' architecture where
+we had either EDMA or sDMA as system DMA.
+
+Packet DMAs were used as dedicated DMAs to service only networking (Kesytone2)
+or USB (am335x) while other peripherals were serviced by EDMA.
+
+In AM65x/j721e the UDMA (Unified DMA) is used for all data movment within the
+SoC, tasked to service all peripherals (UART, McSPI, McASP, networking, etc). 
+
+The NAVSS/UDMA is built around CPPI5 (Communications Port Programming Interface)
+and it supports Packet mode (similar to CPPI4.1 in Keystone2 for networking) and
+TR mode (similar to EDMA descriptor).
+The data movement is done within a PSI-L fabric, peripherals (including the
+UDMA-P) are not addressed by their I/O register as with traditional DMAs but
+with their PSI-L thread ID.
+
+In AM65x/j721e we have two main type of peripherals:
+Legacy: McASP, McSPI, UART, etc.
+ to provide connectivity they are serviced by PDMA (Peripheral DMA)
+ PDMA threads are locked to service a given peripheral, for example PSI-L thread
+ 0x4400/0xc400 is to service McASP0 rx/tx.
+ The PDMa configuration can be done via the UDMA Real Time Peer registers.
+Native: Networking, security accelerator
+ these peripherals have native support for PSI-L.
+
+To be able to use the DMA the following generic steps need to be taken:
+- configure a DMA channel (tchan for TX, rchan for RX)
+ - channel mode: Packet or TR mode
+ - for memcpy a tchan and rchan pair is used.
+ - for packet mode RX we also need to configure a receive flow to configure the
+   packet receiption
+- the source and destination threads must be paired
+- at minimum one pair of rings need to be configured:
+ - tx: transfer ring and transfer completion ring
+ - rx: free descriptor ring and receive ring
+- two interrupts: UDMA-P channel interrupt and ring interrupt for tc_ring/r_ring
+ - If the channel is in packet mode or configured to memcpy then we only need
+   one interrupt from the ring, events from UDMAP is not used.
+
+When the channel setup is completed we only interract with the rings:
+- TX: push a descriptor to t_ring and wait for it to be pushed to the tc_ring by
+  the UDMA-P
+- RX: push a descriptor to the fd_ring and waith for UDMA-P to push it back to
+  the r_ring.
+
+Since we have FIFOs in the DMA fabric (UDMA-P, PSI-L and PDMA) which was not the
+case in previous DMAs we need to report the amount of data held in these FIFOs
+to clients (delay calculation for ALSA, UART FIFO flush support).
+
+Metadata support:
+DMAengine user driver was posted upstream based/tested on the v1 of the UDMA
+series: https://lkml.org/lkml/2019/6/28/20
+SA2UL is using the metadata DMAengine API.
+
+Note on the last patch:
+In Keystone2 the networking had dedicated DMA (packet DMA) which is not the case
+anymore and the DMAengine API currently missing support for the features we
+would need to support networking, things like
+- support for receive descriptor 'classification'
+ - we need to support several receive queues for a channel.
+ - the queues are used for packet priority handling for example, but they can be
+   used to have pools of descriptors for different sizes.
+- out of order completion of descriptors on a channel
+ - when we have several queues to handle different priority packets the
+   descriptors will be completed 'out-of-order'
+- NAPI type of operation (polling instead of interrupt driven transfer)
+ - without this we can not sustain gigabit speeds and we need to support NAPI
+ - not to limit this to networking, but other high performance operations
+
+It is my intention to work on these to be able to remove the 'glue' layer and
+switch to DMAengine API - or have an API aside of DMAengine to have generic way
+to support networking, but given how controversial and not trivial these changes
+are we need something to support networking.
+
+The series (+DT patches to enabled DMA on AM65x and j721e) on top of 5.4-rc5 is
+available:
+https://github.com/omap-audio/linux-audio.git peter/udma/series_v4-5.4-rc5
+
+Regards,
+Peter
 ---
- arch/m68k/include/asm/mcf_pgalloc.h      |  7 -------
- arch/m68k/include/asm/mcf_pgtable.h      | 28 +++++++++----------------
- arch/m68k/include/asm/mmu_context.h      | 12 ++++++++++-
- arch/m68k/include/asm/motorola_pgalloc.h |  4 ++--
- arch/m68k/include/asm/motorola_pgtable.h | 32 +++++++++++++++++-----------
- arch/m68k/include/asm/page.h             |  9 +++++---
- arch/m68k/include/asm/pgtable_mm.h       | 11 ++++++----
- arch/m68k/include/asm/sun3_pgalloc.h     |  5 -----
- arch/m68k/include/asm/sun3_pgtable.h     | 18 ----------------
- arch/m68k/kernel/sys_m68k.c              | 10 ++++++++-
- arch/m68k/mm/init.c                      |  6 ++++--
- arch/m68k/mm/kmap.c                      | 36 ++++++++++++++++++++++++--------
- arch/m68k/mm/mcfmmu.c                    | 16 +++++++++++++-
- arch/m68k/mm/motorola.c                  | 17 +++++++++------
- 14 files changed, 122 insertions(+), 89 deletions(-)
+Grygorii Strashko (3):
+  bindings: soc: ti: add documentation for k3 ringacc
+  soc: ti: k3: add navss ringacc driver
+  dmaengine: ti: k3-udma: Add glue layer for non DMAengine users
 
-diff --git a/arch/m68k/include/asm/mcf_pgalloc.h b/arch/m68k/include/asm/mcf_pgalloc.h
-index b34d44d..82ec54c 100644
---- a/arch/m68k/include/asm/mcf_pgalloc.h
-+++ b/arch/m68k/include/asm/mcf_pgalloc.h
-@@ -28,9 +28,6 @@ extern inline pmd_t *pmd_alloc_kernel(pgd_t *pgd, unsigned long address)
- 	return (pmd_t *) pgd;
- }
- 
--#define pmd_alloc_one_fast(mm, address) ({ BUG(); ((pmd_t *)1); })
--#define pmd_alloc_one(mm, address)      ({ BUG(); ((pmd_t *)2); })
--
- #define pmd_populate(mm, pmd, page) (pmd_val(*pmd) = \
- 	(unsigned long)(page_address(page)))
- 
-@@ -45,8 +42,6 @@ static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t page,
- 	__free_page(page);
- }
- 
--#define __pmd_free_tlb(tlb, pmd, address) do { } while (0)
--
- static inline struct page *pte_alloc_one(struct mm_struct *mm)
- {
- 	struct page *page = alloc_pages(GFP_DMA, 0);
-@@ -100,6 +95,4 @@ static inline pgd_t *pgd_alloc(struct mm_struct *mm)
- 	return new_pgd;
- }
- 
--#define pgd_populate(mm, pmd, pte) BUG()
--
- #endif /* M68K_MCF_PGALLOC_H */
-diff --git a/arch/m68k/include/asm/mcf_pgtable.h b/arch/m68k/include/asm/mcf_pgtable.h
-index 5d5502c..b9f45ae 100644
---- a/arch/m68k/include/asm/mcf_pgtable.h
-+++ b/arch/m68k/include/asm/mcf_pgtable.h
-@@ -198,17 +198,9 @@ static inline int pmd_bad2(pmd_t *pmd) { return 0; }
- #define pmd_present(pmd) (!pmd_none2(&(pmd)))
- static inline void pmd_clear(pmd_t *pmdp) { pmd_val(*pmdp) = 0; }
- 
--static inline int pgd_none(pgd_t pgd) { return 0; }
--static inline int pgd_bad(pgd_t pgd) { return 0; }
--static inline int pgd_present(pgd_t pgd) { return 1; }
--static inline void pgd_clear(pgd_t *pgdp) {}
--
- #define pte_ERROR(e) \
- 	printk(KERN_ERR "%s:%d: bad pte %08lx.\n",	\
- 	__FILE__, __LINE__, pte_val(e))
--#define pmd_ERROR(e) \
--	printk(KERN_ERR "%s:%d: bad pmd %08lx.\n",	\
--	__FILE__, __LINE__, pmd_val(e))
- #define pgd_ERROR(e) \
- 	printk(KERN_ERR "%s:%d: bad pgd %08lx.\n",	\
- 	__FILE__, __LINE__, pgd_val(e))
-@@ -340,14 +332,6 @@ extern pgd_t kernel_pg_dir[PTRS_PER_PGD];
- #define pgd_offset_k(address)	pgd_offset(&init_mm, address)
- 
- /*
-- * Find an entry in the second-level pagetable.
-- */
--static inline pmd_t *pmd_offset(pgd_t *pgd, unsigned long address)
--{
--	return (pmd_t *) pgd;
--}
--
--/*
-  * Find an entry in the third-level pagetable.
-  */
- #define __pte_offset(address)	((address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
-@@ -360,12 +344,16 @@ static inline pmd_t *pmd_offset(pgd_t *pgd, unsigned long address)
- static inline void nocache_page(void *vaddr)
- {
- 	pgd_t *dir;
-+	p4d_t *p4dp;
-+	pud_t *pudp;
- 	pmd_t *pmdp;
- 	pte_t *ptep;
- 	unsigned long addr = (unsigned long) vaddr;
- 
- 	dir = pgd_offset_k(addr);
--	pmdp = pmd_offset(dir, addr);
-+	p4dp = p4d_offset(dir, addr);
-+	pudp = pud_offset(p4dp, addr);
-+	pmdp = pmd_offset(pudp, addr);
- 	ptep = pte_offset_kernel(pmdp, addr);
- 	*ptep = pte_mknocache(*ptep);
- }
-@@ -376,12 +364,16 @@ static inline void nocache_page(void *vaddr)
- static inline void cache_page(void *vaddr)
- {
- 	pgd_t *dir;
-+	p4d_t *p4dp;
-+	pud_t *pudp;
- 	pmd_t *pmdp;
- 	pte_t *ptep;
- 	unsigned long addr = (unsigned long) vaddr;
- 
- 	dir = pgd_offset_k(addr);
--	pmdp = pmd_offset(dir, addr);
-+	p4dp = p4d_offset(dir, addr);
-+	pudp = pud_offset(p4dp, addr);
-+	pmdp = pmd_offset(pudp, addr);
- 	ptep = pte_offset_kernel(pmdp, addr);
- 	*ptep = pte_mkcache(*ptep);
- }
-diff --git a/arch/m68k/include/asm/mmu_context.h b/arch/m68k/include/asm/mmu_context.h
-index f5b1852..cac9f28 100644
---- a/arch/m68k/include/asm/mmu_context.h
-+++ b/arch/m68k/include/asm/mmu_context.h
-@@ -100,6 +100,8 @@ static inline void load_ksp_mmu(struct task_struct *task)
- 	struct mm_struct *mm;
- 	int asid;
- 	pgd_t *pgd;
-+	p4d_t *p4d;
-+	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte;
- 	unsigned long mmuar;
-@@ -127,7 +129,15 @@ static inline void load_ksp_mmu(struct task_struct *task)
- 	if (pgd_none(*pgd))
- 		goto bug;
- 
--	pmd = pmd_offset(pgd, mmuar);
-+	p4d = p4d_offset(pgd, mmuar);
-+	if (p4d_none(*p4d))
-+		goto bug;
-+
-+	pud = pud_offset(p4d, mmuar);
-+	if (pud_none(*pud))
-+		goto bug;
-+
-+	pmd = pmd_offset(pud, mmuar);
- 	if (pmd_none(*pmd))
- 		goto bug;
- 
-diff --git a/arch/m68k/include/asm/motorola_pgalloc.h b/arch/m68k/include/asm/motorola_pgalloc.h
-index acab315..ff9cc40 100644
---- a/arch/m68k/include/asm/motorola_pgalloc.h
-+++ b/arch/m68k/include/asm/motorola_pgalloc.h
-@@ -106,9 +106,9 @@ static inline void pmd_populate(struct mm_struct *mm, pmd_t *pmd, pgtable_t page
- }
- #define pmd_pgtable(pmd) pmd_page(pmd)
- 
--static inline void pgd_populate(struct mm_struct *mm, pgd_t *pgd, pmd_t *pmd)
-+static inline void pud_populate(struct mm_struct *mm, pud_t *pud, pmd_t *pmd)
- {
--	pgd_set(pgd, pmd);
-+	pud_set(pud, pmd);
- }
- 
- #endif /* _MOTOROLA_PGALLOC_H */
-diff --git a/arch/m68k/include/asm/motorola_pgtable.h b/arch/m68k/include/asm/motorola_pgtable.h
-index 7f66a7b..62bedc6 100644
---- a/arch/m68k/include/asm/motorola_pgtable.h
-+++ b/arch/m68k/include/asm/motorola_pgtable.h
-@@ -117,14 +117,14 @@ static inline void pmd_set(pmd_t *pmdp, pte_t *ptep)
- 	}
- }
- 
--static inline void pgd_set(pgd_t *pgdp, pmd_t *pmdp)
-+static inline void pud_set(pud_t *pudp, pmd_t *pmdp)
- {
--	pgd_val(*pgdp) = _PAGE_TABLE | _PAGE_ACCESSED | __pa(pmdp);
-+	pud_val(*pudp) = _PAGE_TABLE | _PAGE_ACCESSED | __pa(pmdp);
- }
- 
- #define __pte_page(pte) ((unsigned long)__va(pte_val(pte) & PAGE_MASK))
- #define __pmd_page(pmd) ((unsigned long)__va(pmd_val(pmd) & _TABLE_MASK))
--#define __pgd_page(pgd) ((unsigned long)__va(pgd_val(pgd) & _TABLE_MASK))
-+#define pud_page_vaddr(pud) ((unsigned long)__va(pud_val(pud) & _TABLE_MASK))
- 
- 
- #define pte_none(pte)		(!pte_val(pte))
-@@ -147,11 +147,11 @@ static inline void pgd_set(pgd_t *pgdp, pmd_t *pmdp)
- #define pmd_page(pmd)		virt_to_page(__va(pmd_val(pmd)))
- 
- 
--#define pgd_none(pgd)		(!pgd_val(pgd))
--#define pgd_bad(pgd)		((pgd_val(pgd) & _DESCTYPE_MASK) != _PAGE_TABLE)
--#define pgd_present(pgd)	(pgd_val(pgd) & _PAGE_TABLE)
--#define pgd_clear(pgdp)		({ pgd_val(*pgdp) = 0; })
--#define pgd_page(pgd)		(mem_map + ((unsigned long)(__va(pgd_val(pgd)) - PAGE_OFFSET) >> PAGE_SHIFT))
-+#define pud_none(pud)		(!pud_val(pud))
-+#define pud_bad(pud)		((pud_val(pud) & _DESCTYPE_MASK) != _PAGE_TABLE)
-+#define pud_present(pud)	(pud_val(pud) & _PAGE_TABLE)
-+#define pud_clear(pudp)		({ pud_val(*pudp) = 0; })
-+#define pud_page(pud)		(mem_map + ((unsigned long)(__va(pud_val(pud)) - PAGE_OFFSET) >> PAGE_SHIFT))
- 
- #define pte_ERROR(e) \
- 	printk("%s:%d: bad pte %08lx.\n", __FILE__, __LINE__, pte_val(e))
-@@ -209,9 +209,9 @@ static inline pgd_t *pgd_offset_k(unsigned long address)
- 
- 
- /* Find an entry in the second-level page table.. */
--static inline pmd_t *pmd_offset(pgd_t *dir, unsigned long address)
-+static inline pmd_t *pmd_offset(pud_t *dir, unsigned long address)
- {
--	return (pmd_t *)__pgd_page(*dir) + ((address >> PMD_SHIFT) & (PTRS_PER_PMD-1));
-+	return (pmd_t *)pud_page_vaddr(*dir) + ((address >> PMD_SHIFT) & (PTRS_PER_PMD-1));
- }
- 
- /* Find an entry in the third-level page table.. */
-@@ -239,11 +239,15 @@ static inline void nocache_page(void *vaddr)
- 
- 	if (CPU_IS_040_OR_060) {
- 		pgd_t *dir;
-+		p4d_t *p4dp;
-+		pud_t *pudp;
- 		pmd_t *pmdp;
- 		pte_t *ptep;
- 
- 		dir = pgd_offset_k(addr);
--		pmdp = pmd_offset(dir, addr);
-+		p4dp = p4d_offset(dir, addr);
-+		pudp = pud_offset(p4dp, addr);
-+		pmdp = pmd_offset(pudp, addr);
- 		ptep = pte_offset_kernel(pmdp, addr);
- 		*ptep = pte_mknocache(*ptep);
- 	}
-@@ -255,11 +259,15 @@ static inline void cache_page(void *vaddr)
- 
- 	if (CPU_IS_040_OR_060) {
- 		pgd_t *dir;
-+		p4d_t *p4dp;
-+		pud_t *pudp;
- 		pmd_t *pmdp;
- 		pte_t *ptep;
- 
- 		dir = pgd_offset_k(addr);
--		pmdp = pmd_offset(dir, addr);
-+		p4dp = p4d_offset(dir, addr);
-+		pudp = pud_offset(p4dp, addr);
-+		pmdp = pmd_offset(pudp, addr);
- 		ptep = pte_offset_kernel(pmdp, addr);
- 		*ptep = pte_mkcache(*ptep);
- 	}
-diff --git a/arch/m68k/include/asm/page.h b/arch/m68k/include/asm/page.h
-index 700d819..05e1e1e 100644
---- a/arch/m68k/include/asm/page.h
-+++ b/arch/m68k/include/asm/page.h
-@@ -21,19 +21,22 @@
- /*
-  * These are used to make use of C type-checking..
-  */
--typedef struct { unsigned long pte; } pte_t;
-+#if !defined(CONFIG_MMU) || CONFIG_PGTABLE_LEVELS == 3
- typedef struct { unsigned long pmd[16]; } pmd_t;
-+#define pmd_val(x)	((&x)->pmd[0])
-+#define __pmd(x)	((pmd_t) { { (x) }, })
-+#endif
-+
-+typedef struct { unsigned long pte; } pte_t;
- typedef struct { unsigned long pgd; } pgd_t;
- typedef struct { unsigned long pgprot; } pgprot_t;
- typedef struct page *pgtable_t;
- 
- #define pte_val(x)	((x).pte)
--#define pmd_val(x)	((&x)->pmd[0])
- #define pgd_val(x)	((x).pgd)
- #define pgprot_val(x)	((x).pgprot)
- 
- #define __pte(x)	((pte_t) { (x) } )
--#define __pmd(x)	((pmd_t) { { (x) }, })
- #define __pgd(x)	((pgd_t) { (x) } )
- #define __pgprot(x)	((pgprot_t) { (x) } )
- 
-diff --git a/arch/m68k/include/asm/pgtable_mm.h b/arch/m68k/include/asm/pgtable_mm.h
-index 646c174f..2bf5c35 100644
---- a/arch/m68k/include/asm/pgtable_mm.h
-+++ b/arch/m68k/include/asm/pgtable_mm.h
-@@ -2,7 +2,12 @@
- #ifndef _M68K_PGTABLE_H
- #define _M68K_PGTABLE_H
- 
--#include <asm-generic/4level-fixup.h>
-+
-+#if defined(CONFIG_SUN3) || defined(CONFIG_COLDFIRE)
-+#include <asm-generic/pgtable-nopmd.h>
-+#else
-+#include <asm-generic/pgtable-nopud.h>
-+#endif
- 
- #include <asm/setup.h>
- 
-@@ -30,9 +35,7 @@
- 
- 
- /* PMD_SHIFT determines the size of the area a second-level page table can map */
--#ifdef CONFIG_SUN3
--#define PMD_SHIFT       17
--#else
-+#if CONFIG_PGTABLE_LEVELS == 3
- #define PMD_SHIFT	22
- #endif
- #define PMD_SIZE	(1UL << PMD_SHIFT)
-diff --git a/arch/m68k/include/asm/sun3_pgalloc.h b/arch/m68k/include/asm/sun3_pgalloc.h
-index 8561211..11b95da 100644
---- a/arch/m68k/include/asm/sun3_pgalloc.h
-+++ b/arch/m68k/include/asm/sun3_pgalloc.h
-@@ -17,8 +17,6 @@
- 
- extern const char bad_pmd_string[];
- 
--#define pmd_alloc_one(mm,address)       ({ BUG(); ((pmd_t *)2); })
--
- #define __pte_free_tlb(tlb,pte,addr)			\
- do {							\
- 	pgtable_pte_page_dtor(pte);			\
-@@ -41,7 +39,6 @@ static inline void pmd_populate(struct mm_struct *mm, pmd_t *pmd, pgtable_t page
-  * inside the pgd, so has no extra memory associated with it.
-  */
- #define pmd_free(mm, x)			do { } while (0)
--#define __pmd_free_tlb(tlb, x, addr)	do { } while (0)
- 
- static inline void pgd_free(struct mm_struct *mm, pgd_t *pgd)
- {
-@@ -58,6 +55,4 @@ static inline pgd_t * pgd_alloc(struct mm_struct *mm)
-      return new_pgd;
- }
- 
--#define pgd_populate(mm, pmd, pte) BUG()
--
- #endif /* SUN3_PGALLOC_H */
-diff --git a/arch/m68k/include/asm/sun3_pgtable.h b/arch/m68k/include/asm/sun3_pgtable.h
-index c987d50..bc41552 100644
---- a/arch/m68k/include/asm/sun3_pgtable.h
-+++ b/arch/m68k/include/asm/sun3_pgtable.h
-@@ -110,11 +110,6 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
- 
- #define pmd_set(pmdp,ptep) do {} while (0)
- 
--static inline void pgd_set(pgd_t *pgdp, pmd_t *pmdp)
--{
--	pgd_val(*pgdp) = virt_to_phys(pmdp);
--}
--
- #define __pte_page(pte) \
- ((unsigned long) __va ((pte_val (pte) & SUN3_PAGE_PGNUM_MASK) << PAGE_SHIFT))
- #define __pmd_page(pmd) \
-@@ -145,16 +140,9 @@ static inline int pmd_present2 (pmd_t *pmd) { return pmd_val (*pmd) & SUN3_PMD_V
- #define pmd_present(pmd) (!pmd_none2(&(pmd)))
- static inline void pmd_clear (pmd_t *pmdp) { pmd_val (*pmdp) = 0; }
- 
--static inline int pgd_none (pgd_t pgd) { return 0; }
--static inline int pgd_bad (pgd_t pgd) { return 0; }
--static inline int pgd_present (pgd_t pgd) { return 1; }
--static inline void pgd_clear (pgd_t *pgdp) {}
--
- 
- #define pte_ERROR(e) \
- 	pr_err("%s:%d: bad pte %08lx.\n", __FILE__, __LINE__, pte_val(e))
--#define pmd_ERROR(e) \
--	pr_err("%s:%d: bad pmd %08lx.\n", __FILE__, __LINE__, pmd_val(e))
- #define pgd_ERROR(e) \
- 	pr_err("%s:%d: bad pgd %08lx.\n", __FILE__, __LINE__, pgd_val(e))
- 
-@@ -194,12 +182,6 @@ extern pgd_t kernel_pg_dir[PTRS_PER_PGD];
- /* Find an entry in a kernel pagetable directory. */
- #define pgd_offset_k(address) pgd_offset(&init_mm, address)
- 
--/* Find an entry in the second-level pagetable. */
--static inline pmd_t *pmd_offset (pgd_t *pgd, unsigned long address)
--{
--	return (pmd_t *) pgd;
--}
--
- /* Find an entry in the third-level pagetable. */
- #define pte_index(address) ((address >> PAGE_SHIFT) & (PTRS_PER_PTE-1))
- #define pte_offset_kernel(pmd, address) ((pte_t *) __pmd_page(*pmd) + pte_index(address))
-diff --git a/arch/m68k/kernel/sys_m68k.c b/arch/m68k/kernel/sys_m68k.c
-index 6363ec8..18a4de7 100644
---- a/arch/m68k/kernel/sys_m68k.c
-+++ b/arch/m68k/kernel/sys_m68k.c
-@@ -465,6 +465,8 @@ sys_atomic_cmpxchg_32(unsigned long newval, int oldval, int d3, int d4, int d5,
- 	for (;;) {
- 		struct mm_struct *mm = current->mm;
- 		pgd_t *pgd;
-+		p4d_t *p4d;
-+		pud_t *pud;
- 		pmd_t *pmd;
- 		pte_t *pte;
- 		spinlock_t *ptl;
-@@ -474,7 +476,13 @@ sys_atomic_cmpxchg_32(unsigned long newval, int oldval, int d3, int d4, int d5,
- 		pgd = pgd_offset(mm, (unsigned long)mem);
- 		if (!pgd_present(*pgd))
- 			goto bad_access;
--		pmd = pmd_offset(pgd, (unsigned long)mem);
-+		p4d = p4d_offset(pgd, (unsigned long)mem);
-+		if (!p4d_present(*p4d))
-+			goto bad_access;
-+		pud = pud_offset(p4d, (unsigned long)mem);
-+		if (!pud_present(*pud))
-+			goto bad_access;
-+		pmd = pmd_offset(pud, (unsigned long)mem);
- 		if (!pmd_present(*pmd))
- 			goto bad_access;
- 		pte = pte_offset_map_lock(mm, pmd, (unsigned long)mem, &ptl);
-diff --git a/arch/m68k/mm/init.c b/arch/m68k/mm/init.c
-index 778cacb..27c453f 100644
---- a/arch/m68k/mm/init.c
-+++ b/arch/m68k/mm/init.c
-@@ -130,8 +130,10 @@ static inline void init_pointer_tables(void)
- 	/* insert pointer tables allocated so far into the tablelist */
- 	init_pointer_table((unsigned long)kernel_pg_dir);
- 	for (i = 0; i < PTRS_PER_PGD; i++) {
--		if (pgd_present(kernel_pg_dir[i]))
--			init_pointer_table(__pgd_page(kernel_pg_dir[i]));
-+		pud_t *pud = (pud_t *)(&kernel_pg_dir[i]);
-+
-+		if (pud_present(*pud))
-+			init_pointer_table(pgd_page_vaddr(kernel_pg_dir[i]));
- 	}
- 
- 	/* insert also pointer table that we used to unmap the zero page */
-diff --git a/arch/m68k/mm/kmap.c b/arch/m68k/mm/kmap.c
-index 40a3b32..9f687da 100644
---- a/arch/m68k/mm/kmap.c
-+++ b/arch/m68k/mm/kmap.c
-@@ -110,6 +110,8 @@ void __iomem *__ioremap(unsigned long physaddr, unsigned long size, int cachefla
- 	unsigned long virtaddr, retaddr;
- 	long offset;
- 	pgd_t *pgd_dir;
-+	p4d_t *p4d_dir;
-+	pud_t *pud_dir;
- 	pmd_t *pmd_dir;
- 	pte_t *pte_dir;
- 
-@@ -196,17 +198,21 @@ void __iomem *__ioremap(unsigned long physaddr, unsigned long size, int cachefla
- 			printk ("\npa=%#lx va=%#lx ", physaddr, virtaddr);
- #endif
- 		pgd_dir = pgd_offset_k(virtaddr);
--		pmd_dir = pmd_alloc(&init_mm, pgd_dir, virtaddr);
-+		p4d_dir = p4d_offset(pgd_dir, virtaddr);
-+		pud_dir = pud_offset(p4d_dir, virtaddr);
-+		pmd_dir = pmd_alloc(&init_mm, pud_dir, virtaddr);
- 		if (!pmd_dir) {
- 			printk("ioremap: no mem for pmd_dir\n");
- 			return NULL;
- 		}
- 
- 		if (CPU_IS_020_OR_030) {
-+#if CONFIG_PGTABLE_LEVELS == 3
- 			pmd_dir->pmd[(virtaddr/PTRTREESIZE) & 15] = physaddr;
- 			physaddr += PTRTREESIZE;
- 			virtaddr += PTRTREESIZE;
- 			size -= PTRTREESIZE;
-+#endif
- 		} else {
- 			pte_dir = pte_alloc_kernel(pmd_dir, virtaddr);
- 			if (!pte_dir) {
-@@ -258,19 +264,24 @@ void __iounmap(void *addr, unsigned long size)
- {
- 	unsigned long virtaddr = (unsigned long)addr;
- 	pgd_t *pgd_dir;
-+	p4d_t *p4d_dir;
-+	pud_t *pud_dir;
- 	pmd_t *pmd_dir;
- 	pte_t *pte_dir;
- 
- 	while ((long)size > 0) {
- 		pgd_dir = pgd_offset_k(virtaddr);
--		if (pgd_bad(*pgd_dir)) {
--			printk("iounmap: bad pgd(%08lx)\n", pgd_val(*pgd_dir));
--			pgd_clear(pgd_dir);
-+		p4d_dir = p4d_offset(pgd_dir, virtaddr);
-+		pud_dir = pud_offset(p4d_dir, virtaddr);
-+		if (pud_bad(*pud_dir)) {
-+			printk("iounmap: bad pgd(%08lx)\n", pud_val(*pud_dir));
-+			pud_clear(pud_dir);
- 			return;
- 		}
--		pmd_dir = pmd_offset(pgd_dir, virtaddr);
-+		pmd_dir = pmd_offset(pud_dir, virtaddr);
- 
- 		if (CPU_IS_020_OR_030) {
-+#if CONFIG_PGTABLE_LEVELS == 3
- 			int pmd_off = (virtaddr/PTRTREESIZE) & 15;
- 			int pmd_type = pmd_dir->pmd[pmd_off] & _DESCTYPE_MASK;
- 
-@@ -281,6 +292,7 @@ void __iounmap(void *addr, unsigned long size)
- 				continue;
- 			} else if (pmd_type == 0)
- 				continue;
-+#endif
- 		}
- 
- 		if (pmd_bad(*pmd_dir)) {
-@@ -307,6 +319,8 @@ void kernel_set_cachemode(void *addr, unsigned long size, int cmode)
- {
- 	unsigned long virtaddr = (unsigned long)addr;
- 	pgd_t *pgd_dir;
-+	p4d_t *p4d_dir;
-+	pud_t *pud_dir;
- 	pmd_t *pmd_dir;
- 	pte_t *pte_dir;
- 
-@@ -341,14 +355,17 @@ void kernel_set_cachemode(void *addr, unsigned long size, int cmode)
- 
- 	while ((long)size > 0) {
- 		pgd_dir = pgd_offset_k(virtaddr);
--		if (pgd_bad(*pgd_dir)) {
--			printk("iocachemode: bad pgd(%08lx)\n", pgd_val(*pgd_dir));
--			pgd_clear(pgd_dir);
-+		p4d_dir = p4d_offset(pgd_dir, virtaddr);
-+		pud_dir = pud_offset(p4d_dir, virtaddr);
-+		if (pud_bad(*pud_dir)) {
-+			printk("iocachemode: bad pud(%08lx)\n", pud_val(*pud_dir));
-+			pud_clear(pud_dir);
- 			return;
- 		}
--		pmd_dir = pmd_offset(pgd_dir, virtaddr);
-+		pmd_dir = pmd_offset(pud_dir, virtaddr);
- 
- 		if (CPU_IS_020_OR_030) {
-+#if CONFIG_PGTABLE_LEVELS == 3
- 			int pmd_off = (virtaddr/PTRTREESIZE) & 15;
- 
- 			if ((pmd_dir->pmd[pmd_off] & _DESCTYPE_MASK) == _PAGE_PRESENT) {
-@@ -358,6 +375,7 @@ void kernel_set_cachemode(void *addr, unsigned long size, int cmode)
- 				size -= PTRTREESIZE;
- 				continue;
- 			}
-+#endif
- 		}
- 
- 		if (pmd_bad(*pmd_dir)) {
-diff --git a/arch/m68k/mm/mcfmmu.c b/arch/m68k/mm/mcfmmu.c
-index 6cb1e41..0ea3756 100644
---- a/arch/m68k/mm/mcfmmu.c
-+++ b/arch/m68k/mm/mcfmmu.c
-@@ -92,6 +92,8 @@ int cf_tlb_miss(struct pt_regs *regs, int write, int dtlb, int extension_word)
- 	unsigned long flags, mmuar, mmutr;
- 	struct mm_struct *mm;
- 	pgd_t *pgd;
-+	p4d_t *p4d;
-+	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte;
- 	int asid;
-@@ -113,7 +115,19 @@ int cf_tlb_miss(struct pt_regs *regs, int write, int dtlb, int extension_word)
- 		return -1;
- 	}
- 
--	pmd = pmd_offset(pgd, mmuar);
-+	p4d = p4d_offset(pgd, mmuar);
-+	if (p4d_none(*p4d)) {
-+		local_irq_restore(flags);
-+		return -1;
-+	}
-+
-+	pud = pud_offset(p4d, mmuar);
-+	if (pud_none(*pud)) {
-+		local_irq_restore(flags);
-+		return -1;
-+	}
-+
-+	pmd = pmd_offset(pud, mmuar);
- 	if (pmd_none(*pmd)) {
- 		local_irq_restore(flags);
- 		return -1;
-diff --git a/arch/m68k/mm/motorola.c b/arch/m68k/mm/motorola.c
-index 356601b..4857985 100644
---- a/arch/m68k/mm/motorola.c
-+++ b/arch/m68k/mm/motorola.c
-@@ -82,9 +82,11 @@ static pmd_t * __init kernel_ptr_table(void)
- 		 */
- 		last = (unsigned long)kernel_pg_dir;
- 		for (i = 0; i < PTRS_PER_PGD; i++) {
--			if (!pgd_present(kernel_pg_dir[i]))
-+			pud_t *pud = (pud_t *)(&kernel_pg_dir[i]);
-+
-+			if (!pud_present(*pud))
- 				continue;
--			pmd = __pgd_page(kernel_pg_dir[i]);
-+			pmd = pgd_page_vaddr(kernel_pg_dir[i]);
- 			if (pmd > last)
- 				last = pmd;
- 		}
-@@ -118,6 +120,8 @@ static void __init map_node(int node)
- #define ROOTTREESIZE (32*1024*1024)
- 	unsigned long physaddr, virtaddr, size;
- 	pgd_t *pgd_dir;
-+	p4d_t *p4d_dir;
-+	pud_t *pud_dir;
- 	pmd_t *pmd_dir;
- 	pte_t *pte_dir;
- 
-@@ -149,14 +153,16 @@ static void __init map_node(int node)
- 				continue;
- 			}
- 		}
--		if (!pgd_present(*pgd_dir)) {
-+		p4d_dir = p4d_offset(pgd_dir, virtaddr);
-+		pud_dir = pud_offset(p4d_dir, virtaddr);
-+		if (!pud_present(*pud_dir)) {
- 			pmd_dir = kernel_ptr_table();
- #ifdef DEBUG
- 			printk ("[new pointer %p]", pmd_dir);
- #endif
--			pgd_set(pgd_dir, pmd_dir);
-+			pud_set(pud_dir, pmd_dir);
- 		} else
--			pmd_dir = pmd_offset(pgd_dir, virtaddr);
-+			pmd_dir = pmd_offset(pud_dir, virtaddr);
- 
- 		if (CPU_IS_020_OR_030) {
- 			if (virtaddr) {
-@@ -304,4 +310,3 @@ void __init paging_init(void)
- 			node_set_state(i, N_NORMAL_MEMORY);
- 	}
- }
--
+Peter Ujfalusi (12):
+  dmaengine: doc: Add sections for per descriptor metadata support
+  dmaengine: Add metadata_ops for dma_async_tx_descriptor
+  dmaengine: Add support for reporting DMA cached data amount
+  dmaengine: ti: Add cppi5 header for K3 NAVSS/UDMA
+  dmaengine: ti: k3 PSI-L remote endpoint configuration
+  dt-bindings: dma: ti: Add document for K3 UDMA
+  dmaengine: ti: New driver for K3 UDMA - split#1: defines, structs, io
+    func
+  dmaengine: ti: New driver for K3 UDMA - split#2: probe/remove, xlate
+    and filter_fn
+  dmaengine: ti: New driver for K3 UDMA - split#3: alloc/free
+    chan_resources
+  dmaengine: ti: New driver for K3 UDMA - split#4: dma_device callbacks
+    1
+  dmaengine: ti: New driver for K3 UDMA - split#5: dma_device callbacks
+    2
+  dmaengine: ti: New driver for K3 UDMA - split#6: Kconfig and Makefile
+
+ .../devicetree/bindings/dma/ti/k3-udma.yaml   |  190 +
+ .../devicetree/bindings/soc/ti/k3-ringacc.txt |   59 +
+ Documentation/driver-api/dmaengine/client.rst |   75 +
+ .../driver-api/dmaengine/provider.rst         |   46 +
+ drivers/dma/dmaengine.c                       |   73 +
+ drivers/dma/dmaengine.h                       |    8 +
+ drivers/dma/ti/Kconfig                        |   26 +
+ drivers/dma/ti/Makefile                       |    3 +
+ drivers/dma/ti/k3-psil-am654.c                |  172 +
+ drivers/dma/ti/k3-psil-j721e.c                |  219 ++
+ drivers/dma/ti/k3-psil-priv.h                 |   39 +
+ drivers/dma/ti/k3-psil.c                      |   97 +
+ drivers/dma/ti/k3-udma-glue.c                 | 1202 ++++++
+ drivers/dma/ti/k3-udma-private.c              |  133 +
+ drivers/dma/ti/k3-udma.c                      | 3425 +++++++++++++++++
+ drivers/dma/ti/k3-udma.h                      |  151 +
+ drivers/soc/ti/Kconfig                        |   12 +
+ drivers/soc/ti/Makefile                       |    1 +
+ drivers/soc/ti/k3-ringacc.c                   | 1158 ++++++
+ include/linux/dma/k3-psil.h                   |   47 +
+ include/linux/dma/k3-udma-glue.h              |  134 +
+ include/linux/dma/ti-cppi5.h                  | 1049 +++++
+ include/linux/dmaengine.h                     |  110 +
+ include/linux/soc/ti/k3-ringacc.h             |  244 ++
+ 24 files changed, 8673 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+ create mode 100644 drivers/dma/ti/k3-psil-am654.c
+ create mode 100644 drivers/dma/ti/k3-psil-j721e.c
+ create mode 100644 drivers/dma/ti/k3-psil-priv.h
+ create mode 100644 drivers/dma/ti/k3-psil.c
+ create mode 100644 drivers/dma/ti/k3-udma-glue.c
+ create mode 100644 drivers/dma/ti/k3-udma-private.c
+ create mode 100644 drivers/dma/ti/k3-udma.c
+ create mode 100644 drivers/dma/ti/k3-udma.h
+ create mode 100644 drivers/soc/ti/k3-ringacc.c
+ create mode 100644 include/linux/dma/k3-psil.h
+ create mode 100644 include/linux/dma/k3-udma-glue.h
+ create mode 100644 include/linux/dma/ti-cppi5.h
+ create mode 100644 include/linux/soc/ti/k3-ringacc.h
+
 -- 
-2.7.4
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
