@@ -2,145 +2,107 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C43CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA10DCA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A91F20656
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:27:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="I/bqdNa5"
+	by mail.kernel.org (Postfix) with ESMTP id B1D98208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:28:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572625711;
+	bh=AGQ8iiY4Sv5ExrC2tV2HF7L3Htvu/REfvE6er7pPcDE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i2MfzNhlHBvg184dHacxK4LgZK+TOAYMOG1sx39zxzXqP0rUqjU9fBHn3Jpm3BuhG
+	 OvclElSQeB6Cj1rZaGW9jfDRP1K/zEBvjnyqAjRjyFvljD9+CJ8vDeqyzOjeHvaflJ
+	 pmcKtN+eq1kzSIiuP8ZakmHCfk/ig03/VN+OoRqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbfKAQ15 (ORCPT
+        id S1728448AbfKAQ2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 12:27:57 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:62379 "EHLO pegase1.c-s.fr"
+        Fri, 1 Nov 2019 12:28:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726701AbfKAQ14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 12:27:56 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 474SKJ5Xpvz9v2ym;
-        Fri,  1 Nov 2019 17:27:48 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=I/bqdNa5; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id PZ9U7nhZ3E8A; Fri,  1 Nov 2019 17:27:48 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 474SKJ4Hsnz9v2yl;
-        Fri,  1 Nov 2019 17:27:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1572625668; bh=MTbVnQzwmKfyCUtbhnjX0ZBzAO1vxqklEBZN4jVzQug=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=I/bqdNa5IgpC1lJpLNjBWXiVPfYnORnOj+VKFKalooWvtzStcCsMQLEJfZSoI/tMs
-         HPqq7+5xka9Xu6P9/Hxeu3LAFjSA7pTUex55mQCSnS5U37HLjLh/kbM029j+btyoBK
-         migQZImU40zDGmpUVa+L/zu3hU/EMw1t2YbjdFlo=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 31C5F8B8F6;
-        Fri,  1 Nov 2019 17:27:50 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id WeeN6NS3i5l2; Fri,  1 Nov 2019 17:27:50 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 91D008B7C2;
-        Fri,  1 Nov 2019 17:27:49 +0100 (CET)
-Subject: Re: [PATCH v3 31/36] serial: ucc_uart: stub out soft_uart_init for
- !CONFIG_PPC32
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Scott Wood <oss@buserror.net>, linux-serial@vger.kernel.org
-References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
- <20191101124210.14510-1-linux@rasmusvillemoes.dk>
- <20191101124210.14510-32-linux@rasmusvillemoes.dk>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <53c1c463-53fc-2005-3b62-a6f430815b45@c-s.fr>
-Date:   Fri, 1 Nov 2019 17:27:49 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726701AbfKAQ2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 12:28:30 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 285742080F;
+        Fri,  1 Nov 2019 16:28:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572625709;
+        bh=AGQ8iiY4Sv5ExrC2tV2HF7L3Htvu/REfvE6er7pPcDE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LWIoDTqvjr1SCA/3GbYgq+sLE9RAhMhlWeB1gGurTUZhTOIvM7KnkzLcVdTA5gedp
+         uAwRBvfPV03Q9adG3rLnJwhDhpqJDlKRj+Wct6rHI3OlwDxhXDqNkRnLPE+CSK/k4r
+         Fu02H3jtWb+tXTEXJgoOjKmVtX6ZO2qWHQZt38Ko=
+Date:   Fri, 1 Nov 2019 16:28:24 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        Rob Clark <robdclark@chromium.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        "moderated list:ARM SMMU DRIVERS" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iommu/arm-smmu: avoid pathological RPM behaviour for
+ unmaps
+Message-ID: <20191101162824.GB3603@willie-the-truck>
+References: <20191031213102.17108-1-robdclark@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191101124210.14510-32-linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031213102.17108-1-robdclark@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 01/11/2019 à 13:42, Rasmus Villemoes a écrit :
-> The Soft UART hack is only needed for some PPC-based SOCs. To allow
-> building this driver for non-PPC, guard soft_uart_init() and its
-> helpers by CONFIG_PPC32, and use a no-op soft_uart_init() otherwise.
-
-I don't like too much ifdefs in C files, especially arch specific ifdefs 
-in generic drivers.
-
-How do we get the QE version on ARM ?
-
-Wouldn't it be cleaner to create a helper for getting the QE version, 
-which would be defined in an arch specific header file, calling 
-mfspr(SPRN_SVR) on powerpc and whatever needed on arm ?
-
-Christophe
-
+On Thu, Oct 31, 2019 at 02:31:02PM -0700, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
 > 
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> When games, browser, or anything using a lot of GPU buffers exits, there
+> can be many hundreds or thousands of buffers to unmap and free.  If the
+> GPU is otherwise suspended, this can cause arm-smmu to resume/suspend
+> for each buffer, resulting 5-10 seconds worth of reprogramming the
+> context bank (arm_smmu_write_context_bank()/arm_smmu_write_s2cr()/etc).
+> To the user it would appear that the system just locked up.
+> 
+> A simple solution is to use pm_runtime_put_autosuspend() instead, so we
+> don't immediately suspend the SMMU device.
+> 
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
 > ---
->   drivers/tty/serial/ucc_uart.c | 17 ++++++++++++++++-
->   1 file changed, 16 insertions(+), 1 deletion(-)
+>  drivers/iommu/arm-smmu.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/tty/serial/ucc_uart.c b/drivers/tty/serial/ucc_uart.c
-> index f286e91714cb..313697842e24 100644
-> --- a/drivers/tty/serial/ucc_uart.c
-> +++ b/drivers/tty/serial/ucc_uart.c
-> @@ -33,7 +33,10 @@
->   
->   #include <linux/firmware.h>
->   #include <soc/fsl/cpm.h>
-> -#include <asm/reg.h>
-> +
-> +#ifdef CONFIG_PPC32
-> +#include <asm/reg.h> /* mfspr, SPRN_SVR */
-> +#endif
->   
->   /*
->    * The GUMR flag for Soft UART.  This would normally be defined in qe.h,
-> @@ -1096,6 +1099,8 @@ static const struct uart_ops qe_uart_pops = {
->   	.verify_port    = qe_uart_verify_port,
->   };
->   
-> +
-> +#ifdef CONFIG_PPC32
->   /*
->    * Obtain the SOC model number and revision level
->    *
-> @@ -1238,6 +1243,16 @@ static int soft_uart_init(struct platform_device *ofdev)
->   	return 0;
->   }
->   
-> +#else /* !CONFIG_PPC32 */
-> +
-> +static int soft_uart_init(struct platform_device *ofdev)
-> +{
-> +	return 0;
-> +}
-> +
-> +#endif
-> +
-> +
->   static int ucc_uart_probe(struct platform_device *ofdev)
->   {
->   	struct device_node *np = ofdev->dev.of_node;
-> 
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 7c503a6bc585..5abc0d210d90 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -122,7 +122,7 @@ static inline int arm_smmu_rpm_get(struct arm_smmu_device *smmu)
+>  static inline void arm_smmu_rpm_put(struct arm_smmu_device *smmu)
+>  {
+>  	if (pm_runtime_enabled(smmu->dev))
+> -		pm_runtime_put(smmu->dev);
+> +		pm_runtime_put_autosuspend(smmu->dev);
+>  }
+>  
+>  static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
+> @@ -1154,6 +1154,20 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+>  	/* Looks ok, so add the device to the domain */
+>  	ret = arm_smmu_domain_add_master(smmu_domain, fwspec);
+>  
+> +	/*
+> +	 * Setup an autosuspend delay to avoid bouncing runpm state.
+> +	 * Otherwise, if a driver for a suspendend consumer device
+
+I fixed this typo and applied with Robin's reviewed-by from before.
+
+Will
