@@ -2,100 +2,105 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA045CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6056BCA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E2B21855
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:29:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572636563;
-	bh=j1KP7pjcUgESkZ4XvE0fMh0jUHiONkGtncQhbYNGfKg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=brgC4G1hMbIQHVk5RW/eDn8urfvY0N/gFduc1y4ymHCiilyVeCFl3+PbeLWCA2FyF
-	 CxcUeF6ii7zGQ0bgvFB7jCOtqSOMeLGvlqF4GKfjBXCNFRnvncE79opOpYpgRHahoI
-	 MurNbqG6r62rWw0b+YhdIsrRDAuJV34sAY2Pnpl0=
+	by mail.kernel.org (Postfix) with ESMTP id 40D95217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:34:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbfKAT3W (ORCPT
+        id S1727827AbfKATeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 15:29:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42454 "EHLO mail.kernel.org"
+        Fri, 1 Nov 2019 15:34:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55490 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727600AbfKAT3W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 15:29:22 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727325AbfKATeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 15:34:03 -0400
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4546121734;
-        Fri,  1 Nov 2019 19:29:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572636561;
-        bh=j1KP7pjcUgESkZ4XvE0fMh0jUHiONkGtncQhbYNGfKg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VQGuM5stE1HnHHX0/rKMjhl2CcL6gPIiR5IegIedqZV9LtP0K3PUPaKqiZ/MKXSZA
-         LAFu4aa9tnMPAxIm4eKyd8Joz4koQv0usvrJDZVKT8frTycD5ktAbqySKSTOXBuNti
-         3XZvZk51mV0e5RqEJJKImxuJprnp7ZKRpoEvANcA=
-Date:   Fri, 1 Nov 2019 12:29:20 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH] kernel: sysctl: make drop_caches write-only
-Message-Id: <20191101122920.798a6d61b2725da8cfe80549@linux-foundation.org>
-In-Reply-To: <20191101192405.GA866154@chrisdown.name>
-References: <20191031221602.9375-1-hannes@cmpxchg.org>
-        <20191031162825.a545a5d4d8567368501769bd@linux-foundation.org>
-        <20191101110901.GB690103@chrisdown.name>
-        <20191101144540.GA12808@cmpxchg.org>
-        <20191101115950.bb88d49849bfecb1af0a88bf@linux-foundation.org>
-        <20191101192405.GA866154@chrisdown.name>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mx1.redhat.com (Postfix) with ESMTPS id 73CFE81DE7
+        for <linux-kernel@vger.kernel.org>; Fri,  1 Nov 2019 19:34:03 +0000 (UTC)
+Received: by mail-wr1-f72.google.com with SMTP id m17so6043777wrb.20
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 12:34:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=DDu4dZguSc1AuhYOU131Dph2BpOLdkpSLt78cfUXrP4=;
+        b=gJLu2Xx5Vk6anaIpjAZVgHkZOxZN4EHdYF8YmoMr4nMT+4ImGLId6ThBf1MqKVRsM7
+         XcPxCeJAud5+ctBCA0QA5oFZ9j+rbYKRqzyp4A/sJbds6ntk9MCvra+aWmiZgjFqDqBE
+         1a5prUtIxhCZC5+/Bu2aGz11x0YaIoYpNw+GCRhCu5r/2AliOT1HSA5t5Bhr9vBCAVge
+         WMERFRjNh8t5DjVayO8hhOpq6x2y8lu3eLJzHcOvp2pIzygTbLpFptG0C9bZ/J/g7ofS
+         dMsu9EU5ULAGEBkk0k1UsG7fs8GWYJ55GnjOLRY8prW5E9fuS9G42WQfTjkySK6ywH5R
+         udUA==
+X-Gm-Message-State: APjAAAWoLvGlzYYKQZ4Pd9+7eiZUxohNy88YagKes8cGw9ssq87eJVmA
+        0IzJ0XA8M6WrOIt765fvlozEdEkTcp0z+bwDJGK0BPdFJdsiuEGQJi1WBOjNkNWKq+oTufhbGVw
+        BKLf500FjSzZlttFjcwQDQOj5
+X-Received: by 2002:a1c:3dc4:: with SMTP id k187mr11325442wma.167.1572636841902;
+        Fri, 01 Nov 2019 12:34:01 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz0xUERtPHGhyf71lfOGgMY82PECMv5XY2AKvQnIIKeMbgOF3SlGefp223udCXQMXep6c44yw==
+X-Received: by 2002:a1c:3dc4:: with SMTP id k187mr11325432wma.167.1572636841676;
+        Fri, 01 Nov 2019 12:34:01 -0700 (PDT)
+Received: from redhat.com (94.222.26.109.rev.sfr.net. [109.26.222.94])
+        by smtp.gmail.com with ESMTPSA id 65sm12393239wrs.9.2019.11.01.12.33.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 12:34:00 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 15:33:57 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, jasowang@redhat.com, mst@redhat.com,
+        sgarzare@redhat.com, yong.liu@intel.com
+Subject: [PULL RESEND] virtio: fixes
+Message-ID: <20191028042900-1-mutt-send-email-mst@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 Nov 2019 19:24:05 +0000 Chris Down <chris@chrisdown.name> wrote:
+Could not figure out whether I sent this pull request or not. Sorry about
+the noise if I did.
 
-> Andrew Morton writes:
-> >> > The only scenario I can construct in my head is that someone has built
-> >> > something to watch drop_caches for modification, but we already have the
-> >> > kmsg output for that.
-> >
-> >The scenario is that something opens /proc/sys/vm/drop_caches for
-> >reading, gets unexpected EPERM and blows up?
-> 
-> Right, but...
-> 
-> >OK.  What if we make reads always return "0"?  That will fix the
-> >misleading output and is more backwards-compatible?
-> 
-> ...I'm not convinced that if an application has no error boundary for that 
-> EPERM that it can tolerate a change in behaviour, either. I mean, if it's 
-> opening it at all, presumably it intends to do *something* based on the value 
-> (regardless of import or lack thereof). It may do nothing, but it's not 
-> possible to know whether that's better or worse than blowing up.
-> 
-> I have mixed feelings on this one. Pragmatically, as someone who programs in 
-> userspace, I'd like failures based on changes in infrastructure to be loud, not 
-> silent. If I'm doing something which doesn't work, I'd like to know about it. 
-> Of course, one can make the argument that as a user of such an application, 
-> sometimes you don't have that luxury.
-> 
-> Either change is an upgrade from the current situation, at least. I prefer 
-> towards whatever makes the API the least confusing, which appears to be 
-> Johannes' original change, but I'd support a patch which always set it to 
-> 0 instead if it was deemed safer.
+The following changes since commit 7d194c2100ad2a6dded545887d02754948ca5241:
 
-On the other hand..  As I mentioned earlier, if someone's code is
-failing because of the permissions change, they can chmod
-/proc/sys/vm/drop_caches at boot time and be happy.  They have no such
-workaround if their software misbehaves due to a read always returning
-"0".
+  Linux 5.4-rc4 (2019-10-20 15:56:22 -0400)
 
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
+
+for you to fetch changes up to b3683dee840274e9997d958b9d82e5de95950f0b:
+
+  vringh: fix copy direction of vringh_iov_push_kern() (2019-10-28 04:25:04 -0400)
+
+----------------------------------------------------------------
+virtio: fixes
+
+Some minor fixes
+
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+
+----------------------------------------------------------------
+Jason Wang (1):
+      vringh: fix copy direction of vringh_iov_push_kern()
+
+Marvin Liu (1):
+      virtio_ring: fix stalls for packed rings
+
+Stefano Garzarella (1):
+      vsock/virtio: remove unused 'work' field from 'struct virtio_vsock_pkt'
+
+ drivers/vhost/vringh.c       | 8 +++++++-
+ drivers/virtio/virtio_ring.c | 7 +++----
+ include/linux/virtio_vsock.h | 1 -
+ 3 files changed, 10 insertions(+), 6 deletions(-)
