@@ -2,246 +2,145 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED86C47E49
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FC6CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A727120650
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 000C821835
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:13:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="DY+6pMGs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfKAOMe (ORCPT
+        id S1727028AbfKAONJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 10:12:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:36628 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726710AbfKAOMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 10:12:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 764B8337;
-        Fri,  1 Nov 2019 07:12:33 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D1CC93F718;
-        Fri,  1 Nov 2019 07:12:32 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 14:12:30 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Tom Joseph <tjoseph@cadence.com>
-Cc:     linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] PCI: cadence: Create new folder 'cadence' and
- move all cadence files to it
-Message-ID: <20191101141230.GH9723@e119886-lin.cambridge.arm.com>
-References: <1572349512-7776-1-git-send-email-tjoseph@cadence.com>
- <1572349512-7776-3-git-send-email-tjoseph@cadence.com>
+        Fri, 1 Nov 2019 10:13:09 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46141 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfKAONI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 10:13:08 -0400
+Received: by mail-io1-f67.google.com with SMTP id c6so10999196ioo.13
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 07:13:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TlYI6UI9fS5d9yjIzRHk5DK4kYPW9gPr3Mb6SrPAxFE=;
+        b=DY+6pMGsOyfGXGpiBchev1A8MThpoGrRVDP4c2kL1T2x4iLT/1Oqzt0RbI2ugp6JUB
+         jckKQDRHFHVY5qfJ+Q4esI6fnzcsXhgeDDJSWIDSEmHIwj3RqKsHUvNZWM1tGAt7NrsV
+         znRnibutxTKLGXs71MnmqdNJnPvXmveeL+O9c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TlYI6UI9fS5d9yjIzRHk5DK4kYPW9gPr3Mb6SrPAxFE=;
+        b=IUkqQZ67JwkoaVSHM8gWFb3K9+fPvhvS9iyqn4ImMOYuUJk54K3ivEs+jqf0dLM6dc
+         BPz0ZaMF5yHiPappEKs/NU5jt9/x9ShuCrXkIDHYrCLxknkw2gl1/bbi5TmQVbuZNVKW
+         BR3Kr3qHyQb54sHP58oo1e0lzfBQkOYLCBCU02OyDmdyUWiitiOmOm25vT5y4nQYAS0K
+         cnfy2o5ILvSBLfNGS415DCvvV+kwOQW/+KF5gXZ8r2VA9s0wPzQyFOcDR7ZFOQ7JkGLw
+         Nln68FKYa2bGOuGFZI04WiKhVzeIa11gn1lkhKoHhy4euM7IWOCHM1NEy9Tj8Cxv19vQ
+         3JBw==
+X-Gm-Message-State: APjAAAUcH2hL2Drgco8s8Ditf8oNSqb6vYcs/6Cnxw1Lk44Czdy934Ze
+        L3E0yzN55SG7X2KjXQtfgONoWw58rt8l+KGYcKpdeg==
+X-Google-Smtp-Source: APXvYqyMLNtzaVw0BMP+EGUQO4Zl/cXY4bdNL2Xb19JBMdareqJEAqq7IY7jnvNWY72KqdWH+k6HJ4EIjuJgdGAsAFQ=
+X-Received: by 2002:a5e:d917:: with SMTP id n23mr1074088iop.28.1572617587422;
+ Fri, 01 Nov 2019 07:13:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572349512-7776-3-git-send-email-tjoseph@cadence.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+References: <20191025175625.8011-1-jagan@amarulasolutions.com>
+ <20191025175625.8011-5-jagan@amarulasolutions.com> <20191028153427.pc3tnoz2d23filhx@hendrix>
+ <CAMty3ZCisTrFGjzHyqSofqFAsKSLV1n2xP5Li3Lonhdi0WUZVA@mail.gmail.com> <20191029085401.gvqpwmmpyml75vis@hendrix>
+In-Reply-To: <20191029085401.gvqpwmmpyml75vis@hendrix>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Fri, 1 Nov 2019 19:42:55 +0530
+Message-ID: <CAMty3ZAWPZSHtAZDf_0Dpx588YGGv3pJX1cXMfkZus3+WF94cA@mail.gmail.com>
+Subject: Re: [PATCH v11 4/7] drm/sun4i: dsi: Handle bus clock explicitly
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 11:45:12AM +0000, Tom Joseph wrote:
-> Cadence core library files may be used by various platform drivers.
-> Add a new directory "cadence" to group all the Cadence core library files
-> and the platforms using Cadence core library.
-> 
-> Signed-off-by: Tom Joseph <tjoseph@cadence.com>
+Hi Maxime,
 
-I'm not very keen on the commit title, perhaps something like this
-is better:
+On Tue, Oct 29, 2019 at 2:24 PM Maxime Ripard <mripard@kernel.org> wrote:
+>
+> On Tue, Oct 29, 2019 at 04:03:56AM +0530, Jagan Teki wrote:
+> > > > explicit handling of common clock would require since the A64
+> > > > doesn't need to mention the clock-names explicitly in dts since it
+> > > > support only one bus clock.
+> > > >
+> > > > Also pass clk_id NULL instead "bus" to regmap clock init function
+> > > > since the single clock variants no need to mention clock-names
+> > > > explicitly.
+> > >
+> > > You don't need explicit clock handling. Passing NULL as the argument
+> > > in regmap_init_mmio_clk will make it use the first clock, which is the
+> > > bus clock.
+> >
+> > Indeed I tried that, since NULL clk_id wouldn't enable the bus clock
+> > during regmap_mmio_gen_context code, passing NULL triggering vblank
+> > timeout.
+>
+> There's a bunch of users of NULL in tree, so finding out why NULL
+> doesn't work is the way forward.
 
-PCI: cadence: Move all files to per-device cadence directory
+I'd have looked the some of the users before checking the code as
+well. As I said passing NULL clk_id to devm_regmap_init_mmio_clk =>
+__devm_regmap_init_mmio_clk would return before processing the clock.
 
-With that (or similar) you can add:
+Here is the code snippet on the tree just to make sure I'm on the same
+page or not.
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+static struct regmap_mmio_context *regmap_mmio_gen_context(struct device *dev,
+                                        const char *clk_id,
+                                        void __iomem *regs,
+                                        const struct regmap_config *config)
+{
+        -----------------------
+        --------------
+        if (clk_id == NULL)
+                return ctx;
 
-(I think my dislike is the length of it, and the word 'folder' instead
-of directory).
+        ctx->clk = clk_get(dev, clk_id);
+        if (IS_ERR(ctx->clk)) {
+                ret = PTR_ERR(ctx->clk);
+                goto err_free;
+        }
 
-> ---
->  drivers/pci/controller/Kconfig                     | 44 +--------------------
->  drivers/pci/controller/Makefile                    |  5 +--
->  drivers/pci/controller/cadence/Kconfig             | 45 ++++++++++++++++++++++
->  drivers/pci/controller/cadence/Makefile            |  5 +++
->  .../pci/controller/{ => cadence}/pcie-cadence-ep.c |  0
->  .../controller/{ => cadence}/pcie-cadence-host.c   |  0
->  .../controller/{ => cadence}/pcie-cadence-plat.c   |  0
->  .../pci/controller/{ => cadence}/pcie-cadence.c    |  0
->  .../pci/controller/{ => cadence}/pcie-cadence.h    |  0
->  9 files changed, 52 insertions(+), 47 deletions(-)
->  create mode 100644 drivers/pci/controller/cadence/Kconfig
->  create mode 100644 drivers/pci/controller/cadence/Makefile
->  rename drivers/pci/controller/{ => cadence}/pcie-cadence-ep.c (100%)
->  rename drivers/pci/controller/{ => cadence}/pcie-cadence-host.c (100%)
->  rename drivers/pci/controller/{ => cadence}/pcie-cadence-plat.c (100%)
->  rename drivers/pci/controller/{ => cadence}/pcie-cadence.c (100%)
->  rename drivers/pci/controller/{ => cadence}/pcie-cadence.h (100%)
-> 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 57d52f6..2aab586 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -22,49 +22,6 @@ config PCI_AARDVARK
->  	 controller is part of the South Bridge of the Marvel Armada
->  	 3700 SoC.
->  
-> -menu "Cadence PCIe controllers support"
-> -
-> -config PCIE_CADENCE
-> -	bool
-> -
-> -config PCIE_CADENCE_HOST
-> -	bool
-> -	depends on OF
-> -	select IRQ_DOMAIN
-> -	select PCIE_CADENCE
-> -
-> -config PCIE_CADENCE_EP
-> -	bool
-> -	depends on OF
-> -	depends on PCI_ENDPOINT
-> -	select PCIE_CADENCE
-> -
-> -config PCIE_CADENCE_PLAT
-> -	bool
-> -
-> -config PCIE_CADENCE_PLAT_HOST
-> -	bool "Cadence PCIe platform host controller"
-> -	depends on OF
-> -	select PCIE_CADENCE_HOST
-> -	select PCIE_CADENCE_PLAT
-> -	help
-> -	  Say Y here if you want to support the Cadence PCIe platform controller in
-> -	  host mode. This PCIe controller may be embedded into many different
-> -	  vendors SoCs.
-> -
-> -config PCIE_CADENCE_PLAT_EP
-> -	bool "Cadence PCIe platform endpoint controller"
-> -	depends on OF
-> -	depends on PCI_ENDPOINT
-> -	select PCIE_CADENCE_EP
-> -	select PCIE_CADENCE_PLAT
-> -	help
-> -	  Say Y here if you want to support the Cadence PCIe  platform controller in
-> -	  endpoint mode. This PCIe controller may be embedded into many
-> -	  different vendors SoCs.
-> -
-> -endmenu
-> -
->  config PCIE_XILINX_NWL
->  	bool "NWL PCIe Core"
->  	depends on ARCH_ZYNQMP || COMPILE_TEST
-> @@ -297,4 +254,5 @@ config VMD
->  	  module will be called vmd.
->  
->  source "drivers/pci/controller/dwc/Kconfig"
-> +source "drivers/pci/controller/cadence/Kconfig"
->  endmenu
-> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-> index 676a41e..8a59829 100644
-> --- a/drivers/pci/controller/Makefile
-> +++ b/drivers/pci/controller/Makefile
-> @@ -1,8 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
-> -obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
-> -obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
-> -obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
-> +obj-$(CONFIG_PCIE_CADENCE) += cadence/
->  obj-$(CONFIG_PCI_FTPCI100) += pci-ftpci100.o
->  obj-$(CONFIG_PCI_HYPERV) += pci-hyperv.o
->  obj-$(CONFIG_PCI_MVEBU) += pci-mvebu.o
-> diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
-> new file mode 100644
-> index 0000000..b76b3cf
-> --- /dev/null
-> +++ b/drivers/pci/controller/cadence/Kconfig
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +menu "Cadence PCIe controllers support"
-> +	depends on PCI
-> +
-> +config PCIE_CADENCE
-> +	bool
-> +
-> +config PCIE_CADENCE_HOST
-> +	bool
-> +	depends on OF
-> +	select IRQ_DOMAIN
-> +	select PCIE_CADENCE
-> +
-> +config PCIE_CADENCE_EP
-> +	bool
-> +	depends on OF
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_CADENCE
-> +
-> +config PCIE_CADENCE_PLAT
-> +	bool
-> +
-> +config PCIE_CADENCE_PLAT_HOST
-> +	bool "Cadence PCIe platform host controller"
-> +	depends on OF
-> +	select PCIE_CADENCE_HOST
-> +	select PCIE_CADENCE_PLAT
-> +	help
-> +	  Say Y here if you want to support the Cadence PCIe platform controller in
-> +	  host mode. This PCIe controller may be embedded into many different
-> +	  vendors SoCs.
-> +
-> +config PCIE_CADENCE_PLAT_EP
-> +	bool "Cadence PCIe platform endpoint controller"
-> +	depends on OF
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_CADENCE_EP
-> +	select PCIE_CADENCE_PLAT
-> +	help
-> +	  Say Y here if you want to support the Cadence PCIe  platform controller in
-> +	  endpoint mode. This PCIe controller may be embedded into many
-> +	  different vendors SoCs.
-> +
-> +endmenu
-> diff --git a/drivers/pci/controller/cadence/Makefile b/drivers/pci/controller/cadence/Makefile
-> new file mode 100644
-> index 0000000..232a3f2
-> --- /dev/null
-> +++ b/drivers/pci/controller/cadence/Makefile
-> @@ -0,0 +1,5 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
-> +obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
-> +obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
-> +obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
-> diff --git a/drivers/pci/controller/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> similarity index 100%
-> rename from drivers/pci/controller/pcie-cadence-ep.c
-> rename to drivers/pci/controller/cadence/pcie-cadence-ep.c
-> diff --git a/drivers/pci/controller/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> similarity index 100%
-> rename from drivers/pci/controller/pcie-cadence-host.c
-> rename to drivers/pci/controller/cadence/pcie-cadence-host.c
-> diff --git a/drivers/pci/controller/pcie-cadence-plat.c b/drivers/pci/controller/cadence/pcie-cadence-plat.c
-> similarity index 100%
-> rename from drivers/pci/controller/pcie-cadence-plat.c
-> rename to drivers/pci/controller/cadence/pcie-cadence-plat.c
-> diff --git a/drivers/pci/controller/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
-> similarity index 100%
-> rename from drivers/pci/controller/pcie-cadence.c
-> rename to drivers/pci/controller/cadence/pcie-cadence.c
-> diff --git a/drivers/pci/controller/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> similarity index 100%
-> rename from drivers/pci/controller/pcie-cadence.h
-> rename to drivers/pci/controller/cadence/pcie-cadence.h
-> -- 
-> 2.2.2
-> 
+        ret = clk_prepare(ctx->clk);
+        if (ret < 0) {
+                clk_put(ctx->clk);
+                goto err_free;
+        }
+        -------------
+        ---------------
+}
+
+Yes, I did check on the driver in the tree before committing explicit
+clock handle, which make similar requirements like us in [1]. this
+imx2 wdt driver is handling the explicit clock as well. I'm sure this
+driver is updated as I have seen few changes related to this driver in
+ML.
+
+Let me know if I still miss any key change or note here, I will dig
+further on this for sure.
+
+[1] https://elixir.bootlin.com/linux/v5.4-rc4/source/drivers/watchdog/imx2_wdt.c#L264
+
+thanks,
+Jagan.
