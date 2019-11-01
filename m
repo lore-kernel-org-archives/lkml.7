@@ -2,96 +2,257 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89512CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEC3CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 590FC217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:03:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="WuU1Uc5N"
+	by mail.kernel.org (Postfix) with ESMTP id 924BC2085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfKAOD0 (ORCPT
+        id S1727996AbfKAOE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 10:03:26 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43778 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfKAOD0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 10:03:26 -0400
-Received: by mail-oi1-f195.google.com with SMTP id s5so8211643oie.10
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 07:03:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hj8GKgCi3LluAQfnCo/lc7oZI8RK+Wo9HkTBkn6GITg=;
-        b=WuU1Uc5N14JJVuVokcInbaIfCOTAQV4VzRoY4bKLZlRkLtNIj1RLut2Iv6w11/8b1x
-         fXQOK/+ZIuu6m2q4BxLvk7zWIjjUJ+CyV6HxKyf2xuX8dBCZV6h62BIUPs16o0pIdTz/
-         se3RVfCzCeAphs7WruQsyEyUNlKFQ1gPzLMcY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hj8GKgCi3LluAQfnCo/lc7oZI8RK+Wo9HkTBkn6GITg=;
-        b=cJVd/C11opT5OPMmJpH9W+hXXMVu1JNr08oeNFei0aEo8vs4vUZHRSTrx87dzsHGqg
-         q2V1BxxI85NE635DS8ysEPDT9HRhIxv5FPAbInBJ4wskxL/Z318WWVF+fKvY/T+auY+g
-         sdgcRTa9umuD9pNNdnzv113B2ujyQ+/pR9Oi7rk2B0E0ZOKbRJFGbLs3zMmLQQ6wHhzq
-         bQzcXRynBULO+0AZ2bpZulVUMTrrsLcjb10/yNv/dGpOjcboXexfLw5Enlo9Uck6uXla
-         X/WAcX2cG0eJYpbTDlZa6900ya6ZVkmrARFYRtU8ZNj8eneCNZ/WUPa7+p5m5r4LwgD/
-         pzjQ==
-X-Gm-Message-State: APjAAAUpIbZiwp2nW7HFCDs5co7a+G1JKsjPOZkh1n4YNm6hsoSIUdgi
-        OE8PM+5vYk8WzqPDKnqyVFW51YPwDA/rofW0udv9ZA==
-X-Google-Smtp-Source: APXvYqzJCMH3nVVKWqiBHFtrRY4ERXVRcubmhdg6GzhenDl8sJ6rXSxBmg9eRFacxgbJ/RM/+sDl4r88tsPT1VOYLxA=
-X-Received: by 2002:aca:c753:: with SMTP id x80mr1970083oif.115.1572617004092;
- Fri, 01 Nov 2019 07:03:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1572437285.git.vpillai@digitalocean.com> <20191031184236.GE5738@pauld.bos.csb>
-In-Reply-To: <20191031184236.GE5738@pauld.bos.csb>
-From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Date:   Fri, 1 Nov 2019 10:03:12 -0400
-Message-ID: <CANaguZCqHnR8b_68SSA_rfdkinVg8vLH66jQ_GhMsdOjuUHe3g@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
-To:     Phil Auld <pauld@redhat.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
+        Fri, 1 Nov 2019 10:04:59 -0400
+Received: from mga18.intel.com ([134.134.136.126]:57541 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726789AbfKAOE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 10:04:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 07:04:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,255,1569308400"; 
+   d="scan'208";a="194668434"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.197]) ([10.237.72.197])
+  by orsmga008.jf.intel.com with ESMTP; 01 Nov 2019 07:04:37 -0700
+Subject: Re: [PATCH v7 27/27] x86/cet/shstk: Add Shadow Stack instructions to
+ opcode map
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
+ <20190606200646.3951-28-yu-cheng.yu@intel.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <93e915b9-975d-9876-8f89-8b6f2bc4586e@intel.com>
+Date:   Fri, 1 Nov 2019 16:03:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20190606200646.3951-28-yu-cheng.yu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Phil,
+On 6/06/19 11:06 PM, Yu-cheng Yu wrote:
+> Add the following shadow stack management instructions.
+> 
+> INCSSP:
+>     Increment shadow stack pointer by the steps specified.
+> 
+> RDSSP:
+>     Read SSP register into a GPR.
+> 
+> SAVEPREVSSP:
+>     Use "prev ssp" token at top of current shadow stack to
+>     create a "restore token" on previous shadow stack.
+> 
+> RSTORSSP:
+>     Restore from a "restore token" pointed by a GPR to SSP.
+> 
+> WRSS:
+>     Write to kernel-mode shadow stack (kernel-mode instruction).
+> 
+> WRUSS:
+>     Write to user-mode shadow stack (kernel-mode instruction).
+> 
+> SETSSBSY:
+>     Verify the "supervisor token" pointed by IA32_PL0_SSP MSR,
+>     if valid, set the token to busy, and set SSP to the value
+>     of IA32_PL0_SSP MSR.
+> 
+> CLRSSBSY:
+>     Verify the "supervisor token" pointed by a GPR, if valid,
+>     clear the busy bit from the token.
 
-> Unless I'm mistaken 7 of the first 8 of these went into sched/core
-> and are now in linux (from v5.4-rc1). It may make sense to rebase on
-> that and simplify the series.
->
-Thanks a lot for pointing this out. We shall test on a rebased 5.4 RC
-and post the changes soon, if the tests goes well. For v3, while rebasing
-to an RC kernel, we saw perf regressions and hence did not check the
-RC kernel this time. You are absolutely right that we can simplify the
-patch series with 5.4 RC.
+Does the notrack prefix also need to be catered for somehow?
 
+> 
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> ---
+>  arch/x86/lib/x86-opcode-map.txt               | 26 +++++++++++++------
+>  tools/objtool/arch/x86/lib/x86-opcode-map.txt | 26 +++++++++++++------
+>  2 files changed, 36 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
+> index e0b85930dd77..c5e825d44766 100644
+> --- a/arch/x86/lib/x86-opcode-map.txt
+> +++ b/arch/x86/lib/x86-opcode-map.txt
+> @@ -366,7 +366,7 @@ AVXcode: 1
+>  1b: BNDCN Gv,Ev (F2) | BNDMOV Ev,Gv (66) | BNDMK Gv,Ev (F3) | BNDSTX Ev,Gv
+>  1c:
+>  1d:
+> -1e:
+> +1e: RDSSP Rd (F3),REX.W
+>  1f: NOP Ev
+>  # 0x0f 0x20-0x2f
+>  20: MOV Rd,Cd
+> @@ -610,7 +610,17 @@ fe: paddd Pq,Qq | vpaddd Vx,Hx,Wx (66),(v1)
+>  ff: UD0
+>  EndTable
+>  
+> -Table: 3-byte opcode 1 (0x0f 0x38)
+> +Table: 3-byte opcode 1 (0x0f 0x01)
+> +Referrer:
+> +AVXcode:
+> +# Skip 0x00-0xe7
+> +e8: SETSSBSY (f3)
+> +e9:
+> +ea: SAVEPREVSSP (f3)
+> +# Skip 0xeb-0xff
+> +EndTable
+> +
+> +Table: 3-byte opcode 2 (0x0f 0x38)
+>  Referrer: 3-byte escape 1
+>  AVXcode: 2
+>  # 0x0f 0x38 0x00-0x0f
+> @@ -789,12 +799,12 @@ f0: MOVBE Gy,My | MOVBE Gw,Mw (66) | CRC32 Gd,Eb (F2) | CRC32 Gd,Eb (66&F2)
+>  f1: MOVBE My,Gy | MOVBE Mw,Gw (66) | CRC32 Gd,Ey (F2) | CRC32 Gd,Ew (66&F2)
+>  f2: ANDN Gy,By,Ey (v)
+>  f3: Grp17 (1A)
+> -f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v)
+> -f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
+> +f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v) | WRUSS Pq,Qq (66),REX.W
+> +f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v) | WRSS Pq,Qq (66),REX.W
 
-Thanks
-Vineeth
+AFAICT WRSS does not have 66 prefix
+
+>  f7: BEXTR Gy,Ey,By (v) | SHLX Gy,Ey,By (66),(v) | SARX Gy,Ey,By (F3),(v) | SHRX Gy,Ey,By (F2),(v)
+>  EndTable
+>  
+> -Table: 3-byte opcode 2 (0x0f 0x3a)
+> +Table: 3-byte opcode 3 (0x0f 0x3a)
+>  Referrer: 3-byte escape 2
+>  AVXcode: 3
+>  # 0x0f 0x3a 0x00-0xff
+> @@ -948,7 +958,7 @@ GrpTable: Grp7
+>  2: LGDT Ms | XGETBV (000),(11B) | XSETBV (001),(11B) | VMFUNC (100),(11B) | XEND (101)(11B) | XTEST (110)(11B)
+>  3: LIDT Ms
+>  4: SMSW Mw/Rv
+> -5: rdpkru (110),(11B) | wrpkru (111),(11B)
+> +5: rdpkru (110),(11B) | wrpkru (111),(11B) | RSTORSSP Mq (F3)
+>  6: LMSW Ew
+>  7: INVLPG Mb | SWAPGS (o64),(000),(11B) | RDTSCP (001),(11B)
+>  EndTable
+> @@ -1019,8 +1029,8 @@ GrpTable: Grp15
+>  2: vldmxcsr Md (v1) | WRFSBASE Ry (F3),(11B)
+>  3: vstmxcsr Md (v1) | WRGSBASE Ry (F3),(11B)
+>  4: XSAVE | ptwrite Ey (F3),(11B)
+> -5: XRSTOR | lfence (11B)
+> -6: XSAVEOPT | clwb (66) | mfence (11B)
+> +5: XRSTOR | lfence (11B) | INCSSP Rd (F3),REX.W
+> +6: XSAVEOPT | clwb (66) | mfence (11B) | CLRSSBSY Mq (F3)
+>  7: clflush | clflushopt (66) | sfence (11B)
+>  EndTable
+>  
+> diff --git a/tools/objtool/arch/x86/lib/x86-opcode-map.txt b/tools/objtool/arch/x86/lib/x86-opcode-map.txt
+> index e0b85930dd77..c5e825d44766 100644
+> --- a/tools/objtool/arch/x86/lib/x86-opcode-map.txt
+> +++ b/tools/objtool/arch/x86/lib/x86-opcode-map.txt
+> @@ -366,7 +366,7 @@ AVXcode: 1
+>  1b: BNDCN Gv,Ev (F2) | BNDMOV Ev,Gv (66) | BNDMK Gv,Ev (F3) | BNDSTX Ev,Gv
+>  1c:
+>  1d:
+> -1e:
+> +1e: RDSSP Rd (F3),REX.W
+>  1f: NOP Ev
+>  # 0x0f 0x20-0x2f
+>  20: MOV Rd,Cd
+> @@ -610,7 +610,17 @@ fe: paddd Pq,Qq | vpaddd Vx,Hx,Wx (66),(v1)
+>  ff: UD0
+>  EndTable
+>  
+> -Table: 3-byte opcode 1 (0x0f 0x38)
+> +Table: 3-byte opcode 1 (0x0f 0x01)
+> +Referrer:
+> +AVXcode:
+> +# Skip 0x00-0xe7
+> +e8: SETSSBSY (f3)
+> +e9:
+> +ea: SAVEPREVSSP (f3)
+> +# Skip 0xeb-0xff
+> +EndTable
+> +
+> +Table: 3-byte opcode 2 (0x0f 0x38)
+>  Referrer: 3-byte escape 1
+>  AVXcode: 2
+>  # 0x0f 0x38 0x00-0x0f
+> @@ -789,12 +799,12 @@ f0: MOVBE Gy,My | MOVBE Gw,Mw (66) | CRC32 Gd,Eb (F2) | CRC32 Gd,Eb (66&F2)
+>  f1: MOVBE My,Gy | MOVBE Mw,Gw (66) | CRC32 Gd,Ey (F2) | CRC32 Gd,Ew (66&F2)
+>  f2: ANDN Gy,By,Ey (v)
+>  f3: Grp17 (1A)
+> -f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v)
+> -f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
+> +f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v) | WRUSS Pq,Qq (66),REX.W
+> +f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v) | WRSS Pq,Qq (66),REX.W
+>  f7: BEXTR Gy,Ey,By (v) | SHLX Gy,Ey,By (66),(v) | SARX Gy,Ey,By (F3),(v) | SHRX Gy,Ey,By (F2),(v)
+>  EndTable
+>  
+> -Table: 3-byte opcode 2 (0x0f 0x3a)
+> +Table: 3-byte opcode 3 (0x0f 0x3a)
+>  Referrer: 3-byte escape 2
+>  AVXcode: 3
+>  # 0x0f 0x3a 0x00-0xff
+> @@ -948,7 +958,7 @@ GrpTable: Grp7
+>  2: LGDT Ms | XGETBV (000),(11B) | XSETBV (001),(11B) | VMFUNC (100),(11B) | XEND (101)(11B) | XTEST (110)(11B)
+>  3: LIDT Ms
+>  4: SMSW Mw/Rv
+> -5: rdpkru (110),(11B) | wrpkru (111),(11B)
+> +5: rdpkru (110),(11B) | wrpkru (111),(11B) | RSTORSSP Mq (F3)
+>  6: LMSW Ew
+>  7: INVLPG Mb | SWAPGS (o64),(000),(11B) | RDTSCP (001),(11B)
+>  EndTable
+> @@ -1019,8 +1029,8 @@ GrpTable: Grp15
+>  2: vldmxcsr Md (v1) | WRFSBASE Ry (F3),(11B)
+>  3: vstmxcsr Md (v1) | WRGSBASE Ry (F3),(11B)
+>  4: XSAVE | ptwrite Ey (F3),(11B)
+> -5: XRSTOR | lfence (11B)
+> -6: XSAVEOPT | clwb (66) | mfence (11B)
+> +5: XRSTOR | lfence (11B) | INCSSP Rd (F3),REX.W
+> +6: XSAVEOPT | clwb (66) | mfence (11B) | CLRSSBSY Mq (F3)
+>  7: clflush | clflushopt (66) | sfence (11B)
+>  EndTable
+>  
+> 
+
