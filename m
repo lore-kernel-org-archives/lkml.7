@@ -8,64 +8,62 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE63CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3B7CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC342085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3650A2085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:38:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0G3CKeV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1/aTXY8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfKAOhw (ORCPT
+        id S1727341AbfKAOiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 10:37:52 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42051 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbfKAOhv (ORCPT
+        Fri, 1 Nov 2019 10:38:15 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50348 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727326AbfKAOiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 10:37:51 -0400
-Received: by mail-wr1-f66.google.com with SMTP id a15so9857738wrf.9;
-        Fri, 01 Nov 2019 07:37:50 -0700 (PDT)
+        Fri, 1 Nov 2019 10:38:14 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 11so9564292wmk.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 07:38:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=iDATA8UWRvuERkVCUo3sHEhaiMy110+5RvXbe9baKYQ=;
-        b=a0G3CKeV4eMZvWvCK5eajXp9N4sKVrGEqIPZIYw5GZOswevSnjtindYVUVrXWrfMRI
-         JMacgwry7FiP4VCmUhiWGkaZ7f5bYkxpt6lmdx9etuDNCo+14TpcACqzVVa4/DNbA2Cc
-         u2HwS6yoKafmZPP1oXL3o/PX4qHIUjL7lD57BUhUCBW1+5XV7+xsRBMAWZxdRR0YRnlr
-         Ozd0YULIoCcc2kgF/ro8ZBKfFyYnMIVVPc1E2T9lHoD9OmA5SEpxixOZNTeZuE40uNmv
-         nSLJTGmRLeaDjfJKZsAtEiEQ3MwLZ5m5vD+RDVHJTHeHw3tQyaVNAma4+kpQ4ijcIdga
-         aCng==
+        bh=d/QAmQIaJZqvBZN9gtf42lfTOPBui/1bELKuGyuJdb8=;
+        b=A1/aTXY88hwx0sfCCWkO613b31JI7fBe2Fo7wc0qyRX1OqGtc1ZqPTHH3fVptzI2xR
+         kjtzIFwT28c8pyCN1rXIAb7VEv+u4LqEx23SRT2bH3mzJkw5AkHNOs4lt482evX6TdWF
+         Owbgw07QIaJIvXlIn0YuxP0DnJ1ZY33AiQXaHs13ZhtLhRBr6AsyzgXdcRaO31s6BfbC
+         cq/gJdjEVmPEDAHhPV8CvWUhlxccGm2a3OBVYvTtNkvqGihMhGX0GOr/Ignd7Nxemwmz
+         JnE2XSKIlW/ZcBwn1hZtqeovVZlQjWliWYbL8JCHXD5aWz0FsGz9AIOM/1cmNSrVmNYv
+         19yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=iDATA8UWRvuERkVCUo3sHEhaiMy110+5RvXbe9baKYQ=;
-        b=QBumv39ek7fAScvDwQV2PSW1W7X9CEU3RXeKNSVaBDxeO0O/DK29rNPVbtZZsd0Agh
-         6t0hT4ORdP/HLm5ikCw1E7AAY3lFu1M35QwQzDrp+5/SWv/K/KU5MZwOFPc1/9PaLnGB
-         VGS/NGhnjUS5xbiQUG0eZAvtbr5vgqzkkI/+SydpXXmKjBPmMLlEV6VeEjDzeZYsojDq
-         TScZOHi7JXxQQK9SfpwpNBIkjSU6X17Rf1osi9Glq3KX8fkf7PgwQZ2W/Mo5APcx1A34
-         DJu0RXhqgLgtJYHVqF1rexy+JBC63sijK4GpQiXOWMugqVHx8ldV4fdMT52xGbfKnLlP
-         GNxQ==
-X-Gm-Message-State: APjAAAWjAI/rKW9lOWu42XKZFxEQL0Ke9JbI4CJouxrreKlUDnqhXk9I
-        kwLxIryKfI9n/fkIIABwR2o=
-X-Google-Smtp-Source: APXvYqxloXtQEEYKf1fFRXMPDxsO+UU37rFFsC09iEeQtHTMIAJRov+wc8xL1bAUgPxg3x3FNI77aA==
-X-Received: by 2002:a5d:4409:: with SMTP id z9mr6610626wrq.22.1572619069481;
-        Fri, 01 Nov 2019 07:37:49 -0700 (PDT)
+        bh=d/QAmQIaJZqvBZN9gtf42lfTOPBui/1bELKuGyuJdb8=;
+        b=Y5eZIc+mqH8XH14JH2uNLUSp9xMKw8bVeo1eDkFV8tHmRfs7G/4V+LJSirFQjDp70T
+         DeTdn2wAnEpkWqjqZrkRtls31Gp9XCBu5iZSS9Am+ho2iJZMToh5BXKLY1Pepmu+JgkA
+         g2nOUfs8Rm5NF7/QoJpJrnM9XdVBxu6pZ4Vn5duif9o77ZBoTzgo06iUZqHwGLwn//+i
+         NB2iFF65PqWcz3CmjiXTVNuiN4nTnqTrwT8aW8fIW17Qi77nK1519zM7IZ1PP6/VsyKQ
+         aPBiTuKBqKdROBVgH0Q5J8egtU1MII46qzqHLC72B2p4U6TI1NYme/SsXtq/sLXuUrHA
+         DiJw==
+X-Gm-Message-State: APjAAAWiDyTswFu8NhQOjdV7nMrD3myrznaElm5+YbwwVCiKK0caPTMj
+        MlpcDL5YtO9puimx0J5ZEtk=
+X-Google-Smtp-Source: APXvYqyI+Q4wEtZDCOGjwU9VHlMJmHZrNaWIfLyrtIJAa8a3WH1InYAp3J1RaSxDOIYycLFVQMvstw==
+X-Received: by 2002:a1c:10a:: with SMTP id 10mr10579982wmb.17.1572619092780;
+        Fri, 01 Nov 2019 07:38:12 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id q9sm1824816wru.83.2019.11.01.07.37.44
+        by smtp.gmail.com with ESMTPSA id l15sm6391895wmh.18.2019.11.01.07.38.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 07:37:49 -0700 (PDT)
+        Fri, 01 Nov 2019 07:38:12 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] crypto: inside-secure - Add missed clk_disable_unprepare
-Date:   Fri,  1 Nov 2019 22:37:15 +0800
-Message-Id: <20191101143715.17708-1-hslester96@gmail.com>
+Subject: [PATCH] gpu: ipu-v3: prg: add missed clk_disable_unprepare in remove
+Date:   Fri,  1 Nov 2019 22:38:01 +0800
+Message-Id: <20191101143801.17774-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -75,27 +73,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-safexcel_remove misses disabling priv->reg_clk like what is done when
-probe fails.
-Add the missed call to fix it.
+The driver forgets to disable and unprepare clks when remove.
+Add the calls to clk_disable_unprepare to fix the problem.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/crypto/inside-secure/safexcel.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/ipu-v3/ipu-prg.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-secure/safexcel.c
-index 4ab1bde8dd9b..24c0f2404ec6 100644
---- a/drivers/crypto/inside-secure/safexcel.c
-+++ b/drivers/crypto/inside-secure/safexcel.c
-@@ -1623,6 +1623,7 @@ static int safexcel_remove(struct platform_device *pdev)
- 	safexcel_unregister_algorithms(priv);
- 	safexcel_hw_reset_rings(priv);
+diff --git a/drivers/gpu/ipu-v3/ipu-prg.c b/drivers/gpu/ipu-v3/ipu-prg.c
+index 196797c1b4b3..6ae6d634c983 100644
+--- a/drivers/gpu/ipu-v3/ipu-prg.c
++++ b/drivers/gpu/ipu-v3/ipu-prg.c
+@@ -430,6 +430,8 @@ static int ipu_prg_remove(struct platform_device *pdev)
+ 	list_del(&prg->list);
+ 	mutex_unlock(&ipu_prg_list_mutex);
  
-+	clk_disable_unprepare(priv->reg_clk);
- 	clk_disable_unprepare(priv->clk);
++	clk_disable_unprepare(prg->clk_axi);
++	clk_disable_unprepare(prg->clk_ipg);
+ 	return 0;
+ }
  
- 	for (i = 0; i < priv->config.rings; i++)
 -- 
 2.23.0
 
