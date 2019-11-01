@@ -2,162 +2,109 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7176CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5717FCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3E6208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:32:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NM8Ga8Hq"
+	by mail.kernel.org (Postfix) with ESMTP id 35E4721734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:35:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfKANcS (ORCPT
+        id S1727237AbfKANfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 09:32:18 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:36205 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbfKANcS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 09:32:18 -0400
-Received: by mail-yw1-f67.google.com with SMTP id y64so623665ywe.3
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 06:32:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sIZwoSrU60azkju4XlI+xHq6n0ne1xWv7n1NGMPGr4Q=;
-        b=NM8Ga8Hqnp8YUqkz1Huiro6k8teFHd041XtBeYc+Ya1GKfoTW8wtTa5320HyfTx7rs
-         ev7ncEyqpJyIouMHVJA0ek6rI/99vnGXVojZD3zJgPS+/RINUhJa8x/Wjse7coSJGDFL
-         Kd+MzCVqIarPT98omr9ob+2N52k+0IPD89iU1D4D3xcizwoU2TzITjgNAiaPY9bx2qhk
-         1ytTybKexviQ3hI4p0Fp0dPqiL2jyyBG2+nxm+kXaZbqg5dfI/4MvoXZ6/hS8M9HQ5Vk
-         EQcDv8rHP1RuZDL+kPZa18q6AYTCP4MiZCU6A1fBNdzAVaNwUVRsnDgBih47qRT2G45u
-         m0qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sIZwoSrU60azkju4XlI+xHq6n0ne1xWv7n1NGMPGr4Q=;
-        b=UdohsowlzFeoxCHXvMUP5/qAAiIMCbnw+x/EMJmSQitDnEzTO9hsN8fPAW6VC08ssR
-         lFFmASuUYvBErLG0JXjnKo35X2uOQWhnKY+x1rtyupFSQkjgq1ns7WadCptNW1ruafSc
-         pDp4YaX6IL94GZGswcmAPn1zuCE5NUlMdg3ORb3HiV2qpADRC+kt6BSVGbreR/V4nh9p
-         nBeVZAmcqs0/hczvZHp2DV1EfoU6KlPst7FB05MjTcLa+mFP9XbP/Xq9ANmr+ixqxc7Z
-         hehj4G4/Q6jLFJfPVerHbfJOLT/xefXHjET8OFKDenspgZ3kceYMfVeAp6zgoLiXhl/e
-         O81g==
-X-Gm-Message-State: APjAAAWBIBguDeRrgcsfu9xUaUVH91OlhNzV86zbn0F2y7UcrbXTdxVV
-        hBhFvte3xYCaUgAIn3N4x+ZG6CFJUuRXOsStZ0Olsw==
-X-Google-Smtp-Source: APXvYqzyWIQ58WDy4QVlh+4flLK1JIVIkiZK2lzx8SHEsEX/KtyBRcjNp3P7bwbxQfGmLusYD0py4wwrMtjR50NGH9k=
-X-Received: by 2002:a81:8486:: with SMTP id u128mr8278300ywf.337.1572615136623;
- Fri, 01 Nov 2019 06:32:16 -0700 (PDT)
+        Fri, 1 Nov 2019 09:35:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49510 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726860AbfKANfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 09:35:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D600DB07B;
+        Fri,  1 Nov 2019 13:35:30 +0000 (UTC)
+Date:   Fri, 1 Nov 2019 13:35:28 +0000
+From:   Mel Gorman <mgorman@suse.de>
+To:     ?????? <yun.wang@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/numa: advanced per-cgroup numa statistic
+Message-ID: <20191101133528.GP28938@suse.de>
+References: <46b0fd25-7b73-aa80-372a-9fcd025154cb@linux.alibaba.com>
+ <20191030095505.GF28938@suse.de>
+ <6f5e43db-24f1-5283-0881-f264b0d5f835@linux.alibaba.com>
+ <20191031131731.GJ28938@suse.de>
+ <5d69ff1b-a477-31b5-8600-9233a38445c7@linux.alibaba.com>
+ <20191101091348.GM28938@suse.de>
+ <2573b108-7885-5c4f-a0ae-2b245d663250@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20191030100618.1.Ibf7a996e4a58e84f11eec910938cfc3f9159c5de@changeid>
- <20191030173758.GC693@sol.localdomain> <CAD=FV=Uzma+eSGG1S1Aq6s3QdMNh4J-c=g-5uhB=0XBtkAawcA@mail.gmail.com>
- <20191030190226.GD693@sol.localdomain> <20191030205745.GA216218@sol.localdomain>
- <CAD=FV=X6Q3QZaND-tfYr9mf-KYMeKFmJDca3ee-i9roWj+GHsQ@mail.gmail.com>
- <CAD=FV=URZX4t-TB2Ne8y5ZfeBGoyhsPZhcncQ0yPe3cRXi=1gw@mail.gmail.com> <20191101043620.GA703@sol.localdomain>
-In-Reply-To: <20191101043620.GA703@sol.localdomain>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Fri, 1 Nov 2019 06:32:05 -0700
-Message-ID: <CABXOdTf=x_LGExsBUnqEvT4t=OAp3e3YjpEDCGdeQnKR=5=D5A@mail.gmail.com>
-Subject: Re: [PATCH] Revert "ext4 crypto: fix to check feature status before
- get policy"
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Chao Yu <chao@kernel.org>,
-        Ryo Hashimoto <hashimoto@chromium.org>,
-        Vadim Sukhomlinov <sukhomlinov@google.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Andrey Pronin <apronin@chromium.org>,
-        linux-doc@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <2573b108-7885-5c4f-a0ae-2b245d663250@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 9:36 PM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Thu, Oct 31, 2019 at 10:52:19AM -0700, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Wed, Oct 30, 2019 at 2:59 PM Doug Anderson <dianders@chromium.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Wed, Oct 30, 2019 at 1:57 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> > > >
-> > > > FWIW, from reading the Chrome OS code, I think the code you linked to isn't
-> > > > where the breakage actually is.  I think it's actually at
-> > > > https://chromium.googlesource.com/chromiumos/platform2/+/refs/heads/master/chromeos-common-script/share/chromeos-common.sh#375
-> > > > ... where an init script is using the error message printed by 'e4crypt
-> > > > get_policy' to decide whether to add -O encrypt to the filesystem or not.
-> > > >
-> > > > It really should check instead:
-> > > >
-> > > >         [ -e /sys/fs/ext4/features/encryption ]
-> > >
-> > > OK, I filed <https://crbug.com/1019939> and CCed all the people listed
-> > > in the cryptohome "OWNERS" file.  Hopefully one of them can pick this
-> > > up as a general cleanup.  Thanks!
-> >
-> > Just to follow-up: I did a quick test here to see if I could fix
-> > "chromeos-common.sh" as you suggested.  Then I got rid of the Revert
-> > and tried to login.  No joy.
-> >
-> > Digging a little deeper, the ext4_dir_encryption_supported() function
-> > is called in two places:
-> > * chromeos-install
-> > * chromeos_startup
-> >
-> > In my test case I had a machine that I'd already logged into (on a
-> > previous kernel version) and I was trying to log into it a second
-> > time.  Thus there's no way that chromeos-install could be involved.
-> > Looking at chromeos_startup:
-> >
-> > https://chromium.googlesource.com/chromiumos/platform2/+/refs/heads/master/init/chromeos_startup
-> >
-> > ...the function is only used for setting up the "encrypted stateful"
-> > partition.  That wasn't where my failure was.  My failure was with
-> > logging in AKA with cryptohome.  Thus I think it's plausible that my
-> > original commit message pointing at cryptohome may have been correct.
-> > It's possible that there were _also_ problems with encrypted stateful
-> > that I wasn't noticing, but if so they were not the only problems.
-> >
-> > It still may be wise to make Chrome OS use different tests, but it
-> > might not be quite as simple as hoped...
-> >
->
-> Ah, I think I found it:
->
-> https://chromium.googlesource.com/chromiumos/overlays/chromiumos-overlay/+/2cbdedd5eca0a57d9596671a99da5fab8e60722b/sys-apps/upstart/files/upstart-1.2-dircrypto.patch
->
-> The init process does EXT4_IOC_GET_ENCRYPTION_POLICY on /, and if the error is
-> EOPNOTSUPP, it skips creating the "dircrypto" keyring.  So then cryptohome can't
-> add keys later.  (Note the error message you got, "Error adding dircrypto key".)
->
+On Fri, Nov 01, 2019 at 07:52:15PM +0800, ?????? wrote:
+> > a much higher degree of flexibility on what information is tracked and
+> > allow flexibility on 
+> > 
+> > So, overall I think this can be done outside the kernel but recognise
+> > that it may not be suitable in all cases. If you feel it must be done
+> > inside the kernel, split out the patch that adds information on failed
+> > page migrations as it stands apart. Put it behind its own kconfig entry
+> > that is disabled by default -- do not tie it directly to NUMA balancing
+> > because of the data structure changes. When enabled, it should still be
+> > disabled by default at runtime and only activated via kernel command line
+> > parameter so that the only people who pay the cost are those that take
+> > deliberate action to enable it.
+> 
+> Agree, we could have these per-task faults info there, give the possibility
+> to implement maybe a practical userland tool,
 
-Good catch. I'll try replacing that with a check for the sysfs flag
-and see if that does the trick.
+I'd prefer not because that would still require the space in the locality
+array to store the data. I'd also prefer that numa_faults_locality[]
+information is not exposed unless this feature is enabled. That information
+is subject to change and interpreting it requires knowledge of the
+internals of automatic NUMA balancing.
 
-Guenter
+There are just too many corner cases where the information is garbage.
+Tasks with a memory policy would never update the counters, short-lived
+tasks may not update it, interleaving will give confused information about
+locality, the timing of the reads matter because it might be cleared,
+the frequency at which they clear is unknown as the frequency is adaptive
+-- the list goes on. I find it very very difficult to believe that a
+tool based on faults_locality will be able to give anything but the
+most superficial help and any sensible decision will require ftrace or
+numa_maps to get real information.
 
-> So it looks like the kernel patch broke both that and
-> ext4_dir_encryption_supported().
->
-> I don't see how it could have broken cryptohome by itself, since AFAICS
-> cryptohome only uses EXT4_IOC_GET_ENCRYPTION_POLICY on the partition which is
-> supposed to have the 'encrypt' feature set.
->
-> - Eric
+> meanwhile have these kernel
+> numa data disabled by default, folks who got no tool but want to do easy
+> monitoring can just turn on the switch :-)
+> 
+> Will have these in next version:
+> 
+>  * separate patch for showing per-task faults info
+
+Please only expose the failed= (or migfailed=) in that patch. Do not
+expose numa_faults_locality unless it is explicitly enabled on behalf of
+a tool that claims it can sensibly interpret it.
+
+>  * new CONFIG for numa stat (disabled by default)
+>  * dynamical runtime switch for numa stat (disabled by default)
+
+Dynamic runtime enabling will mean that if it's turned on, the information
+will be temporarily useless until stats are accumulated. Make sure to
+note that in any associated documentation stating a preference to
+enabling it with a kernel parameter.
+
+-- 
+Mel Gorman
+SUSE Labs
