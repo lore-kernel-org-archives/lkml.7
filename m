@@ -2,100 +2,94 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8087CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24963CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E593217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:54:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lq9f0u/x"
+	by mail.kernel.org (Postfix) with ESMTP id EAB9F2080F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfKAIyp (ORCPT
+        id S1727790AbfKAIzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 04:54:45 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34239 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbfKAIyp (ORCPT
+        Fri, 1 Nov 2019 04:55:37 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:39608 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726663AbfKAIzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 04:54:45 -0400
-Received: by mail-qt1-f196.google.com with SMTP id e14so12122851qto.1;
-        Fri, 01 Nov 2019 01:54:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=srb0ElFij+q7mw1HtNeJS8i5fDcmZ/1MfEVFElDzt2c=;
-        b=Lq9f0u/xSxlvxrO/S71aPgUQwh24EXzIhA+gMr5czvAlrRfyIQoDQ3dTLYSQuWmaFG
-         CsAdPQ17dtXVMq7jZefocrbcqigg8HSgYgl2mwaCHXi5QtBViD3mijCDBMIoZGc7Xtmv
-         iWwVNNeC3rXkmtyw9a+5vIgCO7gAtX8wZAVTqIu9Ko3WMZOKHpUXuzQ4xA48NMg6i/0C
-         bXVjqxOO5c0Q5meHbp/LxrWe1ukJ5bRYCibyudZxFbWKBAU+0Vmnc1SbbWgoTqAzVShP
-         sJf/OsCp2aQFRdS9n2Q6Mpr02VDXDlU9SXXFOWctLmujz0/qxYOnco0ld2OdFzvYQwjC
-         xUhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=srb0ElFij+q7mw1HtNeJS8i5fDcmZ/1MfEVFElDzt2c=;
-        b=P5C2FfYgpIoMUzlUoTGQUUqIumu9r6ula8Lzl5SQFpp2P8M8yGp973b8lpgj9inYTq
-         od8PMjMA/dAXLRN4rvqmq0aDuTQnPWNuujNaRgE7rUY5m/2SaAXX45Fix4sPHgKmAXmt
-         JJkwizZFFERpyb6O2IgHE5NrQM/slGq4KzDZhJLy2MaOEH0uTZfYvOKTpsbVUF1zeL5A
-         98tJaIz+WbqLDM6R3K1JiGq7iw84izhVpEOtiCKq8exzLqXeplzjrS4xlheA+DYcjbOs
-         iisCvdDdCJGoGdZYdmCB+v8iHVjb+/dCYmAtX6CFu+nlJq6Ax3o5Ln17XvOm9vDbAT5z
-         r/gA==
-X-Gm-Message-State: APjAAAV24wfe7Wbbx16ycxWoguRWPcjkchczXYHRuL58Fj3wIwyy+WPj
-        GKziH+jyWzSJUBfqwJqqVlM=
-X-Google-Smtp-Source: APXvYqz8P1RrTcQd5eOO322Bx2fIad1nUPqIFw7IgU59KfITvdM5IolWxX1u7jTIyv4Q1bgXvpRiyw==
-X-Received: by 2002:ac8:424d:: with SMTP id r13mr9924571qtm.111.1572598484318;
-        Fri, 01 Nov 2019 01:54:44 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id a18sm3653517qkc.2.2019.11.01.01.54.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 01:54:43 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Peter Korsgaard <jacmet@sunsite.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] tty: serial: uartlite: use clk_disable_unprepare to match clk_prepare_enable
-Date:   Fri,  1 Nov 2019 16:54:33 +0800
-Message-Id: <20191101085433.10399-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 1 Nov 2019 04:55:37 -0400
+X-IronPort-AV: E=Sophos;i="5.68,254,1569276000"; 
+   d="scan'208";a="409892343"
+Received: from abo-45-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.45])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 09:55:35 +0100
+Date:   Fri, 1 Nov 2019 09:55:34 +0100 (CET)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+cc:     kbuild-all@lists.01.org, linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: fix memdup.cocci warnings
+Message-ID: <alpine.DEB.2.21.1911010953590.2883@hadrien>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver uses clk_prepare_enable in ulite_probe but uses clk_unprepare
-in ulite_remove, which does not match.
-Replace clk_unprepare with clk_disable_unprepare to fix it.
+From: kbuild test robot <lkp@intel.com>
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Use kmemdup rather than duplicating its implementation
+
+Generated by: scripts/coccinelle/api/memdup.cocci
+
+Fixes: f08fcced6d00 ("crypto: allwinner - Add sun8i-ss cryptographic offloader")
+CC: Corentin Labbe <clabbe.montjoie@gmail.com>
+Signed-off-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
 ---
- drivers/tty/serial/uartlite.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
-index 06e79c11141d..3d245827be27 100644
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -862,7 +862,7 @@ static int ulite_remove(struct platform_device *pdev)
- 	struct uartlite_data *pdata = port->private_data;
- 	int rc;
- 
--	clk_unprepare(pdata->clk);
-+	clk_disable_unprepare(pdata->clk);
- 	rc = ulite_release(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
- 	pm_runtime_set_suspended(&pdev->dev);
--- 
-2.23.0
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git master
+head:   298b4c604008025b134bc6fccbc4018449945d60
+commit: f08fcced6d0017c39cb6eccb571290867119d049 [154/163] crypto: allwinner - Add sun8i-ss cryptographic offloader
+:::::: branch date: 3 hours ago
+:::::: commit date: 3 hours ago
 
+Please take the patch only if it's a positive warning. Thanks!
+
+ sun8i-ss-cipher.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+--- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
++++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
+@@ -398,10 +398,9 @@ int sun8i_ss_aes_setkey(struct crypto_sk
+ 		kfree(op->key);
+ 	}
+ 	op->keylen = keylen;
+-	op->key = kmalloc(keylen, GFP_KERNEL | GFP_DMA);
++	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+ 	if (!op->key)
+ 		return -ENOMEM;
+-	memcpy(op->key, key, keylen);
+
+ 	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
+ 	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
+@@ -426,10 +425,9 @@ int sun8i_ss_des3_setkey(struct crypto_s
+ 		kfree(op->key);
+ 	}
+ 	op->keylen = keylen;
+-	op->key = kmalloc(keylen, GFP_KERNEL | GFP_DMA);
++	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+ 	if (!op->key)
+ 		return -ENOMEM;
+-	memcpy(op->key, key, keylen);
+
+ 	crypto_sync_skcipher_clear_flags(op->fallback_tfm, CRYPTO_TFM_REQ_MASK);
+ 	crypto_sync_skcipher_set_flags(op->fallback_tfm, tfm->base.crt_flags & CRYPTO_TFM_REQ_MASK);
