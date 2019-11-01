@@ -2,176 +2,92 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80539CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 11:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D89CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 11:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 574B820862
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 11:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DAF221835
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 11:09:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="nRSM804q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730291AbfKALGo (ORCPT
+        id S1730322AbfKALJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 07:06:44 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54392 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727561AbfKALGn (ORCPT
+        Fri, 1 Nov 2019 07:09:07 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37176 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbfKALJH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 07:06:43 -0400
-Received: from [91.217.168.176] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iQUlN-0007Zu-7r; Fri, 01 Nov 2019 11:06:41 +0000
-Date:   Fri, 1 Nov 2019 12:06:40 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-api@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] clone3: validate stack arguments
-Message-ID: <20191101110639.icbfihw3fk2nzz4o@wittgenstein>
-References: <20191031113608.20713-1-christian.brauner@ubuntu.com>
- <20191031164653.GA24629@redhat.com>
+        Fri, 1 Nov 2019 07:09:07 -0400
+Received: by mail-wr1-f65.google.com with SMTP id t1so3370554wrv.4
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 04:09:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PNqWAL/vcdIkzWkk07XofANRcuWQjzPIpS1/GtEbKcU=;
+        b=nRSM804qrZvift9Sh05oWVFc4gK8vA+tN8Q5awmIhEf7D56uQzsrhVEwmH9i7r2CqC
+         qZHIOSKKZNx2DDqZ2sLIVtBzTX34ue815t86YY1RhnRdUZShaZw722hlrxtIeFOSi+mC
+         sepoIBwqrGvjU06MqnATXk7czNawaz2Yu2RAQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PNqWAL/vcdIkzWkk07XofANRcuWQjzPIpS1/GtEbKcU=;
+        b=Mdf3vfi/8hDkQctjDvhrAkWhSPExii+gepQ7+9dPc/Qr/KaNUcfBQbaLrCSotn+ciI
+         nIIGfJ5FgEBGGiHnhmW2iDeWVwq+Xcffzd3FCXN9ZqAbY3JD+SqITezYJFAtawuiGug7
+         5L1C5LaXc/XkXDeVgUgByurZfrSqdPrO+KlYaCDorXRY8iiSWpBQvLf3oXsox8SnbdOr
+         K0AzsASLE5VaN3/cYIiLRXcGRyfQO3sN2hT+DEMM4EFl8852ZDA8bfa8kiBg0R0F3vLy
+         KJmQiBtNvzGKSCEX3u9LDHDgZSezheKbCVl25+O8eDBLipofByNNDm1ERccLoDeyCV2Q
+         K34Q==
+X-Gm-Message-State: APjAAAUTYAWJCQhUGLw3uQrM349I+gTh01e8BlTk9sKULu9JwzycNrUN
+        9xdkMW21YVmqvlqWYewCfiTwQA==
+X-Google-Smtp-Source: APXvYqy2l0PDMZPx7dSHoMcIgMT8UP4V/5TqGtuFA71u3xhya0ajNZFM5P9rdj15G2bswWsroasc9Q==
+X-Received: by 2002:adf:c409:: with SMTP id v9mr10205437wrf.41.1572606543510;
+        Fri, 01 Nov 2019 04:09:03 -0700 (PDT)
+Received: from localhost ([2620:10d:c092:180::1:f970])
+        by smtp.gmail.com with ESMTPSA id d4sm10304948wrc.54.2019.11.01.04.09.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 04:09:02 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 11:09:01 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH] kernel: sysctl: make drop_caches write-only
+Message-ID: <20191101110901.GB690103@chrisdown.name>
+References: <20191031221602.9375-1-hannes@cmpxchg.org>
+ <20191031162825.a545a5d4d8567368501769bd@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191031164653.GA24629@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191031162825.a545a5d4d8567368501769bd@linux-foundation.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 05:46:53PM +0100, Oleg Nesterov wrote:
-> On 10/31, Christian Brauner wrote:
-> >
-> > --- a/include/uapi/linux/sched.h
-> > +++ b/include/uapi/linux/sched.h
-> > @@ -51,6 +51,10 @@
-> >   *               sent when the child exits.
-> >   * @stack:       Specify the location of the stack for the
-> >   *               child process.
-> > + *               Note, @stack is expected to point to the
-> > + *               lowest address. The stack direction will be
-> > + *               determined by the kernel and set up
-> > + *               appropriately based on @stack_size.
-> 
-> I can't review this patch, I have no idea what does stack_size mean
-> if !arch/x86.
+Hm, not sure why my client didn't show this reply.
 
-In short: nothing at all if it weren't for ia64 (and maybe parisc).
-But let me provide some (hopefully useful) context. (Probably most of
-that is well-know, so sorry for superflous info. :))
+Andrew Morton writes:
+>Risk: some (odd) userspace code will break.  Fixable by manually chmodding
+>it back again.
 
-The stack and stack_size argument are used in copy_thread_tls() and in
-copy_thread(). What the arch will end up calling depends on
-CONFIG_HAVE_COPY_THREAD. Afaict, mips, powerpc, s390, and x86
-call copy_thread_tls(). The other arches call copy_thread().
-On all arches _except_ IA64 copy_thread{_tls}() just assigns "stack" to
-the right register and is done with it.
-On all arches _except_ parisc "stack" needs to point to the highest
-address. On parisc it needs to point to the lowest
-(CONFIG_STACK_GROWSUP).
-IA64 has a downwards growing stack like all the other architectures but
-it expects "stack" to poin to the _lowest_ address nonetheless. In
-contrast to all the other arches it does:
+The only scenario I can construct in my head is that someone has built 
+something to watch drop_caches for modification, but we already have the kmsg 
+output for that.
 
-	child_ptregs->r12 = user_stack_base + user_stack_size - 16;
+>Reward: very little.
+>
+>Is the reward worth the risk?
 
-so ia64 sets up the stack pointer itself.
+There is evidence that this has already caused confusion[0] for many, judging 
+by the number of views and votes. I think the reward is higher than stated 
+here, since it makes the intent and lack of persistent API in the API clearer, 
+and less likely to cause confusion in future.
 
-So now we have:
- parisc ->   upwards growing stack, stack_size _unused_ for user stacks
-!parisc -> downwards growing stack, stack_size _unused_ for user stacks
-   ia64 -> downwards growing stack, stack_size   _used_ for user stacks
-
-Now it gets more confusing since the clone() syscall layout is arch
-dependent as well. Let's ignore the case of arches that have a clone
-syscall version with switched flags and stack argument and only focus on
-arches with an _additional_ stack_size argument:
-
-microblaze -> clone(stack, stack_size)
-
-Then there's clone2() for ia64 which is a _separate_ syscall with an
-additional stack_size argument:
-
-ia64       -> clone2(stack, stack_size)
-
-Now, contrary to what you'd expect, microblaze ignores the stack_size
-argument.
-
-So the stack_size argument _would_ be completely meaningless if it
-weren't for ia64 and parisc.
-
-> 
-> x86 doesn't use stack_size unless a kthread does kernel_thread(), so
-> this change is probably fine...
-> 
-> Hmm. Off-topic question, why did 7f192e3cd3 ("fork: add clone3") add
-> "& ~CSIGNAL" in kernel_thread() ? This looks pointless and confusing
-> to me...
-
-(Can we discuss this over a patch that removes this restriction if we
-think this is pointless?)
-
-> 
-> > +static inline bool clone3_stack_valid(struct kernel_clone_args *kargs)
-> > +{
-> > +	if (kargs->stack == 0) {
-> > +		if (kargs->stack_size > 0)
-> > +			return false;
-> > +	} else {
-> > +		if (kargs->stack_size == 0)
-> > +			return false;
-> 
-> So to implement clone3_wrapper(void *bottom_of_stack) you need to do
-> 
-> 	clone3_wrapper(void *bottom_of_stack)
-> 	{
-> 		struct clone_args args = {
-> 			...
-> 			// make clone3_stack_valid() happy
-> 			.stack = bottom_of_stack - 1,
-> 			.stack_size = 1,
-> 		};
-> 	}
-> 
-> looks a bit strange. OK, I agree, this example is very artificial.
-> But why do you think clone3() should nack stack_size == 0 ?
-
-In short, consistency.
-I think prior clone() versions (on accident) have exposed the stack
-direction as an implementation detail to userspace. Userspace clone()
-code wrapping code is _wild_ and buggy partially because of that.
-
-The best thing imho, is to clearly communicate to userspace that stack
-needs to point to the lowest address and stack_size to the initial range
-of the stack pointer or both are 0.
-
-The alternative is to let userspace either give us a stack pointer that
-we expect to be setup correctly by userspace or a stack pointer to the
-lowest address and a stack_size argument. That's just an invitation for
-more confusion and we have proof with legacy clone that this is not a
-good idea.
-
-> 
-> > +		if (!access_ok((void __user *)kargs->stack, kargs->stack_size))
-> > +			return false;
-> 
-> Why?
-
-It's nice of us to tell userspace _before_ we have created a thread that
-it messed up its parameters instead of starting a thread that then
-immediately crashes.
-
-Christian
+0: https://unix.stackexchange.com/q/17936/10762
