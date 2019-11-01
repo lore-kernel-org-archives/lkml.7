@@ -3,372 +3,172 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FF7C47E49
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D41FCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AECE121928
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC07E218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:43:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JKvzcazt"
+	dkim=pass (1024-bit key) header.d=itdevltd.onmicrosoft.com header.i=@itdevltd.onmicrosoft.com header.b="VWkOgbSh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727638AbfKAVnF (ORCPT
+        id S1727664AbfKAVnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 17:43:05 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39684 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfKAVmr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 17:42:47 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x28so4690579pfo.6
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 14:42:46 -0700 (PDT)
+        Fri, 1 Nov 2019 17:43:07 -0400
+Received: from mail-eopbgr30071.outbound.protection.outlook.com ([40.107.3.71]:1504
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726663AbfKAVnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 17:43:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a8gWy9t3tTdY6mMyjGyEF3LvbGVwKq4DWan1lp6165+1uXLnqHG72exhUSmhmAVYZqBsHBoeC0H28+OfCw2AEO08/piYucJehCddxz6yBzIbcUVxfn9N1yKntM9y3EqvcaPSgytjNQo8jhO3OeAmjUfLjJyVtkNDHU2uJXCW0GYZnp48v+tpnZB75ONQ1oSU0E8f4eeqDP8UcP5ndSRwyTLwIpYazHqbsG1iHZVKFHl1R9w+NNFbs+cgLUwlYg5J3bh22QTB2nZUKfTB2Wg5zY+lobOv+ebko/Wk8eRb1EvNnBcvLc3Us8RAky1CEqenZKyi+zDcmP42OGeFdsfu6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6tbDgwYm7i3M2kgWjGD06NtwTINNoD5Qp0G0Z5fm1fI=;
+ b=LIA/RI3s3+5Scr2RFFW5b1XjOhv1lhGt+7J2Kiwqe3en0znezR3uc0akr7NDDsWhcbQfszXtJNxCj+3LByQ9BsVoctnQ0BiqhvZoPkbrGdWab1OhEtqHnCPCh8W6q3p5x2p1pEH01wq3obPFNmB80yKRcQa+x6xno6ZP7vWhReYoq0ZhAAnYIRUMIb8mva7xPXwQ5lM17nzsY8kGzQF/rJt/0RAQyKSN3dVpfEhMYw9cViz98v0xfwA7mYKwO/867yr/iZyR9dzGkWMNwrrkGA9hBaxWnZdD8z18QDLtDcegjBEyxQ9iYSpWjy4rqVDc5jhtEN0Wi39C7V6DrBZGtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=itdev.co.uk; dmarc=pass action=none header.from=itdev.co.uk;
+ dkim=pass header.d=itdev.co.uk; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ic1ZpoaxH4o5hN+jZyuQG7BFBmFdykhkFLy2KrPXauE=;
-        b=JKvzcazticc0ZdMfUBlPVHXilu1UxDDvy/M9b8wl91FkCZcIeG/OU90Cep6mbLs+Hn
-         cgwEfB0vxNTVTV+H0fsPiWyRorolX+8zSmZACQxDMJmBiPLP65s5q3+AGrrIWPQKx2OX
-         4PhLJE1wqyzU8m12JlnYfkDDpBsicu3uBZAo9kVxMuylli66KeMwo3+XuNXIzV3c9D+y
-         SRZhBSxELJdxaAFJg+TFq2v5YXwYPNxq9+JooolXPON1BARRI/KfF+9u3+a5jxBwA3fm
-         47pf2rtjRAcmm8uMCk+Y2EkBHfwzrEi6PpLVPia3aPzTuhkXyD9oBRr8o3/J4NJmhgrV
-         KsUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ic1ZpoaxH4o5hN+jZyuQG7BFBmFdykhkFLy2KrPXauE=;
-        b=ftVTWmXEpCkewtsZXdJAoYcqttIGejkbG3hQ8aztbhq8/WKGdHC5s5KoFfZjJUYO8a
-         cQ35fgcog2yCcE37meP25CUYaJhFtFOj5lw6eSOi7df7zx7A4E+BZS7WbzeuwViIRWZv
-         BrGV9YusjuIYS6zC/eiDydEV2GfFrGtT7Qb+wPKIHwvRVhaKuR+YcEyDYKJzciV5pvke
-         BoAlEd+n3WRg7WINcdLo16ydqF15j6ShoqsWn35zY55RV3Ho7pUHKyQaU5PIlJ4YvtxD
-         OnuPrB3gtYrgIgfJbkyTnS4SJbDdV4QNi7qZqYYprn6iMKNPXN58pwCsVyl4A5o2aLBk
-         Tsiw==
-X-Gm-Message-State: APjAAAUaUqmjLMFyihO7rKN4ZGkzVX+31cdWI9kfOfiCEWrbiAWxf2YK
-        8SuJhFO8ln7ZFGKVbnC/vJi0/OnxVXk=
-X-Google-Smtp-Source: APXvYqy6frzI7U/VA15cERaQjYmXqqq7+5rwfFiC7kkijDc2gWx4U93L3lELG52xFLy14bWnrbu8eA==
-X-Received: by 2002:a63:fc09:: with SMTP id j9mr1375669pgi.272.1572644566184;
-        Fri, 01 Nov 2019 14:42:46 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id u36sm8299058pgn.29.2019.11.01.14.42.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 14:42:45 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Dave Airlie <airlied@gmail.com>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH v14 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
-Date:   Fri,  1 Nov 2019 21:42:37 +0000
-Message-Id: <20191101214238.78015-5-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191101214238.78015-1-john.stultz@linaro.org>
-References: <20191101214238.78015-1-john.stultz@linaro.org>
+ d=itdevltd.onmicrosoft.com; s=selector2-itdevltd-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6tbDgwYm7i3M2kgWjGD06NtwTINNoD5Qp0G0Z5fm1fI=;
+ b=VWkOgbShV8v+r5Pzup4XkkUu7dHdlaHUyr3nzxOTwjHYzz3n2vO9oDJmt+pR93hOejFhJGT7E4IWYrJjtAivCm7kQUZBEk6euZwBsuC4wz4yTp/DAEsmdXJ6VIYFDiDsG7lqcO0/PZdpgL8VAZr6Wg6LNnyUUQk6m63I5vvhVt8=
+Received: from DBBPR08MB4491.eurprd08.prod.outlook.com (20.179.44.144) by
+ DBBPR08MB4679.eurprd08.prod.outlook.com (20.179.47.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.24; Fri, 1 Nov 2019 21:42:59 +0000
+Received: from DBBPR08MB4491.eurprd08.prod.outlook.com
+ ([fe80::4c2f:e455:fb07:bdee]) by DBBPR08MB4491.eurprd08.prod.outlook.com
+ ([fe80::4c2f:e455:fb07:bdee%6]) with mapi id 15.20.2387.031; Fri, 1 Nov 2019
+ 21:42:59 +0000
+From:   Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+To:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+CC:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Cristian Sicilia <sicilia.cristian@gmail.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 3/3] staging: axis-fifo: remove unused pointer to memory
+ resource
+Thread-Topic: [PATCH 3/3] staging: axis-fifo: remove unused pointer to memory
+ resource
+Thread-Index: AQHVkP1UzicuaAAUZk66MpcyAj/NRw==
+Date:   Fri, 1 Nov 2019 21:42:59 +0000
+Message-ID: <20191101214232.16960-4-quentin.deslandes@itdev.co.uk>
+References: <20191101214232.16960-1-quentin.deslandes@itdev.co.uk>
+In-Reply-To: <20191101214232.16960-1-quentin.deslandes@itdev.co.uk>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0194.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:9e::14) To DBBPR08MB4491.eurprd08.prod.outlook.com
+ (2603:10a6:10:d2::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=quentin.deslandes@itdev.co.uk; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.23.0
+x-originating-ip: [81.98.213.45]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dfae3b0e-75ab-46d4-269d-08d75f14769b
+x-ms-traffictypediagnostic: DBBPR08MB4679:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DBBPR08MB46799E5C11E255F745E5E9ACB3620@DBBPR08MB4679.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:421;
+x-forefront-prvs: 020877E0CB
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39830400003)(376002)(136003)(346002)(396003)(366004)(199004)(189003)(36756003)(2351001)(86362001)(186003)(66066001)(6916009)(14444005)(66556008)(476003)(486006)(71200400001)(64756008)(5640700003)(2501003)(6512007)(66946007)(6486002)(44832011)(71190400001)(2906002)(6436002)(11346002)(6116002)(3846002)(50226002)(66476007)(4326008)(305945005)(8936002)(25786009)(5660300002)(7736002)(81166006)(256004)(386003)(8676002)(6506007)(54906003)(81156014)(66446008)(2616005)(508600001)(14454004)(76176011)(52116002)(446003)(99286004)(102836004)(316002)(1076003)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:DBBPR08MB4679;H:DBBPR08MB4491.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: itdev.co.uk does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jDwTgDFKNic/y0hKd407ooVPIbb++FMSEHnNS/JuMhQ57q1bVI4TB7tYp2YZ1f2kH/hUFEkis8dhX0ljF825LEvsvuqBa63wUFLA3LqXg/yXF6h3yS9H0LnfFyhoJWyQYMYUi179l61Sjm33bQSlL1Y49LN3HyDRUB7xD+lLXr0qeSJ4ls+sh8WyCwa3ET7MTm8JuG8U2w+G8G1EmY5PKiBjdrvhpQrOlQxUmeoZ465hgVYQ5ZIv1zLPaT8ArLdLIuwhECDcSwVCEsJ61X+51WHNuOcmtF7Eh8SBbrnq1gYAI4Gn7wGDy0ZMzfnFk2rg21toSwZdseir9BgYlTwhdiP5SRv4vc7ZgGP1RBwccDOx3QsugBipXoNz0UVzP2QqOztFFs6lBQfT1zH1SRH+fwO9wknlGWIJVb5f0zyD+t28vJSFt/CorLQeYyIA903a
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: itdev.co.uk
+X-MS-Exchange-CrossTenant-Network-Message-Id: dfae3b0e-75ab-46d4-269d-08d75f14769b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2019 21:42:59.1557
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 2d2930c4-2251-45b4-ad79-3582c5f41740
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5NiYWv3V8QjHwkgJ0dtpl2G6s2fiNUb5B1AwfHPnyNDgj4BdXGEr+AVc+S797WdcXlC2aslSuwmTh9p7mltlQSPBBTFXoWRbeb3ap0q5p3s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4679
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a CMA heap, which allows userspace to allocate
-a dma-buf of contiguous memory out of a CMA region.
+Remove unused resource pointer from the device's internal structure.
 
-This code is an evolution of the Android ION implementation, so
-thanks to its original author and maintainters:
-  Benjamin Gaignard, Laura Abbott, and others!
-
-NOTE: This patch only adds the default CMA heap. We will enable
-selectively adding other CMA memory regions to the dmabuf heaps
-interface with a later patch (which requires a dt binding)
-
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: Liam Mark <lmark@codeaurora.org>
-Cc: Pratik Patel <pratikp@codeaurora.org>
-Cc: Brian Starkey <Brian.Starkey@arm.com>
-Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
-Cc: Sudipto Paul <Sudipto.Paul@arm.com>
-Cc: Andrew F. Davis <afd@ti.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Chenbo Feng <fengc@google.com>
-Cc: Alistair Strachan <astrachan@google.com>
-Cc: Hridya Valsaraju <hridya@google.com>
-Cc: Sandeep Patil <sspatil@google.com>
-Cc: Hillf Danton <hdanton@sina.com>
-Cc: Dave Airlie <airlied@gmail.com>
-Cc: dri-devel@lists.freedesktop.org
-Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Reviewed-by: Brian Starkey <brian.starkey@arm.com>
-Acked-by: Laura Abbott <labbott@redhat.com>
-Tested-by: Ayan Kumar Halder <ayan.halder@arm.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
 ---
-v2:
-* Switch allocate to return dmabuf fd
-* Simplify init code
-* Checkpatch fixups
-v3:
-* Switch to inline function for to_cma_heap()
-* Minor cleanups suggested by Brian
-* Fold in new registration style from Andrew
-* Folded in changes from Andrew to use simplified page list
-  from the heap helpers
-v4:
-* Use the fd_flags when creating dmabuf fd (Suggested by
-  Benjamin)
-* Use precalculated pagecount (Suggested by Andrew)
-v6:
-* Changed variable names to improve clarity, as suggested
-  by Brian
-v7:
-* Use newly lower-cased init_heap_helper_buffer helper
-* Use new dmabuf export helper
-v8:
-* Make struct dma_heap_ops const (Suggested by Christoph)
-* Condense dma_heap_buffer and heap_helper_buffer (suggested by
-  Christoph)
-* Checkpatch whitespace fixups
-v9:
-* Removing needless check noted by Brian Starkey
-* Rename dma_heap_get_data->dma_heap_get_drvdata suggested
-  by Hilf Danton
-* Check signals after clearing memory pages to avoid doing
-  needless work if the task is killed as suggested by Hilf
-v12:
-* Rework to only add the default CMA heap
----
- drivers/dma-buf/heaps/Kconfig    |   8 ++
- drivers/dma-buf/heaps/Makefile   |   1 +
- drivers/dma-buf/heaps/cma_heap.c | 178 +++++++++++++++++++++++++++++++
- 3 files changed, 187 insertions(+)
- create mode 100644 drivers/dma-buf/heaps/cma_heap.c
+ drivers/staging/axis-fifo/axis-fifo.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfig
-index 205052744169..a5eef06c4226 100644
---- a/drivers/dma-buf/heaps/Kconfig
-+++ b/drivers/dma-buf/heaps/Kconfig
-@@ -4,3 +4,11 @@ config DMABUF_HEAPS_SYSTEM
- 	help
- 	  Choose this option to enable the system dmabuf heap. The system heap
- 	  is backed by pages from the buddy allocator. If in doubt, say Y.
-+
-+config DMABUF_HEAPS_CMA
-+	bool "DMA-BUF CMA Heap"
-+	depends on DMABUF_HEAPS && DMA_CMA
-+	help
-+	  Choose this option to enable dma-buf CMA heap. This heap is backed
-+	  by the Contiguous Memory Allocator (CMA). If your system has these
-+	  regions, you should say Y here.
-diff --git a/drivers/dma-buf/heaps/Makefile b/drivers/dma-buf/heaps/Makefile
-index d1808eca2581..6e54cdec3da0 100644
---- a/drivers/dma-buf/heaps/Makefile
-+++ b/drivers/dma-buf/heaps/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-y					+= heap-helpers.o
- obj-$(CONFIG_DMABUF_HEAPS_SYSTEM)	+= system_heap.o
-+obj-$(CONFIG_DMABUF_HEAPS_CMA)		+= cma_heap.o
-diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
-new file mode 100644
-index 000000000000..064926b5d735
---- /dev/null
-+++ b/drivers/dma-buf/heaps/cma_heap.c
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * DMABUF CMA heap exporter
-+ *
-+ * Copyright (C) 2012, 2019 Linaro Ltd.
-+ * Author: <benjamin.gaignard@linaro.org> for ST-Ericsson.
-+ */
-+
-+#include <linux/cma.h>
-+#include <linux/device.h>
-+#include <linux/dma-buf.h>
-+#include <linux/dma-heap.h>
-+#include <linux/dma-contiguous.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/highmem.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/scatterlist.h>
-+#include <linux/sched/signal.h>
-+
-+#include "heap-helpers.h"
-+
-+struct cma_heap {
-+	struct dma_heap *heap;
-+	struct cma *cma;
-+};
-+
-+static void cma_heap_free(struct heap_helper_buffer *buffer)
-+{
-+	struct cma_heap *cma_heap = dma_heap_get_drvdata(buffer->heap);
-+	unsigned long nr_pages = buffer->pagecount;
-+	struct page *cma_pages = buffer->priv_virt;
-+
-+	/* free page list */
-+	kfree(buffer->pages);
-+	/* release memory */
-+	cma_release(cma_heap->cma, cma_pages, nr_pages);
-+	kfree(buffer);
-+}
-+
-+/* dmabuf heap CMA operations functions */
-+static int cma_heap_allocate(struct dma_heap *heap,
-+			     unsigned long len,
-+			     unsigned long fd_flags,
-+			     unsigned long heap_flags)
-+{
-+	struct cma_heap *cma_heap = dma_heap_get_drvdata(heap);
-+	struct heap_helper_buffer *helper_buffer;
-+	struct page *cma_pages;
-+	size_t size = PAGE_ALIGN(len);
-+	unsigned long nr_pages = size >> PAGE_SHIFT;
-+	unsigned long align = get_order(size);
-+	struct dma_buf *dmabuf;
-+	int ret = -ENOMEM;
-+	pgoff_t pg;
-+
-+	if (align > CONFIG_CMA_ALIGNMENT)
-+		align = CONFIG_CMA_ALIGNMENT;
-+
-+	helper_buffer = kzalloc(sizeof(*helper_buffer), GFP_KERNEL);
-+	if (!helper_buffer)
-+		return -ENOMEM;
-+
-+	init_heap_helper_buffer(helper_buffer, cma_heap_free);
-+	helper_buffer->flags = heap_flags;
-+	helper_buffer->heap = heap;
-+	helper_buffer->size = len;
-+
-+	cma_pages = cma_alloc(cma_heap->cma, nr_pages, align, false);
-+	if (!cma_pages)
-+		goto free_buf;
-+
-+	if (PageHighMem(cma_pages)) {
-+		unsigned long nr_clear_pages = nr_pages;
-+		struct page *page = cma_pages;
-+
-+		while (nr_clear_pages > 0) {
-+			void *vaddr = kmap_atomic(page);
-+
-+			memset(vaddr, 0, PAGE_SIZE);
-+			kunmap_atomic(vaddr);
-+			/*
-+			 * Avoid wasting time zeroing memory if the process
-+			 * has been killed by by SIGKILL
-+			 */
-+			if (fatal_signal_pending(current))
-+				goto free_cma;
-+
-+			page++;
-+			nr_clear_pages--;
-+		}
-+	} else {
-+		memset(page_address(cma_pages), 0, size);
-+	}
-+
-+	helper_buffer->pagecount = nr_pages;
-+	helper_buffer->pages = kmalloc_array(helper_buffer->pagecount,
-+					     sizeof(*helper_buffer->pages),
-+					     GFP_KERNEL);
-+	if (!helper_buffer->pages) {
-+		ret = -ENOMEM;
-+		goto free_cma;
-+	}
-+
-+	for (pg = 0; pg < helper_buffer->pagecount; pg++)
-+		helper_buffer->pages[pg] = &cma_pages[pg];
-+
-+	/* create the dmabuf */
-+	dmabuf = heap_helper_export_dmabuf(helper_buffer, fd_flags);
-+	if (IS_ERR(dmabuf)) {
-+		ret = PTR_ERR(dmabuf);
-+		goto free_pages;
-+	}
-+
-+	helper_buffer->dmabuf = dmabuf;
-+	helper_buffer->priv_virt = cma_pages;
-+
-+	ret = dma_buf_fd(dmabuf, fd_flags);
-+	if (ret < 0) {
-+		dma_buf_put(dmabuf);
-+		/* just return, as put will call release and that will free */
-+		return ret;
-+	}
-+
-+	return ret;
-+
-+free_pages:
-+	kfree(helper_buffer->pages);
-+free_cma:
-+	cma_release(cma_heap->cma, cma_pages, nr_pages);
-+free_buf:
-+	kfree(helper_buffer);
-+	return ret;
-+}
-+
-+static const struct dma_heap_ops cma_heap_ops = {
-+	.allocate = cma_heap_allocate,
-+};
-+
-+static int __add_cma_heap(struct cma *cma, void *data)
-+{
-+	struct cma_heap *cma_heap;
-+	struct dma_heap_export_info exp_info;
-+
-+	cma_heap = kzalloc(sizeof(*cma_heap), GFP_KERNEL);
-+	if (!cma_heap)
-+		return -ENOMEM;
-+	cma_heap->cma = cma;
-+
-+	exp_info.name = cma_get_name(cma);
-+	exp_info.ops = &cma_heap_ops;
-+	exp_info.priv = cma_heap;
-+
-+	cma_heap->heap = dma_heap_add(&exp_info);
-+	if (IS_ERR(cma_heap->heap)) {
-+		int ret = PTR_ERR(cma_heap->heap);
-+
-+		kfree(cma_heap);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int add_default_cma_heap(void)
-+{
-+	struct cma *default_cma = dev_get_cma_area(NULL);
-+	int ret = 0;
-+
-+	if (default_cma)
-+		ret = __add_cma_heap(default_cma, NULL);
-+
-+	return ret;
-+}
-+module_init(add_default_cma_heap);
-+MODULE_DESCRIPTION("DMA-BUF CMA Heap");
-+MODULE_LICENSE("GPL v2");
--- 
-2.17.1
+diff --git a/drivers/staging/axis-fifo/axis-fifo.c b/drivers/staging/axis-f=
+ifo/axis-fifo.c
+index 2e6e2f149a26..39e6c59df1e9 100644
+--- a/drivers/staging/axis-fifo/axis-fifo.c
++++ b/drivers/staging/axis-fifo/axis-fifo.c
+@@ -125,7 +125,6 @@ MODULE_PARM_DESC(write_timeout, "ms to wait before bloc=
+king write() timing out;
+=20
+ struct axis_fifo {
+ 	int irq; /* interrupt */
+-	struct resource *mem; /* physical memory */
+ 	void __iomem *base_addr; /* kernel space memory */
+=20
+ 	unsigned int rx_fifo_depth; /* max words in the receive fifo */
+@@ -806,10 +805,8 @@ static int axis_fifo_probe(struct platform_device *pde=
+v)
+ 		goto err_initial;
+ 	}
+=20
+-	fifo->mem =3D r_mem;
+-
+ 	/* request physical memory */
+-	fifo->base_addr =3D devm_ioremap_resource(fifo->dt_device, fifo->mem);
++	fifo->base_addr =3D devm_ioremap_resource(fifo->dt_device, r_mem);
+ 	if (IS_ERR(fifo->base_addr)) {
+ 		rc =3D PTR_ERR(fifo->base_addr);
+ 		dev_err(fifo->dt_device, "can't remap IO resource (%d)\n", rc);
+@@ -820,7 +817,7 @@ static int axis_fifo_probe(struct platform_device *pdev=
+)
+=20
+ 	/* create unique device name */
+ 	snprintf(device_name, sizeof(device_name), "%s_%pa",
+-		 DRIVER_NAME, &fifo->mem->start);
++		 DRIVER_NAME, &r_mem->start);
+=20
+ 	dev_dbg(fifo->dt_device, "device name [%s]\n", device_name);
+=20
+@@ -844,7 +841,7 @@ static int axis_fifo_probe(struct platform_device *pdev=
+)
+ 	r_irq =3D platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+ 	if (!r_irq) {
+ 		dev_err(fifo->dt_device, "no IRQ found for 0x%pa\n",
+-			&fifo->mem->start);
++			&r_mem->start);
+ 		rc =3D -EIO;
+ 		goto err_initial;
+ 	}
+@@ -898,7 +895,7 @@ static int axis_fifo_probe(struct platform_device *pdev=
+)
+ 	}
+=20
+ 	dev_info(fifo->dt_device, "axis-fifo created at %pa mapped to 0x%pa, irq=
+=3D%i, major=3D%i, minor=3D%i\n",
+-		 &fifo->mem->start, &fifo->base_addr, fifo->irq,
++		 &r_mem->start, &fifo->base_addr, fifo->irq,
+ 		 MAJOR(fifo->devt), MINOR(fifo->devt));
+=20
+ 	return 0;
+--=20
+2.23.0
 
