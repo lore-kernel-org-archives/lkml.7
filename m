@@ -2,187 +2,179 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9DCCA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DF6CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61CAB2067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0936F2067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572614806;
+	bh=rqtvRstnFB/aFpNsK1qvt8/Qu32GiuMfuYACmi92Ik8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kWPsCkw1Z/9EL4kDXhtC3LLM+R4Tz1bkUKKvwj14JrCUOQrkZfPPa5tZuoSt8ffkO
+	 VtSMuZJWAgQvFnHnXQt1qsUweX2PSQNk5g/9TuAGJ29YLXWweRhbvOijxXH3VSvLIl
+	 WfZowQkWejz06AkRZ2zKET7fhZ6OnCl+IHCq5Ahk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbfKAN0d (ORCPT
+        id S1727162AbfKAN0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 09:26:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:35368 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbfKAN0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 09:26:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C92C1F1;
-        Fri,  1 Nov 2019 06:26:32 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 780223F71E;
-        Fri,  1 Nov 2019 06:26:31 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 13:26:29 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Tom Joseph <tjoseph@cadence.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Fri, 1 Nov 2019 09:26:44 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:38312 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726860AbfKAN0o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 09:26:44 -0400
+Received: from [91.217.168.176] (helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iQWwo-0006n0-LS; Fri, 01 Nov 2019 14:26:38 +0100
+Date:   Fri, 01 Nov 2019 13:26:37 +0000
+Message-ID: <86ftj7ybg2.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI: cadence: Refactor driver to use as a core library
-Message-ID: <20191101132629.GF9723@e119886-lin.cambridge.arm.com>
-References: <1571252912-7354-1-git-send-email-tjoseph@cadence.com>
- <20191025134658.GZ47056@e119886-lin.cambridge.arm.com>
- <MWHPR07MB385315AA79FE4E1EE8531BCBA1600@MWHPR07MB3853.namprd07.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MWHPR07MB385315AA79FE4E1EE8531BCBA1600@MWHPR07MB3853.namprd07.prod.outlook.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+        "Andrew Murray" <Andrew.Murray@arm.com>,
+        Jayachandran C <jnair@marvell.com>,
+        "Robert Richter" <rrichter@marvell.com>
+Subject: Re: [PATCH v2 03/36] irqchip/gic-v3-its: Allow LPI invalidation via the DirectLPI interface
+In-Reply-To: <a263e264-298c-57cf-31b7-a781160a3929@huawei.com>
+References: <20191027144234.8395-1-maz@kernel.org>
+        <20191027144234.8395-4-maz@kernel.org>
+        <a263e264-298c-57cf-31b7-a781160a3929@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 91.217.168.176
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, Andrew.Murray@arm.com, jnair@marvell.com, rrichter@marvell.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 03:03:19PM +0000, Tom Joseph wrote:
-> Hi Andrew,
+On Thu, 31 Oct 2019 08:49:32 +0000,
+Zenghui Yu <yuzenghui@huawei.com> wrote:
 > 
->  I noticed that I missed to respond to your question here.
+> Hi Marc,
 > 
-
-> > > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> > > index fe9f9f1..cafbed0 100644
-> > > --- a/drivers/pci/controller/Kconfig
-> > > +++ b/drivers/pci/controller/Kconfig
-> > > @@ -48,6 +48,34 @@ config PCIE_CADENCE_EP
-> > >  	  endpoint mode. This PCIe controller may be embedded into many
-> > >  	  different vendors SoCs.
-> > >
-> > > +config PCIE_CADENCE_PLAT
-> > > +	bool
-> > > +
-> > > +config PCIE_CADENCE_PLAT_HOST
-> > > +	bool "Cadence PCIe platform host controller"
-> > > +	depends on OF
-> > > +	depends on PCI
-> > > +	select IRQ_DOMAIN
-> > > +	select PCIE_CADENCE
-> > > +	select PCIE_CADENCE_HOST
-> > > +	select PCIE_CADENCE_PLAT
-> > > +	help
-> > > +	  Say Y here if you want to support the Cadence PCIe platform
-> > controller in
-> > > +	  host mode. This PCIe controller may be embedded into many
-> > different
-> > > +	  vendors SoCs.
-> > > +
-> > > +config PCIE_CADENCE_PLAT_EP
-> > > +	bool "Cadence PCIe platform endpoint controller"
-> > > +	depends on OF
-> > > +	depends on PCI_ENDPOINT
-> > > +	select PCIE_CADENCE
-> > > +	select PCIE_CADENCE_EP
-> > > +	select PCIE_CADENCE_PLAT
-> > > +	help
-> > > +	  Say Y here if you want to support the Cadence PCIe  platform
-> > controller in
-> > > +	  endpoint mode. This PCIe controller may be embedded into many
-> > > +	  different vendors SoCs.
-> > > +
-> > >  endmenu
-> > >
-> > >  config PCIE_XILINX_NWL
-> > > diff --git a/drivers/pci/controller/Makefile
-> > b/drivers/pci/controller/Makefile
-> > > index d56a507..676a41e 100644
-> > > --- a/drivers/pci/controller/Makefile
-> > > +++ b/drivers/pci/controller/Makefile
-> > > @@ -2,6 +2,7 @@
-> > >  obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
-> > >  obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
-> > >  obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
-> > > +obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
-> > >  obj-$(CONFIG_PCI_FTPCI100) += pci-ftpci100.o
+> On 2019/10/27 22:42, Marc Zyngier wrote:
+> > We currently don't make much use of the DirectLPI feature, and it would
+> > be beneficial to do this more, if only because it becomes a mandatory
+> > feature for GICv4.1.
 > > 
-> > I think in addition to the above hunks you also need the following:
-> > 
-> > --- a/drivers/pci/controller/Kconfig
-> > +++ b/drivers/pci/controller/Kconfig
-> > @@ -28,25 +28,16 @@ config PCIE_CADENCE
-> >         bool
-> > 
-> >  config PCIE_CADENCE_HOST
-> > -       bool "Cadence PCIe host controller"
-> > +       bool
-> >         depends on OF
-> > -       depends on PCI
-> >         select IRQ_DOMAIN
-> >         select PCIE_CADENCE
-> > -       help
-> > -         Say Y here if you want to support the Cadence PCIe controller in host
-> > -         mode. This PCIe controller may be embedded into many different
-> > vendors
-> > -         SoCs.
-> > 
-> >  config PCIE_CADENCE_EP
-> > -       bool "Cadence PCIe endpoint controller"
-> > +       bool
-> >         depends on OF
-> >         depends on PCI_ENDPOINT
-> >         select PCIE_CADENCE
-> > -       help
-> > -         Say Y here if you want to support the Cadence PCIe  controller in
-> > -         endpoint mode. This PCIe controller may be embedded into many
-> > -         different vendors SoCs.
-> > 
-> >  config PCIE_CADENCE_PLAT
-> >         bool
-> > 
-> > I removed the 'depends on PCI' as you get that for free seeing as the
-> > "PCI controller drivers" menu depends on PCI.
-> > 
-> > Removing the help and text prevents anything from being shown in the
-> > Kconfig
-> > system - I think you need that here to avoid confusing the user (and to make
-> > this just like DWC).
-> > 
-> > I'm happy with the above. Though just like DWC, I find this confusing. This
-> > allows future Cadence based controller drivers to include support for the EP
-> > or host library by 'selecting PCIE_CADENCE_(HOST,EP)' resulting in those
-> > libraries being compiled in. But despite this the user can still unselect
-> > PCIE_CADENCE_PLAT_HOST which simply prevents that HOST,EP library
-> > functions
-> > from being called - i.e. to override and disable that functionality.
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
 > 
-> Thanks for the spotting this and for the explanation . I have corrected these in v3.
-> > 
-> > There is no reason that this needs to look like the DWC Kconfig, if there is
-> > a better way that can provide additional benefits then please feel free to
-> > change it.
-
-
-> > > +
-> > > +	platform_set_drvdata(pdev, cdns_plat_pcie);
-> > > +	if (is_rc) {
-> > > +		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_PLAT_HOST))
-> > > +			return -ENODEV;
-> > 
-> > To continue my earlier point, I haven't understood why (in the DWC case)
-> > this
-> > isn't just CONFIG_PCIE_CADENCE_HOST - i.e. why not a single CONFIG for
-> > the HOST
-> > (instead of _HOST AND _PLAT_HOST)?
-> > 
+> I have no objection to this patch, which says:
 > 
-> My understanding is that, this would be a place where SoC/platform specific code could be inserted.
-> It might not be obvious here (as there is nothing much platform specific) , but just for demo purpose.
->  
+> Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+> 
+> 
+> But this patch really drives me to look through all callsites of
+> dev_event_to_col(), the abstraction which can be used _only_ with
+> physical LPI mappings.
+> 
+> I find that when building the INV command, we use dev_event_to_col()
+> to find the "sync_obj" and then pass it to the following SYNC command.
+> But the "INV+SYNC" will be performed both on physical LPI and *VLPI*
+> (lpi_update_config/its_send_inv).
+> So I have two questions about the way we sending INV on VLPI:
+> 
+> 1) Which "sync" command should be followed?  SYNC or VSYNC?
+> (we currently use SYNC, while the spec says, SYNC "ensures all
+> outstanding ITS operations associated with *physical* interrupts
+> for the Redistributor are globally observed ...")
+> 
+> 2) The "sync_obj" we are currently using seems to be wrong.
 
-Thanks for this. 
+I think you're right on both counts (where were you when I wrote the
+initial GICv4 support? ;-). I think the confusion stems from the fact
+that there is no 'VINV' command, and we simply overlooked the sync
+object issue. It is quite likely that existing implementations don't
+care much about the difference (otherwise we'd have seen the problem
+before), but it doesn't hurt to do the right thing.
 
-Thanks,
+I have the following patch as part of a set of fixes that I'm about to
+post (once I get a chance to test them), let me know what you think.
 
-Andrew Murray
+	M.
+
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index a47ed2ba2907..75ab3716a870 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -702,6 +702,24 @@ static struct its_vpe *its_build_vmovp_cmd(struct its_node *its,
+ 	return valid_vpe(its, desc->its_vmovp_cmd.vpe);
+ }
+ 
++static struct its_vpe *its_build_vinv_cmd(struct its_node *its,
++					  struct its_cmd_block *cmd,
++					  struct its_cmd_desc *desc)
++{
++	struct its_vlpi_map *map;
++
++	map = dev_event_to_vlpi_map(desc->its_inv_cmd.dev,
++				    desc->its_inv_cmd.event_id);
++
++	its_encode_cmd(cmd, GITS_CMD_INV);
++	its_encode_devid(cmd, desc->its_inv_cmd.dev->device_id);
++	its_encode_event_id(cmd, desc->its_inv_cmd.event_id);
++
++	its_fixup_cmd(cmd);
++
++	return valid_vpe(its, map->vpe);
++}
++
+ static u64 its_cmd_ptr_to_offset(struct its_node *its,
+ 				 struct its_cmd_block *ptr)
+ {
+@@ -1068,6 +1086,20 @@ static void its_send_vinvall(struct its_node *its, struct its_vpe *vpe)
+ 	its_send_single_vcommand(its, its_build_vinvall_cmd, &desc);
+ }
+ 
++static void its_send_vinv(struct its_device *dev, u32 event_id)
++{
++	struct its_cmd_desc desc;
++
++	/*
++	 * There is no real VINV command. This is just a normal INV,
++	 * with a VSYNC instead of a SYNC.
++	 */
++	desc.its_inv_cmd.dev = dev;
++	desc.its_inv_cmd.event_id = event_id;
++
++	its_send_single_vcommand(dev->its, its_build_vinv_cmd, &desc);
++}
++
+ /*
+  * irqchip functions - assumes MSI, mostly.
+  */
+@@ -1142,8 +1174,10 @@ static void lpi_update_config(struct irq_data *d, u8 clr, u8 set)
+ 	lpi_write_config(d, clr, set);
+ 	if (gic_rdists->has_direct_lpi && !irqd_is_forwarded_to_vcpu(d))
+ 		direct_lpi_inv(d);
+-	else
++	else if (!irqd_is_forwarded_to_vcpu(d))
+ 		its_send_inv(its_dev, its_get_event_id(d));
++	else
++		its_send_vinv(its_dev, its_get_event_id(d));
+ }
+ 
+ static void its_vlpi_set_doorbell(struct irq_data *d, bool enable)
+
+-- 
+Jazz is not dead, it just smells funny.
