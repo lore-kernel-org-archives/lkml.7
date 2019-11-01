@@ -2,139 +2,90 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E29CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E523ACA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43A72217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC35421734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:13:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbfKAPKV (ORCPT
+        id S1728098AbfKAPNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 11:10:21 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:60008 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbfKAPKV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 11:10:21 -0400
-Received: from [91.217.168.176] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iQYZ5-0001ct-CM; Fri, 01 Nov 2019 15:10:15 +0000
-Date:   Fri, 1 Nov 2019 16:10:14 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Florian Weimer <fweimer@redhat.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        GNU C Library <libc-alpha@sourceware.org>, nd <nd@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] clone3: validate stack arguments
-Message-ID: <20191101151014.75jfcdc3hrwt6ssv@wittgenstein>
-References: <20191031113608.20713-1-christian.brauner@ubuntu.com>
- <f51d97a2-8130-0ba2-c591-638b7fd6b14d@arm.com>
+        Fri, 1 Nov 2019 11:13:07 -0400
+Received: from mga11.intel.com ([192.55.52.93]:32434 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727326AbfKAPNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 11:13:07 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 08:13:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,256,1569308400"; 
+   d="scan'208";a="231256033"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 01 Nov 2019 08:13:04 -0700
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH] perf: Fix the aux_output group inheritance fix
+Date:   Fri,  1 Nov 2019 17:12:48 +0200
+Message-Id: <20191101151248.47327-1-alexander.shishkin@linux.intel.com>
+X-Mailer: git-send-email 2.24.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f51d97a2-8130-0ba2-c591-638b7fd6b14d@arm.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 02:57:10PM +0000, Szabolcs Nagy wrote:
-> On 31/10/2019 11:36, Christian Brauner wrote:
-> > diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-> > index 99335e1f4a27..25b4fa00bad1 100644
-> > --- a/include/uapi/linux/sched.h
-> > +++ b/include/uapi/linux/sched.h
-> > @@ -51,6 +51,10 @@
-> >   *               sent when the child exits.
-> >   * @stack:       Specify the location of the stack for the
-> >   *               child process.
-> > + *               Note, @stack is expected to point to the
-> > + *               lowest address. The stack direction will be
-> > + *               determined by the kernel and set up
-> > + *               appropriately based on @stack_size.
-> >   * @stack_size:  The size of the stack for the child process.
-> >   * @tls:         If CLONE_SETTLS is set, the tls descriptor
-> >   *               is set to tls.
-> > diff --git a/kernel/fork.c b/kernel/fork.c
-> > index bcdf53125210..55af6931c6ec 100644
-> > --- a/kernel/fork.c
-> > +++ b/kernel/fork.c
-> > @@ -2561,7 +2561,35 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
-> >  	return 0;
-> >  }
-> >  
-> > -static bool clone3_args_valid(const struct kernel_clone_args *kargs)
-> > +/**
-> > + * clone3_stack_valid - check and prepare stack
-> > + * @kargs: kernel clone args
-> > + *
-> > + * Verify that the stack arguments userspace gave us are sane.
-> > + * In addition, set the stack direction for userspace since it's easy for us to
-> > + * determine.
-> > + */
-> > +static inline bool clone3_stack_valid(struct kernel_clone_args *kargs)
-> > +{
-> > +	if (kargs->stack == 0) {
-> > +		if (kargs->stack_size > 0)
-> > +			return false;
-> > +	} else {
-> > +		if (kargs->stack_size == 0)
-> > +			return false;
-> > +
-> > +		if (!access_ok((void __user *)kargs->stack, kargs->stack_size))
-> > +			return false;
-> > +
-> > +#if !defined(CONFIG_STACK_GROWSUP) && !defined(CONFIG_IA64)
-> > +		kargs->stack += kargs->stack_size;
-> > +#endif
-> > +	}
-> 
-> from the description it is not clear whose
-> responsibility it is to guarantee the alignment
-> of sp on entry.
+Commit
 
-Userspace.
+  f733c6b508bc ("perf/core: Fix inheritance of aux_output groups")
 
-> 
-> i think 0 stack size may work if signals are
-> blocked and then prohibiting it might not be
-> the right thing.
+adds a null pointer dereference in case inherit_group() races with
+perf_release(), which causes the below.
 
-Note that stack size 0 is allowed:
+> BUG: kernel NULL pointer dereference, address: 000000000000010b
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> PGD 3b203b067 P4D 3b203b067 PUD 3b2040067 PMD 0
+> Oops: 0000 [#1] SMP KASAN
+> CPU: 0 PID: 315 Comm: exclusive-group Tainted: G B 5.4.0-rc3-00181-g72e1839403cb-dirty #878
+> RIP: 0010:perf_get_aux_event+0x86/0x270
+> Call Trace:
+>  ? __perf_read_group_add+0x3b0/0x3b0
+>  ? __kasan_check_write+0x14/0x20
+>  ? __perf_event_init_context+0x154/0x170
+>  inherit_task_group.isra.0.part.0+0x14b/0x170
+>  perf_event_init_task+0x296/0x4b0
 
-struct clone_args args = {
-	.exit_signal = SIGCHLD,
-};
+Fix this by skipping over events that are getting closed, in the
+inheritance path.
 
-clone3(&args, sizeof(args));
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+---
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-will just work fine.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index b1aa5237052b..8ff1218e91b1 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12129,7 +12129,7 @@ static int inherit_group(struct perf_event *parent_event,
+ 		if (IS_ERR(child_ctr))
+ 			return PTR_ERR(child_ctr);
+ 
+-		if (sub->aux_event == parent_event &&
++		if (sub->aux_event == parent_event && child_ctr &&
+ 		    !perf_get_aux_event(child_ctr, leader))
+ 			return -EINVAL;
+ 	}
+-- 
+2.24.0.rc1
 
-> 
-> it's not clear how libc should deal with v5.3
-> kernels which don't have the stack+=stack_size
-> logic.
-
-stable is already Cced and the change will be backported to v5.3.
-Nearly all distros track pull in stable updates.
-
-Florian, thoughts on this?
-
-Christian
