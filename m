@@ -2,96 +2,147 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA26CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D74B1CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53B8A21855
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:08:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572620924;
-	bh=9ZozyuUmqGAt4fIzfc2WuteRl9FmXNAfuDCCnSzQ+wY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AhRiyO6q8XIeYz+x8l9z6tWbDso6uLiHQYwJ5iWqWeoOrpWha5IDDkomrPr/zqdxt
-	 bRUp+GI3khyNWFche7qqzYQuKcz9qlLU8pFLF268CIqVpTbrCZU+10MfrYm51PjQjF
-	 Io4iLg7sMBXahKhEwpiMaa9t9byG8pb1l7mJbwUg=
+	by mail.kernel.org (Postfix) with ESMTP id AE82821734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:09:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YJPHlYUq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbfKAPIn (ORCPT
+        id S1728289AbfKAPJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 11:08:43 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36497 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727893AbfKAPIm (ORCPT
+        Fri, 1 Nov 2019 11:09:56 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27780 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727326AbfKAPJz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 11:08:42 -0400
-Received: by mail-ed1-f66.google.com with SMTP id f7so4681694edq.3;
-        Fri, 01 Nov 2019 08:08:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NCA9Ywds0P5FtYhKbL0ZOhacAW+Sgbwam/HrJvvslJY=;
-        b=j64H2Aidw+d4TISmlyGQWUqPzze572o6HMXzvGHjJ1QLKJPrl8E2oQZS1jRsh4mtIf
-         7GCz4N6IRB9D4r3GzDnZrHcBRWicKDWLBl8D+L5AGGIa5ySjqhJup1ErUSDuXQHiXgeZ
-         hCVZm67A+NWI1lE4kPA6mBsQIAQeFpkJWFqKxccrYG0hH4/p0bcyjEUGO07Oj6aDr0Im
-         z5cBiqzwbfSeiHNBp6mIqxmK4f4FXyEAHrHdpO7V1tmFCizC6RVw4bGFMu0pvBLh/jZG
-         yya2MMqjzaelLQPGzTL+4WD4z/vb500NPxJkrWjsxmX7JSAA1nuhnFIGmXVTJ5fRdlP8
-         6PTw==
-X-Gm-Message-State: APjAAAWfpnUK0F7uDbBr5A0JExHKKDj+ywLQzYuR2rm7ekgXtBtyypO2
-        JoGxFV+J96Qlt4vYrPv6tRsxkP3t
-X-Google-Smtp-Source: APXvYqz1oXEM1R4/Fw/Zy1uABO2AhD8TJPWcq1yuq6FLsl4iDg7WIaPr5LUB9vpgSRK/B8wheOa5qA==
-X-Received: by 2002:aa7:d4d8:: with SMTP id t24mr3231114edr.40.1572620920724;
-        Fri, 01 Nov 2019 08:08:40 -0700 (PDT)
-Received: from pi3 ([194.230.155.180])
-        by smtp.googlemail.com with ESMTPSA id j17sm156379edr.94.2019.11.01.08.08.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 08:08:39 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 16:08:37 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
-        lee.jones@linaro.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] power: supply: max17040: Add IRQ handler for low
- SOC alert
-Message-ID: <20191101150837.GA28931@pi3>
-References: <CAJKOXPdCtbsPaAgYp5iVBhkAsjXzOYWwttQBptgiUgzhbKi09w@mail.gmail.com>
- <20191031184134.30621-1-matheus@castello.eng.br>
- <20191031184134.30621-2-matheus@castello.eng.br>
+        Fri, 1 Nov 2019 11:09:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572620994;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=B0+CdOYJOHUYIPhTqYhU6i7fsne7jTye1CGWyYYt7Oo=;
+        b=YJPHlYUqkXUCsoMZHDzLglvFItNEcLh2YQQCVWqBPlp3QKpyHhvypdVSC+FFJYKuZK49/2
+        54ZeRWPNF1J2PWteu7kiZI9ORayY25qmV405TUyX2t61LZ/9mTtsAIzsB/2W5t//1Cu8R0
+        i0KU6KYvYQQ1F/lqX3M82++F1KlLThc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-338-5P0N9OwUMBiTSmPWIh5iXQ-1; Fri, 01 Nov 2019 11:09:49 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6DC6A800D49;
+        Fri,  1 Nov 2019 15:09:46 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B445810016E8;
+        Fri,  1 Nov 2019 15:09:30 +0000 (UTC)
+Date:   Fri, 1 Nov 2019 11:09:27 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Steve Grubb <sgrubb@redhat.com>
+Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Subject: Re: [PATCH ghak90 V7 20/21] audit: add capcontid to set contid
+ outside init_user_ns
+Message-ID: <20191101150927.c5sf3n5ezfg2eano@madcap2.tricolour.ca>
+References: <cover.1568834524.git.rgb@redhat.com>
+ <CAHC9VhRDoX9du4XbCnBtBzsNPMGOsb-TKM1CC+sCL7HP=FuTRQ@mail.gmail.com>
+ <20191030220320.tnwkaj5gbzchcn7j@madcap2.tricolour.ca>
+ <3677995.NTHC7m0fHc@x2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <3677995.NTHC7m0fHc@x2>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: 5P0N9OwUMBiTSmPWIh5iXQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191031184134.30621-2-matheus@castello.eng.br>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 03:41:31PM -0300, Matheus Castello wrote:
-> According datasheet max17040 has a pin for alert host for low SOC.
-> This pin can be used as external interrupt, so we need to check for
-> interrupts assigned for device and handle it.
-> 
-> In handler we are checking and storing fuel gauge registers values
-> and send an uevent to notificate user space, so user space can decide
-> save work or turn off since the alert demonstrate that the battery may
-> no have the power to keep the system turned on for much longer.
-> 
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  drivers/power/supply/max17040_battery.c | 65 +++++++++++++++++++++++--
->  1 file changed, 60 insertions(+), 5 deletions(-)
+On 2019-10-31 10:50, Steve Grubb wrote:
+> Hello,
+>=20
+> TLDR;  I see a lot of benefit to switching away from procfs for setting a=
+uid &=20
+> sessionid.
+>=20
+> On Wednesday, October 30, 2019 6:03:20 PM EDT Richard Guy Briggs wrote:
+> > > Also, for the record, removing the audit loginuid from procfs is not
+> > > something to take lightly, if at all; like it or not, it's part of th=
+e
+> > > kernel API.
+>=20
+> It can also be used by tools to iterate processes related to one user or=
+=20
+> session. I use this in my Intrusion Prevention System which will land in=
+=20
+> audit user space at some point in the future.
+>=20
+> > Oh, I'm quite aware of how important this change is and it was discusse=
+d
+> > with Steve Grubb who saw the concern and value of considering such a
+> > disruptive change.
+>=20
+> Actually, I advocated for syscall. I think the gist of Eric's idea was th=
+at /
+> proc is the intersection of many nasty problems. By relying on it, you ca=
+n't=20
+> simplify the API to reduce the complexity. Almost no program actually nee=
+ds=20
+> access to /proc. ps does. But almost everything else is happy without it.=
+ For=20
+> example, when you setup chroot jails, you may have to add /dev/random or =
+/
+> dev/null, but almost never /proc. What does force you to add /proc is any=
+=20
+> entry point daemon like sshd because it needs to set the loginuid. If we=
+=20
+> switch away from /proc, then sshd or crond will no longer /require/ procf=
+s to=20
+> be available which again simplifies the system design.
+>=20
+> > Removing proc support for auid/ses would be a
+> > long-term deprecation if accepted.
+>=20
+> It might need to just be turned into readonly for a while. But then again=
+,=20
+> perhaps auid and session should be part of /proc/<pid>/status? Maybe this=
+ can=20
+> be done independently and ahead of the container work so there is a migra=
+tion=20
+> path for things that read auid or session. TBH, maybe this should have be=
+en=20
+> done from the beginning.
 
-This was already reviewed by me. Where's my tag?
+How about making loginuid/contid/capcontid writable only via netlink but
+still provide the /proc interface for reading?  Deprecation of proc can
+be left as a decision for later.  This way sshd/crond/getty don't need
+/proc, but the info is still there for tools that want to read it.
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+> -Steve
 
-Best regards,
-Krzysztof
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
