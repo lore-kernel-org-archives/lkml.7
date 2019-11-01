@@ -2,137 +2,143 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E401CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2568ECA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E831E217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:34:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572600851;
-	bh=0jCij/Fv8ugOCVAh4PqFfAXdu/PxgN5AcduaY+7TskQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s1uKlemlxcFZt8eVTdxyNtTAZ3pAYnixOz3m/FqnWkP2NWXoO58hpg1WCnZ3Qctwm
-	 X4RcqyleZpgEYEYZlsdwcuUVKs5UM3XFmsc7hdflBYnMTE7tDvJAf0fgAaf6fiMeLh
-	 Oc9QvV9Ie64JfoUH+u236qV5q7kvdDb74tRuaBmE=
+	by mail.kernel.org (Postfix) with ESMTP id E7A1121734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:34:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ADFX2EB5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728742AbfKAJeJ (ORCPT
+        id S1728787AbfKAJec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 05:34:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727302AbfKAJeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 05:34:09 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF46321734;
-        Fri,  1 Nov 2019 09:34:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572600848;
-        bh=0jCij/Fv8ugOCVAh4PqFfAXdu/PxgN5AcduaY+7TskQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r20eSui4efPABmYo7hpS0vYVKlcPj8rC24asoji9XM5GANsx40FkR/8T+L4QEfS+c
-         ySou75re54nj88ZPjkzC5BKc0ECclHEmHcEdLWXOPQDeTNeNHdWNgC86bZmua5pwxJ
-         tCGk8Y9PWOTFmXYWYqjI017VLS81unr9CPgr6FHs=
-Date:   Fri, 1 Nov 2019 09:58:57 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>, davem@davemloft.net,
-        mark.rutland@arm.com, p.zabel@pengutronix.de, robh+dt@kernel.org,
-        wens@csie.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v3 0/4] crypto: add sun8i-ss driver for Allwinner
- Security System
-Message-ID: <20191101085857.bukatiog3zxugjng@hendrix>
-References: <20191025185128.24068-1-clabbe.montjoie@gmail.com>
- <20191101061154.abwwbcqzm6lg7uvi@gondor.apana.org.au>
+        Fri, 1 Nov 2019 05:34:32 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40508 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728752AbfKAJeb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 05:34:31 -0400
+Received: by mail-lf1-f65.google.com with SMTP id f4so6783369lfk.7
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 02:34:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P2Wy+d6SJv+zW1h7gwcrJ9wMcc9z6tW4Pf7OV3vuzIM=;
+        b=ADFX2EB5FnE/sL/t/2Vc3e3rF5fsiteBk+A1NMThui6yAi2ffh/Vfsjgbu7Q64wo//
+         /ZbliqCo0dGLps5HIDxXXgS8YTSVHRxr64v7UdeaW8Qf2v3MIf0SEitoyEbRpK2+uOHa
+         En0OqRHTtilLbQCkItdwdeHtmcVVfvRLXG8YLPaMGFGYo5ZxaMRtIYSxsXu8XGBcfHj1
+         iSZwCHcfn4tEC5oOdZQn9ZMJXSZyTqUzXYwSX0L+ebBJ/jMT/clmdue5MBGMan58F22M
+         7JtxmPGOYoJQ4ykrVOkiawCvP5XGhfk2BeCjFy/fju8i27uwEYR8I/i/6a1uJhu82shX
+         zzBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P2Wy+d6SJv+zW1h7gwcrJ9wMcc9z6tW4Pf7OV3vuzIM=;
+        b=lAXBl/tB5VJrrcp4Xvsaw+8A4sbCPXP9ouP6QOgR2dV+/VmEF1X/lHVSG4cDNfC9r5
+         SAqKJF1YsJph0A1gobupAtI6dS3f/dpUqnHGMh43ztKbqg4lcWbjCvLk9CR9b8byPhLR
+         6KkQeJyQDoWA/DV/UpAj4XwFmVbWGD5qOvdEajMzJHOhdJpvj1J7TjDWYfG0V8iDJe/K
+         Mek6HCIApdwEWVeQOfpXvz0QCgW5ivRrSBVSGfn8979vHj2SWUpb0hS8JQLVHx04rRH2
+         2YddRBUyilhqJR7jhJkP7f23QL+iKVN49ETn/15g/a9vfshk7wlgRoipVD5qhN8si39k
+         Zysw==
+X-Gm-Message-State: APjAAAUL0n64MJPzrs4XUHQWggW7BrRkYGfqjExsW+r7ryXOC8Z9iX/+
+        GwaGvF4sEoKL8SRy9Q1S6YzfR+v2BO4iJDec4zR+vw==
+X-Google-Smtp-Source: APXvYqykFl40jxMDQlJMBgGfbD2FRHdfPvjdr0aHRQNEMjEwkimo+7UrmZo1Gp8KiXJ6RvnSoNWXnAaB8dvQSi7cRbs=
+X-Received: by 2002:a05:6512:409:: with SMTP id u9mr6753625lfk.0.1572600869571;
+ Fri, 01 Nov 2019 02:34:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="phjdavwqd433by7q"
-Content-Disposition: inline
-In-Reply-To: <20191101061154.abwwbcqzm6lg7uvi@gondor.apana.org.au>
+References: <1572530323-14802-1-git-send-email-sumit.garg@linaro.org>
+ <1572530323-14802-7-git-send-email-sumit.garg@linaro.org> <20191031214745.GG10507@linux.intel.com>
+In-Reply-To: <20191031214745.GG10507@linux.intel.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Fri, 1 Nov 2019 15:04:18 +0530
+Message-ID: <CAFA6WYMkE928v-v76gGtWmsS0PwRp-OHUtkS0+Ts4V6x0AKBqQ@mail.gmail.com>
+Subject: Re: [Patch v3 6/7] doc: keys: Document usage of TEE based Trusted Keys
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Jens Wiklander <jens.wiklander@linaro.org>, dhowells@redhat.com,
+        Jonathan Corbet <corbet@lwn.net>, jejb@linux.ibm.com,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Stuart Yoder <stuart.yoder@arm.com>,
+        Janne Karhunen <janne.karhunen@gmail.com>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---phjdavwqd433by7q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Nov 01, 2019 at 02:11:54PM +0800, Herbert Xu wrote:
-> On Fri, Oct 25, 2019 at 08:51:24PM +0200, Corentin Labbe wrote:
-> > Hello
-> >
-> > This patch serie adds support for the second version of Allwinner Security System.
-> > The first generation of the Security System is already handled by the sun4i-ss driver.
-> > Due to major change, the first driver cannot handle the second one.
-> > This new Security System is present on A80 and A83T SoCs.
-> >
-> > For the moment, the driver support only DES3/AES in ECB/CBC mode.
-> > Patchs for CTR/CTS, RSA and RNGs will came later.
-> >
-> > This serie is tested with CRYPTO_MANAGER_EXTRA_TESTS
-> > and tested on:
-> > sun8i-a83t-bananapi-m3
-> > sun9i-a80-cubieboard4
-> >
-> > This serie is based on top of the "crypto: add sun8i-ce driver for
-> > Allwinner crypto engine" serie.
-> >
-> > Regards
-> >
-> > Changes since v2:
-> > - Made the reset mandatory
-> > - Removed reset-names
-> >
-> > Changes since v1:
-> > - fixed uninitialized err in sun8i_ss_allocate_chanlist
-> > - Added missing commit description on DT Documentation patch
-> >
-> > Corentin Labbe (4):
-> >   crypto: Add Allwinner sun8i-ss cryptographic offloader
-> >   dt-bindings: crypto: Add DT bindings documentation for sun8i-ss
-> >     Security System
-> >   ARM: dts: sun8i: a83t: Add Security System node
-> >   ARM: dts: sun9i: a80: Add Security System node
-> >
-> >  .../bindings/crypto/allwinner,sun8i-ss.yaml   |  61 ++
-> >  arch/arm/boot/dts/sun8i-a83t.dtsi             |   9 +
-> >  arch/arm/boot/dts/sun9i-a80.dtsi              |   9 +
-> >  drivers/crypto/allwinner/Kconfig              |  28 +
-> >  drivers/crypto/allwinner/Makefile             |   1 +
-> >  drivers/crypto/allwinner/sun8i-ss/Makefile    |   2 +
-> >  .../allwinner/sun8i-ss/sun8i-ss-cipher.c      | 438 ++++++++++++
-> >  .../crypto/allwinner/sun8i-ss/sun8i-ss-core.c | 642 ++++++++++++++++++
-> >  drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h  | 218 ++++++
-> >  9 files changed, 1408 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
-> >  create mode 100644 drivers/crypto/allwinner/sun8i-ss/Makefile
-> >  create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
-> >  create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
-> >  create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
+On Fri, 1 Nov 2019 at 03:17, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
 >
-> Patches 1,2 applied.  Thanks.
+> On Thu, Oct 31, 2019 at 07:28:42PM +0530, Sumit Garg wrote:
+> > Provide documentation for usage of TEE based Trusted Keys via existing
+> > user-space "keyctl" utility. Also, document various use-cases.
+> >
+> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+>
+> This is the most important commit in order for someone who don't deal
+> that much with ARM TEE to get right.
+>
 
-Applied 3 and 4, thanks!
-Maxime
+I agree that documentation needs to be updated and your following
+comments seems to be somewhat similar to comments from Mimi here [1].
 
---phjdavwqd433by7q
-Content-Type: application/pgp-signature; name="signature.asc"
+> Until this commit is right, I don't
+> unfortunately have much to say about other commits.
 
------BEGIN PGP SIGNATURE-----
+Isn't this statement contradicting with your earlier statement
+regarding the right order would be to complete TEE patches review
+first and then come up with documentation here [2]?
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXbvz0QAKCRDj7w1vZxhR
-xVjTAQCdeiXvBM+rscw9plENTZiXAjVbmkADgjas85s2VUzpVQEA04vUS0idMiY/
-RxN28qg8bHvQsTZGYtLIbTxPsSpgCQI=
-=vYi/
------END PGP SIGNATURE-----
+[1] https://lore.kernel.org/linux-integrity/1568025601.4614.253.camel@linux.ibm.com/
+[2] https://lore.kernel.org/linux-integrity/20190909163643.qxmzpcggi567hmhv@linux.intel.com/
 
---phjdavwqd433by7q--
+> Instead of making disjoint islands, you should edit trusted-encrypted.rst
+> so that it describes commonalities and differences.
+>
+> What the document currently describes is the usage model. It could be a
+> section of its own. In that you should describe first the common
+> parameters and separetely the backend specific parametrs.
+>
+> From kernel internals (there could be a section with this name)  the
+> document describe the key generation e.g. is the hardware used and how
+> it is used, is there salting with krng and so forth.
+
+BTW, here is the info regarding RNG provided by OP-TEE (an open-source
+TEE implementation).
+
+It's either direct output from hardware based RNG (if platform
+supports one) [3] or a software based Fortuna CSPRNG (executing in
+trusted environment) [4] which is seeded via multiple entropy sources
+as described here [5].
+
+Overall, I think salting this with krng sounds reasonable to address
+single RNG source concern. So I would suggest to have a common wrapper
+API that would do salting of trust source (TPM or TEE) RNG output with
+krng.
+
+[3] https://github.com/OP-TEE/optee_os/blob/master/core/crypto/rng_hw.c
+[4] https://github.com/OP-TEE/optee_os/blob/master/core/crypto/rng_fortuna.c
+[5] https://github.com/OP-TEE/optee_os/blob/master/core/include/crypto/crypto.h#L272
+
+-Sumit
+
+>
+> /Jarkko
