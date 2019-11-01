@@ -2,124 +2,137 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3797CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E401CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9248C21734
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:32:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vdUoTWpk"
+	by mail.kernel.org (Postfix) with ESMTP id E831E217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:34:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572600851;
+	bh=0jCij/Fv8ugOCVAh4PqFfAXdu/PxgN5AcduaY+7TskQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=s1uKlemlxcFZt8eVTdxyNtTAZ3pAYnixOz3m/FqnWkP2NWXoO58hpg1WCnZ3Qctwm
+	 X4RcqyleZpgEYEYZlsdwcuUVKs5UM3XFmsc7hdflBYnMTE7tDvJAf0fgAaf6fiMeLh
+	 Oc9QvV9Ie64JfoUH+u236qV5q7kvdDb74tRuaBmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbfKAJcJ (ORCPT
+        id S1728742AbfKAJeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 05:32:09 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:41656 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728639AbfKAJcJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 05:32:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ejT2S2mIfvsplY7uEp7jOjxDsXfhP33JrtumCpA22pQ=; b=vdUoTWpkvBtAJ2UJHIGcKsrRh
-        fynCJXsDYXQu4cNL2C/Qeepqc9JrMRc39j7TNApmNN4UFUlr6nfBdHkXoC79KQ3ohvp0jPnFd+I7r
-        eEJBK97VC2dVmft2JU8iLP2NodljJ0d0OzyqJxtvg0QZhJtgSCyIUdmCx+WUwoQ50dIwCSidSHIwX
-        rJQeRBUKgxT++OIYMWK4TD8SIK0P8Je5qHBWt8Imz9VGaMIoYF2LGM/6ospXVUxeZ7mGFNOOWypZs
-        k1qhxDdmVyeU2cgguCeZIPnqD7Z7evBtYlMxK1qHEXm6pKmGIR58zjtcmylAXegOcTqx/Z8vJ03Bx
-        ehUze0JSw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iQTHX-0004zL-QU; Fri, 01 Nov 2019 09:31:48 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Fri, 1 Nov 2019 05:34:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727302AbfKAJeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 05:34:09 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8A5F8300334;
-        Fri,  1 Nov 2019 10:30:43 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3010726540345; Fri,  1 Nov 2019 10:31:45 +0100 (CET)
-Date:   Fri, 1 Nov 2019 10:31:45 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
-        Mel Gorman <mgorman@suse.de>, Ingo Molnar <mingo@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>
-Subject: Re: [RFC 10/10] autonuma, memory tiering: Adjust hot threshold
- automatically
-Message-ID: <20191101093145.GT4131@hirez.programming.kicks-ass.net>
-References: <20191101075727.26683-1-ying.huang@intel.com>
- <20191101075727.26683-11-ying.huang@intel.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF46321734;
+        Fri,  1 Nov 2019 09:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572600848;
+        bh=0jCij/Fv8ugOCVAh4PqFfAXdu/PxgN5AcduaY+7TskQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r20eSui4efPABmYo7hpS0vYVKlcPj8rC24asoji9XM5GANsx40FkR/8T+L4QEfS+c
+         ySou75re54nj88ZPjkzC5BKc0ECclHEmHcEdLWXOPQDeTNeNHdWNgC86bZmua5pwxJ
+         tCGk8Y9PWOTFmXYWYqjI017VLS81unr9CPgr6FHs=
+Date:   Fri, 1 Nov 2019 09:58:57 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>, davem@davemloft.net,
+        mark.rutland@arm.com, p.zabel@pengutronix.de, robh+dt@kernel.org,
+        wens@csie.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v3 0/4] crypto: add sun8i-ss driver for Allwinner
+ Security System
+Message-ID: <20191101085857.bukatiog3zxugjng@hendrix>
+References: <20191025185128.24068-1-clabbe.montjoie@gmail.com>
+ <20191101061154.abwwbcqzm6lg7uvi@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="phjdavwqd433by7q"
 Content-Disposition: inline
-In-Reply-To: <20191101075727.26683-11-ying.huang@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191101061154.abwwbcqzm6lg7uvi@gondor.apana.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 03:57:27PM +0800, Huang, Ying wrote:
 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 0a83e9cf6685..22bdbb7afac2 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -1486,6 +1486,41 @@ static bool numa_migration_check_rate_limit(struct pglist_data *pgdat,
->  	return true;
->  }
->  
-> +#define NUMA_MIGRATION_ADJUST_STEPS	16
-> +
-> +static void numa_migration_adjust_threshold(struct pglist_data *pgdat,
-> +					    unsigned long rate_limit,
-> +					    unsigned long ref_threshold)
-> +{
-> +	unsigned long now = jiffies, last_threshold_jiffies;
-> +	unsigned long unit_threshold, threshold;
-> +	unsigned long try_migrate, ref_try_migrate, mdiff;
-> +
-> +	last_threshold_jiffies = pgdat->autonuma_threshold_jiffies;
-> +	if (now > last_threshold_jiffies +
-> +	    msecs_to_jiffies(sysctl_numa_balancing_scan_period_max) &&
-> +	    cmpxchg(&pgdat->autonuma_threshold_jiffies,
-> +		    last_threshold_jiffies, now) == last_threshold_jiffies) {
+--phjdavwqd433by7q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-That is seriously unreadable gunk.
+On Fri, Nov 01, 2019 at 02:11:54PM +0800, Herbert Xu wrote:
+> On Fri, Oct 25, 2019 at 08:51:24PM +0200, Corentin Labbe wrote:
+> > Hello
+> >
+> > This patch serie adds support for the second version of Allwinner Security System.
+> > The first generation of the Security System is already handled by the sun4i-ss driver.
+> > Due to major change, the first driver cannot handle the second one.
+> > This new Security System is present on A80 and A83T SoCs.
+> >
+> > For the moment, the driver support only DES3/AES in ECB/CBC mode.
+> > Patchs for CTR/CTS, RSA and RNGs will came later.
+> >
+> > This serie is tested with CRYPTO_MANAGER_EXTRA_TESTS
+> > and tested on:
+> > sun8i-a83t-bananapi-m3
+> > sun9i-a80-cubieboard4
+> >
+> > This serie is based on top of the "crypto: add sun8i-ce driver for
+> > Allwinner crypto engine" serie.
+> >
+> > Regards
+> >
+> > Changes since v2:
+> > - Made the reset mandatory
+> > - Removed reset-names
+> >
+> > Changes since v1:
+> > - fixed uninitialized err in sun8i_ss_allocate_chanlist
+> > - Added missing commit description on DT Documentation patch
+> >
+> > Corentin Labbe (4):
+> >   crypto: Add Allwinner sun8i-ss cryptographic offloader
+> >   dt-bindings: crypto: Add DT bindings documentation for sun8i-ss
+> >     Security System
+> >   ARM: dts: sun8i: a83t: Add Security System node
+> >   ARM: dts: sun9i: a80: Add Security System node
+> >
+> >  .../bindings/crypto/allwinner,sun8i-ss.yaml   |  61 ++
+> >  arch/arm/boot/dts/sun8i-a83t.dtsi             |   9 +
+> >  arch/arm/boot/dts/sun9i-a80.dtsi              |   9 +
+> >  drivers/crypto/allwinner/Kconfig              |  28 +
+> >  drivers/crypto/allwinner/Makefile             |   1 +
+> >  drivers/crypto/allwinner/sun8i-ss/Makefile    |   2 +
+> >  .../allwinner/sun8i-ss/sun8i-ss-cipher.c      | 438 ++++++++++++
+> >  .../crypto/allwinner/sun8i-ss/sun8i-ss-core.c | 642 ++++++++++++++++++
+> >  drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h  | 218 ++++++
+> >  9 files changed, 1408 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
+> >  create mode 100644 drivers/crypto/allwinner/sun8i-ss/Makefile
+> >  create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
+> >  create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
+> >  create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
+>
+> Patches 1,2 applied.  Thanks.
 
-> +
-> +		ref_try_migrate = rate_limit *
-> +			sysctl_numa_balancing_scan_period_max / 1000;
-> +		try_migrate = node_page_state(pgdat, NUMA_TRY_MIGRATE);
-> +		mdiff = try_migrate - pgdat->autonuma_threshold_try_migrate;
-> +		unit_threshold = ref_threshold / NUMA_MIGRATION_ADJUST_STEPS;
-> +		threshold = pgdat->autonuma_threshold;
-> +		if (!threshold)
-> +			threshold = ref_threshold;
-> +		if (mdiff > ref_try_migrate * 11 / 10)
-> +			threshold = max(threshold - unit_threshold,
-> +					unit_threshold);
-> +		else if (mdiff < ref_try_migrate * 9 / 10)
-> +			threshold = min(threshold + unit_threshold,
-> +					ref_threshold);
+Applied 3 and 4, thanks!
+Maxime
 
-And that is violating codingstyle.
+--phjdavwqd433by7q
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +		pgdat->autonuma_threshold_try_migrate = try_migrate;
-> +		pgdat->autonuma_threshold = threshold;
-> +	}
-> +}
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXbvz0QAKCRDj7w1vZxhR
+xVjTAQCdeiXvBM+rscw9plENTZiXAjVbmkADgjas85s2VUzpVQEA04vUS0idMiY/
+RxN28qg8bHvQsTZGYtLIbTxPsSpgCQI=
+=vYi/
+-----END PGP SIGNATURE-----
 
-Maybe if you use variable names that are slightly shorter than half your
-line length?
+--phjdavwqd433by7q--
