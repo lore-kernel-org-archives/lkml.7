@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1847DCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B56CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFCDC208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0FBA216F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:08:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KBf2RlKG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nnIBH/N8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbfKACIL (ORCPT
+        id S1728998AbfKACIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 22:08:11 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:46611 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbfKACIL (ORCPT
+        Thu, 31 Oct 2019 22:08:18 -0400
+Received: from mail-yb1-f170.google.com ([209.85.219.170]:39949 "EHLO
+        mail-yb1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbfKACIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 22:08:11 -0400
-Received: by mail-yw1-f66.google.com with SMTP id i2so2958491ywg.13
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 19:08:10 -0700 (PDT)
+        Thu, 31 Oct 2019 22:08:17 -0400
+Received: by mail-yb1-f170.google.com with SMTP id d12so3309946ybn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 19:08:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=iAgomrDaaw+p9SyPDKe+DIwZEIKyPHeJdp6rMCsSqrc=;
-        b=KBf2RlKG/HVF+HdZkZwipGGFDc87+W3TEb3cKUL72YSFO06gGeEQCdgEwVcGArbIEC
-         0hSgawpERrPxShlj96U8j0EgDlDAsSoXTlAfDF2GR344/R8BofFgqibEFBlB+mtGqpuN
-         yFMWgZDIShlUYgLFAy6VDY/j17XU0RC2KQPP9Zcp0/Fq/zv2fYl5Gzg2C+K9spCxNznK
-         QykUXf43faePtkV1/a+P/HuHQYCopqaTgTTJtmlrkvjthjf5XRXXi8vGr5ds8Y7RcjoL
-         KbYzAlzMi2De7OyKSieTdE1sGOTS6Q/7qt25zBlxC+3NjFCaXNOZpXMQxfg/hFGQtbec
-         FXmA==
+        bh=gsFY1KIx9iJYif7vQxfbD15FpxrJSPWH13lYc5zzTiA=;
+        b=nnIBH/N8r0bXFneNBS/XdONbwd5cpWNaSL+I/9jdd5Fmz60RYTHgZRqaUPxlkLfJF/
+         fT6GoUIjbcZhvKEtfb1T5N8NEwHU+IiYHQ3C82VVD/k4ASdseeN5QRLFhb9CmK7yaztb
+         l8Ox6EfAwEAeytcg+F2Eva4DhkSi98nCukrrUg3mYlwAEh1lRsw4xa2lar2+1mxpb52c
+         W/Dm2m44xqX8rNbaKrzSkpjoauSA9/olWoWgM/M1PlrW3gt0vFsy0lTDtBMVcQxSGoko
+         kl4I1jePNxSuX/D0RlPxYlv9XF/duXDAKtVGCoMRrUg9FKfem1SRsGMYr0PEcOLiw0eY
+         jcHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=iAgomrDaaw+p9SyPDKe+DIwZEIKyPHeJdp6rMCsSqrc=;
-        b=KGKj1h/YmuZ6t6FDgjyA5QAqtZ0FjuZB+CQKsNuwdOGl+aXgAqnJYtTBw69xEYZe3t
-         koYMeqMvj7ffkCr3qEwcqEmB9TRHKkgrEJJ8LtHMr7hBSM4pl7dDyusvy2ac2+0xJThI
-         r0L5Cxi3cIrxFoNP7P86q9h8RXtiIDh2dJJhynzqb2K+NXMfqHtSqRotkAFB6pqfBFgf
-         o2mCdc3F3IXw8VNTztEDrIQ3ndk7MXs6yp2m4B0NQEr1wAOARfaI7xi8o5iOvrg2NtAO
-         yxX6thGBjL+rLY3jTPxDrK6uSBMdTZ/R9avVaEX1m1zTNac2EXWBK913f2PIl3BwRgxf
-         tcIg==
-X-Gm-Message-State: APjAAAWyM6tFOlC3uASKqNbrtgDDZ70VyDXjHHzRt7+erWmzduD7370a
-        E+tEdZDCIpyoShtMBrYgOMzdmw==
-X-Google-Smtp-Source: APXvYqwocgrzQk2qV7HduXfj8l1PhQC22H7kaTVlKis0qq4lCq0+YnTVSRlOOzrOxdeHR3aunn2FAQ==
-X-Received: by 2002:a81:8501:: with SMTP id v1mr6501020ywf.406.1572574090230;
-        Thu, 31 Oct 2019 19:08:10 -0700 (PDT)
+        bh=gsFY1KIx9iJYif7vQxfbD15FpxrJSPWH13lYc5zzTiA=;
+        b=tywmPe8ZrijwFtEII6Q/V4lwjjHzZk/VznBIJSOe7wbx8i2+N685O0jMfKQB0mXwIa
+         zIDXkLW/uf/o4WVzeee8qYIYM9NB7MZImLVa8rnxr+TVZJ8fHGEFkMpryaclQySAJnvG
+         VHbS416FA/HHSsH5/Qxee80qlK7JsCPzIAXbuRYpXJgVGdvZzYyWDWx4tp66pwhX7yho
+         p1+JEgeCLzBJ9H9PHQmm94Tv3prk5V7luI+6nJtjqMx5AFftf98QxVd7iIprdfX204jm
+         KWHFeQdOmqFrply902Pf9Moz/4kUvU3l77eABPEzYBtA2LsHU2lJ0v7kkYMYDpvSstDV
+         5hWA==
+X-Gm-Message-State: APjAAAXBcnxo1WvgdB0UqEQUyBNCBUT/VIsY14yNxuG1SVh3H+SvUZ19
+        U4109Kzk4WpKOu2vC3W0WTWgOQ==
+X-Google-Smtp-Source: APXvYqxC/QtBI+uTh4885NOyut2C808t2rcNQx3/HTaTMG6CKLO4pXNd03+eoSRaIX8JHlAqdEoyGw==
+X-Received: by 2002:a25:ba01:: with SMTP id t1mr6972869ybg.309.1572574095898;
+        Thu, 31 Oct 2019 19:08:15 -0700 (PDT)
 Received: from localhost.localdomain (li1038-30.members.linode.com. [45.33.96.30])
-        by smtp.gmail.com with ESMTPSA id m5sm3762076ywj.27.2019.10.31.19.08.04
+        by smtp.gmail.com with ESMTPSA id m5sm3762076ywj.27.2019.10.31.19.08.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 19:08:09 -0700 (PDT)
+        Thu, 31 Oct 2019 19:08:15 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
@@ -71,9 +71,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Coresight ML <coresight@lists.linaro.org>,
         Robert Walker <robert.walker@arm.com>
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2 1/4] perf cs-etm: Continuously record last branches
-Date:   Fri,  1 Nov 2019 10:07:47 +0800
-Message-Id: <20191101020750.29063-2-leo.yan@linaro.org>
+Subject: [PATCH v2 2/4] perf cs-etm: Correct synthesizing instruction samples
+Date:   Fri,  1 Nov 2019 10:07:48 +0800
+Message-Id: <20191101020750.29063-3-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191101020750.29063-1-leo.yan@linaro.org>
 References: <20191101020750.29063-1-leo.yan@linaro.org>
@@ -82,54 +82,192 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Every time synthesize instruction sample, the last branches recording
-will be reset.  This would be fine if the instruction period is big
-enough, for example if we use the option '--itrace=i100000', the last
-branch array is reset for every instruction sample (10000 instructions
-per period); before generate the next instruction sample, there has the
-enough packets coming to fill last branch array.  On the other hand,
-if set a very small period, the packets will be significantly reduced
-between two continuous instruction samples, thus if the last branch
-array is reset for the previous instruction sample, it's almost empty
-for the next instruction sample.
+When 'etm->instructions_sample_period' is less than
+'tidq->period_instructions', the function cs_etm__sample() cannot handle
+this case properly with its logic.
 
-To allow the last branches to work for any instruction periods, this
-patch avoids to reset the last branches for every instruction sample
-and only reset it when flush the trace data.  The last branches will
-be reset only for two cases, one is for trace starting, another case
-is for discontinuous trace; thus it can continuously record last
-branches.
+Let's see below flow as an example:
 
+- If we set itrace option '--itrace=i4', then function cs_etm__sample()
+  has variables with initialized values:
+
+  tidq->period_instructions = 0
+  etm->instructions_sample_period = 4
+
+- When the first packet is coming:
+
+  packet->instr_count = 10; the number of instructions executed in this
+  packet is 10, thus update period_instructions as below:
+
+  tidq->period_instructions = 0 + 10 = 10
+  instrs_over = 10 - 4 = 6
+  offset = 10 - 6 - 1 = 3
+  tidq->period_instructions = instrs_over = 6
+
+- When the second packet is coming:
+
+  packet->instr_count = 10; in the second pass, assume 10 instructions
+  in the trace sample again:
+
+  tidq->period_instructions = 6 + 10 = 16
+  instrs_over = 16 - 4 = 12
+  offset = 10 - 12 - 1 = -3  -> the negative value
+  tidq->period_instructions = instrs_over = 12
+
+So after handle these two packets, there have below issues:
+
+The first issue is that cs_etm__instr_addr() returns the address within
+the current trace sample of the instruction related to offset, so the
+offset is supposed to be always unsigned value.  But in fact, function
+cs_etm__sample() might calculate a negative offset value (in handling
+the second packet, the offset is -3) and pass to cs_etm__instr_addr()
+with u64 type with a big positive integer.
+
+The second issue is it only synthesizes 2 samples for sample period = 4.
+In theory, every packet has 10 instructions so the two packets have
+total 20 instructions, 20 instructions should generate 5 samples
+(4 x 5 = 20).  This is because cs_etm__sample() only calls once
+cs_etm__synth_instruction_sample() to generate instruction sample per
+range packet.
+
+This patch fixes the logic in function cs_etm__sample(); the basic
+idea is to divide into three parts for handling coming packet:
+
+- The first part is for synthesizing the first instruction sample, it
+  combines the instructions from the tail of previous packet and the
+  instructions from the head of the new packet;
+- The second part is to simply generate samples with sample period
+  aligned;
+- The third part is the tail of new packet, the rest instructions will
+  be left to next time handling with sequential packet.
+
+Suggested-by: Mike Leach <mike.leach@linaro.org>
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/util/cs-etm.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/perf/util/cs-etm.c | 106 ++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 93 insertions(+), 13 deletions(-)
 
 diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index f5f855fff412..8be6d010ae84 100644
+index 8be6d010ae84..8e9eb7583bcd 100644
 --- a/tools/perf/util/cs-etm.c
 +++ b/tools/perf/util/cs-etm.c
-@@ -1153,9 +1153,6 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
- 			"CS ETM Trace: failed to deliver instruction event, error %d\n",
- 			ret);
+@@ -1360,23 +1360,103 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+ 		 * TODO: allow period to be defined in cycles and clock time
+ 		 */
  
--	if (etm->synth_opts.last_branch)
--		cs_etm__reset_last_branch_rb(tidq);
--
- 	return ret;
- }
+-		/* Get number of instructions executed after the sample point */
+-		u64 instrs_over = tidq->period_instructions -
+-			etm->instructions_sample_period;
++		/*
++		 * Below diagram is used to demonstrate the instruction samples
++		 * generation flows:
++		 *
++		 *    Instrs     Instrs       Instrs       Instrs
++		 *   Sample(n)  Sample(n+1)  Sample(n+2)  Sample(n+3)
++		 *    |            |            |            |
++		 *    V            V            V            V
++		 *   --------------------------------------------------
++		 *            ^                                  ^
++		 *            |                                  |
++		 *         Period                             Period
++		 *    instructions(Pi)                   instructions(Pi')
++		 *
++		 *            |                                  |
++		 *            \---------------- -----------------/
++		 *                             V
++		 *                      instrs_executed
++		 *
++		 * When the new instruction packet is coming, period
++		 * instructions (Pi) contains the the number of instructions
++		 * executed after the sample point(n).  So for the next sample
++		 * point(n+1), it is combined the two parts instructions, one
++		 * is the tail of the old packet and another is the head of
++		 * the new coming packet.  So we use 'head' variable to cauclate
++		 * the instruction numbers in the new packet for sample(n+1).
++		 *
++		 * For sample(n+2) and sample(n+3), they consume the instruction
++		 * for sample period, so we directly generate samples based on
++		 * the sampe period.
++		 *
++		 * After sample(n+3), there still leave some instructions which
++		 * will be used by later packet; so we use 'instrs_over' to
++		 * track the rest instruction number and its final value
++		 * presents the tail of the packet, it will be assigned to
++		 * 'tidq->period_instructions' for next round calculation.
++		 */
++		u64 head, offset = 0;
++		u64 addr;
  
-@@ -1486,6 +1483,10 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
- 		tidq->prev_packet = tmp;
- 	}
+ 		/*
+-		 * Calculate the address of the sampled instruction (-1 as
+-		 * sample is reported as though instruction has just been
+-		 * executed, but PC has not advanced to next instruction)
++		 * 'instrs_over' is the number of instructions executed after
++		 * sample points, initialise it to 'instrs_executed' and will
++		 * decrease it for consumed instructions in every synthesized
++		 * instruction sample.
+ 		 */
+-		u64 offset = (instrs_executed - instrs_over - 1);
+-		u64 addr = cs_etm__instr_addr(etmq, trace_chan_id,
+-					      tidq->packet, offset);
++		u64 instrs_over = instrs_executed;
  
-+	/* Reset last branches after flush the trace */
-+	if (etm->synth_opts.last_branch)
-+		cs_etm__reset_last_branch_rb(tidq);
+-		ret = cs_etm__synth_instruction_sample(
+-			etmq, tidq, addr, etm->instructions_sample_period);
+-		if (ret)
+-			return ret;
++		/*
++		 * 'head' is the instructions number of the head in the new
++		 * packet, it combines with the tail of previous packet to
++		 * generate a sample.  So 'head' uses the sample period to
++		 * decrease the instruction number introduced by the previous
++		 * packet.
++		 */
++		head = etm->instructions_sample_period -
++				  (tidq->period_instructions - instrs_executed);
 +
- 	return err;
- }
++		if (head) {
++			offset = head;
++
++			/*
++			 * Calculate the address of the sampled instruction (-1
++			 * as sample is reported as though instruction has just
++			 * been executed, but PC has not advanced to next
++			 * instruction)
++			 */
++			addr = cs_etm__instr_addr(etmq, trace_chan_id,
++						  tidq->packet, offset - 1);
++			ret = cs_etm__synth_instruction_sample(
++				etmq, tidq, addr,
++				etm->instructions_sample_period);
++			if (ret)
++				return ret;
++
++			instrs_over -= head;
++		}
++
++		while (instrs_over >= etm->instructions_sample_period) {
++			offset += etm->instructions_sample_period;
++
++			/*
++			 * Calculate the address of the sampled instruction (-1
++			 * as sample is reported as though instruction has just
++			 * been executed, but PC has not advanced to next
++			 * instruction)
++			 */
++			addr = cs_etm__instr_addr(etmq, trace_chan_id,
++						  tidq->packet, offset - 1);
++			ret = cs_etm__synth_instruction_sample(
++				etmq, tidq, addr,
++				etm->instructions_sample_period);
++			if (ret)
++				return ret;
++
++			instrs_over -= etm->instructions_sample_period;
++		}
  
+ 		/* Carry remaining instructions into next sample period */
+ 		tidq->period_instructions = instrs_over;
 -- 
 2.17.1
 
