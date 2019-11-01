@@ -2,65 +2,467 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631C1CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 03:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2940CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 03:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C2A2053B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 03:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB8E2067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 03:45:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PvBowQ8I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbfKADll (ORCPT
+        id S1729232AbfKADpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 23:41:41 -0400
-Received: from hn.kd.ny.adsl ([42.231.162.229]:4070 "HELO zoosbook.com"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
-        id S1728207AbfKADlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 23:41:40 -0400
-Received: from [195.163.116.110] by asx121.turbo-inline.com with ASMTP; Fri, 01 Nov 2019 10:26:17 +0700
-Received: from unknown (99.164.203.92)
-        by qnx.mdrost.com with SMTP; Fri, 01 Nov 2019 10:18:26 +0700
-Received: from unknown (HELO mx03.listsystemsf.net) (Fri, 01 Nov 2019 10:00:46 +0700)
-        by mailout.endmonthnow.com with SMTP; Fri, 01 Nov 2019 10:00:46 +0700
-Received: from unknown (HELO mail.gimmicc.net) (Fri, 01 Nov 2019 09:44:46 +0700)
-        by public.micromail.com.au with ASMTP; Fri, 01 Nov 2019 09:44:46 +0700
-Message-ID: <29F3BCD1.1A007FA4@zoosbook.com>
-Date:   Fri, 01 Nov 2019 09:41:48 +0700
-Reply-To: "zoosbook.com" <admin@zoosbook.com>
-From:   "zoosbook.com" <admin@zoosbook.com>
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; fr-FR; rv:1.7.5) Gecko/20041206 Thunderbird/1.0
-X-Accept-Language: en-us
+        Thu, 31 Oct 2019 23:45:54 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38020 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbfKADpx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 23:45:53 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c13so6069974pfp.5
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 20:45:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Kif7QBlYH7HtQ8QoUYHWsgTTwYoxAYOD/DOI/uUcMFE=;
+        b=PvBowQ8I1eLTJhTYXuVHJZMYoaY1/O8nPLjmt+zcY1xLezdPdRWGn2n4HDIZcjCvbI
+         NHob5GFT5yXt/FXMihCaYtCBR4YaolJT3VSSuHx84Wle0iOsbg4QpAtTIhrPCOMiBDvn
+         75yHNrecabFRtKKbwO6UJIuRAHJt9JwU/kz80=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Kif7QBlYH7HtQ8QoUYHWsgTTwYoxAYOD/DOI/uUcMFE=;
+        b=rVjBEOy2uAj2qbjpX23C6dk9x7WBYKxIB+aCyztGSL/v2Pakru1WCOJRmThysyMK1T
+         4M1LawORbZi8vRAqS2FMjsfaKW/lbEzHbdHJOYrfML8HintdM21AJXLFjQKp0i9M0B9W
+         wK/Xh85NUZ3ezvqIUb9+34ZV4vGVJVAvx5yZTIELQbRlkvViyHJ4S0/MIVZXhO80LRy1
+         PBS7GZirMKDQH3lxJm8+N3ghXSd12qVsjboizMsQVoidewU2MbWuYbzPvUgUTXAl6lja
+         myBYfHdUZbnBM7ahs97y3rMl0etzB6VUyJ57Q2WA/P0ZVBpLD13T/OaAph0udm4kCHCS
+         WHAA==
+X-Gm-Message-State: APjAAAUpCgL/IfAAnMhwrf87sno9jLGRE/CcbvI+7doGn5DBrXP1n3DS
+        UnO2qL39rlYii/+laWlOpjGYeQ==
+X-Google-Smtp-Source: APXvYqxNU06p/uWWHHdHeQP2/XaFd2qFYhrmQSh39YdZ3rGPDuJG0Q+5SL1fgDuYw/eCwyxalIMr7Q==
+X-Received: by 2002:a17:90a:3486:: with SMTP id p6mr12503340pjb.102.1572579951233;
+        Thu, 31 Oct 2019 20:45:51 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s23sm5882129pgh.21.2019.10.31.20.45.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 20:45:49 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 20:45:48 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     samitolvanen@google.com
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 17/17] arm64: implement Shadow Call Stack
+Message-ID: <201910312042.5AF689AAC@keescook>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191031164637.48901-1-samitolvanen@google.com>
+ <20191031164637.48901-18-samitolvanen@google.com>
 MIME-Version: 1.0
-To:     <linux-kernel@vger.kernel.org>
-Cc:     <linux-msdos@vger.kernel.org>, <linux-raid@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-Subject: FREE Bestiality Social Network
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031164637.48901-18-samitolvanen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, 
+On Thu, Oct 31, 2019 at 09:46:37AM -0700, samitolvanen@google.com wrote:
+> This change implements shadow stack switching, initial SCS set-up,
+> and interrupt shadow stacks for arm64.
+> 
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-Bestiality Social Networking Platform. With pictures, videos and friend
-about bestiality and zoophilia porn. 
-Here you can meet and talk with people that love zoo sex.
+The only suggestion would be calling attention the clearing step (both in
+comments below and in the commit log), just to record the earlier
+discussion about it.
 
-Register for a free account with us today
-https://www.zoosbook.com/register
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Let your animalic thoughts get alive.
+-Kees
 
-After you`ll get a feeling of the things inside, please give us a nice
-review here
-https://www.scamadviser.com/check-website/zoosbook.com
+> ---
+>  arch/arm64/Kconfig                   |  5 ++++
+>  arch/arm64/include/asm/scs.h         | 37 ++++++++++++++++++++++++++
+>  arch/arm64/include/asm/stacktrace.h  |  4 +++
+>  arch/arm64/include/asm/thread_info.h |  3 +++
+>  arch/arm64/kernel/Makefile           |  1 +
+>  arch/arm64/kernel/asm-offsets.c      |  3 +++
+>  arch/arm64/kernel/entry.S            | 28 ++++++++++++++++++++
+>  arch/arm64/kernel/head.S             |  9 +++++++
+>  arch/arm64/kernel/irq.c              |  2 ++
+>  arch/arm64/kernel/process.c          |  2 ++
+>  arch/arm64/kernel/scs.c              | 39 ++++++++++++++++++++++++++++
+>  arch/arm64/kernel/smp.c              |  4 +++
+>  12 files changed, 137 insertions(+)
+>  create mode 100644 arch/arm64/include/asm/scs.h
+>  create mode 100644 arch/arm64/kernel/scs.c
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 42867174920f..f4c94c5e8012 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -66,6 +66,7 @@ config ARM64
+>  	select ARCH_USE_QUEUED_RWLOCKS
+>  	select ARCH_USE_QUEUED_SPINLOCKS
+>  	select ARCH_SUPPORTS_MEMORY_FAILURE
+> +	select ARCH_SUPPORTS_SHADOW_CALL_STACK if CC_HAVE_SHADOW_CALL_STACK
+>  	select ARCH_SUPPORTS_ATOMIC_RMW
+>  	select ARCH_SUPPORTS_INT128 if GCC_VERSION >= 50000 || CC_IS_CLANG
+>  	select ARCH_SUPPORTS_NUMA_BALANCING
+> @@ -948,6 +949,10 @@ config ARCH_HAS_CACHE_LINE_SIZE
+>  config ARCH_ENABLE_SPLIT_PMD_PTLOCK
+>  	def_bool y if PGTABLE_LEVELS > 2
+>  
+> +# Supported by clang >= 7.0
+> +config CC_HAVE_SHADOW_CALL_STACK
+> +	def_bool $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
+> +
+>  config SECCOMP
+>  	bool "Enable seccomp to safely compute untrusted bytecode"
+>  	---help---
+> diff --git a/arch/arm64/include/asm/scs.h b/arch/arm64/include/asm/scs.h
+> new file mode 100644
+> index 000000000000..c50d2b0c6c5f
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/scs.h
+> @@ -0,0 +1,37 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_SCS_H
+> +#define _ASM_SCS_H
+> +
+> +#ifndef __ASSEMBLY__
+> +
+> +#include <linux/scs.h>
+> +
+> +#ifdef CONFIG_SHADOW_CALL_STACK
+> +
+> +extern void scs_init_irq(void);
+> +
+> +static __always_inline void scs_save(struct task_struct *tsk)
+> +{
+> +	void *s;
+> +
+> +	asm volatile("mov %0, x18" : "=r" (s));
+> +	task_set_scs(tsk, s);
+> +}
+> +
+> +static inline void scs_overflow_check(struct task_struct *tsk)
+> +{
+> +	if (unlikely(scs_corrupted(tsk)))
+> +		panic("corrupted shadow stack detected inside scheduler\n");
+> +}
+> +
+> +#else /* CONFIG_SHADOW_CALL_STACK */
+> +
+> +static inline void scs_init_irq(void) {}
+> +static inline void scs_save(struct task_struct *tsk) {}
+> +static inline void scs_overflow_check(struct task_struct *tsk) {}
+> +
+> +#endif /* CONFIG_SHADOW_CALL_STACK */
+> +
+> +#endif /* __ASSEMBLY __ */
+> +
+> +#endif /* _ASM_SCS_H */
+> diff --git a/arch/arm64/include/asm/stacktrace.h b/arch/arm64/include/asm/stacktrace.h
+> index 4d9b1f48dc39..b6cf32fb4efe 100644
+> --- a/arch/arm64/include/asm/stacktrace.h
+> +++ b/arch/arm64/include/asm/stacktrace.h
+> @@ -68,6 +68,10 @@ extern void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk);
+>  
+>  DECLARE_PER_CPU(unsigned long *, irq_stack_ptr);
+>  
+> +#ifdef CONFIG_SHADOW_CALL_STACK
+> +DECLARE_PER_CPU(unsigned long *, irq_shadow_call_stack_ptr);
+> +#endif
+> +
+>  static inline bool on_irq_stack(unsigned long sp,
+>  				struct stack_info *info)
+>  {
+> diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
+> index f0cec4160136..8c73764b9ed2 100644
+> --- a/arch/arm64/include/asm/thread_info.h
+> +++ b/arch/arm64/include/asm/thread_info.h
+> @@ -41,6 +41,9 @@ struct thread_info {
+>  #endif
+>  		} preempt;
+>  	};
+> +#ifdef CONFIG_SHADOW_CALL_STACK
+> +	void			*shadow_call_stack;
+> +#endif
+>  };
+>  
+>  #define thread_saved_pc(tsk)	\
+> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+> index 478491f07b4f..b3995329d9e5 100644
+> --- a/arch/arm64/kernel/Makefile
+> +++ b/arch/arm64/kernel/Makefile
+> @@ -63,6 +63,7 @@ obj-$(CONFIG_CRASH_CORE)		+= crash_core.o
+>  obj-$(CONFIG_ARM_SDE_INTERFACE)		+= sdei.o
+>  obj-$(CONFIG_ARM64_SSBD)		+= ssbd.o
+>  obj-$(CONFIG_ARM64_PTR_AUTH)		+= pointer_auth.o
+> +obj-$(CONFIG_SHADOW_CALL_STACK)		+= scs.o
+>  
+>  obj-y					+= vdso/ probes/
+>  obj-$(CONFIG_COMPAT_VDSO)		+= vdso32/
+> diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+> index 214685760e1c..f6762b9ae1e1 100644
+> --- a/arch/arm64/kernel/asm-offsets.c
+> +++ b/arch/arm64/kernel/asm-offsets.c
+> @@ -33,6 +33,9 @@ int main(void)
+>    DEFINE(TSK_TI_ADDR_LIMIT,	offsetof(struct task_struct, thread_info.addr_limit));
+>  #ifdef CONFIG_ARM64_SW_TTBR0_PAN
+>    DEFINE(TSK_TI_TTBR0,		offsetof(struct task_struct, thread_info.ttbr0));
+> +#endif
+> +#ifdef CONFIG_SHADOW_CALL_STACK
+> +  DEFINE(TSK_TI_SCS,		offsetof(struct task_struct, thread_info.shadow_call_stack));
+>  #endif
+>    DEFINE(TSK_STACK,		offsetof(struct task_struct, stack));
+>  #ifdef CONFIG_STACKPROTECTOR
+> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+> index cf3bd2976e57..12a5bc209280 100644
+> --- a/arch/arm64/kernel/entry.S
+> +++ b/arch/arm64/kernel/entry.S
+> @@ -172,6 +172,10 @@ alternative_cb_end
+>  
+>  	apply_ssbd 1, x22, x23
+>  
+> +#ifdef CONFIG_SHADOW_CALL_STACK
+> +	ldr	x18, [tsk, #TSK_TI_SCS]		// Restore shadow call stack
+> +	str	xzr, [tsk, #TSK_TI_SCS]
+> +#endif
+>  	.else
+>  	add	x21, sp, #S_FRAME_SIZE
+>  	get_current_task tsk
+> @@ -278,6 +282,12 @@ alternative_else_nop_endif
+>  	ct_user_enter
+>  	.endif
+>  
+> +#ifdef CONFIG_SHADOW_CALL_STACK
+> +	.if	\el == 0
+> +	str	x18, [tsk, #TSK_TI_SCS]		// Save shadow call stack
+> +	.endif
+> +#endif
+> +
+>  #ifdef CONFIG_ARM64_SW_TTBR0_PAN
+>  	/*
+>  	 * Restore access to TTBR0_EL1. If returning to EL0, no need for SPSR
+> @@ -383,6 +393,9 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
+>  
+>  	.macro	irq_stack_entry
+>  	mov	x19, sp			// preserve the original sp
+> +#ifdef CONFIG_SHADOW_CALL_STACK
+> +	mov	x20, x18		// preserve the original shadow stack
+> +#endif
+>  
+>  	/*
+>  	 * Compare sp with the base of the task stack.
+> @@ -400,6 +413,12 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
+>  
+>  	/* switch to the irq stack */
+>  	mov	sp, x26
+> +
+> +#ifdef CONFIG_SHADOW_CALL_STACK
+> +	/* also switch to the irq shadow stack */
+> +	ldr_this_cpu x18, irq_shadow_call_stack_ptr, x26
+> +#endif
+> +
+>  9998:
+>  	.endm
+>  
+> @@ -409,6 +428,10 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
+>  	 */
+>  	.macro	irq_stack_exit
+>  	mov	sp, x19
+> +#ifdef CONFIG_SHADOW_CALL_STACK
+> +	/* x20 is also preserved */
+> +	mov	x18, x20
+> +#endif
+>  	.endm
+>  
+>  /* GPRs used by entry code */
+> @@ -1155,6 +1178,11 @@ ENTRY(cpu_switch_to)
+>  	ldr	lr, [x8]
+>  	mov	sp, x9
+>  	msr	sp_el0, x1
+> +#ifdef CONFIG_SHADOW_CALL_STACK
+> +	str	x18, [x0, #TSK_TI_SCS]
+> +	ldr	x18, [x1, #TSK_TI_SCS]
+> +	str	xzr, [x1, #TSK_TI_SCS]
 
+For example here.
 
-See you inside
+> +#endif
+>  	ret
+>  ENDPROC(cpu_switch_to)
+>  NOKPROBE(cpu_switch_to)
+> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+> index 989b1944cb71..2be977c6496f 100644
+> --- a/arch/arm64/kernel/head.S
+> +++ b/arch/arm64/kernel/head.S
+> @@ -27,6 +27,7 @@
+>  #include <asm/pgtable-hwdef.h>
+>  #include <asm/pgtable.h>
+>  #include <asm/page.h>
+> +#include <asm/scs.h>
+>  #include <asm/smp.h>
+>  #include <asm/sysreg.h>
+>  #include <asm/thread_info.h>
+> @@ -424,6 +425,10 @@ __primary_switched:
+>  	stp	xzr, x30, [sp, #-16]!
+>  	mov	x29, sp
+>  
+> +#ifdef CONFIG_SHADOW_CALL_STACK
+> +	adr_l	x18, init_shadow_call_stack	// Set shadow call stack
+> +#endif
+> +
+>  	str_l	x21, __fdt_pointer, x5		// Save FDT pointer
+>  
+>  	ldr_l	x4, kimage_vaddr		// Save the offset between
+> @@ -731,6 +736,10 @@ __secondary_switched:
+>  	ldr	x2, [x0, #CPU_BOOT_TASK]
+>  	cbz	x2, __secondary_too_slow
+>  	msr	sp_el0, x2
+> +#ifdef CONFIG_SHADOW_CALL_STACK
+> +	ldr	x18, [x2, #TSK_TI_SCS]		// Set shadow call stack
+> +	str	xzr, [x2, #TSK_TI_SCS]
 
+And here. Maybe something like "// Limit visibility of saved SCS"
 
+-Kees
+
+> +#endif
+>  	mov	x29, #0
+>  	mov	x30, #0
+>  	b	secondary_start_kernel
+> diff --git a/arch/arm64/kernel/irq.c b/arch/arm64/kernel/irq.c
+> index 04a327ccf84d..fe0ca522ff60 100644
+> --- a/arch/arm64/kernel/irq.c
+> +++ b/arch/arm64/kernel/irq.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/vmalloc.h>
+>  #include <asm/daifflags.h>
+>  #include <asm/vmap_stack.h>
+> +#include <asm/scs.h>
+>  
+>  unsigned long irq_err_count;
+>  
+> @@ -63,6 +64,7 @@ static void init_irq_stacks(void)
+>  void __init init_IRQ(void)
+>  {
+>  	init_irq_stacks();
+> +	scs_init_irq();
+>  	irqchip_init();
+>  	if (!handle_arch_irq)
+>  		panic("No interrupt controller found.");
+> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> index 71f788cd2b18..5f0aec285848 100644
+> --- a/arch/arm64/kernel/process.c
+> +++ b/arch/arm64/kernel/process.c
+> @@ -52,6 +52,7 @@
+>  #include <asm/mmu_context.h>
+>  #include <asm/processor.h>
+>  #include <asm/pointer_auth.h>
+> +#include <asm/scs.h>
+>  #include <asm/stacktrace.h>
+>  
+>  #if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_STACKPROTECTOR_PER_TASK)
+> @@ -507,6 +508,7 @@ __notrace_funcgraph struct task_struct *__switch_to(struct task_struct *prev,
+>  	uao_thread_switch(next);
+>  	ptrauth_thread_switch(next);
+>  	ssbs_thread_switch(next);
+> +	scs_overflow_check(next);
+>  
+>  	/*
+>  	 * Complete any pending TLB or cache maintenance on this CPU in case
+> diff --git a/arch/arm64/kernel/scs.c b/arch/arm64/kernel/scs.c
+> new file mode 100644
+> index 000000000000..6f255072c9a9
+> --- /dev/null
+> +++ b/arch/arm64/kernel/scs.c
+> @@ -0,0 +1,39 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Shadow Call Stack support.
+> + *
+> + * Copyright (C) 2019 Google LLC
+> + */
+> +
+> +#include <linux/percpu.h>
+> +#include <linux/vmalloc.h>
+> +#include <asm/scs.h>
+> +
+> +DEFINE_PER_CPU(unsigned long *, irq_shadow_call_stack_ptr);
+> +
+> +#ifndef CONFIG_SHADOW_CALL_STACK_VMAP
+> +DEFINE_PER_CPU(unsigned long [SCS_SIZE/sizeof(long)], irq_shadow_call_stack)
+> +	__aligned(SCS_SIZE);
+> +#endif
+> +
+> +void scs_init_irq(void)
+> +{
+> +	int cpu;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +#ifdef CONFIG_SHADOW_CALL_STACK_VMAP
+> +		unsigned long *p;
+> +
+> +		p = __vmalloc_node_range(SCS_SIZE, SCS_SIZE,
+> +					 VMALLOC_START, VMALLOC_END,
+> +					 SCS_GFP, PAGE_KERNEL,
+> +					 0, cpu_to_node(cpu),
+> +					 __builtin_return_address(0));
+> +
+> +		per_cpu(irq_shadow_call_stack_ptr, cpu) = p;
+> +#else
+> +		per_cpu(irq_shadow_call_stack_ptr, cpu) =
+> +			per_cpu(irq_shadow_call_stack, cpu);
+> +#endif /* CONFIG_SHADOW_CALL_STACK_VMAP */
+> +	}
+> +}
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index dc9fe879c279..cc1938a585d2 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -44,6 +44,7 @@
+>  #include <asm/pgtable.h>
+>  #include <asm/pgalloc.h>
+>  #include <asm/processor.h>
+> +#include <asm/scs.h>
+>  #include <asm/smp_plat.h>
+>  #include <asm/sections.h>
+>  #include <asm/tlbflush.h>
+> @@ -357,6 +358,9 @@ void cpu_die(void)
+>  {
+>  	unsigned int cpu = smp_processor_id();
+>  
+> +	/* Save the shadow stack pointer before exiting the idle task */
+> +	scs_save(current);
+> +
+>  	idle_task_exit();
+>  
+>  	local_daif_mask();
+> -- 
+> 2.24.0.rc0.303.g954a862665-goog
+> 
+
+-- 
+Kees Cook
