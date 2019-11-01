@@ -2,121 +2,78 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B03CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 563B3CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1EF3217F9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:10:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572610258;
-	bh=PDjGeR0RXM/2rYpAPfF4tZCEALWHN0aJQMEO11t0z6I=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=LSUGMTZvVMEO2bnJjNcd/j4h90sxKbRAMla3o3VMQUjVVn3+xN1GMGLRkYxaSE8qC
-	 04smCLYO+MJobTnDfYRwnAKdKHulPEz60vrgehf2SGOoyixYcmXtMTLyJDgMCY+F8w
-	 /MEE1SkHcTzFfs0xriMUjkx6n/RFBMUR5+MaOHQ8=
+	by mail.kernel.org (Postfix) with ESMTP id 391DF208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:14:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728892AbfKAMK5 (ORCPT
+        id S1729001AbfKAMOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 08:10:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34186 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726783AbfKAMK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 08:10:57 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B3B4208E3;
-        Fri,  1 Nov 2019 12:10:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572610256;
-        bh=PDjGeR0RXM/2rYpAPfF4tZCEALWHN0aJQMEO11t0z6I=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=UTYClS5bGV9Gp/Hm+4ygP6JDiq155LPDousKcaOOLn7B7Cjfv+8fjqb7M4JQNVjCe
-         PmRELnWX2XXjk/X7stZTOyOjXgQA/PxQreJvz2hRf4LN6hvHOZ8AWlCrVznSDcuAoC
-         IdZi7O5ZmRkgNE7zEsv5LOherM69eGKUHkMdkPVw=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 181FB3522AF9; Fri,  1 Nov 2019 05:10:56 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 05:10:56 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Lai Jiangshan <laijs@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH 06/11] rcu: clear t->rcu_read_unlock_special in one go
-Message-ID: <20191101121056.GB17910@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191031100806.1326-1-laijs@linux.alibaba.com>
- <20191031100806.1326-7-laijs@linux.alibaba.com>
+        Fri, 1 Nov 2019 08:14:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53542 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727279AbfKAMOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 08:14:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DB7F2AC8B;
+        Fri,  1 Nov 2019 12:14:41 +0000 (UTC)
+Date:   Fri, 1 Nov 2019 13:14:40 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/5] livepatch: new API to track system state changes
+Message-ID: <20191101121440.kpvtont5mrmet2mq@pathway.suse.cz>
+References: <20191030154313.13263-1-pmladek@suse.com>
+ <20191031180650.g4tss4wfksg2bs6a@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191031100806.1326-7-laijs@linux.alibaba.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191031180650.g4tss4wfksg2bs6a@treble>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 10:08:01AM +0000, Lai Jiangshan wrote:
-> Clearing t->rcu_read_unlock_special in one go makes the code
-> more clearly.
+On Thu 2019-10-31 13:06:50, Josh Poimboeuf wrote:
+> On Wed, Oct 30, 2019 at 04:43:08PM +0100, Petr Mladek wrote:
+> > Hi,
+> > 
+> > this is another piece in the puzzle that helps to maintain more
+> > livepatches.
+> > 
+> > Especially pre/post (un)patch callbacks might change a system state.
+> > Any newly installed livepatch has to somehow deal with system state
+> > modifications done be already installed livepatches.
+> > 
+> > This patchset provides a simple and generic API that
+> > helps to keep and pass information between the livepatches.
+> > It is also usable to prevent loading incompatible livepatches.
+> > 
+> > Changes since v3:
+> > 
+> >   + selftests compilation error [kbuild test robot]	
+> >   + fix copyright in selftests [Joe]
+> >   + used macros for the module names in selftests [Joe]
+> >   + allow zero state version [Josh]
+> >   + slightly refactor the code for checking state version [Josh]
+> >   + fix few typos reported by checkpatch.pl [Petr]
+> >   + added Acks [Joe]
 > 
-> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+> Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-Nice simplification!  I had to hand-apply it due to not having taken the
-earlier patches, plus I redid the commit log.  Could you please check
-the version shown below?
+The patchset has been commited into livepatch.git, branch
+for-5.5/system-state.
 
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit 0bef7971edbbd35ed4d1682a465f682077981e85
-Author: Lai Jiangshan <laijs@linux.alibaba.com>
-Date:   Fri Nov 1 05:06:21 2019 -0700
-
-    rcu: Clear ->rcu_read_unlock_special only once
-    
-    In rcu_preempt_deferred_qs_irqrestore(), ->rcu_read_unlock_special is
-    cleared one piece at a time.  Given that the "if" statements in this
-    function use the copy in "special", this commit removes the clearing
-    of the individual pieces in favor of clearing ->rcu_read_unlock_special
-    in one go just after it has been determined to be non-zero.
-    
-    Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 8d0e8c1..d113923 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -444,11 +444,9 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
- 		local_irq_restore(flags);
- 		return;
- 	}
--	t->rcu_read_unlock_special.b.exp_hint = false;
--	t->rcu_read_unlock_special.b.deferred_qs = false;
-+	t->rcu_read_unlock_special.s = 0;
- 	if (special.b.need_qs) {
- 		rcu_qs();
--		t->rcu_read_unlock_special.b.need_qs = false;
- 		if (!t->rcu_read_unlock_special.s && !rdp->exp_deferred_qs) {
- 			local_irq_restore(flags);
- 			return;
-@@ -471,7 +469,6 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
- 
- 	/* Clean up if blocked during RCU read-side critical section. */
- 	if (special.b.blocked) {
--		t->rcu_read_unlock_special.b.blocked = false;
- 
- 		/*
- 		 * Remove this task from the list it blocked on.  The task
+Best Regards,
+Petr
