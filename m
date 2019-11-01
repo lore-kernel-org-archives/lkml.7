@@ -2,94 +2,605 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4545ACA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 11:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9CACA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 11:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F812086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 11:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FC042086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 11:43:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729676AbfKALnZ (ORCPT
+        id S1730408AbfKALng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 07:43:25 -0400
-Received: from mga09.intel.com ([134.134.136.24]:43124 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727170AbfKALnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 07:43:24 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 04:43:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,254,1569308400"; 
-   d="scan'208";a="211771534"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 01 Nov 2019 04:43:19 -0700
-Received: by lahna (sSMTP sendmail emulation); Fri, 01 Nov 2019 13:43:18 +0200
-Date:   Fri, 1 Nov 2019 13:43:18 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     linux-usb@vger.kernel.org
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Lukas Wunner <lukas@wunner.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Christian Kellner <ckellner@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/25] thunderbolt: Add support for USB4
-Message-ID: <20191101114318.GO2593@lahna.fi.intel.com>
-References: <20191023112154.64235-1-mika.westerberg@linux.intel.com>
+        Fri, 1 Nov 2019 07:43:36 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43818 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbfKALnf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 07:43:35 -0400
+Received: by mail-lf1-f68.google.com with SMTP id j5so7017292lfh.10;
+        Fri, 01 Nov 2019 04:43:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xEMnUaW201I4g9nkDmDT+D/RKMnxc1yWKDFK+fC9IGQ=;
+        b=IaUAafRsHoguJQcbCKZkD073nIXEJa/dINxEvlTaa86Yq8aifGrpNToBnNJ7pUuW2X
+         c+/hzGY3892IkC4Z7An/VGbRwfGDajev0ws/mCfK0gVQXCkihJ1HFZl0QfQ31knLW+yI
+         a45pGbGYY+yxG/sXWziya/GaPAzT6QX9a3agb0FL6Yci7IuLqXncBelbBm/lLO9NHZCJ
+         PUUdTSPINlxRUPDUCFkGeksy8LvpOMur6BTb3NH+NJv8dqpHvoY5RRNSD7Xez8ZRZBfF
+         zo69h6KHzmQRklaWEYNUJNO6Z/BScOSS4Rm8i5NacMymtofO1qNmE2zGFT+C0Wr0VxM7
+         RkQg==
+X-Gm-Message-State: APjAAAVJ4RkNOESuDLEw8uYW4gI3BT2LuvsI0Kwp2+XyIOFtq2u7IvnA
+        MJMx+iEglnLlQenbGbbhZv8=
+X-Google-Smtp-Source: APXvYqwc+YDUsz/nV8PjSaEIbAv48/3vT60tPDEgvZRaNWYSF1nIqE/N9ok1LLsmK2sMhKs2jboPQQ==
+X-Received: by 2002:a19:7511:: with SMTP id y17mr7282618lfe.19.1572608612689;
+        Fri, 01 Nov 2019 04:43:32 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id u14sm2558570lfk.47.2019.11.01.04.43.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 04:43:32 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 13:43:25 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [RFC PATCH v3 10/15] regulator: bd71828: Add GPIO based run-level
+ control for regulators
+Message-ID: <2a8fa03308b08b2a15019d9b457d9bff7aafce94.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191023112154.64235-1-mika.westerberg@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 02:21:29PM +0300, Mika Westerberg wrote:
-> Mika Westerberg (22):
->   thunderbolt: Introduce tb_switch_is_icm()
->   thunderbolt: Log switch route string on config read/write timeout
->   thunderbolt: Log error if adding switch fails
->   thunderbolt: Convert basic adapter register names to follow the USB4 spec
->   thunderbolt: Convert PCIe adapter register names to follow the USB4 spec
->   thunderbolt: Convert DP adapter register names to follow the USB4 spec
->   thunderbolt: Make tb_sw_write() take const parameter
->   thunderbolt: Add helper macro to iterate over switch ports
->   thunderbolt: Refactor add_switch() into two functions
->   thunderbolt: Add support for lane bonding
->   thunderbolt: Add default linking between lane adapters if not provided by DROM
->   thunderbolt: Expand controller name in tb_switch_is_xy()
->   thunderbolt: Add downstream PCIe port mappings for Alpine and Titan Ridge
->   thunderbolt: Add Display Port CM handshake for Titan Ridge devices
->   thunderbolt: Add Display Port adapter pairing and resource management
->   thunderbolt: Add bandwidth management for Display Port tunnels
->   thunderbolt: Do not start firmware unless asked by the user
->   thunderbolt: Make tb_find_port() available to other files
->   thunderbolt: Call tb_eeprom_get_drom_offset() from tb_eeprom_read_n()
->   thunderbolt: Add initial support for USB4
->   thunderbolt: Update Kconfig entry to USB4
->   thunderbolt: Update documentation with the USB4 information
-> 
-> Rajmohan Mani (3):
->   thunderbolt: Make tb_switch_find_cap() available to other files
->   thunderbolt: Add support for Time Management Unit
->   thunderbolt: Add support for USB 3.x tunnels
-> 
+Bucks 1,2,6 and 7 on ROHM BD71828 can be either controlled as
+individual regulartors - or they can be grouped to a group of
+regulators that are controlled by 'run levels'. This can be
+done via I2C. Each regulator can be assigned a voltage and
+enable/disable status for each run-level. These statuses are
+also changeable via I2C.
 
-I queued patches 1-17 for v5.5. I'll leave the rest of USB4 patches to
-cook for a while and hopefully we can get them in for v5.6.
+Run-levels can then be changed either by I2C or GPIO. This
+control mechanism is selected by data in one time programmable
+area (during production) and can't be changed later.
+
+Allow regulators to be controlled via run-levels and allow
+getting/setting the current run-level also via GPIO.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+
+Changes since v2 - fixed typo 'RPHM' => 'ROHM' from commit message
+
+ drivers/regulator/bd71828-regulator.c | 373 +++++++++++++++++++++++++-
+ 1 file changed, 362 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/regulator/bd71828-regulator.c b/drivers/regulator/bd71828-regulator.c
+index 3f46658280be..e82e94ecf747 100644
+--- a/drivers/regulator/bd71828-regulator.c
++++ b/drivers/regulator/bd71828-regulator.c
+@@ -4,8 +4,10 @@
+ //
+ 
+ #include <linux/delay.h>
++#include <linux/device.h>
+ #include <linux/err.h>
+ #include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/mfd/rohm-bd71828.h>
+@@ -17,16 +19,27 @@
+ #include <linux/regulator/machine.h>
+ #include <linux/regulator/of_regulator.h>
+ 
++#define MAX_GPIO_DVS_BUCKS 4
++#define DVS_RUN_LEVELS 4
++
+ struct reg_init {
+ 	unsigned int reg;
+ 	unsigned int mask;
+ 	unsigned int val;
+ };
++
++struct run_lvl_ctrl {
++	unsigned int voltage;
++	bool enabled;
++};
++
+ struct bd71828_regulator_data {
+ 	struct regulator_desc desc;
+-	const struct rohm_dvs_config dvs;
++	struct rohm_dvs_config dvs;
+ 	const struct reg_init *reg_inits;
+ 	int reg_init_amnt;
++	struct run_lvl_ctrl run_lvl[DVS_RUN_LEVELS];
++	struct gpio_descs *gps;
+ };
+ 
+ static const struct reg_init buck1_inits[] = {
+@@ -41,6 +54,14 @@ static const struct reg_init buck1_inits[] = {
+ 	},
+ };
+ 
++static const struct reg_init buck1_gpio_inits[] = {
++	{
++		.reg = BD71828_REG_PS_CTRL_1,
++		.mask = BD71828_MASK_DVS_BUCK1_CTRL,
++		.val = BD71828_DVS_BUCK1_USE_RUNLVL,
++	},
++};
++
+ static const struct reg_init buck2_inits[] = {
+ 	{
+ 		.reg = BD71828_REG_PS_CTRL_1,
+@@ -49,6 +70,14 @@ static const struct reg_init buck2_inits[] = {
+ 	},
+ };
+ 
++static const struct reg_init buck2_gpio_inits[] = {
++	{
++		.reg = BD71828_REG_PS_CTRL_1,
++		.mask = BD71828_MASK_DVS_BUCK2_CTRL,
++		.val = BD71828_DVS_BUCK2_USE_RUNLVL,
++	},
++};
++
+ static const struct reg_init buck6_inits[] = {
+ 	{
+ 		.reg = BD71828_REG_PS_CTRL_1,
+@@ -57,6 +86,14 @@ static const struct reg_init buck6_inits[] = {
+ 	},
+ };
+ 
++static const struct reg_init buck6_gpio_inits[] = {
++	{
++		.reg = BD71828_REG_PS_CTRL_1,
++		.mask = BD71828_MASK_DVS_BUCK6_CTRL,
++		.val = BD71828_DVS_BUCK6_USE_RUNLVL,
++	},
++};
++
+ static const struct reg_init buck7_inits[] = {
+ 	{
+ 		.reg = BD71828_REG_PS_CTRL_1,
+@@ -65,6 +102,14 @@ static const struct reg_init buck7_inits[] = {
+ 	},
+ };
+ 
++static const struct reg_init buck7_gpio_inits[] = {
++	{
++		.reg = BD71828_REG_PS_CTRL_1,
++		.mask = BD71828_MASK_DVS_BUCK7_CTRL,
++		.val = BD71828_DVS_BUCK7_USE_RUNLVL,
++	},
++};
++
+ static const struct regulator_linear_range bd71828_buck1267_volts[] = {
+ 	REGULATOR_LINEAR_RANGE(500000, 0x00, 0xef, 6250),
+ 	REGULATOR_LINEAR_RANGE(2000000, 0xf0, 0xff, 0),
+@@ -155,6 +200,80 @@ static int buck_set_hw_dvs_levels(struct device_node *np,
+ 	return rohm_regulator_set_dvs_levels(&data->dvs, np, desc, cfg->regmap);
+ }
+ 
++static int set_runlevel_voltage(struct regmap *regmap,
++				const struct regulator_desc *desc,
++				unsigned int uv, unsigned int level)
++{
++	int i, ret = -EINVAL;
++	/*
++	 * RUN level registers are next to vsel_reg. RUN0 reg is next, then
++	 * is the RUN 1 reg and so on...
++	 */
++	u8 reg = desc->vsel_reg + level + 1;
++	u8 mask = BD71828_MASK_BUCK1267_VOLT;
++
++	for (i = 0; i < desc->n_voltages; i++) {
++		ret = regulator_desc_list_voltage_linear_range(desc, i);
++		if (ret < 0)
++			continue;
++		if (ret == uv) {
++			i <<= ffs(desc->vsel_mask) - 1;
++			ret = regmap_update_bits(regmap, reg, mask, i);
++			break;
++		}
++	}
++	return ret;
++}
++
++static int buck_set_gpio_hw_dvs_levels(struct device_node *np,
++				       const struct regulator_desc *desc,
++				       struct regulator_config *cfg)
++{
++	struct bd71828_regulator_data *data;
++	uint32_t uv;
++	int i, ret;
++	/* On BD71828 the RUN level control reg is next to enable reg */
++	u8 en_reg = desc->enable_reg + 1;
++	const char *props[DVS_RUN_LEVELS] = { "rohm,dvs-runlevel0-voltage",
++					      "rohm,dvs-runlevel1-voltage",
++					      "rohm,dvs-runlevel2-voltage",
++					      "rohm,dvs-runlevel3-voltage" };
++	u8 en_masks[DVS_RUN_LEVELS] = { BD71828_MASK_RUN0_EN,
++					BD71828_MASK_RUN1_EN,
++					BD71828_MASK_RUN2_EN,
++					BD71828_MASK_RUN3_EN };
++
++	data = container_of(desc, struct bd71828_regulator_data, desc);
++
++	for (i = 0; i < DVS_RUN_LEVELS; i++) {
++		ret = of_property_read_u32(np, props[i], &uv);
++		if (ret) {
++			if (ret != -EINVAL)
++				return ret;
++			uv = 0;
++		}
++		if (uv) {
++			data->run_lvl[i].voltage = uv;
++			data->run_lvl[i].enabled = true;
++
++			ret = set_runlevel_voltage(cfg->regmap, desc, uv, i);
++
++			if (ret)
++				return ret;
++
++			ret = regmap_update_bits(cfg->regmap, en_reg,
++						 en_masks[i], en_masks[i]);
++		} else {
++			ret = regmap_update_bits(cfg->regmap, en_reg,
++						 en_masks[i], 0);
++		}
++		if (ret)
++			return ret;
++	}
++
++	return rohm_regulator_set_dvs_levels(&data->dvs, np, desc, cfg->regmap);
++}
++
+ static int ldo6_parse_dt(struct device_node *np,
+ 			 const struct regulator_desc *desc,
+ 			 struct regulator_config *cfg)
+@@ -189,6 +308,85 @@ static int ldo6_parse_dt(struct device_node *np,
+ 	return 0;
+ }
+ 
++static int bd71828_dvs_gpio_set_run_level(struct bd71828_regulator_data *rd,
++					  int val)
++{
++	DECLARE_BITMAP(values, 2);
++
++	if (rd->gps->ndescs != 2)
++		return -EINVAL;
++
++	if (val < 0 || val > 3)
++		return -EINVAL;
++
++	values[0] = val;
++
++	return gpiod_set_array_value_cansleep(rd->gps->ndescs, rd->gps->desc,
++				     rd->gps->info, values);
++}
++static int bd71828_dvs_gpio_get_run_level(struct bd71828_regulator_data *rd)
++{
++	int run_level;
++	int ret;
++
++	DECLARE_BITMAP(values, 2);
++
++	values[0] = 0;
++
++	if (rd->gps->ndescs != 2)
++		return -EINVAL;
++
++	ret = gpiod_get_array_value_cansleep(rd->gps->ndescs, rd->gps->desc,
++				     rd->gps->info, values);
++	if (ret)
++		return ret;
++
++	run_level = values[0];
++
++	return run_level;
++}
++
++static int bd71828_dvs_gpio_is_enabled(struct regulator_dev *rdev)
++{
++	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
++	int ret;
++
++	// TODO: lock GPIO state (Is this needed)
++	ret = bd71828_dvs_gpio_get_run_level(data);
++	if (ret < 0)
++		goto unlock_out;
++
++	ret = data->run_lvl[ret].enabled;
++
++unlock_out:
++	//TODO: unlock
++
++	return ret;
++}
++
++static int bd71828_dvs_gpio_get_voltage(struct regulator_dev *rdev)
++{
++	int ret;
++	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
++
++	// TODO: lock GPIO state (Is this needed)
++	ret = bd71828_dvs_gpio_get_run_level(data);
++	if (ret < 0)
++		goto unlock_out;
++
++	ret = data->run_lvl[ret].voltage;
++
++unlock_out:
++	//TODO: unlock
++
++	return ret;
++}
++
++static const struct regulator_ops dvs_buck_gpio_ops = {
++	.is_enabled = bd71828_dvs_gpio_is_enabled,
++	.get_voltage = bd71828_dvs_gpio_get_voltage,
++};
++
+ static const struct regulator_ops bd71828_buck_ops = {
+ 	.enable = regulator_enable_regmap,
+ 	.disable = regulator_disable_regmap,
+@@ -773,6 +971,132 @@ static const struct bd71828_regulator_data bd71828_rdata[] = {
+ 	},
+ };
+ 
++struct bd71828_gpio_cfg {
++	unsigned int gpiobucks;
++	struct gpio_descs *gps;
++};
++
++static int check_dt_for_gpio_controls(struct device *d,
++				      struct bd71828_gpio_cfg *g)
++{
++	int ret, i;
++	struct device_node *np = d->of_node;
++	const char *prop = "rohm,dvs_gpio_bucks";
++	uint32_t bucks[MAX_GPIO_DVS_BUCKS];
++
++	g->gps = devm_gpiod_get_array(d, "rohm,dvs-vsel", GPIOD_OUT_LOW);
++
++	if (IS_ERR(g->gps)) {
++		ret = PTR_ERR(g->gps);
++		if (ret == -ENOENT)
++			return 0;
++		return ret;
++	}
++
++	if (g->gps->ndescs != 2)
++		return -ENOENT;
++
++	ret = of_property_read_variable_u32_array(np, prop, bucks, 0,
++						  ARRAY_SIZE(bucks));
++
++	if (ret < 0) {
++		if (ret == -EOVERFLOW)
++			return -EINVAL;
++	}
++	for (i = 0; i < ret; i++)
++		g->gpiobucks |= 1 << bucks[i];
++
++	return 0;
++}
++
++static void set_buck_gpio_controlled(struct rohm_regmap_dev *bd71828,
++				     struct bd71828_regulator_data *rd,
++				     struct bd71828_gpio_cfg *g)
++{
++	switch (rd->desc.id) {
++	case BD71828_BUCK1:
++		rd->reg_inits = buck1_gpio_inits;
++		break;
++	case BD71828_BUCK2:
++		rd->reg_inits = buck2_gpio_inits;
++		break;
++	case BD71828_BUCK6:
++		rd->reg_inits = buck6_gpio_inits;
++		break;
++	case BD71828_BUCK7:
++		rd->reg_inits = buck7_gpio_inits;
++		break;
++	default:
++		return;
++	}
++	/*
++	 * Disallow setters. Get voltages/enable states based
++	 * on current RUN level
++	 */
++	rd->gps = g->gps;
++	rd->desc.ops = &dvs_buck_gpio_ops;
++	rd->desc.of_parse_cb = buck_set_gpio_hw_dvs_levels;
++}
++
++static ssize_t show_runlevel(struct device *dev,
++			   struct device_attribute *attr, char *buf)
++{
++	int runlevel;
++	struct bd71828_regulator_data *rd = dev_get_drvdata(dev);
++
++	if (!rd || !rd->gps)
++		return -ENOENT;
++
++	runlevel = bd71828_dvs_gpio_get_run_level(rd);
++	if (runlevel < 0)
++		return runlevel;
++
++	return sprintf(buf, "0x%x\n", runlevel);
++}
++
++static ssize_t set_runlevel(struct device *dev, struct device_attribute *attr,
++			  const char *buf, size_t count)
++{
++	struct bd71828_regulator_data *rd = dev_get_drvdata(dev);
++	long val;
++
++	if (kstrtol(buf, 0, &val) != 0)
++		return -EINVAL;
++
++	val = bd71828_dvs_gpio_set_run_level(rd, val);
++	if (val)
++		return val;
++
++	return count;
++}
++
++static DEVICE_ATTR(runlevel, 0664, show_runlevel, set_runlevel);
++
++static struct attribute *runlevel_attributes[] = {
++	&dev_attr_runlevel.attr,
++	NULL
++};
++
++static const struct attribute_group bd71828_attr_group = {
++	.attrs	= runlevel_attributes,
++};
++
++static int bd71828_create_sysfs(struct platform_device *pdev)
++{
++	return sysfs_create_group(&pdev->dev.kobj, &bd71828_attr_group);
++}
++
++static int bd71828_remove_sysfs(struct platform_device *pdev)
++{
++	sysfs_remove_group(&pdev->dev.kobj, &bd71828_attr_group);
++	return 0;
++}
++
++static int bd71828_remove(struct platform_device *pdev)
++{
++	return bd71828_remove_sysfs(pdev);
++}
++
+ static int bd71828_probe(struct platform_device *pdev)
+ {
+ 	struct rohm_regmap_dev *bd71828;
+@@ -780,6 +1104,8 @@ static int bd71828_probe(struct platform_device *pdev)
+ 	struct regulator_config config = {
+ 		.dev = pdev->dev.parent,
+ 	};
++	struct bd71828_gpio_cfg gcfg = {0};
++	struct bd71828_regulator_data *rd;
+ 
+ 	bd71828 = dev_get_drvdata(pdev->dev.parent);
+ 	if (!bd71828) {
+@@ -787,35 +1113,59 @@ static int bd71828_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 
++	ret = check_dt_for_gpio_controls(pdev->dev.parent, &gcfg);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to get DVS gpio resources\n");
++		return ret;
++	}
++
++	/*
++	 * Allocate device data to allow controlling more than one PMICs
++	 */
++	rd = devm_kmalloc_array(&pdev->dev, ARRAY_SIZE(bd71828_rdata),
++				sizeof(*rd), GFP_KERNEL);
++	if (!rd)
++		return -ENOMEM;
++
++	dev_set_drvdata(&pdev->dev, rd);
++
++	for (i = 0; i < ARRAY_SIZE(bd71828_rdata); i++) {
++		/* Use bd71828_rdata as template */
++		rd[i] = bd71828_rdata[i];
++
++		if (gcfg.gpiobucks & (1 << i))
++			set_buck_gpio_controlled(bd71828, &rd[i], &gcfg);
++	}
++
+ 	config.regmap = bd71828->regmap;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(bd71828_rdata); i++) {
+ 		struct regulator_dev *rdev;
+-		const struct bd71828_regulator_data *rd;
+ 
+-		rd = &bd71828_rdata[i];
++		config.driver_data = &rd[i];
++
+ 		rdev = devm_regulator_register(&pdev->dev,
+-					       &rd->desc, &config);
++					       &rd[i].desc, &config);
+ 		if (IS_ERR(rdev)) {
+ 			dev_err(&pdev->dev,
+ 				"failed to register %s regulator\n",
+-				rd->desc.name);
++				rd[i].desc.name);
+ 			return PTR_ERR(rdev);
+ 		}
+-		for (j = 0; j < rd->reg_init_amnt; j++) {
++		for (j = 0; j < rd[i].reg_init_amnt; j++) {
+ 			ret = regmap_update_bits(bd71828->regmap,
+-						 rd->reg_inits[j].reg,
+-						 rd->reg_inits[j].mask,
+-						 rd->reg_inits[j].val);
++						 rd[i].reg_inits[j].reg,
++						 rd[i].reg_inits[j].mask,
++						 rd[i].reg_inits[j].val);
+ 			if (ret) {
+ 				dev_err(&pdev->dev,
+ 					"regulator %s init failed\n",
+-					rd->desc.name);
++					rd[i].desc.name);
+ 				return ret;
+ 			}
+ 		}
+ 	}
+-	return 0;
++	return bd71828_create_sysfs(pdev);
+ }
+ 
+ static struct platform_driver bd71828_regulator = {
+@@ -823,6 +1173,7 @@ static struct platform_driver bd71828_regulator = {
+ 		.name = "bd71828-pmic"
+ 	},
+ 	.probe = bd71828_probe,
++	.remove = bd71828_remove,
+ };
+ 
+ module_platform_driver(bd71828_regulator);
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
