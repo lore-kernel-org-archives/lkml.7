@@ -2,210 +2,175 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75905CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3910CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 407122067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B23E82067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:22:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="MQLCFnGx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MSMO14DH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfKANQb (ORCPT
+        id S1726971AbfKANW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 09:16:31 -0400
-Received: from mx1.riseup.net ([198.252.153.129]:57026 "EHLO mx1.riseup.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbfKANQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 09:16:31 -0400
-Received: from capuchin.riseup.net (capuchin-pn.riseup.net [10.0.1.176])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "*.riseup.net", Issuer "Sectigo RSA Domain Validation Secure Server CA" (not verified))
-        by mx1.riseup.net (Postfix) with ESMTPS id 474N4T6P5nzFcJ6;
-        Fri,  1 Nov 2019 06:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
-        t=1572614189; bh=FgBE6xxqMnDh8R5p+eGsaBsU02MatiZtn1CIEGmCCdk=;
-        h=To:References:From:Subject:Date:In-Reply-To:From;
-        b=MQLCFnGxI+2Kcv9mQ8qKQCKYjkOtbQUe/E3W53TrWo/sa/YGOQXdlcBWTTMNCQlFW
-         cf6kZdnPGUZ7WGY6Tyvsmt41tcUqVMFiZyTnJUGwvWd+wTUMRVnBJxgxJaGCs6+Srs
-         PSTzTl/hhCzchvUks27Pi5q8ETFAPHErOx/T4XFE=
-X-Riseup-User-ID: A77413114152033575A26406B4726DBADAD7B718E316A6CE1F36915C1855729C
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-         by capuchin.riseup.net (Postfix) with ESMTPSA id 474N445NyFz8tVk;
-        Fri,  1 Nov 2019 06:16:04 -0700 (PDT)
-To:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        outreachy-kernel@googlegroups.com, manasi.d.navare@intel.com,
-        rodrigosiqueiramelo@gmail.com, maarten.lankhorst@linux.intel.com,
-        mripard@kernel.org, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch, corbet@lwn.net, dri-devel@lists.freedesktop.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-References: <20191101042706.2602-1-gabrielabittencourt00@gmail.com>
-From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeida@riseup.net>
-Autocrypt: addr=andrealmeida@riseup.net; keydata=
- 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 mNGb
-Subject: Re: [Lkcamp] [PATCH] drm/doc: Adding VKMS module description and use
- to "Testing and Validation"
-Message-ID: <fa6b780f-a866-d092-4ff8-268ad602c524@riseup.net>
-Date:   Fri, 1 Nov 2019 10:14:39 -0300
+        Fri, 1 Nov 2019 09:22:28 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45935 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbfKANW1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 09:22:27 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q64so10191247ljb.12;
+        Fri, 01 Nov 2019 06:22:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BxLuKMZeBlVEfxN/A5Vfu9gCXIr8p72x+ZY3unGqehk=;
+        b=MSMO14DH6Z1a0eTruGrePh2yxhOOYdC3mv/l+VHLxl/E0Ub3012lpAoCuMOWFNx5Gs
+         DNideGmtLK7TGQVSv9CVsaKUEncGH6TmWjSciHa4QTBpBi5JyQI4dh5Puw6x4Io8e0NW
+         tbk+rk4GdB4C7wVJLivNAahZJkAngdEY5R69tH6+rWsYTVXTcVy7d6ab4iJu/K9nvmeP
+         RLhRIjnVlNTijyRPDGvWR5jmQtNDWOCFA0BaJAEvRaUSPQwry90dy/M+9Hwalej2zFS/
+         b9w3Qq7Y+I2c5Yl3swluJKY+gqoF53z4aHZ4BjFvHKKiDA2xr0EpaYRgikkmzCMVcXob
+         YEyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BxLuKMZeBlVEfxN/A5Vfu9gCXIr8p72x+ZY3unGqehk=;
+        b=fdYusMLDzFvqMEJVVL5+VNX72KG7U+bvr+eux28XJt5jKtgeHI1Dzw8l/iAvCKoRXj
+         CaWfJKHijdzcnVIcM+pkxkY6VykKjWw1ycsQPOQVhcq2FzzIkoWcA6qwxFNmwNymQ/as
+         TY6klA9aA3KKPX5rTqUSzj7KmdZm37jZi5qhpSTwWKa3ZvigO1yrYJhQ+bQKtvk+3sey
+         r+6/P0/YE1i1wJGFdJlEgOHWR1wGuu5PcVrHML4x14K26qwgknZOdXgljEsx6GbRYBAR
+         7wumzPwGXZgTXGxg06x/m3g9dhakMAv0CQgdPjMrjMx/poF4vGthpeiQwMnMf4NEUWTs
+         CRdQ==
+X-Gm-Message-State: APjAAAUEDhKXFsIKun+BZsUMHUMIyjy0vFcDL2foju70l3Cn84Im5jcZ
+        0v7YQ/Uk3g9GRQbgpzXJyAobBthq
+X-Google-Smtp-Source: APXvYqzoXtTpyz8779l4Pan7YKFr+WghIOshLrJXjqxgJt3oJslriavZUkF4t4kZyFY8lJdkfh7WNA==
+X-Received: by 2002:a2e:b5b7:: with SMTP id f23mr8267156ljn.236.1572614544555;
+        Fri, 01 Nov 2019 06:22:24 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id r1sm2512815ljk.83.2019.11.01.06.22.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Nov 2019 06:22:23 -0700 (PDT)
+Subject: Re: [PATCH v6 00/18] Consolidate and improve NVIDIA Tegra CPUIDLE
+ driver(s)
+To:     Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191015170015.1135-1-digetx@gmail.com>
+ <20191016192133.GB26038@pdeschrijver-desktop.Nvidia.com>
+ <72636eb3-5354-eea3-3a51-4975a04186b2@gmail.com>
+ <53ee8bd3-5c53-f0aa-175c-7fa3024d0af5@gmail.com>
+ <20191028140443.GA27141@pdeschrijver-desktop.Nvidia.com>
+ <40de641f-c38e-51ee-ae27-c5db468c45b5@gmail.com>
+ <20191101123359.GG27141@pdeschrijver-desktop.Nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <a72463cd-cc16-691c-3c82-54ebb618ec32@gmail.com>
+Date:   Fri, 1 Nov 2019 16:22:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191101042706.2602-1-gabrielabittencourt00@gmail.com>
+In-Reply-To: <20191101123359.GG27141@pdeschrijver-desktop.Nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gabriela!
+01.11.2019 15:33, Peter De Schrijver пишет:
+> On Tue, Oct 29, 2019 at 03:47:56AM +0300, Dmitry Osipenko wrote:
+> ..
+> 
+>>>>>> It would be useful to switch the power state terminology to the one used
+>>>>>> for later chips:
+>>>>>>
+>>>>>> LP0 becomes SC7
+>>>>>> LP1 becomes C1
+>>>>>> LP2 becomes CC7
+>>>>>>
+>>>>>> Meaning of these states is as follows
+>>>>>>
+>>>>>> C is a core state:
+>>>>>>
+>>>>>> C1 clock gating
+>>>>>> C2 not defined
+>>>>>> C3 not defined
+>>>>>> C4 not defined
+>>>>>> C5 not defined
+>>>>>> C6 not defined for ARM cores
+>>>>>> C7 power-gating
+>>>>>>
+>>>>>> CC is a CPU cluster C state:
+>>>>>>
+>>>>>> CC1 cluster clock gated
+>>>>>> CC2 not defined
+>>>>>> CC3 fmax@Vmin: not used prior to Tegra186
+>>>>>> CC4: cluster retention: no longer supported
+>>>>>> CC5: not defined
+>>>>>> CC6: cluster power gating
+>>>>>> CC7: cluster rail gating
+>>>>>>
+>>>>>> SC is a System C state:
+>>>>>>
+>>>>>> SC1: not defined
+>>>>>> SC2: not defined
+>>>>>> SC3: not defined
+>>>>>> SC4: not defined
+>>>>>> SC5: not defined
+>>>>>> SC6: not defined
+>>>>>> SC7: VDD_SOC off
+>>>>>
+>>>>> Hello Peter,
+>>>>>
+>>>>> But new "drivers/cpuidle/cpuidle-tegra.c" uses exactly that terminology,
+>>>>> please see "cpuidle: Refactor and move NVIDIA Tegra20 driver into
+>>>>> drivers/cpuidle/" and further patches. Am I missing something? Or do you
+>>>>> want the renaming to be a separate patch?
+>>>>>
+>>>>
+>>>> Or maybe you're suggesting to change the names everywhere and not only
+>>>> in the cpuidle driver? Please clarify :)
+>>>
+>>> At least some of the variable and function names still say lp2?
+>>
+>> The cpuidle driver uses LP2 terminology for everything that comes from
+>> the external arch / firmware includes. But it says CC6 for everything
+>> that is internal to the driver. So yes, there is a bit of new/old
+>> terminology mixing in the code.
+>>
+>> The arch code / PMC driver / TF firmware are all saying LP2. The LP2
+>> naming is also a part of the device-tree binding.
+>>
+>> It will be a lot of mess to rename the mach-tegra/pm.c code. I guess
+>> eventually it could be moved to drivers/soc/, so maybe it will be better
+>> to postpone the renaming until then?
+> 
+> Or maybe add a comment somewhere indicating:
+> 
+> LP2 = CC6
+> LP1 = C1
+> LP0 = SC7
+> 
+> TF predates the new naming, so that may make some sense.
 
-On 11/1/19 1:27 AM, Gabriela Bittencourt wrote:
-> Add a description on VKMS module and the cases in which it should be us=
-ed.
-> There's a brief explanation on how to set it and use it in a VM, along =
-with
-> an example of running an igt-test.
->
-> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
->
-> ---
->
-> Hi DRM-community,
-> this is my first (of many, I hope)  patch in this subsystem. I hope to =
-have
-> a lot of learning (and fun :)) working with you guys.
-> I'm starting by documenting the VKMS driver in "Userland interfaces", i=
-f I
-> have been inaccurate in my description or if I misunderstood some conce=
-pt,
-> please let me know.
-Cool! It would be nice also to know if you have tested this patch and
-checked the output .html file.
-> ---
->  Documentation/gpu/drm-uapi.rst | 38 ++++++++++++++++++++++++++++++++++=
+Today it should make more sense just to add an explicit comment to the
+cpuidle driver that clarifies the new naming (IMHO). I'll prepare v7
+with that change.
 
->  1 file changed, 38 insertions(+)
->
-> diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uap=
-i.rst
-> index 94f90521f58c..7d6c86b7af76 100644
-> --- a/Documentation/gpu/drm-uapi.rst
-> +++ b/Documentation/gpu/drm-uapi.rst
-> @@ -285,6 +285,44 @@ run-tests.sh is a wrapper around piglit that will =
-execute the tests matching
->  the -t options. A report in HTML format will be available in
->  ./results/html/index.html. Results can be compared with piglit.
-> =20
-> +Using VKMS to test DRM API
-> +--------------------------
-> +
-> +VKMS is a software-only model of a KMS driver that is useful for testi=
-ng
-> +and for running compositors. VKMS aims to enable a virtual display wit=
-hout
-> +the need for a hardware display capability. These characteristics made=
- VKMS
-> +a perfect tool for validating the DRM core behavior and also support t=
-he
-> +compositor developer. VKMS helps us to test DRM core function in a vir=
-tual
-> +machine, which makes it easy to test some of the core changes.
-"test DRM core function" ... "test some of the core changes", maybe this
-can be reworded to avoid repetition.
-> +
-> +To Validate changes in DRM API with VKMS, start setting the kernel. Th=
-e
-> +VKMS module is not enabled by defaut, so enable it in the menuconfig::=
+Maybe later on, once more code will be consolidated in
+drivers/soc/tegra/, it will become useful to duplicate the clarification
+there as well.
 
-> +
-> +	$ make menuconfig
-> +
-Not sure if we need to teach people how to enable a module.
-> +Compile the kernel with the VKMS enabled and install it in the target
-> +machine. VKMS can be run in a Virtual Machine (QEMU, virtme or similar=
-).
-> +It's recommended the use of KVM with the minimum of 1GB of RAM and fou=
-r
-> +cores.
-> +
-> +It's possible to run the IGT-tests in a VM in two ways:
-> +1. Use IGT inside a VM
-> +2. Use IGT from the host machine and write the results in a shared dir=
-ectory.
-> +
-> +As follow, there is an example of using a VM with a shared directory w=
-ith
-> +the host machine to run igt-tests. As example it's used virtme::
-> +
-> +	$ virtme-run --rwdir /path/for/shared_dir --kdir=3Dpath/for/kernel/di=
-rectory --mods=3Dauto
-> +
-> +Run the igt-tests, as example it's ran the 'kms_flip' tests::
-> +
-> +	$ /path/for/igt-gpu-tools/scripts/run-tests.sh -p -s -t "kms_flip.*" =
--v
-Should we run this command at the host or guest?
-> +
-> +In this example instead of build the igt_runner it's used Piglit
-
-I'm feeling that there should be more commas in this sentence. How about
-"In this example, instead of building igt_runner, Piglit is used"
-
-> +(-p option); it's created html summary of the tests results and it's s=
-aved
-> +in the folder "igt-gpu-tools/results"; it's executed only the igt-test=
-s
-> +matching the -t option.
-> +
->  Display CRC Support
->  -------------------
-> =20
-Thanks,
-=C2=A0=C2=A0=C2=A0 Andr=C3=A9
-
+Please let me know if you disagree or think that something better could
+be done.
