@@ -2,155 +2,137 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B45CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7F0CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82E5F21734
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 415B12086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:50:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nWI00kdP"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="TP7wjRII"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbfKAKmy (ORCPT
+        id S1729847AbfKAKuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 06:42:54 -0400
-Received: from mail-eopbgr00044.outbound.protection.outlook.com ([40.107.0.44]:20519
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728293AbfKAKmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 06:42:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oFqOHl642LZ4wOOAmWJKE+GfhryzlSrnW80CVBFBh87EKQewMtnxE/ezy3XAFp5T5D831zS7xNOx+fbnvLSzfi+mFhAsLZYg7s7TdooKUGN6i+SZSpPuLopHuPXjZkQLa3pzMbcKslnjvF9HOJwYzR0iW1Pf+3wMiXGVPyP+fCpr5gCZbPtlzuIDOwnE1ONkWT4BaNVslci2gYoBxNbnzWpEZvdBS2QzOsNspGrV29focLDL5Ath2r94oBVeCsaMHjZKuNAR5+vQwpriZrMj0rMWftjSjQy+YYmRxO3pYb67A7oJg8V3YhwRDVAgclnO4Fg52Acu+lom4KgAW2o1hQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ABF9wcCz+X+0ikMg81YgNSDGQvyS5akFNiD1j8XVvu4=;
- b=b00qau+cog1Qq7Tgn3m1laxTZiNECgJgUgIze3WQyDEkcib4Jqmidrnjb8AmFTqbfCnoD0wUfQ6QyCnosczeAm+R3n7AQMBBRAufWk+/0UAp1OI3Tu59vDjqo9frjIt+a5JZaP0ZLbb0SZoHWaRZeyrN+kj5iTLb+RjuIjlIIfStzNf3BAh7VDC0pEzkpkOIgHPS/528xlxqz2v/XyzsiiAiJwnvD18O9D+zNDIF38k+EkctxnLvadaXCZW+AzYZrNRaWfc0QT9MA6q9f7+4ghoA+SUZrywxBFHwO0Mr69o5LOfVS2mvhqrYCxREHym/144XKTs7XsTduB0dvgWMiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ABF9wcCz+X+0ikMg81YgNSDGQvyS5akFNiD1j8XVvu4=;
- b=nWI00kdPHzbHeCcS0rFcTju2h1yn+NhuOuKZRMKSausg7EZKoei/UxijbkXXZUCpXuw3xY9qHj4JULZxyEXAcE0vGURnKyCPsGnR7/1pcBwK7sqx7yGm3xZzodJ8FKs0M0F1g5WULgjKtHBQT5nyAUMmzuL7FVrtuXmb3lIii38=
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
- AM0PR04MB6547.eurprd04.prod.outlook.com (20.179.253.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.25; Fri, 1 Nov 2019 10:42:50 +0000
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::fd44:1b14:587c:9fde]) by AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::fd44:1b14:587c:9fde%7]) with mapi id 15.20.2408.024; Fri, 1 Nov 2019
- 10:42:50 +0000
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Peng Fan <peng.fan@nxp.com>
-CC:     "sboyd@kernel.org" <sboyd@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH] clk: imx: clk-composite-8m: add lock to gate/mux
-Thread-Topic: [PATCH] clk: imx: clk-composite-8m: add lock to gate/mux
-Thread-Index: AQHVkJ1nitbWRrQWUkuauMi+K6eGNad2IPkA
-Date:   Fri, 1 Nov 2019 10:42:49 +0000
-Message-ID: <20191101104248.qqpt3hg437rccsri@fsr-ub1664-175>
-References: <1572603166-24594-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1572603166-24594-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM5PR0402CA0023.eurprd04.prod.outlook.com
- (2603:10a6:203:90::33) To AM0PR04MB5779.eurprd04.prod.outlook.com
- (2603:10a6:208:131::23)
-x-originating-ip: [89.37.124.34]
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=abel.vesa@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 753b6fa0-79af-46ce-f5ac-08d75eb83da1
-x-ms-traffictypediagnostic: AM0PR04MB6547:|AM0PR04MB6547:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB654704AE6BBB37D78A5628B2F6620@AM0PR04MB6547.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 020877E0CB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(39860400002)(376002)(366004)(346002)(136003)(396003)(199004)(189003)(476003)(76176011)(6116002)(5660300002)(33716001)(71200400001)(71190400001)(229853002)(81156014)(1076003)(14454004)(3846002)(81166006)(478600001)(8936002)(6636002)(316002)(66066001)(8676002)(54906003)(86362001)(6506007)(99286004)(6246003)(6436002)(102836004)(386003)(6486002)(6862004)(66946007)(66476007)(64756008)(66446008)(14444005)(256004)(2906002)(25786009)(53546011)(186003)(11346002)(446003)(7736002)(305945005)(44832011)(4326008)(26005)(66556008)(52116002)(6512007)(9686003)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6547;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JzmC8m3eXdyFitZxH6nhYc8aOBZ4MZ/xpau8xIvxu5qHOIJUEqbmUGALwIWjTdxnQcdgztDAMEhDzu0b9Ba7GBA2wsZLLUvd11D7YT/R2ARxws0cPKHcD7BBZ5ffvAMAsO4FQjClP0uV2Uo3apvxWRVAwofndFVJbebFhIOFhpKHxIyvBK9hZdpRs/GTQIMZauB87NXEixHMiDDGflSvwB0JLPKojWv33OS0YcvKTYcVi+iIy5XOmcLkucSHvk7hUZ5Z70DtChhOjCFCSImauAJG93qvmpHcfReNS+yROEdimgCwusgrL9Wwn5T4VITxnZ6nIVrz/nwnfPB437TNPxTu2R70cFY2pOhjpuUD9XqbwM/PnRt8nEYjhJQtzhJjYlmshhZHPcEiauX9mATdWlBcIDLCgQBUOTlollKqqz69kYLwD5vX4/0pXABdftUc
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F3789F8DAE0BB44AAFCACCD50CF0592F@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 1 Nov 2019 06:50:13 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39485 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729792AbfKAKuM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 06:50:12 -0400
+Received: by mail-lf1-f68.google.com with SMTP id 195so6906071lfj.6
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 03:50:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dSTkZ3gJr9RHofvoMOdrYurKDo1euKiXxFo6I0S5MME=;
+        b=TP7wjRIIldd6f149q7ZYazFr0cKDyA3RDCsG91Q97OhRmJm747gICMnYi+aftXR2mI
+         QT5Frf2tO23R/gTAFQAlufET+UwaTz9TymoyxavjU9y3a7adhgEnjebEjK2vzE6cy3uo
+         /cmTsAd8guON80ez2qiVszH4PPauwps8G3PsI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dSTkZ3gJr9RHofvoMOdrYurKDo1euKiXxFo6I0S5MME=;
+        b=EiHZvUfRvztfGVdjBr3VVtsGO4m6LT4Kbo3mZ9xBKNMX1ON7QobCptp+5yP+LrunSt
+         ukSXAzE62db6XdNsgPbXe/PrBVGvJnlqNyXrWiLjd3LZUVYQATmpWTRSykqMNdFNVtWo
+         McjkQB2njjtShgjW7motGY3mOHE92G84ruopEo1DNUpTRnj+JK80RTs5mGHnOaNSaYU2
+         nmzgQqWnM09aJf+EzoCxYS8zUSChrRBr4keuIldytLRERcLiHHk1baB/SEnWvQNy33EZ
+         5Uvy/rPadYCJpC0mvejr6NfJjLtZc83f7SPKtyfL+dbdCCgS+RavXerkhxBB3MFerxSu
+         CddQ==
+X-Gm-Message-State: APjAAAWVxlRVUsFkfmEdyxGXDLgwZ8qVx/Z8JEsp9BfX4s7G1KljnJjQ
+        5X9VAf8m3v7R/74ahDNxeAZS8t4BhXJp6w==
+X-Google-Smtp-Source: APXvYqxQxPQDEux7hWSTiO63Y8iwSwLLWeFP/8NIgD4MGfM9h5FyYt0mNJkKU9AYNJeO1RGZ/WCXfg==
+X-Received: by 2002:a19:c354:: with SMTP id t81mr6546520lff.179.1572605408939;
+        Fri, 01 Nov 2019 03:50:08 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id d19sm2566388lfc.12.2019.11.01.03.50.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 Nov 2019 03:50:08 -0700 (PDT)
+Subject: Re: [PATCH linux-kselftest/test v6] lib/list-test: add a test for the
+ 'list' doubly linked list
+To:     Joe Perches <joe@perches.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        shuah <shuah@kernel.org>
+Cc:     David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+References: <20191024224631.118656-1-davidgow@google.com>
+ <0cb1d948-0da3-eb0f-c58f-ae3a785dd0dd@kernel.org>
+ <CABVgOSmCHbGjZBjeWSbPEZbJw22SaBQnoO77xxNzN_ugAwzNiQ@mail.gmail.com>
+ <20191030104217.GA18421@kadam>
+ <42a8270d-ed6f-d29f-5e71-7b76a074b63e@kernel.org>
+ <20191030184600.GC18421@kadam>
+ <2b3b48a8512d2c567fce388394ad1d262d31908e.camel@perches.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <8e8654d4-f81e-be04-7a43-68ff98cdd293@rasmusvillemoes.dk>
+Date:   Fri, 1 Nov 2019 11:50:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 753b6fa0-79af-46ce-f5ac-08d75eb83da1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2019 10:42:49.9331
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DoAsqaxmWHnOZv/q3K7xpp7lXKrj0ZPKuVGxaYQ7I602t9k/uwKK/JFklFmha8gcWNAVWKgWq4/vJZsKr36N0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6547
+In-Reply-To: <2b3b48a8512d2c567fce388394ad1d262d31908e.camel@perches.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-11-01 10:16:19, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
->=20
-> There is a lock to diviver in the composite driver, but that's not
-> enought. lock to gate/mux are also needed to provide exclusive access
-> to the register.
->=20
-> Fixes: d3ff9728134e ("clk: imx: Add imx composite clock")
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+On 30/10/2019 20.15, Joe Perches wrote:
+> On Wed, 2019-10-30 at 21:46 +0300, Dan Carpenter wrote:
+>> Hm...  I imagined the checkpatch code a little different in my head but
+>> this would also work to make it stricter.  I doubt it miss very many
+>> real life style problems.
+> 
+> Well, doubts vs reality...
+> 
+>> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> []
+>> @@ -3607,7 +3607,7 @@ sub process {
+>>  
+>>  # if/while/etc brace do not go on next line, unless defining a do while loop,
+>>  # or if that brace on the next line is for something else
+>> -		if ($line =~ /(.*)\b((?:if|while|for|switch|(?:[a-z_]+|)for_each[a-z_]+)\s*\(|do\b|else\b)/ && $line !~ /^.\s*\#/) {
+>> +		if ($line =~ /(.*)\b((?:if|while|for|switch|(?:list|hlist)_for_each[a-z_]+)\s*\(|do\b|else\b)/ && $line !~ /^.\s*\#/) {
+>>  			my $pre_ctx = "$1$2";
+>>  
+>>  			my ($level, @ctx) = ctx_statement_level($linenr, $realcnt, 0);
+> 
+> So - nak
 
-Looks good to me.
+How about changing the check so it only matches the
+if/while/for/*for_each*/ thing when it's the first thing on a line _and_
+has non-trivial whitespace in front. Then a function declaration as
 
-Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+static void test_for_each()
+{
 
-> ---
->  drivers/clk/imx/clk-composite-8m.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/clk/imx/clk-composite-8m.c b/drivers/clk/imx/clk-com=
-posite-8m.c
-> index e0f25983e80f..20f7c91c03d2 100644
-> --- a/drivers/clk/imx/clk-composite-8m.c
-> +++ b/drivers/clk/imx/clk-composite-8m.c
-> @@ -142,6 +142,7 @@ struct clk_hw *imx8m_clk_hw_composite_flags(const cha=
-r *name,
->  	mux->reg =3D reg;
->  	mux->shift =3D PCG_PCS_SHIFT;
->  	mux->mask =3D PCG_PCS_MASK;
-> +	mux->lock =3D &imx_ccm_lock;
-> =20
->  	div =3D kzalloc(sizeof(*div), GFP_KERNEL);
->  	if (!div)
-> @@ -161,6 +162,7 @@ struct clk_hw *imx8m_clk_hw_composite_flags(const cha=
-r *name,
->  	gate_hw =3D &gate->hw;
->  	gate->reg =3D reg;
->  	gate->bit_idx =3D PCG_CGC_SHIFT;
-> +	gate->lock =3D &imx_ccm_lock;
-> =20
->  	hw =3D clk_hw_register_composite(NULL, name, parent_names, num_parents,
->  			mux_hw, &clk_mux_ops, div_hw,
-> --=20
-> 2.16.4
->=20
+would not fire, nor would it if it were written in the other common style
+
+static void
+test_for_each()
+{
+
+?
+
+Maybe there'd still be a problem at the call-sites
+
+  test_for_each();
+  this_is_not_indented;
+
+but the ending semi-colon should actually make it appear as a loop with
+an empty body (though that in itself might fire a different warning,
+dunno if checkpatch has that kind of warnings). But in any case the
+above should remove _some_ false positives.
+
+Rasmus
