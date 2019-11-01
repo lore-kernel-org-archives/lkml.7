@@ -2,400 +2,361 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC64DCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14305CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2D4204FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:41:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572597662;
-	bh=E0BDuoRZQeTjF4nz9E/q7biOG/ySIjksDw4YyyLV0BQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YpFtEYfk6Z31Bkc3kjKOMtlKnfYcVOPjGYTW+r14SVGruGCNM4cTDWe+u4vYnMOXE
-	 pC68nNKnrQmFKdby0nGTY+oYlHwQROwNZKGhAMJAWP2tBZvdwqAjZASiTJvpawFbVe
-	 D3viyrlydaRLX+ClSzItT/VFJxC5gJqiB0cNgJxg=
+	by mail.kernel.org (Postfix) with ESMTP id CB1DE204FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:41:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ao/SmJxR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfKAIlB (ORCPT
+        id S1727757AbfKAIlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 04:41:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49602 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727588AbfKAIlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 04:41:02 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:34796 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727603AbfKAIlA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 Nov 2019 04:41:00 -0400
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A61D21924;
-        Fri,  1 Nov 2019 08:40:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572597658;
-        bh=E0BDuoRZQeTjF4nz9E/q7biOG/ySIjksDw4YyyLV0BQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=STu4+9xVvJiDLN3ydWT5Tmt9CLCG12U/dQWq7NaeDGt2QEHX/lafZQ+F9rqVc4fle
-         JquIbMSdQ6hiEVpBegrFjJZNfbtotigub7xHCA87DYGk4aweCb/5jefFmjY2L439tm
-         NiWensCF06Bx7qf9Ft3PgEtauy+glk7Q8hTasILw=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Helge Deller <deller@gmx.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Salter <msalter@redhat.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
-        Richard Weinberger <richard@nod.at>,
-        Rolf Eike Beer <eike-kernel@sf-tec.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Mike Rapoport <rppt@kernel.org>, linux-alpha@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org,
-        linux-um@lists.infradead.org, sparclinux@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH v2 07/13] nds32: use pgtable-nopmd instead of 4level-fixup
-Date:   Fri,  1 Nov 2019 10:39:38 +0200
-Message-Id: <1572597584-6390-8-git-send-email-rppt@kernel.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572597584-6390-1-git-send-email-rppt@kernel.org>
-References: <1572597584-6390-1-git-send-email-rppt@kernel.org>
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA18epiR021257;
+        Fri, 1 Nov 2019 03:40:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572597651;
+        bh=0nliBJ0aS+ZPJD5/Er1M0lCPZp+R7mh7eBej+Gho4Bw=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ao/SmJxR9gsY44rVJKzi0rmGSZAed9nlkD8qWe3GDxwEValL1AkKcaQJ9H2gmxUba
+         WwbeJOpIk0w8YFJuHkMvNNTUP9IiPvIIclWH9NNiROoETR15HmT9v6KCyKRfBAKoMJ
+         lK74AptzNe7qmJ4DPhVWd3hSvgj5RgxmG4SaYW3c=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA18epjA046859
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 1 Nov 2019 03:40:51 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 1 Nov
+ 2019 03:40:31 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 1 Nov 2019 03:40:31 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA18eP8d036903;
+        Fri, 1 Nov 2019 03:40:41 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+Subject: [PATCH v4 04/15] dmaengine: Add metadata_ops for dma_async_tx_descriptor
+Date:   Fri, 1 Nov 2019 10:41:24 +0200
+Message-ID: <20191101084135.14811-5-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+The metadata is best described as side band data or parameters traveling
+alongside the data DMAd by the DMA engine. It is data
+which is understood by the peripheral and the peripheral driver only, the
+DMA engine see it only as data block and it is not interpreting it in any
+way.
 
-nds32 has only two-level page tables and can use pgtable-nopmd and folding
-of the upper layers.
+The metadata can be different per descriptor as it is a parameter for the
+data being transferred.
 
-Replace usage of include/asm-generic/4level-fixup.h and explicit definition
-of __PAGETABLE_PMD_FOLDED in nds32 with include/asm-generic/pgtable-nopmd.h
-and adjust page table manipulation macros and functions accordingly.
+If the DMA supports per descriptor metadata it can implement the attach,
+get_ptr/set_len callbacks.
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Client drivers must only use either attach or get_ptr/set_len to avoid
+misconfiguration.
+
+Client driver can check if a given metadata mode is supported by the
+channel during probe time with
+dmaengine_is_metadata_mode_supported(chan, DESC_METADATA_CLIENT);
+dmaengine_is_metadata_mode_supported(chan, DESC_METADATA_ENGINE);
+
+and based on this information can use either mode.
+
+Wrappers are also added for the metadata_ops.
+
+To be used in DESC_METADATA_CLIENT mode:
+dmaengine_desc_attach_metadata()
+
+To be used in DESC_METADATA_ENGINE mode:
+dmaengine_desc_get_metadata_ptr()
+dmaengine_desc_set_metadata_len()
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Tero Kristo <t-kristo@ti.com>
 ---
- arch/nds32/include/asm/page.h    |  3 ---
- arch/nds32/include/asm/pgalloc.h |  3 ---
- arch/nds32/include/asm/pgtable.h | 12 +-----------
- arch/nds32/include/asm/tlb.h     |  1 -
- arch/nds32/kernel/pm.c           |  4 +++-
- arch/nds32/mm/fault.c            | 16 +++++++++++++---
- arch/nds32/mm/init.c             | 11 ++++++++---
- arch/nds32/mm/mm-nds32.c         |  6 +++++-
- arch/nds32/mm/proc.c             | 26 +++++++++++++++++---------
- 9 files changed, 47 insertions(+), 35 deletions(-)
+ drivers/dma/dmaengine.c   |  73 ++++++++++++++++++++++++++
+ include/linux/dmaengine.h | 108 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 181 insertions(+)
 
-diff --git a/arch/nds32/include/asm/page.h b/arch/nds32/include/asm/page.h
-index 8feb1fa..86b3201 100644
---- a/arch/nds32/include/asm/page.h
-+++ b/arch/nds32/include/asm/page.h
-@@ -41,17 +41,14 @@ void clear_page(void *page);
- void copy_page(void *to, void *from);
- 
- typedef unsigned long pte_t;
--typedef unsigned long pmd_t;
- typedef unsigned long pgd_t;
- typedef unsigned long pgprot_t;
- 
- #define pte_val(x)      (x)
--#define pmd_val(x)      (x)
- #define pgd_val(x)	(x)
- #define pgprot_val(x)   (x)
- 
- #define __pte(x)        (x)
--#define __pmd(x)        (x)
- #define __pgd(x)        (x)
- #define __pgprot(x)     (x)
- 
-diff --git a/arch/nds32/include/asm/pgalloc.h b/arch/nds32/include/asm/pgalloc.h
-index 37125e6..85c1173 100644
---- a/arch/nds32/include/asm/pgalloc.h
-+++ b/arch/nds32/include/asm/pgalloc.h
-@@ -15,9 +15,6 @@
- /*
-  * Since we have only two-level page tables, these are trivial
-  */
--#define pmd_alloc_one(mm, addr)		({ BUG(); ((pmd_t *)2); })
--#define pmd_free(mm, pmd)			do { } while (0)
--#define pgd_populate(mm, pmd, pte)	BUG()
- #define pmd_pgtable(pmd) pmd_page(pmd)
- 
- extern pgd_t *pgd_alloc(struct mm_struct *mm);
-diff --git a/arch/nds32/include/asm/pgtable.h b/arch/nds32/include/asm/pgtable.h
-index 0588ec9..a80b9c6 100644
---- a/arch/nds32/include/asm/pgtable.h
-+++ b/arch/nds32/include/asm/pgtable.h
-@@ -4,8 +4,7 @@
- #ifndef _ASMNDS32_PGTABLE_H
- #define _ASMNDS32_PGTABLE_H
- 
--#define __PAGETABLE_PMD_FOLDED 1
--#include <asm-generic/4level-fixup.h>
-+#include <asm-generic/pgtable-nopmd.h>
- #include <linux/sizes.h>
- 
- #include <asm/memory.h>
-@@ -19,26 +18,20 @@
- #ifdef CONFIG_ANDES_PAGE_SIZE_4KB
- #define PGDIR_SHIFT      22
- #define PTRS_PER_PGD     1024
--#define PMD_SHIFT        22
--#define PTRS_PER_PMD     1
- #define PTRS_PER_PTE     1024
- #endif
- 
- #ifdef CONFIG_ANDES_PAGE_SIZE_8KB
- #define PGDIR_SHIFT      24
- #define PTRS_PER_PGD     256
--#define PMD_SHIFT        24
--#define PTRS_PER_PMD     1
- #define PTRS_PER_PTE     2048
- #endif
- 
- #ifndef __ASSEMBLY__
- extern void __pte_error(const char *file, int line, unsigned long val);
--extern void __pmd_error(const char *file, int line, unsigned long val);
- extern void __pgd_error(const char *file, int line, unsigned long val);
- 
- #define pte_ERROR(pte)		__pte_error(__FILE__, __LINE__, pte_val(pte))
--#define pmd_ERROR(pmd)		__pmd_error(__FILE__, __LINE__, pmd_val(pmd))
- #define pgd_ERROR(pgd)		__pgd_error(__FILE__, __LINE__, pgd_val(pgd))
- #endif /* !__ASSEMBLY__ */
- 
-@@ -366,9 +359,6 @@ static inline pmd_t __mk_pmd(pte_t * ptep, unsigned long prot)
- /* to find an entry in a kernel page-table-directory */
- #define pgd_offset_k(addr)      pgd_offset(&init_mm, addr)
- 
--/* Find an entry in the second-level page table.. */
--#define pmd_offset(dir, addr)	((pmd_t *)(dir))
--
- static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
- {
- 	const unsigned long mask = 0xfff;
-diff --git a/arch/nds32/include/asm/tlb.h b/arch/nds32/include/asm/tlb.h
-index a8aff1c..6726038 100644
---- a/arch/nds32/include/asm/tlb.h
-+++ b/arch/nds32/include/asm/tlb.h
-@@ -7,6 +7,5 @@
- #include <asm-generic/tlb.h>
- 
- #define __pte_free_tlb(tlb, pte, addr)	pte_free((tlb)->mm, pte)
--#define __pmd_free_tlb(tlb, pmd, addr)	pmd_free((tln)->mm, pmd)
- 
- #endif
-diff --git a/arch/nds32/kernel/pm.c b/arch/nds32/kernel/pm.c
-index ffa8040..e25700e 100644
---- a/arch/nds32/kernel/pm.c
-+++ b/arch/nds32/kernel/pm.c
-@@ -14,6 +14,7 @@ unsigned int *phy_addr_sp_tmp;
- static void nds32_suspend2ram(void)
- {
- 	pgd_t *pgdv;
-+	p4d_t *p4dv;
- 	pud_t *pudv;
- 	pmd_t *pmdv;
- 	pte_t *ptev;
-@@ -21,7 +22,8 @@ static void nds32_suspend2ram(void)
- 	pgdv = (pgd_t *)__va((__nds32__mfsr(NDS32_SR_L1_PPTB) &
- 		L1_PPTB_mskBASE)) + pgd_index((unsigned int)cpu_resume);
- 
--	pudv = pud_offset(pgdv, (unsigned int)cpu_resume);
-+	p4dv = p4d_offset(pgdv, (unsigned int)cpu_resume);
-+	pudv = pud_offset(p4dv, (unsigned int)cpu_resume);
- 	pmdv = pmd_offset(pudv, (unsigned int)cpu_resume);
- 	ptev = pte_offset_map(pmdv, (unsigned int)cpu_resume);
- 
-diff --git a/arch/nds32/mm/fault.c b/arch/nds32/mm/fault.c
-index 064ae5d..906dfb2 100644
---- a/arch/nds32/mm/fault.c
-+++ b/arch/nds32/mm/fault.c
-@@ -31,6 +31,8 @@ void show_pte(struct mm_struct *mm, unsigned long addr)
- 	pr_alert("[%08lx] *pgd=%08lx", addr, pgd_val(*pgd));
- 
- 	do {
-+		p4d_t *p4d;
-+		pud_t *pud;
- 		pmd_t *pmd;
- 
- 		if (pgd_none(*pgd))
-@@ -41,7 +43,9 @@ void show_pte(struct mm_struct *mm, unsigned long addr)
- 			break;
- 		}
- 
--		pmd = pmd_offset(pgd, addr);
-+		p4d = p4d_offset(pgd, addr);
-+		pud = pud_offset(p4d, addr);
-+		pmd = pmd_offset(pud, addr);
- #if PTRS_PER_PMD != 1
- 		pr_alert(", *pmd=%08lx", pmd_val(*pmd));
- #endif
-@@ -359,6 +363,7 @@ void do_page_fault(unsigned long entry, unsigned long addr,
- 
- 		unsigned int index = pgd_index(addr);
- 		pgd_t *pgd, *pgd_k;
-+		p4d_t *p4d, *p4d_k;
- 		pud_t *pud, *pud_k;
- 		pmd_t *pmd, *pmd_k;
- 		pte_t *pte_k;
-@@ -369,8 +374,13 @@ void do_page_fault(unsigned long entry, unsigned long addr,
- 		if (!pgd_present(*pgd_k))
- 			goto no_context;
- 
--		pud = pud_offset(pgd, addr);
--		pud_k = pud_offset(pgd_k, addr);
-+		p4d = p4d_offset(pgd, addr);
-+		p4d_k = p4d_offset(pgd_k, addr);
-+		if (!p4d_present(*p4d_k))
-+			goto no_context;
-+
-+		pud = pud_offset(p4d, addr);
-+		pud_k = pud_offset(p4d_k, addr);
- 		if (!pud_present(*pud_k))
- 			goto no_context;
- 
-diff --git a/arch/nds32/mm/init.c b/arch/nds32/mm/init.c
-index 55703b0..0be3833f 100644
---- a/arch/nds32/mm/init.c
-+++ b/arch/nds32/mm/init.c
-@@ -54,6 +54,7 @@ static void __init map_ram(void)
- {
- 	unsigned long v, p, e;
- 	pgd_t *pge;
-+	p4d_t *p4e;
- 	pud_t *pue;
- 	pmd_t *pme;
- 	pte_t *pte;
-@@ -69,7 +70,8 @@ static void __init map_ram(void)
- 
- 	while (p < e) {
- 		int j;
--		pue = pud_offset(pge, v);
-+		p4e = p4d_offset(pge, v);
-+		pue = pud_offset(p4e, v);
- 		pme = pmd_offset(pue, v);
- 
- 		if ((u32) pue != (u32) pge || (u32) pme != (u32) pge) {
-@@ -100,6 +102,7 @@ static void __init fixedrange_init(void)
- {
- 	unsigned long vaddr;
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- #ifdef CONFIG_HIGHMEM
-@@ -111,7 +114,8 @@ static void __init fixedrange_init(void)
- 	 */
- 	vaddr = __fix_to_virt(__end_of_fixed_addresses - 1);
- 	pgd = swapper_pg_dir + pgd_index(vaddr);
--	pud = pud_offset(pgd, vaddr);
-+	p4d = p4d_offset(pgd, vaddr);
-+	pud = pud_offset(p4d, vaddr);
- 	pmd = pmd_offset(pud, vaddr);
- 	fixmap_pmd_p = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
- 	if (!fixmap_pmd_p)
-@@ -126,7 +130,8 @@ static void __init fixedrange_init(void)
- 	vaddr = PKMAP_BASE;
- 
- 	pgd = swapper_pg_dir + pgd_index(vaddr);
--	pud = pud_offset(pgd, vaddr);
-+	p4d = p4d_offset(pgd, vaddr);
-+	pud = pud_offset(p4d, vaddr);
- 	pmd = pmd_offset(pud, vaddr);
- 	pte = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
- 	if (!pte)
-diff --git a/arch/nds32/mm/mm-nds32.c b/arch/nds32/mm/mm-nds32.c
-index 3b43798..8503bee 100644
---- a/arch/nds32/mm/mm-nds32.c
-+++ b/arch/nds32/mm/mm-nds32.c
-@@ -74,6 +74,8 @@ void setup_mm_for_reboot(char mode)
- {
- 	unsigned long pmdval;
- 	pgd_t *pgd;
-+	p4d_t *p4d;
-+	pud_t *pud;
- 	pmd_t *pmd;
- 	int i;
- 
-@@ -84,7 +86,9 @@ void setup_mm_for_reboot(char mode)
- 
- 	for (i = 0; i < USER_PTRS_PER_PGD; i++) {
- 		pmdval = (i << PGDIR_SHIFT);
--		pmd = pmd_offset(pgd + i, i << PGDIR_SHIFT);
-+		p4d = p4d_offset(pgd, i << PGDIR_SHIFT);
-+		pud = pud_offset(p4d, i << PGDIR_SHIFT);
-+		pmd = pmd_offset(pud + i, i << PGDIR_SHIFT);
- 		set_pmd(pmd, __pmd(pmdval));
- 	}
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 03ac4b96117c..6baddf7dcbfd 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -1302,6 +1302,79 @@ void dma_async_tx_descriptor_init(struct dma_async_tx_descriptor *tx,
  }
-diff --git a/arch/nds32/mm/proc.c b/arch/nds32/mm/proc.c
-index ba80992..837ae77 100644
---- a/arch/nds32/mm/proc.c
-+++ b/arch/nds32/mm/proc.c
-@@ -16,10 +16,14 @@ extern struct cache_info L1_cache_info[2];
+ EXPORT_SYMBOL(dma_async_tx_descriptor_init);
  
- int va_kernel_present(unsigned long addr)
- {
-+	p4d_t *p4d;
-+	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *ptep, pte;
++static inline int desc_check_and_set_metadata_mode(
++	struct dma_async_tx_descriptor *desc, enum dma_desc_metadata_mode mode)
++{
++	/* Make sure that the metadata mode is not mixed */
++	if (!desc->desc_metadata_mode) {
++		if (dmaengine_is_metadata_mode_supported(desc->chan, mode))
++			desc->desc_metadata_mode = mode;
++		else
++			return -ENOTSUPP;
++	} else if (desc->desc_metadata_mode != mode) {
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++int dmaengine_desc_attach_metadata(struct dma_async_tx_descriptor *desc,
++				   void *data, size_t len)
++{
++	int ret;
++
++	if (!desc)
++		return -EINVAL;
++
++	ret = desc_check_and_set_metadata_mode(desc, DESC_METADATA_CLIENT);
++	if (ret)
++		return ret;
++
++	if (!desc->metadata_ops || !desc->metadata_ops->attach)
++		return -ENOTSUPP;
++
++	return desc->metadata_ops->attach(desc, data, len);
++}
++EXPORT_SYMBOL_GPL(dmaengine_desc_attach_metadata);
++
++void *dmaengine_desc_get_metadata_ptr(struct dma_async_tx_descriptor *desc,
++				      size_t *payload_len, size_t *max_len)
++{
++	int ret;
++
++	if (!desc)
++		return ERR_PTR(-EINVAL);
++
++	ret = desc_check_and_set_metadata_mode(desc, DESC_METADATA_ENGINE);
++	if (ret)
++		return ERR_PTR(ret);
++
++	if (!desc->metadata_ops || !desc->metadata_ops->get_ptr)
++		return ERR_PTR(-ENOTSUPP);
++
++	return desc->metadata_ops->get_ptr(desc, payload_len, max_len);
++}
++EXPORT_SYMBOL_GPL(dmaengine_desc_get_metadata_ptr);
++
++int dmaengine_desc_set_metadata_len(struct dma_async_tx_descriptor *desc,
++				    size_t payload_len)
++{
++	int ret;
++
++	if (!desc)
++		return -EINVAL;
++
++	ret = desc_check_and_set_metadata_mode(desc, DESC_METADATA_ENGINE);
++	if (ret)
++		return ret;
++
++	if (!desc->metadata_ops || !desc->metadata_ops->set_len)
++		return -ENOTSUPP;
++
++	return desc->metadata_ops->set_len(desc, payload_len);
++}
++EXPORT_SYMBOL_GPL(dmaengine_desc_set_metadata_len);
++
+ /* dma_wait_for_async_tx - spin wait for a transaction to complete
+  * @tx: in-flight transaction to wait on
+  */
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 8fcdee1c0cf9..0e8b426bbde9 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -219,6 +219,58 @@ typedef struct { DECLARE_BITMAP(bits, DMA_TX_TYPE_END); } dma_cap_mask_t;
+  * @bytes_transferred: byte counter
+  */
  
--	pmd = pmd_offset(pgd_offset_k(addr), addr);
-+	p4d = p4d_offset(pgd_offset_k(addr), addr);
-+	pud = pud_offset(p4d, addr);
-+	pmd = pmd_offset(pud, addr);
- 	if (!pmd_none(*pmd)) {
- 		ptep = pte_offset_map(pmd, addr);
- 		pte = *ptep;
-@@ -32,20 +36,24 @@ int va_kernel_present(unsigned long addr)
- pte_t va_present(struct mm_struct * mm, unsigned long addr)
- {
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *ptep, pte;
++/**
++ * enum dma_desc_metadata_mode - per descriptor metadata mode types supported
++ * @DESC_METADATA_CLIENT - the metadata buffer is allocated/provided by the
++ *  client driver and it is attached (via the dmaengine_desc_attach_metadata()
++ *  helper) to the descriptor.
++ *
++ * Client drivers interested to use this mode can follow:
++ * - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++ *   1. prepare the descriptor (dmaengine_prep_*)
++ *	construct the metadata in the client's buffer
++ *   2. use dmaengine_desc_attach_metadata() to attach the buffer to the
++ *	descriptor
++ *   3. submit the transfer
++ * - DMA_DEV_TO_MEM:
++ *   1. prepare the descriptor (dmaengine_prep_*)
++ *   2. use dmaengine_desc_attach_metadata() to attach the buffer to the
++ *	descriptor
++ *   3. submit the transfer
++ *   4. when the transfer is completed, the metadata should be available in the
++ *	attached buffer
++ *
++ * @DESC_METADATA_ENGINE - the metadata buffer is allocated/managed by the DMA
++ *  driver. The client driver can ask for the pointer, maximum size and the
++ *  currently used size of the metadata and can directly update or read it.
++ *  dmaengine_desc_get_metadata_ptr() and dmaengine_desc_set_metadata_len() is
++ *  provided as helper functions.
++ *
++ * Client drivers interested to use this mode can follow:
++ * - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++ *   1. prepare the descriptor (dmaengine_prep_*)
++ *   2. use dmaengine_desc_get_metadata_ptr() to get the pointer to the engine's
++ *	metadata area
++ *   3. update the metadata at the pointer
++ *   4. use dmaengine_desc_set_metadata_len()  to tell the DMA engine the amount
++ *	of data the client has placed into the metadata buffer
++ *   5. submit the transfer
++ * - DMA_DEV_TO_MEM:
++ *   1. prepare the descriptor (dmaengine_prep_*)
++ *   2. submit the transfer
++ *   3. on transfer completion, use dmaengine_desc_get_metadata_ptr() to get the
++ *	pointer to the engine's metadata area
++ *   4. Read out the metadata from the pointer
++ *
++ * Note: the two mode is not compatible and clients must use one mode for a
++ * descriptor.
++ */
++enum dma_desc_metadata_mode {
++	DESC_METADATA_NONE = 0,
++	DESC_METADATA_CLIENT = BIT(0),
++	DESC_METADATA_ENGINE = BIT(1),
++};
++
+ struct dma_chan_percpu {
+ 	/* stats */
+ 	unsigned long memcpy_count;
+@@ -475,6 +527,18 @@ struct dmaengine_unmap_data {
+ 	dma_addr_t addr[0];
+ };
  
- 	pgd = pgd_offset(mm, addr);
- 	if (!pgd_none(*pgd)) {
--		pud = pud_offset(pgd, addr);
--		if (!pud_none(*pud)) {
--			pmd = pmd_offset(pud, addr);
--			if (!pmd_none(*pmd)) {
--				ptep = pte_offset_map(pmd, addr);
--				pte = *ptep;
--				if (pte_present(pte))
--					return pte;
-+		p4d = p4d_offset(pgd, addr);
-+		if (!p4d_none(*p4d)) {
-+			pud = pud_offset(p4d, addr);
-+			if (!pud_none(*pud)) {
-+				pmd = pmd_offset(pud, addr);
-+				if (!pmd_none(*pmd)) {
-+					ptep = pte_offset_map(pmd, addr);
-+					pte = *ptep;
-+					if (pte_present(pte))
-+						return pte;
-+				}
- 			}
- 		}
- 	}
++struct dma_async_tx_descriptor;
++
++struct dma_descriptor_metadata_ops {
++	int (*attach)(struct dma_async_tx_descriptor *desc, void *data,
++		      size_t len);
++
++	void *(*get_ptr)(struct dma_async_tx_descriptor *desc,
++			 size_t *payload_len, size_t *max_len);
++	int (*set_len)(struct dma_async_tx_descriptor *desc,
++		       size_t payload_len);
++};
++
+ /**
+  * struct dma_async_tx_descriptor - async transaction descriptor
+  * ---dma generic offload fields---
+@@ -488,6 +552,11 @@ struct dmaengine_unmap_data {
+  * descriptor pending. To be pushed on .issue_pending() call
+  * @callback: routine to call after this operation is complete
+  * @callback_param: general parameter to pass to the callback routine
++ * @desc_metadata_mode: core managed metadata mode to protect mixed use of
++ *	DESC_METADATA_CLIENT or DESC_METADATA_ENGINE. Otherwise
++ *	DESC_METADATA_NONE
++ * @metadata_ops: DMA driver provided metadata mode ops, need to be set by the
++ *	DMA driver if metadata mode is supported with the descriptor
+  * ---async_tx api specific fields---
+  * @next: at completion submit this descriptor
+  * @parent: pointer to the next level up in the dependency chain
+@@ -504,6 +573,8 @@ struct dma_async_tx_descriptor {
+ 	dma_async_tx_callback_result callback_result;
+ 	void *callback_param;
+ 	struct dmaengine_unmap_data *unmap;
++	enum dma_desc_metadata_mode desc_metadata_mode;
++	struct dma_descriptor_metadata_ops *metadata_ops;
+ #ifdef CONFIG_ASYNC_TX_ENABLE_CHANNEL_SWITCH
+ 	struct dma_async_tx_descriptor *next;
+ 	struct dma_async_tx_descriptor *parent;
+@@ -666,6 +737,7 @@ struct dma_filter {
+  * @global_node: list_head for global dma_device_list
+  * @filter: information for device/slave to filter function/param mapping
+  * @cap_mask: one or more dma_capability flags
++ * @desc_metadata_modes: supported metadata modes by the DMA device
+  * @max_xor: maximum number of xor sources, 0 if no capability
+  * @max_pq: maximum number of PQ sources and PQ-continue capability
+  * @copy_align: alignment shift for memcpy operations
+@@ -727,6 +799,7 @@ struct dma_device {
+ 	struct list_head global_node;
+ 	struct dma_filter filter;
+ 	dma_cap_mask_t  cap_mask;
++	enum dma_desc_metadata_mode desc_metadata_modes;
+ 	unsigned short max_xor;
+ 	unsigned short max_pq;
+ 	enum dmaengine_alignment copy_align;
+@@ -902,6 +975,41 @@ static inline struct dma_async_tx_descriptor *dmaengine_prep_dma_memcpy(
+ 						    len, flags);
+ }
+ 
++static inline bool dmaengine_is_metadata_mode_supported(struct dma_chan *chan,
++		enum dma_desc_metadata_mode mode)
++{
++	if (!chan)
++		return false;
++
++	return !!(chan->device->desc_metadata_modes & mode);
++}
++
++#ifdef CONFIG_DMA_ENGINE
++int dmaengine_desc_attach_metadata(struct dma_async_tx_descriptor *desc,
++				   void *data, size_t len);
++void *dmaengine_desc_get_metadata_ptr(struct dma_async_tx_descriptor *desc,
++				      size_t *payload_len, size_t *max_len);
++int dmaengine_desc_set_metadata_len(struct dma_async_tx_descriptor *desc,
++				    size_t payload_len);
++#else /* CONFIG_DMA_ENGINE */
++static inline int dmaengine_desc_attach_metadata(
++		struct dma_async_tx_descriptor *desc, void *data, size_t len)
++{
++	return -EINVAL;
++}
++static inline void *dmaengine_desc_get_metadata_ptr(
++		struct dma_async_tx_descriptor *desc, size_t *payload_len,
++		size_t *max_len)
++{
++	return NULL;
++}
++static inline int dmaengine_desc_set_metadata_len(
++		struct dma_async_tx_descriptor *desc, size_t payload_len)
++{
++	return -EINVAL;
++}
++#endif /* CONFIG_DMA_ENGINE */
++
+ /**
+  * dmaengine_terminate_all() - Terminate all active DMA transfers
+  * @chan: The channel for which to terminate the transfers
 -- 
-2.7.4
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
