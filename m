@@ -2,75 +2,107 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F09CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E1DCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1447D217F9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB8E82086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:06:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lawnmS4/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbfKAKFv (ORCPT
+        id S1729370AbfKAKGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 06:05:51 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5248 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728048AbfKAKFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 06:05:51 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 263B1D67FC4C1998E218;
-        Fri,  1 Nov 2019 18:05:49 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 1 Nov 2019
- 18:05:46 +0800
-Subject: Re: [RFC PATCH v2] f2fs: support data compression
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20191029092730.109428-1-yuchao0@huawei.com>
- <20191031160105.GC60005@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <33c09ea0-b521-77b7-dd84-a3ede003a793@huawei.com>
-Date:   Fri, 1 Nov 2019 18:05:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 1 Nov 2019 06:06:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46472 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728048AbfKAKGS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 06:06:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=jmed3/I8XI1nyJIh3Dfsq3N/qBZGlZAkvrKYEkgMiC0=; b=lawnmS4/4P7nUtVf89/ilyj0IB
+        b9Z6ob1Ti2QlYsNCks1XCPssUqvcSQ8ouHl9hUas1hbbqdOn5YJhEFYFmGyz7gLsTSsYTE/1rWW9S
+        Z0r7c29roE+eUQP2KyI4jtYPQiUnI+oN5jSs+r9SBf0IUV+Nq0rQno1dfKWHhy3y9XKHlu2ALtbKb
+        iJxGa1vNpT9owA7utH7bnk9VreSMJQiVr3EzSumYg54/hxQlSKX1P+8rLsrkOSCmbl99eY7+qN0bP
+        ep3gW3Zly8mo9PTj7d/aH+REXWukKXz7Ewsax9RCxZzmqT4SLVoNsUtSXX7F/rShGu565+h2IScWP
+        3OA262mg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iQTor-0001IS-6r; Fri, 01 Nov 2019 10:06:13 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3E240301A79;
+        Fri,  1 Nov 2019 11:05:09 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3DF4B26540348; Fri,  1 Nov 2019 11:06:11 +0100 (CET)
+Date:   Fri, 1 Nov 2019 11:06:11 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH RFC 1/6] perf/x86: Add perf text poke event
+Message-ID: <20191101100611.GV4131@hirez.programming.kicks-ass.net>
+References: <20191025130000.13032-1-adrian.hunter@intel.com>
+ <20191025130000.13032-2-adrian.hunter@intel.com>
+ <20191030104747.GA21153@leoy-ThinkPad-X240s>
+ <20191030124659.GQ4114@hirez.programming.kicks-ass.net>
+ <20191030141950.GB21153@leoy-ThinkPad-X240s>
+ <20191030162325.GT4114@hirez.programming.kicks-ass.net>
+ <20191031073136.GC21153@leoy-ThinkPad-X240s>
+ <CAJ9a7VgZH7g=rFDpKf=FzEcyBVLS_WjqbrqtRnjOi7WOY4st+w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191031160105.GC60005@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJ9a7VgZH7g=rFDpKf=FzEcyBVLS_WjqbrqtRnjOi7WOY4st+w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/11/1 0:01, Jaegeuk Kim wrote:
->> +f2fs-$(CONFIG_FS_COMPRESSION) += compress.o
-> CONFIG_F2FS_FS_COMPRESSION?
+On Thu, Oct 31, 2019 at 12:29:15PM +0000, Mike Leach wrote:
+> On Thu, 31 Oct 2019 at 07:31, Leo Yan <leo.yan@linaro.org> wrote:
 
-Fixed.
-
+> > > Since all instructions (with the possible exception of RET) are
+> > > unconditional branch instructions: NOP, JMP, CALL. It makes no read
+> > > difference to the argument below.
+> > >
+> > > ( I'm thinking RET might be special in that it reads the return address
+> > > from the stack and therefore must emit the whole IP into the stream, as
+> > > we cannot know the stack state )
+> >
+> > To be honest, I don't have knowledge what's the exactly format for 'ret'
+> > in CoreSight trace; so would like to leave this to Mike.
+> >
 > 
->> +#ifdef F2FS_FS_COMPRESSION
-> Do we need this?
+> For ETM trace we do not have to output the entire address into he stream if:
+> - address compression allows us to emit only the changed ls bit from the
+> last address.
+> - the address is identical to one of the last three addresses emitted ( we
+> just emit a ‘same address encoding’
+> - we are using return stack compression and the address is top of the
+> return stack (we emit nothing and the decoder gets the address from its own
+> mode, of the return stack)
 
-Ditto.
+Cute. I don't actually know what PT does, but I figured there had to at
+least be the option to provide more information.
 
-> 
->> +bool f2fs_is_compress_backend_ready(struct inode *inode)
->> +{
->> +	if (!f2fs_compressed_file(inode))
->> +		return true;
-> #ifdef F2FS_FS_COMPRESSION
->> +	return f2fs_cops[F2FS_I(inode)->i_compress_algorithm];
-> #else
-> 	return -EOPNOTSUPP;
-> #endif
-
-Ditto, I kept return value as boolean.
-
-> 
