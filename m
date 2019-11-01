@@ -2,98 +2,130 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1541ACA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20921CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D83C520656
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:15:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="bHux83oE"
+	by mail.kernel.org (Postfix) with ESMTP id 037EE20650
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727746AbfKAQPk (ORCPT
+        id S1727865AbfKAQPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 12:15:40 -0400
-Received: from vps.xff.cz ([195.181.215.36]:60268 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726949AbfKAQPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 12:15:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1572624937; bh=DUJ21suT9UFTz9RcE01mK2DkoJaOFwuKLOjW5+4c7js=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=bHux83oE+gyWLkQFblsmIXq+x2TReluLU64ZFrLrHnGg8o6LECme6g+JEVaqzN/A6
-         /zWD1G5F3nTrfQ6cle/Xsw7cg+fWXUc7kRyxMHNCOuZKz8EUB8DOFANuM7RTOfBVTQ
-         q2weXI4DwqROBU0BZ/z8RgZtJecPLtByFvbWOWrY=
-Date:   Fri, 1 Nov 2019 17:15:37 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     linux-sunxi@googlegroups.com, Yangtao Li <tiny.windzz@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:ALLWINNER CPUFREQ DRIVER" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cpufreq: sun50i: Fix CPU speed bin detection
-Message-ID: <20191101161537.xqywdnwlrxgjf7hf@core.my.home>
-Mail-Followup-To: Maxime Ripard <mripard@kernel.org>,
-        linux-sunxi@googlegroups.com, Yangtao Li <tiny.windzz@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:ALLWINNER CPUFREQ DRIVER" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191031181359.282617-1-megous@megous.com>
- <20191101150701.fgke7hoad5zn3vn2@hendrix>
+        Fri, 1 Nov 2019 12:15:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38324 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726949AbfKAQPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 12:15:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0E53BB533;
+        Fri,  1 Nov 2019 16:15:51 +0000 (UTC)
+Date:   Fri, 1 Nov 2019 17:15:06 +0100
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     hannes@cmpxchg.org, clm@fb.com, dennisz@fb.com,
+        Josef Bacik <jbacik@fb.com>, kernel-team@fb.com,
+        newella@fb.com, lizefan@huawei.com, axboe@kernel.dk,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Rik van Riel <riel@surriel.com>, josef@toxicpanda.com,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/10] blkcg: implement blk-iocost
+Message-ID: <20191101161506.GA28212@blackbody.suse.cz>
+References: <20190828220600.2527417-1-tj@kernel.org>
+ <20190828220600.2527417-9-tj@kernel.org>
+ <20190910125513.GA6399@blackbody.suse.cz>
+ <20190910160855.GS2263813@devbig004.ftw2.facebook.com>
+ <20191003145106.GC6678@blackbody.suse.cz>
+ <20191003164552.GA3247445@devbig004.ftw2.facebook.com>
+ <20191009153629.GA5400@blackbody.suse.cz>
+ <20191014153643.GD18794@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
 Content-Disposition: inline
-In-Reply-To: <20191101150701.fgke7hoad5zn3vn2@hendrix>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20191014153643.GD18794@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 04:07:01PM +0100, Maxime Ripard wrote:
-> On Thu, Oct 31, 2019 at 07:13:58PM +0100, Ondrej Jirman wrote:
-> > I have failures to boot on Orange Pi 3, because this driver determined
-> > that my SoC is from the normal bin, but my SoC only works reliably with
-> > the OPP values for the slowest bin.
-> >
-> > Looking at BSP code, I found that efuse values have following meanings
-> > on H6:
-> >
-> > - 0b000 invalid (interpreted in vendor's BSP as normal bin)
-> > - 0b001 slowest bin
-> > - 0b011 normal bin
-> > - 0b111 fastest bin
-> >
-> > Let's play it safe and interpret 0 as the slowest bin, but fix detection
-> > of other bins to match vendor code.
-> >
-> > Fixes: f328584f7bff ("cpufreq: Add sun50i nvmem based CPU scaling driver")
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> 
-> Acked-by: Maxime Ripard <mripard@kernel.org>
 
-Self-NACK :) Please don't merge.
+--bg08WKrSYDhXBjb5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please see the other e-mail for why.
+Hello
 
-thank you and regards,
-	o.
+(I realize it's likely late for the remark but I'd like to bring it up
+anyway.)
 
-> Out of curiosity, which OPP table is being used? I guess it's one of
-> the dozens of patches sitting there...
-> 
-> Maxime
+On Mon, Oct 14, 2019 at 08:36:43AM -0700, Tejun Heo <tj@kernel.org> wrote:
+> We likely can talk on the subject
+> for a really long time probalby because there's no clearly technically
+> better choice here, so...
+I agree with you that functionally the two options are equal and also
+=66rom configuration POV they seem both sensible.
 
+I checked where BFQ stores its per-device parameters and its under the
+sysfs directory of given device's iosched directory. So from the user
+perspective it'd be more consistent if all similar tunables resided
+under that location.
 
+(OTOH, I admit I'm not that familiar with block layer internals to
+identify the overlap between IO scheduler and IO controller.)
+
+> Yeah, it's kinda unfortunate that it requires this many parameters but
+> at least my opinion is that that's reflecting the inherent
+> complexities of the underlying devices and how workloads interact with
+> them.
+After I learnt about the existence of BFQ tunables, I'm no longer
+concerned by the complexity of the parameter space.
+
+Thanks for the explanations of QoS purpose.
+
+> For QoS parameters, Andy is currently working on a method to determine
+> the set of parametesr which are at the edge of total work cliff -
+> ie. the point where tighetning QoS params further starts reducing the
+> total amount of work the device can do significantly.
+The QoS description in the Documentation/ describes the interpretation
+of the individual parameters, however, this purpose and how it works was
+not clear to be from that. I think the QoS policy would deserve similar
+description in the Documentation/.
+
+> Nothing can issue IOs indefinitely without some of them completing and
+> the total amount of work a workload can do is conjoined with the
+> completion latencies. [...]
+I may reply to this point later. However, if that provably works, I'm
+likely missing something in my understanding, so that'd be irrelevant.
+
+Cheers,
+Michal
+
+--bg08WKrSYDhXBjb5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl28WgQACgkQia1+riC5
+qShQKA/7BT64RM/e1xU73WG0TsdQ1By8FWwkm/pwmasQzFiWE2gbCKdVx7FOdoR7
+m1cyKkl1tWef4uJGy788zwruYfliudpgN4juB0qDBMXfX+FIMOcIkbfbsXYf7qSy
+S3iIUP5p0sidWswOeK/fEwXKDEDzmZGqxqHiRiLYyoXE1gGsf6wH2HCy+S5fOC8K
+EEiCk3c4EzG2cX6gQa1nuhXIYhGASZXpVGwfyFi9O6cYZmzuEyj26k2YjnZsmWp9
+i8uqcOrTOCYV36nP5YJyfKKhfx0UlpGKFk90z9LGagKEhbD2Ht3xgYugJJCrem4C
+OS7tJWWWaycZ/uli5InGk5X/lGMp514FY1ARNyA0/HavLI5eqTDkvf2b2EP+yoRH
+bwnPh/YeYyPjMQJ+ONfdV1iC5pGIYsGC20jOQz4QY9QRkjbKwMLLacYHoCSDIRxg
+BLgwf35pxzXJfxQc8iEdoSz1Ii6yKOZGDN+5C4yUV/1qDSG4j4DvAfY+71oc34is
+HvZBattBqurPSH8f4DMg9zB6KaU/JAWrg0m/sUxDXSbu3pit7R/L/PVP+Kljhsf5
+vmQf6n3e4wcU93S7hCCLPA0CWMQLgn/PIgDBKUIJP6eP6CAV4NKkK7xY/ZjViduI
+DlKBVs30QYjqG4xx5oZCyzmiA7Q96q3vMtzR6tevrTD6tSyf08g=
+=0UBH
+-----END PGP SIGNATURE-----
+
+--bg08WKrSYDhXBjb5--
