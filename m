@@ -7,62 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75A4CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656D0CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F67D2067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D73F2067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:42:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="E6p6xxCr"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="goNZ5OE4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730794AbfKAMmv (ORCPT
+        id S1730810AbfKAMmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 08:42:51 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37572 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730750AbfKAMmr (ORCPT
+        Fri, 1 Nov 2019 08:42:55 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36923 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730782AbfKAMmv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 08:42:47 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v2so10129739lji.4
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 05:42:45 -0700 (PDT)
+        Fri, 1 Nov 2019 08:42:51 -0400
+Received: by mail-lf1-f67.google.com with SMTP id b20so7145938lfp.4
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 05:42:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/C1Eg1dR+pzbI0uF0+AzerXAuAR/n78tvkDzoMBSgLI=;
-        b=E6p6xxCrNL24MJSKd9WV7hyzQub0rZ74qqVrC33D8S4zffFOXSmiI07OOrVK/EYRr7
-         RUa2hKLf0AbNe1U4vqbo424rJ6TtF5dZ7URlni+1mSdKFNbhfuyDZH2bmwUkEc1PN5+y
-         KsDZUcdFfYKJBovm1/jt9ezy8dXuKFe/haEvI=
+        bh=skc4BB3FfJVhrMQufim0pPb5lTLStBal+/ZiI3PgHrk=;
+        b=goNZ5OE4tByzOYzAc1bKhKcL9oM+UBCCFrvDNLRRvcNalh8UnNn6w3j3/Q21+wi139
+         yiMCFOFtB95G2/yRPf1PDZQuswYXEi69SttUocHkc6sMbHZBdFvyxel4r9/0e7RIvZPM
+         c/eVWDJF9fTGzUPSul9kKDwPdfk36qWT5Kll4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/C1Eg1dR+pzbI0uF0+AzerXAuAR/n78tvkDzoMBSgLI=;
-        b=P0JLtkbw7DxOwAIevvY7ocGLRgnOftLaph/qD8g/Lvl+ma9BcRO35ku0zZ8jhlW40q
-         X7XKj6jDfCRrbQgi4prcT4IgkiF/jo3i3CGfB0hn6CTeORUUbSM9SewTwX7UeT9DqSNb
-         mp3XxalSetcrUAvpUgWYAB+5sL6KE96iqOKkW2cpeiE36Ns+nop+fz0rzFroe3FsEFf0
-         s4awmbhDt40a24xbKavl0gmMPyK1P1qsAwznL1rF+Vc79Z8Lz8EocQ8cvxJBUbIXhHpH
-         2AmrP16tfwpgDP5fNMp4ao/5M8ECQfWAkGow+asGM5QYsjnusoD/7/oLQyojFGFGL4lB
-         gbbA==
-X-Gm-Message-State: APjAAAXOj55fTGMwDtmPFGpo03sYzXeFxQPaXhYsBjfmJKrJ8UWiSnbk
-        6ro22AZK8X2FxTDIMmr24QyhjA==
-X-Google-Smtp-Source: APXvYqwFNc8j57WfHASb7dDdRvzJDRCUUK7Jd083Crpc8DfY36CzXhgw+rR0rcivqtg51F7xRMNXHQ==
-X-Received: by 2002:a2e:8007:: with SMTP id j7mr8239471ljg.19.1572612164992;
-        Fri, 01 Nov 2019 05:42:44 -0700 (PDT)
+        bh=skc4BB3FfJVhrMQufim0pPb5lTLStBal+/ZiI3PgHrk=;
+        b=e/HVRsNdz8+NF/mWu/XLIh7l2+73uRFhG4KWRNn+v/mvB6KDPOOVPcXTIohigjM5ET
+         dzXW6AKwU/9sKLWDsHy56004tnZjvOIpMDQ2J2xyLLLkh1olwfl8r/jo7BarTNhE89qT
+         YnaTKzGF0emuaqpKHMrmURUrePdhC5N4BnOteSGRcJmZR5n9uw4iR6XtwD8QZM0Osi8F
+         I+BM8t6zswmweLW8e1kvstR+wCo04zByVr4yIMm4gFK8n6MrRHLVGgyTJsoA8Slc+oNX
+         RUU8US+jBxR6mjAj7eXrrpFKbkET8Y3nndfsrN37Y0bvt6quhgdpHUNsLxIsOjcupSMd
+         H2jg==
+X-Gm-Message-State: APjAAAWhe3cmFnNMw7LbAUNIwPJBwumpaM33Wvw/UyJu93GRvrNkXTh3
+        6b8ZFYbrATtOKEgmy0vO/aKgiw==
+X-Google-Smtp-Source: APXvYqx+LkhhsdE4uicd68kleysrFNvL7csaxcY4M/SzGwCUFxmQjOfm//4bJ58IrETbPNpw6KnCjQ==
+X-Received: by 2002:a19:8c1c:: with SMTP id o28mr7221433lfd.105.1572612169565;
+        Fri, 01 Nov 2019 05:42:49 -0700 (PDT)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id o26sm2458540lfi.57.2019.11.01.05.42.44
+        by smtp.gmail.com with ESMTPSA id o26sm2458540lfi.57.2019.11.01.05.42.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 05:42:44 -0700 (PDT)
+        Fri, 01 Nov 2019 05:42:49 -0700 (PDT)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
 Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v3 24/36] soc: fsl: qe: qe_io.c: access device tree property using be32_to_cpu
-Date:   Fri,  1 Nov 2019 13:41:58 +0100
-Message-Id: <20191101124210.14510-25-linux@rasmusvillemoes.dk>
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-serial@vger.kernel.org
+Subject: [PATCH v3 28/36] serial: ucc_uart: explicitly include soc/fsl/cpm.h
+Date:   Fri,  1 Nov 2019 13:42:02 +0100
+Message-Id: <20191101124210.14510-29-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191101124210.14510-1-linux@rasmusvillemoes.dk>
 References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
@@ -74,46 +75,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to apply be32_to_cpu to make this work correctly on
-little-endian hosts.
+This driver uses #defines from soc/fsl/cpm.h, so instead of relying on
+some other header pulling that in, do that explicitly. This is
+preparation for allowing this driver to build on ARM.
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/soc/fsl/qe/qe_io.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/tty/serial/ucc_uart.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/soc/fsl/qe/qe_io.c b/drivers/soc/fsl/qe/qe_io.c
-index 99aeb01586bd..61dd8eb8c0fe 100644
---- a/drivers/soc/fsl/qe/qe_io.c
-+++ b/drivers/soc/fsl/qe/qe_io.c
-@@ -142,7 +142,7 @@ int par_io_of_config(struct device_node *np)
- {
- 	struct device_node *pio;
- 	int pio_map_len;
--	const unsigned int *pio_map;
-+	const __be32 *pio_map;
+diff --git a/drivers/tty/serial/ucc_uart.c b/drivers/tty/serial/ucc_uart.c
+index a0555ae2b1ef..7e802616cba8 100644
+--- a/drivers/tty/serial/ucc_uart.c
++++ b/drivers/tty/serial/ucc_uart.c
+@@ -32,6 +32,7 @@
+ #include <soc/fsl/qe/ucc_slow.h>
  
- 	if (par_io == NULL) {
- 		printk(KERN_ERR "par_io not initialized\n");
-@@ -167,9 +167,15 @@ int par_io_of_config(struct device_node *np)
- 	}
+ #include <linux/firmware.h>
++#include <soc/fsl/cpm.h>
+ #include <asm/reg.h>
  
- 	while (pio_map_len > 0) {
--		par_io_config_pin((u8) pio_map[0], (u8) pio_map[1],
--				(int) pio_map[2], (int) pio_map[3],
--				(int) pio_map[4], (int) pio_map[5]);
-+		u8 port        = be32_to_cpu(pio_map[0]);
-+		u8 pin         = be32_to_cpu(pio_map[1]);
-+		int dir        = be32_to_cpu(pio_map[2]);
-+		int open_drain = be32_to_cpu(pio_map[3]);
-+		int assignment = be32_to_cpu(pio_map[4]);
-+		int has_irq    = be32_to_cpu(pio_map[5]);
-+
-+		par_io_config_pin(port, pin, dir, open_drain,
-+				  assignment, has_irq);
- 		pio_map += 6;
- 		pio_map_len -= 6;
- 	}
+ /*
 -- 
 2.23.0
 
