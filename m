@@ -2,169 +2,98 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 914CBCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4262CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2562086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:29:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MaxHt/+m"
+	by mail.kernel.org (Postfix) with ESMTP id 77B4221734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfKAS3f (ORCPT
+        id S1727495AbfKASbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 14:29:35 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42415 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbfKAS3e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 14:29:34 -0400
-Received: by mail-io1-f67.google.com with SMTP id k1so11872112iom.9
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 11:29:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9TFUU0VzHDXJnyCpiU6F6S+f4IqiuMpQ1VoUi3wfR0c=;
-        b=MaxHt/+mx78gQBGBk76n6MGcKzQD/d2Q//mL/eFBppnw/fSrPNexufzC/trzGpMows
-         +NxstIC6SvnZoYWezP6XxWiIkGMuzmdIvVxi7TurEd4laj8KpnvVjYhM6kWx+CwVbiQg
-         nb6VUf/cgygiG7jtOV8zbWD8D64Md/6xPzEOYve7x8YaiHo7cgpuHhP5PXo5Qh1DFpzn
-         zvmPxvv9GtfDIk4zkyaw6iilTXIdBdeRf1WH4KTQKalfPuoUVikvDYCkId6S0hs9D2JN
-         1B5FCy+WJMm8ipl19rAxxRjJ/eZLBerMOSr9G2r7TOkTdY0QpG83DZeieQ7bb1N66DKF
-         nNmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9TFUU0VzHDXJnyCpiU6F6S+f4IqiuMpQ1VoUi3wfR0c=;
-        b=sgthMhue7kFHfGWWEthB0pubd5y19ailAjzm0QIk2313KKdKPYwSFT0RxVpUtGhCby
-         U3wTSBAeeDbourXch/MkSc2NGvvLj4QuMHLWrrO45+mrPSaYAGKu1AwnY846hkCXo6Cc
-         8T6JS/puxq1RnbY1E7NmZLuD8Moe73Xy7HpQrr9tqMKnEKqiyOPL3hBi6//4qI7BYsMf
-         6TQffywjAQMPPebK4SLv2usQ7xQrW1OrdyPgl7lOsk5Y0Emkq+KhA4qjl6mErmNFVyv+
-         wrhoJOJD+lrNx18s0+kvbAyrqDcw1rAgBugDJrxttIOrzpo8Ox54ag4RZgSOxSoI6Sor
-         ey+A==
-X-Gm-Message-State: APjAAAWJnpGDp+QWoC7cA6IOtijxRPkDvtaQiqf2qnn4osI+cJlDFOI3
-        TErTrOl9KIJK1+s8D0G16jnLHTNm7KiEdhQKWo5cpQ==
-X-Google-Smtp-Source: APXvYqzyPELcJRJA3nMkmapdmScZGN/ssHdPP+UN3xZEGE0xW/JvB+kQlDAhixvAMBGT15CYnNzHe3AmR2jC03wcJUs=
-X-Received: by 2002:a5d:8d8f:: with SMTP id b15mr11847661ioj.296.1572632973507;
- Fri, 01 Nov 2019 11:29:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <157262960837.2838.17520432516398899751.stgit@naples-babu.amd.com> <157262962352.2838.15656190309312238595.stgit@naples-babu.amd.com>
-In-Reply-To: <157262962352.2838.15656190309312238595.stgit@naples-babu.amd.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 1 Nov 2019 11:29:22 -0700
-Message-ID: <CALMp9eQT=a99YhraQZ+awMKOWK=3tg=m9NppZnsvK0Q1PWxbAw@mail.gmail.com>
-Subject: Re: [PATCH 2/4] kvm: svm: Enable UMIP feature on AMD
-To:     "Moger, Babu" <Babu.Moger@amd.com>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "nayna@linux.ibm.com" <nayna@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 1 Nov 2019 14:31:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43322 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727222AbfKASbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 14:31:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 41AABB309;
+        Fri,  1 Nov 2019 18:31:37 +0000 (UTC)
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     eric@anholt.net, wahrenst@gmx.net
+Cc:     gregkh@linuxfoundation.org, dave@stgolabs.net,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
+Subject: [PATCH resend] staging: vc04_services: replace g_free_fragments_mutex with spinlock
+Date:   Fri,  1 Nov 2019 11:29:49 -0700
+Message-Id: <20191101182949.21225-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191028165909.GA469472@kroah.com>
+References: <20191028165909.GA469472@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 10:33 AM Moger, Babu <Babu.Moger@amd.com> wrote:
->
-> AMD 2nd generation EPYC processors support UMIP (User-Mode Instruction
-> Prevention) feature. The UMIP feature prevents the execution of certain
-> instructions if the Current Privilege Level (CPL) is greater than 0.
-> If any of these instructions are executed with CPL > 0 and UMIP
-> is enabled, then kernel reports a #GP exception.
->
-> The idea is taken from articles:
-> https://lwn.net/Articles/738209/
-> https://lwn.net/Articles/694385/
->
-> Enable the feature if supported on bare metal and emulate instructions
-> to return dummy values for certain cases.
->
-> Signed-off-by: Babu Moger <babu.moger@amd.com>
-> ---
->  arch/x86/kvm/svm.c |   21 ++++++++++++++++-----
->  1 file changed, 16 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 4153ca8cddb7..79abbdeca148 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -2533,6 +2533,11 @@ static void svm_decache_cr4_guest_bits(struct kvm_vcpu *vcpu)
->  {
->  }
->
-> +static bool svm_umip_emulated(void)
-> +{
-> +       return boot_cpu_has(X86_FEATURE_UMIP);
-> +}
+There is no need to be using a semaphore, or a sleeping lock
+in the first place: critical region is extremely short, does not
+call into any blocking calls and furthermore lock and unlocking
+operations occur in the same context.
 
-This makes no sense to me. If the hardware actually supports UMIP,
-then it doesn't have to be emulated.
+Get rid of another semaphore user by replacing it with a spinlock.
 
-To the extent that kvm emulates UMIP on Intel CPUs without hardware
-UMIP (i.e. smsw is still allowed at CPL>0), we can always do the same
-emulation on AMD, because SVM has always offered intercepts of sgdt,
-sidt, sldt, and str. So, if you really want to offer this emulation on
-pre-EPYC 2 CPUs, this function should just return true. But, I have to
-ask, "why?"
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+This is in an effort to further reduce semaphore users in the kernel.
 
-*Virtualization* of UMIP on EPYC 2 already works without any of these changes.
+This is a resend, which just seems simpler given the confusions.
 
->  static void update_cr0_intercept(struct vcpu_svm *svm)
->  {
->         ulong gcr0 = svm->vcpu.arch.cr0;
-> @@ -4438,6 +4443,13 @@ static int interrupt_window_interception(struct vcpu_svm *svm)
->         return 1;
->  }
->
-> +static int umip_interception(struct vcpu_svm *svm)
-> +{
-> +       struct kvm_vcpu *vcpu = &svm->vcpu;
-> +
-> +       return kvm_emulate_instruction(vcpu, 0);
-> +}
-> +
->  static int pause_interception(struct vcpu_svm *svm)
->  {
->         struct kvm_vcpu *vcpu = &svm->vcpu;
-> @@ -4775,6 +4787,10 @@ static int (*const svm_exit_handlers[])(struct vcpu_svm *svm) = {
->         [SVM_EXIT_SMI]                          = nop_on_interception,
->         [SVM_EXIT_INIT]                         = nop_on_interception,
->         [SVM_EXIT_VINTR]                        = interrupt_window_interception,
-> +       [SVM_EXIT_IDTR_READ]                    = umip_interception,
-> +       [SVM_EXIT_GDTR_READ]                    = umip_interception,
-> +       [SVM_EXIT_LDTR_READ]                    = umip_interception,
-> +       [SVM_EXIT_TR_READ]                      = umip_interception,
->         [SVM_EXIT_RDPMC]                        = rdpmc_interception,
->         [SVM_EXIT_CPUID]                        = cpuid_interception,
->         [SVM_EXIT_IRET]                         = iret_interception,
-> @@ -5976,11 +5992,6 @@ static bool svm_xsaves_supported(void)
->         return boot_cpu_has(X86_FEATURE_XSAVES);
->  }
->
-> -static bool svm_umip_emulated(void)
-> -{
-> -       return false;
-> -}
-> -
->  static bool svm_pt_supported(void)
->  {
->         return false;
->
+ .../staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+index 8dc730cfe7a6..710d21654128 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+@@ -63,7 +63,7 @@ static char *g_free_fragments;
+ static struct semaphore g_free_fragments_sema;
+ static struct device *g_dev;
+ 
+-static DEFINE_SEMAPHORE(g_free_fragments_mutex);
++static DEFINE_SPINLOCK(g_free_fragments_lock);
+ 
+ static irqreturn_t
+ vchiq_doorbell_irq(int irq, void *dev_id);
+@@ -528,11 +528,11 @@ create_pagelist(char __user *buf, size_t count, unsigned short type)
+ 
+ 		WARN_ON(g_free_fragments == NULL);
+ 
+-		down(&g_free_fragments_mutex);
++		spin_lock(&g_free_fragments_lock);
+ 		fragments = g_free_fragments;
+ 		WARN_ON(fragments == NULL);
+ 		g_free_fragments = *(char **) g_free_fragments;
+-		up(&g_free_fragments_mutex);
++		spin_unlock(&g_free_fragments_lock);
+ 		pagelist->type = PAGELIST_READ_WITH_FRAGMENTS +
+ 			(fragments - g_fragments_base) / g_fragments_size;
+ 	}
+@@ -591,10 +591,10 @@ free_pagelist(struct vchiq_pagelist_info *pagelistinfo,
+ 			kunmap(pages[num_pages - 1]);
+ 		}
+ 
+-		down(&g_free_fragments_mutex);
++		spin_lock(&g_free_fragments_lock);
+ 		*(char **)fragments = g_free_fragments;
+ 		g_free_fragments = fragments;
+-		up(&g_free_fragments_mutex);
++		spin_unlock(&g_free_fragments_lock);
+ 		up(&g_free_fragments_sema);
+ 	}
+ 
+-- 
+2.16.4
+
