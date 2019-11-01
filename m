@@ -2,32 +2,32 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AEFCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 07:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CC6CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 07:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D5A2080F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 07:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC2B72080F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 07:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbfKAH6X (ORCPT
+        id S1730154AbfKAH6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 03:58:23 -0400
+        Fri, 1 Nov 2019 03:58:25 -0400
 Received: from mga17.intel.com ([192.55.52.151]:16169 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727059AbfKAH6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 03:58:22 -0400
+        id S1727059AbfKAH6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 03:58:25 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 00:58:22 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 00:58:25 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,254,1569308400"; 
-   d="scan'208";a="225962454"
+   d="scan'208";a="225962463"
 Received: from yhuang-dev.sh.intel.com ([10.239.159.29])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Nov 2019 00:58:20 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 01 Nov 2019 00:58:22 -0700
 From:   "Huang, Ying" <ying.huang@intel.com>
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
@@ -38,10 +38,12 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Fengguang Wu <fengguang.wu@intel.com>
-Subject: [RFC 00/10] autonuma: Optimize memory placement in memory tiering system
-Date:   Fri,  1 Nov 2019 15:57:17 +0800
-Message-Id: <20191101075727.26683-1-ying.huang@intel.com>
+Subject: [RFC 01/10] autonuma: Fix watermark checking in migrate_balanced_pgdat()
+Date:   Fri,  1 Nov 2019 15:57:18 +0800
+Message-Id: <20191101075727.26683-2-ying.huang@intel.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191101075727.26683-1-ying.huang@intel.com>
+References: <20191101075727.26683-1-ying.huang@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,59 +53,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Huang Ying <ying.huang@intel.com>
 
-With the advent of various new memory types, there may be multiple
-memory types in one machine, e.g. DRAM and PMEM (persistent memory).
-Because the performance and cost of the different types of memory may
-be different, the memory subsystem of the machine could be called
-memory tiering system.
+When zone_watermark_ok() is called in migrate_balanced_pgdat() to
+check migration target node, the parameter classzone_idx (for
+requested zone) is specified as 0 (ZONE_DMA).  But when allocating
+memory for autonuma in alloc_misplaced_dst_page(), the requested zone
+from GFP flags is ZONE_MOVABLE.  That is, the requested zone is
+different.  The size of lowmem_reserve for the different requested
+zone is different.  And this may cause some issues.
 
-After commit c221c0b0308f ("device-dax: "Hotplug" persistent memory
-for use like normal RAM"), the PMEM could be used as cost-effective
-volatile memory in separate NUMA nodes.  In a typical memory tiering
-system, there are CPUs, DRAM and PMEM in each physical NUMA node.  The
-CPUs and the DRAM will be put in one logical node, while the PMEM will
-be put in another (faked) logical node.
+For example, in the zoneinfo of a test machine as below,
 
-To optimize the system overall performance, the hot pages should be
-placed in DRAM node.  To do that, we need to identify the hot pages in
-the PMEM node and migrate them to DRAM node via NUMA migration.
+Node 0, zone    DMA32
+  pages free     61592
+        min      29
+        low      454
+        high     879
+        spanned  1044480
+        present  442306
+        managed  425921
+        protection: (0, 0, 62457, 62457, 62457)
 
-While in autonuma, there are a set of existing mechanisms to identify
-the pages recently accessed by the CPUs in a node and migrate the
-pages to the node.  So we can reuse these mechanisms to build
-mechanisms to optimize page placement in the memory tiering system.
-This has been implemented in this patchset.
+The free page number of ZONE_DMA32 is greater than "high watermark +
+lowmem_reserve[ZONE_DMA]", but less than "high watermark +
+lowmem_reserve[ZONE_MOVABLE]".  And because __alloc_pages_node() in
+alloc_misplaced_dst_page() requests ZONE_MOVABLE, the
+zone_watermark_ok() on ZONE_DMA32 in migrate_balanced_pgdat() may
+always return true.  So, autonuma may not stop even when memory
+pressure in node 0 is heavy.
 
-At the other hand, the cold pages should be placed in PMEM node.  So,
-we also need to identify the cold pages in the DRAM node and migrate
-them to PMEM node.
+To fix the issue, ZONE_MOVABLE is used as parameter to call
+zone_watermark_ok() in migrate_balanced_pgdat().  This makes it same
+as requested zone in alloc_misplaced_dst_page().  So that
+migrate_balanced_pgdat() returns false when memory pressure is heavy.
 
-In the following patchset,
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Rik van Riel <riel@redhat.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Fengguang Wu <fengguang.wu@intel.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+---
+ mm/migrate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[PATCH 0/4] [RFC] Migrate Pages in lieu of discard
-https://lore.kernel.org/linux-mm/20191016221148.F9CCD155@viggo.jf.intel.com/
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 513107baccd3..8f06bd37d927 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1954,7 +1954,7 @@ static bool migrate_balanced_pgdat(struct pglist_data *pgdat,
+ 		if (!zone_watermark_ok(zone, 0,
+ 				       high_wmark_pages(zone) +
+ 				       nr_migrate_pages,
+-				       0, 0))
++				       ZONE_MOVABLE, 0))
+ 			continue;
+ 		return true;
+ 	}
+-- 
+2.23.0
 
-A mechanism to demote the cold DRAM pages to PMEM node under memory
-pressure is implemented.  Based on that, the cold DRAM pages can be
-demoted to PMEM node proactively to free some memory space on DRAM
-node, so that the hot PMEM pages can be migrated to the DRAM node.
-This has been implemented in this patchset too.
-
-The patchset is based on the following not-yet-merged patchset:
-
-[PATCH 0/4] [RFC] Migrate Pages in lieu of discard
-https://lore.kernel.org/linux-mm/20191016221148.F9CCD155@viggo.jf.intel.com/
-
-This is part of a larger patch set.  If you want to apply these or
-play with them, I'd suggest using the tree from here.
-
-    http://lkml.kernel.org/r/c3d6de4d-f7c3-b505-2e64-8ee5f70b2118@intel.com
-
-
-With all above optimization, the score of pmbench memory accessing
-benchmark with 80:20 read/write ratio and normal access address
-distribution improves 116% on a 2 socket Intel server with Optane DC
-Persistent Memory.
-
-Best Regards,
-Huang, Ying
