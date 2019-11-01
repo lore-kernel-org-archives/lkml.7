@@ -2,173 +2,174 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A498CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D244CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0B12053B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B35217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:08:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="Hg7SwH8O"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iy1M95zv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbfKAUHF (ORCPT
+        id S1727666AbfKAUIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 16:07:05 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43526 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbfKAUHF (ORCPT
+        Fri, 1 Nov 2019 16:08:40 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:32925 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727573AbfKAUIk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 16:07:05 -0400
-Received: by mail-io1-f68.google.com with SMTP id c11so12133102iom.10
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 13:07:04 -0700 (PDT)
+        Fri, 1 Nov 2019 16:08:40 -0400
+Received: by mail-io1-f67.google.com with SMTP id n17so12200173ioa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 13:08:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+9XbHQUSxDq9B2fBuL9mDt+Zz+PE63ygUr4teBcOseY=;
-        b=Hg7SwH8Os7Mt6Hy5Uhc0YprZslXlv3Ffm9C6jPfxEHM2Ognx2JG+/k69EhxhCjVV3p
-         DxA17xvbkTRBGClk7UCA62LE3l+9O0GmKVqNgjbnZ0voqByFL6KL18CU5cJQcffecmmr
-         +HCyerf1ruUnvbA7D3QD7oWcMPjRjH1rRHqPSMJG+ILWH5FEB5hEYc0q3GTmlLUWBImn
-         uuAUzGzdJQR6IhBrEBH9glsmaWhJ5Z/DcWnxLb9elJ5Xzn4hqi69EsJg8JMRcb9YE/fI
-         57T3s4sr3T+f+OeTmHIIpHNZ80jQm3BdYtkRZglRhmwKZSM52CvnDcCYeB+oDDu3CtV3
-         /wbg==
+        bh=MMuSpKjkTI+qLHBAx7jiWHtZy7SBXqBydOpP3zmsAf0=;
+        b=iy1M95zv28ds+X7p9Bnf8UORlZ25yKj13mQ5Jrd0O0NdJ5ntb5qElb75VErfm9EjI/
+         jSxnioGDdMiDFuQNPUcDa0z4dg6EtNIqy7zogSY9rlNz1Fjc9JKgakgg5BqzQXAR7jay
+         +FiH0SFYCnxihNF00z4gOxZoBFa2V99OJdimTbe8T8p2H0e1Ui88GFrpeWfSI5CKMf30
+         BfCt5YBhNK6HKCKcKHRxI3juodEIVNhYyxHFncFhItHWdPkEGT0g+9oKdp1b6kgN5zSZ
+         VfapLnaLbqg07loMP1BxnUqhctnhNHToTMoqNv0lh5ANrmtvJ+mTY4v+KGiCK33/oElR
+         bEmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+9XbHQUSxDq9B2fBuL9mDt+Zz+PE63ygUr4teBcOseY=;
-        b=H2cJYhEEXmuQIyDQT/E8AOvmmeFU97EodqwVzgQPPjZ4ct+Xh5HIijPkA10kSXGnik
-         PnLk9Gks0p3M/pKUWf7zOQo/nchxIZNANtr8/7/S0lcny4vwhOmFeFRsHtk+Y1xV7PBU
-         QKe8Rja30EHShNCvHDpF030MfB5CIgBa41ISh6tUZDdR4fcH135pUMjnb7j49UrDo2nM
-         0nWhqi20Q+FF4tnYFJbldRMeEs2rM80GixbO5Hyk6CqAdE8t8ZIf0eH5ZbjdlIHDRPNf
-         2stl3rdAbrKiM6JwtErJAxzhrXSxlkD6UnW6bkORWFI+L+0Uv3zFKO2XuXrlQZffJJiF
-         ocoA==
-X-Gm-Message-State: APjAAAXy6QBHt/3O06FabUJaBkVE+Jd4dZcm6Urpz4s5epB5tMfqqLj1
-        5+keERYEkJmtd1qlVqkI3wxVREeYrP+Hac2mqFt7PA==
-X-Google-Smtp-Source: APXvYqy5n1vXsytW26bqTvpzaABeBZZwvUCZ1vuhjQ9ddqyBcvJTAEptTluBPDHwD+Uc3eNC9nM15zbChm4srlB/2JY=
-X-Received: by 2002:a6b:b4ca:: with SMTP id d193mr12235813iof.71.1572638823824;
- Fri, 01 Nov 2019 13:07:03 -0700 (PDT)
+        bh=MMuSpKjkTI+qLHBAx7jiWHtZy7SBXqBydOpP3zmsAf0=;
+        b=IM90+qiCy3iQa9apmEiI7Gg665D7m/SscPwvts0y8WnLYh26EGU4NTDVJC4W/QZFkI
+         nnJQesBvRHumTe6lBRo/HC3kOj06/U41YA4RW/VuNh4APrB0ENv8ky+VQAXYii4CgTlx
+         TkG7Sg+wXimOD3VSkwjlTSmQOM/ON/K6NoQxsyvvmFYc13Ck6tWK7HxEnyPu6No40XqN
+         DUiHvNKgXdoNmhWmTJ8i/YOnm7ZPoZZgm+HST5KNMkE7k6dmLH+Lx/5MOBRyfPPf/IBh
+         7fPdLDnND8TaOM8l9OlTg6dxGNUWaT4pDZPxD463+njwrE0EchF6Efd2ii/qZAA0P1nU
+         SdVg==
+X-Gm-Message-State: APjAAAXcpyQdny+aKC8eBBNai797e7EhaN/vafvUe5aCbPDngroDOh46
+        vc0yUjjjdWGYyKAdVCfVPhVj2+PbbsTfjuPdL6cOcg==
+X-Google-Smtp-Source: APXvYqykFpXYqsVF1tIAiHqvDdZssgcuaF7exg53Xy1RXqEfNVedVGsxZUH4HCKHmLKIjcLCuewEdEmZiksH7W/L/cs=
+X-Received: by 2002:a6b:908a:: with SMTP id s132mr12389079iod.118.1572638918483;
+ Fri, 01 Nov 2019 13:08:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191101180713.5470-1-robdclark@gmail.com>
-In-Reply-To: <20191101180713.5470-1-robdclark@gmail.com>
-From:   Sean Paul <sean@poorly.run>
-Date:   Fri, 1 Nov 2019 16:06:28 -0400
-Message-ID: <CAMavQKKMjge6MwH=-DS5Ngs8ZE5G_x_Vncy+YoqYrC0s0AfX=Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] drm/atomic: fix self-refresh helpers crtc state dereference
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
+References: <157262960837.2838.17520432516398899751.stgit@naples-babu.amd.com>
+ <157262962352.2838.15656190309312238595.stgit@naples-babu.amd.com>
+ <CALMp9eQT=a99YhraQZ+awMKOWK=3tg=m9NppZnsvK0Q1PWxbAw@mail.gmail.com>
+ <669031a1-b9a6-8a45-9a05-a6ce5fb7fa8b@amd.com> <CALCETrXdo2arN=s9Bt1LmYkPajcBj1NuTPC8dwuw2mMZqT0tRw@mail.gmail.com>
+ <91a05d64-36c0-c4c4-fe49-83a4db1ade10@amd.com>
+In-Reply-To: <91a05d64-36c0-c4c4-fe49-83a4db1ade10@amd.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Fri, 1 Nov 2019 13:08:27 -0700
+Message-ID: <CALMp9eRWjj1b7bPdiJO3ZT2xDCyV=Ypf6GUcQLkXnqr7YrXDRg@mail.gmail.com>
+Subject: Re: [PATCH 2/4] kvm: svm: Enable UMIP feature on AMD
+To:     "Moger, Babu" <Babu.Moger@amd.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "nayna@linux.ibm.com" <nayna@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 2:09 PM Rob Clark <robdclark@gmail.com> wrote:
+On Fri, Nov 1, 2019 at 1:04 PM Moger, Babu <Babu.Moger@amd.com> wrote:
 >
-> From: Rob Clark <robdclark@chromium.org>
 >
-> drm_self_refresh_helper_update_avg_times() was incorrectly accessing the
-> new incoming state after drm_atomic_helper_commit_hw_done().  But this
-> state might have already been superceeded by an !nonblock atomic update
-> resulting in dereferencing an already free'd crtc_state.
 >
-> Fixes: d4da4e33341c ("drm: Measure Self Refresh Entry/Exit times to avoid thrashing")
-> Cc: Sean Paul <seanpaul@chromium.org>
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
-> TODO I *think* this will more or less do the right thing.. althought I'm
-> not 100% sure if, for example, we enter psr in a nonblock commit, and
-> then leave psr in a !nonblock commit that overtakes the completion of
-> the nonblock commit.  Not sure if this sort of scenario can happen in
-> practice.  But not crashing is better than crashing, so I guess we
-> should either take this patch or rever the self-refresh helpers until
-> Sean can figure out a better solution.
->
->  drivers/gpu/drm/drm_atomic_helper.c       |  2 ++
->  drivers/gpu/drm/drm_self_refresh_helper.c | 11 ++++++-----
->  include/drm/drm_atomic.h                  |  8 ++++++++
->  3 files changed, 16 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> index 3ef2ac52ce94..732bd0ce9241 100644
-> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> @@ -2240,6 +2240,8 @@ void drm_atomic_helper_commit_hw_done(struct drm_atomic_state *old_state)
->         int i;
->
->         for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
-> +               old_state->crtcs[i].new_self_refresh_active = new_crtc_state->self_refresh_active;
-> +
->                 commit = new_crtc_state->commit;
->                 if (!commit)
->                         continue;
-> diff --git a/drivers/gpu/drm/drm_self_refresh_helper.c b/drivers/gpu/drm/drm_self_refresh_helper.c
-> index 68f4765a5896..77b9079fa578 100644
-> --- a/drivers/gpu/drm/drm_self_refresh_helper.c
-> +++ b/drivers/gpu/drm/drm_self_refresh_helper.c
-> @@ -143,19 +143,20 @@ void drm_self_refresh_helper_update_avg_times(struct drm_atomic_state *state,
->                                               unsigned int commit_time_ms)
->  {
->         struct drm_crtc *crtc;
-> -       struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> +       struct drm_crtc_state *old_crtc_state;
->         int i;
->
-> -       for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state,
-> -                                     new_crtc_state, i) {
-> +       for_each_old_crtc_in_state(state, crtc, old_crtc_state, i) {
-> +               bool new_self_refresh_active =
-> +                               state->crtcs[i].new_self_refresh_active;
->                 struct drm_self_refresh_data *sr_data = crtc->self_refresh_data;
->                 struct ewma_psr_time *time;
->
->                 if (old_crtc_state->self_refresh_active ==
-> -                   new_crtc_state->self_refresh_active)
-> +                   new_self_refresh_active)
->                         continue;
->
-> -               if (new_crtc_state->self_refresh_active)
-> +               if (new_self_refresh_active)
->                         time = &sr_data->entry_avg_ms;
->                 else
->                         time = &sr_data->exit_avg_ms;
-> diff --git a/include/drm/drm_atomic.h b/include/drm/drm_atomic.h
-> index 927e1205d7aa..86baf2b38bb3 100644
-> --- a/include/drm/drm_atomic.h
-> +++ b/include/drm/drm_atomic.h
-> @@ -155,6 +155,14 @@ struct __drm_crtcs_state {
->         struct drm_crtc *ptr;
->         struct drm_crtc_state *state, *old_state, *new_state;
->
-> +       /**
-> +        * @new_self_refresh_active:
-> +        *
-> +        * drm_atomic_helper_commit_hw_done() stashes new_crtc_state->self_refresh_active
-> +        * so that it can be accessed late in drm_self_refresh_helper_update_avg_times().
-> +        */
-> +       bool new_self_refresh_active;
-> +
+> On 11/1/19 2:24 PM, Andy Lutomirski wrote:
+> > On Fri, Nov 1, 2019 at 12:20 PM Moger, Babu <Babu.Moger@amd.com> wrote:
+> >>
+> >>
+> >>
+> >> On 11/1/19 1:29 PM, Jim Mattson wrote:
+> >>> On Fri, Nov 1, 2019 at 10:33 AM Moger, Babu <Babu.Moger@amd.com> wrote:
+> >>>>
+> >>>> AMD 2nd generation EPYC processors support UMIP (User-Mode Instruction
+> >>>> Prevention) feature. The UMIP feature prevents the execution of certain
+> >>>> instructions if the Current Privilege Level (CPL) is greater than 0.
+> >>>> If any of these instructions are executed with CPL > 0 and UMIP
+> >>>> is enabled, then kernel reports a #GP exception.
+> >>>>
+> >>>> The idea is taken from articles:
+> >>>> https://lwn.net/Articles/738209/
+> >>>> https://lwn.net/Articles/694385/
+> >>>>
+> >>>> Enable the feature if supported on bare metal and emulate instructions
+> >>>> to return dummy values for certain cases.
+> >>>>
+> >>>> Signed-off-by: Babu Moger <babu.moger@amd.com>
+> >>>> ---
+> >>>>  arch/x86/kvm/svm.c |   21 ++++++++++++++++-----
+> >>>>  1 file changed, 16 insertions(+), 5 deletions(-)
+> >>>>
+> >>>> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> >>>> index 4153ca8cddb7..79abbdeca148 100644
+> >>>> --- a/arch/x86/kvm/svm.c
+> >>>> +++ b/arch/x86/kvm/svm.c
+> >>>> @@ -2533,6 +2533,11 @@ static void svm_decache_cr4_guest_bits(struct kvm_vcpu *vcpu)
+> >>>>  {
+> >>>>  }
+> >>>>
+> >>>> +static bool svm_umip_emulated(void)
+> >>>> +{
+> >>>> +       return boot_cpu_has(X86_FEATURE_UMIP);
+> >>>> +}
+> >>>
+> >>> This makes no sense to me. If the hardware actually supports UMIP,
+> >>> then it doesn't have to be emulated.
+> >> My understanding..
+> >>
+> >> If the hardware supports the UMIP, it will generate the #GP fault when
+> >> these instructions are executed at CPL > 0. Purpose of the emulation is to
+> >> trap the GP and return a dummy value. Seems like this required in certain
+> >> legacy OSes running in protected and virtual-8086 modes. In long mode no
+> >> need to emulate. Here is the bit explanation https://lwn.net/Articles/738209/
+> >>
+> >
+> > Indeed.  Again, what does this have to do with your patch?
+> >
+> >>
+> >>>
+> >>> To the extent that kvm emulates UMIP on Intel CPUs without hardware
+> >>> UMIP (i.e. smsw is still allowed at CPL>0), we can always do the same
+> >>> emulation on AMD, because SVM has always offered intercepts of sgdt,
+> >>> sidt, sldt, and str. So, if you really want to offer this emulation on
+> >>> pre-EPYC 2 CPUs, this function should just return true. But, I have to
+> >>> ask, "why?"
+> >>
+> >>
+> >> Trying to support UMIP feature only on EPYC 2 hardware. No intention to
+> >> support pre-EPYC 2.
+> >>
+> >
+> > I think you need to totally rewrite your changelog to explain what you
+> > are doing.
+> >
+> > As I understand it, there are a couple of things KVM can do:
+> >
+> > 1. If the underlying hardware supports UMIP, KVM can expose UMIP to
+> > the guest.  SEV should be irrelevant here.
+> >
+> > 2. Regardless of whether the underlying hardware supports UMIP, KVM
+> > can try to emulate UMIP in the guest.  This may be impossible if SEV
+> > is enabled.
+> >
+> > Which of these are you doing?
+> >
+> My intention was to do 1.  Let me go back and think about this again.
 
-Instead of stashing this in crtc, we could generate a bitmask local to
-commit_tail and pass that to calc_avg_times? That way we don't have to
-worry about someone using this when they shouldn't
-
-Sean
-
->         /**
->          * @commit:
->          *
-> --
-> 2.21.0
->
+(1) already works.
