@@ -2,118 +2,113 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CED7CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C980CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 439092080F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E82DB21734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghjSVKpL"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="UuJXdNFj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbfKAJLN (ORCPT
+        id S1727899AbfKAJMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 05:11:13 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33430 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbfKAJLN (ORCPT
+        Fri, 1 Nov 2019 05:12:02 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37595 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727550AbfKAJMC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 05:11:13 -0400
-Received: by mail-wr1-f68.google.com with SMTP id s1so9022275wro.0;
-        Fri, 01 Nov 2019 02:11:11 -0700 (PDT)
+        Fri, 1 Nov 2019 05:12:02 -0400
+Received: by mail-lf1-f66.google.com with SMTP id b20so6752076lfp.4
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 02:11:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Vhjdwd9OjDgZKFYAiqq3M747PlQxCBQAkRBjkbyP7ZE=;
-        b=ghjSVKpLhAM8ISXDDeFz9y/C6z6EwrwhVPWoJcoRy3cWjxomwNmYtyo2mo2va4jcmA
-         ckgLhb1TMEgBPs6z+5cGziauek9PwpjPtF9bNS9UVjN2MWI0TP8XxzM0rIWMYzpe68kt
-         cYoCQTDKl0gEYC6UpIDUrjXTC3m2l3cLykNr6n4zH6dhxG0XiiQ5aG5sniB0hCjHSd0b
-         XMZQjt+/Vn6NY/B2wd6eewneXLbkji3K/hGNMJSzzs9ysAkpI6byIBnsh/jqluU1PhqP
-         R6A4YyDNezfGsHiu66yGzf2lRv9g/RKoBR+MA8dhlif+AaKhzpLwS9VQgtQPRrLKhPCe
-         mB/g==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XlvIQVFH0OsvvtfZAtH/Qzezeu3c9I63M8S4KPzBTmI=;
+        b=UuJXdNFjFQHl67JtwQY9epQ7JZlX/qPb15ER8c6Lqil7fRSMcWNmfwOoeV2vHvtVIf
+         MQprOmpD0hwsPPFv2gxzxn4Ufk5Qeavun2lFUk2TgV9/BJmHdQ9LjJJ4cLQHvBjOt2iq
+         7InLsmyICkBrD2SFovxTIo55dNntzl9yo0IcQEGHox/sHEWXjP92g9WoW1Z/R7RjoyCR
+         dw+A/DYMa1eBrvJi7jIO94xX+0zK2qTl0s4ygNxkGhD9Tvg/jlXPIsDkskH/BRFS0OFW
+         rBmZ4ZqdBwG72D4QcTsAOtQDJM+k21sLl7cD2V9ljZhidt0HoZbQbczQibBO+ANCIENx
+         R3Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Vhjdwd9OjDgZKFYAiqq3M747PlQxCBQAkRBjkbyP7ZE=;
-        b=qfJxv4+D6KBKEdtLvFbVZvfg+CV2tntu2kkZl3BP0CzzV47MabhUtBk414B6NGm7bb
-         T9EzMCPJJPTqf18P26rxNOkE3Sn/74WpEh24EzIHEDN78Gj29DZB8Hjr69zrkFt3nnmM
-         Jue6/Ua0yBK2zY0bZ4AywFrlHTf8NI4mv5JNnUop7thK7nT0yAYFRRe4ABbv5tYZvj2E
-         xotgJPCBV5JUbNUkUyDKRD67EkXzSUw0UQxF7WVTnN6T/xBTql0mZ9ZL4xwb0sKfjj61
-         Z1A3GfNuDYxdFQcUEoVZLx2AP1n1gFSBnui7DrnLfSGr6i8E7M6qITxPJglkLgDofN4O
-         iH9g==
-X-Gm-Message-State: APjAAAWvui0g5Ooj8tr6Juzm8uDg1f8OlWieU7b9b1OETWQCtgLxCg20
-        0B/Co8Gmbr5smM1nCDKsS2hPaAIhp3s=
-X-Google-Smtp-Source: APXvYqwucsVTviL1wqTqOub9YHhpaHgCtVJWjyxDGuPZN3ErAUCBvnC3v/Sq43iK8ecfBp/JazKKkw==
-X-Received: by 2002:adf:b1c6:: with SMTP id r6mr10165019wra.48.1572599469966;
-        Fri, 01 Nov 2019 02:11:09 -0700 (PDT)
-Received: from localhost.localdomain ([62.178.82.229])
-        by smtp.gmail.com with ESMTPSA id y2sm6655648wmy.2.2019.11.01.02.11.07
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XlvIQVFH0OsvvtfZAtH/Qzezeu3c9I63M8S4KPzBTmI=;
+        b=cLvh5jKFKprT8j/yHLwDVYBdya8auSPbaNMSayX6/sCbpfQn35XnbUrs+KF2MLg0J8
+         LYnSOPQPrtSFJ+vwxZ3VXBlExTzsW3gF0TLV1R7VIqK9/Ve/9U8gTxBXPJC+7XeHSCzs
+         SMLUSEUgSSdlaP+2+5amwyzELAXK9PKQy9OCdIXOPqjYFqsI/4huVg22p33VW7eKaNxS
+         MDCPC2xqOF6fEhmEm4OxBpmt2To8bi6YQyCNDegFXpmf5KebUm05dPrDnLL7jvC/JHkK
+         KLr5ufun5N1Ou+pKJkq0YmH9eoIeyPmH1SLPFfRey+EroZKL8Z9rL6d7ZU2d+nYxb8+E
+         7U3A==
+X-Gm-Message-State: APjAAAWYfG04x16mfaieIshe6ou1g0h+loBQpIbtzj5mNksX3KcTOAMh
+        jwAcFs6GhCL1hUTSbOgsvz2KWA==
+X-Google-Smtp-Source: APXvYqz/HnRIkMMRi6lyXHmUXuPZQAZA0KSr/y66JRxF1fApobZgQwfrztMJrO8lOUblE8ZNClOn4A==
+X-Received: by 2002:a19:6b04:: with SMTP id d4mr6761779lfa.10.1572599518710;
+        Fri, 01 Nov 2019 02:11:58 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id r1sm2237427ljk.83.2019.11.01.02.11.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 02:11:08 -0700 (PDT)
-From:   Christian Gmeiner <christian.gmeiner@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH] drm/etnaviv: correct ETNA_MAX_PIPE define
-Date:   Fri,  1 Nov 2019 11:10:48 +0100
-Message-Id: <20191101101110.10105-1-christian.gmeiner@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 01 Nov 2019 02:11:57 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 3778110134C; Fri,  1 Nov 2019 12:11:57 +0300 (+03)
+Date:   Fri, 1 Nov 2019 12:11:57 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Salter <msalter@redhat.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
+        Richard Weinberger <richard@nod.at>,
+        Rolf Eike Beer <eike-kernel@sf-tec.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
+        sparclinux@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v2 01/13] alpha: use pgtable-nop4d instead of 4level-fixup
+Message-ID: <20191101091157.q4cesn6vsiy5qj2j@box>
+References: <1572597584-6390-1-git-send-email-rppt@kernel.org>
+ <1572597584-6390-2-git-send-email-rppt@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572597584-6390-2-git-send-email-rppt@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-etnaviv supports the following pipe types:
+On Fri, Nov 01, 2019 at 10:39:32AM +0200, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> It is not likely alpha will have 5-level page tables.
+> 
+> Replace usage of include/asm-generic/4level-fixup.h and implied
+> __ARCH_HAS_4LEVEL_HACK with include/asm-generic/pgtable-nop4d.h and adjust
+> page table manipulation macros and functions accordingly.
 
-ETNA_PIPE_3D      0x00
-ETNA_PIPE_2D      0x01
-ETNA_PIPE_VG      0x02
+Not pgtable-nop4d.h, but pgtable-nopud.h. Also in subject.
 
-The current used value of 4 for ETNA_MAX_PIPES is wrong and
-caueses some troubles in the combination with perf counters.
-
-Lets have a look at the function etnaviv_pm_query_dom(..):
-If domain->pipe is 3 then we are one element beyond the end
-of the array.
-
-The easiest way to fix this issue is to provide a correct value
-for ETNA_MAX_PIPES.
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: a8c21a5451d8 ("drm/etnaviv: add initial etnaviv DRM driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
----
- include/uapi/drm/etnaviv_drm.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/uapi/drm/etnaviv_drm.h b/include/uapi/drm/etnaviv_drm.h
-index 09d0df8b71c5..5a62228298d1 100644
---- a/include/uapi/drm/etnaviv_drm.h
-+++ b/include/uapi/drm/etnaviv_drm.h
-@@ -75,7 +75,7 @@ struct drm_etnaviv_timespec {
- #define ETNAVIV_PARAM_GPU_NUM_VARYINGS              0x1a
- #define ETNAVIV_PARAM_SOFTPIN_START_ADDR            0x1b
- 
--#define ETNA_MAX_PIPES 4
-+#define ETNA_MAX_PIPES 3
- 
- struct drm_etnaviv_param {
- 	__u32 pipe;           /* in */
 -- 
-2.23.0
-
+ Kirill A. Shutemov
