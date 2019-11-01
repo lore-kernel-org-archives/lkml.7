@@ -2,86 +2,164 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AF9CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64966CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACBD21897
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4FE21855
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:18:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="vttfE+yH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CLO5Qm/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfKASQG (ORCPT
+        id S1727185AbfKASSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 14:16:06 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56116 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbfKASQG (ORCPT
+        Fri, 1 Nov 2019 14:18:01 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:35310 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbfKASSA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 14:16:06 -0400
-Received: by mail-wm1-f68.google.com with SMTP id m17so908204wmi.5
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 11:16:03 -0700 (PDT)
+        Fri, 1 Nov 2019 14:18:00 -0400
+Received: by mail-yb1-f194.google.com with SMTP id s8so189886ybc.2
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 11:17:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sxZpbgKRxXNWGi7JPE5PJWysYsru4FyBDVNdoORRq6s=;
-        b=vttfE+yHueTydpOmGzXppeugfpRtDd2BWsq3YaVtIJ2Z0/Tokkp5mPQ7DMvO06zg5S
-         Tk4b1yFEhm2Wc5Z0iMzxyARZGJFr0ZwreXVX7yJsX52sKOP4mKT6zJqPUuEj3q72e/qN
-         zdgumdE0Dm8GOejq+pRy0oH9hv0NvzIaN9Eql4dQdJh7MFWEPiST+yyb3rh84kZdjAzy
-         Lbl9fdSGQ+heCbTnoNhbbjIn3AxlP6cIHb2UG61hvDkl/mO7rICswVRgJzGZWHiMFVe/
-         FDfcz4U8pQrhGgrUiPI0OQJkH0yZ1KDSH5NSgbbe7oXPcIDEf2eGdTGHV/3anZOfyOB2
-         v5Ag==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K1dOhbDvlz+VXkT92swPjrnBtSngUC8vWTfrXwwNhyY=;
+        b=CLO5Qm/PlPPjpWrndTxBcyLtDMn89fyBXHpnWCS+nH1k4WHVUnqU8ZK4hXdXEUA+fe
+         yzFHMHp8geEjZm/iQfH5Vx4Vyavb1HFA8BIQDZkPCodULlTm1UR7qPd2F3P02uahDFGM
+         lRC1/Fg0B2tWwvqbhgJdzUJ6CqGyqBjPKZG0WUq31dRZ+Cf2GRNn9d5StDnhkVkHXORk
+         Im3rlB1ClPvVVALs0auqckzKgNds0CIZZC49294cGrDtsrMm8DVIVcJu59EeUCCC1TDK
+         POBWVCuhJp13dxhIGFRSJdyJE8u7aErOjlx3iXWcff0MMRyph0H3cnDyP0DzVyshrIty
+         JJJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sxZpbgKRxXNWGi7JPE5PJWysYsru4FyBDVNdoORRq6s=;
-        b=iKKKBewuOMdtzrMo+99MglkOSDuP/xCCrRo5orD10y/fpxPcOQAf8KWNQlbdU8LwnF
-         96/ebsEU+Kx7ZV13u2qDBoXj2Lm8lNPO57DvjGr/KYlqoXTcQGGA9jKW1wfZxvDcjzO2
-         dTbmASiZuwvzUyCLMtnhTssMy02H10YWmCpNgESAlYylTAft2FuK2/iM4Z+dwrf068Md
-         vhqECSVeW/T+4g+x85mTL80/DEhHm6vVlu/TQmmRJNTlsFzEmTsIKz96XMKd3L3DHkc5
-         VRY9Uv6fFEUch8K8162+k0aqwGp/KqL838G7up61NmyxUVaHxlap9/Z9pM/V5i3lXa1S
-         MOag==
-X-Gm-Message-State: APjAAAW99otH6KAaOd8BE90+vG+o3VB/lKQsxB78sOQJRApwLydIc7pF
-        UDhyZzfVLv4vTtF0lWsBdcb3Bw==
-X-Google-Smtp-Source: APXvYqxissnymQlTIZHuchg7pdEDwKYW3/LTmbLmpkQZw7CfA6kNNHUqMixo6wErYI+CKsI4eGbAYw==
-X-Received: by 2002:a1c:a791:: with SMTP id q139mr11147563wme.155.1572632162588;
-        Fri, 01 Nov 2019 11:16:02 -0700 (PDT)
-Received: from netronome.com (fred-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:a2a4:c5ff:fe4c:9ce9])
-        by smtp.gmail.com with ESMTPSA id w13sm10336198wrm.8.2019.11.01.11.16.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 11:16:02 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 19:16:01 +0100
-From:   Simon Horman <simon.horman@netronome.com>
-To:     vincent.cheng.xh@renesas.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, richardcochran@gmail.com,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: ptp: Add device tree binding for IDT
- ClockMatrix based PTP clock
-Message-ID: <20191101181600.GD5859@netronome.com>
-References: <1572578407-32532-1-git-send-email-vincent.cheng.xh@renesas.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K1dOhbDvlz+VXkT92swPjrnBtSngUC8vWTfrXwwNhyY=;
+        b=dE4ku/O8T0eUJDiErcysTcQTc6IOF/fCwfUEGFAPM9nHoWbKtLD/dMsG4imZ0mIE/w
+         rikbRV98rxQIkF2EYvQ6m4gbx/7r1OX1F78GnKaMuI0VmkvVlPyMoLLXXtf5H2N5feo5
+         RsrcMoRarqKv3tEgXO9nOCOkIAvF0pwS943xPZwozX69Zs8ocHEonIVysk5/UXrb9YuX
+         wYm8YQ8wxwje9+8KBDrgYlTG45ZaonWQFGP9fFDJuYYyciuZ6IzblkmlhTfQh2tIYwew
+         aVK+DMZ7F+wxbkp0iPYFjFDhNXCLXsc1guYtRJjdo+ZwqIfpdryeEF37dmGz6VEFxveM
+         jHig==
+X-Gm-Message-State: APjAAAVoEtSHtdsgUBEP0hYqHuGlXk7GXLwXG7UEMaX11deS1RfRIGJY
+        f5Ij6cMsz8HXrDWwRV0ozPKrjXnWzSSHhQF1wbUxSA==
+X-Google-Smtp-Source: APXvYqxo0mSU502NSpYWvdOeGh//uDeakjnxwpfotuR+Ml3IAbrPchH2s+feB5U1ZnKWNyEMuck/yacSnujP2IInM5w=
+X-Received: by 2002:a25:cf8c:: with SMTP id f134mr10567617ybg.45.1572632278924;
+ Fri, 01 Nov 2019 11:17:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572578407-32532-1-git-send-email-vincent.cheng.xh@renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191030100618.1.Ibf7a996e4a58e84f11eec910938cfc3f9159c5de@changeid>
+ <20191030173758.GC693@sol.localdomain> <CAD=FV=Uzma+eSGG1S1Aq6s3QdMNh4J-c=g-5uhB=0XBtkAawcA@mail.gmail.com>
+ <20191030190226.GD693@sol.localdomain> <20191030205745.GA216218@sol.localdomain>
+ <CAD=FV=X6Q3QZaND-tfYr9mf-KYMeKFmJDca3ee-i9roWj+GHsQ@mail.gmail.com>
+ <CAD=FV=URZX4t-TB2Ne8y5ZfeBGoyhsPZhcncQ0yPe3cRXi=1gw@mail.gmail.com> <20191101043620.GA703@sol.localdomain>
+In-Reply-To: <20191101043620.GA703@sol.localdomain>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Fri, 1 Nov 2019 11:17:47 -0700
+Message-ID: <CABXOdTddU2Kn8hJyofAC9eofZHAA4ddBhjNXc8GwC5dm3beMZA@mail.gmail.com>
+Subject: Re: [PATCH] Revert "ext4 crypto: fix to check feature status before
+ get policy"
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Chao Yu <chao@kernel.org>,
+        Ryo Hashimoto <hashimoto@chromium.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Andrey Pronin <apronin@chromium.org>,
+        linux-doc@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 11:20:06PM -0400, vincent.cheng.xh@renesas.com wrote:
-> From: Vincent Cheng <vincent.cheng.xh@renesas.com>
-> 
-> Add device tree binding doc for the IDT ClockMatrix PTP clock.
-> 
-> Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
+On Thu, Oct 31, 2019 at 9:36 PM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> On Thu, Oct 31, 2019 at 10:52:19AM -0700, Doug Anderson wrote:
+> > Hi,
+> >
+> > On Wed, Oct 30, 2019 at 2:59 PM Doug Anderson <dianders@chromium.org> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Wed, Oct 30, 2019 at 1:57 PM Eric Biggers <ebiggers@kernel.org> wrote:
+> > > >
+> > > > FWIW, from reading the Chrome OS code, I think the code you linked to isn't
+> > > > where the breakage actually is.  I think it's actually at
+> > > > https://chromium.googlesource.com/chromiumos/platform2/+/refs/heads/master/chromeos-common-script/share/chromeos-common.sh#375
+> > > > ... where an init script is using the error message printed by 'e4crypt
+> > > > get_policy' to decide whether to add -O encrypt to the filesystem or not.
+> > > >
+> > > > It really should check instead:
+> > > >
+> > > >         [ -e /sys/fs/ext4/features/encryption ]
+> > >
+> > > OK, I filed <https://crbug.com/1019939> and CCed all the people listed
+> > > in the cryptohome "OWNERS" file.  Hopefully one of them can pick this
+> > > up as a general cleanup.  Thanks!
+> >
+> > Just to follow-up: I did a quick test here to see if I could fix
+> > "chromeos-common.sh" as you suggested.  Then I got rid of the Revert
+> > and tried to login.  No joy.
+> >
+> > Digging a little deeper, the ext4_dir_encryption_supported() function
+> > is called in two places:
+> > * chromeos-install
+> > * chromeos_startup
+> >
+> > In my test case I had a machine that I'd already logged into (on a
+> > previous kernel version) and I was trying to log into it a second
+> > time.  Thus there's no way that chromeos-install could be involved.
+> > Looking at chromeos_startup:
+> >
+> > https://chromium.googlesource.com/chromiumos/platform2/+/refs/heads/master/init/chromeos_startup
+> >
+> > ...the function is only used for setting up the "encrypted stateful"
+> > partition.  That wasn't where my failure was.  My failure was with
+> > logging in AKA with cryptohome.  Thus I think it's plausible that my
+> > original commit message pointing at cryptohome may have been correct.
+> > It's possible that there were _also_ problems with encrypted stateful
+> > that I wasn't noticing, but if so they were not the only problems.
+> >
+> > It still may be wise to make Chrome OS use different tests, but it
+> > might not be quite as simple as hoped...
+> >
+>
+> Ah, I think I found it:
+>
+> https://chromium.googlesource.com/chromiumos/overlays/chromiumos-overlay/+/2cbdedd5eca0a57d9596671a99da5fab8e60722b/sys-apps/upstart/files/upstart-1.2-dircrypto.patch
+>
+> The init process does EXT4_IOC_GET_ENCRYPTION_POLICY on /, and if the error is
+> EOPNOTSUPP, it skips creating the "dircrypto" keyring.  So then cryptohome can't
+> add keys later.  (Note the error message you got, "Error adding dircrypto key".)
+>
+> So it looks like the kernel patch broke both that and
+> ext4_dir_encryption_supported().
+>
 
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
+ext4_dir_encryption_supported() was already changed to use the sysfs
+file, and changing the upstart code to check the sysfs file does
+indeed fix the problem for good. I'll do some more tests and push the
+necessary changes into our code base if I don't hit some other issue.
 
+> I don't see how it could have broken cryptohome by itself, since AFAICS
+> cryptohome only uses EXT4_IOC_GET_ENCRYPTION_POLICY on the partition which is
+> supposed to have the 'encrypt' feature set.
+>
+Yes, indeed it seems as if that is unrelated.
+
+Guenter
