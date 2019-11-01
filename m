@@ -2,119 +2,151 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE78CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 01:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3468CCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 01:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B765C208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 01:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 059C8208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 01:18:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gLSX1PZf";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="pB6wHCTM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbfKABRw (ORCPT
+        id S1729098AbfKABSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 21:17:52 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5675 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726772AbfKABRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 21:17:52 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 72B76F7F7557A3374BC9;
-        Fri,  1 Nov 2019 09:17:49 +0800 (CST)
-Received: from [127.0.0.1] (10.74.149.191) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 1 Nov 2019
- 09:17:40 +0800
-Subject: Re: [PATCH net-next 8/9] net: hns3: cleanup some print format warning
-To:     Joe Perches <joe@perches.com>, <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
-        Guojia Liao <liaoguojia@huawei.com>
-References: <1572521004-36126-1-git-send-email-tanhuazhong@huawei.com>
- <1572521004-36126-9-git-send-email-tanhuazhong@huawei.com>
- <4541e77d257685c649f5f994e673a409a3634f50.camel@perches.com>
-From:   tanhuazhong <tanhuazhong@huawei.com>
-Message-ID: <ce0c5f5f-08b7-7e38-b156-954a8398abfa@huawei.com>
-Date:   Fri, 1 Nov 2019 09:17:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Thu, 31 Oct 2019 21:18:09 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:33092 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfKABSJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 21:18:09 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id B62CB60B10; Fri,  1 Nov 2019 01:18:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572571087;
+        bh=y9zMopn20pWyqd0dZAi6MdBEcZVwhsf/FKrrzC2v+nc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gLSX1PZfWinw39KqYpe7dn5LELvTP3vyfXmd0MSUFFiLT8hftYycjs5QEXIeYP50g
+         jI5r6azQ+z12+2WdunRNOpUDxdBNxAM4j+U6CCr6StU1BZxsooGv13ZGgPHRffL12E
+         NX6HTWFzSdTPpC3LnqdIPuFv7xeU9nXY3lPAvsTI=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 3C1F760913;
+        Fri,  1 Nov 2019 01:18:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572571086;
+        bh=y9zMopn20pWyqd0dZAi6MdBEcZVwhsf/FKrrzC2v+nc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pB6wHCTMNwQeSdopYeN0dThzcYnAz2cCO2YnbCR9/j4HD06nQ5ZqAm0IusbOBIcOB
+         xh9U69ZoofNSa8G39UYEBpYLp2OVrXC5CTCLbbyCWdmN+xhA6m5nM+z4uu+kNd+8cJ
+         EkHRQxnY7nASLD6oiKXoI2GgogTXZ/LtWa8L6y68=
 MIME-Version: 1.0
-In-Reply-To: <4541e77d257685c649f5f994e673a409a3634f50.camel@perches.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.149.191]
-X-CFilter-Loop: Reflected
+Date:   Fri, 01 Nov 2019 09:18:06 +0800
+From:   cang@codeaurora.org
+To:     Mark Salyzyn <salyzyn@android.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/2] scsi: ufs: Introduce a vops for resetting host
+ controller
+In-Reply-To: <61b83149-e89b-bb4c-d747-a4c596c8eede@android.com>
+References: <1571804009-29787-1-git-send-email-cang@codeaurora.org>
+ <1571804009-29787-2-git-send-email-cang@codeaurora.org>
+ <61b83149-e89b-bb4c-d747-a4c596c8eede@android.com>
+Message-ID: <8b7e86d09cde1ea45c1ad979d88dc022@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-10-31 22:44, Mark Salyzyn wrote:
+> On 10/22/19 9:13 PM, Can Guo wrote:
+>> Some UFS host controllers need their specific implementations of 
+>> resetting
+>> to get them into a good state. Provide a new vops to allow the 
+>> platform
+>> driver to implement this own reset operation.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> ---
+>>   drivers/scsi/ufs/ufshcd.c | 16 ++++++++++++++++
+>>   drivers/scsi/ufs/ufshcd.h | 10 ++++++++++
+>>   2 files changed, 26 insertions(+)
+>> 
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> index c28c144..161e3c4 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -3859,6 +3859,14 @@ static int ufshcd_link_recovery(struct ufs_hba 
+>> *hba)
+>>   	ufshcd_set_eh_in_progress(hba);
+>>   	spin_unlock_irqrestore(hba->host->host_lock, flags);
+>>   +	ret = ufshcd_vops_full_reset(hba);
+>> +	if (ret)
+>> +		dev_warn(hba->dev, "%s: full reset returned %d\n",
+>> +				  __func__, ret);
+>> +
+>> +	/* Reset the attached device */
+>> +	ufshcd_vops_device_reset(hba);
+>> +
+>>   	ret = ufshcd_host_reset_and_restore(hba);
+>>     	spin_lock_irqsave(hba->host->host_lock, flags);
+> 
+> In all your cases, especially after this adjustment,
+> ufshcd_vops_full_reset is called blindly (+error checking message)
+> before ufshcd_vops_device_reset. What about dropping the .full_reset
+> (should really have been called .hw_reset or .host_reset) addition to
+> the vops, just adding ufshcd_vops_device_reset call here before
+> ufshcd_host_reset_and_restore, and in the driver folding the
+> ufshcd_vops_full_reset code into the .device_reset handler?
+> 
+> Would that be workable? It would be simpler if so.
+> 
+> I can see a desire for the heads up
+> (ufshcd_vops_full_reset+)ufshcd_vops_device_reset calls before
+> ufshcd_host_reset_and_restore because that function will spin 10
+> seconds waiting for a response from a standardized register, that
+> itself could be hardware locked up requiring product specific reset
+> procedures. But if that is the case, then what about all the other
+> calls to ufshcd_host_reset_and_restore in this file that are not
+> provided the heads up? My guess is that the host device only
+> demonstrated issues in the ufshcd_link_recovery handling path? Are you
+> sure this is the only path that tickles the controller into a hardware
+> lockup state?
+> 
+> Sincerely -- Mark Salyzyn
 
+Hi Mark Salyzyn,
 
-On 2019/10/31 19:53, Joe Perches wrote:
-> On Thu, 2019-10-31 at 19:23 +0800, Huazhong Tan wrote:
->> From: Guojia Liao <liaoguojia@huawei.com>
->>
->> Using '%d' for printing type unsigned int or '%u' for
->> type int would cause static tools to give false warnings,
->> so this patch cleanups this warning by using the suitable
->> format specifier of the type of variable.
->>
->> BTW, modifies the type of some variables and macro to
->> synchronize with their usage.
-> 
-> What tool is this?
+Folding the "full_reset" vops inito "device_reset" vops is one choice 
+for now. Shall do that.
+Your guess is correct. the head up is needed in ufshcd_link_recovery() 
+path because
+link is already in bad state when we are here, expeically after hibern8 
+exit fails.
+So we need a full reset to PHY and host controller here before 
+host_reset_and_restore.
+But other calls to host_reset_and_restore are under good conditions.
 
-Sorry, it is my mistake, as confirmed, this patch is
-advised by internal code review.
-
-> 
-> I think this static warning is excessive as macro
-> defines with a small positive number are common
-> 
-
-yes, it seems ok.
-The reason we do this modification is that
-printing resp_data_len with '%u' and printing
-HCLGE_MBX_MAX_RESP_DATA_SIZE with '%d' seems a little odd.
-
-  	if (resp_data_len > HCLGE_MBX_MAX_RESP_DATA_SIZE) {
-  		dev_err(&hdev->pdev->dev,
--			"PF fail to gen resp to VF len %d exceeds max len %d\n",
-+			"PF fail to gen resp to VF len %u exceeds max len %u\n",
-  			resp_data_len,
-  			HCLGE_MBX_MAX_RESP_DATA_SIZE);
-
-Thanks for your suggestion.
-
->> diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-> []
->> @@ -72,7 +72,7 @@ enum hclge_mbx_vlan_cfg_subcode {
->>   };
->>   
->>   #define HCLGE_MBX_MAX_MSG_SIZE	16
->> -#define HCLGE_MBX_MAX_RESP_DATA_SIZE	8
->> +#define HCLGE_MBX_MAX_RESP_DATA_SIZE	8U
->>   #define HCLGE_MBX_RING_MAP_BASIC_MSG_NUM	3
->>   #define HCLGE_MBX_RING_NODE_VARIABLE_NUM	3
-> 
-> like this one
-> 
->> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-> []
->> @@ -57,68 +57,68 @@ static int hns3_dbg_queue_info(struct hnae3_handle *h,
->>   					   HNS3_RING_RX_RING_BASEADDR_H_REG);
->>   		base_add_l = readl_relaxed(ring->tqp->io_base +
->>   					   HNS3_RING_RX_RING_BASEADDR_L_REG);
->> -		dev_info(&h->pdev->dev, "RX(%d) BASE ADD: 0x%08x%08x\n", i,
->> +		dev_info(&h->pdev->dev, "RX(%u) BASE ADD: 0x%08x%08x\n", i,
-> 
-> so using %d is correct enough.
-> 
-> 
-> 
-> .
-> 
-
+Regards,
+Can Guo.
