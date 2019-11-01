@@ -2,177 +2,117 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CFBCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B61D6CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A621F218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 877E021734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:14:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AXZWcd+y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfKAVIJ (ORCPT
+        id S1726779AbfKAVOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 17:08:09 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39236 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfKAVIJ (ORCPT
+        Fri, 1 Nov 2019 17:14:19 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33840 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfKAVOS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 17:08:09 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <dann.frazier@canonical.com>)
-        id 1iQe9O-0008LU-TT
-        for linux-kernel@vger.kernel.org; Fri, 01 Nov 2019 21:08:07 +0000
-Received: by mail-io1-f72.google.com with SMTP id v5so1605596iot.8
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 14:08:06 -0700 (PDT)
+        Fri, 1 Nov 2019 17:14:18 -0400
+Received: by mail-oi1-f193.google.com with SMTP id l202so9360988oig.1
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 14:14:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QsBFzGseNwFFn5J/7iyUWJn/fmN/VHqMXH3Pl+Ts4n4=;
+        b=AXZWcd+yryOPD4PVkEcKBB2NuJvQ7TNtMHwdG/PothZp+16BB1lKXLpleUSlWJUqwV
+         bhqy3YgPiKCHz0JXPkanxlqh0v4gh8MA83zZGd2XOurl2G//TSjG0c0E/5Wl7JPRm4jX
+         fc3Kd4Os18BKAksnMs+fT1m4/BgTiR/yCP99MNo52SJnA7mWvB/OYl55SRyfeo4PlJN9
+         IJs7cTRox+DrOxbJmRzB4HyFMhVJLwrzqmNC5A084jm+NgBPv3GIKU1DpyMlHACHWnGf
+         HcBCdHKRhpwGGoV4UK7HTPwSd7j8olhNpcW8orK0RjZxjoJ0ap/qA/fSplc9me5F8LHT
+         vk/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=99Grxk3NP/rj106dyBNQOJBBT+7NzmkfjxIr2ycA+xY=;
-        b=cXOXFfRhldVFPddQCYx3GAy3YhKuvtmD//RsbdjZdPWP5Dy0SwcxbR9CaZHCQw3HcQ
-         aqnSXLckg0JXzWHYBJ1qX945sIKcDcWX+DvmY3jgJUd3fl8L/hAneT9JBPbLFOA8pWqO
-         ieUBEdTdxMWY0y7HjnczMptsLyQNPBVbBNY/cZlZ9f+9GEjHDaYgQMAUGO9VMKMxBury
-         LzauRYJpRuSSCqgr2z1MAUfvzZrLE5gZZGwSLG3S+IYScwdMAe47Z/VAbKZirYYZYqKt
-         aoYYhRa105yLKkorhdw2mEYxr6579XN4361FeZXCEVRJdM2LZHBhDrp2P4C3QX7Caq6H
-         lOGQ==
-X-Gm-Message-State: APjAAAV6ihhviy4Kzk+031aKORvcGdV4h2cK+sCi/NO6zEBAWETb6R+g
-        /aF+huR0AbrbD7wFaEp7FjA1lair0ueFQwxsJIvbf9BxHL66CwbBKn0RhiZm0mF39MEb4Swc2VC
-        MZYF8cgj4WqX6ihzl+EF0FGB/bhNy7U8ycDjuSHGFZA==
-X-Received: by 2002:a92:3dd8:: with SMTP id k85mr1030084ilf.176.1572642485709;
-        Fri, 01 Nov 2019 14:08:05 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxViiJ/H/ziNdfZ++M2P5LolU+tfBrHJuWfbH2VzvXMEWOTUG2WwEc09JNUg8f928m6IUIo4w==
-X-Received: by 2002:a92:3dd8:: with SMTP id k85mr1030038ilf.176.1572642485253;
-        Fri, 01 Nov 2019 14:08:05 -0700 (PDT)
-Received: from xps13.canonical.com (c-71-56-235-36.hsd1.co.comcast.net. [71.56.235.36])
-        by smtp.gmail.com with ESMTPSA id t16sm812926iol.12.2019.11.01.14.08.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 14:08:04 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 15:08:03 -0600
-From:   dann frazier <dann.frazier@canonical.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Seth Forshee <seth.forshee@canonical.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        James Morris <jmorris@namei.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: tracefs splats in lockdown=confidentiality mode
-Message-ID: <20191101210803.GA9841@xps13.dannf>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QsBFzGseNwFFn5J/7iyUWJn/fmN/VHqMXH3Pl+Ts4n4=;
+        b=FgW2hQ2/VQ778PfE/CcpsULvvxGjAiMTMYE7L/sMeGxBPglji30Xht/hJ354NCKOhB
+         RW2X0y2ENZlXo75Sxa2SmO6+uAqU/CbdjfojOTCohyqM4hcTkd9VjHY6nyPnUuIKt2F9
+         cuTx6aZujO/+DUYZ8AAI2pA8xmO2xC0n0Ky0JJ1LLL7CcK0p/XGilbr98wbZlUbKPGBo
+         jIea+SDJNWdij3hsMJrRjEzl3AZm4ebyz3PMvWgqVo9Novby2Kkyi92xVJNpi9LFnI25
+         p9K1rRqCcmlzuaENgnpodz04rujZVDeb0IOjBzvZGAposOc822xBfunSdIFUwZBLxrtD
+         it5Q==
+X-Gm-Message-State: APjAAAWc8pLjr9Sd6xSy1jJ0jFb5oqFG13+x8Jdpmiw+3PrOljMRHHDq
+        EZbbJ6G3CpCGG9Vq4v5hsdrLF5HosrZKDkM72AnuDw==
+X-Google-Smtp-Source: APXvYqwgRMsWiGTNh6WOcdU1Aoj9HbAoKkUAOYZP0eoiRwERP3bRkOhMrW6BQVW+CaXUu6pzBCRJw5nvVfmlcFWHy2Y=
+X-Received: by 2002:aca:4dcc:: with SMTP id a195mr5936152oib.172.1572642857474;
+ Fri, 01 Nov 2019 14:14:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191030145112.19738-1-will@kernel.org> <6e457227-ca06-2998-4ffa-a58ab171ce32@arm.com>
+ <20191030155444.GC19096@willie-the-truck> <CAGETcx9ogWQC1ZtnS_4xC3ShqBpuRSKudWEEWC22UZUEhdEU4A@mail.gmail.com>
+ <20191031193758.GA2607492@lophozonia> <CAGETcx-MuMVvj0O-MFdfmLADEq=cQY_=x+irvhgwHhG4VeeSdg@mail.gmail.com>
+ <6994ae35-2b89-2feb-2bcb-cffc5a01963c@huawei.com>
+In-Reply-To: <6994ae35-2b89-2feb-2bcb-cffc5a01963c@huawei.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 1 Nov 2019 14:13:41 -0700
+Message-ID: <CAGETcx-9M8vvHA2Lykcv0hHWoC2OAw5kfBrjcNJN2CYCwR4eWQ@mail.gmail.com>
+Subject: Re: [PATCH 0/7] iommu: Permit modular builds of ARM SMMU[v3] drivers
+To:     John Garry <john.garry@huawei.com>
+Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hey,
-  fyi, I'm seeing a bunch of errors from tracefs when booting 5.4-rc5 in
-lockdown=confidentiality mode:
+On Fri, Nov 1, 2019 at 3:28 AM John Garry <john.garry@huawei.com> wrote:
+>
+> On 31/10/2019 23:34, Saravana Kannan via iommu wrote:
+> > I looked into the iommu-map property and it shouldn't be too hard to
+> > add support for it. Looks like we can simply hold off on probing the
+> > root bridge device till all the iommus in its iommu-map are probed and
+> > we should be fine.
+> >
+> >> I'm also unsure about distro vendors agreeing to a mandatory kernel
+> >> parameter (of_devlink). Do you plan to eventually enable it by default?
+> >>
+> >>> static const struct supplier_bindings of_supplier_bindings[] = {
+> >>>          { .parse_prop = parse_clocks, },
+> >>>          { .parse_prop = parse_interconnects, },
+> >>>          { .parse_prop = parse_regulators, },
+> >>> +        { .parse_prop = parse_iommus, },
+> >>>          {},
+> >>> };
+> >>>
+> >>> I plan to upstream this pretty soon, but I have other patches in
+> >>> flight that touch the same file and I'm waiting for those to get
+> >>> accepted. I also want to clean up the code a bit to reduce some
+> >>> repetition before I add support for more bindings.
+> >> I'm also wondering about ACPI support.
+> > I'd love to add ACPI support too, but I have zero knowledge of ACPI.
+> > I'd be happy to help anyone who wants to add ACPI support that allows
+> > ACPI to add device links.
+>
+> If possible to add, that may be useful for remedying this:
+>
+> https://lore.kernel.org/linux-iommu/9625faf4-48ef-2dd3-d82f-931d9cf26976@huawei.com/
 
-[    1.763630] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
-[    1.772332] Could not create tracefs 'available_events' entry
-[    1.778633] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
-[    1.787095] Could not create tracefs 'set_event' entry
-[    1.792412] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
-(...)
-[    2.899481] Could not create tracefs 'set_graph_notrace' entry
-[    2.905671] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
-[    2.913934] ------------[ cut here ]------------
-[    2.918435] Could not register function stat for cpu 0
-[    2.923717] WARNING: CPU: 1 PID: 1 at kernel/trace/ftrace.c:987 ftrace_init_tracefs_toplevel+0x168/0x1bc
-[    2.933939] Modules linked in:
-[    2.937290] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.4.0-050400rc5-generic #201910271430
-[    2.946528] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-[    2.954088] pstate: 60400005 (nZCv daif +PAN -UAO)
-[    2.959359] pc : ftrace_init_tracefs_toplevel+0x168/0x1bc
-[    2.965262] lr : ftrace_init_tracefs_toplevel+0x168/0x1bc
-[    2.971192] sp : ffff80001002bd40
-[    2.974852] x29: ffff80001002bd40 x28: 0000000000000000 
-[    2.980680] x27: 0000000000000000 x26: ffff8000119f9358 
-[    2.986552] x25: ffff8000119f9580 x24: ffff00007fb77200 
-[    2.992359] x23: ffff00007c873e80 x22: ffff80001153d200 
-[    2.998201] x21: ffff800010d8ad08 x20: 0000000000000000 
-[    3.004007] x19: 0000000000000000 x18: 0000000000000010 
-[    3.009851] x17: 0000000000000007 x16: 000000000000000e 
-[    3.015674] x15: ffff00007d1213e8 x14: ffffffffffffffff 
-[    3.021526] x13: ffff80009002ba47 x12: ffff80001002ba4f 
-[    3.027338] x11: ffff800011a1e000 x10: 0000000000000000 
-[    3.033148] x9 : ffff800011c13000 x8 : 000000000000015d 
-[    3.038984] x7 : 0000000000000017 x6 : ffff800011c129c9 
-[    3.044783] x5 : 0000000000000007 x4 : 0000000000000000 
-[    3.050617] x3 : 0000000000000000 x2 : 00000000ffffffff 
-[    3.056430] x1 : bcf0a68bd924d700 x0 : 0000000000000000 
-[    3.062258] Call trace:
-[    3.064951]  ftrace_init_tracefs_toplevel+0x168/0x1bc
-[    3.070571]  tracer_init_tracefs+0xc0/0x1fc
-[    3.075165]  do_one_initcall+0x50/0x220
-[    3.079384]  kernel_init_freeable+0x1ec/0x2b0
-[    3.084186]  kernel_init+0x18/0x108
-[    3.088032]  ret_from_fork+0x10/0x18
-[    3.091983] ---[ end trace 32f7e54339335d2a ]---
-[    3.097149] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
-[    3.105311] Could not create tracefs 'tracing_thresh' entry
-[    3.110762] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
-[    3.119199] Could not create tracefs 'README' entry
-[    3.124212] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
-[    3.132920] Could not create tracefs 'saved_cmdlines' entry
-[    3.139075] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
-[    3.147592] Could not create tracefs 'saved_cmdlines_size' entry
-[    3.153950] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
-[    3.162288] Could not create tracefs 'saved_tgids' entry
-[    3.206061] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
-[    3.214629] Could not create tracefs 'dyn_ftrace_total_info' entry
-[    3.221063] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
-[    3.229245] Could not create tracefs 'funcgraph-overrun' entry
-[    3.234990] ------------[ cut here ]------------
-[    3.239724] Failed to create trace option: funcgraph-overrun
-[    3.239774] WARNING: CPU: 1 PID: 1 at kernel/trace/trace.c:8106 create_trace_option_files+0x200/0x230
-[    3.255931] Modules linked in:
-[    3.259332] CPU: 1 PID: 1 Comm: swapper/0 Tainted: G        W         5.4.0-050400rc5-generic #201910271430
-[    3.270051] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-[    3.277621] pstate: 60400005 (nZCv daif +PAN -UAO)
-[    3.282902] pc : create_trace_option_files+0x200/0x230
-[    3.288564] lr : create_trace_option_files+0x200/0x230
-[    3.294247] sp : ffff80001002bd10
-[    3.297914] x29: ffff80001002bd10 x28: ffff800011a34508 
-[    3.303769] x27: ffff00007cb12e00 x26: ffff800011bb243d 
-[    3.309638] x25: ffff800010d8b750 x24: ffff00007cb12e00 
-[    3.315485] x23: 0000000000000000 x22: ffff800011a34508 
-[    3.321327] x21: ffff800011a344d0 x20: 0000000000000000 
-[    3.327284] x19: ffff800011a320b8 x18: 0000000000000010 
-[    3.333121] x17: 0000000000000007 x16: 000000000000000e 
-[    3.338980] x15: ffff00007d1213e8 x14: ffffffffffffffff 
-[    3.344827] x13: ffff80009002b9a7 x12: ffff80001002b9af 
-[    3.350690] x11: ffff800011a1e000 x10: 0000000000000000 
-[    3.356524] x9 : 00000000fffffffe x8 : 6870617267636e75 
-[    3.362394] x7 : 66203a6e6f697470 x6 : ffff800011c12498 
-[    3.368229] x5 : 0000000000000030 x4 : 0000000000000000 
-[    3.374082] x3 : 0000000000000000 x2 : 00000000ffffffff 
-[    3.379915] x1 : bcf0a68bd924d700 x0 : 0000000000000000 
-[    3.385768] Call trace:
-[    3.388478]  create_trace_option_files+0x200/0x230
-[    3.393849]  __update_tracer_options+0x34/0x48
-[    3.398748]  tracer_init_tracefs+0x1e0/0x1fc
-[    3.403454]  do_one_initcall+0x50/0x220
-[    3.407692]  kernel_init_freeable+0x1ec/0x2b0
-[    3.412494]  kernel_init+0x18/0x108
-[    3.416351]  ret_from_fork+0x10/0x18
-[    3.420287] ---[ end trace 32f7e54339335d2b ]---
-[    3.425479] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
-[    3.433724] Could not create tracefs 'funcgraph-cpu' entry
-(...)
-[    3.692698] Could not create tracefs 'uprobe_events' entry
-[    3.698724] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
-[    3.707217] Could not create tracefs 'uprobe_profile' entry
+I'm happy that this change might fix that problem, but isn't the
+problem reported in that thread more to do with child devices getting
+added before the parent probes successfully? That doesn't make sense
+to me. Can't the piceport driver not add its child devices before it
+probes successfully? Or more specifically, who adds the child devices
+of the pcieport before the pcieport itself probes?
 
-
- -dann
+Thanks,
+Saravana
