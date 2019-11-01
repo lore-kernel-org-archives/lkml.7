@@ -2,124 +2,120 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE7BCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13706CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32F02217F9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:02:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZALH4Yfl"
+	by mail.kernel.org (Postfix) with ESMTP id E94A121906
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:05:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbfKANB7 (ORCPT
+        id S1726926AbfKANFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 09:01:59 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33981 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbfKANB6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 09:01:58 -0400
-Received: by mail-lf1-f68.google.com with SMTP id f5so7188825lfp.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 06:01:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=fphXyhWaK8q12drDLe3urhMTSDXA/CeIZ2MBw+pCQgQ=;
-        b=ZALH4YflQW6NRCFPOGAxRtjJdDYA3neJtrF+P3iORu7ocUUHKsG1yeXmxEp27f8X6M
-         jtu0ExXuqXNam4VcxDmBXvs6tE3hxgn4fO7vpACGw60s8ay5ZW2Uv+O++SuQUq8+P/W+
-         /qLyIZGsPIUK1rQ6PZosKR/RTuYYvny923I00YgCCMAdwjnlMCGssOoDQbepPmro1PXi
-         BGRS2y8eH5zFXNL6K4aJQ3K/D9vrdu5yZ0xp+4ZUPSGxT9ffAK3WZo9SOzQqO9OekW+I
-         Rd+1kaQQSweTORTwGkTysCf60SNqFahZIMogxIdR+sNW5wVPxiDXbKZ4ELj7nHUV7r/H
-         46Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=fphXyhWaK8q12drDLe3urhMTSDXA/CeIZ2MBw+pCQgQ=;
-        b=HwqxxnqEubzfAxYlPak+jvwNtxVtD2R716SzHlEtiKERbanNNv16jO+FxNQ5RaMR/E
-         oUmRHvpg9JJS99kPKJMou0idbXOJ0tkSozuIqS/2vxyLxkK9GMBcvosFDmXW/qEslFkz
-         tYoQ/ZK+KMRvg+z98qgyu4vGoemVDJsAdDTO5QWM7G0inL6h7lHQQKSKiXAnIVeZMOfz
-         0UtDsmt/GLzgz34JXm2C/ZEINT+4A/v6u8hCevJ7SvbljihPHgfGk7dQp+aeHx18TaQ3
-         lb2vzZZy4Qpjq2dVb/kkZnf9CPWU1aG80IxixDIXgOjpncLKLRWFlMQmW6z5D33udhfD
-         Dcfw==
-X-Gm-Message-State: APjAAAVR5vFOIwdMplAjgeFxqo6a214AutVZm9Ghy5D4fVqpFsyMe1kH
-        m1o87+B/Qjk3CK1osvVrc/g=
-X-Google-Smtp-Source: APXvYqy401o/VOXjGcPBFVX8rQflVU/g8egFZKHJb7re7KdgLfcxSGtdakMH0LiYf/V46O70zGPsgw==
-X-Received: by 2002:a19:6f0e:: with SMTP id k14mr7333425lfc.34.1572613315214;
-        Fri, 01 Nov 2019 06:01:55 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.199.94])
-        by smtp.gmail.com with ESMTPSA id 9sm2473347ljq.104.2019.11.01.06.01.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 06:01:54 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id 6C09446123B; Fri,  1 Nov 2019 16:01:53 +0300 (MSK)
-Date:   Fri, 1 Nov 2019 16:01:53 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>, X86-ML <x86@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH -tip] x86/fpu: Use XFEATURE_ enum for legacy entries
-Message-ID: <20191101130153.GG1615@uranus.lan>
+        Fri, 1 Nov 2019 09:05:18 -0400
+Received: from mga02.intel.com ([134.134.136.20]:18063 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726620AbfKANFS (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 09:05:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 06:05:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,255,1569308400"; 
+   d="scan'208";a="211781192"
+Received: from xueyaoli-mobl.ccr.corp.intel.com (HELO [10.254.210.166]) ([10.254.210.166])
+  by fmsmga001.fm.intel.com with ESMTP; 01 Nov 2019 06:05:16 -0700
+Subject: Re: [PATCH v5 7/7] perf report: Sort by sampled cycles percent per
+ block for tui
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20191030060430.23558-1-yao.jin@linux.intel.com>
+ <20191030060430.23558-8-yao.jin@linux.intel.com>
+ <20191101083426.GC2172@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <71901aab-bb1a-219a-a85c-e36dd66201a7@linux.intel.com>
+Date:   Fri, 1 Nov 2019 21:05:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191101083426.GC2172@krava>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When setting up sizes and offsets for legacy header entries
-we can use XFEATURE_FP and XFEATURE_SSE names for better
-readability (and finally we have a reference for these
-XFEATURE_ in a real code).
 
-Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
-CC: Ingo Molnar <mingo@kernel.org>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: H. Peter Anvin <hpa@zytor.com>
----
- arch/x86/kernel/fpu/xstate.c |   16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
 
-Index: linux-tip.git/arch/x86/kernel/fpu/xstate.c
-===================================================================
---- linux-tip.git.orig/arch/x86/kernel/fpu/xstate.c
-+++ linux-tip.git/arch/x86/kernel/fpu/xstate.c
-@@ -254,10 +254,13 @@ static void __init setup_xstate_features
- 	 * in the fixed offsets in the xsave area in either compacted form
- 	 * or standard form.
- 	 */
--	xstate_offsets[0] = 0;
--	xstate_sizes[0] = offsetof(struct fxregs_state, xmm_space);
--	xstate_offsets[1] = xstate_sizes[0];
--	xstate_sizes[1] = FIELD_SIZEOF(struct fxregs_state, xmm_space);
-+	xstate_offsets[XFEATURE_FP]	= 0;
-+	xstate_sizes[XFEATURE_FP]	= offsetof(struct fxregs_state,
-+						   xmm_space);
-+
-+	xstate_offsets[XFEATURE_SSE]	= xstate_sizes[XFEATURE_FP];
-+	xstate_sizes[XFEATURE_SSE]	= FIELD_SIZEOF(struct fxregs_state,
-+						       xmm_space);
- 
- 	for (i = FIRST_EXTENDED_XFEATURE; i < XFEATURE_MAX; i++) {
- 		if (!xfeature_enabled(i))
-@@ -350,8 +353,9 @@ static void __init setup_xstate_comp(voi
- 	 * in the fixed offsets in the xsave area in either compacted form
- 	 * or standard form.
- 	 */
--	xstate_comp_offsets[0] = 0;
--	xstate_comp_offsets[1] = offsetof(struct fxregs_state, xmm_space);
-+	xstate_comp_offsets[XFEATURE_FP] = 0;
-+	xstate_comp_offsets[XFEATURE_SSE] = offsetof(struct fxregs_state,
-+						     xmm_space);
- 
- 	if (!boot_cpu_has(X86_FEATURE_XSAVES)) {
- 		for (i = FIRST_EXTENDED_XFEATURE; i < XFEATURE_MAX; i++) {
+On 11/1/2019 4:34 PM, Jiri Olsa wrote:
+> On Wed, Oct 30, 2019 at 02:04:30PM +0800, Jin Yao wrote:
+> 
+> SNIP
+> 
+>> +
+>>   static int perf_evlist__tty_browse_hists(struct evlist *evlist,
+>>   					 struct report *rep,
+>>   					 const char *help)
+>> @@ -605,6 +624,11 @@ static int report__browse_hists(struct report *rep)
+>>   
+>>   	switch (use_browser) {
+>>   	case 1:
+>> +		if (rep->total_cycles_mode) {
+>> +			ret = perf_evlist__tui_block_hists_browse(evlist, rep);
+>> +			break;
+>> +		}
+> 
+> does this have sense only for cycles event? what if I do:
+>    # perf record -b -e cycles,cache-misses
+> 
+> jirka
+> 
+
+It can report both cycles and cache-misses. But I use a simple way.
+
+When I run 'perf report --total-cycles', it displays the window for the 
+first event ('cycles') by default. For example,
+
+# Samples: 8384 of event 'cycles'
+Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles
+...
+
+Once I press 'q' to quit current window, it then switches to another 
+window for the second event ('cache-misses'). For example,
+
+# Samples: 7072 of event 'cache-misses'
+Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles
+...
+
+Thanks
+Jin Yao
+
+>> +
+>>   		ret = perf_evlist__tui_browse_hists(evlist, help, NULL,
+>>   						    rep->min_percent,
+>>   						    &session->header.env,
+>> @@ -1408,12 +1432,8 @@ int cmd_report(int argc, const char **argv)
+>>   	if (report.total_cycles_mode) {
+>>   		if (sort__mode != SORT_MODE__BRANCH)
+>>   			report.total_cycles_mode = false;
+>> -		else if (!report.use_stdio) {
+>> -			pr_err("Error: --total-cycles can be only used together with --stdio\n");
+>> -			goto error;
+>> -		} else {
+>> +		else
+>>   			sort_order = "sym";
+>> -		}
+>>   	}
+>>   
+>>   	if (strcmp(input_name, "-") != 0)
+> 
+> SNIP
+> 
