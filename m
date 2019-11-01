@@ -2,108 +2,106 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA015CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36972CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80F7921928
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F8C20656
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:03:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="tnaqTMz9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZgoTtfkj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbfKAQBh (ORCPT
+        id S1727285AbfKAQDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 12:01:37 -0400
-Received: from vps.xff.cz ([195.181.215.36]:60034 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbfKAQBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 12:01:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1572624095; bh=E/fbHRLXQc9yL42ILQyIrY7ShI2u1NGQZd6aLMmys9A=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=tnaqTMz9YGuF8cKSjHlduKJk7RfWI4X44N3TU0gbrQA2h2DLvnZUMKqsidsL7hPZ4
-         A/bAsSp2ImUz1BWUSUJ98G8UmIDOIgAUF+znhSvSvOBBd3/POx2U9jB2X/2j/sYEAb
-         9KcZDkaVj6C9iExKATC2xCbWlcek8xFF3uYh6460=
-Date:   Fri, 1 Nov 2019 17:01:34 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     linux-sunxi@googlegroups.com, Yangtao Li <tiny.windzz@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:ALLWINNER CPUFREQ DRIVER" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cpufreq: sun50i: Fix CPU speed bin detection
-Message-ID: <20191101160134.n7ay2jl7j5vzofo2@core.my.home>
-Mail-Followup-To: Maxime Ripard <mripard@kernel.org>,
-        linux-sunxi@googlegroups.com, Yangtao Li <tiny.windzz@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:ALLWINNER CPUFREQ DRIVER" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191031181359.282617-1-megous@megous.com>
- <20191101150701.fgke7hoad5zn3vn2@hendrix>
+        Fri, 1 Nov 2019 12:03:21 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46751 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfKAQDU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 12:03:20 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f19so6739486pgn.13
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 09:03:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=i2tLZxbCCHmnoEpOsO7B5VVDeMXO3toEiyrLWd0A38o=;
+        b=ZgoTtfkjNDBbZRIaUX+TdhUiwPA47BigCQVQqtPPwfqU3QeSY1JuDiW/UVtHyZ1Gzr
+         cF/ZdGJxwN7J0e5aa+eX5J5fTTL0x8NA+b6Y17qMp58DZd6jH6MzvqXNxVqqg6r+LDOL
+         Ne1kQ+1HkcxuS4XQDr7NyJt9V/GbYc+DGDuKBYiXzDUQiOqBnwQXzADqxhtToL1zBiUI
+         uaFsm1UrMoebyLrf88ZR6S5vpaC2bnyfrxGaFmC9NmKYkgCuKfKWlpH5lh05WBxbu8+2
+         FKVSQ7guXRZ0DrghNiUHXzJIRnhrKUepXvlV0eH1nn/fHnGqud4OAFBFujvakMak/IMH
+         kWcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=i2tLZxbCCHmnoEpOsO7B5VVDeMXO3toEiyrLWd0A38o=;
+        b=GAo1We1PCtCEOG0P/MzvSr7SOaFM2sNX4vlA/skbCvKGbls2RmmL7yeGsxG1THqLmm
+         PdktVAQ1hzAZRzE92KqTFJv6n1pYAdUcVnoo2nzcUG3I3rstknX9rAU+IkzTnnAdRVf1
+         iEVYFH6EN1d1p8Hvwg0kg+V2w3gPh9U4TctgkiXXuWforoj34xTb9ygULqWxYZhIX7kR
+         4Jz95ZQT+8OkOid+/uhubsrl1f8eG0AYUoZW4L8FkPZAyEubD0F9I463pBYBnghiV0U7
+         rYPZO6W5gyPDsEPUT4dXksUJircbPy+jxLvhOKj4tehqAEX4VqmYpI91WZV4Wv7P5dkl
+         5pMQ==
+X-Gm-Message-State: APjAAAXIpZNsQOKCutCZIYVNfs4j03IKa7qK13Y+RJqpSFXQOYCeRcof
+        Z8KjKAgqLP+1MAGYE6gktcvO7YRthpzjTQ==
+X-Google-Smtp-Source: APXvYqzp2gT3KgISCliS31Ttoh4B4VoKcz1N1xyVB98zOypkWYgNP6dKvs8v8O5KoOoq5K1+ysCY+A==
+X-Received: by 2002:a17:90a:62cc:: with SMTP id k12mr651068pjs.142.1572624199710;
+        Fri, 01 Nov 2019 09:03:19 -0700 (PDT)
+Received: from localhost ([2402:3a80:1386:1fa1:cbdc:7851:d398:f27c])
+        by smtp.gmail.com with ESMTPSA id n3sm7541205pff.102.2019.11.01.09.03.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 09:03:18 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 21:33:12 +0530
+From:   Jaskaran Singh <jaskaransingh7654321@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     alexander.deucher@amd.com, christian.koenig@amd.com,
+        David1.Zhou@amd.com, airlied@linux.ie, daniel@ffwll.ch,
+        kraxel@redhat.com, chris@chris-wilson.co.uk,
+        emil.velikov@collabora.com, Felix.Kuehling@amd.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH] drivers: gpu: amdgpu: Remove @dev from
+ amdgpu_gem_prime_export documentation
+Message-ID: <20191101160312.GA11047@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191101150701.fgke7hoad5zn3vn2@hendrix>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 04:07:01PM +0100, Maxime Ripard wrote:
-> On Thu, Oct 31, 2019 at 07:13:58PM +0100, Ondrej Jirman wrote:
-> > I have failures to boot on Orange Pi 3, because this driver determined
-> > that my SoC is from the normal bin, but my SoC only works reliably with
-> > the OPP values for the slowest bin.
-> >
-> > Looking at BSP code, I found that efuse values have following meanings
-> > on H6:
-> >
-> > - 0b000 invalid (interpreted in vendor's BSP as normal bin)
-> > - 0b001 slowest bin
-> > - 0b011 normal bin
-> > - 0b111 fastest bin
-> >
-> > Let's play it safe and interpret 0 as the slowest bin, but fix detection
-> > of other bins to match vendor code.
-> >
-> > Fixes: f328584f7bff ("cpufreq: Add sun50i nvmem based CPU scaling driver")
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> 
-> Acked-by: Maxime Ripard <mripard@kernel.org>
-> 
-> Out of curiosity, which OPP table is being used? I guess it's one of
-> the dozens of patches sitting there...
+The function does not have a "dev" argument, so remove it from
+the documentation. This fixes the following documentation
+build warning:
 
-I'm using one from Orange Pi 3's fex file from Xunlong:
+./drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c:335:
+	warning: Excess function parameter 'dev' description in
+	'amdgpu_gem_prime_export'
 
-https://github.com/orangepi-xunlong/OrangePiH6_external/blob/master/sys_config/OrangePiH6_3_sys_config.fex
-https://megous.com/git/linux/commit/?h=ths-5.4&id=7b409e83b4ac70f3435886da6a26cecf9af77213
+Signed-off-by: Jaskaran Singh <jaskaransingh7654321@gmail.com>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-This one doesn't really differentiate between normal/fast bins.
-
-There's also another one in the Allwinner DTS files:
-
-https://github.com/orangepi-xunlong/OrangePiH6_Linux4_9/blob/master/arch/arm64/boot/dts/sunxi/sun50iw6p1.dtsi#L349
-
-which seems to be the one used by Yangtao Li in the dt-bindings
-docummentation.
-	
-regards,
-	o.
-
-> Maxime
-
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
+index 61f108ec2b5c..4917b548b7f2 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
+@@ -321,7 +321,6 @@ const struct dma_buf_ops amdgpu_dmabuf_ops = {
+ 
+ /**
+  * amdgpu_gem_prime_export - &drm_driver.gem_prime_export implementation
+- * @dev: DRM device
+  * @gobj: GEM BO
+  * @flags: Flags such as DRM_CLOEXEC and DRM_RDWR.
+  *
+-- 
+2.21.0
 
