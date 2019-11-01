@@ -2,151 +2,130 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAA5CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 00:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2CDC47E49
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 00:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC102086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 00:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 853AD208CB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 00:18:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uQ+7Utyj"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BbhYRAwW";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JxCrruKd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbfKAADc (ORCPT
+        id S1728578AbfKAAST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 20:03:32 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43084 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfKAADc (ORCPT
+        Thu, 31 Oct 2019 20:18:19 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:42446 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727335AbfKAASS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 20:03:32 -0400
-Received: by mail-qt1-f194.google.com with SMTP id c26so10895374qtj.10;
-        Thu, 31 Oct 2019 17:03:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VKxv5zSXLT1ehgNKTex+0kSfIDKsNz1FYp7ELOBKXaw=;
-        b=uQ+7UtyjG5GA1UQaFEr6n72Aa3Q4dGYJnOftfMff/8zzfTXCojzeL74N5S4ghYJsk4
-         oDU8oZ0+M0n6yy2h9bQoVd5OZQ+tOc46ZzkgEoh4NC4WjF4w3pfGBZFXyKb5akkGCT37
-         fpJ0WYT4Y50xOk1AkIfDharSR6bHEfRupZQlC1zOzt7tSZKpsX22Snk6jq9MEctd5ehM
-         jtKGS8hXO4BTODlIVlZRodLYBUMuntTj2eXCd0DH2/DGPy4lRwV6DybOvc0lLiPgAKMw
-         hj3IhtwhiPqO1kFbc9gyl3876rMWhuN5qClB/zhaZMM6f6pGa8lryvbb7ONdyjVy0yTt
-         4MxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VKxv5zSXLT1ehgNKTex+0kSfIDKsNz1FYp7ELOBKXaw=;
-        b=FFxuVesOYZxGF0foGdwnuE47UiU5yMlKhm3eeUVLLfU1snHo7Eew6KUQXZhaTQW2Of
-         blJ2MJsEIsqYylhDl8ISEAjj9GYGqWsBxQeMqt7w4prjKwLbG/m9MFPud81p0nw0yDRM
-         lgjLf/BW6tMEOZrOLAeeKBsEm42H420Kh4xFK4EZB77QQk85rVsDzYaVj8FncGZc+J2G
-         dNoHndDPoAjQqssMjJuhCpZ5lNMwMAsX8QOpwIzyZaeCGb2S7kF+C0YJSZC8pHufOuo/
-         coH8SxavS5Rx8rgrlNPuNQo2JuqhOpUhJwZJAWUmiSq/NtQbrt8SHNdKFk52BqS+dH+k
-         dNUw==
-X-Gm-Message-State: APjAAAWl+z/cOFZuUcqNf+Z5Y6NA8MOEmGAWwVxtqkAdB0zXqfbG7LWC
-        ehILRRQEHNapzDDY78dGGZM=
-X-Google-Smtp-Source: APXvYqymy6b+iU9I+tawyTCVvYzzlBX02xlrg519Yb/4Rlqrui7DJhFfgNwIGWHab1ijOZsnqjWQSg==
-X-Received: by 2002:ac8:549:: with SMTP id c9mr769668qth.178.1572566610732;
-        Thu, 31 Oct 2019 17:03:30 -0700 (PDT)
-Received: from localhost.localdomain ([187.34.252.37])
-        by smtp.gmail.com with ESMTPSA id n5sm2693959qke.74.2019.10.31.17.03.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 17:03:30 -0700 (PDT)
-From:   Rodrigo Carvalho <rodrigorsdc@gmail.com>
-To:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel-usp@googlegroups.com,
-        Rodrigo Carvalho <rodrigorsdc@gmail.com>
-Subject: [PATCH v3] dt-bindings: iio: accel: add binding documentation for ADIS16240
-Date:   Thu, 31 Oct 2019 21:03:01 -0300
-Message-Id: <20191101000301.12901-1-rodrigorsdc@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Thu, 31 Oct 2019 20:18:18 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1B15960A96; Fri,  1 Nov 2019 00:18:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572567498;
+        bh=rrKhKmeW7vI4vqSW4GX5bA8V0NngHAe0nA8L0Lpuxoo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BbhYRAwWqNTNNcpoujF5p5ib38RAG+ksieaG7qHohUcXauKOy2qu7ETAIBXYnHIiz
+         wxD7wFO3ptNdP/+5lFWHUa0vsvFKvoLl0rn3R2M9RQYg4dl12+wJl21Wi0bjWPnDhV
+         S0Z12o3xaHm6MtIJdiXzoGBjAFqf39WJ2uX79uBc=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 2F0B860208;
+        Fri,  1 Nov 2019 00:18:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572567497;
+        bh=rrKhKmeW7vI4vqSW4GX5bA8V0NngHAe0nA8L0Lpuxoo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JxCrruKdcnnExenW7QLW6SYkAob/HnfjCjyOqZnlseyaj8ZlNcVXbVCOeGPhlzi8r
+         hK9qo/3Pln5gARgq9wIzMijo1vaUZfpBmZB0j01P2uf49MafGPDvhCTN/eaW7lO/5R
+         7cWIHwj8NFtf0ciKW+S3jZQEjoBAvbHgy+7aaRTA=
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+Date:   Fri, 01 Nov 2019 08:18:17 +0800
+From:   cang@codeaurora.org
+To:     Mark Salyzyn <salyzyn@android.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/5] scsi: Adjust DBD setting in mode sense for caching
+ mode page per LLD
+In-Reply-To: <6bda63c6-4bcf-b7ad-f552-4c72ba0b9024@android.com>
+References: <1572318655-28772-1-git-send-email-cang@codeaurora.org>
+ <1572318655-28772-2-git-send-email-cang@codeaurora.org>
+ <fd78538f-8e5f-2e5f-0107-a8bc284d037d@android.com>
+ <6bda63c6-4bcf-b7ad-f552-4c72ba0b9024@android.com>
+Message-ID: <904e0c27ce60c91f3c6447bd9ac3dae9@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add device tree binding documentation for ADIS16240.
+On 2019-10-31 23:40, Mark Salyzyn wrote:
+> On 10/31/19 8:20 AM, Mark Salyzyn wrote:
+>> On 10/28/19 8:10 PM, Can Guo wrote:
+>>> Host sends MODE_SENSE_10 with caching mode page, to check if the 
+>>> device
+>>> supports the cache feature.
+>>> UFS JEDEC standards require DBD field to be set to 1.
+>>> 
+>>> This patch allows LLD to define the setting of DBD if required.
+>>> 
+>>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>>> ---
+>>>   drivers/scsi/sd.c        | 6 +++++-
+>>>   include/scsi/scsi_host.h | 6 ++++++
+>>>   2 files changed, 11 insertions(+), 1 deletion(-)
+>>> 
+>>> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+>>> index aab4ed8..6d8194f 100644
+>>> --- a/drivers/scsi/sd.c
+>>> +++ b/drivers/scsi/sd.c
+>>> @@ -2629,6 +2629,7 @@ static int sd_try_rc16_first(struct scsi_device 
+>>> *sdp)
+>>>   {
+>>>       int len = 0, res;
+>>>       struct scsi_device *sdp = sdkp->device;
+>>> +    struct Scsi_Host *host = sdp->host;
+>> variable locality
+>>>       int dbd;
+>>>       int modepage;
+>>> @@ -2660,7 +2661,10 @@ static int sd_try_rc16_first(struct 
+>>> scsi_device *sdp)
+>>>           dbd = 8;
+>>>       } else {
+>>>           modepage = 8;
+>>> -        dbd = 0;
+>>> +        if (host->set_dbd_for_caching)
+>>> +            dbd = 8;
+>>> +        else
+>>> +            dbd = 0;
+>>>       }
+>> 
+>> This simplifies to:
+>> 
+>> -   } else if (sdp->type == TYPE_RBC) {
+>> 
+>> +    } else if (sdp->type == TYPE_RBC || 
+>> sdp->host->set_dbd_for_caching) {
+> 
+> IDK what happened with my mailer sending out an older infant copy
+> (blame on fumble fingers). My final copy was instead the
+> simplification:
+> 
+> +    dbd = sdp->host->set_dbd_for_caching ? 8 : 0;
 
-Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
----
-V3:
-   - Remove spi-cpol and spi-cpha field. They don't seem necessary
- .../bindings/iio/accel/adi,adis16240.yaml     | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+Thank you for your review.
 
-diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-new file mode 100644
-index 000000000000..9a4cd12c4818
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/accel/adi,adis16240.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ADIS16240 Programmable Impact Sensor and Recorder driver
-+
-+maintainers:
-+  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-+
-+description: |
-+  ADIS16240 Programmable Impact Sensor and Recorder driver that supports
-+  SPI interface.
-+    https://www.analog.com/en/products/adis16240.html
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adis16240
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        /* Example for a SPI device node */
-+        accelerometer@0 {
-+            compatible = "adi,adis16240";
-+            reg = <0>;
-+            spi-max-frequency = <2500000>;
-+            spi-cpol;
-+            spi-cpha;
-+            interrupt-parent = <&gpio0>;
-+            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+        };
-+    };
--- 
-2.23.0
+Regards,
+Can Guo
 
