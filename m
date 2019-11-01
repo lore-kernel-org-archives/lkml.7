@@ -2,109 +2,132 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5717FCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F989CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E4721734
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543CF217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:38:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eqlpi5vE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfKANfd (ORCPT
+        id S1727324AbfKANiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 09:35:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49510 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726860AbfKANfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 09:35:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D600DB07B;
-        Fri,  1 Nov 2019 13:35:30 +0000 (UTC)
-Date:   Fri, 1 Nov 2019 13:35:28 +0000
-From:   Mel Gorman <mgorman@suse.de>
-To:     ?????? <yun.wang@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/numa: advanced per-cgroup numa statistic
-Message-ID: <20191101133528.GP28938@suse.de>
-References: <46b0fd25-7b73-aa80-372a-9fcd025154cb@linux.alibaba.com>
- <20191030095505.GF28938@suse.de>
- <6f5e43db-24f1-5283-0881-f264b0d5f835@linux.alibaba.com>
- <20191031131731.GJ28938@suse.de>
- <5d69ff1b-a477-31b5-8600-9233a38445c7@linux.alibaba.com>
- <20191101091348.GM28938@suse.de>
- <2573b108-7885-5c4f-a0ae-2b245d663250@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <2573b108-7885-5c4f-a0ae-2b245d663250@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 1 Nov 2019 09:38:55 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:55108 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbfKANiy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 09:38:54 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA1DZdgU083064;
+        Fri, 1 Nov 2019 13:38:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=pAWPZX5GeZndrulBLbi6FyYmwNdbtqqaIrrv2rvnQtw=;
+ b=eqlpi5vEBsM/i0bfKTlJ01lv/ONzTi7P9Cs2n54nycHzTJ0vlL5pMp+Sawhpalop6aDY
+ V0ndHjmLQdMxNLz6Cb3f3+l1VhJD5XmGBcbX+tlHhe5FHP8gsgmEbf/lThk9AGJp56mV
+ 6jTXf34+iLWi0lmb4P4a9fjxCVBD1wSo05VDgJnPDLHbQ94G0LoSzmez/fjPX5cGxJQi
+ yFg14kN+pkew2ZCcX0sz41LjmeYOGavRN2tAAtr4if7RZr6uMdio6/dSBaPe/Ms9nuDO
+ IcflcgxtudcMM7rm08IQDsz6OwAKiGnvDCDZ6uibl7p7fhneguLPeW+VvkJQR2fizVu3 Bw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2vxwhg1uup-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 01 Nov 2019 13:38:30 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA1DZQH6005568;
+        Fri, 1 Nov 2019 13:36:30 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2vyqpg843y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 01 Nov 2019 13:36:29 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA1DaSLo023879;
+        Fri, 1 Nov 2019 13:36:28 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 01 Nov 2019 06:36:28 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH -next] nfsd: Drop LIST_HEAD where the variable it declares
+ is never used.
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20191101114054.50225-1-maowenan@huawei.com>
+Date:   Fri, 1 Nov 2019 09:36:27 -0400
+Cc:     Bruce Fields <bfields@redhat.com>,
+        Trond Myklebust <trond.myklebust@primarydata.com>,
+        Dros Adamson <dros@primarydata.com>,
+        jeff.layton@primarydata.com, richard.sharpe@primarydata.com,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7E1B5E17-FF35-472B-8316-D4C01085BAE4@oracle.com>
+References: <20191101114054.50225-1-maowenan@huawei.com>
+To:     Mao Wenan <maowenan@huawei.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9427 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1911010136
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9427 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1911010136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 07:52:15PM +0800, ?????? wrote:
-> > a much higher degree of flexibility on what information is tracked and
-> > allow flexibility on 
-> > 
-> > So, overall I think this can be done outside the kernel but recognise
-> > that it may not be suitable in all cases. If you feel it must be done
-> > inside the kernel, split out the patch that adds information on failed
-> > page migrations as it stands apart. Put it behind its own kconfig entry
-> > that is disabled by default -- do not tie it directly to NUMA balancing
-> > because of the data structure changes. When enabled, it should still be
-> > disabled by default at runtime and only activated via kernel command line
-> > parameter so that the only people who pay the cost are those that take
-> > deliberate action to enable it.
-> 
-> Agree, we could have these per-task faults info there, give the possibility
-> to implement maybe a practical userland tool,
+Hi Mao-
 
-I'd prefer not because that would still require the space in the locality
-array to store the data. I'd also prefer that numa_faults_locality[]
-information is not exposed unless this feature is enabled. That information
-is subject to change and interpreting it requires knowledge of the
-internals of automatic NUMA balancing.
+> On Nov 1, 2019, at 7:40 AM, Mao Wenan <maowenan@huawei.com> wrote:
+>=20
+> The declarations were introduced with the file, but the declared
+> variables were not used.
+>=20
+> Fixes: 65294c1f2c5e ("nfsd: add a new struct file caching facility to =
+nfsd")
 
-There are just too many corner cases where the information is garbage.
-Tasks with a memory policy would never update the counters, short-lived
-tasks may not update it, interleaving will give confused information about
-locality, the timing of the reads matter because it might be cleared,
-the frequency at which they clear is unknown as the frequency is adaptive
--- the list goes on. I find it very very difficult to believe that a
-tool based on faults_locality will be able to give anything but the
-most superficial help and any sensible decision will require ftrace or
-numa_maps to get real information.
+I'm not sure a Fixes: tag is necessary here? 65294c1f2c5e
+works fine without this change, and it's not something we
+would need to backport into stable kernels.
 
-> meanwhile have these kernel
-> numa data disabled by default, folks who got no tool but want to do easy
-> monitoring can just turn on the switch :-)
-> 
-> Will have these in next version:
-> 
->  * separate patch for showing per-task faults info
+This is more of a clean up patch.
 
-Please only expose the failed= (or migfailed=) in that patch. Do not
-expose numa_faults_locality unless it is explicitly enabled on behalf of
-a tool that claims it can sensibly interpret it.
 
->  * new CONFIG for numa stat (disabled by default)
->  * dynamical runtime switch for numa stat (disabled by default)
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> ---
+> fs/nfsd/filecache.c | 2 --
+> 1 file changed, 2 deletions(-)
+>=20
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index ef55e9b..32a9bf2 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -685,8 +685,6 @@ nfsd_file_cache_purge(struct net *net)
+> void
+> nfsd_file_cache_shutdown(void)
+> {
+> -	LIST_HEAD(dispose);
+> -
+> 	set_bit(NFSD_FILE_SHUTDOWN, &nfsd_file_lru_flags);
+>=20
+> 	lease_unregister_notifier(&nfsd_file_lease_notifier);
+> --=20
+> 2.7.4
+>=20
 
-Dynamic runtime enabling will mean that if it's turned on, the information
-will be temporarily useless until stats are accumulated. Make sure to
-note that in any associated documentation stating a preference to
-enabling it with a kernel parameter.
+--
+Chuck Lever
 
--- 
-Mel Gorman
-SUSE Labs
+
+
