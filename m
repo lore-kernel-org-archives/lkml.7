@@ -2,148 +2,118 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC33CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E35EDCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 356DB20679
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B167B2085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:42:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xdEUx+8P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikqziVfg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfKAUlN (ORCPT
+        id S1727801AbfKAUmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 16:41:13 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:60726 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbfKAUlN (ORCPT
+        Fri, 1 Nov 2019 16:42:51 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40945 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbfKAUmv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 16:41:13 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA1Kf5FQ034212;
-        Fri, 1 Nov 2019 15:41:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572640865;
-        bh=DWoyQIOP+Dnx87nS7EMk/Arh6FOoKdD8LFrByX5asjs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=xdEUx+8PL+9YMPjp+pAT/YAwoCmNEMHbA4A3u3JtkTjVaqGLItvTuSZCbqAYvPQcM
-         n3AI+LRPFLedEtgonI1mVPsaOTsBaV+y9rSVm/3rpxLhLBzrWHNXExGHyei/871aeq
-         b2vF/o4snZc5g/B/v+rnLR+B6EJXs0CHCTxEPI3I=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA1Kf4rG014068
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 Nov 2019 15:41:05 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 1 Nov
- 2019 15:40:51 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 1 Nov 2019 15:40:51 -0500
-Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA1Kf1GF114953;
-        Fri, 1 Nov 2019 15:41:02 -0500
-Subject: Re: [PATCH v5 net-next 05/12] dt-bindings: net: ti: add new cpsw
- switch driver bindings
-To:     Florian Fainelli <f.fainelli@gmail.com>, <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>
-CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
-References: <20191024100914.16840-1-grygorii.strashko@ti.com>
- <20191024100914.16840-6-grygorii.strashko@ti.com>
- <caf68306-46ce-f97d-b45a-0fc1cd5323f7@gmail.com>
- <6e64b70e-604a-b8c6-12ce-7977ffa4ed5a@ti.com>
- <5c286f76-d108-5d78-dd8f-19e1baf64396@gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <b81b6502-0e2b-d786-ae71-b40b0a1fab79@ti.com>
-Date:   Fri, 1 Nov 2019 22:40:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 1 Nov 2019 16:42:51 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q2so4942787ljg.7;
+        Fri, 01 Nov 2019 13:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ZGSw0Pf1yR7L0D2XUywPAXmKwfJWwLsrgldLsCFIOFg=;
+        b=ikqziVfgGr73GAy1cRnOZrkrHml/aNL1IkBEoAFKaKqFBgzoosvRYbOKj/h2wPjDZ4
+         /Uh62d2CtaE+6aLHFYv9eJ3fgMwIDzViNazwXGHJ0IfNQ3+tcn5csPR1u8hU0JGjV3f2
+         R5lus91udvDRirSnmLkNl6B9H2GVfshZuPWFEYspsSiI7JWCuLSRbHIQfork2RYavLtA
+         ArNQFvTmBYmOeBDQH9ylAsmE1z5A6Wcu2TyfXtW8Gee1xCyx2pjLC4fttuIxyATyiPNK
+         yHj1+ObGAXtYhJj1RN9fNoy7ISvmB5vrRVXl/pHHv62yY0n8K9xcaiPb71RAqbNcwfFe
+         3ZhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ZGSw0Pf1yR7L0D2XUywPAXmKwfJWwLsrgldLsCFIOFg=;
+        b=CHgZ1dJz/O+a5f/BeVz02JzTUA6mmUk51xvLcHSED9Lgx3MPBblk6DWporOPtCCiM1
+         /8wbVDmbEPZjYl4jgWtPHrBflYIwgPWGnGM+r/wEbBLebsIepICigKq3teggKtclm3hi
+         eG4U94mxfBFpWeEW6BajelZ7yRo9MWF1DnVXOCDYK5QWGsqE9F4vIcmtWl5FDUA9YqJO
+         9r+TVTEIbWFNitcbLM1syUpJGYhKq2YelOiHjyDs6ZAeMA0xpE1BQshz9NYvIaCfUFED
+         3QM4dzwNwWejMO7dv2s5ghnPthKkQiGkVe0J2qrvRzyZvCswIaInprkaRIGj7m/AXfVD
+         v8yg==
+X-Gm-Message-State: APjAAAXG0sPYV5nfKzoXJR6ipkZLu79hCBV3Klab2d9VpWKR7jbs1v7Y
+        Nybn/6LOHkV32ryD/pXGv1U=
+X-Google-Smtp-Source: APXvYqxYE3IyIX8b2BVVt44CkmPEeeQhwtVdacK9SIq4c59o5QNNJVjRK0M+MlQmVg8WgBbtlV6xTQ==
+X-Received: by 2002:a05:651c:313:: with SMTP id a19mr9543563ljp.199.1572640969006;
+        Fri, 01 Nov 2019 13:42:49 -0700 (PDT)
+Received: from debian-tom.home (2-111-15-75-dynamic.dk.customer.tdc.net. [2.111.15.75])
+        by smtp.gmail.com with ESMTPSA id 190sm3766098ljj.72.2019.11.01.13.42.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 13:42:48 -0700 (PDT)
+From:   Tomas Bortoli <tomasbortoli@gmail.com>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller@googlegroups.com, Tomas Bortoli <tomasbortoli@gmail.com>,
+        syzbot+a0d209a4676664613e76@syzkaller.appspotmail.com
+Subject: [PATCH] Fix invalid-free in bcsp_close()
+Date:   Fri,  1 Nov 2019 21:42:44 +0100
+Message-Id: <20191101204244.14509-1-tomasbortoli@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <000000000000109f9605964acf6c@google.com>
+References: <000000000000109f9605964acf6c@google.com>
 MIME-Version: 1.0
-In-Reply-To: <5c286f76-d108-5d78-dd8f-19e1baf64396@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Syzbot reported an invalid-free that I introduced fixing a memleak.
 
+bcsp_recv() also frees bcsp->rx_skb but never nullifies its value.
+Nullify bcsp->rx_skb every time it is freed.
 
-On 01/11/2019 19:36, Florian Fainelli wrote:
-> On 11/1/19 10:25 AM, Grygorii Strashko wrote:
->> Hi Florian,
->>
->> On 25/10/2019 20:47, Florian Fainelli wrote:
->>> On 10/24/19 3:09 AM, Grygorii Strashko wrote:
->>>> Add bindings for the new TI CPSW switch driver. Comparing to the legacy
->>>> bindings (net/cpsw.txt):
->>>> - ports definition follows DSA bindings (net/dsa/dsa.txt) and ports
->>>> can be
->>>> marked as "disabled" if not physically wired.
->>>> - all deprecated properties dropped;
->>>> - all legacy propertiies dropped which represent constant HW
->>>> cpapbilities
->>>> (cpdma_channels, ale_entries, bd_ram_size, mac_control, slaves,
->>>> active_slave)
->>>> - TI CPTS DT properties are reused as is, but grouped in "cpts" sub-node
->>>> - TI Davinci MDIO DT bindings are reused as is, because Davinci MDIO is
->>>> reused.
->>>>
->>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>>> ---
->>>
->>> [snip]
->>>> +- mdio : CPSW MDIO bus block description
->>>> +    - bus_freq : MDIO Bus frequency
->>>
->>> clock-frequency is a more typical property to describe the bus clock's
->>> frequency, that is what i2c and spi do.
->>
->> The MDIO is re-used here unchanged (including bindings).
->> i think, I could try to add standard optional property "bus-frequency"
->> to MDIO bindings
->> as separate series, and deprecate "bus_freq".
-> 
-> What is wrong with 'clock-frequency'?
-> 
-> Documentation/devicetree/bindings/i2c/i2c.txt:
-> 
-> - clock-frequency
->          frequency of bus clock in Hz.
-> 
-> Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt:
-> 
-> - clock-frequency: the MDIO bus clock that must be output by the MDIO bus
->    hardware, if absent, the default hardware values are used
-> 
-> Maybe this is a bit of a misnomer as it is usually considered a
-> replacement for the lack of a proper "clocks" property with a clock
-> provider, but we can flip the coin around any way we want, it looks
-> almost the same.
-> 
+Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+Reported-by: syzbot+a0d209a4676664613e76@syzkaller.appspotmail.com
+---
+ drivers/bluetooth/hci_bcsp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-I can do clock-frequency, but I like more bus-frequency (personally)
-due to more understandable meaning, and because in "Devicetree Specification v0.2"
-clock-frequency is defined as more related to clocks.
-
-Any way I hope you agree that it should be part separate discussion?
-
-
+diff --git a/drivers/bluetooth/hci_bcsp.c b/drivers/bluetooth/hci_bcsp.c
+index fe2e307009f4..cf4a56095817 100644
+--- a/drivers/bluetooth/hci_bcsp.c
++++ b/drivers/bluetooth/hci_bcsp.c
+@@ -591,6 +591,7 @@ static int bcsp_recv(struct hci_uart *hu, const void *data, int count)
+ 			if (*ptr == 0xc0) {
+ 				BT_ERR("Short BCSP packet");
+ 				kfree_skb(bcsp->rx_skb);
++				bcsp->rx_skb = NULL;
+ 				bcsp->rx_state = BCSP_W4_PKT_START;
+ 				bcsp->rx_count = 0;
+ 			} else
+@@ -606,6 +607,7 @@ static int bcsp_recv(struct hci_uart *hu, const void *data, int count)
+ 			    bcsp->rx_skb->data[2])) != bcsp->rx_skb->data[3]) {
+ 				BT_ERR("Error in BCSP hdr checksum");
+ 				kfree_skb(bcsp->rx_skb);
++				bcsp->rx_skb = NULL;
+ 				bcsp->rx_state = BCSP_W4_PKT_DELIMITER;
+ 				bcsp->rx_count = 0;
+ 				continue;
+@@ -630,6 +632,7 @@ static int bcsp_recv(struct hci_uart *hu, const void *data, int count)
+ 				       bscp_get_crc(bcsp));
+ 
+ 				kfree_skb(bcsp->rx_skb);
++				bcsp->rx_skb = NULL;
+ 				bcsp->rx_state = BCSP_W4_PKT_DELIMITER;
+ 				bcsp->rx_count = 0;
+ 				continue;
 -- 
-Best regards,
-grygorii
+2.20.1
+
