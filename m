@@ -2,128 +2,122 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C1BCA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 107B8CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 194E221734
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D35EE21734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:41:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NIWsRoTx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbfKAQjl (ORCPT
+        id S1728832AbfKAQla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 12:39:41 -0400
-Received: from mga02.intel.com ([134.134.136.20]:32461 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727426AbfKAQjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 12:39:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 09:39:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,256,1569308400"; 
-   d="scan'208";a="199860587"
-Received: from ggarreto-mobl1.amr.corp.intel.com (HELO [10.255.92.243]) ([10.255.92.243])
-  by fmsmga007.fm.intel.com with ESMTP; 01 Nov 2019 09:39:38 -0700
-Subject: Re: [alsa-devel] [PATCH v4 2/2] soundwire: qcom: add support for
- SoundWire controller
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        robh@kernel.org, vkoul@kernel.org
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org
-References: <20191030153150.18303-1-srinivas.kandagatla@linaro.org>
- <20191030153150.18303-3-srinivas.kandagatla@linaro.org>
- <af29ec6e-d89e-7fa4-a8cd-29ab944ecd5c@linux.intel.com>
- <926bd15f-e230-8f5e-378d-355bfeeecf27@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <3d17a2a2-3033-e740-a466-e6cf7919adb2@linux.intel.com>
-Date:   Fri, 1 Nov 2019 11:39:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 1 Nov 2019 12:41:30 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39410 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbfKAQla (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 12:41:30 -0400
+Received: by mail-qt1-f193.google.com with SMTP id t8so13663810qtc.6
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 09:41:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jj2ZpJ3W6qaiv42ekK7hG2yJnsYRtdgNJLz0ayczD4M=;
+        b=NIWsRoTxNQah7NnWYAIT6IUPn5VQxxF+402RE36qdY0bMta3u0r92MnO60h6Elh3jD
+         /Kxx/Z8CfpknUauRIHUymmLu3DzUZctWqzB4nqjoBfW/zmhH6UiLngKPqY9xzOL+WuNz
+         11VMGlR6L2RcXOw+BDW6jhNVeY3/DoUSECITk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jj2ZpJ3W6qaiv42ekK7hG2yJnsYRtdgNJLz0ayczD4M=;
+        b=BA0N0khOna4zIa6c3+4qh+8btI78mPfCBORo/QY5fuSw0twKK8G5pDy8bzdl/uKnXB
+         u1GEE49ySKOxA34qMqx5VpIuX/sgDtDqPOQRSPf4Hg6VPO4ZdrbkTyv+iziRW7/7NEK1
+         FLNiicSgVmxFoEItiouPgy6sNOvA+8keIHYiUCHgearpGhRnlrOmHv6aOazzYqvpOC9R
+         tCiTQP/3QKIQX0RkdYj7manAIPALl0lyL2vN/sb8WqpYAA9knRlHM/JFTfKPh4U9kDZg
+         ZSrZATI8O/NyTpYAaj7U0mId+406aFynY6WkxoX3gZKkdQt1izJqevftQN02H8ef23o+
+         swvA==
+X-Gm-Message-State: APjAAAV3K9QOxrTcSty0i3MmXXTRVdbAxQAUTJL5VjBOk7ceZs9eO5Zn
+        50qqrotMc3c35bEsImMkMMNSO2u1NNqyHQ==
+X-Google-Smtp-Source: APXvYqxP6khL6N4dYMQ0SdrWS0UAWARcs6EamDhVbB+9y68+oqC4SBC5HgJjoxDBzA0U3gAj98FSjw==
+X-Received: by 2002:ac8:394f:: with SMTP id t15mr179134qtb.179.1572626488836;
+        Fri, 01 Nov 2019 09:41:28 -0700 (PDT)
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com. [209.85.222.170])
+        by smtp.gmail.com with ESMTPSA id r36sm5858340qta.27.2019.11.01.09.41.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Nov 2019 09:41:28 -0700 (PDT)
+Received: by mail-qk1-f170.google.com with SMTP id 15so11259144qkh.6
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 09:41:28 -0700 (PDT)
+X-Received: by 2002:a37:4ac8:: with SMTP id x191mr6693149qka.85.1572626151290;
+ Fri, 01 Nov 2019 09:35:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <926bd15f-e230-8f5e-378d-355bfeeecf27@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <cover.1572437285.git.vpillai@digitalocean.com>
+ <20191031184236.GE5738@pauld.bos.csb> <CANaguZCqHnR8b_68SSA_rfdkinVg8vLH66jQ_GhMsdOjuUHe3g@mail.gmail.com>
+In-Reply-To: <CANaguZCqHnR8b_68SSA_rfdkinVg8vLH66jQ_GhMsdOjuUHe3g@mail.gmail.com>
+From:   Greg Kerr <kerrnel@chromium.org>
+Date:   Fri, 1 Nov 2019 09:35:38 -0700
+X-Gmail-Original-Message-ID: <CAJGSLMtnxSqKvu3C7WQhMUUbzRXmfU1MVyLz8GcAQcAscdaZdw@mail.gmail.com>
+Message-ID: <CAJGSLMtnxSqKvu3C7WQhMUUbzRXmfU1MVyLz8GcAQcAscdaZdw@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Cc:     Phil Auld <pauld@redhat.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Nov 1, 2019 at 7:03 AM Vineeth Remanan Pillai
+<vpillai@digitalocean.com> wrote:
+>
+> Hi Phil,
+>
+> > Unless I'm mistaken 7 of the first 8 of these went into sched/core
+> > and are now in linux (from v5.4-rc1). It may make sense to rebase on
+> > that and simplify the series.
+> >
+> Thanks a lot for pointing this out. We shall test on a rebased 5.4 RC
+> and post the changes soon, if the tests goes well. For v3, while rebasing
+> to an RC kernel, we saw perf regressions and hence did not check the
+> RC kernel this time. You are absolutely right that we can simplify the
+> patch series with 5.4 RC.
 
->>> +static int qcom_swrm_prepare(struct snd_pcm_substream *substream,
->>> +                 struct snd_soc_dai *dai)
->>> +{
->>> +    struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
->>> +
->>> +    if (!ctrl->sruntime[dai->id])
->>> +        return -EINVAL;
->>> +
->>> +    return sdw_enable_stream(ctrl->sruntime[dai->id]);
->>
->> So in hw_params you call sdw_prepare_stream() and in _prepare you call 
->> sdw_enable_stream()?
->>
->> Shouldn't this be handled in a .trigger operation as per the 
->> documentation "From ASoC DPCM framework, this stream state is linked to
->> .trigger() start operation."
-> 
-> If I move sdw_enable/disable_stream() to trigger I get a big click noise 
-> on my speakers at start and end of every playback. Tried different 
-> things but nothing helped so far!. Enabling Speaker DACs only after 
-> SoundWire ports are enabled is working for me!
-> There is nothing complicated on WSA881x codec side all the DACs are 
-> enabled/disabled as part of DAPM.
+Has anyone considering shipping a V1 implementation which just allows
+threads from the same process to share a core together? And then
+iterating on that? Would that be simpler to implement or do the same
+fundamental problems exist as tagging arbitrary processes with
+cookies?
 
-that looks like a work-around to me? If you do a bank switch without 
-anything triggered, you are most likely sending a bunch of zeroes to 
-your amplifier and enabling click/pop removals somehow.
+Regards,
 
-It'd be worth looking into this, maybe there's a missing digital 
-mute/unmute that's not done in the right order?
+Greg Kerr
 
-> 
->>
->> It's also my understanding that .prepare will be called multiples times, 
-> 
-> I agree, need to add some extra checks in the prepare to deal with this!
-> 
->> including for underflows and resume if you don't support INFO_RESUME.
-> 
->>
->> the sdw_disable_stream() is in .hw_free, which is not necessarily 
->> called by the core, so you may have a risk of not being able to recover?
-> 
-> Hmm, I thought hw_free is always called to release resources allocated 
-> in hw_params.
-> 
-> In what cases does the core not call this?
-
-yes, but prepare can be called without hw_free called first. that's why 
-we updated the state machine to allow for DISABLED|DEPREPARED -> 
-PREPARED transitions.
-
->>> +static const struct dev_pm_ops qcom_swrm_dev_pm_ops = {
->>> +    SET_RUNTIME_PM_OPS(qcom_swrm_runtime_suspend,
->>> +               qcom_swrm_runtime_resume,
->>> +               NULL
->>> +    )
->>> +};
->>
->> Maybe define pm_runtime at a later time then? We've had a lot of race 
->> conditions to deal with, and it's odd that you don't support plain 
->> vanilla suspend first?
->>
-> Trying to keep things simple for the first patchset! added this dummies 
-> to keep the soundwire core happy!
-
-If you are referring to the errors when pm_runtime is not enabled, we 
-fixed this is the series that's been out for review for 10 days now...
-
-see '[PATCH 03/18] soundwire: bus: add PM/no-PM versions of read/write 
-functions', that should remove the need for dummy functions.
-
+>
+>
+> Thanks
+> Vineeth
