@@ -2,158 +2,81 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5214FCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FB2CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 226222086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:16:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KR7VIPH0"
+	by mail.kernel.org (Postfix) with ESMTP id D434A2086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:20:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbfKAUQs (ORCPT
+        id S1727836AbfKAUUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 16:16:48 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:41122 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbfKAUQs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 16:16:48 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA1KGdvH007674;
-        Fri, 1 Nov 2019 15:16:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572639399;
-        bh=XckIMX9TOLpRUdwAePmoGCJdYT+5toAsS7w8nr/Ee6g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=KR7VIPH0NTgTtD80kS210fYpguS9kMl4YdKPGmpZbtSTuuhRX2+XlvkcwHp+D+ix3
-         XODUzzhmCjJUQ+xaiMe9D2M0m13QBd8GqNq21rOee59yOBZVyzbSJECZgT9FokhvQk
-         z93jEJIge/VQlVzsVtrT5h2rNa+ES67pz0TZSScA=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA1KGdwk109200
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 Nov 2019 15:16:39 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 1 Nov
- 2019 15:16:25 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 1 Nov 2019 15:16:25 -0500
-Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA1KGZS0093218;
-        Fri, 1 Nov 2019 15:16:36 -0500
-Subject: Re: [PATCH v5 net-next 06/12] net: ethernet: ti: introduce cpsw
- switchdev based driver part 1 - dual-emac
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
-References: <20191024100914.16840-1-grygorii.strashko@ti.com>
- <20191024100914.16840-7-grygorii.strashko@ti.com>
- <20191029122422.GL15259@lunn.ch>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <d87c72e1-cb91-04a2-c881-0d8eec4671e2@ti.com>
-Date:   Fri, 1 Nov 2019 22:16:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 1 Nov 2019 16:20:07 -0400
+Received: from mga11.intel.com ([192.55.52.93]:55656 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726477AbfKAUUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 16:20:07 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 13:20:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,256,1569308400"; 
+   d="scan'208";a="226138430"
+Received: from bklaps-mobl.ger.corp.intel.com (HELO localhost) ([10.252.27.20])
+  by fmsmga004.fm.intel.com with ESMTP; 01 Nov 2019 13:19:58 -0700
+Date:   Fri, 1 Nov 2019 22:19:57 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Jens Wiklander <jens.wiklander@linaro.org>, dhowells@redhat.com,
+        Jonathan Corbet <corbet@lwn.net>, jejb@linux.ibm.com,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Stuart Yoder <stuart.yoder@arm.com>,
+        Janne Karhunen <janne.karhunen@gmail.com>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Subject: Re: [Patch v3 6/7] doc: keys: Document usage of TEE based Trusted
+ Keys
+Message-ID: <20191101201957.GA8369@linux.intel.com>
+References: <1572530323-14802-1-git-send-email-sumit.garg@linaro.org>
+ <1572530323-14802-7-git-send-email-sumit.garg@linaro.org>
+ <20191031214745.GG10507@linux.intel.com>
+ <CAFA6WYMkE928v-v76gGtWmsS0PwRp-OHUtkS0+Ts4V6x0AKBqQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191029122422.GL15259@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFA6WYMkE928v-v76gGtWmsS0PwRp-OHUtkS0+Ts4V6x0AKBqQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
-
-On 29/10/2019 14:24, Andrew Lunn wrote:
->>   config TI_CPTS
->>   	bool "TI Common Platform Time Sync (CPTS) Support"
->> -	depends on TI_CPSW || TI_KEYSTONE_NETCP || COMPILE_TEST
->> +	depends on TI_CPSW || TI_KEYSTONE_NETCP || COMPILE_TEST || TI_CPSW_SWITCHDEV
+On Fri, Nov 01, 2019 at 03:04:18PM +0530, Sumit Garg wrote:
+ 
+> Isn't this statement contradicting with your earlier statement
+> regarding the right order would be to complete TEE patches review
+> first and then come up with documentation here [2]?
 > 
-> nit picking, but COMPILE_TEST is generally last on the line.
-> 
->> +/**
->> + * cpsw_set_mc - adds multicast entry to the table if it's not added or deletes
->> + * if it's not deleted
->> + * @ndev: device to sync
->> + * @addr: address to be added or deleted
->> + * @vid: vlan id, if vid < 0 set/unset address for real device
->> + * @add: add address if the flag is set or remove otherwise
->> + */
->> +static int cpsw_set_mc(struct net_device *ndev, const u8 *addr,
->> +		       int vid, int add)
->> +{
->> +	struct cpsw_priv *priv = netdev_priv(ndev);
->> +	struct cpsw_common *cpsw = priv->cpsw;
->> +	int slave_no = cpsw_slave_index(cpsw, priv);
->> +	int mask, flags, ret;
-> 
-> David will complain about reverse Christmas tree. You need to move
-> some of the assignments into the body of the function. This problems
-> happens a few times in the code.
-> 
->> +static int cpsw_set_pauseparam(struct net_device *ndev,
->> +			       struct ethtool_pauseparam *pause)
->> +{
->> +	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
->> +	struct cpsw_priv *priv = netdev_priv(ndev);
->> +
->> +	priv->rx_pause = pause->rx_pause ? true : false;
->> +	priv->tx_pause = pause->tx_pause ? true : false;
->> +
->> +	return phy_restart_aneg(cpsw->slaves[priv->emac_port - 1].phy);
->> +}
-> 
-> You should look at the value of pause.autoneg.
+> [1] https://lore.kernel.org/linux-integrity/1568025601.4614.253.camel@linux.ibm.com/
+> [2] https://lore.kernel.org/linux-integrity/20190909163643.qxmzpcggi567hmhv@linux.intel.com/
 
-I'll use phy_validate_pause() and phy_set_asym_pause() here,
-and fix other comments.
+With the intersecting issues, namely key generation and conflicting
+keyctl parameters, that was not a well considered statement.
 
-> 
->> +static const struct devlink_ops cpsw_devlink_ops;
-> 
-> It would be nice to avoid this forward declaration.
-
-It's not declaration, it's definition of devlink_ops without any standard callbacks implemented.
-
-> 
->> +static const struct devlink_param cpsw_devlink_params[] = {
->> +	DEVLINK_PARAM_DRIVER(CPSW_DL_PARAM_ALE_BYPASS,
->> +			     "ale_bypass", DEVLINK_PARAM_TYPE_BOOL,
->> +			     BIT(DEVLINK_PARAM_CMODE_RUNTIME),
->> +			     cpsw_dl_ale_ctrl_get, cpsw_dl_ale_ctrl_set, NULL),
->> +};
-> 
-> Is this documented?
-
-In patch 9. But I'll update it and add standard devlink parameter definition, like:
-
-ale_bypass	[DEVICE, DRIVER-SPECIFIC]
-		Allows to enable ALE_CONTROL(4).BYPASS mode for debug purposes
-		Type: bool
-		Configuration mode: runtime
-
-Thank you for review.
-
--- 
-Best regards,
-grygorii
+/Jarkko
