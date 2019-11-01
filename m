@@ -2,105 +2,134 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C68C5CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC397CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7A7820656
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2DB20656
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:15:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="KPc3vgN8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbfKAGMF (ORCPT
+        id S1728724AbfKAGPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 02:12:05 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:37720 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbfKAGMF (ORCPT <rfc822;linux-kernel@vger.kernel.orG>);
-        Fri, 1 Nov 2019 02:12:05 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1iQQA7-0001yS-KT; Fri, 01 Nov 2019 14:11:55 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1iQQA6-0004uG-Co; Fri, 01 Nov 2019 14:11:54 +0800
-Date:   Fri, 1 Nov 2019 14:11:54 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     davem@davemloft.net, mark.rutland@arm.com, mripard@kernel.org,
-        p.zabel@pengutronix.de, robh+dt@kernel.org, wens@csie.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v3 0/4] crypto: add sun8i-ss driver for Allwinner
- Security System
-Message-ID: <20191101061154.abwwbcqzm6lg7uvi@gondor.apana.org.au>
-References: <20191025185128.24068-1-clabbe.montjoie@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025185128.24068-1-clabbe.montjoie@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Fri, 1 Nov 2019 02:15:47 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:45244 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbfKAGPr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 02:15:47 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id xA16ELBd016348;
+        Fri, 1 Nov 2019 15:14:23 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com xA16ELBd016348
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1572588863;
+        bh=i3mAUJKjHAwllmd7KANZFUaKrxZfgZZBSwsGJnV7Xbc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KPc3vgN83gq/1DFpYm2jc42MVPmVXAyW/Lg2mxWgvu1ZAu0bN1KYxqRvmNONYWFk3
+         gaUQbkdfqWaDEZ2BcXD9Si4l6mpnff26BF+UBdrTZLRrMCTujMwF3QcBsWjbcgkcOF
+         2XbnAVCrdwv3ty0YJtZg3c+4DVaAZKk3gkjpX0FwnK4VsdT89nJli9OWVsMEH9B2G4
+         hss+ENiiJCQFP5NOVFqIIOBCByvo34NugeyFLi+nkDC66Xc3GjYRkp6KQ2rDBUrSMD
+         JlBahWfNsllQ39/AajGZsAZRYAix+l2RjQ37GhjRbqpYTT/40NjdAoGwDVMHt+Y2WS
+         XMwjT6UgHMK7w==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        David Gibson <david@gibson.dropbear.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] libfdt: add SPDX-License-Identifier to libfdt wrappers
+Date:   Fri,  1 Nov 2019 15:14:09 +0900
+Message-Id: <20191101061411.16988-2-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191101061411.16988-1-yamada.masahiro@socionext.com>
+References: <20191101061411.16988-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 08:51:24PM +0200, Corentin Labbe wrote:
-> Hello
-> 
-> This patch serie adds support for the second version of Allwinner Security System.
-> The first generation of the Security System is already handled by the sun4i-ss driver.
-> Due to major change, the first driver cannot handle the second one.
-> This new Security System is present on A80 and A83T SoCs.
-> 
-> For the moment, the driver support only DES3/AES in ECB/CBC mode.
-> Patchs for CTR/CTS, RSA and RNGs will came later.
-> 
-> This serie is tested with CRYPTO_MANAGER_EXTRA_TESTS
-> and tested on:
-> sun8i-a83t-bananapi-m3
-> sun9i-a80-cubieboard4
-> 
-> This serie is based on top of the "crypto: add sun8i-ce driver for
-> Allwinner crypto engine" serie.
-> 
-> Regards
-> 
-> Changes since v2:
-> - Made the reset mandatory
-> - Removed reset-names
-> 
-> Changes since v1:
-> - fixed uninitialized err in sun8i_ss_allocate_chanlist
-> - Added missing commit description on DT Documentation patch
-> 
-> Corentin Labbe (4):
->   crypto: Add Allwinner sun8i-ss cryptographic offloader
->   dt-bindings: crypto: Add DT bindings documentation for sun8i-ss
->     Security System
->   ARM: dts: sun8i: a83t: Add Security System node
->   ARM: dts: sun9i: a80: Add Security System node
-> 
->  .../bindings/crypto/allwinner,sun8i-ss.yaml   |  61 ++
->  arch/arm/boot/dts/sun8i-a83t.dtsi             |   9 +
->  arch/arm/boot/dts/sun9i-a80.dtsi              |   9 +
->  drivers/crypto/allwinner/Kconfig              |  28 +
->  drivers/crypto/allwinner/Makefile             |   1 +
->  drivers/crypto/allwinner/sun8i-ss/Makefile    |   2 +
->  .../allwinner/sun8i-ss/sun8i-ss-cipher.c      | 438 ++++++++++++
->  .../crypto/allwinner/sun8i-ss/sun8i-ss-core.c | 642 ++++++++++++++++++
->  drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h  | 218 ++++++
->  9 files changed, 1408 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
->  create mode 100644 drivers/crypto/allwinner/sun8i-ss/Makefile
->  create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
->  create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
->  create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
+These are kernel source code even though they are just two-line wrappers.
 
-Patches 1,2 applied.  Thanks.
+Files without explicit license information fall back to GPL-2.0-only,
+which is the project default.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ lib/fdt.c            | 1 +
+ lib/fdt_empty_tree.c | 1 +
+ lib/fdt_ro.c         | 1 +
+ lib/fdt_rw.c         | 1 +
+ lib/fdt_strerror.c   | 1 +
+ lib/fdt_sw.c         | 1 +
+ lib/fdt_wip.c        | 1 +
+ 7 files changed, 7 insertions(+)
+
+diff --git a/lib/fdt.c b/lib/fdt.c
+index 97f20069fc37..041f8922a23c 100644
+--- a/lib/fdt.c
++++ b/lib/fdt.c
+@@ -1,2 +1,3 @@
++// SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/libfdt_env.h>
+ #include "../scripts/dtc/libfdt/fdt.c"
+diff --git a/lib/fdt_empty_tree.c b/lib/fdt_empty_tree.c
+index 5d30c58150ad..452221227bf3 100644
+--- a/lib/fdt_empty_tree.c
++++ b/lib/fdt_empty_tree.c
+@@ -1,2 +1,3 @@
++// SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/libfdt_env.h>
+ #include "../scripts/dtc/libfdt/fdt_empty_tree.c"
+diff --git a/lib/fdt_ro.c b/lib/fdt_ro.c
+index f73c04ea7be4..9f696d19f060 100644
+--- a/lib/fdt_ro.c
++++ b/lib/fdt_ro.c
+@@ -1,2 +1,3 @@
++// SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/libfdt_env.h>
+ #include "../scripts/dtc/libfdt/fdt_ro.c"
+diff --git a/lib/fdt_rw.c b/lib/fdt_rw.c
+index 0c1f0f4a4b13..2a61e9c6dd44 100644
+--- a/lib/fdt_rw.c
++++ b/lib/fdt_rw.c
+@@ -1,2 +1,3 @@
++// SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/libfdt_env.h>
+ #include "../scripts/dtc/libfdt/fdt_rw.c"
+diff --git a/lib/fdt_strerror.c b/lib/fdt_strerror.c
+index 8713e3ff4707..4554e5fdac12 100644
+--- a/lib/fdt_strerror.c
++++ b/lib/fdt_strerror.c
+@@ -1,2 +1,3 @@
++// SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/libfdt_env.h>
+ #include "../scripts/dtc/libfdt/fdt_strerror.c"
+diff --git a/lib/fdt_sw.c b/lib/fdt_sw.c
+index 9ac7e50c76ce..d3345ca399cf 100644
+--- a/lib/fdt_sw.c
++++ b/lib/fdt_sw.c
+@@ -1,2 +1,3 @@
++// SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/libfdt_env.h>
+ #include "../scripts/dtc/libfdt/fdt_sw.c"
+diff --git a/lib/fdt_wip.c b/lib/fdt_wip.c
+index 45b3fc3d3ba1..9674d4c3b115 100644
+--- a/lib/fdt_wip.c
++++ b/lib/fdt_wip.c
+@@ -1,2 +1,3 @@
++// SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/libfdt_env.h>
+ #include "../scripts/dtc/libfdt/fdt_wip.c"
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.17.1
+
