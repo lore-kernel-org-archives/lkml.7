@@ -8,103 +8,101 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E993DCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 04:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 946ECCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 04:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEEA92083E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 04:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 576B4208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 04:20:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YuaqAmiZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EdIA7qYj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbfKAEEt (ORCPT
+        id S1727879AbfKAESe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 00:04:49 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39136 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbfKAEEs (ORCPT
+        Fri, 1 Nov 2019 00:18:34 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45929 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfKAESe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 00:04:48 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p12so5612729pgn.6;
-        Thu, 31 Oct 2019 21:04:47 -0700 (PDT)
+        Fri, 1 Nov 2019 00:18:34 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q13so8454814wrs.12
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 21:18:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QsWota2Z/1CKC8Q2G+ABbLlBht6wDe5bQYoK9v/iJIQ=;
-        b=YuaqAmiZ8VGIpENUY9ZbesjxC4hTJg6sflDLOXoSgfCgxGYPHp8xKKj95T/3A0nsM7
-         NfQ0PGpocPsSiqoaJi9y6XPApw/yZbqhSj8I1ZYHAOkdZFQnF/IBq4YSvpsZZ8v5m01v
-         4dDxVTO0Cdqo9FE7X7KdOVOyjIMK6JRxf7scDVF2qpiYP4X+oYkKJ8+9jxwbdUoS5OKG
-         NDVckaOBmeMADxMgo0wJLLLjFhW7HhQ0GWNT3999Hmk3Fiw3ea/sYxJ3YhBjQ+R3Gtql
-         NSf6QXqRjxKYTL0+F7fJvI4+uoFkmpu/0OSEDceUKCE3hsd0BBZzBCzuVzfv8etjZF9K
-         WC/g==
+        h=from:to:cc:subject:date:message-id;
+        bh=NGhlTP8oZ8XipxhHTj4eiIdTcdXbzg8PKGeLDXhalyY=;
+        b=EdIA7qYjj9Zrt774dt0oiZlMSGvi26KO8YGtd8OncH3ftqlG3sDO7XXs3ZBmrOkdzY
+         GhK2zQWsc/CevxKkQHy7w6etZdItRLpoqxbTO85PYop92kE31u+VCn9R5PU99TJ733fS
+         HyNQmDhCOXd8ingVeTEfdm3cwW6B83MZsSzGSiWhctbM3eCbsNeb/OeESSt32yBv7o5f
+         fOB2cNYRpQvr62F1yXZ/ydjq+lK2huhe6m9zTL++5lvjmgypI+hFfEiyrO4eAjfrWiKq
+         GJ3gNdNOGPinrt3NCiS5mIRf/laE2m3t09If/VTVQ0tQD2MpOvEBY4fm/RjYSxhumfta
+         T+fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QsWota2Z/1CKC8Q2G+ABbLlBht6wDe5bQYoK9v/iJIQ=;
-        b=KUi3RalP/YfZoTI0R5BA4oamKxPGQ0jXnSr4YRHc2JubXXmjoCHRyHLdWm5E2/wEuE
-         M57G7lWp6CAviQyKg3nh0Sy1lFEDJg46onUUALl78PsZ18UBdW/YRumTNUczLFuH7dtr
-         Y4mshi8LjtGbAxC/Apnf2x7oCmaIdbX0kn3AASLA//GsgXm30xLMiG64DFeU93Ma7vHC
-         nPgbN09Uh7NrLoX6nHj/GoSnaXtSmMwbLhzTI+hmJaOF71bgE3KLuHzL30UG8hBP4I9M
-         fnkZG/WvcN8MjmKgr1dJusaWcyp6vpTj9O2SxjeOH0gTJFyMyPfmWLQMP2BFCiGsbRh9
-         SWAw==
-X-Gm-Message-State: APjAAAUlxRMsNuDpTHpvDrL7tE8I3MgrzMQcaCs1p9jsEs5RIu86Doue
-        vz6jpqxIXvKo0jGajYd7oNA=
-X-Google-Smtp-Source: APXvYqzhDiYlZFckPQVD6GH/zbn70eZz0om2uIJE636BdWD7xClrh4P979cJfbsJRoQntMNNzq+CvA==
-X-Received: by 2002:a17:90a:cc07:: with SMTP id b7mr4015780pju.135.1572581087105;
-        Thu, 31 Oct 2019 21:04:47 -0700 (PDT)
-Received: from masabert (i118-21-156-233.s30.a048.ap.plala.or.jp. [118.21.156.233])
-        by smtp.gmail.com with ESMTPSA id a33sm4660713pgb.57.2019.10.31.21.04.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 31 Oct 2019 21:04:46 -0700 (PDT)
-Received: by masabert (Postfix, from userid 1000)
-        id AF86920128D; Fri,  1 Nov 2019 13:04:44 +0900 (JST)
-From:   Masanari Iida <standby24x7@gmail.com>
-To:     linux-kernel@vger.kernel.org, mhocko@suse.com,
-        ebiederm@xmission.com, akpm@linux-foundation.org,
-        stable@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org,
-        mingo@redhat.com
-Cc:     Masanari Iida <standby24x7@gmail.com>
-Subject: [PATCH 2/2] docs: admin-guide: Remove threads-max auto-tuning
-Date:   Fri,  1 Nov 2019 13:04:38 +0900
-Message-Id: <20191101040438.6029-2-standby24x7@gmail.com>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20191101040438.6029-1-standby24x7@gmail.com>
-References: <20191101040438.6029-1-standby24x7@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NGhlTP8oZ8XipxhHTj4eiIdTcdXbzg8PKGeLDXhalyY=;
+        b=JzVdx9HE3xIlqi7Y4ZmqSc3DK4dUGjhzTFc1fHYrqJRuyAYvKRZGMhZLCxtzAVTo9y
+         3V6s/D/dUc9AD4xhob2+6N6gRXi3KrM8uHPYpZAtjOXbz6yacNj7jvuXugDEqcyTW8KP
+         gp8Qek70Tpa5YD07zFaHhUJO14SPhWGuxwXtEh/g7gtwdlJr1lVQQUZQ7kUtobCPQUAC
+         Ar7GpzO/fLYsKe6SdaEffnbF1SuWG2RLf4B1Hb7R4hGysB4Qlz79cXXR+QjP4dJbcBUQ
+         j7CGujalsTB2B/HDQRsv/+WvcIqWpvaI7HAHolHSDQoonx8xoqD0LIKXoWQVBKUoXZEo
+         BsGw==
+X-Gm-Message-State: APjAAAXWEaJM72JBut72rPbjDS/3RZLGPUVUxzkuzWvWhDkKbi/Wpw2q
+        cXbbbu5pN5HiACFDvtVmgZg=
+X-Google-Smtp-Source: APXvYqwltumjagUsai+cQa/vVBU2gQPEaUNhz0/YGjLbZNJV6oODNZWhklfyejFkF987nzfWojq+Eg==
+X-Received: by 2002:a05:6000:12cd:: with SMTP id l13mr8822750wrx.181.1572581912624;
+        Thu, 31 Oct 2019 21:18:32 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id u187sm5743536wme.15.2019.10.31.21.18.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 21:18:32 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
+        ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] reset: brcmstb: Fix resource checks
+Date:   Thu, 31 Oct 2019 21:18:21 -0700
+Message-Id: <20191101041821.30931-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since following path was merged in 5.4-rc3,
-auto-tuning feature in threads-max was not exist any more.
-Fix the admin-guide document as is.
+The use of IS_ALIGNED() is incorrect, the typical resource we pass looks
+like this: start: 0x8404318, size: 0x30. When using IS_ALIGNED() we will
+get the following 0x8404318 & (0x18 - 1) = 0x10 which is definitively
+not equal to 0, same goes with the size.
 
-kernel/sysctl.c: do not override max_threads provided by userspace
-b0f53dbc4bc4c371f38b14c391095a3bb8a0bb40
+Replace this with an appropriate check on the start address and the
+resource size to be a multiple of SW_INIT_BANK_SIZE.
 
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+Fixes: 77750bc089e4 ("reset: Add Broadcom STB SW_INIT reset controller driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- Documentation/admin-guide/sysctl/kernel.rst | 4 ----
- 1 file changed, 4 deletions(-)
+Changes in v2:
 
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 38e0f10d7d9f..9035adbdff58 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -1109,10 +1109,6 @@ constant FUTEX_TID_MASK (0x3fffffff).
- If a value outside of this range is written to threads-max an error
- EINVAL occurs.
+- simply check that the resource size is at least SW_INIT_BANK_SIZE
+
+ drivers/reset/reset-brcmstb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/reset/reset-brcmstb.c b/drivers/reset/reset-brcmstb.c
+index a608f445dad6..208a87aaee53 100644
+--- a/drivers/reset/reset-brcmstb.c
++++ b/drivers/reset/reset-brcmstb.c
+@@ -91,8 +91,8 @@ static int brcmstb_reset_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  
--The value written is checked against the available RAM pages. If the
--thread structures would occupy too much (more than 1/8th) of the
--available RAM pages threads-max is reduced accordingly.
--
- 
- unknown_nmi_panic:
- ==================
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!IS_ALIGNED(res->start, SW_INIT_BANK_SIZE) ||
+-	    !IS_ALIGNED(resource_size(res), SW_INIT_BANK_SIZE)) {
++	if ((res->start & SW_INIT_BANK_SIZE) != SW_INIT_BANK_SIZE ||
++	    !DIV_ROUND_DOWN_ULL(resource_size(res), SW_INIT_BANK_SIZE)) {
+ 		dev_err(kdev, "incorrect register range\n");
+ 		return -EINVAL;
+ 	}
 -- 
-2.24.0.rc1
+2.17.1
 
