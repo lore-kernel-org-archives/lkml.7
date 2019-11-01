@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2D4CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAC1CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781F221897
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7FD21A49
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbfKAOKA (ORCPT
+        id S1728126AbfKAOKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 10:10:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:35866 "EHLO foss.arm.com"
+        Fri, 1 Nov 2019 10:10:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:35896 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727725AbfKAOJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 10:09:59 -0400
+        id S1727725AbfKAOKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 10:10:02 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2AAD332;
-        Fri,  1 Nov 2019 07:09:58 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA4B431F;
+        Fri,  1 Nov 2019 07:10:01 -0700 (PDT)
 Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 013A83F718;
-        Fri,  1 Nov 2019 07:09:55 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 055EF3F718;
+        Fri,  1 Nov 2019 07:09:58 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -43,11 +43,10 @@ Cc:     Steven Price <steven.price@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH v15 02/23] arc: mm: Add p?d_leaf() definitions
-Date:   Fri,  1 Nov 2019 14:09:21 +0000
-Message-Id: <20191101140942.51554-3-steven.price@arm.com>
+        Russell King <linux@armlinux.org.uk>
+Subject: [PATCH v15 03/23] arm: mm: Add p?d_leaf() definitions
+Date:   Fri,  1 Nov 2019 14:09:22 +0000
+Message-Id: <20191101140942.51554-4-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191101140942.51554-1-steven.price@arm.com>
 References: <20191101140942.51554-1-steven.price@arm.com>
@@ -60,31 +59,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 walk_page_range() is going to be allowed to walk page tables other than
 those of user space. For this it needs to know when it has reached a
-'leaf' entry in the page tables. This information will be provided by the
+'leaf' entry in the page tables. This information is provided by the
 p?d_leaf() functions/macros.
 
-For arc, we only have two levels, so only pmd_leaf() is needed.
+For arm pmd_large() already exists and does what we want. So simply
+provide the generic pmd_leaf() name.
 
-CC: Vineet Gupta <vgupta@synopsys.com>
-CC: linux-snps-arc@lists.infradead.org
-Acked-by: Vineet Gupta <vgupta@synopsys.com>
+CC: Russell King <linux@armlinux.org.uk>
+CC: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- arch/arc/include/asm/pgtable.h | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/include/asm/pgtable-2level.h | 1 +
+ arch/arm/include/asm/pgtable-3level.h | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/arch/arc/include/asm/pgtable.h b/arch/arc/include/asm/pgtable.h
-index 7addd0301c51..b4a0cf27ac1c 100644
---- a/arch/arc/include/asm/pgtable.h
-+++ b/arch/arc/include/asm/pgtable.h
-@@ -274,6 +274,7 @@ static inline void pmd_set(pmd_t *pmdp, pte_t *ptep)
- #define pmd_none(x)			(!pmd_val(x))
- #define	pmd_bad(x)			((pmd_val(x) & ~PAGE_MASK))
- #define pmd_present(x)			(pmd_val(x))
-+#define pmd_leaf(x)			(pmd_val(x) & _PAGE_HW_SZ)
- #define pmd_clear(xp)			do { pmd_val(*(xp)) = 0; } while (0)
+diff --git a/arch/arm/include/asm/pgtable-2level.h b/arch/arm/include/asm/pgtable-2level.h
+index 51beec41d48c..0d3ea35c97fe 100644
+--- a/arch/arm/include/asm/pgtable-2level.h
++++ b/arch/arm/include/asm/pgtable-2level.h
+@@ -189,6 +189,7 @@ static inline pmd_t *pmd_offset(pud_t *pud, unsigned long addr)
+ }
  
- #define pte_page(pte)		pfn_to_page(pte_pfn(pte))
+ #define pmd_large(pmd)		(pmd_val(pmd) & 2)
++#define pmd_leaf(pmd)		(pmd_val(pmd) & 2)
+ #define pmd_bad(pmd)		(pmd_val(pmd) & 2)
+ #define pmd_present(pmd)	(pmd_val(pmd))
+ 
+diff --git a/arch/arm/include/asm/pgtable-3level.h b/arch/arm/include/asm/pgtable-3level.h
+index 5b18295021a0..ad55ab068dbf 100644
+--- a/arch/arm/include/asm/pgtable-3level.h
++++ b/arch/arm/include/asm/pgtable-3level.h
+@@ -134,6 +134,7 @@
+ #define pmd_sect(pmd)		((pmd_val(pmd) & PMD_TYPE_MASK) == \
+ 						 PMD_TYPE_SECT)
+ #define pmd_large(pmd)		pmd_sect(pmd)
++#define pmd_leaf(pmd)		pmd_sect(pmd)
+ 
+ #define pud_clear(pudp)			\
+ 	do {				\
 -- 
 2.20.1
 
