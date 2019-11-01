@@ -4,39 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB58CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C88CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD97020862
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 878C420862
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbfKANt0 (ORCPT
+        id S1727616AbfKANuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 09:49:26 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5691 "EHLO huawei.com"
+        Fri, 1 Nov 2019 09:50:54 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44646 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726622AbfKANt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 09:49:26 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A904FF0927A7025CDCA6;
-        Fri,  1 Nov 2019 21:49:10 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 1 Nov 2019
- 21:49:04 +0800
+        id S1726622AbfKANuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 09:50:54 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8417EDCDBFA1A1135DD7;
+        Fri,  1 Nov 2019 21:50:47 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Fri, 1 Nov 2019
+ 21:50:40 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <denis.ciocca@st.com>,
-        <yuehaibing@huawei.com>, <rfontana@redhat.com>,
-        <tglx@linutronix.de>, <heiko.stuebner@bq.com>,
-        <rjones@gateworks.com>, <drake@endlessm.com>,
-        <colin.king@canonical.com>
-CC:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] iio: st_accel: Fix unused variable warning
-Date:   Fri, 1 Nov 2019 21:47:41 +0800
-Message-ID: <20191101134741.25108-1-yuehaibing@huawei.com>
+To:     <arend.vanspriel@broadcom.com>, <franky.lin@broadcom.com>,
+        <hante.meuleman@broadcom.com>, <chi-hsien.lin@cypress.com>,
+        <wright.feng@cypress.com>, <kvalo@codeaurora.org>,
+        <davem@davemloft.net>, <yuehaibing@huawei.com>,
+        <christophe.jaillet@wanadoo.fr>
+CC:     <linux-wireless@vger.kernel.org>,
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        <brcm80211-dev-list@cypress.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] brcmsmac: remove set but not used variables
+Date:   Fri, 1 Nov 2019 21:50:35 +0800
+Message-ID: <20191101135035.11612-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -47,33 +48,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/iio/accel/st_accel_core.c:1005:44: warning:
- mount_matrix_ext_info defined but not used [-Wunused-const-variable=]
+drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c:841:7: warning: variable free_pdu set but not used [-Wunused-but-set-variable]
+drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c:842:30: warning: variable tx_rts_count set but not used [-Wunused-but-set-variable]
+drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c:842:6: warning: variable tx_rts set but not used [-Wunused-but-set-variable]
+drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c:843:7: warning: variable totlen set but not used [-Wunused-but-set-variable]
 
-Move it to ifdef to mute this warning.
+They are never used, so can be removed.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/iio/accel/st_accel_core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
-index 2e37f8a..bba0717 100644
---- a/drivers/iio/accel/st_accel_core.c
-+++ b/drivers/iio/accel/st_accel_core.c
-@@ -1002,10 +1002,12 @@ get_mount_matrix(const struct iio_dev *indio_dev,
- 	return adata->mount_matrix;
- }
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c
+index 6bb34a12..ff39773 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c
+@@ -838,9 +838,8 @@ brcms_c_dotxstatus(struct brcms_c_info *wlc, struct tx_status *txs)
+ 	struct dma_pub *dma = NULL;
+ 	struct d11txh *txh = NULL;
+ 	struct scb *scb = NULL;
+-	bool free_pdu;
+-	int tx_rts, tx_frame_count, tx_rts_count;
+-	uint totlen, supr_status;
++	int tx_frame_count;
++	uint supr_status;
+ 	bool lastframe;
+ 	struct ieee80211_hdr *h;
+ 	u16 mcl;
+@@ -917,11 +916,8 @@ brcms_c_dotxstatus(struct brcms_c_info *wlc, struct tx_status *txs)
+ 			     CHSPEC_CHANNEL(wlc->default_bss->chanspec));
+ 	}
  
-+#ifdef CONFIG_ACPI
- static const struct iio_chan_spec_ext_info mount_matrix_ext_info[] = {
- 	IIO_MOUNT_MATRIX(IIO_SHARED_BY_ALL, get_mount_matrix),
- 	{ },
- };
-+#endif
+-	tx_rts = le16_to_cpu(txh->MacTxControlLow) & TXC_SENDRTS;
+ 	tx_frame_count =
+ 	    (txs->status & TX_STATUS_FRM_RTX_MASK) >> TX_STATUS_FRM_RTX_SHIFT;
+-	tx_rts_count =
+-	    (txs->status & TX_STATUS_RTS_RTX_MASK) >> TX_STATUS_RTS_RTX_SHIFT;
  
- /* Read ST-specific _ONT orientation data from ACPI and generate an
-  * appropriate mount matrix.
+ 	lastframe = !ieee80211_has_morefrags(h->frame_control);
+ 
+@@ -989,9 +985,6 @@ brcms_c_dotxstatus(struct brcms_c_info *wlc, struct tx_status *txs)
+ 			tx_info->flags |= IEEE80211_TX_STAT_ACK;
+ 	}
+ 
+-	totlen = p->len;
+-	free_pdu = true;
+-
+ 	if (lastframe) {
+ 		/* remove PLCP & Broadcom tx descriptor header */
+ 		skb_pull(p, D11_PHY_HDR_LEN);
 -- 
 2.7.4
 
