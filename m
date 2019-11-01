@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FC0CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7896ACA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B25218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F8A321929
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:41:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="TRQByVsU"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="EG4sMyfK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbfKAWlo (ORCPT
+        id S1728254AbfKAWlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 18:41:44 -0400
-Received: from mail-eopbgr720078.outbound.protection.outlook.com ([40.107.72.78]:60224
+        Fri, 1 Nov 2019 18:41:47 -0400
+Received: from mail-eopbgr720065.outbound.protection.outlook.com ([40.107.72.65]:49770
         "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728154AbfKAWlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 18:41:40 -0400
+        id S1728178AbfKAWlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 18:41:42 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UX28UAa/x6e3SQ5etNiuD4nAd/nV6iqcKvBTEVGiSTUh6KJC9Nb7CsL5Id7fl/zWz7zb/RkoCOKWSQngpoJvNzibZSLUX2sBY7u7iZZRSxvT0VtAd40j9oxqYkchIKDZGt1o9myw/UOKcaNkFCVTrQMnTnJ6d6If9CuD+Im2pdE/KYBrGhhUN0tt9KyUBcgO0wwpj291/SoZlrZ/U/+OiR9jh4huOWGeHWt3UrzuJE1cuU4kXhe65inqMal17qvK7O1Q2l/pe/8areskU9Fi4esmbKVJFEsDuZk8b36x2O9rtNiQy7xT709nTvyZ958uNKhAOZ4XrQ3PbmNhrI0TMg==
+ b=kX2TEDgtK+lvyHC9kbDu+N1tPU3vFSYObn5JM8hCKFJ3PS12EwkrS97mhQMmRYSQIwmDT7yG6Ofi+n/lROgR0xUylmxh1/xYDy8XwgKiyaXl1XAeR6mLs3yQvd386xrusM/sLxpdDv0jtUC7Taj1RB9dnengol0S2JAU0pn1I+yYBRPqlPizqQrAa8Oq6eKOacEgd+Cnc9nbPHxuwhjhVVxN2j33L+sU74gLctq7UdX71WUazj4ao419EPMK0IDf513yfAv7cuh7wopxNuMgaQKzkHDx2pxuNU3k/q3zM9DUkX5uEJkVCPtiY0XMOwMnyuS3XbBDE2eyjGlsGc+h2g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ALxIwlyiTfsO8l7Nb8N0EctsF5F3m8cZQ5pUy5LNTV4=;
- b=ZsrrVQy06tzF7/hnyVlGd1LeSxm0s2j/2HKyWNxCjiyrDfEpqIGWF5HNgDcckVQ0DtqA44IUqVuplygcLsoLAAHI61wSy1cOuDr7RyxHLwCnP2cwNcrDaWn+JvVJfttRkzaWcqbmRH4f3tuSRSWDa4j0QUp1If5mdR9jM0oQmeaDXvuQTcF45+yk/gxyIpCUEvvyl3/lsy+PdlQN0JmDmJ4qobBQ2JV/36CoqjAudRqiP7vFwvNte/Ywq33G0JI6loKdLMYSByuuVnHQa02pI37YlQC7zrV6ScBj5kGve0A0udcRKczaJFZLprxJTnq8Ep015eOF+U7WmB9U2nqd+A==
+ bh=Y2Tp4WKVbXYrtXYVqN/q/J4DyH0704uY06p08APXWkI=;
+ b=QtrCLEjC5zoCRTC6HePc8xwtMpzPmanqafVeHehaZRw5vDu79OarDh8fEK/2yJRJNdHvsbeU0UaBMBo1wRnHJqkk0iHetmUm3URtysnMVr4LCSJsJZyxCb2K7ljo5Qtfaq7guVeOwhHdqeq6pBFeY/X8pTQUMeFGIEyMHz/Y3K2FoRSXQ/RRSVl0Aa33q8jJpaWtefs3RVUgiJ2+Tpozz4iaihBMzpeHvOdJeJkfoiswW4/UBnbjesFw5JlOAqj1xaBEYmjTIRvHcDfBdE3LOK3wjUb/uO2xAc+K+0OnVT2bi3Wp4mTeF/AUuNH2noJm8uLvIn1+f2GuFSY1FccJWQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ALxIwlyiTfsO8l7Nb8N0EctsF5F3m8cZQ5pUy5LNTV4=;
- b=TRQByVsUBHlpnxZuyFpE0b7jI9/QX7kWq1/nm9owQ4ufJlLfVPcadpdwVF09xQ8nFmcw9lL5lT1v74Hi2UZsHDrUc/3AgFPhwe9z9rOzBQcY7S9J/y27zQT5EvOXbY6pfGZcMGqPPlUuEMIvnxQ3pdFnSKGxjy75fb2xa9+XXrk=
+ bh=Y2Tp4WKVbXYrtXYVqN/q/J4DyH0704uY06p08APXWkI=;
+ b=EG4sMyfKTkGf5we/YiqJ1QlQwLi6AOS3uKqwRxosBG591fL6e24fRlFIn1biI2/uxP7nHN31vct9Gu1i+Hg409chihqY5U+SJnmwAguqR8U5KFQytON4HH6GGsXd6JGTZTk17blcGhkDXbDMOFXyHYbGhW4gKBLquXmlCU/nHyE=
 Received: from DM6PR12MB3865.namprd12.prod.outlook.com (10.255.173.210) by
  DM6PR12MB3243.namprd12.prod.outlook.com (20.179.105.155) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Fri, 1 Nov 2019 22:41:33 +0000
+ 15.20.2408.24; Fri, 1 Nov 2019 22:41:38 +0000
 Received: from DM6PR12MB3865.namprd12.prod.outlook.com
  ([fe80::4898:93e0:3c0c:d862]) by DM6PR12MB3865.namprd12.prod.outlook.com
  ([fe80::4898:93e0:3c0c:d862%6]) with mapi id 15.20.2408.024; Fri, 1 Nov 2019
- 22:41:33 +0000
+ 22:41:38 +0000
 From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
 To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>
@@ -60,13 +60,13 @@ CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
         "rimasluk@amazon.com" <rimasluk@amazon.com>,
         "Grimm, Jon" <Jon.Grimm@amd.com>,
         "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-Subject: [PATCH v4 09/17] svm: Add support for activate/deactivate AVIC at
- runtime
-Thread-Topic: [PATCH v4 09/17] svm: Add support for activate/deactivate AVIC
- at runtime
-Thread-Index: AQHVkQWC0JrNHs37ykiq/KcQAHfp2w==
-Date:   Fri, 1 Nov 2019 22:41:32 +0000
-Message-ID: <1572648072-84536-10-git-send-email-suravee.suthikulpanit@amd.com>
+Subject: [PATCH v4 13/17] kvm: i8254: Deactivate APICv when using in-kernel
+ PIT re-injection mode.
+Thread-Topic: [PATCH v4 13/17] kvm: i8254: Deactivate APICv when using
+ in-kernel PIT re-injection mode.
+Thread-Index: AQHVkQWFwL1+c1CZPkWuTq14KdLXDQ==
+Date:   Fri, 1 Nov 2019 22:41:37 +0000
+Message-ID: <1572648072-84536-14-git-send-email-suravee.suthikulpanit@amd.com>
 References: <1572648072-84536-1-git-send-email-suravee.suthikulpanit@amd.com>
 In-Reply-To: <1572648072-84536-1-git-send-email-suravee.suthikulpanit@amd.com>
 Accept-Language: en-US
@@ -83,127 +83,111 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 1.8.3.1
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0b12c9ee-6346-4c57-b1b4-08d75f1ca4fd
+x-ms-office365-filtering-correlation-id: f184d363-865c-4abf-b3c7-08d75f1ca7fb
 x-ms-traffictypediagnostic: DM6PR12MB3243:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB3243C988D6464C8778850BD3F3620@DM6PR12MB3243.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-microsoft-antispam-prvs: <DM6PR12MB3243F475FA7D6CA1C9B518FFF3620@DM6PR12MB3243.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
 x-forefront-prvs: 020877E0CB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(366004)(376002)(39860400002)(136003)(199004)(189003)(66476007)(66446008)(26005)(6506007)(386003)(86362001)(5660300002)(102836004)(4720700003)(305945005)(7736002)(7416002)(76176011)(256004)(14444005)(8936002)(8676002)(186003)(52116002)(6486002)(478600001)(50226002)(71200400001)(71190400001)(81166006)(6436002)(476003)(2906002)(3846002)(6116002)(6512007)(99286004)(4326008)(2616005)(316002)(11346002)(446003)(486006)(81156014)(14454004)(66946007)(36756003)(110136005)(54906003)(66066001)(64756008)(66556008)(25786009)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3243;H:DM6PR12MB3865.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(1496009)(396003)(346002)(366004)(376002)(39860400002)(136003)(199004)(189003)(66476007)(66446008)(26005)(6506007)(386003)(86362001)(5660300002)(102836004)(4720700003)(305945005)(7736002)(7416002)(76176011)(256004)(14444005)(8936002)(8676002)(186003)(52116002)(6486002)(478600001)(50226002)(71200400001)(71190400001)(81166006)(6436002)(476003)(2906002)(3846002)(6116002)(6512007)(99286004)(4326008)(2616005)(316002)(11346002)(446003)(486006)(81156014)(14454004)(66946007)(36756003)(110136005)(54906003)(66066001)(64756008)(66556008)(25786009)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3243;H:DM6PR12MB3865.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wV4FHGCq7Gq1SFuR1KI0voOmyemdr80B1b0/4kq5KLhxgQla5FmsdCSUMurOuj3WOH8WOBUyohEArmT9FI+aQr+HQII+GpwWs2VyGuBy0nhwHG+HfkgBEhV4SFevQTg6ugZc1q32OOJ8cCt6aET7YRbO6gL1yGclkG+xuyqreKnMNJisvpROLWjgjSDivwxiercIN6rjQ1svRIzeSvXjXqjPy4oPkg8LDSHpKyFemTWOG4/wi/pQvA9beQwj0czxw0931lVhVdT57Lg7hgEa61DjUd3kbuo8QEiARVIpksSSHVLj3n64rIklLbVBpmgZJkj90dMSBJ5VH4tJlvQ/Ua5AixCZN9RCpPxlTcTy6euc7HF+8d6L8FJheYVwJAvC0XxfvQaOeHWqGRJsop0En7gMNR2b25Yw+/kMgD1UqUFNaAAaBfi9Rexr6ONlh1fT
+x-microsoft-antispam-message-info: 2AbdUbA4nuUOVGK9sK6kwU7GR7u5+Apfm/+Ml7D0q3vQn9E5sqsnfN63u1sX08Rkvac8D5vpun+3g+PB9c9f3Sp1VzF4zhmb63PPKxxFWp9v1V0WL/52IWo6Fyi3hfBqxu0EhVAPybJz7hvd9JFntCvWTxgOyDpfTtITvGhhUPC6JbIi+j9ArlNdG4blcMBE5CF4NIU5W0djP3k+qTg52m4uvKVo09nN61DAKcN0kIeHIwA+gj67rEhub6lDJPGQo3ntt2PPLZLs8ezU9F3W5z7EbX8BAvv/bKQPCawX4A9o8XVe/vkVYI+2a8t4EC7MnGgNkV49PISzf+wfuIZn7qbcbbftb5kM/cQQDvQq4Fw0squMfL7a4kb/5Fd+I34HT5v0+F/OEca0Nao7f0XPU1/5fuSH1WrQngLfAdI3tbe2xXMQxmfYHXw4nGT74gl6
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b12c9ee-6346-4c57-b1b4-08d75f1ca4fd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2019 22:41:32.9915
+X-MS-Exchange-CrossTenant-Network-Message-Id: f184d363-865c-4abf-b3c7-08d75f1ca7fb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2019 22:41:37.9837
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Iv+axw7PE4ubyv9e/2rIABm2KsMz1srNOdsdAyPpmFW4u919ocb6Sg68/2xlO7igfCtdulvfbYa1ZgHLY+ijxw==
+X-MS-Exchange-CrossTenant-userprincipalname: VzdzFnU1KkLDCgQ4xZ/i1ptFQN52kuuwrjVMgUDyC/S599yW8/w9lTJ7tuJ6xH7w8pr9Kh22buE4Lv/N/VVMqw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3243
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add necessary logics for supporting activate/deactivate AVIC at runtime.
+AMD SVM AVIC accelerates EOI write and does not trap. This causes
+in-kernel PIT re-injection mode to fail since it relies on irq-ack
+notifier mechanism. So, APICv is activated only when in-kernel PIT
+is in discard mode e.g. w/ qemu option:
 
+  -global kvm-pit.lost_tick_policy=3Ddiscard
+
+Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 ---
- arch/x86/kvm/svm.c | 28 ++++++++++++++++++++++------
- 1 file changed, 22 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  1 +
+ arch/x86/kvm/i8254.c            | 10 ++++++++++
+ arch/x86/kvm/svm.c              |  8 +++++++-
+ 3 files changed, 18 insertions(+), 1 deletion(-)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_hos=
+t.h
+index fe61269..460f7a4 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -858,6 +858,7 @@ enum kvm_irqchip_mode {
+ #define APICV_DEACT_BIT_HYPERV     1
+ #define APICV_DEACT_BIT_NESTED     2
+ #define APICV_DEACT_BIT_IRQWIN     3
++#define APICV_DEACT_BIT_PIT_REINJ  4
+=20
+ struct kvm_arch {
+ 	unsigned long n_used_mmu_pages;
+diff --git a/arch/x86/kvm/i8254.c b/arch/x86/kvm/i8254.c
+index 4a6dc54..3f77fda 100644
+--- a/arch/x86/kvm/i8254.c
++++ b/arch/x86/kvm/i8254.c
+@@ -295,12 +295,22 @@ void kvm_pit_set_reinject(struct kvm_pit *pit, bool r=
+einject)
+ 	if (atomic_read(&ps->reinject) =3D=3D reinject)
+ 		return;
+=20
++	/*
++	 * AMD SVM AVIC accelerates EOI write and does not trap.
++	 * This cause in-kernel PIT re-inject mode to fail
++	 * since it checks ps->irq_ack before kvm_set_irq()
++	 * and relies on the ack notifier to timely queue
++	 * the pt->worker work iterm and reinject the missed tick.
++	 * So, deactivate APICv when PIT is in reinject mode.
++	 */
+ 	if (reinject) {
++		kvm_request_apicv_update(kvm, false, APICV_DEACT_BIT_PIT_REINJ);
+ 		/* The initial state is preserved while ps->reinject =3D=3D 0. */
+ 		kvm_pit_reset_reinject(pit);
+ 		kvm_register_irq_ack_notifier(kvm, &ps->irq_ack_notifier);
+ 		kvm_register_irq_mask_notifier(kvm, 0, &pit->mask_notifier);
+ 	} else {
++		kvm_request_apicv_update(kvm, true, APICV_DEACT_BIT_PIT_REINJ);
+ 		kvm_unregister_irq_ack_notifier(kvm, &ps->irq_ack_notifier);
+ 		kvm_unregister_irq_mask_notifier(kvm, 0, &pit->mask_notifier);
+ 	}
 diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 21203a6..5b90458 100644
+index 0e7ff04..9812feb 100644
 --- a/arch/x86/kvm/svm.c
 +++ b/arch/x86/kvm/svm.c
-@@ -388,6 +388,7 @@ struct amd_svm_iommu_ir {
- static void svm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0);
- static void svm_flush_tlb(struct kvm_vcpu *vcpu, bool invalidate_gpa);
- static void svm_complete_interrupts(struct vcpu_svm *svm);
-+static inline void avic_post_state_restore(struct kvm_vcpu *vcpu);
+@@ -1679,7 +1679,13 @@ static int avic_update_access_page(struct kvm *kvm, =
+bool activate)
+ 	int ret =3D 0;
 =20
- static int nested_svm_exit_handled(struct vcpu_svm *svm);
- static int nested_svm_intercept(struct vcpu_svm *svm);
-@@ -1485,7 +1486,10 @@ static void avic_init_vmcb(struct vcpu_svm *svm)
- 	vmcb->control.avic_logical_id =3D lpa & AVIC_HPA_MASK;
- 	vmcb->control.avic_physical_id =3D ppa & AVIC_HPA_MASK;
- 	vmcb->control.avic_physical_id |=3D AVIC_MAX_PHYSICAL_ID_COUNT;
--	vmcb->control.int_ctl |=3D AVIC_ENABLE_MASK;
-+	if (kvm_apicv_activated(svm->vcpu.kvm))
-+		vmcb->control.int_ctl |=3D AVIC_ENABLE_MASK;
-+	else
-+		vmcb->control.int_ctl &=3D ~AVIC_ENABLE_MASK;
- }
+ 	mutex_lock(&kvm->slots_lock);
+-	if (kvm->arch.apic_access_page_done =3D=3D activate)
++	/*
++	 * During kvm_destroy_vm(), kvm_pit_set_reinject() could trigger
++	 * APICv mode change, which update APIC_ACCESS_PAGE_PRIVATE_MEMSLOT
++	 * memory region. So, we need to ensure that kvm->mm =3D=3D current->mm.
++	 */
++	if ((kvm->arch.apic_access_page_done =3D=3D activate) ||
++	    (kvm->mm !=3D current->mm))
+ 		goto out;
 =20
- static void init_vmcb(struct vcpu_svm *svm)
-@@ -1696,7 +1700,8 @@ static int avic_init_backing_page(struct kvm_vcpu *vc=
-pu)
- 	int id =3D vcpu->vcpu_id;
- 	struct vcpu_svm *svm =3D to_svm(vcpu);
-=20
--	ret =3D avic_update_access_page(vcpu->kvm, true);
-+	if (kvm_apicv_activated(vcpu->kvm))
-+		ret =3D avic_update_access_page(vcpu->kvm, true);
- 	if (ret)
- 		return ret;
-=20
-@@ -2188,7 +2193,8 @@ static struct kvm_vcpu *svm_create_vcpu(struct kvm *k=
-vm, unsigned int id)
- 	/* We initialize this flag to true to make sure that the is_running
- 	 * bit would be set the first time the vcpu is loaded.
- 	 */
--	svm->avic_is_running =3D true;
-+	if (irqchip_in_kernel(kvm) && kvm_apicv_activated(kvm))
-+		svm->avic_is_running =3D true;
-=20
- 	svm->nested.hsave =3D page_address(hsave_page);
-=20
-@@ -2325,6 +2331,8 @@ static void svm_vcpu_blocking(struct kvm_vcpu *vcpu)
-=20
- static void svm_vcpu_unblocking(struct kvm_vcpu *vcpu)
- {
-+	if (kvm_check_request(KVM_REQ_APICV_UPDATE, vcpu))
-+		kvm_vcpu_update_apicv(vcpu);
- 	avic_set_running(vcpu, true);
- }
-=20
-@@ -5190,17 +5198,25 @@ static int svm_set_pi_irte_mode(struct kvm_vcpu *vc=
-pu, bool activate)
- 	return ret;
- }
-=20
--/* Note: Currently only used by Hyper-V. */
- static void svm_refresh_apicv_exec_ctrl(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm =3D to_svm(vcpu);
- 	struct vmcb *vmcb =3D svm->vmcb;
- 	bool activated =3D kvm_vcpu_apicv_active(vcpu);
-=20
--	if (activated)
-+	if (activated) {
-+		/**
-+		 * During AVIC temporary deactivation, guest could update
-+		 * APIC ID, DFR and LDR registers, which would not be trapped
-+		 * by avic_unaccelerated_access_interception(). In this case,
-+		 * we need to check and update the AVIC logical APIC ID table
-+		 * accordingly before re-activating.
-+		 */
-+		avic_post_state_restore(vcpu);
- 		vmcb->control.int_ctl |=3D AVIC_ENABLE_MASK;
--	else
-+	} else {
- 		vmcb->control.int_ctl &=3D ~AVIC_ENABLE_MASK;
-+	}
- 	mark_dirty(vmcb, VMCB_AVIC);
-=20
- 	svm_set_pi_irte_mode(vcpu, activated);
+ 	ret =3D __x86_set_memory_region(kvm,
 --=20
 1.8.3.1
 
