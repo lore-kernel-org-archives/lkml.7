@@ -2,157 +2,98 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4CFCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCC8CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1572F21855
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99390217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:44:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G5s2o+qE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LWzaFQtV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfKATnI (ORCPT
+        id S1727516AbfKAToS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 15:43:08 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:43152 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbfKATnH (ORCPT
+        Fri, 1 Nov 2019 15:44:18 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:32900 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbfKAToR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 15:43:07 -0400
-Received: by mail-il1-f196.google.com with SMTP id j2so7494769ilc.10
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 12:43:07 -0700 (PDT)
+        Fri, 1 Nov 2019 15:44:17 -0400
+Received: by mail-io1-f68.google.com with SMTP id n17so12131882ioa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 12:44:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HBU5ywzGh6TtInbH1iFPI2M+KK4ROc/yEe/OrFQ65rA=;
-        b=G5s2o+qE2yN4oKhlwwkVbARlGZto28NOBDCB/4Bf27tnuwQVZuD4+GLXOvlQVXRwh8
-         j2sFShbZxuqJMXNHrylwRfk2Q6IQn0xQdmAPot0eqigrBsuRil45800MGX1uWt5k3pAN
-         Mmmw2qr68e1SucxTswYSKojebkZ7VWTrDTSH7P9MAc004URnggyAth3AX84S2UusktA2
-         lhFJCwMUjV3/guf3shRTwmovJnapC5wyoGctgzU0DbWRpQRe5Cy3U7wczZd5myfeQ8TZ
-         1R+qufv4eJ7LKxy7h8xO5jaAbLMw2JYV4YpvfTbjWhwszktbba1KnD5PR84FdmiU8qnE
-         O21g==
+        bh=axzshPELM7/h/f56rh7I6+q9RKvy3Fkbh152ongAIZo=;
+        b=LWzaFQtV8lpRJL4zRxgdrqJXFvoWyXicqfLJbq4fqq9D4a5jegOQkkt6TItBaijwyF
+         UiSLZdvb4KbyvXkIug/VziNjxWrWpxIfOe1cq+3vyMhbfZwv5tRFafD7MKI1RQ/dZGCR
+         h6K9PPGKZwLD955fa25U/L1m2f7Kf1k1h3pUU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HBU5ywzGh6TtInbH1iFPI2M+KK4ROc/yEe/OrFQ65rA=;
-        b=iVcbCb2qMIvTYg3MURbEj2e+U/Sj8KDHFeWHi6bWVMow8KJQ1173mEC0LyBprHrKu5
-         gY81CQQEM/0bzSTwXoX3HaN/12AcRmhKEtAP+IniBL11CuXkC1fPUPn9hK/xXExNn0PB
-         AD6UWHuiP5NzYtbgsDlbvS9s/+AcylD8kDSeyy+WDa1cKrs42H4UOA2BwHSocpWyOq1S
-         jS8VTTGJfAHyQlrvJ5n2JagYy60tzJBq/cn8KOeWUWRjPOr83nVRR9T1fYSCW+VbYkJQ
-         m70zwB+xx8iF1hOOHAl0UQyWiSnZH/ckVf3b1Gq5cA8Rj0kBPuNQpKY/l9NiFZHgYYhO
-         ohkA==
-X-Gm-Message-State: APjAAAWw/cP1Q/hLpQ5A1fBRDnSVl0xJi1XwOL8sGUHIB7eXgOADBal7
-        qRTI9pSlVZd/kLK+C2y3gZozKlczDGke8QyBXuCaBQ==
-X-Google-Smtp-Source: APXvYqxtCbVFAjBmVS7420DGm4ZfM8mRqAwCba4a2fXHBkGq9oZ1n0yenuJmxYB5FHp8FhIHgJdTcLkCLnXe8tEjTx0=
-X-Received: by 2002:a92:de49:: with SMTP id e9mr11293064ilr.108.1572637386283;
- Fri, 01 Nov 2019 12:43:06 -0700 (PDT)
+        bh=axzshPELM7/h/f56rh7I6+q9RKvy3Fkbh152ongAIZo=;
+        b=FFLbkaENujIlnN4bUyJfDKVFa7vapvB3b/5/ScNjSNIoPFCxvqIhOw6mC88rLvhTVb
+         rN3npmyp8TT04VkbOrQ/2Lrif/NmVLiduWKmoiSYnNpZAoAblzHBA87lfs8zAfesBi0G
+         yanTXJSPIdYkkYVJN4nAnpml23dVY0uQVgKUcD606b/EnI6eBXKjzYOcRvr6vLMx/KF4
+         QGIbHRJo7sSXZYDDn9pYUUAE6c5Iggf8j+Nbj2hZRhEcXzHCLKztXDt1yFOJEzM2Th2Q
+         m1sVWe+6fO38Ui1AFCRaSbhnQb7nPdSWSgv/aCHdheCwh2u+wKxeAK3vDQ9AZV+rkFmI
+         fBcQ==
+X-Gm-Message-State: APjAAAXf7XCESqxpzBHvXg4zuQgcJX/UJtC2sX0NiRrPWlCaFPiXjKsL
+        iL7iYe5rA1iOsLZugPD+VitdPWUrA8G4nDFe91CrIw==
+X-Google-Smtp-Source: APXvYqwn8/+qOnCQ0SanGF+GlIb02HFEC57QcBSoEAxDl2XuN/Lo8hASlLzc7oaZ3XOazsRShxybaTd0EtPsyM+YbY0=
+X-Received: by 2002:a5d:9053:: with SMTP id v19mr11719168ioq.244.1572637455610;
+ Fri, 01 Nov 2019 12:44:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <157262960837.2838.17520432516398899751.stgit@naples-babu.amd.com>
- <157262961597.2838.16953618909905259198.stgit@naples-babu.amd.com>
- <CALMp9eTb8N-WxgQ_J5_siU=8=DGNUjM=UZCN5YkAQoofZHx1hA@mail.gmail.com> <a5466e76-3a7b-2de7-ceb9-3d41bf5e4f4d@amd.com>
-In-Reply-To: <a5466e76-3a7b-2de7-ceb9-3d41bf5e4f4d@amd.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 1 Nov 2019 12:42:55 -0700
-Message-ID: <CALMp9eSnB+=0MYBkkyAfw1WK+ZmYFqpd7EDToFRmnbE+g3MEvQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] kvm: x86: Dont set UMIP feature bit unconditionally
-To:     "Moger, Babu" <Babu.Moger@amd.com>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "nayna@linux.ibm.com" <nayna@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <20191101180713.5470-1-robdclark@gmail.com> <20191101180713.5470-2-robdclark@gmail.com>
+ <ec3c1d7b-231a-862f-ce12-8ac4c9616ca5@linux.intel.com>
+In-Reply-To: <ec3c1d7b-231a-862f-ce12-8ac4c9616ca5@linux.intel.com>
+From:   Rob Clark <robdclark@chromium.org>
+Date:   Fri, 1 Nov 2019 12:44:04 -0700
+Message-ID: <CAJs_Fx6ErP9ap=veqJSrN-coKm_VV78wxqYLj_QF+-Gutk5AZA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/atomic: clear new_state pointers at hw_done
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc:     Rob Clark <robdclark@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 12:39 PM Moger, Babu <Babu.Moger@amd.com> wrote:
+On Fri, Nov 1, 2019 at 11:33 AM Maarten Lankhorst
+<maarten.lankhorst@linux.intel.com> wrote:
 >
->
->
-> On 11/1/19 1:35 PM, Jim Mattson wrote:
-> > On Fri, Nov 1, 2019 at 10:33 AM Moger, Babu <Babu.Moger@amd.com> wrote:
-> >>
-> >> The UMIP (User-Mode Instruction Prevention) feature bit should be
-> >> set if the emulation (kvm_x86_ops->umip_emulated) is supported
-> >> which is done already.
-> >>
-> >> Remove the unconditional setting of this bit.
-> >>
-> >> Fixes: ae3e61e1c28338d0 ("KVM: x86: add support for UMIP")
-> >>
-> >> Signed-off-by: Babu Moger <babu.moger@amd.com>
-> >> ---
-> >>  arch/x86/kvm/cpuid.c |    2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> >> index f68c0c753c38..5b81ba5ad428 100644
-> >> --- a/arch/x86/kvm/cpuid.c
-> >> +++ b/arch/x86/kvm/cpuid.c
-> >> @@ -364,7 +364,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
-> >>         /* cpuid 7.0.ecx*/
-> >>         const u32 kvm_cpuid_7_0_ecx_x86_features =
-> >>                 F(AVX512VBMI) | F(LA57) | F(PKU) | 0 /*OSPKE*/ | F(RDPID) |
-> >> -               F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
-> >> +               F(AVX512_VPOPCNTDQ) | F(AVX512_VBMI2) | F(GFNI) |
-> >>                 F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
-> >>                 F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/;
-> >>
+> Op 01-11-2019 om 19:07 schreef Rob Clark:
+> > From: Rob Clark <robdclark@chromium.org>
 > >
-> > This isn't unconditional. This is masked by the features on the boot
-> > CPU. Since UMIP can be virtualized (without emulation) on CPUs that
-> > support UMIP, you should leave this alone.
+> > The new state should not be accessed after this point.  Clear the
+> > pointers to make that explicit.
 > >
+> > This makes the error corrected in the previous patch more obvious.
+> >
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
 >
-> There is some inconstancy here.
+> Would be nice if you could cc intel-gfx@lists.freedesktop.org next time, so I know our CI infrastructure is happy;
 >
-> static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32
+> It wouldn't surprise me if it catches 1 or 2 abuses in i915.
 >
-> unsigned f_umip = kvm_x86_ops->umip_emulated() ? F(UMIP) : 0;
-> ...
+> Otherwise Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 >
-> case 7: {
->              ..
->             entry->ecx |= f_umip;
->             ..
->         }
->
-> and
-> static bool svm_umip_emulated(void)
-> {
->         return false;
-> }
->
-> static inline bool vmx_umip_emulated(void)
-> {
->         return vmcs_config.cpu_based_2nd_exec_ctrl &
->                 SECONDARY_EXEC_DESC;
-> }
->
->
-> It appears that intention was to enable the UMIP if SVM or VMX support
-> umip emulation. But that is not how it is working now. Now it is enabled
-> if boot CPU supports UMIP.
+> Perhaps you could mail this to version to intel-gfx-trybot@lists.freedesktop.org using git-send-email so we at least get i915 results?
 
-No. The code enumerates UMIP in the guest if *either* it can be
-virtualized (i.e. the host supports it natively), *or* it can be
-emulated.
+ok, I sent both patches to trybot, hopefully it tries them together,
+as this patch without the self-refresh fix will definitely fall over
+
+BR,
+-R
