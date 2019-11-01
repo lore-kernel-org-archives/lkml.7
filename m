@@ -2,134 +2,85 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10738CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45F9CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4D78217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:46:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="otXhBIFK"
+	by mail.kernel.org (Postfix) with ESMTP id A97D421897
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572641189;
+	bh=gBtBxUPX0z0dr/96PZO7T5LUfDsyS3pS2T9fKmfigx0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jRYOv8d6EBK4QdMb+JmkuhvbMCap1sw9aaOwE9hGD+XaDAC7GmAnEnwMOo2BTb+M8
+	 JoHczfsvP7mA8ps8RFAPXdau+9ZwoBl9gkhknFNCZGoiW7/CJcg1tCwzJzDZzof4hD
+	 booinlARNYKotRbGwH2HQs0duiUmr5o6ZkyHJDGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbfKAUqT (ORCPT
+        id S1727973AbfKAUq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 16:46:19 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49190 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbfKAUqS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 16:46:18 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA1KkAFO125498;
-        Fri, 1 Nov 2019 15:46:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572641170;
-        bh=zybgR7hDF/o4db+iKiuX3H8IVivapUrRQjOn5yGa7K8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=otXhBIFK/UWifwkl7A3yKL1MaKFpvk1+SsSgCvQpHNfBhk8PnSMnhQEnZNzwgOFyF
-         xLYwYNBDB1UhUieFQKE+yzeXoGf3ni5chqRp2+k6XsXPq59N6FQUMQoMF5E2tEFnAD
-         WQ1xdXTH59r03zrOb+IUWXr1nwV4Puyqp3+QY3do=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA1KkAJG041314;
-        Fri, 1 Nov 2019 15:46:10 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 1 Nov
- 2019 15:45:56 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 1 Nov 2019 15:45:56 -0500
-Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA1Kk6n3017157;
-        Fri, 1 Nov 2019 15:46:07 -0500
-Subject: Re: [PATCH v5 net-next 06/12] net: ethernet: ti: introduce cpsw
- switchdev based driver part 1 - dual-emac
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
-References: <20191024100914.16840-1-grygorii.strashko@ti.com>
- <20191024100914.16840-7-grygorii.strashko@ti.com>
- <20191029122422.GL15259@lunn.ch>
- <d87c72e1-cb91-04a2-c881-0d8eec4671e2@ti.com>
- <20191101203913.GD31534@lunn.ch>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <8f3eb934-7dcd-b43a-de96-6a864ef67c92@ti.com>
-Date:   Fri, 1 Nov 2019 22:46:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 1 Nov 2019 16:46:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726477AbfKAUq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 16:46:28 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64153217D9;
+        Fri,  1 Nov 2019 20:46:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572641187;
+        bh=gBtBxUPX0z0dr/96PZO7T5LUfDsyS3pS2T9fKmfigx0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=V5GePef3mZHVsWfixm6pT0lp9b+3EXpxI+IeheoSd6Rox+c0CPhnRowItQi5+8uOk
+         bShJdg1uDunvD69b+lR9SHlMBqfL9h6ZPqXLIOk1KDiO28bXa2cD8EAvlhvuTH0sjv
+         WlFeVltFWmAL1xMV1cCmYHR1Rbw6KRBmwr9zQtDg=
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 1/6] PCI/PM: Apply D2 delay as milliseconds, not microseconds
+Date:   Fri,  1 Nov 2019 15:45:53 -0500
+Message-Id: <20191101204558.210235-2-helgaas@kernel.org>
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
+In-Reply-To: <20191101204558.210235-1-helgaas@kernel.org>
+References: <20191101204558.210235-1-helgaas@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191101203913.GD31534@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Bjorn Helgaas <bhelgaas@google.com>
 
+PCI_PM_D2_DELAY is defined as 200, which is milliseconds, but previously we
+used udelay(), which only waited for 200 microseconds.  Use msleep()
+instead so we wait the correct amount of time.  See PCIe r5.0, sec 5.9.
 
-On 01/11/2019 22:39, Andrew Lunn wrote:
->>>> +static const struct devlink_ops cpsw_devlink_ops;
->>>
->>> It would be nice to avoid this forward declaration.
->>
->> It's not declaration, it's definition of devlink_ops without any standard callbacks implemented.
-> 
-> Ho Grygorii
-> 
-> Ah, yes.
-> 
-> How about
-> 
-> = {
->    };
-> 
-> to make it clearer?
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-NP
-
-> 
->>>> +static const struct devlink_param cpsw_devlink_params[] = {
->>>> +	DEVLINK_PARAM_DRIVER(CPSW_DL_PARAM_ALE_BYPASS,
->>>> +			     "ale_bypass", DEVLINK_PARAM_TYPE_BOOL,
->>>> +			     BIT(DEVLINK_PARAM_CMODE_RUNTIME),
->>>> +			     cpsw_dl_ale_ctrl_get, cpsw_dl_ale_ctrl_set, NULL),
->>>> +};
->>>
->>> Is this documented?
->>
->> In patch 9. But I'll update it and add standard devlink parameter definition, like:
->>
->> ale_bypass	[DEVICE, DRIVER-SPECIFIC]
->> 		Allows to enable ALE_CONTROL(4).BYPASS mode for debug purposes
->> 		Type: bool
->> 		Configuration mode: runtime
-> 
-> And please you the standard file naming and location,
-> Documentation/networking/devlink-params-foo.txt
-Ok. I will.
-But I'd like to clarify:
-- drivers documentation placed in ./Documentation/networking/device_drivers/ti/
-so could you confirm pls, that you want me to add devlink-params documentation in separate file
-and palace it in ./Documentation/networking/ folder directly?
-   
-
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e7982af9a5d8..cd96874ae76d 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -886,7 +886,7 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+ 	if (state == PCI_D3hot || dev->current_state == PCI_D3hot)
+ 		pci_dev_d3_sleep(dev);
+ 	else if (state == PCI_D2 || dev->current_state == PCI_D2)
+-		udelay(PCI_PM_D2_DELAY);
++		msleep(PCI_PM_D2_DELAY);
+ 
+ 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+ 	dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
 -- 
-Best regards,
-grygorii
+2.24.0.rc1.363.gb1bccd3e3d-goog
+
