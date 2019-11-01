@@ -2,138 +2,119 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B70CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 01:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE78CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 01:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFFAC2083E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 01:13:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Bzq9d8FJ"
+	by mail.kernel.org (Postfix) with ESMTP id B765C208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 01:17:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfKABN4 (ORCPT
+        id S1729021AbfKABRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 21:13:56 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:38495 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbfKABNz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 21:13:55 -0400
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id xA11DmlE031721;
-        Fri, 1 Nov 2019 10:13:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com xA11DmlE031721
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1572570829;
-        bh=gq2ntcwWwPmJbX6KujZPFJEqb9x4csC/Cehv9Nngo0w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Bzq9d8FJodYz9vCF76NW7o+SZ/rPK0s7Th0OZWmA6N+1dAxUQJNuK52yFbN90VdQI
-         uwVbIzRLJbdSy8oE9Hggm7lFTAxl8PEX7a+E1OGUjan7Sy7ROOzI1vDX3KVe3jSGMT
-         f+wAPPDA4utqcaXdKya1zM8aYI9OGyNgzU5V0WCRYHY8aAqZJhQ3PEPsHpjC47vWvz
-         niGHFm3AdBGfgvV0a3DmfQZa6Frnz7RzwLCf15jU9f8TipjC7jHmlEaTEt/rQbdmPb
-         jQDH8jWeRym1XSfBcEunMaj+4d0Maot3Ryespos1dGFoFgGaktyocly3JDDun6yaox
-         ymNSbd+pGr8Zg==
-X-Nifty-SrcIP: [209.85.222.46]
-Received: by mail-ua1-f46.google.com with SMTP id q16so2492376uao.1;
-        Thu, 31 Oct 2019 18:13:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAVd55hJpo4yYl0wJyUS2xtNMJcD6WPFuvOzUBn7IqmTWw2ro95A
-        +8l2IYjI3uauoIpVXjdSxViXMmBUDeKOkXR3ySI=
-X-Google-Smtp-Source: APXvYqw/PajTAhDXPdOfLwuMzSOHJNtlGhOENV4a2oNhQQR/ci6cU5z+to6L/NH38vwTMbUIwFxp8YSFIT2xqMloz1E=
-X-Received: by 2002:ab0:279a:: with SMTP id t26mr779257uap.40.1572570827659;
- Thu, 31 Oct 2019 18:13:47 -0700 (PDT)
+        Thu, 31 Oct 2019 21:17:52 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5675 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726772AbfKABRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 21:17:52 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 72B76F7F7557A3374BC9;
+        Fri,  1 Nov 2019 09:17:49 +0800 (CST)
+Received: from [127.0.0.1] (10.74.149.191) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 1 Nov 2019
+ 09:17:40 +0800
+Subject: Re: [PATCH net-next 8/9] net: hns3: cleanup some print format warning
+To:     Joe Perches <joe@perches.com>, <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
+        Guojia Liao <liaoguojia@huawei.com>
+References: <1572521004-36126-1-git-send-email-tanhuazhong@huawei.com>
+ <1572521004-36126-9-git-send-email-tanhuazhong@huawei.com>
+ <4541e77d257685c649f5f994e673a409a3634f50.camel@perches.com>
+From:   tanhuazhong <tanhuazhong@huawei.com>
+Message-ID: <ce0c5f5f-08b7-7e38-b156-954a8398abfa@huawei.com>
+Date:   Fri, 1 Nov 2019 09:17:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-References: <20191003102915.28301-1-yamada.masahiro@socionext.com>
- <20191003102915.28301-4-yamada.masahiro@socionext.com> <x497e4kluxq.fsf@segfault.boston.devel.redhat.com>
-In-Reply-To: <x497e4kluxq.fsf@segfault.boston.devel.redhat.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 1 Nov 2019 10:13:10 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASmpO6Dn2M1DtoCDs=RM+jwW7_tRhq7nqDU1YZWdRafuw@mail.gmail.com>
-Message-ID: <CAK7LNASmpO6Dn2M1DtoCDs=RM+jwW7_tRhq7nqDU1YZWdRafuw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] modpost: do not set ->preloaded for symbols from Module.symvers
-To:     Jeff Moyer <jmoyer@redhat.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4541e77d257685c649f5f994e673a409a3634f50.camel@perches.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.149.191]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 1:51 AM Jeff Moyer <jmoyer@redhat.com> wrote:
->
-> Masahiro Yamada <yamada.masahiro@socionext.com> writes:
->
-> > Now that there is no overwrap between symbols from ELF files and
-> > ones from Module.symvers.
-> >
-> > So, the 'exported twice' warning should be reported irrespective
-> > of where the symbol in question came from. Only the exceptional case
-> > is when __crc_<sym> symbol appears before __ksymtab_<sym>. This
-> > typically occurs for EXPORT_SYMBOL in .S files.
->
-> Hi, Masahiro,
->
-> After apply this patch, I get the following modpost warnings when doing:
->
-> $ make M=tools/tesing/nvdimm
-> ...
->   Building modules, stage 2.
->   MODPOST 12 modules
-> WARNING: tools/testing/nvdimm/libnvdimm: 'nvdimm_bus_lock' exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
-> WARNING: tools/testing/nvdimm/libnvdimm: 'nvdimm_bus_unlock' exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
-> WARNING: tools/testing/nvdimm/libnvdimm: 'is_nvdimm_bus_locked' exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
-> WARNING: tools/testing/nvdimm/libnvdimm: 'devm_nvdimm_memremap' exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
-> WARNING: tools/testing/nvdimm/libnvdimm: 'nd_fletcher64' exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
-> WARNING: tools/testing/nvdimm/libnvdimm: 'to_nd_desc' exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
-> WARNING: tools/testing/nvdimm/libnvdimm: 'to_nvdimm_bus_dev' exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
-> ...
->
-> There are a lot of these warnings.  :)
-
-These warnings are correct since
-drivers/nvdimm/Makefile and
-tools/testing/nvdimm/Kbuild
-compile the same files.
 
 
+On 2019/10/31 19:53, Joe Perches wrote:
+> On Thu, 2019-10-31 at 19:23 +0800, Huazhong Tan wrote:
+>> From: Guojia Liao <liaoguojia@huawei.com>
+>>
+>> Using '%d' for printing type unsigned int or '%u' for
+>> type int would cause static tools to give false warnings,
+>> so this patch cleanups this warning by using the suitable
+>> format specifier of the type of variable.
+>>
+>> BTW, modifies the type of some variables and macro to
+>> synchronize with their usage.
+> 
+> What tool is this?
 
+Sorry, it is my mistake, as confirmed, this patch is
+advised by internal code review.
 
->  If I revert this patch, no
-> complaints.
->
-> Cheers,
-> Jeff
->
->
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> >  scripts/mod/modpost.c | 1 -
-> >  1 file changed, 1 deletion(-)
-> >
-> > diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> > index 5234555cf550..6ca38d10efc5 100644
-> > --- a/scripts/mod/modpost.c
-> > +++ b/scripts/mod/modpost.c
-> > @@ -2457,7 +2457,6 @@ static void read_dump(const char *fname, unsigned int kernel)
-> >               s = sym_add_exported(symname, namespace, mod,
-> >                                    export_no(export));
-> >               s->kernel    = kernel;
-> > -             s->preloaded = 1;
-> >               s->is_static = 0;
-> >               sym_update_crc(symname, mod, crc, export_no(export));
-> >       }
->
+> 
+> I think this static warning is excessive as macro
+> defines with a small positive number are common
+> 
 
+yes, it seems ok.
+The reason we do this modification is that
+printing resp_data_len with '%u' and printing
+HCLGE_MBX_MAX_RESP_DATA_SIZE with '%d' seems a little odd.
 
--- 
-Best Regards
-Masahiro Yamada
+  	if (resp_data_len > HCLGE_MBX_MAX_RESP_DATA_SIZE) {
+  		dev_err(&hdev->pdev->dev,
+-			"PF fail to gen resp to VF len %d exceeds max len %d\n",
++			"PF fail to gen resp to VF len %u exceeds max len %u\n",
+  			resp_data_len,
+  			HCLGE_MBX_MAX_RESP_DATA_SIZE);
+
+Thanks for your suggestion.
+
+>> diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+> []
+>> @@ -72,7 +72,7 @@ enum hclge_mbx_vlan_cfg_subcode {
+>>   };
+>>   
+>>   #define HCLGE_MBX_MAX_MSG_SIZE	16
+>> -#define HCLGE_MBX_MAX_RESP_DATA_SIZE	8
+>> +#define HCLGE_MBX_MAX_RESP_DATA_SIZE	8U
+>>   #define HCLGE_MBX_RING_MAP_BASIC_MSG_NUM	3
+>>   #define HCLGE_MBX_RING_NODE_VARIABLE_NUM	3
+> 
+> like this one
+> 
+>> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
+> []
+>> @@ -57,68 +57,68 @@ static int hns3_dbg_queue_info(struct hnae3_handle *h,
+>>   					   HNS3_RING_RX_RING_BASEADDR_H_REG);
+>>   		base_add_l = readl_relaxed(ring->tqp->io_base +
+>>   					   HNS3_RING_RX_RING_BASEADDR_L_REG);
+>> -		dev_info(&h->pdev->dev, "RX(%d) BASE ADD: 0x%08x%08x\n", i,
+>> +		dev_info(&h->pdev->dev, "RX(%u) BASE ADD: 0x%08x%08x\n", i,
+> 
+> so using %d is correct enough.
+> 
+> 
+> 
+> .
+> 
+
