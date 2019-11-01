@@ -2,155 +2,192 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E7FCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ABACA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9DF2067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51BA52067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:34:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JPm8R1IH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MRvHRHn8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729591AbfKAMeD (ORCPT
+        id S1729960AbfKAMef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 08:34:03 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:4650 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfKAMeC (ORCPT
+        Fri, 1 Nov 2019 08:34:35 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49890 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726229AbfKAMef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 08:34:02 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dbc26400000>; Fri, 01 Nov 2019 05:34:08 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 01 Nov 2019 05:34:01 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 01 Nov 2019 05:34:01 -0700
-Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 1 Nov
- 2019 12:34:01 +0000
-Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
-        id 2D99742966; Fri,  1 Nov 2019 14:33:59 +0200 (EET)
-Date:   Fri, 1 Nov 2019 14:33:59 +0200
-From:   Peter De Schrijver <pdeschrijver@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
-        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 00/18] Consolidate and improve NVIDIA Tegra CPUIDLE
- driver(s)
-Message-ID: <20191101123359.GG27141@pdeschrijver-desktop.Nvidia.com>
-References: <20191015170015.1135-1-digetx@gmail.com>
- <20191016192133.GB26038@pdeschrijver-desktop.Nvidia.com>
- <72636eb3-5354-eea3-3a51-4975a04186b2@gmail.com>
- <53ee8bd3-5c53-f0aa-175c-7fa3024d0af5@gmail.com>
- <20191028140443.GA27141@pdeschrijver-desktop.Nvidia.com>
- <40de641f-c38e-51ee-ae27-c5db468c45b5@gmail.com>
+        Fri, 1 Nov 2019 08:34:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572611673;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Blgz1QDlbrX4CFcoZXAgNrnij3Ts9PT2qjsZuUJOKd4=;
+        b=MRvHRHn8eBtStDNvADnO8LyqVs1hHvYfshdBusObc4qkB6WwppDdZSkAZJtSkKGrBldq7u
+        muIdljDhcO/5sixyWSK+E+G2KP4QKnVEWWlM1quNYt1zKfkSPn50k3ptP8Iqn00RDC1LS/
+        qCgdG37LO3M/97jY6dA2KkqMe3H1+9k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-155-QADGKEzYOKOPHVxH7fQt-A-1; Fri, 01 Nov 2019 08:33:05 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 86BE9800683;
+        Fri,  1 Nov 2019 12:33:02 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 113F75D9CD;
+        Fri,  1 Nov 2019 12:32:59 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri,  1 Nov 2019 13:33:00 +0100 (CET)
+Date:   Fri, 1 Nov 2019 13:32:57 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-api@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] clone3: validate stack arguments
+Message-ID: <20191101123257.GA508@redhat.com>
+References: <20191031113608.20713-1-christian.brauner@ubuntu.com>
+ <20191031164653.GA24629@redhat.com>
+ <20191101110639.icbfihw3fk2nzz4o@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20191101110639.icbfihw3fk2nzz4o@wittgenstein>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: QADGKEzYOKOPHVxH7fQt-A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <40de641f-c38e-51ee-ae27-c5db468c45b5@gmail.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572611648; bh=ClHEOCZNpQnrcTnVEWCJjHR07pbg7qvno12Y8tH2Dy8=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=JPm8R1IH6Np2IGI6y3kIMTOJ1rP/8Pi2c76MBsBfFNDkpBX901NBpRClwnNreTgEA
-         qLExi2OcAxxXyaLsmVGDlzxVKZCFbZX8+dnqSIEeaFKzH3T+m7UvU4BbDPd6CYd2Hb
-         2C/Nr53Dkt9wFk1K/NG0z6FRmVRTgbZzsIWOLmi7iqgl8fLUdV3nmiOu9fbcQI0bJU
-         YCE8cefv6mBzfFUsp/YWJ1RbTDJleWRvHL3mMIK+RWYPBmJbnz3ALNrNs/8EW4VlBs
-         4+j7XujCFSVktQig4fJTqLqwcK1o60tENBkdb5FAQwIIbTEz26Nr2lC1jW0+SscMt2
-         jtOP5Lk1c2L8Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 03:47:56AM +0300, Dmitry Osipenko wrote:
-..
+On 11/01, Christian Brauner wrote:
+>
+> On Thu, Oct 31, 2019 at 05:46:53PM +0100, Oleg Nesterov wrote:
+> > On 10/31, Christian Brauner wrote:
+> > >
+> > > --- a/include/uapi/linux/sched.h
+> > > +++ b/include/uapi/linux/sched.h
+> > > @@ -51,6 +51,10 @@
+> > >   *               sent when the child exits.
+> > >   * @stack:       Specify the location of the stack for the
+> > >   *               child process.
+> > > + *               Note, @stack is expected to point to the
+> > > + *               lowest address. The stack direction will be
+> > > + *               determined by the kernel and set up
+> > > + *               appropriately based on @stack_size.
+> >
+> > I can't review this patch, I have no idea what does stack_size mean
+> > if !arch/x86.
+>
+> In short: nothing at all if it weren't for ia64 (and maybe parisc).
+> But let me provide some (hopefully useful) context.
 
-> >>>> It would be useful to switch the power state terminology to the one used
-> >>>> for later chips:
-> >>>>
-> >>>> LP0 becomes SC7
-> >>>> LP1 becomes C1
-> >>>> LP2 becomes CC7
-> >>>>
-> >>>> Meaning of these states is as follows
-> >>>>
-> >>>> C is a core state:
-> >>>>
-> >>>> C1 clock gating
-> >>>> C2 not defined
-> >>>> C3 not defined
-> >>>> C4 not defined
-> >>>> C5 not defined
-> >>>> C6 not defined for ARM cores
-> >>>> C7 power-gating
-> >>>>
-> >>>> CC is a CPU cluster C state:
-> >>>>
-> >>>> CC1 cluster clock gated
-> >>>> CC2 not defined
-> >>>> CC3 fmax@Vmin: not used prior to Tegra186
-> >>>> CC4: cluster retention: no longer supported
-> >>>> CC5: not defined
-> >>>> CC6: cluster power gating
-> >>>> CC7: cluster rail gating
-> >>>>
-> >>>> SC is a System C state:
-> >>>>
-> >>>> SC1: not defined
-> >>>> SC2: not defined
-> >>>> SC3: not defined
-> >>>> SC4: not defined
-> >>>> SC5: not defined
-> >>>> SC6: not defined
-> >>>> SC7: VDD_SOC off
-> >>>
-> >>> Hello Peter,
-> >>>
-> >>> But new "drivers/cpuidle/cpuidle-tegra.c" uses exactly that terminology,
-> >>> please see "cpuidle: Refactor and move NVIDIA Tegra20 driver into
-> >>> drivers/cpuidle/" and further patches. Am I missing something? Or do you
-> >>> want the renaming to be a separate patch?
-> >>>
-> >>
-> >> Or maybe you're suggesting to change the names everywhere and not only
-> >> in the cpuidle driver? Please clarify :)
-> > 
-> > At least some of the variable and function names still say lp2?
-> 
-> The cpuidle driver uses LP2 terminology for everything that comes from
-> the external arch / firmware includes. But it says CC6 for everything
-> that is internal to the driver. So yes, there is a bit of new/old
-> terminology mixing in the code.
-> 
-> The arch code / PMC driver / TF firmware are all saying LP2. The LP2
-> naming is also a part of the device-tree binding.
-> 
-> It will be a lot of mess to rename the mach-tegra/pm.c code. I guess
-> eventually it could be moved to drivers/soc/, so maybe it will be better
-> to postpone the renaming until then?
+Thanks...
 
-Or maybe add a comment somewhere indicating:
+> (Probably most of
+> that is well-know,
 
-LP2 = CC6
-LP1 = C1
-LP0 = SC7
+Certainly not to me ;) Thanks.
 
-TF predates the new naming, so that may make some sense.
+> > > +static inline bool clone3_stack_valid(struct kernel_clone_args *karg=
+s)
+> > > +{
+> > > +=09if (kargs->stack =3D=3D 0) {
+> > > +=09=09if (kargs->stack_size > 0)
+> > > +=09=09=09return false;
+> > > +=09} else {
+> > > +=09=09if (kargs->stack_size =3D=3D 0)
+> > > +=09=09=09return false;
+> >
+> > So to implement clone3_wrapper(void *bottom_of_stack) you need to do
+> >
+> > =09clone3_wrapper(void *bottom_of_stack)
+> > =09{
+> > =09=09struct clone_args args =3D {
+> > =09=09=09...
+> > =09=09=09// make clone3_stack_valid() happy
+> > =09=09=09.stack =3D bottom_of_stack - 1,
+> > =09=09=09.stack_size =3D 1,
+> > =09=09};
+> > =09}
+> >
+> > looks a bit strange. OK, I agree, this example is very artificial.
+> > But why do you think clone3() should nack stack_size =3D=3D 0 ?
+>
+> In short, consistency.
 
-Peter.
+And in my opinion this stack_size =3D=3D 0 check destroys the consistency,
+see below.
+
+But just in case, let me say that overall I personally like this change.
+
+> The best thing imho, is to clearly communicate to userspace that stack
+> needs to point to the lowest address and stack_size to the initial range
+> of the stack pointer
+
+Agreed.
+
+But the kernel can't verify that "stack" actually points to the lowest
+address and stack_size is actually the stack size. Consider another
+artificial
+
+    =09clone3_wrapper(void *bottom_of_stack, unsigned long offs)
+    =09{
+    =09=09struct clone_args args =3D {
+    =09=09=09...
+    =09=09=09// make clone3_stack_valid() happy
+    =09=09=09.stack =3D bottom_of_stack - offs,
+    =09=09=09.stack_size =3D offs,
+    =09=09};
+    =09=09sys_clone3(args);
+    =09}
+=09
+Now,
+
+=09clone3_wrapper(bottom_of_stack, offs);
+
+is same thing for _any_ offs except offs =3D=3D 0 will fail. Why? To me thi=
+s
+is not consistent, I think the "stack_size =3D=3D 0" check buys nothing and
+only adds some confusion.
+
+Say, stack_size =3D=3D 1 is "obviously wrong" too, this certainly means tha=
+t
+"stack" doesn't point to the lowest address (or the child will corrupt the
+memory), but it works.
+
+OK, I won't insist. Perhaps it can help to detect the case when a user
+forgets to pass the correct stack size.
+
+> > > +=09=09if (!access_ok((void __user *)kargs->stack, kargs->stack_size)=
+)
+> > > +=09=09=09return false;
+> >
+> > Why?
+>
+> It's nice of us to tell userspace _before_ we have created a thread that
+> it messed up its parameters instead of starting a thread that then
+> immediately crashes.
+
+Heh. Then why this code doesn't verify that at least stack + stack_size is
+properly mmaped with PROT_READ|WRITE?
+
+Oleg.
+
