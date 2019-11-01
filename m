@@ -2,141 +2,86 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6473ACA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5A3CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33FBA21734
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:18:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WMGeLp/A"
+	by mail.kernel.org (Postfix) with ESMTP id 8A9E6217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:28:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbfKAMSN (ORCPT
+        id S1727741AbfKAM2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 08:18:13 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55557 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730637AbfKAMSM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 08:18:12 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g24so9151142wmh.5;
-        Fri, 01 Nov 2019 05:18:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZOoIzpG2z8fi2GZrvyp00RYzBAVVduBNjTY7LDpDnDA=;
-        b=WMGeLp/AVcDchEPwD5VJFbDRfoXly9LNsd0siehQ54HLKyIZ8qz9gi8KhSFn/ECKpG
-         4taW6nS3xhiwjHUhlKwrUKHiRbPhs2tXHJbH1qNcz50q5vHK3RsSKuYORB7lqzRv+kKs
-         hlzTPidpqQOgpmDIDqPQWVRFFc279Bdiwn3Fo+zG7ZmOK3rWuWObm1y60wX26Y0lLe2R
-         rxYZZwUwn6q4AWS6avO/Ttxqrm9T9MPIkI6l8saqG21Hm3uzAKNsJTZk8gGvFL4ZXobX
-         QQ84THyc3nfF1poe9cx5U0FWZlISf+jXrv+zA2bXISGSyXsVB4eUT5G0vYx3eZZY9NgO
-         xZAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZOoIzpG2z8fi2GZrvyp00RYzBAVVduBNjTY7LDpDnDA=;
-        b=X+szGtX8jeFdstKdfMaH1J95SPYF8sBc5Ghi0kjVSxaHv6QSZwljCCZvGibrY+iFB+
-         ijH4TxZM93MCBxdhwx0vZAw24WldRr7QytgKjW6ffZ+TjpSY01cTjCyJPju5kjoYoQ1i
-         kNUILBH5zDW8YjWTRy0hxCICO6vSA5B/NmPIwgPJKamY1q4piHDP3K7SOwuJkGKkq43k
-         omjvq87/LccgyX96GpBkPSOz/tzlUWbD45n0EvVJd2yLu74ShVuE7g+1TDNBXYz4GMLQ
-         QcM1HI1QYX4HqhQsjtnYl8J9NYXlOagOPfcWi/dyhW9gzlv3mzPGpZawKJPrFfaCcVWF
-         rXcg==
-X-Gm-Message-State: APjAAAUjWUuy50qOWuqb2B4I3XJ/54hzGGENieIdgIW8Wmlusmeh5+wM
-        W+lInhw/scll9ArGzVEorhQ=
-X-Google-Smtp-Source: APXvYqyYGMPZVOcwrT99SjO70XvqnXNb10RZu4lXx7hjfGuoisqKxZ/u5JHTJkzyPdKNoiU5Az3ORw==
-X-Received: by 2002:a1c:1d53:: with SMTP id d80mr6277323wmd.88.1572610690236;
-        Fri, 01 Nov 2019 05:18:10 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id p15sm7759400wrs.94.2019.11.01.05.18.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 05:18:09 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-spi@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] spi: sifive: disable clk when probe fails and remove
-Date:   Fri,  1 Nov 2019 20:17:45 +0800
-Message-Id: <20191101121745.13413-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 1 Nov 2019 08:28:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:34588 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726889AbfKAM2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 08:28:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27DFB1F1;
+        Fri,  1 Nov 2019 05:28:31 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 22B613F6C4;
+        Fri,  1 Nov 2019 05:28:30 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 12:28:25 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 0/7] iommu: Permit modular builds of ARM SMMU[v3] drivers
+Message-ID: <20191101122825.GA318@e121166-lin.cambridge.arm.com>
+References: <20191030145112.19738-1-will@kernel.org>
+ <6e457227-ca06-2998-4ffa-a58ab171ce32@arm.com>
+ <20191030155444.GC19096@willie-the-truck>
+ <CAGETcx9ogWQC1ZtnS_4xC3ShqBpuRSKudWEEWC22UZUEhdEU4A@mail.gmail.com>
+ <20191031193758.GA2607492@lophozonia>
+ <CAGETcx-MuMVvj0O-MFdfmLADEq=cQY_=x+irvhgwHhG4VeeSdg@mail.gmail.com>
+ <20191101114148.GA2694906@lophozonia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191101114148.GA2694906@lophozonia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to disable and unprepare clk when probe fails and
-remove.
-Add the calls to fix the problem.
+On Fri, Nov 01, 2019 at 12:41:48PM +0100, Jean-Philippe Brucker wrote:
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/spi/spi-sifive.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+[...]
 
-diff --git a/drivers/spi/spi-sifive.c b/drivers/spi/spi-sifive.c
-index 35254bdc42c4..f7c1e20432e0 100644
---- a/drivers/spi/spi-sifive.c
-+++ b/drivers/spi/spi-sifive.c
-@@ -357,14 +357,14 @@ static int sifive_spi_probe(struct platform_device *pdev)
- 	if (!cs_bits) {
- 		dev_err(&pdev->dev, "Could not auto probe CS lines\n");
- 		ret = -EINVAL;
--		goto put_master;
-+		goto disable_clk;
- 	}
- 
- 	num_cs = ilog2(cs_bits) + 1;
- 	if (num_cs > SIFIVE_SPI_MAX_CS) {
- 		dev_err(&pdev->dev, "Invalid number of spi slaves\n");
- 		ret = -EINVAL;
--		goto put_master;
-+		goto disable_clk;
- 	}
- 
- 	/* Define our master */
-@@ -393,7 +393,7 @@ static int sifive_spi_probe(struct platform_device *pdev)
- 			       dev_name(&pdev->dev), spi);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Unable to bind to interrupt\n");
--		goto put_master;
-+		goto disable_clk;
- 	}
- 
- 	dev_info(&pdev->dev, "mapped; irq=%d, cs=%d\n",
-@@ -402,11 +402,13 @@ static int sifive_spi_probe(struct platform_device *pdev)
- 	ret = devm_spi_register_master(&pdev->dev, master);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "spi_register_master failed\n");
--		goto put_master;
-+		goto disable_clk;
- 	}
- 
- 	return 0;
- 
-+disable_clk:
-+	clk_disable_unprepare(spi->clk);
- put_master:
- 	spi_master_put(master);
- 
-@@ -420,6 +422,7 @@ static int sifive_spi_remove(struct platform_device *pdev)
- 
- 	/* Disable all the interrupts just in case */
- 	sifive_spi_write(spi, SIFIVE_SPI_REG_IE, 0);
-+	clk_disable_unprepare(spi->clk);
- 
- 	return 0;
- }
--- 
-2.23.0
+> > > I'm also wondering about ACPI support.
+> > 
+> > I'd love to add ACPI support too, but I have zero knowledge of ACPI.
+> > I'd be happy to help anyone who wants to add ACPI support that allows
+> > ACPI to add device links.
+> 
+> It's not as generic as device-tree, each vendor has their own table to
+> describe the IOMMU topology. I don't see a nice way to transpose the
+> add_links() callback there. Links need to be created either in a common
+> path (iommu_probe_device()) or in the APCI IORT driver.
 
+We can create a generic stub that calls into respective firmware
+handling paths (eg iort_dma_setup() in acpi_dma_configure()).
+
+There are three arches booting with ACPI so stubbing it out in
+specific firmware handlers is not such a big deal, less generic
+sure, but not catastrophically bad.
+
+Obviously this works for IOMMU masters links - for resources
+dependencies (eg power domains) it deserves some thought, keeping in
+mind that IOMMUs are static table entries in ACPI and not device objects
+so they are not even capable of expressing eg power resources and
+suchlike.
+
+Long story short: adding IOMMU masters links in ACPI should be
+reasonably simple, everything else requires further thought.
+
+Lorenzo
