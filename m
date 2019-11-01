@@ -2,153 +2,108 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B06FCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 07:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AEFCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 07:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62FEF2080F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 07:57:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WA+ly02R"
+	by mail.kernel.org (Postfix) with ESMTP id 53D5A2080F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 07:58:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbfKAH5j (ORCPT
+        id S1730107AbfKAH6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 03:57:39 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:58988 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbfKAH5j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 03:57:39 -0400
-Received: from pendragon.ideasonboard.com (unknown [109.190.253.13])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5624D2D1;
-        Fri,  1 Nov 2019 08:57:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1572595055;
-        bh=DKSEd/4zmCFtM4D8ZLoAyFUzhEtzYdFH9A2SAZ6Kmsg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WA+ly02RQE1bXxx9ReIa6usD0bl1d0D1w+iCYgmRRvvUZpa3hkog3EbmOq8v5Ui1q
-         4JG9vZOadNUP3DwmdCtRMOUpIxAQP2R5HeFwf8vlq7xD+LeH/8tP9M/zIr/dWbcszb
-         Pcd5Hz3IdhJhK6K4Ce+Cwr2E/vBruD5SNpzPX5SE=
-Date:   Fri, 1 Nov 2019 09:57:26 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Adam Ford <aford173@gmail.com>, Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V5 1/3] drm/panel: simple: Add Logic PD Type 28 display
- support
-Message-ID: <20191101075726.GB6209@pendragon.ideasonboard.com>
-References: <20191016135147.7743-1-aford173@gmail.com>
- <CAHCN7xJ-1b_OHXy_u8TvA5i4PuWGbci6YN3x1hUY_UaLxzu+QQ@mail.gmail.com>
+        Fri, 1 Nov 2019 03:58:23 -0400
+Received: from mga17.intel.com ([192.55.52.151]:16169 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727059AbfKAH6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 03:58:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 00:58:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,254,1569308400"; 
+   d="scan'208";a="225962454"
+Received: from yhuang-dev.sh.intel.com ([10.239.159.29])
+  by fmsmga004.fm.intel.com with ESMTP; 01 Nov 2019 00:58:20 -0700
+From:   "Huang, Ying" <ying.huang@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Huang Ying <ying.huang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Ingo Molnar <mingo@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>
+Subject: [RFC 00/10] autonuma: Optimize memory placement in memory tiering system
+Date:   Fri,  1 Nov 2019 15:57:17 +0800
+Message-Id: <20191101075727.26683-1-ying.huang@intel.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHCN7xJ-1b_OHXy_u8TvA5i4PuWGbci6YN3x1hUY_UaLxzu+QQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 09:44:20AM -0500, Adam Ford wrote:
-> On Wed, Oct 16, 2019 at 8:52 AM Adam Ford <aford173@gmail.com> wrote:
-> >
-> > Previously, there was an omap panel-dpi driver that would
-> > read generic timings from the device tree and set the display
-> > timing accordingly.  This driver was removed so the screen
-> > no longer functions.  This patch modifies the panel-simple
-> > file to setup the timings to the same values previously used.
-> >
-> > Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
-> 
-> Will this be able to make it into linux-next for the 5.5 merge window?
-> I believe Tony has picked up the device tree portion in his omap
-> tree, but I haven't seen any notifications on this series on whether
-> or not it's being applied.  I also don't know which tree I need to
-> look if it's already been applied.
-> 
-> This fixes a regression introduced a while ago where the driver I was
-> using for the display was removed.
+From: Huang Ying <ying.huang@intel.com>
 
-Sam, would you be able to pick this up ?
+With the advent of various new memory types, there may be multiple
+memory types in one machine, e.g. DRAM and PMEM (persistent memory).
+Because the performance and cost of the different types of memory may
+be different, the memory subsystem of the machine could be called
+memory tiering system.
 
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> > ---
-> > V5:  No Change
-> > V4:  No Change
-> > V3:  No Change
-> > V2:  No Change
-> >
-> > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> > index 5d487686d25c..72f69709f349 100644
-> > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > @@ -2061,6 +2061,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
-> >         .flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-> >  };
-> >
-> > +static const struct drm_display_mode logicpd_type_28_mode = {
-> > +       .clock = 9000,
-> > +       .hdisplay = 480,
-> > +       .hsync_start = 480 + 3,
-> > +       .hsync_end = 480 + 3 + 42,
-> > +       .htotal = 480 + 3 + 42 + 2,
-> > +
-> > +       .vdisplay = 272,
-> > +       .vsync_start = 272 + 2,
-> > +       .vsync_end = 272 + 2 + 11,
-> > +       .vtotal = 272 + 2 + 11 + 3,
-> > +       .vrefresh = 60,
-> > +       .flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
-> > +};
-> > +
-> > +static const struct panel_desc logicpd_type_28 = {
-> > +       .modes = &logicpd_type_28_mode,
-> > +       .num_modes = 1,
-> > +       .bpc = 8,
-> > +       .size = {
-> > +               .width = 105,
-> > +               .height = 67,
-> > +       },
-> > +       .delay = {
-> > +               .prepare = 200,
-> > +               .enable = 200,
-> > +               .unprepare = 200,
-> > +               .disable = 200,
-> > +       },
-> > +       .bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-> > +       .bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
-> > +                    DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
-> > +};
-> > +
-> >  static const struct panel_desc mitsubishi_aa070mc01 = {
-> >         .modes = &mitsubishi_aa070mc01_mode,
-> >         .num_modes = 1,
-> > @@ -3287,6 +3321,9 @@ static const struct of_device_id platform_of_match[] = {
-> >         }, {
-> >                 .compatible = "lg,lp129qe",
-> >                 .data = &lg_lp129qe,
-> > +       }, {
-> > +               .compatible = "logicpd,type28",
-> > +               .data = &logicpd_type_28,
-> >         }, {
-> >                 .compatible = "mitsubishi,aa070mc01-ca1",
-> >                 .data = &mitsubishi_aa070mc01,
+After commit c221c0b0308f ("device-dax: "Hotplug" persistent memory
+for use like normal RAM"), the PMEM could be used as cost-effective
+volatile memory in separate NUMA nodes.  In a typical memory tiering
+system, there are CPUs, DRAM and PMEM in each physical NUMA node.  The
+CPUs and the DRAM will be put in one logical node, while the PMEM will
+be put in another (faked) logical node.
 
--- 
-Regards,
+To optimize the system overall performance, the hot pages should be
+placed in DRAM node.  To do that, we need to identify the hot pages in
+the PMEM node and migrate them to DRAM node via NUMA migration.
 
-Laurent Pinchart
+While in autonuma, there are a set of existing mechanisms to identify
+the pages recently accessed by the CPUs in a node and migrate the
+pages to the node.  So we can reuse these mechanisms to build
+mechanisms to optimize page placement in the memory tiering system.
+This has been implemented in this patchset.
+
+At the other hand, the cold pages should be placed in PMEM node.  So,
+we also need to identify the cold pages in the DRAM node and migrate
+them to PMEM node.
+
+In the following patchset,
+
+[PATCH 0/4] [RFC] Migrate Pages in lieu of discard
+https://lore.kernel.org/linux-mm/20191016221148.F9CCD155@viggo.jf.intel.com/
+
+A mechanism to demote the cold DRAM pages to PMEM node under memory
+pressure is implemented.  Based on that, the cold DRAM pages can be
+demoted to PMEM node proactively to free some memory space on DRAM
+node, so that the hot PMEM pages can be migrated to the DRAM node.
+This has been implemented in this patchset too.
+
+The patchset is based on the following not-yet-merged patchset:
+
+[PATCH 0/4] [RFC] Migrate Pages in lieu of discard
+https://lore.kernel.org/linux-mm/20191016221148.F9CCD155@viggo.jf.intel.com/
+
+This is part of a larger patch set.  If you want to apply these or
+play with them, I'd suggest using the tree from here.
+
+    http://lkml.kernel.org/r/c3d6de4d-f7c3-b505-2e64-8ee5f70b2118@intel.com
+
+
+With all above optimization, the score of pmbench memory accessing
+benchmark with 80:20 read/write ratio and normal access address
+distribution improves 116% on a 2 socket Intel server with Optane DC
+Persistent Memory.
+
+Best Regards,
+Huang, Ying
