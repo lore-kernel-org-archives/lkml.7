@@ -2,145 +2,134 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2CDCA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC6CCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 385E6217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA99520862
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:33:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="G3Xq7ttw";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fQf4WVwF"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="v5dwu2Xl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfKARcB (ORCPT
+        id S1728253AbfKARdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 13:32:01 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43082 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbfKARcB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 13:32:01 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 8A88561161; Fri,  1 Nov 2019 17:32:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572629520;
-        bh=kTFcEII9VQ7VXdQiCsnxkwUwGz79YeOsQ0OeBBkuScg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=G3Xq7ttwWLwE1I7B4eT0lehOG3VsHXSMBKPq0mxQz6iyTHCoXX/juAWzlS2We9W3M
-         83x6jFNvvZjtqOHmmegPa/M8iNnBQu6argBZHIqYDTzSX2SW3p53z5bDjvX91C31Xi
-         TZBuhBunN5tnbjuRA58LhvfwRrzlaLo7ihbfmymA=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id A5A6B6110B;
-        Fri,  1 Nov 2019 17:31:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572629519;
-        bh=kTFcEII9VQ7VXdQiCsnxkwUwGz79YeOsQ0OeBBkuScg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fQf4WVwFGtfc1Wm6kx1nxc5oXiJWgVWuuikBGSz5IfoXqOJ2OvG24BLxdjkiA3Age
-         AO+oLYI4x2+RggoVwq0YVOaogZZM4qq/VW5y4d/mI4TOQFee8FG7cWeus748HT7TYr
-         Ukf5AJrLsyYsL8FQ+Em9swSjmWPSsgocl1JP6590=
+        Fri, 1 Nov 2019 13:33:36 -0400
+Received: from mail-eopbgr700086.outbound.protection.outlook.com ([40.107.70.86]:2017
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726554AbfKARdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 13:33:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DSkd1gtA7I14yHHWIg1gN3Ei756f4M9rvbNf40/UKVodmjv//JwVN2mG9sD9K/ODbrK/wSPvmPPtC5w1V86v7z/GwI7rTr9w6w7U2U2I7UMHUbXfpJ7d7QX1UnpKkN5DmzxAo0mBlR3HyWczkR95smZ75OMYjtPukahjYjhGuRlLa/1l2Aey2BC8gQYOlKCUD5owKC4T1o0r5xsDW9qxZqVXnt6Pr/G5PN7cdaKdkzC+37V6bOVdA+BmBC9dzE94ZO7wcnykrkPmiti0wucTWGIS1yfKzLlsC2Nf53xylVxj5M14hG1JV0ULr3AOgrHsPPO9HV7Biwyrx3ydb2x/DA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H/dGH5xrTnpEDELMuBijtP5Xkd6krd5g9D3YNTiBfdk=;
+ b=FYudDhtiHSOhJb1sZe0LDDN+69fAWrjDkY4lhzOvhSiSSKQcu6EW0e67KBmIRMl4Zpl2j+T3GuLHwy93fcf77800fXNpEj2GSgucsKvPo9qGJoUHSDwYtOM/VBawhiEmEFD5aOJ8ZrOyyNFX3O6f0wmYn0hx5+bIRrScY1neKxRed1OsO1yVFa3uz+v6//Vz7f8b+K+lde2kIa5YNEWvIJhpcCmMwSoJeakqaDqaoUdwnJikZJror9j1MfBAWPcjTVx5pBoOlhbPe7kR55cP+1siAtpKIAZ/dcQynd60SpAb1GeIMk3VOO7q4gwgNx1zkMC30uueV4zkAQFAbYmJUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H/dGH5xrTnpEDELMuBijtP5Xkd6krd5g9D3YNTiBfdk=;
+ b=v5dwu2XlOmtDDDa5b3G8rnoLZjjN7owoGHEqAaeTXgA5Oz3ezQYSBRkcD679HbQjafBgfa8kFoZR8aaUDoXa4fYahXOIf8Q9Xb7GWm/HZNL7e2k3hU7MmNn/fmKlcTusFSTHVV4GKJsUuejdiwmODxvBXUQAnz5OUZG0AqKsUfY=
+Received: from BL0PR12MB2468.namprd12.prod.outlook.com (52.132.30.157) by
+ BL0PR12MB2548.namprd12.prod.outlook.com (52.132.29.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.24; Fri, 1 Nov 2019 17:33:30 +0000
+Received: from BL0PR12MB2468.namprd12.prod.outlook.com
+ ([fe80::748c:1f32:1a4d:acca]) by BL0PR12MB2468.namprd12.prod.outlook.com
+ ([fe80::748c:1f32:1a4d:acca%7]) with mapi id 15.20.2387.028; Fri, 1 Nov 2019
+ 17:33:30 +0000
+From:   "Moger, Babu" <Babu.Moger@amd.com>
+To:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Moger, Babu" <Babu.Moger@amd.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "nayna@linux.ibm.com" <nayna@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: [PATCH 0/4] Emulate and enable UMIP feature on AMD
+Thread-Topic: [PATCH 0/4] Emulate and enable UMIP feature on AMD
+Thread-Index: AQHVkNp6yHzbr4SWxUqB/ZBcMwNDtg==
+Date:   Fri, 1 Nov 2019 17:33:30 +0000
+Message-ID: <157262960837.2838.17520432516398899751.stgit@naples-babu.amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN6PR08CA0014.namprd08.prod.outlook.com
+ (2603:10b6:805:66::27) To BL0PR12MB2468.namprd12.prod.outlook.com
+ (2603:10b6:207:44::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Babu.Moger@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.78.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f572f14a-8a9c-43ec-d5af-08d75ef19caa
+x-ms-traffictypediagnostic: BL0PR12MB2548:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BL0PR12MB2548A0B54B7F58DAD0BA888995620@BL0PR12MB2548.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 020877E0CB
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(376002)(39860400002)(136003)(346002)(189003)(199004)(66946007)(71190400001)(2501003)(2906002)(71200400001)(25786009)(14454004)(476003)(478600001)(2201001)(6116002)(3846002)(316002)(5660300002)(54906003)(86362001)(110136005)(4326008)(81156014)(64756008)(26005)(102836004)(66066001)(66446008)(7736002)(99286004)(305945005)(7416002)(8676002)(8936002)(186003)(66476007)(486006)(6486002)(6512007)(6506007)(386003)(66556008)(256004)(14444005)(6436002)(52116002)(103116003)(81166006)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR12MB2548;H:BL0PR12MB2468.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: exGF2hbicJtOq3iGoqpHa0Z3kqNkBTcYWjIa5QrfK22Tb+7MUvIYDDXICOuJJfYuUC35u8hYBBEayUPjk1vuWB79xXzonNfM60uG6lTAqp/YK/M1pvhKBDbsvbpesXD8jhIV/NdYWq4DuG7jUEvBOSTB0plOMEYLgLh//BNjx0F/V3B50cgPGpEwUY0mpUnuouCBfqyEJXVEFJ4FKHULvtM3GB1JxI8lJPAno/pEXJSiofn6rPOH2vIwoAXWehcsTfhpKqrBJf2Gi0fC9ngB0XeJ3373LnGWNQn5er81vN+gpLP8xVQrsRola6zHSEEugQUBCZjW9jXXZAKJJTkRq3ZX6WCyA8rZ0GevqsOOw2qpRl72dMxY/iwmPmNfbRxF/oe0RnGSoTeoV29Ok9zYB5NmLIZGJysRirvHdMH+jKCu6AVxu4IkW/n6zBl2I/oZ
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <490770091B2FFE4EBC0CB805FDA3B229@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 01 Nov 2019 23:01:59 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Will Deacon <will@kernel.org>, bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCHv7 0/3] QCOM smmu-500 wait-for-safe handling for sdm845
-In-Reply-To: <20191101172508.GB3983@willie-the-truck>
-References: <cover.1568966170.git.saiprakash.ranjan@codeaurora.org>
- <20191101163136.GC3603@willie-the-truck>
- <af7e9a14ae7512665f0cae32e08c8b06@codeaurora.org>
- <20191101172508.GB3983@willie-the-truck>
-Message-ID: <119d4bcf5989d1aa0686fd674c6a3370@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f572f14a-8a9c-43ec-d5af-08d75ef19caa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2019 17:33:30.6604
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: r07VneNFfItYXPv4qMi24Gx0i8AWgS+kKWEwypBuEV9jmcY8CEOkf2rxbXF66D/6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB2548
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-01 22:55, Will Deacon wrote:
-> On Fri, Nov 01, 2019 at 10:49:00PM +0530, Sai Prakash Ranjan wrote:
->> On 2019-11-01 22:01, Will Deacon wrote:
->> > On Fri, Sep 20, 2019 at 01:34:26PM +0530, Sai Prakash Ranjan wrote:
->> > > Previous version of the patches are at [1]:
->> > >
->> > > QCOM's implementation of smmu-500 on sdm845 adds a hardware logic
->> > > called
->> > > wait-for-safe. This logic helps in meeting the invalidation
->> > > requirements
->> > > from 'real-time clients', such as display and camera. This
->> > > wait-for-safe
->> > > logic ensures that the invalidations happen after getting an ack
->> > > from these
->> > > devices.
->> > > In this patch-series we are disabling this wait-for-safe logic from
->> > > the
->> > > arm-smmu driver's probe as with this enabled the hardware tries to
->> > > throttle invalidations from 'non-real-time clients', such as USB and
->> > > UFS.
->> > >
->> > > For detailed information please refer to patch [3/4] in this series.
->> > > I have included the device tree patch too in this series for someone
->> > > who
->> > > would like to test out this. Here's a branch [2] that gets display
->> > > on MTP
->> > > SDM845 device.
->> > >
->> > > This patch series is inspired from downstream work to handle
->> > > under-performance
->> > > issues on real-time clients on sdm845. In downstream we add separate
->> > > page table
->> > > ops to handle TLB maintenance and toggle wait-for-safe in tlb_sync
->> > > call so that
->> > > achieve required performance for display and camera [3, 4].
->> >
->> > What's the plan for getting this merged? I'm not happy taking the
->> > firmware
->> > bits without Andy's ack, but I also think the SMMU changes should go via
->> > the IOMMU tree to avoid conflicts.
->> >
->> > Andy?
->> >
->> 
->> Bjorn maintains QCOM stuff now if I am not wrong and he has already 
->> reviewed
->> the firmware bits. So I'm hoping you could take all these through 
->> IOMMU
->> tree.
-> 
-> Oh, I didn't realise that. Is there a MAINTAINERS update someplace? If 
-> I
-> run:
-> 
-> $ ./scripts/get_maintainer.pl -f drivers/firmware/qcom_scm-64.c
-> 
-> in linux-next, I get:
-> 
-> Andy Gross <agross@kernel.org> (maintainer:ARM/QUALCOMM SUPPORT)
-> linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT)
-> linux-kernel@vger.kernel.org (open list)
-> 
-
-It hasn't been updated yet then. I will leave it to Bjorn or Andy to 
-comment on this.
-
--Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+QU1EIDJuZCBnZW5lcmF0aW9uIEVQWUMgcHJvY2Vzc29ycyBzdXBwb3J0IFVNSVAgKFVzZXItTW9k
+ZSBJbnN0cnVjdGlvbg0KUHJldmVudGlvbikgZmVhdHVyZS4gRW11bGF0ZSBhbmQgZW5hYmxlIHRo
+ZSBVTUlQIGZlYXR1cmUgaWYgYmFyZSBtZXRhbA0Kc3VwcG9ydHMgaXQuIEVtdWxhdGlvbiBvZiBV
+TUlQIGluc3RydWN0aW9ucyAoc2dkdCwgc2lkdCwgc2xkdCwgc21zdyBhbmQNCnN0cikgcmVxdWly
+ZXMgdGhlIGh5cGVydmlzb3IgdG8gcmVhZCBhbmQgd3JpdGUgdGhlIGd1ZXN0IG1lbW9yeS4gR3Vl
+c3QNCm1lbW9yeSBpcyBlbmNyeXB0ZWQgb24gU0VWIGd1ZXN0LiBIeXBlcnZpc29yIGNhbm5vdCBz
+dWNjZXNzZnVsbHkgcmVhZCBvcg0Kd3JpdGUgdGhlIGd1ZXN0IG1lbW9yeS4gU28gZGlzYWJsZSBl
+bXVsYXRpb24gb24gU0VWIGd1ZXN0LiBFbmFibGUgdGhlDQplbXVsYXRpb24gb25seSBvbiBub24g
+U0VWIGd1ZXN0Lg0KDQpUZXN0ZWQgb24gRVBZQy9FUFlDLVJvbWUgVk1zIGFuZCB3b3JrcyBhcyBl
+eHBlY3RlZC4gUGxlYXNlIHJldmlldy4NCg0KQmFidSBNb2dlciAoNCk6DQogIGt2bTogeDg2OiBE
+b250IHNldCBVTUlQIGZlYXR1cmUgYml0IHVuY29uZGl0aW9uYWxseQ0KICBrdm06IHN2bTogRW5h
+YmxlIFVNSVAgZmVhdHVyZSBvbiBBTUQNCiAga3ZtOiBzdm06IEVtdWxhdGUgVU1JUCBpbnN0cnVj
+dGlvbnMgb24gbm9uIFNFViBndWVzdA0KICB4ODYvS2NvbmZpZzogUmVuYW1lIFVNSVAgY29uZmln
+IHBhcmFtZXRlcg0KDQogYXJjaC94ODYvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICB8
+ICA4ICsrKy0tLS0NCiBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9kaXNhYmxlZC1mZWF0dXJlcy5oIHwg
+IDIgKy0NCiBhcmNoL3g4Ni9pbmNsdWRlL2FzbS91bWlwLmggICAgICAgICAgICAgIHwgIDQgKyst
+LQ0KIGFyY2gveDg2L2tlcm5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgfCAgMiArLQ0KIGFy
+Y2gveDg2L2t2bS9jcHVpZC5jICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQ0KIGFyY2gveDg2
+L2t2bS9zdm0uYyAgICAgICAgICAgICAgICAgICAgICAgfCAzMCArKysrKysrKysrKysrKysrKysr
+Ky0tLS0NCiA2IGZpbGVzIGNoYW5nZWQsIDM0IGluc2VydGlvbnMoKyksIDE0IGRlbGV0aW9ucygt
+KQ0KDQotLSANCjIuMjAuMQ0KDQo=
