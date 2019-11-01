@@ -2,122 +2,84 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_HTML_ATTACH autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC9ACA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8433DCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C14072080F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64658217F9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:00:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbfKAKAn (ORCPT
+        id S1729072AbfKAKAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 06:00:43 -0400
-Received: from palmtree.beeroclock.net ([178.79.160.154]:43818 "EHLO
-        palmtree.beeroclock.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbfKAKAn (ORCPT
+        Fri, 1 Nov 2019 06:00:46 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53147 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728092AbfKAKAo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 06:00:43 -0400
-Received: from mailpile.local (palmtree.beeroclock.net [IPv6:2a01:7e00::f03c:91ff:fe93:f66c])
-        by palmtree.beeroclock.net (Postfix) with ESMTPSA id 310AF1F5F4;
-        Fri,  1 Nov 2019 10:00:41 +0000 (UTC)
+        Fri, 1 Nov 2019 06:00:44 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iQTjP-0003cs-VH; Fri, 01 Nov 2019 10:00:36 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Andy Gross <agross@kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next][V2] drivers: thermal: tsens: fix potential integer overflow on multiply
+Date:   Fri,  1 Nov 2019 10:00:35 +0000
+Message-Id: <20191101100035.25502-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="==XWc4LnSndNetJSQtLBzrXgdspr5mXY==";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
-Subject: Re: [PATCH 2/3] ARM: dts: sun8i: add FriendlyARM NanoPi Duo2
-From:   Karl Palsson <karlp@tweak.net.au>
-To:     "Chen-Yu Tsai" <wens@csie.org>
-Cc:     "Maxime Ripard" <mripard@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-In-Reply-To: <CAGb2v67PLemQvj+SOF2h_cfc4HcnAyvs866Bas7GRUF9Y1Lo1A@mail.gmail.com>
-References: <CAGb2v67PLemQvj+SOF2h_cfc4HcnAyvs866Bas7GRUF9Y1Lo1A@mail.gmail.com>
-User-Agent: Mailpile
-Message-Id: <FbCSL9o7LLRZJoCAokdTzGW6y5cRWs88rHTPoqG2238c@mailpile>
-Date:   Fri, 01 Nov 2019 10:00:33 -0000
-OpenPGP: id=9F020B9C40DA5E6F2CAF63B319A8B50FD4D5CAF6; preference=signencrypt
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==XWc4LnSndNetJSQtLBzrXgdspr5mXY==
-Content-Type: multipart/mixed; boundary="==YNFVxqfDdewuHhTDfY9tCavnXqx3Gk=="
-Subject: Re: [PATCH 2/3] ARM: dts: sun8i: add FriendlyARM NanoPi Duo2
-From: Karl Palsson <karlp@tweak.net.au>
-To: "Chen-Yu Tsai" <wens@csie.org>
-Cc: "Maxime Ripard" <mripard@kernel.org>,
- <linux-arm-kernel@lists.infradead.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-In-Reply-To: <CAGb2v67PLemQvj+SOF2h_cfc4HcnAyvs866Bas7GRUF9Y1Lo1A@mail.gmail.com>
-References: <CAGb2v67PLemQvj+SOF2h_cfc4HcnAyvs866Bas7GRUF9Y1Lo1A@mail.gmail.com>
-User-Agent: Mailpile
-Date: Fri, 01 Nov 2019 10:00:33 -0000
-OpenPGP: id=9F020B9C40DA5E6F2CAF63B319A8B50FD4D5CAF6; preference=signencrypt
+From: Colin Ian King <colin.king@canonical.com>
 
---==YNFVxqfDdewuHhTDfY9tCavnXqx3Gk==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Currently a multiply operation is being performed on two int values
+and the result is being assigned to a u64, presumably because the
+end result is expected to be probably larger than an int. However,
+because the multiply is an int multiply one can get overflow. Avoid
+the overflow by casting degc to a u64 to force a u64 multiply.
 
+Also use div_u64 for the divide as suggested by Daniel Lezcano.
 
-Chen-Yu Tsai <wens@csie.org> wrote:
+Addresses-Coverity: ("Unintentional integer overflow")
+Fixes: fbfe1a042cfd ("drivers: thermal: tsens: Add interrupt support")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
 
-(will fix all other comments)
+V2: use div_u64 for the divide as suggested by Daniel Lezcano.
 
-> > +               // on opi-win, shutdown is pl4, is BT-RST-N is moduel pin 34
-> > +               // YES; PG13 is correct.
-> 
-> I'm guessing all these comments are from your development
-> cycle? Please remove them.
+---
+ drivers/thermal/qcom/tsens-common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yes, gross mistake squishing it all and rebasing, my apologies.
-
-> 
-> > +               shutdown-gpios = <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
-> > +       };
-> > +};
-> 
-> The board also has SPI flash. Can you add that as well?
-
-It doesn't come mounted standard, it's just a blank footprint, so
-I felt it should be left out?
-
-Sincerely,
-Karl Palsson
---==YNFVxqfDdewuHhTDfY9tCavnXqx3Gk==--
-
---==XWc4LnSndNetJSQtLBzrXgdspr5mXY==
-Content-Type: application/pgp-signature; name="OpenPGP-digital-signature.html"
-Content-Description: OpenPGP Digital Signature
-Content-Disposition: attachment; filename="OpenPGP-digital-signature.html"
-
-<html><body><h1>Digital Signature</h1><p>
-
-This is a digital signature, which can be used to verify
-the authenticity of this message. You can safely discard
-or ignore this file if your e-mail software does not
-support digital signatures.
-
-</p><pre>
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEnwILnEDaXm8sr2OzGai1D9TVyvYFAl28Ai8ACgkQGai1D9TV
-yvZqZRAAqzoj/fQIFzqbUDDwOJzUdS2I5t3imDOuMjRM7d27AXwN+Dj6lrtMMzR9
-0ZFQ1z3fGELU1CwCkRyrnmLeSt4ttIxK4IgpAZ2lMPe9+gH58SzXDDvKxVN+xRSn
-nczcYHYlB8/7GX3f/PA1RJiGgpSdI8q/cCVKQVRIU4SkCLU6s+05Dip6DtWJrijO
-W/f/Bvwx/gqMXwYhcYnr8cVqphYr8a+URtpneHpM52IgygPDC0JujDD3Pm3K7m9E
-7WM9LYxHyk+VzI2brQBqHfaWQUr7X43LB/HkEmALO/QDFBeL9ap05TLrXaGHptxK
-f5rVw94zucQAsLGLVNGmEDBmOsAQUvQ0NcAg73ZUO66uBhV1l4e4tlcUsYgtVoQw
-GQmqno8Rzbslll2nnMyTLNXdj9ICywSWeykpD9dFcrkRx/PjFshk8GFW2uYIPRGQ
-U0RH+mqatGgqe+icELR2E6OHtIF0li/Pk3/Cq3nG9Zln+KO60MFx3cCR3F5e0Yon
-GUN678VD1zRwER+2EVIr2bVdZQIkjpjXsmTbk8upTr75nlm7QQuBfWD4ElZZiluA
-LuP3DEb6SuxWmPkb60R6BaMMYXE880nQx8R7cabtpQ4fv35Vy7KmnJaPLg3ti4qK
-qVDO8XL300QN6b5R8b7JvXblcymfS/LWL9usCFPKnQWusKdBIho=
-=n1cL
------END PGP SIGNATURE-----
-
-</pre><hr><i><a href='https://www.mailpile.is/'>Generated by Mailpile</a>.</i></body></html>
---==XWc4LnSndNetJSQtLBzrXgdspr5mXY==--
+diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+index 03bf1b8133ea..c6b551ec7323 100644
+--- a/drivers/thermal/qcom/tsens-common.c
++++ b/drivers/thermal/qcom/tsens-common.c
+@@ -92,7 +92,7 @@ void compute_intercept_slope(struct tsens_priv *priv, u32 *p1,
+ 
+ static inline u32 degc_to_code(int degc, const struct tsens_sensor *s)
+ {
+-	u64 code = (degc * s->slope + s->offset) / SLOPE_FACTOR;
++	u64 code = div_u64(((u64)degc * s->slope + s->offset), SLOPE_FACTOR);
+ 
+ 	pr_debug("%s: raw_code: 0x%llx, degc:%d\n", __func__, code, degc);
+ 	return clamp_val(code, THRESHOLD_MIN_ADC_CODE, THRESHOLD_MAX_ADC_CODE);
+-- 
+2.20.1
 
