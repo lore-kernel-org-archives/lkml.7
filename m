@@ -2,91 +2,104 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46515CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC12C47E49
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C37D21855
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9142086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:21:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="JOwFEArD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="M8hV507c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfKAUUl (ORCPT
+        id S1727909AbfKAUU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 16:20:41 -0400
-Received: from mout.gmx.net ([212.227.17.22]:56975 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbfKAUUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 16:20:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1572639624;
-        bh=gEEhob0QambsBd+8IP8sk2yJj2Asu79OD/yDb2XsK9Q=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
-        b=JOwFEArDmfVv/FPhbTG9KN5livXCRnB5ZhL6y6g5mVwyGAEeWlNdFElWZlzJgByCd
-         VRU+1CCtUsWaB+iFkAN8f9Z3RNw+nTTA7q5wNvaCwRlq2ElIhbKVChWdq3J9CCX0SE
-         kW77GmK60XY4+13GnmW7YvJBi2RMzbjKTKnE4kZA=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ls3530 ([80.187.110.91]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MJE6F-1igvtz1MCJ-00KgtW; Fri, 01
- Nov 2019 21:20:24 +0100
-Date:   Fri, 1 Nov 2019 21:20:19 +0100
-From:   Helge Deller <deller@gmx.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        John David Anglin <dave.anglin@bell.net>
-Cc:     Sven Schnelle <svens@stackframe.org>
-Subject: [GIT PULL] parisc architecture fix for kernel v5.4
-Message-ID: <20191101202019.GA22999@ls3530>
+        Fri, 1 Nov 2019 16:20:59 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.217]:36540 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbfKAUU6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 16:20:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1572639656;
+        s=strato-dkim-0002; d=aepfle.de;
+        h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=XtCq+R5tcMt8CotAtaiQUQwbLgPqym0ayXNPvI8RUz4=;
+        b=M8hV507crXnOYYFu/b4zx2tstn3fg7H1zRIuPFJ/fJM+lZJjSKQzHREBCpvdH+s9q6
+        GRRpR/moawFvam2GRd19rbs4noXdmhRSG4+QGD39g1P69BaXcet9Q3pQK1TlBqSfvahT
+        aJ4BlritT4Jlir3l1272pxCR/PFHxBOJtpPG2FsTqAsPHkb0gddqMGCJzrdbkz0GWPu4
+        AkIXa9snsnAYTnkFHDTMXfAfqeF64nX51JsPsr7xtVNzIlt5WFFOsNT0bCGym6TEqzjC
+        Y2pLQ9t2yRZd0/OXehqBpXbwXLEW1fxe7h23R8u0sNOT7GFFpCEehXOFn2S0fJYkjclM
+        0e3w==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QED/SSGq+wjGiUC4AUztn93FPS2dyuYM9nFg=="
+X-RZG-CLASS-ID: mo00
+Received: from sender
+        by smtp.strato.de (RZmta 44.29.0 SBL|AUTH)
+        with ESMTPSA id 20735bvA1KHqHLo
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Fri, 1 Nov 2019 21:17:52 +0100 (CET)
+Date:   Fri, 1 Nov 2019 21:17:45 +0100
+From:   Olaf Hering <olaf@aepfle.de>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "open list:Hyper-V CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] tools/hv: async name resolution in kvp_daemon
+Message-ID: <20191101211745.37dc5044.olaf@aepfle.de>
+In-Reply-To: <20191028184955.24dbb7d4.olaf@aepfle.de>
+References: <20191024144943.26199-1-olaf@aepfle.de>
+        <20191028161754.GF1554@sasha-vm>
+        <20191028184955.24dbb7d4.olaf@aepfle.de>
+X-Mailer: Claws Mail 2019.05.18 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Provags-ID: V03:K1:lmdelkpxDYCvc+DQjD6pvjzZzZKWwNd0Ihgy0KIcKfoXwUw18kA
- sgUW8wf/UhtZnSlFfwJUp6VoVHuYCsJzcqCl8NEBB3Lu4KozrYYZDbjr85sEHcRAdQj59Yo
- 97jCtbgxEAH345JQfDtsbh2ZcdYJFwYBQyeb5ySnEZckHs944ZIHE6WcRwN9kr9dhKhNasA
- dXPwga9ZUiSKetsoUz69w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Y6vrH0e2sQ4=:1zuAaB8186z/5wpMy5Aex3
- Lmjf1Fy/r9SaV0mGsPuPoFNbn4Z66Ft4GNeGX+jMxORsAhDpPKUdNN3gUax9z7nMvh/Fj9Nxx
- 8AyyJrdNzzJQSaqOctaPY0nxG5Tg4BWh71xB45VWkCnBatYmSKbkwS9R+M5lYanrsZxoSKgpR
- DJ85fC+RjrGFgfLUtH1mxj3nYppVLyS3tTAY2JNoTud9gaaoCMWh0cbWAaPkj4uSdW20VQ88y
- 179V0Xu8CalwBaFCMo8wE/FAP4LJH42NkUfRbqWLRyA08JZnrP0h+VqNi9pK/XynAIKH1huNT
- kj/ZM8l98E8THCX0+NUUPpTBJvm/sW8Y8NCgg3thaDt9+3oSbka45YpGK5bJiQyFx+YvbWpkL
- ldeytF4oy3RaDqevokmtEJL91j3YCm0pJyE/+ULWf2BNLdbPtSbQ1uhAQS6+YgRLHZ8y/CM2Y
- hp0h0tyhClJUBl7TnDWIvn+/d5T8u+mkTtHP1Thm+FcFLqvMrNnBuI7uYMtLP4BesFv/Acmqp
- 8CTx+3FUXRW5R/VAmuWWjy/ad8j1xxYVRosVQ6h+8nZ+kI1p6+3KgARJmQ1l67Odq5ki9QlIm
- exTSUh3LlKe3MmwxzDVAiyGHjsvA2GgGGFqKjcU549wKLHVBJ3cYarVQJfuCZIlOLitCxI+MU
- CvSHhCDV5eAlfeNRCrauuBxaS639uwQBmZXR4xAtqd73yQfw/V1FhmaidGI16sTLs6zrsGf4o
- SuaU0YLVej29r837ZIQWwZmT2R2m49H2n0tL2mzKPFasmChG3QUZTcWIqmJHlwfnbmUa78/ws
- aWUNsZN163p1wyj6hoJf3soxKfXfwOn/v60U4fjndDb/Xltn6s+BVBsdO2lB/jmVdwj3k5HNR
- shxAwroSI5uPeKQfQVPD7/vjj/yr5Hm6odwQiKj4Dnj7LzmEjSyoIQp0ekmhKj/bf1BjgoZ5z
- 5JGS2MYPGqTI2GaaMk+VRf/mga5TiECz27STkvCRXVJOgzr/QwbE9/zRoB4fnKpciFsFBfzQw
- WvHMjrEm7DfnV5IgyuG3NR5S3SuV7rKUce3wNUlNj1PO59xhQ13qmY6SV2TJudkP6PniW1Ljr
- 5hgCXSL7UbTxGNxO3mJcqzFW5Yjp55VmC2IFYk1QV2rShAaD22ijjCG0p1UoByKQ4d96Fu0g9
- IR7OyWEe1iY0wqHSnapzHaGXlfNK7iKdj9QFyZP10nE73DY0rbHv+2WfDAL8DMQmPNdnteXVu
- PyPMIi8eANOBsROb55sRo/ZIRkt17RR5pXX2iSw==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/HtdrpGxa9p+iibwC0FBZ88M"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+--Sig_/HtdrpGxa9p+iibwC0FBZ88M
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-please pull a one-line fix for the parisc architecture for kernel 5.4 from:
+Am Mon, 28 Oct 2019 18:49:55 +0100
+schrieb Olaf Hering <olaf@aepfle.de>:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.4-3
+> Am Mon, 28 Oct 2019 12:17:54 -0400
+> schrieb Sasha Levin <sashal@kernel.org>:
+> > undefined reference to `pthread_create' =20
+> Does "make V=3D1 -C tools/hv" work for you?
 
-Fix a parisc kernel crash with ftrace functions when compiled without frame
-pointers.
+Did you have a chance to check why the patch fails for you?
 
-Thanks,
-Helge
 
-----------------------------------------------------------------
-Sven Schnelle (1):
-      parisc: fix frame pointer in ftrace_regs_caller()
+Olaf
 
+--Sig_/HtdrpGxa9p+iibwC0FBZ88M
+Content-Type: application/pgp-signature
+Content-Description: Digitale Signatur von OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl28kuoACgkQ86SN7mm1
+DoBEAQ//W23SXKcJCdXPXpGBL3K6CrmsWiiVHoarCoQaK00IPvxwkMnUizXZPZLT
+JFAad9nqT/ZxbYVxh6BfcIyKqSTP3ospBQISvIFCPODS36pBRN5UkmDQVvtUJDu5
+MJPlUUi82uLQMjgvlBvDadrBhZ/m0HBhaiD5rpcQLrntljNtAs7T6+yioG0tJ8N2
+xSR5iaD1Wo3tGZwbHhcpi//XRds6Wx6K+2UXCVKOrehlZCRhp4CowYmceyH3RtLH
+p3gNXbC5plm5mgBeRTXYnsxvkqzfAxOu0sFwLZKhzsgA1AVRR/7+9oEmt1kMFe7w
+EjvsLKahCE5tzgULZOuVVwhjCfQPXq6XRjMpud/WR5oS34znIZgmfVLeq2Ut0TeU
+PzujNRSshx/rlnGtgmEHxEJdcQU9/CzPwCSqYAgDZVvYI6PhHmzZ87dwihsiupYn
+6DZBfMilNdc1KN2QsLBCbv3D3mZd653tWKRcp+arNR5F8Vwx0iuUtxl7BDQCQcb/
++atsEY8kNYO7oYoyo9Ex/mMyLV7Ze9rEDCV3CfoJA/M+o6cC0BULJGt2r6QDx0s5
+iiDxf9jbBK8X7gfmjn/fyL5I+PC6eYseW5D2/Q+1boELMfSjJAJxpMMgkQppE6Hr
+sj4gm0+gZsNgbimDI9U+YRjM0ZFdyWKOUNpMX/dFfss2qTdAAck=
+=lTlB
+-----END PGP SIGNATURE-----
+
+--Sig_/HtdrpGxa9p+iibwC0FBZ88M--
