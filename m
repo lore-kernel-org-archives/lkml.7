@@ -2,155 +2,111 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDDECA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B16CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB9221855
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95811217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:47:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fvWxHBvt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbfKAWr0 (ORCPT
+        id S1728025AbfKAWrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 18:47:26 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:52248 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727751AbfKAWrZ (ORCPT
+        Fri, 1 Nov 2019 18:47:55 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54729 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727355AbfKAWrz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 18:47:25 -0400
-Received: from dread.disaster.area (pa49-180-67-183.pa.nsw.optusnet.com.au [49.180.67.183])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 1A8E043E42B;
-        Sat,  2 Nov 2019 09:47:17 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iQfhL-00070m-Nv; Sat, 02 Nov 2019 09:47:15 +1100
-Date:   Sat, 2 Nov 2019 09:47:15 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Boaz Harrosh <boaz@plexistor.com>, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 0/5] Enable per-file/directory DAX operations
-Message-ID: <20191101224715.GY4614@dread.disaster.area>
-References: <20191023221332.GE2044@dread.disaster.area>
- <efffc9e7-8948-a117-dc7f-e394e50606ab@plexistor.com>
- <20191024073446.GA4614@dread.disaster.area>
- <fb4f8be7-bca6-733a-7f16-ced6557f7108@plexistor.com>
- <20191024213508.GB4614@dread.disaster.area>
- <ab101f90-6ec1-7527-1859-5f6309640cfa@plexistor.com>
- <20191025003603.GE4614@dread.disaster.area>
- <20191025204926.GA26184@iweiny-DESK2.sc.intel.com>
- <20191027221039.GL4614@dread.disaster.area>
- <20191031161757.GA14771@iweiny-DESK2.sc.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031161757.GA14771@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
-        a=3wLbm4YUAFX2xaPZIabsgw==:117 a=3wLbm4YUAFX2xaPZIabsgw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
-        a=7-415B0cAAAA:8 a=DDk79rDXCmxeI5gZc_4A:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+        Fri, 1 Nov 2019 18:47:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572648473;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4AbnmotS4GX9fzPBPwmbaz4gXNWAgBddj71xKQDFLh8=;
+        b=fvWxHBvtLDj7sUcK/owIPp20UIfeG0tSTjP/ts3vIlJhnjG5+bJfKHimXmhx6kKOnO4CLk
+        0+WKmYnl8IrlWNVKO1iiG+UBfrmo2t4iEfDKjkcOmJd/tMlCZTGNOXDPM6ahCaupzFK0Se
+        iI3fBukuFYJ8Gp9A/i7p7SjhzBefnGI=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-264-Zq6Pj0PtME6stIvQrd-B8A-1; Fri, 01 Nov 2019 18:47:52 -0400
+Received: by mail-wr1-f71.google.com with SMTP id j17so6174179wru.13
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 15:47:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=1w2dwPc3mjEgCi5ISKwx4I9slR+xAJYMQCO80tIGzcw=;
+        b=Wha0rk3LMD/ZYsIiqv8jJs7jJKpMwDF8GFqBIhX6SxttQkD7AcdSs/zxjB1ZchNiZg
+         TXa80D5/JsT6O30mD3ID9MkTyZMJMoa2odrYMpG5/fu4HNUxEaHY+LKvdkkwle+kCSGC
+         Ra0AB8xeWVwRKAo9L8zMj9vDXuYzvyai6HhYGxKc6v0FYTeCj5v7BEOEGyuMm/8mjFXZ
+         jmBEgqdgE3ggGJFjb43lX26eZL7VirzGa8YS9IglCcivVf903Wy5GLGV0yFb7w1iLDUF
+         SksYbUblumwxaZ1M7uK3KiqlJTch2WKrLTxtGxd3zFeCFd9S92AE0jejUKqTuZ6UyXOr
+         FJsg==
+X-Gm-Message-State: APjAAAVLqJrWH0Frf6xEkRYJCgqbahP76zSj/+qZRBoiXmTrWycMpzXQ
+        dp8e3SqbZWEGlKSamKXISsge2fvIwxqIZhYtmG0gLGIl5W88fCgOwiSqpcpc7AXsl3ThCmegF+k
+        p77wsWha638OzfiMkTbV6xgKx
+X-Received: by 2002:a1c:c90c:: with SMTP id f12mr11715766wmb.97.1572648471201;
+        Fri, 01 Nov 2019 15:47:51 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwN/jcsNi/ctBdMAzUSO/Z1IRdnXDc72udPBZiDioY5UtZhUAZXY1QOnnbQRhBPBL4fgTL/cA==
+X-Received: by 2002:a1c:c90c:: with SMTP id f12mr11715756wmb.97.1572648471004;
+        Fri, 01 Nov 2019 15:47:51 -0700 (PDT)
+Received: from [192.168.3.122] (p5B0C68FD.dip0.t-ipconnect.de. [91.12.104.253])
+        by smtp.gmail.com with ESMTPSA id v16sm9025494wrc.84.2019.11.01.15.47.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Nov 2019 15:47:50 -0700 (PDT)
+From:   David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] drivers/base/memory.c: memory subsys init: skip search for missing blocks
+Date:   Fri, 1 Nov 2019 23:47:49 +0100
+Message-Id: <3B456200-E7A1-454E-A70B-92B4A72743C4@redhat.com>
+References: <b72983e6-0560-972a-57c8-9006942ab2a1@linux.vnet.ibm.com>
+Cc:     Scott Cheloha <cheloha@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nathanl@linux.ibm.com
+In-Reply-To: <b72983e6-0560-972a-57c8-9006942ab2a1@linux.vnet.ibm.com>
+To:     Rick Lindsley <ricklind@linux.vnet.ibm.com>
+X-Mailer: iPhone Mail (17A878)
+X-MC-Unique: Zq6Pj0PtME6stIvQrd-B8A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 09:17:58AM -0700, Ira Weiny wrote:
-> On Mon, Oct 28, 2019 at 09:10:39AM +1100, Dave Chinner wrote:
-> > On Fri, Oct 25, 2019 at 01:49:26PM -0700, Ira Weiny wrote:
-> 
-> [snip]
-> 
-> > 
-> > > Currently this works if I remount the fs or if I use <procfs>/drop_caches like
-> > > Boaz mentioned.
-> > 
-> > drop_caches frees all the dentries that don't have an active
-> > references before it iterates over inodes, thereby dropping the
-> > cached reference(s) to the inode that pins it in memory before it
-> > iterates the inode LRU.
-> > 
-> > > Isn't there a way to get xfs to do that on it's own?
-> > 
-> > Not reliably. Killing all the dentries doesn't guarantee the inode
-> > will be reclaimed immediately. The ioctl() itself requires an open
-> > file reference to the inode, and there's no telling how many other
-> > references there are to the inode that the filesystem a) can't find,
-> > and b) even if it can find them, it is illegal to release them.
-> > 
-> > IOWs, if you are relying on being able to force eviction of inode
-> > from the cache for correct operation of a user controlled flag, then
-> > it's just not going to work.
-> 
-> Agree, I see the difficulty of forcing the effective flag to change in this
-> path.  However, the only thing I am relying on is that the ioctl will change
-> the physical flag.
-> 
-> IOW I am proposing that the semantic be that changing the physical flag does
-> _not_ immediately change the effective flag.  With that clarified up front the
-> user can adjust accordingly.
 
-Which makes it useless from an admin perspective. i.e. to change the
-way the application uses DAX now, admins are going to have to end up
-rebooting the machine to guarantee that the kernel has picked up the
-change in the on-disk flag.
 
-> After thinking about this more I think there is a strong use case to be able to
-> change the physical flag on a non-zero length file.  That use case is to be
-> able to restore files from backups.
+> Am 01.11.2019 um 23:32 schrieb Rick Lindsley <ricklind@linux.vnet.ibm.com=
+>:
+>=20
+> =EF=BB=BFOn 11/1/19 12:00 PM, David Hildenbrand wrote:
+>> No, I don't really like that. Can we please speed up the lookup via a ra=
+dix tree as noted in the comment of "find_memory_block()".
+>=20
+> I agree with the general sentiment that a redesign is the correct long te=
+rm action - it has been for some time now - but implementing a new storage =
+and retrieval method and verifying that it introduces no new problems itsel=
+f is non-trivial.  There's a reason it remains a comment.
+>=20
+> I don't see any issues with the patch itself.   Do we really want to fore=
+go the short term, low-hanging, low risk fruit in favor of waiting indefini=
+tely for that well-tested long-term solution?
 
-Why does that matter? Backup programs need to set the flag before
-the data is written into the destination file, just like they do
-with restoring other flags that influence data placement like the RT
-device bit and extent size hints...
+The low hanging fruit for me is to convert it to a simple VM_BUG_ON(). As I=
+ said, this should never really happen with current code.
 
-Basically, all these issues you keep trying to work around go away
-if we can come up with a way of swapping the aops vector safely.
-That's the problem we need to solve, anything else results in
-largely unacceptible user visible admin warts.
+Also, I don=E2=80=98t think adding a radix tree here is rocket science and =
+takes indefinitely ;) feel free to prove me wrong.
 
-> I propose the user has no direct control over this event and it is mainly used
-> to restore files from backups which is mainly an admin operation where a
-> remount is a reasonable thing to do.
+>=20
+> Rick
 
-As soon as users understand that they flag can be changed, they are
-going to want to do that and they are going to want it to work
-reliably.
-
-> Users direct control of the effective flag is through inheritance.  The user
-> needs to create the file in a DAX enable dir and they get effective operation
-> right away.
-
-Until they realise the application is slow or broken because it is
-using DAX, and they want to turn DAX off for that application. Then
-they have *no control*. You cannot have it both ways - being able to
-turn something on but not turn it off is not "effective operation"
-or user friendly.
-
-> If in the future we can determine a safe way to trigger the a_ops change we can
-> add that to the semantic as an alternative for users.
-
-No, the flag does not get turned on until we've solved the problems
-that resulted in us turning it off. We've gone over this mutliple
-times, and nobody has solved the issues that need solving - everyone
-seems to just hack around the issues rather than solving it
-properly. If we thought taking some kind of shortcut full of
-compromises and gotchas was the right solution, we would have never
-turned the flag off in the first place.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
