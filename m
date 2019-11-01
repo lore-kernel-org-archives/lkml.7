@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBA7CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D72CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B114218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BAFA21897
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:12:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LtAl7Dty"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="odv3zPa4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbfKAWMd (ORCPT
+        id S1728052AbfKAWMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 18:12:33 -0400
-Received: from mail-vs1-f74.google.com ([209.85.217.74]:43382 "EHLO
-        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727499AbfKAWMc (ORCPT
+        Fri, 1 Nov 2019 18:12:36 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:34362 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727984AbfKAWMd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 18:12:32 -0400
-Received: by mail-vs1-f74.google.com with SMTP id x2so1933928vse.10
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 15:12:30 -0700 (PDT)
+        Fri, 1 Nov 2019 18:12:33 -0400
+Received: by mail-pg1-f201.google.com with SMTP id w9so8024093pgl.1
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 15:12:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=oPoEfiJ829HFiTJF4c1zGL5TdlrTqAGNgCQhkPxdZv8=;
-        b=LtAl7DtyP3CWOemlPwjpOVNnzn34lyrO0lR489D5hiJ2VdFoF7EvYDq2wfAcUETMUj
-         AJJV9M7q6HlU6FTXIdD1nVIYYwLxTKh17kUwJIBUkK7g2ckd+p7WgRLwUL+U4LhnUrbS
-         88BQeTCyX9oSneGkX/XIJMANH1JIMKlq987kvfi9Jwu3IO8heBNjQe3JNyCoyIBcqE5C
-         r14KyfVUCK2DPs+EL3vCGkIShUp8wmIdLEHOjtbfUl144pnEGGFEFKJlhFi/qSds+L4C
-         EczTWrE0OgWD8kqUXRcCY/eBf8by4lrn14g7ldLKqA66pCBxbbWJBFgW5xjq+nWP9ZjC
-         NtIw==
+        bh=uZ/kQt4EYM2LvpfCusnWoxftHyD2DxgcHTICv7X7dqw=;
+        b=odv3zPa4RgQ8s6dsoDxvbsmHF3EENGYKEFkki0g9WgsTtiUy1PWOo4QagxAFwNjlM5
+         UaXo+6ESXS0tfN9t/uaTyImKPgoUdkbU5/6mXIU+WDuhuaMZVZlToQjZBZjUeJ+XCKaN
+         AZaYtQv4cn3jcrlvgSVPiMAL2aX2o/kWtvg0ZhsbFx5XNHfG27Zn+lw1m2rgEzTuN0Qx
+         AhXuI7DUwTtXfZmNooQs1nB+s/Ns/DX1LvGMoiAbd56F3AJ+mJtqGL8w4imrJ9czieHh
+         o3BNgiNlRATQnbvYsOjBOz35StnAU9Usdu1hP8mnieHo1tIou+WOWs5WVmR96RMvFpMw
+         BkXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=oPoEfiJ829HFiTJF4c1zGL5TdlrTqAGNgCQhkPxdZv8=;
-        b=tfrqcr3Afq+Ib+rxD1ye5D/duRDNXgyd2EHLfdTGwzpz4aCIAatEwDfOSD4owGR1Ga
-         eJsvkLH1nIdkorGCHKMPdj8h7v7s+sNdYpG9gUYdzfnMuxht018Ejoi17tVhpnSBoIla
-         6QlkHo2P/CHyDnmBdW3UtFTr0pAVZIhfKdj23Okua8BcutYDUSRKyiB+puj5SFC1PZ2S
-         GSsKgLUgp6zrJ3/zsQdnau2c1CPgo1mAS79gGM8NGO5ZIc/NJTnh+hMIP4aQyI/BfY84
-         u6LGDgcVf/y93ZyipTp3eUknUI4nmOvHp1CtYxoQWMXGugzyVtLvI9Pmf70aMta4t254
-         Tk4Q==
-X-Gm-Message-State: APjAAAUFWtmMNnYtxRfZ9N2qjKefQ2rm6BzIb6H9TTdgbGLw84+k3gBK
-        x8bmsVRkY9dPSYdDqLDJ2Mls30+J2kyafC4cUQY=
-X-Google-Smtp-Source: APXvYqxf6pyuy2b0C7kGwVb9cMM9HBx/dT4rTM6z4dJTmBDml32z4MNPrDuebbuZ9ExwOLM18YhheN7oDa5AKWC4xdM=
-X-Received: by 2002:a67:f7d0:: with SMTP id a16mr2505843vsp.108.1572646349491;
- Fri, 01 Nov 2019 15:12:29 -0700 (PDT)
-Date:   Fri,  1 Nov 2019 15:11:46 -0700
+        bh=uZ/kQt4EYM2LvpfCusnWoxftHyD2DxgcHTICv7X7dqw=;
+        b=JRsd1OoxwUo2NzT14V0OYPf6AAV4+UFk1SwrcaLYnLwKMw2LN/hXm6etAP0F+0zisR
+         /gdZPPeNHrhaDqgL6QiteQRigpYKO7LNKJ9vvu6sQgZoVtD4uspI5RxjxjNKrd4CfMNx
+         ZkH9qkD1dV1KAFosF9Yzh2MIvvc9CQPdNUid4o0agEfJvtvJQjyXMDfQVjxI5NIRKLym
+         qth/dTi4MUv/85gPo5ABjIZVrB+EjKyBI0aS7xidPpmGUaFqNSP9RX2c0JLGcPz/JWph
+         cEUGaBoPUM2BNJhr6Ofpf5WvacBK8/o/m7EN6iNm0Y11pZONGBajWv1xkuZT0cZ7song
+         3YTQ==
+X-Gm-Message-State: APjAAAXZP1VxjRLknhlWQ+bJcPdY0fLYaz1f7yEPFwr0bxx1/+oozgTo
+        yc6yxwbBVX5Px9d2x62+Cu8n0/BZmhu6qEnaq+w=
+X-Google-Smtp-Source: APXvYqxnvjccMKGZa+EMFNvyVvl4JQq0YHBc8XNC8xBIuIHK+TPnyLwR96cD6M+G58PTtTiYueuKAoyE/cNOXhTJ/L8=
+X-Received: by 2002:a63:3203:: with SMTP id y3mr15810585pgy.437.1572646351983;
+ Fri, 01 Nov 2019 15:12:31 -0700 (PDT)
+Date:   Fri,  1 Nov 2019 15:11:47 -0700
 In-Reply-To: <20191101221150.116536-1-samitolvanen@google.com>
-Message-Id: <20191101221150.116536-14-samitolvanen@google.com>
+Message-Id: <20191101221150.116536-15-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20191101221150.116536-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-Subject: [PATCH v4 13/17] arm64: preserve x18 when CPU is suspended
+Subject: [PATCH v4 14/17] arm64: efi: restore x18 if it was corrupted
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -85,64 +85,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't lose the current task's shadow stack when the CPU is suspended.
+If we detect a corrupted x18 and SCS is enabled, restore the register
+before jumping back to instrumented code. This is safe, because the
+wrapper is called with preemption disabled and a separate shadow stack
+is used for interrupt handling.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm64/include/asm/suspend.h |  2 +-
- arch/arm64/mm/proc.S             | 10 ++++++++++
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/efi-rt-wrapper.S | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/suspend.h b/arch/arm64/include/asm/suspend.h
-index 8939c87c4dce..0cde2f473971 100644
---- a/arch/arm64/include/asm/suspend.h
-+++ b/arch/arm64/include/asm/suspend.h
-@@ -2,7 +2,7 @@
- #ifndef __ASM_SUSPEND_H
- #define __ASM_SUSPEND_H
- 
--#define NR_CTX_REGS 12
-+#define NR_CTX_REGS 13
- #define NR_CALLEE_SAVED_REGS 12
- 
- /*
-diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-index fdabf40a83c8..5616dc52a033 100644
---- a/arch/arm64/mm/proc.S
-+++ b/arch/arm64/mm/proc.S
-@@ -49,6 +49,8 @@
-  * cpu_do_suspend - save CPU registers context
-  *
-  * x0: virtual address of context pointer
-+ *
-+ * This must be kept in sync with struct cpu_suspend_ctx in <asm/suspend.h>.
-  */
- ENTRY(cpu_do_suspend)
- 	mrs	x2, tpidr_el0
-@@ -73,6 +75,9 @@ alternative_endif
- 	stp	x8, x9, [x0, #48]
- 	stp	x10, x11, [x0, #64]
- 	stp	x12, x13, [x0, #80]
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+	str	x18, [x0, #96]
-+#endif
+diff --git a/arch/arm64/kernel/efi-rt-wrapper.S b/arch/arm64/kernel/efi-rt-wrapper.S
+index 3fc71106cb2b..945744f16086 100644
+--- a/arch/arm64/kernel/efi-rt-wrapper.S
++++ b/arch/arm64/kernel/efi-rt-wrapper.S
+@@ -34,5 +34,10 @@ ENTRY(__efi_rt_asm_wrapper)
+ 	ldp	x29, x30, [sp], #32
+ 	b.ne	0f
  	ret
- ENDPROC(cpu_do_suspend)
- 
-@@ -89,6 +94,11 @@ ENTRY(cpu_do_resume)
- 	ldp	x9, x10, [x0, #48]
- 	ldp	x11, x12, [x0, #64]
- 	ldp	x13, x14, [x0, #80]
+-0:	b	efi_handle_corrupted_x18	// tail call
++0:
 +#ifdef CONFIG_SHADOW_CALL_STACK
-+	ldr	x18, [x0, #96]
-+	/* Clear the SCS pointer from the state buffer */
-+	str	xzr, [x0, #96]
++	/* Restore x18 before returning to instrumented code. */
++	mov	x18, x2
 +#endif
- 	msr	tpidr_el0, x2
- 	msr	tpidrro_el0, x3
- 	msr	contextidr_el1, x4
++	b	efi_handle_corrupted_x18	// tail call
+ ENDPROC(__efi_rt_asm_wrapper)
 -- 
 2.24.0.rc1.363.gb1bccd3e3d-goog
 
