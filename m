@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0E1CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A955CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C5D2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F6A521855
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:26:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FvLY0L0K"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ifI8SQ9d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfKAV0t (ORCPT
+        id S1727283AbfKAV0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 17:26:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55844 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727123AbfKAV0q (ORCPT
+        Fri, 1 Nov 2019 17:26:55 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57780 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727188AbfKAV0s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 17:26:46 -0400
+        Fri, 1 Nov 2019 17:26:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572643605;
+        s=mimecast20190719; t=1572643607;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=vc9DkpMujQuhpCve3Y34f4TSvB+W8OlWdKhsXSlhGW0=;
-        b=FvLY0L0KY2T/xKkM+Yve/+o1qoy7Q1Ur8GaPc1f+skUf88KhfTPA6Rwu2fB2zhf74TGdnP
-        ZlgH3hxvsvfMLDtOLCq3+zfYQ1A4EM4dolud8hFsikVNAgvI8K4xWmBK1glh8EpkY+o7bT
-        7FgMxVrsyLn3g7h2a6HvedqcL8fRvQg=
+        bh=VmbUG2xp7oJxAAQUnh6rfZI/GV69GyKIZVQEsGh/h4s=;
+        b=ifI8SQ9d54m1sCVXHXHzJ1FKsou0GYaL+bk4Y6oGwVYSAMTvVGHi0sXudpcLEZ5GGqrchh
+        R8MbbtXb3Q4Fds4iiC9INOnW2+KD4TI2aF2Bapl3Svfq1CVgnbUvDyxlyMo5+hxqeIowxx
+        3zPdQ634eJjz659jxSIH5xt/j9v1ZIA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-273-GsvX0Ji3MkOSgzBUAc1JGg-1; Fri, 01 Nov 2019 17:26:42 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-390-0s3lOTovP82_VPzjX0IMQw-1; Fri, 01 Nov 2019 17:26:41 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 021E2800D49;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B926A1005500;
         Fri,  1 Nov 2019 21:26:40 +0000 (UTC)
 Received: from amt.cnet (ovpn-112-2.gru2.redhat.com [10.97.112.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CCE7F5D9E2;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CD4785D6B7;
         Fri,  1 Nov 2019 21:26:37 +0000 (UTC)
 Received: from amt.cnet (localhost [127.0.0.1])
-        by amt.cnet (Postfix) with ESMTP id 9FBD910517E;
-        Fri,  1 Nov 2019 19:26:19 -0200 (BRST)
+        by amt.cnet (Postfix) with ESMTP id 61B62105157;
+        Fri,  1 Nov 2019 19:03:36 -0200 (BRST)
 Received: (from marcelo@localhost)
-        by amt.cnet (8.14.7/8.14.7/Submit) id xA1LQFgl020794;
-        Fri, 1 Nov 2019 19:26:15 -0200
-Date:   Fri, 1 Nov 2019 19:26:15 -0200
+        by amt.cnet (8.14.7/8.14.7/Submit) id xA1L3W81020345;
+        Fri, 1 Nov 2019 19:03:32 -0200
+Date:   Fri, 1 Nov 2019 19:03:32 -0200
 From:   Marcelo Tosatti <mtosatti@redhat.com>
 To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
 Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         joao.m.martins@oracle.com, rafael.j.wysocki@intel.com,
         rkrcmar@redhat.com, pbonzini@redhat.com
-Subject: Re: [PATCH 5/5] cpuidle-haltpoll: fix up the branch check
-Message-ID: <20191101212613.GB20672@amt.cnet>
+Subject: Re: [PATCH 1/5] KVM: simplify branch check in host poll code
+Message-ID: <20191101210331.GA20061@amt.cnet>
 References: <1572060239-17401-1-git-send-email-zhenzhong.duan@oracle.com>
- <1572060239-17401-6-git-send-email-zhenzhong.duan@oracle.com>
+ <1572060239-17401-2-git-send-email-zhenzhong.duan@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <1572060239-17401-6-git-send-email-zhenzhong.duan@oracle.com>
+In-Reply-To: <1572060239-17401-2-git-send-email-zhenzhong.duan@oracle.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: GsvX0Ji3MkOSgzBUAc1JGg-1
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: 0s3lOTovP82_VPzjX0IMQw-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -74,48 +74,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 26, 2019 at 11:23:59AM +0800, Zhenzhong Duan wrote:
-> Ensure pool time is longer than block_ns, so there is a margin to
-> avoid vCPU get into block state unnecessorily.
+On Sat, Oct 26, 2019 at 11:23:55AM +0800, Zhenzhong Duan wrote:
+> Remove redundant check.
 >=20
 > Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 > ---
->  drivers/cpuidle/governors/haltpoll.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  virt/kvm/kvm_main.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 >=20
-> diff --git a/drivers/cpuidle/governors/haltpoll.c b/drivers/cpuidle/gover=
-nors/haltpoll.c
-> index 4b00d7a..59eadaf 100644
-> --- a/drivers/cpuidle/governors/haltpoll.c
-> +++ b/drivers/cpuidle/governors/haltpoll.c
-> @@ -81,9 +81,9 @@ static void adjust_poll_limit(struct cpuidle_device *de=
-v, unsigned int block_us)
->  =09u64 block_ns =3D block_us*NSEC_PER_USEC;
-> =20
->  =09/* Grow cpu_halt_poll_us if
-> -=09 * cpu_halt_poll_us < block_ns < guest_halt_poll_us
-> +=09 * cpu_halt_poll_us <=3D block_ns < guest_halt_poll_us
->  =09 */
-> -=09if (block_ns > dev->poll_limit_ns && block_ns <=3D guest_halt_poll_ns=
-) {
-> +=09if (block_ns >=3D dev->poll_limit_ns && block_ns < guest_halt_poll_ns=
-) {
-=09=09=09=09=09      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 67ef3f2..2ca2979 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -2366,13 +2366,12 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
+>  =09=09} else if (halt_poll_ns) {
+>  =09=09=09if (block_ns <=3D vcpu->halt_poll_ns)
+>  =09=09=09=09;
+> -=09=09=09/* we had a long block, shrink polling */
+> -=09=09=09else if (vcpu->halt_poll_ns && block_ns > halt_poll_ns)
+> -=09=09=09=09shrink_halt_poll_ns(vcpu);
+>  =09=09=09/* we had a short halt and our poll time is too small */
+> -=09=09=09else if (vcpu->halt_poll_ns < halt_poll_ns &&
 
-If block_ns =3D=3D guest_halt_poll_ns, you won't allow dev->poll_limit_ns t=
-o
-grow. Why is that?
+This is not a redundant check: it avoids from calling
+into grow_halt_poll_ns, which will do:
 
-> @@ -101,7 +101,7 @@ static void adjust_poll_limit(struct cpuidle_device *=
-dev, unsigned int block_us)
->  =09=09=09val =3D guest_halt_poll_ns;
-> =20
->  =09=09dev->poll_limit_ns =3D val;
-> -=09} else if (block_ns > guest_halt_poll_ns &&
-> +=09} else if (block_ns >=3D guest_halt_poll_ns &&
->  =09=09   guest_halt_poll_allow_shrink) {
->  =09=09unsigned int shrink =3D guest_halt_poll_shrink;
-
-And here you shrink if block_ns =3D=3D guest_halt_poll_ns. Not sure
-why that makes sense either.
+=091) Multiplication
+=092) Cap that back to halt_poll_ns
+=093) Invoke the trace_kvm_halt_poll_ns_grow tracepoint
+=09   (when in fact vcpu->halt_poll_ns did not grow).
 
