@@ -4,73 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CB3CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BE3CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56BC521835
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 739E62085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:01:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbfKAOAY (ORCPT
+        id S1727895AbfKAOBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 10:00:24 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58254 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfKAOAY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 10:00:24 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iQXTN-00055Z-FX; Fri, 01 Nov 2019 14:00:17 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ice: fix potential infinite loop because loop counter being too small
-Date:   Fri,  1 Nov 2019 14:00:17 +0000
-Message-Id: <20191101140017.16646-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 1 Nov 2019 10:01:15 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44216 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727728AbfKAOBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 10:01:14 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1E6788A8061615E898D9;
+        Fri,  1 Nov 2019 22:01:12 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 1 Nov 2019
+ 22:01:01 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
+        <pedrom.sousa@synopsys.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <stanley.chu@mediatek.com>,
+        <yuehaibing@huawei.com>, <arnd@arndb.de>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] scsi: ufshcd: Remove dev_err() on platform_get_irq() failure
+Date:   Fri, 1 Nov 2019 22:00:58 +0800
+Message-ID: <20191101140058.23212-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+platform_get_irq() will call dev_err() itself on failure,
+so there is no need for the driver to also do this.
+This is detected by coccinelle.
 
-Currently the for-loop counter i is a u8 however it is being checked
-against a maximum value hw->num_tx_sched_layers which is a u16. Hence
-there is a potential wrap-around of counter i back to zero if
-hw->num_tx_sched_layers is greater than 255.  Fix this by making i
-a u16.
-
-Addresses-Coverity: ("Infinite loop")
-Fixes: b36c598c999c ("ice: Updates to Tx scheduler code")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/net/ethernet/intel/ice/ice_sched.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/ufs/ufshcd-pltfrm.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_sched.c b/drivers/net/ethernet/intel/ice/ice_sched.c
-index fc624b73d05d..2fde9653a608 100644
---- a/drivers/net/ethernet/intel/ice/ice_sched.c
-+++ b/drivers/net/ethernet/intel/ice/ice_sched.c
-@@ -1036,7 +1036,7 @@ enum ice_status ice_sched_query_res_alloc(struct ice_hw *hw)
- 	struct ice_aqc_query_txsched_res_resp *buf;
- 	enum ice_status status = 0;
- 	__le16 max_sibl;
--	u8 i;
-+	u16 i;
+diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
+index 8d40dc9..76f9be7 100644
+--- a/drivers/scsi/ufs/ufshcd-pltfrm.c
++++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
+@@ -402,7 +402,6 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
  
- 	if (hw->layer_info)
- 		return status;
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+-		dev_err(dev, "IRQ resource not available\n");
+ 		err = -ENODEV;
+ 		goto out;
+ 	}
 -- 
-2.20.1
+2.7.4
+
 
