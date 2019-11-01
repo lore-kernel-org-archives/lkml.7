@@ -2,108 +2,95 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D398CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F55CC47E49
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D04621835
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C95F21897
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:50:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tByDGaaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729003AbfKAMqH convert rfc822-to-8bit (ORCPT
+        id S1728018AbfKAMux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 08:46:07 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44710 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbfKAMqG (ORCPT
+        Fri, 1 Nov 2019 08:50:53 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53682 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfKAMuw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 08:46:06 -0400
-Received: by mail-oi1-f195.google.com with SMTP id s71so8014985oih.11;
-        Fri, 01 Nov 2019 05:46:06 -0700 (PDT)
+        Fri, 1 Nov 2019 08:50:52 -0400
+Received: by mail-wm1-f67.google.com with SMTP id n7so9231054wmc.3;
+        Fri, 01 Nov 2019 05:50:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EKGzxWtR3fiXW/40+7aYocnd9u+gzpb6DDnHwR2mWX4=;
+        b=tByDGaaIgL/auVEam4y/Fevw0xCWCgTYgec2YLif4gCkcPDIt0cw9b0bad9AWAnatb
+         hcce1036cqyoQ1bYR5/ajs8L9rXCV+M3Qt/tjkljyE4vdI8V62U4TjTqsA9LWN95PtxQ
+         mjfnCHrrPRqW9zFaL2QCUROK+8RTwopcDe9mdNS9XjA+LKmd1Qn2R6IHoa7u/cHWy61W
+         2RYhuzi/Q0+ub/OgjYDjgSFa8rSTISy4D0Dc4t5tvqk2snTdSr/IaQ0BrsnHFiEdYaA9
+         wdPVFarPQxo341qV/HyqFKJYhcBbpfzRnRmqbZFTMlcAzM0M25ihJhBuzRsfXa9Yxg8E
+         4uvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5ePSdIm6pah0cj12lWYKf0TPdMueWECgaXObaXLnaO0=;
-        b=g5/smSvVe7wGbwQqdRahN0khEVpnicA/L4ySYqrF/dAyVPMoszJywBFK7Nhkqj8nLt
-         vYKbsXCCka35+2xQ4XSw0Kz7RiTK4jSIW0HPuVXUTxHchzOtH7QWO+rGtq47/Zh4zItx
-         PnZxLbppSUAl0kBwEEyj4NbgL7R8PEGDLfhfuGE3n0ZkAUqGpUgJFgj59nSjZcj1MktQ
-         x/l/AiuKohBxpD1rJt6g8/aMFnfr45wJht62ujdYl4NDGQgqHKWDri2RaJTyuLl1URge
-         keZPOpdn73ObJdA91b+DjdX8U64ooExF9BvtVo6z6VcvkKwhTDZrwjumIBuZM06g/iYl
-         6RKg==
-X-Gm-Message-State: APjAAAVVcRqRcmf+A+HG6L3oQAqTu+3iNMvmydwwjXA7fu+O3Q6P6zq8
-        jYTkn+rFigQpouATxAqoXyK7J0WtfCA2J2xgThk=
-X-Google-Smtp-Source: APXvYqwlddboe7ivMWjOKf93FGaNASg7HlPVjO+wJM7HX6dWoWcJ8Gr6urg+mAaFKSAdWCZGC0DaqjEIy8+88o4+A7U=
-X-Received: by 2002:a05:6808:60a:: with SMTP id y10mr1877464oih.102.1572612365503;
- Fri, 01 Nov 2019 05:46:05 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EKGzxWtR3fiXW/40+7aYocnd9u+gzpb6DDnHwR2mWX4=;
+        b=W+Pg3YR83W1EsIvNSEc3jSPjcj8HOtzQPyeZwoLCrojQn1FvcERq5mQDk0770f/ebJ
+         IxfBF/t+dD1g+k2DoHfU6Ht6Wj7GQM5DnnTHZ62qL5UEpI7l43ow2J9PVyqYTr9OMicD
+         VVOOFIU+j0C1w2LJihfTPz/mbz/sK6IW45nV2m9Ij8dmG0AG31n6K6HvtBriRB3Aj6gH
+         IYN6cw8DGg2gkZjFJ7OE5EHuwkWrIlCTh64w6dGYk9Cb4A8INJ7mixBrBXjkHXdXQe3N
+         BeqSfxJkEpRJ8YTW1w8NmhHp8LgqEC8rKGOkYZYGSs2huH7RUE/5WxUtDIGK9kQVxVjR
+         HH2g==
+X-Gm-Message-State: APjAAAWdPnuTl+xOO3ocSpBhmv8s3w6v/GEXUYdmZygc7F2XieWTHFNv
+        8yVb1QCqeQ7UBY+J7sbIZamEPUiF
+X-Google-Smtp-Source: APXvYqzuE2vAdMAq+9VOhAQXWfUPUsaGN/1iaSbTb8N8x4q2gMNbsC/YXDePLm9/FneMrqzdZGwEQw==
+X-Received: by 2002:a1c:f317:: with SMTP id q23mr9342526wmq.74.1572612650614;
+        Fri, 01 Nov 2019 05:50:50 -0700 (PDT)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id a1sm5047692wmb.28.2019.11.01.05.50.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 05:50:49 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 13:50:38 +0100
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     kbuild-all@lists.01.org, linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: fix semicolon.cocci warnings
+Message-ID: <20191101125038.GA3904@Red>
+References: <alpine.DEB.2.21.1911010950330.2883@hadrien>
 MIME-Version: 1.0
-References: <20191016142601.28255-1-geert+renesas@glider.be>
- <CACRpkdathjE3CLWsJYapL-0ri9_mC-uCKrh058zBk_nN5wHkDg@mail.gmail.com> <CAMuHMdVQaCtWR9ZO7N-HKOZS1ivBNWssjqzV1B0XwSBkMFp8Ow@mail.gmail.com>
-In-Reply-To: <CAMuHMdVQaCtWR9ZO7N-HKOZS1ivBNWssjqzV1B0XwSBkMFp8Ow@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 1 Nov 2019 13:45:53 +0100
-Message-ID: <CAMuHMdVxCEAdxj4xfnU2DEr0UkL5-xNzVdUFkvFgpzr28a7Vfw@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: sh-pfc: Do not use platform_get_irq() to
- count interrupts
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1911010950330.2883@hadrien>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Nov 01, 2019 at 09:52:06AM +0100, Julia Lawall wrote:
+> From: kbuild test robot <lkp@intel.com>
+> 
+>  Remove unneeded semicolon.
+> 
+> Generated by: scripts/coccinelle/misc/semicolon.cocci
+> 
+> Fixes: f08fcced6d00 ("crypto: allwinner - Add sun8i-ss cryptographic offloader")
+> CC: Corentin Labbe <clabbe.montjoie@gmail.com>
+> Signed-off-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
+> ---
 
-On Thu, Oct 24, 2019 at 2:35 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Thu, Oct 24, 2019 at 2:07 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Wed, Oct 16, 2019 at 4:26 PM Geert Uytterhoeven
-> > <geert+renesas@glider.be> wrote:
-> > > As platform_get_irq() now prints an error when the interrupt does not
-> > > exist, counting interrupts by looping until failure causes the printing
-> > > of scary messages like:
-> > >
-> > >     sh-pfc e6060000.pin-controller: IRQ index 0 not found
-> > >
-> > > Fix this by using the platform_irq_count() helper instead.
-> > >
-> > > Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > > Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> > > Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > ---
-> > > v2:
-> > >   - Add Reviewed-by, Tested-by.
-> > >
-> > > Linus: Can you please take this one, as it is a fix for v5.4? Thx!
-> >
-> > I'm not sure the little error message counts as
-> > a regression, certainly users can live with it.
->
-> Several similar fixes have already made it upstream.
-> But the decision is up to you.
->
-> > Can't you just put it in your queue for the next kernel?
->
-> Sure, will do (after ELC-E), if you prefer.
+Acked-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-Queuing in sh-pfc-for-v5.5.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks
