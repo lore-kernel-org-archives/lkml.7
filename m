@@ -2,128 +2,108 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF10FCA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C6CCA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96F3620650
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF33F20650
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:19:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UMeh5Qej"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Qh2apHPi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbfKAQTP (ORCPT
+        id S1728340AbfKAQTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 12:19:15 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43414 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfKAQTP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 12:19:15 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 3so7385964pfb.10;
-        Fri, 01 Nov 2019 09:19:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dAGwFFDGn7AorxgIz/AEpdCiGhCVLv3rIV9fz6SUeP8=;
-        b=UMeh5QejuPBHRPk70ICMaxUtljVz04aSCgfhYqis0E+f/qX9YksRLO7gylTYEKYdZS
-         mY9BheeLRGuXG96psRHLn7eGWKCfiXCVooi3Nr0pcj3xbx2JxEuIzoA5NikKE+TwNcac
-         Czof0g0/HS6tjeFTLI3/C15xuzNymXh4xk/+5dl1tK0aCNXvDpZM/Cboof8NnyTLUGaJ
-         5IbU+Tod3smBHkiY8bEnMCuwChwcxbDBZSc18TTgQc9rUsf3QZtbQyYcd/PmHgY81sNi
-         Q7R5vkOLrftO5A+Hp7WcOYjnqVl2MANl57fpvIWa6ly2F/Bn0aiAELMZOR+mvVP8pXR6
-         QbWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dAGwFFDGn7AorxgIz/AEpdCiGhCVLv3rIV9fz6SUeP8=;
-        b=OZAIRAoZlKPAUAXoSyW/akRSX+BfpC1Opf9pizKBvlLRUoRfJDzwO0ldeoeBxiloqU
-         ApLFaomjStQracM8Jo9mM9Ea7v/yGFe/hrpPruKYWpgfs9tf+8BhX/TnS4lt/lE1IpMN
-         DR6NzP9p65KVdUrlyfN/J662YAWLZL/G7ds69aVK5o/FP9CmZ2PDk/TV/qvG7HgPZM1V
-         3uYd2+LjY4SKl35/BHoQI1vMquhXcqvAxlNa0RVgm6Jn4pht7xhDZ4jMHX40tas4v3eD
-         CAk6PtL3emrL3YSKmHgBG14kCluTcsFUrgj0H1keV561UHbZuZ55kX36nh5ofLPSjlDG
-         B+Yg==
-X-Gm-Message-State: APjAAAV3Tov7xdDJv2QT4tNqwUH3AmzXXFKstYvw1kP8QTtpYLqDazcs
-        soPugdjLSvCllpXl+2lez8G5uHE7OxuJixOGp8A=
-X-Google-Smtp-Source: APXvYqyI9lotw31W/ZvoHgHNajTKgybh89AhP1kwZOAh1wJBGAWlmqvLx8kWHzHz2ipfEJOIxWHoPn6XBMDYrjsksTw=
-X-Received: by 2002:a62:fb06:: with SMTP id x6mr6778318pfm.231.1572625154324;
- Fri, 01 Nov 2019 09:19:14 -0700 (PDT)
+        Fri, 1 Nov 2019 12:19:40 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:2613 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726229AbfKAQTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 12:19:39 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 474S7r1fhQz9v2yk;
+        Fri,  1 Nov 2019 17:19:36 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Qh2apHPi; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id LL34SHhx5NAd; Fri,  1 Nov 2019 17:19:36 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 474S7r0Vhdz9v2yj;
+        Fri,  1 Nov 2019 17:19:36 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1572625176; bh=zDfTuyr5rEX4zI99jRtwwUmmmD2R9ZF+lJ3geVUTGqg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Qh2apHPiLmfs6EJags73uaZqx7IGD2FVk7wvpRg1Xm9W8sHg4b8c0XYoz89a/MRlq
+         ifUiSWAlsgpiZgs2eFg46/a/REe+tZT7GJvh/RMS1qeGrUk0/VtRCaLsvr61qV3h9f
+         2IebLlE11RurHHXZJeawbhGKSNai0y6xorR+vquA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9F8768B8F6;
+        Fri,  1 Nov 2019 17:19:37 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ornw-bnFdm4u; Fri,  1 Nov 2019 17:19:37 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3884C8B7C2;
+        Fri,  1 Nov 2019 17:19:37 +0100 (CET)
+Subject: Re: [PATCH v3 28/36] serial: ucc_uart: explicitly include
+ soc/fsl/cpm.h
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Scott Wood <oss@buserror.net>, linux-serial@vger.kernel.org
+References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
+ <20191101124210.14510-1-linux@rasmusvillemoes.dk>
+ <20191101124210.14510-29-linux@rasmusvillemoes.dk>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <a921b57b-04d5-4874-89e2-df29dfe99bfc@c-s.fr>
+Date:   Fri, 1 Nov 2019 17:19:37 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191101035646.25644-1-linux@roeck-us.net>
-In-Reply-To: <20191101035646.25644-1-linux@roeck-us.net>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Sat, 2 Nov 2019 01:19:03 +0900
-Message-ID: <CAC5umyhiOiAiYWs2Y=L5133CCQNnAgi8oq6AbGzgkznZKz5f-w@mail.gmail.com>
-Subject: Re: [PATCH v3] nvme: Add hardware monitoring support
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Keith Busch <kbusch@kernel.org>, Chris Healy <cphealy@gmail.com>,
-        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org, Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191101124210.14510-29-linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B411=E6=9C=881=E6=97=A5(=E9=87=91) 12:56 Guenter Roeck <linux@ro=
-eck-us.net>:
-> +void nvme_hwmon_init(struct nvme_ctrl *ctrl)
-> +{
-> +       struct device *dev =3D ctrl->device;
+Le 01/11/2019 à 13:42, Rasmus Villemoes a écrit :
+> This driver uses #defines from soc/fsl/cpm.h, so instead of relying on
+> some other header pulling that in, do that explicitly. This is
+> preparation for allowing this driver to build on ARM.
+> 
 
-Should we use 'ctrl->dev' instead of 'ctrl->device'?
+UCC are only on QE.
+CPM has SCCs. instead.
+So this driver shouldn't need cpm.h
 
-The 'ctrl->device' is a pointer to char device and the '->of_node' member
-is NULL.
+Christophe
 
-So if devm_hwmon_device_register_with_info() (i.e. __hwmon_device_register)
-is called with 'ctrl->device', it doesn't attempt to register a sensor to a
-DT thermal zone (i.e. hwmon_thermal_add_sensor() is not called at all).
-
-This change was required, when I tried this nvme hwmon patch with the
-following DT thermal setup.
-
-https://lore.kernel.org/linux-devicetree/1561990354-4084-3-git-send-email-a=
-kinobu.mita@gmail.com/
-
-> +       struct nvme_hwmon_data *data;
-> +       struct device *hwmon;
-> +       int err;
-> +
-> +       data =3D devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return;
-> +
-> +       data->ctrl =3D ctrl;
-> +       mutex_init(&data->read_lock);
-> +
-> +       err =3D nvme_hwmon_get_smart_log(data);
-> +       if (err) {
-> +               dev_warn(dev, "Failed to read smart log (error %d)\n", er=
-r);
-> +               devm_kfree(dev, data);
-> +               return;
-> +       }
-> +
-> +       hwmon =3D devm_hwmon_device_register_with_info(dev, dev_name(dev)=
-, data,
-> +                                                    &nvme_hwmon_chip_inf=
-o,
-> +                                                    NULL);
-
-If the above change is applied, the second 'name' argument is changed
-from 'nvme0' to '0000:01:00.0' as a side effect.  So we may want to
-change the second argument, too.
-
-> +       if (IS_ERR(hwmon)) {
-> +               dev_warn(dev, "Failed to instantiate hwmon device\n");
-> +               devm_kfree(dev, data);
-> +       }
-> +}
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
+>   drivers/tty/serial/ucc_uart.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/tty/serial/ucc_uart.c b/drivers/tty/serial/ucc_uart.c
+> index a0555ae2b1ef..7e802616cba8 100644
+> --- a/drivers/tty/serial/ucc_uart.c
+> +++ b/drivers/tty/serial/ucc_uart.c
+> @@ -32,6 +32,7 @@
+>   #include <soc/fsl/qe/ucc_slow.h>
+>   
+>   #include <linux/firmware.h>
+> +#include <soc/fsl/cpm.h>
+>   #include <asm/reg.h>
+>   
+>   /*
+> 
