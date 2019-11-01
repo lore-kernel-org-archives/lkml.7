@@ -6,40 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB47CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 23:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29261CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 23:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45FDD20881
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 23:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A5D120881
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 23:59:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbfKAX7V (ORCPT
+        id S1727927AbfKAX7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 19:59:21 -0400
-Received: from mga04.intel.com ([192.55.52.120]:63647 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727964AbfKAX7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 Nov 2019 19:59:16 -0400
+Received: from mga04.intel.com ([192.55.52.120]:63645 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727269AbfKAX7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 19:59:15 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 16:59:16 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 16:59:14 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,257,1569308400"; 
-   d="scan'208";a="199469599"
+   d="scan'208";a="199469573"
 Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
-  by fmsmga008.fm.intel.com with ESMTP; 01 Nov 2019 16:59:17 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 01 Nov 2019 16:59:15 -0700
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, keith.busch@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Huong Nguyen <huong.nguyen@dell.com>,
-        Austin Bolen <Austin.Bolen@dell.com>
-Subject: [PATCH v10 8/8] PCI/ACPI: Enable EDR support
-Date:   Fri,  1 Nov 2019 16:56:56 -0700
-Message-Id: <b271f0614e90dd9222c5e5b043ee0d0937f3c54f.1572652041.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [PATCH v10 2/8] PCI/DPC: Allow dpc_probe() even if firmware first mode is enabled
+Date:   Fri,  1 Nov 2019 16:56:50 -0700
+Message-Id: <c2bb2291887fe321a0b8747992539516ef5b68d9.1572652041.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1572652041.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1572652041.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -52,156 +48,143 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-As per PCI firmware specification r3.2 Downstream Port Containment
-Related Enhancements ECN, sec 4.5.1, OS must implement following steps
-to enable/use EDR feature.
+As per ACPI specification v6.3, sec 5.6.6, Error Disconnect Recover
+(EDR) notification used by firmware to let OS know about the DPC event
+and permit OS to perform error recovery when processing the EDR
+notification. Also, as per PCI firmware specification r3.2 Downstream
+Port Containment Related Enhancements ECN, sec 4.5.1, table 4-6, if DPC
+is controlled by firmware (firmware first mode), it's responsible for
+initializing Downstream Port Containment Extended Capability Structures
+per firmware policy. And, OS is permitted to read or write DPC Control
+and Status registers of a port while processing an Error Disconnect
+Recover (EDR) notification from firmware on that port.
 
-1. OS can use bit 7 of _OSC Control Field to negotiate control over
-Downstream Port Containment (DPC) configuration of PCIe port. After _OSC
-negotiation, firmware will Set this bit to grant OS control over PCIe
-DPC configuration and Clear it if this feature was requested and denied,
-or was not requested.
+Currently, if firmware controls DPC (firmware first mode), OS will not
+create/enumerate DPC PCIe port services. But, if OS supports EDR
+feature, then as mentioned in above spec references, it should permit
+enumeration of DPC driver and also support handling ACPI EDR
+notification. So as first step, allow dpc_probe() to continue even if
+firmware first mode is enabled. Also add appropriate checks to ensure
+device registers are not modified outside EDR notification window in
+firmware first mode. This is a preparatory patch for adding EDR support.
 
-2. Also, if OS supports EDR, it should expose its support to BIOS by
-setting bit 7 of _OSC Support Field. And if OS sets bit 7 of _OSC
-Control Field it must also expose support for EDR by setting bit 7 of
-_OSC Support Field.
-
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Len Brown <lenb@kernel.org>
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Acked-by: Keith Busch <keith.busch@intel.com>
-Tested-by: Huong Nguyen <huong.nguyen@dell.com>
-Tested-by: Austin Bolen <Austin.Bolen@dell.com>
 ---
- drivers/acpi/pci_root.c         | 9 +++++++++
- drivers/pci/pcie/portdrv_core.c | 8 +++++++-
- drivers/pci/probe.c             | 1 +
- include/linux/acpi.h            | 6 ++++--
- include/linux/pci.h             | 3 ++-
- 5 files changed, 23 insertions(+), 4 deletions(-)
+ drivers/pci/pcie/dpc.c | 65 +++++++++++++++++++++++++++++++++---------
+ 1 file changed, 52 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index d1e666ef3fcc..134e20474dfd 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -131,6 +131,7 @@ static struct pci_osc_bit_struct pci_osc_support_bit[] = {
- 	{ OSC_PCI_CLOCK_PM_SUPPORT, "ClockPM" },
- 	{ OSC_PCI_SEGMENT_GROUPS_SUPPORT, "Segments" },
- 	{ OSC_PCI_MSI_SUPPORT, "MSI" },
-+	{ OSC_PCI_EDR_SUPPORT, "EDR" },
- 	{ OSC_PCI_HPX_TYPE_3_SUPPORT, "HPX-Type3" },
- };
- 
-@@ -141,6 +142,7 @@ static struct pci_osc_bit_struct pci_osc_control_bit[] = {
- 	{ OSC_PCI_EXPRESS_AER_CONTROL, "AER" },
- 	{ OSC_PCI_EXPRESS_CAPABILITY_CONTROL, "PCIeCapability" },
- 	{ OSC_PCI_EXPRESS_LTR_CONTROL, "LTR" },
-+	{ OSC_PCI_EXPRESS_DPC_CONTROL, "DPC" },
- };
- 
- static void decode_osc_bits(struct acpi_pci_root *root, char *msg, u32 word,
-@@ -440,6 +442,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
- 		support |= OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT;
- 	if (pci_msi_enabled())
- 		support |= OSC_PCI_MSI_SUPPORT;
-+	if (IS_ENABLED(CONFIG_PCIE_EDR))
-+		support |= OSC_PCI_EDR_SUPPORT;
- 
- 	decode_osc_support(root, "OS supports", support);
- 	status = acpi_pci_osc_support(root, support);
-@@ -487,6 +491,9 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
- 			control |= OSC_PCI_EXPRESS_AER_CONTROL;
- 	}
- 
-+	if (IS_ENABLED(CONFIG_PCIE_DPC))
-+		control |= OSC_PCI_EXPRESS_DPC_CONTROL;
-+
- 	requested = control;
- 	status = acpi_pci_osc_control_set(handle, &control,
- 					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL);
-@@ -916,6 +923,8 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
- 		host_bridge->native_pme = 0;
- 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
- 		host_bridge->native_ltr = 0;
-+	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
-+		host_bridge->native_dpc = 0;
- 
- 	/*
- 	 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index 1b330129089f..1b54a39df795 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -250,8 +250,14 @@ static int get_port_device_capability(struct pci_dev *dev)
- 		pcie_pme_interrupt_enable(dev, false);
- 	}
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index a32ec3487a8d..c3e0b05efa4b 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -69,6 +69,14 @@ void pci_save_dpc_state(struct pci_dev *dev)
+ 	if (!dpc)
+ 		return;
  
 +	/*
-+	 * If EDR support is enabled in OS, then even if AER is not handled in
-+	 * OS, DPC service can be enabled.
++	 * If DPC is controlled by firmware then save/restore tasks are also
++	 * controller by firmware. So skip rest of the function if DPC is
++	 * controlled by firmware.
 +	 */
- 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
--	    pci_aer_available() && services & PCIE_PORT_SERVICE_AER)
-+	    ((IS_ENABLED(CONFIG_PCIE_EDR) && !host->native_dpc) ||
-+	    (pci_aer_available() && services & PCIE_PORT_SERVICE_AER &&
-+	    (pcie_ports_native || host->native_dpc))))
- 		services |= PCIE_PORT_SERVICE_DPC;
++	if (pcie_aer_get_firmware_first(dev))
++		return;
++
+ 	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
+ 	if (!save_state)
+ 		return;
+@@ -90,6 +98,14 @@ void pci_restore_dpc_state(struct pci_dev *dev)
+ 	if (!dpc)
+ 		return;
  
- 	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 3d5271a7a849..54be2f93eba3 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -596,6 +596,7 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
- 	bridge->native_shpc_hotplug = 1;
- 	bridge->native_pme = 1;
- 	bridge->native_ltr = 1;
-+	bridge->native_dpc = 1;
- }
++	/*
++	 * If DPC is controlled by firmware then save/restore tasks are also
++	 * controller by firmware. So skip rest of the function if DPC is
++	 * controlled by firmware.
++	 */
++	if (pcie_aer_get_firmware_first(dev))
++		return;
++
+ 	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
+ 	if (!save_state)
+ 		return;
+@@ -291,9 +307,6 @@ static int dpc_probe(struct pcie_device *dev)
+ 	int status;
+ 	u16 ctl, cap;
  
- struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 8b4e516bac00..71452d4959ec 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -515,8 +515,9 @@ extern bool osc_pc_lpi_support_confirmed;
- #define OSC_PCI_CLOCK_PM_SUPPORT		0x00000004
- #define OSC_PCI_SEGMENT_GROUPS_SUPPORT		0x00000008
- #define OSC_PCI_MSI_SUPPORT			0x00000010
-+#define OSC_PCI_EDR_SUPPORT			0x00000080
- #define OSC_PCI_HPX_TYPE_3_SUPPORT		0x00000100
--#define OSC_PCI_SUPPORT_MASKS			0x0000011f
-+#define OSC_PCI_SUPPORT_MASKS			0x0000019f
+-	if (pcie_aer_get_firmware_first(pdev))
+-		return -ENOTSUPP;
+-
+ 	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
+ 	if (!dpc)
+ 		return -ENOMEM;
+@@ -302,13 +315,32 @@ static int dpc_probe(struct pcie_device *dev)
+ 	dpc->dev = dev;
+ 	set_service_data(dev, dpc);
  
- /* PCI Host Bridge _OSC: Capabilities DWORD 3: Control Field */
- #define OSC_PCI_EXPRESS_NATIVE_HP_CONTROL	0x00000001
-@@ -525,7 +526,8 @@ extern bool osc_pc_lpi_support_confirmed;
- #define OSC_PCI_EXPRESS_AER_CONTROL		0x00000008
- #define OSC_PCI_EXPRESS_CAPABILITY_CONTROL	0x00000010
- #define OSC_PCI_EXPRESS_LTR_CONTROL		0x00000020
--#define OSC_PCI_CONTROL_MASKS			0x0000003f
-+#define OSC_PCI_EXPRESS_DPC_CONTROL		0x00000080
-+#define OSC_PCI_CONTROL_MASKS			0x000000bf
+-	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
+-					   dpc_handler, IRQF_SHARED,
+-					   "pcie-dpc", dpc);
+-	if (status) {
+-		pci_warn(pdev, "request IRQ%d failed: %d\n", dev->irq,
+-			 status);
+-		return status;
++	/*
++	 * As per PCIe spec r5.0, implementation note titled "Determination
++	 * of DPC Control", to avoid conflicts over whether platform
++	 * firmware or the operating system have control of DPC, it is
++	 * recommended that platform firmware and operating systems always link
++	 * the control of DPC to the control of Advanced Error Reporting.
++	 *
++	 * So use AER FF mode check API pcie_aer_get_firmware_first() to decide
++	 * whether DPC is controlled by software or firmware.
++	 *
++	 * If DPC is handled in firmware and ACPI support is not enabled
++	 * in OS, skip probe and return error.
++	 */
++	if (pcie_aer_get_firmware_first(pdev) && !IS_ENABLED(CONFIG_ACPI))
++		return -ENODEV;
++
++	/* Register interrupt handler only if OS controls DPC */
++	if (!pcie_aer_get_firmware_first(pdev)) {
++		status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
++						   dpc_handler, IRQF_SHARED,
++						   "pcie-dpc", dpc);
++		if (status) {
++			pci_warn(pdev, "request IRQ%d failed: %d\n", dev->irq,
++				 status);
++			return status;
++		}
+ 	}
  
- #define ACPI_GSB_ACCESS_ATTRIB_QUICK		0x00000002
- #define ACPI_GSB_ACCESS_ATTRIB_SEND_RCV         0x00000004
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index f9088c89a534..dc0751df03f5 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -509,8 +509,9 @@ struct pci_host_bridge {
- 	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
- 	unsigned int	native_pme:1;		/* OS may use PCIe PME */
- 	unsigned int	native_ltr:1;		/* OS may use PCIe LTR */
--	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
-+	unsigned int	native_dpc:1;		/* OS may use PCIe DPC */
+ 	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CAP, &cap);
+@@ -323,9 +355,12 @@ static int dpc_probe(struct pcie_device *dev)
+ 			dpc->rp_log_size = 0;
+ 		}
+ 	}
+-
+-	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+-	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
++	if (!pcie_aer_get_firmware_first(pdev)) {
++		ctl = (ctl & 0xfff4) |
++			(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
++		pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL,
++				      ctl);
++	}
  
-+	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
- 	/* Resource alignment requirements */
- 	resource_size_t (*align_resource)(struct pci_dev *dev,
- 			const struct resource *res,
+ 	pci_info(pdev, "error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
+ 		 cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
+@@ -343,6 +378,10 @@ static void dpc_remove(struct pcie_device *dev)
+ 	struct pci_dev *pdev = dev->port;
+ 	u16 ctl;
+ 
++	/* Skip updating DPC registers if DPC is controlled by firmware */
++	if (pcie_aer_get_firmware_first(pdev))
++		return;
++
+ 	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
+ 	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
+ 	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
 -- 
 2.21.0
 
