@@ -2,85 +2,122 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC690CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F9FCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 957FC208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 403D5208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:44:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGI71aBT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h06R/0w/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729450AbfKACnG (ORCPT
+        id S1729475AbfKACol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 22:43:06 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34121 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727516AbfKACnG (ORCPT
+        Thu, 31 Oct 2019 22:44:41 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39235 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbfKACok (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 22:43:06 -0400
-Received: by mail-pg1-f193.google.com with SMTP id e4so5502492pgs.1;
-        Thu, 31 Oct 2019 19:43:05 -0700 (PDT)
+        Thu, 31 Oct 2019 22:44:40 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x28so2749573pfo.6;
+        Thu, 31 Oct 2019 19:44:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=pdCTSNBzXMVNjxxGCg4sNnFLSh/Zm1ndkbOKTDQj3Xg=;
-        b=TGI71aBTwvspJiLiByHBuShrC9p+h55vSKn/6uObmDz/WBaIrbtw9VoPVVd87zC67F
-         i/nUq9dSm9HkOaJoc+9bADkSKian1Bhxilev7PuqKzCfuzIQJY4V7BRr9s0zeNSH8DlX
-         HIlf9ek9jnLRjLtWuB58UxuP8EuwFT8ErF+udgENhim/tfgB3JyrqOsgEFdtmuXBVhrJ
-         zIV2F0RY26VNkAgqPvHYtjCJoRfThxg9Sqpuj+BNcTRgHkh3VLUkra63yM9dJ04JxA9d
-         Co4sBAWieB54ae5yT3z7r3UQKI97sB6hm4aOzt8I8RzcpgTy1PiRG5d1W22oBRF5oPom
-         7WPQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=d0tVrAmrERsoSt+7rvxULMwxjRb7DGBkYT/cGct46m0=;
+        b=h06R/0w/hcnwPbFU8IE7PfPmLBTx2clX4OQlykuSfy+6xmH7Vu5sN85N09Tp3VqKx2
+         BEZtCuRRoGwq7UJncs/qYnJjXn6s2kH+gJoxSP+1HeoKs7jUgG0UL26uVVp0vvoEohkX
+         AusveXNwjuAhRRm822U+jDdKuv/6+uQBu7O81R/Xxt58HZgRVjdYyk/E0xgEJdQ+6hlm
+         MQvO2HjABiBrYwvr/Q9bHBhEW0/sHYJ6P5RzJo+TiuC642i8hOKVw/dy9UFjeHbM1iZS
+         bFU+NA+zkpCfbqfeAOEeBxtOZFqee+0V6rQ+PIdY3lvMCsKkh7dEIwgFJBybuhmvLUUc
+         4UBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pdCTSNBzXMVNjxxGCg4sNnFLSh/Zm1ndkbOKTDQj3Xg=;
-        b=pdNz6j826zumZXDxgXniGROAHmdEYn008R8t51sDH/NsLi7C3Fw/jsoJS/AYy6yiRh
-         9hn7Zfh1h8TU6hwEVrVHaSfQ0Vk/2a24G5YpHTsXK4okgT4jMMNzS8p4lG+PNCs4bEHB
-         g1geXisqbKdtiMYah/FrfALcxnhe+DnoX2+VyuY95gnpfhfjsiqBZPCJpLOGdmx49SLw
-         f+iRnGDPRw1GMGfimikWbuoFU0vwhQSludnpgIDEHwK5eBn7NMlftlEH8KZzAQDzRy2F
-         4di1riK8TdhZSHGq3x3fwAPiEC71IWXrzltaT7kf0umpeGI8pCnh8fnx7af2znCSKIUe
-         u85g==
-X-Gm-Message-State: APjAAAUQzc2yswM4yC4OqfVBNhvot6E5UKWGR8Pc9+CmM7062ta0tqzv
-        a2I9rrNVGtN0PKT8q6GK+nY=
-X-Google-Smtp-Source: APXvYqxsUtr/syuVlBUTHzCpCyixPYIDnjIN1yGv0EwxyHs5csyO/t3eaaC6ET2qXt8uFIFHmoJ6SQ==
-X-Received: by 2002:a17:90b:30d:: with SMTP id ay13mr12221327pjb.29.1572576185443;
-        Thu, 31 Oct 2019 19:43:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=d0tVrAmrERsoSt+7rvxULMwxjRb7DGBkYT/cGct46m0=;
+        b=BH4XfJ38zTDzki6CHI8LbzOAvngLqohnKAWgruxT0vDSJzc2ab7KOuJUwLtWkwdiyn
+         OJHwi7PmHYUIOEpQCXNS0/QZ/uhlG7hifF5F/e97j/mDZ7cVDP88qwA8oUnhfAkNVMYX
+         /NdOlA9CwJ4Ayx4ECVlxeBF29qZRJ4KsZuwGSdl3Pqc5LlfXsVDGUkGuqXijLdYF35+F
+         4Xy0BCFYON3oHnhIUxzVTBAxOOFAx0tYhRHO/uHQCw+mmk97cZYBVFZvZm291Bl9tg0B
+         M2v+oaFZsQ9pyL6W2JaksJgLpqZwlcZF8fxpnULqw0p9n0+LRpr9ZoF7EF6Kw7aO0d0d
+         eQUA==
+X-Gm-Message-State: APjAAAW7dgvG5TmKKc44txEZqjXvZDtUV8iwGoujmzY69ilicerSPTn6
+        HBjC1Yp+eMeiHz0BV/WGq6k=
+X-Google-Smtp-Source: APXvYqxzmqx4e1CjTuVyZlnM6Qi0Y0wXJWfMb6JdSyDhXZnyks5RMFFWT+7JrmMN9dXkJQ/R5Pyf/A==
+X-Received: by 2002:a62:90:: with SMTP id 138mr10686184pfa.209.1572576280180;
+        Thu, 31 Oct 2019 19:44:40 -0700 (PDT)
 Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id a21sm3434162pjq.1.2019.10.31.19.43.03
+        by smtp.gmail.com with ESMTPSA id a29sm6891774pfr.49.2019.10.31.19.44.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 19:43:04 -0700 (PDT)
+        Thu, 31 Oct 2019 19:44:39 -0700 (PDT)
 From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     agross@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+To:     agross@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH 0/2] Support for MSM8998 mss
-Date:   Thu, 31 Oct 2019 19:43:01 -0700
-Message-Id: <20191101024301.21919-1-jeffrey.l.hugo@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: remoteproc: qcom: Add Q6v5 Modem PIL binding for MSM8998
+Date:   Thu, 31 Oct 2019 19:44:35 -0700
+Message-Id: <20191101024435.21975-1-jeffrey.l.hugo@gmail.com>
 X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20191101024301.21919-1-jeffrey.l.hugo@gmail.com>
+References: <20191101024301.21919-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Booting mss on MSM8998 is a critical step to getting wifi functional - a
-rather useful feature for the MSM8998 based laptops.
+Add new compatible string for Qualcomm MSM8998 SoCs.
 
-Jeffrey Hugo (2):
-  dt-bindings: remoteproc: qcom: Add Q6v5 Modem PIL binding for MSM8998
-  remoteproc: qcom_q6v5_mss: Add support for MSM8998
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
- .../bindings/remoteproc/qcom,q6v5.txt         |  6 +++
- drivers/remoteproc/qcom_q6v5_mss.c            | 52 ++++++++++++++++---
- 2 files changed, 52 insertions(+), 6 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+index 41ca5df5be5a..c416746f93cf 100644
+--- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+@@ -12,6 +12,7 @@ on the Qualcomm Hexagon core.
+ 		    "qcom,msm8916-mss-pil",
+ 		    "qcom,msm8974-mss-pil"
+ 		    "qcom,msm8996-mss-pil"
++		    "qcom,msm8998-mss-pil"
+ 		    "qcom,sdm845-mss-pil"
+ 
+ - reg:
+@@ -41,6 +42,7 @@ on the Qualcomm Hexagon core.
+ 	qcom,msm8974-mss-pil:
+ 		    must be "wdog", "fatal", "ready", "handover", "stop-ack"
+ 	qcom,msm8996-mss-pil:
++	qcom,msm8998-mss-pil:
+ 	qcom,sdm845-mss-pil:
+ 		    must be "wdog", "fatal", "ready", "handover", "stop-ack",
+ 		    "shutdown-ack"
+@@ -70,6 +72,9 @@ on the Qualcomm Hexagon core.
+ 	qcom,msm8996-mss-pil:
+ 		    must be "iface", "bus", "mem", "xo", "gpll0_mss",
+ 		    "snoc_axi", "mnoc_axi", "pnoc", "qdss"
++	qcom,msm8998-mss-pil:
++		    must be "iface", "bus", "mem", "xo", "gpll0_mss",
++		    "snoc_axi", "mnoc_axi", "qdss"
+ 	qcom,sdm845-mss-pil:
+ 		    must be "iface", "bus", "mem", "xo", "gpll0_mss",
+ 		    "snoc_axi", "mnoc_axi", "prng"
+@@ -137,6 +142,7 @@ For the compatible string below the following supplies are required:
+ 	qcom,msm8974-mss-pil:
+ 		    no power-domain names required
+ 	qcom,msm8996-mss-pil:
++	qcom,msm8998-mss-pil:
+ 		    must be "cx", "mx"
+ 	qcom,sdm845-mss-pil:
+ 		    must be "cx", "mx", "mss", "load_state"
 -- 
 2.17.1
 
