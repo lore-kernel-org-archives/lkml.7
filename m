@@ -2,137 +2,139 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7F0CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CFBCA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 415B12086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:50:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="TP7wjRII"
+	by mail.kernel.org (Postfix) with ESMTP id 4810D2086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572605642;
+	bh=Qq5uDUh2NAo8fqV6wNGVGEMgX1RTvNFGVvP2NZoDCJs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wCskYLhmeZ+R+jKKnMnEZfdQnSH6EZyJ3KIadWTIpbwDTMjNRLUrO/1JnfQCurmho
+	 SQQRo4TvA/nX32XYBWzqV+3sytACrS+mJbhQCgYf3RDlcHh1YHg/e4Lx7uG5m3JhCU
+	 HHAu/G2/CZ1Up4LYux4pahh6s3xxLBy8ExS5fq6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbfKAKuN (ORCPT
+        id S1729914AbfKAKyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 06:50:13 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39485 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729792AbfKAKuM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 06:50:12 -0400
-Received: by mail-lf1-f68.google.com with SMTP id 195so6906071lfj.6
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 03:50:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dSTkZ3gJr9RHofvoMOdrYurKDo1euKiXxFo6I0S5MME=;
-        b=TP7wjRIIldd6f149q7ZYazFr0cKDyA3RDCsG91Q97OhRmJm747gICMnYi+aftXR2mI
-         QT5Frf2tO23R/gTAFQAlufET+UwaTz9TymoyxavjU9y3a7adhgEnjebEjK2vzE6cy3uo
-         /cmTsAd8guON80ez2qiVszH4PPauwps8G3PsI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dSTkZ3gJr9RHofvoMOdrYurKDo1euKiXxFo6I0S5MME=;
-        b=EiHZvUfRvztfGVdjBr3VVtsGO4m6LT4Kbo3mZ9xBKNMX1ON7QobCptp+5yP+LrunSt
-         ukSXAzE62db6XdNsgPbXe/PrBVGvJnlqNyXrWiLjd3LZUVYQATmpWTRSykqMNdFNVtWo
-         McjkQB2njjtShgjW7motGY3mOHE92G84ruopEo1DNUpTRnj+JK80RTs5mGHnOaNSaYU2
-         nmzgQqWnM09aJf+EzoCxYS8zUSChrRBr4keuIldytLRERcLiHHk1baB/SEnWvQNy33EZ
-         5Uvy/rPadYCJpC0mvejr6NfJjLtZc83f7SPKtyfL+dbdCCgS+RavXerkhxBB3MFerxSu
-         CddQ==
-X-Gm-Message-State: APjAAAWVxlRVUsFkfmEdyxGXDLgwZ8qVx/Z8JEsp9BfX4s7G1KljnJjQ
-        5X9VAf8m3v7R/74ahDNxeAZS8t4BhXJp6w==
-X-Google-Smtp-Source: APXvYqxQxPQDEux7hWSTiO63Y8iwSwLLWeFP/8NIgD4MGfM9h5FyYt0mNJkKU9AYNJeO1RGZ/WCXfg==
-X-Received: by 2002:a19:c354:: with SMTP id t81mr6546520lff.179.1572605408939;
-        Fri, 01 Nov 2019 03:50:08 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id d19sm2566388lfc.12.2019.11.01.03.50.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Nov 2019 03:50:08 -0700 (PDT)
-Subject: Re: [PATCH linux-kselftest/test v6] lib/list-test: add a test for the
- 'list' doubly linked list
-To:     Joe Perches <joe@perches.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        shuah <shuah@kernel.org>
-Cc:     David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-References: <20191024224631.118656-1-davidgow@google.com>
- <0cb1d948-0da3-eb0f-c58f-ae3a785dd0dd@kernel.org>
- <CABVgOSmCHbGjZBjeWSbPEZbJw22SaBQnoO77xxNzN_ugAwzNiQ@mail.gmail.com>
- <20191030104217.GA18421@kadam>
- <42a8270d-ed6f-d29f-5e71-7b76a074b63e@kernel.org>
- <20191030184600.GC18421@kadam>
- <2b3b48a8512d2c567fce388394ad1d262d31908e.camel@perches.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <8e8654d4-f81e-be04-7a43-68ff98cdd293@rasmusvillemoes.dk>
-Date:   Fri, 1 Nov 2019 11:50:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 1 Nov 2019 06:54:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42528 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726622AbfKAKyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 06:54:00 -0400
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EA6521897;
+        Fri,  1 Nov 2019 10:53:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572605639;
+        bh=Qq5uDUh2NAo8fqV6wNGVGEMgX1RTvNFGVvP2NZoDCJs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dJssP0BubNF96U27YGA25BF4L03OtdVguBaTCc00FUo0WFtULEicmT4wttke4p4Pt
+         2O2Rw0nW5apd0QaniBP3+m0ewuiu6nlWqaooJT7vgZVV01uND28whgkmCp5XzM9yX4
+         WTfayBWyWoyWkUOz9uP+o3u6Hr7XkXfFoIsMlAOU=
+Received: by mail-lf1-f43.google.com with SMTP id f5so6939601lfp.1;
+        Fri, 01 Nov 2019 03:53:58 -0700 (PDT)
+X-Gm-Message-State: APjAAAWxF9PR4eYb+vv8K2OcTuGSEDQZoX7EFmMnWV+PkkvjSvxk0sJZ
+        PibPxBFgV4fpv/dgJYsGtyq3A4N/VBb/Q5B7NAk=
+X-Google-Smtp-Source: APXvYqzPNO+lSp1NGMQoEFqECmKTS1sJUS58FFxOWntNonCUIVnUCLRCXSqjn52p8zPDEzb3zy9Uf2v1Rt6VLAnp19Y=
+X-Received: by 2002:a19:ad4a:: with SMTP id s10mr6726882lfd.159.1572605637145;
+ Fri, 01 Nov 2019 03:53:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2b3b48a8512d2c567fce388394ad1d262d31908e.camel@perches.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191021161351.20789-1-krzk@kernel.org> <20191021161351.20789-4-krzk@kernel.org>
+ <CAMuHMdXr7_HP5NUQ_0D76N-eBuootQqyPusqmf6nyDnLN__ORA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXr7_HP5NUQ_0D76N-eBuootQqyPusqmf6nyDnLN__ORA@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 1 Nov 2019 11:53:45 +0100
+X-Gmail-Original-Message-ID: <CAJKOXPcZGhC1+-tOwL6N_ohWzXEqJ3T6=HWefNzXsa3eeQN1fg@mail.gmail.com>
+Message-ID: <CAJKOXPcZGhC1+-tOwL6N_ohWzXEqJ3T6=HWefNzXsa3eeQN1fg@mail.gmail.com>
+Subject: Re: [PATCH v4 4/7] dt-bindings: sram: Merge Renesas SRAM bindings
+ into generic
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Heiko Stuebner <heiko@sntech.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/10/2019 20.15, Joe Perches wrote:
-> On Wed, 2019-10-30 at 21:46 +0300, Dan Carpenter wrote:
->> Hm...  I imagined the checkpatch code a little different in my head but
->> this would also work to make it stricter.  I doubt it miss very many
->> real life style problems.
-> 
-> Well, doubts vs reality...
-> 
->> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> []
->> @@ -3607,7 +3607,7 @@ sub process {
->>  
->>  # if/while/etc brace do not go on next line, unless defining a do while loop,
->>  # or if that brace on the next line is for something else
->> -		if ($line =~ /(.*)\b((?:if|while|for|switch|(?:[a-z_]+|)for_each[a-z_]+)\s*\(|do\b|else\b)/ && $line !~ /^.\s*\#/) {
->> +		if ($line =~ /(.*)\b((?:if|while|for|switch|(?:list|hlist)_for_each[a-z_]+)\s*\(|do\b|else\b)/ && $line !~ /^.\s*\#/) {
->>  			my $pre_ctx = "$1$2";
->>  
->>  			my ($level, @ctx) = ctx_statement_level($linenr, $realcnt, 0);
-> 
-> So - nak
+On Fri, 1 Nov 2019 at 11:08, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Krzysztof,
+>
+> On Mon, Oct 21, 2019 at 6:15 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > The Renesas SRAM bindings list only compatible so integrate them into
+> > generic SRAM bindings schema.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
+> Thanks for your patch, whcih is now commit 0759b09eadd0d9a1 ("dt-bindings:
+> sram: Merge Renesas SRAM bindings into generic") in Rob's for-next branch.
+>
+> > --- a/Documentation/devicetree/bindings/sram/renesas,smp-sram.txt
+> > +++ /dev/null
+> > @@ -1,27 +0,0 @@
+> > -* Renesas SMP SRAM
+> > -
+> > -Renesas R-Car Gen2 and RZ/G1 SoCs need a small piece of SRAM for the jump stub
+> > -for secondary CPU bringup and CPU hotplug.
+> > -This memory is reserved by adding a child node to a "mmio-sram" node, cfr.
+> > -Documentation/devicetree/bindings/sram/sram.txt.
+> > -
+> > -Required child node properties:
+> > -  - compatible: Must be "renesas,smp-sram",
+> > -  - reg: Address and length of the reserved SRAM.
+> > -    The full physical (bus) address must be aligned to a 256 KiB boundary.
+> > -
+> > -
+> > -Example:
+> > -
+> > -       icram1: sram@e63c0000 {
+> > -               compatible = "mmio-sram";
+> > -               reg = <0 0xe63c0000 0 0x1000>;
+> > -               #address-cells = <1>;
+> > -               #size-cells = <1>;
+> > -               ranges = <0 0 0xe63c0000 0x1000>;
+> > -
+> > -               smp-sram@0 {
+> > -                       compatible = "renesas,smp-sram";
+> > -                       reg = <0 0x10>;
+> > -               };
+>
+> > --- a/Documentation/devicetree/bindings/sram/sram.yaml
+> > +++ b/Documentation/devicetree/bindings/sram/sram.yaml
+>
+> > @@ -186,3 +187,17 @@ examples:
+> >              reg = <0x1ff80 0x8>;
+> >          };
+> >      };
+> > +
+> > +  - |
+> > +    sram@e63c0000 {
+> > +        compatible = "mmio-sram";
+> > +        reg = <0xe63c0000 0x1000>;
+>
+> Is there any specific reason you converted the example from 64-bit to
+> 32-bit addressing?
+> All Renesas SoCs using this have #address-cells and #size-cells = <2>.
 
-How about changing the check so it only matches the
-if/while/for/*for_each*/ thing when it's the first thing on a line _and_
-has non-trivial whitespace in front. Then a function declaration as
+I should mention it in commit msg. The reason is because examples are
+compiled inside a {} with address/size cells of 1. Instead of
+conversion maybe it would be reasonable to put it inside additional
+node adjusting the address/size cells.
 
-static void test_for_each()
-{
-
-would not fire, nor would it if it were written in the other common style
-
-static void
-test_for_each()
-{
-
-?
-
-Maybe there'd still be a problem at the call-sites
-
-  test_for_each();
-  this_is_not_indented;
-
-but the ending semi-colon should actually make it appear as a loop with
-an empty body (though that in itself might fire a different warning,
-dunno if checkpatch has that kind of warnings). But in any case the
-above should remove _some_ false positives.
-
-Rasmus
+Best regards,
+Krzysztof
