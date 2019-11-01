@@ -2,148 +2,160 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA904CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B88CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0C42217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC17217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:26:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="T36Tr2PF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p2RmuRZy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbfKAKQX (ORCPT
+        id S1729732AbfKAK0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 06:16:23 -0400
-Received: from mail-eopbgr00089.outbound.protection.outlook.com ([40.107.0.89]:21678
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729471AbfKAKQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 06:16:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FxrgGCcMQ3NubkTGH+5MrqYMaiL+i9wwoAurbTE8ehJOJBOFyU+zh0HMpWwtNWCPxE+9xznE1Ew3xqn6IsygmWZ9pHxsQPpWt8nJQaX4cEIDZhkbbVSnG58LB873cygMKhCV1eDcqVCs3WNchhV5MfRMrBnn2EDbjGugNMWktDiw2K3kYYCpYSvlXPOdnuBI5RvBLCF0hFlBZ/i0OrhhaeWv/eldtB3P/tqidRATlHphmdRVmT6xtOhbVl3x8gj53c8oClyVlnyJymR7zuI/2wMHZ6Zndg/+Hl3KBxzDEJdndkINXYIAVbIiMumAoLZmE6HttdFTT/obM88dApDbEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GEjNv2BDjI1G7k63M4Yk3OLuJc/sRKSE2ecyOSgvLrs=;
- b=e/LVTWXw9mbC6DejKeciNTuKJL4UMZc9qJBe36FLSMwTjKSCdyOgtwsw9Prx7bVcCPJL9TLK4i0pVvULN1KH9E5ZsNxardeDQKov+/cCzU6JxISXOoFYDEx9DbRIQRDn2U36Ph9G3vPldzApRWBwfi5iheNjbed0qqH+QoLdkAq1kP6BN77Zr9LAskCF0o8XhtSlFxR5IE5VFn2hgJ81xvqNEVYx2/8d5DDlOO6fWNiec2nRKM3D3LVNxEIGpBFKZRIueDlp5PGDztMpG4Z9I1EaQRbRzj+SXC5wcLenC3OgRYEjjn9ck5Ngq4hjaUHqeMKMqcEde+82HtavRqdznw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GEjNv2BDjI1G7k63M4Yk3OLuJc/sRKSE2ecyOSgvLrs=;
- b=T36Tr2PFpJsYkpVkU+8P5gj2VQOTOAE7LlsDIL68Fu5KJEyyqH3S6nIVda2KPWKc7U1C9mtnRmCDMMkJD3gjZjdqSWfoamRCyTkQP8fSv9+fqQPw+CRYzl9bEVkkvmu8Kg4TXUKRIvIF88mphEduSvOYuC4PxOtrlEcKkOfncjg=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5188.eurprd04.prod.outlook.com (20.177.42.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.30; Fri, 1 Nov 2019 10:16:19 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::843c:e722:27cb:74e1]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::843c:e722:27cb:74e1%5]) with mapi id 15.20.2387.028; Fri, 1 Nov 2019
- 10:16:19 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "sboyd@kernel.org" <sboyd@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Abel Vesa <abel.vesa@nxp.com>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH] clk: imx: clk-composite-8m: add lock to gate/mux
-Thread-Topic: [PATCH] clk: imx: clk-composite-8m: add lock to gate/mux
-Thread-Index: AQHVkJ1nitbWRrQWUkuauMi+K6eGNQ==
-Date:   Fri, 1 Nov 2019 10:16:19 +0000
-Message-ID: <1572603166-24594-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR02CA0209.apcprd02.prod.outlook.com
- (2603:1096:201:20::21) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d7c51b07-d29a-4498-29f7-08d75eb489a0
-x-ms-traffictypediagnostic: AM0PR04MB5188:|AM0PR04MB5188:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB5188D29497A9CD1C23A72C1F88620@AM0PR04MB5188.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 020877E0CB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(366004)(39860400002)(376002)(199004)(189003)(486006)(316002)(66946007)(110136005)(66476007)(66556008)(386003)(6506007)(99286004)(14444005)(256004)(52116002)(86362001)(66066001)(64756008)(66446008)(2201001)(50226002)(2906002)(54906003)(3846002)(4326008)(6116002)(6512007)(36756003)(8936002)(25786009)(5660300002)(2501003)(305945005)(81166006)(71190400001)(71200400001)(8676002)(81156014)(7736002)(44832011)(26005)(14454004)(476003)(2616005)(102836004)(186003)(6636002)(478600001)(6436002)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5188;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dRwXf712rwIjCkCaIQL+wqyvGDSRW7jJP3cu1xR8BWCPFwrhSovRCTtyvM8R+jQtNicbGdO2oltd4O2fclzhhMPCIPHc5pYGHC2ZP7bA+L81CbsIQMAz9dyI7jksVEApJS2OcY7pi3D/FY5Op6SkwIcVAoDsAas77L+1P2MIlm2lTJeZfJamXeaiyVI6iDJ74AN0ryKgM0km38onvjV/iIJfdhugzV3q4EhUboTInQGHSbnOxlUSY4bZ8BbqY80ZO7NTV957lwXIBBR+n6Zoyte5KJScNVSzRU6zKv16BbUgKnEtmPRwRTche9WO/mSTIMPqgGH9/rPz7FGUQAf/YLChnppkdVvQiPPNB5bZE8bmp+NLWsy2EONjupujDr2iUHwAfJyngFQF5X1qzrITgZygyyO1AhxRCEZZDMW4WIu9E5KYA3Dezrv0Oh2ADAnC
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 1 Nov 2019 06:26:08 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35270 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729466AbfKAK0H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 06:26:07 -0400
+Received: by mail-wr1-f67.google.com with SMTP id l10so9200364wrb.2
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 03:26:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mIsyO0dYa/j5O9STeNXT9gsa/Vv1qidzl7M/7WtKnlY=;
+        b=p2RmuRZyGE752aqHlKKWtMTXzUv40V+9x50Xh6mCgJ3CUx9LAOFpMC+dvKgAikhBm9
+         2kt3yA292OpNk/XCm/jJHaodqTuc0y0xCVEWBcc93RKcETt8s+uVnHwORFqNcTJicSNa
+         GJaniqgHjINAuJ3G0xCtRga17zJ51eIGZ+GWK6fdzQ/TZQvvzUgAaAaN5vUoBIYpS7WQ
+         HtRQtLSGIMLTQWhns1Wezne1F4unAMZ+UxPgDXbU6ZntTE2kmgHZRHc/Bnt0ncbBb5uM
+         8pyCcXne6aKVU3B1L1C8O4RyY4ZzG1V5wQOWt9K2XQcJWphEpghPluPXmWvdZiJ7hm7J
+         oL3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mIsyO0dYa/j5O9STeNXT9gsa/Vv1qidzl7M/7WtKnlY=;
+        b=R5uViK/BIxWY1NkAYRe4lJETrLighLPEq/oZpxeKsRaBt+vMNfXhWBi/j+A7MYneZD
+         kZSp6UDmiJEfbpMdNo5Czaji2f6ArrE1ItvPtM7nQkbmw9X3FjCeyVtKjdKbXS2qvW33
+         F4jxLiK5a3ASWl7LSxcYRoOEkQl+B3yDH1wpgAxs0ifjangqlv2nkz1NrdpBNRK1MyIC
+         Uf/K95P5hPFizNcBSCBYssUfnmMTpl47ltdK4RIGiHuhfj72E/BVmpHU5McThAkBaKFm
+         Fcz56B78ELUJkcFUORsmIaFfoA0/I8Kb4zob4Qz2UmQ4ECvsJqiH66uSaIZCetK1mGpm
+         s1Zg==
+X-Gm-Message-State: APjAAAWU5EASMGZPimCV4YdceaD41o2T5nM5EMNaFgkp9Ut2lBFK/4pd
+        BOcVDX9VkoNoEKWLc05SFqgntRkSJOl/YdKxoideQg==
+X-Google-Smtp-Source: APXvYqwINW8N2IbEc4obogACI/d5yO7n6MpnKx9pbBB7JuFm9SKc0Awl31e6U+DHhEQgcUm0nussnBPhPtj24lUNz94=
+X-Received: by 2002:a5d:404d:: with SMTP id w13mr10458377wrp.185.1572603964621;
+ Fri, 01 Nov 2019 03:26:04 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d7c51b07-d29a-4498-29f7-08d75eb489a0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2019 10:16:19.7670
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gGkErQ3LI8HX/PRzUbsiPr0hzYRyAxCR//GrM7Vyog7GqEbD851oGsiF7gVWzMbcAMJ64iHpQCVkB6O1nQ+IZg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5188
+References: <20191024224631.118656-1-davidgow@google.com> <201910311147.FA6A822@keescook>
+In-Reply-To: <201910311147.FA6A822@keescook>
+From:   David Gow <davidgow@google.com>
+Date:   Fri, 1 Nov 2019 03:25:52 -0700
+Message-ID: <CABVgOSmFm312wkP7_jhgkPhmPHeC+2000twNj7hKPbKf0VEg7w@mail.gmail.com>
+Subject: Re: [PATCH linux-kselftest/test v6] lib/list-test: add a test for the
+ 'list' doubly linked list
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Shuah Khan <shuah@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On Thu, Oct 31, 2019 at 11:51 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Thu, Oct 24, 2019 at 03:46:31PM -0700, David Gow wrote:
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 7ef985e01457..f3d0c6e42b97 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -9504,6 +9504,13 @@ F:     Documentation/misc-devices/lis3lv02d.rst
+> >  F:   drivers/misc/lis3lv02d/
+> >  F:   drivers/platform/x86/hp_accel.c
+> >
+> > +LIST KUNIT TEST
+> > +M:   David Gow <davidgow@google.com>
+> > +L:   linux-kselftest@vger.kernel.org
+> > +L:   kunit-dev@googlegroups.com
+> > +S:   Maintained
+> > +F:   lib/list-test.c
+>
+> Should KUnit be the first name here? Then all KUnit tests appear in the
+> same location in the MAINTAINERS file, or should it be like it is here,
+> so that KUnit tests are close to the same-named area?
 
-There is a lock to diviver in the composite driver, but that's not
-enought. lock to gate/mux are also needed to provide exclusive access
-to the register.
+Thus far, we haven't standardised on anything re: MAINTAINERS entries
+for tests. For the sysctl test, for instance, the file has been added
+to the general "PROC SYSCTL" section.
+There's no existing MAINTAINERS entry for list.h at all, though, so
+that's couldn't be done here.
 
-Fixes: d3ff9728134e ("clk: imx: Add imx composite clock")
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/clk/imx/clk-composite-8m.c | 2 ++
- 1 file changed, 2 insertions(+)
+My suspicion is that it doesn't matter all that much (isn't everyone
+just grepping MAINTAINERS anyway?), but that long-term, tests are more
+likely to be being maintained in parallel with the code under test,
+rather than in one group block of tests. I don't mind changing it if
+anyone has stronger opinions, though...
 
-diff --git a/drivers/clk/imx/clk-composite-8m.c b/drivers/clk/imx/clk-compo=
-site-8m.c
-index e0f25983e80f..20f7c91c03d2 100644
---- a/drivers/clk/imx/clk-composite-8m.c
-+++ b/drivers/clk/imx/clk-composite-8m.c
-@@ -142,6 +142,7 @@ struct clk_hw *imx8m_clk_hw_composite_flags(const char =
-*name,
- 	mux->reg =3D reg;
- 	mux->shift =3D PCG_PCS_SHIFT;
- 	mux->mask =3D PCG_PCS_MASK;
-+	mux->lock =3D &imx_ccm_lock;
-=20
- 	div =3D kzalloc(sizeof(*div), GFP_KERNEL);
- 	if (!div)
-@@ -161,6 +162,7 @@ struct clk_hw *imx8m_clk_hw_composite_flags(const char =
-*name,
- 	gate_hw =3D &gate->hw;
- 	gate->reg =3D reg;
- 	gate->bit_idx =3D PCG_CGC_SHIFT;
-+	gate->lock =3D &imx_ccm_lock;
-=20
- 	hw =3D clk_hw_register_composite(NULL, name, parent_names, num_parents,
- 			mux_hw, &clk_mux_ops, div_hw,
---=20
-2.16.4
+> > +
+> >  LIVE PATCHING
+> >  M:   Josh Poimboeuf <jpoimboe@redhat.com>
+> >  M:   Jiri Kosina <jikos@kernel.org>
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index a3017a5dadcd..6c1be6181e38 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -1961,6 +1961,24 @@ config SYSCTL_KUNIT_TEST
+> >
+> >         If unsure, say N.
+> >
+> > +config LIST_KUNIT_TEST
+>
+> Similarly for the Kconfig name. (Also aren't KUNIT and TEST redundant?)
+>
+> config KUNIT_LIST
+>
+> ?
+>
+> config LIST_KUNIT
+>
 
+This matches what's being done with the existing sysctl test, which
+uses SYSCTL_KUNIT_TEST as its config name.
+So, we've kind-of standardised on x_KUNIT_TEST thus far, even if it is
+a bit redundant.
+
+> > --- a/lib/Makefile
+> > +++ b/lib/Makefile
+> > @@ -292,3 +292,6 @@ obj-$(CONFIG_GENERIC_LIB_MULDI3) += muldi3.o
+> >  obj-$(CONFIG_GENERIC_LIB_CMPDI2) += cmpdi2.o
+> >  obj-$(CONFIG_GENERIC_LIB_UCMPDI2) += ucmpdi2.o
+> >  obj-$(CONFIG_OBJAGG) += objagg.o
+> > +
+> > +# KUnit tests
+> > +obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
+>
+> And again, list-kunit.o? Other things have -test (or more commonly
+> _test) suffixes. (So maybe list_kunit.o?)
+>
+> But as I said last time, I'll live with whatever, I'd just like a
+> documented best-practice with a reasonable rationale. :)
+>
+
+Similarly, we've been going with a -test suffix thus far.
+
+I definitely agree that these conventions should be documented, though.
+
+Cheers,
+-- David
