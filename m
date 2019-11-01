@@ -2,423 +2,445 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C4CCA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2C0CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFA3218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3AC0218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:42:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KrVy1MKK"
+	dkim=pass (1024-bit key) header.d=itdevltd.onmicrosoft.com header.i=@itdevltd.onmicrosoft.com header.b="Mj5bg8Qt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfKAVmx (ORCPT
+        id S1727542AbfKAVm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 17:42:53 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45951 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727369AbfKAVms (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 17:42:48 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z4so1871170pfn.12
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 14:42:47 -0700 (PDT)
+        Fri, 1 Nov 2019 17:42:57 -0400
+Received: from mail-eopbgr30071.outbound.protection.outlook.com ([40.107.3.71]:1504
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727488AbfKAVm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 17:42:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aEUK2zNOfJCezAikvfsvyzyypjqpHf7cOT74ndPtp7D1z2RIGMNwKbCS5+VaXzSNcBerKCr/b8kRXZ+GkMPuj0eYsQJMnebKn+3kLSoPaFc3a1w0xasN5QycJSn2Ad6K7fOGZ2d8dkoMxA0thOPEo9KdkX6f7v3Fc6C1rSks92M9RKtCetlqxV54gxYCH4nIRjiO7pbNJiSconHqo2IINtwsoJga4eM5wuuKKI9eLnb+ihuV+wY4GaaIJYZjHv4hjCVwippBuPw0Bz2DIVDMYJjWRuf7+c59P38kFCvaIrY06gQrE6aq4OAZ2FwqksKryB5i1ZFgmfkSg+7QPdx6uw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kxb+HVUn/l8CkWGYDXNiETmLkd1TFiUuTiHiXY5rRO8=;
+ b=RwoM8NjdzBEbVdqn3czGBG0PLpi/llNfJtvqjeUn+TbxmNYTWSnZ/bAwR/0H/0lNfFqboJeaXYpdCVdlvSq91VJzDA1Nl+NB1uDWeY6YELt5pr1evC1/pYYagvnrek/rqG74igorN2uFn4I7/ux4cq/S6xLfe+x6a6Ekcmpf9Gpr1QNW/52PdjFTB1n8kr5oeJR4c2gY4afp40OLaVoNMIEOyhhpxSxjgYvUhBmbDiyD6KPYGU4Yy6d+U8m8EvEFvgTuDuQ39vo2EspihnMdX+qhtH0bTdyXDlhy7XmjeRfbJBay7NtKc54e9t5Pll+5JwTmYa3QuEJ8+zSa7H6eAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=itdev.co.uk; dmarc=pass action=none header.from=itdev.co.uk;
+ dkim=pass header.d=itdev.co.uk; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=BKopGp18VfB8thzYt3B0RriqVl7rtglmz7RmjgpOFFU=;
-        b=KrVy1MKKM2w+NP5NbHceS58OGoeZN6dYS27RPSclt0xd3XWuYV6w5lEthbMmYmlLlL
-         x3QpmB3a6Fzmywa0O9SRlUcAUC2ZW2z8/u+/FyuHQ7ogLNi4LVKNQBhj9qh+h3kIO2bi
-         2exN+l3mY+HWqQZw6AUEscSN6x1QbvUn+PtKnQgo4Lwz3VdKBkcJitQjHcaVkrfZeQZP
-         LA1HyzeR3cH9mlXZS+frQI3bPYjNcMUr66tTGGK0DrkgEteUI18DNtJde/F22WN4Cest
-         bZ1kKMycP1QM4w7YUojd2aqAE2ZHdmr8oH9PY7sqcfrg/HmZDo/1RSFas3Y3kGakKZK3
-         CAiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=BKopGp18VfB8thzYt3B0RriqVl7rtglmz7RmjgpOFFU=;
-        b=L/Dnpb4VAAzFX1/G1m3+RKiEHuuq8qCH1JUb2MSUWQ+Yzz1rtzMV4FB5pM16lVTdtl
-         uFkiAS0OrG+jAOEng1uvv3CfPG1mVZmDiIp3tthjuakoPkUfOeM32ATc5xQ77Wdymg95
-         V9+BlI/+XPLGifBvURWeCqVb2oXN3OhgfXmScaFVGpHZMK+Hj5yDkTSLzuSUIwbtYndF
-         m6RhTakuQmH/Km+1lOOJBG/YmHWlU83GR9/m+5aBTl+pJLh2ziqfkMHbRTtnlP5cAkgG
-         wFkrshnT8eEzO+Xmhqk19uqrwsUJjrp3Q0NeN6zgoe9B2mBmqCcz+ZDcJZTZmq1TblXs
-         9uJQ==
-X-Gm-Message-State: APjAAAXmYqdaIaX/BcNk5zS9+00vt7dttHw1IS0U1lfyk1CLdAVTMDtL
-        N2GpkQ+a+GGB6QlnnAC67FSa1o/u8sk=
-X-Google-Smtp-Source: APXvYqzVnfDmbrk/uqmXW1DjOyXPCzoLFf/gLPS8NVxfobXsXQcOTxM2J9LazYgBPcCnG7O8yWAAuw==
-X-Received: by 2002:a62:1ad6:: with SMTP id a205mr16030502pfa.64.1572644567226;
-        Fri, 01 Nov 2019 14:42:47 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id u36sm8299058pgn.29.2019.11.01.14.42.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 14:42:46 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Dave Airlie <airlied@gmail.com>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH v14 5/5] kselftests: Add dma-heap test
-Date:   Fri,  1 Nov 2019 21:42:38 +0000
-Message-Id: <20191101214238.78015-6-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191101214238.78015-1-john.stultz@linaro.org>
-References: <20191101214238.78015-1-john.stultz@linaro.org>
+ d=itdevltd.onmicrosoft.com; s=selector2-itdevltd-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kxb+HVUn/l8CkWGYDXNiETmLkd1TFiUuTiHiXY5rRO8=;
+ b=Mj5bg8QtTBnP3NBwvx2yui+4/Is4DcqMGY0JLGBVE2ZOawjEg4MPtGsHnTR21gk2Q5IgQ+FWoJtQV6jwQBdm7wRdajdcn+swzjGKm/e1VGERuXmbcc693MSHgN2jAQR+H/+/gwHTpNcfn5N3WNYLaDS6itcc7iqByM6VlFFLVwc=
+Received: from DBBPR08MB4491.eurprd08.prod.outlook.com (20.179.44.144) by
+ DBBPR08MB4679.eurprd08.prod.outlook.com (20.179.47.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.24; Fri, 1 Nov 2019 21:42:50 +0000
+Received: from DBBPR08MB4491.eurprd08.prod.outlook.com
+ ([fe80::4c2f:e455:fb07:bdee]) by DBBPR08MB4491.eurprd08.prod.outlook.com
+ ([fe80::4c2f:e455:fb07:bdee%6]) with mapi id 15.20.2387.031; Fri, 1 Nov 2019
+ 21:42:50 +0000
+From:   Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+To:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+CC:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Cristian Sicilia <sicilia.cristian@gmail.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/3] staging: axis-fifo: avoid parsing ignored device tree
+ properties
+Thread-Topic: [PATCH 1/3] staging: axis-fifo: avoid parsing ignored device
+ tree properties
+Thread-Index: AQHVkP1PJ9JbGeTLKk+o14pv3DXh/w==
+Date:   Fri, 1 Nov 2019 21:42:50 +0000
+Message-ID: <20191101214232.16960-2-quentin.deslandes@itdev.co.uk>
+References: <20191101214232.16960-1-quentin.deslandes@itdev.co.uk>
+In-Reply-To: <20191101214232.16960-1-quentin.deslandes@itdev.co.uk>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0194.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:9e::14) To DBBPR08MB4491.eurprd08.prod.outlook.com
+ (2603:10a6:10:d2::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=quentin.deslandes@itdev.co.uk; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.23.0
+x-originating-ip: [81.98.213.45]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b2c45a5a-ad13-4965-b6b4-08d75f14719e
+x-ms-traffictypediagnostic: DBBPR08MB4679:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DBBPR08MB4679376BE600BD91D2F5FF7BB3620@DBBPR08MB4679.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2000;
+x-forefront-prvs: 020877E0CB
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39830400003)(376002)(136003)(346002)(396003)(366004)(199004)(189003)(36756003)(2351001)(86362001)(186003)(66066001)(6916009)(66556008)(476003)(486006)(71200400001)(64756008)(5640700003)(2501003)(6512007)(66946007)(6486002)(44832011)(71190400001)(2906002)(6436002)(11346002)(6116002)(3846002)(50226002)(66476007)(4326008)(305945005)(8936002)(25786009)(5660300002)(7736002)(81166006)(256004)(386003)(8676002)(6506007)(54906003)(81156014)(66446008)(2616005)(508600001)(14454004)(76176011)(30864003)(52116002)(446003)(99286004)(102836004)(316002)(1076003)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:DBBPR08MB4679;H:DBBPR08MB4491.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: itdev.co.uk does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uJ0PBQwSfMBjrcvYsnd2BXwS2QQKPv13nRhzLnibTVUPM9mCSSIcZTkgQ62T3jpuUDNKG8HVyEqkCVy66vtAavLGDa66cpKIYUcQu1FFv/GOl4a34SZOfGjLsBapNZ1rJIWQ4BLVkdWREaQJP+DiBsltpUPVz6MRRl9ENo7sg7huir8LeeoxJiJxOzxTDjWpAePeMQWl8938osrtHRNgcKIVSmUGK//T5nSk3wXoz6CKoeB+narfVDfG0d9LEmoALxIdH2fKra+CcGi2ZsKhO/kPwFKx5rk40o2ur7+50K03H6y+g4dFOTY5nTp3riJiV1iR87Xvxw+D1tyj8k+ZLk0v2YXTutlrSrhBxeBSDPgxk/GaDNnUyNc5alK48dayKLOlZrQ9EXboJJvrSuEixTyckmQyXsyphLVY42hxVwNVddtuKD0s3aAf3OCeZ+Jn
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: itdev.co.uk
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2c45a5a-ad13-4965-b6b4-08d75f14719e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2019 21:42:50.8354
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 2d2930c4-2251-45b4-ad79-3582c5f41740
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WuYQSE/xv9cdkBNXjUWCLudU97E33Qp10Be8Zsh25BtjRT6RpldCjCIFB7jyz7QBmQYrsfr+3aCR50x3CgT4nayH9GNsYHGVolRcc+btTVQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4679
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add very trivial allocation and import test for dma-heaps,
-utilizing the vgem driver as a test importer.
+Some properties were parsed from the device tree and then ignored by the
+driver. Some would return an error if absent from the device tree, then
+return an error if they were found because they are unsupported by the
+driver.
 
-A good chunk of this code taken from:
-  tools/testing/selftests/android/ion/ionmap_test.c
-  Originally by Laura Abbott <labbott@redhat.com>
+Avoid parsing unused properties and clearly explain in the documentation
+the ignored / unsupported properties.
 
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: Liam Mark <lmark@codeaurora.org>
-Cc: Pratik Patel <pratikp@codeaurora.org>
-Cc: Brian Starkey <Brian.Starkey@arm.com>
-Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
-Cc: Sudipto Paul <Sudipto.Paul@arm.com>
-Cc: Andrew F. Davis <afd@ti.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Chenbo Feng <fengc@google.com>
-Cc: Alistair Strachan <astrachan@google.com>
-Cc: Hridya Valsaraju <hridya@google.com>
-Cc: Sandeep Patil <sspatil@google.com>
-Cc: Hillf Danton <hdanton@sina.com>
-Cc: Dave Airlie <airlied@gmail.com>
-Cc: dri-devel@lists.freedesktop.org
-Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Reviewed-by: Brian Starkey <brian.starkey@arm.com>
-Acked-by: Laura Abbott <labbott@redhat.com>
-Tested-by: Ayan Kumar Halder <ayan.halder@arm.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
 ---
-v2:
-* Switched to use reworked dma-heap apis
-v3:
-* Add simple mmap
-* Utilize dma-buf testdev to test importing
-v4:
-* Rework to use vgem
-* Pass in fd_flags to match interface changes
-* Skip . and .. dirs
-v6:
-* Number of style/cleanups suggested by Brian
-v7:
-* Whitespace fixup for checkpatch
-v8:
-* More checkpatch whitespace fixups
-v9:
-* Better handling error returns out to main, suggested
-  by Brian Starkey
-* Switch to using snprintf, suggested by Brian
-v14:
-* Fix a missing return value
-* Add calls to test the GET_FEATURES ioctl
-* Build fix reported by kernel test robot <lkp@intel.com>
-  and fixed by Xiao Yang <ice_yangxiao@163.com>
-* Minor Makefile cleanups
----
- tools/testing/selftests/dmabuf-heaps/Makefile |   6 +
- .../selftests/dmabuf-heaps/dmabuf-heap.c      | 255 ++++++++++++++++++
- 2 files changed, 261 insertions(+)
- create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
- create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+ drivers/staging/axis-fifo/axis-fifo.c   | 247 ++++++------------------
+ drivers/staging/axis-fifo/axis-fifo.txt |  18 +-
+ 2 files changed, 74 insertions(+), 191 deletions(-)
 
-diff --git a/tools/testing/selftests/dmabuf-heaps/Makefile b/tools/testing/selftests/dmabuf-heaps/Makefile
-new file mode 100644
-index 000000000000..607c2acd2082
---- /dev/null
-+++ b/tools/testing/selftests/dmabuf-heaps/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0
-+CFLAGS += -static -O3 -Wl,-no-as-needed -Wall -I../../../../usr/include
-+
-+TEST_GEN_PROGS = dmabuf-heap
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-new file mode 100644
-index 000000000000..ec47901ef2e2
---- /dev/null
-+++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-@@ -0,0 +1,255 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <dirent.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <stdint.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <sys/ioctl.h>
-+#include <sys/mman.h>
-+#include <sys/types.h>
-+
-+#include <linux/dma-buf.h>
-+#include <drm/drm.h>
-+
-+#include "../../../../include/uapi/linux/dma-heap.h"
-+
-+#define DEVPATH "/dev/dma_heap"
-+
-+static int check_vgem(int fd)
+diff --git a/drivers/staging/axis-fifo/axis-fifo.c b/drivers/staging/axis-f=
+ifo/axis-fifo.c
+index 805437fa249a..b436f48a9d50 100644
+--- a/drivers/staging/axis-fifo/axis-fifo.c
++++ b/drivers/staging/axis-fifo/axis-fifo.c
+@@ -701,6 +701,68 @@ static int get_dts_property(struct axis_fifo *fifo,
+ 	return 0;
+ }
+=20
++static int axis_fifo_parse_dt(struct axis_fifo *fifo)
 +{
-+	drm_version_t version = { 0 };
-+	char name[5];
 +	int ret;
++	unsigned int value;
 +
-+	version.name_len = 4;
-+	version.name = name;
-+
-+	ret = ioctl(fd, DRM_IOCTL_VERSION, &version);
-+	if (ret)
-+		return 0;
-+
-+	return !strcmp(name, "vgem");
-+}
-+
-+static int open_vgem(void)
-+{
-+	int i, fd;
-+	const char *drmstr = "/dev/dri/card";
-+
-+	fd = -1;
-+	for (i = 0; i < 16; i++) {
-+		char name[80];
-+
-+		snprintf(name, 80, "%s%u", drmstr, i);
-+
-+		fd = open(name, O_RDWR);
-+		if (fd < 0)
-+			continue;
-+
-+		if (!check_vgem(fd)) {
-+			close(fd);
-+			fd = -1;
-+			continue;
-+		} else {
-+			break;
-+		}
-+	}
-+	return fd;
-+}
-+
-+static int import_vgem_fd(int vgem_fd, int dma_buf_fd, uint32_t *handle)
-+{
-+	struct drm_prime_handle import_handle = {
-+		.fd = dma_buf_fd,
-+		.flags = 0,
-+		.handle = 0,
-+	 };
-+	int ret;
-+
-+	ret = ioctl(vgem_fd, DRM_IOCTL_PRIME_FD_TO_HANDLE, &import_handle);
-+	if (ret == 0)
-+		*handle = import_handle.handle;
-+	return ret;
-+}
-+
-+static void close_handle(int vgem_fd, uint32_t handle)
-+{
-+	struct drm_gem_close close = {
-+		.handle = handle,
-+	};
-+
-+	ioctl(vgem_fd, DRM_IOCTL_GEM_CLOSE, &close);
-+}
-+
-+static int dmabuf_heap_open(char *name)
-+{
-+	int ret, fd;
-+	char buf[256];
-+
-+	ret = snprintf(buf, 256, "%s/%s", DEVPATH, name);
-+	if (ret < 0) {
-+		printf("snprintf failed!\n");
-+		return ret;
-+	}
-+
-+	fd = open(buf, O_RDWR);
-+	if (fd < 0)
-+		printf("open %s failed!\n", buf);
-+	return fd;
-+}
-+
-+static int dmabuf_heap_get_features(int fd, unsigned long long *features)
-+{
-+	struct dma_heap_get_features_data data = {0};
-+	int ret;
-+
-+	ret = ioctl(fd, DMA_HEAP_IOC_GET_FEATURES, &data);
-+	if (ret < 0)
-+		return ret;
-+
-+	*features = (int)data.features;
-+	return ret;
-+}
-+
-+static int dmabuf_heap_alloc(int fd, size_t len, unsigned int flags,
-+			     int *dmabuf_fd)
-+{
-+	struct dma_heap_allocation_data data = {
-+		.len = len,
-+		.fd_flags = O_RDWR | O_CLOEXEC,
-+		.heap_flags = flags,
-+	};
-+	int ret;
-+
-+	if (!dmabuf_fd)
-+		return -EINVAL;
-+
-+	ret = ioctl(fd, DMA_HEAP_IOC_ALLOC, &data);
-+	if (ret < 0)
-+		return ret;
-+	*dmabuf_fd = (int)data.fd;
-+	return ret;
-+}
-+
-+static void dmabuf_sync(int fd, int start_stop)
-+{
-+	struct dma_buf_sync sync = {
-+		.flags = start_stop | DMA_BUF_SYNC_RW,
-+	};
-+	int ret;
-+
-+	ret = ioctl(fd, DMA_BUF_IOCTL_SYNC, &sync);
-+	if (ret)
-+		printf("sync failed %d\n", errno);
-+}
-+
-+#define ONE_MEG (1024 * 1024)
-+
-+static int do_test(char *heap_name)
-+{
-+	int heap_fd = -1, dmabuf_fd = -1, importer_fd = -1;
-+	uint32_t handle = 0;
-+	void *p = NULL;
-+	unsigned long long features;
-+	int ret;
-+
-+	printf("Testing heap: %s\n", heap_name);
-+
-+	heap_fd = dmabuf_heap_open(heap_name);
-+	if (heap_fd < 0)
-+		return -1;
-+
-+	dmabuf_heap_get_features(heap_fd, &features);
-+	printf("Interface features: 0x%llx\n", features);
-+
-+	printf("Allocating 1 MEG\n");
-+	ret = dmabuf_heap_alloc(heap_fd, ONE_MEG, 0, &dmabuf_fd);
++	ret =3D get_dts_property(fifo, "xlnx,axi-str-rxd-tdata-width", &value);
 +	if (ret) {
-+		printf("Allocation Failed!\n");
-+		ret = -1;
-+		goto out;
-+	}
-+	/* mmap and write a simple pattern */
-+	p = mmap(NULL,
-+		 ONE_MEG,
-+		 PROT_READ | PROT_WRITE,
-+		 MAP_SHARED,
-+		 dmabuf_fd,
-+		 0);
-+	if (p == MAP_FAILED) {
-+		printf("mmap() failed: %m\n");
-+		ret = -1;
-+		goto out;
-+	}
-+	printf("mmap passed\n");
-+
-+	dmabuf_sync(dmabuf_fd, DMA_BUF_SYNC_START);
-+	memset(p, 1, ONE_MEG / 2);
-+	memset((char *)p + ONE_MEG / 2, 0, ONE_MEG / 2);
-+	dmabuf_sync(dmabuf_fd, DMA_BUF_SYNC_END);
-+
-+	importer_fd = open_vgem();
-+	if (importer_fd < 0) {
-+		ret = importer_fd;
-+		printf("Failed to open vgem\n");
-+		goto out;
++		dev_err(fifo->dt_device, "missing xlnx,axi-str-rxd-tdata-width property\=
+n");
++		goto end;
++	} else if (value !=3D 32) {
++		dev_err(fifo->dt_device, "xlnx,axi-str-rxd-tdata-width only supports 32 =
+bits\n");
++		ret =3D -EIO;
++		goto end;
 +	}
 +
-+	ret = import_vgem_fd(importer_fd, dmabuf_fd, &handle);
-+	if (ret < 0) {
-+		printf("Failed to import buffer\n");
-+		goto out;
++	ret =3D get_dts_property(fifo, "xlnx,axi-str-txd-tdata-width", &value);
++	if (ret) {
++		dev_err(fifo->dt_device, "missing xlnx,axi-str-txd-tdata-width property\=
+n");
++		goto end;
++	} else if (value !=3D 32) {
++		dev_err(fifo->dt_device, "xlnx,axi-str-txd-tdata-width only supports 32 =
+bits\n");
++		ret =3D -EIO;
++		goto end;
 +	}
-+	printf("import passed\n");
 +
-+	dmabuf_sync(dmabuf_fd, DMA_BUF_SYNC_START);
-+	memset(p, 0xff, ONE_MEG);
-+	dmabuf_sync(dmabuf_fd, DMA_BUF_SYNC_END);
-+	printf("syncs passed\n");
++	ret =3D get_dts_property(fifo, "xlnx,rx-fifo-depth",
++			       &fifo->rx_fifo_depth);
++	if (ret) {
++		dev_err(fifo->dt_device, "missing xlnx,rx-fifo-depth property\n");
++		ret =3D -EIO;
++		goto end;
++	}
 +
-+	close_handle(importer_fd, handle);
-+	ret = 0;
++	ret =3D get_dts_property(fifo, "xlnx,tx-fifo-depth",
++			       &fifo->tx_fifo_depth);
++	if (ret) {
++		dev_err(fifo->dt_device, "missing xlnx,tx-fifo-depth property\n");
++		ret =3D -EIO;
++		goto end;
++	}
 +
-+out:
-+	if (p)
-+		munmap(p, ONE_MEG);
-+	if (importer_fd >= 0)
-+		close(importer_fd);
-+	if (dmabuf_fd >= 0)
-+		close(dmabuf_fd);
-+	if (heap_fd >= 0)
-+		close(heap_fd);
++	/* IP sets TDFV to fifo depth - 4 so we will do the same */
++	fifo->tx_fifo_depth -=3D 4;
 +
++	ret =3D get_dts_property(fifo, "xlnx,use-rx-data", &fifo->has_rx_fifo);
++	if (ret) {
++		dev_err(fifo->dt_device, "missing xlnx,use-rx-data property\n");
++		ret =3D -EIO;
++		goto end;
++	}
++
++	ret =3D get_dts_property(fifo, "xlnx,use-tx-data", &fifo->has_tx_fifo);
++	if (ret) {
++		dev_err(fifo->dt_device, "missing xlnx,use-tx-data property\n");
++		ret =3D -EIO;
++		goto end;
++	}
++
++end:
 +	return ret;
 +}
 +
-+int main(void)
-+{
-+	DIR *d;
-+	struct dirent *dir;
-+	int ret = -1;
-+
-+	d = opendir(DEVPATH);
-+	if (!d) {
-+		printf("No %s directory?\n", DEVPATH);
-+		return -1;
-+	}
-+
-+	while ((dir = readdir(d)) != NULL) {
-+		if (!strncmp(dir->d_name, ".", 2))
-+			continue;
-+		if (!strncmp(dir->d_name, "..", 3))
-+			continue;
-+
-+		ret = do_test(dir->d_name);
-+		if (ret)
-+			break;
-+	}
-+	closedir(d);
-+
-+	return ret;
-+}
--- 
-2.17.1
+ static int axis_fifo_probe(struct platform_device *pdev)
+ {
+ 	struct resource *r_irq; /* interrupt resources */
+@@ -712,34 +774,6 @@ static int axis_fifo_probe(struct platform_device *pde=
+v)
+=20
+ 	int rc =3D 0; /* error return value */
+=20
+-	/* IP properties from device tree */
+-	unsigned int rxd_tdata_width;
+-	unsigned int txc_tdata_width;
+-	unsigned int txd_tdata_width;
+-	unsigned int tdest_width;
+-	unsigned int tid_width;
+-	unsigned int tuser_width;
+-	unsigned int data_interface_type;
+-	unsigned int has_tdest;
+-	unsigned int has_tid;
+-	unsigned int has_tkeep;
+-	unsigned int has_tstrb;
+-	unsigned int has_tuser;
+-	unsigned int rx_fifo_depth;
+-	unsigned int rx_programmable_empty_threshold;
+-	unsigned int rx_programmable_full_threshold;
+-	unsigned int axi_id_width;
+-	unsigned int axi4_data_width;
+-	unsigned int select_xpm;
+-	unsigned int tx_fifo_depth;
+-	unsigned int tx_programmable_empty_threshold;
+-	unsigned int tx_programmable_full_threshold;
+-	unsigned int use_rx_cut_through;
+-	unsigned int use_rx_data;
+-	unsigned int use_tx_control;
+-	unsigned int use_tx_cut_through;
+-	unsigned int use_tx_data;
+-
+ 	/* ----------------------------
+ 	 *     init wrapper device
+ 	 * ----------------------------
+@@ -806,164 +840,9 @@ static int axis_fifo_probe(struct platform_device *pd=
+ev)
+ 	 * ----------------------------
+ 	 */
+=20
+-	/* retrieve device tree properties */
+-	rc =3D get_dts_property(fifo, "xlnx,axi-str-rxd-tdata-width",
+-			      &rxd_tdata_width);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,axi-str-txc-tdata-width",
+-			      &txc_tdata_width);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,axi-str-txd-tdata-width",
+-			      &txd_tdata_width);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,axis-tdest-width", &tdest_width);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,axis-tid-width", &tid_width);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,axis-tuser-width", &tuser_width);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,data-interface-type",
+-			      &data_interface_type);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,has-axis-tdest", &has_tdest);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,has-axis-tid", &has_tid);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,has-axis-tkeep", &has_tkeep);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,has-axis-tstrb", &has_tstrb);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,has-axis-tuser", &has_tuser);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,rx-fifo-depth", &rx_fifo_depth);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,rx-fifo-pe-threshold",
+-			      &rx_programmable_empty_threshold);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,rx-fifo-pf-threshold",
+-			      &rx_programmable_full_threshold);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,s-axi-id-width", &axi_id_width);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,s-axi4-data-width", &axi4_data_width)=
+;
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,select-xpm", &select_xpm);
++	rc =3D axis_fifo_parse_dt(fifo);
+ 	if (rc)
+ 		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,tx-fifo-depth", &tx_fifo_depth);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,tx-fifo-pe-threshold",
+-			      &tx_programmable_empty_threshold);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,tx-fifo-pf-threshold",
+-			      &tx_programmable_full_threshold);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,use-rx-cut-through",
+-			      &use_rx_cut_through);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,use-rx-data", &use_rx_data);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,use-tx-ctrl", &use_tx_control);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,use-tx-cut-through",
+-			      &use_tx_cut_through);
+-	if (rc)
+-		goto err_unmap;
+-	rc =3D get_dts_property(fifo, "xlnx,use-tx-data", &use_tx_data);
+-	if (rc)
+-		goto err_unmap;
+-
+-	/* check validity of device tree properties */
+-	if (rxd_tdata_width !=3D 32) {
+-		dev_err(fifo->dt_device,
+-			"rxd_tdata_width width [%u] unsupported\n",
+-			rxd_tdata_width);
+-		rc =3D -EIO;
+-		goto err_unmap;
+-	}
+-	if (txd_tdata_width !=3D 32) {
+-		dev_err(fifo->dt_device,
+-			"txd_tdata_width width [%u] unsupported\n",
+-			txd_tdata_width);
+-		rc =3D -EIO;
+-		goto err_unmap;
+-	}
+-	if (has_tdest) {
+-		dev_err(fifo->dt_device, "tdest not supported\n");
+-		rc =3D -EIO;
+-		goto err_unmap;
+-	}
+-	if (has_tid) {
+-		dev_err(fifo->dt_device, "tid not supported\n");
+-		rc =3D -EIO;
+-		goto err_unmap;
+-	}
+-	if (has_tkeep) {
+-		dev_err(fifo->dt_device, "tkeep not supported\n");
+-		rc =3D -EIO;
+-		goto err_unmap;
+-	}
+-	if (has_tstrb) {
+-		dev_err(fifo->dt_device, "tstrb not supported\n");
+-		rc =3D -EIO;
+-		goto err_unmap;
+-	}
+-	if (has_tuser) {
+-		dev_err(fifo->dt_device, "tuser not supported\n");
+-		rc =3D -EIO;
+-		goto err_unmap;
+-	}
+-	if (use_rx_cut_through) {
+-		dev_err(fifo->dt_device, "rx cut-through not supported\n");
+-		rc =3D -EIO;
+-		goto err_unmap;
+-	}
+-	if (use_tx_cut_through) {
+-		dev_err(fifo->dt_device, "tx cut-through not supported\n");
+-		rc =3D -EIO;
+-		goto err_unmap;
+-	}
+-	if (use_tx_control) {
+-		dev_err(fifo->dt_device, "tx control not supported\n");
+-		rc =3D -EIO;
+-		goto err_unmap;
+-	}
+-
+-	/* TODO
+-	 * these exist in the device tree but it's unclear what they do
+-	 * - select-xpm
+-	 * - data-interface-type
+-	 */
+-
+-	/* set device wrapper properties based on IP config */
+-	fifo->rx_fifo_depth =3D rx_fifo_depth;
+-	/* IP sets TDFV to fifo depth - 4 so we will do the same */
+-	fifo->tx_fifo_depth =3D tx_fifo_depth - 4;
+-	fifo->has_rx_fifo =3D use_rx_data;
+-	fifo->has_tx_fifo =3D use_tx_data;
+=20
+ 	reset_ip_core(fifo);
+=20
+diff --git a/drivers/staging/axis-fifo/axis-fifo.txt b/drivers/staging/axis=
+-fifo/axis-fifo.txt
+index 85d88c010e72..5828e1b8e822 100644
+--- a/drivers/staging/axis-fifo/axis-fifo.txt
++++ b/drivers/staging/axis-fifo/axis-fifo.txt
+@@ -25,10 +25,10 @@ Required properties:
+ - xlnx,axi-str-txc-tdata-width: Should be <0x20>
+ - xlnx,axi-str-txd-protocol: Should be "XIL_AXI_STREAM_ETH_DATA"
+ - xlnx,axi-str-txd-tdata-width: Should be <0x20>
+-- xlnx,axis-tdest-width: AXI-Stream TDEST width
+-- xlnx,axis-tid-width: AXI-Stream TID width
+-- xlnx,axis-tuser-width: AXI-Stream TUSER width
+-- xlnx,data-interface-type: Should be <0x0>
++- xlnx,axis-tdest-width: AXI-Stream TDEST width (ignored by the driver)
++- xlnx,axis-tid-width: AXI-Stream TID width (ignored by the driver)
++- xlnx,axis-tuser-width: AXI-Stream TUSER width (ignored by the driver)
++- xlnx,data-interface-type: Should be <0x0> (ignored by the driver)
+ - xlnx,has-axis-tdest: Should be <0x0> (this feature isn't supported)
+ - xlnx,has-axis-tid: Should be <0x0> (this feature isn't supported)
+ - xlnx,has-axis-tkeep: Should be <0x0> (this feature isn't supported)
+@@ -36,13 +36,17 @@ Required properties:
+ - xlnx,has-axis-tuser: Should be <0x0> (this feature isn't supported)
+ - xlnx,rx-fifo-depth: Depth of RX FIFO in words
+ - xlnx,rx-fifo-pe-threshold: RX programmable empty interrupt threshold
++	(ignored by the driver)
+ - xlnx,rx-fifo-pf-threshold: RX programmable full interrupt threshold
+-- xlnx,s-axi-id-width: Should be <0x4>
+-- xlnx,s-axi4-data-width: Should be <0x20>
+-- xlnx,select-xpm: Should be <0x0>
++	(ignored by the driver)
++- xlnx,s-axi-id-width: Should be <0x4> (ignored by the driver)
++- xlnx,s-axi4-data-width: Should be <0x20> (ignored by the driver)
++- xlnx,select-xpm: Should be <0x0> (ignored by the driver)
+ - xlnx,tx-fifo-depth: Depth of TX FIFO in words
+ - xlnx,tx-fifo-pe-threshold: TX programmable empty interrupt threshold
++	(ignored by the driver)
+ - xlnx,tx-fifo-pf-threshold: TX programmable full interrupt threshold
++	(ignored by the driver)
+ - xlnx,use-rx-cut-through: Should be <0x0> (this feature isn't supported)
+ - xlnx,use-rx-data: <0x1> if RX FIFO is enabled, <0x0> otherwise
+ - xlnx,use-tx-ctrl: Should be <0x0> (this feature isn't supported)
+--=20
+2.23.0
 
