@@ -2,95 +2,104 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A25FCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 665A0CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BEE821734
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6AF21734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:39:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmLI6Xfp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729079AbfKAQhr (ORCPT
+        id S1729004AbfKAQjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 12:37:47 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60104 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727626AbfKAQhq (ORCPT
+        Fri, 1 Nov 2019 12:39:03 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39826 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbfKAQjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 12:37:46 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iQZve-0002yY-9u; Fri, 01 Nov 2019 17:37:38 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DC4B91C0315;
-        Fri,  1 Nov 2019 17:37:37 +0100 (CET)
-Date:   Fri, 01 Nov 2019 16:37:37 -0000
-From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: ras/core] x86/mce: Add Xeon Icelake to list of CPUs that support PPIN
-Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        "linux-edac" <linux-edac@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86-ml" <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191028163719.19708-1-tony.luck@intel.com>
-References: <20191028163719.19708-1-tony.luck@intel.com>
+        Fri, 1 Nov 2019 12:39:03 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t12so4605843plo.6
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 09:39:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Jop3Dux9Tb3Ov/yAM9BwP8Zp0TbIeSOkimu79QY77es=;
+        b=nmLI6Xfp4DCOu0L6Y0a6idgMpzE/ZCS6AXaU1AX1lBJkSSFLMJJMyEXVX43sofP8BM
+         jpb6lCY0BXFwGWAUBFoseAhpp0yqARTfCsjnqJA9xYnkS6S4ljXOCZi8VT3nbPgFaB+T
+         oaNDXQZ3C6efLroLoE88iCbEW3/60zoCWd7FzL6fpipnd5Z3qm7QW9X3sxlilgIw8TCQ
+         bPkHhNVix3KT43TwaGSq5ed93dFCXDBNHyT8FnTLUNVak1Kbe7sJJnT2r4TUQOPyH4k/
+         rCMS4rR9q2RQWxq2qxEPIWyLtpPP5PK7bDvzBDGOOpf2imwnhteMOjPbLHLvUefhj0XP
+         oa+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Jop3Dux9Tb3Ov/yAM9BwP8Zp0TbIeSOkimu79QY77es=;
+        b=dnH7MeJhrlR0J0V6AlmPpnELMTPeD9KRFqLP9gCcVBh5EchnlHNVK8jC1y9KLMOQRt
+         Yc6rtXvV1K/h6GKkty3476AhnEsIpulXSp+IUWKN6PCIt9/psU7v3f6i5X8fBQikNvfZ
+         68fWtoTfnTmotKM198Z8QoXSajJIm+Clh3YbHcb6m6vTJ5cOltsVtdv956kLRfoQ9bnp
+         naKjF046/iHoZXnE93m3k1Ed8rM/XnH5A03LBMHEavg76RAlkjGj+1MY7ldPP/NMnXOR
+         jUlhsYbe0aPyLkQXDpaJk9lk8YvQsdmrutoVUdkezdkAq1Yi+30rHh4UnHOQfcywajQH
+         nHbg==
+X-Gm-Message-State: APjAAAUjZGt3Au9VQPkYEk02STz3Q5828n7kCpFp9u43ERGbOs6uqZOc
+        67UOud8l/kdzL93Nhat1ucH6ULgZvK39wQ==
+X-Google-Smtp-Source: APXvYqwikFR65XxVHQmNND6nn1yvtJkPX4KG/6KXxiGf1DsHPC00SF/oqM0MfFi79t8JfXr2DGcWdQ==
+X-Received: by 2002:a17:902:161:: with SMTP id 88mr12645499plb.253.1572626341042;
+        Fri, 01 Nov 2019 09:39:01 -0700 (PDT)
+Received: from localhost ([2402:3a80:1386:1fa1:cbdc:7851:d398:f27c])
+        by smtp.gmail.com with ESMTPSA id m15sm6319676pgv.58.2019.11.01.09.38.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 09:39:00 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 22:08:56 +0530
+From:   Jaskaran Singh <jaskaransingh7654321@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        alexander.deucher@amd.com, christian.koenig@amd.com,
+        David1.Zhou@amd.com, airlied@linux.ie, daniel@ffwll.ch,
+        Felix.Kuehling@amd.com, ray.huang@amd.com
+Subject: [PATCH] drivers: gpu: drm: amd: amdgpu: Add @level to
+ amdgpu_vm_bo_param documentation
+Message-ID: <20191101163856.GA13800@localhost.localdomain>
 MIME-Version: 1.0
-Message-ID: <157262625753.29376.16645566147052348797.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the ras/core branch of tip:
+The documentation for this function is missing the function parameter
+"level", so add it. This fixes the following warning:
 
-Commit-ID:     dc6b025de95bcd22ff37c4fabb022ec8a027abf1
-Gitweb:        https://git.kernel.org/tip/dc6b025de95bcd22ff37c4fabb022ec8a027abf1
-Author:        Tony Luck <tony.luck@intel.com>
-AuthorDate:    Mon, 28 Oct 2019 09:37:19 -07:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Fri, 01 Nov 2019 17:29:36 +01:00
+./drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:821:
+	warning: Function parameter or member 'level'
+	not described in 'amdgpu_vm_bo_param'
 
-x86/mce: Add Xeon Icelake to list of CPUs that support PPIN
-
-New CPU model, same MSRs to control and read the inventory number.
-
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191028163719.19708-1-tony.luck@intel.com
+Signed-off-by: Jaskaran Singh <jaskaransingh7654321@gmail.com>
 ---
- arch/x86/kernel/cpu/mce/intel.c | 1 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
-index 68a1d25..e270d07 100644
---- a/arch/x86/kernel/cpu/mce/intel.c
-+++ b/arch/x86/kernel/cpu/mce/intel.c
-@@ -484,6 +484,7 @@ static void intel_ppin_init(struct cpuinfo_x86 *c)
- 	case INTEL_FAM6_BROADWELL_D:
- 	case INTEL_FAM6_BROADWELL_X:
- 	case INTEL_FAM6_SKYLAKE_X:
-+	case INTEL_FAM6_ICELAKE_X:
- 	case INTEL_FAM6_XEON_PHI_KNL:
- 	case INTEL_FAM6_XEON_PHI_KNM:
- 
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+index 5251352f5922..6f6a9be11d84 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+@@ -813,6 +813,7 @@ static int amdgpu_vm_clear_bo(struct amdgpu_device *adev,
+  *
+  * @adev: amdgpu_device pointer
+  * @vm: requesting vm
++ * @level: VMPT level
+  * @bp: resulting BO allocation parameters
+  */
+ static void amdgpu_vm_bo_param(struct amdgpu_device *adev, struct amdgpu_vm *vm,
+-- 
+2.21.0
+
