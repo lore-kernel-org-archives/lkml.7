@@ -2,165 +2,105 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20E1CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F16CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89496217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572618640;
-	bh=6swmzGZ6W4m7+r/4MFAVFqhIbyFdbUu5MV3GQEOZcQg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=A7BPyOT8uA/oAw+8qturaFx8mrOtrlExzNcLhJDqxDgbqX9PqBTerj9da/n5Nz82y
-	 CgNoF6OjKgDESxqYGF+fI7nL1TSxmF44pMkxbuFYru9em2C6Ec+2KisqDkD+/0wXg0
-	 zoqfRu9VOStSOb0l+g/Yi04jHzJBSFfbjCSxqVD8=
+	by mail.kernel.org (Postfix) with ESMTP id 6E16E2085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:31:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="peZ5yz7P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfKAOaj (ORCPT
+        id S1727206AbfKAObf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 10:30:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726658AbfKAOai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 10:30:38 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FD972085B;
-        Fri,  1 Nov 2019 14:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572618637;
-        bh=6swmzGZ6W4m7+r/4MFAVFqhIbyFdbUu5MV3GQEOZcQg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=ABxyxbJr58QFu6NSOBGZ9ISXt4rUUHYfG5jdOIsxXo97oQ6q7TXGeog/1fVNH0Xkj
-         vBInleml28yISY+5IVsFWaG0fHTubnH5ssF6A3Y6pTHa4Jp4Ok01tpniJjVRtVigij
-         5Yg0Ra8PrkZCsh3/sDsgdg3bf6jel/QkuzZxeZQA=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E73DA3522AF9; Fri,  1 Nov 2019 07:30:36 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 07:30:36 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Babu Moger <Babu.Moger@amd.com>,
-        Rik van Riel <riel@surriel.com>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Jann Horn <jannh@google.com>,
-        David Windsor <dwindsor@gmail.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Yuyang Du <duyuyang@gmail.com>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Dmitry V. Levin" <ldv@altlinux.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH 11/11] x86,rcu: use percpu rcu_preempt_depth
-Message-ID: <20191101143036.GM20975@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191031100806.1326-1-laijs@linux.alibaba.com>
- <20191031100806.1326-12-laijs@linux.alibaba.com>
- <20191101125816.GD17910@paulmck-ThinkPad-P72>
- <20191101131315.GY4131@hirez.programming.kicks-ass.net>
+        Fri, 1 Nov 2019 10:31:35 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44274 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727060AbfKAObe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 10:31:34 -0400
+Received: by mail-pl1-f194.google.com with SMTP id q16so4448325pll.11;
+        Fri, 01 Nov 2019 07:31:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v3P4Nfs/f4DDEDkuO0DhQZmxaSsoKdeeybFv9GrZiS4=;
+        b=peZ5yz7PiZB4AB4GxNEZuAgdW42izQMegYV24QXx31rtLrdiAEmo3PKGBiDAyxU8GU
+         y0PVxetYpy59ZsuVdgQN5Mh820MTD2qXnJJLnhc0S65tnWGCTW5xFK+eUBdktKkxy3k2
+         LR6j7t48WN4qop8gvzYwHxtregpdk7wQv12e6GdGetnXACZeIr7erMxdAqBNIn2LWKEX
+         ZiSOCua9wRU6k7V/m5+6pSTcO8KbJkICDQf+ukH2Ixpj+5mWe1iuI2Ww8zYe203sdVQr
+         nvsbV+hB/tqKmn8tcUc9Fw/by9bTswdO0VfRg+RmDb3S9HxyBX6n1P7ne9mR1AMI7N6n
+         +ZDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v3P4Nfs/f4DDEDkuO0DhQZmxaSsoKdeeybFv9GrZiS4=;
+        b=a8z0IcRlBiUqRB5Y9BjAfG76kAmBmSo5j/R14WZO0GcjtA6pVzT72TdCghf/ejDcJX
+         kw4l+QpYvceoRZ3a1L1phgu9XmTe5s4kS6E7+3+PAOwJ18/3zy7pZu+0xr4WR7/xHNxD
+         nv9PXBniV/G+NmiG2JlYLfrQ81HwsSbSX2/wGKDz3y4EQOutLev1dMIB+uOfQ9TAy4/8
+         kNABVq45hqRsQNA62YnYCQUmClzbctmPIf/fcJkOsyrBSKwPtnN8/tRAd5b4QMTZrKt8
+         CKDKjCqSHwspxi67PaUlqVZ1qN9hDeyQqA2VGPzI2zwUgpJeeF7AMnxLl+I8q57QNRpN
+         /V1A==
+X-Gm-Message-State: APjAAAU5bEuXQKYcuUFFDyRL7qhGBholNk6y4sIGaFiWjbiS4hYHA0Br
+        3OV/BFe4cAqSyuK2OUta7m8=
+X-Google-Smtp-Source: APXvYqzIVaFOzABdHtSgRBIuKde8kZfF/0r+n7Ump6Oam46JfLfhx8fI8VNRZlg+DUBpC+SngGmivw==
+X-Received: by 2002:a17:902:7885:: with SMTP id q5mr12444241pll.317.1572618694114;
+        Fri, 01 Nov 2019 07:31:34 -0700 (PDT)
+Received: from localhost.localdomain ([45.114.62.165])
+        by smtp.gmail.com with ESMTPSA id x9sm9273061pje.27.2019.11.01.07.31.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 07:31:33 -0700 (PDT)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC-next 0/1] Odroid C2: Enable DVFS for cpu
+Date:   Fri,  1 Nov 2019 14:31:25 +0000
+Message-Id: <20191101143126.2549-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191101131315.GY4131@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 02:13:15PM +0100, Peter Zijlstra wrote:
-> On Fri, Nov 01, 2019 at 05:58:16AM -0700, Paul E. McKenney wrote:
-> > On Thu, Oct 31, 2019 at 10:08:06AM +0000, Lai Jiangshan wrote:
-> > > +/* We mask the RCU_NEED_SPECIAL bit so that it return real depth */
-> > > +static __always_inline int rcu_preempt_depth(void)
-> > > +{
-> > > +	return raw_cpu_read_4(__rcu_preempt_depth) & ~RCU_NEED_SPECIAL;
-> > 
-> > Why not raw_cpu_generic_read()?
-> > 
-> > OK, OK, I get that raw_cpu_read_4() translates directly into an "mov"
-> > instruction on x86, but given that x86 percpu_from_op() is able to
-> > adjust based on operand size, why doesn't something like raw_cpu_read()
-> > also have an x86-specific definition that adjusts based on operand size?
-> 
-> The reason for preempt.h was header recursion hell.
+Some how this patch got lost, so resend this again.
 
-Fair enough, being as that is also the reason for _rcu_read_lock()
-not being inlined.  :-/
+[0] https://patchwork.kernel.org/patch/11136545/
 
-> > > +}
-> > > +
-> > > +static __always_inline void rcu_preempt_depth_set(int pc)
-> > > +{
-> > > +	int old, new;
-> > > +
-> > > +	do {
-> > > +		old = raw_cpu_read_4(__rcu_preempt_depth);
-> > > +		new = (old & RCU_NEED_SPECIAL) |
-> > > +			(pc & ~RCU_NEED_SPECIAL);
-> > > +	} while (raw_cpu_cmpxchg_4(__rcu_preempt_depth, old, new) != old);
-> > 
-> > Ummm...
-> > 
-> > OK, as you know, I have long wanted _rcu_read_lock() to be inlineable.
-> > But are you -sure- that an x86 cmpxchg is faster than a function call
-> > and return?  I have strong doubts on that score.
-> 
-> This is a regular CMPXCHG instruction, not a LOCK prefixed one, and that
-> should make all the difference
+This patch enable DVFS on GXBB Odroid C2.
 
-Yes, understood, but this is also adding some arithmetic, a comparison,
-and a conditional branch.  Are you -sure- that this is cheaper than
-an unconditional call and return?
+DVFS has been tested by running the arm64 cpuburn
+[1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
+PM-QA testing
+[2] https://git.linaro.org/power/pm-qa.git [cpufreq testcase]
 
-> > Plus multiplying the x86-specific code by 26 doesn't look good.
-> > 
-> > And the RCU read-side nesting depth really is a per-task thing.  Copying
-> > it to and from the task at context-switch time might make sense if we
-> > had a serious optimization, but it does not appear that we do.
-> > 
-> > You original patch some years back, ill-received though it was at the
-> > time, is looking rather good by comparison.  Plus it did not require
-> > architecture-specific code!
-> 
-> Right, so the per-cpu preempt_count code relies on the preempt_count
-> being invariant over context switches. That means we never have to
-> save/restore the thing.
-> 
-> For (preemptible) rcu, this is 'obviously' not the case.
-> 
-> That said, I've not looked over this patch series, I only got 1 actual
-> patch, not the whole series, and I've not had time to go dig out the
-> rest..
+Tested on latest U-Boot 2019.07-1 (Aug 01 2019 - 23:58:01 +0000) Arch Linux ARM
 
-I have taken a couple of the earlier patches in the series.
+Patch based on my next-20191031 for 5.5.x kernel.
+Hope this is not late entry.
 
-Perhaps inlining these things is instead a job for the long anticipated
-GCC LTO?  ;-)
+Best Regards
+-Anand
 
-							Thanx, Paul
+Anand Moon (1):
+  arm64: dts: meson: odroid-c2: Enable SCPI DVFS for cpu
+
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+-- 
+2.23.0
+
