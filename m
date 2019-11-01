@@ -2,93 +2,188 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_ACC_NUM autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C15CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 23:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC70CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 23:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C20920679
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 23:28:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572650897;
-	bh=Mh7+/uKXmXD7zXtiBeC/Rv2F/zlkkhUrXIkz5U5QYQY=;
-	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=sY2v5+ILsP3gdtJ4r/wp4fHruLXgwqWUOy1ZHXvkoi1kYgSungbM4FD6L92n/j3gL
-	 l6KqFG2tTOGgq+japzMJet+W1NV2WzFBlTxRdtI5/1MAdZjvBqgirYeLGAP8XlvVCW
-	 ukYq4lNs1M8L22U9LGN3YMxqisA5PMp7sXI7/4VY=
+	by mail.kernel.org (Postfix) with ESMTP id C745521855
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 23:28:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aFEY4zmp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbfKAX2Q (ORCPT
+        id S1727773AbfKAX2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 19:28:16 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34957 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727574AbfKAX2O (ORCPT
+        Fri, 1 Nov 2019 19:28:49 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45741 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfKAX2t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 19:28:14 -0400
-Received: by mail-pf1-f195.google.com with SMTP id d13so8051323pfq.2;
-        Fri, 01 Nov 2019 16:28:14 -0700 (PDT)
+        Fri, 1 Nov 2019 19:28:49 -0400
+Received: by mail-lf1-f68.google.com with SMTP id v8so8293312lfa.12
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 16:28:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+M1K01EEp04eNFe1/UKBDW3ZMjQPHzjlhyOmR/QFjcs=;
+        b=aFEY4zmpK64LpsuQxvdQEnFnTIeGCwrg3i2xNAwXEL2GVHLzO6dfGjoI8LFTB4x6jN
+         kwTCNk0RMOhjlR/vV9kB96xiZcg7bdoN8hXcWciHgZT7BWgukZcWmnjyqCpB1rWgQpGQ
+         cKcY9faYSHJEBmhlmu+HGRVKIabtDyx7R+XzG+7eQSB7XgOot37CYno7FVfwU04t3AXy
+         llXGksOdEhsrExQMmPnxw0qYO5hmWCxyboZYISvzWsMWn7tkagKu7HvmvebsD7TpGBot
+         Dvdh65Q4K4WitAOdFUTXgXT/HXZZmGoAsfnqEdRvxpkxK1KRAq6nj4QdU9F3S1vfyRIg
+         +slw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
-         :references:in-reply-to;
-        bh=cS4FjHovoa9iGebRrfyMIYWfQWXcuPGHDu34OuRwB9U=;
-        b=Y6SK6uPAOpE+oKRtHFDJZrZG3wDroX6pKZ0greCt5OMd4WJ0DNXaVvw6caqEVzbaUx
-         qHbxq89vvYFcRIPdgk6lQjqYTOREe1865J1x2bsCjujhRnb4Qwrm2UUmMXV3dBovPVAN
-         Tq5DPMRPcalKNzte48ZK3K/SHfFLur3wRcu/13RJHnkT/TKbw0BRYPaF4YOmZLNTo6Ag
-         9Ugn4lSATpfJLph2YBowN6Hk17NVIqCIiD28uhlLTW8cUzvD2LyQLwNnR8CepKrhJ3k2
-         V3ymB7vfRjsyIGJCJ4SRrthoXl2dmDV5/Oftcnl8wvZsUmIncicTwBsDop9F5dCBv7dY
-         cuRw==
-X-Gm-Message-State: APjAAAVKmJr6xyIN2LImFmXwmJMolSU6rppD10WL6khu2MKtm1VtROPi
-        KuWzIYUylP6njIrfkN3uqk8=
-X-Google-Smtp-Source: APXvYqxyWu5VJ+Mh3KaFxhEhry9upHWvRtIn+yyvAxPWBNWdthUH985WtUA9TniaDVN/Uq0/QmJ+7w==
-X-Received: by 2002:a17:90a:2942:: with SMTP id x2mr9437263pjf.119.1572650894035;
-        Fri, 01 Nov 2019 16:28:14 -0700 (PDT)
-Received: from localhost ([2601:646:8a00:9810:9d6:9cca:ff8c:efe0])
-        by smtp.gmail.com with ESMTPSA id 19sm8783182pjd.23.2019.11.01.16.28.13
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+M1K01EEp04eNFe1/UKBDW3ZMjQPHzjlhyOmR/QFjcs=;
+        b=UDzoK1zM8vJzTOY+wJboJ3eqN9Ixpt6g+txCY+EmLjyOG+PdXAv+sgGe3OCOEMBIfA
+         tW3tb9nORM6wF+0q4huVXeWFRRHI+SwPdA7v+s6vkeVedSKQrNLh/5BXnhNfB4fuNK5m
+         E+vfbJ5sM9oxsvIq3d5pQdzoolnDMcZKV5bE0uvoI8pJNIvEw8+a50dqfUY9nXUZKh96
+         6qGPe6YcC8HislOYSlQAYpghhxPg9N4boo8v4bJuWg1NKbBX/qKni7erebqfrcmjYgm2
+         6sOXi1IK4u+t3DT09GHId04aRnKdsijgD/p0VlU0Q4/h/yFMqzk/UQDB9pwmS36//Nbx
+         x+Bg==
+X-Gm-Message-State: APjAAAXSbuOz0/istkgZUzKjyq4lHUXVMdTKEqip1/XZBFbKAoSLE/eY
+        6v1Kc2bCn6KK1Pxe7O5AKBFMiw==
+X-Google-Smtp-Source: APXvYqwRE1U/ONxOU6MEnVoZ8KUkGgJnYB6PDtOKwHQwugNUTXzuG0oTlf6M9xZpUUCBeJhoXlCXlQ==
+X-Received: by 2002:a19:7d85:: with SMTP id y127mr8527754lfc.160.1572650926729;
+        Fri, 01 Nov 2019 16:28:46 -0700 (PDT)
+Received: from localhost.localdomain (88-201-94-178.pool.ukrtel.net. [178.94.201.88])
+        by smtp.gmail.com with ESMTPSA id l21sm3355673lje.0.2019.11.01.16.28.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 16:28:13 -0700 (PDT)
-Message-ID: <5dbcbf8d.1c69fb81.d579.a9f1@mx.google.com>
-Date:   Fri, 01 Nov 2019 16:28:12 -0700
-From:   Paul Burton <paulburton@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-CC:     paul.burton@mips.com, ralf@linux-mips.org, jhogan@kernel.org,
-        chenhc@lemote.com
-CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH v3] MIPS: Loongson: Make default kernel log buffer size as  128KB for Loongson3
-References:  <1571220180-5478-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To:  <1571220180-5478-1-git-send-email-yangtiezhu@loongson.cn>
+        Fri, 01 Nov 2019 16:28:46 -0700 (PDT)
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     davem@davemloft.net, vinicius.gomes@intel.com
+Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: [PATCH net] taprio: fix panic while hw offload sched list swap
+Date:   Sat,  2 Nov 2019 01:28:28 +0200
+Message-Id: <20191101232828.17023-1-ivan.khoronzhuk@linaro.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Don't swap oper and admin schedules too early, it's not correct and
+causes crash.
 
-Tiezhu Yang wrote:
-> When I update kernel with loongson3_defconfig based on the Loongson 3A3000
-> platform, then using dmesg command to show kernel ring buffer, the initial
-> kernel messages have disappeared due to the log buffer is too small, it is
-> better to change the kernel log buffer size from 16KB to 128KB which is
-> enough to save the boot messages.
-> 
-> Since the default LOG_BUF_SHIFT value is 17, the default kernel log buffer
-> size is 128KB, just delete the CONFIG_LOG_BUF_SHIFT line.
+Steps to reproduce:
 
-Applied to mips-next.
+1)
+tc qdisc replace dev eth0 parent root handle 100 taprio \
+    num_tc 3 \
+    map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
+    queues 1@0 1@1 1@2 \
+    base-time $SOME_BASE_TIME \
+    sched-entry S 01 80000 \
+    sched-entry S 02 15000 \
+    sched-entry S 04 40000 \
+    flags 2
 
-> commit 8a5a49987130
-> https://git.kernel.org/mips/c/8a5a49987130
-> 
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Signed-off-by: Paul Burton <paulburton@kernel.org>
+2)
+tc qdisc replace dev eth0 parent root handle 100 taprio \
+    base-time $SOME_BASE_TIME \
+    sched-entry S 01 90000 \
+    sched-entry S 02 20000 \
+    sched-entry S 04 40000 \
+    flags 2
 
-Thanks,
-    Paul
+3)
+tc qdisc replace dev eth0 parent root handle 100 taprio \
+    base-time $SOME_BASE_TIME \
+    sched-entry S 01 150000 \
+    sched-entry S 02 200000 \
+    sched-entry S 04 40000 \
+    flags 2
 
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paulburton@kernel.org to report it. ]
+Do 2 3 2 .. steps  more times if not happens and observe:
+
+[  305.832319] Unable to handle kernel write to read-only memory at
+virtual address ffff0000087ce7f0
+[  305.910887] CPU: 0 PID: 0 Comm: swapper/0 Not tainted
+[  305.919306] Hardware name: Texas Instruments AM654 Base Board (DT)
+
+[...]
+
+[  306.017119] x1 : ffff800848031d88 x0 : ffff800848031d80
+[  306.022422] Call trace:
+[  306.024866]  taprio_free_sched_cb+0x4c/0x98
+[  306.029040]  rcu_process_callbacks+0x25c/0x410
+[  306.033476]  __do_softirq+0x10c/0x208
+[  306.037132]  irq_exit+0xb8/0xc8
+[  306.040267]  __handle_domain_irq+0x64/0xb8
+[  306.044352]  gic_handle_irq+0x7c/0x178
+[  306.048092]  el1_irq+0xb0/0x128
+[  306.051227]  arch_cpu_idle+0x10/0x18
+[  306.054795]  do_idle+0x120/0x138
+[  306.058015]  cpu_startup_entry+0x20/0x28
+[  306.061931]  rest_init+0xcc/0xd8
+[  306.065154]  start_kernel+0x3bc/0x3e4
+[  306.068810] Code: f2fbd5b7 f2fbd5b6 d503201f f9400422 (f9000662)
+[  306.074900] ---[ end trace 96c8e2284a9d9d6e ]---
+[  306.079507] Kernel panic - not syncing: Fatal exception in interrupt
+[  306.085847] SMP: stopping secondary CPUs
+[  306.089765] Kernel Offset: disabled
+
+Try to explain one of the possible crash cases:
+
+The "real" admin list is assigned when admin_sched is set to
+new_admin, it happens after "swap", that assigns to oper_sched NULL.
+Thus if call qdisc show it can crash.
+
+Farther, next second time, when sched list is updated, the admin_sched
+is not NULL and becomes the oper_sched, previous oper_sched was NULL so
+just skipped. But then admin_sched is assigned new_admin, but schedules
+to free previous assigned admin_sched (that already became oper_sched).
+
+Farther, next third time, when sched list is updated,
+while one more swap, oper_sched is not null, but it was happy to be
+freed already (while prev. admin update), so while try to free
+oper_sched the kernel panic happens at taprio_free_sched_cb().
+
+So, move the "swap emulation" where it should be according to function
+comment from code.
+
+Fixes: 9c66d15646760e ("taprio: Add support for hardware offloading")
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+---
+
+Based on net/master
+
+ net/sched/sch_taprio.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
+index 6719a65169d4..286ad4bb50f1 100644
+--- a/net/sched/sch_taprio.c
++++ b/net/sched/sch_taprio.c
+@@ -1224,8 +1224,6 @@ static int taprio_enable_offload(struct net_device *dev,
+ 		goto done;
+ 	}
+ 
+-	taprio_offload_config_changed(q);
+-
+ done:
+ 	taprio_offload_free(offload);
+ 
+@@ -1505,6 +1503,9 @@ static int taprio_change(struct Qdisc *sch, struct nlattr *opt,
+ 			call_rcu(&admin->rcu, taprio_free_sched_cb);
+ 
+ 		spin_unlock_irqrestore(&q->current_entry_lock, flags);
++
++		if (FULL_OFFLOAD_IS_ENABLED(taprio_flags))
++			taprio_offload_config_changed(q);
+ 	}
+ 
+ 	new_admin = NULL;
+-- 
+2.20.1
+
