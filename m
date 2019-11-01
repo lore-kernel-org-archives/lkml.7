@@ -2,90 +2,126 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E523ACA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661DCCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC35421734
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C2DB21734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:13:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572621224;
+	bh=XOvlUoYYmErybiRCw29vOwpB4SaMYbx70SIkF9wDJOI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Xnz1xewPjFVDavpx+mw/BlLqpYujEtYxLufQKWyLrgCLQf+Mz2k8ndEtornT6rt82
+	 c+R1TQxKmQWQmJQ/QCyaDLX7MwCCjTqkVG+Lu0a8Ln39r17f/C2cY4LLUCLlTXr5YV
+	 f9FWnONh0+OVL4ZMwZ4q5v4SDWSQX53sUrVp80dA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbfKAPNH (ORCPT
+        id S1728292AbfKAPNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 11:13:07 -0400
-Received: from mga11.intel.com ([192.55.52.93]:32434 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727326AbfKAPNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 11:13:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 08:13:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,256,1569308400"; 
-   d="scan'208";a="231256033"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 01 Nov 2019 08:13:04 -0700
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH] perf: Fix the aux_output group inheritance fix
-Date:   Fri,  1 Nov 2019 17:12:48 +0200
-Message-Id: <20191101151248.47327-1-alexander.shishkin@linux.intel.com>
-X-Mailer: git-send-email 2.24.0.rc1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 1 Nov 2019 11:13:43 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:40148 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727326AbfKAPNm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 11:13:42 -0400
+Received: from 138.105.71.37.rev.sfr.net ([37.71.105.138] helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iQYcL-0008EX-Qz; Fri, 01 Nov 2019 16:13:37 +0100
+Date:   Fri, 01 Nov 2019 15:13:37 +0000
+Message-ID: <86eeyry6hq.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Andrew Murray" <Andrew.Murray@arm.com>,
+        Jayachandran C <jnair@marvell.com>,
+        "Robert Richter" <rrichter@marvell.com>
+Subject: Re: [PATCH v2 09/36] irqchip/gic-v3: Add GICv4.1 VPEID size discovery
+In-Reply-To: <ec979d9b-cfe8-bfd8-fc4c-c41a602b2494@huawei.com>
+References: <20191027144234.8395-1-maz@kernel.org>
+        <20191027144234.8395-10-maz@kernel.org>
+        <ec979d9b-cfe8-bfd8-fc4c-c41a602b2494@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 37.71.105.138
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, Andrew.Murray@arm.com, jnair@marvell.com, rrichter@marvell.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit
+On Thu, 31 Oct 2019 12:02:24 +0000,
+Zenghui Yu <yuzenghui@huawei.com> wrote:
+> 
+> Hi Marc,
+> 
+> On 2019/10/27 22:42, Marc Zyngier wrote:
+> > While GICv4.0 mandates 16 bit worth of VPEIDs, GICv4.1 allows smaller
+> > implementations to be built. Add the required glue to dynamically
+> > compute the limit.
+> > 
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > ---
+> >   drivers/irqchip/irq-gic-v3-its.c   | 11 ++++++++++-
+> >   drivers/irqchip/irq-gic-v3.c       |  3 +++
+> >   include/linux/irqchip/arm-gic-v3.h |  5 +++++
+> >   3 files changed, 18 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> > index 94c9c2e9f917..40912b3fb0e1 100644
+> > --- a/drivers/irqchip/irq-gic-v3-its.c
+> > +++ b/drivers/irqchip/irq-gic-v3-its.c
+> > @@ -121,7 +121,16 @@ struct its_node {
+> >   #define ITS_ITT_ALIGN		SZ_256
+> >     /* The maximum number of VPEID bits supported by VLPI commands
+> > */
+> > -#define ITS_MAX_VPEID_BITS	(16)
+> > +#define ITS_MAX_VPEID_BITS						\
+> > +	({								\
+> > +		int nvpeid = 16;					\
+> > +		if (gic_rdists->has_rvpeid &&				\
+> > +		    gic_rdists->gicd_typer2 & GICD_TYPER2_VIL)		\
+> > +			nvpeid = 1 + (gic_rdists->gicd_typer2 &		\
+> > +				      GICD_TYPER2_VID);			\
+> 
+> Does it make sense to let nvpeid not more than 16 here? As the spec says
+> "Values above 0x0F are RESERVED". But I don't know why should we have
+> this restriction ;-)
 
-  f733c6b508bc ("perf/core: Fix inheritance of aux_output groups")
+This is something that Andrew raised in the previous version. My take
+on this is that properly implemented HW should give us something that
+matches the spec (in the 0-15 range), and I don't think that guarding
+against that is useful at this stage.
 
-adds a null pointer dereference in case inherit_group() races with
-perf_release(), which causes the below.
+My understanding is that once the architecture allows using the 16-31
+range, we'll either use it directly because it is just a natural
+extension to the existing range, or they mean something different
+altogether and we'll get a new discovery bit somewhere.
 
-> BUG: kernel NULL pointer dereference, address: 000000000000010b
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 3b203b067 P4D 3b203b067 PUD 3b2040067 PMD 0
-> Oops: 0000 [#1] SMP KASAN
-> CPU: 0 PID: 315 Comm: exclusive-group Tainted: G B 5.4.0-rc3-00181-g72e1839403cb-dirty #878
-> RIP: 0010:perf_get_aux_event+0x86/0x270
-> Call Trace:
->  ? __perf_read_group_add+0x3b0/0x3b0
->  ? __kasan_check_write+0x14/0x20
->  ? __perf_event_init_context+0x154/0x170
->  inherit_task_group.isra.0.part.0+0x14b/0x170
->  perf_event_init_task+0x296/0x4b0
+> Either way,
+> 
+> Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
 
-Fix this by skipping over events that are getting closed, in the
-inheritance path.
+Thanks,
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
----
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+	M.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index b1aa5237052b..8ff1218e91b1 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -12129,7 +12129,7 @@ static int inherit_group(struct perf_event *parent_event,
- 		if (IS_ERR(child_ctr))
- 			return PTR_ERR(child_ctr);
- 
--		if (sub->aux_event == parent_event &&
-+		if (sub->aux_event == parent_event && child_ctr &&
- 		    !perf_get_aux_event(child_ctr, leader))
- 			return -EINVAL;
- 	}
 -- 
-2.24.0.rc1
-
+Jazz is not dead, it just smells funny.
