@@ -2,113 +2,138 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C732CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042C0CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D47322475
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D46E62054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbfKAJUQ convert rfc822-to-8bit (ORCPT
+        id S1728438AbfKAJUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 05:20:16 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:60088 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728271AbfKAJUP (ORCPT
+        Fri, 1 Nov 2019 05:20:37 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:6553 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728271AbfKAJUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 05:20:15 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id DEA1E608313B;
-        Fri,  1 Nov 2019 10:20:11 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 8IWPWn6JPQyM; Fri,  1 Nov 2019 10:20:10 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id B72236083139;
-        Fri,  1 Nov 2019 10:20:10 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id sbwSZl86X70W; Fri,  1 Nov 2019 10:20:10 +0100 (CET)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id F410762EBCC0;
-        Fri,  1 Nov 2019 10:20:09 +0100 (CET)
-Date:   Fri, 1 Nov 2019 10:20:09 +0100 (CET)
-From:   Richard Weinberger <richard@nod.at>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        anton ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>, davem <davem@davemloft.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Helge Deller <deller@gmx.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        torvalds <torvalds@linux-foundation.org>,
-        Mark Salter <msalter@redhat.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
-        Rolf Eike Beer <eike-kernel@sf-tec.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        linux-alpha <linux-alpha@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-c6x-dev <linux-c6x-dev@linux-c6x.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-parisc <linux-parisc@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Message-ID: <1435962204.69872.1572600009245.JavaMail.zimbra@nod.at>
-In-Reply-To: <1572597584-6390-13-git-send-email-rppt@kernel.org>
-References: <1572597584-6390-1-git-send-email-rppt@kernel.org> <1572597584-6390-13-git-send-email-rppt@kernel.org>
-Subject: Re: [PATCH v2 12/13] um: add support for folded p4d page tables
+        Fri, 1 Nov 2019 05:20:37 -0400
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="Codrin.Ciubotariu@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 4EucVUhtbVEvbbmY/hUuxzdLY3HCA1DJyUwm5BdYJsMKc+vK+Hl1Tad9RkaHzU00ItPmJTt4fx
+ D3rUN1GvKpNhF7r+p2hYpM3hG7ghEPYimBdDHMChdk8lG+BbpTDHb1JLoR/94JaHgvdSJO6Mgr
+ bNFSJKPlVmTVQBRnsyMJjC0kqtVRxOF7cIQE0uvUvzuvQSt82Jky/x2MURFc+bF8sPhSNYbR8A
+ jaeN388kkBxt45fbOkIOLPHRyjLrcROGbACLj3vccRiVjc0R0bE9GLWfXvCZV83xITufjKic9p
+ 5vQ=
+X-IronPort-AV: E=Sophos;i="5.68,254,1569308400"; 
+   d="scan'208";a="53750120"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Nov 2019 02:20:37 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 1 Nov 2019 02:20:35 -0700
+Received: from rob-ult-m19940.corp.atmel.com (10.10.85.251) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Fri, 1 Nov 2019 02:20:33 -0700
+From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <ludovic.desroches@microchip.com>, <linus.walleij@linaro.org>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <robh+dt@kernel.org>, <claudiu.beznea@microchip.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH v2] pinctrl: at91: Enable slewrate by default on SAM9X60
+Date:   Fri, 1 Nov 2019 11:20:31 +0200
+Message-ID: <20191101092031.24896-1-codrin.ciubotariu@microchip.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
-Thread-Topic: add support for folded p4d page tables
-Thread-Index: S6h0nIi9frMaCZ4VaOjeTjwnLFOM0w==
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ Ursprüngliche Mail -----
-> Von: "Mike Rapoport" <rppt@kernel.org>
+On SAM9X60, slewrate should be enabled on pins with a switching frequency
+below 50Mhz. Since most of our pins do not exceed this value, we enable
+slewrate by default. Pins with a switching value that exceeds 50Mhz will
+have to explicitly disable slewrate.
 
-[...]
+This patch changes the ABI. However, the slewrate macros are only used
+by SAM9X60 and, at this moment, there are no device-tree files available
+for this platform.
 
-> #define pte_page(x) pfn_to_page(pte_pfn(x))
-> diff --git a/arch/um/kernel/mem.c b/arch/um/kernel/mem.c
-> index 417ff64..6fd17bc 100644
-> --- a/arch/um/kernel/mem.c
-> +++ b/arch/um/kernel/mem.c
-> @@ -92,10 +92,26 @@ static void __init one_md_table_init(pud_t *pud)
-> #endif
-> }
-> 
-> +static void __init one_pud_table_init(p4d_t *p4d)
-> +{
-> +#if CONFIG_PGTABLE_LEVELS > 3
+Suggested-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+---
 
-Isn't this dead code?
+Changes in v2:
+ - updated commit message to reflect the ABI change
 
-For uml we have:
-config PGTABLE_LEVELS
-        int
-        default 3 if 3_LEVEL_PGTABLES
-        default 2
+ drivers/pinctrl/pinctrl-at91.c     | 4 ++--
+ include/dt-bindings/pinctrl/at91.h | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-Thanks,
-//richard
+diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+index 117075b5798f..c135149e84e9 100644
+--- a/drivers/pinctrl/pinctrl-at91.c
++++ b/drivers/pinctrl/pinctrl-at91.c
+@@ -85,8 +85,8 @@ enum drive_strength_bit {
+ 					 DRIVE_STRENGTH_SHIFT)
+ 
+ enum slewrate_bit {
+-	SLEWRATE_BIT_DIS,
+ 	SLEWRATE_BIT_ENA,
++	SLEWRATE_BIT_DIS,
+ };
+ 
+ #define SLEWRATE_BIT_MSK(name)		(SLEWRATE_BIT_##name << SLEWRATE_SHIFT)
+@@ -669,7 +669,7 @@ static void at91_mux_sam9x60_set_slewrate(void __iomem *pio, unsigned pin,
+ {
+ 	unsigned int tmp;
+ 
+-	if (setting < SLEWRATE_BIT_DIS || setting > SLEWRATE_BIT_ENA)
++	if (setting < SLEWRATE_BIT_ENA || setting > SLEWRATE_BIT_DIS)
+ 		return;
+ 
+ 	tmp = readl_relaxed(pio + SAM9X60_PIO_SLEWR);
+diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pinctrl/at91.h
+index 3831f91fb3ba..e8e117306b1b 100644
+--- a/include/dt-bindings/pinctrl/at91.h
++++ b/include/dt-bindings/pinctrl/at91.h
+@@ -27,8 +27,8 @@
+ #define AT91_PINCTRL_DRIVE_STRENGTH_MED			(0x2 << 5)
+ #define AT91_PINCTRL_DRIVE_STRENGTH_HI			(0x3 << 5)
+ 
+-#define AT91_PINCTRL_SLEWRATE_DIS	(0x0 << 9)
+-#define AT91_PINCTRL_SLEWRATE_ENA	(0x1 << 9)
++#define AT91_PINCTRL_SLEWRATE_ENA	(0x0 << 9)
++#define AT91_PINCTRL_SLEWRATE_DIS	(0x1 << 9)
+ 
+ #define AT91_PIOA	0
+ #define AT91_PIOB	1
+-- 
+2.20.1
+
