@@ -2,173 +2,102 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F114CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 355E3CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810D9208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2611208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:08:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DkhRARDV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730173AbfKAIGm (ORCPT
+        id S1730212AbfKAIIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 04:06:42 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:44466 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729852AbfKAIGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 04:06:42 -0400
-Received: from [46.218.74.72] (helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iQRx7-0001Qk-C2; Fri, 01 Nov 2019 09:06:37 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Markus Reichl <m.reichl@fivetechno.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: rockchip: Add PCIe node on rk3399-roc-pc
-Date:   Fri, 01 Nov 2019 09:06:36 +0100
-Message-ID: <2490852.kIovObk3uj@phil>
-In-Reply-To: <f66fe5c3-6760-20b0-54cc-8f0c1a754bab@fivetechno.de>
-References: <09300c2d-4298-1b01-ac41-d1b2610589d4@fivetechno.de> <1719506.vT9a8mQdzu@phil> <f66fe5c3-6760-20b0-54cc-8f0c1a754bab@fivetechno.de>
+        Fri, 1 Nov 2019 04:08:44 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50656 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729852AbfKAIIo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 04:08:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572595723;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=nMCDLKHK9p0Avwq2KQRi+OzRMAXn28q4vC8O9lcUbxU=;
+        b=DkhRARDVKYCZY9ph/+HXiMZALXendSSUdIqBdWErKiLQ9aFcIU7XYWdgX6tGASig+3NEo8
+        /eM8orthen8T3nBQ4mWkRrynY6cnM6YLTh+xQHIgJoOMW+jAfIY2L40AF4hL3/7oNZgI1X
+        wU/KZM/WYNOhChtekD2UsmWHPhCIW/I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-417-H9JeXlaaNb2a06NT9mVs0A-1; Fri, 01 Nov 2019 04:08:40 -0400
+X-MC-Unique: H9JeXlaaNb2a06NT9mVs0A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81CF4800D49;
+        Fri,  1 Nov 2019 08:08:38 +0000 (UTC)
+Received: from localhost (ovpn-116-219.ams2.redhat.com [10.36.116.219])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DAE3260BEC;
+        Fri,  1 Nov 2019 08:08:37 +0000 (UTC)
+Date:   Fri, 1 Nov 2019 09:08:36 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     davem@davemloft.net, sunilmut@microsoft.com, willemb@google.com,
+        sgarzare@redhat.com, ytht.net@gmail.com, arnd@arndb.de,
+        tglx@linutronix.de, decui@microsoft.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] vsock: Simplify '__vsock_release()'
+Message-ID: <20191101080836.GA4888@stefanha-x1.localdomain>
+References: <20191031064741.4567-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20191031064741.4567-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Mimecast-Spam-Score: 0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tKW2IUtsqtDRztdT"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
+--tKW2IUtsqtDRztdT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Am Donnerstag, 31. Oktober 2019, 19:12:10 CET schrieb Markus Reichl:
-> Am 31.10.19 um 17:57 schrieb Heiko Stuebner:
-> > Am Montag, 28. Oktober 2019, 15:47:27 CET schrieb Markus Reichl:
-> >> rk3399-roc-pc has a PCIe interface. Enable it for use with
-> >> the M.2 NGFF M_KEY slot on roc-rk3399-mezzanine board.
-> >> Tested with Samsung 970 evo plus SSD.
-> >> 
-> >> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
-> >> ---
-> >>  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 38 +++++++++++++++++++
-> >>  1 file changed, 38 insertions(+)
-> >> 
-> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> >> index 9313251765c7..2d637d54994b 100644
-> >> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> >> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> >> @@ -158,6 +158,21 @@
-> >>  		regulator-max-microvolt = <1400000>;
-> >>  		vin-supply = <&vcc_sys>;
-> >>  	};
-> >> +
-> >> +	/* on roc-rk3399-mezzanine board */
-> > 
-> > I'm undecided on this. From what I've seen that mezzanine board is some
-> > sort of addon, like a raspberry pi hat. Therefore it's not always present,
-> > so probably should not be part of the base board dts.
-> > 
-> > I'm thinking a dt-overlay that can then be activated might be the solution
-> > of choice, but I've reached out to arm-soc poeple on irc to determine the
-> > correct course.
-> > 
-> I have seen some board.dtsi with board_only.dts respective board_extension.dts
-> in the arch/arm64/boot/dts/rockchip directory. Would that be ok?
+On Thu, Oct 31, 2019 at 07:47:41AM +0100, Christophe JAILLET wrote:
+> Use '__skb_queue_purge()' instead of re-implementing it.
+>=20
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>  net/vmw_vsock/af_vsock.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 
-The answer is twofold I guess ;-)
+Modulo the comment about double-underscore:
 
-(1) The 100% correct way would probably be to use a devicetree overlay
-together with capemgr [0] to load the overlay from userspace, but
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-(2a) The distinction between system-on-module + baseboard and
-board+cape is somewhat foggy I think and it really doesn't look like there
-will be a big plethora of capes for the roc-rk3399-pc
+--tKW2IUtsqtDRztdT
+Content-Type: application/pgp-signature; name="signature.asc"
 
-(2b) People may actually want to boot of that nvme pcie drive attached
-to the mezzanine, so it will be somewhat permanent connection anyway
-and also the system then cannot wait for userspace to come up first, if
-the userspace is sitting on that drive ;-) .
+-----BEGIN PGP SIGNATURE-----
 
-So I think, going the dts+dts-extension is the best way to go.
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl276AIACgkQnKSrs4Gr
+c8hfmgf+INURpFV1u1GE48Cf2ihsC6QhHVe3MTzVVV3eQztp78fDvWBPuRqFZP7U
+HjbZNkqJ92U4xAhO9Z+biLTYUKeLb1IIueXXUgZsrELr3zfdAL9fybIGln7c42Nx
+yJvwDFHAbgT1fFlnoaYE22ZUeALajF/AiBdIjwoqWmRYN2iYDHjzZzncuoaEVjuN
+RueUQUVdjdCLcIbAaLf460N2ksM511vXRJ8BjTSkQL6154steJgibuT2PwluMNhp
+FKEIavD0NT/tjZRuS7IkmXl+ZTENDEPuUeRaRsxk9KXhG1/MlcyHGVhgdDvk5irL
+BG3X708iLUI2gdg+CkotgwzgFMiT4A==
+=C+k4
+-----END PGP SIGNATURE-----
 
-Heiko
-
-
-[0] https://elinux.org/Capemgr
-
-
-
-> >> +	vcc3v3_pcie: vcc3v3-pcie {
-> >> +		compatible = "regulator-fixed";
-> >> +		regulator-name = "vcc3v3_pcie";
-> >> +		enable-active-high;
-> >> +		gpio = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
-> >> +		pinctrl-names = "default";
-> >> +		pinctrl-0 = <&vcc3v3_pcie_en>;
-> >> +		regulator-always-on;
-> >> +		regulator-boot-on;
-> >> +		regulator-min-microvolt = <3300000>;
-> >> +		regulator-max-microvolt = <3300000>;
-> >> +		vin-supply = <&dc_12v>;
-> >> +	};
-> >>  };
-> >>  
-> >>  &cpu_l0 {
-> >> @@ -514,6 +529,19 @@
-> >>  	status = "okay";
-> >>  };
-> >>  
-> >> +&pcie_phy {
-> >> +	status = "okay";
-> >> +};
-> >> +
-> >> +&pcie0 {
-> >> +	ep-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>;
-> >> +	num-lanes = <4>;
-> >> +	pinctrl-names = "default";
-> >> +	pinctrl-0 = <&pcie_perst>;
-> >> +	vpcie3v3-supply = <&vcc3v3_pcie>;
-> >> +	status = "okay";
-> >> +};
-> >> +
-> >>  &pinctrl {
-> >>  	lcd-panel {
-> >>  		lcd_panel_reset: lcd-panel-reset {
-> >> @@ -535,6 +563,16 @@
-> >>  		};
-> >>  	};
-> >>  
-> >> +	pcie {
-> >> +		vcc3v3_pcie_en: vcc3v3-pcie-en {
-> >> +			rockchip,pins = <1 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
-> >> +		};
-> >> +
-> >> +		pcie_perst: pcie-perst {
-> >> +			rockchip,pins = <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
-> >> +		};
-> >> +	};
-> >> +
-> >>  	pmic {
-> >>  		vsel1_gpio: vsel1-gpio {
-> >>  			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
-> >> 
-> > 
-> > 
-> > 
-> > 
-> > 
-> > _______________________________________________
-> > Linux-rockchip mailing list
-> > Linux-rockchip@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> > 
-> 
-
-
-
+--tKW2IUtsqtDRztdT--
 
