@@ -2,113 +2,152 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DADCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923C0CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76602208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692D62080F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="2LEyL1aA"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WA28TkbY";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MUL7g+74"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729841AbfKAGQl (ORCPT
+        id S1729695AbfKAG1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 02:16:41 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:46719 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727502AbfKAGQk (ORCPT
+        Fri, 1 Nov 2019 02:27:31 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:45170 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbfKAG1b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 02:16:40 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id xA16ELBc016348;
-        Fri, 1 Nov 2019 15:14:22 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com xA16ELBc016348
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1572588862;
-        bh=pGYwt8aksICDvlfvWj0tCkyuHYQwW0lnnIiz1OylTcI=;
+        Fri, 1 Nov 2019 02:27:31 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id EB918602F0; Fri,  1 Nov 2019 06:27:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572589649;
+        bh=bL0nOQrP/x3tmqadN/OsJ7Er4EhcsGr3nKsfrJY+8ns=;
         h=From:To:Cc:Subject:Date:From;
-        b=2LEyL1aAf04dKzfo3G9K86up2BmcPt/JstqCUtoJLk02MXaqrTW2WCd7ZztvVKMci
-         6ppe5upzfBLZZiHGY1Dqe0D/K+HksAM7zA/EpQouymBiw10cn2BioTABxASWR60hqj
-         HHMOi9eEjk5rFEvUxS2H6fFJ+nSD5tw/6A73Ct+7tpkrTXEw6P+l/qLzNsCXW9+a6W
-         SN06S6NH39f52zTMVPcCrqrMNTijLq14u+I6NZ+cinTJeciVQV8nzBtxISTvaTKpU4
-         A/3DTOPAyvWAC5IXMGxN88SERT9Fj1HDyF9cNHz+MUUnLGgHhpIqCkwmXDiYAVRhif
-         FyeF756FCdaeg==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        David Gibson <david@gibson.dropbear.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] libfdt: prepare for (U)INT32_MAX addition
-Date:   Fri,  1 Nov 2019 15:14:08 +0900
-Message-Id: <20191101061411.16988-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        b=WA28TkbYi5W21hY/G1dPTGNxAaPFNPkgjAm5hNzR+dL2//HUUpKRaO6Gk2KEyf21R
+         zFE6b+RWYrxCBYDP8SalkIMFeVOIskm9Fqk9Llh7pBxDDab8uk0fLFkIUzhUeD9Gge
+         IvM6vn1Keeuxa1fi/iUsp+R+rWSvcZiKqrOTGC6M=
+Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 14627602F0;
+        Fri,  1 Nov 2019 06:27:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572589648;
+        bh=bL0nOQrP/x3tmqadN/OsJ7Er4EhcsGr3nKsfrJY+8ns=;
+        h=From:To:Cc:Subject:Date:From;
+        b=MUL7g+74h0Qm/7JuPlbyJhwLkieiNlTfZFnsCa4h1TTmNB6S6pLiifhTvveZrEkFz
+         tJz7sAaX+qKPV3DYhwEEqG4bXd9cIKMh3CJq5wyGJphhjz+i/3M1TyYLa0Rca03udg
+         cXH8OCKLCGqlm1EdAib4XONUfIfAZJblEHwSTers=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 14627602F0
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
+From:   Kiran Gunda <kgunda@codeaurora.org>
+To:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V10 0/8] backlight: qcom-wled: Support for QCOM wled driver
+Date:   Fri,  1 Nov 2019 11:56:56 +0530
+Message-Id: <1572589624-6095-1-git-send-email-kgunda@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch series renames the pm8941-wled.c driver to qcom-wled.c to add
+the support for multiple PMICs supported by qualcomm. This patch series
+supports both PM8941 and PMI8998 WLED. The PMI8998 WLED has the support
+to handle the OVP (over voltage protection) and the SC (short circuit
+protection)
+interrupts. It also has the auto string detection algorithm support to
+configure the right strings if the user specified string configuration
+is in-correct. These three features are added in this series for PMI8998.
 
-As you may know, libfdt in the upstream DTC project
-added referenced to (U)INT32_MAX.
+changes from v1:
+   - Fixed the commit message for
+   - backlight: qcom-wled: Rename pm8941-wled.c to qcom-wled.c
 
-The kernel code has three files to adjust:
+Changes from v2:
+   - Fixed bjorn and other reviewer's comments
+   - Seperated the device tree bindings
+   - Splitted out the WLED4 changes in seperate patch
+   - Merged OVP and auto string detection patch
 
-include/linux/libfdt_env.h
-arch/powerpc/boot/libfdt_env.h
-arch/arm/boot/compressed/libfdt_env.h
+Changes from v3:
+  - Added Reviewed-by/Acked-by tags
+  - Fixed comments from Bjorn/Vinod/Rob
+  - Splitting the "backlight: qcom-wled: Add support for WLED4 peripheral" patch
+    to seperate the WLED3 specific restructure.
 
-Instead of fixing arch/arm/boot/compressed/libfdt_env.h,
-it is pretty easy to refactor the ARM decompressor
-to reuse <linux/lbifdt_env.h>
-So, 2/3 simplifies the Makefile and deletes its own
-libfdt_env.h
+Changes from v4:
+  - Added reviewed-by/Acked-by tags
+  - Fixed comments from Bjorn/Daniel/Pavel
 
-On the other hand, the PPC boot-wrapper is a can of worms.
-I give up refactoring it.
-Let's keep it closed, and just update arch/powerpc/boot/libfdt_env.h
+Changes from v5:
+  - Fixed comments from Bjorn/Pavel
 
+Changes from v5/v6:
+  - Fixed comments from Bjorn/Pavel on V5 series, which were missed in V6 series
+  - Patch 1 and 2, mentioned below, from V6 series are picked by Pavel In next.
+    Hence, dropped them in this series.
+    https://lore.kernel.org/patchwork/patch/1132467/
+    https://lore.kernel.org/patchwork/patch/1132468/
 
+Changes from v7:
+  - Addressed comments from Daniel Thompson/Lee Jones
+  - Patch 1 and 2, mentioned below, from V6 series are picked by Pavel In next.
+    Hence, dropped them in this series.
+    https://lore.kernel.org/patchwork/patch/1132467/
+    https://lore.kernel.org/patchwork/patch/1132468/
 
-Masahiro Yamada (3):
-  libfdt: add SPDX-License-Identifier to libfdt wrappers
-  ARM: decompressor: simplify libfdt builds
-  libfdt: define INT32_MAX and UINT32_MAX in libfdt_env.h
+Changes from v8:
+ - Addressed a comment from Daniel Thompson on patch 6
+ - Added Reviewed-by tag of Daniel Thompson on patch 4
+ - Patch 1 and 2, mentioned below, from V6 series are picked by Pavel In next.
+    Hence, dropped them in this series.
+    https://lore.kernel.org/patchwork/patch/1132467/
+    https://lore.kernel.org/patchwork/patch/1132468/
 
- arch/arm/boot/compressed/.gitignore     |  9 -------
- arch/arm/boot/compressed/Makefile       | 33 +++++++------------------
- arch/arm/boot/compressed/atags_to_fdt.c |  1 +
- arch/arm/boot/compressed/fdt.c          |  2 ++
- arch/arm/boot/compressed/fdt_ro.c       |  2 ++
- arch/arm/boot/compressed/fdt_rw.c       |  2 ++
- arch/arm/boot/compressed/fdt_wip.c      |  2 ++
- arch/arm/boot/compressed/libfdt_env.h   | 22 -----------------
- arch/powerpc/boot/libfdt_env.h          |  2 ++
- include/linux/libfdt_env.h              |  3 +++
- lib/fdt.c                               |  1 +
- lib/fdt_empty_tree.c                    |  1 +
- lib/fdt_ro.c                            |  1 +
- lib/fdt_rw.c                            |  1 +
- lib/fdt_strerror.c                      |  1 +
- lib/fdt_sw.c                            |  1 +
- lib/fdt_wip.c                           |  1 +
- 17 files changed, 30 insertions(+), 55 deletions(-)
- create mode 100644 arch/arm/boot/compressed/fdt.c
- create mode 100644 arch/arm/boot/compressed/fdt_ro.c
- create mode 100644 arch/arm/boot/compressed/fdt_rw.c
- create mode 100644 arch/arm/boot/compressed/fdt_wip.c
- delete mode 100644 arch/arm/boot/compressed/libfdt_env.h
+Changes from v9:
+ - Added back the below dropped out patches to this series.
+    https://lore.kernel.org/patchwork/patch/1132467/
+    https://lore.kernel.org/patchwork/patch/1132468/
+ - Added Reviewed-by tag of Daniel Thompson on patch 8
+
+Kiran Gunda (8):
+  backlight: qcom-wled: Rename pm8941-wled.c to qcom-wled.c
+  backlight: qcom-wled: restructure the qcom-wled bindings.
+  backlight: qcom-wled: Add new properties for PMI8998.
+  backlight: qcom-wled: Rename PM8941* to WLED3
+  backlight: qcom-wled: Restructure the driver for WLED3.
+  backlight: qcom-wled: Add support for WLED4 peripheral.
+  backlight: qcom-wled: add support for short circuit handling.
+  backlight: qcom-wled: Add auto string detection logic
+
+ .../bindings/leds/backlight/pm8941-wled.txt        |   42 -
+ .../bindings/leds/backlight/qcom-wled.txt          |  154 +++
+ drivers/video/backlight/Kconfig                    |    8 +-
+ drivers/video/backlight/Makefile                   |    2 +-
+ drivers/video/backlight/pm8941-wled.c              |  424 -------
+ drivers/video/backlight/qcom-wled.c                | 1296 ++++++++++++++++++++
+ 6 files changed, 1455 insertions(+), 471 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+ delete mode 100644 drivers/video/backlight/pm8941-wled.c
+ create mode 100644 drivers/video/backlight/qcom-wled.c
 
 -- 
-2.17.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
 
