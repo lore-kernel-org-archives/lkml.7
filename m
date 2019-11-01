@@ -2,117 +2,81 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31380CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBC4CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029F3217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:48:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMMrN5Nw"
+	by mail.kernel.org (Postfix) with ESMTP id ADC8E217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:52:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbfKAUsI (ORCPT
+        id S1727789AbfKAUwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 16:48:08 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36754 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbfKAUsH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 16:48:07 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y10so7903772qto.3;
-        Fri, 01 Nov 2019 13:48:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=WbkXhr26XYd0AF1obLB0bhvMsDV/wAE5Um2xcjbSmZc=;
-        b=dMMrN5NwUAfFqcKZvrysRquTSCfuaSsDXyTxAWMZOy1ARvC44afagLZJAKMyUj9dnE
-         tK932SpxQ50JIlOTYp1kyVc3OEUnsJwnmesCypbWKzRx5WxJfN1ME0quDebrSSCqBxhu
-         wYtTDkTdbCpDIdRBj5jFpN+rC76uLDklNPICXZ6301MTj+k+4VJYW0IhFDfHqZR15Gep
-         q1SzSrwkZ/4b7HqwnfKXzfQWTADGlsBgt9nCsHHwCuiiMhQLBoVrfVKzzY1O3sSA4qyg
-         cl6teHpl2ZqolYhDt6myjMFHk/bAtERcPeh7738ZLUQlFkrihXpuTCR3hvXdL4vnZ1Zj
-         LDIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=WbkXhr26XYd0AF1obLB0bhvMsDV/wAE5Um2xcjbSmZc=;
-        b=KX6yGZ3M+iT9jH8glzxeFSD9xMbQ+fno1CWMAFUpGe/rETlXoXffzATJ5TF3jpQ1/J
-         HimIhtx+KfJM3mDKVVtkupXGD888uCzEbze19M6JSAyCj4k3IXBM0LNny9FpJO0v16PO
-         g5Rc/yHmShlhRD+LoegGqxNhvgt7L7lzgIoLs0jDguXVkxSJhMbuXZuDOfKCtyVkBCke
-         3NYlHNo5lzcOu3Af0O+glwMffsxD5AG8IDbqdaIeRicTK3beSbSUns4HP7eRU5BjDL36
-         5lckgPY4lhfuqizA1g8xffxPpag7/a4r83kdrVGhLnn5obzO4dFNamaPD9HUbfC23Z96
-         Tk6Q==
-X-Gm-Message-State: APjAAAVGd7QWB52Zw1i8UOZXp0X6LPuRfdlQhPkx+/bJ64wv0fS87pwR
-        81jpCxiY6PqGLVKCuTSO9jo=
-X-Google-Smtp-Source: APXvYqyBDrpn/qo4CHUifK6KNQhm/sqT8FvN6KY9uvEIL5he7EJl0ACsDZ6k6LH32r1dU0cnXyBGAA==
-X-Received: by 2002:ad4:4489:: with SMTP id m9mr12256740qvt.126.1572641286301;
-        Fri, 01 Nov 2019 13:48:06 -0700 (PDT)
-Received: from svens-asus.arcx.com ([184.94.50.30])
-        by smtp.gmail.com with ESMTPSA id e3sm3818162qkg.136.2019.11.01.13.48.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 13:48:05 -0700 (PDT)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Marek Vasut <marex@denx.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Adam Ford <aford173@gmail.com>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] Input: ili210x - add ILI2117 support
-Date:   Fri,  1 Nov 2019 16:48:01 -0400
-Message-Id: <20191101204801.16328-1-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190302141704.32547-1-marex@denx.de>
-References: <20190302141704.32547-1-marex@denx.de>
+        Fri, 1 Nov 2019 16:52:55 -0400
+Received: from mga07.intel.com ([134.134.136.100]:40669 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726477AbfKAUwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 16:52:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 13:52:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,257,1569308400"; 
+   d="scan'208";a="199916667"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by fmsmga007.fm.intel.com with ESMTP; 01 Nov 2019 13:52:54 -0700
+Received: from fmsmsx126.amr.corp.intel.com (10.18.125.43) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 1 Nov 2019 13:52:54 -0700
+Received: from fmsmsx114.amr.corp.intel.com ([169.254.6.30]) by
+ FMSMSX126.amr.corp.intel.com ([169.254.1.167]) with mapi id 14.03.0439.000;
+ Fri, 1 Nov 2019 13:52:53 -0700
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+Subject: Re: [PATCH] libnvdimm/pmem: Delete include of nd-core.h
+Thread-Topic: [PATCH] libnvdimm/pmem: Delete include of nd-core.h
+Thread-Index: AQHVkE2z3NSFKZ0vREyUBbLgylDZYad3QWQA
+Date:   Fri, 1 Nov 2019 20:52:52 +0000
+Message-ID: <86ea4fc17a94446df545af450e9de704e674b68c.camel@intel.com>
+References: <157256829077.1212326.8726596129631121970.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <157256829077.1212326.8726596129631121970.stgit@dwillia2-desk3.amr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+x-originating-ip: [10.232.112.164]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9FAEA65EFF47F44A81AEC60455BFA102@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dmitry / Marek,
-
-There have been two attempts to add ILI2117 touch controller support.
-I was about to add a third, but luckily I checked the mailing list
-before writing any code :)
-
-Adding this support would clearly be beneficial for the common good.
-What can we do to get this in motion again?
-
-Last time I checked, Marek posted a patch which added the 2117, but Dmitry
-objected, because the code became too unwieldy. Dmitry then posted a cleanup
-patch, which did not work for Marek. So everything came to a halt.
-See:
-https://patchwork.kernel.org/patch/10836651/
-https://www.spinics.net/lists/linux-input/msg62670.html
-
-Dmitry, would you perhaps be willing to accept Marek's patch, and perform the
-cleanup later?
-
-Marek, would you perhaps be willing to invest some time to debug Dmitry's
-cleanup patch?
-
-On my end, I've reviewed Dmitry's patch and it looks mostly ok. I saw one
-difference with ILI210X which could explain Marek's results, but I can't be
-sure - because I could not locate the 210X's register layout on the web.
-
-In Dmitry's patch, we see:
-
-	touch = ili210x_report_events(priv, touchdata);
-	if (touch || chip->continue_polling(touchdata))
-		schedule_delayed_work(&priv->dwork,
-				      msecs_to_jiffies(priv->poll_period));
-
-but this is not exactly equivalent to the original. Because in the original,
-the 210X's decision to kick off delayed work is completely independent of
-the value of touch.
-
-Suggested replacement:
-
-	touch = ili210x_report_events(priv, touchdata);
-	if (chip->continue_polling)
-		touch = chip->continue_polling(touchdata);
-
-Sven
+T24gVGh1LCAyMDE5LTEwLTMxIGF0IDE3OjMxIC0wNzAwLCBEYW4gV2lsbGlhbXMgd3JvdGU6DQo+
+IFRoZSBlbnRpcmUgcG9pbnQgb2YgbmQtY29yZS5oIGlzIHRvIGhpZGUgZnVuY3Rpb25hbGl0eSB0
+aGF0IG5vIGxlYWYNCj4gZHJpdmVyIHNob3VsZCB0b3VjaC4gSW4gZmFjdCwgdGhlIGNvbW1pdCB0
+aGF0IGFkZGVkIGl0IGhhZCBubyBuZWVkIHRvDQo+IGluY2x1ZGUgaXQuDQo+IA0KPiBGaXhlczog
+MDZlOGNjZGFiMTVmICgiYWNwaTogbmZpdDogQWRkIHN1cHBvcnQgZm9yIGRldGVjdCBwbGF0Zm9y
+bS4uLiIpDQo+IENjOiBJcmEgV2VpbnkgPGlyYS53ZWlueUBpbnRlbC5jb20+DQo+IENjOiBEYXZl
+IEppYW5nIDxkYXZlLmppYW5nQGludGVsLmNvbT4NCj4gQ2M6IFZpc2hhbCBWZXJtYSA8dmlzaGFs
+LmwudmVybWFAaW50ZWwuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBEYW4gV2lsbGlhbXMgPGRhbi5q
+LndpbGxpYW1zQGludGVsLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL252ZGltbS9wbWVtLmMgfCAg
+ICAxIC0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGRlbGV0aW9uKC0pDQoNCkxvb2tzIGdvb2QsDQpS
+ZXZpZXdlZC1ieTogVmlzaGFsIFZlcm1hIDx2aXNoYWwubC52ZXJtYUBpbnRlbC5jb20+DQoNCj4g
+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL252ZGltbS9wbWVtLmMgYi9kcml2ZXJzL252ZGltbS9w
+bWVtLmMNCj4gaW5kZXggN2E2ZjQ1MDFkY2RhLi5hZDhlNGRmMTI4MmIgMTAwNjQ0DQo+IC0tLSBh
+L2RyaXZlcnMvbnZkaW1tL3BtZW0uYw0KPiArKysgYi9kcml2ZXJzL252ZGltbS9wbWVtLmMNCj4g
+QEAgLTI4LDcgKzI4LDYgQEANCj4gICNpbmNsdWRlICJwbWVtLmgiDQo+ICAjaW5jbHVkZSAicGZu
+LmgiDQo+ICAjaW5jbHVkZSAibmQuaCINCj4gLSNpbmNsdWRlICJuZC1jb3JlLmgiDQo+ICANCj4g
+IHN0YXRpYyBzdHJ1Y3QgZGV2aWNlICp0b19kZXYoc3RydWN0IHBtZW1fZGV2aWNlICpwbWVtKQ0K
+PiAgew0KPiANCg0K
