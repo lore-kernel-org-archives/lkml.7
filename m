@@ -2,106 +2,112 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F79BCA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218C2CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E01B4217F9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:49:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572623382;
-	bh=wdIW0/QLcRnGZarqavMjg3f1Q6gO9y6P1i5x8XnrKC4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ImbEVPaLnOLsiir7ZOkR7c84Mzbd69670yGZ2Fj/ozfp9TaUGoGoHI5hYeDeC6Hiq
-	 QZKkj6lkZtVvvzNGbLhtg+Dfu+1bGO0H8+aw6LOC10750I1c2adzbOWx95zbi9exxa
-	 Mi05OesxWsOGFaHeqQ9/ZV09cZHbFcXQ/C2v9vSE=
+	by mail.kernel.org (Postfix) with ESMTP id EDA12208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:51:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iNqAtli8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbfKAPtk (ORCPT
+        id S1729075AbfKAPvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 11:49:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726720AbfKAPtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 11:49:40 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 1 Nov 2019 11:51:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22894 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727517AbfKAPvP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 11:51:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572623474;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=V/F/uH98yTm8/ocyS4BrLQNZoDCzFMcQkLKpDmR+yKk=;
+        b=iNqAtli853y4KaqZJMkWtgA6wIvBtN7WAY9TmzM5kiIHjPzSFHR7VWMU6++e/PCjQ0kvEz
+        D54SFWECqosQBe7i7ElKQ9GpsH0PEy3CAUa8XUaIJ982LgSA1uAJV8z0B4Ua4I3/v5Vl7F
+        Ad2qcgpX9zgqsWyN5AABW0yVciDk5fI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-20-2R4BlIySO8-CwaNhv7pQGQ-1; Fri, 01 Nov 2019 11:51:11 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C625721734;
-        Fri,  1 Nov 2019 15:49:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572623379;
-        bh=wdIW0/QLcRnGZarqavMjg3f1Q6gO9y6P1i5x8XnrKC4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=chJsFqRrFQAkIuvN3HeWEC/ZgBqGFyB54Lohux3DUr9V3T7pnBow3Tn11j/JLpRD/
-         Wndm4HzwQJtvJF9DPGrJnTaDkiSwbsEdo3IgooYz2kh/PXILxPniKykE3XC/kUKQux
-         AcI32uRZ3U1IV1D52C0TtrTxa+gQaGz6FvqY87HA=
-Date:   Fri, 1 Nov 2019 16:07:01 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com, Yangtao Li <tiny.windzz@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:ALLWINNER CPUFREQ DRIVER" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cpufreq: sun50i: Fix CPU speed bin detection
-Message-ID: <20191101150701.fgke7hoad5zn3vn2@hendrix>
-References: <20191031181359.282617-1-megous@megous.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9DFD4800C77;
+        Fri,  1 Nov 2019 15:51:09 +0000 (UTC)
+Received: from pick.fieldses.org (ovpn-124-79.rdu2.redhat.com [10.10.124.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4A01F5D713;
+        Fri,  1 Nov 2019 15:51:08 +0000 (UTC)
+Received: by pick.fieldses.org (Postfix, from userid 2815)
+        id 33261120054; Fri,  1 Nov 2019 11:51:06 -0400 (EDT)
+Date:   Fri, 1 Nov 2019 11:51:06 -0400
+From:   "J. Bruce Fields" <bfields@redhat.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Mao Wenan <maowenan@huawei.com>,
+        Trond Myklebust <trond.myklebust@primarydata.com>,
+        Dros Adamson <dros@primarydata.com>,
+        jeff.layton@primarydata.com, richard.sharpe@primarydata.com,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next] nfsd: Drop LIST_HEAD where the variable it
+ declares is never used.
+Message-ID: <20191101155106.GA30730@pick.fieldses.org>
+References: <20191101114054.50225-1-maowenan@huawei.com>
+ <7E1B5E17-FF35-472B-8316-D4C01085BAE4@oracle.com>
+ <20191101144921.GA10409@kadam>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cxmms35ejqeprbv6"
+In-Reply-To: <20191101144921.GA10409@kadam>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: 2R4BlIySO8-CwaNhv7pQGQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191031181359.282617-1-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Nov 01, 2019 at 05:49:21PM +0300, Dan Carpenter wrote:
+> On Fri, Nov 01, 2019 at 09:36:27AM -0400, Chuck Lever wrote:
+> > > On Nov 1, 2019, at 7:40 AM, Mao Wenan <maowenan@huawei.com> wrote:
+> > >=20
+> > > The declarations were introduced with the file, but the declared
+> > > variables were not used.
+> > >=20
+> > > Fixes: 65294c1f2c5e ("nfsd: add a new struct file caching facility to=
+ nfsd")
 
---cxmms35ejqeprbv6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks, applying for 5.5.
 
-On Thu, Oct 31, 2019 at 07:13:58PM +0100, Ondrej Jirman wrote:
-> I have failures to boot on Orange Pi 3, because this driver determined
-> that my SoC is from the normal bin, but my SoC only works reliably with
-> the OPP values for the slowest bin.
->
-> Looking at BSP code, I found that efuse values have following meanings
-> on H6:
->
-> - 0b000 invalid (interpreted in vendor's BSP as normal bin)
-> - 0b001 slowest bin
-> - 0b011 normal bin
-> - 0b111 fastest bin
->
-> Let's play it safe and interpret 0 as the slowest bin, but fix detection
-> of other bins to match vendor code.
->
-> Fixes: f328584f7bff ("cpufreq: Add sun50i nvmem based CPU scaling driver")
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > I'm not sure a Fixes: tag is necessary here? 65294c1f2c5e
+> > works fine without this change, and it's not something we
+> > would need to backport into stable kernels.
+> >=20
+> > This is more of a clean up patch.
+> >=20
+>=20
+> Fixes is not really related to backports or stable.  I would agree that
+> this isn't a bug but just a cleanup, but the problem is that other
+> people want Fixes tags for everything...
+>=20
+> Yesterday I sent a cleanup patch and I almost put the Fixes tag under
+> the --- cut off but in the end I just deleted it...  It's hard to know
+> what the right thing is.
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+It doesn't have a stable cc and it's pretty obvious cleanup, so I guess
+there's no harm in it.
 
-Out of curiosity, which OPP table is being used? I guess it's one of
-the dozens of patches sitting there...
+I could go either way.  But I'll leave the patch as is unless someone
+comes up with a clear policy.
 
-Maxime
+--b.
 
---cxmms35ejqeprbv6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXbxKFQAKCRDj7w1vZxhR
-xfcRAQDCSZvITYVU4ONlpersX7CkPXMk47yfFv5qPasvorZbCAD8DOHH9GG8dEHE
-Q0G94TyC+NiQEhK6W0kM+D5jpHiE0gg=
-=Z6U9
------END PGP SIGNATURE-----
-
---cxmms35ejqeprbv6--
