@@ -1,94 +1,152 @@
-Return-Path: <SRS0=21RF=YY=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F63FCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAA5CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 00:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F6DB2087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 31 Oct 2019 23:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC102086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 00:03:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="QKg7HV2p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uQ+7Utyj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbfJaX5t (ORCPT
+        id S1728371AbfKAADc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 19:57:49 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39364 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfJaX5s (ORCPT
+        Thu, 31 Oct 2019 20:03:32 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43084 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfKAADc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 19:57:48 -0400
-Received: by mail-io1-f67.google.com with SMTP id 18so8952184ion.6
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 16:57:48 -0700 (PDT)
+        Thu, 31 Oct 2019 20:03:32 -0400
+Received: by mail-qt1-f194.google.com with SMTP id c26so10895374qtj.10;
+        Thu, 31 Oct 2019 17:03:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=DlWmb7IgZmhk+yp3PdCqAG1wjzyXN6dB08lLnHa3HSI=;
-        b=QKg7HV2pAE7DIHMgc/9tZeYwmdgbo2E+YYpv/47wUW17mWxHMTJ5yDYC1ruwzxtcBi
-         t9+kMhToecgxgoI9nhoVEw48Li/xVty1stCAtxtG2RovvSqv6rBCW78Ehp2+j5EmcFIs
-         UOsW5rIqW+axEbyd0M32o/mbx1WjWmbDfpaeJM3ZPxA0i4TfejI2Ms4I4Fk4TkLTCXOk
-         E6jErckYSrZ5IsP2d9+KaHBP6/LFhTB5wKaR74Ro+UGxej9RmD+qE31b37b6ceScIvMQ
-         8HLgAIs4bzDWhGXenL4fkBDEmp1SRIC7UgIcF8wSRhSbW5f+nKIPRZm7EB3gfwyDL2or
-         mXDA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VKxv5zSXLT1ehgNKTex+0kSfIDKsNz1FYp7ELOBKXaw=;
+        b=uQ+7UtyjG5GA1UQaFEr6n72Aa3Q4dGYJnOftfMff/8zzfTXCojzeL74N5S4ghYJsk4
+         oDU8oZ0+M0n6yy2h9bQoVd5OZQ+tOc46ZzkgEoh4NC4WjF4w3pfGBZFXyKb5akkGCT37
+         fpJ0WYT4Y50xOk1AkIfDharSR6bHEfRupZQlC1zOzt7tSZKpsX22Snk6jq9MEctd5ehM
+         jtKGS8hXO4BTODlIVlZRodLYBUMuntTj2eXCd0DH2/DGPy4lRwV6DybOvc0lLiPgAKMw
+         hj3IhtwhiPqO1kFbc9gyl3876rMWhuN5qClB/zhaZMM6f6pGa8lryvbb7ONdyjVy0yTt
+         4MxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=DlWmb7IgZmhk+yp3PdCqAG1wjzyXN6dB08lLnHa3HSI=;
-        b=Bn9DZYUwJV3vE9A9IBd5jVccO9YnSxe0dJyjrVyeNZJtE9UM4X5D2IJiwop9260g1u
-         A9gOiK6s4/w0B6+fWNqVQE8Ltpza3MHDb5nSQevbS7Mr7H+WLrsf7Toanyx2+JtZlSeG
-         2VBJNKVzRkU06mLWokwSl4jHHl/7k+5wJYKF+wJ+//NjXjHhARUKEZ130pLEVQoTGt6j
-         RC1dTBC98dLC5Wfc2gAdX+mBFbFA6lOsXUUDFQXjG0Uk+pyYAoTF45I9Xg+BHnEef1tf
-         HZRzac+YOcXK51/I7AbQpoOybkEo7qVMXX1IxmpVVSpzrvevb5ucBgdjDeHWgxWT6ePe
-         nJzQ==
-X-Gm-Message-State: APjAAAV/FBfSl3EIJ6eWDFIqcAc4OkjdnWMJHeYbag1oJPqWNk3xvm+4
-        EFsrXlMEjncRSiEyEgZnaddgxZTW59c=
-X-Google-Smtp-Source: APXvYqy/KVTA2A/G8TC2Xo2QaQ5wgHyPiwtcrr4nHibTrr61rJ7aezpdz/Jbn9eXGIwUvSRXBQWkrQ==
-X-Received: by 2002:a05:6638:da:: with SMTP id w26mr5957124jao.58.1572566267869;
-        Thu, 31 Oct 2019 16:57:47 -0700 (PDT)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id s70sm807595ili.13.2019.10.31.16.57.47
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VKxv5zSXLT1ehgNKTex+0kSfIDKsNz1FYp7ELOBKXaw=;
+        b=FFxuVesOYZxGF0foGdwnuE47UiU5yMlKhm3eeUVLLfU1snHo7Eew6KUQXZhaTQW2Of
+         blJ2MJsEIsqYylhDl8ISEAjj9GYGqWsBxQeMqt7w4prjKwLbG/m9MFPud81p0nw0yDRM
+         lgjLf/BW6tMEOZrOLAeeKBsEm42H420Kh4xFK4EZB77QQk85rVsDzYaVj8FncGZc+J2G
+         dNoHndDPoAjQqssMjJuhCpZ5lNMwMAsX8QOpwIzyZaeCGb2S7kF+C0YJSZC8pHufOuo/
+         coH8SxavS5Rx8rgrlNPuNQo2JuqhOpUhJwZJAWUmiSq/NtQbrt8SHNdKFk52BqS+dH+k
+         dNUw==
+X-Gm-Message-State: APjAAAWl+z/cOFZuUcqNf+Z5Y6NA8MOEmGAWwVxtqkAdB0zXqfbG7LWC
+        ehILRRQEHNapzDDY78dGGZM=
+X-Google-Smtp-Source: APXvYqymy6b+iU9I+tawyTCVvYzzlBX02xlrg519Yb/4Rlqrui7DJhFfgNwIGWHab1ijOZsnqjWQSg==
+X-Received: by 2002:ac8:549:: with SMTP id c9mr769668qth.178.1572566610732;
+        Thu, 31 Oct 2019 17:03:30 -0700 (PDT)
+Received: from localhost.localdomain ([187.34.252.37])
+        by smtp.gmail.com with ESMTPSA id n5sm2693959qke.74.2019.10.31.17.03.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 16:57:47 -0700 (PDT)
-Date:   Thu, 31 Oct 2019 16:57:45 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anup Patel <anup@brainfault.org>
-Subject: Re: [PATCH 05/12] riscv: implement remote sfence.i using IPIs
-In-Reply-To: <20191028121043.22934-6-hch@lst.de>
-Message-ID: <alpine.DEB.2.21.9999.1910311657150.25874@viisi.sifive.com>
-References: <20191028121043.22934-1-hch@lst.de> <20191028121043.22934-6-hch@lst.de>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Thu, 31 Oct 2019 17:03:30 -0700 (PDT)
+From:   Rodrigo Carvalho <rodrigorsdc@gmail.com>
+To:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel-usp@googlegroups.com,
+        Rodrigo Carvalho <rodrigorsdc@gmail.com>
+Subject: [PATCH v3] dt-bindings: iio: accel: add binding documentation for ADIS16240
+Date:   Thu, 31 Oct 2019 21:03:01 -0300
+Message-Id: <20191101000301.12901-1-rodrigorsdc@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 28 Oct 2019, Christoph Hellwig wrote:
+This patch add device tree binding documentation for ADIS16240.
 
-> The RISC-V ISA only supports flushing the instruction cache for the
-> local CPU core.  Currently we always offload the remote TLB flushing to
-> the SBI, which then issues an IPI under the hoods.  But with M-mode
-> we do not have an SBI so we have to do it ourselves.   IPI to the
-> other nodes using the existing kernel helpers instead if we have
-> native clint support and thus can IPI directly from the kernel.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Anup Patel <anup@brainfault.org>
+Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
+---
+V3:
+   - Remove spi-cpol and spi-cpha field. They don't seem necessary
+ .../bindings/iio/accel/adi,adis16240.yaml     | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
 
-Thanks, queued for v5.5-rc1 with a minor fix to one of the code comments.
+diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+new file mode 100644
+index 000000000000..9a4cd12c4818
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/accel/adi,adis16240.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ADIS16240 Programmable Impact Sensor and Recorder driver
++
++maintainers:
++  - Alexandru Ardelean <alexandru.ardelean@analog.com>
++
++description: |
++  ADIS16240 Programmable Impact Sensor and Recorder driver that supports
++  SPI interface.
++    https://www.analog.com/en/products/adis16240.html
++
++properties:
++  compatible:
++    enum:
++      - adi,adis16240
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    spi0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        /* Example for a SPI device node */
++        accelerometer@0 {
++            compatible = "adi,adis16240";
++            reg = <0>;
++            spi-max-frequency = <2500000>;
++            spi-cpol;
++            spi-cpha;
++            interrupt-parent = <&gpio0>;
++            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++        };
++    };
+-- 
+2.23.0
 
-
-- Paul
