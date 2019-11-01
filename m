@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B218CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5A4CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22A33204FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43AE72190F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572597627;
-	bh=p11JZ/878S75pE68Mq2TwTFjvlVsPceSwhIak764zRU=;
+	s=default; t=1572597635;
+	bh=yv9SFIdg5D2vfTnwk1AOT8EqOCosf2YIIQ4xx40h8eQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i7kZTPTlDvsfxzCaiBVat6PwjeoHNm6Svj2r+X8QYWzxvGqE8nRQjPnMK0tq/giks
-	 piF/sAgG7M9pw+F10UIvpJN5Nv3vV65QHPZk6lV2Vnll67UrWnQ4YZxYJcw4qbaDvf
-	 heBdCwhGVcQ0kb54UENuu8noVz0OhYklRLnC5yA0=
+	b=jWo+lDILpNPtmDLpZDx+G+2SJqbVa9DCtDpO3ms8C+66yq8Heq1e8fhkQtZaMSHy+
+	 KcKseUXphnnjVblumM1LfeZEA/fi/oKFkU8mNl2ggMVins09jiLHjBn/fDEFzlL8Z9
+	 Ksb4avOaslsSTpDduWOLF0SlaCht/YOBMcI+muyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbfKAIkZ (ORCPT
+        id S1727257AbfKAIke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 04:40:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48484 "EHLO mail.kernel.org"
+        Fri, 1 Nov 2019 04:40:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727072AbfKAIkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 04:40:24 -0400
+        id S1727170AbfKAIkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 04:40:33 -0400
 Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AE342080F;
-        Fri,  1 Nov 2019 08:40:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F79421855;
+        Fri,  1 Nov 2019 08:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572597623;
-        bh=p11JZ/878S75pE68Mq2TwTFjvlVsPceSwhIak764zRU=;
+        s=default; t=1572597632;
+        bh=yv9SFIdg5D2vfTnwk1AOT8EqOCosf2YIIQ4xx40h8eQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XIPBXyE5+aopVknBez2XPZH6Bd0B49HK06noESPbZDJcHXB4rzWNfmRsdKHmqkHST
-         8kF+uQYhtKDirFQDPpJkI+atddkb/+858+FxG8Z7/fiZCo/qSQg9GZZ5HLy4ov4+tX
-         9PvOkccN2Mh84pDUHZJHV4TOtLbQ7BFtW5IrGOHQ=
+        b=EZ+ypoIFQCODDWFgNBiPbEWH2b8LmFQxFUuVM5HjnoECoEWfbwyMgd8F6MDmzUzYD
+         r07LAQ9ytIRnaljuvGgItkkmZKzhifn9o8iscdAYsA5XqXAJAU/VpVtxCfEb3m2Je2
+         2QWPncGgetNJnttZky6QK5sZ1WGZ8C0G5wLKUsgM=
 From:   Mike Rapoport <rppt@kernel.org>
 To:     linux-mm@kvack.org
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
@@ -68,9 +68,9 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org,
         linux-um@lists.infradead.org, sparclinux@vger.kernel.org,
         Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH v2 03/13] c6x: use pgtable-nopud instead of 4level-fixup
-Date:   Fri,  1 Nov 2019 10:39:34 +0200
-Message-Id: <1572597584-6390-4-git-send-email-rppt@kernel.org>
+Subject: [PATCH v2 04/13] m68k: nommu: use pgtable-nopud instead of 4level-fixup
+Date:   Fri,  1 Nov 2019 10:39:35 +0200
+Message-Id: <1572597584-6390-5-git-send-email-rppt@kernel.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1572597584-6390-1-git-send-email-rppt@kernel.org>
 References: <1572597584-6390-1-git-send-email-rppt@kernel.org>
@@ -81,31 +81,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mike Rapoport <rppt@linux.ibm.com>
 
-c6x is a nommu architecture and does not require fixup for upper layers of
-the page tables because it is already handled by the generic nommu
-implementation.
+The generic nommu implementation of page table manipulation takes care of
+folding of the upper levels and does not require fixups.
 
-Replace usage of include/asm-generic/4level-fixup.h with
-include/asm-generic/pgtable-nopud.h
+Simply replace of include/asm-generic/4level-fixup.h with
+include/asm-generic/pgtable-nopud.h.
 
 Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Acked-by: Greg Ungerer <gerg@linux-m68k.org>
 ---
- arch/c6x/include/asm/pgtable.h | 2 +-
+ arch/m68k/include/asm/pgtable_no.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/c6x/include/asm/pgtable.h b/arch/c6x/include/asm/pgtable.h
-index 0b6919c..197c473 100644
---- a/arch/c6x/include/asm/pgtable.h
-+++ b/arch/c6x/include/asm/pgtable.h
-@@ -8,7 +8,7 @@
- #ifndef _ASM_C6X_PGTABLE_H
- #define _ASM_C6X_PGTABLE_H
+diff --git a/arch/m68k/include/asm/pgtable_no.h b/arch/m68k/include/asm/pgtable_no.h
+index c18165b..ccc4568 100644
+--- a/arch/m68k/include/asm/pgtable_no.h
++++ b/arch/m68k/include/asm/pgtable_no.h
+@@ -2,7 +2,7 @@
+ #ifndef _M68KNOMMU_PGTABLE_H
+ #define _M68KNOMMU_PGTABLE_H
  
 -#include <asm-generic/4level-fixup.h>
 +#include <asm-generic/pgtable-nopud.h>
  
- #include <asm/setup.h>
- #include <asm/page.h>
+ /*
+  * (C) Copyright 2000-2002, Greg Ungerer <gerg@snapgear.com>
 -- 
 2.7.4
 
