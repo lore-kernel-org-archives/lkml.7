@@ -2,158 +2,173 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD43CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F114CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E59B5208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:06:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j7pyo/6B"
+	by mail.kernel.org (Postfix) with ESMTP id 810D9208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730143AbfKAIGQ (ORCPT
+        id S1730173AbfKAIGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 04:06:16 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33919 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729881AbfKAIGQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 04:06:16 -0400
-Received: by mail-pf1-f195.google.com with SMTP id x195so3042572pfd.1;
-        Fri, 01 Nov 2019 01:06:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Jhu34IXJDs+hULNrQ3H3A+yhrlFb8rs8xpIaYVWNx0o=;
-        b=j7pyo/6BJOkohcd+bGnK5/T+KsrfHjr3Y3oaVzCgpq8SU7gnF+F51IBRzeZW/4dwr5
-         23jmqtyosAX0aUUH5nXPrrDNaP9cRz/7O7nAmf36KaqYEF/HaGzemyFMk4Fv29oCalBi
-         n0OAQS8uwfjs12rk8CZUUELUKUEY3f8vj6mmMHumbitbPdvfnhLRpikijQux3stEXD2d
-         sbZiTcMiTOIwj0bzC/jNuZX+kGStyuL/MNuEnXOOu+ulagC3b7N/cAx2vlVA+jUf/Bdo
-         fhaF0VtpK7/h/vH5mEeUhAATaNiKac/9vysT8bqXj9D/iM0sJ+QndlMF5dSYdwwQxc4D
-         NEOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Jhu34IXJDs+hULNrQ3H3A+yhrlFb8rs8xpIaYVWNx0o=;
-        b=syHwWUc5QuZCqrcCeCBdxWSpd6qvB1vHJdlj4Y4OIxbXAuQGRIJKvVWBSJDiU66+fM
-         mBnbTA7F95fQ1cS8COGBbiAeWIVQ5aAHlLXaHET/nZp2h6SdKLWOqpT8McIDKz/nuYg6
-         cZXyittljEUtiNe3FAXKzxF3tDKBDndu9MM8pBcpmrrZ5vuM0Vbyej92qgQ6EEdn5+L8
-         xBDVKznN2UFcBaF5exoalUNeWhO4XBzyWQ2iDOXQgANM8cj8sMRA5geyo8ir/13+/hfJ
-         DlQwCF7rNUgW0vxyBwHxxoPfv31mbH1AUSQh5yNUJvIdaWGxtt/dpPrsPqocl2xXrWL8
-         ZdVA==
-X-Gm-Message-State: APjAAAW9OOedMNUXOleVNcmHIQtb9ECa30lVDHKP/cXvzizLGkBPfW43
-        fAQiOGmq78EZtiP/NudQW/4=
-X-Google-Smtp-Source: APXvYqxDO3k8caAHkgU75ZJwN/RonVvFIpKPbhqkBLM+qCtwp9qT/PXKHRzQ9M4HkobUT5/wK3X3Fg==
-X-Received: by 2002:a63:3d2:: with SMTP id 201mr11835306pgd.372.1572595575543;
-        Fri, 01 Nov 2019 01:06:15 -0700 (PDT)
-Received: from Gentoo.localdomain ([103.231.91.35])
-        by smtp.gmail.com with ESMTPSA id y1sm5917088pfq.138.2019.11.01.01.06.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Nov 2019 01:06:14 -0700 (PDT)
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     rdunlap@infradead.org
-Cc:     bfields@fieldses.org, yamada.masahiro@socionext.com,
-        michal.lkml@markovi.net, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Subject: [PATCH] scripts:prune-kernel:Removed old kernels and modules dir from system
-Date:   Fri,  1 Nov 2019 13:35:10 +0530
-Message-Id: <20191101080510.26247-1-unixbhaskar@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 1 Nov 2019 04:06:42 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:44466 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729852AbfKAIGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 04:06:42 -0400
+Received: from [46.218.74.72] (helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iQRx7-0001Qk-C2; Fri, 01 Nov 2019 09:06:37 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Markus Reichl <m.reichl@fivetechno.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: dts: rockchip: Add PCIe node on rk3399-roc-pc
+Date:   Fri, 01 Nov 2019 09:06:36 +0100
+Message-ID: <2490852.kIovObk3uj@phil>
+In-Reply-To: <f66fe5c3-6760-20b0-54cc-8f0c1a754bab@fivetechno.de>
+References: <09300c2d-4298-1b01-ac41-d1b2610589d4@fivetechno.de> <1719506.vT9a8mQdzu@phil> <f66fe5c3-6760-20b0-54cc-8f0c1a754bab@fivetechno.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allow you to remove old kernels and associated modules
-directory from the system.You can do it at once with the -r flag
-and interactively with the -i flag.
+Hi Markus,
 
-Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
----
- scripts/prune-kernel | 63 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+Am Donnerstag, 31. Oktober 2019, 19:12:10 CET schrieb Markus Reichl:
+> Am 31.10.19 um 17:57 schrieb Heiko Stuebner:
+> > Am Montag, 28. Oktober 2019, 15:47:27 CET schrieb Markus Reichl:
+> >> rk3399-roc-pc has a PCIe interface. Enable it for use with
+> >> the M.2 NGFF M_KEY slot on roc-rk3399-mezzanine board.
+> >> Tested with Samsung 970 evo plus SSD.
+> >> 
+> >> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+> >> ---
+> >>  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 38 +++++++++++++++++++
+> >>  1 file changed, 38 insertions(+)
+> >> 
+> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> >> index 9313251765c7..2d637d54994b 100644
+> >> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> >> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> >> @@ -158,6 +158,21 @@
+> >>  		regulator-max-microvolt = <1400000>;
+> >>  		vin-supply = <&vcc_sys>;
+> >>  	};
+> >> +
+> >> +	/* on roc-rk3399-mezzanine board */
+> > 
+> > I'm undecided on this. From what I've seen that mezzanine board is some
+> > sort of addon, like a raspberry pi hat. Therefore it's not always present,
+> > so probably should not be part of the base board dts.
+> > 
+> > I'm thinking a dt-overlay that can then be activated might be the solution
+> > of choice, but I've reached out to arm-soc poeple on irc to determine the
+> > correct course.
+> > 
+> I have seen some board.dtsi with board_only.dts respective board_extension.dts
+> in the arch/arm64/boot/dts/rockchip directory. Would that be ok?
 
-diff --git a/scripts/prune-kernel b/scripts/prune-kernel
-index a25aa2160d47..373a845792e6 100755
---- a/scripts/prune-kernel
-+++ b/scripts/prune-kernel
-@@ -1,3 +1,66 @@
- #!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
-+#This script will remove old kernels and modules directory related to it.
-+# "-h" or "--help" show how to use this script or show without parameter.
-+#"-r" or "--remove" show how to silently remove old kernel and modules dir.
-+#"-i" or "--interactive" show how to remove interactively.
+The answer is twofold I guess ;-)
 
-+flag=$1
-+kernel_version=$2
-+modules_version=$3
-+boot_dir=/boot
-+modules_dir=/lib/modules
-+
-+remove_old_kernel() {
-+	cd $boot_dir
-+	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
-+	return 0
-+}
-+
-+remove_old_modules_dir() {
-+	cd $modules_dir
-+	rm -rf $modules_version
-+	return 0
-+}
-+
-+usage() {
-+	printf "Usage: $(basename $0) [-ri] \n"
-+	printf "\n -r or --remove  kernel_version modules_version \n"
-+	printf "\n -i or --interactive do as interactive way \n"
-+	return 0
-+}
-+
-+	case "$flag" in
-+		-i | --interactive)
-+			printf "\nEnter kernel version to remove or blank/empty to exit:%s"
-+			read kernel_version
-+			if [[ $kernel_version != "" ]]; then
-+				remove_old_kernel
-+				printf "Please give the full modules directory name to remove:%s"
-+				read modules_version
-+				if [[ $modules_version != "" ]]; then
-+					remove_old_modules_dir
-+					printf "\n\nRemoved kernel version:$kernel_version and associated modules directory:$modules_version ...Done \n"
-+				else
-+					exit 1
-+				fi
-+			fi
-+			;;
-+		-h | --help)
-+			usage
-+			exit 1
-+			;;
-+		-r | --remove)
-+			if [[ $# -ne 3 ]]; then
-+				printf "You need to provide kernel version and modules directory name \n"
-+				exit 1
-+			else
-+				remove_old_kernel
-+				remove_old_modules_dir
-+			fi
-+			;;
-+		*)
-+			usage
-+			exit 1
-+			;;
-+	esac
---
-2.23.0
+(1) The 100% correct way would probably be to use a devicetree overlay
+together with capemgr [0] to load the overlay from userspace, but
+
+(2a) The distinction between system-on-module + baseboard and
+board+cape is somewhat foggy I think and it really doesn't look like there
+will be a big plethora of capes for the roc-rk3399-pc
+
+(2b) People may actually want to boot of that nvme pcie drive attached
+to the mezzanine, so it will be somewhat permanent connection anyway
+and also the system then cannot wait for userspace to come up first, if
+the userspace is sitting on that drive ;-) .
+
+So I think, going the dts+dts-extension is the best way to go.
+
+Heiko
+
+
+[0] https://elinux.org/Capemgr
+
+
+
+> >> +	vcc3v3_pcie: vcc3v3-pcie {
+> >> +		compatible = "regulator-fixed";
+> >> +		regulator-name = "vcc3v3_pcie";
+> >> +		enable-active-high;
+> >> +		gpio = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
+> >> +		pinctrl-names = "default";
+> >> +		pinctrl-0 = <&vcc3v3_pcie_en>;
+> >> +		regulator-always-on;
+> >> +		regulator-boot-on;
+> >> +		regulator-min-microvolt = <3300000>;
+> >> +		regulator-max-microvolt = <3300000>;
+> >> +		vin-supply = <&dc_12v>;
+> >> +	};
+> >>  };
+> >>  
+> >>  &cpu_l0 {
+> >> @@ -514,6 +529,19 @@
+> >>  	status = "okay";
+> >>  };
+> >>  
+> >> +&pcie_phy {
+> >> +	status = "okay";
+> >> +};
+> >> +
+> >> +&pcie0 {
+> >> +	ep-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>;
+> >> +	num-lanes = <4>;
+> >> +	pinctrl-names = "default";
+> >> +	pinctrl-0 = <&pcie_perst>;
+> >> +	vpcie3v3-supply = <&vcc3v3_pcie>;
+> >> +	status = "okay";
+> >> +};
+> >> +
+> >>  &pinctrl {
+> >>  	lcd-panel {
+> >>  		lcd_panel_reset: lcd-panel-reset {
+> >> @@ -535,6 +563,16 @@
+> >>  		};
+> >>  	};
+> >>  
+> >> +	pcie {
+> >> +		vcc3v3_pcie_en: vcc3v3-pcie-en {
+> >> +			rockchip,pins = <1 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
+> >> +		};
+> >> +
+> >> +		pcie_perst: pcie-perst {
+> >> +			rockchip,pins = <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
+> >> +		};
+> >> +	};
+> >> +
+> >>  	pmic {
+> >>  		vsel1_gpio: vsel1-gpio {
+> >>  			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
+> >> 
+> > 
+> > 
+> > 
+> > 
+> > 
+> > _______________________________________________
+> > Linux-rockchip mailing list
+> > Linux-rockchip@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> > 
+> 
+
+
+
 
