@@ -2,341 +2,204 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C155C47E49
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3412CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D1F21925
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A167E20862
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:46:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="enpaHuDY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729712AbfKAGnm (ORCPT
+        id S1729734AbfKAGqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 02:43:42 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:2333 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726132AbfKAGnk (ORCPT
+        Fri, 1 Nov 2019 02:46:09 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:58954 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbfKAGqJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 02:43:40 -0400
-X-UUID: c958f380f0414687bdb21af56c93c848-20191101
-X-UUID: c958f380f0414687bdb21af56c93c848-20191101
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <chun-hung.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 239938428; Fri, 01 Nov 2019 14:43:32 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 1 Nov 2019 14:43:25 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 1 Nov 2019 14:43:25 +0800
-From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
-To:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Chun-Hung Wu <chun-hung.wu@mediatek.com>
-Subject: [PATCH 2/3] [2/3] mmc: mediatek: command queue support
-Date:   Fri, 1 Nov 2019 14:43:01 +0800
-Message-ID: <1572590582-11056-2-git-send-email-chun-hung.wu@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1572590582-11056-1-git-send-email-chun-hung.wu@mediatek.com>
-References: <1572590582-11056-1-git-send-email-chun-hung.wu@mediatek.com>
+        Fri, 1 Nov 2019 02:46:09 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191101064605epoutp035a553a59f2ba776bfa7fd3f97ad0f472~S9vgymnjF3190131901epoutp03e
+        for <linux-kernel@vger.kernel.org>; Fri,  1 Nov 2019 06:46:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191101064605epoutp035a553a59f2ba776bfa7fd3f97ad0f472~S9vgymnjF3190131901epoutp03e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1572590765;
+        bh=oE1vKRf9KfKqu3zr6FieGsODlnie4bMmsyb+gfv+dTQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=enpaHuDYwXQPo3Zfcq56V26Y5sq/iIA+vdp+FznzNGNwMsDAkZ5xi4653DPD7xL0m
+         hp3ZjKghOO65sRffB4MN0rWVyBppakvTWToYjGAyLgkuLDzzE30TzgzvhZYnaqKvma
+         lVs83BI3qDamhC4J7RfqE2DTAVyYASJRnt4GhRkE=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191101064605epcas1p1323ab4351d7b964f67d531f2b6110bc5~S9vgY_6AN0373603736epcas1p1E;
+        Fri,  1 Nov 2019 06:46:05 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.156]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 474CQ25d6MzMqYkh; Fri,  1 Nov
+        2019 06:46:02 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AF.E7.04224.AA4DBBD5; Fri,  1 Nov 2019 15:46:02 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191101064602epcas1p10339b9c1a2eed204bac1acf3885d79a7~S9vdTg6lV0610206102epcas1p1R;
+        Fri,  1 Nov 2019 06:46:02 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191101064602epsmtrp2cd1980aeab7e3cfe894743e329be8b97~S9vdSpE4H2799827998epsmtrp2q;
+        Fri,  1 Nov 2019 06:46:02 +0000 (GMT)
+X-AuditID: b6c32a38-d5bff70000001080-d9-5dbbd4aa66dd
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D4.A6.25663.9A4DBBD5; Fri,  1 Nov 2019 15:46:01 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191101064601epsmtip2286b09d9f75b10b361a36590c3420d72~S9vdA0cqz2931229312epsmtip28;
+        Fri,  1 Nov 2019 06:46:01 +0000 (GMT)
+Subject: Re: [PATCH] PM / devfreq: events: fix excessive stack usage
+To:     Arnd Bergmann <arnd@arndb.de>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Lukasz Luba <l.luba@partner.samsung.com>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <e0d6b270-477a-9438-e992-263187bc52aa@samsung.com>
+Date:   Fri, 1 Nov 2019 15:51:32 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <20191022142703.1789898-1-arnd@arndb.de>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOJsWRmVeSWpSXmKPExsWy7bCmge6qK7tjDVYtVrP4O+kYu0X/49fM
+        FufPb2C3ONv0ht3iVoOMxabH11gtLu+aw2bxufcIo8WM8/uYLG43rmBz4PL4/WsSo8emVZ1s
+        HpuX1HscfLeHyaNvyypGj8+b5ALYorJtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0t
+        zJUU8hJzU22VXHwCdN0yc4AOU1IoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUWBbo
+        FSfmFpfmpesl5+daGRoYGJkCFSZkZ1z7KlxwULRiwdmnzA2MEwW7GDk4JARMJE71hnQxcnEI
+        CexglFi/dDsLhPOJUeL9yilMEM43RomzB06zdzFygnU8n3SEGSKxl1Fi2fnXjBDOe0aJfbuW
+        sYBUCQu4SHy+/44NJCEisJ9RYvHt92AOs8BGRom9k6+BVbEJaEnsf3GDDcTmF1CUuPrjMSOI
+        zStgJ7Fs1xGwOIuAisTiKz/YQa4VFYiQOP01EaJEUOLkzCdgYzgFTCWW90K0MguIS9x6Mp8J
+        wpaXaN46G+xUCYF2dol5j+9D/eAise/tckYIW1ji1fEtUHEpic/v9rJB2NUSK08eYYNo7mCU
+        2LL/AitEwlhi/9LJTCAHMQtoSqzfpQ8RVpTY+Xsu1BF8Eu++9rBCQphXoqNNCKJEWeLyg7tM
+        ELakxOL2TrYJjEqzkLwzC8kLs5C8MAth2QJGllWMYqkFxbnpqcWGBSbIsb2JEZxotSx2MO45
+        53OIUYCDUYmHd0bX7lgh1sSy4srcQ4wSHMxKIrzb1wGFeFMSK6tSi/Lji0pzUosPMZoCA3si
+        s5Rocj4wC+SVxBuaGhkbG1uYGJqZGhoqifM6Ll8aKySQnliSmp2aWpBaBNPHxMEp1cC47siK
+        L7PSvTJn8FlJnQmdMO/1rXqxqpUP6j9U2t1tEZB8uSZ12b9X6flZF08pFjFfcmzZna/2/+vU
+        TfJFj5/OkFpzq+ywy2M75XPx6/4bPnh4oOmXGBvr8uzqtYEPPfU1V+RNPXGO6eq5cKmJ16v8
+        pm5ccaz13PcOFtNlsp+NWhSuLzDT6L2zQomlOCPRUIu5qDgRAP/Wx6fKAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsWy7bCSvO7KK7tjDRbdtrD4O+kYu0X/49fM
+        FufPb2C3ONv0ht3iVoOMxabH11gtLu+aw2bxufcIo8WM8/uYLG43rmBz4PL4/WsSo8emVZ1s
+        HpuX1HscfLeHyaNvyypGj8+b5ALYorhsUlJzMstSi/TtErgyrn0VLjgoWrHg7FPmBsaJgl2M
+        nBwSAiYSzycdYQaxhQR2M0o8eckLEZeUmHbxKFCcA8gWljh8uLiLkQuo5C2jxINvG1hAaoQF
+        XCQ+33/HBpIQEdjPKHHyz0FmEIdZYCNQ1eK5TBAtHYwS5z9fB1vBJqAlsf/FDTYQm19AUeLq
+        j8eMIDavgJ3Esl1HwOIsAioSi6/8YAexRQUiJJ5vvwFVIyhxcuYTsNWcAqYSy3shepkF1CX+
+        zLvEDGGLS9x6Mp8JwpaXaN46m3kCo/AsJO2zkLTMQtIyC0nLAkaWVYySqQXFuem5xYYFRnmp
+        5XrFibnFpXnpesn5uZsYwTGnpbWD8cSJ+EOMAhyMSjy8M7p2xwqxJpYVV+YeYpTgYFYS4d2+
+        DijEm5JYWZValB9fVJqTWnyIUZqDRUmcVz7/WKSQQHpiSWp2ampBahFMlomDU6qBMVBpyz35
+        GdPTFXjCAm7vafNsjNvAZCn0ff3cPQev6k014W5N1niz6FSY9bfLTokrC1mZH9bqvb71T+r9
+        yiWnFQPCWE8cSPp7V999yUJe4+7exmzdRtOPVht4y/xCLzN4uT862nPu41KOh+ezdi9Zu+e5
+        wedzn7epFK0Ma7djeMqgXr8pa7pJvRJLcUaioRZzUXEiALC0KYy1AgAA
+X-CMS-MailID: 20191101064602epcas1p10339b9c1a2eed204bac1acf3885d79a7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191022142726epcas3p4c09cde8944f5e8f1472b496e1e1fbccc
+References: <CGME20191022142726epcas3p4c09cde8944f5e8f1472b496e1e1fbccc@epcas3p4.samsung.com>
+        <20191022142703.1789898-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support command queue for mt6779 platform.
+Hi Arnd,
 
-Change-Id: I56b866fa4097a3c0bee77f53486c470e4f1944b9
-Feature:
-Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
----
- drivers/mmc/host/mtk-sd.c | 151 +++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 141 insertions(+), 10 deletions(-)
+On 19. 10. 22. 오후 11:26, Arnd Bergmann wrote:
+> Putting a 'struct devfreq_event_dev' object on the stack is generally
+> a bad idea and here it leads to a warnig about potential stack overflow:
+> 
+> drivers/devfreq/event/exynos-ppmu.c:643:12: error: stack frame size of 1040 bytes in function 'exynos_ppmu_probe' [-Werror,-Wframe-larger-than=]
+> 
+> There is no real need for the device structure, only the string inside
+> it, so add an internal helper function that simply takes the string
+> as its argument and remove the device structure.
+> 
+> Fixes: 1dd62c66d345 ("PM / devfreq: events: extend events by type of counted data")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/devfreq/event/exynos-ppmu.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
+> index 87b42055e6bc..302e466549d3 100644
+> --- a/drivers/devfreq/event/exynos-ppmu.c
+> +++ b/drivers/devfreq/event/exynos-ppmu.c
+> @@ -101,17 +101,22 @@ static struct __exynos_ppmu_events {
+>  	PPMU_EVENT(dmc1_1),
+>  };
+>  
+> -static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
+> +static int __exynos_ppmu_find_ppmu_id(const char *edev_name)
+>  {
+>  	int i;
+>  
+>  	for (i = 0; i < ARRAY_SIZE(ppmu_events); i++)
+> -		if (!strcmp(edev->desc->name, ppmu_events[i].name))
+> +		if (!strcmp(edev_name, ppmu_events[i].name))
+>  			return ppmu_events[i].id;
+>  
+>  	return -EINVAL;
+>  }
+>  
+> +static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
+> +{
+> +	return __exynos_ppmu_find_ppmu_id(edev->desc->name);
+> +}
+> +
+>  /*
+>   * The devfreq-event ops structure for PPMU v1.1
+>   */
+> @@ -556,13 +561,11 @@ static int of_get_devfreq_events(struct device_node *np,
+>  			 * use default if not.
+>  			 */
+>  			if (info->ppmu_type == EXYNOS_TYPE_PPMU_V2) {
+> -				struct devfreq_event_dev edev;
+>  				int id;
+>  				/* Not all registers take the same value for
+>  				 * read+write data count.
+>  				 */
+> -				edev.desc = &desc[j];
+> -				id = exynos_ppmu_find_ppmu_id(&edev);
+> +				id = __exynos_ppmu_find_ppmu_id(desc->name);
 
-diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-index 189e426..b132397 100644
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -31,6 +31,8 @@
- #include <linux/mmc/sdio.h>
- #include <linux/mmc/slot-gpio.h>
- 
-+#include "cqhci.h"
-+
- #define MAX_BD_NUM          1024
- 
- /*--------------------------------------------------------------------------*/
-@@ -151,6 +153,7 @@
- #define MSDC_INT_DMA_BDCSERR    (0x1 << 17)	/* W1C */
- #define MSDC_INT_DMA_GPDCSERR   (0x1 << 18)	/* W1C */
- #define MSDC_INT_DMA_PROTECT    (0x1 << 19)	/* W1C */
-+#define MSDC_INT_CMDQ           (0x1 << 28)	/* W1C */
- 
- /* MSDC_INTEN mask */
- #define MSDC_INTEN_MMCIRQ       (0x1 << 0)	/* RW */
-@@ -181,6 +184,7 @@
- /* SDC_CFG mask */
- #define SDC_CFG_SDIOINTWKUP     (0x1 << 0)	/* RW */
- #define SDC_CFG_INSWKUP         (0x1 << 1)	/* RW */
-+#define SDC_CFG_WRDTOC          (0x1fff  << 2)  /* RW */
- #define SDC_CFG_BUSWIDTH        (0x3 << 16)	/* RW */
- #define SDC_CFG_SDIO            (0x1 << 19)	/* RW */
- #define SDC_CFG_SDIOIDE         (0x1 << 20)	/* RW */
-@@ -228,6 +232,7 @@
- #define MSDC_PATCH_BIT_SPCPUSH    (0x1 << 29)	/* RW */
- #define MSDC_PATCH_BIT_DECRCTMO   (0x1 << 30)	/* RW */
- 
-+#define MSDC_PB1_BUSY_CHECK_SEL   (0x1 << 7)    /* RW */
- #define MSDC_PATCH_BIT1_STOP_DLY  (0xf << 8)    /* RW */
- 
- #define MSDC_PATCH_BIT2_CFGRESP   (0x1 << 15)   /* RW */
-@@ -431,6 +436,7 @@ struct msdc_host {
- 	struct msdc_save_para save_para; /* used when gate HCLK */
- 	struct msdc_tune_para def_tune_para; /* default tune setting */
- 	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
-+	struct cqhci_host *cq_host;
- };
- 
- static const struct mtk_mmc_compatible mt8135_compat = {
-@@ -527,6 +533,18 @@ struct msdc_host {
- 	.use_internal_cd = true,
- };
- 
-+static const struct mtk_mmc_compatible mt6779_compat = {
-+	.clk_div_bits = 12,
-+	.hs400_tune = false,
-+	.pad_tune_reg = MSDC_PAD_TUNE0,
-+	.async_fifo = true,
-+	.data_tune = true,
-+	.busy_check = true,
-+	.stop_clk_fix = true,
-+	.enhance_rx = true,
-+	.support_64g = true,
-+};
-+
- static const struct of_device_id msdc_of_ids[] = {
- 	{ .compatible = "mediatek,mt8135-mmc", .data = &mt8135_compat},
- 	{ .compatible = "mediatek,mt8173-mmc", .data = &mt8173_compat},
-@@ -536,6 +554,7 @@ struct msdc_host {
- 	{ .compatible = "mediatek,mt7622-mmc", .data = &mt7622_compat},
- 	{ .compatible = "mediatek,mt8516-mmc", .data = &mt8516_compat},
- 	{ .compatible = "mediatek,mt7620-mmc", .data = &mt7620_compat},
-+	{ .compatible = "mediatek,mt6779-mmc", .data = &mt6779_compat},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, msdc_of_ids);
-@@ -698,21 +717,21 @@ static void msdc_unprepare_data(struct msdc_host *host, struct mmc_request *mrq)
- 	}
- }
- 
--/* clock control primitives */
--static void msdc_set_timeout(struct msdc_host *host, u32 ns, u32 clks)
-+static u64 msdc_timeout_cal(struct msdc_host *host, u64 ns, u64 clks)
- {
--	u32 timeout, clk_ns;
-+	u64 timeout, clk_ns;
- 	u32 mode = 0;
- 
--	host->timeout_ns = ns;
--	host->timeout_clks = clks;
- 	if (host->mmc->actual_clock == 0) {
- 		timeout = 0;
- 	} else {
--		clk_ns  = 1000000000UL / host->mmc->actual_clock;
--		timeout = (ns + clk_ns - 1) / clk_ns + clks;
-+		clk_ns  = 1000000000ULL;
-+		do_div(clk_ns, host->mmc->actual_clock);
-+		timeout = ns + clk_ns - 1;
-+		do_div(timeout, clk_ns);
-+		timeout += clks;
- 		/* in 1048576 sclk cycle unit */
--		timeout = (timeout + (0x1 << 20) - 1) >> 20;
-+		timeout = DIV_ROUND_UP(timeout, (0x1 << 20));
- 		if (host->dev_comp->clk_div_bits == 8)
- 			sdr_get_field(host->base + MSDC_CFG,
- 				      MSDC_CFG_CKMOD, &mode);
-@@ -722,9 +741,30 @@ static void msdc_set_timeout(struct msdc_host *host, u32 ns, u32 clks)
- 		/*DDR mode will double the clk cycles for data timeout */
- 		timeout = mode >= 2 ? timeout * 2 : timeout;
- 		timeout = timeout > 1 ? timeout - 1 : 0;
--		timeout = timeout > 255 ? 255 : timeout;
- 	}
--	sdr_set_field(host->base + SDC_CFG, SDC_CFG_DTOC, timeout);
-+	return timeout;
-+}
-+
-+/* clock control primitives */
-+static void msdc_set_timeout(struct msdc_host *host, u64 ns, u64 clks)
-+{
-+	u64 timeout;
-+
-+	host->timeout_ns = ns;
-+	host->timeout_clks = clks;
-+
-+	timeout = msdc_timeout_cal(host, ns, clks);
-+	sdr_set_field(host->base + SDC_CFG, SDC_CFG_DTOC,
-+		      (u32)(timeout > 255 ? 255 : timeout));
-+}
-+
-+static void msdc_set_busy_timeout(struct msdc_host *host, u64 ns, u64 clks)
-+{
-+	u64 timeout;
-+
-+	timeout = msdc_timeout_cal(host, ns, clks);
-+	sdr_set_field(host->base + SDC_CFG, SDC_CFG_WRDTOC,
-+		      (u32)(timeout > 8191 ? 8191 : timeout));
- }
- 
- static void msdc_gate_clock(struct msdc_host *host)
-@@ -1413,6 +1453,36 @@ static void msdc_enable_sdio_irq(struct mmc_host *mmc, int enb)
- 		pm_runtime_put_noidle(host->dev);
- }
- 
-+#if IS_ENABLED(CONFIG_MMC_CQHCI)
-+static irqreturn_t msdc_cmdq_irq(struct msdc_host *host, u32 intsts)
-+{
-+	int cmd_err = 0, dat_err = 0;
-+
-+	if (intsts & MSDC_INT_RSPCRCERR) {
-+		cmd_err = (unsigned int)-EILSEQ;
-+		dev_err(host->dev, "%s: CMD CRC ERR", __func__);
-+	} else if (intsts & MSDC_INT_CMDTMO) {
-+		cmd_err = (unsigned int)-ETIMEDOUT;
-+		dev_err(host->dev, "%s: CMD TIMEOUT ERR", __func__);
-+	}
-+
-+	if (intsts & MSDC_INT_DATCRCERR) {
-+		dat_err = (unsigned int)-EILSEQ;
-+		dev_err(host->dev, "%s: DATA CRC ERR", __func__);
-+	} else if (intsts & MSDC_INT_DATTMO) {
-+		dat_err = (unsigned int)-ETIMEDOUT;
-+		dev_err(host->dev, "%s: DATA TIMEOUT ERR", __func__);
-+	}
-+
-+	if (cmd_err || dat_err) {
-+		dev_err(host->dev, "cmd_err = %d, dat_err =%d, intsts = 0x%x",
-+			cmd_err, dat_err, intsts);
-+	}
-+
-+	return cqhci_irq(host->mmc, 0, cmd_err, dat_err);
-+}
-+#endif
-+
- static irqreturn_t msdc_irq(int irq, void *dev_id)
- {
- 	struct msdc_host *host = (struct msdc_host *) dev_id;
-@@ -1449,6 +1519,16 @@ static irqreturn_t msdc_irq(int irq, void *dev_id)
- 		if (!(events & (event_mask & ~MSDC_INT_SDIOIRQ)))
- 			break;
- 
-+#if IS_ENABLED(CONFIG_MMC_CQHCI)
-+		if ((host->mmc->caps2 & MMC_CAP2_CQE) &&
-+		    (events & MSDC_INT_CMDQ)) {
-+			msdc_cmdq_irq(host, events);
-+			/* clear interrupts */
-+			writel(events, host->base + MSDC_INT);
-+			return IRQ_HANDLED;
-+		}
-+#endif
-+
- 		if (!mrq) {
- 			dev_err(host->dev,
- 				"%s: MRQ=NULL; events=%08X; event_mask=%08X\n",
-@@ -2132,6 +2212,36 @@ static int msdc_get_cd(struct mmc_host *mmc)
- 		return !val;
- }
- 
-+static void msdc_cqe_enable(struct mmc_host *mmc)
-+{
-+	struct msdc_host *host = mmc_priv(mmc);
-+
-+	/* enable cmdq irq */
-+	writel(MSDC_INT_CMDQ, host->base + MSDC_INTEN);
-+	/* enable busy check */
-+	sdr_set_bits(host->base + MSDC_PATCH_BIT1, MSDC_PB1_BUSY_CHECK_SEL);
-+	/* default write data / busy timeout 20s */
-+	msdc_set_busy_timeout(host, 20 * 1000000000ULL, 0);
-+	/* default read data timeout 1s */
-+	msdc_set_timeout(host, 1000000000ULL, 0);
-+}
-+
-+void msdc_cqe_disable(struct mmc_host *mmc, bool recovery)
-+{
-+	struct msdc_host *host = mmc_priv(mmc);
-+
-+	/* disable cmdq irq */
-+	sdr_clr_bits(host->base + MSDC_INTEN, MSDC_INT_CMDQ);
-+	/* disable busy check */
-+	sdr_clr_bits(host->base + MSDC_PATCH_BIT1, MSDC_PB1_BUSY_CHECK_SEL);
-+
-+	if (recovery) {
-+		sdr_set_field(host->base + MSDC_DMA_CTRL,
-+			      MSDC_DMA_CTRL_STOP, 1);
-+		msdc_reset_hw(host);
-+	}
-+}
-+
- static const struct mmc_host_ops mt_msdc_ops = {
- 	.post_req = msdc_post_req,
- 	.pre_req = msdc_pre_req,
-@@ -2148,6 +2258,11 @@ static int msdc_get_cd(struct mmc_host *mmc)
- 	.hw_reset = msdc_hw_reset,
- };
- 
-+static const struct cqhci_host_ops msdc_cmdq_ops = {
-+	.enable         = msdc_cqe_enable,
-+	.disable        = msdc_cqe_disable,
-+};
-+
- static void msdc_of_property_parse(struct platform_device *pdev,
- 				   struct msdc_host *host)
- {
-@@ -2299,6 +2414,22 @@ static int msdc_drv_probe(struct platform_device *pdev)
- 		host->dma_mask = DMA_BIT_MASK(32);
- 	mmc_dev(mmc)->dma_mask = &host->dma_mask;
- 
-+#if IS_ENABLED(CONFIG_MMC_CQHCI)
-+	if (mmc->caps2 & MMC_CAP2_CQE) {
-+		host->cq_host = devm_kzalloc(host->mmc->parent,
-+					     sizeof(*host->cq_host),
-+					     GFP_KERNEL);
-+		host->cq_host->caps |= CQHCI_TASK_DESC_SZ_128;
-+		host->cq_host->mmio = host->base + 0x800;
-+		host->cq_host->ops = &msdc_cmdq_ops;
-+		cqhci_init(host->cq_host, mmc, true);
-+		mmc->max_segs = 128;
-+		/* cqhci 16bit length */
-+		/* 0 size, means 65536 so we don't have to -1 here */
-+		mmc->max_seg_size = 64 * 1024;
-+	}
-+#endif
-+
- 	host->timeout_clks = 3 * 1048576;
- 	host->dma.gpd = dma_alloc_coherent(&pdev->dev,
- 				2 * sizeof(struct mt_gpdma_desc),
+I got that the original exynos_ppmu_find_ppmu_id() function
+has the bug. If 'events' node contains the one more events,
+it will be failed. Because 'events' node only contained
+the only one event on device-tree node on real use-case,
+the problem had not happened.
+
+'desc' indicates the array. So, instead of desc->name,
+have to use 'desc[j].name correctly. 
+
+And I'll fix the fundamental bug on separate patch.
+
+>  
+>  				switch (id) {
+>  				case PPMU_PMNCNT0:
+> 
+
+
 -- 
-1.9.1
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
