@@ -2,159 +2,130 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B417DCA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE66DCA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1862080F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:56:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sk3+H7dO"
+	by mail.kernel.org (Postfix) with ESMTP id 90FBF217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:58:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572627529;
+	bh=qFRzIk9HEkD9vu8HJIyey5qv3NbMoZgsRhbnWzmVi6U=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=OuQEyxJ61xJhU8Sj+s24FlOhJoveYNBIyaSXBLGa9zMVaIMmzrV04+ItssU1rM16B
+	 F8h5J2iFljuZwYSOoSNSi4iOVDGbthuLeS4M8VMD7yTedccbKsd1wjYsmDSu4Wv5ML
+	 57x4z2ObDBR7N8Za364Ry9gOvY7ZU3cVG73xsuPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbfKAQ4y (ORCPT
+        id S1729328AbfKAQ6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 12:56:54 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50644 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727582AbfKAQ4y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 12:56:54 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 11so9977945wmk.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 09:56:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=nS/+TuNpW6A1PUyhzxZcAt0Rui/rYCvfdsnTwLIkmXw=;
-        b=sk3+H7dO516bj4wsmf/aijFVggFKvvcBuKWoWWmP306tit1N5cx4Qtom236Y07f0ea
-         gbRPnVHnWEUHHv4lcm6mJQ0DEJDe09DQAQiaQxkRxtI5n1CPRYhk1NitTna5L6gekVBG
-         iRUT+gTn2tXf/bzdLAgVKL1tXWjgPVgYNjTs07ltD51Vs2HqC17+KocxxKXq/ZrWQshU
-         kgMl5lViIosBn8ACvqZX5dZ4dtZPR0KdCR6h7sRA77FmOptA1TkPIQIkWf8hQvb5RPPk
-         jF/qKqrmwU+l8KR7PXfwXujK6BJO/lo5Dkev274P+I+FtMyEDYwFYAMqhbV4Lh86hXXL
-         0ppw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=nS/+TuNpW6A1PUyhzxZcAt0Rui/rYCvfdsnTwLIkmXw=;
-        b=qhC7pi394ukUEuaqfoQecScSNHE6pUTVurJjTWD1LjcBbbBQTEqWBQ/2TAbBqeXLM3
-         J7aF0PdEtQfoKvGHfqK+GsEaAGCD4XO6ymHKkWI8HEb5RiTv+xUqCJcL+iHLQ16nkdNe
-         TBZuXx35ladWhRHQq/Hl11yuBUQQ9PTHU3PPTGOVWnVvyTKKZIpsDOTMeu6fLhf0KjHH
-         4GVxD8dYDOj8F5b/dJ4jbRgGprjRyP+J30toXS9bJyCXfSxewCs1ujMeQO1902W0gz5t
-         4h9ms36Oj33w7sLUBq2MVi0lTmhCB2pZqiR9+njy8u7P99kMZATybJCI9LasjVB0xuTl
-         o1lw==
-X-Gm-Message-State: APjAAAWvVh2XarM97t3lIFYq3xaIoRG+ieLnNVX19GV9P/YTexzIaV4z
-        +BroVsczrudXZrWosa91lkBDhg==
-X-Google-Smtp-Source: APXvYqwgoXxPBgzO8xNejOYYQkCOTTUqypDnz32OSLKzeuCev+CG+dKqipu6ebYcGpFHOLeWRoyvgg==
-X-Received: by 2002:a7b:ce84:: with SMTP id q4mr10445126wmj.36.1572627410927;
-        Fri, 01 Nov 2019 09:56:50 -0700 (PDT)
-Received: from [192.168.0.104] (88-147-66-34.dyn.eolo.it. [88.147.66.34])
-        by smtp.gmail.com with ESMTPSA id h140sm3832714wme.22.2019.11.01.09.56.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Nov 2019 09:56:50 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH 08/10] blkcg: implement blk-iocost
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <20191101161506.GA28212@blackbody.suse.cz>
-Date:   Fri, 1 Nov 2019 17:56:48 +0100
-Cc:     Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-        clm@fb.com, dennisz@fb.com, Josef Bacik <jbacik@fb.com>,
-        kernel-team@fb.com, newella@fb.com, lizefan@huawei.com,
-        axboe@kernel.dk, Rik van Riel <riel@surriel.com>,
-        josef@toxicpanda.com, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F45F2906-AB10-473D-B515-793E8FB10E6A@linaro.org>
-References: <20190828220600.2527417-1-tj@kernel.org>
- <20190828220600.2527417-9-tj@kernel.org>
- <20190910125513.GA6399@blackbody.suse.cz>
- <20190910160855.GS2263813@devbig004.ftw2.facebook.com>
- <20191003145106.GC6678@blackbody.suse.cz>
- <20191003164552.GA3247445@devbig004.ftw2.facebook.com>
- <20191009153629.GA5400@blackbody.suse.cz>
- <20191014153643.GD18794@devbig004.ftw2.facebook.com>
- <20191101161506.GA28212@blackbody.suse.cz>
-To:     =?utf-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Fri, 1 Nov 2019 12:58:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57396 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727582AbfKAQ6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 12:58:48 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B3BB20862;
+        Fri,  1 Nov 2019 16:58:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572627526;
+        bh=qFRzIk9HEkD9vu8HJIyey5qv3NbMoZgsRhbnWzmVi6U=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=B5LX88t0cS32gq98HP8kd6LMlJtgzwRge4/afYdAqZjUBjei53xq9b2eUeUzPtAOQ
+         t2S2IrLp+1KWWnJ0NAdIu0XsTpnJrdgvOzQxs3ZRkKxtCag9QIXlF1mlfAU0BHDQsU
+         OL6hQA0pmP8v8VoPnilbN2xW02Sf+d4H2OIlxbsE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 338993520744; Fri,  1 Nov 2019 09:58:46 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 09:58:46 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Lai Jiangshan <laijs@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH 06/11] rcu: clear t->rcu_read_unlock_special in one go
+Message-ID: <20191101165846.GA21445@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191031100806.1326-1-laijs@linux.alibaba.com>
+ <20191031100806.1326-7-laijs@linux.alibaba.com>
+ <20191101121056.GB17910@paulmck-ThinkPad-P72>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191101121056.GB17910@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Nov 01, 2019 at 05:10:56AM -0700, Paul E. McKenney wrote:
+> On Thu, Oct 31, 2019 at 10:08:01AM +0000, Lai Jiangshan wrote:
+> > Clearing t->rcu_read_unlock_special in one go makes the code
+> > more clearly.
+> > 
+> > Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+> 
+> Nice simplification!  I had to hand-apply it due to not having taken the
+> earlier patches, plus I redid the commit log.  Could you please check
+> the version shown below?
 
+Except that this simplification depends on having moved the check of
+(!t->rcu_read_unlock_special.s && !rdp->exp_deferred_qs) early, and
+thus results in rcutorture failures due to tasks failing to be dequeued.
 
-> Il giorno 1 nov 2019, alle ore 17:15, Michal Koutn=C3=BD =
-<mkoutny@suse.com> ha scritto:
->=20
-> Hello
->=20
+From what I can see, the only early exit that matters is the first one,
+so I am simply removing those within the "if" statements.
 
-Hi Michal,
+							Thanx, Paul
 
-> (I realize it's likely late for the remark but I'd like to bring it up
-> anyway.)
->=20
-> On Mon, Oct 14, 2019 at 08:36:43AM -0700, Tejun Heo <tj@kernel.org> =
-wrote:
->> We likely can talk on the subject
->> for a really long time probalby because there's no clearly =
-technically
->> better choice here, so...
-> I agree with you that functionally the two options are equal and also
-> from configuration POV they seem both sensible.
->=20
-> I checked where BFQ stores its per-device parameters and its under the
-> sysfs directory of given device's iosched directory. So from the user
-> perspective it'd be more consistent if all similar tunables resided
-> under that location.
->=20
-> (OTOH, I admit I'm not that familiar with block layer internals to
-> identify the overlap between IO scheduler and IO controller.)
->=20
-
-If useful for you to know, BFQ parameters are not meant to changed
-(apart from the low_latency tunable, if one wants full control on
-weights).  Parameters are a testing aid, to use in case of an anomaly.
-After solving the anomaly, default values should be used again.
-
-Thanks,
-Paolo
-
->> Yeah, it's kinda unfortunate that it requires this many parameters =
-but
->> at least my opinion is that that's reflecting the inherent
->> complexities of the underlying devices and how workloads interact =
-with
->> them.
-> After I learnt about the existence of BFQ tunables, I'm no longer
-> concerned by the complexity of the parameter space.
->=20
-> Thanks for the explanations of QoS purpose.
->=20
->> For QoS parameters, Andy is currently working on a method to =
-determine
->> the set of parametesr which are at the edge of total work cliff -
->> ie. the point where tighetning QoS params further starts reducing the
->> total amount of work the device can do significantly.
-> The QoS description in the Documentation/ describes the interpretation
-> of the individual parameters, however, this purpose and how it works =
-was
-> not clear to be from that. I think the QoS policy would deserve =
-similar
-> description in the Documentation/.
->=20
->> Nothing can issue IOs indefinitely without some of them completing =
-and
->> the total amount of work a workload can do is conjoined with the
->> completion latencies. [...]
-> I may reply to this point later. However, if that provably works, I'm
-> likely missing something in my understanding, so that'd be irrelevant.
->=20
-> Cheers,
-> Michal
-
+> ------------------------------------------------------------------------
+> 
+> commit 0bef7971edbbd35ed4d1682a465f682077981e85
+> Author: Lai Jiangshan <laijs@linux.alibaba.com>
+> Date:   Fri Nov 1 05:06:21 2019 -0700
+> 
+>     rcu: Clear ->rcu_read_unlock_special only once
+>     
+>     In rcu_preempt_deferred_qs_irqrestore(), ->rcu_read_unlock_special is
+>     cleared one piece at a time.  Given that the "if" statements in this
+>     function use the copy in "special", this commit removes the clearing
+>     of the individual pieces in favor of clearing ->rcu_read_unlock_special
+>     in one go just after it has been determined to be non-zero.
+>     
+>     Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+>     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> 
+> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> index 8d0e8c1..d113923 100644
+> --- a/kernel/rcu/tree_plugin.h
+> +++ b/kernel/rcu/tree_plugin.h
+> @@ -444,11 +444,9 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
+>  		local_irq_restore(flags);
+>  		return;
+>  	}
+> -	t->rcu_read_unlock_special.b.exp_hint = false;
+> -	t->rcu_read_unlock_special.b.deferred_qs = false;
+> +	t->rcu_read_unlock_special.s = 0;
+>  	if (special.b.need_qs) {
+>  		rcu_qs();
+> -		t->rcu_read_unlock_special.b.need_qs = false;
+>  		if (!t->rcu_read_unlock_special.s && !rdp->exp_deferred_qs) {
+>  			local_irq_restore(flags);
+>  			return;
+> @@ -471,7 +469,6 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
+>  
+>  	/* Clean up if blocked during RCU read-side critical section. */
+>  	if (special.b.blocked) {
+> -		t->rcu_read_unlock_special.b.blocked = false;
+>  
+>  		/*
+>  		 * Remove this task from the list it blocked on.  The task
