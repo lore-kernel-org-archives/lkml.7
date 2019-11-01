@@ -2,166 +2,219 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFBCCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD6BCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECBE820862
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F046F20862
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:55:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cNB5MULE"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="GfxNNiPj";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="GfxNNiPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730024AbfKAGze (ORCPT
+        id S1730071AbfKAGzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 02:55:34 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:64493 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfKAGze (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 02:55:34 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191101065532epoutp037ff6bc5217740bf2ad9c69b75a83ee17~S93wbbE_o0827908279epoutp03P
-        for <linux-kernel@vger.kernel.org>; Fri,  1 Nov 2019 06:55:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191101065532epoutp037ff6bc5217740bf2ad9c69b75a83ee17~S93wbbE_o0827908279epoutp03P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1572591332;
-        bh=izcNP/hLiYVSKEzCuHOenOd/RanTgVtooHCxQOAVUbs=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=cNB5MULEt0PkdJZOYt+X2jAPj0AsnxR4tUQm2zJONByAlYvV3Gqg1RmziG4dLUeYt
-         SwPsgStQCVb09Zkv0CxU8iNnXYrUFjwBap3AXXlTfIyQJ92WpOaGyVB9S77OcL42JZ
-         1OBLZ7LbiivfUbwXoqidBSouyTomEFFf09akuVh0=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20191101065531epcas1p3e0b6585497fecd265807acbd46533fea~S93v_YW4P0360703607epcas1p3C;
-        Fri,  1 Nov 2019 06:55:31 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 474Ccx3ZghzMqYkb; Fri,  1 Nov
-        2019 06:55:29 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        87.24.04085.1E6DBBD5; Fri,  1 Nov 2019 15:55:29 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191101065528epcas1p4c98eb2f047e91c429229c4b27df9c784~S93tP6U6d1538215382epcas1p4U;
-        Fri,  1 Nov 2019 06:55:28 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191101065528epsmtrp19cf9a214cd77d85d892226ee58bc1536~S93tPEnkj2342223422epsmtrp1O;
-        Fri,  1 Nov 2019 06:55:28 +0000 (GMT)
-X-AuditID: b6c32a37-e19ff70000000ff5-41-5dbbd6e143e2
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        12.59.24756.0E6DBBD5; Fri,  1 Nov 2019 15:55:28 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191101065528epsmtip11cd179d6b8c955003d04a9bd7f5c0595~S93s_MqwC1596415964epsmtip1j;
-        Fri,  1 Nov 2019 06:55:28 +0000 (GMT)
-Subject: Re: [PATCH v7 14/19] PM / devfreq: tegra30: Don't enable already
- enabled consecutive interrupts
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Peter Geis <pgwipeout@gmail.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <6b98cb58-7487-3e0d-705a-fa1d8e4e43bd@samsung.com>
-Date:   Fri, 1 Nov 2019 16:00:59 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191029220019.26773-15-digetx@gmail.com>
+        Fri, 1 Nov 2019 02:55:39 -0400
+Received: from mail-eopbgr70057.outbound.protection.outlook.com ([40.107.7.57]:65152
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725787AbfKAGzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 02:55:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G1D24k7HU0R9r/oHzcqJoqA3lobn3dtEv+1CmAU99Gg=;
+ b=GfxNNiPjc6hGwvXtOaEjgYDSwgMBLnYKCKacyTdOP9mMq+Ljnya2zXJe/UeBIUmW6pebf00l+DisixnPp6o3Rw9pZ65A/7TlUkh7CML+uFEPg/3m6Lj6RYYSqAYKG75YYd46A7pMvKzif+PNsbyfL8U2MSS2V3w3AVivjYiP460=
+Received: from AM6PR08CA0003.eurprd08.prod.outlook.com (2603:10a6:20b:b2::15)
+ by DBBPR08MB4489.eurprd08.prod.outlook.com (2603:10a6:10:cf::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.24; Fri, 1 Nov
+ 2019 06:53:49 +0000
+Received: from DB5EUR03FT057.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::201) by AM6PR08CA0003.outlook.office365.com
+ (2603:10a6:20b:b2::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2408.17 via Frontend
+ Transport; Fri, 1 Nov 2019 06:53:49 +0000
+Authentication-Results: spf=fail (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: Fail (protection.outlook.com: domain of arm.com does not
+ designate 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT057.mail.protection.outlook.com (10.152.20.235) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.20 via Frontend Transport; Fri, 1 Nov 2019 06:53:49 +0000
+Received: ("Tessian outbound 0cf06bf5c60e:v33"); Fri, 01 Nov 2019 06:53:47 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: afc7a4bc6c2ddb6e
+X-CR-MTA-TID: 64aa7808
+Received: from 365a51563c8f.2 (cr-mta-lb-1.cr-mta-net [104.47.12.56])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 8528E9D0-152F-4980-8CC2-034399548CFA.1;
+        Fri, 01 Nov 2019 06:53:42 +0000
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04lp2056.outbound.protection.outlook.com [104.47.12.56])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 365a51563c8f.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Fri, 01 Nov 2019 06:53:42 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Oij4OC59eut+RWuoaJVA9wFpdtsFr8IV7+PrBPf72gSVbbJ97UQJC61PJSlNsO+HFQwbRcpRStQWAqqX63tZrGH3OPkt0NKjxdEBif9v9oO9FhNJeAroPvrLjgbGcvM1z4IhWTcx0pNzawDB+3DLlXpd+C433ej3SQf1e7axjj49XaxaounnmASG0weYkvh2xIMVL1qwljVkfTVDE8fVr8tXpHFymj0f7W1JPyfVrbI4ryycrLgRDl1oYvx3p9HJZH2UDq3hkUiDKm+6IuKzU93dFUMAjIi6yOjHFajBwUCMZdqdBcxj7gJnlna7iDkh9apyWPcA0/FjSz+ZGrpdow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G1D24k7HU0R9r/oHzcqJoqA3lobn3dtEv+1CmAU99Gg=;
+ b=hcvqukfHrBzOWLzAltkJHpGPpPCTCSDVlqnGgc4KHHQ83P1EWPOU19wCzL+9RfOPM6uQnWTrXL65AmUDX5hCOI0GHDZbVep5bxYSiI0eRVysXgeztgI1RHs1sDdhiTlZuwgzrpuZPhJWeCxIgudnfCgMaS0w89GGCH/pgFbFSyEznkoR1opuKEmIHQs5mAKg4KsBztH9S7bSLq7VnuprnnBZVS6/X3hA4mtEFFucn+ckm5EvLR1YaE6B4uajjvKl8k6O0y+x6SciPlYzKUM+87sjpsMhVnC8c41Kg+uy1LlhKLBWOIoxAQZUw23CL8nmopCmmXWOXJ4SgtxMiI8KNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G1D24k7HU0R9r/oHzcqJoqA3lobn3dtEv+1CmAU99Gg=;
+ b=GfxNNiPjc6hGwvXtOaEjgYDSwgMBLnYKCKacyTdOP9mMq+Ljnya2zXJe/UeBIUmW6pebf00l+DisixnPp6o3Rw9pZ65A/7TlUkh7CML+uFEPg/3m6Lj6RYYSqAYKG75YYd46A7pMvKzif+PNsbyfL8U2MSS2V3w3AVivjYiP460=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1SPR01MB0002.eurprd08.prod.outlook.com (20.179.193.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.17; Fri, 1 Nov 2019 06:53:40 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::a809:417a:faf3:61a7]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::a809:417a:faf3:61a7%6]) with mapi id 15.20.2387.030; Fri, 1 Nov 2019
+ 06:53:40 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        Mihail Atanassov <Mihail.Atanassov@arm.com>,
+        "imirkin@alum.mit.edu" <imirkin@alum.mit.edu>
+CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Subject: [PATCH v8 0/4] drm/komeda: Enable CRTC color-mgmt
+Thread-Topic: [PATCH v8 0/4] drm/komeda: Enable CRTC color-mgmt
+Thread-Index: AQHVkIEXNSRZprgrzkynrrlyleMEKQ==
+Date:   Fri, 1 Nov 2019 06:53:40 +0000
+Message-ID: <20191101065319.29251-1-james.qian.wang@arm.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAJsWRmVeSWpSXmKPExsWy7bCmge7Da7tjDe6uk7FY/fExo0XLrEUs
-        Fmeb3rBbXN41h83ic+8RRovOL7PYLG43rmCzOPvM2+LnrnksFn1rL7E5cHnsuLuE0WPnrLvs
-        Hr3N79g8+rasYvT4vEkugDUq2yYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEv
-        MTfVVsnFJ0DXLTMH6CglhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToFlgV5xYm5x
-        aV66XnJ+rpWhgYGRKVBhQnbGl6/5Bf+5KuYsfcXYwPifo4uRk0NCwESie9IXxi5GLg4hgR2M
-        ElOvTmOHcD4xSpxuu8sM4XxjlOjvngqU4QBrmb1aCiK+l1Fizr8XTBDOe0aJvws/sIIUCQtk
-        SUx7KgsSFxFYxCSx9uh2ZpB9zAKREod3rmYCsdkEtCT2v7jBBmLzCyhKXP3xmBHE5hWwk/g7
-        9xSYzSKgIvHi/0pGkJmiAhESp78mQpQISpyc+YQFxOYUMJfYcuEJI8R4cYlbT+YzQdjyEs1b
-        ZzNDvPmfTWLX9AII20Xi1+ZXLBC2sMSr41vYIWwpiZf9bVB2tcTKk0fYQO6XEOhglNiy/wIr
-        RMJYYv/SyUwg9zALaEqs36UPEVaU2Pl7LtQNfBLvvvawQsKKV6KjTQiiRFni8oO7TBC2pMTi
-        9k62CYxKs5B8MwvJB7OQfDALYdkCRpZVjGKpBcW56anFhgXGyFG9iRGcWrXMdzBuOOdziFGA
-        g1GJh3dG1+5YIdbEsuLK3EOMEhzMSiK829cBhXhTEiurUovy44tKc1KLDzGaAsN6IrOUaHI+
-        MO3nlcQbmhoZGxtbmBiamRoaKonzOi5fGiskkJ5YkpqdmlqQWgTTx8TBKdXAmCztleCy5Jn4
-        x5/PhNZIzm4XE+N5bqrmxrviUMWTZafc25X3a4u6OaU0vfddL9bkzrZr+YrFL593xVs3v5h9
-        Ra9/a3OykhCDcq1M647+ngQ7N6NUzmUF1+7tmPdpaVZ145eLK+6Vcwh9yuRW85ZZEqThtfNh
-        bYo2k/ye9Ks/Cx4HfPNcIPlbiaU4I9FQi7moOBEAQJiM2cMDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDIsWRmVeSWpSXmKPExsWy7bCSnO6Da7tjDXo3Glqs/viY0aJl1iIW
-        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFrcbV7BZnH3mbfFz1zwWi761l9gcuDx23F3C6LFz1l12
-        j97md2wefVtWMXp83iQXwBrFZZOSmpNZllqkb5fAlfHla37Bf66KOUtfMTYw/ufoYuTgkBAw
-        kZi9WqqLkYtDSGA3o8SWmb8Yuxg5geKSEtMuHmWGqBGWOHy4GKLmLaNE27oXjCBxYYEsiWlP
-        ZUHiIgJLmCTOflnODNLLLBAp0TN3CxtEwzZGic5D31hBEmwCWhL7X9xgA7H5BRQlrv54DLaM
-        V8BO4u/cU2A2i4CKxIv/K8FsUYEIiefbb0DVCEqcnPmEBcTmFDCX2HLhCSPEMnWJP/MuQS0W
-        l7j1ZD4ThC0v0bx1NvMERuFZSNpnIWmZhaRlFpKWBYwsqxglUwuKc9Nziw0LDPNSy/WKE3OL
-        S/PS9ZLzczcxguNMS3MH4+Ul8YcYBTgYlXh4Z3TtjhViTSwrrsw9xCjBwawkwrt9HVCINyWx
-        siq1KD++qDQntfgQozQHi5I479O8Y5FCAumJJanZqakFqUUwWSYOTqkGRrFuzvrX9xKen3wr
-        9LDL4nXAOXX3vMMK/Luv6ik4LBE42hQ41y66X+x+1o86i1Dlw11bZy3l+N+9JzSKs/HcnrnC
-        /ctrQ29X1X3XUX31l6fbkaXwX5M3j75M5wPeclmNHIf+s8xPFTeJTdPZNOPQ84AFeiyrfa6e
-        mzBri8d6gbArBz9ZiM5bo8RSnJFoqMVcVJwIAGnpTSivAgAA
-X-CMS-MailID: 20191101065528epcas1p4c98eb2f047e91c429229c4b27df9c784
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191029220705epcas5p2ea4d8a7c244b4ba35f98fba05cfab646
-References: <20191029220019.26773-1-digetx@gmail.com>
-        <CGME20191029220705epcas5p2ea4d8a7c244b4ba35f98fba05cfab646@epcas5p2.samsung.com>
-        <20191029220019.26773-15-digetx@gmail.com>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2PR0302CA0022.apcprd03.prod.outlook.com
+ (2603:1096:202::32) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 29e29d3f-4c2f-4b71-2aaf-08d75e983fdc
+X-MS-TrafficTypeDiagnostic: VE1SPR01MB0002:|VE1SPR01MB0002:|DBBPR08MB4489:
+X-MS-Exchange-PUrlCount: 3
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <DBBPR08MB44890277520D8886BD4B384BB3620@DBBPR08MB4489.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:7219;OLM:7219;
+x-forefront-prvs: 020877E0CB
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(39860400002)(346002)(366004)(199004)(189003)(66066001)(2616005)(486006)(36756003)(8676002)(966005)(14454004)(5660300002)(476003)(103116003)(2501003)(2171002)(86362001)(3846002)(6116002)(305945005)(2201001)(25786009)(1076003)(6512007)(66476007)(52116002)(71200400001)(71190400001)(386003)(55236004)(6506007)(6436002)(102836004)(6486002)(7736002)(14444005)(6306002)(186003)(99286004)(8936002)(110136005)(4326008)(54906003)(50226002)(478600001)(64756008)(2906002)(66446008)(81156014)(66556008)(316002)(66946007)(81166006)(256004)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1SPR01MB0002;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: BO5NfdAZIUNwy+Y+uzRGCp2N7fan96Vx46NItzUSQk3DW/dmkAtNlv11pI7A+BIpouWH2ts9qUM/MjlpFBCzsp++jUrIDztpJKl6/WfPNyyiUM0CRKo2QzNW6PZy6E6cFm+rVrYFqGch30qMImcI2kzPVAIteI5J1jwL1LMk+U36COCia3zmP2v1TPldMwjpL9RCtTptw3LWo9FMQ4NVbmPuAOIJzuPjQKNSMzL2oX1Hv9HUrJMKPxt5wChIyeudRnYN3i/lxOBwOW3f0ZiX1vxdVA7DgMmxxEW7ohfngOlWqoj/RefIQ0D8SZ4A0SWHz2t8ibINNzqLnBL/H0N6qo9lkm+47Ns9Os5TwxTs9j0waYgPlb3DCPEseWjIbRJd65FEMmUJ+ebztdnDnW492VWlne5LXCHC2WLPAGXc5JykqKr1oHG1zKTi3YR1zoLuImykoBOBkm7YLj1DXcryfZcduH8zz3IAtlN9kx4OW7c=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1SPR01MB0002
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT057.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(376002)(396003)(346002)(1110001)(339900001)(199004)(189003)(3846002)(14444005)(54906003)(110136005)(6306002)(8676002)(2616005)(7736002)(105606002)(6512007)(66066001)(50466002)(336012)(2906002)(486006)(2171002)(26005)(4326008)(25786009)(476003)(8746002)(23756003)(47776003)(81166006)(50226002)(8936002)(2201001)(6116002)(22756006)(966005)(103116003)(356004)(6486002)(86362001)(305945005)(14454004)(99286004)(1076003)(36756003)(5660300002)(316002)(186003)(81156014)(126002)(6506007)(386003)(76130400001)(478600001)(70586007)(70206006)(26826003)(102836004)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:DBBPR08MB4489;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Fail;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 2ec3120d-4d69-4d85-d3a5-08d75e983a08
+NoDisclaimer: True
+X-Forefront-PRVS: 020877E0CB
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: urxdvtaVlN9tuflbWNrtwM9w8Sk4zxZ0pjbxK66bcDdj4lkpBx8eG0RtvWI6b09aDmW32eotLNpVVDPLM+IoVfJU4wn7BNsvC4ehwBAfOz4L7UXDat+8gNGD3fyuO3Vt8qDfsWlh7tFRs2oH0jYjU72UGdvSIBI7D+hDHD7aEzhAc0Hb8M6AaXnmQufGjvlIoE9Uj8CYdtW53Gh3k7r7cj34Zax0yp9ULb7KOVOMmRVvPHk7xxc3FX0aZhfmAd4ZmDuKNVnD9P/IwPtj9CcgDVGtAbMDRvTYNr/iXKevAfEzhugejeXtp6AhADyNEMFp1gp2EmtMnrROpq9vACA9KfKYjkrR5I8aNNBTeRsKK+N5uYOhvs3PDFHC61cpaObIuCUC7YCwL98Edq8j9Ysu+fBDwpe9l8/PhB56IAhm1mvG4xt/H5UA/IJ5Vqh3F6DkhsU4JMf4t3UiKCWDNqeyjDTk+abeCuBFBuF8gbP1FXo=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Nov 2019 06:53:49.5127
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29e29d3f-4c2f-4b71-2aaf-08d75e983fdc
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4489
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 10. 30. 오전 7:00, Dmitry Osipenko wrote:
-> Consecutive up/down interrupt-bit is set in the interrupt status register
-> only if that interrupt was previously enabled. Thus enabling the already
-> enabled interrupt doesn't do much for us.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra30-devfreq.c | 4 ----
->  1 file changed, 4 deletions(-)
-> 
-> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index 9cbee82880ff..a9336cf4b37a 100644
-> --- a/drivers/devfreq/tegra30-devfreq.c
-> +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -261,8 +261,6 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
->  
->  		if (dev->boost_freq >= tegra->max_freq)
->  			dev->boost_freq = tegra->max_freq;
-> -		else
-> -			dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
->  	} else if (intr_status & ACTMON_DEV_INTR_CONSECUTIVE_LOWER) {
->  		/*
->  		 * new_boost = old_boost * down_coef
-> @@ -275,8 +273,6 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
->  
->  		if (dev->boost_freq < (ACTMON_BOOST_FREQ_STEP >> 1))
->  			dev->boost_freq = 0;
-> -		else
-> -			dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
->  	}
->  
->  	if (dev->config->avg_dependency_threshold) {
-> 
+This series actually are regrouped from:
+- drm/komeda: Enable layer/plane color-mgmt:
+  https://patchwork.freedesktop.org/series/60893/
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+- drm/komeda: Enable CRTC color-mgmt
+  https://patchwork.freedesktop.org/series/61370/
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+For removing the dependence on:
+- https://patchwork.freedesktop.org/series/30876/
+
+Lowry Li (Arm Technology China) (1):
+  drm/komeda: Adds gamma and color-transform support for DOU-IPS
+
+james qian wang (Arm Technology China) (3):
+  drm/komeda: Add a new helper drm_color_ctm_s31_32_to_qm_n()
+  drm/komeda: Add drm_lut_to_fgamma_coeffs()
+  drm/komeda: Add drm_ctm_to_coeffs()
+
+v2:
+  Move the fixpoint conversion function s31_32_to_q2_12() to drm core
+  as a shared helper.
+
+v4:
+  Address review comments from Mihai, Daniel and Ilia.
+
+V5:
+- Includes the sign bit in the value of m (Qm.n).
+- Rebase with drm-misc-next
+
+v6:
+  Allows m =3D=3D 0 according to Mihail's comments.
+
+Lowry Li (Arm Technology China) (1):
+  drm/komeda: Adds gamma and color-transform support for DOU-IPS
+
+james qian wang (Arm Technology China) (3):
+  drm: Add a new helper drm_color_ctm_s31_32_to_qm_n()
+  drm/komeda: Add drm_lut_to_fgamma_coeffs()
+  drm/komeda: Add drm_ctm_to_coeffs()
+
+ .../arm/display/komeda/d71/d71_component.c    | 20 ++++++
+ .../arm/display/komeda/komeda_color_mgmt.c    | 66 +++++++++++++++++++
+ .../arm/display/komeda/komeda_color_mgmt.h    | 10 ++-
+ .../gpu/drm/arm/display/komeda/komeda_crtc.c  |  2 +
+ .../drm/arm/display/komeda/komeda_pipeline.h  |  3 +
+ .../display/komeda/komeda_pipeline_state.c    |  6 ++
+ drivers/gpu/drm/drm_color_mgmt.c              | 34 ++++++++++
+ include/drm/drm_color_mgmt.h                  |  1 +
+ 8 files changed, 141 insertions(+), 1 deletion(-)
+
+--
+2.20.1
