@@ -2,596 +2,69 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC64CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC29CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1EFE2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C428217F9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730542AbfKAMQA (ORCPT
+        id S1730563AbfKAMR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 08:16:00 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:45911 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727279AbfKAMQA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 08:16:00 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 01 Nov 2019 17:38:48 +0530
-IronPort-SDR: 18joQudYus4ACgZj8lLhxVDhYBCuEjVF8uYnY0Gvn3CvYkFZi99P6HuMaKUHP1QyO/n/NKkg7f
- 3ddpIfMTa0TXf2LMoVnhI1fugbLpFhN4gtUGy9FjyDyPyh+L++BYAPgEovmMx3HFqhxpDiHxC/
- CsdnveCmUfD9fjv2LxDDL7E8IxdbrOXMewTCzSLx7VjmgeCoBUNx8QAnVSg3kdb+B160xn/eYN
- HVMtJ2DnTnyTJf/zkItdO1Mxw+PqBE5yO0xOkUkwxHUEBTw1p2Ejl2Bo+0LlbBloURJ+lVQ5ox
- +0qCh79T4A6fZRq4LMelAMFG
-Received: from c-rkambl-linux1.qualcomm.com ([10.242.50.190])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 01 Nov 2019 17:38:35 +0530
-Received: by c-rkambl-linux1.qualcomm.com (Postfix, from userid 2344811)
-        id 70B7318F1; Fri,  1 Nov 2019 17:38:34 +0530 (IST)
-From:   Rajeshwari <rkambl@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sivaa@codeaurora.org,
-        sanm@codeaurora.org, Rajeshwari <rkambl@codeaurora.org>
-Subject: [PATCH 1/1] arm64: dts: qcom: sc7180:  Add device node support for TSENS in SC7180
-Date:   Fri,  1 Nov 2019 17:38:28 +0530
-Message-Id: <1572610108-1363-2-git-send-email-rkambl@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572610108-1363-1-git-send-email-rkambl@codeaurora.org>
-References: <1572610108-1363-1-git-send-email-rkambl@codeaurora.org>
+        Fri, 1 Nov 2019 08:17:26 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5684 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730552AbfKAMR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 08:17:26 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B574CA5A24D5CE4484E6;
+        Fri,  1 Nov 2019 20:17:23 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Fri, 1 Nov 2019
+ 20:17:13 +0800
+Subject: Re: [PATCH v2 20/36] irqchip/gic-v4.1: Suppress per-VLPI doorbell
+To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-kernel@vger.kernel.org>
+CC:     Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Andrew Murray" <Andrew.Murray@arm.com>,
+        Jayachandran C <jnair@marvell.com>,
+        "Robert Richter" <rrichter@marvell.com>
+References: <20191027144234.8395-1-maz@kernel.org>
+ <20191027144234.8395-21-maz@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <256391fa-56f1-7588-3bff-ae8aa36d6615@huawei.com>
+Date:   Fri, 1 Nov 2019 20:17:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
+MIME-Version: 1.0
+In-Reply-To: <20191027144234.8395-21-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add TSENS node and user thermal zone configurations for TSENS sensors in SC7180.
+Hi Marc,
 
-Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 518 +++++++++++++++++++++++++++++++++++
- 1 file changed, 518 insertions(+)
+On 2019/10/27 22:42, Marc Zyngier wrote:
+> Since GICv4.1 gives us a per-VPE doorbell, avoid programming anything
+> else on VMOVI/VMAPI/VMAPTI and on any other action that would have
+> otherwise resulted in a per-VLPI doorbell to be programmed.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 07ea393..06ded1d 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -238,6 +238,22 @@
- 			};
- 		};
- 
-+		tsens0: thermal-sensor@c263000 {
-+			compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
-+			reg = <0 0x0c263000 0 0x1ff>, /* TM */
-+				<0 0x0c222000 0 0x1ff>; /* SROT */
-+			#qcom,sensors = <15>;
-+			#thermal-sensor-cells = <1>;
-+		};
-+
-+		tsens1: thermal-sensor@c265000 {
-+			compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
-+			reg = <0 0x0c265000 0 0x1ff>, /* TM */
-+				<0 0x0c223000 0 0x1ff>; /* SROT */
-+			#qcom,sensors = <10>;
-+			#thermal-sensor-cells = <1>;
-+		};
-+
- 		spmi_bus: spmi@c440000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0 0xc440000 0 0x1100>,
-@@ -449,6 +465,508 @@
- 		};
- 	};
- 
-+	thermal-zones {
-+		aoss-0-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-governor = "user_space";
-+			thermal-sensors = <&tsens0 0>;
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-0-0-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-governor = "user_space";
-+			thermal-sensors = <&tsens0 1>;
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-0-1-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-governor = "user_space";
-+			thermal-sensors = <&tsens0 2>;
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-0-2-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-governor = "user_space";
-+			thermal-sensors = <&tsens0 3>;
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-0-3-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 4>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-0-4-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 5>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-0-5-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 6>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpuss-0-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 7>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpuss-1-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 8>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-1-0-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 9>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-1-1-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 10>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-1-2-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 11>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cpu-1-3-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 12>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		gpuss-0-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 13>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		gpuss-1-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens0 14>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		aoss-1-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 0>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		cwlan-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 1>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		audio-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 2>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		ddr-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 3>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				ative-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		q6-hvx-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 4>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		camera-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 5>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		mdm-core-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 6>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		mdm-dsp-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 7>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		npu-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 8>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+
-+		video-usr {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens1 9>;
-+			thermal-governor = "user_space";
-+			wake-capable-sensor;
-+			trips {
-+				active-config0 {
-+					temperature = <125000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+				reset-mon-cfg {
-+					temperature = <115000>;
-+					hysteresis = <5000>;
-+					type = "passive";
-+				};
-+			};
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 1 IRQ_TYPE_LEVEL_LOW>,
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
 
