@@ -2,102 +2,148 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28698CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA904CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F15472086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C42217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:16:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="DrBwmdA2"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="T36Tr2PF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbfKAKMY (ORCPT
+        id S1729665AbfKAKQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 06:12:24 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38507 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbfKAKMX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 06:12:23 -0400
-Received: by mail-qk1-f193.google.com with SMTP id e2so10137941qkn.5;
-        Fri, 01 Nov 2019 03:12:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ND8y/KAJEHxe8vYu6nFNiGmvLZloLNx/Qhcmj2riyfs=;
-        b=DrBwmdA2hyuypUMdqsxgKAPOBwvzb/c3z7uksP87rq82GzxeMEHhvZFCbdACHdfw8N
-         vjkd6BctJNzkmDNGqy5YoXmnCNryXR+Cq3mWpEqQz0/vV6JZZg/cExsisJWSnJ5c3vig
-         rwnuKfQ2s4VZLHbJovbnP2amAl6xDURhPW/7o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ND8y/KAJEHxe8vYu6nFNiGmvLZloLNx/Qhcmj2riyfs=;
-        b=d9/Ue5/w6UE+nmAtHjisD2Xj9eu2FJafoC4sPZc3psCbQllS8NP8y9ESTF9bKYsOK5
-         TipoMGwaAysYtqIzZOmZsGmwonlFcmgBxlm6BM8YwxR2dUnVJMXmqxlORTFd41rmJl+v
-         f45Nje1FZvb2e5GLXc1pvDd7Skew/SnGwWC85dSP1mAaF3rBqIu8cOqnjmVfJoRMFEuw
-         TO7nNOkLTbMCGBBSEE4POB4Fp8Echusz/rH9YKNe7NYbMcPP890y/NKUcpdj61pAt5d6
-         wQYD17rNEyduBA+dYBG0pwSFQ7FoXS2iTAajd79wVpvqO8HbalPrzTd7nCmtN0uX0N2i
-         BMGQ==
-X-Gm-Message-State: APjAAAWEJQyPS2lCbcI0Wadqx7oyQyIsPU4hYsgc/GW/VPiiwOH3Ce4p
-        VbimnM+dxh0+OauoRaMLB57uVQJgxsrs5zUL0pU=
-X-Google-Smtp-Source: APXvYqwoU1k7FEmT61Ivo0VZaveC+nWADRFHlsA0BlwLNyI+e6RuAdTXAbMLTDbS33RCVwVgM/jm6sohxZSvu01ohA8=
-X-Received: by 2002:a37:5fc1:: with SMTP id t184mr2349520qkb.171.1572603142333;
- Fri, 01 Nov 2019 03:12:22 -0700 (PDT)
+        Fri, 1 Nov 2019 06:16:23 -0400
+Received: from mail-eopbgr00089.outbound.protection.outlook.com ([40.107.0.89]:21678
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729471AbfKAKQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 06:16:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FxrgGCcMQ3NubkTGH+5MrqYMaiL+i9wwoAurbTE8ehJOJBOFyU+zh0HMpWwtNWCPxE+9xznE1Ew3xqn6IsygmWZ9pHxsQPpWt8nJQaX4cEIDZhkbbVSnG58LB873cygMKhCV1eDcqVCs3WNchhV5MfRMrBnn2EDbjGugNMWktDiw2K3kYYCpYSvlXPOdnuBI5RvBLCF0hFlBZ/i0OrhhaeWv/eldtB3P/tqidRATlHphmdRVmT6xtOhbVl3x8gj53c8oClyVlnyJymR7zuI/2wMHZ6Zndg/+Hl3KBxzDEJdndkINXYIAVbIiMumAoLZmE6HttdFTT/obM88dApDbEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GEjNv2BDjI1G7k63M4Yk3OLuJc/sRKSE2ecyOSgvLrs=;
+ b=e/LVTWXw9mbC6DejKeciNTuKJL4UMZc9qJBe36FLSMwTjKSCdyOgtwsw9Prx7bVcCPJL9TLK4i0pVvULN1KH9E5ZsNxardeDQKov+/cCzU6JxISXOoFYDEx9DbRIQRDn2U36Ph9G3vPldzApRWBwfi5iheNjbed0qqH+QoLdkAq1kP6BN77Zr9LAskCF0o8XhtSlFxR5IE5VFn2hgJ81xvqNEVYx2/8d5DDlOO6fWNiec2nRKM3D3LVNxEIGpBFKZRIueDlp5PGDztMpG4Z9I1EaQRbRzj+SXC5wcLenC3OgRYEjjn9ck5Ngq4hjaUHqeMKMqcEde+82HtavRqdznw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GEjNv2BDjI1G7k63M4Yk3OLuJc/sRKSE2ecyOSgvLrs=;
+ b=T36Tr2PFpJsYkpVkU+8P5gj2VQOTOAE7LlsDIL68Fu5KJEyyqH3S6nIVda2KPWKc7U1C9mtnRmCDMMkJD3gjZjdqSWfoamRCyTkQP8fSv9+fqQPw+CRYzl9bEVkkvmu8Kg4TXUKRIvIF88mphEduSvOYuC4PxOtrlEcKkOfncjg=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5188.eurprd04.prod.outlook.com (20.177.42.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.30; Fri, 1 Nov 2019 10:16:19 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::843c:e722:27cb:74e1]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::843c:e722:27cb:74e1%5]) with mapi id 15.20.2387.028; Fri, 1 Nov 2019
+ 10:16:19 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] clk: imx: clk-composite-8m: add lock to gate/mux
+Thread-Topic: [PATCH] clk: imx: clk-composite-8m: add lock to gate/mux
+Thread-Index: AQHVkJ1nitbWRrQWUkuauMi+K6eGNQ==
+Date:   Fri, 1 Nov 2019 10:16:19 +0000
+Message-ID: <1572603166-24594-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR02CA0209.apcprd02.prod.outlook.com
+ (2603:1096:201:20::21) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d7c51b07-d29a-4498-29f7-08d75eb489a0
+x-ms-traffictypediagnostic: AM0PR04MB5188:|AM0PR04MB5188:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB5188D29497A9CD1C23A72C1F88620@AM0PR04MB5188.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 020877E0CB
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(366004)(39860400002)(376002)(199004)(189003)(486006)(316002)(66946007)(110136005)(66476007)(66556008)(386003)(6506007)(99286004)(14444005)(256004)(52116002)(86362001)(66066001)(64756008)(66446008)(2201001)(50226002)(2906002)(54906003)(3846002)(4326008)(6116002)(6512007)(36756003)(8936002)(25786009)(5660300002)(2501003)(305945005)(81166006)(71190400001)(71200400001)(8676002)(81156014)(7736002)(44832011)(26005)(14454004)(476003)(2616005)(102836004)(186003)(6636002)(478600001)(6436002)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5188;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dRwXf712rwIjCkCaIQL+wqyvGDSRW7jJP3cu1xR8BWCPFwrhSovRCTtyvM8R+jQtNicbGdO2oltd4O2fclzhhMPCIPHc5pYGHC2ZP7bA+L81CbsIQMAz9dyI7jksVEApJS2OcY7pi3D/FY5Op6SkwIcVAoDsAas77L+1P2MIlm2lTJeZfJamXeaiyVI6iDJ74AN0ryKgM0km38onvjV/iIJfdhugzV3q4EhUboTInQGHSbnOxlUSY4bZ8BbqY80ZO7NTV957lwXIBBR+n6Zoyte5KJScNVSzRU6zKv16BbUgKnEtmPRwRTche9WO/mSTIMPqgGH9/rPz7FGUQAf/YLChnppkdVvQiPPNB5bZE8bmp+NLWsy2EONjupujDr2iUHwAfJyngFQF5X1qzrITgZygyyO1AhxRCEZZDMW4WIu9E5KYA3Dezrv0Oh2ADAnC
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20191021194820.293556-1-taoren@fb.com> <20191021194820.293556-2-taoren@fb.com>
-In-Reply-To: <20191021194820.293556-2-taoren@fb.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 1 Nov 2019 10:12:10 +0000
-Message-ID: <CACPK8XfebA9PcpyWkofCJ5fAZ9ddUjQ4ZeCf73KXb51+k_+N1Q@mail.gmail.com>
-Subject: Re: [PATCH 1/4] ARM: dts: aspeed: add dtsi for Facebook AST2500
- Network BMCs
-To:     Tao Ren <taoren@fb.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7c51b07-d29a-4498-29f7-08d75eb489a0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2019 10:16:19.7670
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gGkErQ3LI8HX/PRzUbsiPr0hzYRyAxCR//GrM7Vyog7GqEbD851oGsiF7gVWzMbcAMJ64iHpQCVkB6O1nQ+IZg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5188
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019 at 19:49, Tao Ren <taoren@fb.com> wrote:
->
-> Introduce "facebook-netbmc-ast2500-common.dtsi" which is included by all
-> Facebook AST2500 Network BMC platforms. The major purpose is to minimize
-> duplicated device entries cross Facebook Network BMC dts files.
->
+From: Peng Fan <peng.fan@nxp.com>
 
-> +
-> +&mac1 {
-> +       status = "okay";
-> +       no-hw-checksum;
+There is a lock to diviver in the composite driver, but that's not
+enought. lock to gate/mux are also needed to provide exclusive access
+to the register.
 
-Was this included to work around the IPv6 issue that Benh recently fixed?
+Fixes: d3ff9728134e ("clk: imx: Add imx composite clock")
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+ drivers/clk/imx/clk-composite-8m.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-If you can test your platform with
-88824e3bf29a2fcacfd9ebbfe03063649f0f3254 applied and the
-no-hw-checksum property removed, please send a follow up to remove
-this property.
+diff --git a/drivers/clk/imx/clk-composite-8m.c b/drivers/clk/imx/clk-compo=
+site-8m.c
+index e0f25983e80f..20f7c91c03d2 100644
+--- a/drivers/clk/imx/clk-composite-8m.c
++++ b/drivers/clk/imx/clk-composite-8m.c
+@@ -142,6 +142,7 @@ struct clk_hw *imx8m_clk_hw_composite_flags(const char =
+*name,
+ 	mux->reg =3D reg;
+ 	mux->shift =3D PCG_PCS_SHIFT;
+ 	mux->mask =3D PCG_PCS_MASK;
++	mux->lock =3D &imx_ccm_lock;
+=20
+ 	div =3D kzalloc(sizeof(*div), GFP_KERNEL);
+ 	if (!div)
+@@ -161,6 +162,7 @@ struct clk_hw *imx8m_clk_hw_composite_flags(const char =
+*name,
+ 	gate_hw =3D &gate->hw;
+ 	gate->reg =3D reg;
+ 	gate->bit_idx =3D PCG_CGC_SHIFT;
++	gate->lock =3D &imx_ccm_lock;
+=20
+ 	hw =3D clk_hw_register_composite(NULL, name, parent_names, num_parents,
+ 			mux_hw, &clk_mux_ops, div_hw,
+--=20
+2.16.4
 
-It's not doing any harm, but by cleaning it up there's less chance
-others blindly copy the same thing.
-
-Thanks,
-
-Joel
-
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
-> +};
