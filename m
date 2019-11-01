@@ -2,131 +2,93 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5036CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA27CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3A6217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65FAE21897
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:48:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="oqrarDW4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VkajqyNc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfKAVsH (ORCPT
+        id S1727001AbfKAVs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 17:48:07 -0400
-Received: from mail.kmu-office.ch ([178.209.48.109]:42296 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfKAVsG (ORCPT
+        Fri, 1 Nov 2019 17:48:58 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41766 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfKAVs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 17:48:06 -0400
-Received: from zyt.lan (unknown [37.17.234.113])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id 10A635C3996;
-        Fri,  1 Nov 2019 22:48:04 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1572644884;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=O13dNAYrYnYnAw0xq29Wh01pA7LkcCcNnwb/S9BEyZ4=;
-        b=oqrarDW4zfIMJCdBVsRFd58EEyoqwH0Xltu0lQsxy8nEPGMa3cBdF7fCHTqr1sYp7csyKD
-        Q730qm7qYjDz3FFMTtEaPIC+qAK0QKVff3Hw+XfMDA9SE/qRDBlT6FIW5mZ/vjWNENXntr
-        uTvyhbWoTQAVLwrcYpQfodgIRt0bbvk=
-From:   Stefan Agner <stefan@agner.ch>
-To:     linux@armlinux.org.uk
-Cc:     ndesaulniers@google.com, nico@fluxnic.net, rfranz@marvell.com,
-        linus.walleij@linaro.org, ard.biesheuvel@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, Stefan Agner <stefan@agner.ch>
-Subject: [PATCH] ARM: use APSR_nzcv instead of r15 as mrc operand
-Date:   Fri,  1 Nov 2019 22:47:58 +0100
-Message-Id: <472f8bd1f000f45343cc0c66a26380fe4b532147.1572644664.git.stefan@agner.ch>
-X-Mailer: git-send-email 2.23.0
+        Fri, 1 Nov 2019 17:48:58 -0400
+Received: by mail-qt1-f194.google.com with SMTP id o3so14899382qtj.8
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 14:48:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4ydkaqiUndvm12oKsPXUCT8XdG0VC6PHW8cZ5YaD7Is=;
+        b=VkajqyNcqBhTysuY+9L/fqxUYlJRoeFSBdotA9y5qE3URez6Jq5OwAJAvLmEOxg/fQ
+         Mu3367pMl5vAKCTzUIaO5TJIGwVPUtpbPtm32kre4hIi7X4ks3TV8nWVS2fC0WpQQiet
+         vd+uXgCXb+am1z3HG67PI8nSk3VdE7POz4Zqov4oDyCRbVCgF3SVBzUMj7UuSHNw9qsf
+         vFsh+b/Cuq1f+JreP8BlILo4wn1gyyW/amCR6GK+UL8yqoQtlZeiK2zxp6yhQHHex5fw
+         4HN9O7nzyxS66p2ZX73FAoJbB+03uawlH46258rLmCZCbHZtsjUbaGLKuzqLZGFDzfmo
+         e6vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4ydkaqiUndvm12oKsPXUCT8XdG0VC6PHW8cZ5YaD7Is=;
+        b=hlOxcGhmmoUGj0b93KRb1zeG1KtZfL2sEajc02w4x+eUMPCgu420+eLG6UtaWq0V2h
+         d24JCj7Wh1lRHHOe6anysVhZtrF5hdC/OoBGGGYbvsq+5oDi1DlHkP92AMe4NdBwCZ6K
+         /w+6rcBTAoFaC/2IcHht4YbL3VxNpzPiRTDR1dE1qj+fHyfpi9A4fvjwjOvMqyytCLjN
+         C/g10GXPAJas3XvhkKm+nYPJi3M4U7T3+YvGorKmObj6EdTKQRj3++njM/vtRNstbN4E
+         ewGHIUp14vwh0fGWktxCdftWtcUwdCxZ13hhNTKcmezVa6FhhZDpYcTWdltaNUjSGa5K
+         59qA==
+X-Gm-Message-State: APjAAAXviW8qMA7KAOhKCkDH6opbPLNraGT+l5swBFJJ0F5Ni/ZJT0iu
+        bmcZC0+r0ZJVfBYcAJuD0mM=
+X-Google-Smtp-Source: APXvYqzC91ObphFfFFrFsQgh1ScFvBn+AK56YCKyqplp9ASMS4yDktUIdICHLEO1znGXJAk6S9Kpbw==
+X-Received: by 2002:ad4:57a7:: with SMTP id g7mr12254000qvx.30.1572644937106;
+        Fri, 01 Nov 2019 14:48:57 -0700 (PDT)
+Received: from GBdebian.ic.unicamp.br (wifi-177-220-84-14.wifi.ic.unicamp.br. [177.220.84.14])
+        by smtp.gmail.com with ESMTPSA id w24sm5482300qta.44.2019.11.01.14.48.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 14:48:56 -0700 (PDT)
+From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+To:     outreachy-kernel@googlegroups.com, manasi.d.navare@intel.com,
+        rodrigosiqueiramelo@gmail.com, hamohammed.sa@gmail.com,
+        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
+        trivial@kernel.org
+Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Subject: [PATCH v2 VKMS 0/2] drm/vkms: Changing some words in 'blend' function documentation
+Date:   Fri,  1 Nov 2019 18:48:46 -0300
+Message-Id: <20191101214848.7574-1-gabrielabittencourt00@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LLVM's integrated assembler does not accept r15 as mrc operand.
-  arch/arm/boot/compressed/head.S:1267:16: error: operand must be a register in range [r0, r14] or apsr_nzcv
-  1: mrc p15, 0, r15, c7, c14, 3 @ test,clean,invalidate D cache
-                 ^
+Changes in v2:
+- Add fixing typo in word 'destination'
+- Add change of the preposition
+- In v1 the name of the function was wrong, fix it in this version
+- Add the patch changing the word 'TODO'
 
-Use APSR_nzcv instead of r15. The GNU assembler supports this
-syntax since binutils 2.21 [0].
+I've tested the patches using kernel-doc
 
-[0] https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=commit;h=db472d6ff0f438a21b357249a9b48e4b74498076
+Gabriela Bittencourt (2):
+  drm/vkms: Fix typo and preposion in function documentation
+  drm/vkms: Changing a 'Todo' to a 'TODO' in code comment
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- arch/arm/boot/compressed/head.S | 2 +-
- arch/arm/mm/proc-arm1026.S      | 4 ++--
- arch/arm/mm/proc-arm926.S       | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/vkms/vkms_composer.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
-index 15ecad944847..ead21e5f2b80 100644
---- a/arch/arm/boot/compressed/head.S
-+++ b/arch/arm/boot/compressed/head.S
-@@ -1273,7 +1273,7 @@ iflush:
- __armv5tej_mmu_cache_flush:
- 		tst	r4, #1
- 		movne	pc, lr
--1:		mrc	p15, 0, r15, c7, c14, 3	@ test,clean,invalidate D cache
-+1:		mrc	p15, 0, APSR_nzcv, c7, c14, 3	@ test,clean,invalidate D cache
- 		bne	1b
- 		mcr	p15, 0, r0, c7, c5, 0	@ flush I cache
- 		mcr	p15, 0, r0, c7, c10, 4	@ drain WB
-diff --git a/arch/arm/mm/proc-arm1026.S b/arch/arm/mm/proc-arm1026.S
-index 10e21012380b..0bdf25a95b10 100644
---- a/arch/arm/mm/proc-arm1026.S
-+++ b/arch/arm/mm/proc-arm1026.S
-@@ -138,7 +138,7 @@ ENTRY(arm1026_flush_kern_cache_all)
- 	mov	ip, #0
- __flush_whole_cache:
- #ifndef CONFIG_CPU_DCACHE_DISABLE
--1:	mrc	p15, 0, r15, c7, c14, 3		@ test, clean, invalidate
-+1:	mrc	p15, 0, APSR_nzcv, c7, c14, 3		@ test, clean, invalidate
- 	bne	1b
- #endif
- 	tst	r2, #VM_EXEC
-@@ -363,7 +363,7 @@ ENTRY(cpu_arm1026_switch_mm)
- #ifdef CONFIG_MMU
- 	mov	r1, #0
- #ifndef CONFIG_CPU_DCACHE_DISABLE
--1:	mrc	p15, 0, r15, c7, c14, 3		@ test, clean, invalidate
-+1:	mrc	p15, 0, APSR_nzcv, c7, c14, 3		@ test, clean, invalidate
- 	bne	1b
- #endif
- #ifndef CONFIG_CPU_ICACHE_DISABLE
-diff --git a/arch/arm/mm/proc-arm926.S b/arch/arm/mm/proc-arm926.S
-index 3188ab2bac61..1ba253c2bce1 100644
---- a/arch/arm/mm/proc-arm926.S
-+++ b/arch/arm/mm/proc-arm926.S
-@@ -131,7 +131,7 @@ __flush_whole_cache:
- #ifdef CONFIG_CPU_DCACHE_WRITETHROUGH
- 	mcr	p15, 0, ip, c7, c6, 0		@ invalidate D cache
- #else
--1:	mrc	p15, 0, r15, c7, c14, 3 	@ test,clean,invalidate
-+1:	mrc	p15, 0, APSR_nzcv, c7, c14, 3 	@ test,clean,invalidate
- 	bne	1b
- #endif
- 	tst	r2, #VM_EXEC
-@@ -358,7 +358,7 @@ ENTRY(cpu_arm926_switch_mm)
- 	mcr	p15, 0, ip, c7, c6, 0		@ invalidate D cache
- #else
- @ && 'Clean & Invalidate whole DCache'
--1:	mrc	p15, 0, r15, c7, c14, 3 	@ test,clean,invalidate
-+1:	mrc	p15, 0, APSR_nzcv, c7, c14, 3 	@ test,clean,invalidate
- 	bne	1b
- #endif
- 	mcr	p15, 0, ip, c7, c5, 0		@ invalidate I cache
 -- 
-2.23.0
+2.20.1
 
