@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DB5CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 07:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD855CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 07:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC162080F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 07:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09032080F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 07:58:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730211AbfKAH6b (ORCPT
+        id S1730223AbfKAH6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 03:58:31 -0400
+        Fri, 1 Nov 2019 03:58:34 -0400
 Received: from mga17.intel.com ([192.55.52.151]:16169 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727059AbfKAH6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 03:58:30 -0400
+        id S1727059AbfKAH6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 03:58:33 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 00:58:29 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 00:58:33 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,254,1569308400"; 
-   d="scan'208";a="225962481"
+   d="scan'208";a="225962485"
 Received: from yhuang-dev.sh.intel.com ([10.239.159.29])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Nov 2019 00:58:27 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 01 Nov 2019 00:58:30 -0700
 From:   "Huang, Ying" <ying.huang@intel.com>
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
@@ -38,9 +38,9 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Fengguang Wu <fengguang.wu@intel.com>
-Subject: [RFC 03/10] autonuma: Add NUMA_BALANCING_MEMORY_TIERING mode
-Date:   Fri,  1 Nov 2019 15:57:20 +0800
-Message-Id: <20191101075727.26683-4-ying.huang@intel.com>
+Subject: [RFC 04/10] autonuma, memory tiering: Rate limit NUMA migration throughput
+Date:   Fri,  1 Nov 2019 15:57:21 +0800
+Message-Id: <20191101075727.26683-5-ying.huang@intel.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191101075727.26683-1-ying.huang@intel.com>
 References: <20191101075727.26683-1-ying.huang@intel.com>
@@ -53,46 +53,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Huang Ying <ying.huang@intel.com>
 
-With the advent of various new memory types, some machines will have
-multiple memory types, e.g. DRAM and PMEM (persistent memory).
-Because the performance of the different types of memory may be
-different, the memory subsystem could be called memory tiering system.
+In autonuma memory tiering mode, the hot PMEM (persistent memory)
+pages could be migrated to DRAM via autonuma.  But this incurs some
+overhead too.  So that sometimes the workload performance may be hurt.
+To avoid too much disturbing to the workload, the migration throughput
+should be rate-limited.
 
-In a typical memory tiering system, there are CPUs, fast memory and
-slow memory in each physical NUMA node.  The CPUs and the fast memory
-will be put in one logical node (called fast memory node), while the
-slow memory will be put in another (faked) logical node (called slow
-memory node).  And in autonuma, there are a set of mechanisms to
-identify the pages recently accessed by the CPUs in a node and migrate
-the pages to the node.  So the performance optimization to promote the
-hot pages in slow memory node to the fast memory node in the memory
-tiering system could be implemented based on the autonuma framework.
+At the other hand, in some situation, for example, some workloads
+exits, many DRAM pages become free, so that some pages of the other
+workloads can be migrated to DRAM.  To respond to the workloads
+changing quickly, it's better to migrate pages faster.
 
-But the requirement of the hot page promotion in the memory tiering
-system is different from that of the normal NUMA balancing in some
-aspects.  E.g. for the hot page promotion, we can skip to scan fastest
-memory node because we have nowhere to promote the hot pages to.  To
-make autonuma works for both the normal NUMA balancing and the memory
-tiering hot page promotion, we have defined a set of flags and made
-the value of sysctl_numa_balancing_mode to be "OR" of these flags.
-The flags are as follows,
+To address the above 2 requirements, a rate limit algorithm as follows
+is used,
 
-- 0x0: NUMA_BALANCING_DISABLED
-- 0x1: NUMA_BALANCING_NORMAL
-- 0x2: NUMA_BALANCING_MEMORY_TIERING
+- If there is enough free memory in DRAM node (that is, > high
+  watermark + 2 * rate limit pages), then NUMA migration throughput will
+  not be rate-limited to respond to the workload changing quickly.
 
-NUMA_BALANCING_NORMAL enables the normal NUMA balancing across
-sockets, while NUMA_BALANCING_MEMORY_TIERING enables the hot page
-promotion across memory tiers.  They can be enabled individually or
-together.  If all flags are cleared, the autonuma is disabled
-completely.
+- Otherwise, counting the number of pages to try to migrate to a DRAM
+  node via autonuma, if the count exceeds the limit specified by the
+  users, stop NUMA migration until the next second.
 
-The sysctl interface is extended accordingly in a backward compatible
-way.
+A new sysctl knob kernel.numa_balancing_rate_limit_mbps is added for
+the users to specify the limit.  If its value is 0, the default
+value (high watermark) will be used.
 
-TODO:
-
-- Update ABI document: Documentation/sysctl/kernel.txt
+TODO: Add ABI document for new sysctl knob.
 
 Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -107,90 +94,171 @@ Cc: Fengguang Wu <fengguang.wu@intel.com>
 Cc: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org
 ---
- include/linux/sched/sysctl.h | 5 +++++
- kernel/sched/core.c          | 9 +++------
- kernel/sysctl.c              | 7 ++++---
- 3 files changed, 12 insertions(+), 9 deletions(-)
+ include/linux/mmzone.h       |  7 ++++
+ include/linux/sched/sysctl.h |  1 +
+ kernel/sched/fair.c          | 63 ++++++++++++++++++++++++++++++++++++
+ kernel/sysctl.c              |  8 +++++
+ mm/vmstat.c                  |  3 ++
+ 5 files changed, 82 insertions(+)
 
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index d0b6ececaf39..46382b058546 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -247,6 +247,9 @@ enum node_stat_item {
+ 	NR_DIRTIED,		/* page dirtyings since bootup */
+ 	NR_WRITTEN,		/* page writings since bootup */
+ 	NR_KERNEL_MISC_RECLAIMABLE,	/* reclaimable non-slab kernel pages */
++#ifdef CONFIG_NUMA_BALANCING
++	NUMA_TRY_MIGRATE,	/* pages to try to migrate via NUMA balancing */
++#endif
+ 	NR_VM_NODE_STAT_ITEMS
+ };
+ 
+@@ -766,6 +769,10 @@ typedef struct pglist_data {
+ 	unsigned long split_queue_len;
+ #endif
+ 
++#ifdef CONFIG_NUMA_BALANCING
++	unsigned long autonuma_jiffies;
++	unsigned long autonuma_try_migrate;
++#endif
+ 	/* Fields commonly accessed by the page reclaim scanner */
+ 	struct lruvec		lruvec;
+ 
 diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-index 99ce6d728df7..5cfe38783c60 100644
+index 5cfe38783c60..e3616889a91c 100644
 --- a/include/linux/sched/sysctl.h
 +++ b/include/linux/sched/sysctl.h
-@@ -33,6 +33,11 @@ enum sched_tunable_scaling {
- };
- extern enum sched_tunable_scaling sysctl_sched_tunable_scaling;
- 
-+#define NUMA_BALANCING_DISABLED		0x0
-+#define NUMA_BALANCING_NORMAL		0x1
-+#define NUMA_BALANCING_MEMORY_TIERING	0x2
-+
-+extern int sysctl_numa_balancing_mode;
- extern unsigned int sysctl_numa_balancing_scan_delay;
+@@ -42,6 +42,7 @@ extern unsigned int sysctl_numa_balancing_scan_delay;
  extern unsigned int sysctl_numa_balancing_scan_period_min;
  extern unsigned int sysctl_numa_balancing_scan_period_max;
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 874c427742a9..6f490e2fd45e 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2169,6 +2169,7 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
+ extern unsigned int sysctl_numa_balancing_scan_size;
++extern unsigned int sysctl_numa_balancing_rate_limit;
+ 
+ #ifdef CONFIG_SCHED_DEBUG
+ extern __read_mostly unsigned int sysctl_sched_migration_cost;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index f35930f5e528..489e2e21bb5d 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1047,6 +1047,12 @@ unsigned int sysctl_numa_balancing_scan_size = 256;
+ /* Scan @scan_size MB every @scan_period after an initial @scan_delay in ms */
+ unsigned int sysctl_numa_balancing_scan_delay = 1000;
+ 
++/*
++ * Restrict the NUMA migration per second in MB for each target node
++ * if no enough free space in target node
++ */
++unsigned int sysctl_numa_balancing_rate_limit;
++
+ struct numa_group {
+ 	refcount_t refcount;
+ 
+@@ -1397,6 +1403,44 @@ static inline unsigned long group_weight(struct task_struct *p, int nid,
+ 	return 1000 * faults / total_faults;
  }
  
- DEFINE_STATIC_KEY_FALSE(sched_numa_balancing);
-+int sysctl_numa_balancing_mode;
- 
- #ifdef CONFIG_NUMA_BALANCING
- 
-@@ -2184,20 +2185,16 @@ void set_numabalancing_state(bool enabled)
- int sysctl_numa_balancing(struct ctl_table *table, int write,
- 			 void __user *buffer, size_t *lenp, loff_t *ppos)
++static bool pgdat_free_space_enough(struct pglist_data *pgdat)
++{
++	int z;
++	unsigned long rate_limit;
++
++	rate_limit = sysctl_numa_balancing_rate_limit << (20 - PAGE_SHIFT);
++	for (z = pgdat->nr_zones - 1; z >= 0; z--) {
++		struct zone *zone = pgdat->node_zones + z;
++
++		if (!populated_zone(zone))
++			continue;
++
++		if (zone_watermark_ok(zone, 0,
++				      high_wmark_pages(zone) + rate_limit * 2,
++				      ZONE_MOVABLE, 0))
++			return true;
++	}
++	return false;
++}
++
++static bool numa_migration_check_rate_limit(struct pglist_data *pgdat,
++					    unsigned long rate_limit, int nr)
++{
++	unsigned long try_migrate;
++	unsigned long now = jiffies, last_jiffies;
++
++	mod_node_page_state(pgdat, NUMA_TRY_MIGRATE, nr);
++	try_migrate = node_page_state(pgdat, NUMA_TRY_MIGRATE);
++	last_jiffies = pgdat->autonuma_jiffies;
++	if (now > last_jiffies + HZ &&
++	    cmpxchg(&pgdat->autonuma_jiffies, last_jiffies, now) ==
++	    last_jiffies)
++		pgdat->autonuma_try_migrate = try_migrate;
++	if (try_migrate - pgdat->autonuma_try_migrate > rate_limit)
++		return false;
++	return true;
++}
++
+ bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
+ 				int src_nid, int dst_cpu)
  {
--	struct ctl_table t;
- 	int err;
--	int state = static_branch_likely(&sched_numa_balancing);
+@@ -1404,6 +1448,25 @@ bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
+ 	int dst_nid = cpu_to_node(dst_cpu);
+ 	int last_cpupid, this_cpupid;
  
- 	if (write && !capable(CAP_SYS_ADMIN))
- 		return -EPERM;
++	/*
++	 * If memory tiering mode is enabled, will try promote pages
++	 * in slow memory node to fast memory node.
++	 */
++	if (sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING &&
++	    next_promotion_node(src_nid) != -1) {
++		struct pglist_data *pgdat;
++		unsigned long rate_limit;
++
++		pgdat = NODE_DATA(dst_nid);
++		if (pgdat_free_space_enough(pgdat))
++			return true;
++
++		rate_limit = sysctl_numa_balancing_rate_limit <<
++			(20 - PAGE_SHIFT);
++		return numa_migration_check_rate_limit(pgdat, rate_limit,
++						       hpage_nr_pages(page));
++	}
++
+ 	this_cpupid = cpu_pid_to_cpupid(dst_cpu, current->pid);
+ 	last_cpupid = page_cpupid_xchg_last(page, this_cpupid);
  
--	t = *table;
--	t.data = &state;
--	err = proc_dointvec_minmax(&t, write, buffer, lenp, ppos);
-+	err = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
- 	if (err < 0)
- 		return err;
- 	if (write)
--		set_numabalancing_state(state);
-+		set_numabalancing_state(*(int *)table->data);
- 	return err;
- }
- #endif
 diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 1beca96fb625..442acedb1fe7 100644
+index 442acedb1fe7..c455ff404436 100644
 --- a/kernel/sysctl.c
 +++ b/kernel/sysctl.c
-@@ -129,6 +129,7 @@ static int __maybe_unused neg_one = -1;
- static int zero;
- static int __maybe_unused one = 1;
- static int __maybe_unused two = 2;
-+static int __maybe_unused three = 3;
- static int __maybe_unused four = 4;
- static unsigned long zero_ul;
- static unsigned long one_ul = 1;
-@@ -422,12 +423,12 @@ static struct ctl_table kern_table[] = {
+@@ -421,6 +421,14 @@ static struct ctl_table kern_table[] = {
+ 		.proc_handler	= proc_dointvec_minmax,
+ 		.extra1		= &one,
  	},
++	{
++		.procname	= "numa_balancing_rate_limit_mbps",
++		.data		= &sysctl_numa_balancing_rate_limit,
++		.maxlen		= sizeof(unsigned int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= &zero,
++	},
  	{
  		.procname	= "numa_balancing",
--		.data		= NULL, /* filled in by handler */
--		.maxlen		= sizeof(unsigned int),
-+		.data		= &sysctl_numa_balancing_mode,
-+		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= sysctl_numa_balancing,
- 		.extra1		= &zero,
--		.extra2		= &one,
-+		.extra2		= &three,
- 	},
- #endif /* CONFIG_NUMA_BALANCING */
- #endif /* CONFIG_SCHED_DEBUG */
+ 		.data		= &sysctl_numa_balancing_mode,
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index d4bbf9d69c06..c7ec14673ba8 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1198,6 +1198,9 @@ const char * const vmstat_text[] = {
+ 	"nr_dirtied",
+ 	"nr_written",
+ 	"nr_kernel_misc_reclaimable",
++#ifdef CONFIG_NUMA_BALANCING
++	"numa_try_migrate",
++#endif
+ 
+ 	/* enum writeback_stat_item counters */
+ 	"nr_dirty_threshold",
 -- 
 2.23.0
 
