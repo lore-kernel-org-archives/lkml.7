@@ -2,83 +2,98 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7E9CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DD4CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 348F021734
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:59:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="VwZmEH6B"
+	by mail.kernel.org (Postfix) with ESMTP id 033F82086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:59:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbfKAK7C (ORCPT
+        id S1730137AbfKAK7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 06:59:02 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55761 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729789AbfKAK7C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 06:59:02 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g24so8925556wmh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 03:59:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LtFp0F0HrsUYyNBlzjAg/7imere0s3lC3VUOl+c6wWo=;
-        b=VwZmEH6BFuBX/lEfDq2gTf28+aE6bseQhEvwyXhZetLJ4XDt/sc7VtvJm2m6W3fQmY
-         no1u3HUstUiMEtr5X1fKOoazXhc1ODwZ45XAWZVFgdDjaDzy9pJD1gt4iGfDW/vbiDzh
-         pY0rw1SBF/npTDRTKj0yNA99/wWXgRn1wAMXc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LtFp0F0HrsUYyNBlzjAg/7imere0s3lC3VUOl+c6wWo=;
-        b=hMXsNkRFjTmNVIhEU9+tL0xK9ODAPxCF4YrsnmA9WjqKhADbpO4BFeVBZRUyBFfGSG
-         QTSoR+ODs/apIn1jQ06dv+jlavmMZvuDQpJkrU5R9D1OBRsDRzQAZqqPO5y8LSX3WgD2
-         4ilHvVUGUGiKrC/HEw0O+0l5xUGzHi5Fsu8O7csv6Aovue3R+euExC8cE2FGvPxqePlK
-         ghU0ULgYWqrYWAIxE4nQvIKo0WUDf1kSCS6i571AsxFSDPNubebTEFhICPgdzIKL1FXP
-         HJLlaAAIAjINWvOXEa5wNv6clVC1fc285RIwJaFTA0AfL6G+CjjHAxoUviCCqYsVaKNb
-         QI7Q==
-X-Gm-Message-State: APjAAAWgZbtWORLt2gpR28NLRYNmEOQmT7pd2UzUroaT4OYag5BvSTvd
-        BEvoIrqjaWtcmXXuYOphVXnq8w==
-X-Google-Smtp-Source: APXvYqw+3+Gejtx1dbHSz1D4wdx8qwJDsgqG3o9gN8mxHqhJ5uVwTa8a/3Zk4qq+GGthKlyftuHaWw==
-X-Received: by 2002:a1c:7704:: with SMTP id t4mr8981357wmi.4.1572605940145;
-        Fri, 01 Nov 2019 03:59:00 -0700 (PDT)
-Received: from localhost ([2620:10d:c092:180::1:f970])
-        by smtp.gmail.com with ESMTPSA id n13sm1507441wmi.25.2019.11.01.03.58.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 03:58:59 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 10:58:58 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH] kernel: sysctl: make drop_caches write-only
-Message-ID: <20191101105858.GA690103@chrisdown.name>
-References: <20191031221602.9375-1-hannes@cmpxchg.org>
+        Fri, 1 Nov 2019 06:59:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:33942 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729789AbfKAK7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 06:59:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94D7F1FB;
+        Fri,  1 Nov 2019 03:59:05 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EFE7A3F6C4;
+        Fri,  1 Nov 2019 03:59:04 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 10:59:03 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v4 2/3] dwc: PCI: intel: PCIe RC controller driver
+Message-ID: <20191101105902.GB9723@e119886-lin.cambridge.arm.com>
+References: <cover.1571638827.git.eswara.kota@linux.intel.com>
+ <c46ba3f4187fe53807948b4f10996b89a75c492c.1571638827.git.eswara.kota@linux.intel.com>
+ <20191021130339.GP47056@e119886-lin.cambridge.arm.com>
+ <661f7e9c-a79f-bea6-08d8-4df54f500019@linux.intel.com>
+ <20191025090926.GX47056@e119886-lin.cambridge.arm.com>
+ <6f8b2e72-caa3-30b8-4c76-8ad7bb321ce2@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191031221602.9375-1-hannes@cmpxchg.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <6f8b2e72-caa3-30b8-4c76-8ad7bb321ce2@linux.intel.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Johannes Weiner writes:
->Currently, the drop_caches proc file and sysctl read back the last
->value written, suggesting this is somehow a stateful setting instead
->of a one-time command. Make it write-only, like e.g. compact_memory.
->
->Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+On Tue, Oct 29, 2019 at 04:59:17PM +0800, Dilip Kota wrote:
+> 
+> On 10/25/2019 5:09 PM, Andrew Murray wrote:
+> > On Tue, Oct 22, 2019 at 05:04:21PM +0800, Dilip Kota wrote:
+> > > Hi Andrew Murray,
+> > > 
+> > > On 10/21/2019 9:03 PM, Andrew Murray wrote:
+> > > > On Mon, Oct 21, 2019 at 02:39:19PM +0800, Dilip Kota wrote:
+> > > > > +
+> > > > > +void dw_pcie_link_set_n_fts(struct dw_pcie *pci, u32 n_fts)
+> > > > > +{
+> > > > > +	u32 val;
+> > > > > +
+> > > > > +	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+> > > > > +	val &= ~PORT_LOGIC_N_FTS;
+> > > > > +	val |= n_fts;
+> > > > > +	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+> > > > > +}
+> > > > I notice that pcie-artpec6.c (artpec6_pcie_set_nfts) also writes the FTS
+> > > > and defines a bunch of macros to support this. It doesn't make sense to
+> > > > duplicate this there. Therefore I think we need to update pcie-artpec6.c
+> > > > to use this new function.
+> > > I think we can do in a separate patch after these changes get merged and
+> > > keep this patch series for intel PCIe driver and required changes in PCIe
+> > > DesignWare framework.
+> > The pcie-artpec6.c is a DWC driver as well. So I think we can do all this
+> > together. This helps reduce the technical debt that will otherwise build up
+> > in duplicated code.
+> I agree with you to remove duplicated code, but at this point not sure what
+> all drivers has defined FTS configuration.
+> Reviewing all other DWC drivers and removing them can be done in one single
+> separate patch.
 
-Since we already have the kmsg notifier when it's used, this seems reasonable 
-to me.
+I'm not asking to set up an FTS configuration for all DWC drivers, but instead
+to move this helper function you've created to somewhere like pcie-designware.c
+and call it from this driver and pcie-artpec6.c.
 
-Acked-by: Chris Down <chris@chrisdown.name>
+Thanks,
+
+Andrew Murray
+
+> 
+> Regards,
+> Dilip
