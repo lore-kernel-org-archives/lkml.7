@@ -2,160 +2,131 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2A6CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EEACA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2D88208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:56:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F9Ndl5Ph"
+	by mail.kernel.org (Postfix) with ESMTP id B31BE21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:00:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729392AbfKAP4e (ORCPT
+        id S1727149AbfKAQAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 11:56:34 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41578 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbfKAP4e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 11:56:34 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j14so7572598lfb.8
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 08:56:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fFCvFToGeaHVIGU5sFBVgfSRoD2BKpJyYjD9mLtHujQ=;
-        b=F9Ndl5PhHtMPfUuMcm8khWvn73/BEOIl++HBIcr20Ca4EaRLGm0X6RFvsiVYxyTX1g
-         ScVc4k5lnnHBMJ/H/gnJWwg7s7cajawJ2YKfsHiEtNaOhBIrW6P82v9lWIsp4xPGOmsA
-         9q8ZHL/h7W1JGbUDLXrlJb3earEteWQrnKzeYI4pTOy0d8MaY+lfEZgmfgMGyFxVDWOZ
-         lusyDw5qW5fg9ImIFhykFIXEit3Pty0/IEovLGP9ElvcQ0+kyi6ngXU+wqtlfiMAIXmA
-         3oC4MDlTxQoJKR2Ml8zNsEQhHYR4x9mVMEqIxS+PkIWxgT1z+NItPSoSl+FuRRrny1sQ
-         xumw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fFCvFToGeaHVIGU5sFBVgfSRoD2BKpJyYjD9mLtHujQ=;
-        b=eF2DwrbhxluusrKYj8K2Gu9H4nmvANQZ5vsihq6tIoqG2wWNF/dRQ5YTYtG9cBb1Yk
-         aeuHb7YvF2MNtJg+wKFYWiFzclZQi5ArmS3esfSlbFYBIQRGhCbr8K9x9i6o5x1FFImq
-         rKYoXWZAsSdVChQym4TQ3jiETt41P8676N9TIti+SQmaBg4RyAVbYv69v62IJ4j54Upj
-         CuJpgr1FHBoaV0lkfFc6BtEL8fvkRMr/anxTAM4Dijrn9BfAamt02DJ7ykfayCYmsPTA
-         Y6dN5MDxm4VeYuR8KgY+6AFm7xKDr5VVE5J8zPsZOvAGMORw0lqVeBP4ZY9ypGxI3ROp
-         l7jw==
-X-Gm-Message-State: APjAAAXEe05UrhHi+AKQoDEX2VXvRe5ARyxKTVHEFUBTqm059uREasmL
-        aKzPipuMoQrmb7+0wChyFFXnFm9u0hbJUk7gegKR5Q+3L0U9Qw==
-X-Google-Smtp-Source: APXvYqxLkZQZkIBPHIuRg8wW008rxg1ziHdr9p3sXGGFnFmuX+RTcYVkFo7wPFbzWchz3TjPyV901OIH/V9MrUR/M5o=
-X-Received: by 2002:ac2:4a8f:: with SMTP id l15mr7717304lfp.5.1572623791617;
- Fri, 01 Nov 2019 08:56:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191030114530.872-1-peter.ujfalusi@ti.com>
-In-Reply-To: <20191030114530.872-1-peter.ujfalusi@ti.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 1 Nov 2019 16:56:19 +0100
-Message-ID: <CACRpkdbw9MVrQMSgVMenSqAOiti1pAy4d2LvWY-ssx9dhzWEcw@mail.gmail.com>
-Subject: Re: [RFC 0/2] gpio: Support for shared GPIO lines on boards
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Grant Likely <glikely@secretlab.ca>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Fri, 1 Nov 2019 12:00:37 -0400
+Received: from mga06.intel.com ([134.134.136.31]:46031 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726912AbfKAQAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 12:00:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 09:00:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,256,1569308400"; 
+   d="scan'208";a="351986851"
+Received: from cepartan-mobl3.ger.corp.intel.com (HELO [10.249.40.248]) ([10.249.40.248])
+  by orsmga004.jf.intel.com with ESMTP; 01 Nov 2019 09:00:34 -0700
+Subject: Re: [PATCH] drm/atomic: swap_state should stall on cleanup_done
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
         Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191031223641.19208-1-robdclark@gmail.com>
+ <7b97af56-be9b-ed2e-f692-36433a889d6e@linux.intel.com>
+ <CAF6AEGs9CwDLv7O4ymvTsK1+Bjopy8Q+DzOqqfeW9jM=n5beUQ@mail.gmail.com>
+From:   Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Message-ID: <21c3ce89-6920-d801-f6d4-a22a963cdc7b@linux.intel.com>
+Date:   Fri, 1 Nov 2019 17:00:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <CAF6AEGs9CwDLv7O4ymvTsK1+Bjopy8Q+DzOqqfeW9jM=n5beUQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+Op 01-11-2019 om 15:59 schreef Rob Clark:
+> On Fri, Nov 1, 2019 at 7:47 AM Maarten Lankhorst
+> <maarten.lankhorst@linux.intel.com> wrote:
+>> Op 31-10-2019 om 23:36 schreef Rob Clark:
+>>> From: Rob Clark <robdclark@chromium.org>
+>>>
+>>> Stalling on cleanup_done ensures that any atomic state related to a
+>>> nonblock commit no longer has dangling references to per-object state
+>>> that can be freed.
+>>>
+>>> Otherwise, if a !nonblock commit completes after a nonblock commit has
+>>> swapped state (ie. the synchronous part of the nonblock commit comes
+>>> before the !nonblock commit), but before the asynchronous part of the
+>>> nonblock commit completes, what was the new per-object state in the
+>>> nonblock commit can be freed.
+>>>
+>>> This shows up with the new self-refresh helper, as _update_avg_times()
+>>> dereferences the original old and new crtc_state.
+>>>
+>>> Fixes: d4da4e33341c ("drm: Measure Self Refresh Entry/Exit times to avoid thrashing")
+>>> Cc: Sean Paul <seanpaul@chromium.org>
+>>> Signed-off-by: Rob Clark <robdclark@chromium.org>
+>>> ---
+>>> Other possibilities:
+>>> 1) maybe block later before freeing atomic state?
+>>> 2) refcount individual per-object state
+>>>
+>>>  drivers/gpu/drm/drm_atomic_helper.c | 6 +++---
+>>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+>>> index 3ef2ac52ce94..a5d95429f91b 100644
+>>> --- a/drivers/gpu/drm/drm_atomic_helper.c
+>>> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+>>> @@ -2711,7 +2711,7 @@ int drm_atomic_helper_swap_state(struct drm_atomic_state *state,
+>>>                       if (!commit)
+>>>                               continue;
+>>>
+>>> -                     ret = wait_for_completion_interruptible(&commit->hw_done);
+>>> +                     ret = wait_for_completion_interruptible(&commit->cleanup_done);
+>>>                       if (ret)
+>>>                               return ret;
+>>>               }
+>>> @@ -2722,7 +2722,7 @@ int drm_atomic_helper_swap_state(struct drm_atomic_state *state,
+>>>                       if (!commit)
+>>>                               continue;
+>>>
+>>> -                     ret = wait_for_completion_interruptible(&commit->hw_done);
+>>> +                     ret = wait_for_completion_interruptible(&commit->cleanup_done);
+>>>                       if (ret)
+>>>                               return ret;
+>>>               }
+>>> @@ -2733,7 +2733,7 @@ int drm_atomic_helper_swap_state(struct drm_atomic_state *state,
+>>>                       if (!commit)
+>>>                               continue;
+>>>
+>>> -                     ret = wait_for_completion_interruptible(&commit->hw_done);
+>>> +                     ret = wait_for_completion_interruptible(&commit->cleanup_done);
+>>>                       if (ret)
+>>>                               return ret;
+>>>               }
+>> Nack, hw_done means all new_crtc_state (from the old commit pov) dereferences are done.
+>>
+> hmm, it would be nice if the for_each_blah_in_state() iterators would
+> splat on incorrect usage, then..  it tool a while to track down what
+> was going wrong.  And Sean claimed the self refresh helpers worked for
+> him on rockchip/i915 (although I'm starting to suspect maybe he just
+> didn't have enough debug options enabled to poison freed memory?)
+Could do a memset on the new arrays after hw_done?
+>> Self refresh helpers should be fixed. :)
+> Looks like what they need out of crtc_state is pretty minimal, maybe
+> they could extract out crtc_state->self_refresh_active earlier..
 
-cutting all the discussions in this thread we need to see the bigger
-pattern:
+Yeah, something like that would work. :)
 
-On GPIO rails
-
-People want "something like rails" for GPIO. In power supplies
-and thus the regulator subsystem, rails are connected to many
-logical endpoints.
-
-- The suggested inverter bindings would be effectively an
-  inverter on a GPIO rail.
-
-- This suggestion would be equal to many power consumers
-  on a rail, such as the usecase of shared gpio-enable lines in
-  the regulator subsystem already provides.
-
-The former seems to have been identified as solveable for the
-userspace that needed it and absorbed into the drafts for a
-virtualized GPIO controller. (Aggregating and creating a new
-virtual GPIO chip for some select physical GPIO lines.)
-
-I haven't seen an exact rationale from the DT community as
-to why these things should not be modeled, but as can be
-clearly seen in
-Documentation/devicetree/bindings/regulator/regulator.yaml
-the "rail abstraction" from the regulator subsystem which
-is in effect struct regulation_constraints and it sibling
-struct regulator_init_data is not in the DT bindings, instead
-this is encoded as properties in the regulator itself, so this
-is pretty consistent: the phandle from regulator to consumer
-*is* the rail.
-
-This goes back to Rajendras initial DT regulator support code
-see:
-git log -p 69511a452e6d
-
-So it would be logical then to just have:
-
-- More than one phandle taking the same GPIO line
-- Figure this situation out in the gpiolib OF core
-- Resolve the manageability of the situation (same
-  consumer flags etc)
-- Instantiate a kernel component as suggested,
-  mediating requests.
-- Handle it from there.
-
-So:
-
-gpio: gpio-controller@0 {
-        compatible = "foo,gpio";
-        gpio-controller;
-        #gpio-cells = <2>;
-};
-
-consumer-a {
-       compatible = "foo,consumer-a";
-       rst-gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
-};
-
-consumer-b {
-       compatible = "foo,consumer-b";
-       rst-gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
-};
-
-Hi kernel: figure it out.
-
-From this point the kernel driver(s) have to figure it out.
-
-I don't think this requires any changes to the DT bindings
-other than perhaps spelling out that if you link more than one
-phandle to a GPIO line, magic will happen. (We should probably
-make very verbose dmesg prints about this magic.)
-
-This is enough to start with. After that we can discuss adding
-flags and constraint properties to a certain GPIO line if
-need be. (That will be a big discussion as well, as we haven't
-even figured out how to assign default values to individual
-GPIO lines yet.)
-
-Yours,
-Linus Walleij
