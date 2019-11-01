@@ -2,98 +2,185 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3B7CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F80C47E49
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3650A2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:38:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1/aTXY8"
+	by mail.kernel.org (Postfix) with ESMTP id 9C8B02085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfKAOiP (ORCPT
+        id S1727347AbfKAOk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 10:38:15 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50348 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbfKAOiO (ORCPT
+        Fri, 1 Nov 2019 10:40:26 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59211 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbfKAOk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 10:38:14 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 11so9564292wmk.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 07:38:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d/QAmQIaJZqvBZN9gtf42lfTOPBui/1bELKuGyuJdb8=;
-        b=A1/aTXY88hwx0sfCCWkO613b31JI7fBe2Fo7wc0qyRX1OqGtc1ZqPTHH3fVptzI2xR
-         kjtzIFwT28c8pyCN1rXIAb7VEv+u4LqEx23SRT2bH3mzJkw5AkHNOs4lt482evX6TdWF
-         Owbgw07QIaJIvXlIn0YuxP0DnJ1ZY33AiQXaHs13ZhtLhRBr6AsyzgXdcRaO31s6BfbC
-         cq/gJdjEVmPEDAHhPV8CvWUhlxccGm2a3OBVYvTtNkvqGihMhGX0GOr/Ignd7Nxemwmz
-         JnE2XSKIlW/ZcBwn1hZtqeovVZlQjWliWYbL8JCHXD5aWz0FsGz9AIOM/1cmNSrVmNYv
-         19yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d/QAmQIaJZqvBZN9gtf42lfTOPBui/1bELKuGyuJdb8=;
-        b=Y5eZIc+mqH8XH14JH2uNLUSp9xMKw8bVeo1eDkFV8tHmRfs7G/4V+LJSirFQjDp70T
-         DeTdn2wAnEpkWqjqZrkRtls31Gp9XCBu5iZSS9Am+ho2iJZMToh5BXKLY1Pepmu+JgkA
-         g2nOUfs8Rm5NF7/QoJpJrnM9XdVBxu6pZ4Vn5duif9o77ZBoTzgo06iUZqHwGLwn//+i
-         NB2iFF65PqWcz3CmjiXTVNuiN4nTnqTrwT8aW8fIW17Qi77nK1519zM7IZ1PP6/VsyKQ
-         aPBiTuKBqKdROBVgH0Q5J8egtU1MII46qzqHLC72B2p4U6TI1NYme/SsXtq/sLXuUrHA
-         DiJw==
-X-Gm-Message-State: APjAAAWiDyTswFu8NhQOjdV7nMrD3myrznaElm5+YbwwVCiKK0caPTMj
-        MlpcDL5YtO9puimx0J5ZEtk=
-X-Google-Smtp-Source: APXvYqyI+Q4wEtZDCOGjwU9VHlMJmHZrNaWIfLyrtIJAa8a3WH1InYAp3J1RaSxDOIYycLFVQMvstw==
-X-Received: by 2002:a1c:10a:: with SMTP id 10mr10579982wmb.17.1572619092780;
-        Fri, 01 Nov 2019 07:38:12 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id l15sm6391895wmh.18.2019.11.01.07.38.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 07:38:12 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] gpu: ipu-v3: prg: add missed clk_disable_unprepare in remove
-Date:   Fri,  1 Nov 2019 22:38:01 +0800
-Message-Id: <20191101143801.17774-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 1 Nov 2019 10:40:26 -0400
+Received: from [91.217.168.176] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iQY6B-00083i-4c; Fri, 01 Nov 2019 14:40:23 +0000
+Date:   Fri, 1 Nov 2019 15:40:22 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-api@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] clone3: validate stack arguments
+Message-ID: <20191101144021.p6dh7utlvqecuhua@wittgenstein>
+References: <20191031113608.20713-1-christian.brauner@ubuntu.com>
+ <20191031164653.GA24629@redhat.com>
+ <20191101110639.icbfihw3fk2nzz4o@wittgenstein>
+ <20191101123257.GA508@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191101123257.GA508@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to disable and unprepare clks when remove.
-Add the calls to clk_disable_unprepare to fix the problem.
+On Fri, Nov 01, 2019 at 01:32:57PM +0100, Oleg Nesterov wrote:
+> On 11/01, Christian Brauner wrote:
+> >
+> > On Thu, Oct 31, 2019 at 05:46:53PM +0100, Oleg Nesterov wrote:
+> > > On 10/31, Christian Brauner wrote:
+> > > >
+> > > > --- a/include/uapi/linux/sched.h
+> > > > +++ b/include/uapi/linux/sched.h
+> > > > @@ -51,6 +51,10 @@
+> > > >   *               sent when the child exits.
+> > > >   * @stack:       Specify the location of the stack for the
+> > > >   *               child process.
+> > > > + *               Note, @stack is expected to point to the
+> > > > + *               lowest address. The stack direction will be
+> > > > + *               determined by the kernel and set up
+> > > > + *               appropriately based on @stack_size.
+> > >
+> > > I can't review this patch, I have no idea what does stack_size mean
+> > > if !arch/x86.
+> >
+> > In short: nothing at all if it weren't for ia64 (and maybe parisc).
+> > But let me provide some (hopefully useful) context.
+> 
+> Thanks...
+> 
+> > (Probably most of
+> > that is well-know,
+> 
+> Certainly not to me ;) Thanks.
+> 
+> > > > +static inline bool clone3_stack_valid(struct kernel_clone_args *kargs)
+> > > > +{
+> > > > +	if (kargs->stack == 0) {
+> > > > +		if (kargs->stack_size > 0)
+> > > > +			return false;
+> > > > +	} else {
+> > > > +		if (kargs->stack_size == 0)
+> > > > +			return false;
+> > >
+> > > So to implement clone3_wrapper(void *bottom_of_stack) you need to do
+> > >
+> > > 	clone3_wrapper(void *bottom_of_stack)
+> > > 	{
+> > > 		struct clone_args args = {
+> > > 			...
+> > > 			// make clone3_stack_valid() happy
+> > > 			.stack = bottom_of_stack - 1,
+> > > 			.stack_size = 1,
+> > > 		};
+> > > 	}
+> > >
+> > > looks a bit strange. OK, I agree, this example is very artificial.
+> > > But why do you think clone3() should nack stack_size == 0 ?
+> >
+> > In short, consistency.
+> 
+> And in my opinion this stack_size == 0 check destroys the consistency,
+> see below.
+> 
+> But just in case, let me say that overall I personally like this change.
+> 
+> > The best thing imho, is to clearly communicate to userspace that stack
+> > needs to point to the lowest address and stack_size to the initial range
+> > of the stack pointer
+> 
+> Agreed.
+> 
+> But the kernel can't verify that "stack" actually points to the lowest
+> address and stack_size is actually the stack size. Consider another
+> artificial
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/gpu/ipu-v3/ipu-prg.c | 2 ++
- 1 file changed, 2 insertions(+)
+Sure, but that's the similar to other structs that are passed via a
+pointer and come with a size. You could pass:
 
-diff --git a/drivers/gpu/ipu-v3/ipu-prg.c b/drivers/gpu/ipu-v3/ipu-prg.c
-index 196797c1b4b3..6ae6d634c983 100644
---- a/drivers/gpu/ipu-v3/ipu-prg.c
-+++ b/drivers/gpu/ipu-v3/ipu-prg.c
-@@ -430,6 +430,8 @@ static int ipu_prg_remove(struct platform_device *pdev)
- 	list_del(&prg->list);
- 	mutex_unlock(&ipu_prg_list_mutex);
- 
-+	clk_disable_unprepare(prg->clk_axi);
-+	clk_disable_unprepare(prg->clk_ipg);
- 	return 0;
- }
- 
--- 
-2.23.0
+setxattr(..., ..., value - size, size, ...);
 
+and the kernel would be confused as well.
+
+> 
+>     	clone3_wrapper(void *bottom_of_stack, unsigned long offs)
+>     	{
+>     		struct clone_args args = {
+>     			...
+>     			// make clone3_stack_valid() happy
+>     			.stack = bottom_of_stack - offs,
+>     			.stack_size = offs,
+>     		};
+>     		sys_clone3(args);
+>     	}
+> 	
+> Now,
+> 
+> 	clone3_wrapper(bottom_of_stack, offs);
+> 
+> is same thing for _any_ offs except offs == 0 will fail. Why? To me this
+> is not consistent, I think the "stack_size == 0" check buys nothing and
+> only adds some confusion.
+
+I disagree. It's a very easy contract: pass a stack and a size or
+request copy-on-write by passing both as 0.
+Sure, you can flaunt that contract but that's true of every other
+pointer + size api. The point is: the api we endorse should be simple
+and stack + stack_size is very simple.
+
+> 
+> Say, stack_size == 1 is "obviously wrong" too, this certainly means that
+> "stack" doesn't point to the lowest address (or the child will corrupt the
+> memory), but it works.
+> 
+> OK, I won't insist. Perhaps it can help to detect the case when a user
+> forgets to pass the correct stack size.
+> 
+> > > > +		if (!access_ok((void __user *)kargs->stack, kargs->stack_size))
+> > > > +			return false;
+> > >
+> > > Why?
+> >
+> > It's nice of us to tell userspace _before_ we have created a thread that
+> > it messed up its parameters instead of starting a thread that then
+> > immediately crashes.
+> 
+> Heh. Then why this code doesn't verify that at least stack + stack_size is
+> properly mmaped with PROT_READ|WRITE?
+
+access_ok() is uncomplicated.
+The other check makes a lot more assumptions. Theare are users that might
+want to have a PROT_NONE part of their stack as their own "private"
+guard page (Jann just made that point) and there are other corner cases.
+
+Christian
