@@ -2,406 +2,177 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39418CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CFBCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00497208CB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A621F218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:08:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbfKAVGD (ORCPT
+        id S1726887AbfKAVIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 17:06:03 -0400
-Received: from mga03.intel.com ([134.134.136.65]:51337 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbfKAVGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 17:06:03 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 14:06:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,257,1569308400"; 
-   d="scan'208";a="212891542"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga002.jf.intel.com with ESMTP; 01 Nov 2019 14:06:02 -0700
-Date:   Fri, 1 Nov 2019 14:10:28 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v7 07/11] iommu/vt-d: Add nested translation helper
- function
-Message-ID: <20191101141028.38798894@jacob-builder>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDD3C@SHSMSX104.ccr.corp.intel.com>
-References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1571946904-86776-8-git-send-email-jacob.jun.pan@linux.intel.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDD3C@SHSMSX104.ccr.corp.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Fri, 1 Nov 2019 17:08:09 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39236 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfKAVIJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 17:08:09 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <dann.frazier@canonical.com>)
+        id 1iQe9O-0008LU-TT
+        for linux-kernel@vger.kernel.org; Fri, 01 Nov 2019 21:08:07 +0000
+Received: by mail-io1-f72.google.com with SMTP id v5so1605596iot.8
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 14:08:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=99Grxk3NP/rj106dyBNQOJBBT+7NzmkfjxIr2ycA+xY=;
+        b=cXOXFfRhldVFPddQCYx3GAy3YhKuvtmD//RsbdjZdPWP5Dy0SwcxbR9CaZHCQw3HcQ
+         aqnSXLckg0JXzWHYBJ1qX945sIKcDcWX+DvmY3jgJUd3fl8L/hAneT9JBPbLFOA8pWqO
+         ieUBEdTdxMWY0y7HjnczMptsLyQNPBVbBNY/cZlZ9f+9GEjHDaYgQMAUGO9VMKMxBury
+         LzauRYJpRuSSCqgr2z1MAUfvzZrLE5gZZGwSLG3S+IYScwdMAe47Z/VAbKZirYYZYqKt
+         aoYYhRa105yLKkorhdw2mEYxr6579XN4361FeZXCEVRJdM2LZHBhDrp2P4C3QX7Caq6H
+         lOGQ==
+X-Gm-Message-State: APjAAAV6ihhviy4Kzk+031aKORvcGdV4h2cK+sCi/NO6zEBAWETb6R+g
+        /aF+huR0AbrbD7wFaEp7FjA1lair0ueFQwxsJIvbf9BxHL66CwbBKn0RhiZm0mF39MEb4Swc2VC
+        MZYF8cgj4WqX6ihzl+EF0FGB/bhNy7U8ycDjuSHGFZA==
+X-Received: by 2002:a92:3dd8:: with SMTP id k85mr1030084ilf.176.1572642485709;
+        Fri, 01 Nov 2019 14:08:05 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxViiJ/H/ziNdfZ++M2P5LolU+tfBrHJuWfbH2VzvXMEWOTUG2WwEc09JNUg8f928m6IUIo4w==
+X-Received: by 2002:a92:3dd8:: with SMTP id k85mr1030038ilf.176.1572642485253;
+        Fri, 01 Nov 2019 14:08:05 -0700 (PDT)
+Received: from xps13.canonical.com (c-71-56-235-36.hsd1.co.comcast.net. [71.56.235.36])
+        by smtp.gmail.com with ESMTPSA id t16sm812926iol.12.2019.11.01.14.08.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 14:08:04 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 15:08:03 -0600
+From:   dann frazier <dann.frazier@canonical.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Seth Forshee <seth.forshee@canonical.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        James Morris <jmorris@namei.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: tracefs splats in lockdown=confidentiality mode
+Message-ID: <20191101210803.GA9841@xps13.dannf>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 25 Oct 2019 07:04:28 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+hey,
+  fyi, I'm seeing a bunch of errors from tracefs when booting 5.4-rc5 in
+lockdown=confidentiality mode:
 
-> > From: Jacob Pan [mailto:jacob.jun.pan@linux.intel.com]
-> > Sent: Friday, October 25, 2019 3:55 AM
-> > 
-> > Nested translation mode is supported in VT-d 3.0 Spec.CH 3.8.
-> > With PASID granular translation type set to 0x11b, translation
-> > result from the first level(FL) also subject to a second level(SL)
-> > page table translation. This mode is used for SVA virtualization,
-> > where FL performs guest virtual to guest physical translation and
-> > SL performs guest physical to host physical translation.  
-> 
-> I think we really differentiate what is the common logic for
-> first-level usages (GVA, GIOVA, etc.) in scalable mode, and
-> what is specific to SVA. I have the feeling that SVA is over-used
-> to cause confusing interpretation.
-> 
-Good point, it should be clearly stated that nest mode is not for gSVA
-only, gIOVA shares this common code.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
-> > ---
-> >  drivers/iommu/intel-pasid.c | 207
-> > ++++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/iommu/intel-pasid.h |  12 +++
-> >  2 files changed, 219 insertions(+)
-> > 
-> > diff --git a/drivers/iommu/intel-pasid.c
-> > b/drivers/iommu/intel-pasid.c index ffbd416ed3b8..f846a907cfcf
-> > 100644 --- a/drivers/iommu/intel-pasid.c
-> > +++ b/drivers/iommu/intel-pasid.c
-> > @@ -415,6 +415,76 @@ pasid_set_flpm(struct pasid_entry *pe, u64
-> > value) pasid_set_bits(&pe->val[2], GENMASK_ULL(3, 2), value << 2);
-> >  }
-> > 
-> > +/*
-> > + * Setup the Extended Memory Type(EMT) field (Bits 91-93)
-> > + * of a scalable mode PASID entry.
-> > + */
-> > +static inline void
-> > +pasid_set_emt(struct pasid_entry *pe, u64 value)
-> > +{
-> > +	pasid_set_bits(&pe->val[1], GENMASK_ULL(29, 27), value <<
-> > 27); +}
-> > +
-> > +/*
-> > + * Setup the Page Attribute Table (PAT) field (Bits 96-127)
-> > + * of a scalable mode PASID entry.
-> > + */
-> > +static inline void
-> > +pasid_set_pat(struct pasid_entry *pe, u64 value)
-> > +{
-> > +	pasid_set_bits(&pe->val[1], GENMASK_ULL(63, 32), value <<
-> > 27); +}
-> > +
-> > +/*
-> > + * Setup the Cache Disable (CD) field (Bit 89)
-> > + * of a scalable mode PASID entry.
-> > + */
-> > +static inline void
-> > +pasid_set_cd(struct pasid_entry *pe)
-> > +{
-> > +	pasid_set_bits(&pe->val[1], 1 << 25, 1);
-> > +}
-> > +
-> > +/*
-> > + * Setup the Extended Memory Type Enable (EMTE) field (Bit 90)
-> > + * of a scalable mode PASID entry.
-> > + */
-> > +static inline void
-> > +pasid_set_emte(struct pasid_entry *pe)
-> > +{
-> > +	pasid_set_bits(&pe->val[1], 1 << 26, 1);
-> > +}
-> > +
-> > +/*
-> > + * Setup the Extended Access Flag Enable (EAFE) field (Bit 135)
-> > + * of a scalable mode PASID entry.
-> > + */
-> > +static inline void
-> > +pasid_set_eafe(struct pasid_entry *pe)
-> > +{
-> > +	pasid_set_bits(&pe->val[2], 1 << 7, 1);
-> > +}
-> > +
-> > +/*
-> > + * Setup the Page-level Cache Disable (PCD) field (Bit 95)
-> > + * of a scalable mode PASID entry.
-> > + */
-> > +static inline void
-> > +pasid_set_pcd(struct pasid_entry *pe)
-> > +{
-> > +	pasid_set_bits(&pe->val[1], 1 << 31, 1);
-> > +}
-> > +
-> > +/*
-> > + * Setup the Page-level Write-Through (PWT)) field (Bit 94)
-> > + * of a scalable mode PASID entry.
-> > + */
-> > +static inline void
-> > +pasid_set_pwt(struct pasid_entry *pe)
-> > +{
-> > +	pasid_set_bits(&pe->val[1], 1 << 30, 1);
-> > +}
-> > +
-> >  static void
-> >  pasid_cache_invalidation_with_pasid(struct intel_iommu *iommu,
-> >  				    u16 did, int pasid)
-> > @@ -647,3 +717,140 @@ int intel_pasid_setup_pass_through(struct
-> > intel_iommu *iommu,
-> > 
-> >  	return 0;
-> >  }
-> > +
-> > +static int intel_pasid_setup_bind_data(struct intel_iommu *iommu,
-> > +				struct pasid_entry *pte,
-> > +				struct iommu_gpasid_bind_data_vtd
-> > *pasid_data)
-> > +{
-> > +	/*
-> > +	 * Not all guest PASID table entry fields are passed down
-> > during bind,
-> > +	 * here we only set up the ones that are dependent on guest
-> > settings.
-> > +	 * Execution related bits such as NXE, SMEP are not
-> > meaningful to IOMMU,
-> > +	 * therefore not set. Other fields, such as snoop related,
-> > are set based
-> > +	 * on host needs regardless of  guest settings.
-> > +	 */
-> > +	if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_SRE) {
-> > +		if (!ecap_srs(iommu->ecap)) {
-> > +			pr_err("No supervisor request support on
-> > %s\n",
-> > +			       iommu->name);
-> > +			return -EINVAL;
-> > +		}
-> > +		pasid_set_sre(pte);
-> > +	}
-> > +
-> > +	if ((pasid_data->flags & IOMMU_SVA_VTD_GPASID_EAFE) &&
-> > ecap_eafs(iommu->ecap))
-> > +		pasid_set_eafe(pte);
-> > +
-> > +	if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_EMTE) {
-> > +		pasid_set_emte(pte);
-> > +		pasid_set_emt(pte, pasid_data->emt);
-> > +	}  
-> 
-> above conditional checks are not consistent. The 1st check may
-> return error but latter two don't. Can you confirm whether it's
-> desired way?
-> 
-should be consistent and under the check of host MTS capability. Will
-change.
-> > +
-> > +	/*
-> > +	 * Memory type is only applicable to devices inside
-> > processor coherent
-> > +	 * domain. PCIe devices are not included. We can skip the
-> > rest of the
-> > +	 * flags if IOMMU does not support MTS.
-> > +	 */
-> > +	if (!ecap_mts(iommu->ecap)) {
-> > +		pr_info("%s does not support memory type bind guest
-> > PASID\n",
-> > +			iommu->name);
-> > +		return 0;  
-> 
-> why not -EINVAL?
-> 
-right, if host does not support MTS and guest wants to set MTS related
-bits, -EINVAL should be returned.
+[    1.763630] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
+[    1.772332] Could not create tracefs 'available_events' entry
+[    1.778633] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
+[    1.787095] Could not create tracefs 'set_event' entry
+[    1.792412] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
+(...)
+[    2.899481] Could not create tracefs 'set_graph_notrace' entry
+[    2.905671] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
+[    2.913934] ------------[ cut here ]------------
+[    2.918435] Could not register function stat for cpu 0
+[    2.923717] WARNING: CPU: 1 PID: 1 at kernel/trace/ftrace.c:987 ftrace_init_tracefs_toplevel+0x168/0x1bc
+[    2.933939] Modules linked in:
+[    2.937290] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.4.0-050400rc5-generic #201910271430
+[    2.946528] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+[    2.954088] pstate: 60400005 (nZCv daif +PAN -UAO)
+[    2.959359] pc : ftrace_init_tracefs_toplevel+0x168/0x1bc
+[    2.965262] lr : ftrace_init_tracefs_toplevel+0x168/0x1bc
+[    2.971192] sp : ffff80001002bd40
+[    2.974852] x29: ffff80001002bd40 x28: 0000000000000000 
+[    2.980680] x27: 0000000000000000 x26: ffff8000119f9358 
+[    2.986552] x25: ffff8000119f9580 x24: ffff00007fb77200 
+[    2.992359] x23: ffff00007c873e80 x22: ffff80001153d200 
+[    2.998201] x21: ffff800010d8ad08 x20: 0000000000000000 
+[    3.004007] x19: 0000000000000000 x18: 0000000000000010 
+[    3.009851] x17: 0000000000000007 x16: 000000000000000e 
+[    3.015674] x15: ffff00007d1213e8 x14: ffffffffffffffff 
+[    3.021526] x13: ffff80009002ba47 x12: ffff80001002ba4f 
+[    3.027338] x11: ffff800011a1e000 x10: 0000000000000000 
+[    3.033148] x9 : ffff800011c13000 x8 : 000000000000015d 
+[    3.038984] x7 : 0000000000000017 x6 : ffff800011c129c9 
+[    3.044783] x5 : 0000000000000007 x4 : 0000000000000000 
+[    3.050617] x3 : 0000000000000000 x2 : 00000000ffffffff 
+[    3.056430] x1 : bcf0a68bd924d700 x0 : 0000000000000000 
+[    3.062258] Call trace:
+[    3.064951]  ftrace_init_tracefs_toplevel+0x168/0x1bc
+[    3.070571]  tracer_init_tracefs+0xc0/0x1fc
+[    3.075165]  do_one_initcall+0x50/0x220
+[    3.079384]  kernel_init_freeable+0x1ec/0x2b0
+[    3.084186]  kernel_init+0x18/0x108
+[    3.088032]  ret_from_fork+0x10/0x18
+[    3.091983] ---[ end trace 32f7e54339335d2a ]---
+[    3.097149] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
+[    3.105311] Could not create tracefs 'tracing_thresh' entry
+[    3.110762] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
+[    3.119199] Could not create tracefs 'README' entry
+[    3.124212] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
+[    3.132920] Could not create tracefs 'saved_cmdlines' entry
+[    3.139075] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
+[    3.147592] Could not create tracefs 'saved_cmdlines_size' entry
+[    3.153950] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
+[    3.162288] Could not create tracefs 'saved_tgids' entry
+[    3.206061] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
+[    3.214629] Could not create tracefs 'dyn_ftrace_total_info' entry
+[    3.221063] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
+[    3.229245] Could not create tracefs 'funcgraph-overrun' entry
+[    3.234990] ------------[ cut here ]------------
+[    3.239724] Failed to create trace option: funcgraph-overrun
+[    3.239774] WARNING: CPU: 1 PID: 1 at kernel/trace/trace.c:8106 create_trace_option_files+0x200/0x230
+[    3.255931] Modules linked in:
+[    3.259332] CPU: 1 PID: 1 Comm: swapper/0 Tainted: G        W         5.4.0-050400rc5-generic #201910271430
+[    3.270051] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+[    3.277621] pstate: 60400005 (nZCv daif +PAN -UAO)
+[    3.282902] pc : create_trace_option_files+0x200/0x230
+[    3.288564] lr : create_trace_option_files+0x200/0x230
+[    3.294247] sp : ffff80001002bd10
+[    3.297914] x29: ffff80001002bd10 x28: ffff800011a34508 
+[    3.303769] x27: ffff00007cb12e00 x26: ffff800011bb243d 
+[    3.309638] x25: ffff800010d8b750 x24: ffff00007cb12e00 
+[    3.315485] x23: 0000000000000000 x22: ffff800011a34508 
+[    3.321327] x21: ffff800011a344d0 x20: 0000000000000000 
+[    3.327284] x19: ffff800011a320b8 x18: 0000000000000010 
+[    3.333121] x17: 0000000000000007 x16: 000000000000000e 
+[    3.338980] x15: ffff00007d1213e8 x14: ffffffffffffffff 
+[    3.344827] x13: ffff80009002b9a7 x12: ffff80001002b9af 
+[    3.350690] x11: ffff800011a1e000 x10: 0000000000000000 
+[    3.356524] x9 : 00000000fffffffe x8 : 6870617267636e75 
+[    3.362394] x7 : 66203a6e6f697470 x6 : ffff800011c12498 
+[    3.368229] x5 : 0000000000000030 x4 : 0000000000000000 
+[    3.374082] x3 : 0000000000000000 x2 : 00000000ffffffff 
+[    3.379915] x1 : bcf0a68bd924d700 x0 : 0000000000000000 
+[    3.385768] Call trace:
+[    3.388478]  create_trace_option_files+0x200/0x230
+[    3.393849]  __update_tracer_options+0x34/0x48
+[    3.398748]  tracer_init_tracefs+0x1e0/0x1fc
+[    3.403454]  do_one_initcall+0x50/0x220
+[    3.407692]  kernel_init_freeable+0x1ec/0x2b0
+[    3.412494]  kernel_init+0x18/0x108
+[    3.416351]  ret_from_fork+0x10/0x18
+[    3.420287] ---[ end trace 32f7e54339335d2b ]---
+[    3.425479] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
+[    3.433724] Could not create tracefs 'funcgraph-cpu' entry
+(...)
+[    3.692698] Could not create tracefs 'uprobe_events' entry
+[    3.698724] Lockdown: swapper/0: use of tracefs is restricted; see man kernel_lockdown.7
+[    3.707217] Could not create tracefs 'uprobe_profile' entry
 
-> > +	}
-> > +
-> > +	if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_PCD)
-> > +		pasid_set_pcd(pte);
-> > +	if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_PWT)
-> > +		pasid_set_pwt(pte);
-> > +	if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_CD)
-> > +		pasid_set_cd(pte);
-> > +	pasid_set_pat(pte, pasid_data->pat);
-> > +
-> > +	return 0;
-> > +
-> > +}
-> > +
-> > +/**
-> > + * intel_pasid_setup_nested() - Set up PASID entry for nested
-> > translation
-> > + * which is used for vSVA. The first level page tables are used for
-> > + * GVA-GPA translation in the guest, second level page tables are
-> > used
-> > + * for GPA to HPA translation.  
-> 
-> It's too restricting on how 1st level is used by guest.
-> 
-will fix. stating FL can be used for gIOVA in nested mode.
-> > + *
-> > + * @iommu:      Iommu which the device belong to
-> > + * @dev:        Device to be set up for translation
-> > + * @gpgd:       FLPTPTR: First Level Page translation pointer in
-> > GPA
-> > + * @pasid:      PASID to be programmed in the device PASID table
-> > + * @pasid_data: Additional PASID info from the guest bind request
-> > + * @domain:     Domain info for setting up second level page tables
-> > + * @addr_width: Address width of the first level (guest)
-> > + */
-> > +int intel_pasid_setup_nested(struct intel_iommu *iommu,
-> > +			struct device *dev, pgd_t *gpgd,
-> > +			int pasid, struct
-> > iommu_gpasid_bind_data_vtd *pasid_data,
-> > +			struct dmar_domain *domain,
-> > +			int addr_width)
-> > +{
-> > +	struct pasid_entry *pte;
-> > +	struct dma_pte *pgd;
-> > +	u64 pgd_val;
-> > +	int agaw;
-> > +	u16 did;
-> > +
-> > +	if (!ecap_nest(iommu->ecap)) {
-> > +		pr_err("IOMMU: %s: No nested translation
-> > support\n",
-> > +		       iommu->name);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	pte = intel_pasid_get_entry(dev, pasid);
-> > +	if (WARN_ON(!pte))
-> > +		return -EINVAL;
-> > +
-> > +	pasid_clear_entry(pte);
-> > +
-> > +	/* Sanity checking performed by caller to make sure address
-> > +	 * width matching in two dimensions:
-> > +	 * 1. CPU vs. IOMMU
-> > +	 * 2. Guest vs. Host.
-> > +	 */
-> > +	switch (addr_width) {
-> > +	case 57:  
-> 
-> AW_5LEVEL
-> 
-> > +		pasid_set_flpm(pte, 1);
-> > +		break;
-> > +	case 48:  
-> 
-> AW_4LEVEL
-> 
-will add macros
 
-> > +		pasid_set_flpm(pte, 0);
-> > +		break;
-> > +	default:
-> > +		dev_err(dev, "Invalid paging mode %d\n",
-> > addr_width);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	pasid_set_flptr(pte, (u64)gpgd);
-> > +
-> > +	intel_pasid_setup_bind_data(iommu, pte, pasid_data);
-> > +
-> > +	/* Setup the second level based on the given domain */
-> > +	pgd = domain->pgd;
-> > +
-> > +	for (agaw = domain->agaw; agaw != iommu->agaw; agaw--) {
-> > +		pgd = phys_to_virt(dma_pte_addr(pgd));
-> > +		if (!dma_pte_present(pgd)) {
-> > +			dev_err(dev, "Invalid domain page
-> > table\n");  
-> 
-> pasid_clear_entry?
-> 
-right, even though present bit is not set still a good practice to
-clear.
-
-> > +			return -EINVAL;
-> > +		}
-> > +	}
-> > +	pgd_val = virt_to_phys(pgd);
-> > +	pasid_set_slptr(pte, pgd_val);
-> > +	pasid_set_fault_enable(pte);
-> > +
-> > +	did = domain->iommu_did[iommu->seq_id];
-> > +	pasid_set_domain_id(pte, did);
-> > +
-> > +	pasid_set_address_width(pte, agaw);
-> > +	pasid_set_page_snoop(pte, !!ecap_smpwc(iommu->ecap));
-> > +
-> > +	pasid_set_translation_type(pte, PASID_ENTRY_PGTT_NESTED);
-> > +	pasid_set_present(pte);
-> > +	pasid_flush_caches(iommu, pte, pasid, did);
-> > +
-> > +	return 0;
-> > +}
-> > diff --git a/drivers/iommu/intel-pasid.h
-> > b/drivers/iommu/intel-pasid.h index e413e884e685..09c85db73b77
-> > 100644 --- a/drivers/iommu/intel-pasid.h
-> > +++ b/drivers/iommu/intel-pasid.h
-> > @@ -46,6 +46,7 @@
-> >   * to vmalloc or even module mappings.
-> >   */
-> >  #define PASID_FLAG_SUPERVISOR_MODE	BIT(0)
-> > +#define PASID_FLAG_NESTED		BIT(1)
-> > 
-> >  struct pasid_dir_entry {
-> >  	u64 val;
-> > @@ -55,6 +56,11 @@ struct pasid_entry {
-> >  	u64 val[8];
-> >  };
-> > 
-> > +#define PASID_ENTRY_PGTT_FL_ONLY	(1)
-> > +#define PASID_ENTRY_PGTT_SL_ONLY	(2)
-> > +#define PASID_ENTRY_PGTT_NESTED		(3)
-> > +#define PASID_ENTRY_PGTT_PT		(4)
-> > +
-> >  /* The representative of a PASID table */
-> >  struct pasid_table {
-> >  	void			*table;		/*
-> > pasid table pointer */ @@ -103,6 +109,12 @@ int
-> > intel_pasid_setup_second_level(struct intel_iommu *iommu,
-> >  int intel_pasid_setup_pass_through(struct intel_iommu *iommu,
-> >  				   struct dmar_domain *domain,
-> >  				   struct device *dev, int pasid);
-> > +int intel_pasid_setup_nested(struct intel_iommu *iommu,
-> > +			struct device *dev, pgd_t *pgd,
-> > +			int pasid,
-> > +			struct iommu_gpasid_bind_data_vtd
-> > *pasid_data,
-> > +			struct dmar_domain *domain,
-> > +			int addr_width);
-> >  void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
-> >  				 struct device *dev, int pasid);
-> >  int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int
-> > *pasid); --
-> > 2.7.4  
-> 
-
-[Jacob Pan]
+ -dann
