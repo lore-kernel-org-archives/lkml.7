@@ -2,147 +2,152 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB36CCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 04:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 867D9CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 04:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F6D9217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 04:27:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eYOl9Xry"
+	by mail.kernel.org (Postfix) with ESMTP id 5FED9217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 04:36:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572582987;
+	bh=IApEQ8cOoKKUT4dlrwrwKT0dtfSlZL/Pzu10k24ZQzo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rwCCV8Xa9Rfg+pNhavnHySWn1lSD3C4povj3WY8gBE0DeK447xFtmsddFbk5OVHIP
+	 zewd9EtAlEF1+lFFWqwtFFCfybCvYgsXYwoB0JEjGW5A1AdD0jlIgsfnTrv0QjQWL5
+	 ffuWUNEEck+lWxXprnRalUNcAYqhXx24U8lZ/bgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbfKAE1R (ORCPT
+        id S1729790AbfKAEgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 00:27:17 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:36026 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbfKAE1R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 00:27:17 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y10so4716603qto.3;
-        Thu, 31 Oct 2019 21:27:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HpS7M3wugMxRqvwJlP7zk8Xh32CVSZbs51QsUAEIzfw=;
-        b=eYOl9Xry51JB4XOdcoO0HKnLb5V3OO+fyyZXo3Gyk4O17pxoDfoSvQUCR7XNoasLmn
-         1JpmLWlUEimCevap83AXVIUpMM4tmRf7BrH/H9HZPBHebQwP4EUXbC7Mpu/iAUjg9bx4
-         K/Gnk0D2Xoe4iTxrsIsps+Z1VX4K2XAEJQe1EY4qUmWUkm2MDrHWhRSkW90OsfNKH+at
-         djFMIo9+Ypc0/PLBXNAydL8HRDa6ovC53rdB2Yv+9dgU30Jc9nGMQ7WSDhRJ/YdLkB8p
-         3j//UCXEPr/yf2jxd3nXQKS5QarHMHlwIztXZJv9pIM9MK5iHpry0oPwBnaUJMvVUwNU
-         kw+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HpS7M3wugMxRqvwJlP7zk8Xh32CVSZbs51QsUAEIzfw=;
-        b=N91QzoSS/abK2ji31eRuffUFElvEa2Oq/4PV3xIchIlOf/IynP0YR+INXpmLpab37I
-         Rcsgb2HNJ39Ik3nfApTtrtt9UkHbzO3UJkuysLEVBIfsm/l8YFlpOFFTTXalItUXO/z5
-         AefvspVkQqDbrVzsFzxk6JvuzMzN4xrDR/F7d4ZmCn7Z0ttZhIztAlOw/9TtWY4puehC
-         Fvb5f1m0pcExu2TlR7sJUxF5hmOFREEbMiSmTCbf5PfORWKo8B8EcZgRHCSRFpH/643l
-         9y3fx96AubvKNP/sJ4/ubUm95EWE29RvjrWDU9V1YPw2xZNqwg2vb7+R5MFRU0CA7T93
-         oymw==
-X-Gm-Message-State: APjAAAXMvcAK7l9+lECUU+/GD6WbzNY+lDoC6dHMmSf3dLD46scYKcNe
-        Acdbmm9h2kIbhdkLEW5+zOs=
-X-Google-Smtp-Source: APXvYqzDwJYaREOSe2o21TAZV4qBy7f/mE8kw3SqL1wNgJYXEuC0QZxtcJYWENR6LVI7cPRVcn6ENw==
-X-Received: by 2002:aed:24af:: with SMTP id t44mr1230263qtc.135.1572582435878;
-        Thu, 31 Oct 2019 21:27:15 -0700 (PDT)
-Received: from localhost.localdomain ([187.106.44.83])
-        by smtp.gmail.com with ESMTPSA id w24sm3719838qta.44.2019.10.31.21.27.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 21:27:15 -0700 (PDT)
-From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-To:     outreachy-kernel@googlegroups.com, manasi.d.navare@intel.com,
-        rodrigosiqueiramelo@gmail.com, maarten.lankhorst@linux.intel.com,
-        mripard@kernel.org, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch, corbet@lwn.net, dri-devel@lists.freedesktop.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-Subject: [PATCH] drm/doc: Adding VKMS module description and use to "Testing and Validation"
-Date:   Fri,  1 Nov 2019 01:27:06 -0300
-Message-Id: <20191101042706.2602-1-gabrielabittencourt00@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 1 Nov 2019 00:36:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbfKAEgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 00:36:24 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33E9F208CB;
+        Fri,  1 Nov 2019 04:36:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572582982;
+        bh=IApEQ8cOoKKUT4dlrwrwKT0dtfSlZL/Pzu10k24ZQzo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EPJo+iUYSOqSex//thgdLs5Lz5fKD2heNME2eDIPq9ybb2bN3iorTFtTCutulnndZ
+         GALoNt31mGtWx7JHv//z8oAk/4SnyW6T5d92TEs8gtkAEAsggCpORJV8DeRVcn23AX
+         Ap6bUAuvPnP8SZyau9kBl/CTa8RGicnMSnBfjD6Q=
+Date:   Thu, 31 Oct 2019 21:36:20 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Gwendal Grignou <gwendal@chromium.org>, Chao Yu <chao@kernel.org>,
+        Ryo Hashimoto <hashimoto@chromium.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        Guenter Roeck <groeck@chromium.org>, apronin@chromium.org,
+        linux-doc@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-fscrypt@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [PATCH] Revert "ext4 crypto: fix to check feature status before
+ get policy"
+Message-ID: <20191101043620.GA703@sol.localdomain>
+Mail-Followup-To: Doug Anderson <dianders@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>, Chao Yu <chao@kernel.org>,
+        Ryo Hashimoto <hashimoto@chromium.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        Guenter Roeck <groeck@chromium.org>, apronin@chromium.org,
+        linux-doc@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, linux-fscrypt@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
+References: <20191030100618.1.Ibf7a996e4a58e84f11eec910938cfc3f9159c5de@changeid>
+ <20191030173758.GC693@sol.localdomain>
+ <CAD=FV=Uzma+eSGG1S1Aq6s3QdMNh4J-c=g-5uhB=0XBtkAawcA@mail.gmail.com>
+ <20191030190226.GD693@sol.localdomain>
+ <20191030205745.GA216218@sol.localdomain>
+ <CAD=FV=X6Q3QZaND-tfYr9mf-KYMeKFmJDca3ee-i9roWj+GHsQ@mail.gmail.com>
+ <CAD=FV=URZX4t-TB2Ne8y5ZfeBGoyhsPZhcncQ0yPe3cRXi=1gw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=URZX4t-TB2Ne8y5ZfeBGoyhsPZhcncQ0yPe3cRXi=1gw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a description on VKMS module and the cases in which it should be used.
-There's a brief explanation on how to set it and use it in a VM, along with
-an example of running an igt-test.
+On Thu, Oct 31, 2019 at 10:52:19AM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Wed, Oct 30, 2019 at 2:59 PM Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > Hi,
+> >
+> > On Wed, Oct 30, 2019 at 1:57 PM Eric Biggers <ebiggers@kernel.org> wrote:
+> > >
+> > > FWIW, from reading the Chrome OS code, I think the code you linked to isn't
+> > > where the breakage actually is.  I think it's actually at
+> > > https://chromium.googlesource.com/chromiumos/platform2/+/refs/heads/master/chromeos-common-script/share/chromeos-common.sh#375
+> > > ... where an init script is using the error message printed by 'e4crypt
+> > > get_policy' to decide whether to add -O encrypt to the filesystem or not.
+> > >
+> > > It really should check instead:
+> > >
+> > >         [ -e /sys/fs/ext4/features/encryption ]
+> >
+> > OK, I filed <https://crbug.com/1019939> and CCed all the people listed
+> > in the cryptohome "OWNERS" file.  Hopefully one of them can pick this
+> > up as a general cleanup.  Thanks!
+> 
+> Just to follow-up: I did a quick test here to see if I could fix
+> "chromeos-common.sh" as you suggested.  Then I got rid of the Revert
+> and tried to login.  No joy.
+> 
+> Digging a little deeper, the ext4_dir_encryption_supported() function
+> is called in two places:
+> * chromeos-install
+> * chromeos_startup
+> 
+> In my test case I had a machine that I'd already logged into (on a
+> previous kernel version) and I was trying to log into it a second
+> time.  Thus there's no way that chromeos-install could be involved.
+> Looking at chromeos_startup:
+> 
+> https://chromium.googlesource.com/chromiumos/platform2/+/refs/heads/master/init/chromeos_startup
+> 
+> ...the function is only used for setting up the "encrypted stateful"
+> partition.  That wasn't where my failure was.  My failure was with
+> logging in AKA with cryptohome.  Thus I think it's plausible that my
+> original commit message pointing at cryptohome may have been correct.
+> It's possible that there were _also_ problems with encrypted stateful
+> that I wasn't noticing, but if so they were not the only problems.
+> 
+> It still may be wise to make Chrome OS use different tests, but it
+> might not be quite as simple as hoped...
+> 
 
-Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Ah, I think I found it:
 
----
+https://chromium.googlesource.com/chromiumos/overlays/chromiumos-overlay/+/2cbdedd5eca0a57d9596671a99da5fab8e60722b/sys-apps/upstart/files/upstart-1.2-dircrypto.patch
 
-Hi DRM-community,
-this is my first (of many, I hope)  patch in this subsystem. I hope to have
-a lot of learning (and fun :)) working with you guys.
-I'm starting by documenting the VKMS driver in "Userland interfaces", if I
-have been inaccurate in my description or if I misunderstood some concept,
-please let me know.
----
- Documentation/gpu/drm-uapi.rst | 38 ++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+The init process does EXT4_IOC_GET_ENCRYPTION_POLICY on /, and if the error is
+EOPNOTSUPP, it skips creating the "dircrypto" keyring.  So then cryptohome can't
+add keys later.  (Note the error message you got, "Error adding dircrypto key".)
 
-diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
-index 94f90521f58c..7d6c86b7af76 100644
---- a/Documentation/gpu/drm-uapi.rst
-+++ b/Documentation/gpu/drm-uapi.rst
-@@ -285,6 +285,44 @@ run-tests.sh is a wrapper around piglit that will execute the tests matching
- the -t options. A report in HTML format will be available in
- ./results/html/index.html. Results can be compared with piglit.
- 
-+Using VKMS to test DRM API
-+--------------------------
-+
-+VKMS is a software-only model of a KMS driver that is useful for testing
-+and for running compositors. VKMS aims to enable a virtual display without
-+the need for a hardware display capability. These characteristics made VKMS
-+a perfect tool for validating the DRM core behavior and also support the
-+compositor developer. VKMS helps us to test DRM core function in a virtual
-+machine, which makes it easy to test some of the core changes.
-+
-+To Validate changes in DRM API with VKMS, start setting the kernel. The
-+VKMS module is not enabled by defaut, so enable it in the menuconfig::
-+
-+	$ make menuconfig
-+
-+Compile the kernel with the VKMS enabled and install it in the target
-+machine. VKMS can be run in a Virtual Machine (QEMU, virtme or similar).
-+It's recommended the use of KVM with the minimum of 1GB of RAM and four
-+cores.
-+
-+It's possible to run the IGT-tests in a VM in two ways:
-+1. Use IGT inside a VM
-+2. Use IGT from the host machine and write the results in a shared directory.
-+
-+As follow, there is an example of using a VM with a shared directory with
-+the host machine to run igt-tests. As example it's used virtme::
-+
-+	$ virtme-run --rwdir /path/for/shared_dir --kdir=path/for/kernel/directory --mods=auto
-+
-+Run the igt-tests, as example it's ran the 'kms_flip' tests::
-+
-+	$ /path/for/igt-gpu-tools/scripts/run-tests.sh -p -s -t "kms_flip.*" -v
-+
-+In this example instead of build the igt_runner it's used Piglit
-+(-p option); it's created html summary of the tests results and it's saved
-+in the folder "igt-gpu-tools/results"; it's executed only the igt-tests
-+matching the -t option.
-+
- Display CRC Support
- -------------------
- 
--- 
-2.20.1
+So it looks like the kernel patch broke both that and
+ext4_dir_encryption_supported().
 
+I don't see how it could have broken cryptohome by itself, since AFAICS
+cryptohome only uses EXT4_IOC_GET_ENCRYPTION_POLICY on the partition which is
+supposed to have the 'encrypt' feature set.
+
+- Eric
