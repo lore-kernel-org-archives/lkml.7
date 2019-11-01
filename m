@@ -2,104 +2,128 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 665A0CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C1BCA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B6AF21734
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:39:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmLI6Xfp"
+	by mail.kernel.org (Postfix) with ESMTP id 194E221734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbfKAQjD (ORCPT
+        id S1729085AbfKAQjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 12:39:03 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39826 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbfKAQjD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 12:39:03 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t12so4605843plo.6
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 09:39:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Jop3Dux9Tb3Ov/yAM9BwP8Zp0TbIeSOkimu79QY77es=;
-        b=nmLI6Xfp4DCOu0L6Y0a6idgMpzE/ZCS6AXaU1AX1lBJkSSFLMJJMyEXVX43sofP8BM
-         jpb6lCY0BXFwGWAUBFoseAhpp0yqARTfCsjnqJA9xYnkS6S4ljXOCZi8VT3nbPgFaB+T
-         oaNDXQZ3C6efLroLoE88iCbEW3/60zoCWd7FzL6fpipnd5Z3qm7QW9X3sxlilgIw8TCQ
-         bPkHhNVix3KT43TwaGSq5ed93dFCXDBNHyT8FnTLUNVak1Kbe7sJJnT2r4TUQOPyH4k/
-         rCMS4rR9q2RQWxq2qxEPIWyLtpPP5PK7bDvzBDGOOpf2imwnhteMOjPbLHLvUefhj0XP
-         oa+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Jop3Dux9Tb3Ov/yAM9BwP8Zp0TbIeSOkimu79QY77es=;
-        b=dnH7MeJhrlR0J0V6AlmPpnELMTPeD9KRFqLP9gCcVBh5EchnlHNVK8jC1y9KLMOQRt
-         Yc6rtXvV1K/h6GKkty3476AhnEsIpulXSp+IUWKN6PCIt9/psU7v3f6i5X8fBQikNvfZ
-         68fWtoTfnTmotKM198Z8QoXSajJIm+Clh3YbHcb6m6vTJ5cOltsVtdv956kLRfoQ9bnp
-         naKjF046/iHoZXnE93m3k1Ed8rM/XnH5A03LBMHEavg76RAlkjGj+1MY7ldPP/NMnXOR
-         jUlhsYbe0aPyLkQXDpaJk9lk8YvQsdmrutoVUdkezdkAq1Yi+30rHh4UnHOQfcywajQH
-         nHbg==
-X-Gm-Message-State: APjAAAUjZGt3Au9VQPkYEk02STz3Q5828n7kCpFp9u43ERGbOs6uqZOc
-        67UOud8l/kdzL93Nhat1ucH6ULgZvK39wQ==
-X-Google-Smtp-Source: APXvYqwikFR65XxVHQmNND6nn1yvtJkPX4KG/6KXxiGf1DsHPC00SF/oqM0MfFi79t8JfXr2DGcWdQ==
-X-Received: by 2002:a17:902:161:: with SMTP id 88mr12645499plb.253.1572626341042;
-        Fri, 01 Nov 2019 09:39:01 -0700 (PDT)
-Received: from localhost ([2402:3a80:1386:1fa1:cbdc:7851:d398:f27c])
-        by smtp.gmail.com with ESMTPSA id m15sm6319676pgv.58.2019.11.01.09.38.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 09:39:00 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 22:08:56 +0530
-From:   Jaskaran Singh <jaskaransingh7654321@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        alexander.deucher@amd.com, christian.koenig@amd.com,
-        David1.Zhou@amd.com, airlied@linux.ie, daniel@ffwll.ch,
-        Felix.Kuehling@amd.com, ray.huang@amd.com
-Subject: [PATCH] drivers: gpu: drm: amd: amdgpu: Add @level to
- amdgpu_vm_bo_param documentation
-Message-ID: <20191101163856.GA13800@localhost.localdomain>
+        Fri, 1 Nov 2019 12:39:41 -0400
+Received: from mga02.intel.com ([134.134.136.20]:32461 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727426AbfKAQjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 12:39:40 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 09:39:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,256,1569308400"; 
+   d="scan'208";a="199860587"
+Received: from ggarreto-mobl1.amr.corp.intel.com (HELO [10.255.92.243]) ([10.255.92.243])
+  by fmsmga007.fm.intel.com with ESMTP; 01 Nov 2019 09:39:38 -0700
+Subject: Re: [alsa-devel] [PATCH v4 2/2] soundwire: qcom: add support for
+ SoundWire controller
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        robh@kernel.org, vkoul@kernel.org
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org
+References: <20191030153150.18303-1-srinivas.kandagatla@linaro.org>
+ <20191030153150.18303-3-srinivas.kandagatla@linaro.org>
+ <af29ec6e-d89e-7fa4-a8cd-29ab944ecd5c@linux.intel.com>
+ <926bd15f-e230-8f5e-378d-355bfeeecf27@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <3d17a2a2-3033-e740-a466-e6cf7919adb2@linux.intel.com>
+Date:   Fri, 1 Nov 2019 11:39:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <926bd15f-e230-8f5e-378d-355bfeeecf27@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The documentation for this function is missing the function parameter
-"level", so add it. This fixes the following warning:
 
-./drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c:821:
-	warning: Function parameter or member 'level'
-	not described in 'amdgpu_vm_bo_param'
+>>> +static int qcom_swrm_prepare(struct snd_pcm_substream *substream,
+>>> +                 struct snd_soc_dai *dai)
+>>> +{
+>>> +    struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
+>>> +
+>>> +    if (!ctrl->sruntime[dai->id])
+>>> +        return -EINVAL;
+>>> +
+>>> +    return sdw_enable_stream(ctrl->sruntime[dai->id]);
+>>
+>> So in hw_params you call sdw_prepare_stream() and in _prepare you call 
+>> sdw_enable_stream()?
+>>
+>> Shouldn't this be handled in a .trigger operation as per the 
+>> documentation "From ASoC DPCM framework, this stream state is linked to
+>> .trigger() start operation."
+> 
+> If I move sdw_enable/disable_stream() to trigger I get a big click noise 
+> on my speakers at start and end of every playback. Tried different 
+> things but nothing helped so far!. Enabling Speaker DACs only after 
+> SoundWire ports are enabled is working for me!
+> There is nothing complicated on WSA881x codec side all the DACs are 
+> enabled/disabled as part of DAPM.
 
-Signed-off-by: Jaskaran Singh <jaskaransingh7654321@gmail.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 1 +
- 1 file changed, 1 insertion(+)
+that looks like a work-around to me? If you do a bank switch without 
+anything triggered, you are most likely sending a bunch of zeroes to 
+your amplifier and enabling click/pop removals somehow.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-index 5251352f5922..6f6a9be11d84 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-@@ -813,6 +813,7 @@ static int amdgpu_vm_clear_bo(struct amdgpu_device *adev,
-  *
-  * @adev: amdgpu_device pointer
-  * @vm: requesting vm
-+ * @level: VMPT level
-  * @bp: resulting BO allocation parameters
-  */
- static void amdgpu_vm_bo_param(struct amdgpu_device *adev, struct amdgpu_vm *vm,
--- 
-2.21.0
+It'd be worth looking into this, maybe there's a missing digital 
+mute/unmute that's not done in the right order?
+
+> 
+>>
+>> It's also my understanding that .prepare will be called multiples times, 
+> 
+> I agree, need to add some extra checks in the prepare to deal with this!
+> 
+>> including for underflows and resume if you don't support INFO_RESUME.
+> 
+>>
+>> the sdw_disable_stream() is in .hw_free, which is not necessarily 
+>> called by the core, so you may have a risk of not being able to recover?
+> 
+> Hmm, I thought hw_free is always called to release resources allocated 
+> in hw_params.
+> 
+> In what cases does the core not call this?
+
+yes, but prepare can be called without hw_free called first. that's why 
+we updated the state machine to allow for DISABLED|DEPREPARED -> 
+PREPARED transitions.
+
+>>> +static const struct dev_pm_ops qcom_swrm_dev_pm_ops = {
+>>> +    SET_RUNTIME_PM_OPS(qcom_swrm_runtime_suspend,
+>>> +               qcom_swrm_runtime_resume,
+>>> +               NULL
+>>> +    )
+>>> +};
+>>
+>> Maybe define pm_runtime at a later time then? We've had a lot of race 
+>> conditions to deal with, and it's odd that you don't support plain 
+>> vanilla suspend first?
+>>
+> Trying to keep things simple for the first patchset! added this dummies 
+> to keep the soundwire core happy!
+
+If you are referring to the errors when pm_runtime is not enabled, we 
+fixed this is the series that's been out for review for 10 days now...
+
+see '[PATCH 03/18] soundwire: bus: add PM/no-PM versions of read/write 
+functions', that should remove the need for dummy functions.
 
