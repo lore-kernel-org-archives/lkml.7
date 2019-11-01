@@ -2,130 +2,187 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2CDC47E49
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 00:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE877CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 00:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 853AD208CB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 00:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88D5F2083E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 00:20:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BbhYRAwW";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JxCrruKd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rzKOj5ic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbfKAAST (ORCPT
+        id S1728618AbfKAAUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 20:18:19 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:42446 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727335AbfKAASS (ORCPT
+        Thu, 31 Oct 2019 20:20:01 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35817 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727332AbfKAAUB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 20:18:18 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1B15960A96; Fri,  1 Nov 2019 00:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572567498;
-        bh=rrKhKmeW7vI4vqSW4GX5bA8V0NngHAe0nA8L0Lpuxoo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BbhYRAwWqNTNNcpoujF5p5ib38RAG+ksieaG7qHohUcXauKOy2qu7ETAIBXYnHIiz
-         wxD7wFO3ptNdP/+5lFWHUa0vsvFKvoLl0rn3R2M9RQYg4dl12+wJl21Wi0bjWPnDhV
-         S0Z12o3xaHm6MtIJdiXzoGBjAFqf39WJ2uX79uBc=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 2F0B860208;
-        Fri,  1 Nov 2019 00:18:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572567497;
-        bh=rrKhKmeW7vI4vqSW4GX5bA8V0NngHAe0nA8L0Lpuxoo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JxCrruKdcnnExenW7QLW6SYkAob/HnfjCjyOqZnlseyaj8ZlNcVXbVCOeGPhlzi8r
-         hK9qo/3Pln5gARgq9wIzMijo1vaUZfpBmZB0j01P2uf49MafGPDvhCTN/eaW7lO/5R
-         7cWIHwj8NFtf0ciKW+S3jZQEjoBAvbHgy+7aaRTA=
+        Thu, 31 Oct 2019 20:20:01 -0400
+Received: by mail-qt1-f195.google.com with SMTP id r22so892113qtt.2;
+        Thu, 31 Oct 2019 17:20:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=xi5TyLi/vvHgUujnBuE9/F+olYAjNu8EPkfesj0ZK4w=;
+        b=rzKOj5icRaa7e7dd4H/ADt79zDKh5OVt8s58jN4YR0znr5Zgwq9peB+CLATCxwt7js
+         G4m4VwXxC4BTyR9Wt6CdGF7GrfGLYW9OYODnujX+OhKMqrMG2vTjqCGCveAEsIEDj8ge
+         rzclLH7VImO8mV/PGWh9U0j1qf6HoZvNg6ljxk6GRjwbLMHKvtsslP0/b2wDlCQFuuGi
+         b89CnuhTKbjUNxKe6waMvFj+UtZr4B90te/Cib9GfSkFWGxxk5pn9rPffX92s32e5sfw
+         6bZHHlD3MRa4IbdwIV/rWBeGtS6sYyuKAsdHzB0SiTtjCHUpsdUJ4YeUEKE9pHefMd0/
+         vcoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=xi5TyLi/vvHgUujnBuE9/F+olYAjNu8EPkfesj0ZK4w=;
+        b=LT3a5TKjxAbEIcqyo+hsSQPQAo6+cOm9A39H0BmxpKI+ndvi/x3e7M2fe8uszpsIOi
+         ZPRU3TUYpQvPtq0xHzOS9U14Z/jpOjq1Da93ot7K2qedduxDKTsG1Kw4iv3r9fsrSs4T
+         mJrhWUDZs8mstYo9foeA29clET3WzBZe8jTchUIPU2bTT2nSfLELADcM4KUHXuRNA9n3
+         yx9lbnOvn9BRjwyiOrpAo3vspjZ470y+ryeIurIXMSPDBCs7AqLdzKKTci29nl7XFgJf
+         FPobTvJmjtwZi9+2pha88vZCLYkBJ2hzfYP9o/Y35gpVIb+UUF1DfaSmlYYWfqnJTMP4
+         l4NA==
+X-Gm-Message-State: APjAAAXNAW+dqUr7a4rZNSBTrg0TLheuWdTkKv0Jc5qhkVpF5b4Uwlgy
+        MauJzFJeq8uBPwN3Z0TFbK0=
+X-Google-Smtp-Source: APXvYqxqxSJDeI2V3tx8kDrd5hNk4dcTmWeUwwm9LrVpi9BsPF+MhBP2TamP2awoaTi/IgOCAW+nlA==
+X-Received: by 2002:ac8:30f4:: with SMTP id w49mr3279347qta.35.1572567599773;
+        Thu, 31 Oct 2019 17:19:59 -0700 (PDT)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id b123sm1092985qkc.120.2019.10.31.17.19.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 31 Oct 2019 17:19:59 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 1177420CB3;
+        Thu, 31 Oct 2019 20:19:58 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Thu, 31 Oct 2019 20:19:58 -0400
+X-ME-Sender: <xms:LXq7XfO7Pkzn_njUnJn0J9wFg4GC6PAd_FRRVHrf7g2fMCEU1vbJ9Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedruddtiedgvddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtugfgjggfsehtkeertddtreejnecuhfhrohhmpeeuohhq
+    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuffhomh
+    grihhnpehlfihnrdhnvghtnecukfhppeduieejrddvvddtrddvheehrddvkeenucfrrghr
+    rghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrg
+    hlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeep
+    ghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:LXq7XSXx2jvDSf_aeIxnBY0bggmTmIm8QM-WkfCzx_Fh8herrWHYjQ>
+    <xmx:LXq7XQdDwL8yVZjP9GTR2tqXW6dPqDHkMH6kgKeILga3RUmx-LKPJw>
+    <xmx:LXq7XbgF5y41ZpezUo5pumJb5bq9CxkX8SZhPkrSJi8NxWEcEiqAjQ>
+    <xmx:Lnq7XX-MtlGEDV0hnZqhmJaYDfQT6vsGZoew7T5CaR82C-mbZWOd4Q>
+Received: from localhost (unknown [167.220.255.28])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4FF1780066;
+        Thu, 31 Oct 2019 20:19:56 -0400 (EDT)
+Date:   Fri, 1 Nov 2019 08:19:48 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH 02/11] rcu: fix bug when rcu_exp_handler() in nested
+ interrupt
+Message-ID: <20191101001948.GA182@boqun-laptop.fareast.corp.microsoft.com>
+References: <20191031100806.1326-1-laijs@linux.alibaba.com>
+ <20191031100806.1326-3-laijs@linux.alibaba.com>
+ <20191031134731.GP20975@paulmck-ThinkPad-P72>
+ <20191031143119.GA15954@paulmck-ThinkPad-P72>
+ <6b621228-4cab-6e2c-9912-cddc56ad6775@linux.alibaba.com>
+ <20191031185258.GX20975@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Date:   Fri, 01 Nov 2019 08:18:17 +0800
-From:   cang@codeaurora.org
-To:     Mark Salyzyn <salyzyn@android.com>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/5] scsi: Adjust DBD setting in mode sense for caching
- mode page per LLD
-In-Reply-To: <6bda63c6-4bcf-b7ad-f552-4c72ba0b9024@android.com>
-References: <1572318655-28772-1-git-send-email-cang@codeaurora.org>
- <1572318655-28772-2-git-send-email-cang@codeaurora.org>
- <fd78538f-8e5f-2e5f-0107-a8bc284d037d@android.com>
- <6bda63c6-4bcf-b7ad-f552-4c72ba0b9024@android.com>
-Message-ID: <904e0c27ce60c91f3c6447bd9ac3dae9@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+In-Reply-To: <20191031185258.GX20975@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-31 23:40, Mark Salyzyn wrote:
-> On 10/31/19 8:20 AM, Mark Salyzyn wrote:
->> On 10/28/19 8:10 PM, Can Guo wrote:
->>> Host sends MODE_SENSE_10 with caching mode page, to check if the 
->>> device
->>> supports the cache feature.
->>> UFS JEDEC standards require DBD field to be set to 1.
->>> 
->>> This patch allows LLD to define the setting of DBD if required.
->>> 
->>> Signed-off-by: Can Guo <cang@codeaurora.org>
->>> ---
->>>   drivers/scsi/sd.c        | 6 +++++-
->>>   include/scsi/scsi_host.h | 6 ++++++
->>>   2 files changed, 11 insertions(+), 1 deletion(-)
->>> 
->>> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
->>> index aab4ed8..6d8194f 100644
->>> --- a/drivers/scsi/sd.c
->>> +++ b/drivers/scsi/sd.c
->>> @@ -2629,6 +2629,7 @@ static int sd_try_rc16_first(struct scsi_device 
->>> *sdp)
->>>   {
->>>       int len = 0, res;
->>>       struct scsi_device *sdp = sdkp->device;
->>> +    struct Scsi_Host *host = sdp->host;
->> variable locality
->>>       int dbd;
->>>       int modepage;
->>> @@ -2660,7 +2661,10 @@ static int sd_try_rc16_first(struct 
->>> scsi_device *sdp)
->>>           dbd = 8;
->>>       } else {
->>>           modepage = 8;
->>> -        dbd = 0;
->>> +        if (host->set_dbd_for_caching)
->>> +            dbd = 8;
->>> +        else
->>> +            dbd = 0;
->>>       }
->> 
->> This simplifies to:
->> 
->> -   } else if (sdp->type == TYPE_RBC) {
->> 
->> +    } else if (sdp->type == TYPE_RBC || 
->> sdp->host->set_dbd_for_caching) {
-> 
-> IDK what happened with my mailer sending out an older infant copy
-> (blame on fumble fingers). My final copy was instead the
-> simplification:
-> 
-> +    dbd = sdp->host->set_dbd_for_caching ? 8 : 0;
+On Thu, Oct 31, 2019 at 11:52:58AM -0700, Paul E. McKenney wrote:
+> On Thu, Oct 31, 2019 at 11:14:23PM +0800, Lai Jiangshan wrote:
+> > 
+> > 
+> > On 2019/10/31 10:31 下午, Paul E. McKenney wrote:
+> > > On Thu, Oct 31, 2019 at 06:47:31AM -0700, Paul E. McKenney wrote:
+> > > > On Thu, Oct 31, 2019 at 10:07:57AM +0000, Lai Jiangshan wrote:
+> > > > > These is a possible bug (although which I can't triger yet)
+> > > > > since 2015 8203d6d0ee78
+> > > > > (rcu: Use single-stage IPI algorithm for RCU expedited grace period)
+> > > > > 
+> > > > >   rcu_read_unlock()
+> > > > >    ->rcu_read_lock_nesting = -RCU_NEST_BIAS;
+> > > > >    interrupt(); // before or after rcu_read_unlock_special()
+> > > > >     rcu_read_lock()
+> > > > >      fetch some rcu protected pointers
+> > > > >      // exp GP starts in other cpu.
+> > > > >      some works
+> > > > >      NESTED interrupt for rcu_exp_handler();
+> > > 
+> > > Also, which platforms support nested interrupts?  Last I knew, this was
+> > > prohibited.
+> > > 
+> > > > >        report exp qs! BUG!
+> > > > 
+> > > > Why would a quiescent state for the expedited grace period be reported
+> > > > here?  This CPU is still in an RCU read-side critical section, isn't it?
+> > > 
+> > > And I now see what you were getting at here.  Yes, the current code
+> > > assumes that interrupt-disabled regions, like hardware interrupt
+> > > handlers, cannot be interrupted.  But if interrupt-disabled regions such
+> > > as hardware interrupt handlers can be interrupted (as opposed to being
+> > > NMIed), wouldn't that break a whole lot of stuff all over the place in
+> > > the kernel?  So that sounds like an arch bug to me.
+> > 
+> > I don't know when I started always assuming hardware interrupt
+> > handler can be nested by (other) interrupt. I can't find any
+> > documents say Linux don't allow nested interrupt handler.
+> > Google search suggests the opposite.
 
-Thank you for your review.
+FWIW, there is a LWN article talking about we disallow interrupt nesting
+in *most* cases:
+
+	https://lwn.net/Articles/380931/
+
+, that's unless a interrupt handler explicitly calls
+local_irq_enable_in_hardirq(), it remains irq disabled, which means no
+nesting interrupt allowed.
 
 Regards,
-Can Guo
+Boqun
 
+> 
+> The results I am seeing look to be talking about threaded interrupt
+> handlers, which indeed can be interrupted by hardware interrupts.  As can
+> softirq handlers.  But these are not examples of a hardware interrupt
+> handler being interrupted by another hardware interrupt.  For that to
+> work reasonably, something like a system priority level is required,
+> as in the old DYNIX/ptx kernel, or, going even farther back, DEC's RT-11.
+> 
+> > grep -rIni nested Documentation/memory-barriers.txt Documentation/x86/
+> > It still have some words about nested interrupt handler.
+> 
+> Some hardware does not differentiate between interrupts and exceptions,
+> for example, an illegal-instruction trap within an interrupt handler
+> might look in some ways like a nested interrupt.
+> 
+> > The whole patchset doesn't depend on this patch, and actually
+> > it is reverted later in the patchset. Dropping this patch
+> > can be an option for next round.
+> 
+> Sounds like a plan!
+> 
+> 							Thanx, Paul
+> 
+[...]
