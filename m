@@ -2,89 +2,139 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4A4CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E29CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 534E621D71
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:10:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572621015;
-	bh=DHRnWs2HEw45y8XEgwbogs3D/xEvwtlHB376bpTsRNw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NYQXbjC3/4nlD108B/PZKhjXlUdpTex3I7Iqewj0FrWliq6bF5PvzpsNru9TbnKzA
-	 uS+bz3hi9Jz+HV2S6Hm8GXCXCipmfmVDqYfWnAG/rgX8uu3ljpeOOSqOvYGAIuuIBs
-	 sRSJnXaPysZ8xL/WJqpDVozgMyOopJb5KKAuZiGg=
+	by mail.kernel.org (Postfix) with ESMTP id 43A72217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:10:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbfKAPKO (ORCPT
+        id S1728445AbfKAPKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 11:10:14 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45499 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbfKAPKO (ORCPT
+        Fri, 1 Nov 2019 11:10:21 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60008 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727326AbfKAPKV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 11:10:14 -0400
-Received: by mail-ed1-f65.google.com with SMTP id y7so7770956edo.12;
-        Fri, 01 Nov 2019 08:10:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x4KZq3kGQPspcz1DGYOZ1s842werTKqCk1PLcvS+4sE=;
-        b=BcLPg4RjbUWMpuGD3GoDbtG2Qq87I4qA3tzox2Lw3gwlQrXvSDLsm0mmMJ6Gdo5xXN
-         5w+HPRhhCLKIFL5AXNPZod7fDfNQDaxeg2n8NKEq9GKScNxslx/0QWo8QGAUp4wQR3w7
-         KWbXwLaAYcjz+weRDz3uPra4JK8pxYZMOfIKqMsTlXfSUOCOj8FL9mMyujEpxamFGqQm
-         ME9UecGBgHvRyT/4ErXHzw00mbC4MC8BXJKNew7uq6u+afGnjNbcK9f991pQ25NyEa9k
-         sgKnX9ncOXpV2KmrbBM8H5Q6QhKMiu+U4QneMIZYLb62g2BtBb9Qq3yx9FtxAH2cXzAV
-         /9Sw==
-X-Gm-Message-State: APjAAAWte6eR+bwvKhpwB7cRe0TLT3Hp+kf5GGLPnV2a7h1N/Z/IpJ9V
-        1iHf+8f6/iM/9JEJVkhLD1A=
-X-Google-Smtp-Source: APXvYqz26adyYVDJfuaglBMs7RfG0GkthAgsMv06HnH23SGBLY/s4NlPYr/haLEMifj8RhJT0FDQoQ==
-X-Received: by 2002:a50:ef0d:: with SMTP id m13mr12973589eds.210.1572621012012;
-        Fri, 01 Nov 2019 08:10:12 -0700 (PDT)
-Received: from pi3 ([194.230.155.180])
-        by smtp.googlemail.com with ESMTPSA id c15sm202871edl.16.2019.11.01.08.10.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 08:10:11 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 16:10:09 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
-        lee.jones@linaro.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/4] dt-bindings: power: supply: Max17040: Add low
- level SOC alert threshold
-Message-ID: <20191101151009.GB28931@pi3>
-References: <CAJKOXPdCtbsPaAgYp5iVBhkAsjXzOYWwttQBptgiUgzhbKi09w@mail.gmail.com>
- <20191031184134.30621-1-matheus@castello.eng.br>
- <20191031184134.30621-3-matheus@castello.eng.br>
+        Fri, 1 Nov 2019 11:10:21 -0400
+Received: from [91.217.168.176] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iQYZ5-0001ct-CM; Fri, 01 Nov 2019 15:10:15 +0000
+Date:   Fri, 1 Nov 2019 16:10:14 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Florian Weimer <fweimer@redhat.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        GNU C Library <libc-alpha@sourceware.org>, nd <nd@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] clone3: validate stack arguments
+Message-ID: <20191101151014.75jfcdc3hrwt6ssv@wittgenstein>
+References: <20191031113608.20713-1-christian.brauner@ubuntu.com>
+ <f51d97a2-8130-0ba2-c591-638b7fd6b14d@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191031184134.30621-3-matheus@castello.eng.br>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <f51d97a2-8130-0ba2-c591-638b7fd6b14d@arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 03:41:32PM -0300, Matheus Castello wrote:
-> For configure low level state of charge threshold alert signaled from
-> max17040 we add "maxim,alert-low-soc-level" property.
+On Fri, Nov 01, 2019 at 02:57:10PM +0000, Szabolcs Nagy wrote:
+> On 31/10/2019 11:36, Christian Brauner wrote:
+> > diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
+> > index 99335e1f4a27..25b4fa00bad1 100644
+> > --- a/include/uapi/linux/sched.h
+> > +++ b/include/uapi/linux/sched.h
+> > @@ -51,6 +51,10 @@
+> >   *               sent when the child exits.
+> >   * @stack:       Specify the location of the stack for the
+> >   *               child process.
+> > + *               Note, @stack is expected to point to the
+> > + *               lowest address. The stack direction will be
+> > + *               determined by the kernel and set up
+> > + *               appropriately based on @stack_size.
+> >   * @stack_size:  The size of the stack for the child process.
+> >   * @tls:         If CLONE_SETTLS is set, the tls descriptor
+> >   *               is set to tls.
+> > diff --git a/kernel/fork.c b/kernel/fork.c
+> > index bcdf53125210..55af6931c6ec 100644
+> > --- a/kernel/fork.c
+> > +++ b/kernel/fork.c
+> > @@ -2561,7 +2561,35 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+> >  	return 0;
+> >  }
+> >  
+> > -static bool clone3_args_valid(const struct kernel_clone_args *kargs)
+> > +/**
+> > + * clone3_stack_valid - check and prepare stack
+> > + * @kargs: kernel clone args
+> > + *
+> > + * Verify that the stack arguments userspace gave us are sane.
+> > + * In addition, set the stack direction for userspace since it's easy for us to
+> > + * determine.
+> > + */
+> > +static inline bool clone3_stack_valid(struct kernel_clone_args *kargs)
+> > +{
+> > +	if (kargs->stack == 0) {
+> > +		if (kargs->stack_size > 0)
+> > +			return false;
+> > +	} else {
+> > +		if (kargs->stack_size == 0)
+> > +			return false;
+> > +
+> > +		if (!access_ok((void __user *)kargs->stack, kargs->stack_size))
+> > +			return false;
+> > +
+> > +#if !defined(CONFIG_STACK_GROWSUP) && !defined(CONFIG_IA64)
+> > +		kargs->stack += kargs->stack_size;
+> > +#endif
+> > +	}
 > 
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  .../power/supply/max17040_battery.txt         | 33 +++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> from the description it is not clear whose
+> responsibility it is to guarantee the alignment
+> of sp on entry.
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Userspace.
 
-Best regards,
-Krzysztof
+> 
+> i think 0 stack size may work if signals are
+> blocked and then prohibiting it might not be
+> the right thing.
 
+Note that stack size 0 is allowed:
+
+struct clone_args args = {
+	.exit_signal = SIGCHLD,
+};
+
+clone3(&args, sizeof(args));
+
+will just work fine.
+
+> 
+> it's not clear how libc should deal with v5.3
+> kernels which don't have the stack+=stack_size
+> logic.
+
+stable is already Cced and the change will be backported to v5.3.
+Nearly all distros track pull in stable updates.
+
+Florian, thoughts on this?
+
+Christian
