@@ -2,78 +2,121 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B24CCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 03:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39719CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 03:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A2F2067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 03:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11E67208CB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 03:05:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572577501;
+	bh=nU6uqOVFaCsulLB14w3V7HfkrQ0IMKZJP3c9WxF8K20=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eu9yoF9wNEXv3FU16XC6cjixY1IbEM5WZD4WOMZZZOWHffC6VhLOgtx3ho8SZsTEN
+	 DIfoYWwM3BxLjMDxpNTqnRfjrfMIKkedVevveu1CIqZfcAZITMUIi1SP5f1XsduLJB
+	 0uQVjq4bWu/jPkdq8SZI+XCZdrSE1v66eavYbSec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbfKADDa (ORCPT
+        id S1729465AbfKADE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 23:03:30 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41313 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbfKADDa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 23:03:30 -0400
-Received: by mail-ed1-f65.google.com with SMTP id a21so6502090edj.8
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 20:03:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E3Ouz8MYdv6MVhyGpKyVx7KVTwv3PMM5rhYzr4+rqe0=;
-        b=lVYSLALXxzZXVeHvGVRhlf4fRSvlTqULzgy52OD4Sb4TCGso9+f/bC1K8H/NKhWsKC
-         97y273mZ1ksRof8bKQM+GfHFN7N+FqNN+PKBfJ+1vnQOSkAfL6jUcL3CmLpjk91Rew3y
-         wfHJdrjPSdk6oqMbSUTcZxHkEhso5rluYF0ZFQ6CVTJB2MtknprJP06eq0ZtmumlxT2f
-         chLB6YP6oKjW9K5VaA0RrravmWYuN4CfAbnClAfGWi0Qr8nHGE3/wyuxNEBypG81yliz
-         zzruPqTU3M3sAkVJkdTklDCQ3qr5c9OkTXkSm9qQYGY4CZDPx+oVZ5IOcZV9ngqz9D1u
-         dmPA==
-X-Gm-Message-State: APjAAAXqpBP+0aHzMc0pVZPGqsK1qPiOX4ZhoIhg1J6pqpm0FYHgDleB
-        wiwN66NhUpIsG7X6BXsPjEsIYexNUJ8=
-X-Google-Smtp-Source: APXvYqyUS9xhjODfh4lpyqDPZ1+eeaZdndTUK/WS3vwpeHFDvNHvxibuPQkFJ80MDref6g2zGMUGxw==
-X-Received: by 2002:a50:8dc5:: with SMTP id s5mr10066861edh.115.1572577408277;
-        Thu, 31 Oct 2019 20:03:28 -0700 (PDT)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com. [209.85.221.53])
-        by smtp.gmail.com with ESMTPSA id q25sm152013eds.35.2019.10.31.20.03.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 31 Oct 2019 20:03:27 -0700 (PDT)
-Received: by mail-wr1-f53.google.com with SMTP id l10so8379266wrb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 20:03:27 -0700 (PDT)
-X-Received: by 2002:adf:c641:: with SMTP id u1mr3392231wrg.361.1572577407549;
- Thu, 31 Oct 2019 20:03:27 -0700 (PDT)
+        Thu, 31 Oct 2019 23:04:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726793AbfKADE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 23:04:59 -0400
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68C6A217D9;
+        Fri,  1 Nov 2019 03:04:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572577498;
+        bh=nU6uqOVFaCsulLB14w3V7HfkrQ0IMKZJP3c9WxF8K20=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=vTGvqh2b7quzmstG195V56puCkgWoM1VlheFQG+9axMEtSr28lRYaSTp9SsxJPjPP
+         y3lQgR7VIvU4oOJ/5ZJZEtlnD4vvARiJgO/6v/sknd967OhCt7MEer9GFtUQS2PCsT
+         oimyKhk9SY9UrQdaGwrnODbFMGvG9VExlwqKLxJ8=
+Received: by mail-wr1-f50.google.com with SMTP id l10so8381405wrb.2;
+        Thu, 31 Oct 2019 20:04:58 -0700 (PDT)
+X-Gm-Message-State: APjAAAX3zofpHyg4xToctFH3YZ8SeCHas7rJrnFh5Ov43fkwi1Ayct7b
+        7hOYJSvo0Af6awISVutaEU53ORFuKp3RIzFESjk=
+X-Google-Smtp-Source: APXvYqzuh0xd7+aIhEcjOGh28vIL0qQI5LRMwwA+gux/Bnu7YhlsdGHN+j3Azg/o4pUMm36qhzBi0fLYag9m4IFhJUs=
+X-Received: by 2002:a5d:6203:: with SMTP id y3mr8698187wru.142.1572577496753;
+ Thu, 31 Oct 2019 20:04:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191031231216.30903-2-karlp@tweak.net.au> <20191031231216.30903-3-karlp@tweak.net.au>
-In-Reply-To: <20191031231216.30903-3-karlp@tweak.net.au>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Fri, 1 Nov 2019 11:03:16 +0800
-X-Gmail-Original-Message-ID: <CAGb2v661sfnYmU9k7R1c7Nrc7_9-LkH5LQa9dvyPVZLGnLfaHg@mail.gmail.com>
-Message-ID: <CAGb2v661sfnYmU9k7R1c7Nrc7_9-LkH5LQa9dvyPVZLGnLfaHg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: sun8i: add FriendlyARM NanoPi Duo2-IoT Box
-To:     Karl Palsson <karlp@tweak.net.au>
-Cc:     Maxime Ripard <mripard@kernel.org>,
+References: <20191030163807.17817-1-wens@kernel.org> <91017889-2ae7-d467-eed3-6d3b2bb130b9@gmx.net>
+In-Reply-To: <91017889-2ae7-d467-eed3-6d3b2bb130b9@gmx.net>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Fri, 1 Nov 2019 11:04:45 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67quD_EGgck7QLaO+rwgyPT0G+FfzDiZuyEAb0E1yf=yw@mail.gmail.com>
+Message-ID: <CAGb2v67quD_EGgck7QLaO+rwgyPT0G+FfzDiZuyEAb0E1yf=yw@mail.gmail.com>
+Subject: Re: [PATCH] thermal: brcmstb: enable hwmon
+To:     Stefan Wahren <wahrenst@gmx.net>
+Cc:     Chen-Yu Tsai <wens@kernel.org>, Markus Mayer <mmayer@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "open list:BROADCOM BCM281XX..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        "open list:THERMAL" <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 7:12 AM Karl Palsson <karlp@tweak.net.au> wrote:
+On Thu, Oct 31, 2019 at 9:09 PM Stefan Wahren <wahrenst@gmx.net> wrote:
 >
-> The IoT-Box is a dock for the NanoPi Duo2, adding two USB host ports, a
-> 10/100 ethernet port, a variety of pin headers for i2c and uarts, and a
-> quad band 2G GSM module, a SIM800C.
+> Hi Chen-Yu,
 >
-> Full documentation and schematics available from vendor:
-> http://wiki.friendlyarm.com/wiki/index.php/NanoPi_Duo2_IoT-Box
+> Am 30.10.19 um 17:38 schrieb Chen-Yu Tsai:
+> > From: Chen-Yu Tsai <wens@csie.org>
+> >
+> > By defaul of-based thermal driver do not have hwmon entries registered.
+> >
+> > Do this explicitly so users can use standard hwmon interfaces and tools
+> > to read the temperature.
+> >
+> > This is based on similar changes for bcm2835_thermal in commit
+> > d56c19d07e0b ("thermal: bcm2835: enable hwmon explicitly").
+> >
+> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > ---
+> >
+> > This patch was only compile tested. A similar patch [1] was submitted to
+> > the downstream kernel, which I did build and actually run on a Raspberry
+> > Pi 4.
 >
-> Signed-off-by: Karl Palsson <karlp@tweak.net.au>
+> just a note: from my understanding [2] the brcmstb_thermal isn't the
+> right driver for BCM2711. Please consider the current downstream
+> solution for BCM2711 support as a quick hack to avoid writing a new
+> thermal driver. But must confess that i didn't test Florian's recent
+> changes yet.
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+Thanks for the tip. I only saw the thread after posting this patch.
+
+ChenYu
+
+> Regards
+> Stefan
+>
+> [2] -
+> https://github.com/raspberrypi/linux/issues/3101#issuecomment-527554223
+>
+> >
+> > This one for mainline is much simpler, as it does not need to deal with
+> > the error path or device removal, due to the use of devres.
+> >
+> >  [1] https://github.com/raspberrypi/linux/pull/3307
+> >
+> > ---
+> >  drivers/thermal/broadcom/brcmstb_thermal.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+>
