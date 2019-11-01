@@ -2,133 +2,131 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 530B8CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5036CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B09820659
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F3A6217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:48:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="oqrarDW4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfKAVog (ORCPT
+        id S1726817AbfKAVsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 17:44:36 -0400
-Received: from mga09.intel.com ([134.134.136.24]:38222 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbfKAVof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 17:44:35 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 14:44:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,257,1569308400"; 
-   d="scan'208";a="206513841"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by FMSMGA003.fm.intel.com with SMTP; 01 Nov 2019 14:44:31 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Fri, 01 Nov 2019 23:44:31 +0200
-Date:   Fri, 1 Nov 2019 23:44:31 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Rob Clark <robdclark@chromium.org>
-Cc:     Rob Clark <robdclark@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>, Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH 2/2] drm/atomic: clear new_state pointers at hw_done
-Message-ID: <20191101214431.GJ1208@intel.com>
-References: <20191101180713.5470-1-robdclark@gmail.com>
- <20191101180713.5470-2-robdclark@gmail.com>
- <20191101192458.GI1208@intel.com>
- <CAJs_Fx7u6VNDarYqUuUSMSsWK0jpS5ybse0h1X4AmtXO9Mia_w@mail.gmail.com>
+        Fri, 1 Nov 2019 17:48:07 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:42296 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfKAVsG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 17:48:06 -0400
+Received: from zyt.lan (unknown [37.17.234.113])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 10A635C3996;
+        Fri,  1 Nov 2019 22:48:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1572644884;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=O13dNAYrYnYnAw0xq29Wh01pA7LkcCcNnwb/S9BEyZ4=;
+        b=oqrarDW4zfIMJCdBVsRFd58EEyoqwH0Xltu0lQsxy8nEPGMa3cBdF7fCHTqr1sYp7csyKD
+        Q730qm7qYjDz3FFMTtEaPIC+qAK0QKVff3Hw+XfMDA9SE/qRDBlT6FIW5mZ/vjWNENXntr
+        uTvyhbWoTQAVLwrcYpQfodgIRt0bbvk=
+From:   Stefan Agner <stefan@agner.ch>
+To:     linux@armlinux.org.uk
+Cc:     ndesaulniers@google.com, nico@fluxnic.net, rfranz@marvell.com,
+        linus.walleij@linaro.org, ard.biesheuvel@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com, Stefan Agner <stefan@agner.ch>
+Subject: [PATCH] ARM: use APSR_nzcv instead of r15 as mrc operand
+Date:   Fri,  1 Nov 2019 22:47:58 +0100
+Message-Id: <472f8bd1f000f45343cc0c66a26380fe4b532147.1572644664.git.stefan@agner.ch>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJs_Fx7u6VNDarYqUuUSMSsWK0jpS5ybse0h1X4AmtXO9Mia_w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 12:49:02PM -0700, Rob Clark wrote:
-> On Fri, Nov 1, 2019 at 12:25 PM Ville Syrjälä
-> <ville.syrjala@linux.intel.com> wrote:
-> >
-> > On Fri, Nov 01, 2019 at 11:07:13AM -0700, Rob Clark wrote:
-> > > From: Rob Clark <robdclark@chromium.org>
-> > >
-> > > The new state should not be accessed after this point.  Clear the
-> > > pointers to make that explicit.
-> > >
-> > > This makes the error corrected in the previous patch more obvious.
-> > >
-> > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > > ---
-> > >  drivers/gpu/drm/drm_atomic_helper.c | 29 +++++++++++++++++++++++++++++
-> > >  1 file changed, 29 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> > > index 732bd0ce9241..176831df8163 100644
-> > > --- a/drivers/gpu/drm/drm_atomic_helper.c
-> > > +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> > > @@ -2234,13 +2234,42 @@ EXPORT_SYMBOL(drm_atomic_helper_fake_vblank);
-> > >   */
-> > >  void drm_atomic_helper_commit_hw_done(struct drm_atomic_state *old_state)
-> > >  {
-> > > +     struct drm_connector *connector;
-> > > +     struct drm_connector_state *old_conn_state, *new_conn_state;
-> > >       struct drm_crtc *crtc;
-> > >       struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> > > +     struct drm_plane *plane;
-> > > +     struct drm_plane_state *old_plane_state, *new_plane_state;
-> > >       struct drm_crtc_commit *commit;
-> > > +     struct drm_private_obj *obj;
-> > > +     struct drm_private_state *old_obj_state, *new_obj_state;
-> > >       int i;
-> > >
-> > > +     /*
-> > > +      * After this point, drivers should not access the permanent modeset
-> > > +      * state, so we also clear the new_state pointers to make this
-> > > +      * restriction explicit.
-> > > +      *
-> > > +      * For the CRTC state, we do this in the same loop where we signal
-> > > +      * hw_done, since we still need to new_crtc_state to fish out the
-> > > +      * commit.
-> > > +      */
-> > > +
-> > > +     for_each_oldnew_connector_in_state(old_state, connector, old_conn_state, new_conn_state, i) {
-> > > +             old_state->connectors[i].new_state = NULL;
-> > > +     }
-> > > +
-> > > +     for_each_oldnew_plane_in_state(old_state, plane, old_plane_state, new_plane_state, i) {
-> > > +             old_state->planes[i].new_state = NULL;
-> > > +     }
-> > > +
-> > > +     for_each_oldnew_private_obj_in_state(old_state, obj, old_obj_state, new_obj_state, i) {
-> > > +             old_state->private_objs[i].new_state = NULL;
-> > > +     }
-> > > +
-> > >       for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
-> > >               old_state->crtcs[i].new_self_refresh_active = new_crtc_state->self_refresh_active;
-> > > +             old_state->crtcs[i].new_state = NULL;
-> >
-> > That's going to be a real PITA when doing programming after the fact from
-> > a vblank worker. It's already a pain that the new_crtc_state->state is
-> > getting NULLed somewhere.
-> >
-> 
-> I think you already have that problem, this just makes it explicit.
+LLVM's integrated assembler does not accept r15 as mrc operand.
+  arch/arm/boot/compressed/head.S:1267:16: error: operand must be a register in range [r0, r14] or apsr_nzcv
+  1: mrc p15, 0, r15, c7, c14, 3 @ test,clean,invalidate D cache
+                 ^
 
-I don't yet. Except on a branch where I have my vblank workers.
-And I think the only problem is having the helpers/core clobber
-the pointers when it should not. I don't see why it can't just
-leave them be and let me use them.
+Use APSR_nzcv instead of r15. The GNU assembler supports this
+syntax since binutils 2.21 [0].
 
+[0] https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=commit;h=db472d6ff0f438a21b357249a9b48e4b74498076
+
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ arch/arm/boot/compressed/head.S | 2 +-
+ arch/arm/mm/proc-arm1026.S      | 4 ++--
+ arch/arm/mm/proc-arm926.S       | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+index 15ecad944847..ead21e5f2b80 100644
+--- a/arch/arm/boot/compressed/head.S
++++ b/arch/arm/boot/compressed/head.S
+@@ -1273,7 +1273,7 @@ iflush:
+ __armv5tej_mmu_cache_flush:
+ 		tst	r4, #1
+ 		movne	pc, lr
+-1:		mrc	p15, 0, r15, c7, c14, 3	@ test,clean,invalidate D cache
++1:		mrc	p15, 0, APSR_nzcv, c7, c14, 3	@ test,clean,invalidate D cache
+ 		bne	1b
+ 		mcr	p15, 0, r0, c7, c5, 0	@ flush I cache
+ 		mcr	p15, 0, r0, c7, c10, 4	@ drain WB
+diff --git a/arch/arm/mm/proc-arm1026.S b/arch/arm/mm/proc-arm1026.S
+index 10e21012380b..0bdf25a95b10 100644
+--- a/arch/arm/mm/proc-arm1026.S
++++ b/arch/arm/mm/proc-arm1026.S
+@@ -138,7 +138,7 @@ ENTRY(arm1026_flush_kern_cache_all)
+ 	mov	ip, #0
+ __flush_whole_cache:
+ #ifndef CONFIG_CPU_DCACHE_DISABLE
+-1:	mrc	p15, 0, r15, c7, c14, 3		@ test, clean, invalidate
++1:	mrc	p15, 0, APSR_nzcv, c7, c14, 3		@ test, clean, invalidate
+ 	bne	1b
+ #endif
+ 	tst	r2, #VM_EXEC
+@@ -363,7 +363,7 @@ ENTRY(cpu_arm1026_switch_mm)
+ #ifdef CONFIG_MMU
+ 	mov	r1, #0
+ #ifndef CONFIG_CPU_DCACHE_DISABLE
+-1:	mrc	p15, 0, r15, c7, c14, 3		@ test, clean, invalidate
++1:	mrc	p15, 0, APSR_nzcv, c7, c14, 3		@ test, clean, invalidate
+ 	bne	1b
+ #endif
+ #ifndef CONFIG_CPU_ICACHE_DISABLE
+diff --git a/arch/arm/mm/proc-arm926.S b/arch/arm/mm/proc-arm926.S
+index 3188ab2bac61..1ba253c2bce1 100644
+--- a/arch/arm/mm/proc-arm926.S
++++ b/arch/arm/mm/proc-arm926.S
+@@ -131,7 +131,7 @@ __flush_whole_cache:
+ #ifdef CONFIG_CPU_DCACHE_WRITETHROUGH
+ 	mcr	p15, 0, ip, c7, c6, 0		@ invalidate D cache
+ #else
+-1:	mrc	p15, 0, r15, c7, c14, 3 	@ test,clean,invalidate
++1:	mrc	p15, 0, APSR_nzcv, c7, c14, 3 	@ test,clean,invalidate
+ 	bne	1b
+ #endif
+ 	tst	r2, #VM_EXEC
+@@ -358,7 +358,7 @@ ENTRY(cpu_arm926_switch_mm)
+ 	mcr	p15, 0, ip, c7, c6, 0		@ invalidate D cache
+ #else
+ @ && 'Clean & Invalidate whole DCache'
+-1:	mrc	p15, 0, r15, c7, c14, 3 	@ test,clean,invalidate
++1:	mrc	p15, 0, APSR_nzcv, c7, c14, 3 	@ test,clean,invalidate
+ 	bne	1b
+ #endif
+ 	mcr	p15, 0, ip, c7, c5, 0		@ invalidate I cache
 -- 
-Ville Syrjälä
-Intel
+2.23.0
+
