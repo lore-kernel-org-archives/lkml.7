@@ -2,118 +2,124 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A82CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E0ECA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B842217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572634150;
-	bh=UtotsVrBU3BoxXHlblzEP9xmV6Kfj7U2PcegPJZRp4c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=d/wnALIzPGdsK7ajIWM+Adw1jv6i+bK2Ub2Bi7vcUEGjn2xTWaL49wNyHUNYYVztN
-	 pMe4VX72V5JLlTi8bwDjfbni+5+s/qCB5QAcuElpRMntN0JA7XiMi9QFxaXGJHSXgS
-	 lJJUMu18/hdC4+831OxQW8KSDC5BMMKWgMtwV8po=
+	by mail.kernel.org (Postfix) with ESMTP id 95109217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:52:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BLlFl4qx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfKAStJ (ORCPT
+        id S1727547AbfKASwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 14:49:09 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34240 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbfKAStI (ORCPT
+        Fri, 1 Nov 2019 14:52:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30613 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727381AbfKASwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 14:49:08 -0400
-Received: by mail-lf1-f66.google.com with SMTP id f5so7937043lfp.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 11:49:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NOMWJgPM1rDLmkw/2ygHrVXuEmkEd1D0/JlMXiMe9Cs=;
-        b=MAQEB0bjYlwnpicMwJ0hpvQfShzzNnbkhVUWFhCx8LmPdFf1VtrZRsRhYlpBiWxwDU
-         6SYl+q81U3u4H3tge2/n+9uInRo/rkB7rpshebRyiFJfKyg3CH5z6P+T82/TjkFdiXOg
-         XlHt7lD/HhHCjEU4zEIR0POrtffKJPcsovlxM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NOMWJgPM1rDLmkw/2ygHrVXuEmkEd1D0/JlMXiMe9Cs=;
-        b=QDqMIDNHPeVtwMg3N6DzS5Kww04LIRM9gqCU0MGIdbAUtVWFp8pcnlmhFqxc9RXiIl
-         nSz+XOYfWy7TWRbv/FnMeiLM9G7SqYqXDIn5mYslxTREwq5J6/2gl6NHKIikbtRGVVjG
-         C8fDDFB4eqEhOhq7srqSJHDrvV3Hi3A5BxulwsG1Xmz5AZoG4WKAEOWGh44y4O9p/52t
-         YidPFw+dwpYupq5d8ovlb9lAUs/Laui72zaV7E9lJDrb2ilK5aWiFbBVqEBApanAvnLg
-         NXwQoCV0Yk7vubWI+/+2Q9ggDnDoVkXFcZ3QPeLwmDXW6DRggT3utUin4Dj+/Ih56Ewh
-         qYfg==
-X-Gm-Message-State: APjAAAXr0I2buE8rBk4DRxBTYcsEbDXOADDCXERpV6Ammr0it/C+stDG
-        P0VolknfQJEl3fH7GhOCPaDIdeCRzhw=
-X-Google-Smtp-Source: APXvYqwrpHGB3yB01adCK+26/1IExWc2YxEY0R5owJL6TxEjXGJ9fuOAGChppOHeZ09Dr7u6rV4F5A==
-X-Received: by 2002:a19:40cf:: with SMTP id n198mr8261612lfa.189.1572634146148;
-        Fri, 01 Nov 2019 11:49:06 -0700 (PDT)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id s27sm3057102lfc.43.2019.11.01.11.49.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Nov 2019 11:49:04 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id r7so2546531ljg.2
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 11:49:04 -0700 (PDT)
-X-Received: by 2002:a05:651c:154:: with SMTP id c20mr9193922ljd.1.1572634144278;
- Fri, 01 Nov 2019 11:49:04 -0700 (PDT)
+        Fri, 1 Nov 2019 14:52:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572634354;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7vllCCVrOpmYyfvb9Xg8yUmypgDAYnIAfaIkWG13YkI=;
+        b=BLlFl4qx6Ixre0EKnfeNJIBu7wsJSZKr2kIFaIsoec54sa4jerr8MEs5BYYLQmz5CnJxK4
+        6+56IIMdGIDyKrpT0QsywLeCeZc/h/Ebrs3xpVIjRtSBCtZyOjqIqkT5xq/lpAibo0OrG7
+        MZewOSTBMMVy+cIWFkIGYX0o5j20dK8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-133-5oo6zwAIOUexO0zYswBGLw-1; Fri, 01 Nov 2019 14:52:31 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D04681005500;
+        Fri,  1 Nov 2019 18:52:29 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E9F4600D1;
+        Fri,  1 Nov 2019 18:52:28 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Subject: Re: [PATCH 4/4] modpost: do not set ->preloaded for symbols from Module.symvers
+References: <20191003102915.28301-1-yamada.masahiro@socionext.com>
+        <20191003102915.28301-4-yamada.masahiro@socionext.com>
+        <x497e4kluxq.fsf@segfault.boston.devel.redhat.com>
+        <CAK7LNASmpO6Dn2M1DtoCDs=RM+jwW7_tRhq7nqDU1YZWdRafuw@mail.gmail.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Fri, 01 Nov 2019 14:52:27 -0400
+In-Reply-To: <CAK7LNASmpO6Dn2M1DtoCDs=RM+jwW7_tRhq7nqDU1YZWdRafuw@mail.gmail.com>
+        (Masahiro Yamada's message of "Fri, 1 Nov 2019 10:13:10 +0900")
+Message-ID: <x494kznctuc.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20191101174840.GA81963@gmail.com>
-In-Reply-To: <20191101174840.GA81963@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 1 Nov 2019 11:48:48 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi_VHc=Q2JsPbVmCgpKekNJwnbBiYrmvnSSW8aiAkg7nQ@mail.gmail.com>
-Message-ID: <CAHk-=wi_VHc=Q2JsPbVmCgpKekNJwnbBiYrmvnSSW8aiAkg7nQ@mail.gmail.com>
-Subject: Re: [GIT PULL] perf fixes
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@infradead.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: 5oo6zwAIOUexO0zYswBGLw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 10:48 AM Ingo Molnar <mingo@kernel.org> wrote:
+Masahiro Yamada <yamada.masahiro@socionext.com> writes:
+
+> On Fri, Nov 1, 2019 at 1:51 AM Jeff Moyer <jmoyer@redhat.com> wrote:
+>>
+>> Masahiro Yamada <yamada.masahiro@socionext.com> writes:
+>>
+>> > Now that there is no overwrap between symbols from ELF files and
+>> > ones from Module.symvers.
+>> >
+>> > So, the 'exported twice' warning should be reported irrespective
+>> > of where the symbol in question came from. Only the exceptional case
+>> > is when __crc_<sym> symbol appears before __ksymtab_<sym>. This
+>> > typically occurs for EXPORT_SYMBOL in .S files.
+>>
+>> Hi, Masahiro,
+>>
+>> After apply this patch, I get the following modpost warnings when doing:
+>>
+>> $ make M=3Dtools/tesing/nvdimm
+>> ...
+>>   Building modules, stage 2.
+>>   MODPOST 12 modules
+>> WARNING: tools/testing/nvdimm/libnvdimm: 'nvdimm_bus_lock' exported
+>> twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+>> WARNING: tools/testing/nvdimm/libnvdimm: 'nvdimm_bus_unlock'
+>> exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+>> WARNING: tools/testing/nvdimm/libnvdimm: 'is_nvdimm_bus_locked'
+>> exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+>> WARNING: tools/testing/nvdimm/libnvdimm: 'devm_nvdimm_memremap'
+>> exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+>> WARNING: tools/testing/nvdimm/libnvdimm: 'nd_fletcher64' exported twice.=
+ Previous export was in drivers/nvdimm/libnvdimm.ko
+>> WARNING: tools/testing/nvdimm/libnvdimm: 'to_nd_desc' exported twice. Pr=
+evious export was in drivers/nvdimm/libnvdimm.ko
+>> WARNING: tools/testing/nvdimm/libnvdimm: 'to_nvdimm_bus_dev'
+>> exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+>> ...
+>>
+>> There are a lot of these warnings.  :)
 >
-> Alexander Shishkin (1):
->       perf/core: Start rejecting the syscall with attr.__reserved_2 set
+> These warnings are correct since
+> drivers/nvdimm/Makefile and
+> tools/testing/nvdimm/Kbuild
+> compile the same files.
 
-This seems to quite possibly break existing apps. Is there any reason
-to believe that existing users have actually cleared that field?
+Yeah, but that's by design.  Is there a way to silence these warnings?
 
-It's suspect for another reason too: the commit that added that field
-just added it to the end of the structure, with the argument that
-"aux_watermark will only matter for new AUX-aware code, so the old
-code should still be fine".
+-Jeff
 
-So by *definition* those old kinds of users would never have cleared
-that field, because that field didn't exist.
-
-Honestly, this all shows a worrying complete disregard for backwards
-compatibility. Calling this a "fix" is questionable, when it is much
-more likely to break some old user.
-
-I've pulled it, but I need people to be aware that this is utter
-garbage, and that if anybody ever reports it, this needs to be
-immediately reverted.
-
-And the people involved should stop claiming this "fixes" anything,
-and should look hard at their random ABI expansions and "fixes".
-
-The original code that said "old users would not be impacted" is
-correct. But this "fix" is very very very questionable indeed, and I
-get the feeling that somebody doesn't understand what ABI is, when
-they claim that this "fixes" anything.
-
-      Linus
