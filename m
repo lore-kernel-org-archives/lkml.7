@@ -2,98 +2,131 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5F1CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25236CA9ECE
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31865217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:34:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T2RLrf9y"
+	by mail.kernel.org (Postfix) with ESMTP id F14092080F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 08:37:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730178AbfKAIep (ORCPT
+        id S1726755AbfKAIhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 04:34:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20270 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726964AbfKAIeo (ORCPT
+        Fri, 1 Nov 2019 04:37:25 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:35515 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726636AbfKAIhY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 04:34:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572597283;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VeTVVRHH5RhLf1wEcfrwLCrIZRBQRtnalW9KKdhHWCI=;
-        b=T2RLrf9yusTIu/oSDxl3Dbr9xzEOccK+As97rgynT1VUNaelsg09FfGVOsLEYbgCZgdfza
-        cluP4JrrqZkjZRi+aATegEybevgPfN7/vMbaNu/GE7s3x6Ff4nrmEciY/kHMAy80/ESN2U
-        6lYOMMR0o6XRoQaffwCl5gF/XE6V/mU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-244-XeYdMJPzMl-JuLS3R5yRzA-1; Fri, 01 Nov 2019 04:34:40 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4BC1800D49;
-        Fri,  1 Nov 2019 08:34:38 +0000 (UTC)
-Received: from krava (ovpn-204-176.brq.redhat.com [10.40.204.176])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D580360852;
-        Fri,  1 Nov 2019 08:34:35 +0000 (UTC)
-Date:   Fri, 1 Nov 2019 09:34:34 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v5 7/7] perf report: Sort by sampled cycles percent per
- block for tui
-Message-ID: <20191101083434.GD2172@krava>
-References: <20191030060430.23558-1-yao.jin@linux.intel.com>
- <20191030060430.23558-8-yao.jin@linux.intel.com>
+        Fri, 1 Nov 2019 04:37:24 -0400
+Received: from [IPv6:2001:983:e9a7:1:8c66:a727:bbe6:d244]
+ ([IPv6:2001:983:e9a7:1:8c66:a727:bbe6:d244])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id QSQRik7i3sBskQSQSiTkxp; Fri, 01 Nov 2019 09:37:22 +0100
+Subject: Re: [PATCH v2 01/10] media: hantro: Fix H264 max frmsize supported on
+ RK3288
+To:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Jonas Karlman <jonas@kwiboo.se>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <HE1PR06MB401108289F09802C261374F8AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <HE1PR06MB4011858F97A96AD25E75E2E1AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <20191031095238.683b69d9@collabora.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <77df1d5a-5c53-00c0-3d32-063341dde55e@xs4all.nl>
+Date:   Fri, 1 Nov 2019 09:36:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191030060430.23558-8-yao.jin@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: XeYdMJPzMl-JuLS3R5yRzA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <20191031095238.683b69d9@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfB2uUZXiFXXgr2vo17Eg+w/SoGCEqJ0WHo8JmU547gcfwnCu6lvTLAEdJ7bPHEpH3w2zRrZn1ZDEmyPvnEwwLdaAC/9x+9QlAyc0WCKlEo8uxBdBGie3
+ vorMjNj2O03EEVFxPlhJ6BzDckNeIit7s6pzlCUFLQ8/jkTXf4vlZxfA4CwfxmuRVq1OW1xLd5sHNDWTbdEmTnR4zNHwZ4eJhmrMtLs50hNAsclofc5yYNKj
+ c+1lpqaCEbraOSa//0pG8mHDtFPtUYwfhZITStU/84u1yR/oVsf/xDpQloz/O4nYwEH3SIDmi4lIGUK4D3qcN/aPeSQ7zBUxDt70hFTY6WOAtuqWBtUNBpNM
+ APWbAcK6Js+jsPgjGN6iK9M3LNdGRIaVDOqJy7FYUGzZpMZF1DG6s3majRbi77J5RK6ZeUue/DDG/i9CaS6AaWWzSuTRgXyAWq/6OE3/cEqumWlEMHo9/DVe
+ zA/92x/K5aCl7tNDAPJ61nyHces0rD12k03yzcyKbC/8g65zMYk8ajc110Q=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 02:04:30PM +0800, Jin Yao wrote:
+On 10/31/19 9:52 AM, Boris Brezillon wrote:
+> On Tue, 29 Oct 2019 01:24:47 +0000
+> Jonas Karlman <jonas@kwiboo.se> wrote:
+> 
+>> TRM specify supported image size 48x48 to 4096x2304 at step size 16 pixels,
+>> change frmsize max_width/max_height to match TRM at [1].
+>>
+>> This patch makes it possible to decode the 4096x2304 sample at [2].
+>>
+>> [1] http://www.t-firefly.com/download/firefly-rk3288/docs/TRM/rk3288-chapter-25-video-encoder-decoder-unit-(vcodec).pdf
+>> [2] https://4ksamples.com/puppies-bath-in-4k/
+>>
+>> Fixes: 760327930e10 ("media: hantro: Enable H264 decoding on rk3288")
+>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> 
+> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Tested-by: Boris Brezillon <boris.brezillon@collabora.com>
+> 
+> Let's also add
+> 
+> Cc: <stable@vger.kernel.org>
+> 
+> just in case this patch doesn't make it to 5.4.
+> 
+> 
+>> ---
+>> Changes in v2:
+>>   - updated commit message with reference to TRM and sample video
+>> ---
+>>  drivers/staging/media/hantro/rk3288_vpu_hw.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/staging/media/hantro/rk3288_vpu_hw.c b/drivers/staging/media/hantro/rk3288_vpu_hw.c
+>> index c0bdd6c02520..f8db6fcaad73 100644
+>> --- a/drivers/staging/media/hantro/rk3288_vpu_hw.c
+>> +++ b/drivers/staging/media/hantro/rk3288_vpu_hw.c
+>> @@ -67,10 +67,10 @@ static const struct hantro_fmt rk3288_vpu_dec_fmts[] = {
+>>  		.max_depth = 2,
+>>  		.frmsize = {
+>>  			.min_width = 48,
+>> -			.max_width = 3840,
+>> +			.max_width = 4096,
+>>  			.step_width = MB_DIM,
+>>  			.min_height = 48,
+>> -			.max_height = 2160,
+>> +			.max_height = 2304,
+>>  			.step_height = MB_DIM,
+> 
+> Hans, Mauro, we were intending to have this fix merged in 5.4 or at
+> the very least be backported to the 5.4 stable branch at some point,
+> the problem is, this patch is based on media/master which contains the
+> s/MB_DIM_H264/MB_DIM/ change. I can send a new version based on
+> media/fixes, but that means Linus will have a conflict when merging the
+> media 5.5 PR in his tree. Are you fine dealing with this conflict
+> (letting Linus know about the expected resolution or backmerging the -rc
+> containing the fix in media/master so that he doesn't even have to deal
+> with it), or should we just let this patch go in media/master and
+> backport it later?
 
-SNIP
+Backport it later once it is merged in mainline.
 
-> diff --git a/tools/perf/ui/browsers/hists.h b/tools/perf/ui/browsers/hist=
-s.h
-> index 91d3e18b50aa..078f2f2c7abd 100644
-> --- a/tools/perf/ui/browsers/hists.h
-> +++ b/tools/perf/ui/browsers/hists.h
-> @@ -5,6 +5,7 @@
->  #include "ui/browser.h"
-> =20
->  struct annotation_options;
-> +struct evsel;
-> =20
->  struct hist_browser {
->  =09struct ui_browser   b;
-> @@ -15,6 +16,7 @@ struct hist_browser {
->  =09struct pstack=09    *pstack;
->  =09struct perf_env=09    *env;
->  =09struct annotation_options *annotation_opts;
-> +=09struct evsel=09    *block_evsel;
+This patch doesn't fix a bug, it is really an enhancement, so I think this
+can safely be delayed.
 
-you should be able to get the evsel from hists_to_evsel function
+Regards,
 
-jirka
+	Hans
+
+> 
+>>  		},
+>>  	},
+> 
 
