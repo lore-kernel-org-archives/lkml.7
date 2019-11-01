@@ -2,150 +2,226 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B21CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 01:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54299CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1635C2083E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 01:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C39520578
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbfKAB5f (ORCPT
+        id S1728639AbfKACBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 21:57:35 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:50998 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726540AbfKAB5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 21:57:34 -0400
-Received: from dggemi403-hub.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id A8870B4F52DF28840A32;
-        Fri,  1 Nov 2019 09:57:31 +0800 (CST)
-Received: from DGGEMI529-MBS.china.huawei.com ([169.254.5.176]) by
- dggemi403-hub.china.huawei.com ([10.3.17.136]) with mapi id 14.03.0439.000;
- Fri, 1 Nov 2019 09:57:23 +0800
-From:   "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "alistair@popple.id.au" <alistair@popple.id.au>,
-        "chengjian (D)" <cj.chengjian@huawei.com>,
-        Xiexiuqi <xiexiuqi@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "oss@buserror.net" <oss@buserror.net>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "Libin (Huawei)" <huawei.libin@huawei.com>,
-        "agust@denx.de" <agust@denx.de>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IGxvb3AgbmVzdGluZyBpbiBhbGlnbm1lbnQgZXhj?=
- =?utf-8?Q?eption_and_machine_check?=
-Thread-Topic: =?utf-8?B?562U5aSNOiBsb29wIG5lc3RpbmcgaW4gYWxpZ25tZW50IGV4Y2VwdGlvbiBh?=
- =?utf-8?Q?nd_machine_check?=
-Thread-Index: AdWLzOb7zyHoVFoiQIWRpEOzZEjVL///vrgA//yweICACykWAP/+hnzQ
-Date:   Fri, 1 Nov 2019 01:57:22 +0000
-Message-ID: <D44062DC474617438D5181ADFE2B2C21016ED78D@dggemi529-mbs.china.huawei.com>
-References: <D44062DC474617438D5181ADFE2B2C21016DE42A@dggemi529-mbs.china.huawei.com>
- <8215aeb3-57dd-223a-29d3-45ca22b0543c@c-s.fr>
- <D44062DC474617438D5181ADFE2B2C21016E9EAA@dggemi529-mbs.china.huawei.com>
- <ef93fa2f-d98f-2e94-322e-0ae095626e75@c-s.fr>
-In-Reply-To: <ef93fa2f-d98f-2e94-322e-0ae095626e75@c-s.fr>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.184.195.37]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        Thu, 31 Oct 2019 22:01:08 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:14072 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726540AbfKACBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 22:01:07 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 017883BACD3F827086A3;
+        Fri,  1 Nov 2019 10:01:05 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id xA120I6t003238;
+        Fri, 1 Nov 2019 10:00:18 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019110110005294-235130 ;
+          Fri, 1 Nov 2019 10:00:52 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     tglx@linutronix.de
+Cc:     mingo@redhat.com, peterz@infradead.org, dvhart@infradead.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, jiang.xuexin@zte.com.cn,
+        Yang Tao <yang.tao172@zte.com.cn>
+Subject: [PATCH] Robust-futex wakes up the waiters will be missed
+Date:   Fri, 1 Nov 2019 10:03:09 +0800
+Message-Id: <1572573789-16557-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-11-01 10:00:53,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-11-01 10:00:23,
+        Serialize complete at 2019-11-01 10:00:23
+X-MAIL: mse-fl1.zte.com.cn xA120I6t003238
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIENocmlzdG9waGUNCg0KCUkgYW0gc29ycnkgdGhhdCB3ZSBhcmUgaW4gc29tZSB0cm91Ymxl
-cyBmb3Igc29tZSB1bnByZWRpY3RhYmxlIHByb2JsZW1zIHdoZW4gd2UgcmVwbGF5IGFuZCBoYXZl
-bid0IGdpdmVuIHlvdSBhIHF1aWNrIHJlcGx5Lg0KCQ0KCUkgYWxzbyB3YW50IHRvIGFzayBkb2Vz
-IHRoZSBwaGVub21lb24odXNlIG1lbWNweV90b2lvIHdoZW4gY29weSBpb3JlbWFwX2FkZHJlc3Mp
-IG9ubHkgb2NjdXJzIGluIHBvd2VycGMgPyBkb2VzIGFueSBvdGhlciANCmFyY2ggYWxzbyBoYXMg
-dGhlIHNhbWUgcHJvYmxlbSA/IHdlIGFyZSBpbiBwZXJzdWl0IG9mIGFza2luZyB3aHkgdGhpcyBw
-aGVub21lbm9uIGhhcHBlbmVkLiBPdXIgbGludXgga2VybmVsIHZlcnNpb24gaXMgNC40Lg0KCQ0K
-CXRoYW5rcyB2ZXJ5IG11Y2guDQoNCi0tLS0t6YKu5Lu25Y6f5Lu2LS0tLS0NCuWPkeS7tuS6ujog
-Q2hyaXN0b3BoZSBMZXJveSBbbWFpbHRvOmNocmlzdG9waGUubGVyb3lAYy1zLmZyXSANCuWPkemA
-geaXtumXtDogMjAxOeW5tDEw5pyIMzHml6UgMTk6MTMNCuaUtuS7tuS6ujogV2FuZ3NoYW9ibyAo
-Ym9ibykgPGJvYm8uc2hhb2Jvd2FuZ0BodWF3ZWkuY29tPg0K5oqE6YCBOiBjaGVuZ2ppYW4gKEQp
-IDxjai5jaGVuZ2ppYW5AaHVhd2VpLmNvbT47IExpYmluIChIdWF3ZWkpIDxodWF3ZWkubGliaW5A
-aHVhd2VpLmNvbT47IFhpZXhpdXFpIDx4aWV4aXVxaUBodWF3ZWkuY29tPjsgemhhbmd5aSAoRikg
-PHlpLnpoYW5nQGh1YXdlaS5jb20+DQrkuLvpopg6IFJlOiDnrZTlpI06IGxvb3AgbmVzdGluZyBp
-biBhbGlnbm1lbnQgZXhjZXB0aW9uIGFuZCBtYWNoaW5lIGNoZWNrDQoNCkhpLA0KDQpEaWQgeW91
-IHRyeSA/IERvZXMgaXQgd29yayA/DQoNCkNocmlzdG9waGUNCg0KTGUgMjgvMTAvMjAxOSDDoCAw
-Njo1NywgV2FuZ3NoYW9ibyAoYm9ibykgYSDDqWNyaXTCoDoNCj4gSGksQ2hyaXN0b3BoZQ0KPiAN
-Cj4gVGhhbmsgeW91IGZvciB5b3VyIHF1aWNrIHJlcGx5LiBJIHdpbGwgdHJ5IHRvIHVzZSBtZW1j
-cHlfdG9pbygpIGluc3RlYWQgb2YgbWVtY3B5KCkuDQo+IA0KPiAtLS0tLemCruS7tuWOn+S7ti0t
-LS0tDQo+IOWPkeS7tuS6ujogQ2hyaXN0b3BoZSBMZXJveSBbbWFpbHRvOmNocmlzdG9waGUubGVy
-b3lAYy1zLmZyXQ0KPiDlj5HpgIHml7bpl7Q6IDIwMTnlubQxMOaciDI25pelIDE5OjIwDQo+IOaU
-tuS7tuS6ujogV2FuZ3NoYW9ibyAoYm9ibykgPGJvYm8uc2hhb2Jvd2FuZ0BodWF3ZWkuY29tPg0K
-PiDmioTpgIE6IGxpbnV4LWFyY2hAdmdlci5rZXJuZWwub3JnOyBhbGlzdGFpckBwb3BwbGUuaWQu
-YXU7IGNoZW5namlhbiAoRCkgDQo+IDxjai5jaGVuZ2ppYW5AaHVhd2VpLmNvbT47IFhpZXhpdXFp
-IDx4aWV4aXVxaUBodWF3ZWkuY29tPjsgDQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
-IG9zc0BidXNlcnJvci5uZXQ7IHBhdWx1c0BzYW1iYS5vcmc7IA0KPiBMaWJpbiAoSHVhd2VpKSA8
-aHVhd2VpLmxpYmluQGh1YXdlaS5jb20+OyBhZ3VzdEBkZW54LmRlOyANCj4gbGludXhwcGMtZGV2
-QGxpc3RzLm96bGFicy5vcmcNCj4g5Li76aKYOiBSZTogbG9vcCBuZXN0aW5nIGluIGFsaWdubWVu
-dCBleGNlcHRpb24gYW5kIG1hY2hpbmUgY2hlY2sNCj4gDQo+IEhpLA0KPiANCj4gTGUgMjYvMTAv
-MjAxOSDDoCAwOToyMywgV2FuZ3NoYW9ibyAoYm9ibykgYSDDqWNyaXTCoDoNCj4+IEhpLA0KPj4N
-Cj4+IEkgZW5jb3VudGVyZWQgYSBwcm9ibGVtIGFib3V0IGEgbG9vcCBuZXN0aW5nIG9jY3VycmVk
-IGluIA0KPj4gbWFudWZhY3R1cmluZyB0aGUgYWxpZ25tZW50IGV4Y2VwdGlvbiBpbiBtYWNoaW5l
-IGNoZWNrLCB0cmlnZ2VyIGJhY2tncm91bmQgaXMgOg0KPj4NCj4+IHByb2JsZW06DQo+Pg0KPj4g
-bWFjaGluZSBjaGVja291dCBvciBjcml0aWNhbCBpbnRlcnJ1cHQgLT7igKYtPmtib3hfd3JpdGVb
-Zm9yIHJlY29yZGluZyANCj4+IGxhc3Qgd29yZHNdIC0+IG1lbWNweShpcnJlbWFwX2FkZHIsIHNy
-YyxzaXplKTpfR0xPQkFMKG1lbWNweSnigKYNCj4+DQo+PiB3aGVuIHdlIGVudGVyIG1lbWNweSxh
-IGNvbW1hbmQg4oCYZGNieiByMTEscjbigJkgd2lsbCBjYXVzZSBhIGFsaWdubWVudCANCj4+IGV4
-Y2VwdGlvbiwgaW4gdGhpcyBzaXR1YXRpb24scjExIGxvYWRzIHRoZSBpb3JlbWFwIGFkZHJlc3Ms
-d2hpY2ggDQo+PiBsZWFkcyB0byB0aGUgYWxpZ25tZW50IGV4Y2VwdGlvbiwNCj4gDQo+IFlvdSBj
-YW4ndCB1c2UgbWVtY3B5KCkgb24gc29tZXRoaW5nIGVsc2UgdGhhbiBtZW1vcnkuDQo+IA0KPiBG
-b3IgYW4gaW9yZW1hcHBlZCBhcmVhLCB5b3UgaGF2ZSB0byB1c2UgbWVtY3B5X3RvaW8oKQ0KPiAN
-Cj4gQ2hyaXN0b3BoZQ0KPiANCj4+DQo+PiB0aGVuIHRoZSBjb21tYW5kIGNhbiBub3QgYmUgcHJv
-Y2VzcyBzdWNjZXNzZnVsbHksYXMgd2Ugc3RpbGwgaW4gDQo+PiBtYWNoaW5lIGNoZWNrLmF0IHRo
-ZSBlbmQgLGl0IHRyaWdnZXJzIGEgbmV3IGlycSBtYWNoaW5lIGNoZWNrIGluIGlycSANCj4+IGhh
-bmRsZXIgZnVuY3Rpb24sYSBsb29wIG5lc3RpbmcgYmVnaW5zLg0KPj4NCj4+IGFuYWx5c2lzOg0K
-Pj4NCj4+IFdlIGhhdmUgYW5hbHlzZWQgYSBsb3QsYnV0IGl0IHN0aWxsIGNhbiBub3QgY29tZSB0
-byBhIHJlYXNvbmFibGUgDQo+PiBkZXNjcmlwdGlvbixpbiBjb21tb24sdGhlIGFsaWdubWVudCB0
-cmlnZ2VyZWQgaW4gbWFjaGluZSBjaGVjayANCj4+IGNvbnRleHQgY2FuIHN0aWxsIGJlIGNvbGxl
-Y3RlZCBpbnRvIHRoZSBLYm94DQo+Pg0KPj4gYWZ0ZXIgYWxpZ25tZW50IGV4Y2VwdGlvbiBiZSBo
-YW5kbGVkIGJ5IGhhbmRsZXIgZnVuY3Rpb24sIGJ1dCBob3cgDQo+PiBkb2VzIHRoZSBtYWNoaW5l
-IGNoZWNrb3V0IGNhbiBiZSB0cmlnZ2VyZWQgaW4gdGhlIGhhbmRsZXIgZnVjbnRpb24gDQo+PiBm
-b3IgYW55IGNhdXNlcz8gV2UgcHJpbnQgcmVsZXZhbnQgcmVnaXN0ZXJzDQo+Pg0KPj4gYXMgZm9s
-bG93IHdoZW4gZmlyc3QgZW50ZXIgbWFjaGluZSBjaGVjayBhbmQgYWxpZ25tZW50IGV4Y2VwdGlv
-biANCj4+IGhhbmRsZXINCj4+IGZ1bmN0aW9uOg0KPj4NCj4+ICAgwqDCoMKgwqDCoMKgwqDCoCBN
-U1I6MHgywqDCoMKgwqDCoCBNU1I6MHgwDQo+Pg0KPj4gICDCoMKgwqDCoMKgwqDCoMKgIFNSUjE6
-MHgywqDCoMKgwqDCoCBTUlIxOjB4MjEwMDINCj4+DQo+PiAgIMKgwqDCoMKgwqDCoMKgwqAgQnV0
-IHRoZSBtYW51YWwgc2F5cyBTUlIxIHNob3VsZCBiZSBzZXQgdG8gTVNSKDB4Miksd2h5IA0KPj4g
-dGhhdCBoYXBwZW5lZCA/DQo+Pg0KPj4gICDCoMKgwqDCoMKgwqDCoMKgIFRoZW4gYSBicmFuY2gg
-aW4gaGFuZGxlciBmdW5jdGlvbiBjb3B5IHRoZSBTUlIxIHRvIA0KPj4gTVNSLHRoaXMgZW5ibGUg
-TVNSW01FXSBhbmQgTVNSW0NFXSxzeXN0ZW0gY29sbGFwc2VzLg0KPj4NCj4+IENvbmNsdXNpb246
-DQo+Pg0KPj4gICDCoMKgwqDCoMKgwqDCoMKgIDEpwqAgd2h5IHRoZSBhbGlnbm1lbnQgZXhjZXB0
-aW9uIGNhbiBub3QgYmUgaGFuZGxlZCBpbiANCj4+IG1hY2hpbmUgY2hlY2sgPw0KPj4NCj4+ICAg
-wqDCoMKgwqDCoMKgwqDCoCAyKcKgIGJlc2lkZXMgbWVtY3B5LGFueSBvdGhlciBmdW5jdGlvbiBj
-YW4gY2F1c2UgdGhlIA0KPj4gYWxpZ25tZW50IGV4Y2VwdGlvbiA/DQo+Pg0KPj4gV2Ugc3RpbGwg
-cmVjdXJyZW50IGl0LCB0aGUgbGluZSBhcyBmb2xsb3dzOg0KPj4NCj4+ICAgwqDCoMKgwqDCoMKg
-wqDCoCBDcHUgZGVhZCBsb2NrLT53YXRjaCBsb2ctPnRyaWdnZXINCj4+IGZpcS0+a2JveF93cml0
-ZS0+bWVtY3B5LT5hbGlnbm1lbnQgZXhjZXB0aW9uLT5wcmludCBsYXN0IHdvcmRzLg0KPj4NCj4+
-ICAgwqDCoMKgwqDCoMKgwqDCoCBidXQgZm9yIHRob3NlIHByb2JsZW1zIGFzIGJlbG93LHdoYXQg
-dGhlIGtib3ggcHJpbnRlZCBpcyBlbXB0eS4NCj4+DQo+PiAtLS0tLS0tLS0tLS0tLS0tLS1rYm94
-IHJlc3RhcnQ6W8KgwqAgMTAuMTQ3NTk0XS0tLS0tLS0tLS0tLS0tLS0NCj4+DQo+PiBrYm94IHZl
-cmlmeSBmcyBtYWdpYyBmYWlsDQo+Pg0KPj4ga2JveCBtZW0gbWFieWUgZGVzdHJveWVkLCBmb3Jt
-YXQgaXQNCj4+DQo+PiBrYm94OiBsb2FkIE9LDQo+Pg0KPj4gbG9jay10YXNrOiBtYWpvclsyNDld
-IG1pbm9yWzBdDQo+Pg0KPj4gLS0tLS1zdGFydCBzaG93X2Rlc3Ryb3llZF9rYm94X21lbV9oZWFk
-LS0tLQ0KPj4NCj4+IDAwMDAwMDAwOiAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAw
-MMKgIC4uLi4uLi4uLi4uLi4uLi4NCj4+DQo+PiAwMDAwMDAxMDogMDAwMDAwMDAgMDAwMDAwMDAg
-MDAwMDAwMDAgMDAwMDAwMDDCoCAuLi4uLi4uLi4uLi4uLi4uDQo+Pg0KPj4gMDAwMDAwMjA6IDAw
-MDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwwqAgLi4uLi4uLi4uLi4uLi4uLg0KPj4N
-Cj4+IDAwMDAwMDMwOiAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMMKgIC4uLi4u
-Li4uLi4uLi4uLi4NCj4+DQo+PiAwMDAwMDA0MDogMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAg
-MDAwMDAwMDDCoCAuLi4uLi4uLi4uLi4uLi4uDQo+Pg0KPj4gMDAwMDAwNTA6IDAwMDAwMDAwIDAw
-MDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwwqAgLi4uLi4uLi4uLi4uLi4uLg0KPj4NCj4+IDAwMDAw
-MDYwOiAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMMKgIC4uLi4uLi4uLi4uLi4u
-Li4NCj4+DQo+PiAwMDAwMDA3MDogMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDDC
-oCAuLi4uLi4uLi4uLi4uLi4uDQo+Pg0KPj4gMDAwMDAwODA6IDAwMDAwMDAwIDAwMDAwMDAwIDAw
-MDAwMDAwIDAwMDAwMDAwwqAgLi4uLi4uLi4uLi4uLi4uLg0KPj4NCj4+IDAwMDAwMDkwOiAwMDAw
-MDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMMKgIC4uLi4uLi4uLi4uLi4uLi4NCj4+DQo=
+From: Yang Tao <yang.tao172@zte.com.cn>
+
+We found two scenarios:
+(1)When the owner of a mutex lock with robust attribute and no_pi
+will release the lock and executes pthread_mutex_unlock(),it is
+killed after setting mutex->__data.__lock = 0 and before wake
+others. It will go through the robust process, but it will not wake
+up watiers because mutex->__data.__lock = 0.
+
+                OWNER
+
+        pthread_mutex_unlock()
+                |
+                |
+                V
+        atomic_exchange_rel (&mutex->__data.__lock, 0)
+                        <------------------------killed
+            lll_futex_wake ()                   |
+                                                |
+                                                |(__lock = 0)
+                                                |(enter kernel)
+                                                |
+                                                V
+                                            do_exit()
+                                            exit_mm()
+                                          mm_release()
+                                        exit_robust_list()
+                                        handle_futex_death()
+                                                |
+                                                |(__lock = 0)
+                                                |(uval = 0)
+                                                |
+                                                V
+        if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
+                return 0;<------wakes up waiters will be missed
+
+(2) When a waiter wakes up and returns to the user space, it is
+killed before getting the lock (before modifying
+mutex->__data.__lock), and other waiters will not wake up.
+
+        OWNER                         WAITER
+
+   pthread_mutex_unlock()
+                |
+                |(__lock = 0)
+                |
+                V
+         futex_wake()
+                                fuet_wait()   //awaked
+                                        |
+                                        |
+                                        |(enter userspace)
+                                        |(__lock = 0)
+                                        |
+                                        V
+                        oldval = mutex->__data.__lock
+                                          <-----------------killed
+    atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,  |
+                        id | assume_other_futex_waiters, 0)      |
+                                                                 |
+                                                                 |
+                                                   (enter kernel)|
+                                                                 |
+                                                                 V
+                                                         do_exit()
+                                                        |
+                                                        |
+                                                        V
+                                        handle_futex_death()
+                                        |
+                                        |(__lock = 0)
+                                        |(uval = 0)
+                                        |
+                                        V
+        if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
+                return 0;<------wakes up waiters will be missed
+So, in these scenarios, task will not wake up waiters
+
+We found that when the task was killed in two scenarios,
+task->robust_list->list_op_pending =&mutex->__data.__list.__next,
+so we can do something.
+
+We think that task should wake up once when the following conditions
+are met:
+        (1) task->robust_list->list_op_pending != NULL;
+        (2) mutex->__data.__lock = 0;
+        (3) no_pi
+In some cases, this may lead to some redundant wakeups, which will
+reduce the efficiency of the program, but it will not affectthe
+program operation, and it is very rare to meet these three
+conditions.
+
+At the same time, we only wake up and do not set the died bit,
+because mutex->__data.__lock = 0; mutex->__data.__owner = 0;
+At this time, it can be seen that there is no owner,and the wake-up
+process directly take the lock.
+
+If the died bit is set, it may cause some misoperation. Such as a
+waiter being killed when the owner is releasing the lock, it will
+mark the lock with the died bit, which is not good.
+
+We don't need to set "mutex->__data.__count"(in mutex structure),
+which will not affect repeated lock holding.
+
+Signed-off-by: Yang Tao <yang.tao172@zte.com.cn>
+---
+ kernel/futex.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/futex.c b/kernel/futex.c
+index bd18f60..c2fb590 100644
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -3456,7 +3456,9 @@ SYSCALL_DEFINE3(get_robust_list, int, pid,
+  * Process a futex-list entry, check whether it's owned by the
+  * dying task, and do notification if so:
+  */
+-static int handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int pi)
++static int handle_futex_death(u32 __user *uaddr,
++			      struct task_struct *curr, int pi,
++			      bool pending)
+ {
+ 	u32 uval, uninitialized_var(nval), mval;
+ 	int err;
+@@ -3469,6 +3471,10 @@ static int handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int p
+ 	if (get_user(uval, uaddr))
+ 		return -1;
+ 
++	/* Robust-futex wakes up the waiters will be missed*/
++	if (pending && !pi && uval == 0)
++		futex_wake(uaddr, 1, 1, FUTEX_BITSET_MATCH_ANY);
++
+ 	if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
+ 		return 0;
+ 
+@@ -3590,7 +3596,7 @@ void exit_robust_list(struct task_struct *curr)
+ 		 */
+ 		if (entry != pending)
+ 			if (handle_futex_death((void __user *)entry + futex_offset,
+-						curr, pi))
++						curr, pi, 0))
+ 				return;
+ 		if (rc)
+ 			return;
+@@ -3607,7 +3613,7 @@ void exit_robust_list(struct task_struct *curr)
+ 
+ 	if (pending)
+ 		handle_futex_death((void __user *)pending + futex_offset,
+-				   curr, pip);
++				   curr, pip, 1);
+ }
+ 
+ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
+@@ -3784,7 +3790,7 @@ void compat_exit_robust_list(struct task_struct *curr)
+ 		if (entry != pending) {
+ 			void __user *uaddr = futex_uaddr(entry, futex_offset);
+ 
+-			if (handle_futex_death(uaddr, curr, pi))
++			if (handle_futex_death(uaddr, curr, pi, 0))
+ 				return;
+ 		}
+ 		if (rc)
+@@ -3803,7 +3809,7 @@ void compat_exit_robust_list(struct task_struct *curr)
+ 	if (pending) {
+ 		void __user *uaddr = futex_uaddr(pending, futex_offset);
+ 
+-		handle_futex_death(uaddr, curr, pip);
++		handle_futex_death(uaddr, curr, pip, 1);
+ 	}
+ }
+ 
+-- 
+2.15.2
+
