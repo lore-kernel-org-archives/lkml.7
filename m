@@ -2,197 +2,514 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7B3CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2188DCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FEEB21855
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A731C208CB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:05:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MYCBpQ1y"
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="aZ+jdaP2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbfKAVEv (ORCPT
+        id S1726798AbfKAVFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 17:04:51 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45601 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfKAVEu (ORCPT
+        Fri, 1 Nov 2019 17:05:23 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:41918 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfKAVFX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 17:04:50 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x21so14697007qto.12
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 14:04:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=rU5awjd7OsKi+MjPz5zkPNthALUjS34IGcuRf1byb3I=;
-        b=MYCBpQ1yJWfqeAl1zazCgHUNVBCXOVbAupu9Tw5PyPCacB7oBlTchC+5QEcSDSlppj
-         xU1s2TD9NiUvV0wRfn8w5/y8ORls+UnEa6UFaTeaYv5PxNRJGCBu0+zRHLTAB2Ki21kd
-         F/CtsFIi+9D8qtT2ulNspJyKgFjpWUg7SF84r7Rm64mNPsNjUiCE0tY/DBjRsbaK5XOa
-         qcxyoS0SN4+e6QCbAMpMhNXbhj88EYc9nE31tM4wQZ1DIdXJDAppjsd8z7eqmnHo9o5L
-         pKxEZyvxuLSpd26KccAHKSd1dH3j68JElsuenkCbt+ZQuOj7o5G7MgwpJTRHIlIv1xJY
-         kHYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=rU5awjd7OsKi+MjPz5zkPNthALUjS34IGcuRf1byb3I=;
-        b=ERucYt7bCEHLcg/Dtj51PtBdFycP++uimixaNgbYS1u9sFd1dM7Mzh306ThRtaYX6t
-         LHOfWXl06sM9WuvrAAboCDfiS7Fo+L9GU3ENGmK+9fXPtz47GVe+ieKrSqT2UfRJwDGx
-         K7hGNzfDSRaHXNy7WfzPSNR8YlyRSrfceQea+233AsFcAGI3nbQ12tmpWs4V+jeTchE+
-         lEdIu/Zerm4Ygsg5X0J5v/vSfn+KQ85HApV4fQUcY87L/ByZMV5j3muT+KY1ZWMe6eOr
-         m7L4Wo25Iif/nyNAyBM0nV1KOAXr9JKMuYeNVcndCPpxz0RO4eKVGNOeBuvRVpcvGlaT
-         yDeQ==
-X-Gm-Message-State: APjAAAU2xheg9cOwqvHl/0VTpx+bh8z6V6lQRRwcd93Va6W4h8DLJdCX
-        VIqOrwLU7oPZC+wuJX+MFvOnrQ==
-X-Google-Smtp-Source: APXvYqwvyAPbFpJuUv1dfrJ/A+79dw3z2gl+2zURReuAUE5ys0OWiM8VNmKPnAhjSZwpoofSSurXvg==
-X-Received: by 2002:aed:2ec6:: with SMTP id k64mr1475272qtd.61.1572642289403;
-        Fri, 01 Nov 2019 14:04:49 -0700 (PDT)
-Received: from [192.168.1.169] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id c17sm4165329qkm.37.2019.11.01.14.04.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Nov 2019 14:04:48 -0700 (PDT)
-Subject: Re: [Patch v4 5/6] thermal/cpu-cooling: Update thermal pressure in
- case of a maximum frequency capping
-To:     Ionela Voinescu <ionela.voinescu@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
- <1571776465-29763-6-git-send-email-thara.gopinath@linaro.org>
- <2b19d7da-412c-932f-7251-110eadbef3e3@arm.com>
- <CAKfTPtCpZq61gQVpATtTdg5hDA+tP4bF6xPMsvHYUMoY+H-6FQ@mail.gmail.com>
- <20191101154612.GA4884@e108754-lin>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Quentin Perret <qperret@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Amit Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <5DBC9DEF.6030007@linaro.org>
-Date:   Fri, 1 Nov 2019 17:04:47 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Fri, 1 Nov 2019 17:05:23 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 13B4C5C2BE5;
+        Fri,  1 Nov 2019 22:05:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1572642318;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tZ0h3EbFObpMXriwNz6TxLUzEv415VpeQRqv5BkyAzM=;
+        b=aZ+jdaP2fbJVvi7Ct9ffPndXM1r43BGv6pQuKmuFKcBj4RM4OsE/vLAZTe0ZAYd6+psrvq
+        LN9fVToPoJkjs5IeFN4swvLqyoebECM0HMf1K9tzVMM0MEKlHCkr2kelkUZPY6LQXyGeAl
+        PIk9EPsaaqK6Eo9s3coSxBh6OTWq2vU=
 MIME-Version: 1.0
-In-Reply-To: <20191101154612.GA4884@e108754-lin>
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+Date:   Fri, 01 Nov 2019 22:05:17 +0100
+From:   Stefan Agner <stefan@agner.ch>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     linux@armlinux.org.uk, Fangrui Song <maskray@google.com>,
+        Jian Cai <jiancai@google.com>,
+        Peter Smith <peter.smith@linaro.org>,
+        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Roy Franz <rfranz@marvell.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Allison Randal <allison@lohutok.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Sonny Rao <sonnyrao@chromium.org>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] arm: replace Sun/Solaris style flag on section directive
+In-Reply-To: <20191030174429.248697-1-ndesaulniers@google.com>
+References: <20191030174429.248697-1-ndesaulniers@google.com>
+Message-ID: <fa4e28a9a16c54319916be005159e250@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/01/2019 11:47 AM, Ionela Voinescu wrote:
-> Hi guys,
-> 
-> On Thursday 31 Oct 2019 at 17:38:25 (+0100), Vincent Guittot wrote:
->> On Thu, 31 Oct 2019 at 17:29, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->>>
->>> On 22.10.19 22:34, Thara Gopinath wrote:
->>>> Thermal governors can request for a cpu's maximum supported frequency
->>>> to be capped in case of an overheat event. This in turn means that the
->>>> maximum capacity available for tasks to run on the particular cpu is
->>>> reduced. Delta between the original maximum capacity and capped
->>>> maximum capacity is known as thermal pressure. Enable cpufreq cooling
->>>> device to update the thermal pressure in event of a capped
->>>> maximum frequency.
->>>>
->>>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
->>>> ---
->>>>  drivers/thermal/cpu_cooling.c | 31 +++++++++++++++++++++++++++++--
->>>>  1 file changed, 29 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
->>>> index 391f397..2e6a979 100644
->>>> --- a/drivers/thermal/cpu_cooling.c
->>>> +++ b/drivers/thermal/cpu_cooling.c
->>>> @@ -218,6 +218,23 @@ static u32 cpu_power_to_freq(struct cpufreq_cooling_device *cpufreq_cdev,
->>>>  }
->>>>
->>>>  /**
->>>> + * update_sched_max_capacity - update scheduler about change in cpu
->>>> + *                                   max frequency.
->>>> + * @policy - cpufreq policy whose max frequency is capped.
->>>> + */
->>>> +static void update_sched_max_capacity(struct cpumask *cpus,
->>>> +                                   unsigned int cur_max_freq,
->>>> +                                   unsigned int max_freq)
->>>> +{
->>>> +     int cpu;
->>>> +     unsigned long capacity = (cur_max_freq << SCHED_CAPACITY_SHIFT) /
->>>> +                               max_freq;
->>>> +
->>>> +     for_each_cpu(cpu, cpus)
->>>> +             update_thermal_pressure(cpu, capacity);
->>>> +}
->>>> +
->>>> +/**
->>>>   * get_load() - get load for a cpu since last updated
->>>>   * @cpufreq_cdev:    &struct cpufreq_cooling_device for this cpu
->>>>   * @cpu:     cpu number
->>>> @@ -320,6 +337,7 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
->>>>                                unsigned long state)
->>>>  {
->>>>       struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
->>>> +     int ret;
->>>>
->>>>       /* Request state should be less than max_level */
->>>>       if (WARN_ON(state > cpufreq_cdev->max_level))
->>>> @@ -331,8 +349,17 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
->>>>
->>>>       cpufreq_cdev->cpufreq_state = state;
->>>>
->>>> -     return dev_pm_qos_update_request(&cpufreq_cdev->qos_req,
->>>> -                             cpufreq_cdev->freq_table[state].frequency);
->>>> +     ret = dev_pm_qos_update_request
->>>> +                             (&cpufreq_cdev->qos_req,
->>>> +                              cpufreq_cdev->freq_table[state].frequency);
->>>> +
->>>> +     if (ret > 0)
->>>> +             update_sched_max_capacity
->>>> +                             (cpufreq_cdev->policy->cpus,
->>>> +                              cpufreq_cdev->freq_table[state].frequency,
->>>> +                              cpufreq_cdev->policy->cpuinfo.max_freq);
->>>> +
->>>> +     return ret;
->>>>  }
->>>>
->>>>  /**
->>>>
->>>
->>> Why not getting rid of update_sched_max_capacity() entirely and call
->>> update_thermal_pressure() in cpu_cooling.c directly? Saves one level in
->>> the call chain and would mean less code for this feature.
->>
->> But you add complexity in update_thermal_pressure which now has to
->> deal with a cpumask and to compute some frequency ratio
->> IMHO, it's cleaner to keep update_thermal_pressure simple as it is now
->>
-> 
-> How about removing update_thermal_pressure altogether and doing all the
-> work in update_sched_max_capacity? That is, have
-> update_sched_max_capacity compute the capped_freq_ratio, do the
-> normalization, and set it per_cpu for all CPUs in the frequency domain.
-> You'll save some calculations that you're now doing in
-> update_thermal_pressure for each cpu and you avoid shifting back and
-> forth.
+Hi Nick,
 
-Yes.  I can pass the delta to update_thermal_pressure. I will still want
-to keep update_thermal_pressure and a per cpu variable in fair.c to
-store this.
+On 2019-10-30 18:44, Nick Desaulniers wrote:
+> It looks like a section directive was using "Solaris style" to declare
+> the section flags. Replace this with the GNU style so that Clang's
+> integrated assembler can assemble this directive.
 > 
-> If you're doing so it would be worth renaming update_sched_max_capacity
-> to something like update_sched_thermal_pressure.
-Will do.
+> The modified instances were identified via:
+> $ ag \\.section | grep \#
+
+I actually have the *very same* patch on my tree, just did not cleanup
+the commit message and submit :-(
+
+Anyways, this looks good to me:
+
+Reviewed-by: Stefan Agner <stefan@agner.ch>
+
+--
+Stefan
 
 
--- 
-Warm Regards
-Thara
+> 
+> Link:
+> https://ftp.gnu.org/old-gnu/Manuals/gas-2.9.1/html_chapter/as_7.html#SEC119
+> Link: https://github.com/ClangBuiltLinux/linux/issues/744
+> Link: https://bugs.llvm.org/show_bug.cgi?id=43759
+> Link: https://reviews.llvm.org/D69296
+> Suggested-by: Fangrui Song <maskray@google.com>
+> Suggested-by: Jian Cai <jiancai@google.com>
+> Suggested-by: Peter Smith <peter.smith@linaro.org>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+>  arch/arm/boot/bootp/init.S            | 2 +-
+>  arch/arm/boot/compressed/big-endian.S | 2 +-
+>  arch/arm/boot/compressed/head.S       | 2 +-
+>  arch/arm/boot/compressed/piggy.S      | 2 +-
+>  arch/arm/mm/proc-arm1020.S            | 2 +-
+>  arch/arm/mm/proc-arm1020e.S           | 2 +-
+>  arch/arm/mm/proc-arm1022.S            | 2 +-
+>  arch/arm/mm/proc-arm1026.S            | 2 +-
+>  arch/arm/mm/proc-arm720.S             | 2 +-
+>  arch/arm/mm/proc-arm740.S             | 2 +-
+>  arch/arm/mm/proc-arm7tdmi.S           | 2 +-
+>  arch/arm/mm/proc-arm920.S             | 2 +-
+>  arch/arm/mm/proc-arm922.S             | 2 +-
+>  arch/arm/mm/proc-arm925.S             | 2 +-
+>  arch/arm/mm/proc-arm926.S             | 2 +-
+>  arch/arm/mm/proc-arm940.S             | 2 +-
+>  arch/arm/mm/proc-arm946.S             | 2 +-
+>  arch/arm/mm/proc-arm9tdmi.S           | 2 +-
+>  arch/arm/mm/proc-fa526.S              | 2 +-
+>  arch/arm/mm/proc-feroceon.S           | 2 +-
+>  arch/arm/mm/proc-mohawk.S             | 2 +-
+>  arch/arm/mm/proc-sa110.S              | 2 +-
+>  arch/arm/mm/proc-sa1100.S             | 2 +-
+>  arch/arm/mm/proc-v6.S                 | 2 +-
+>  arch/arm/mm/proc-v7.S                 | 2 +-
+>  arch/arm/mm/proc-v7m.S                | 4 ++--
+>  arch/arm/mm/proc-xsc3.S               | 2 +-
+>  arch/arm/mm/proc-xscale.S             | 2 +-
+>  28 files changed, 29 insertions(+), 29 deletions(-)
+> 
+> diff --git a/arch/arm/boot/bootp/init.S b/arch/arm/boot/bootp/init.S
+> index 5c476bd2b4ce..b562da2f7040 100644
+> --- a/arch/arm/boot/bootp/init.S
+> +++ b/arch/arm/boot/bootp/init.S
+> @@ -13,7 +13,7 @@
+>   *  size immediately following the kernel, we could build this into
+>   *  a binary blob, and concatenate the zImage using the cat command.
+>   */
+> -		.section .start,#alloc,#execinstr
+> +		.section .start, "ax"
+>  		.type	_start, #function
+>  		.globl	_start
+>  
+> diff --git a/arch/arm/boot/compressed/big-endian.S
+> b/arch/arm/boot/compressed/big-endian.S
+> index 88e2a88d324b..0e092c36da2f 100644
+> --- a/arch/arm/boot/compressed/big-endian.S
+> +++ b/arch/arm/boot/compressed/big-endian.S
+> @@ -6,7 +6,7 @@
+>   *  Author: Nicolas Pitre
+>   */
+>  
+> -	.section ".start", #alloc, #execinstr
+> +	.section ".start", "ax"
+>  
+>  	mrc	p15, 0, r0, c1, c0, 0	@ read control reg
+>  	orr	r0, r0, #(1 << 7)	@ enable big endian mode
+> diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+> index 93dffed0ac6e..15ecad944847 100644
+> --- a/arch/arm/boot/compressed/head.S
+> +++ b/arch/arm/boot/compressed/head.S
+> @@ -140,7 +140,7 @@
+>  #endif
+>  		.endm
+>  
+> -		.section ".start", #alloc, #execinstr
+> +		.section ".start", "ax"
+>  /*
+>   * sort out different calling conventions
+>   */
+> diff --git a/arch/arm/boot/compressed/piggy.S b/arch/arm/boot/compressed/piggy.S
+> index 0284f84dcf38..27577644ee72 100644
+> --- a/arch/arm/boot/compressed/piggy.S
+> +++ b/arch/arm/boot/compressed/piggy.S
+> @@ -1,5 +1,5 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+> -	.section .piggydata,#alloc
+> +	.section .piggydata, "a"
+>  	.globl	input_data
+>  input_data:
+>  	.incbin	"arch/arm/boot/compressed/piggy_data"
+> diff --git a/arch/arm/mm/proc-arm1020.S b/arch/arm/mm/proc-arm1020.S
+> index 4fa5371bc662..2785da387c91 100644
+> --- a/arch/arm/mm/proc-arm1020.S
+> +++ b/arch/arm/mm/proc-arm1020.S
+> @@ -491,7 +491,7 @@ cpu_arm1020_name:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  	.type	__arm1020_proc_info,#object
+>  __arm1020_proc_info:
+> diff --git a/arch/arm/mm/proc-arm1020e.S b/arch/arm/mm/proc-arm1020e.S
+> index 5d8a8339e09a..e9ea237ed785 100644
+> --- a/arch/arm/mm/proc-arm1020e.S
+> +++ b/arch/arm/mm/proc-arm1020e.S
+> @@ -449,7 +449,7 @@ arm1020e_crval:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  	.type	__arm1020e_proc_info,#object
+>  __arm1020e_proc_info:
+> diff --git a/arch/arm/mm/proc-arm1022.S b/arch/arm/mm/proc-arm1022.S
+> index b3dd95c345e4..920c279e7879 100644
+> --- a/arch/arm/mm/proc-arm1022.S
+> +++ b/arch/arm/mm/proc-arm1022.S
+> @@ -443,7 +443,7 @@ arm1022_crval:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  	.type	__arm1022_proc_info,#object
+>  __arm1022_proc_info:
+> diff --git a/arch/arm/mm/proc-arm1026.S b/arch/arm/mm/proc-arm1026.S
+> index ac5afde12f35..10e21012380b 100644
+> --- a/arch/arm/mm/proc-arm1026.S
+> +++ b/arch/arm/mm/proc-arm1026.S
+> @@ -437,7 +437,7 @@ arm1026_crval:
+>  	string	cpu_arm1026_name, "ARM1026EJ-S"
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  	.type	__arm1026_proc_info,#object
+>  __arm1026_proc_info:
+> diff --git a/arch/arm/mm/proc-arm720.S b/arch/arm/mm/proc-arm720.S
+> index c99d24363f32..39361e196d61 100644
+> --- a/arch/arm/mm/proc-arm720.S
+> +++ b/arch/arm/mm/proc-arm720.S
+> @@ -172,7 +172,7 @@ arm720_crval:
+>   * See <asm/procinfo.h> for a definition of this structure.
+>   */
+>  
+> -		.section ".proc.info.init", #alloc
+> +		.section ".proc.info.init", "a"
+>  
+>  .macro arm720_proc_info name:req, cpu_val:req, cpu_mask:req,
+> cpu_name:req, cpu_flush:req
+>  		.type	__\name\()_proc_info,#object
+> diff --git a/arch/arm/mm/proc-arm740.S b/arch/arm/mm/proc-arm740.S
+> index 1b4a3838393f..1a94bbf6e53f 100644
+> --- a/arch/arm/mm/proc-arm740.S
+> +++ b/arch/arm/mm/proc-arm740.S
+> @@ -128,7 +128,7 @@ __arm740_setup:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  	.type	__arm740_proc_info,#object
+>  __arm740_proc_info:
+>  	.long	0x41807400
+> diff --git a/arch/arm/mm/proc-arm7tdmi.S b/arch/arm/mm/proc-arm7tdmi.S
+> index 17a4687065c7..52b66cf0259e 100644
+> --- a/arch/arm/mm/proc-arm7tdmi.S
+> +++ b/arch/arm/mm/proc-arm7tdmi.S
+> @@ -72,7 +72,7 @@ __arm7tdmi_setup:
+>  
+>  		.align
+>  
+> -		.section ".proc.info.init", #alloc
+> +		.section ".proc.info.init", "a"
+>  
+>  .macro arm7tdmi_proc_info name:req, cpu_val:req, cpu_mask:req, cpu_name:req, \
+>  	extra_hwcaps=0
+> diff --git a/arch/arm/mm/proc-arm920.S b/arch/arm/mm/proc-arm920.S
+> index 298c76b47749..31ac8acc34dc 100644
+> --- a/arch/arm/mm/proc-arm920.S
+> +++ b/arch/arm/mm/proc-arm920.S
+> @@ -434,7 +434,7 @@ arm920_crval:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  	.type	__arm920_proc_info,#object
+>  __arm920_proc_info:
+> diff --git a/arch/arm/mm/proc-arm922.S b/arch/arm/mm/proc-arm922.S
+> index 824be3a0bc23..ca2c7ca8af21 100644
+> --- a/arch/arm/mm/proc-arm922.S
+> +++ b/arch/arm/mm/proc-arm922.S
+> @@ -412,7 +412,7 @@ arm922_crval:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  	.type	__arm922_proc_info,#object
+>  __arm922_proc_info:
+> diff --git a/arch/arm/mm/proc-arm925.S b/arch/arm/mm/proc-arm925.S
+> index d40cff8f102c..a381a0c9f109 100644
+> --- a/arch/arm/mm/proc-arm925.S
+> +++ b/arch/arm/mm/proc-arm925.S
+> @@ -477,7 +477,7 @@ arm925_crval:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  .macro arm925_proc_info name:req, cpu_val:req, cpu_mask:req,
+> cpu_name:req, cache
+>  	.type	__\name\()_proc_info,#object
+> diff --git a/arch/arm/mm/proc-arm926.S b/arch/arm/mm/proc-arm926.S
+> index f3cd08f353f0..3188ab2bac61 100644
+> --- a/arch/arm/mm/proc-arm926.S
+> +++ b/arch/arm/mm/proc-arm926.S
+> @@ -460,7 +460,7 @@ arm926_crval:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  	.type	__arm926_proc_info,#object
+>  __arm926_proc_info:
+> diff --git a/arch/arm/mm/proc-arm940.S b/arch/arm/mm/proc-arm940.S
+> index 1c26d991386d..4b8a00220cc9 100644
+> --- a/arch/arm/mm/proc-arm940.S
+> +++ b/arch/arm/mm/proc-arm940.S
+> @@ -340,7 +340,7 @@ __arm940_setup:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  	.type	__arm940_proc_info,#object
+>  __arm940_proc_info:
+> diff --git a/arch/arm/mm/proc-arm946.S b/arch/arm/mm/proc-arm946.S
+> index 2dc1c75a4fd4..555becf9c758 100644
+> --- a/arch/arm/mm/proc-arm946.S
+> +++ b/arch/arm/mm/proc-arm946.S
+> @@ -395,7 +395,7 @@ __arm946_setup:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  	.type	__arm946_proc_info,#object
+>  __arm946_proc_info:
+>  	.long	0x41009460
+> diff --git a/arch/arm/mm/proc-arm9tdmi.S b/arch/arm/mm/proc-arm9tdmi.S
+> index 913c06e590af..ef517530130b 100644
+> --- a/arch/arm/mm/proc-arm9tdmi.S
+> +++ b/arch/arm/mm/proc-arm9tdmi.S
+> @@ -66,7 +66,7 @@ __arm9tdmi_setup:
+>  
+>  		.align
+>  
+> -		.section ".proc.info.init", #alloc
+> +		.section ".proc.info.init", "a"
+>  
+>  .macro arm9tdmi_proc_info name:req, cpu_val:req, cpu_mask:req, cpu_name:req
+>  		.type	__\name\()_proc_info, #object
+> diff --git a/arch/arm/mm/proc-fa526.S b/arch/arm/mm/proc-fa526.S
+> index 8120b6f4dbb8..dddf833fe000 100644
+> --- a/arch/arm/mm/proc-fa526.S
+> +++ b/arch/arm/mm/proc-fa526.S
+> @@ -185,7 +185,7 @@ fa526_cr1_set:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  	.type	__fa526_proc_info,#object
+>  __fa526_proc_info:
+> diff --git a/arch/arm/mm/proc-feroceon.S b/arch/arm/mm/proc-feroceon.S
+> index bb6dc34d42a3..b12b76bc8d30 100644
+> --- a/arch/arm/mm/proc-feroceon.S
+> +++ b/arch/arm/mm/proc-feroceon.S
+> @@ -571,7 +571,7 @@ feroceon_crval:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  .macro feroceon_proc_info name:req, cpu_val:req, cpu_mask:req,
+> cpu_name:req, cache:req
+>  	.type	__\name\()_proc_info,#object
+> diff --git a/arch/arm/mm/proc-mohawk.S b/arch/arm/mm/proc-mohawk.S
+> index f08308578885..d47d6c5cee63 100644
+> --- a/arch/arm/mm/proc-mohawk.S
+> +++ b/arch/arm/mm/proc-mohawk.S
+> @@ -416,7 +416,7 @@ mohawk_crval:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  	.type	__88sv331x_proc_info,#object
+>  __88sv331x_proc_info:
+> diff --git a/arch/arm/mm/proc-sa110.S b/arch/arm/mm/proc-sa110.S
+> index d5bc5d702563..baba503ba816 100644
+> --- a/arch/arm/mm/proc-sa110.S
+> +++ b/arch/arm/mm/proc-sa110.S
+> @@ -196,7 +196,7 @@ sa110_crval:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  	.type	__sa110_proc_info,#object
+>  __sa110_proc_info:
+> diff --git a/arch/arm/mm/proc-sa1100.S b/arch/arm/mm/proc-sa1100.S
+> index be7b611c76c7..75ebacc8e4e5 100644
+> --- a/arch/arm/mm/proc-sa1100.S
+> +++ b/arch/arm/mm/proc-sa1100.S
+> @@ -239,7 +239,7 @@ sa1100_crval:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  .macro sa1100_proc_info name:req, cpu_val:req, cpu_mask:req, cpu_name:req
+>  	.type	__\name\()_proc_info,#object
+> diff --git a/arch/arm/mm/proc-v6.S b/arch/arm/mm/proc-v6.S
+> index c1c85eb3484f..1dd0d5ca27da 100644
+> --- a/arch/arm/mm/proc-v6.S
+> +++ b/arch/arm/mm/proc-v6.S
+> @@ -261,7 +261,7 @@ v6_crval:
+>  	string	cpu_elf_name, "v6"
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  	/*
+>  	 * Match any ARMv6 processor core.
+> diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
+> index c4e8006a1a8c..48e0ef6f0dcc 100644
+> --- a/arch/arm/mm/proc-v7.S
+> +++ b/arch/arm/mm/proc-v7.S
+> @@ -644,7 +644,7 @@ __v7_setup_stack:
+>  	string	cpu_elf_name, "v7"
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  	/*
+>  	 * Standard v7 proc info content
+> diff --git a/arch/arm/mm/proc-v7m.S b/arch/arm/mm/proc-v7m.S
+> index 1a49d503eafc..84459c1d31b8 100644
+> --- a/arch/arm/mm/proc-v7m.S
+> +++ b/arch/arm/mm/proc-v7m.S
+> @@ -93,7 +93,7 @@ ENTRY(cpu_cm7_proc_fin)
+>  	ret	lr
+>  ENDPROC(cpu_cm7_proc_fin)
+>  
+> -	.section ".init.text", #alloc, #execinstr
+> +	.section ".init.text", "ax"
+>  
+>  __v7m_cm7_setup:
+>  	mov	r8, #(V7M_SCB_CCR_DC | V7M_SCB_CCR_IC| V7M_SCB_CCR_BP)
+> @@ -177,7 +177,7 @@ ENDPROC(__v7m_setup)
+>  	string cpu_elf_name "v7m"
+>  	string cpu_v7m_name "ARMv7-M"
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  .macro __v7m_proc name, initfunc, cache_fns = nop_cache_fns, hwcaps =
+> 0,  proc_fns = v7m_processor_functions
+>  	.long	0			/* proc_info_list.__cpu_mm_mmu_flags */
+> diff --git a/arch/arm/mm/proc-xsc3.S b/arch/arm/mm/proc-xsc3.S
+> index 1ac0fbbe9f12..42eaecc43cfe 100644
+> --- a/arch/arm/mm/proc-xsc3.S
+> +++ b/arch/arm/mm/proc-xsc3.S
+> @@ -496,7 +496,7 @@ xsc3_crval:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  .macro xsc3_proc_info name:req, cpu_val:req, cpu_mask:req
+>  	.type	__\name\()_proc_info,#object
+> diff --git a/arch/arm/mm/proc-xscale.S b/arch/arm/mm/proc-xscale.S
+> index bdb2b7749b03..18ac5a1f8922 100644
+> --- a/arch/arm/mm/proc-xscale.S
+> +++ b/arch/arm/mm/proc-xscale.S
+> @@ -610,7 +610,7 @@ xscale_crval:
+>  
+>  	.align
+>  
+> -	.section ".proc.info.init", #alloc
+> +	.section ".proc.info.init", "a"
+>  
+>  .macro xscale_proc_info name:req, cpu_val:req, cpu_mask:req,
+> cpu_name:req, cache
+>  	.type	__\name\()_proc_info,#object
