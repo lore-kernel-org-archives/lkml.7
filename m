@@ -2,102 +2,164 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C568CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE20CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D486521897
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:59:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572645566;
-	bh=QiZm9ub4TObxGGKcca2WTm6kN/XMUXB/j0wvSJ5M3eA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yiIpnjEbCMkXNY5hIQW9r985hQfO9IY9cYUC8sAb/qjqIK+i1uaY6c/g0HNmXIxiz
-	 QkJIETFwUK2VCsP+sbroORcuCHNDjkbmG9N//2tH2lc8u1ApK/gKPeMJTewyXeyzB8
-	 LemBFF5yBa9IRj5YMisocCPZ3IWSXM8Uqqn2GOEQ=
+	by mail.kernel.org (Postfix) with ESMTP id 135C4218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:05:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CxRV7R5w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727614AbfKAV7Z (ORCPT
+        id S1727108AbfKAWFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 17:59:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726229AbfKAV7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 17:59:24 -0400
-Received: from rapoport-lnx (190.228.71.37.rev.sfr.net [37.71.228.190])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 1 Nov 2019 18:05:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29790 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726663AbfKAWFh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 18:05:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572645935;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=E8+rrZXvUsqeBEaW/X2CqD+QnPOx373OWvmJOxsDZMI=;
+        b=CxRV7R5w1tFCKwkn2VITDPE7KNHlgmKWuJ+JSo/antl9wFd7qtfaTorApkuE4BvjGY04AK
+        1Au6fQEBqqkE12C6PbksYWE6cT9VYqxfbGjUJNy76jULFBjsRI6RY3qO5RtM6rz1b4YDDV
+        lQ7bf1rX3pPXUweE5tFk/E5c2/cjVcA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-395-UyQR-pJ3NNi_-Rohn9Habw-1; Fri, 01 Nov 2019 18:05:32 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6ED020679;
-        Fri,  1 Nov 2019 21:59:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572645563;
-        bh=QiZm9ub4TObxGGKcca2WTm6kN/XMUXB/j0wvSJ5M3eA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IHcZXPG5aOVX7THF5w1BhXuPpEAFbXmlm1YNYoLN1/wia+WcGzRCfkdX1Ruwcf8B0
-         7VsDchfB2H1tc1VfaQdn38Nf40YHULbzg3WrgWUI8RNC8o7I6dxUJNNV8Ww/2Gbls9
-         tJJ3TSp8O0lGrXdZetQvfatdTrJJjGLz2VuJU/Ck=
-Date:   Fri, 1 Nov 2019 22:59:11 +0100
-From:   Mike Rapoport <rppt@kernel.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Helge Deller <deller@gmx.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Salter <msalter@redhat.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
-        Richard Weinberger <richard@nod.at>,
-        Rolf Eike Beer <eike-kernel@sf-tec.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        sparclinux@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v2 01/13] alpha: use pgtable-nop4d instead of 4level-fixup
-Message-ID: <20191101215905.GB20065@rapoport-lnx>
-References: <1572597584-6390-1-git-send-email-rppt@kernel.org>
- <1572597584-6390-2-git-send-email-rppt@kernel.org>
- <20191101091157.q4cesn6vsiy5qj2j@box>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B3CA1005500;
+        Fri,  1 Nov 2019 22:05:30 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-40.rdu2.redhat.com [10.10.121.40])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 220DF60878;
+        Fri,  1 Nov 2019 22:05:26 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wjqx4j2vqg-tAwthNP1gcAcj1x4B7sq6Npbi8QJTUMd-A@mail.gmail.com>
+References: <CAHk-=wjqx4j2vqg-tAwthNP1gcAcj1x4B7sq6Npbi8QJTUMd-A@mail.gmail.com> <157262963995.13142.5568934007158044624.stgit@warthog.procyon.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 00/11] pipe: Notification queue preparation [ver #3]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191101091157.q4cesn6vsiy5qj2j@box>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-ID: <13963.1572645926.1@warthog.procyon.org.uk>
+Date:   Fri, 01 Nov 2019 22:05:26 +0000
+Message-ID: <13964.1572645926@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: UyQR-pJ3NNi_-Rohn9Habw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 12:11:57PM +0300, Kirill A. Shutemov wrote:
-> On Fri, Nov 01, 2019 at 10:39:32AM +0200, Mike Rapoport wrote:
-> > From: Mike Rapoport <rppt@linux.ibm.com>
-> > 
-> > It is not likely alpha will have 5-level page tables.
-> > 
-> > Replace usage of include/asm-generic/4level-fixup.h and implied
-> > __ARCH_HAS_4LEVEL_HACK with include/asm-generic/pgtable-nop4d.h and adjust
-> > page table manipulation macros and functions accordingly.
-> 
-> Not pgtable-nop4d.h, but pgtable-nopud.h. Also in subject.
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Ouch, of course.
- 
-> -- 
->  Kirill A. Shutemov
+> Side note: we have a couple of cases where I don't think we should use
+> the "sync" version at all.
+>=20
+> Both pipe_read() and pipe_write() have that
+>=20
+>         if (do_wakeup) {
+>                 wake_up_interruptible_sync_poll(&pipe->wait, ...
+>=20
+> code at the end, outside the loop. But those two wake-ups aren't
+> actually synchronous.
 
--- 
-Sincerely yours,
-Mike.
+Changing those to non-sync:
+
+BENCHMARK       BEST            TOTAL BYTES     AVG BYTES       STDDEV
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+pipe                  305816126     36255936983       302132808         888=
+0788
+splice                282402106     27102249370       225852078       21003=
+3443
+vmsplice              440022611     48896995196       407474959        5990=
+6438
+
+Changing the others in pipe_read() and pipe_write() too:
+
+pipe                  305609682     36285967942       302383066         741=
+5744
+splice                282475690     27891475073       232428958       20168=
+7522
+vmsplice              451458280     51949421503       432911845        3492=
+5242
+
+The cumulative patch is attached below.  I'm not sure how well this should
+make a difference with my benchmark programs since each thread can run on i=
+ts
+own CPU.
+
+David
+---
+diff --git a/fs/pipe.c b/fs/pipe.c
+index 9cd5cbef9552..c5e3765465f0 100644
+--- a/fs/pipe.c
++++ b/fs/pipe.c
+@@ -332,7 +332,7 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
+ =09=09=09=09do_wakeup =3D 1;
+ =09=09=09=09wake =3D head - (tail - 1) =3D=3D pipe->max_usage / 2;
+ =09=09=09=09if (wake)
+-=09=09=09=09=09wake_up_interruptible_sync_poll_locked(
++=09=09=09=09=09wake_up_locked_poll(
+ =09=09=09=09=09=09&pipe->wait, EPOLLOUT | EPOLLWRNORM);
+ =09=09=09=09spin_unlock_irq(&pipe->wait.lock);
+ =09=09=09=09if (wake)
+@@ -371,7 +371,7 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
+=20
+ =09/* Signal writers asynchronously that there is more room. */
+ =09if (do_wakeup) {
+-=09=09wake_up_interruptible_sync_poll(&pipe->wait, EPOLLOUT | EPOLLWRNORM)=
+;
++=09=09wake_up_interruptible_poll(&pipe->wait, EPOLLOUT | EPOLLWRNORM);
+ =09=09kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
+ =09}
+ =09if (ret > 0)
+@@ -477,7 +477,7 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
+ =09=09=09 * syscall merging.
+ =09=09=09 * FIXME! Is this really true?
+ =09=09=09 */
+-=09=09=09wake_up_interruptible_sync_poll_locked(
++=09=09=09wake_up_locked_poll(
+ =09=09=09=09&pipe->wait, EPOLLIN | EPOLLRDNORM);
+=20
+ =09=09=09spin_unlock_irq(&pipe->wait.lock);
+@@ -531,7 +531,7 @@ pipe_write(struct kiocb *iocb, struct iov_iter *from)
+ out:
+ =09__pipe_unlock(pipe);
+ =09if (do_wakeup) {
+-=09=09wake_up_interruptible_sync_poll(&pipe->wait, EPOLLIN | EPOLLRDNORM);
++=09=09wake_up_interruptible_poll(&pipe->wait, EPOLLIN | EPOLLRDNORM);
+ =09=09kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
+ =09}
+ =09if (ret > 0 && sb_start_write_trylock(file_inode(filp)->i_sb)) {
+
