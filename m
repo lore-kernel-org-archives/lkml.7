@@ -2,145 +2,136 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FC6CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F8CCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 000C821835
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E17FD20650
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:15:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="DY+6pMGs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q+oEe0pD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfKAONJ (ORCPT
+        id S1727112AbfKAOPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 10:13:09 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46141 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfKAONI (ORCPT
+        Fri, 1 Nov 2019 10:15:02 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35767 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfKAOPC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 10:13:08 -0400
-Received: by mail-io1-f67.google.com with SMTP id c6so10999196ioo.13
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 07:13:08 -0700 (PDT)
+        Fri, 1 Nov 2019 10:15:02 -0400
+Received: by mail-lj1-f195.google.com with SMTP id r7so1736207ljg.2;
+        Fri, 01 Nov 2019 07:14:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TlYI6UI9fS5d9yjIzRHk5DK4kYPW9gPr3Mb6SrPAxFE=;
-        b=DY+6pMGsOyfGXGpiBchev1A8MThpoGrRVDP4c2kL1T2x4iLT/1Oqzt0RbI2ugp6JUB
-         jckKQDRHFHVY5qfJ+Q4esI6fnzcsXhgeDDJSWIDSEmHIwj3RqKsHUvNZWM1tGAt7NrsV
-         znRnibutxTKLGXs71MnmqdNJnPvXmveeL+O9c=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=e0tGtyGNT4kJrC3FzIuXmzWyqLKYES36p37pNrq+te0=;
+        b=q+oEe0pDcNt3aIIGsFlBC+vuhAWm6ZzaY0JHON82tZAuc4IJ2cLt1cUxWgrmeaLIdb
+         i8r+E34/NXMzQcH7AIDpod2KClNHoWXKvFE7UNWx/sOsLESjDJAjcfxHe2YkSu6UzP1D
+         NSP8YdpxKHt8/ksrGkElnpj2dpiyBVNnnPIsaLEzkLTWWoY3NQdoRFwgiN28SPaAiRax
+         UWZRi7zzLMpua5uNWM5xsglcC5V4PtsQrEwume77vAcHarRKklyYb+MPYZu+LnjmylEo
+         FzAgFhzJW3ZNN82tpOxSpn7uwGHJFA0n9Ww15hs9ryrrtVqSGWVKlCGaasEaXmGIlNr9
+         TmPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TlYI6UI9fS5d9yjIzRHk5DK4kYPW9gPr3Mb6SrPAxFE=;
-        b=IUkqQZ67JwkoaVSHM8gWFb3K9+fPvhvS9iyqn4ImMOYuUJk54K3ivEs+jqf0dLM6dc
-         BPz0ZaMF5yHiPappEKs/NU5jt9/x9ShuCrXkIDHYrCLxknkw2gl1/bbi5TmQVbuZNVKW
-         BR3Kr3qHyQb54sHP58oo1e0lzfBQkOYLCBCU02OyDmdyUWiitiOmOm25vT5y4nQYAS0K
-         cnfy2o5ILvSBLfNGS415DCvvV+kwOQW/+KF5gXZ8r2VA9s0wPzQyFOcDR7ZFOQ7JkGLw
-         Nln68FKYa2bGOuGFZI04WiKhVzeIa11gn1lkhKoHhy4euM7IWOCHM1NEy9Tj8Cxv19vQ
-         3JBw==
-X-Gm-Message-State: APjAAAUcH2hL2Drgco8s8Ditf8oNSqb6vYcs/6Cnxw1Lk44Czdy934Ze
-        L3E0yzN55SG7X2KjXQtfgONoWw58rt8l+KGYcKpdeg==
-X-Google-Smtp-Source: APXvYqyMLNtzaVw0BMP+EGUQO4Zl/cXY4bdNL2Xb19JBMdareqJEAqq7IY7jnvNWY72KqdWH+k6HJ4EIjuJgdGAsAFQ=
-X-Received: by 2002:a5e:d917:: with SMTP id n23mr1074088iop.28.1572617587422;
- Fri, 01 Nov 2019 07:13:07 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=e0tGtyGNT4kJrC3FzIuXmzWyqLKYES36p37pNrq+te0=;
+        b=YnjxfFRbr6QuGVxVg0ATKVCho9urVt3gZZBmIkuwmZjdZLIH+Uo8lIN1L38oXrFv7q
+         FsZH5umgGvylyeuJc8Bh+pkD/AlqXXTmnM9h4z/NQbHnXQsEiJZUQsRrZhc8V8AKKlT9
+         n/SY+aWGEpHzk05i7j7hFXk/86BgVUThj3AsPSWwMQeLMtza/3W2IGJ65MSsEPS6e45p
+         Jm0ucJmTb5gUtCMSoAf6OJPVblEiRn4sKc2IwpkEQ1y1xg2LQZjiKJ6p1ZoIRFdE+f8D
+         EPo7fNt++lDjD6BmeA3O+yiLXR6Ccv4HQC73LAnPDsPJEDeHIZntmEPpCoGkWOeRiPUS
+         0kug==
+X-Gm-Message-State: APjAAAXhWdTmlu/Y5ckHVN8Ym9JddauDjv2VPBQ+FiWhdUoEGc3Su4fV
+        xZ+h92aqHKPg6kr85jwZIQV+2q2B
+X-Google-Smtp-Source: APXvYqxsbdGpkDO3MxGcdyqfwf4268XChSrkHtw4H/YHQKMTTu1VOUYaS95vLN1tgjUOnaJze2Im1A==
+X-Received: by 2002:a2e:858f:: with SMTP id b15mr8468737lji.68.1572617698640;
+        Fri, 01 Nov 2019 07:14:58 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id v21sm2584805lfe.68.2019.11.01.07.14.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Nov 2019 07:14:58 -0700 (PDT)
+Subject: Re: [PATCH v7 18/19] PM / devfreq: tegra30: Tune up MCCPU boost-down
+ coefficient
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191029220019.26773-1-digetx@gmail.com>
+ <CGME20191029220656epcas2p4b19cb854054ebce6132c7111f52cada4@epcas2p4.samsung.com>
+ <20191029220019.26773-19-digetx@gmail.com>
+ <99a90972-2170-ebcb-7bff-cd9ba8b0b0d1@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <110096a4-9f77-3912-a911-76d9c2c5c277@gmail.com>
+Date:   Fri, 1 Nov 2019 17:14:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20191025175625.8011-1-jagan@amarulasolutions.com>
- <20191025175625.8011-5-jagan@amarulasolutions.com> <20191028153427.pc3tnoz2d23filhx@hendrix>
- <CAMty3ZCisTrFGjzHyqSofqFAsKSLV1n2xP5Li3Lonhdi0WUZVA@mail.gmail.com> <20191029085401.gvqpwmmpyml75vis@hendrix>
-In-Reply-To: <20191029085401.gvqpwmmpyml75vis@hendrix>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Fri, 1 Nov 2019 19:42:55 +0530
-Message-ID: <CAMty3ZAWPZSHtAZDf_0Dpx588YGGv3pJX1cXMfkZus3+WF94cA@mail.gmail.com>
-Subject: Re: [PATCH v11 4/7] drm/sun4i: dsi: Handle bus clock explicitly
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Icenowy Zheng <icenowy@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <99a90972-2170-ebcb-7bff-cd9ba8b0b0d1@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+01.11.2019 10:45, Chanwoo Choi пишет:
+> On 19. 10. 30. 오전 7:00, Dmitry Osipenko wrote:
+>> MCCPU boosts up very aggressively by 800% and boosts down very mildly by
+>> 10%. This doesn't work well when system is idling because the very slow
+>> de-boosting results in lots of consecutive-down interrupts, in result
+>> memory stays clocked high and CPU doesn't enter deepest idling state
+>> instead of keeping memory at lowest freq and having CPU cluster turned
+>> off. A more faster de-boosting fixes the case of idling system and doesn't
+>> affect the case of an active system.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/devfreq/tegra30-devfreq.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+>> index d0dd42856e5b..9a21a29198ee 100644
+>> --- a/drivers/devfreq/tegra30-devfreq.c
+>> +++ b/drivers/devfreq/tegra30-devfreq.c
+>> @@ -123,7 +123,7 @@ static const struct tegra_devfreq_device_config actmon_device_configs[] = {
+>>  		.offset = 0x200,
+>>  		.irq_mask = 1 << 25,
+>>  		.boost_up_coeff = 800,
+>> -		.boost_down_coeff = 90,
+>> +		.boost_down_coeff = 40,
+>>  		.boost_up_threshold = 27,
+>>  		.boost_down_threshold = 10,
+>>  		.avg_dependency_threshold = 50000,
+>>
+> 
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> 
+> IMO, I think that it is not good to change the threshold value
+> on device driver directly when some requirement happen.
+> Instead, better to get the threshold value from device-tree file.
 
-On Tue, Oct 29, 2019 at 2:24 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Tue, Oct 29, 2019 at 04:03:56AM +0530, Jagan Teki wrote:
-> > > > explicit handling of common clock would require since the A64
-> > > > doesn't need to mention the clock-names explicitly in dts since it
-> > > > support only one bus clock.
-> > > >
-> > > > Also pass clk_id NULL instead "bus" to regmap clock init function
-> > > > since the single clock variants no need to mention clock-names
-> > > > explicitly.
-> > >
-> > > You don't need explicit clock handling. Passing NULL as the argument
-> > > in regmap_init_mmio_clk will make it use the first clock, which is the
-> > > bus clock.
-> >
-> > Indeed I tried that, since NULL clk_id wouldn't enable the bus clock
-> > during regmap_mmio_gen_context code, passing NULL triggering vblank
-> > timeout.
->
-> There's a bunch of users of NULL in tree, so finding out why NULL
-> doesn't work is the way forward.
+I think in worst case these values could be tuned for a hardware
+generation. The current hardcoded values should be good enough for everyone.
 
-I'd have looked the some of the users before checking the code as
-well. As I said passing NULL clk_id to devm_regmap_init_mmio_clk =>
-__devm_regmap_init_mmio_clk would return before processing the clock.
+If we'll find that some differentiation is needed, then we could
+consider making the pre-defined config per hardware generation by
+specifying "data" fields of the of_device_id table.
 
-Here is the code snippet on the tree just to make sure I'm on the same
-page or not.
+It also should be possible add sysfs interface for userpace to change
+the boosting values. Or make these values a driver's module parameters.
 
-static struct regmap_mmio_context *regmap_mmio_gen_context(struct device *dev,
-                                        const char *clk_id,
-                                        void __iomem *regs,
-                                        const struct regmap_config *config)
-{
-        -----------------------
-        --------------
-        if (clk_id == NULL)
-                return ctx;
-
-        ctx->clk = clk_get(dev, clk_id);
-        if (IS_ERR(ctx->clk)) {
-                ret = PTR_ERR(ctx->clk);
-                goto err_free;
-        }
-
-        ret = clk_prepare(ctx->clk);
-        if (ret < 0) {
-                clk_put(ctx->clk);
-                goto err_free;
-        }
-        -------------
-        ---------------
-}
-
-Yes, I did check on the driver in the tree before committing explicit
-clock handle, which make similar requirements like us in [1]. this
-imx2 wdt driver is handling the explicit clock as well. I'm sure this
-driver is updated as I have seen few changes related to this driver in
-ML.
-
-Let me know if I still miss any key change or note here, I will dig
-further on this for sure.
-
-[1] https://elixir.bootlin.com/linux/v5.4-rc4/source/drivers/watchdog/imx2_wdt.c#L264
-
-thanks,
-Jagan.
+There are different variants of what could be done in order to
+differentiate the configuration. But again, this is not needed for.
