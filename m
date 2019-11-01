@@ -2,138 +2,160 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 042C0CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B16CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D46E62054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69B7B20656
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 09:24:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NcQJUAL0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728438AbfKAJUh (ORCPT
+        id S1728503AbfKAJYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 05:20:37 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:6553 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728271AbfKAJUh (ORCPT
+        Fri, 1 Nov 2019 05:24:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57452 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbfKAJYO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 05:20:37 -0400
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="Codrin.Ciubotariu@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 4EucVUhtbVEvbbmY/hUuxzdLY3HCA1DJyUwm5BdYJsMKc+vK+Hl1Tad9RkaHzU00ItPmJTt4fx
- D3rUN1GvKpNhF7r+p2hYpM3hG7ghEPYimBdDHMChdk8lG+BbpTDHb1JLoR/94JaHgvdSJO6Mgr
- bNFSJKPlVmTVQBRnsyMJjC0kqtVRxOF7cIQE0uvUvzuvQSt82Jky/x2MURFc+bF8sPhSNYbR8A
- jaeN388kkBxt45fbOkIOLPHRyjLrcROGbACLj3vccRiVjc0R0bE9GLWfXvCZV83xITufjKic9p
- 5vQ=
-X-IronPort-AV: E=Sophos;i="5.68,254,1569308400"; 
-   d="scan'208";a="53750120"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Nov 2019 02:20:37 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 1 Nov 2019 02:20:35 -0700
-Received: from rob-ult-m19940.corp.atmel.com (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 1 Nov 2019 02:20:33 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <ludovic.desroches@microchip.com>, <linus.walleij@linaro.org>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <robh+dt@kernel.org>, <claudiu.beznea@microchip.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH v2] pinctrl: at91: Enable slewrate by default on SAM9X60
-Date:   Fri, 1 Nov 2019 11:20:31 +0200
-Message-ID: <20191101092031.24896-1-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 1 Nov 2019 05:24:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cK8RDKGLEBSFrlPBnRxYMsLMSEeAec+1Jsjy1sax2wA=; b=NcQJUAL0u7F0uHiPkOCjzAtVh
+        uaVCWT7io6zbjwzq6lGBlRbwKu2RVehnFmi5gfhZDqMiillQvsNnI52omCopCGJCGkOWMA3X8UjEd
+        v0RdE66Gl0aAZ0F0A0Fz3yPQDZdRWYyyDbooey1P3TTJ+vLKXY+1GSjo4ZVGjsxgBIdb+PfVxY677
+        laHKHXvSlxYWe0MuX0sGRIn3CtNeoezYDVMg01Op6TBKHe2C7nQqP33qJ9UiN0BmV2u0P8O+WXTpI
+        ofH9OilWeBAnBtYGbwH85Z6Ms63xeFgYhU7SLh/exL49l107cu/McPPFKifzVQWrSs7Sf863xYkvP
+        v0R1wZ5cQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iQTA7-0008HP-Qb; Fri, 01 Nov 2019 09:24:08 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C2B69305E42;
+        Fri,  1 Nov 2019 10:23:02 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9A20E26540344; Fri,  1 Nov 2019 10:24:04 +0100 (CET)
+Date:   Fri, 1 Nov 2019 10:24:04 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Ingo Molnar <mingo@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>
+Subject: Re: [RFC 08/10] autonuma, memory tiering: Select hotter pages to
+ promote to fast memory node
+Message-ID: <20191101092404.GS4131@hirez.programming.kicks-ass.net>
+References: <20191101075727.26683-1-ying.huang@intel.com>
+ <20191101075727.26683-9-ying.huang@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191101075727.26683-9-ying.huang@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On SAM9X60, slewrate should be enabled on pins with a switching frequency
-below 50Mhz. Since most of our pins do not exceed this value, we enable
-slewrate by default. Pins with a switching value that exceeds 50Mhz will
-have to explicitly disable slewrate.
+On Fri, Nov 01, 2019 at 03:57:25PM +0800, Huang, Ying wrote:
+> index 8ec38b11b361..59e2151734ab 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -484,6 +484,11 @@ struct mm_struct {
+>  
+>  		/* numa_scan_seq prevents two threads setting pte_numa */
+>  		int numa_scan_seq;
+> +
+> +#define NUMA_SCAN_NR_HIST	16
+> +		int numa_scan_idx;
+> +		unsigned long numa_scan_jiffies[NUMA_SCAN_NR_HIST];
+> +		unsigned long numa_scan_starts[NUMA_SCAN_NR_HIST];
 
-This patch changes the ABI. However, the slewrate macros are only used
-by SAM9X60 and, at this moment, there are no device-tree files available
-for this platform.
+Why 16? This is 4 cachelines.
 
-Suggested-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
+>  #endif
+>  		/*
+>  		 * An operation with batched TLB flushing is going on. Anything
 
-Changes in v2:
- - updated commit message to reflect the ABI change
+> +static long numa_hint_fault_latency(struct task_struct *p, unsigned long addr)
+> +{
+> +	struct mm_struct *mm = p->mm;
+> +	unsigned long now = jiffies;
+> +	unsigned long start, end;
+> +	int i, j;
+> +	long latency = 0;
+> +
+> +	i = READ_ONCE(mm->numa_scan_idx);
+> +	i = i ? i - 1 : NUMA_SCAN_NR_HIST - 1;
+> +	/*
+> +	 * Paired with smp_wmb() in task_numa_work() to check
+> +	 * scan range buffer after get current index
+> +	 */
+> +	smp_rmb();
 
- drivers/pinctrl/pinctrl-at91.c     | 4 ++--
- include/dt-bindings/pinctrl/at91.h | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+That wants to be:
 
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 117075b5798f..c135149e84e9 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -85,8 +85,8 @@ enum drive_strength_bit {
- 					 DRIVE_STRENGTH_SHIFT)
- 
- enum slewrate_bit {
--	SLEWRATE_BIT_DIS,
- 	SLEWRATE_BIT_ENA,
-+	SLEWRATE_BIT_DIS,
- };
- 
- #define SLEWRATE_BIT_MSK(name)		(SLEWRATE_BIT_##name << SLEWRATE_SHIFT)
-@@ -669,7 +669,7 @@ static void at91_mux_sam9x60_set_slewrate(void __iomem *pio, unsigned pin,
- {
- 	unsigned int tmp;
- 
--	if (setting < SLEWRATE_BIT_DIS || setting > SLEWRATE_BIT_ENA)
-+	if (setting < SLEWRATE_BIT_ENA || setting > SLEWRATE_BIT_DIS)
- 		return;
- 
- 	tmp = readl_relaxed(pio + SAM9X60_PIO_SLEWR);
-diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pinctrl/at91.h
-index 3831f91fb3ba..e8e117306b1b 100644
---- a/include/dt-bindings/pinctrl/at91.h
-+++ b/include/dt-bindings/pinctrl/at91.h
-@@ -27,8 +27,8 @@
- #define AT91_PINCTRL_DRIVE_STRENGTH_MED			(0x2 << 5)
- #define AT91_PINCTRL_DRIVE_STRENGTH_HI			(0x3 << 5)
- 
--#define AT91_PINCTRL_SLEWRATE_DIS	(0x0 << 9)
--#define AT91_PINCTRL_SLEWRATE_ENA	(0x1 << 9)
-+#define AT91_PINCTRL_SLEWRATE_ENA	(0x0 << 9)
-+#define AT91_PINCTRL_SLEWRATE_DIS	(0x1 << 9)
- 
- #define AT91_PIOA	0
- #define AT91_PIOB	1
--- 
-2.20.1
+	i = smp_load_acquire(&mm->numa_scan_idx)
+	i = (i - 1) % NUMA_SCAN_NR_HIST;
+
+(and because NUMA_SCAN_NR_HIST is a power of 2, the compiler will
+conveniently make that a bitwise and operation)
+
+And: "DEC %0; AND $15, %0" is so much faster than a branch.
+
+> +	end = READ_ONCE(mm->numa_scan_offset);
+> +	start = READ_ONCE(mm->numa_scan_starts[i]);
+> +	if (start == end)
+> +		end = start + MAX_SCAN_WINDOW * (1UL << 22);
+> +	for (j = 0; j < NUMA_SCAN_NR_HIST; j++) {
+> +		latency = now - READ_ONCE(mm->numa_scan_jiffies[i]);
+> +		start = READ_ONCE(mm->numa_scan_starts[i]);
+> +		/* Scan pass the end of address space */
+> +		if (end < start)
+> +			end = TASK_SIZE;
+> +		if (addr >= start && addr < end)
+> +			return latency;
+> +		end = start;
+> +		i = i ? i - 1 : NUMA_SCAN_NR_HIST - 1;
+
+		i = (i - 1) % NUMA_SCAN_NR_HIST;
+> +	}
+> +	/*
+> +	 * The tracking window isn't large enough, approximate to the
+> +	 * max latency in the tracking window.
+> +	 */
+> +	return latency;
+> +}
+
+> @@ -2583,6 +2640,19 @@ void task_numa_work(struct callback_head *work)
+>  		start = 0;
+>  		vma = mm->mmap;
+>  	}
+> +	idx = mm->numa_scan_idx;
+> +	WRITE_ONCE(mm->numa_scan_starts[idx], start);
+> +	WRITE_ONCE(mm->numa_scan_jiffies[idx], jiffies);
+> +	/*
+> +	 * Paired with smp_rmb() in should_numa_migrate_memory() to
+> +	 * update scan range buffer index after update the buffer
+> +	 * contents.
+> +	 */
+> +	smp_wmb();
+> +	if (idx + 1 >= NUMA_SCAN_NR_HIST)
+> +		WRITE_ONCE(mm->numa_scan_idx, 0);
+> +	else
+> +		WRITE_ONCE(mm->numa_scan_idx, idx + 1);
+
+	smp_store_release(&mm->nums_scan_idx, idx % NUMA_SCAN_NR_HIST);
 
