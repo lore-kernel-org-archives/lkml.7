@@ -2,108 +2,117 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C6CCA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB12CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF33F20650
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2045B20650
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:20:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Qh2apHPi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzLMxhHT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbfKAQTk (ORCPT
+        id S1728380AbfKAQUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 12:19:40 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:2613 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726229AbfKAQTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 12:19:39 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 474S7r1fhQz9v2yk;
-        Fri,  1 Nov 2019 17:19:36 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Qh2apHPi; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id LL34SHhx5NAd; Fri,  1 Nov 2019 17:19:36 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 474S7r0Vhdz9v2yj;
-        Fri,  1 Nov 2019 17:19:36 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1572625176; bh=zDfTuyr5rEX4zI99jRtwwUmmmD2R9ZF+lJ3geVUTGqg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Qh2apHPiLmfs6EJags73uaZqx7IGD2FVk7wvpRg1Xm9W8sHg4b8c0XYoz89a/MRlq
-         ifUiSWAlsgpiZgs2eFg46/a/REe+tZT7GJvh/RMS1qeGrUk0/VtRCaLsvr61qV3h9f
-         2IebLlE11RurHHXZJeawbhGKSNai0y6xorR+vquA=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9F8768B8F6;
-        Fri,  1 Nov 2019 17:19:37 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ornw-bnFdm4u; Fri,  1 Nov 2019 17:19:37 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3884C8B7C2;
-        Fri,  1 Nov 2019 17:19:37 +0100 (CET)
-Subject: Re: [PATCH v3 28/36] serial: ucc_uart: explicitly include
- soc/fsl/cpm.h
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Scott Wood <oss@buserror.net>, linux-serial@vger.kernel.org
-References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
- <20191101124210.14510-1-linux@rasmusvillemoes.dk>
- <20191101124210.14510-29-linux@rasmusvillemoes.dk>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <a921b57b-04d5-4874-89e2-df29dfe99bfc@c-s.fr>
-Date:   Fri, 1 Nov 2019 17:19:37 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 1 Nov 2019 12:20:43 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33547 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfKAQUm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 12:20:42 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y127so7632084lfc.0;
+        Fri, 01 Nov 2019 09:20:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kDxL/9y811Z5nJM6Y5gJFSYgQI7x3MvaiflUEhpC+a4=;
+        b=TzLMxhHTQ83j1KiZCts5nJ0fFYQ6I7amj6HjTJ1W8tF/mxgqsv8yFgHXeONrx9bspH
+         DsPISG3I/Lof0f8vEHpEPeZikhCFl2LwE4UZ95B6OJ6Mcct2PklaUJY0Onjkj7F32X+P
+         nSGI/IEmoChrva++IhyLaRaFArG6v0Nbn+nzg8a7yteLL8inGp2H1vgNugXu5qjhWpXJ
+         RO6iYg0NTJtGAr/idELataxJXINKBvwvxMyzCrh+CaVhYHzsbmCti7zqP+fBEvhDhS+N
+         PNuCwchiwlUuIwL8iGMYXYeaVYqWclhgCfANAo97bYkq6K84iTBkoopDg0DY33S5dY6y
+         jlAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kDxL/9y811Z5nJM6Y5gJFSYgQI7x3MvaiflUEhpC+a4=;
+        b=iYUlUr/fSqZjWH8/Zw5v8XboNaVVcVtIyIiI6U7Cioi4sCa8OaMn1kUA3SF6gWouHf
+         XpC8+9tlhkY6Z6hxr0QK3X5+8KkrqKTi3bi4/kTLmsdtQ2NGbwNud705YP3wor9Jlu4K
+         PxKc3qEhVxhnYSx7E4h+IHRTvgJyj6N1HZGxgfNZpCys8D8a4mjL4piYl/KDUbHT78VG
+         8QTqlTQTvmcqX+BNpqWFWXY05TIQD7dUaoFHSMfibC4wsr5vIcevG4SvCgydvR4Qa/sO
+         PNQiHvQFWi0E/D0tyQQC6UQm4aHbSYxfnnfTSon9rch0zWRXSmzqbWkN1BBUNBNZSve2
+         eeIg==
+X-Gm-Message-State: APjAAAWcgGb/LPviSO7uzSKPZotv5zKqA9Kbr6v7riGUJKGOs+IWL/ky
+        NUToq9ZXshqc2/M8LhSLbibdxyI+X+65FRFBPgM=
+X-Google-Smtp-Source: APXvYqyBHGDySk0Vd6YhzSIKHg7CaAhmCpinTscezOyZG7qrbnFNJA+Fb2gFjeXKcD8zNnP4KkekqFNN3Rr0OmGdePg=
+X-Received: by 2002:ac2:4919:: with SMTP id n25mr2371545lfi.58.1572625240350;
+ Fri, 01 Nov 2019 09:20:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191101124210.14510-29-linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20191029200001.9640-1-jim.cromie@gmail.com> <07db7036-b46f-c157-5737-e3d96c808f14@rasmusvillemoes.dk>
+In-Reply-To: <07db7036-b46f-c157-5737-e3d96c808f14@rasmusvillemoes.dk>
+From:   jim.cromie@gmail.com
+Date:   Fri, 1 Nov 2019 10:20:14 -0600
+Message-ID: <CAJfuBxyE8Ju5S2bM28LSqULZzX6eFqDKJGVsRXP0Qhi6n+Y0kQ@mail.gmail.com>
+Subject: Re: [PATCH 01/16] dyndbg: drop trim_prefix, obsoleted by __FILE__s
+ relative path
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Jason Baron <jbaron@akamai.com>,
+        LKML <linux-kernel@vger.kernel.org>, Greg KH <greg@kroah.com>,
+        clang-built-linux@googlegroups.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 01/11/2019 à 13:42, Rasmus Villemoes a écrit :
-> This driver uses #defines from soc/fsl/cpm.h, so instead of relying on
-> some other header pulling that in, do that explicitly. This is
-> preparation for allowing this driver to build on ARM.
-> 
+Cool, thanks!
 
-UCC are only on QE.
-CPM has SCCs. instead.
-So this driver shouldn't need cpm.h
 
-Christophe
+On Wed, Oct 30, 2019 at 3:20 PM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
+>
+> On 29/10/2019 21.00, Jim Cromie wrote:
+> > Regarding:
+> > commit 2b6783191da7 ("dynamic_debug: add trim_prefix() to provide source-root relative paths")
+> > commit a73619a845d5 ("kbuild: use -fmacro-prefix-map to make __FILE__ a relative path")
+> >
+> > 2nd commit broke dynamic-debug's "file $fullpath" query form, but
+> > nobody noticed because 1st commit trimmed prefixes from control-file
+> > output, so the click-copy-pasting of fullpaths into new queries had
+> > ceased; that query form became unused.
+> >
+> > So remove the function and callers; its purpose was to strip the
+> > prefix from __FILE__, which is now gone.
+>
+> I agree with the intent, but I wonder if this is premature. I mean, the
+> -fmacro-prefix-map is only for gcc 8+, so this ends up printing the full
+> paths when the compiler is just a little old (and the kernel was built
+> out-of-tree).
+>
+> I don't think keeping the current workaround for a year or two more
+> should hurt; when int skip = strlen(__FILE__) -
+> strlen("lib/dynamic_debug.c"); evaluates to 0 (in-tree build, or build
+> with new enough gcc), I'm pretty sure gcc optimizes the rest of the
+> function away (it should know that strncmp(x, y, 0) gives 0, and even if
+> it didn't, the conditional assigns 0 to skip which it already is, so gcc
+> just needs to know that strncmp() is pure).
+>
+> >
+> > Also drop "file $fullpath" from docs, and tweak example to cite column
+> > 1 of control-file as valid "file $input".
+>
+> That part certainly makes sense, since the $fullpath hasn't actually
+> been in the control file for a long time.
+>
+> Rasmus
+>
 
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> ---
->   drivers/tty/serial/ucc_uart.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/tty/serial/ucc_uart.c b/drivers/tty/serial/ucc_uart.c
-> index a0555ae2b1ef..7e802616cba8 100644
-> --- a/drivers/tty/serial/ucc_uart.c
-> +++ b/drivers/tty/serial/ucc_uart.c
-> @@ -32,6 +32,7 @@
->   #include <soc/fsl/qe/ucc_slow.h>
->   
->   #include <linux/firmware.h>
-> +#include <soc/fsl/cpm.h>
->   #include <asm/reg.h>
->   
->   /*
-> 
+
+I agree.  Ive split the patch, am keeping the doc change.
