@@ -2,197 +2,155 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C60CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E7FCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0640E217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:33:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572611606;
-	bh=655oP4EcLo1bTQpP1velcNHS7UmLoENn3nPbnIRZ0WE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=YwwZNDkA9XgMTNphgoZj30cutnsxzDygVm/LZbaM6r2ZAxCKOLDPv6FaDW1lmmx2J
-	 tNTu1j06HeouagO40shPcEA4OvN0HDaYpwf9sgz2nHiHoe1mru0qQxd9/9F/YQ0Amc
-	 QVO5KWxs63DCQy0XE4bqRQ8rYRg3faTHEUqMAXmA=
+	by mail.kernel.org (Postfix) with ESMTP id 1A9DF2067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:34:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JPm8R1IH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbfKAMdY (ORCPT
+        id S1729591AbfKAMeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 08:33:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44300 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726229AbfKAMdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 08:33:24 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A67462067D;
-        Fri,  1 Nov 2019 12:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572611603;
-        bh=655oP4EcLo1bTQpP1velcNHS7UmLoENn3nPbnIRZ0WE=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=sP38mqAoM8SXz9neSyycjsVBSuXKFmNVooL2T/T3dR12CLTAnzRiNply+FsxwSTrQ
-         uWa5alKKp40v8CyC97lCKRqKpBotwWM6gWEDjSadbi3gKYZXGhbeF+NhdBYIIP0CMd
-         zoBba/XCkFkUKaCX6tqDJq0zivuK5V6EB7NMgwTc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 77B413522AF9; Fri,  1 Nov 2019 05:33:23 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 05:33:23 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Lai Jiangshan <laijs@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH 08/11] rcu: don't use negative ->rcu_read_lock_nesting
-Message-ID: <20191101123323.GC17910@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191031100806.1326-1-laijs@linux.alibaba.com>
- <20191031100806.1326-9-laijs@linux.alibaba.com>
+        Fri, 1 Nov 2019 08:34:03 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:4650 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfKAMeC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 08:34:02 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dbc26400000>; Fri, 01 Nov 2019 05:34:08 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 01 Nov 2019 05:34:01 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 01 Nov 2019 05:34:01 -0700
+Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 1 Nov
+ 2019 12:34:01 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id 2D99742966; Fri,  1 Nov 2019 14:33:59 +0200 (EET)
+Date:   Fri, 1 Nov 2019 14:33:59 +0200
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
+        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 00/18] Consolidate and improve NVIDIA Tegra CPUIDLE
+ driver(s)
+Message-ID: <20191101123359.GG27141@pdeschrijver-desktop.Nvidia.com>
+References: <20191015170015.1135-1-digetx@gmail.com>
+ <20191016192133.GB26038@pdeschrijver-desktop.Nvidia.com>
+ <72636eb3-5354-eea3-3a51-4975a04186b2@gmail.com>
+ <53ee8bd3-5c53-f0aa-175c-7fa3024d0af5@gmail.com>
+ <20191028140443.GA27141@pdeschrijver-desktop.Nvidia.com>
+ <40de641f-c38e-51ee-ae27-c5db468c45b5@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20191031100806.1326-9-laijs@linux.alibaba.com>
+In-Reply-To: <40de641f-c38e-51ee-ae27-c5db468c45b5@gmail.com>
+X-NVConfidentiality: public
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572611648; bh=ClHEOCZNpQnrcTnVEWCJjHR07pbg7qvno12Y8tH2Dy8=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=JPm8R1IH6Np2IGI6y3kIMTOJ1rP/8Pi2c76MBsBfFNDkpBX901NBpRClwnNreTgEA
+         qLExi2OcAxxXyaLsmVGDlzxVKZCFbZX8+dnqSIEeaFKzH3T+m7UvU4BbDPd6CYd2Hb
+         2C/Nr53Dkt9wFk1K/NG0z6FRmVRTgbZzsIWOLmi7iqgl8fLUdV3nmiOu9fbcQI0bJU
+         YCE8cefv6mBzfFUsp/YWJ1RbTDJleWRvHL3mMIK+RWYPBmJbnz3ALNrNs/8EW4VlBs
+         4+j7XujCFSVktQig4fJTqLqwcK1o60tENBkdb5FAQwIIbTEz26Nr2lC1jW0+SscMt2
+         jtOP5Lk1c2L8Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 10:08:03AM +0000, Lai Jiangshan wrote:
-> Negative ->rcu_read_lock_nesting was introduced to prevent
-> scheduler deadlock which was just prevented by deferred qs.
-> So negative ->rcu_read_lock_nesting is useless now and
-> rcu_read_unlock() can be simplified.
-> 
-> And negative ->rcu_read_lock_nesting is bug-prone,
-> it is good to kill it.
-> 
-> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
-> ---
->  kernel/rcu/tree_exp.h    | 30 ++----------------------------
->  kernel/rcu/tree_plugin.h | 21 +++++----------------
->  2 files changed, 7 insertions(+), 44 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-> index c0d06bce35ea..9dcbd2734620 100644
-> --- a/kernel/rcu/tree_exp.h
-> +++ b/kernel/rcu/tree_exp.h
-> @@ -621,11 +621,11 @@ static void rcu_exp_handler(void *unused)
->  	 * report the quiescent state, otherwise defer.
->  	 */
->  	if (!t->rcu_read_lock_nesting) {
-> +		rdp->exp_deferred_qs = true;
->  		if (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
->  		    rcu_dynticks_curr_cpu_in_eqs()) {
-> -			rcu_report_exp_rdp(rdp);
-> +			rcu_preempt_deferred_qs(t);
->  		} else {
-> -			rdp->exp_deferred_qs = true;
->  			set_tsk_need_resched(t);
->  			set_preempt_need_resched();
->  		}
-> @@ -646,32 +646,6 @@ static void rcu_exp_handler(void *unused)
->  		WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, true);
->  		return;
->  	}
-> -
-> -	/*
-> -	 * The final and least likely case is where the interrupted
-> -	 * code was just about to or just finished exiting the RCU-preempt
-> -	 * read-side critical section, and no, we can't tell which.
-> -	 * So either way, set ->deferred_qs to flag later code that
-> -	 * a quiescent state is required.
-> -	 *
-> -	 * If the CPU is fully enabled (or if some buggy RCU-preempt
-> -	 * read-side critical section is being used from idle), just
-> -	 * invoke rcu_preempt_deferred_qs() to immediately report the
-> -	 * quiescent state.  We cannot use rcu_read_unlock_special()
-> -	 * because we are in an interrupt handler, which will cause that
-> -	 * function to take an early exit without doing anything.
-> -	 *
-> -	 * Otherwise, force a context switch after the CPU enables everything.
-> -	 */
-> -	rdp->exp_deferred_qs = true;
-> -	if (rcu_preempt_need_deferred_qs(t) &&
-> -	    (!(preempt_count() & (PREEMPT_MASK | SOFTIRQ_MASK)) ||
-> -	    WARN_ON_ONCE(rcu_dynticks_curr_cpu_in_eqs()))) {
-> -		rcu_preempt_deferred_qs(t);
-> -	} else {
-> -		set_tsk_need_resched(t);
-> -		set_preempt_need_resched();
-> -	}
->  }
->  
->  /* PREEMPTION=y, so no PREEMPTION=n expedited grace period to clean up after. */
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index dbded2b8c792..c62631c79463 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -344,8 +344,6 @@ static int rcu_preempt_blocked_readers_cgp(struct rcu_node *rnp)
->  }
->  
->  /* Bias and limit values for ->rcu_read_lock_nesting. */
-> -#define RCU_NEST_BIAS INT_MAX
-> -#define RCU_NEST_NMAX (-INT_MAX / 2)
->  #define RCU_NEST_PMAX (INT_MAX / 2)
->  
->  /*
-> @@ -373,21 +371,15 @@ void __rcu_read_unlock(void)
->  {
->  	struct task_struct *t = current;
->  
-> -	if (t->rcu_read_lock_nesting != 1) {
-> -		--t->rcu_read_lock_nesting;
-> -	} else {
-> +	if (--t->rcu_read_lock_nesting == 0) {
->  		barrier();  /* critical section before exit code. */
-> -		t->rcu_read_lock_nesting = -RCU_NEST_BIAS;
-> -		barrier();  /* assign before ->rcu_read_unlock_special load */
+On Tue, Oct 29, 2019 at 03:47:56AM +0300, Dmitry Osipenko wrote:
+..
 
-But if we take an interrupt here, and the interrupt handler contains
-an RCU read-side critical section, don't we end up in the same hole
-that resulted in this article when the corresponding rcu_read_unlock()
-executes?  https://lwn.net/Articles/453002/
-
-							Thanx, Paul
-
->  		if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
->  			rcu_read_unlock_special(t);
-> -		barrier();  /* ->rcu_read_unlock_special load before assign */
-> -		t->rcu_read_lock_nesting = 0;
->  	}
->  	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
->  		int rrln = t->rcu_read_lock_nesting;
->  
-> -		WARN_ON_ONCE(rrln < 0 && rrln > RCU_NEST_NMAX);
-> +		WARN_ON_ONCE(rrln < 0);
->  	}
->  }
->  EXPORT_SYMBOL_GPL(__rcu_read_unlock);
-> @@ -535,12 +527,9 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
->   */
->  static bool rcu_preempt_need_deferred_qs(struct task_struct *t)
->  {
-> -	return (__this_cpu_read(rcu_data.exp_deferred_qs) &&
-> -		(!t->rcu_read_lock_nesting ||
-> -		 t->rcu_read_lock_nesting == -RCU_NEST_BIAS))
-> -		||
-> -		(READ_ONCE(t->rcu_read_unlock_special.s) &&
-> -		 t->rcu_read_lock_nesting <= 0);
-> +	return (__this_cpu_read(rcu_data.exp_deferred_qs) ||
-> +		READ_ONCE(t->rcu_read_unlock_special.s)) &&
-> +	       !t->rcu_read_lock_nesting;
->  }
->  
->  /*
-> -- 
-> 2.20.1
+> >>>> It would be useful to switch the power state terminology to the one used
+> >>>> for later chips:
+> >>>>
+> >>>> LP0 becomes SC7
+> >>>> LP1 becomes C1
+> >>>> LP2 becomes CC7
+> >>>>
+> >>>> Meaning of these states is as follows
+> >>>>
+> >>>> C is a core state:
+> >>>>
+> >>>> C1 clock gating
+> >>>> C2 not defined
+> >>>> C3 not defined
+> >>>> C4 not defined
+> >>>> C5 not defined
+> >>>> C6 not defined for ARM cores
+> >>>> C7 power-gating
+> >>>>
+> >>>> CC is a CPU cluster C state:
+> >>>>
+> >>>> CC1 cluster clock gated
+> >>>> CC2 not defined
+> >>>> CC3 fmax@Vmin: not used prior to Tegra186
+> >>>> CC4: cluster retention: no longer supported
+> >>>> CC5: not defined
+> >>>> CC6: cluster power gating
+> >>>> CC7: cluster rail gating
+> >>>>
+> >>>> SC is a System C state:
+> >>>>
+> >>>> SC1: not defined
+> >>>> SC2: not defined
+> >>>> SC3: not defined
+> >>>> SC4: not defined
+> >>>> SC5: not defined
+> >>>> SC6: not defined
+> >>>> SC7: VDD_SOC off
+> >>>
+> >>> Hello Peter,
+> >>>
+> >>> But new "drivers/cpuidle/cpuidle-tegra.c" uses exactly that terminology,
+> >>> please see "cpuidle: Refactor and move NVIDIA Tegra20 driver into
+> >>> drivers/cpuidle/" and further patches. Am I missing something? Or do you
+> >>> want the renaming to be a separate patch?
+> >>>
+> >>
+> >> Or maybe you're suggesting to change the names everywhere and not only
+> >> in the cpuidle driver? Please clarify :)
+> > 
+> > At least some of the variable and function names still say lp2?
 > 
+> The cpuidle driver uses LP2 terminology for everything that comes from
+> the external arch / firmware includes. But it says CC6 for everything
+> that is internal to the driver. So yes, there is a bit of new/old
+> terminology mixing in the code.
+> 
+> The arch code / PMC driver / TF firmware are all saying LP2. The LP2
+> naming is also a part of the device-tree binding.
+> 
+> It will be a lot of mess to rename the mach-tegra/pm.c code. I guess
+> eventually it could be moved to drivers/soc/, so maybe it will be better
+> to postpone the renaming until then?
+
+Or maybe add a comment somewhere indicating:
+
+LP2 = CC6
+LP1 = C1
+LP0 = SC7
+
+TF predates the new naming, so that may make some sense.
+
+Peter.
