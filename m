@@ -2,101 +2,121 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FABC47E49
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E9FCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 369832086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:04:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="pZeGw3P0"
+	by mail.kernel.org (Postfix) with ESMTP id 7568D21855
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:09:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572635364;
+	bh=oqQ6mc8vMOO6iFg5xkYVj8cqy2/wKHrB+ZBK7dSIJbA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aF/sRs7hQl9Q0BOozQSLicDlWGCT+eQ+lCxTn5NptS7PNvn7gphajWOlo1lohwvZz
+	 Uuu0dVDcxipqPOaz6yboHYFprkRqw4VNKA4t1fq5BLzJPeZrx291DBYKLhykpvquvq
+	 lvHXlEc2qG8/GMyH7JpqiuPrn0YM4kVr/uUW2OEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfKATEj (ORCPT
+        id S1727655AbfKATJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 15:04:39 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46753 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727372AbfKATEj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 15:04:39 -0400
-Received: by mail-qt1-f193.google.com with SMTP id u22so14210271qtq.13
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 12:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XhqExbZh5kPvj3K4NZnoOcF081VOsziHuz7IlqtxrcQ=;
-        b=pZeGw3P0RHdQki9K0gEObnP8OHglDuZpmvPq+OFKsU6xgeQL13BnAHlulP/AXJaNhH
-         ZwTok1P9GNkau5IjixzgvwHoRsMHZDO4mQHl58gONYUVmICu+ICmGAtlNEveE0COrV9y
-         /Xa/uFFqFErQaCPkaMjXEPyOF3xZXKviJzxY5RswiEk3RU1cFRsNAAq86vhLr+M4iejN
-         DUSzb9XHpmVLLc2pvB9NkEKqyofyX55556V+I2ArroDUo1pUEBLty4g6IEse0WyTjh8w
-         PDU5nOG+jTcNTKTvoqF9nxDfT1BF6OsABjs+f7dv3bSZ1ICuWpkn9uNUWSuindYPhE30
-         ehAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XhqExbZh5kPvj3K4NZnoOcF081VOsziHuz7IlqtxrcQ=;
-        b=MFPoml9BkmyWJMRxj3HpUzrciDmPZl0MnzzyAeG11uU+ZSPLCIMsYBOHu90HNU8/ng
-         qGWRPE7NhGMC/SZqeSDlu2ygVMq1YXz6x2mp9FCPK/MXaqpzuiC2F1GTg2FQ2f7i+nlX
-         gem016MNmhuzJ0R4zPjc522QYnOwa3sH+WWpve51wfQAneKPEWbXZpJ/GzNcJMtzUDFl
-         3bgogC5tWh94D0voohNaNg5bfg1P00/4g4wnn/kE7ZmY2FnC+I+qNSq99WAY2qCFzpRS
-         26N4Ip4wmpfwkOvmgf8IepvDjdxvtCzurZhbS8jsvk1eedLodOXE/sBOINDFR6rqUnk9
-         UFFA==
-X-Gm-Message-State: APjAAAXg0+lyCGOA1MuNAjndMEumQrPVCx3kuvTKXXpsz9D97R1pp4XW
-        K2ivDRAzh6KZ7sXTLoqJ+WaoFmY7r5PFS2pdvDCafw==
-X-Google-Smtp-Source: APXvYqzaVfaVFf4/E1qtu06OCKxRakja8j6eb7eFWaPT90bJMEaqpKJybo0BQto3pfGWV02Havz8W/MP/51N1VZFBBk=
-X-Received: by 2002:a0c:c392:: with SMTP id o18mr11435117qvi.75.1572635077831;
- Fri, 01 Nov 2019 12:04:37 -0700 (PDT)
+        Fri, 1 Nov 2019 15:09:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726671AbfKATJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 15:09:22 -0400
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFA84218DE
+        for <linux-kernel@vger.kernel.org>; Fri,  1 Nov 2019 19:09:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572635362;
+        bh=oqQ6mc8vMOO6iFg5xkYVj8cqy2/wKHrB+ZBK7dSIJbA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dmi0sKqQdD/CtjGV934ctcBkBqjEG0DD84sdkg6g56WAc44/iodUHl2tYGNestOFC
+         vZcSOUvDWCQbeR5qqWw/K67by48GtFmAqzr4y7V660wH9Jq6BXatQy0Oq3PaiGvKtK
+         /nhKLYwgNrMWt/f1mOsId2LBZ+VHWPB3y+kp56T4=
+Received: by mail-wr1-f43.google.com with SMTP id p4so10574960wrm.8
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 12:09:21 -0700 (PDT)
+X-Gm-Message-State: APjAAAW2GY7fs7/Np3hOI/G5u6bBEJF2F5MzQMjjSn/0mAXql3rusxPT
+        NqwmMn4amF+QKfSchwUYKVyVZfczCPGJx3y9CSBhcw==
+X-Google-Smtp-Source: APXvYqyZ9Wly2LV68S8MZlxCRLu2pe2tQOypXuB/IZXMIr+8oftULkBEVxSwZk3JFBwMfvp1qSXU2voo9srBQswlajk=
+X-Received: by 2002:a5d:51c2:: with SMTP id n2mr11735442wrv.149.1572635360221;
+ Fri, 01 Nov 2019 12:09:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAG=yYwmQHyp62qKDoiM091iXKs5iP8rNBLs9kc7Wi_PDCgMrbw@mail.gmail.com>
-In-Reply-To: <CAG=yYwmQHyp62qKDoiM091iXKs5iP8rNBLs9kc7Wi_PDCgMrbw@mail.gmail.com>
-From:   Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
-Date:   Sat, 2 Nov 2019 00:34:01 +0530
-Message-ID: <CAG=yYwmYCLOktQxhsyjarybbR+aF2Z3RuXVj4hfE5wD_6nJjNA@mail.gmail.com>
-Subject: Re: PROBLEM: PCIe Bus Error atleast
-To:     ruscur@russell.cc, sbobroff@linux.ibm.com, oohall@gmail.com,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+References: <157262960837.2838.17520432516398899751.stgit@naples-babu.amd.com>
+ <157262962352.2838.15656190309312238595.stgit@naples-babu.amd.com>
+ <CALCETrUSjbjt=U6OpTFXEZsEJQ6zjcqCeqi6nSFOi=rN91zWmg@mail.gmail.com> <288d481f-43c7-ffbb-8aed-c3c4bc19846b@amd.com>
+In-Reply-To: <288d481f-43c7-ffbb-8aed-c3c4bc19846b@amd.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 1 Nov 2019 12:09:06 -0700
+X-Gmail-Original-Message-ID: <CALCETrX9ztjRvCMFTWrf0WgAv4C9Y9DWcxQ4bBr3ajcAWNF9ZA@mail.gmail.com>
+Message-ID: <CALCETrX9ztjRvCMFTWrf0WgAv4C9Y9DWcxQ4bBr3ajcAWNF9ZA@mail.gmail.com>
+Subject: Re: [PATCH 2/4] kvm: svm: Enable UMIP feature on AMD
+To:     "Moger, Babu" <Babu.Moger@amd.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "nayna@linux.ibm.com" <nayna@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 2, 2019 at 12:15 AM Jeffrin Thalakkottoor
-<jeffrin@rajagiritech.edu.in> wrote:
+On Fri, Nov 1, 2019 at 11:38 AM Moger, Babu <Babu.Moger@amd.com> wrote:
+>
+>
+>
+> On 11/1/19 1:24 PM, Andy Lutomirski wrote:
+> > On Fri, Nov 1, 2019 at 10:33 AM Moger, Babu <Babu.Moger@amd.com> wrote:
+> >>
+> >> AMD 2nd generation EPYC processors support UMIP (User-Mode Instruction
+> >> Prevention) feature. The UMIP feature prevents the execution of certain
+> >> instructions if the Current Privilege Level (CPL) is greater than 0.
+> >> If any of these instructions are executed with CPL > 0 and UMIP
+> >> is enabled, then kernel reports a #GP exception.
+> >>
+> >> The idea is taken from articles:
+> >> https://lwn.net/Articles/738209/
+> >> https://lwn.net/Articles/694385/
+> >>
+> >> Enable the feature if supported on bare metal and emulate instructions
+> >> to return dummy values for certain cases.
+> >
+> > What are these cases?
+>
+> It is mentioned in the article https://lwn.net/Articles/738209/
+>
+> === How does it impact applications?
+>
+> When enabled, however, UMIP will change the behavior that certain
+> applications expect from the operating system. For instance, programs
+> running on WineHQ and DOSEMU2 rely on some of these instructions to
+> function. Stas Sergeev found that Microsoft Windows 3.1 and dos4gw use the
+> instruction SMSW when running in virtual-8086 mode [4]. SGDT and SIDT can
+> also be used on virtual-8086 mode.
+>
 
-> But i think when i tried again today i could not reprodu....
-i do not know why, but now iam able to reproduce the error
+What does that have to do with your series?  Your series is about
+enabling UMIP (or emulating UMIP -- your descriptions are quite
+unclear) on AMD hardware, and the hypervisor should *not* be emulating
+instructions to return dummy values.  The *guest kernel* already knows
+how to emulate userspace instructions as needed.
 
-more details follows
----------------------x------x------------------------------------------
-GNU Make            4.2.1
-Binutils            2.33.1
-Util-linux          2.33.1
-Mount                2.33.1
-Linux C Library      2.29
-Dynamic linker (ldd) 2.29
-Procps              3.3.15
-Kbd                  2.0.4
-Console-tools        2.0.4
-Sh-utils            8.30
-Udev                241
-------------------------x-----------------x---------------------------
-
-$gcc --version
-gcc (Debian 9.2.1-14) 9.2.1 20191025
-Copyright (C) 2019 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
----------------------x----------x----------------------------------
-
--- 
-software engineer
-rajagiri school of engineering and technology
+--Andy
