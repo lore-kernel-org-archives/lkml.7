@@ -2,375 +2,93 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A15C47E49
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 01:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1704DCA9ECB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 01:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1F0A208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 01:52:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572573159;
-	bh=A6VsGixv5aCu8y96TC5bwY2jl9YLOfCBEoihNlkap/A=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=MAK2Icxs7myq8gLYTLZUZbO1gzwJEk6V3/StSIag2GyzcC+g0CVIe0QPfTmn96EfP
-	 aFXKBSMkgF1QBjIOdauV5AvuSNk5MowW/Vpq216xXDC5jr9lmA0T0vDaKt1JZ/+eKd
-	 AQcBz3K0+Uhv2y+SJ2OoIHAQvsvFOyEK28i50CdY=
+	by mail.kernel.org (Postfix) with ESMTP id D4F552083E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 01:56:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="az3h7bW5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbfKABwh (ORCPT
+        id S1728686AbfKAB42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 21:52:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726540AbfKABwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 21:52:37 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        Thu, 31 Oct 2019 21:56:28 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:41764 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727477AbfKAB42 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 21:56:28 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31AD62083E;
-        Fri,  1 Nov 2019 01:52:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572573148;
-        bh=A6VsGixv5aCu8y96TC5bwY2jl9YLOfCBEoihNlkap/A=;
-        h=Date:From:To:Subject:From;
-        b=itO4JapNoDwrYDc/vwg4zEoIhgfJpJBstTH7N8A46jAa8GB0rpyZv37QAWkt9Pip9
-         E06qcH2srwLAUM2Nc1ICtPr6jguXEMuGUin8ciaTfPaVTE6htlaEhYPhmBUHynddAx
-         RB6VZfL3Di6eILbN70SFYIYofjxQANkNZoQml/NY=
-Date:   Thu, 31 Oct 2019 18:52:27 -0700
-From:   akpm@linux-foundation.org
-To:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
-Subject:  mmotm 2019-10-31-18-51 uploaded
-Message-ID: <20191101015227.7oN66jTUn%akpm@linux-foundation.org>
-User-Agent: s-nail v14.8.16
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id EAE758365D;
+        Fri,  1 Nov 2019 14:56:25 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1572573385;
+        bh=HiEdNYNi8oKqRVwMtkU4iyatNl5LZzujdzu2zDPjPIc=;
+        h=From:To:Cc:Subject:Date;
+        b=az3h7bW5EzvCriUtcnu51s90I3bkQVYItBuGPcQhMt3feWD6WjxO+Ihk6RnIKaMm0
+         4EantzP+U5lt5NvECSkMQzIDzYkNp/b7npkFy27EUDUnBYL9KzpmNFKvOBYSgPr0I+
+         GyrZDKbWewKiNAtR2nlBN+ShAgBwjR8hv47P3akilvEoP1QbrWQ0d7gT1Yw7DzGEPt
+         SwmcrJrq8i4Zlry/KXcd066tu0snRhxZ4ZizjCME89KgA7/yg0a/yOfz00eiTSRzyI
+         7PbHyiH1uUYPo7PbckDNvapW6OCrjQDyaee4A39qOO54vhypk4zg1FHkqTZ69LvyeR
+         ScEnByGsviEDQ==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5dbb90c90000>; Fri, 01 Nov 2019 14:56:25 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 4B2F413EED4;
+        Fri,  1 Nov 2019 14:56:25 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id AA07A28005D; Fri,  1 Nov 2019 14:56:25 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     linus.walleij@linaro.org, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 0/2] pinctrl: bcm: nsp: gpio improvements 
+Date:   Fri,  1 Nov 2019 14:56:19 +1300
+Message-Id: <20191101015621.12451-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mm-of-the-moment snapshot 2019-10-31-18-51 has been uploaded to
+I'm working on a platform using the BCM 58525 SoC. I noticed that some of
+the peripherals were being deferred (not that that's a problem) and debug=
+fs
+was complaining "File ':axi@18000000:gpio@20' in directory 'domains' alre=
+ady
+present!" which is more of a sign that things were not right.
 
-   http://www.ozlabs.org/~akpm/mmotm/
+The debugfs error was because the manually created irq domain was not
+cleaned up on failure (or deferral).
 
-mmotm-readme.txt says
+I've dropped the patch from this series that changes the order in the
+device tree. I can probably live with the deferrals.
 
-README for mm-of-the-moment:
+While I was debugging another issue I noticed my gpio-hogs weren't
+showing up correctly in /sys/kernel/debug/gpio. At first I thought I was
+missing commit d95da993383c ("gpiolib: Preserve desc->flags when setting
+state") but as it turns out pinctrl-nsp-gpio.c didn't provide a
+get_direction function so the generic code assumed they all started as
+inputs. I've added a new patch to address that.
 
-http://www.ozlabs.org/~akpm/mmotm/
+Chris Packham (2):
+  pinctrl: bcm: nsp: use gpiolib infrastructure for interrupts
+  pinctrl: bcm: nsp: implement get_direction
 
-This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-more than once a week.
+ drivers/pinctrl/bcm/pinctrl-nsp-gpio.c | 119 ++++++++++++-------------
+ 1 file changed, 56 insertions(+), 63 deletions(-)
 
-You will need quilt to apply these patches to the latest Linus release (5.x
-or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-http://ozlabs.org/~akpm/mmotm/series
+--=20
+2.23.0
 
-The file broken-out.tar.gz contains two datestamp files: .DATE and
-.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-followed by the base kernel version against which this patch series is to
-be applied.
-
-This tree is partially included in linux-next.  To see which patches are
-included in linux-next, consult the `series' file.  Only the patches
-within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-linux-next.
-
-
-A full copy of the full kernel tree with the linux-next and mmotm patches
-already applied is available through git within an hour of the mmotm
-release.  Individual mmotm releases are tagged.  The master branch always
-points to the latest release, so it's constantly rebasing.
-
-	https://github.com/hnaz/linux-mm
-
-The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
-contains daily snapshots of the -mm tree.  It is updated more frequently
-than mmotm, and is untested.
-
-A git copy of this tree is also available at
-
-	https://github.com/hnaz/linux-mm
-
-
-
-This mmotm tree contains the following patches against 5.4-rc5:
-(patches marked "*" will be included in linux-next)
-
-  origin.patch
-* proc-kpageflags-prevent-an-integer-overflow-in-stable_page_flags.patch
-* proc-kpageflags-do-not-use-uninitialized-struct-pages.patch
-* mmthp-recheck-each-page-before-collapsing-file-thp.patch
-* mmthp-recheck-each-page-before-collapsing-file-thp-fix.patch
-* mm-memcontrol-fix-null-ptr-deref-in-percpu-stats-flush.patch
-* mm-gup_benchmark-fix-map_hugetlb-case.patch
-* mm-meminit-recalculate-pcpu-batch-and-high-limits-after-init-completes.patch
-* mm-meminit-recalculate-pcpu-batch-and-high-limits-after-init-completes-fix.patch
-* mm-thp-handle-page-cache-thp-correctly-in-pagetranscompoundmap.patch
-* mm-thp-handle-page-cache-thp-correctly-in-pagetranscompoundmap-v4.patch
-* ocfs2-protect-extent-tree-in-the-ocfs2_prepare_inode_for_write.patch
-* ocfs2-protect-extent-tree-in-the-ocfs2_prepare_inode_for_write-checkpatch-fixes.patch
-* mm-mmu_notifiers-use-the-right-return-code-for-warn_on.patch
-* mm-vmstat-hide-proc-pagetypeinfo-from-normal-users.patch
-* mm-vmstat-reduce-zone-lock-holding-time-by-proc-pagetypeinfo.patch
-* mm-vmstat-reduce-zone-lock-holding-time-by-proc-pagetypeinfo-fix.patch
-* khugepaged-might_sleep-warn-due-to-config_highpte=y.patch
-* mm-thp-tweak-reclaim-compaction-effort-of-local-only-and-all-node-allocations.patch
-* mm-rate-limit-allocation-failure-warnings-more-aggressively.patch
-* zswap-add-myself-to-the-maintainers-list.patch
-* dump_stack-avoid-the-livelock-of-the-dump_lock.patch
-* dump_stack-avoid-the-livelock-of-the-dump_lock-fix.patch
-* maintainers-update-information-for-memory-management.patch
-* maintainers-update-information-for-memory-management-fix.patch
-* mm-slab-make-page_cgroup_ino-to-recognize-non-compound-slab-pages-properly.patch
-* scripts-gdb-fix-debugging-modules-compiled-with-hot-cold-partitioning.patch
-* mm-sparse-consistently-do-not-zero-memmap.patch
-* mm-memory_hotplug-fix-updating-the-node-span.patch
-* mm-memcontrol-fix-network-errors-from-failing-__gfp_atomic-charges.patch
-* mm-mempolicy-fix-the-wrong-return-value-and-potential-pages-leak-of-mbind.patch
-* ocfs2-remove-unused-function-ocfs2_prepare_inode_for_refcount.patch
-* ocfs2-fix-passing-zero-to-ptr_err-warning.patch
-* ramfs-support-o_tmpfile.patch
-  mm.patch
-* mm-slab-make-kmalloc_info-contain-all-types-of-names.patch
-* mm-slab-remove-unused-kmalloc_size.patch
-* mm-slab_common-use-enum-kmalloc_cache_type-to-iterate-over-kmalloc-caches.patch
-* mm-slub-print-the-offset-of-fault-addresses.patch
-* mm-update-comments-in-slubc.patch
-* mm-gup-allow-cma-migration-to-propagate-errors-back-to-caller.patch
-* mm-swap-disallow-swapon-on-zoned-block-devices.patch
-* mm-swap-disallow-swapon-on-zoned-block-devices-fix.patch
-* mm-trivial-mark_page_accessed-cleanup.patch
-* mm-memcg-clean-up-reclaim-iter-array.patch
-* mm-vmscan-expose-cgroup_ino-for-memcg-reclaim-tracepoints.patch
-* mm-memcontrol-remove-dead-code-from-memory_max_write.patch
-* mm-memcontrol-try-harder-to-set-a-new-memoryhigh.patch
-* mm-fix-comments-based-on-per-node-memcg.patch
-* mm-vmscan-memcontrol-remove-mem_cgroup_select_victim_node.patch
-* mm-vmscan-memcontrol-remove-mem_cgroup_select_victim_node-v2.patch
-* mm-drop-mmap_sem-before-calling-balance_dirty_pages-in-write-fault.patch
-* shmem-pin-the-file-in-shmem_fault-if-mmap_sem-is-dropped.patch
-* mm-emit-tracepoint-when-rss-changes.patch
-* mm-mmapc-remove-a-never-trigger-warning-in-__vma_adjust.patch
-* mm-pgmap-use-correct-alignment-when-looking-at-first-pfn-from-a-region.patch
-* mm-pgmap-use-correct-alignment-when-looking-at-first-pfn-from-a-region-checkpatch-fixes.patch
-* mm-mmap-fix-the-adjusted-length-error.patch
-* mm-swap-piggyback-lru_add_drain_all-calls.patch
-* mm-mmapc-prev-could-be-retrieved-from-vma-vm_prev.patch
-* mm-mmapc-__vma_unlink_prev-is-not-necessary-now.patch
-* mm-mmapc-extract-__vma_unlink_list-as-counter-part-for-__vma_link_list.patch
-* mm-mmapc-rb_parent-is-not-necessary-in-__vma_link_list.patch
-* mm-rmapc-dont-reuse-anon_vma-if-we-just-want-a-copy.patch
-* mm-rmapc-reuse-mergeable-anon_vma-as-parent-when-fork.patch
-* mm-mmapc-use-is_err_value-to-check-return-value-of-get_unmapped_area.patch
-* mm-mmapc-use-is_err_value-to-check-return-value-of-get_unmapped_area-fix.patch
-* arc-mm-remove-__arch_use_5level_hack.patch
-* asm-generic-tlb-stub-out-pud_free_tlb-if-nopud.patch
-* asm-generic-tlb-stub-out-p4d_free_tlb-if-nop4d.patch
-* asm-generic-tlb-stub-out-pmd_free_tlb-if-nopmd.patch
-* asm-generic-mm-stub-out-p4ud_clear_bad-if-__pagetable_p4ud_folded.patch
-* mm-fix-outdated-comment-in-page_get_anon_vma.patch
-* mm-memory-failurec-clean-up-around-tk-pre-allocation.patch
-* mm-soft-offline-convert-parameter-to-pfn.patch
-* mm-hotplug-reorder-memblock_-calls-in-try_remove_memory.patch
-* memory_hotplug-add-a-bounds-check-to-__add_pages.patch
-* mm-memory_hotplug-export-generic_online_page.patch
-* hv_balloon-use-generic_online_page.patch
-* mm-memory_hotplug-remove-__online_page_free-and-__online_page_increment_counters.patch
-* mm-memmap_init-update-variable-name-in-memmap_init_zone.patch
-* mm-memory_hotplug-dont-access-uninitialized-memmaps-in-shrink_zone_span.patch
-* mm-memory_hotplug-shrink-zones-when-offlining-memory.patch
-* mm-memory_hotplug-poison-memmap-in-remove_pfn_range_from_zone.patch
-* mm-memory_hotplug-we-always-have-a-zone-in-find_smallestbiggest_section_pfn.patch
-* mm-memory_hotplug-dont-check-for-all-holes-in-shrink_zone_span.patch
-* mm-memory_hotplug-drop-local-variables-in-shrink_zone_span.patch
-* mm-memory_hotplug-cleanup-__remove_pages.patch
-* mm-page_allocc-dont-set-pages-pagereserved-when-offlining.patch
-* mm-page_isolationc-convert-skip_hwpoison-to-memory_offline.patch
-* mm-memory_hotplug-fix-try_offline_node.patch
-* mm-sparsec-mark-populate_section_memmap-as-__meminit.patch
-* mm-sparsec-mark-populate_section_memmap-as-__meminit-v2.patch
-* mm-vmalloc-remove-unnecessary-highmem_mask-from-parameter-of-gfpflags_allow_blocking.patch
-* mm-vmalloc-remove-preempt_disable-enable-when-do-preloading.patch
-* mm-vmalloc-respect-passed-gfp_mask-when-do-preloading.patch
-* mm-vmalloc-add-more-comments-to-the-adjust_va_to_fit_type.patch
-* selftests-vm-add-fragment-config_test_vmalloc.patch
-* mm-vmalloc-rework-vmap_area_lock.patch
-* mm-page_alloc-add-alloc_contig_pages.patch
-* mm-pcp-share-common-code-between-memory-hotplug-and-percpu-sysctl-handler.patch
-* mm-pcpu-make-zone-pcp-updates-and-reset-internal-to-the-mm.patch
-* mm-fix-comment-for-isolate_unmapped-macro.patch
-* mm-vmscan-remove-unused-lru_pages-argument.patch
-* mm-vmscan-remove-unused-scan_control-parameter-from-pageout.patch
-* mm-vmscan-simplify-lruvec_lru_size.patch
-* mm-clean-up-and-clarify-lruvec-lookup-procedure.patch
-* mm-vmscan-move-inactive_list_is_low-swap-check-to-the-caller.patch
-* mm-vmscan-naming-fixes-global_reclaim-and-sane_reclaim.patch
-* mm-vmscan-replace-shrink_node-loop-with-a-retry-jump.patch
-* mm-vmscan-turn-shrink_node_memcg-into-shrink_lruvec.patch
-* mm-vmscan-split-shrink_node-into-node-part-and-memcgs-part.patch
-* mm-vmscan-split-shrink_node-into-node-part-and-memcgs-part-fix.patch
-* mm-vmscan-harmonize-writeback-congestion-tracking-for-nodes-memcgs.patch
-* z3fold-add-inter-page-compaction.patch
-* z3fold-add-inter-page-compaction-fix.patch
-* mm-support-memblock-alloc-on-the-exact-node-for-sparse_buffer_init.patch
-* mm-oom-avoid-printk-iteration-under-rcu.patch
-* mm-oom-avoid-printk-iteration-under-rcu-fix.patch
-* hugetlbfs-hugetlb_fault_mutex_hash-cleanup.patch
-* hugetlbfs-add-o_tmpfile-support.patch
-* mm-hugetlbfs-fix-error-handling-when-setting-up-mounts.patch
-* hugetlbfs-convert-macros-to-static-inline-fix-sparse-warning.patch
-* hugetlb-region_chg-provides-only-cache-entry.patch
-* hugetlb-remove-duplicated-code.patch
-* hugetlb-remove-duplicated-code-checkpatch-fixes.patch
-* hugetlb-remove-unused-hstate-in-hugetlb_fault_mutex_hash.patch
-* hugetlb-remove-unused-hstate-in-hugetlb_fault_mutex_hash-fix.patch
-* hugetlb-remove-unused-hstate-in-hugetlb_fault_mutex_hash-fix-fix.patch
-* mm-hugetlb-avoid-looping-to-the-same-hugepage-if-pages-and-vmas.patch
-* mm-split_huge_pages_fops-should-be-defined-with-define_debugfs_attribute.patch
-* mm-thp-do-not-queue-fully-unmapped-pages-for-deferred-split.patch
-* mm-thp-make-set_huge_zero_page-return-void.patch
-* mm-cmac-switch-to-bitmap_zalloc-for-cma-bitmap-allocation.patch
-* mm-cma_debug-use-define_debugfs_attribute-to-define-debugfs-fops.patch
-* mm-hwpoison-inject-use-define_debugfs_attribute-to-define-debugfs-fops.patch
-* mm-vmstat-add-helpers-to-get-vmstat-item-names-for-each-enum-type.patch
-* mm-vmstat-do-not-use-size-of-vmstat_text-as-count-of-proc-vmstat-items.patch
-* mm-memcontrol-use-vmstat-names-for-printing-statistics.patch
-* mm-mmapc-make-vma_merge-comment-more-easy-to-understand.patch
-* userfaultfd-use-vma_pagesize-for-all-huge-page-size-calculation.patch
-* userfaultfd-remove-unnecessary-warn_on-in-__mcopy_atomic_hugetlb.patch
-* userfaultfd-wrap-the-common-dst_vma-check-into-an-inlined-function.patch
-* uffd-wp-clear-vm_uffd_missing-or-vm_uffd_wp-during-userfaultfd_register.patch
-* mm-shmemc-make-array-values-static-const-makes-object-smaller.patch
-* mm-fix-struct-member-name-in-function-comments.patch
-* mm-fix-typo-in-the-comment-when-calling-function-__setpageuptodate.patch
-* mm-memory_hotplugc-remove-__online_page_set_limits.patch
-* mm-annotate-refault-stalls-from-swap_readpage.patch
-* mm-annotate-refault-stalls-from-swap_readpage-fix.patch
-* info-task-hung-in-generic_file_write_iter.patch
-* info-task-hung-in-generic_file_write-fix.patch
-* kernel-hung_taskc-monitor-killed-tasks.patch
-* proc-change-nlink-under-proc_subdir_lock.patch
-* proc-delete-useless-len-variable.patch
-* proc-shuffle-struct-pde_opener.patch
-* proc-fix-confusing-macro-arg-name.patch
-* sysctl-inline-braces-for-ctl_table-and-ctl_table_header.patch
-* gitattributes-use-dts-diff-driver-for-dts-files.patch
-* linux-build_bugh-change-type-to-int.patch
-* kernel-notifierc-intercepting-duplicate-registrations-to-avoid-infinite-loops.patch
-* kernel-notifierc-remove-notifier_chain_cond_register.patch
-* kernel-notifierc-remove-blocking_notifier_chain_cond_register.patch
-* kernel-profile-use-cpumask_available-to-check-for-null-cpumask.patch
-* kernel-sysc-avoid-copying-possible-padding-bytes-in-copy_to_user.patch
-* hung_task-allow-printing-warnings-every-check-interval.patch
-* get_maintainer-add-signatures-from-fixes-badcommit-lines-in-commit-message.patch
-* lib-rbtree-set-successors-parent-unconditionally.patch
-* lib-rbtree-get-successors-color-directly.patch
-* string-add-stracpy-and-stracpy_pad-mechanisms.patch
-* documentation-checkpatch-prefer-stracpy-strscpy-over-strcpy-strlcpy-strncpy.patch
-* lib-fix-possible-incorrect-result-from-rational-fractions-helper.patch
-* checkpatch-improve-ignoring-camelcase-si-style-variants-like-ma.patch
-* epoll-simplify-ep_poll_safewake-for-config_debug_lock_alloc.patch
-* fs-epoll-remove-unnecessary-wakeups-of-nested-epoll.patch
-* selftests-add-epoll-selftests.patch
-* elf-delete-unused-interp_map_addr-argument.patch
-* elf-extract-elf_read-function.patch
-* uaccess-disallow-int_max-copy-sizes.patch
-* aio-simplify-read_events.patch
-* kcov-remote-coverage-support.patch
-* usb-kcov-collect-coverage-from-hub_event.patch
-* usb-kcov-collect-coverage-from-hub_event-fix.patch
-* vhost-kcov-collect-coverage-from-vhost_worker.patch
-* lib-ubsan-dont-seralize-ubsan-report.patch
-* smp_mb__beforeafter_atomic-update-documentation.patch
-* ipc-mqueuec-remove-duplicated-code.patch
-* ipc-mqueuec-update-document-memory-barriers.patch
-* ipc-msgc-update-and-document-memory-barriers.patch
-* ipc-semc-document-and-update-memory-barriers.patch
-* arch-ipcbufh-make-uapi-asm-ipcbufh-self-contained.patch
-* arch-msgbufh-make-uapi-asm-msgbufh-self-contained.patch
-* arch-sembufh-make-uapi-asm-sembufh-self-contained.patch
-* ipc-consolidate-all-xxxctl_down-functions.patch
-  linux-next.patch
-  linux-next-rejects.patch
-  linux-next-git-rejects.patch
-  diff-sucks.patch
-* drivers-block-null_blk_mainc-fix-layout.patch
-* drivers-block-null_blk_mainc-fix-uninitialized-var-warnings.patch
-* pinctrl-fix-pxa2xxc-build-warnings.patch
-* lib-list-test-add-a-test-for-the-list-doubly-linked-list.patch
-* lib-list-test-add-a-test-for-the-list-doubly-linked-list-v3.patch
-* lib-genallocc-export-symbol-addr_in_gen_pool.patch
-* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr.patch
-* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr-fix.patch
-* hacking-group-sysrq-kgdb-ubsan-into-generic-kernel-debugging-instruments.patch
-* hacking-create-submenu-for-arch-special-debugging-options.patch
-* hacking-group-kernel-data-structures-debugging-together.patch
-* hacking-move-kernel-testing-and-coverage-options-to-same-submenu.patch
-* hacking-move-oops-into-lockups-and-hangs.patch
-* hacking-move-sched_stack_end_check-after-debug_stack_usage.patch
-* hacking-create-a-submenu-for-scheduler-debugging-options.patch
-* hacking-move-debug_bugverbose-to-printk-and-dmesg-options.patch
-* hacking-move-debug_fs-to-generic-kernel-debugging-instruments.patch
-* bitops-introduce-the-for_each_set_clump8-macro.patch
-* bitops-introduce-the-for_each_set_clump8-macro-fix.patch
-* bitops-introduce-the-for_each_set_clump8-macro-fix-fix.patch
-* bitops-introduce-the-for_each_set_clump8-macro-fix-fix-fix.patch
-* lib-test_bitmapc-add-for_each_set_clump8-test-cases.patch
-* gpio-104-dio-48e-utilize-for_each_set_clump8-macro.patch
-* gpio-104-idi-48-utilize-for_each_set_clump8-macro.patch
-* gpio-gpio-mm-utilize-for_each_set_clump8-macro.patch
-* gpio-ws16c48-utilize-for_each_set_clump8-macro.patch
-* gpio-pci-idio-16-utilize-for_each_set_clump8-macro.patch
-* gpio-pcie-idio-24-utilize-for_each_set_clump8-macro.patch
-* gpio-uniphier-utilize-for_each_set_clump8-macro.patch
-* gpio-74x164-utilize-the-for_each_set_clump8-macro.patch
-* thermal-intel-intel_soc_dts_iosf-utilize-for_each_set_clump8-macro.patch
-* gpio-pisosr-utilize-the-for_each_set_clump8-macro.patch
-* gpio-max3191x-utilize-the-for_each_set_clump8-macro.patch
-* gpio-pca953x-utilize-the-for_each_set_clump8-macro.patch
-* lib-test_bitmap-force-argument-of-bitmap_parselist_user-to-proper-address-space.patch
-* lib-test_bitmap-undefine-macros-after-use.patch
-* lib-test_bitmap-name-exp_bytes-properly.patch
-* lib-test_bitmap-rename-exp-to-exp1-to-avoid-ambiguous-name.patch
-* lib-test_bitmap-move-exp1-and-exp2-upper-for-others-to-use.patch
-* lib-test_bitmap-fix-comment-about-this-file.patch
-* bitmap-introduce-bitmap_replace-helper.patch
-* gpio-pca953x-remove-redundant-variable-and-check-in-irq-handler.patch
-* gpio-pca953x-use-input-from-regs-structure-in-pca953x_irq_pending.patch
-* gpio-pca953x-convert-to-use-bitmap-api.patch
-* gpio-pca953x-convert-to-use-bitmap-api-fix.patch
-* gpio-pca953x-tight-up-indentation.patch
-* mm-add-generic-pd_leaf-macros.patch
-* arc-mm-add-pd_leaf-definitions.patch
-* arm-mm-add-pd_leaf-definitions.patch
-* arm64-mm-add-pd_leaf-definitions.patch
-* mips-mm-add-pd_leaf-definitions.patch
-* powerpc-mm-add-pd_leaf-definitions.patch
-* riscv-mm-add-pd_leaf-definitions.patch
-* s390-mm-add-pd_leaf-definitions.patch
-* sparc-mm-add-pd_leaf-definitions.patch
-* x86-mm-add-pd_leaf-definitions.patch
-* mm-pagewalk-add-p4d_entry-and-pgd_entry.patch
-* mm-pagewalk-allow-walking-without-vma.patch
-* mm-pagewalk-add-test_pd-callbacks.patch
-* mm-pagewalk-add-depth-parameter-to-pte_hole.patch
-* x86-mm-point-to-struct-seq_file-from-struct-pg_state.patch
-* x86-mmefi-convert-ptdump_walk_pgd_level-to-take-a-mm_struct.patch
-* x86-mm-convert-ptdump_walk_pgd_level_debugfs-to-take-an-mm_struct.patch
-* x86-mm-convert-ptdump_walk_pgd_level_core-to-take-an-mm_struct.patch
-* mm-add-generic-ptdump.patch
-* x86-mm-convert-dump_pagetables-to-use-walk_page_range.patch
-* arm64-mm-convert-mm-dumpc-to-use-walk_page_range.patch
-* arm64-mm-display-non-present-entries-in-ptdump.patch
-* drivers-tty-serial-sh-scic-suppress-warning.patch
-* fix-read-buffer-overflow-in-delta-ipc.patch
-  make-sure-nobodys-leaking-resources.patch
-  releasing-resources-with-children.patch
-  mutex-subsystem-synchro-test-module.patch
-  kernel-forkc-export-kernel_thread-to-modules.patch
-  workaround-for-a-pci-restoring-bug.patch
