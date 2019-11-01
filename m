@@ -2,239 +2,226 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E85CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855D4CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B34217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA352085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZanBpDPj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pA7VrUMF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbfKAWLc (ORCPT
+        id S1727462AbfKAWL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 18:11:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57509 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725989AbfKAWLc (ORCPT
+        Fri, 1 Nov 2019 18:11:56 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:38835 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfKAWLz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 18:11:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572646290;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=NtB8lZVxMteNuLvde5Uug6IaSN97jmYqJbZY5PhbQTw=;
-        b=ZanBpDPjvrl6TJ6/S/Kk/SEOCkaQ2wXQhMK00oJ8oWozHQKfr8Y/dMn33TkWcLs6O302Uq
-        tmJcBS//aG7G4bs0RveIMBTjrrpH32yXnB+HU5I69D9ouUdvH8zogKWJgrp2D0kDFvWuhg
-        cNrelijYOlJ/75JHShWLcubTKOKC9aM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-115-VbJCQgB5Ngm_RTQ11-aNwg-1; Fri, 01 Nov 2019 18:11:27 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8639B1005500;
-        Fri,  1 Nov 2019 22:11:25 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-116-33.ams2.redhat.com [10.36.116.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 04A9E600D1;
-        Fri,  1 Nov 2019 22:11:18 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Tang Chen <tangchen@cn.fujitsu.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v2] mm/memory_hotplug: Fix try_offline_node()
-Date:   Fri,  1 Nov 2019 23:11:18 +0100
-Message-Id: <20191101221118.5959-1-david@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: VbJCQgB5Ngm_RTQ11-aNwg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        Fri, 1 Nov 2019 18:11:55 -0400
+Received: by mail-pf1-f201.google.com with SMTP id d126so8451988pfd.5
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 15:11:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=QMYlUo6go1QaBsrZ04QyWd4mPltUOCdHxfrp1U4piPI=;
+        b=pA7VrUMFgvackUgMe/piXoHPkTAs+b/FFKd8gPmFfcrm/KLP7Y+qoLxKMb3126U4e4
+         sdc0PRcooZZRR7RfeEW8vSmh8Z+iN5SpQ3vrACcpfafjhRMOxaG4DcNMaMQ/jH+YMFTQ
+         r/J7E7luA3G1eVcRLIosgkLfpTwkGRI4H5MiJjQGC5qknsQF0D95Ifddmh7yZgfVY06Y
+         lGysSOFEA2svnEQDD4F+BF17NRGzU1zUsLAcHo3QsdOsLgpA4MzE8Wua0beo2OciXAbj
+         hH7VxVMfFSL3zwxFfUv0LvZAmYLX9knJ/S/TZ4mdE2y8p/EH4Vk5EufFFRO6LzQQem00
+         RNeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=QMYlUo6go1QaBsrZ04QyWd4mPltUOCdHxfrp1U4piPI=;
+        b=my3HOxUaRa7ClvbDLQZTZLgWg7sGPrKPSjLFqFhg9OCA/dmcOZKh6Xd5RzggxEo6Rd
+         OSseH00StJRkb42JYBeMU/l6tdHuXMJlM0OkHj0DGDK6B46Pxynx9nM8wNKVSCSS5UdN
+         HJrsEcV097vPEx+JV6tfgsyRukIG3JvZBiYg+AW2IjD9ev3aJ8oT7E28Co7UFZ1Zxi3i
+         1+HMscM86yEENI2/tq33z6btNQ3YZ/dfaaOfuUJgORtYHq6L4xgudbWto0Nm02whBhlO
+         ApGwUnrNrh96thPdDIKsAEHBmMHCGx77QrEBJAlTGIYOMRzQ5M9PBtXeboJ4zsXfvG/e
+         /ECA==
+X-Gm-Message-State: APjAAAU0fnifStKIByLXfd9iGcyNBUnC9Wuw3jX2WLTtofhwikMeT6F4
+        hgc4v1ziC+R5/SNnVmcaHQEdxhq5DHnGQ9aBdaY=
+X-Google-Smtp-Source: APXvYqzTngnWtjbqEG3gQE3K9LX8wVZzWKEGtYb0s66XOiVH27Hv4t/hwOe2zbXaGKcIrGCYHg0Cwu16o68haAeZgf4=
+X-Received: by 2002:a65:64d4:: with SMTP id t20mr15535375pgv.181.1572646314485;
+ Fri, 01 Nov 2019 15:11:54 -0700 (PDT)
+Date:   Fri,  1 Nov 2019 15:11:33 -0700
+In-Reply-To: <20191018161033.261971-1-samitolvanen@google.com>
+Message-Id: <20191101221150.116536-1-samitolvanen@google.com>
+Mime-Version: 1.0
+References: <20191018161033.261971-1-samitolvanen@google.com>
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
+Subject: [PATCH v4 00/17] add support for Clang's Shadow Call Stack
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-try_offline_node() is pretty much broken right now:
-- The node span is updated when onlining memory, not when adding it. We
-  ignore memory that was mever onlined. Bad.
-- We touch possible garbage memmaps. The pfn_to_nid(pfn) can easily
-  trigger a kernel panic. Bad for memory that is offline but also bad
-  for subsection hotadd with ZONE_DEVICE, whereby the memmap of the first
-  PFN of a section might contain garbage.
-- Sections belonging to mixed nodes are not properly considered.
+This patch series adds support for Clang's Shadow Call Stack
+(SCS) mitigation, which uses a separately allocated shadow stack
+to protect against return address overwrites. More information
+can be found here:
 
-As memory blocks might belong to multiple nodes, we would have to walk all
-pageblocks (or at least subsections) within present sections. However,
-we don't have a way to identify whether a memmap that is not online was
-initialized (relevant for ZONE_DEVICE). This makes things more complicated.
+  https://clang.llvm.org/docs/ShadowCallStack.html
 
-Luckily, we can piggy pack on the node span and the nid stored in
-memory blocks. Currently, the node span is grown when calling
-move_pfn_range_to_zone() - e.g., when onlining memory, and shrunk when
-removing memory, before calling try_offline_node(). Sysfs links are
-created via link_mem_sections(), e.g., during boot or when adding memory.
+SCS provides better protection against traditional buffer
+overflows than CONFIG_STACKPROTECTOR_*, but it should be noted
+that SCS security guarantees in the kernel differ from the ones
+documented for user space. The kernel must store addresses of
+shadow stacks used by other tasks and interrupt handlers in
+memory, which means an attacker capable reading and writing
+arbitrary memory may be able to locate them and hijack control
+flow by modifying shadow stacks that are not currently in use.
 
-If the node still spans memory or if any memory block belongs to the
-nid, we don't set the node offline. As memory blocks that span multiple
-nodes cannot get offlined, the nid stored in memory blocks is reliable
-enough (for such online memory blocks, the node still spans the memory).
+SCS is currently supported only on arm64, where the compiler
+requires the x18 register to be reserved for holding the current
+task's shadow stack pointer. Because of this, the series includes
+patches from Ard to remove x18 usage from assembly code.
 
-Note: We will soon stop shrinking the ZONE_DEVICE zone and the node span
-when removing ZONE_DEVICE memory to fix similar issues (access of garbage
-memmaps) - until we have a reliable way to identify whether these memmaps
-were properly initialized. This implies later, that once a node had
-ZONE_DEVICE memory, we won't be able to set a node offline -
-which should be acceptable.
+With -fsanitize=shadow-call-stack, the compiler injects
+instructions to all non-leaf C functions to store the return
+address to the shadow stack, and unconditionally load it again
+before returning. As a result, SCS is currently incompatible
+with features that rely on modifying function return addresses
+to alter control flow, such as function graph tracing and
+kretprobes, although it may be possible to later change these
+features to modify the shadow stack instead. A copy of the return
+address is still kept in the kernel stack for compatibility with
+stack unwinding, for example.
 
-Since commit f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded
-memory to zones until online") memory that is added is not assoziated
-with a zone/node (memmap not initialized). The introducing
-commit 60a5a19e7419 ("memory-hotplug: remove sysfs file of node") already
-missed that we could have multiple nodes for a section and that the
-zone/node span is updated when onlining pages, not when adding them.
+SCS has a minimal performance overhead, but allocating
+shadow stacks increases kernel memory usage. The feature is
+therefore mostly useful on hardware that lacks support for PAC
+instructions.
 
-I tested this by hotplugging two DIMMs to a memory-less and cpu-less NUMA
-node. The node is properly onlined when adding the DIMMs. When removing
-the DIMMs, the node is properly offlined.
+Changes in v4:
+ - Fixed authorship for Ard's patches
+ - Added missing commit messages
+ - Commented code that clears SCS from thread_info
+ - Added a comment about SCS_END_MAGIC being non-canonical
 
-Fixes: 60a5a19e7419 ("memory-hotplug: remove sysfs file of node")
-Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory =
-to zones until online") # visiable after d0dc12e86b319
-Cc: Tang Chen <tangchen@cn.fujitsu.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: Nayna Jain <nayna@linux.ibm.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
+Changes in v3:
+ - Switched to filter-out for removing SCS flags in Makefiles
+ - Changed the __noscs attribute to use __no_sanitize__("...")
+   instead of no_sanitize("...")
+ - Cleaned up inline function definitions and moved task_scs()
+   into a macro
+ - Cleaned up scs_free() and scs_magic()
+ - Moved SCS initialization into dup_task_struct() and removed
+   the now unused scs_task_init()
+ - Added comments to __scs_base() and scs_task_reset() to better
+   document design choices
+ - Changed copy_page to make the offset and bias explicit
 
-v1 -> v2:
-- Drop sysfs handling, simplify, and add a comment
-- Make sure to include last section fully
+Changes in v2:
+ - Changed Ard's KVM patch to use x29 instead of x18 for the
+   guest context, which makes restore_callee_saved_regs cleaner
+ - Updated help text (and commit messages) to point out
+   differences in security properties compared to user space SCS
+ - Cleaned up config options: removed the ROP protection choice,
+   replaced the CC_IS_CLANG dependency with an arch-specific
+   cc-option test, and moved disabling of incompatible config
+   options to an arch-specific Kconfig
+ - Added CC_FLAGS_SCS, which are filtered out where needed
+   instead of using DISABLE_SCS
+ - Added a __has_feature guard around __noscs for older clang
+   versions
 
-We stop shrinking the ZONE_DEVICE zone after the following patch:
- [PATCH v6 04/10] mm/memory_hotplug: Don't access uninitialized memmaps
- in shrink_zone_span()
-This implies, the above note regarding ZONE_DEVICE on a node blocking a
-node from getting offlined until we sorted out how to properly shrink
-the ZONE_DEVICE zone.
+Ard Biesheuvel (3):
+  arm64/lib: copy_page: avoid x18 register in assembler code
+  arm64: kvm: stop treating register x18 as caller save
+  arm64: kernel: avoid x18 __cpu_soft_restart
 
-This patch is especially important for:
- [PATCH v6 05/10] mm/memory_hotplug: Shrink zones when offlining
- memory
-As the BUG fixed with this patch becomes now easier to observe when memory
-is offlined (in contrast to when memory would never have been onlined
-before).
+Sami Tolvanen (14):
+  arm64: mm: avoid x18 in idmap_kpti_install_ng_mappings
+  add support for Clang's Shadow Call Stack (SCS)
+  scs: add accounting
+  scs: add support for stack usage debugging
+  kprobes: fix compilation without CONFIG_KRETPROBES
+  arm64: kprobes: fix kprobes without CONFIG_KRETPROBES
+  arm64: disable kretprobes with SCS
+  arm64: disable function graph tracing with SCS
+  arm64: reserve x18 from general allocation with SCS
+  arm64: preserve x18 when CPU is suspended
+  arm64: efi: restore x18 if it was corrupted
+  arm64: vdso: disable Shadow Call Stack
+  arm64: disable SCS for hypervisor code
+  arm64: implement Shadow Call Stack
 
-As both patches are stable fixes and in next/master for a long time, we
-should probably pull this patch in front of both and also backport this
-patch at least to
- Cc: stable@vger.kernel.org # v4.13+
-I have not checked yet if there are real blockers to do that. I guess not.
+ Makefile                             |   6 +
+ arch/Kconfig                         |  33 ++++
+ arch/arm64/Kconfig                   |   9 +-
+ arch/arm64/Makefile                  |   4 +
+ arch/arm64/include/asm/scs.h         |  37 +++++
+ arch/arm64/include/asm/stacktrace.h  |   4 +
+ arch/arm64/include/asm/suspend.h     |   2 +-
+ arch/arm64/include/asm/thread_info.h |   3 +
+ arch/arm64/kernel/Makefile           |   1 +
+ arch/arm64/kernel/asm-offsets.c      |   3 +
+ arch/arm64/kernel/cpu-reset.S        |   4 +-
+ arch/arm64/kernel/efi-rt-wrapper.S   |   7 +-
+ arch/arm64/kernel/entry.S            |  28 ++++
+ arch/arm64/kernel/head.S             |   9 ++
+ arch/arm64/kernel/irq.c              |   2 +
+ arch/arm64/kernel/probes/kprobes.c   |   2 +
+ arch/arm64/kernel/process.c          |   2 +
+ arch/arm64/kernel/scs.c              |  39 +++++
+ arch/arm64/kernel/smp.c              |   4 +
+ arch/arm64/kernel/vdso/Makefile      |   2 +-
+ arch/arm64/kvm/hyp/Makefile          |   3 +
+ arch/arm64/kvm/hyp/entry.S           |  41 +++--
+ arch/arm64/lib/copy_page.S           |  38 ++---
+ arch/arm64/mm/proc.S                 |  73 +++++----
+ drivers/base/node.c                  |   6 +
+ fs/proc/meminfo.c                    |   4 +
+ include/linux/compiler-clang.h       |   6 +
+ include/linux/compiler_types.h       |   4 +
+ include/linux/mmzone.h               |   3 +
+ include/linux/scs.h                  |  57 +++++++
+ init/init_task.c                     |   8 +
+ kernel/Makefile                      |   1 +
+ kernel/fork.c                        |   9 ++
+ kernel/kprobes.c                     |  38 ++---
+ kernel/sched/core.c                  |   2 +
+ kernel/sched/sched.h                 |   1 +
+ kernel/scs.c                         | 227 +++++++++++++++++++++++++++
+ mm/page_alloc.c                      |   6 +
+ mm/vmstat.c                          |   3 +
+ 39 files changed, 634 insertions(+), 97 deletions(-)
+ create mode 100644 arch/arm64/include/asm/scs.h
+ create mode 100644 arch/arm64/kernel/scs.c
+ create mode 100644 include/linux/scs.h
+ create mode 100644 kernel/scs.c
 
----
- mm/memory_hotplug.c | 45 +++++++++++++++++++++++++++++----------------
- 1 file changed, 29 insertions(+), 16 deletions(-)
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 0140c20837b6..b5f696491577 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1634,6 +1634,18 @@ static int check_cpu_on_node(pg_data_t *pgdat)
- =09return 0;
- }
-=20
-+static int check_no_memblock_for_node_cb(struct memory_block *mem, void *a=
-rg)
-+{
-+=09int nid =3D *(int *)arg;
-+
-+=09/*
-+=09 * If a memory block belongs to multiple nodes, the stored nid is not
-+=09 * reliable. However, such blocks are always online (e.g., cannot get
-+=09 * offlined) and, therefore, are still spanned by the node.
-+=09 */
-+=09return mem->nid =3D=3D nid ? -EEXIST : 0;
-+}
-+
- /**
-  * try_offline_node
-  * @nid: the node ID
-@@ -1645,26 +1657,27 @@ static int check_cpu_on_node(pg_data_t *pgdat)
-  */
- void try_offline_node(int nid)
- {
-+=09const unsigned long end_section_nr =3D __highest_present_section_nr + 1=
-;
- =09pg_data_t *pgdat =3D NODE_DATA(nid);
--=09unsigned long start_pfn =3D pgdat->node_start_pfn;
--=09unsigned long end_pfn =3D start_pfn + pgdat->node_spanned_pages;
--=09unsigned long pfn;
--
--=09for (pfn =3D start_pfn; pfn < end_pfn; pfn +=3D PAGES_PER_SECTION) {
--=09=09unsigned long section_nr =3D pfn_to_section_nr(pfn);
--
--=09=09if (!present_section_nr(section_nr))
--=09=09=09continue;
-+=09int rc;
-=20
--=09=09if (pfn_to_nid(pfn) !=3D nid)
--=09=09=09continue;
-+=09/*
-+=09 * If the node still spans pages (especially ZONE_DEVICE), don't
-+=09 * offline it. A node spans memory after move_pfn_range_to_zone(),
-+=09 * e.g., after the memory block was onlined.
-+=09 */
-+=09if (pgdat->node_spanned_pages)
-+=09=09return;
-=20
--=09=09/*
--=09=09 * some memory sections of this node are not removed, and we
--=09=09 * can't offline node now.
--=09=09 */
-+=09/*
-+=09 * Especially offline memory blocks might not be spanned by the
-+=09 * node. They will get spanned by the node once they get onlined.
-+=09 * However, they link to the node in sysfs and can get onlined later.
-+=09 */
-+=09rc =3D walk_memory_blocks(0, PFN_PHYS(section_nr_to_pfn(end_section_nr)=
-),
-+=09=09=09=09&nid, check_no_memblock_for_node_cb);
-+=09if (rc)
- =09=09return;
--=09}
-=20
- =09if (check_cpu_on_node(pgdat))
- =09=09return;
---=20
-2.21.0
+base-commit: 0dbe6cb8f7e05bc9611602ef45980a6c57b245a3
+-- 
+2.24.0.rc1.363.gb1bccd3e3d-goog
 
