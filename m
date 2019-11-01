@@ -2,94 +2,100 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D12CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA045CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9899521734
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:28:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kragniz.eu header.i=@kragniz.eu header.b="TGRoCxKA"
+	by mail.kernel.org (Postfix) with ESMTP id A8E2B21855
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:29:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572636563;
+	bh=j1KP7pjcUgESkZ4XvE0fMh0jUHiONkGtncQhbYNGfKg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=brgC4G1hMbIQHVk5RW/eDn8urfvY0N/gFduc1y4ymHCiilyVeCFl3+PbeLWCA2FyF
+	 CxcUeF6ii7zGQ0bgvFB7jCOtqSOMeLGvlqF4GKfjBXCNFRnvncE79opOpYpgRHahoI
+	 MurNbqG6r62rWw0b+YhdIsrRDAuJV34sAY2Pnpl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbfKAT25 (ORCPT
+        id S1727829AbfKAT3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 15:28:57 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35430 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727325AbfKAT25 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 15:28:57 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 8so2982688wmo.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 12:28:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kragniz.eu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4Mutma0I285HLAM6Sw5PmtAvnBP2OZbW46A3J1dY9kk=;
-        b=TGRoCxKACJ9VtmiTGZQHEaYEdxpZQOpr/Q2KzvtQoVIJMdZqdG5NtWy3ZhNQyoIlWL
-         rUCsxm3aeT62XLB1CWUyTKX/z2ChTvUZ6BfGjDCFBhZMkOCcnLnoJHIgcCdUHKvgqiXn
-         F6+3ChT8uGSArJQlizjjRlF/C8sN/OZq4Nrsk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4Mutma0I285HLAM6Sw5PmtAvnBP2OZbW46A3J1dY9kk=;
-        b=m+iQ7QVjxt/VJvXI0Ytnsk/OeyXmPvqicP2Ka8sALa37XUreecvxmVXZW8T0F1DFFO
-         WlDw3CXJPmY+vp622tXK2hdkq3mYKOJvoAZBlaii8mjW6Tq9Wr5ovupU03pr2pkgxl8A
-         O6DhJz64bJ4eC/AyVk/IPqX6jytAdm34BWEFuutASdzLKa6OrVLuZdbe6fNUm+Gnx7L+
-         2S9LHmGSf9OhbnIzDMsaj+/XtfjvOL0z/Ti/AELSjGbPeWfK0LTVjZlTl/vc8CwNOgXN
-         cayHcp2d2OXKNfbfDW77euMMJe7yps2AZgo/6InHoLvaZaoXxOs8vHwY8l99CBg77OY/
-         ybww==
-X-Gm-Message-State: APjAAAVYpAx/y16bf2S2B2S8xQsp4etvAA6+Kvn13bky8tZLFzbkcz78
-        DUEC5IHaSdSS1ocsPpsNkOA3ew==
-X-Google-Smtp-Source: APXvYqzLIKewNStvLv8a4CM24iYDjlSWZc7mf3HWJvdAslTWYLuXcXhtD9k/sua9kX7hD0Tu22Zn/g==
-X-Received: by 2002:a7b:cb03:: with SMTP id u3mr11509610wmj.126.1572636535053;
-        Fri, 01 Nov 2019 12:28:55 -0700 (PDT)
-Received: from localhost.localdomain ([2.31.167.245])
-        by smtp.gmail.com with ESMTPSA id a8sm9786395wme.11.2019.11.01.12.28.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 12:28:54 -0700 (PDT)
-From:   Louis Taylor <louis@kragniz.eu>
-To:     georgi.djakov@linaro.org
-Cc:     corbet@lwn.net, linux-pm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Louis Taylor <louis@kragniz.eu>
-Subject: [PATCH] docs: driver-api: make interconnect title quieter
-Date:   Fri,  1 Nov 2019 19:33:14 +0000
-Message-Id: <20191101193314.67994-1-louis@kragniz.eu>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 1 Nov 2019 15:29:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727600AbfKAT3W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 15:29:22 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4546121734;
+        Fri,  1 Nov 2019 19:29:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572636561;
+        bh=j1KP7pjcUgESkZ4XvE0fMh0jUHiONkGtncQhbYNGfKg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VQGuM5stE1HnHHX0/rKMjhl2CcL6gPIiR5IegIedqZV9LtP0K3PUPaKqiZ/MKXSZA
+         LAFu4aa9tnMPAxIm4eKyd8Joz4koQv0usvrJDZVKT8frTycD5ktAbqySKSTOXBuNti
+         3XZvZk51mV0e5RqEJJKImxuJprnp7ZKRpoEvANcA=
+Date:   Fri, 1 Nov 2019 12:29:20 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH] kernel: sysctl: make drop_caches write-only
+Message-Id: <20191101122920.798a6d61b2725da8cfe80549@linux-foundation.org>
+In-Reply-To: <20191101192405.GA866154@chrisdown.name>
+References: <20191031221602.9375-1-hannes@cmpxchg.org>
+        <20191031162825.a545a5d4d8567368501769bd@linux-foundation.org>
+        <20191101110901.GB690103@chrisdown.name>
+        <20191101144540.GA12808@cmpxchg.org>
+        <20191101115950.bb88d49849bfecb1af0a88bf@linux-foundation.org>
+        <20191101192405.GA866154@chrisdown.name>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes it consistent with the other headings in the Linux driver
-implementer's API guide.
+On Fri, 1 Nov 2019 19:24:05 +0000 Chris Down <chris@chrisdown.name> wrote:
 
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
----
- Documentation/driver-api/interconnect.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Andrew Morton writes:
+> >> > The only scenario I can construct in my head is that someone has built
+> >> > something to watch drop_caches for modification, but we already have the
+> >> > kmsg output for that.
+> >
+> >The scenario is that something opens /proc/sys/vm/drop_caches for
+> >reading, gets unexpected EPERM and blows up?
+> 
+> Right, but...
+> 
+> >OK.  What if we make reads always return "0"?  That will fix the
+> >misleading output and is more backwards-compatible?
+> 
+> ...I'm not convinced that if an application has no error boundary for that 
+> EPERM that it can tolerate a change in behaviour, either. I mean, if it's 
+> opening it at all, presumably it intends to do *something* based on the value 
+> (regardless of import or lack thereof). It may do nothing, but it's not 
+> possible to know whether that's better or worse than blowing up.
+> 
+> I have mixed feelings on this one. Pragmatically, as someone who programs in 
+> userspace, I'd like failures based on changes in infrastructure to be loud, not 
+> silent. If I'm doing something which doesn't work, I'd like to know about it. 
+> Of course, one can make the argument that as a user of such an application, 
+> sometimes you don't have that luxury.
+> 
+> Either change is an upgrade from the current situation, at least. I prefer 
+> towards whatever makes the API the least confusing, which appears to be 
+> Johannes' original change, but I'd support a patch which always set it to 
+> 0 instead if it was deemed safer.
 
-diff --git a/Documentation/driver-api/interconnect.rst b/Documentation/driver-api/interconnect.rst
-index c3e004893796..cdeb5825f314 100644
---- a/Documentation/driver-api/interconnect.rst
-+++ b/Documentation/driver-api/interconnect.rst
-@@ -1,7 +1,7 @@
- .. SPDX-License-Identifier: GPL-2.0
- 
- =====================================
--GENERIC SYSTEM INTERCONNECT SUBSYSTEM
-+Generic System Interconnect Subsystem
- =====================================
- 
- Introduction
--- 
-2.23.0
+On the other hand..  As I mentioned earlier, if someone's code is
+failing because of the permissions change, they can chmod
+/proc/sys/vm/drop_caches at boot time and be happy.  They have no such
+workaround if their software misbehaves due to a read always returning
+"0".
 
