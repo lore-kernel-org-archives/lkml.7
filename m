@@ -2,182 +2,124 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4E5C47E49
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE38CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E1521906
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:30:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="umMn3Y+u"
+	by mail.kernel.org (Postfix) with ESMTP id 17D782067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfKAVak (ORCPT
+        id S1726912AbfKAVig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 17:30:40 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38060 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfKAVak (ORCPT
+        Fri, 1 Nov 2019 17:38:36 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:33897 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725989AbfKAVig (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 17:30:40 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y23so11206707ljc.5;
-        Fri, 01 Nov 2019 14:30:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZUMbanYAR2JSQFXtbmagULus+WfywDZrwLUh3k9jtsA=;
-        b=umMn3Y+u4IeNaoKlgUdMAZNW66GDjoo8446drYodCdBa7ZmGnsoygSzfiBCEk5EW/K
-         Z3YKyGO/huuIQ9ZWYK2xKSadEzoEz9Uoq7veWo+T9lhlHL4OPQAagL35zEgPhPXEmuNn
-         8Ctc8Rk1yMl2pYgBY9qd/muTcdrZx398dbczT6YURP2tjHGOkz5NSth7TRQtvML4n0Nr
-         mC2kFGS+OgZK5WDZEH+LGa2TsZhVVIIdReVjom9QVzRdK8sVCZzN1T3xlSJn4pjvUHGT
-         iPNGWA84KW3Vpy1na6bJ6ViB9Djz1yPCa08StTgz4dqXy1Xhk5dg+11uPBxqRCQW8Q4z
-         djpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZUMbanYAR2JSQFXtbmagULus+WfywDZrwLUh3k9jtsA=;
-        b=hcgLJgQeJ5jUwjGjogzL0bvMV0f4JkWeG5shOJwk0+Vo88lhbC+n3WT4qVlp8mH0pS
-         i4X10CoAMiRC2KYWBWMtnqNx8z0QtKkrzBTOc89/JVbRs3ieK8YMNXeAS/1gvNyUMlmO
-         OQl4Ls2YiC8DlTFvATJvGbq9kbKF7lMiG3pW6mLnsb+/XpLMk04YTBq9ICOC1VqQ8ueV
-         4aZ/GX56OO9vOk97H0sht1C5bS/4xkW179TDpNPsZx9thrJzkvJQEY4jPjHmSv0LJA6+
-         /NlB5WNcLWRZgdz++C9YoFgucIvP2DqKP2cD/vE4gx08vzehF3hqXoPYURio3RKvNWC/
-         BbzA==
-X-Gm-Message-State: APjAAAVGGdn6gA2HNCCi/XxBC9odsxoZ7w5OKAzdopJ+vsUuutyxfkH6
-        bJGZ5WQn/dTI+zHMBJ86Bot/ACme
-X-Google-Smtp-Source: APXvYqyQg7FVoTK+7F7aVQMbDzmR4UztW5orQfSKGemWQwF3ydiJE5F9YDtBNjdUEqfNel0WXXx4yw==
-X-Received: by 2002:a2e:161b:: with SMTP id w27mr9594995ljd.183.1572643837562;
-        Fri, 01 Nov 2019 14:30:37 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id r21sm2805638ljn.65.2019.11.01.14.30.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Nov 2019 14:30:36 -0700 (PDT)
-Subject: Re: [PATCH v6 00/18] Consolidate and improve NVIDIA Tegra CPUIDLE
- driver(s)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191015170015.1135-1-digetx@gmail.com>
- <20191016192133.GB26038@pdeschrijver-desktop.Nvidia.com>
- <72636eb3-5354-eea3-3a51-4975a04186b2@gmail.com>
- <53ee8bd3-5c53-f0aa-175c-7fa3024d0af5@gmail.com>
- <20191028140443.GA27141@pdeschrijver-desktop.Nvidia.com>
- <40de641f-c38e-51ee-ae27-c5db468c45b5@gmail.com>
- <20191101123359.GG27141@pdeschrijver-desktop.Nvidia.com>
- <a72463cd-cc16-691c-3c82-54ebb618ec32@gmail.com>
-Message-ID: <9c25ea71-ebe9-d9c2-0dff-6b2752e27131@gmail.com>
-Date:   Sat, 2 Nov 2019 00:30:35 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 1 Nov 2019 17:38:36 -0400
+Received: from dread.disaster.area (pa49-180-67-183.pa.nsw.optusnet.com.au [49.180.67.183])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 239EF3A03EA;
+        Sat,  2 Nov 2019 08:38:26 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iQech-0006ba-Hr; Sat, 02 Nov 2019 08:38:23 +1100
+Date:   Sat, 2 Nov 2019 08:38:23 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, Jan Kara <jack@suse.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Linux-Arch <linux-arch@vger.kernel.org>
+Subject: Re: [RFC] errno.h: Provide EFSCORRUPTED for everybody
+Message-ID: <20191101213823.GW4614@dread.disaster.area>
+References: <20191031010736.113783-1-Valdis.Kletnieks@vt.edu>
+ <CAMuHMdXzyVBa4TZEc5eRaBzu50thgJ2TrHJLZqwhbQ=JASgWOA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <a72463cd-cc16-691c-3c82-54ebb618ec32@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXzyVBa4TZEc5eRaBzu50thgJ2TrHJLZqwhbQ=JASgWOA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=3wLbm4YUAFX2xaPZIabsgw==:117 a=3wLbm4YUAFX2xaPZIabsgw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
+        a=7-415B0cAAAA:8 a=aJW9rHtRmq1v9DlCOwQA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-01.11.2019 16:22, Dmitry Osipenko пишет:
-> 01.11.2019 15:33, Peter De Schrijver пишет:
->> On Tue, Oct 29, 2019 at 03:47:56AM +0300, Dmitry Osipenko wrote:
->> ..
->>
->>>>>>> It would be useful to switch the power state terminology to the one used
->>>>>>> for later chips:
->>>>>>>
->>>>>>> LP0 becomes SC7
->>>>>>> LP1 becomes C1
->>>>>>> LP2 becomes CC7
->>>>>>>
->>>>>>> Meaning of these states is as follows
->>>>>>>
->>>>>>> C is a core state:
->>>>>>>
->>>>>>> C1 clock gating
->>>>>>> C2 not defined
->>>>>>> C3 not defined
->>>>>>> C4 not defined
->>>>>>> C5 not defined
->>>>>>> C6 not defined for ARM cores
->>>>>>> C7 power-gating
->>>>>>>
->>>>>>> CC is a CPU cluster C state:
->>>>>>>
->>>>>>> CC1 cluster clock gated
->>>>>>> CC2 not defined
->>>>>>> CC3 fmax@Vmin: not used prior to Tegra186
->>>>>>> CC4: cluster retention: no longer supported
->>>>>>> CC5: not defined
->>>>>>> CC6: cluster power gating
->>>>>>> CC7: cluster rail gating
->>>>>>>
->>>>>>> SC is a System C state:
->>>>>>>
->>>>>>> SC1: not defined
->>>>>>> SC2: not defined
->>>>>>> SC3: not defined
->>>>>>> SC4: not defined
->>>>>>> SC5: not defined
->>>>>>> SC6: not defined
->>>>>>> SC7: VDD_SOC off
->>>>>>
->>>>>> Hello Peter,
->>>>>>
->>>>>> But new "drivers/cpuidle/cpuidle-tegra.c" uses exactly that terminology,
->>>>>> please see "cpuidle: Refactor and move NVIDIA Tegra20 driver into
->>>>>> drivers/cpuidle/" and further patches. Am I missing something? Or do you
->>>>>> want the renaming to be a separate patch?
->>>>>>
->>>>>
->>>>> Or maybe you're suggesting to change the names everywhere and not only
->>>>> in the cpuidle driver? Please clarify :)
->>>>
->>>> At least some of the variable and function names still say lp2?
->>>
->>> The cpuidle driver uses LP2 terminology for everything that comes from
->>> the external arch / firmware includes. But it says CC6 for everything
->>> that is internal to the driver. So yes, there is a bit of new/old
->>> terminology mixing in the code.
->>>
->>> The arch code / PMC driver / TF firmware are all saying LP2. The LP2
->>> naming is also a part of the device-tree binding.
->>>
->>> It will be a lot of mess to rename the mach-tegra/pm.c code. I guess
->>> eventually it could be moved to drivers/soc/, so maybe it will be better
->>> to postpone the renaming until then?
->>
->> Or maybe add a comment somewhere indicating:
->>
->> LP2 = CC6
->> LP1 = C1
->> LP0 = SC7
->>
->> TF predates the new naming, so that may make some sense.
+On Fri, Nov 01, 2019 at 09:57:31PM +0100, Geert Uytterhoeven wrote:
+> Hi Valdis,
 > 
-> Today it should make more sense just to add an explicit comment to the
-> cpuidle driver that clarifies the new naming (IMHO). I'll prepare v7
-> with that change.
+> On Thu, Oct 31, 2019 at 2:11 AM Valdis Kletnieks
+> <valdis.kletnieks@vt.edu> wrote:
+> > Three questions: (a) ACK/NAK on this patch, (b) should it be all in one
+> > patch, or one to add to errno.h and 6 patches for 6 filesystems?), and
+> > (c) if one patch, who gets to shepherd it through?
+> >
+> > There's currently 6 filesystems that have the same #define. Move it
+> > into errno.h so it's defined in just one place.
+> >
+> > Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
 > 
-> Maybe later on, once more code will be consolidated in
-> drivers/soc/tegra/, it will become useful to duplicate the clarification
-> there as well.
+> Thanks for your patch!
 > 
-> Please let me know if you disagree or think that something better could
-> be done.
+> > --- a/include/uapi/asm-generic/errno.h
+> > +++ b/include/uapi/asm-generic/errno.h
+> > @@ -98,6 +98,7 @@
+> >  #define        EINPROGRESS     115     /* Operation now in progress */
+> >  #define        ESTALE          116     /* Stale file handle */
+> >  #define        EUCLEAN         117     /* Structure needs cleaning */
+> > +#define        EFSCORRUPTED    EUCLEAN
+> 
+> I have two questions:
+> a) Why not use EUCLEAN everywhere instead?
+>     Having two different names for the same errno complicates grepping.
 
-BTW, LP3 = C1.
+Because:
+	a) EUCLEAN is horrible for code documentation. EFSCORRUPTED
+	describes exactly the error being returned and/or checked for.
 
-I don't think that the new terminology has equivalent to LP1 (CPU
-cluster power gating + DRAM in self-refresh).
+	b) we've used EFSCORRUPTED in XFS since 1993. i.e. it was an
+	official, published error value on Irix, and we've kept it
+	in the linux code for the past ~20 years because of a)
+
+	c) Userspace programs that include filesystem specific
+	headers have already been exposed to and use EFSCORRUPTED,
+	so we can't remove/change it without breaking userspace.
+
+	d) EUCLEAN has a convenient userspace string description
+	that is appropriate for filesystem corruption: "Structure
+	needs cleaning" is precisely what needs to happen. Repair of
+	the filesystem (i.e. recovery to a clean state) is what is
+	required to fix the error....
+
+> b) Perhaps both errors should use different values?
+
+That horse bolted to userspace years ago - this is just formalising
+the practice that has spread across multiple linux filesystems from
+XFS over the past ~10 years..
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
