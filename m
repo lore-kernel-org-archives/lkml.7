@@ -2,144 +2,118 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4C5CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A82CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D50217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B842217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572634102;
-	bh=j0rlK8l1pSBgzERyaLEvJNCfYUmwAaz1IVhv9iLIVLo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O7gdmNRyJKeHfFlqSVoJjXgy1lGj7RMUeGG7FdUqvman66wdIA8u+BqevxcxFkoiU
-	 KWGqcvuuBGQ3JR5GZJsybzOnOZk+kQdoLiS1P60s2Bsj/GWyUVpL2daqmZ5ToiGvnl
-	 IDFhGR2z+SJxRCr8bM84BjREPRf6NYWMTmahPKM0=
+	s=default; t=1572634150;
+	bh=UtotsVrBU3BoxXHlblzEP9xmV6Kfj7U2PcegPJZRp4c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=d/wnALIzPGdsK7ajIWM+Adw1jv6i+bK2Ub2Bi7vcUEGjn2xTWaL49wNyHUNYYVztN
+	 pMe4VX72V5JLlTi8bwDjfbni+5+s/qCB5QAcuElpRMntN0JA7XiMi9QFxaXGJHSXgS
+	 lJJUMu18/hdC4+831OxQW8KSDC5BMMKWgMtwV8po=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfKASsV (ORCPT
+        id S1727538AbfKAStJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 14:48:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726671AbfKASsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 14:48:21 -0400
-Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F244217D9;
-        Fri,  1 Nov 2019 18:48:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572634099;
-        bh=j0rlK8l1pSBgzERyaLEvJNCfYUmwAaz1IVhv9iLIVLo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0tBpL9yKKSgZy88R8V96yHLnFYK4svlh1B/CPDmhG+qoigVO9ZtUAfaEsrmdtK1ZP
-         fPOIMhjSL4hG/C4+UxrYEkOs+mb2laUDMRGaeBkWm2AmzTAgAtqwP3AMJNqPl91PwO
-         gScGtL9BJyQzTpMUmVWNa3Zd3OmeMkNQhAPK+Py8=
-Date:   Fri, 1 Nov 2019 14:48:17 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Xin Long <lucien.xin@gmail.com>
-Cc:     "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "syzbot+d44f7bbebdea49dbc84a@syzkaller.appspotmail.com" 
-        <syzbot+d44f7bbebdea49dbc84a@syzkaller.appspotmail.com>,
-        "marcelo.leitner@gmail.com" <marcelo.leitner@gmail.com>
-Subject: Re: [PATCH 4.14 024/119] sctp: change sctp_prot .no_autobind with
- true
-Message-ID: <20191101184817.GU1554@sasha-vm>
-References: <20191027203259.948006506@linuxfoundation.org>
- <20191027203307.303661015@linuxfoundation.org>
- <3e9de35dda19c0ac207d49d24c2735655b1d8d64.camel@nokia.com>
- <CADvbK_dx=dT6j-XMA=p9QgJJp5YgA2zRCLuY08u4pz0v=vXorw@mail.gmail.com>
- <20191031120958.GP1554@sasha-vm>
- <CADvbK_eRDP=zK7cTFDBmOe1_+-Q57Daet7V1OUY9FPaENDY3VA@mail.gmail.com>
+        Fri, 1 Nov 2019 14:49:09 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34240 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbfKAStI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 14:49:08 -0400
+Received: by mail-lf1-f66.google.com with SMTP id f5so7937043lfp.1
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 11:49:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NOMWJgPM1rDLmkw/2ygHrVXuEmkEd1D0/JlMXiMe9Cs=;
+        b=MAQEB0bjYlwnpicMwJ0hpvQfShzzNnbkhVUWFhCx8LmPdFf1VtrZRsRhYlpBiWxwDU
+         6SYl+q81U3u4H3tge2/n+9uInRo/rkB7rpshebRyiFJfKyg3CH5z6P+T82/TjkFdiXOg
+         XlHt7lD/HhHCjEU4zEIR0POrtffKJPcsovlxM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NOMWJgPM1rDLmkw/2ygHrVXuEmkEd1D0/JlMXiMe9Cs=;
+        b=QDqMIDNHPeVtwMg3N6DzS5Kww04LIRM9gqCU0MGIdbAUtVWFp8pcnlmhFqxc9RXiIl
+         nSz+XOYfWy7TWRbv/FnMeiLM9G7SqYqXDIn5mYslxTREwq5J6/2gl6NHKIikbtRGVVjG
+         C8fDDFB4eqEhOhq7srqSJHDrvV3Hi3A5BxulwsG1Xmz5AZoG4WKAEOWGh44y4O9p/52t
+         YidPFw+dwpYupq5d8ovlb9lAUs/Laui72zaV7E9lJDrb2ilK5aWiFbBVqEBApanAvnLg
+         NXwQoCV0Yk7vubWI+/+2Q9ggDnDoVkXFcZ3QPeLwmDXW6DRggT3utUin4Dj+/Ih56Ewh
+         qYfg==
+X-Gm-Message-State: APjAAAXr0I2buE8rBk4DRxBTYcsEbDXOADDCXERpV6Ammr0it/C+stDG
+        P0VolknfQJEl3fH7GhOCPaDIdeCRzhw=
+X-Google-Smtp-Source: APXvYqwrpHGB3yB01adCK+26/1IExWc2YxEY0R5owJL6TxEjXGJ9fuOAGChppOHeZ09Dr7u6rV4F5A==
+X-Received: by 2002:a19:40cf:: with SMTP id n198mr8261612lfa.189.1572634146148;
+        Fri, 01 Nov 2019 11:49:06 -0700 (PDT)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id s27sm3057102lfc.43.2019.11.01.11.49.04
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Nov 2019 11:49:04 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id r7so2546531ljg.2
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 11:49:04 -0700 (PDT)
+X-Received: by 2002:a05:651c:154:: with SMTP id c20mr9193922ljd.1.1572634144278;
+ Fri, 01 Nov 2019 11:49:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CADvbK_eRDP=zK7cTFDBmOe1_+-Q57Daet7V1OUY9FPaENDY3VA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191101174840.GA81963@gmail.com>
+In-Reply-To: <20191101174840.GA81963@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 1 Nov 2019 11:48:48 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi_VHc=Q2JsPbVmCgpKekNJwnbBiYrmvnSSW8aiAkg7nQ@mail.gmail.com>
+Message-ID: <CAHk-=wi_VHc=Q2JsPbVmCgpKekNJwnbBiYrmvnSSW8aiAkg7nQ@mail.gmail.com>
+Subject: Re: [GIT PULL] perf fixes
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Arnaldo Carvalho de Melo <acme@infradead.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 02, 2019 at 01:58:33AM +0800, Xin Long wrote:
->On Thu, Oct 31, 2019 at 8:10 PM Sasha Levin <sashal@kernel.org> wrote:
->>
->> On Thu, Oct 31, 2019 at 05:14:15PM +0800, Xin Long wrote:
->> >On Thu, Oct 31, 2019 at 3:54 PM Rantala, Tommi T. (Nokia - FI/Espoo)
->> ><tommi.t.rantala@nokia.com> wrote:
->> >>
->> >> On Sun, 2019-10-27 at 22:00 +0100, Greg Kroah-Hartman wrote:
->> >> > From: Xin Long <lucien.xin@gmail.com>
->> >> >
->> >> > [ Upstream commit 63dfb7938b13fa2c2fbcb45f34d065769eb09414 ]
->> >> >
->> >> > syzbot reported a memory leak:
->> >> >
->> >> >   BUG: memory leak, unreferenced object 0xffff888120b3d380 (size 64):
->> >> >   backtrace:
->> >> >
->> >> >     [...] slab_alloc mm/slab.c:3319 [inline]
->> >> >     [...] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
->> >> >     [...] sctp_bucket_create net/sctp/socket.c:8523 [inline]
->> >> >     [...] sctp_get_port_local+0x189/0x5a0 net/sctp/socket.c:8270
->> >> >     [...] sctp_do_bind+0xcc/0x200 net/sctp/socket.c:402
->> >> >     [...] sctp_bindx_add+0x4b/0xd0 net/sctp/socket.c:497
->> >> >     [...] sctp_setsockopt_bindx+0x156/0x1b0 net/sctp/socket.c:1022
->> >> >     [...] sctp_setsockopt net/sctp/socket.c:4641 [inline]
->> >> >     [...] sctp_setsockopt+0xaea/0x2dc0 net/sctp/socket.c:4611
->> >> >     [...] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3147
->> >> >     [...] __sys_setsockopt+0x10f/0x220 net/socket.c:2084
->> >> >     [...] __do_sys_setsockopt net/socket.c:2100 [inline]
->> >> >
->> >> > It was caused by when sending msgs without binding a port, in the path:
->> >> > inet_sendmsg() -> inet_send_prepare() -> inet_autobind() ->
->> >> > .get_port/sctp_get_port(), sp->bind_hash will be set while bp->port is
->> >> > not. Later when binding another port by sctp_setsockopt_bindx(), a new
->> >> > bucket will be created as bp->port is not set.
->> >> >
->> >> > sctp's autobind is supposed to call sctp_autobind() where it does all
->> >> > things including setting bp->port. Since sctp_autobind() is called in
->> >> > sctp_sendmsg() if the sk is not yet bound, it should have skipped the
->> >> > auto bind.
->> >> >
->> >> > THis patch is to avoid calling inet_autobind() in inet_send_prepare()
->> >> > by changing sctp_prot .no_autobind with true, also remove the unused
->> >> > .get_port.
->> >>
->> >> Hi,
->> >>
->> >> I'm seeing SCTP oops in 4.14.151, reproducible easily with iperf:
->> >>
->> >> # iperf3 -s -1 &
->> >> # iperf3 -c localhost --sctp
->> >>
->> >> This patch was also included in 4.19.81, but there it seems to be working
->> >> fine.
->> >>
->> >> Any ideas if this patch is valid for 4.14, or what's missing in 4.14 to
->> >> make this work?
->> >pls get this commit into 4.14, which has been in 4.19:
->> >
->> >commit 644fbdeacf1d3edd366e44b8ba214de9d1dd66a9
->> >Author: Xin Long <lucien.xin@gmail.com>
->> >Date:   Sun May 20 16:39:10 2018 +0800
->> >
->> >    sctp: fix the issue that flags are ignored when using kernel_connect
->>
->> Care to send a backport?
->Sure, I haven't yet sent a backport for 4.14.y
->After I do the cherry-pick, what's the next step? Post it upstream
->with CCing someone ?
+On Fri, Nov 1, 2019 at 10:48 AM Ingo Molnar <mingo@kernel.org> wrote:
+>
+> Alexander Shishkin (1):
+>       perf/core: Start rejecting the syscall with attr.__reserved_2 set
 
-Just make sure stable@vger.kernel.org is Cc'ed.
+This seems to quite possibly break existing apps. Is there any reason
+to believe that existing users have actually cleared that field?
 
--- 
-Thanks,
-Sasha
+It's suspect for another reason too: the commit that added that field
+just added it to the end of the structure, with the argument that
+"aux_watermark will only matter for new AUX-aware code, so the old
+code should still be fine".
+
+So by *definition* those old kinds of users would never have cleared
+that field, because that field didn't exist.
+
+Honestly, this all shows a worrying complete disregard for backwards
+compatibility. Calling this a "fix" is questionable, when it is much
+more likely to break some old user.
+
+I've pulled it, but I need people to be aware that this is utter
+garbage, and that if anybody ever reports it, this needs to be
+immediately reverted.
+
+And the people involved should stop claiming this "fixes" anything,
+and should look hard at their random ABI expansions and "fixes".
+
+The original code that said "old users would not be impacted" is
+correct. But this "fix" is very very very questionable indeed, and I
+get the feeling that somebody doesn't understand what ABI is, when
+they claim that this "fixes" anything.
+
+      Linus
