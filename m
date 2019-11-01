@@ -2,190 +2,220 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3146CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 163F8CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE297208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:45:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehpdFbf9"
+	by mail.kernel.org (Postfix) with ESMTP id E4BD62086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:48:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbfKACpG (ORCPT
+        id S1728937AbfKACsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 22:45:06 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46810 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbfKACpG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 22:45:06 -0400
-Received: by mail-pl1-f195.google.com with SMTP id q21so3660314plr.13;
-        Thu, 31 Oct 2019 19:45:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2alu0Zc/ft6aP0mMKc3T9tiyxMrXfO91QDsxper6hEU=;
-        b=ehpdFbf9etA7HW62oqX1LZFKJYoVBbPQJudG07hAzBC8Og6HDH61qiMQ+BoApygcx7
-         k4M4QURpehSj5Bf6xW8xD0TR3ZveBXnF0CrejEW9xdyohY+Ct54ePpe4fTLWuL/PY8EZ
-         51aGcxxyFVTnM9L92Rkx6bUf2y0UWYrA0zztnFrwyy2jOzvAAnHUVAg3/9hXLFeansxV
-         fsHnL82XtkqpyvS8v8eVGOzZzDEg2kAk7xNZbc6VdBkNESHRj2flPiqtfybbwBWpK2+S
-         qESYgQCuX/I6AQZz4wDTI77agsVXerggJem0FahjKdWti7PNUOyWH5CZxkcn+gomZyt/
-         btHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=2alu0Zc/ft6aP0mMKc3T9tiyxMrXfO91QDsxper6hEU=;
-        b=iP2MNpT7P7x57KkYLXFAo6AIcae9uIMVYWOBlr2FwfBJxFha03S5qA1QEDIP2Cu/GW
-         Ay4jKBnHJxON/fhMu+ACO48JbFl/biyfkBCVq40aoR8xS235PT2xrGTwadFYQZ9Ya3TD
-         L4dW4jl3iAiaoGEaXLuraCvYU1Uzn2x1oPlqHitHPg9RWugvvsutCflodA4pgNBiw1/p
-         nFKuZtdT8iRkZLW5BCMFW0eylgvmA8GFoR5RKBVtBtOplgYlimHKl+UtxX1sW9Sy1vl8
-         dYcfCksCD3OJQIhVWYEgL1dgoz3g1Tr8Rzsva8obUOvmmHYsYJBc8JZ/Wq7lf9+5ehxf
-         F0zg==
-X-Gm-Message-State: APjAAAWpyoFZrciEXkv4ydEJ5ynP2c2MwEXLHBNtwbIIre2LWynXGyDu
-        D87poF7hP5K0rtrWpKlh52w=
-X-Google-Smtp-Source: APXvYqwePioh5LZFvobRYjFvfwGYHFfaowQT003aLyNZ6K7yaoHsR9ZUDrhlk3TRnP0FADX8XNgH/Q==
-X-Received: by 2002:a17:902:6f01:: with SMTP id w1mr10214320plk.35.1572576305307;
-        Thu, 31 Oct 2019 19:45:05 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id e71sm6641948pgc.91.2019.10.31.19.45.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2019 19:45:04 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     agross@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH 2/2] remoteproc: qcom_q6v5_mss: Add support for MSM8998
-Date:   Thu, 31 Oct 2019 19:45:01 -0700
-Message-Id: <20191101024501.22026-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191101024301.21919-1-jeffrey.l.hugo@gmail.com>
-References: <20191101024301.21919-1-jeffrey.l.hugo@gmail.com>
+        Thu, 31 Oct 2019 22:48:17 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:52222 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726614AbfKACsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 22:48:17 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id xA12lsRT030889
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Thu, 31 Oct 2019 19:47:54 -0700
+Received: from [128.224.155.112] (128.224.155.112) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Thu, 31 Oct
+ 2019 19:47:53 -0700
+Subject: Re: [PATCH v5] perf record: Add support for limit perf output file
+ size
+To:     <acme@redhat.com>, <jolsa@redhat.com>, <arnaldo.melo@gmail.com>,
+        <linux-kernel@vger.kernel.org>
+References: <20191022080901.3841-1-jiwei.sun@windriver.com>
+CC:     <alexander.shishkin@linux.intel.com>, <mpetlan@redhat.com>,
+        <namhyung@kernel.org>, <a.p.zijlstra@chello.nl>,
+        <adrian.hunter@intel.com>, <Richard.Danter@windriver.com>,
+        <jiwei.sun.bj@qq.com>
+From:   Jiwei Sun <Jiwei.Sun@windriver.com>
+Message-ID: <3d1767cd-61b0-19d6-a21e-2803f7973b2e@windriver.com>
+Date:   Fri, 1 Nov 2019 10:47:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191022080901.3841-1-jiwei.sun@windriver.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [128.224.155.112]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MSM8998 sits between MSM8996 and SDM845 in terms of functionality needed to
-boot the modem subsystem.  Booting mss allows for servicing the traditional
-cellular usecases along with the wireless usecases such as wifi.
+Hi Jirka & Arnaldo,
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- drivers/remoteproc/qcom_q6v5_mss.c | 52 ++++++++++++++++++++++++++----
- 1 file changed, 46 insertions(+), 6 deletions(-)
+I'm sorry to bother you, could you please help me to review the v5 patch again?
+Thank you very much for your suggestions for the v4 patch.
 
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index bdf1dd00b89b..685182368aa7 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -61,6 +61,7 @@
- #define QDSP6SS_GFMUX_CTL_REG		0x020
- #define QDSP6SS_PWR_CTL_REG		0x030
- #define QDSP6SS_MEM_PWR_CTL		0x0B0
-+#define QDSP6V6SS_MEM_PWR_CTL		0x034
- #define QDSP6SS_STRAP_ACC		0x110
- 
- /* AXI Halt Register Offsets */
-@@ -196,6 +197,7 @@ enum {
- 	MSS_MSM8916,
- 	MSS_MSM8974,
- 	MSS_MSM8996,
-+	MSS_MSM8998,
- 	MSS_SDM845,
- };
- 
-@@ -504,7 +506,10 @@ static int q6v5proc_reset(struct q6v5 *qproc)
- 		}
- 
- 		goto pbl_wait;
--	} else if (qproc->version == MSS_MSM8996) {
-+	} else if (qproc->version == MSS_MSM8996 ||
-+		   qproc->version == MSS_MSM8998) {
-+		int mem_pwr_ctl;
-+
- 		/* Override the ACC value if required */
- 		writel(QDSP6SS_ACC_OVERRIDE_VAL,
- 		       qproc->reg_base + QDSP6SS_STRAP_ACC);
-@@ -549,17 +554,24 @@ static int q6v5proc_reset(struct q6v5 *qproc)
- 		writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
- 
- 		/* Turn on L1, L2, ETB and JU memories 1 at a time */
--		val = readl(qproc->reg_base + QDSP6SS_MEM_PWR_CTL);
--		for (i = 19; i >= 0; i--) {
-+		if (qproc->version == MSS_MSM8996) {
-+			mem_pwr_ctl = QDSP6SS_MEM_PWR_CTL;
-+			i = 19;
-+		} else {
-+			/* MSS_MSM8998 */
-+			mem_pwr_ctl = QDSP6V6SS_MEM_PWR_CTL;
-+			i = 28;
-+		}
-+		val = readl(qproc->reg_base + mem_pwr_ctl);
-+		for (; i >= 0; i--) {
- 			val |= BIT(i);
--			writel(val, qproc->reg_base +
--						QDSP6SS_MEM_PWR_CTL);
-+			writel(val, qproc->reg_base + mem_pwr_ctl);
- 			/*
- 			 * Read back value to ensure the write is done then
- 			 * wait for 1us for both memory peripheral and data
- 			 * array to turn on.
- 			 */
--			val |= readl(qproc->reg_base + QDSP6SS_MEM_PWR_CTL);
-+			val |= readl(qproc->reg_base + mem_pwr_ctl);
- 			udelay(1);
- 		}
- 		/* Remove word line clamp */
-@@ -1592,6 +1604,33 @@ static const struct rproc_hexagon_res sdm845_mss = {
- 	.version = MSS_SDM845,
- };
- 
-+static const struct rproc_hexagon_res msm8998_mss = {
-+	.hexagon_mba_image = "mba.mbn",
-+	.proxy_clk_names = (char*[]){
-+			"xo",
-+			"qdss",
-+			"mem",
-+			NULL
-+	},
-+	.active_clk_names = (char*[]){
-+			"iface",
-+			"bus",
-+			"mem",
-+			"gpll0_mss",
-+			"mnoc_axi",
-+			"snoc_axi",
-+			NULL
-+	},
-+	.proxy_pd_names = (char*[]){
-+			"cx",
-+			"mx",
-+			NULL
-+	},
-+	.need_mem_protection = true,
-+	.has_alt_reset = false,
-+	.version = MSS_MSM8998,
-+};
-+
- static const struct rproc_hexagon_res msm8996_mss = {
- 	.hexagon_mba_image = "mba.mbn",
- 	.proxy_supply = (struct qcom_mss_reg_res[]) {
-@@ -1698,6 +1737,7 @@ static const struct of_device_id q6v5_of_match[] = {
- 	{ .compatible = "qcom,msm8916-mss-pil", .data = &msm8916_mss},
- 	{ .compatible = "qcom,msm8974-mss-pil", .data = &msm8974_mss},
- 	{ .compatible = "qcom,msm8996-mss-pil", .data = &msm8996_mss},
-+	{ .compatible = "qcom,msm8998-mss-pil", .data = &msm8998_mss},
- 	{ .compatible = "qcom,sdm845-mss-pil", .data = &sdm845_mss},
- 	{ },
- };
--- 
-2.17.1
+Best regards,
+Jiwei
 
+On 2019e9410f22f% 16:09, jsun4 wrote:
+> The patch adds a new option to limit the output file size, then based
+> on it, we can create a wrapper of the perf command that uses the option
+> to avoid exhausting the disk space by the unconscious user.
+> 
+> In order to make the perf.data parsable, we just limit the sample data
+> size, since the perf.data consists of many headers and sample data and
+> other data, the actual size of the recorded file will bigger than the
+> setting value.
+> 
+> Testing it:
+> 
+>  # ./perf record -a -g --max-size=10M
+>  Couldn't synthesize bpf events.
+>  [ perf record: perf size limit reached (10249 KB), stopping session ]
+>  [ perf record: Woken up 32 times to write data ]
+>  [ perf record: Captured and wrote 10.133 MB perf.data (71964 samples) ]
+> 
+>  # ls -lh perf.data
+>  -rw------- 1 root root 11M Oct 22 14:32 perf.data
+> 
+>  # ./perf record -a -g --max-size=10K
+>  [ perf record: perf size limit reached (10 KB), stopping session ]
+>  Couldn't synthesize bpf events.
+>  [ perf record: Woken up 0 times to write data ]
+>  [ perf record: Captured and wrote 1.546 MB perf.data (69 samples) ]
+> 
+>  # ls -l perf.data
+>  -rw------- 1 root root 1626952 Oct 22 14:36 perf.data
+> 
+> Signed-off-by: Jiwei Sun <jiwei.sun@windriver.com>
+> ---
+> v5 changes:
+>   - Change the output format like [ perf record: perf size limit XX ]
+>   - change the killing perf way from "raise(SIGTERM)" to set "done == 1"
+> 
+> v4 changes:
+>   - Just show one WARNING message after reached the limit.
+> 
+> v3 changes:
+>   - add a test result
+>   - add the new option to tools/perf/Documentation/perf-record.txt
+> 
+> v2 changes:
+>   - make patch based on latest Arnaldo's perf/core,
+>   - display warning message when reached the limit.
+> ---
+>  tools/perf/Documentation/perf-record.txt |  4 +++
+>  tools/perf/builtin-record.c              | 46 +++++++++++++++++++++++-
+>  2 files changed, 49 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 8a4506113d9f..ebcba1f95513 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -574,6 +574,10 @@ Implies --tail-synthesize.
+>  --kcore::
+>  Make a copy of /proc/kcore and place it into a directory with the perf data file.
+>  
+> +--max-size=<size>::
+> +Limit the sample data max size, <size> is expected to be a number with
+> +appended unit character - B/K/M/G
+> +
+>  SEE ALSO
+>  --------
+>  linkperf:perf-stat[1], linkperf:perf-list[1]
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index f6664bb08b26..b9ddfcda9611 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -94,8 +94,11 @@ struct record {
+>  	struct switch_output	switch_output;
+>  	unsigned long long	samples;
+>  	cpu_set_t		affinity_mask;
+> +	unsigned long		output_max_size;	/* = 0: unlimited */
+>  };
+>  
+> +static volatile int done;
+> +
+>  static volatile int auxtrace_record__snapshot_started;
+>  static DEFINE_TRIGGER(auxtrace_snapshot_trigger);
+>  static DEFINE_TRIGGER(switch_output_trigger);
+> @@ -123,6 +126,12 @@ static bool switch_output_time(struct record *rec)
+>  	       trigger_is_ready(&switch_output_trigger);
+>  }
+>  
+> +static bool record__output_max_size_exceeded(struct record *rec)
+> +{
+> +	return rec->output_max_size &&
+> +	       (rec->bytes_written >= rec->output_max_size);
+> +}
+> +
+>  static int record__write(struct record *rec, struct mmap *map __maybe_unused,
+>  			 void *bf, size_t size)
+>  {
+> @@ -135,6 +144,13 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
+>  
+>  	rec->bytes_written += size;
+>  
+> +	if (record__output_max_size_exceeded(rec) && !done) {
+> +		fprintf(stderr, "[ perf record: perf size limit reached (%lu KB),"
+> +				" stopping session ]\n",
+> +				rec->bytes_written >> 10);
+> +		done = 1;
+> +	}
+> +
+>  	if (switch_output_size(rec))
+>  		trigger_hit(&switch_output_trigger);
+>  
+> @@ -499,7 +515,6 @@ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
+>  	return record__write(rec, map, bf, size);
+>  }
+>  
+> -static volatile int done;
+>  static volatile int signr = -1;
+>  static volatile int child_finished;
+>  
+> @@ -1984,6 +1999,33 @@ static int record__parse_affinity(const struct option *opt, const char *str, int
+>  	return 0;
+>  }
+>  
+> +static int parse_output_max_size(const struct option *opt,
+> +				 const char *str, int unset)
+> +{
+> +	unsigned long *s = (unsigned long *)opt->value;
+> +	static struct parse_tag tags_size[] = {
+> +		{ .tag  = 'B', .mult = 1       },
+> +		{ .tag  = 'K', .mult = 1 << 10 },
+> +		{ .tag  = 'M', .mult = 1 << 20 },
+> +		{ .tag  = 'G', .mult = 1 << 30 },
+> +		{ .tag  = 0 },
+> +	};
+> +	unsigned long val;
+> +
+> +	if (unset) {
+> +		*s = 0;
+> +		return 0;
+> +	}
+> +
+> +	val = parse_tag_value(str, tags_size);
+> +	if (val != (unsigned long) -1) {
+> +		*s = val;
+> +		return 0;
+> +	}
+> +
+> +	return -1;
+> +}
+> +
+>  static int record__parse_mmap_pages(const struct option *opt,
+>  				    const char *str,
+>  				    int unset __maybe_unused)
+> @@ -2311,6 +2353,8 @@ static struct option __record_options[] = {
+>  			    "n", "Compressed records using specified level (default: 1 - fastest compression, 22 - greatest compression)",
+>  			    record__parse_comp_level),
+>  #endif
+> +	OPT_CALLBACK(0, "max-size", &record.output_max_size,
+> +		     "size", "Limit the maximum size of the output file", parse_output_max_size),
+>  	OPT_END()
+>  };
+>  
+> 
