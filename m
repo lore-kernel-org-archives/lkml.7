@@ -2,77 +2,95 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A3ADCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A25FCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 157A7217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:36:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572626188;
-	bh=pzuTPfxW6ChiKka7CrU44DU0IlZRj3qP8BZLIY0Klv0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=fcjDADp47odtG8OOAprQBRoYdvzysulGbPIiCQhphCCwmNanGKrX84s/J+YTEM5Im
-	 BoK6QGDQHJj7Yo30hRhQnXDn53JsK5iouxqAsNz73TDRVLR9KyLVRsPOq/60Gy2E24
-	 1zS2FBcr6TgiH8cC5hVWunnLueMniyRUPU0fbND0=
+	by mail.kernel.org (Postfix) with ESMTP id 1BEE821734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:37:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbfKAQg1 (ORCPT
+        id S1729079AbfKAQhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 12:36:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727483AbfKAQg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 12:36:26 -0400
-Received: from localhost (unknown [104.132.0.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A57D21734;
-        Fri,  1 Nov 2019 16:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572626186;
-        bh=pzuTPfxW6ChiKka7CrU44DU0IlZRj3qP8BZLIY0Klv0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SFScjW5/mIzRRC64s6EdyqkA2S+lEgEuoDFWJs/mH+EGfAVuXtL6+JeY4t5GMlfT5
-         AATXzkQNYj6vs1Oay4RTJRk7b3IT3Rc0wQb/36UueBTYR9yMzcHaiYO01WL0DOagRt
-         x2r7KVMVtEb1k/p09P3fjKAKBbiX74cVyWKpxak0=
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH] f2fs: avoid kernel panic on corruption test
-Date:   Fri,  1 Nov 2019 09:36:24 -0700
-Message-Id: <20191101163624.7994-1-jaegeuk@kernel.org>
-X-Mailer: git-send-email 2.19.0.605.g01d371f741-goog
+        Fri, 1 Nov 2019 12:37:47 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60104 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727626AbfKAQhq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 12:37:46 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iQZve-0002yY-9u; Fri, 01 Nov 2019 17:37:38 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DC4B91C0315;
+        Fri,  1 Nov 2019 17:37:37 +0100 (CET)
+Date:   Fri, 01 Nov 2019 16:37:37 -0000
+From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: ras/core] x86/mce: Add Xeon Icelake to list of CPUs that support PPIN
+Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "linux-edac" <linux-edac@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86-ml" <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20191028163719.19708-1-tony.luck@intel.com>
+References: <20191028163719.19708-1-tony.luck@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <157262625753.29376.16645566147052348797.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-xfstests/generic/475 complains kernel warn/panic while testing corrupted disk.
+The following commit has been merged into the ras/core branch of tip:
 
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Commit-ID:     dc6b025de95bcd22ff37c4fabb022ec8a027abf1
+Gitweb:        https://git.kernel.org/tip/dc6b025de95bcd22ff37c4fabb022ec8a027abf1
+Author:        Tony Luck <tony.luck@intel.com>
+AuthorDate:    Mon, 28 Oct 2019 09:37:19 -07:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Fri, 01 Nov 2019 17:29:36 +01:00
+
+x86/mce: Add Xeon Icelake to list of CPUs that support PPIN
+
+New CPU model, same MSRs to control and read the inventory number.
+
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191028163719.19708-1-tony.luck@intel.com
 ---
- fs/f2fs/node.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/x86/kernel/cpu/mce/intel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 8b66bc4c004b..06fd6d77d34b 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -2349,7 +2349,6 @@ static int __f2fs_build_free_nids(struct f2fs_sb_info *sbi,
+diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
+index 68a1d25..e270d07 100644
+--- a/arch/x86/kernel/cpu/mce/intel.c
++++ b/arch/x86/kernel/cpu/mce/intel.c
+@@ -484,6 +484,7 @@ static void intel_ppin_init(struct cpuinfo_x86 *c)
+ 	case INTEL_FAM6_BROADWELL_D:
+ 	case INTEL_FAM6_BROADWELL_X:
+ 	case INTEL_FAM6_SKYLAKE_X:
++	case INTEL_FAM6_ICELAKE_X:
+ 	case INTEL_FAM6_XEON_PHI_KNL:
+ 	case INTEL_FAM6_XEON_PHI_KNM:
  
- 			if (ret) {
- 				up_read(&nm_i->nat_tree_lock);
--				f2fs_bug_on(sbi, !mount);
- 				f2fs_err(sbi, "NAT is corrupt, run fsck to fix it");
- 				return ret;
- 			}
--- 
-2.19.0.605.g01d371f741-goog
-
