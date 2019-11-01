@@ -2,67 +2,134 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8685CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 181AFCA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3F14217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2971217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:57:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="1qxvtNWX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfKAU47 (ORCPT
+        id S1727822AbfKAU5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 16:56:59 -0400
-Received: from palmtree.beeroclock.net ([178.79.160.154]:44672 "EHLO
-        palmtree.beeroclock.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727144AbfKAU46 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 16:56:58 -0400
-Received: from beros.lan (89-160-129-47.du.xdsl.is [89.160.129.47])
-        by palmtree.beeroclock.net (Postfix) with ESMTPSA id 88A6C1F76B;
-        Fri,  1 Nov 2019 20:56:56 +0000 (UTC)
-From:   Karl Palsson <karlp@tweak.net.au>
-To:     mripard@kernel.org, wens@csie.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Karl Palsson <karlp@tweak.net.au>
-Subject: [PATCH 2/2] dt-bindings: arm: sunxi: add FriendlyARM NanoPi Duo2
-Date:   Fri,  1 Nov 2019 20:55:36 +0000
-Message-Id: <20191101205535.7896-2-karlp@tweak.net.au>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191101205535.7896-1-karlp@tweak.net.au>
-References: <20191101205535.7896-1-karlp@tweak.net.au>
+        Fri, 1 Nov 2019 16:57:41 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:46004 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726396AbfKAU5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 16:57:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=n5rRT0a1iTfLvFxrf02dbZh2qtFNVDbMMIEOedlKQOY=; b=1qxvtNWXGZsqvIRCmMwL+v+dJ2
+        LKqEzTc7yUs5IBgejnC0WfxUbKEDRdFgp3zBCivnKiNoXbzATeRwkDtGPEoJunrrOh6NoE9md7IGH
+        ikFVWEhVGs/IZrpQ4qTuBm+kuZX9vh2nLcNP2JqYtg3mXGofbiiEonc4sPT9HbF+4Kq8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iQdz7-0000M4-Od; Fri, 01 Nov 2019 21:57:29 +0100
+Date:   Fri, 1 Nov 2019 21:57:29 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     netdev@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 net-next 06/12] net: ethernet: ti: introduce cpsw
+ switchdev based driver part 1 - dual-emac
+Message-ID: <20191101205729.GE31534@lunn.ch>
+References: <20191024100914.16840-1-grygorii.strashko@ti.com>
+ <20191024100914.16840-7-grygorii.strashko@ti.com>
+ <20191029123230.GM15259@lunn.ch>
+ <24b1623d-48df-328a-eda7-4195e9df2b22@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <24b1623d-48df-328a-eda7-4195e9df2b22@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds bindings for the newly added NanoPi Duo2 board.
+On Fri, Nov 01, 2019 at 10:34:57PM +0200, Grygorii Strashko wrote:
+> 
+> 
+> On 29/10/2019 14:32, Andrew Lunn wrote:
+> > > +static int cpsw_probe(struct platform_device *pdev)
+> > > +{
+> > > +	const struct soc_device_attribute *soc;
+> > > +	struct device *dev = &pdev->dev;
+> > > +	struct resource *ss_res;
+> > > +	struct cpsw_common *cpsw;
+> > > +	struct gpio_descs *mode;
+> > > +	void __iomem *ss_regs;
+> > > +	int ret = 0, ch;
+> > > +	struct clk *clk;
+> > > +	int irq;
+> > > +
+> > 
+> > ...
+> > 
+> > > +
+> > > +	/* setup netdevs */
+> > > +	ret = cpsw_create_ports(cpsw);
+> > > +	if (ret)
+> > > +		goto clean_unregister_netdev;
+> > 
+> > At this point, the slave ports go live. If the kernel is configured
+> > with NFS root etc, it will start using the interfaces.
+> > 
+> > +
+> > > +	/* Grab RX and TX IRQs. Note that we also have RX_THRESHOLD and
+> > > +	 * MISC IRQs which are always kept disabled with this driver so
+> > > +	 * we will not request them.
+> > > +	 *
+> > > +	 * If anyone wants to implement support for those, make sure to
+> > > +	 * first request and append them to irqs_table array.
+> > > +	 */
+> > > +
+> > > +	ret = devm_request_irq(dev, cpsw->irqs_table[0], cpsw_rx_interrupt,
+> > > +			       0, dev_name(dev), cpsw);
+> > > +	if (ret < 0) {
+> > > +		dev_err(dev, "error attaching irq (%d)\n", ret);
+> > > +		goto clean_unregister_netdev;
+> > > +	}
+> > > +
+> > > +	ret = devm_request_irq(dev, cpsw->irqs_table[1], cpsw_tx_interrupt,
+> > > +			       0, dev_name(dev), cpsw);
+> > > +	if (ret < 0) {
+> > > +		dev_err(dev, "error attaching irq (%d)\n", ret);
+> > > +		goto clean_unregister_netdev;
+> > > +	}
+> > 
+> > Are there any race conditions if the network starts using the devices
+> > before interrupts are requested? To be safe, maybe this should be done
+> > before the slaves are created?
+> 
+> Usually during boot - there is no parallel probing (as opposite to modules loading by
+> udev, for example). Also, there is barrier init call deferred_probe_initcall() to ensure all
+> drivers probed before going to mount rootfs.
+> 
+> So, i do not think this could cause any issue - max few packets will be delayed
+> until kernel will switch back here, but the chances that ndo_open will be finished before probe ->0.
 
-Signed-off-by: Karl Palsson <karlp@tweak.net.au>
----
- Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+I helped track down a crash recently, along these lines. ndo_open()
+was getting called before the probe function finished, when kernel ip
+address auto config was in action. This is not to do with parallel
+probing, i think there is something in register_netdev() which is
+triggered each time an interface is added to do the ip
+configuration. And the first thing that does is open the interface.
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-index 000a00d12d6a..152c0499b0a3 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-+++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-@@ -211,6 +211,11 @@ properties:
-           - const: friendlyarm,nanopi-a64
-           - const: allwinner,sun50i-a64
- 
-+      - description: FriendlyARM NanoPi Duo2
-+        items:
-+          - const: friendlyarm,nanopi-duo2
-+          - const: allwinner,sun8i-h3
-+
-       - description: FriendlyARM NanoPi M1
-         items:
-           - const: friendlyarm,nanopi-m1
--- 
-2.20.1
-
+	  Andrew
