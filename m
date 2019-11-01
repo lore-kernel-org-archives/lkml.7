@@ -2,116 +2,116 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B09CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 396C9CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B4A20650
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09533217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:49:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="I8fTjuu/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbfKAOq6 (ORCPT
+        id S1727548AbfKAOtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 10:46:58 -0400
-Received: from mga07.intel.com ([134.134.136.100]:16464 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727027AbfKAOq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 10:46:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 07:46:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,255,1569308400"; 
-   d="scan'208";a="351970577"
-Received: from cepartan-mobl3.ger.corp.intel.com (HELO [10.249.40.248]) ([10.249.40.248])
-  by orsmga004.jf.intel.com with ESMTP; 01 Nov 2019 07:46:55 -0700
-Subject: Re: [PATCH] drm/atomic: swap_state should stall on cleanup_done
-To:     Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Fri, 1 Nov 2019 10:49:45 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:32774 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727483AbfKAOto (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 10:49:44 -0400
+Received: by mail-il1-f196.google.com with SMTP id s6so8933886iln.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 07:49:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OvG/qWeSbh1TxLgtmArlVNDYsoALFmkQsSm7UaGBE/U=;
+        b=I8fTjuu/6Ne32KB3TzlkLHNc34FVVQHy/sTVoKvVYeIrGIs/zEWpPkdT4X2FTYZjfJ
+         UM4GFAou96icNjK1AVI5vEOtitRVjbXgZfqaanuntVF/vhTirkZT/9E+CWJUq7E2TQj0
+         StXEuMWcR5zlKYK8R7EGKhYIJ+Gb4ciY1IEMBuLWPRJg6NDyeWhuiAg3JUaKBbPDkQbL
+         sElozNdk4t7DFMJr/2GTc4DXhCqAVsopLQpS5jb3DWebvxakkqFHF/FpNq1kpaMflaeM
+         i/d5Nr3Kf7lOCXzSXk2CZXk0I+pfGJSDm0die6SS7xUqTydNbrFVI18tKwuFsQOAi/MB
+         kf9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OvG/qWeSbh1TxLgtmArlVNDYsoALFmkQsSm7UaGBE/U=;
+        b=GVZRjyeRt47DF2Qs8MNJhb40mR7ngX+XQHc2HZCz7C2y3isOPlIzRpZqo1aBxOHwL+
+         w2stLhTKr6OsBFZnS7AomVWgu8JjDq/onTEv5NGJohKgn4+J35nA5T07upyl0571aaKv
+         J8c+ZD1hyRX2fshvICE57Y5g+LZdic3saR5ATU0XbnL4mgECQu6l+5soxxxEJWTgPivD
+         d1KdUCR8d1EdhetDk1iEYsFyeXzTX+7e7P47POEXlTHsjjis3XxAvpDvaAumDYNDXPNe
+         8ZPxnNWSTcUuwsRcfwcADb5Scap/lqkKGoT8PBPNEpOy/VE2lgM/armJgfrmVczLXFhZ
+         1QLw==
+X-Gm-Message-State: APjAAAUPHUdpJkOvUMyt66NsH7LqpbbRk2PM6UgjwqHStlgbQwDndhOB
+        u/qty7BiQ+qvQRN3oCx58HsBKYqAaaq7sOk9
+X-Google-Smtp-Source: APXvYqxr+bs1ScRWYKeCxmeXCSlj6Q4Lr6KXKYyS2zYjKblHkVBUMc7IPKJ+YzvkERiHaP9xr0/5Lg==
+X-Received: by 2002:a92:5d8f:: with SMTP id e15mr13331860ilg.173.1572619783709;
+        Fri, 01 Nov 2019 07:49:43 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id f73sm1107827ild.59.2019.11.01.07.49.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 Nov 2019 07:49:42 -0700 (PDT)
+Subject: Re: [PATCH 10/19] fs/io_uring: set FOLL_PIN via pin_user_pages()
+To:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
         Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191031223641.19208-1-robdclark@gmail.com>
-From:   Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Message-ID: <7b97af56-be9b-ed2e-f692-36433a889d6e@linux.intel.com>
-Date:   Fri, 1 Nov 2019 15:46:54 +0100
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+References: <20191030224930.3990755-1-jhubbard@nvidia.com>
+ <20191030224930.3990755-11-jhubbard@nvidia.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <979ba2a3-ee04-fb12-204d-1b68c7b6e141@kernel.dk>
+Date:   Fri, 1 Nov 2019 08:49:39 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191031223641.19208-1-robdclark@gmail.com>
+In-Reply-To: <20191030224930.3990755-11-jhubbard@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Op 31-10-2019 om 23:36 schreef Rob Clark:
-> From: Rob Clark <robdclark@chromium.org>
->
-> Stalling on cleanup_done ensures that any atomic state related to a
-> nonblock commit no longer has dangling references to per-object state
-> that can be freed.
->
-> Otherwise, if a !nonblock commit completes after a nonblock commit has
-> swapped state (ie. the synchronous part of the nonblock commit comes
-> before the !nonblock commit), but before the asynchronous part of the
-> nonblock commit completes, what was the new per-object state in the
-> nonblock commit can be freed.
->
-> This shows up with the new self-refresh helper, as _update_avg_times()
-> dereferences the original old and new crtc_state.
->
-> Fixes: d4da4e33341c ("drm: Measure Self Refresh Entry/Exit times to avoid thrashing")
-> Cc: Sean Paul <seanpaul@chromium.org>
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
-> Other possibilities:
-> 1) maybe block later before freeing atomic state?
-> 2) refcount individual per-object state
->
->  drivers/gpu/drm/drm_atomic_helper.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> index 3ef2ac52ce94..a5d95429f91b 100644
-> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> @@ -2711,7 +2711,7 @@ int drm_atomic_helper_swap_state(struct drm_atomic_state *state,
->  			if (!commit)
->  				continue;
->  
-> -			ret = wait_for_completion_interruptible(&commit->hw_done);
-> +			ret = wait_for_completion_interruptible(&commit->cleanup_done);
->  			if (ret)
->  				return ret;
->  		}
-> @@ -2722,7 +2722,7 @@ int drm_atomic_helper_swap_state(struct drm_atomic_state *state,
->  			if (!commit)
->  				continue;
->  
-> -			ret = wait_for_completion_interruptible(&commit->hw_done);
-> +			ret = wait_for_completion_interruptible(&commit->cleanup_done);
->  			if (ret)
->  				return ret;
->  		}
-> @@ -2733,7 +2733,7 @@ int drm_atomic_helper_swap_state(struct drm_atomic_state *state,
->  			if (!commit)
->  				continue;
->  
-> -			ret = wait_for_completion_interruptible(&commit->hw_done);
-> +			ret = wait_for_completion_interruptible(&commit->cleanup_done);
->  			if (ret)
->  				return ret;
->  		}
+On 10/30/19 4:49 PM, John Hubbard wrote:
+> Convert fs/io_uring to use the new pin_user_pages() call, which sets
+> FOLL_PIN. Setting FOLL_PIN is now required for code that requires
+> tracking of pinned pages, and therefore for any code that calls
+> put_user_page().
 
-Nack, hw_done means all new_crtc_state (from the old commit pov) dereferences are done.
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
 
-Self refresh helpers should be fixed. :)
+-- 
+Jens Axboe
 
