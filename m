@@ -2,442 +2,463 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8112DCA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6728FCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4869C20650
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28EC720650
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 16:18:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FCXI/veZ"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Gw4YiAn3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbfKAQRn (ORCPT
+        id S1728164AbfKAQSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 12:17:43 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42389 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727610AbfKAQRm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 12:17:42 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a15so10139107wrf.9
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 09:17:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qbEALJPGyMG1TdmryILrvwfTCLWmWNt0rNBwGTNqEpw=;
-        b=FCXI/veZR0NzQ4qOLR8l3kMMPzej2RExbJGN4/HCaV3NL1TAvkg3pHCA6273sPpBoK
-         vZfYShIaeLbZt5wE/8PMC5EAZzvCczFmc/5T51CSw7F88Z5NqtIsye6lw8VXabSykDMI
-         Ul/GPpD62E44sC0li2Pi5BOecgYwRLhAZqGq7KSzv2ViMSPyKvvAApKg+Uw/xPaG7S4g
-         RSO+4BwZNfIk+5OVVSwR8+fj6Jt5p1x0bja90qp4AbDYCI2u5eS88Ltg1s7Ur66jl463
-         4+/NNJGdm6aHbk2uBQxfCi0VnftzKonK24CvgR5hd5kgVSsA0cmYbJEwDeYBoggo6Pg5
-         DIPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qbEALJPGyMG1TdmryILrvwfTCLWmWNt0rNBwGTNqEpw=;
-        b=phwQQFL4RKcZDpE4bBUOTkk5IAMlX4KwDdFEa0HQIU/eFes8wPJOenzzOMocob7XAM
-         OJIn41kQrdlsRH75aAHug3PIovzOXpzPAlIcrTNYrgFQf/L16e+giuc/qMIv524yvmRK
-         +elUjij7OJ48f6/Gz5FJ8J2r/qzHrBU1+3QA9b3b/BhJvbQStO0TSgctA9Crnzzp9Z55
-         zQWWGlx9rbGE09CeIIgxiD/QoctybQgoUOsiYiU9Nr4RiTDOJ/j3NH0Ewx3LXVt8YzWi
-         ATHoHV/yNq49Vz4SIQgItsdPZtXtdY9WAESdx+cd0Qn9K0NkCYS6fP2TMx/oUPnVdVTq
-         wcOg==
-X-Gm-Message-State: APjAAAVqjVO+WVbZH/GTzLrxj7m0uozfi/3uRN1ffO+Yz1HKXmxT8i5X
-        BNHumSWYagT5e2S+6rV/7ChBpEr0GL0=
-X-Google-Smtp-Source: APXvYqx6EyFz+f4X7YnfGdwPAwc5VAsJiQiK9qlrPpD42h/+1t9COsvgm+xukYZBXFUqMRrQPsDe5A==
-X-Received: by 2002:a5d:624f:: with SMTP id m15mr10395454wrv.59.1572625058805;
-        Fri, 01 Nov 2019 09:17:38 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id j63sm9350109wmj.46.2019.11.01.09.17.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Nov 2019 09:17:37 -0700 (PDT)
-Subject: Re: [alsa-devel] [PATCH v4 2/2] soundwire: qcom: add support for
- SoundWire controller
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        robh@kernel.org, vkoul@kernel.org
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org
-References: <20191030153150.18303-1-srinivas.kandagatla@linaro.org>
- <20191030153150.18303-3-srinivas.kandagatla@linaro.org>
- <af29ec6e-d89e-7fa4-a8cd-29ab944ecd5c@linux.intel.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <926bd15f-e230-8f5e-378d-355bfeeecf27@linaro.org>
-Date:   Fri, 1 Nov 2019 16:17:37 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 1 Nov 2019 12:18:13 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:2090 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727610AbfKAQSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 12:18:12 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 474S693NsXz9v2yk;
+        Fri,  1 Nov 2019 17:18:09 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Gw4YiAn3; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 7R5HJrjvJMqx; Fri,  1 Nov 2019 17:18:09 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 474S692J1vz9v2yj;
+        Fri,  1 Nov 2019 17:18:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1572625089; bh=//xW9oe3sdeea9BTEt/GmLNcAVM0ebOxU86PVSKO8v8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Gw4YiAn34KPIZVpbWNuT3uI3oIGrSSzhBPX8K7h17dzkE4ph9h4nSAkz98Op1BF9M
+         F/GEsICzWRl/01VVs0AYkHnT4+aELBMwekMi/jZgM87Up+wTQC/5SPAkgtZKIkIuYf
+         zREJScQJEWnhgUVIzRiDaJpvUOrlia2OMK5cXps0=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DA86C8B8F6;
+        Fri,  1 Nov 2019 17:18:10 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id etT95YCdmsBx; Fri,  1 Nov 2019 17:18:10 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 39F758B7C2;
+        Fri,  1 Nov 2019 17:18:10 +0100 (CET)
+Subject: Re: [PATCH v3 26/36] soc: fsl: move cpm.h from powerpc/include/asm to
+ include/soc/fsl
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Scott Wood <oss@buserror.net>
+References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
+ <20191101124210.14510-1-linux@rasmusvillemoes.dk>
+ <20191101124210.14510-27-linux@rasmusvillemoes.dk>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <5071118d-2008-7725-a6cd-ce14b49dfa20@c-s.fr>
+Date:   Fri, 1 Nov 2019 17:18:10 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <af29ec6e-d89e-7fa4-a8cd-29ab944ecd5c@linux.intel.com>
+In-Reply-To: <20191101124210.14510-27-linux@rasmusvillemoes.dk>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Pierre for reviewing this!
 
-On 30/10/2019 16:28, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 10/30/19 10:31 AM, Srinivas Kandagatla wrote:
->> Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
->> either integrated as part of WCD audio codecs via slimbus or
->> as part of SOC I/O.
->>
->> This patchset adds support to a very basic controller which has been
->> tested with WCD934x SoundWire controller connected to WSA881x smart
->> speaker amplifiers.
-> 
-> Sorry for the delay in reviewing this patch.
-> 
-> I have a set of comments mostly on error handling and mapping between 
-> ASoC callbacks and stream states (which took a lot of work on our side 
-> and required an updated state machine in the patches shared last week).
-> 
-> [snip]
-> 
->> +static int qcom_swrm_cmd_fifo_wr_cmd(struct qcom_swrm_ctrl *ctrl, u8 
->> cmd_data,
->> +                     u8 dev_addr, u16 reg_addr)
->> +{
->> +    DECLARE_COMPLETION_ONSTACK(comp);
->> +    unsigned long flags;
->> +    u32 val;
->> +    int ret;
->> +
->> +    spin_lock_irqsave(&ctrl->comp_lock, flags);
->> +    ctrl->comp = &comp;
->> +    spin_unlock_irqrestore(&ctrl->comp_lock, flags);
->> +    val = SWRM_REG_VAL_PACK(cmd_data, dev_addr,
->> +                SWRM_SPECIAL_CMD_ID, reg_addr);
->> +    ret = ctrl->reg_write(ctrl, SWRM_CMD_FIFO_WR_CMD, val);
->> +    if (ret)
->> +        goto err;
->> +
->> +    ret = wait_for_completion_timeout(ctrl->comp,
->> +                      msecs_to_jiffies(TIMEOUT_MS));
->> +
->> +    if (!ret)
->> +        ret = SDW_CMD_IGNORED;
->> +    else
->> +        ret = SDW_CMD_OK;
->> +err:
->> +    spin_lock_irqsave(&ctrl->comp_lock, flags);
->> +    ctrl->comp = NULL;
->> +    spin_unlock_irqrestore(&ctrl->comp_lock, flags);
->> +
->> +    return ret;
->> +}
->> +
->> +static int qcom_swrm_cmd_fifo_rd_cmd(struct qcom_swrm_ctrl *ctrl,
->> +                     u8 dev_addr, u16 reg_addr,
->> +                     u32 len, u8 *rval)
->> +{
->> +    int i, ret;
->> +    u32 val;
->> +    DECLARE_COMPLETION_ONSTACK(comp);
->> +    unsigned long flags;
->> +
->> +    spin_lock_irqsave(&ctrl->comp_lock, flags);
->> +    ctrl->comp = &comp;
->> +    spin_unlock_irqrestore(&ctrl->comp_lock, flags);
->> +
->> +    val = SWRM_REG_VAL_PACK(len, dev_addr, SWRM_SPECIAL_CMD_ID, 
->> reg_addr);
->> +    ret = ctrl->reg_write(ctrl, SWRM_CMD_FIFO_RD_CMD, val);
->> +    if (ret)
->> +        goto err;
->> +
->> +    ret = wait_for_completion_timeout(ctrl->comp,
->> +                      msecs_to_jiffies(TIMEOUT_MS));
->> +
->> +    if (!ret) {
->> +        ret = SDW_CMD_IGNORED;
->> +        goto err;
->> +    } else {
->> +        ret = SDW_CMD_OK;
->> +    }
->> +
->> +    for (i = 0; i < len; i++) {
->> +        ret = ctrl->reg_read(ctrl, SWRM_CMD_FIFO_RD_FIFO_ADDR, &val);
->> +        if (ret)
->> +            return ret;
->> +
->> +        rval[i] = val & 0xFF;
->> +    }
->> +
->> +err:
->> +    spin_lock_irqsave(&ctrl->comp_lock, flags);
->> +    ctrl->comp = NULL;
->> +    spin_unlock_irqrestore(&ctrl->comp_lock, flags);
->> +
->> +    return ret;
->> +}
->> +
->> +static void qcom_swrm_get_device_status(struct qcom_swrm_ctrl *ctrl)
->> +{
->> +    u32 val;
->> +    int i;
->> +
->> +    ctrl->reg_read(ctrl, SWRM_MCP_SLV_STATUS, &val);
-> 
-> Sometimes you test the return value of reg_read(), and sometimes you 
-> don't? same for read_write()?
-> 
-> For the Intel stuff, we typically don't check the read/writes to 
-> controller registers, but anything that goes out on the bus is checked.
-> 
 
-I will try to make this more consistent in next version!
+Le 01/11/2019 à 13:42, Rasmus Villemoes a écrit :
+> Some drivers, e.g. ucc_uart, need definitions from cpm.h. In order to
+> allow building those drivers for non-ppc based SOCs, move the header
+> to include/soc/fsl. For now, leave a trivial wrapper at the old
+> location so drivers can be updated one by one.
 
-...
+I'm not sure that's the correct way to go.
 
->> +
->> +static int qcom_swrm_prepare(struct snd_pcm_substream *substream,
->> +                 struct snd_soc_dai *dai)
->> +{
->> +    struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
->> +
->> +    if (!ctrl->sruntime[dai->id])
->> +        return -EINVAL;
->> +
->> +    return sdw_enable_stream(ctrl->sruntime[dai->id]);
-> 
-> So in hw_params you call sdw_prepare_stream() and in _prepare you call 
-> sdw_enable_stream()?
-> 
-> Shouldn't this be handled in a .trigger operation as per the 
-> documentation "From ASoC DPCM framework, this stream state is linked to
-> .trigger() start operation."
+As far as I know, CPM is specific to powerpc (or maybe common to some 
+motorola 68000). So only powerpc specific drivers should need it.
 
-If I move sdw_enable/disable_stream() to trigger I get a big click noise 
-on my speakers at start and end of every playback. Tried different 
-things but nothing helped so far!. Enabling Speaker DACs only after 
-SoundWire ports are enabled is working for me!
-There is nothing complicated on WSA881x codec side all the DACs are 
-enabled/disabled as part of DAPM.
+If cpm.h includes items that are needed for QE, those items should go in 
+another .h
+
+Of course, it doesn't mean we can't move cpm.h in include/soc/fsl, but 
+anyway only platforms having CPM1 or CPM2 should include it.
+
+Christophe
+
 
 > 
-> It's also my understanding that .prepare will be called multiples times, 
-
-I agree, need to add some extra checks in the prepare to deal with this!
-
-> including for underflows and resume if you don't support INFO_RESUME.
-
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
+>   arch/powerpc/include/asm/cpm.h | 172 +--------------------------------
+>   include/soc/fsl/cpm.h          | 171 ++++++++++++++++++++++++++++++++
+>   2 files changed, 172 insertions(+), 171 deletions(-)
+>   create mode 100644 include/soc/fsl/cpm.h
 > 
-> the sdw_disable_stream() is in .hw_free, which is not necessarily called 
-> by the core, so you may have a risk of not being able to recover?
-
-Hmm, I thought hw_free is always called to release resources allocated 
-in hw_params.
-
-In what cases does the core not call this?
-
+> diff --git a/arch/powerpc/include/asm/cpm.h b/arch/powerpc/include/asm/cpm.h
+> index 4c24ea8209bb..ce483b0f8a4d 100644
+> --- a/arch/powerpc/include/asm/cpm.h
+> +++ b/arch/powerpc/include/asm/cpm.h
+> @@ -1,171 +1 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -#ifndef __CPM_H
+> -#define __CPM_H
+> -
+> -#include <linux/compiler.h>
+> -#include <linux/types.h>
+> -#include <linux/errno.h>
+> -#include <linux/of.h>
+> -#include <soc/fsl/qe/qe.h>
+> -
+> -/*
+> - * SPI Parameter RAM common to QE and CPM.
+> - */
+> -struct spi_pram {
+> -	__be16	rbase;	/* Rx Buffer descriptor base address */
+> -	__be16	tbase;	/* Tx Buffer descriptor base address */
+> -	u8	rfcr;	/* Rx function code */
+> -	u8	tfcr;	/* Tx function code */
+> -	__be16	mrblr;	/* Max receive buffer length */
+> -	__be32	rstate;	/* Internal */
+> -	__be32	rdp;	/* Internal */
+> -	__be16	rbptr;	/* Internal */
+> -	__be16	rbc;	/* Internal */
+> -	__be32	rxtmp;	/* Internal */
+> -	__be32	tstate;	/* Internal */
+> -	__be32	tdp;	/* Internal */
+> -	__be16	tbptr;	/* Internal */
+> -	__be16	tbc;	/* Internal */
+> -	__be32	txtmp;	/* Internal */
+> -	__be32	res;	/* Tx temp. */
+> -	__be16  rpbase;	/* Relocation pointer (CPM1 only) */
+> -	__be16	res1;	/* Reserved */
+> -};
+> -
+> -/*
+> - * USB Controller pram common to QE and CPM.
+> - */
+> -struct usb_ctlr {
+> -	u8	usb_usmod;
+> -	u8	usb_usadr;
+> -	u8	usb_uscom;
+> -	u8	res1[1];
+> -	__be16	usb_usep[4];
+> -	u8	res2[4];
+> -	__be16	usb_usber;
+> -	u8	res3[2];
+> -	__be16	usb_usbmr;
+> -	u8	res4[1];
+> -	u8	usb_usbs;
+> -	/* Fields down below are QE-only */
+> -	__be16	usb_ussft;
+> -	u8	res5[2];
+> -	__be16	usb_usfrn;
+> -	u8	res6[0x22];
+> -} __attribute__ ((packed));
+> -
+> -/*
+> - * Function code bits, usually generic to devices.
+> - */
+> -#ifdef CONFIG_CPM1
+> -#define CPMFCR_GBL	((u_char)0x00)	/* Flag doesn't exist in CPM1 */
+> -#define CPMFCR_TC2	((u_char)0x00)	/* Flag doesn't exist in CPM1 */
+> -#define CPMFCR_DTB	((u_char)0x00)	/* Flag doesn't exist in CPM1 */
+> -#define CPMFCR_BDB	((u_char)0x00)	/* Flag doesn't exist in CPM1 */
+> -#else
+> -#define CPMFCR_GBL	((u_char)0x20)	/* Set memory snooping */
+> -#define CPMFCR_TC2	((u_char)0x04)	/* Transfer code 2 value */
+> -#define CPMFCR_DTB	((u_char)0x02)	/* Use local bus for data when set */
+> -#define CPMFCR_BDB	((u_char)0x01)	/* Use local bus for BD when set */
+> -#endif
+> -#define CPMFCR_EB	((u_char)0x10)	/* Set big endian byte order */
+> -
+> -/* Opcodes common to CPM1 and CPM2
+> -*/
+> -#define CPM_CR_INIT_TRX		((ushort)0x0000)
+> -#define CPM_CR_INIT_RX		((ushort)0x0001)
+> -#define CPM_CR_INIT_TX		((ushort)0x0002)
+> -#define CPM_CR_HUNT_MODE	((ushort)0x0003)
+> -#define CPM_CR_STOP_TX		((ushort)0x0004)
+> -#define CPM_CR_GRA_STOP_TX	((ushort)0x0005)
+> -#define CPM_CR_RESTART_TX	((ushort)0x0006)
+> -#define CPM_CR_CLOSE_RX_BD	((ushort)0x0007)
+> -#define CPM_CR_SET_GADDR	((ushort)0x0008)
+> -#define CPM_CR_SET_TIMER	((ushort)0x0008)
+> -#define CPM_CR_STOP_IDMA	((ushort)0x000b)
+> -
+> -/* Buffer descriptors used by many of the CPM protocols. */
+> -typedef struct cpm_buf_desc {
+> -	ushort	cbd_sc;		/* Status and Control */
+> -	ushort	cbd_datlen;	/* Data length in buffer */
+> -	uint	cbd_bufaddr;	/* Buffer address in host memory */
+> -} cbd_t;
+> -
+> -/* Buffer descriptor control/status used by serial
+> - */
+> -
+> -#define BD_SC_EMPTY	(0x8000)	/* Receive is empty */
+> -#define BD_SC_READY	(0x8000)	/* Transmit is ready */
+> -#define BD_SC_WRAP	(0x2000)	/* Last buffer descriptor */
+> -#define BD_SC_INTRPT	(0x1000)	/* Interrupt on change */
+> -#define BD_SC_LAST	(0x0800)	/* Last buffer in frame */
+> -#define BD_SC_TC	(0x0400)	/* Transmit CRC */
+> -#define BD_SC_CM	(0x0200)	/* Continuous mode */
+> -#define BD_SC_ID	(0x0100)	/* Rec'd too many idles */
+> -#define BD_SC_P		(0x0100)	/* xmt preamble */
+> -#define BD_SC_BR	(0x0020)	/* Break received */
+> -#define BD_SC_FR	(0x0010)	/* Framing error */
+> -#define BD_SC_PR	(0x0008)	/* Parity error */
+> -#define BD_SC_NAK	(0x0004)	/* NAK - did not respond */
+> -#define BD_SC_OV	(0x0002)	/* Overrun */
+> -#define BD_SC_UN	(0x0002)	/* Underrun */
+> -#define BD_SC_CD	(0x0001)	/* */
+> -#define BD_SC_CL	(0x0001)	/* Collision */
+> -
+> -/* Buffer descriptor control/status used by Ethernet receive.
+> - * Common to SCC and FCC.
+> - */
+> -#define BD_ENET_RX_EMPTY	(0x8000)
+> -#define BD_ENET_RX_WRAP		(0x2000)
+> -#define BD_ENET_RX_INTR		(0x1000)
+> -#define BD_ENET_RX_LAST		(0x0800)
+> -#define BD_ENET_RX_FIRST	(0x0400)
+> -#define BD_ENET_RX_MISS		(0x0100)
+> -#define BD_ENET_RX_BC		(0x0080)	/* FCC Only */
+> -#define BD_ENET_RX_MC		(0x0040)	/* FCC Only */
+> -#define BD_ENET_RX_LG		(0x0020)
+> -#define BD_ENET_RX_NO		(0x0010)
+> -#define BD_ENET_RX_SH		(0x0008)
+> -#define BD_ENET_RX_CR		(0x0004)
+> -#define BD_ENET_RX_OV		(0x0002)
+> -#define BD_ENET_RX_CL		(0x0001)
+> -#define BD_ENET_RX_STATS	(0x01ff)	/* All status bits */
+> -
+> -/* Buffer descriptor control/status used by Ethernet transmit.
+> - * Common to SCC and FCC.
+> - */
+> -#define BD_ENET_TX_READY	(0x8000)
+> -#define BD_ENET_TX_PAD		(0x4000)
+> -#define BD_ENET_TX_WRAP		(0x2000)
+> -#define BD_ENET_TX_INTR		(0x1000)
+> -#define BD_ENET_TX_LAST		(0x0800)
+> -#define BD_ENET_TX_TC		(0x0400)
+> -#define BD_ENET_TX_DEF		(0x0200)
+> -#define BD_ENET_TX_HB		(0x0100)
+> -#define BD_ENET_TX_LC		(0x0080)
+> -#define BD_ENET_TX_RL		(0x0040)
+> -#define BD_ENET_TX_RCMASK	(0x003c)
+> -#define BD_ENET_TX_UN		(0x0002)
+> -#define BD_ENET_TX_CSL		(0x0001)
+> -#define BD_ENET_TX_STATS	(0x03ff)	/* All status bits */
+> -
+> -/* Buffer descriptor control/status used by Transparent mode SCC.
+> - */
+> -#define BD_SCC_TX_LAST		(0x0800)
+> -
+> -/* Buffer descriptor control/status used by I2C.
+> - */
+> -#define BD_I2C_START		(0x0400)
+> -
+> -#ifdef CONFIG_CPM
+> -int cpm_command(u32 command, u8 opcode);
+> -#else
+> -static inline int cpm_command(u32 command, u8 opcode)
+> -{
+> -	return -ENOSYS;
+> -}
+> -#endif /* CONFIG_CPM */
+> -
+> -int cpm2_gpiochip_add32(struct device *dev);
+> -
+> -#endif
+> +#include <soc/fsl/cpm.h>
+> diff --git a/include/soc/fsl/cpm.h b/include/soc/fsl/cpm.h
+> new file mode 100644
+> index 000000000000..4c24ea8209bb
+> --- /dev/null
+> +++ b/include/soc/fsl/cpm.h
+> @@ -0,0 +1,171 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __CPM_H
+> +#define __CPM_H
+> +
+> +#include <linux/compiler.h>
+> +#include <linux/types.h>
+> +#include <linux/errno.h>
+> +#include <linux/of.h>
+> +#include <soc/fsl/qe/qe.h>
+> +
+> +/*
+> + * SPI Parameter RAM common to QE and CPM.
+> + */
+> +struct spi_pram {
+> +	__be16	rbase;	/* Rx Buffer descriptor base address */
+> +	__be16	tbase;	/* Tx Buffer descriptor base address */
+> +	u8	rfcr;	/* Rx function code */
+> +	u8	tfcr;	/* Tx function code */
+> +	__be16	mrblr;	/* Max receive buffer length */
+> +	__be32	rstate;	/* Internal */
+> +	__be32	rdp;	/* Internal */
+> +	__be16	rbptr;	/* Internal */
+> +	__be16	rbc;	/* Internal */
+> +	__be32	rxtmp;	/* Internal */
+> +	__be32	tstate;	/* Internal */
+> +	__be32	tdp;	/* Internal */
+> +	__be16	tbptr;	/* Internal */
+> +	__be16	tbc;	/* Internal */
+> +	__be32	txtmp;	/* Internal */
+> +	__be32	res;	/* Tx temp. */
+> +	__be16  rpbase;	/* Relocation pointer (CPM1 only) */
+> +	__be16	res1;	/* Reserved */
+> +};
+> +
+> +/*
+> + * USB Controller pram common to QE and CPM.
+> + */
+> +struct usb_ctlr {
+> +	u8	usb_usmod;
+> +	u8	usb_usadr;
+> +	u8	usb_uscom;
+> +	u8	res1[1];
+> +	__be16	usb_usep[4];
+> +	u8	res2[4];
+> +	__be16	usb_usber;
+> +	u8	res3[2];
+> +	__be16	usb_usbmr;
+> +	u8	res4[1];
+> +	u8	usb_usbs;
+> +	/* Fields down below are QE-only */
+> +	__be16	usb_ussft;
+> +	u8	res5[2];
+> +	__be16	usb_usfrn;
+> +	u8	res6[0x22];
+> +} __attribute__ ((packed));
+> +
+> +/*
+> + * Function code bits, usually generic to devices.
+> + */
+> +#ifdef CONFIG_CPM1
+> +#define CPMFCR_GBL	((u_char)0x00)	/* Flag doesn't exist in CPM1 */
+> +#define CPMFCR_TC2	((u_char)0x00)	/* Flag doesn't exist in CPM1 */
+> +#define CPMFCR_DTB	((u_char)0x00)	/* Flag doesn't exist in CPM1 */
+> +#define CPMFCR_BDB	((u_char)0x00)	/* Flag doesn't exist in CPM1 */
+> +#else
+> +#define CPMFCR_GBL	((u_char)0x20)	/* Set memory snooping */
+> +#define CPMFCR_TC2	((u_char)0x04)	/* Transfer code 2 value */
+> +#define CPMFCR_DTB	((u_char)0x02)	/* Use local bus for data when set */
+> +#define CPMFCR_BDB	((u_char)0x01)	/* Use local bus for BD when set */
+> +#endif
+> +#define CPMFCR_EB	((u_char)0x10)	/* Set big endian byte order */
+> +
+> +/* Opcodes common to CPM1 and CPM2
+> +*/
+> +#define CPM_CR_INIT_TRX		((ushort)0x0000)
+> +#define CPM_CR_INIT_RX		((ushort)0x0001)
+> +#define CPM_CR_INIT_TX		((ushort)0x0002)
+> +#define CPM_CR_HUNT_MODE	((ushort)0x0003)
+> +#define CPM_CR_STOP_TX		((ushort)0x0004)
+> +#define CPM_CR_GRA_STOP_TX	((ushort)0x0005)
+> +#define CPM_CR_RESTART_TX	((ushort)0x0006)
+> +#define CPM_CR_CLOSE_RX_BD	((ushort)0x0007)
+> +#define CPM_CR_SET_GADDR	((ushort)0x0008)
+> +#define CPM_CR_SET_TIMER	((ushort)0x0008)
+> +#define CPM_CR_STOP_IDMA	((ushort)0x000b)
+> +
+> +/* Buffer descriptors used by many of the CPM protocols. */
+> +typedef struct cpm_buf_desc {
+> +	ushort	cbd_sc;		/* Status and Control */
+> +	ushort	cbd_datlen;	/* Data length in buffer */
+> +	uint	cbd_bufaddr;	/* Buffer address in host memory */
+> +} cbd_t;
+> +
+> +/* Buffer descriptor control/status used by serial
+> + */
+> +
+> +#define BD_SC_EMPTY	(0x8000)	/* Receive is empty */
+> +#define BD_SC_READY	(0x8000)	/* Transmit is ready */
+> +#define BD_SC_WRAP	(0x2000)	/* Last buffer descriptor */
+> +#define BD_SC_INTRPT	(0x1000)	/* Interrupt on change */
+> +#define BD_SC_LAST	(0x0800)	/* Last buffer in frame */
+> +#define BD_SC_TC	(0x0400)	/* Transmit CRC */
+> +#define BD_SC_CM	(0x0200)	/* Continuous mode */
+> +#define BD_SC_ID	(0x0100)	/* Rec'd too many idles */
+> +#define BD_SC_P		(0x0100)	/* xmt preamble */
+> +#define BD_SC_BR	(0x0020)	/* Break received */
+> +#define BD_SC_FR	(0x0010)	/* Framing error */
+> +#define BD_SC_PR	(0x0008)	/* Parity error */
+> +#define BD_SC_NAK	(0x0004)	/* NAK - did not respond */
+> +#define BD_SC_OV	(0x0002)	/* Overrun */
+> +#define BD_SC_UN	(0x0002)	/* Underrun */
+> +#define BD_SC_CD	(0x0001)	/* */
+> +#define BD_SC_CL	(0x0001)	/* Collision */
+> +
+> +/* Buffer descriptor control/status used by Ethernet receive.
+> + * Common to SCC and FCC.
+> + */
+> +#define BD_ENET_RX_EMPTY	(0x8000)
+> +#define BD_ENET_RX_WRAP		(0x2000)
+> +#define BD_ENET_RX_INTR		(0x1000)
+> +#define BD_ENET_RX_LAST		(0x0800)
+> +#define BD_ENET_RX_FIRST	(0x0400)
+> +#define BD_ENET_RX_MISS		(0x0100)
+> +#define BD_ENET_RX_BC		(0x0080)	/* FCC Only */
+> +#define BD_ENET_RX_MC		(0x0040)	/* FCC Only */
+> +#define BD_ENET_RX_LG		(0x0020)
+> +#define BD_ENET_RX_NO		(0x0010)
+> +#define BD_ENET_RX_SH		(0x0008)
+> +#define BD_ENET_RX_CR		(0x0004)
+> +#define BD_ENET_RX_OV		(0x0002)
+> +#define BD_ENET_RX_CL		(0x0001)
+> +#define BD_ENET_RX_STATS	(0x01ff)	/* All status bits */
+> +
+> +/* Buffer descriptor control/status used by Ethernet transmit.
+> + * Common to SCC and FCC.
+> + */
+> +#define BD_ENET_TX_READY	(0x8000)
+> +#define BD_ENET_TX_PAD		(0x4000)
+> +#define BD_ENET_TX_WRAP		(0x2000)
+> +#define BD_ENET_TX_INTR		(0x1000)
+> +#define BD_ENET_TX_LAST		(0x0800)
+> +#define BD_ENET_TX_TC		(0x0400)
+> +#define BD_ENET_TX_DEF		(0x0200)
+> +#define BD_ENET_TX_HB		(0x0100)
+> +#define BD_ENET_TX_LC		(0x0080)
+> +#define BD_ENET_TX_RL		(0x0040)
+> +#define BD_ENET_TX_RCMASK	(0x003c)
+> +#define BD_ENET_TX_UN		(0x0002)
+> +#define BD_ENET_TX_CSL		(0x0001)
+> +#define BD_ENET_TX_STATS	(0x03ff)	/* All status bits */
+> +
+> +/* Buffer descriptor control/status used by Transparent mode SCC.
+> + */
+> +#define BD_SCC_TX_LAST		(0x0800)
+> +
+> +/* Buffer descriptor control/status used by I2C.
+> + */
+> +#define BD_I2C_START		(0x0400)
+> +
+> +#ifdef CONFIG_CPM
+> +int cpm_command(u32 command, u8 opcode);
+> +#else
+> +static inline int cpm_command(u32 command, u8 opcode)
+> +{
+> +	return -ENOSYS;
+> +}
+> +#endif /* CONFIG_CPM */
+> +
+> +int cpm2_gpiochip_add32(struct device *dev);
+> +
+> +#endif
 > 
->> +}
->> +
-
->> +static int qcom_swrm_hw_free(struct snd_pcm_substream *substream,
->> +                 struct snd_soc_dai *dai)
->> +{
->> +    struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
->> +    struct sdw_stream_runtime *sruntime = ctrl->sruntime[dai->id];
->> +
->> +    qcom_swrm_stream_free_ports(ctrl, sruntime);
->> +    sdw_stream_remove_master(&ctrl->bus, sruntime);
->> +    sdw_disable_stream(sruntime);
->> +    sdw_deprepare_stream(sruntime);
-> 
-> is the order correct here?
-> 
-> On the Intel side we do
-> 
-> trigger_stop:
-> sdw_disable_stream(sruntime);
-> 
-> hw_free
-> sdw_deprepare_stream(sruntime);
-> sdw_stream_remove_master(&ctrl->bus, sruntime);
-> sdw_release_stream(dma->stream);
-> 
-
-I thought I fixed this one! will be more careful next time!
-
->> +
->> +    return 0;
->> +}
->> +
->> +static int qcom_swrm_set_sdw_stream(struct snd_soc_dai *dai,
->> +                    void *stream, int direction)
->> +{
->> +    struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
->> +
->> +    ctrl->sruntime[dai->id] = stream;
->> +
->> +    return 0;
->> +}
->> +
->> +static int qcom_swrm_startup(struct snd_pcm_substream *substream,
->> +                 struct snd_soc_dai *dai)
->> +{
->> +    struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
->> +    struct snd_soc_pcm_runtime *rtd = substream->private_data;
->> +    struct sdw_stream_runtime *sruntime;
->> +    int ret, i;
-> 
-> if you supported pm_runtime, that's where you'd want to take a reference?
-> 
-
-I have not tested runtime pm Yet on my setup!
-
->> +    sruntime = sdw_alloc_stream(dai->name);
->> +    if (!sruntime)
->> +        return -ENOMEM;
->> +
->> +    ctrl->sruntime[dai->id] = sruntime;
->> +
->> +    for (i = 0; i < rtd->num_codecs; i++) {
->> +        ret = snd_soc_dai_set_sdw_stream(rtd->codec_dais[i], sruntime,
->> +                         substream->stream);
->> +        if (ret < 0 && ret != -ENOTSUPP) {
->> +            dev_err(dai->dev, "Failed to set sdw stream on %s",
->> +                rtd->codec_dais[i]->name);
->> +            sdw_release_stream(sruntime);
->> +            return ret;
->> +        }
->> +    }
->> +
->> +    return 0;
->> +}
->> +
->> +static void qcom_swrm_shutdown(struct snd_pcm_substream *substream,
->> +                   struct snd_soc_dai *dai)
->> +{
->> +    struct qcom_swrm_ctrl *ctrl = dev_get_drvdata(dai->dev);
-> 
-> and that's where you'd want to  call pm_runtime_put()
-> 
->> +    sdw_release_stream(ctrl->sruntime[dai->id]);
->> +    ctrl->sruntime[dai->id] = NULL;
->> +}
->> +
->> +static const struct snd_soc_dai_ops qcom_swrm_pdm_dai_ops = {
->> +    .hw_params = qcom_swrm_hw_params,
->> +    .prepare = qcom_swrm_prepare,
->> +    .hw_free = qcom_swrm_hw_free,
->> +    .startup = qcom_swrm_startup,
->> +    .shutdown = qcom_swrm_shutdown,
->> +    .set_sdw_stream = qcom_swrm_set_sdw_stream,
-> 
-> no .trigger?
-> 
->> +};
->> +
->> +static const struct snd_soc_component_driver qcom_swrm_dai_component = {
->> +    .name = "soundwire",
->> +};
->> +
->> +static int qcom_swrm_register_dais(struct qcom_swrm_ctrl *ctrl)
->> +{
->> +    int num_dais = ctrl->num_dout_ports + ctrl->num_din_ports;
->> +    struct snd_soc_dai_driver *dais;
->> +    struct snd_soc_pcm_stream *stream;
->> +    struct device *dev = ctrl->dev;
->> +    int i;
->> +
->> +    /* PDM dais are only tested for now */
->> +    dais = devm_kcalloc(dev, num_dais, sizeof(*dais), GFP_KERNEL);
->> +    if (!dais)
->> +        return -ENOMEM;
->> +
->> +    for (i = 0; i < num_dais; i++) {
->> +        dais[i].name = devm_kasprintf(dev, GFP_KERNEL, "SDW Pin%d", i);
->> +        if (!dais[i].name)
->> +            return -ENOMEM;
-> 
-> I think I mentioned we don't do this in the Intel stuff since it 
-> conflicts with topology? is this required on the QCOM side?
-> 
-yes, we need this for dailink parsing code in machine driver which 
-lookup the name from device tree node. If we do not add name at this 
-point machine driver will fail to probe as missing dai dependencies.
-
->> +
->> +        if (i < ctrl->num_dout_ports)
->> +            stream = &dais[i].playback;
->> +        else
->> +            stream = &dais[i].capture;
->> +
->> +        stream->channels_min = 1;
->> +        stream->channels_max = 1;
->> +        stream->rates = SNDRV_PCM_RATE_48000;
->> +        stream->formats = SNDRV_PCM_FMTBIT_S16_LE;
->> +
->> +        dais[i].ops = &qcom_swrm_pdm_dai_ops;
->> +        dais[i].id = i;
->> +    }
->> +
->> +    return devm_snd_soc_register_component(ctrl->dev,
->> +                        &qcom_swrm_dai_component,
->> +                        dais, num_dais);
->> +}
->> +
-
-...
-
->> +static int qcom_swrm_runtime_suspend(struct device *device)
->> +{
->> +    /* TBD */
->> +    return 0;
->> +}
->> +
->> +static int qcom_swrm_runtime_resume(struct device *device)
->> +{
->> +    /* TBD */
->> +    return 0;
->> +}
->> +
->> +static const struct dev_pm_ops qcom_swrm_dev_pm_ops = {
->> +    SET_RUNTIME_PM_OPS(qcom_swrm_runtime_suspend,
->> +               qcom_swrm_runtime_resume,
->> +               NULL
->> +    )
->> +};
-> 
-> Maybe define pm_runtime at a later time then? We've had a lot of race 
-> conditions to deal with, and it's odd that you don't support plain 
-> vanilla suspend first?
-> 
-Trying to keep things simple for the first patchset! added this dummies 
-to keep the soundwire core happy!
-
-thanks,
-srini
->> +static const struct of_device_id qcom_swrm_of_match[] = {
->> +    { .compatible = "qcom,soundwire-v1.3.0", },
->> +    {/* sentinel */},
->> +};
->> +
->> +MODULE_DEVICE_TABLE(of, qcom_swrm_of_match);
->> +
->> +static struct platform_driver qcom_swrm_driver = {
->> +    .probe    = &qcom_swrm_probe,
->> +    .remove = &qcom_swrm_remove,
->> +    .driver = {
->> +        .name    = "qcom-soundwire",
->> +        .of_match_table = qcom_swrm_of_match,
->> +        .pm = &qcom_swrm_dev_pm_ops,
->> +    }
->> +};
->> +module_platform_driver(qcom_swrm_driver);
->> +
->> +MODULE_DESCRIPTION("Qualcomm soundwire driver");
->> +MODULE_LICENSE("GPL v2");
->>
