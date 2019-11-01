@@ -2,117 +2,164 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA08CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D226FCA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A9A621897
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A96B42085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572628330;
-	bh=vnZrTKo6Rmz/GAUeO0nfFXF8tEC7+i1aJB4G8sPAOPM=;
+	s=default; t=1572628608;
+	bh=0VLtvy1Li+X4S07iJZuXHqdU+xhvhoGmzB/HsuY/Ov8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UZM5fgTHEXlnyoo0t65ZS8eSYMNNraTTmK1965ykq2sggEE9SDi5BQ0FozthuFemq
-	 YEFL0yZtqiUkDDTEk0f1dSWeNPw+5PPCo603hOAOroWBwqkNmL/8JScDAOW8eyEeuA
-	 ueBtCqHittfwyCGnRHxej70d/1m2Oh7+FFxXvD34=
+	b=m1VClcJJncOTST8YegAG2Tt/NsB6+E1/a0f+Qyqi/RwFHQJBj/70ujHYpReNYNPZb
+	 fGyeapsh11R/Y1/PRiKEbgaJyJ+751McmWbNasAccEWBPDv2RZVm+FxLMnkGnhk1e1
+	 /SEprrJkWIXd+0lmmm6mCNpRIQrB5/gXihC6/fAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbfKARMJ (ORCPT
+        id S1727633AbfKARQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 13:12:09 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46713 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727334AbfKARMI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 13:12:08 -0400
-Received: by mail-qt1-f195.google.com with SMTP id u22so13735311qtq.13;
-        Fri, 01 Nov 2019 10:12:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qBMruKDrI3Y48/s7yeyyJd+W3JxGzLZElVujOhMNo6A=;
-        b=buxhYq1vZ0N+QH31OeIiVHzsQreNFrkDUAPUKeSLEcMP9R5h/LvZ1GURfJMH6xcb6Z
-         V5dGQaCQILTWG6m52g+zvaEydQ2z0/OK0hdjk0KBPGP0c67PH+VKIGPmX3fL/+MtWb0v
-         lahLDwyXElV9I+fckICB1sfR8tGhxiqfPRuz91j1pjQkiWmMfR9Ez30H+C38wajeAYo9
-         D9BLnuH/AGvfpzKkvvxs/jTUlQCkawfQuCciXnX3esNMzwPZw3e4ge6xsD1SKR41h8Fl
-         KI9Xng7klJdU8WLnbmfY3Ra8exeWOMjLW3ZlMymad0COZ7Prkmre6Zcrj7xZtmQPaCyv
-         RgXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qBMruKDrI3Y48/s7yeyyJd+W3JxGzLZElVujOhMNo6A=;
-        b=HpyJ6muEP2grZLMfShhsXpIfvEcW0i9JMm7V18oIThhSRgDmcWPMJ/xHEiqf5g7anl
-         +13eSzGNkDVnr2JVwGhhEvRqETLLxNUfdireyxTU67PWcTHXocyat4HAXnrNia6bYwMX
-         3n1voJXECn7RgcNgXN+SN8yNdX6dBXDYcz8yk4GnjZKzGRPSAysjFDb68YrTN4kygT08
-         eCpebAM7gw0PPxqwNeNAJu2+rqF8zILco/HCYkcYGkixQtNZkEbSNz42CJ38UHZbEPdw
-         8OlKgSEe4PlvCqaPMnHg47/cHoRx5uBjTTEbV2a1YM4GsTKX9V24lw6TBNFbsLG/EOxj
-         vpdQ==
-X-Gm-Message-State: APjAAAUfUgjCV2BhMnsKMS/owrC0hio5ZE350q+P2O9MPnpvVF4KLyct
-        cy10azkqrVd9ZMwTAdMNsPE=
-X-Google-Smtp-Source: APXvYqyS8BC/NScTWDb66O2vz8siZmUL33ffFo8nCRgGbLvydjciCv+urAANR6Qa803PY7ZD0TFJ/g==
-X-Received: by 2002:ac8:51d4:: with SMTP id d20mr334345qtn.239.1572628327191;
-        Fri, 01 Nov 2019 10:12:07 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::ad6a])
-        by smtp.gmail.com with ESMTPSA id o201sm3585630qka.17.2019.11.01.10.12.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Nov 2019 10:12:06 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 10:12:02 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux MM <linux-mm@kvack.org>, Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH v2] net: fix sk_page_frag() recursion from memory reclaim
-Message-ID: <20191101171202.GP3622521@devbig004.ftw2.facebook.com>
-References: <20191019170141.GQ18794@devbig004.ftw2.facebook.com>
- <20191024205027.GF3622521@devbig004.ftw2.facebook.com>
- <CALvZod6=B-gMJJxhMRt6k5eRwB-3zdgJR5419orTq8-+36wbMQ@mail.gmail.com>
- <20191031162049.27e54d9412214aea79acd2ea@linux-foundation.org>
+        Fri, 1 Nov 2019 13:16:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726957AbfKARQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 13:16:47 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 517FE2085B;
+        Fri,  1 Nov 2019 17:08:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572628107;
+        bh=0VLtvy1Li+X4S07iJZuXHqdU+xhvhoGmzB/HsuY/Ov8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DhjUBZFokLgKbeFcbFEYX+4/vgqse2DiRVLKOazVZ7jeSb7JJau3jICFIlREBp6nT
+         A+WLX6ce3gzd42JF2h9Cg4xGQoCIXemZxX1i6yPRrzNMm67AYjFlW6Fsw8fi7xer+z
+         sESre9SUiTkjKoBixYasHL22b9CjBvICA0uJ/WmM=
+Date:   Fri, 1 Nov 2019 17:08:23 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v2] dt-bindings: iommu: Convert Arm SMMUv3 to DT schema
+Message-ID: <20191101170822.GE3603@willie-the-truck>
+References: <20191014191256.12697-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191031162049.27e54d9412214aea79acd2ea@linux-foundation.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191014191256.12697-1-robh@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Rob,
 
-On Thu, Oct 31, 2019 at 04:20:49PM -0700, Andrew Morton wrote:
-> > > In [0], tcp_send_msg_locked() was using current->page_frag when it
+On Mon, Oct 14, 2019 at 02:12:56PM -0500, Rob Herring wrote:
+> Convert the Arm SMMv3 binding to the DT schema format.
 > 
-> "tcp_sendmsg_locked" and "current->task_frag".  Stuff like this makes
-> review harder :(
-
-lol, sorry about that.
-
-> > > Fix it by adding gfpflags_normal_context() which tests sleepable &&
-> > > !reclaim and use it to determine whether to use current->task_frag.
-> > >
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Robin Murphy <Robin.Murphy@arm.com>
+> Cc: iommu@lists.linux-foundation.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> v2:
+> - Refine interrupt definition based on Robin's comments
 > 
-> Dumb-but-obvious question.  Rather than putzing with allocation modes,
-> is it not feasible to change the net layer to copy the current value of
-> current->task_frag into a local then restore its value when it has
-> finished being used?
+>  .../devicetree/bindings/iommu/arm,smmu-v3.txt |  77 --------------
+>  .../bindings/iommu/arm,smmu-v3.yaml           | 100 ++++++++++++++++++
+>  2 files changed, 100 insertions(+), 77 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
+>  create mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
 
-It's being used as an allocation cache, so doing so would lead to the
-same area getting allocated for two packets at the same time instead
-overrunning the end of the cache.
+[...]
 
-Thanks.
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
+> new file mode 100644
+> index 000000000000..662cbc4592c9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
+> @@ -0,0 +1,100 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iommu/arm,smmu-v3.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ARM SMMUv3 Architecture Implementation
+> +
+> +maintainers:
+> +  - Will Deacon <will@kernel.org>
+> +  - Robin Murphy <Robin.Murphy@arm.com>
+> +
+> +description: |+
+> +  The SMMUv3 architecture is a significant departure from previous
+> +  revisions, replacing the MMIO register interface with in-memory command
+> +  and event queues and adding support for the ATS and PRI components of
+> +  the PCIe specification.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^iommu@[0-9a-f]*"
+> +  compatible:
+> +    const: arm,smmu-v3
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 4
+> +
+> +  interrupt-names:
+> +    oneOf:
+> +      - const: combined
+> +        description:
+> +          The combined interrupt is optional, and should only be provided if the
+> +          hardware supports just a single, combined interrupt line.
+> +          If provided, then the combined interrupt will be used in preference to
+> +          any others.
+> +      - items:
+> +          - const: eventq     # Event Queue not empt
+> +          - const: priq       # PRI Queue not empty
+> +          - const: cmdq-sync  # CMD_SYNC complete
+> +          - const: gerror     # Global Error activated
+> +      - minItems: 2
+> +        maxItems: 4
+> +        items:
+> +          - const: eventq
+> +          - const: gerror
+> +          - const: priq
+> +          - const: cmdq-sync
 
--- 
-tejun
+I find it a bit odd to say "minItems: 2" here since, for example, if you
+have an SMMU that supports PRI then you really want the PRIQ interrupt
+hooked up. The only one never care about in the current driver is cmdq-sync,
+but that's just a driver quirk.
+
+Also, if the thing supports MSIs then it might not have any wired interrupts
+at all. Hmm.
+
+> +
+> +  '#iommu-cells':
+> +    const: 1
+> +
+> +  dma-coherent:
+> +    description: |
+> +      Present if page table walks made by the SMMU are cache coherent with the
+> +      CPU.
+
+This looks like you've taken the text from SMMUv2 by accident. For SMMUv3,
+it's not just about page table walks, but *any* DMA operations made by the
+SMMU (e.g. STE lookup). I don't see the need to change the current text tbh.
+
+Will
