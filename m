@@ -2,153 +2,176 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7558FCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 11:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80539CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 11:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53F4721734
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 11:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574B820862
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 11:06:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730200AbfKALGK (ORCPT
+        id S1730291AbfKALGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 07:06:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5680 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726720AbfKALGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 07:06:10 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id BE556712A63643A18BCD;
-        Fri,  1 Nov 2019 19:06:07 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 1 Nov 2019
- 19:05:57 +0800
-Subject: Re: [PATCH v2 13/36] irqchip/gic-v4.1: Don't use the VPE proxy if
- RVPEID is set
-To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-kernel@vger.kernel.org>
-CC:     Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Andrew Murray" <Andrew.Murray@arm.com>,
-        Jayachandran C <jnair@marvell.com>,
-        "Robert Richter" <rrichter@marvell.com>
-References: <20191027144234.8395-1-maz@kernel.org>
- <20191027144234.8395-14-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <8514ccbe-814a-5bdd-3791-bdd65510ce68@huawei.com>
-Date:   Fri, 1 Nov 2019 19:05:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Fri, 1 Nov 2019 07:06:44 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54392 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbfKALGn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 07:06:43 -0400
+Received: from [91.217.168.176] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iQUlN-0007Zu-7r; Fri, 01 Nov 2019 11:06:41 +0000
+Date:   Fri, 1 Nov 2019 12:06:40 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-api@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] clone3: validate stack arguments
+Message-ID: <20191101110639.icbfihw3fk2nzz4o@wittgenstein>
+References: <20191031113608.20713-1-christian.brauner@ubuntu.com>
+ <20191031164653.GA24629@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191027144234.8395-14-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191031164653.GA24629@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On 2019/10/27 22:42, Marc Zyngier wrote:
-> The infamous VPE proxy device isn't used with GICv4.1 because:
-> - we can invalidate any LPI from the DirectLPI MMIO interface
-> - the ITS and redistributors understand the life cycle of
->    the doorbell, so we don't need to enable/disable it all
->    the time
+On Thu, Oct 31, 2019 at 05:46:53PM +0100, Oleg Nesterov wrote:
+> On 10/31, Christian Brauner wrote:
+> >
+> > --- a/include/uapi/linux/sched.h
+> > +++ b/include/uapi/linux/sched.h
+> > @@ -51,6 +51,10 @@
+> >   *               sent when the child exits.
+> >   * @stack:       Specify the location of the stack for the
+> >   *               child process.
+> > + *               Note, @stack is expected to point to the
+> > + *               lowest address. The stack direction will be
+> > + *               determined by the kernel and set up
+> > + *               appropriately based on @stack_size.
 > 
-> So let's escape early from the proxy related functions.
+> I can't review this patch, I have no idea what does stack_size mean
+> if !arch/x86.
+
+In short: nothing at all if it weren't for ia64 (and maybe parisc).
+But let me provide some (hopefully useful) context. (Probably most of
+that is well-know, so sorry for superflous info. :))
+
+The stack and stack_size argument are used in copy_thread_tls() and in
+copy_thread(). What the arch will end up calling depends on
+CONFIG_HAVE_COPY_THREAD. Afaict, mips, powerpc, s390, and x86
+call copy_thread_tls(). The other arches call copy_thread().
+On all arches _except_ IA64 copy_thread{_tls}() just assigns "stack" to
+the right register and is done with it.
+On all arches _except_ parisc "stack" needs to point to the highest
+address. On parisc it needs to point to the lowest
+(CONFIG_STACK_GROWSUP).
+IA64 has a downwards growing stack like all the other architectures but
+it expects "stack" to poin to the _lowest_ address nonetheless. In
+contrast to all the other arches it does:
+
+	child_ptregs->r12 = user_stack_base + user_stack_size - 16;
+
+so ia64 sets up the stack pointer itself.
+
+So now we have:
+ parisc ->   upwards growing stack, stack_size _unused_ for user stacks
+!parisc -> downwards growing stack, stack_size _unused_ for user stacks
+   ia64 -> downwards growing stack, stack_size   _used_ for user stacks
+
+Now it gets more confusing since the clone() syscall layout is arch
+dependent as well. Let's ignore the case of arches that have a clone
+syscall version with switched flags and stack argument and only focus on
+arches with an _additional_ stack_size argument:
+
+microblaze -> clone(stack, stack_size)
+
+Then there's clone2() for ia64 which is a _separate_ syscall with an
+additional stack_size argument:
+
+ia64       -> clone2(stack, stack_size)
+
+Now, contrary to what you'd expect, microblaze ignores the stack_size
+argument.
+
+So the stack_size argument _would_ be completely meaningless if it
+weren't for ia64 and parisc.
+
 > 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-
-> ---
->   drivers/irqchip/irq-gic-v3-its.c | 23 ++++++++++++++++++++++-
->   1 file changed, 22 insertions(+), 1 deletion(-)
+> x86 doesn't use stack_size unless a kthread does kernel_thread(), so
+> this change is probably fine...
 > 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index 220d490d516e..999e61a9b2c3 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -3069,7 +3069,7 @@ static const struct irq_domain_ops its_domain_ops = {
->   /*
->    * This is insane.
->    *
-> - * If a GICv4 doesn't implement Direct LPIs (which is extremely
-> + * If a GICv4.0 doesn't implement Direct LPIs (which is extremely
->    * likely), the only way to perform an invalidate is to use a fake
->    * device to issue an INV command, implying that the LPI has first
->    * been mapped to some event on that device. Since this is not exactly
-> @@ -3077,9 +3077,18 @@ static const struct irq_domain_ops its_domain_ops = {
->    * only issue an UNMAP if we're short on available slots.
->    *
->    * Broken by design(tm).
-> + *
-> + * GICv4.1 actually mandates that we're able to invalidate by writing to a
-> + * MMIO register. It doesn't implement the whole of DirectLPI, but that's
-> + * good enough. And most of the time, we don't even have to invalidate
-> + * anything, so that's actually pretty good!
+> Hmm. Off-topic question, why did 7f192e3cd3 ("fork: add clone3") add
+> "& ~CSIGNAL" in kernel_thread() ? This looks pointless and confusing
+> to me...
 
-I can't understand the meaning of this last sentence. May I ask for an
-explanation? :)
+(Can we discuss this over a patch that removes this restriction if we
+think this is pointless?)
 
-
-Thanks,
-Zenghui
-
->    */
->   static void its_vpe_db_proxy_unmap_locked(struct its_vpe *vpe)
->   {
-> +	/* GICv4.1 doesn't use a proxy, so nothing to do here */
-> +	if (gic_rdists->has_rvpeid)
-> +		return;
-> +
->   	/* Already unmapped? */
->   	if (vpe->vpe_proxy_event == -1)
->   		return;
-> @@ -3102,6 +3111,10 @@ static void its_vpe_db_proxy_unmap_locked(struct its_vpe *vpe)
->   
->   static void its_vpe_db_proxy_unmap(struct its_vpe *vpe)
->   {
-> +	/* GICv4.1 doesn't use a proxy, so nothing to do here */
-> +	if (gic_rdists->has_rvpeid)
-> +		return;
-> +
->   	if (!gic_rdists->has_direct_lpi) {
->   		unsigned long flags;
->   
-> @@ -3113,6 +3126,10 @@ static void its_vpe_db_proxy_unmap(struct its_vpe *vpe)
->   
->   static void its_vpe_db_proxy_map_locked(struct its_vpe *vpe)
->   {
-> +	/* GICv4.1 doesn't use a proxy, so nothing to do here */
-> +	if (gic_rdists->has_rvpeid)
-> +		return;
-> +
->   	/* Already mapped? */
->   	if (vpe->vpe_proxy_event != -1)
->   		return;
-> @@ -3135,6 +3152,10 @@ static void its_vpe_db_proxy_move(struct its_vpe *vpe, int from, int to)
->   	unsigned long flags;
->   	struct its_collection *target_col;
->   
-> +	/* GICv4.1 doesn't use a proxy, so nothing to do here */
-> +	if (gic_rdists->has_rvpeid)
-> +		return;
-> +
->   	if (gic_rdists->has_direct_lpi) {
->   		void __iomem *rdbase;
->   
 > 
+> > +static inline bool clone3_stack_valid(struct kernel_clone_args *kargs)
+> > +{
+> > +	if (kargs->stack == 0) {
+> > +		if (kargs->stack_size > 0)
+> > +			return false;
+> > +	} else {
+> > +		if (kargs->stack_size == 0)
+> > +			return false;
+> 
+> So to implement clone3_wrapper(void *bottom_of_stack) you need to do
+> 
+> 	clone3_wrapper(void *bottom_of_stack)
+> 	{
+> 		struct clone_args args = {
+> 			...
+> 			// make clone3_stack_valid() happy
+> 			.stack = bottom_of_stack - 1,
+> 			.stack_size = 1,
+> 		};
+> 	}
+> 
+> looks a bit strange. OK, I agree, this example is very artificial.
+> But why do you think clone3() should nack stack_size == 0 ?
 
+In short, consistency.
+I think prior clone() versions (on accident) have exposed the stack
+direction as an implementation detail to userspace. Userspace clone()
+code wrapping code is _wild_ and buggy partially because of that.
+
+The best thing imho, is to clearly communicate to userspace that stack
+needs to point to the lowest address and stack_size to the initial range
+of the stack pointer or both are 0.
+
+The alternative is to let userspace either give us a stack pointer that
+we expect to be setup correctly by userspace or a stack pointer to the
+lowest address and a stack_size argument. That's just an invitation for
+more confusion and we have proof with legacy clone that this is not a
+good idea.
+
+> 
+> > +		if (!access_ok((void __user *)kargs->stack, kargs->stack_size))
+> > +			return false;
+> 
+> Why?
+
+It's nice of us to tell userspace _before_ we have created a thread that
+it messed up its parameters instead of starting a thread that then
+immediately crashes.
+
+Christian
