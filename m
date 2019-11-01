@@ -7,202 +7,177 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDF6CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4E5C47E49
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEAD92085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E1521906
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:30:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7NqdaJn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="umMn3Y+u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfKAVaU (ORCPT
+        id S1727260AbfKAVak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 17:30:20 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40956 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbfKAVaU (ORCPT
+        Fri, 1 Nov 2019 17:30:40 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38060 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfKAVak (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 17:30:20 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r4so7887934pfl.7;
-        Fri, 01 Nov 2019 14:30:19 -0700 (PDT)
+        Fri, 1 Nov 2019 17:30:40 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y23so11206707ljc.5;
+        Fri, 01 Nov 2019 14:30:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j9Zzx2OmoZKK0YTGcIbk0+d45+ZuPxodkOVR0WatlxM=;
-        b=b7NqdaJnjQ60mtJTxu02zhkyysPO6X9h9nBYWOZVeQfsqZMkp5udUkAUZuXMWY7m/K
-         6kBCha9xyGlZPaZatv6dVbhxhl3E1MggDT9Nl/VZOTOZfWriIOqbFOSc40OCD7wQdKeJ
-         ShiNr7fC4C5tcjhBH0o4QhPz6aiq8mWjk/fv6PlkxFpEr0XTUqBt7UWV6aJIBK+NZX+h
-         4ndEV4cu6cXQ38GIkUUmpJ/aQtQpNJEl6t11YmzSc5fpvMvFOhzGgBkWx4rRkSHErEGP
-         j1OIElbnrmkAJAsABdetec2iyugAh2KsQm/oI8IceArlB1i1m/nW3SoG9CTf+r0qHM1i
-         THxA==
+        bh=ZUMbanYAR2JSQFXtbmagULus+WfywDZrwLUh3k9jtsA=;
+        b=umMn3Y+u4IeNaoKlgUdMAZNW66GDjoo8446drYodCdBa7ZmGnsoygSzfiBCEk5EW/K
+         Z3YKyGO/huuIQ9ZWYK2xKSadEzoEz9Uoq7veWo+T9lhlHL4OPQAagL35zEgPhPXEmuNn
+         8Ctc8Rk1yMl2pYgBY9qd/muTcdrZx398dbczT6YURP2tjHGOkz5NSth7TRQtvML4n0Nr
+         mC2kFGS+OgZK5WDZEH+LGa2TsZhVVIIdReVjom9QVzRdK8sVCZzN1T3xlSJn4pjvUHGT
+         iPNGWA84KW3Vpy1na6bJ6ViB9Djz1yPCa08StTgz4dqXy1Xhk5dg+11uPBxqRCQW8Q4z
+         djpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=j9Zzx2OmoZKK0YTGcIbk0+d45+ZuPxodkOVR0WatlxM=;
-        b=bldsAld2lIrWso5MneYUqsvl1tMwxUurXvbnz8YuETXQuGqmV7kKROC85Uj03nJ35p
-         kw7TLVWUZ3LzUHSUV9+OSbNAhC28O/8NjdQK0FXUW2O8SBkcbLSRVyPrXxmA1oBFT1E0
-         SWrYVJEu02SCkNhCs6AgKNV2fVIBCCdD7pjnmgQLI3JPo1B/qKequL7dVynjXYrNt4wD
-         oUdr9X+VwKrNrI0MM7ORuk1TVU22k+aWuJu/QeeZsDCgRJQriBriJRIheuK4NiBkjwe+
-         j+yJQHIuNJKBgXZwRvD3bRZFoeZ/1MICDF4O1TT/yDjM/8pLN265Enzo44rRfPnPYVhk
-         XT8g==
-X-Gm-Message-State: APjAAAWmSiqy2utvVdP9r4nQWIa7TnsVPlJPnwY2VXTP2J6B+RoZLplx
-        14YS+/pMojL/mBvY9FZ4f8+PzdNGGRY=
-X-Google-Smtp-Source: APXvYqzP5pCISaMJxKLrH+bSwSReGvtyfZ76m0aWat/GKZQJBZbiZYsCWgReTQKrrx4mtLs9p7ogJQ==
-X-Received: by 2002:a62:61c4:: with SMTP id v187mr15954809pfb.23.1572643819363;
-        Fri, 01 Nov 2019 14:30:19 -0700 (PDT)
-Received: from [172.16.1.40] ([131.107.174.218])
-        by smtp.gmail.com with ESMTPSA id h66sm9315173pfg.23.2019.11.01.14.30.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Nov 2019 14:30:18 -0700 (PDT)
-Subject: Re: [PATCH v6 1/2] dt-bindings: edac: arm-dmc520.txt
-To:     Lei Wang <wangglei@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc:     "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "hangl@microsoft.com" <hangl@microsoft.com>,
-        "lewan@microsoft.com" <lewan@microsoft.com>,
-        "ruizhao@microsoft.com" <ruizhao@microsoft.com>,
-        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
-        "yuqing.shen@broadcom.com" <yuqing.shen@broadcom.com>,
-        "ray.jui@broadcom.com" <ray.jui@broadcom.com>, shji@microsoft.com
-References: <BY5PR04MB6599EAA659A53B2331CB812586890@BY5PR04MB6599.namprd04.prod.outlook.com>
- <CAL_JsqJxcUr06+O_Ht5Kw0KXCWfSVC+6WMQqNxt-JehHh874hw@mail.gmail.com>
- <f4b2c4b9-4999-6736-31eb-a63781013664@gmail.com>
-From:   Lei Wang <wangglei@gmail.com>
-Message-ID: <7ea42556-49d4-5951-cda7-08e1209b0145@gmail.com>
-Date:   Fri, 1 Nov 2019 14:30:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        bh=ZUMbanYAR2JSQFXtbmagULus+WfywDZrwLUh3k9jtsA=;
+        b=hcgLJgQeJ5jUwjGjogzL0bvMV0f4JkWeG5shOJwk0+Vo88lhbC+n3WT4qVlp8mH0pS
+         i4X10CoAMiRC2KYWBWMtnqNx8z0QtKkrzBTOc89/JVbRs3ieK8YMNXeAS/1gvNyUMlmO
+         OQl4Ls2YiC8DlTFvATJvGbq9kbKF7lMiG3pW6mLnsb+/XpLMk04YTBq9ICOC1VqQ8ueV
+         4aZ/GX56OO9vOk97H0sht1C5bS/4xkW179TDpNPsZx9thrJzkvJQEY4jPjHmSv0LJA6+
+         /NlB5WNcLWRZgdz++C9YoFgucIvP2DqKP2cD/vE4gx08vzehF3hqXoPYURio3RKvNWC/
+         BbzA==
+X-Gm-Message-State: APjAAAVGGdn6gA2HNCCi/XxBC9odsxoZ7w5OKAzdopJ+vsUuutyxfkH6
+        bJGZ5WQn/dTI+zHMBJ86Bot/ACme
+X-Google-Smtp-Source: APXvYqyQg7FVoTK+7F7aVQMbDzmR4UztW5orQfSKGemWQwF3ydiJE5F9YDtBNjdUEqfNel0WXXx4yw==
+X-Received: by 2002:a2e:161b:: with SMTP id w27mr9594995ljd.183.1572643837562;
+        Fri, 01 Nov 2019 14:30:37 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id r21sm2805638ljn.65.2019.11.01.14.30.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Nov 2019 14:30:36 -0700 (PDT)
+Subject: Re: [PATCH v6 00/18] Consolidate and improve NVIDIA Tegra CPUIDLE
+ driver(s)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191015170015.1135-1-digetx@gmail.com>
+ <20191016192133.GB26038@pdeschrijver-desktop.Nvidia.com>
+ <72636eb3-5354-eea3-3a51-4975a04186b2@gmail.com>
+ <53ee8bd3-5c53-f0aa-175c-7fa3024d0af5@gmail.com>
+ <20191028140443.GA27141@pdeschrijver-desktop.Nvidia.com>
+ <40de641f-c38e-51ee-ae27-c5db468c45b5@gmail.com>
+ <20191101123359.GG27141@pdeschrijver-desktop.Nvidia.com>
+ <a72463cd-cc16-691c-3c82-54ebb618ec32@gmail.com>
+Message-ID: <9c25ea71-ebe9-d9c2-0dff-6b2752e27131@gmail.com>
+Date:   Sat, 2 Nov 2019 00:30:35 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <f4b2c4b9-4999-6736-31eb-a63781013664@gmail.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <a72463cd-cc16-691c-3c82-54ebb618ec32@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-Kindly ping... I addressed your comments in below, and with one=20
-question. Thanks!
-
--Lei
-
-On 10/25/19 10:31 AM, Lei Wang wrote:
-> Thanks James/Rob/Borislav for pointing out the email list issue. My wor=
-k=20
-> email does not work good either for this exercise. Going forward I'll=20
-> switch to my gmail account.
->=20
-> And Thanks Rob for reviewing! Please see below.
->=20
->>> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
->>> @@ -0,0 +1,26 @@
->>> +* ARM DMC-520 EDAC node
->>> +
->>> +Required properties:
->>> +- compatible=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 : "brcm,dmc-520", "arm,dm=
-c-520".
->>> +- reg=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 : Address r=
-ange of the DMC-520 registers.
->>> +- interrupts=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 : DMC-520 interrupt numbe=
-rs. The example=20
->>> below specifies
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 two interrupt lines for dram_ecc_errc_int and
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 dram_ecc_errd_int.
->>> +- interrupt-config=A0=A0=A0=A0 : This is an array of interrupt masks=
-=2E For=20
->>> each of the
+01.11.2019 16:22, Dmitry Osipenko пишет:
+> 01.11.2019 15:33, Peter De Schrijver пишет:
+>> On Tue, Oct 29, 2019 at 03:47:56AM +0300, Dmitry Osipenko wrote:
+>> ..
 >>
->> Not a standard property, so would need a vendor prefix...
->=20
-> Would dmc-interrupt-config as the property name work? Thanks!
->=20
+>>>>>>> It would be useful to switch the power state terminology to the one used
+>>>>>>> for later chips:
+>>>>>>>
+>>>>>>> LP0 becomes SC7
+>>>>>>> LP1 becomes C1
+>>>>>>> LP2 becomes CC7
+>>>>>>>
+>>>>>>> Meaning of these states is as follows
+>>>>>>>
+>>>>>>> C is a core state:
+>>>>>>>
+>>>>>>> C1 clock gating
+>>>>>>> C2 not defined
+>>>>>>> C3 not defined
+>>>>>>> C4 not defined
+>>>>>>> C5 not defined
+>>>>>>> C6 not defined for ARM cores
+>>>>>>> C7 power-gating
+>>>>>>>
+>>>>>>> CC is a CPU cluster C state:
+>>>>>>>
+>>>>>>> CC1 cluster clock gated
+>>>>>>> CC2 not defined
+>>>>>>> CC3 fmax@Vmin: not used prior to Tegra186
+>>>>>>> CC4: cluster retention: no longer supported
+>>>>>>> CC5: not defined
+>>>>>>> CC6: cluster power gating
+>>>>>>> CC7: cluster rail gating
+>>>>>>>
+>>>>>>> SC is a System C state:
+>>>>>>>
+>>>>>>> SC1: not defined
+>>>>>>> SC2: not defined
+>>>>>>> SC3: not defined
+>>>>>>> SC4: not defined
+>>>>>>> SC5: not defined
+>>>>>>> SC6: not defined
+>>>>>>> SC7: VDD_SOC off
+>>>>>>
+>>>>>> Hello Peter,
+>>>>>>
+>>>>>> But new "drivers/cpuidle/cpuidle-tegra.c" uses exactly that terminology,
+>>>>>> please see "cpuidle: Refactor and move NVIDIA Tegra20 driver into
+>>>>>> drivers/cpuidle/" and further patches. Am I missing something? Or do you
+>>>>>> want the renaming to be a separate patch?
+>>>>>>
+>>>>>
+>>>>> Or maybe you're suggesting to change the names everywhere and not only
+>>>>> in the cpuidle driver? Please clarify :)
+>>>>
+>>>> At least some of the variable and function names still say lp2?
+>>>
+>>> The cpuidle driver uses LP2 terminology for everything that comes from
+>>> the external arch / firmware includes. But it says CC6 for everything
+>>> that is internal to the driver. So yes, there is a bit of new/old
+>>> terminology mixing in the code.
+>>>
+>>> The arch code / PMC driver / TF firmware are all saying LP2. The LP2
+>>> naming is also a part of the device-tree binding.
+>>>
+>>> It will be a lot of mess to rename the mach-tegra/pm.c code. I guess
+>>> eventually it could be moved to drivers/soc/, so maybe it will be better
+>>> to postpone the renaming until then?
 >>
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 above interrupt line, add one interrupt=20
->>> mask element to
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 it. That is, there is a 1:1 mapping from=20
->>> each interrupt
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 line to an interrupt mask. An interrupt=20
->>> mask can represent
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 multiple interrupts being enabled. Refer to=20
->>> interrupt_control
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 register in DMC-520 TRM for interrupt=20
->>> mapping. In the example
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 below, the interrupt configuration enables=20
->>> dram_ecc_errc_int
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 and dram_ecc_errd_int. And each interrupt=20
->>> is connected to
->>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 a separate interrupt line.
+>> Or maybe add a comment somewhere indicating:
 >>
->> I've gone and read thru the TRM some. This binding doesn't seem to
->> correspond to the TRM at all. There are a bunch of interrupts and a
->> combined interrupt, and then there's the same set for 'overflow'
->> interrupts.
+>> LP2 = CC6
+>> LP1 = C1
+>> LP0 = SC7
 >>
->> There's only one 'interrupt_control' reg. How do you have more that 1
->> 32-bit value?
->=20
-> There is only one 'interrupt_control' register, for multiple interrupt =
+>> TF predates the new naming, so that may make some sense.
+> 
+> Today it should make more sense just to add an explicit comment to the
+> cpuidle driver that clarifies the new naming (IMHO). I'll prepare v7
+> with that change.
+> 
+> Maybe later on, once more code will be consolidated in
+> drivers/soc/tegra/, it will become useful to duplicate the clarification
+> there as well.
+> 
+> Please let me know if you disagree or think that something better could
+> be done.
 
-> sources. Then depending on platform hardware design, these interrupt=20
-> sources can be wired to different physical interrupt lines.
->=20
-> That is, it is possible to mux interrupt sources into=A0 interrupt line=
-s=20
-> for dmc520 in different ways. For example, in this particular brcm=20
-> implementation,
->=20
-> Line 841: source dram_ecc_errc_int
-> Line 843: source dram_ecc_errd_int
-> Line 839: source dram_ecc_errc_int and dram_ecc_errd_int
->=20
-> There are two possibilities for implementing ecc counts for ce/ue. And =
+BTW, LP3 = C1.
 
-> we chose to use the single source line: as below, two interrupt lines=20
-> 0x349 and 0x34B, with interrupt masks 0x4 and 0x8 respectively.
->=20
-> Also, it's possible to implement using the combined-source line too:=20
-> that would be one interrupt line 0x347, with interrupt mask 0xC.
->=20
-> This dt binding can support both by modifying the properties, without=20
-> having to modify driver code.
->=20
->  >> +
->  >> +Example:
->  >> +
->  >> +dmc0: dmc@200000 {
->  >> +=A0=A0=A0=A0=A0=A0 compatible =3D "brcm,dmc-520", "arm,dmc-520";
->  >> +=A0=A0=A0=A0=A0=A0 reg =3D <0x200000 0x80000>;
->  >> +=A0=A0=A0=A0=A0=A0 interrupts =3D <0x0 0x349 0x4>, <0x0 0x34B 0x4>=
-;
->  >> +=A0=A0=A0=A0=A0=A0 interrupt-config =3D <0x4>, <0x8>;
->  >> +};
->  >> --
->  >> 2.17.1
->=20
-> Thanks!
->=20
-> -Lei
->=20
-
+I don't think that the new terminology has equivalent to LP1 (CPU
+cluster power gating + DRAM in self-refresh).
