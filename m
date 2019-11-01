@@ -2,93 +2,155 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D031CCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 05:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE961CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 05:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A79A22085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 05:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA4182085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 05:45:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QJq/W/+L";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AJl5A1k2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AWoSOgg+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729885AbfKAFml (ORCPT
+        id S1729824AbfKAFpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 01:42:41 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47434 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfKAFmk (ORCPT
+        Fri, 1 Nov 2019 01:45:07 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38438 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbfKAFpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 01:42:40 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id DE5A160A66; Fri,  1 Nov 2019 05:42:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572586959;
-        bh=hfIUvKWAJJGAIiPINob40uFW3VATFr4Hy/OOMnNedZ4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QJq/W/+LeemfKfbuQt8carVNB0URGDh3KbVxp+VdHth6cbpLg4YAnp5NwdNlmDGaS
-         HD9E4VwrnJNbYy/qP17K3SeclV+MWLu1Nxbtv1K1qPNQ1qrbJfRLtpgZf5lE38kErP
-         /DJFNVuUlQW5+mlQ/lTxmYn0RmgyFIdAaQ500YcY=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id D668260A66;
-        Fri,  1 Nov 2019 05:42:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572586958;
-        bh=hfIUvKWAJJGAIiPINob40uFW3VATFr4Hy/OOMnNedZ4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AJl5A1k2zCnHgvYqAvbQ2tw0xbY7UZ487lMyuth0SXCeWAZy1iQ0A/UYUECO0mtq9
-         iL79uI+9ha4SC15D5PMNFY3e0Jy2CVpGZQvyYxUSd31WHzpMILh7xKbf7+8R04AYUN
-         CM2CgEzIe78GA80M9YzJSY2+1xt5ZUInUf3uwmh8=
+        Fri, 1 Nov 2019 01:45:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=n9DPm3VVfItkSEn1eKXRQ5eHJ60lVxQA7EUPm71QGMw=; b=AWoSOgg+buMrwiSFbI+6o0Thj
+        3eFxjfRjuhZP9gAgntodz6uHhAekmUOhnx51l84nw26n+K/2m03925we6JqRqMg2fO5yNThLv7fCR
+        54wa1spwoxlsA1FAq/AxSMqOW9n7vX0r6S4MxNNDsC1uJE6Pu5GBBCOGJFygeHPFtW+POf/rCJua7
+        sEfQG8O1L7V4EfpQXo2d3u8ZHM32kklfJZdVno/Vz+BpK1LNtaKmGCdEfzuh4fTftNHZ0eaZSEGGI
+        r4RSD/Io2P+oPqWuQWErW9wtNRpWHR4kbjfc927Nhm1QQfnR2YraHyYiwPGsRiMMfl8isVCHs+fIE
+        XjpwLslgA==;
+Received: from [2601:1c0:6280:3f0::4ba1]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iQPk9-0003Mp-ED; Fri, 01 Nov 2019 05:45:05 +0000
+Subject: Re: [PATCH] scripts: prune-kernel:remove old kernels and modules dir
+ from system
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Cc:     bfields@fieldses.org, yamada.masahiro@socionext.com,
+        michal.lkml@markovi.net, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191030095445.912435-1-unixbhaskar@gmail.com>
+ <b8a12c03-1e17-61de-2cd9-a09650dc22b1@infradead.org>
+ <20191031033722.GA7687@Gentoo>
+ <41693d0e-8ff2-bf06-f1a6-e7fb52779f95@infradead.org>
+ <20191031045242.GA3130@Gentoo>
+ <809aa850-7a22-a7c5-af21-0e88d1c63dd7@infradead.org>
+ <20191031071839.GB3130@Gentoo>
+ <875a75ec-bbf1-9d80-a3e1-9c759c9c05e1@infradead.org>
+ <20191101042337.GA3141@Gentoo> <20191101051108.GB3141@Gentoo>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <b45d0312-d482-2d09-d6af-7a8b6b7051c5@infradead.org>
+Date:   Thu, 31 Oct 2019 22:45:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 01 Nov 2019 11:12:38 +0530
-From:   kgunda@codeaurora.org
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        daniel.thompson@linaro.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V9 1/6] backlight: qcom-wled: Add new properties for
- PMI8998.
-In-Reply-To: <20191031085845.GA5700@dell>
-References: <1571814423-6535-1-git-send-email-kgunda@codeaurora.org>
- <1571814423-6535-2-git-send-email-kgunda@codeaurora.org>
- <20191031085845.GA5700@dell>
-Message-ID: <4b5c264b8d4b47c48bc87ca389041a02@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+In-Reply-To: <20191101051108.GB3141@Gentoo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-31 14:28, Lee Jones wrote:
-> On Wed, 23 Oct 2019, Kiran Gunda wrote:
+On 10/31/19 10:11 PM, Bhaskar Chowdhury wrote:
+> On 09:53 Fri 01 Nov 2019, Bhaskar Chowdhury wrote:
+>> On 08:06 Thu 31 Oct 2019, Randy Dunlap wrote:
+>>> On 10/31/19 12:18 AM, Bhaskar Chowdhury wrote:
+>>>> On 22:27 Wed 30 Oct 2019, Randy Dunlap wrote:
+>>>>> On 10/30/19 9:52 PM, Bhaskar Chowdhury wrote:
+>>>>>>>>> That 'rm' doesn't remove any files.  Compare what remove_old_kernel() does.
+>>>>>>>> No,it is not using that function rather take the parameter from the
+>>>>>>>> commandline and get into boot dir match with it and remove it.
+>>>>>>>
+>>>>>>> But it doesn't do that.  I tested it.  It should be more like what
+>>>>>>> rmeove_old_kernel() does:
+>>>>>>>
+>>>>>>>         rm -If vmlinuz-$kernel_ver System.map-$kernel_ver config-$kernel_ver
+>>>>>>>
+>>>>>>> and if not, please explain why not.
+>>>>>> Okay, again some uniformity missing in the code, I would like to your
+>>>>>> suggested method,i.e call remove_old_kernel to do the job instead of depending on individual kernel.
+>>>>>
+>>>>> The simplest thing to do is set kernel_version=$kernel_ver
+>>>>> and then call remove_old_kernel().
+>>>>> And set modules_version=$modules_dir_name and call remove_old_modules_dir().
+>>>>>
+>>>>> But it would be cleaner to pass a parameter (kernel_version) to the
+>>>>> remove_old_kernel() function and to pass a parameter (modules_dir) to the
+>>>>> remove_old_modules_dir() function.
+>>>>
+>>>>>
+>>>>
+>>>> Thank you...I have just modified the code and call both the function
+>>>> under remove option. BTW I didn't set the extra variable $kernel_ver name it $kernel_version and instead of $modules_dir_name name it $mo
+>>>> dules_version.
+>>>>
+>>>> Capturing command line parameter in $kernel_version and $modules_version
+>>>>
+>>>> Is that fine? Here is a code snippet:
+>>>
+>>> Yes, that should be OK.
+>>>
+>>>> -r | --remove)
+>>>>   if [[ $# -ne 3 ]]; then
+>>>>    printf "You need to provide kernel version and modules directory
+>>>>    name \n"
+>>>>    exit 1
+>>>>    else
+>>>>    remove_old_kernel
+>>>>    remove_old_modules_dir
+>>>>    fi
+>>>>
+>>>>
+>>>> I have just test it and it works.
+>>>>
+>>>>
+>>>> And about solitary r option without hypen is ignoring and doing nothing.
+>>>>
+>>>> Means, if I pass ./scripts/prune-kernel r 5.3.3
+>>>> it simply ignore and does nothing.Only with the hypen it can work.
+>>>
+>>> Is that how it should be?
+>>> or what would you expect that to do?
+>> Yes it should be. Any malformed parameter should be discarded,except
+>> what explicitly given in code form,as help reminder.
+>> OR
+>> Do you want me to reminds user that they are missing thing to operate
+>> correctly??
+>>>
+>>> -- 
+>>> ~Randy
+>> Bhaskar
+>>>
+> Randy,
 > 
->> Update the bindings with the new properties used for
->> PMI8998.
->> 
->> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
->> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
->> ---
->>  .../bindings/leds/backlight/qcom-wled.txt          | 74 
->> ++++++++++++++++++----
->>  1 file changed, 63 insertions(+), 11 deletions(-)
+> I think we should show the help message , whenever user put a malformed
+> parameter, say they put something like this :
 > 
-> This patch no longer applies.
+> ./scripts/prune-kernel f 5.3.3
 > 
-> It looks like you dropped the rename patch.
+> It should show the help message to indicate what exactly need to pass
+> with the script to get the desired result.
 > 
-> Please rebase all of the patches in this set on top of a released
-> commit and resend.
-Sure. I will resend the complete series with the dropped patches.
+> What do you think??
+
+I agree.  Entering garbage junk should spit out help.
+
+-- 
+~Randy
+
