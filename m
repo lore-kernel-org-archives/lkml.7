@@ -2,121 +2,105 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39719CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 03:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72496CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 03:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11E67208CB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 03:05:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572577501;
-	bh=nU6uqOVFaCsulLB14w3V7HfkrQ0IMKZJP3c9WxF8K20=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eu9yoF9wNEXv3FU16XC6cjixY1IbEM5WZD4WOMZZZOWHffC6VhLOgtx3ho8SZsTEN
-	 DIfoYWwM3BxLjMDxpNTqnRfjrfMIKkedVevveu1CIqZfcAZITMUIi1SP5f1XsduLJB
-	 0uQVjq4bWu/jPkdq8SZI+XCZdrSE1v66eavYbSec=
+	by mail.kernel.org (Postfix) with ESMTP id 437842067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 03:06:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fipki4Ji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbfKADE7 (ORCPT
+        id S1729586AbfKADG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 23:04:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbfKADE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 23:04:59 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68C6A217D9;
-        Fri,  1 Nov 2019 03:04:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572577498;
-        bh=nU6uqOVFaCsulLB14w3V7HfkrQ0IMKZJP3c9WxF8K20=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vTGvqh2b7quzmstG195V56puCkgWoM1VlheFQG+9axMEtSr28lRYaSTp9SsxJPjPP
-         y3lQgR7VIvU4oOJ/5ZJZEtlnD4vvARiJgO/6v/sknd967OhCt7MEer9GFtUQS2PCsT
-         oimyKhk9SY9UrQdaGwrnODbFMGvG9VExlwqKLxJ8=
-Received: by mail-wr1-f50.google.com with SMTP id l10so8381405wrb.2;
-        Thu, 31 Oct 2019 20:04:58 -0700 (PDT)
-X-Gm-Message-State: APjAAAX3zofpHyg4xToctFH3YZ8SeCHas7rJrnFh5Ov43fkwi1Ayct7b
-        7hOYJSvo0Af6awISVutaEU53ORFuKp3RIzFESjk=
-X-Google-Smtp-Source: APXvYqzuh0xd7+aIhEcjOGh28vIL0qQI5LRMwwA+gux/Bnu7YhlsdGHN+j3Azg/o4pUMm36qhzBi0fLYag9m4IFhJUs=
-X-Received: by 2002:a5d:6203:: with SMTP id y3mr8698187wru.142.1572577496753;
- Thu, 31 Oct 2019 20:04:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191030163807.17817-1-wens@kernel.org> <91017889-2ae7-d467-eed3-6d3b2bb130b9@gmx.net>
-In-Reply-To: <91017889-2ae7-d467-eed3-6d3b2bb130b9@gmx.net>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Fri, 1 Nov 2019 11:04:45 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67quD_EGgck7QLaO+rwgyPT0G+FfzDiZuyEAb0E1yf=yw@mail.gmail.com>
-Message-ID: <CAGb2v67quD_EGgck7QLaO+rwgyPT0G+FfzDiZuyEAb0E1yf=yw@mail.gmail.com>
-Subject: Re: [PATCH] thermal: brcmstb: enable hwmon
-To:     Stefan Wahren <wahrenst@gmx.net>
-Cc:     Chen-Yu Tsai <wens@kernel.org>, Markus Mayer <mmayer@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        "open list:BROADCOM BCM281XX..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 31 Oct 2019 23:06:28 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52445 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbfKADG1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 31 Oct 2019 23:06:27 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c17so646439wmk.2;
+        Thu, 31 Oct 2019 20:06:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ABoCwU9PP9ddyUwXERXcCZdYWkmzW6JWRZWKZZduMb8=;
+        b=fipki4JiNUGyDzM+Uhc6AJgfupy3T53fUwGXdyAPBips59hmCtphQspTnuEcGfG3aU
+         fcWZQICG3N0MgtYCEPy3CVcxS1ogVjKr+kUtuISKj8JqU6SGRrucgJ6Yt/O13E6WA8LI
+         M+4q5vFDs8Dfwqti3Ng+jhtVUG/H8A9nYazaBrk9MIrgk0k9zIcwrpt/cATyNpZsvRtx
+         dIXCArYC0M6rwTQVrDAeYclcMV/slp98rLSJsJgFNKqTe+rjYhm2CHxZcKJ+IvLdpYFE
+         a/j2O3elx9oo86L0xZ3X0uFvO7pzJYJnWJ3R2OSxuBeN95Mpsh/crlUZPmDy9gl87Lqn
+         LzEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ABoCwU9PP9ddyUwXERXcCZdYWkmzW6JWRZWKZZduMb8=;
+        b=oUnIRhGlnwjKiKuGw+P1LXEz/28CW558HnUmGQmBtVqnA7ZUCJemoykdMfjVoV1Pct
+         cvsDKcaD6A6rJm1NvN4byiogr1HRRhaKdWjR5vbH3keT1edgpG28zeQYRMa8oHcYDmIM
+         E46SgLIm+9RM5UN9fpubmqtjbr15bHyj/RrQp+3uCpiz5E8lpQot7b/R6v0Vl2n9rKsw
+         mPz3ks00WXxGPEJFVqhGrAd4Xt387Y+fJejTA1CNnGMnEyvWzzCE2q6Hms8Zlf51Q0qn
+         LNdYAJq8+4qIUSPm4tGxGfgO08zDxeidwJrOfRbJxT6OobK3M7u1yGg6nsfPkgQSHOkv
+         dRkg==
+X-Gm-Message-State: APjAAAWBnpSBAHP8V3lGHg/sG8TnK2f92BAf5CP6Fbj3mf+4Vrfa8bED
+        4CnlYStcjFoxNOsNUZ6eJgSTOwMq
+X-Google-Smtp-Source: APXvYqxuscdYaOY+WQrYM+P8BeaEGx5d1Xq3998VHM+OFwKySzE77N586ldM9L8zBHAtJieEBn01vg==
+X-Received: by 2002:a05:600c:20c7:: with SMTP id y7mr7292101wmm.34.1572577585137;
+        Thu, 31 Oct 2019 20:06:25 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id j11sm2625299wrq.26.2019.10.31.20.06.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 20:06:24 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
+        ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] reset: brcmstb: Fix resource checks
+Date:   Thu, 31 Oct 2019 20:06:15 -0700
+Message-Id: <20191101030616.27372-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 9:09 PM Stefan Wahren <wahrenst@gmx.net> wrote:
->
-> Hi Chen-Yu,
->
-> Am 30.10.19 um 17:38 schrieb Chen-Yu Tsai:
-> > From: Chen-Yu Tsai <wens@csie.org>
-> >
-> > By defaul of-based thermal driver do not have hwmon entries registered.
-> >
-> > Do this explicitly so users can use standard hwmon interfaces and tools
-> > to read the temperature.
-> >
-> > This is based on similar changes for bcm2835_thermal in commit
-> > d56c19d07e0b ("thermal: bcm2835: enable hwmon explicitly").
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > ---
-> >
-> > This patch was only compile tested. A similar patch [1] was submitted to
-> > the downstream kernel, which I did build and actually run on a Raspberry
-> > Pi 4.
->
-> just a note: from my understanding [2] the brcmstb_thermal isn't the
-> right driver for BCM2711. Please consider the current downstream
-> solution for BCM2711 support as a quick hack to avoid writing a new
-> thermal driver. But must confess that i didn't test Florian's recent
-> changes yet.
+The use of IS_ALIGNED() is incorrect, the typical resource we pass looks
+like this: start: 0x8404318, size: 0x30. When using IS_ALIGNED() we will
+get the following 0x8404318 & (0x18 - 1) = 0x10 which is definitively
+not equal to 0.
 
-Thanks for the tip. I only saw the thread after posting this patch.
+Replace this with an appropriate check on the start address and the
+resource size to be a multiple of SW_INIT_BANK_SIZE.
 
-ChenYu
+Fixes: 77750bc089e4 ("reset: Add Broadcom STB SW_INIT reset controller driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/reset/reset-brcmstb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> Regards
-> Stefan
->
-> [2] -
-> https://github.com/raspberrypi/linux/issues/3101#issuecomment-527554223
->
-> >
-> > This one for mainline is much simpler, as it does not need to deal with
-> > the error path or device removal, due to the use of devres.
-> >
-> >  [1] https://github.com/raspberrypi/linux/pull/3307
-> >
-> > ---
-> >  drivers/thermal/broadcom/brcmstb_thermal.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
->
+diff --git a/drivers/reset/reset-brcmstb.c b/drivers/reset/reset-brcmstb.c
+index a608f445dad6..21ca6fa51365 100644
+--- a/drivers/reset/reset-brcmstb.c
++++ b/drivers/reset/reset-brcmstb.c
+@@ -91,8 +91,8 @@ static int brcmstb_reset_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!IS_ALIGNED(res->start, SW_INIT_BANK_SIZE) ||
+-	    !IS_ALIGNED(resource_size(res), SW_INIT_BANK_SIZE)) {
++	if ((res->start & SW_INIT_BANK_SIZE) != SW_INIT_BANK_SIZE ||
++	    resource_size(res) % SW_INIT_BANK_SIZE) {
+ 		dev_err(kdev, "incorrect register range\n");
+ 		return -EINVAL;
+ 	}
+-- 
+2.17.1
+
