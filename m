@@ -2,116 +2,119 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5633ACA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6922CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6C720862
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:31:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oKlSmGu0"
+	by mail.kernel.org (Postfix) with ESMTP id AE45C21734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:32:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572618767;
+	bh=awMAnw9Qq2gBQEeEgcYC7CS6pz44jp0V0kf6PkvwF+c=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=dW/PNW/cyBRq12V18jYJTqvXAhKFoq3ujiPAaUKDGgKzfZkuf6IEVEs0Ak0V7cKPg
+	 wBEXeM7TbYCYea3L4CPORkwaXCD/A0VUZL1E7sNkEyju+NCBQzyEpQZBRIqaCgNgGG
+	 nsrBY2R9DxR5/wg0v2277tcFdkFeAUsMUjH/KnnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfKAObq (ORCPT
+        id S1727221AbfKAOcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 10:31:46 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38556 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbfKAObq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 10:31:46 -0400
-Received: by mail-pg1-f195.google.com with SMTP id j30so3121068pgn.5;
-        Fri, 01 Nov 2019 07:31:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2FrXDkN5ZNQ5+RGqx6Mrb8PAqmL7u63EHey24e7/ywQ=;
-        b=oKlSmGu0l/QNsOmfcHoqvh5d2HYh7/VJfA3eELWS00z9HspCj6ziNT3qNtmtXxVKhG
-         /vCFVTNxv+a7lZm6fQD+5HMGXDtNWu4ixskrHf/fxeAKHOos596BB/JiRvJ755+4vnGM
-         nMb+cz/eWsPvmTC/FtInM60g+zC92ick5Q0KU5+4pkYcDA80pFrVBk31mqtWezAyU+7v
-         O8oyQgfEzBDPa0Rv1Cd0SfY/do5hILcfNRMFbg+3UNg5pNTe191UC7s7l9QZjWRWFv3V
-         rGKWYvmp9uaT0wQq/UmCj+HxrZRHN46GnjnLKx7uNHJbzXRjRQj1wvn7QSodQnbJhdNT
-         lsLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2FrXDkN5ZNQ5+RGqx6Mrb8PAqmL7u63EHey24e7/ywQ=;
-        b=JjXz426KuICcptjk1iIrF5q53usHBZFl5twsdqISZcUitlY41qCFiJ3wfBtQBdepIZ
-         xzhFh3SWL5k0Q3x4tovasogxE+SacFMBWm9nls3JOpR5CFcbKPfx4vG7Q/pxhj/chv/2
-         7brFywGM4RVep+/pCg2KKviCepqLcPyh4HChAgfC4IP8sBCSG6cf7PIO7iqLxxxrW27e
-         wVXg0nQrGJ7Z9BTC7iztTIF6iQCMzL5ng2t921S+Za5wTtK3RMQxEzlRKCZlyQCvqqaf
-         gWftpehqpFPBWjC3irUJQfbs+A8KGVMVKB6Qxz2uX4vcJfNkt3fYhCKNrACdasSsH1SK
-         B8Hg==
-X-Gm-Message-State: APjAAAV4vnaKnJC1eiyPJ2+zvZunuw3KO4Qzjpybx8B3YkvG3YgENMNc
-        TOMfPYu6/v4hMgdBfH+HWA8=
-X-Google-Smtp-Source: APXvYqwMma5R3MDVUeyvdrFzn/WU1yusLdcF5o5dfhV+xy+nI2ygjZLpe9NmzO0LZq+qPjbUw3w8YA==
-X-Received: by 2002:a63:1c06:: with SMTP id c6mr13721047pgc.417.1572618705268;
-        Fri, 01 Nov 2019 07:31:45 -0700 (PDT)
-Received: from localhost.localdomain ([45.114.62.165])
-        by smtp.gmail.com with ESMTPSA id x9sm9273061pje.27.2019.11.01.07.31.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 07:31:44 -0700 (PDT)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC-next 1/1] arm64: dts: meson: odroid-c2: Enable SCPI DVFS for cpu
-Date:   Fri,  1 Nov 2019 14:31:26 +0000
-Message-Id: <20191101143126.2549-2-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191101143126.2549-1-linux.amoon@gmail.com>
-References: <20191101143126.2549-1-linux.amoon@gmail.com>
+        Fri, 1 Nov 2019 10:32:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726701AbfKAOcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 10:32:46 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7153120862;
+        Fri,  1 Nov 2019 14:32:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572618765;
+        bh=awMAnw9Qq2gBQEeEgcYC7CS6pz44jp0V0kf6PkvwF+c=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ry9apcOW3hjwZVKiKAmkcHGbORCoYyIuehNaDmc/LW5REQPkKsJObcxnWHdyYbg/f
+         vt2KQcCJU/bGqsctJdzBipw1NzQ56ctc2kuHWYdehk12LpkkBK/W4aqMCFwA1witTG
+         FjGBtkfEZE2I/sGiS4Uzui1t4iN7dkfwLL741jqc=
+Date:   Fri, 1 Nov 2019 14:32:40 +0000
+From:   Will Deacon <will@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     catalin.marinas@arm.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM Kernel Mailing List 
+        <linux-arm-kernel@lists.infradead.org>, peterz@infradead.org
+Subject: [GIT PULL] arm64: Fixes for -rc6
+Message-ID: <20191101143240.GA3287@willie-the-truck>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable System Control and Power Interface, DVFS for cpu
-with setting 1.54 GHz as max freq in the initial SCPI tables
-loaded by the BL2, i.e. packed with U-Boot.
+Hi Linus,
 
-Fixes: f7bcd4b6f698 (ARM64: dts: meson-gxbb-odroidc2: Disable SCPI DVFS)
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>
-Suggested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-In discuss on other mailing list thread below.
-[0] https://lkml.org/lkml/2019/8/30/186
+Please pull these arm64 fixes for -rc6. They're almost exclusively
+related to CPU errata in CPUs from Broadcom and Qualcomm where the
+workarounds were either not being enabled when they should have been or
+enabled when they shouldn't have been. The only "interesting" fix is
+ensuring that writeable, shared mappings are initially mapped as clean
+since we inadvertently broke the logic back in v4.14 and then noticed
+the problem via code inspection the other day.
 
-Tested on mainline U-Boot 2019.07-1 (Aug 01 2019 - 23:58:01 +0000) Arch Linux ARM
-on archlinux distro.
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The only critical issue we have outstanding is a sporadic NULL
+dereference in the scheduler, which doesn't appear to be arm64-specific
+and PeterZ is tearing his hair out over it at the moment.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 6ded279c40c8..9678784aa1a9 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -307,7 +307,7 @@
- };
- 
- &scpi_clocks {
--	status = "disabled";
-+	status = "okay";
- };
- 
- /* SD */
--- 
-2.23.0
+Cheers,
 
+Will
+
+--->8
+
+The following changes since commit 777d062e5bee0e3c0751cdcbce116a76ee2310ec:
+
+  Merge branch 'errata/tx2-219' into for-next/fixes (2019-10-17 13:42:42 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+
+for you to fetch changes up to 1cf45b8fdbb87040e1d1bd793891089f4678aa41:
+
+  arm64: apply ARM64_ERRATUM_843419 workaround for Brahma-B53 core (2019-11-01 10:47:37 +0000)
+
+----------------------------------------------------------------
+arm64 fixes for -rc6
+
+- Enable CPU errata workarounds for Broadcom Brahma-B53
+
+- Enable CPU errata workarounds for Qualcomm Hydra/Kryo CPUs
+
+- Fix initial dirty status of writeable, shared mappings
+
+----------------------------------------------------------------
+Bjorn Andersson (2):
+      arm64: cpufeature: Enable Qualcomm Falkor/Kryo errata 1003
+      arm64: cpufeature: Enable Qualcomm Falkor errata 1009 for Kryo
+
+Catalin Marinas (1):
+      arm64: Ensure VM_WRITE|VM_SHARED ptes are clean by default
+
+Doug Berger (1):
+      arm64: apply ARM64_ERRATUM_845719 workaround for Brahma-B53 core
+
+Florian Fainelli (2):
+      arm64: Brahma-B53 is SSB and spectre v2 safe
+      arm64: apply ARM64_ERRATUM_843419 workaround for Brahma-B53 core
+
+ Documentation/arm64/silicon-errata.rst |  7 +++-
+ arch/arm64/include/asm/cputype.h       |  2 ++
+ arch/arm64/include/asm/pgtable-prot.h  | 15 +++++----
+ arch/arm64/kernel/cpu_errata.c         | 59 +++++++++++++++++++++++++++-------
+ 4 files changed, 64 insertions(+), 19 deletions(-)
