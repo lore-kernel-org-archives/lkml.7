@@ -2,104 +2,159 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E341CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B51CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E0421734
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:24:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="GpVrTIU9"
+	by mail.kernel.org (Postfix) with ESMTP id 2B3DD21855
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:25:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572636302;
+	bh=dOxETrrx9e62OuVNxLdqpWdtW436erq1Fp0byfEZcow=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uCkAswd1SqBRKluFGdvxpgIki/yMar3nN7YbYCpVxLfigB/bhzrv7PcR625Xz93Dc
+	 gV5zVUN+Zo13CzcNBSTa+ef/HWtUx/dSPCIkC2VNUXkqx2O9F19AuYpOhs8NYlR+NG
+	 sqdGw1U94pZ4jeZZ9J7JIMFFeTRdjxLaAO1h+mX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbfKATYL (ORCPT
+        id S1727809AbfKATZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 15:24:11 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34926 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727659AbfKATYL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 15:24:11 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 8so2972420wmo.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 12:24:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1wEIO/2YiEoRoYoTOxS9UGohqBdoKl+fmZ2tHjySO14=;
-        b=GpVrTIU9RaUx/M7L1qvoh0UVu6B13MdTGeuB+rZDPyyv9VjXHehuBDXTlap5rRupNp
-         dDeV7/gWPljqzbZj29H07br6CXEpXan3xPKO0QhnYsbBM6m3gKaUZtOiDWjur++xSx3e
-         oLZJ3uQrsc6oiP+ozeM76ZB3oKbMz7Ql7/y7Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1wEIO/2YiEoRoYoTOxS9UGohqBdoKl+fmZ2tHjySO14=;
-        b=bLy8aba4QvHLz4u8oEXfIP2l3QKQLyzITIas/ADO3U1cxQGy5W08djPLwiLbZP2dBf
-         vhSHmXuJwo+i3C3jz/tm0oVNUSGX9DikCs7OusHXQpya9M59JKO+nQPnHXehf489xmto
-         UFXM0Z3ud5kbgYZkLUwcu5cPJ1UuLdGWqmezGGP5M+ul6cqdi8xVKNSf1idr3jUt11Sb
-         81h6MwO1x/Jq85V+PKuAQvLDDgIlW9N2YoXWavZAe5Rd4B1crop4Kz27SIUHXw67LXud
-         cucTeHEDF5j5Oqb113KlE0xmPp+D0LKl5YfU4jogxpLX73ELUHejj51nM+k3Wsi3RgMK
-         F7/Q==
-X-Gm-Message-State: APjAAAVxCkpLbus+U+/t8QJmMTg9Ij5RaSjtQtehaDJALrw+A2GMhHvX
-        otMHbr7VX+NrijG9J7IAzF0ZyFOJVV2qtQ==
-X-Google-Smtp-Source: APXvYqzhKELOJ9RzQ6qVqVkh8P/JQygqBphv8Nlt3tcnzxK6/UnOX5ZOkEBbTTEJb3+VnPupOp1Utw==
-X-Received: by 2002:a1c:6144:: with SMTP id v65mr11972251wmb.53.1572636247197;
-        Fri, 01 Nov 2019 12:24:07 -0700 (PDT)
-Received: from localhost ([89.32.122.5])
-        by smtp.gmail.com with ESMTPSA id 11sm9025390wmb.34.2019.11.01.12.24.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 12:24:06 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 19:24:05 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH] kernel: sysctl: make drop_caches write-only
-Message-ID: <20191101192405.GA866154@chrisdown.name>
-References: <20191031221602.9375-1-hannes@cmpxchg.org>
- <20191031162825.a545a5d4d8567368501769bd@linux-foundation.org>
- <20191101110901.GB690103@chrisdown.name>
- <20191101144540.GA12808@cmpxchg.org>
- <20191101115950.bb88d49849bfecb1af0a88bf@linux-foundation.org>
+        Fri, 1 Nov 2019 15:25:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727756AbfKATZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 15:25:00 -0400
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DE2821D7C
+        for <linux-kernel@vger.kernel.org>; Fri,  1 Nov 2019 19:24:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572636298;
+        bh=dOxETrrx9e62OuVNxLdqpWdtW436erq1Fp0byfEZcow=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UiH3+TX53xDLOWupQDLxho31QSei6aWT//MnPJdr+9M6HGoyhNYrmwgI8tfUlGvZq
+         mRvjd7CK36qa44Q6wG98AzvO/oINih7ImEeYxCO04X+iavop/qPFbpdr+1X1yul6GP
+         aO2Ltp90viUC0jyqrYYpOhwqu7WGHsPItFV8F08s=
+Received: by mail-wr1-f52.google.com with SMTP id n1so10624255wra.10
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 12:24:58 -0700 (PDT)
+X-Gm-Message-State: APjAAAX/uE5PJM4lyrZ48wJz/GDiyQc1hnz28za/xzFa9X5fOO/4lSId
+        1LGVge1zOf4rGpusXIA0/3F6uWunjtmPp6fM7DoHwA==
+X-Google-Smtp-Source: APXvYqztRuGYdGSrXFGiZvNo5ReaB6pDXKbqd8BUA1v5glF47Wm2wgWyf4VvXKP4u5dgqsy951b8SvEzfrSpHOqYlDw=
+X-Received: by 2002:a5d:51c2:: with SMTP id n2mr11780810wrv.149.1572636296663;
+ Fri, 01 Nov 2019 12:24:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191101115950.bb88d49849bfecb1af0a88bf@linux-foundation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <157262960837.2838.17520432516398899751.stgit@naples-babu.amd.com>
+ <157262962352.2838.15656190309312238595.stgit@naples-babu.amd.com>
+ <CALMp9eQT=a99YhraQZ+awMKOWK=3tg=m9NppZnsvK0Q1PWxbAw@mail.gmail.com> <669031a1-b9a6-8a45-9a05-a6ce5fb7fa8b@amd.com>
+In-Reply-To: <669031a1-b9a6-8a45-9a05-a6ce5fb7fa8b@amd.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 1 Nov 2019 12:24:45 -0700
+X-Gmail-Original-Message-ID: <CALCETrXdo2arN=s9Bt1LmYkPajcBj1NuTPC8dwuw2mMZqT0tRw@mail.gmail.com>
+Message-ID: <CALCETrXdo2arN=s9Bt1LmYkPajcBj1NuTPC8dwuw2mMZqT0tRw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] kvm: svm: Enable UMIP feature on AMD
+To:     "Moger, Babu" <Babu.Moger@amd.com>
+Cc:     Jim Mattson <jmattson@google.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "nayna@linux.ibm.com" <nayna@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew Morton writes:
->> > The only scenario I can construct in my head is that someone has built
->> > something to watch drop_caches for modification, but we already have the
->> > kmsg output for that.
+On Fri, Nov 1, 2019 at 12:20 PM Moger, Babu <Babu.Moger@amd.com> wrote:
 >
->The scenario is that something opens /proc/sys/vm/drop_caches for
->reading, gets unexpected EPERM and blows up?
+>
+>
+> On 11/1/19 1:29 PM, Jim Mattson wrote:
+> > On Fri, Nov 1, 2019 at 10:33 AM Moger, Babu <Babu.Moger@amd.com> wrote:
+> >>
+> >> AMD 2nd generation EPYC processors support UMIP (User-Mode Instruction
+> >> Prevention) feature. The UMIP feature prevents the execution of certain
+> >> instructions if the Current Privilege Level (CPL) is greater than 0.
+> >> If any of these instructions are executed with CPL > 0 and UMIP
+> >> is enabled, then kernel reports a #GP exception.
+> >>
+> >> The idea is taken from articles:
+> >> https://lwn.net/Articles/738209/
+> >> https://lwn.net/Articles/694385/
+> >>
+> >> Enable the feature if supported on bare metal and emulate instructions
+> >> to return dummy values for certain cases.
+> >>
+> >> Signed-off-by: Babu Moger <babu.moger@amd.com>
+> >> ---
+> >>  arch/x86/kvm/svm.c |   21 ++++++++++++++++-----
+> >>  1 file changed, 16 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> >> index 4153ca8cddb7..79abbdeca148 100644
+> >> --- a/arch/x86/kvm/svm.c
+> >> +++ b/arch/x86/kvm/svm.c
+> >> @@ -2533,6 +2533,11 @@ static void svm_decache_cr4_guest_bits(struct kvm_vcpu *vcpu)
+> >>  {
+> >>  }
+> >>
+> >> +static bool svm_umip_emulated(void)
+> >> +{
+> >> +       return boot_cpu_has(X86_FEATURE_UMIP);
+> >> +}
+> >
+> > This makes no sense to me. If the hardware actually supports UMIP,
+> > then it doesn't have to be emulated.
+> My understanding..
+>
+> If the hardware supports the UMIP, it will generate the #GP fault when
+> these instructions are executed at CPL > 0. Purpose of the emulation is to
+> trap the GP and return a dummy value. Seems like this required in certain
+> legacy OSes running in protected and virtual-8086 modes. In long mode no
+> need to emulate. Here is the bit explanation https://lwn.net/Articles/738209/
+>
 
-Right, but...
+Indeed.  Again, what does this have to do with your patch?
 
->OK.  What if we make reads always return "0"?  That will fix the
->misleading output and is more backwards-compatible?
+>
+> >
+> > To the extent that kvm emulates UMIP on Intel CPUs without hardware
+> > UMIP (i.e. smsw is still allowed at CPL>0), we can always do the same
+> > emulation on AMD, because SVM has always offered intercepts of sgdt,
+> > sidt, sldt, and str. So, if you really want to offer this emulation on
+> > pre-EPYC 2 CPUs, this function should just return true. But, I have to
+> > ask, "why?"
+>
+>
+> Trying to support UMIP feature only on EPYC 2 hardware. No intention to
+> support pre-EPYC 2.
+>
 
-...I'm not convinced that if an application has no error boundary for that 
-EPERM that it can tolerate a change in behaviour, either. I mean, if it's 
-opening it at all, presumably it intends to do *something* based on the value 
-(regardless of import or lack thereof). It may do nothing, but it's not 
-possible to know whether that's better or worse than blowing up.
+I think you need to totally rewrite your changelog to explain what you
+are doing.
 
-I have mixed feelings on this one. Pragmatically, as someone who programs in 
-userspace, I'd like failures based on changes in infrastructure to be loud, not 
-silent. If I'm doing something which doesn't work, I'd like to know about it. 
-Of course, one can make the argument that as a user of such an application, 
-sometimes you don't have that luxury.
+As I understand it, there are a couple of things KVM can do:
 
-Either change is an upgrade from the current situation, at least. I prefer 
-towards whatever makes the API the least confusing, which appears to be 
-Johannes' original change, but I'd support a patch which always set it to 
-0 instead if it was deemed safer.
+1. If the underlying hardware supports UMIP, KVM can expose UMIP to
+the guest.  SEV should be irrelevant here.
+
+2. Regardless of whether the underlying hardware supports UMIP, KVM
+can try to emulate UMIP in the guest.  This may be impossible if SEV
+is enabled.
+
+Which of these are you doing?
