@@ -2,192 +2,109 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ABACA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E19CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51BA52067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0580C217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 12:35:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MRvHRHn8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6DPO1+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729960AbfKAMef (ORCPT
+        id S1730179AbfKAMfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 08:34:35 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49890 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726229AbfKAMef (ORCPT
+        Fri, 1 Nov 2019 08:35:14 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38837 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfKAMfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 08:34:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572611673;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Blgz1QDlbrX4CFcoZXAgNrnij3Ts9PT2qjsZuUJOKd4=;
-        b=MRvHRHn8eBtStDNvADnO8LyqVs1hHvYfshdBusObc4qkB6WwppDdZSkAZJtSkKGrBldq7u
-        muIdljDhcO/5sixyWSK+E+G2KP4QKnVEWWlM1quNYt1zKfkSPn50k3ptP8Iqn00RDC1LS/
-        qCgdG37LO3M/97jY6dA2KkqMe3H1+9k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-155-QADGKEzYOKOPHVxH7fQt-A-1; Fri, 01 Nov 2019 08:33:05 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 86BE9800683;
-        Fri,  1 Nov 2019 12:33:02 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 113F75D9CD;
-        Fri,  1 Nov 2019 12:32:59 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri,  1 Nov 2019 13:33:00 +0100 (CET)
-Date:   Fri, 1 Nov 2019 13:32:57 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-api@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] clone3: validate stack arguments
-Message-ID: <20191101123257.GA508@redhat.com>
-References: <20191031113608.20713-1-christian.brauner@ubuntu.com>
- <20191031164653.GA24629@redhat.com>
- <20191101110639.icbfihw3fk2nzz4o@wittgenstein>
+        Fri, 1 Nov 2019 08:35:13 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c13so6984491pfp.5;
+        Fri, 01 Nov 2019 05:35:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=JrQpRLrI0AXjDn7h5/imwTuVbTmOR/egWWcExOPFss8=;
+        b=c6DPO1+dJWaR5QwK5nITdiQa2VSCzKU0UJyzM52uZfJImnUT8znF/v1Z7fehu7ljzX
+         O6Ip6olUXWGHvKGJubiCywGulBq2cwaG1/GdUjlFMUYp1dVqrvI+47su7liqpbLo9Y/c
+         kVhIIexHaGvj7SIEEho4OEFnFBe59YCzC7m7g9SPFUwDTYM+ngM1dkB5goMnyD3/jDue
+         GWGh9bmQtv0XtdEScK9NTd6Ja5sXhF5Pz/s2NIfnr9la7/UAPlWpEXhotxVblLNrT9Sh
+         8xMGgDKVtRPU096775ABViaSa9SQOhh1AmN+ZbPpKFSkHW4ey8cSiaJscwcuMPFfn+8o
+         LU1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=JrQpRLrI0AXjDn7h5/imwTuVbTmOR/egWWcExOPFss8=;
+        b=TNSPv/h2NAeOirwv6Y/441UsadGIGRp0ZcCBawzxoe7MjM/cGfaVTBhANglxMZxw7X
+         z1ztZ43QkELTsmPDpHOmBDCMsmCO4RiNehViBwh3Uz8s2n0rPhqTVhuN4flez5c57dyj
+         1pk9hBPAwS+6ykuUvqbAKjiC4+GMix2jSFC3q2TUc7VXyAakr25WJhHXlEtbEV2zwQBZ
+         3KJdRVQyDTLnYkdtD0CUpTFrmzuCiteMgqorcbb3vmARxD1E/AXjvpACU56RWPZ37zm8
+         sJQFsZ4BOMfYrypg0bUHYBeVTbenvziz5GvfY7XV2eizPsUR6mjuiT821C65BP9TqPfu
+         k+MQ==
+X-Gm-Message-State: APjAAAWOQexuLPBlG8H/pC5PiDVzbvEpsMZVXWx6IKt6Zy3wARfDHKB6
+        0K+J9DHXlm7EKpFSHKBDZBM=
+X-Google-Smtp-Source: APXvYqwchZ6piwRCYF/jZ4yGwFTa6igUGC6aCHKEwPMGqPkQaHu6ZhJXRtktRNJlTRM0R8WwMaIlgA==
+X-Received: by 2002:a63:7247:: with SMTP id c7mr13095692pgn.311.1572611711190;
+        Fri, 01 Nov 2019 05:35:11 -0700 (PDT)
+Received: from saurav ([117.232.233.44])
+        by smtp.gmail.com with ESMTPSA id q23sm7703887pjd.2.2019.11.01.05.35.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 05:35:10 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 18:05:03 +0530
+From:   Saurav Girepunje <saurav.girepunje@gmail.com>
+To:     mikecyr@linux.ibm.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     saurav.girepunje@hotmail.com
+Subject: [PATCH] scsi: ibmvscsi_tgt: Remove unneeded variable rc
+Message-ID: <20191101120407.GA9369@saurav>
 MIME-Version: 1.0
-In-Reply-To: <20191101110639.icbfihw3fk2nzz4o@wittgenstein>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: QADGKEzYOKOPHVxH7fQt-A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/01, Christian Brauner wrote:
->
-> On Thu, Oct 31, 2019 at 05:46:53PM +0100, Oleg Nesterov wrote:
-> > On 10/31, Christian Brauner wrote:
-> > >
-> > > --- a/include/uapi/linux/sched.h
-> > > +++ b/include/uapi/linux/sched.h
-> > > @@ -51,6 +51,10 @@
-> > >   *               sent when the child exits.
-> > >   * @stack:       Specify the location of the stack for the
-> > >   *               child process.
-> > > + *               Note, @stack is expected to point to the
-> > > + *               lowest address. The stack direction will be
-> > > + *               determined by the kernel and set up
-> > > + *               appropriately based on @stack_size.
-> >
-> > I can't review this patch, I have no idea what does stack_size mean
-> > if !arch/x86.
->
-> In short: nothing at all if it weren't for ia64 (and maybe parisc).
-> But let me provide some (hopefully useful) context.
+Variable rc is not modified in ibmvscsis_srp_i_logout function.
+So remove unneeded variable rc.
 
-Thanks...
+Issue found using coccicheck tool.
 
-> (Probably most of
-> that is well-know,
+Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+---
+ drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Certainly not to me ;) Thanks.
-
-> > > +static inline bool clone3_stack_valid(struct kernel_clone_args *karg=
-s)
-> > > +{
-> > > +=09if (kargs->stack =3D=3D 0) {
-> > > +=09=09if (kargs->stack_size > 0)
-> > > +=09=09=09return false;
-> > > +=09} else {
-> > > +=09=09if (kargs->stack_size =3D=3D 0)
-> > > +=09=09=09return false;
-> >
-> > So to implement clone3_wrapper(void *bottom_of_stack) you need to do
-> >
-> > =09clone3_wrapper(void *bottom_of_stack)
-> > =09{
-> > =09=09struct clone_args args =3D {
-> > =09=09=09...
-> > =09=09=09// make clone3_stack_valid() happy
-> > =09=09=09.stack =3D bottom_of_stack - 1,
-> > =09=09=09.stack_size =3D 1,
-> > =09=09};
-> > =09}
-> >
-> > looks a bit strange. OK, I agree, this example is very artificial.
-> > But why do you think clone3() should nack stack_size =3D=3D 0 ?
->
-> In short, consistency.
-
-And in my opinion this stack_size =3D=3D 0 check destroys the consistency,
-see below.
-
-But just in case, let me say that overall I personally like this change.
-
-> The best thing imho, is to clearly communicate to userspace that stack
-> needs to point to the lowest address and stack_size to the initial range
-> of the stack pointer
-
-Agreed.
-
-But the kernel can't verify that "stack" actually points to the lowest
-address and stack_size is actually the stack size. Consider another
-artificial
-
-    =09clone3_wrapper(void *bottom_of_stack, unsigned long offs)
-    =09{
-    =09=09struct clone_args args =3D {
-    =09=09=09...
-    =09=09=09// make clone3_stack_valid() happy
-    =09=09=09.stack =3D bottom_of_stack - offs,
-    =09=09=09.stack_size =3D offs,
-    =09=09};
-    =09=09sys_clone3(args);
-    =09}
-=09
-Now,
-
-=09clone3_wrapper(bottom_of_stack, offs);
-
-is same thing for _any_ offs except offs =3D=3D 0 will fail. Why? To me thi=
-s
-is not consistent, I think the "stack_size =3D=3D 0" check buys nothing and
-only adds some confusion.
-
-Say, stack_size =3D=3D 1 is "obviously wrong" too, this certainly means tha=
-t
-"stack" doesn't point to the lowest address (or the child will corrupt the
-memory), but it works.
-
-OK, I won't insist. Perhaps it can help to detect the case when a user
-forgets to pass the correct stack size.
-
-> > > +=09=09if (!access_ok((void __user *)kargs->stack, kargs->stack_size)=
-)
-> > > +=09=09=09return false;
-> >
-> > Why?
->
-> It's nice of us to tell userspace _before_ we have created a thread that
-> it messed up its parameters instead of starting a thread that then
-> immediately crashes.
-
-Heh. Then why this code doesn't verify that at least stack + stack_size is
-properly mmaped with PROT_READ|WRITE?
-
-Oleg.
+diff --git a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
+index 7f9535392a93..09a4dbd0a9e5 100644
+--- a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
++++ b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
+@@ -2353,7 +2353,6 @@ static long ibmvscsis_srp_i_logout(struct scsi_info *vscsi,
+ {
+ 	struct iu_entry *iue = cmd->iue;
+ 	struct srp_i_logout *log_out = &vio_iu(iue)->srp.i_logout;
+-	long rc = ADAPT_SUCCESS;
+ 
+ 	if ((vscsi->debit > 0) || !list_empty(&vscsi->schedule_q) ||
+ 	    !list_empty(&vscsi->waiting_rsp)) {
+@@ -2369,7 +2368,7 @@ static long ibmvscsis_srp_i_logout(struct scsi_info *vscsi,
+ 		ibmvscsis_post_disconnect(vscsi, WAIT_IDLE, 0);
+ 	}
+ 
+-	return rc;
++	return ADAPT_SUCCESS;
+ }
+ 
+ /* Called with intr lock held */
+-- 
+2.20.1
 
