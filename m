@@ -2,160 +2,117 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27039CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31380CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE05217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:47:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572641237;
-	bh=SSkz3soRV0jdoMV7GQDwd9LGZExhDp/y3PEYxGNxQLY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LGix5uRBXy/wFaACPHjO44+0WUYi8xXaAC0NRbjRe7Yh+WyDTjXd7J1clKw5GY6n9
-	 NykcrkuuQGOYrYPRky6WHMiwIPSkKKILkZ6x2ykcXVsNibjLO525rA3OFS8+klCnBB
-	 +CWXt29ildg+LJqd2PsjFPzGZ383+rd6pv/6IbE4=
+	by mail.kernel.org (Postfix) with ESMTP id 029F3217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:48:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMMrN5Nw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbfKAUrP (ORCPT
+        id S1728115AbfKAUsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 16:47:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727517AbfKAUrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 16:47:15 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92699217D9;
-        Fri,  1 Nov 2019 20:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572641234;
-        bh=SSkz3soRV0jdoMV7GQDwd9LGZExhDp/y3PEYxGNxQLY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jVoqK4iZZstPIyuKWWbEFzDm5toz63GhaArRo3fr0RbJXH38Yu90S9QnQSeUZp6GA
-         MgdvB+9y8GOV1FAak3eTcsrCsba1SSCPxlKZi7t+7jD/9iLHwppKo5bZr51OX1xpy6
-         Fu+YQ3KiBQrIL4hnYEg/sHXAI7x9oRodQwIWxgyY=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 6/6] PCI/PM: Remove unused pci_driver.suspend_late() hook
-Date:   Fri,  1 Nov 2019 15:45:58 -0500
-Message-Id: <20191101204558.210235-7-helgaas@kernel.org>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-In-Reply-To: <20191101204558.210235-1-helgaas@kernel.org>
-References: <20191101204558.210235-1-helgaas@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 1 Nov 2019 16:48:08 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36754 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbfKAUsH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 16:48:07 -0400
+Received: by mail-qt1-f194.google.com with SMTP id y10so7903772qto.3;
+        Fri, 01 Nov 2019 13:48:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=WbkXhr26XYd0AF1obLB0bhvMsDV/wAE5Um2xcjbSmZc=;
+        b=dMMrN5NwUAfFqcKZvrysRquTSCfuaSsDXyTxAWMZOy1ARvC44afagLZJAKMyUj9dnE
+         tK932SpxQ50JIlOTYp1kyVc3OEUnsJwnmesCypbWKzRx5WxJfN1ME0quDebrSSCqBxhu
+         wYtTDkTdbCpDIdRBj5jFpN+rC76uLDklNPICXZ6301MTj+k+4VJYW0IhFDfHqZR15Gep
+         q1SzSrwkZ/4b7HqwnfKXzfQWTADGlsBgt9nCsHHwCuiiMhQLBoVrfVKzzY1O3sSA4qyg
+         cl6teHpl2ZqolYhDt6myjMFHk/bAtERcPeh7738ZLUQlFkrihXpuTCR3hvXdL4vnZ1Zj
+         LDIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=WbkXhr26XYd0AF1obLB0bhvMsDV/wAE5Um2xcjbSmZc=;
+        b=KX6yGZ3M+iT9jH8glzxeFSD9xMbQ+fno1CWMAFUpGe/rETlXoXffzATJ5TF3jpQ1/J
+         HimIhtx+KfJM3mDKVVtkupXGD888uCzEbze19M6JSAyCj4k3IXBM0LNny9FpJO0v16PO
+         g5Rc/yHmShlhRD+LoegGqxNhvgt7L7lzgIoLs0jDguXVkxSJhMbuXZuDOfKCtyVkBCke
+         3NYlHNo5lzcOu3Af0O+glwMffsxD5AG8IDbqdaIeRicTK3beSbSUns4HP7eRU5BjDL36
+         5lckgPY4lhfuqizA1g8xffxPpag7/a4r83kdrVGhLnn5obzO4dFNamaPD9HUbfC23Z96
+         Tk6Q==
+X-Gm-Message-State: APjAAAVGd7QWB52Zw1i8UOZXp0X6LPuRfdlQhPkx+/bJ64wv0fS87pwR
+        81jpCxiY6PqGLVKCuTSO9jo=
+X-Google-Smtp-Source: APXvYqyBDrpn/qo4CHUifK6KNQhm/sqT8FvN6KY9uvEIL5he7EJl0ACsDZ6k6LH32r1dU0cnXyBGAA==
+X-Received: by 2002:ad4:4489:: with SMTP id m9mr12256740qvt.126.1572641286301;
+        Fri, 01 Nov 2019 13:48:06 -0700 (PDT)
+Received: from svens-asus.arcx.com ([184.94.50.30])
+        by smtp.gmail.com with ESMTPSA id e3sm3818162qkg.136.2019.11.01.13.48.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 13:48:05 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Marek Vasut <marex@denx.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Adam Ford <aford173@gmail.com>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] Input: ili210x - add ILI2117 support
+Date:   Fri,  1 Nov 2019 16:48:01 -0400
+Message-Id: <20191101204801.16328-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190302141704.32547-1-marex@denx.de>
+References: <20190302141704.32547-1-marex@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+Dmitry / Marek,
 
-The struct pci_driver.suspend_late() hook is one of the legacy PCI power
-management callbacks, and there are no remaining users of it.  Remove it.
+There have been two attempts to add ILI2117 touch controller support.
+I was about to add a third, but luckily I checked the mailing list
+before writing any code :)
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- Documentation/power/pci.rst | 10 +++++-----
- drivers/pci/pci-driver.c    | 22 +---------------------
- include/linux/pci.h         |  2 --
- 3 files changed, 6 insertions(+), 28 deletions(-)
+Adding this support would clearly be beneficial for the common good.
+What can we do to get this in motion again?
 
-diff --git a/Documentation/power/pci.rst b/Documentation/power/pci.rst
-index ff7029b94068..0924d29636ad 100644
---- a/Documentation/power/pci.rst
-+++ b/Documentation/power/pci.rst
-@@ -692,11 +692,11 @@ controlling the runtime power management of their devices.
- At the time of this writing there are two ways to define power management
- callbacks for a PCI device driver, the recommended one, based on using a
- dev_pm_ops structure described in Documentation/driver-api/pm/devices.rst, and
--the "legacy" one, in which the .suspend(), .suspend_late(), and
--.resume() callbacks from struct pci_driver are used.  The legacy approach,
--however, doesn't allow one to define runtime power management callbacks and is
--not really suitable for any new drivers.  Therefore it is not covered by this
--document (refer to the source code to learn more about it).
-+the "legacy" one, in which the .suspend() and .resume() callbacks from struct
-+pci_driver are used.  The legacy approach, however, doesn't allow one to define
-+runtime power management callbacks and is not really suitable for any new
-+drivers.  Therefore it is not covered by this document (refer to the source code
-+to learn more about it).
- 
- It is recommended that all PCI device drivers define a struct dev_pm_ops object
- containing pointers to power management (PM) callbacks that will be executed by
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index fc372c2d529a..e89fd90eaa93 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -599,32 +599,12 @@ static int pci_legacy_suspend(struct device *dev, pm_message_t state)
- static int pci_legacy_suspend_late(struct device *dev, pm_message_t state)
- {
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
--	struct pci_driver *drv = pci_dev->driver;
--
--	if (drv && drv->suspend_late) {
--		pci_power_t prev = pci_dev->current_state;
--		int error;
--
--		error = drv->suspend_late(pci_dev, state);
--		suspend_report_result(drv->suspend_late, error);
--		if (error)
--			return error;
--
--		if (!pci_dev->state_saved && pci_dev->current_state != PCI_D0
--		    && pci_dev->current_state != PCI_UNKNOWN) {
--			pci_WARN_ONCE(pci_dev, pci_dev->current_state != prev,
--				      "PCI PM: Device state not saved by %pS\n",
--				      drv->suspend_late);
--			goto Fixup;
--		}
--	}
- 
- 	if (!pci_dev->state_saved)
- 		pci_save_state(pci_dev);
- 
- 	pci_pm_set_unknown_state(pci_dev);
- 
--Fixup:
- 	pci_fixup_device(pci_fixup_suspend_late, pci_dev);
- 
- 	return 0;
-@@ -653,7 +633,7 @@ static void pci_pm_default_suspend(struct pci_dev *pci_dev)
- static bool pci_has_legacy_pm_support(struct pci_dev *pci_dev)
- {
- 	struct pci_driver *drv = pci_dev->driver;
--	bool ret = drv && (drv->suspend || drv->suspend_late || drv->resume);
-+	bool ret = drv && (drv->suspend || drv->resume);
- 
- 	/*
- 	 * Legacy PM support is used by default, so warn if the new framework is
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index dd4596fc1208..9b0e35e09874 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -805,7 +805,6 @@ struct module;
-  *		The remove function always gets called from process
-  *		context, so it can sleep.
-  * @suspend:	Put device into low power state.
-- * @suspend_late: Put device into low power state.
-  * @resume:	Wake device from low power state.
-  *		(Please see Documentation/power/pci.rst for descriptions
-  *		of PCI Power Management and the related functions.)
-@@ -828,7 +827,6 @@ struct pci_driver {
- 	int  (*probe)(struct pci_dev *dev, const struct pci_device_id *id);	/* New device inserted */
- 	void (*remove)(struct pci_dev *dev);	/* Device removed (NULL if not a hot-plug capable driver) */
- 	int  (*suspend)(struct pci_dev *dev, pm_message_t state);	/* Device suspended */
--	int  (*suspend_late)(struct pci_dev *dev, pm_message_t state);
- 	int  (*resume)(struct pci_dev *dev);	/* Device woken up */
- 	void (*shutdown)(struct pci_dev *dev);
- 	int  (*sriov_configure)(struct pci_dev *dev, int num_vfs); /* On PF */
--- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
+Last time I checked, Marek posted a patch which added the 2117, but Dmitry
+objected, because the code became too unwieldy. Dmitry then posted a cleanup
+patch, which did not work for Marek. So everything came to a halt.
+See:
+https://patchwork.kernel.org/patch/10836651/
+https://www.spinics.net/lists/linux-input/msg62670.html
 
+Dmitry, would you perhaps be willing to accept Marek's patch, and perform the
+cleanup later?
+
+Marek, would you perhaps be willing to invest some time to debug Dmitry's
+cleanup patch?
+
+On my end, I've reviewed Dmitry's patch and it looks mostly ok. I saw one
+difference with ILI210X which could explain Marek's results, but I can't be
+sure - because I could not locate the 210X's register layout on the web.
+
+In Dmitry's patch, we see:
+
+	touch = ili210x_report_events(priv, touchdata);
+	if (touch || chip->continue_polling(touchdata))
+		schedule_delayed_work(&priv->dwork,
+				      msecs_to_jiffies(priv->poll_period));
+
+but this is not exactly equivalent to the original. Because in the original,
+the 210X's decision to kick off delayed work is completely independent of
+the value of touch.
+
+Suggested replacement:
+
+	touch = ili210x_report_events(priv, touchdata);
+	if (chip->continue_polling)
+		touch = chip->continue_polling(touchdata);
+
+Sven
