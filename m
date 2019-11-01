@@ -2,99 +2,120 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D67CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A62CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E242086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B672086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:21:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I3SMuVHn"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qVlDmf1e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfKASVV (ORCPT
+        id S1727351AbfKASVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 14:21:21 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33675 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726498AbfKASVV (ORCPT
+        Fri, 1 Nov 2019 14:21:46 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38342 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726498AbfKASVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 14:21:21 -0400
-Received: by mail-qk1-f193.google.com with SMTP id 71so11590942qkl.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 11:21:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xfChniPxmFbZU2S4qrE7c3GqiFqrYlUdrzoxXGWQIRg=;
-        b=I3SMuVHnefRGev7pKBa/p/vIdpNEst8AexAfUrQVntypTFJVSOseXJZcgDIgmsGXAu
-         cmQ89JtTQy3tV7nJmJSSSCu2kN5AbiWclNGyInwZ+03vGsEw1Fht3wC53e4eokh/j8Zb
-         JrI0B+PU7qmLMAlxCXiYY3BNoX9XEZZkHyvUEErAI8XoNu4k12MUMDK81fyYkVKRsDf/
-         v3GW+n4KTacJVvKZKAnnUsAmfx8KxoCBiCZBCxf0XGxn/EWOVRDtHsGFN7hwzQXWjAht
-         TJiML7FmEkeePOp6uv6E7gPfPfdrLtkU23vwXgdnNWyy9n5D9Q8/CG/+76SzYZV8eLCL
-         F23Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xfChniPxmFbZU2S4qrE7c3GqiFqrYlUdrzoxXGWQIRg=;
-        b=XReIYmQB3r7ozsHwHxLihXfVgSKD79zISTIUPp/IUs5xvj4KK2NK93zRN/z+po3Kzh
-         if4Q6p7qnBAkY67wEQHaqzhbBJ5XUHMc0wzbEsMT05Rsne3blYwd0qe5FEC6KBkiFvF0
-         d/5+RtwsagH0POJjkE3SS3j7xdySgNfZfQbdHq3WyZSMuTdpmS77C89zII6XNvAdJQwj
-         nIhOt4pg/l166Mt1ozwXt4l+yggyAWgH+84UbSgVXoMJbHzaPF87ijnfpKlmqyWQeHWk
-         8oILywVS2XwIaauyEZofm+LdvdnPX8ypAzq/vnSXVA1pAxGGVB5enAeTt2vbx34kwoIK
-         mMRg==
-X-Gm-Message-State: APjAAAULW496fFiea+cmdzPbGVXTc8sRQ/qLfUwrwwvOWG9WTTHp0P4l
-        hYpyMX443uEynTsoRfG7LvO/ra3m2Es=
-X-Google-Smtp-Source: APXvYqxZY/z0KLt1SybUGNSm28l8yCtxJuvO7dV3LGq7qbkBb//5NCQ5JlrS/35+dRQm18m56FMylg==
-X-Received: by 2002:a37:b046:: with SMTP id z67mr1749300qke.343.1572632480189;
-        Fri, 01 Nov 2019 11:21:20 -0700 (PDT)
-Received: from GBdebian.ic.unicamp.br (wifi-177-220-84-14.wifi.ic.unicamp.br. [177.220.84.14])
-        by smtp.gmail.com with ESMTPSA id x38sm5106688qtc.64.2019.11.01.11.21.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 11:21:19 -0700 (PDT)
-From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-To:     outreachy-kernel@googlegroups.com, manasi.d.navare@intel.com,
-        rodrigosiqueiramelo@gmail.com, hamohammed.sa@gmail.com,
-        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
-        trivial@kernel.org
-Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-Subject: [PATCH] drm/vkms: Fix typo in function documentation
-Date:   Fri,  1 Nov 2019 15:21:02 -0300
-Message-Id: <20191101182102.30358-1-gabrielabittencourt00@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 1 Nov 2019 14:21:46 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA1I9BXQ120184;
+        Fri, 1 Nov 2019 18:21:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=KkJBV1OKZEQpd6p0Z4UlW9v/6UWLZWUIedN3euPfzqM=;
+ b=qVlDmf1e1y4rtEhitO4YdT5duiNCu4M70o7FEu5JUb8kVCkrPpQHyRVkPGIiE+DXx4c5
+ mE9ItAZypqkiY6yyK77fmBaWBgjn2G5HTcGsWSv6v/ariR2MUsfmTFYZyW2UTWx7/9O2
+ XKx2BeGdASQbbdYqEoBnjxVMyzYnMtJ+i2hmPSYN90+e4+J9jiZ/HfRT+VqycyrolwBm
+ AGWLD5CIh33m0ft5etI8hn6IsxpZz2GTM9TeaxCk+9YliinrmFvPeHN2aChFhJ2+uujx
+ o1jGt+QLdWJMwGS1LeuMxQVEgqqKHzVX3vqfDSxzV+Mpu6Y9CweJx9Oj5l5NPtNItrpf nw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2vxwhg3b8p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 01 Nov 2019 18:21:20 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA1I9Q8s013876;
+        Fri, 1 Nov 2019 18:21:19 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2w0qdwrtf5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 01 Nov 2019 18:21:19 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA1ILFrK004326;
+        Fri, 1 Nov 2019 18:21:16 GMT
+Received: from pp-ThinkCentre-M82.us.oracle.com (/10.132.95.199)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 01 Nov 2019 11:21:15 -0700
+From:   Prakash Sangappa <prakash.sangappa@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ebiederm@xmission.com, tglx@linutronix.de, peterz@infradead.org,
+        serge@hallyn.com, prakash.sangappa@oracle.com
+Subject: [RFC PATCH 0/1] CAP_SYS_NICE inside user namespace
+Date:   Fri,  1 Nov 2019 11:18:27 -0700
+Message-Id: <1572632308-7071-1-git-send-email-prakash.sangappa@oracle.com>
+X-Mailer: git-send-email 2.7.4
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9428 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1911010168
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9428 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1911010168
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix typo in word 'blend' in function 'compute_crc' documentation.
+Some of the capabilities(7) which affect system wide resources, are ineffective
+inside user namespaces. This restriction applies even to root user( uid 0)
+from init namespace mapped into the user namespace. One such capability
+is CAP_SYS_NICE which is required to change process priority. As a result of
+which the root user cannot perform operations like increase a process priority
+using -ve nice value or set RT priority on processes inside the user namespace.
+A workaround to deal with this restriction is to use the help of a process /
+daemon running outside the user namespace to change process priority, which is
+a an inconvenience.
 
-Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
----
- drivers/gpu/drm/vkms/vkms_composer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+We could allow these restricted capabilities to take effect only for the root
+user from init namespace mapped inside a user namespace and limit the effect
+with use of cgroups. It would seem reasonable to deal with each of these
+restricted capabilities on a case by case basis and address them. This patch
+is concerning CAP_SYS_NICE capability. The proposal here is to selectively
+allow CAP_SYS_NICE to take effect inside user namespace only for a root user
+mapped from init name space. 
 
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index d5585695c64d..15efccdcce1b 100644
---- a/drivers/gpu/drm/vkms/vkms_composer.c
-+++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -43,7 +43,7 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
- }
- 
- /**
-- * blend - belnd value at vaddr_src with value at vaddr_dst
-+ * blend - blend value at vaddr_src with value at vaddr_dst
-  * @vaddr_dst: destination address
-  * @vaddr_src: source address
-  * @dest_composer: destination framebuffer's metadata
+Which user id gets to map the root user(uid 0) from init namespace inside its
+user namespaces is authorized thru /etc/subuid & /etc/subgid entries. Only
+system admin / root user on the system can add these entries.
+Therefore any ordinary user cannot simply map the root user(uid 0) into
+user namespaces created. Necessary cgroup bandwidth control can be used
+to limit cpu usage for such user namespaces.
+
+The capabilities(7) manpage lists all the operations / system calls that are
+subject to CAP_SYS_NICE capability check. This patch currently allows
+CAP_SYS_NICE to take effect inside a user namespace only for system calls
+affecting process priority. For completeness sake should memory
+operations(migrate_pages(2), move_pages(2), mbind(2)) mentioned in the
+manpage, also be permitted? There are no cgroup controls to limit the effect
+of these memory operations.
+
+Looking for feedback on this approach.
+
+Prakash Sangappa (1):
+  Selectively allow CAP_SYS_NICE capability inside user namespaces
+
+ kernel/sched/core.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
 -- 
-2.20.1
+2.7.4
 
