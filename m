@@ -2,162 +2,279 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F00CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE8CCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84BD6208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:21:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZvFQruI8"
+	by mail.kernel.org (Postfix) with ESMTP id 4ADE820656
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:28:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572622085;
+	bh=ue1u0lvyhFGrMTkob5Dt7SrUYRrkh39+YuCFCdO7eMA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ihQDzrlRKEIfARfQAL5hO77zALJyzLjd9NBoB+VNn2K6o7aW7h3vswXnuzcruP8ys
+	 iT9XbIvJ5xx+XRY/ZP7cJVvySNjEtcwbG0XTvIRCFCuiMjALP88L7LDorwm2hHdUN7
+	 XXGwCozebexqQ+33r/jUob2l7LfnjC1sHjcvMdj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbfKAPVl (ORCPT
+        id S1727629AbfKAP2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 11:21:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35080 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728449AbfKAPVk (ORCPT
+        Fri, 1 Nov 2019 11:28:02 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41631 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727308AbfKAP2C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 11:21:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572621699;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WDYGxxA/KgrYN0QEUL49MfltlmEWA16vt4MxjEs1+6E=;
-        b=ZvFQruI8L0LIc8Abg9nge7/YYc2CgXmrxcQ0E2Arp63U/CUqj+BsVzHQAr6GB4JTyCldVV
-        j4MKTv9MX0U/UDN0bU8JLz8ghEDVYN+Ur2jmwn+B/N3pHiKsNYeOESlaCrzAp+Tcfbv0ra
-        e8gHd21V2VgXboUFC5QAXvJTsP042Cw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-253-i5RvBvQWOlyITqFctoslYg-1; Fri, 01 Nov 2019 11:21:33 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4EE31005500;
-        Fri,  1 Nov 2019 15:21:31 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 82BD619C58;
-        Fri,  1 Nov 2019 15:21:21 +0000 (UTC)
-Date:   Fri, 1 Nov 2019 11:21:18 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Steve Grubb <sgrubb@redhat.com>
-Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Subject: Re: [PATCH ghak90 V7 20/21] audit: add capcontid to set contid
- outside init_user_ns
-Message-ID: <20191101152118.mi2svoringtrdskv@madcap2.tricolour.ca>
-References: <cover.1568834524.git.rgb@redhat.com>
- <3677995.NTHC7m0fHc@x2>
- <20191101150927.c5sf3n5ezfg2eano@madcap2.tricolour.ca>
- <1592218.lpl3eoh2c6@x2>
+        Fri, 1 Nov 2019 11:28:02 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a21so7820328edj.8;
+        Fri, 01 Nov 2019 08:28:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/NDrXUcKJ7/8F/Y/hMevpGshYdNpAqX9Q9Po/a2HHFU=;
+        b=sUOzVhtQocv5pfp9i1AnDEhFCeZazsN4amRqIg4MZp/mCyXVRM3InGwd3tOy6eY1rl
+         4/uln9q0KOZ+FVV9XQwx5mU4dE8rglkFOxlE3f1fpFnNXnBozb80SYC0fP3GgCFjUkTX
+         H7Vm+jR4aUd/YPUMRwbSsg5q1pTBmMqc51VOzDFFSUFwqdQbh/YMsMPFdSmC6RARIcTc
+         3iqWWy7qZCjYc+/578iGwnHG0eHEmRhsHjmTdY+BfcFX7IEGGBKV/wbEX5Bgmlfg37j0
+         y4vCnW5zqUNhIT/V0ouPqRcA89H+L6nmPLXxCFxH6MLuOdKFsIc2jkKg/51yscQalTAs
+         sx0g==
+X-Gm-Message-State: APjAAAXb7xQyqtPV7fO5klAENMADll0DLyorkRP+Hea1lSj2I9RVaETT
+        TCyqKavgwzQjPqh/rL8OId89WzqR
+X-Google-Smtp-Source: APXvYqxv92IajGpVuJNmou4pi/RvjIctHN/Z9uqKoJY2ORRfop0PfmLD8aDVPmlhQFctKWT7tl5IzQ==
+X-Received: by 2002:a17:906:218a:: with SMTP id 10mr10267550eju.38.1572622079111;
+        Fri, 01 Nov 2019 08:27:59 -0700 (PDT)
+Received: from pi3 ([194.230.155.180])
+        by smtp.googlemail.com with ESMTPSA id nq2sm39225ejb.43.2019.11.01.08.27.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 08:27:57 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 16:27:55 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
+        lee.jones@linaro.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/4] power: supply: max17040: Config alert SOC low
+ level threshold from FDT
+Message-ID: <20191101152755.GC28931@pi3>
+References: <CAJKOXPdCtbsPaAgYp5iVBhkAsjXzOYWwttQBptgiUgzhbKi09w@mail.gmail.com>
+ <20191031184134.30621-1-matheus@castello.eng.br>
+ <20191031184134.30621-4-matheus@castello.eng.br>
 MIME-Version: 1.0
-In-Reply-To: <1592218.lpl3eoh2c6@x2>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: i5RvBvQWOlyITqFctoslYg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20191031184134.30621-4-matheus@castello.eng.br>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-01 11:13, Steve Grubb wrote:
-> On Friday, November 1, 2019 11:09:27 AM EDT Richard Guy Briggs wrote:
-> > On 2019-10-31 10:50, Steve Grubb wrote:
-> > > Hello,
-> > >=20
-> > > TLDR;  I see a lot of benefit to switching away from procfs for setti=
-ng
-> > > auid & sessionid.
-> > >=20
-> > > On Wednesday, October 30, 2019 6:03:20 PM EDT Richard Guy Briggs wrot=
-e:
-> > > > > Also, for the record, removing the audit loginuid from procfs is =
-not
-> > > > > something to take lightly, if at all; like it or not, it's part o=
-f
-> > > > > the
-> > > > > kernel API.
-> > >=20
-> > > It can also be used by tools to iterate processes related to one user=
- or
-> > > session. I use this in my Intrusion Prevention System which will land=
- in
-> > > audit user space at some point in the future.
-> > >=20
-> > > > Oh, I'm quite aware of how important this change is and it was
-> > > > discussed
-> > > > with Steve Grubb who saw the concern and value of considering such =
-a
-> > > > disruptive change.
-> > >=20
-> > > Actually, I advocated for syscall. I think the gist of Eric's idea wa=
-s
-> > > that / proc is the intersection of many nasty problems. By relying on
-> > > it, you can't simplify the API to reduce the complexity. Almost no
-> > > program actually needs access to /proc. ps does. But almost everythin=
-g
-> > > else is happy without it. For example, when you setup chroot jails, y=
-ou
-> > > may have to add /dev/random or / dev/null, but almost never /proc. Wh=
-at
-> > > does force you to add /proc is any entry point daemon like sshd becau=
-se
-> > > it needs to set the loginuid. If we switch away from /proc, then sshd=
- or
-> > > crond will no longer /require/ procfs to be available which again
-> > > simplifies the system design.
-> > >=20
-> > > > Removing proc support for auid/ses would be a
-> > > > long-term deprecation if accepted.
-> > >=20
-> > > It might need to just be turned into readonly for a while. But then
-> > > again,
-> > > perhaps auid and session should be part of /proc/<pid>/status? Maybe =
-this
-> > > can be done independently and ahead of the container work so there is=
- a
-> > > migration path for things that read auid or session. TBH, maybe this
-> > > should have been done from the beginning.
-> >=20
-> > How about making loginuid/contid/capcontid writable only via netlink bu=
-t
-> > still provide the /proc interface for reading?  Deprecation of proc can
-> > be left as a decision for later.  This way sshd/crond/getty don't need
-> > /proc, but the info is still there for tools that want to read it.
->=20
-> This also sounds good to me. But I still think loginuid and audit session=
-id=20
-> should get written in /proc/<pid>/status so that all process information =
-is=20
-> consolidated in one place.
+On Thu, Oct 31, 2019 at 03:41:33PM -0300, Matheus Castello wrote:
+> For configuration of fuel gauge alert for a low level state of charge
+> interrupt we add a function to config level threshold and a device tree
+> binding property to set it in flatned device tree node.
+> 
+> Now we can use "maxim,alert-low-soc-level" property with the values from
+> 1% up to 32% to configure alert interrupt threshold.
+> 
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>  drivers/power/supply/max17040_battery.c | 88 +++++++++++++++++++++----
+>  1 file changed, 74 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+> index 75459f76d02c..802575342c72 100644
+> --- a/drivers/power/supply/max17040_battery.c
+> +++ b/drivers/power/supply/max17040_battery.c
+> @@ -29,6 +29,9 @@
+>  #define MAX17040_DELAY		1000
+>  #define MAX17040_BATTERY_FULL	95
+> 
+> +#define MAX17040_ATHD_MASK		0xFFC0
+> +#define MAX17040_ATHD_DEFAULT_POWER_UP	4
+> +
+>  struct max17040_chip {
+>  	struct i2c_client		*client;
+>  	struct delayed_work		work;
+> @@ -43,6 +46,8 @@ struct max17040_chip {
+>  	int soc;
+>  	/* State Of Charge */
+>  	int status;
+> +	/* Low alert threshold from 32% to 1% of the State of Charge */
+> +	u32 low_soc_alert_threshold;
+>  };
+> 
+>  static int max17040_get_property(struct power_supply *psy,
+> @@ -99,6 +104,22 @@ static void max17040_reset(struct i2c_client *client)
+>  	max17040_write_reg(client, MAX17040_CMD, 0x0054);
+>  }
+> 
+> +static int max17040_set_low_soc_threshold_alert(struct i2c_client *client,
+> +	u32 level)
+> +{
+> +	int ret;
+> +	u16 data;
+> +
+> +	level = 32 - level;
+> +	data = max17040_read_reg(client, MAX17040_RCOMP);
+> +	/* clear the alrt bit and set LSb 5 bits */
+> +	data &= MAX17040_ATHD_MASK;
+> +	data |= level;
+> +	ret = max17040_write_reg(client, MAX17040_RCOMP, data);
+> +
+> +	return ret;
+> +}
+> +
+>  static void max17040_get_vcell(struct i2c_client *client)
+>  {
+>  	struct max17040_chip *chip = i2c_get_clientdata(client);
+> @@ -115,7 +136,6 @@ static void max17040_get_soc(struct i2c_client *client)
+>  	u16 soc;
+> 
+>  	soc = max17040_read_reg(client, MAX17040_SOC);
+> -
+>  	chip->soc = (soc >> 8);
+>  }
+> 
+> @@ -161,6 +181,24 @@ static void max17040_get_status(struct i2c_client *client)
+>  		chip->status = POWER_SUPPLY_STATUS_FULL;
+>  }
+> 
+> +static int max17040_get_of_data(struct max17040_chip *chip)
+> +{
+> +	struct device *dev = &chip->client->dev;
+> +	struct device_node *np = dev->of_node;
+> +	int ret = 0;
+> +
+> +	if (of_property_read_u32(np, "maxim,alert-low-soc-level",
+> +			&chip->low_soc_alert_threshold)) {
 
-I don't have a problem adding auid/sessionid to /proc/<pid>/status with
-other related information, but it is disruptive to deprecate the
-existing interface which could be a seperate step.
+Please align the line break with line above. checkpatch --strict might
+give you hints about this.
 
-> -Steve
+> +		chip->low_soc_alert_threshold = MAX17040_ATHD_DEFAULT_POWER_UP;
+> +	/* check if low_soc_alert_threshold is between 1% and 32% */
 
-- RGB
+The comment looks misleading here, like it belongs to previous block.
+Maybe put it inside else if {} block?
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+> +	} else if (chip->low_soc_alert_threshold <= 0 ||
+> +			chip->low_soc_alert_threshold >= 33){
 
+Missing space before {.
+
+> +		ret = -EINVAL;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static void max17040_check_changes(struct i2c_client *client)
+>  {
+>  	max17040_get_vcell(client);
+> @@ -192,6 +230,10 @@ static irqreturn_t max17040_thread_handler(int id, void *dev)
+>  	/* send uevent */
+>  	power_supply_changed(chip->battery);
+> 
+> +	/* reset alert bit */
+> +	max17040_set_low_soc_threshold_alert(client,
+> +		chip->low_soc_alert_threshold);
+
+Unless the continuation exceeds 80 character limit, please align it with
+previous line.
+
+> +
+>  	return IRQ_HANDLED;
+>  }
+> 
+> @@ -216,6 +258,7 @@ static int max17040_probe(struct i2c_client *client,
+>  	struct i2c_adapter *adapter = client->adapter;
+>  	struct power_supply_config psy_cfg = {};
+>  	struct max17040_chip *chip;
+> +	int ret;
+> 
+>  	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
+>  		return -EIO;
+> @@ -226,6 +269,12 @@ static int max17040_probe(struct i2c_client *client,
+> 
+>  	chip->client = client;
+>  	chip->pdata = client->dev.platform_data;
+> +	ret = max17040_get_of_data(chip);
+> +	if (ret) {
+> +		dev_err(&client->dev,
+> +			"failed: low SOC alert OF data out of bounds\n");
+> +		return ret;
+> +	}
+> 
+>  	i2c_set_clientdata(client, chip);
+>  	psy_cfg.drv_data = chip;
+> @@ -242,20 +291,31 @@ static int max17040_probe(struct i2c_client *client,
+> 
+>  	/* check interrupt */
+>  	if (client->irq) {
+> -		int ret;
+> -		unsigned int flags;
+> -
+> -		dev_info(&client->dev, "IRQ: enabled\n");
+> -		flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
+> -		ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+> -						max17040_thread_handler, flags,
+> -						chip->battery->desc->name,
+> -						chip);
+> -
+> -		if (ret) {
+> -			client->irq = 0;
+> +		if (of_device_is_compatible(client->dev.of_node,
+> +			"maxim,max77836-battery")) {
+
+Alignment.
+
+> +			ret = max17040_set_low_soc_threshold_alert(client,
+> +				chip->low_soc_alert_threshold);
+
+Ditto.
+
+> +			if (ret) {
+> +				dev_err(&client->dev,
+> +					"Failed to set low SOC alert: err %d\n",
+> +					ret);
+> +				return ret;
+> +			}
+> +
+> +			dev_info(&client->dev, "IRQ: enabled\n");
+> +			ret = devm_request_threaded_irq(&client->dev,
+> +				client->irq, NULL, max17040_thread_handler,
+> +				(client->flags | IRQF_ONESHOT),
+
+This looks unrelated. Befor ethis were IRQF_TRIGGER_FALLING |
+IRQF_ONESHOT, now you use client->flags. There is no reason why this
+commit should change it.
+
+> +				chip->battery->desc->name, chip);
+
+This breaks alignment which was here before.
+
+Best regards,
+Krzysztof
+
+
+> +
+> +			if (ret) {
+> +				client->irq = 0;
+> +				dev_warn(&client->dev,
+> +					"Failed to get IRQ err %d\n", ret);
+> +			}
+> +		} else {
+>  			dev_warn(&client->dev,
+> -				"Failed to get IRQ err %d\n", ret);
+> +				"Device not compatible for IRQ");
+>  		}
+>  	}
+> 
+> --
+> 2.24.0.rc2
+> 
