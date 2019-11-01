@@ -2,239 +2,162 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1900CCA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F00CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D984E217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84BD6208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:21:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="shkONEcf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZvFQruI8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbfKAPU7 (ORCPT
+        id S1728688AbfKAPVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 11:20:59 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38830 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbfKAPU6 (ORCPT
+        Fri, 1 Nov 2019 11:21:41 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35080 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728449AbfKAPVk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 11:20:58 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA1FKlYb015196;
-        Fri, 1 Nov 2019 10:20:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572621647;
-        bh=eeA3umD584w/bAmDdnoCxBa6AsPCzlgHuHEtXWEal/s=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=shkONEcfODmBLwI/jnS5yqQNMP1gCfKDwc8qE4YXsaaZgJobWZNtWIk7LNcDVtFt/
-         GVsnaaqsh4XwAjyOg/KvuB4s2OG8lbfRnAP94OXLJ/KnClkFjXtuAu+81+eZdHUbjj
-         rEHDvcz4nUv1RcQ97hU1JSnMhCfN7dqgm96qT2Y8=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA1FKlxT052853
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 Nov 2019 10:20:47 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 1 Nov
- 2019 10:20:33 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 1 Nov 2019 10:20:33 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA1FKiSv064409;
-        Fri, 1 Nov 2019 10:20:44 -0500
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <devicetree@vger.kernel.org>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
- <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
- <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
- <20191030141736.GN4568@sirena.org.uk>
- <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
- <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
- <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com>
- <CAL_Jsq+V0oAdVCaW+S12CUa4grCJhZD8OGDeu=0ohcGgxOkPVg@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <5669a4c1-2bc1-423b-1407-073317f7df7e@ti.com>
-Date:   Fri, 1 Nov 2019 17:21:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 1 Nov 2019 11:21:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572621699;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WDYGxxA/KgrYN0QEUL49MfltlmEWA16vt4MxjEs1+6E=;
+        b=ZvFQruI8L0LIc8Abg9nge7/YYc2CgXmrxcQ0E2Arp63U/CUqj+BsVzHQAr6GB4JTyCldVV
+        j4MKTv9MX0U/UDN0bU8JLz8ghEDVYN+Ur2jmwn+B/N3pHiKsNYeOESlaCrzAp+Tcfbv0ra
+        e8gHd21V2VgXboUFC5QAXvJTsP042Cw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-253-i5RvBvQWOlyITqFctoslYg-1; Fri, 01 Nov 2019 11:21:33 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4EE31005500;
+        Fri,  1 Nov 2019 15:21:31 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 82BD619C58;
+        Fri,  1 Nov 2019 15:21:21 +0000 (UTC)
+Date:   Fri, 1 Nov 2019 11:21:18 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Steve Grubb <sgrubb@redhat.com>
+Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Subject: Re: [PATCH ghak90 V7 20/21] audit: add capcontid to set contid
+ outside init_user_ns
+Message-ID: <20191101152118.mi2svoringtrdskv@madcap2.tricolour.ca>
+References: <cover.1568834524.git.rgb@redhat.com>
+ <3677995.NTHC7m0fHc@x2>
+ <20191101150927.c5sf3n5ezfg2eano@madcap2.tricolour.ca>
+ <1592218.lpl3eoh2c6@x2>
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+V0oAdVCaW+S12CUa4grCJhZD8OGDeu=0ohcGgxOkPVg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <1592218.lpl3eoh2c6@x2>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: i5RvBvQWOlyITqFctoslYg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-11-01 11:13, Steve Grubb wrote:
+> On Friday, November 1, 2019 11:09:27 AM EDT Richard Guy Briggs wrote:
+> > On 2019-10-31 10:50, Steve Grubb wrote:
+> > > Hello,
+> > >=20
+> > > TLDR;  I see a lot of benefit to switching away from procfs for setti=
+ng
+> > > auid & sessionid.
+> > >=20
+> > > On Wednesday, October 30, 2019 6:03:20 PM EDT Richard Guy Briggs wrot=
+e:
+> > > > > Also, for the record, removing the audit loginuid from procfs is =
+not
+> > > > > something to take lightly, if at all; like it or not, it's part o=
+f
+> > > > > the
+> > > > > kernel API.
+> > >=20
+> > > It can also be used by tools to iterate processes related to one user=
+ or
+> > > session. I use this in my Intrusion Prevention System which will land=
+ in
+> > > audit user space at some point in the future.
+> > >=20
+> > > > Oh, I'm quite aware of how important this change is and it was
+> > > > discussed
+> > > > with Steve Grubb who saw the concern and value of considering such =
+a
+> > > > disruptive change.
+> > >=20
+> > > Actually, I advocated for syscall. I think the gist of Eric's idea wa=
+s
+> > > that / proc is the intersection of many nasty problems. By relying on
+> > > it, you can't simplify the API to reduce the complexity. Almost no
+> > > program actually needs access to /proc. ps does. But almost everythin=
+g
+> > > else is happy without it. For example, when you setup chroot jails, y=
+ou
+> > > may have to add /dev/random or / dev/null, but almost never /proc. Wh=
+at
+> > > does force you to add /proc is any entry point daemon like sshd becau=
+se
+> > > it needs to set the loginuid. If we switch away from /proc, then sshd=
+ or
+> > > crond will no longer /require/ procfs to be available which again
+> > > simplifies the system design.
+> > >=20
+> > > > Removing proc support for auid/ses would be a
+> > > > long-term deprecation if accepted.
+> > >=20
+> > > It might need to just be turned into readonly for a while. But then
+> > > again,
+> > > perhaps auid and session should be part of /proc/<pid>/status? Maybe =
+this
+> > > can be done independently and ahead of the container work so there is=
+ a
+> > > migration path for things that read auid or session. TBH, maybe this
+> > > should have been done from the beginning.
+> >=20
+> > How about making loginuid/contid/capcontid writable only via netlink bu=
+t
+> > still provide the /proc interface for reading?  Deprecation of proc can
+> > be left as a decision for later.  This way sshd/crond/getty don't need
+> > /proc, but the info is still there for tools that want to read it.
+>=20
+> This also sounds good to me. But I still think loginuid and audit session=
+id=20
+> should get written in /proc/<pid>/status so that all process information =
+is=20
+> consolidated in one place.
 
+I don't have a problem adding auid/sessionid to /proc/<pid>/status with
+other related information, but it is disruptive to deprecate the
+existing interface which could be a seperate step.
 
-On 01/11/2019 15.46, Rob Herring wrote:
-> On Thu, Oct 31, 2019 at 3:00 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>
->>
->>
->> On 30/10/2019 20.49, Rob Herring wrote:
->>> On Wed, Oct 30, 2019 at 9:30 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>>>
->>>>
->>>>
->>>> On 30/10/2019 16.17, Mark Brown wrote:
->>>>> On Wed, Oct 30, 2019 at 03:32:09PM +0200, Peter Ujfalusi wrote:
->>>>>> On 30/10/2019 15.12, Rob Herring wrote:
->>>>>
->>>>>>> Why can't we just add a shared flag like we have for interrupts?
->>>>>>> Effectively, we have that for resets too, it's just hardcoded in the
->>>>>>> the drivers.
->>>>>
->>>>>> This would be kind of the same thing what the
->>>>>> GPIOD_FLAGS_BIT_NONEXCLUSIVE does, which was a quick workaround for
->>>>>> fixed-regulators afaik.
->>>>>
->>>>> The theory with that was that any usage of this would need the
->>>>> higher level code using the GPIO to cooperate so they didn't step
->>>>> on each other's toes so the GPIO code should just punt to it.
->>>>
->>>> But from the client driver point of view a GPIO is still GPIO and if the
->>>> components are unrelated then it is hard to patch things together from
->>>> the top.
->>>
->>> You can't escape a driver being aware. If a driver depends on that
->>> GPIO to actually be set to states the driver says, then it can't be
->>> guaranteed to work. For example, maybe the driver assumes the device
->>> is in reset state after toggling reset and doesn't work if not in
->>> reset state. The driver has to be aware no matter what you do in DT.
->>
->> That's true for some device, but it is also true that some can not
->> tolerate being reset without them knowing it.
-> 
-> You mean a reset when the driver is not loaded would not work? How
-> could that ever work?
+> -Steve
 
-No, what I mean is that one device is reset because the driver for the
-other device toggles the GPIO line.
+- RGB
 
-If one driver toggles the GPIO line directly then the GPIO line is going
-to be toggled for all the devices the GPIO line is connected to.
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
-> I don't think you can have any reset control in
-> the drivers in that case.
-
-The device needs the RST line to be high, otherwise it is not
-accessible. If it does not have reset control how can we make sure that
-the GPIO line is in correct state?
-
-gpio-hog does not work all the time because we can not trust probe order
-and w/o gpio binding on the user deferred probing is not possible.
-If for some reason the gpio controller is probed after the drivers
-depending on the reset/enable GPIO then there's not much we can do.
-
->> If all users of the shared GPIO have full control over it then they can
->> just toggle it whatever way they want. How would a regulator, codec,
->> amplifier would negotiate on what to do with the shared GPIO?
->>
->> Another not uncommon setup is when the two components needs different level:
->> C1: ENABLE is high active
->> C2: RESET is high active
->>
->> To enable C1, the GPIO should be high. To enable C2 the GPIO must be low.
->> In the board one of the branch of the shared GPIO needs (and have) a
->> logic inverter.
->>
->> If they both control the same GPIO then they must have requested it with
->> different GPIO_ACTIVE_ since the drivers are written according to chip
->> spec, so C1 sets the GPIO to 1, C2 sets it to 0, the inversion for one
->> of them must happen in gpio core, right?
-> 
-> No, drivers are written to set the state to active/inactive.
-
-I think the drivers are written in a way to follow what their datasheets
-are tells. If it say that the GPIO line must be high to enable the
-device then they gpiod_set_value(1), if the line must be low to enable
-them then they will gpiod_set_value(0).
-
-> The DT GPIO_ACTIVE_ flags can depend on an inverter being present (BTW, there
-> was a recent attempt to do an inverter binding).
-
-Yes.
-If the line is inverted on the board, than the DT GPIO_ACTIVE_LOW will
-invert it to the correct level.
-
-We have two off the shelf components, C1 and C2. They have a driver
-written based on the datasheets.
-C1 needs HIGH (LOW reset/disable)
- uses gpiod_set_value(1) to enable the device
-
-C2 needs LOW (HIGH reset/disable)
- uses gpiod_set_value(0) to enable the device
-
-When they are connected to a dedicated GPIO the DT binding has
-GPIO_ACTIVE_HIGH since when the GPIO is set to 1 it goes HIGH, right?
-
-If two device is connected to one GPIO one of them needs an inverter on
-the GPIO line after it is split into two, let say C2 got inverted line:
-C1 tells in DT that the line is not inverted: GPIO_ACTIVE_HOGH
-C2 tells in DT that the line is inverted: GPIO_ACTIVE_LOW
-
-GPIO HIGH -> D1 is enabled
-	  -> !HIGH -> LOW -> D2 is enabled
-
-If both would request the same physical GPIO then how would this work? A
-single GPIO can not be handled in inverted and non inverted way at the
-same time.
-
-But this is just a side effect that this would be easy to handle with
-this DT binding and driver.
-After all, it will describe the GPIO line split.
-
->> It should be possible to add pass-through mode for gpio-shared so that
->> all requests would propagate to the root GPIO if that's what needed for
->> some setups.
->>
->> That way the gpio-shared would nicely handle the GPIO inversions, would
->> be able to handle cases to avoid unwanted reset/enable of components or
->> allow components to be ninja-reset.
-> 
-> What does ninja-reset mean?
-
-Ninjas attack from ambush ;)
-The device is reset w/o it's driver being aware that it ever happened as
-other driver toggled the shared GPIO line.
-
->> I think it would be possible to add gpiod_is_shared(struct gpio_desc
->> *desc) so users can check if the GPIO is shared - it would only return
->> true if the gpio-shared is not in pass-through mode so they can know
->> that the state they see on their gpio desc is not necessary matching
->> with reality.
->> Probably another gpiod_shared_get_root_value() to fetch the root's state?
->>
->> I intentionally not returning that in the driver as clients might skip a
->> gpio_set_value() seeing that the GPIO line is already in a state they
->> would want it, but that would not register their needs for the level.
->>
->> - Péter
->>
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
