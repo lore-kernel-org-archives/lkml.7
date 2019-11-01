@@ -2,125 +2,91 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AA4CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AF4CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB5D321734
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EE15217F9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:03:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="ws3zZ5Ui"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbfKAPBq (ORCPT
+        id S1728083AbfKAPD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 11:01:46 -0400
-Received: from shell.v3.sk ([90.176.6.54]:53018 "EHLO shell.v3.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727365AbfKAPBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 11:01:45 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id E7C2C400B5;
-        Fri,  1 Nov 2019 16:01:40 +0100 (CET)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 4EMX4ZocWg0t; Fri,  1 Nov 2019 16:01:35 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id B7EB4400BD;
-        Fri,  1 Nov 2019 16:01:34 +0100 (CET)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id GPjCwwEgtuTK; Fri,  1 Nov 2019 16:01:34 +0100 (CET)
-Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 91BAE400B5;
-        Fri,  1 Nov 2019 16:01:33 +0100 (CET)
-Message-ID: <a57dec8fca7b42d6a4f4fb29cb4b9f87435fca74.camel@v3.sk>
-Subject: Re: [PATCH v2 0/9] Simplify MFD Core
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Barry Song <baohua@kernel.org>, stephan@gerhold.net,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        James Cameron <quozl@laptop.org>
-Date:   Fri, 01 Nov 2019 16:01:32 +0100
-In-Reply-To: <20191101090751.GH5700@dell>
-References: <20191021105822.20271-1-lee.jones@linaro.org>
-         <CAK8P3a10w9Xg6U8EgUqPLbucP3A0wc9xO_WNG06LxHrsZkZc1g@mail.gmail.com>
-         <e5e7695cc82b4370752f45082be007dbe410c74c.camel@v3.sk>
-         <20191021115339.GF4365@dell>
-         <ba31d7cb894cb44eacee630e56fae647922f3dc2.camel@v3.sk>
-         <20191101090751.GH5700@dell>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        Fri, 1 Nov 2019 11:03:29 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46372 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727650AbfKAPD2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 11:03:28 -0400
+Received: by mail-wr1-f65.google.com with SMTP id b3so4156738wrs.13
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 08:03:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wKqXfvZWrQz1n3ascw58fy8Akh2y/FtmDPOkWTyzyfY=;
+        b=ws3zZ5Uicol7T0q//uQT40qivLqP3f2fSdmlHh40z6ocWNYtoy6MCOuLfdKYWZfMKS
+         cue1kCFtM3ary0ryAqMUSgnv1P5XeKnCLUIyzJWGgsFRCtbRybeVQWnx9IY2370sD4Zh
+         2LZYw7plqDqnDIOMkDA8hUimU3yjLM8Hpt2SdeA3TF1Ws6orHjbR5HweCkuQ0+wjr7um
+         n5VrpzIwxpMHY3J/D/saidTIa7uV5HK4xgL+EMfdNXpNsq/RJR35BTO7Kq8zPfGwDAxj
+         NSPd0tcNeZ6QG11x2CURNg+9JjgUEFLoQuqnfVGOI549ZjmqPzCqoThtSfw4P+aU56BM
+         xETQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wKqXfvZWrQz1n3ascw58fy8Akh2y/FtmDPOkWTyzyfY=;
+        b=EtxwEDgEpwxA6SWIa38rETVxRakv9+cIMF7xJ5SoS1k95KSPqopZsfQe8ajg+gHSwW
+         g0xg6EeX5WengpKym48spXPzwVxFpRVFRW0EdUVDvJxzu8Gwim5DgRmHGloDSRhgIObD
+         0dtwH5o/bUn9ps9Df8a9s+SfquwrgR+Qz1hc0xA3Pawn5baxHy0iWCb+UbuJRE6hqJbD
+         moqBtE6R3gSsvAgVauM6UTi8BOBvFJBtLIop4daYLezLUh/D3fxB8BJR4QYW9ONif6+k
+         0wEaFb4K0Mxtd+CpyP4GLMg3tQlueK3Xv4gKeHYvu198m9i3xs9CeyvQKWbX95oj+cE3
+         RsgA==
+X-Gm-Message-State: APjAAAXCQsWoTPkjBLKVzTJgpTW8yvLOKgEYwIYz62kc4pJKAHX+9Osk
+        XhKwiJY2ug+c59StgI0iAs4QEg==
+X-Google-Smtp-Source: APXvYqxusNCycKMoEK+7x9WjnNtpLqHubFpyz72J9sNYtu1+osdcL+xW/I9kefVQr2Pa3hmkfZERoA==
+X-Received: by 2002:adf:9486:: with SMTP id 6mr10593224wrr.28.1572620604647;
+        Fri, 01 Nov 2019 08:03:24 -0700 (PDT)
+Received: from netronome.com (fred-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:a2a4:c5ff:fe4c:9ce9])
+        by smtp.gmail.com with ESMTPSA id c21sm6365647wmb.46.2019.11.01.08.03.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 08:03:24 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 16:03:23 +0100
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [RFC PATCH 2/3] dt-bindings: net: phy: Add support for AT803X
+Message-ID: <20191101150322.GB5859@netronome.com>
+References: <20191030224251.21578-1-michael@walle.cc>
+ <20191030224251.21578-3-michael@walle.cc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030224251.21578-3-michael@walle.cc>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-11-01 at 09:07 +0000, Lee Jones wrote:
-> On Mon, 21 Oct 2019, Lubomir Rintel wrote:
-> > On Mon, 2019-10-21 at 12:53 +0100, Lee Jones wrote:
-> > > On Mon, 21 Oct 2019, Lubomir Rintel wrote:
-> > > 
-> > > > On Mon, 2019-10-21 at 13:29 +0200, Arnd Bergmann wrote:
-> > > > > On Mon, Oct 21, 2019 at 12:58 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > > > > MFD currently has one over-complicated user.  CS5535 uses a mixture of
-> > > > > > cell cloning, reference counting and subsystem-level call-backs to
-> > > > > > achieve its goal of requesting an IO memory region only once across 3
-> > > > > > consumers.  The same can be achieved by handling the region centrally
-> > > > > > during the parent device's .probe() sequence.  Releasing can be handed
-> > > > > > in a similar way during .remove().
-> > > > > > 
-> > > > > > While we're here, take the opportunity to provide some clean-ups and
-> > > > > > error checking to issues noticed along the way.
-> > > > > > 
-> > > > > > This also paves the way for clean cell disabling via Device Tree being
-> > > > > > discussed at [0]
-> > > > > > 
-> > > > > > [0] https://lkml.org/lkml/2019/10/18/612.
-> > > > > 
-> > > > > As the CS5535 is primarily used on the OLPC XO1, it would be
-> > > > > good to have someone test the series on such a machine.
-> > > > > 
-> > > > > I've added a few people to Cc that may be able to help test it, or
-> > > > > know someone who can.
-> > > > > 
-> > > > > For the actual patches, see
-> > > > > https://lore.kernel.org/lkml/20191021105822.20271-1-lee.jones@linaro.org/T/#t
-> > > > 
-> > > > Thanks for the pointer. I'd by happy to test this.
-> > > > 
-> > > > Which tree do the patches apply to?
-> > > > Or, better, is there a tree with the patches applied that I could use?
-> > > 
-> > > Ideal.  Thank you.
-> > > 
-> > > http://git.linaro.org/people/lee.jones/linux.git/log/?h=topic/mfd-remove-clone-cs5535-mfd
-> > 
-> > Thanks. My boot attempt ends up in a panic [1]:
+On Wed, Oct 30, 2019 at 11:42:50PM +0100, Michael Walle wrote:
+> Document the Atheros AR803x PHY bindings.
 > 
-> New patches have been drafted, reviewed and pushed to the same branch.
-> 
-> Would you be kind enough to boot test them for me please Lubo?
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  .../bindings/net/atheros,at803x.yaml          | 58 +++++++++++++++++++
+>  include/dt-bindings/net/atheros-at803x.h      | 13 +++++
+>  2 files changed, 71 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/atheros,at803x.yaml
+>  create mode 100644 include/dt-bindings/net/atheros-at803x.h
 
-The branch
+Hi Michael,
 
-Tested-by: Lubomir Rintel <lkundrak@v3.sk> (OLPC XO-1)
-
-Here's a dmesg and partial sysfs listing indicating that the driver
-indeed bound correctly: https://paste.centos.org/view/3aa89258
-
-> 
-> TIA.
-
-Take care
-Lubo
-
+please run the schema past dtbs_check as per the instructions in
+Documentation/devicetree/writing-schema.rst
