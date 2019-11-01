@@ -2,120 +2,199 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D11CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC3ACA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B27821855
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AE0420862
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:36:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eWHbR6qa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DHSLrZ06"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729957AbfKARfv (ORCPT
+        id S1728740AbfKARg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 13:35:51 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38726 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729247AbfKARfu (ORCPT
+        Fri, 1 Nov 2019 13:36:29 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43301 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727365AbfKARg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 13:35:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572629748;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Vi11bsC86DIjvR3JukBeRWivqFrcNqVuRmOTzZJ3x6E=;
-        b=eWHbR6qa32z1JEvGOTepGMnD8upLPWEP+E+EKxl9akWjRESdGm0oFLTTS9d92N4nWDNcud
-        mmt7WghgArZVlpQlpXD0Lq1C0IO1hyijrqL37/t3Xb5yfLXOovBuIkGIWAtvyJMZmK8axq
-        wfB0GcK1kfN+2awHj5rBVl8q8LPUOD8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-280-jObNGFxmMiqYnw6I3pTN-A-1; Fri, 01 Nov 2019 13:35:46 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03A9A800D49;
-        Fri,  1 Nov 2019 17:35:45 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-40.rdu2.redhat.com [10.10.121.40])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C6B45D6B7;
-        Fri,  1 Nov 2019 17:35:42 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 11/11] pipe: Increase the writer-wakeup threshold to
- reduce context-switch count [ver #3]
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>, dhowells@redhat.com,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 01 Nov 2019 17:35:41 +0000
-Message-ID: <157262974145.13142.5910403713310791673.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157262963995.13142.5568934007158044624.stgit@warthog.procyon.org.uk>
-References: <157262963995.13142.5568934007158044624.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Fri, 1 Nov 2019 13:36:29 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 3so7511681pfb.10;
+        Fri, 01 Nov 2019 10:36:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Z0U01s7+6Ea8Fz436rHjv7Qqm8LV+DjHi5N/V/PY/XE=;
+        b=DHSLrZ06cWK6VEikHg0pEOqzDGREWugeMzuFhyHQML3yuLAveJ9HhOhiez3+tlZ90J
+         ek2rnq9dLqsqvfYs93BI2ss1DjBT9ww6ceZnAakeWDDqygwwrHEBE0DU1r+48gO7uBvi
+         0LnAWpTrgw3PTZaTIKTgzVYhrenwnYmhOM4EkTe9Hebw3GzNKGAGwUSVgYNSC2rekuMc
+         6p5bb6sylbtwTfi6ucTuR+a+72h3xghBMbpmrOs2i4Qt6R7hZLK1QHBZmrReRBajcPtn
+         9+m91Kxbd0i8KvMl6tbQ0EiRdNUO/wyaQ2EvmJp82qd/tMGqlRNU+4lJYFXxQgZsAP2+
+         0nOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Z0U01s7+6Ea8Fz436rHjv7Qqm8LV+DjHi5N/V/PY/XE=;
+        b=OXeSp2x1DNJGb8IagurdKzJMBlpXcvarpJM2FpYeu5IY2BZEfAgAe9tQ/pjF+SW0Y6
+         PJ8F0bdgU0D0doqsUtffyG8NWvZfxOxlNbaUpJ2QogVoqdNAuiUj2/j+mBILKNlbvsOm
+         +GUnU++k7ZUR+yvHxnBrVD1FalIW/winywLlqkxxoz3ZHjin7ENuA9DQLdYb2VW8pRs6
+         uAHyAFGqh9vybXaQXU2xNUBtsImh4fUkuprKMMU2p5NFL9IJeegGoUR6yF/msB4S+3cz
+         oqGqN0+NkzbY/tZWJL9iKQ1EanB1v6GJ3tBvjkP1YIGDVAEPcudpGcWB9DIfhQbh5zgO
+         JvYw==
+X-Gm-Message-State: APjAAAUjcZbjuOBpZ3L+7Wyd7jl/O0zL3bodc+k9E4XNau0TSWYXBczJ
+        fMNucYBsGDqopL8aHfprJSqgA9F0
+X-Google-Smtp-Source: APXvYqzXNPhKuW6XMfQ1f4g/1vBPp+SsbntUuSCigJvTWleeoY5iTIX6ZkUgdW09yT4cjQpzJULQfQ==
+X-Received: by 2002:a63:d609:: with SMTP id q9mr14832868pgg.110.1572629787326;
+        Fri, 01 Nov 2019 10:36:27 -0700 (PDT)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id l24sm7141999pff.151.2019.11.01.10.36.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 Nov 2019 10:36:26 -0700 (PDT)
+Subject: Re: [PATCH v5 net-next 05/12] dt-bindings: net: ti: add new cpsw
+ switch driver bindings
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        netdev@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jiri Pirko <jiri@resnulli.us>
+Cc:     Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+References: <20191024100914.16840-1-grygorii.strashko@ti.com>
+ <20191024100914.16840-6-grygorii.strashko@ti.com>
+ <caf68306-46ce-f97d-b45a-0fc1cd5323f7@gmail.com>
+ <6e64b70e-604a-b8c6-12ce-7977ffa4ed5a@ti.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <5c286f76-d108-5d78-dd8f-19e1baf64396@gmail.com>
+Date:   Fri, 1 Nov 2019 10:36:25 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: jObNGFxmMiqYnw6I3pTN-A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <6e64b70e-604a-b8c6-12ce-7977ffa4ed5a@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Increase the threshold at which the reader sends a wake event to the
-writers in the queue such that the queue must be half empty before the wake
-is issued rather than the wake being issued when just a single slot
-available.
+On 11/1/19 10:25 AM, Grygorii Strashko wrote:
+> Hi Florian,
+> 
+> On 25/10/2019 20:47, Florian Fainelli wrote:
+>> On 10/24/19 3:09 AM, Grygorii Strashko wrote:
+>>> Add bindings for the new TI CPSW switch driver. Comparing to the legacy
+>>> bindings (net/cpsw.txt):
+>>> - ports definition follows DSA bindings (net/dsa/dsa.txt) and ports
+>>> can be
+>>> marked as "disabled" if not physically wired.
+>>> - all deprecated properties dropped;
+>>> - all legacy propertiies dropped which represent constant HW
+>>> cpapbilities
+>>> (cpdma_channels, ale_entries, bd_ram_size, mac_control, slaves,
+>>> active_slave)
+>>> - TI CPTS DT properties are reused as is, but grouped in "cpts" sub-node
+>>> - TI Davinci MDIO DT bindings are reused as is, because Davinci MDIO is
+>>> reused.
+>>>
+>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>>> ---
+>>
+>> [snip]
+>>> +- mdio : CPSW MDIO bus block description
+>>> +    - bus_freq : MDIO Bus frequency
+>>
+>> clock-frequency is a more typical property to describe the bus clock's
+>> frequency, that is what i2c and spi do.
+> 
+> The MDIO is re-used here unchanged (including bindings).
+> i think, I could try to add standard optional property "bus-frequency"
+> to MDIO bindings
+> as separate series, and deprecate "bus_freq".
 
-This reduces the number of context switches in the tests significantly,
-without altering the amount of work achieved.  With my pipe-bench program,
-there's a 20% reduction versus an unpatched kernel.
+What is wrong with 'clock-frequency'?
 
-Suggested-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+Documentation/devicetree/bindings/i2c/i2c.txt:
 
- fs/pipe.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+- clock-frequency
+        frequency of bus clock in Hz.
 
-diff --git a/fs/pipe.c b/fs/pipe.c
-index aba2455caabe..9cd5cbef9552 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -324,16 +324,18 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
- =09=09=09}
-=20
- =09=09=09if (!buf->len) {
-+=09=09=09=09bool wake;
- =09=09=09=09pipe_buf_release(pipe, buf);
- =09=09=09=09spin_lock_irq(&pipe->wait.lock);
- =09=09=09=09tail++;
- =09=09=09=09pipe->tail =3D tail;
- =09=09=09=09do_wakeup =3D 1;
--=09=09=09=09if (head - (tail - 1) =3D=3D pipe->max_usage)
-+=09=09=09=09wake =3D head - (tail - 1) =3D=3D pipe->max_usage / 2;
-+=09=09=09=09if (wake)
- =09=09=09=09=09wake_up_interruptible_sync_poll_locked(
- =09=09=09=09=09=09&pipe->wait, EPOLLOUT | EPOLLWRNORM);
- =09=09=09=09spin_unlock_irq(&pipe->wait.lock);
--=09=09=09=09if (head - (tail - 1) =3D=3D pipe->max_usage)
-+=09=09=09=09if (wake)
- =09=09=09=09=09kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
- =09=09=09}
- =09=09=09total_len -=3D chars;
+Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt:
 
+- clock-frequency: the MDIO bus clock that must be output by the MDIO bus
+  hardware, if absent, the default hardware values are used
+
+Maybe this is a bit of a misnomer as it is usually considered a
+replacement for the lack of a proper "clocks" property with a clock
+provider, but we can flip the coin around any way we want, it looks
+almost the same.
+-- 
+Florian
