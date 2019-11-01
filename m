@@ -2,164 +2,141 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62CACA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594C8CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B10521734
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:55:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572630915;
-	bh=3Xm0g5bLJT6AlbiJKa7sggY6JRT1YNzhQMPcX5fIqcg=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=OWu3TP5wrIPuqiJilc4Gg8iRCmrgqwkDYULH+Ua0xoowGQ/aW26gdSwMhV5epVCx4
-	 HXDb8MVr77MmS2BJ8kCnyGkA9SfFiWpnzikotXri9aCvp/YaEG5iNKVJh5GdlJdVCQ
-	 7jL4TjFQ2cRzxD+49PhhtCj8qEgzXp6mJVMPALFQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2DD3E21734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:56:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="LXR1GGLk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfKARzO (ORCPT
+        id S1726876AbfKAR4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 13:55:14 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45584 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfKARzN (ORCPT
+        Fri, 1 Nov 2019 13:56:32 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:37947 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfKAR4c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 13:55:13 -0400
-Received: by mail-wr1-f65.google.com with SMTP id q13so10405711wrs.12
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 10:55:12 -0700 (PDT)
+        Fri, 1 Nov 2019 13:56:32 -0400
+Received: by mail-il1-f194.google.com with SMTP id y5so9375999ilb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 10:56:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ES+LHpjXtfCoOvIzCh6qL8zNso7DXWydpdGJ10lggoc=;
-        b=gLneO5kf9GxBEj/Nap7QfVzPfxobMkznpdmYSVnMhr0zKEPaMIfr2PvjztDeWBHZ1L
-         IL+WbGXw16zcmua/tVfNKdV9sMIhtmtlyf5p2XMgoXpQXOqu6vLhdXi+P7Y/05MaNKNo
-         /ztPeGOQ6+0RPHKLhpeJhLRvC9bSaPfX38r+TJZ1B2dfLiiKLeNfs2ObV2iIlx6YS/Qz
-         rKi6Xiu9x4TZ+j+XLIBxIJBcnif8GL57WLXaXJSPjUOxwgWTrNdBmBiIAW724D+1cEpL
-         tt9vsj4ix1ToUREU4fs1XaA8ii3z/RMhQE/Qbl2i0iP/nswgg6LJMtitNBtqgExUSngn
-         3g2A==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fVMecHB4iqy/JcrkafiqEnLMlJZ7+7jzZA1mGmL5dRI=;
+        b=LXR1GGLkYQybIQFAxI5i1hnPTzEMnuLx819TYZ3yoXl9FpEQvAxhzKlssv/rYdGLKf
+         8LzM8bOCBl2TtsMukEZtl2Y0MWbZMcXWU2lTGNBc1iU2IVmugt0L8LjylC9Vcvg110S7
+         QphjQ+6wsclxIpnuZ4iCDK39C6qXXHEP7BdFr0X3de5Zpy0t4b1IQZv9M8IRjJNZ13n9
+         5Suf46JlO+qZq8x3RAMegJn3v1cdTihpkx4uWy2oJwuU5jQvhv5CJ15YJz+ByPVKKsub
+         5yHLKuNrfWutqMmU3j/NDTnV+aWSQuABWA9kZc1wSGTEp7+qn5RaxChLi/4Zs3lMmyLh
+         ueNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=ES+LHpjXtfCoOvIzCh6qL8zNso7DXWydpdGJ10lggoc=;
-        b=OdUaUcDc538hiAxD+9fyqWBUYS49CKw6ttnEQpnCytwDSxJmSMRaRDeeGNn8neoB4J
-         jD+GDY2c/HWJn5S+BubxKlwToQdurgPKLenY2/OFiwX9WD1mf3qKOl8JrOl7yIdmflqw
-         4TMnNsPM6a9/4kSr8b7rKcZRPg0AHkm9rVbM+hwquk25dI72l+1nirw38Uc4y81N/rm5
-         lJEoCecB0AULvY5J24brB6KSSTZygIudZKaMVsndcdcurK5UX/BAnzX6LIzp8//JrBgp
-         Zny4RTz3vEnPfM1YrfRKzNNxkjxOpmxv/kx/2Gbe73Cq/Hlf79sueUzzG7j92XzdAluQ
-         NMzA==
-X-Gm-Message-State: APjAAAV2VOQsevj7XjNjdjwMv5WQ27Y3dMu4u3mQkVQheneopoenQRWC
-        vcyl6IMMtV3tTSEb5kGWAIV+Lgu+
-X-Google-Smtp-Source: APXvYqwND//TTZ9F4wZcAXUyHlatBJxCiNHmzv9Q5Lmm8b+QXLMZNIlwPtpgO5MKeXj4oCoaU2NyoQ==
-X-Received: by 2002:a5d:404d:: with SMTP id w13mr12269333wrp.185.1572630911295;
-        Fri, 01 Nov 2019 10:55:11 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id o189sm11605258wmo.23.2019.11.01.10.55.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 10:55:10 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 18:55:08 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [GIT PULL] scheduler fixes
-Message-ID: <20191101175508.GA125660@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fVMecHB4iqy/JcrkafiqEnLMlJZ7+7jzZA1mGmL5dRI=;
+        b=Xo2Z7OAdH+9TnYKFbTg/Tk3B+vO23jpoj5M5YCNw7Wh5R5XFaVN8YoOzegJJc82fIe
+         rCg9o6kpPU3QIUKk0avAgU9y2O3u2sBApcQ0+w6J9/R37XEd29/PNhEYDl14hVexujVK
+         oXkJ4Zcx+GiSJe8T/Ru16Ur9J1FZmTOWOM+0iia5/8YUYFNlDIk9/xjEikmanzHjAhnK
+         hq3Xn5ynUVK70tr+JrCiEZOFZhHVz2u6rsDWl4G4YxgLhy3A599eAOpGTE2SwBt3hsNy
+         sQQfT5qGaHNzTdIcCDO9EoZ8g+WdhfCfkGyUiP4ajyt7NZc7cV3p79DJAcJLsQrv+krS
+         6+fA==
+X-Gm-Message-State: APjAAAUGmAhV9Uc6pgxTd1nItOzULvBSg5NiuGlXmn8VHzZd2/bHG2mc
+        A5EXdmPvjfM1+kUl/06BSzi+AQ==
+X-Google-Smtp-Source: APXvYqwAhGOHpfrylwdtk9bVK77UdVTEj4lT1jPVHRKsDs+bvH4Fv1WxHT89f+9cyVKHL3NyOnvx+w==
+X-Received: by 2002:a92:650d:: with SMTP id z13mr13087195ilb.18.1572630991510;
+        Fri, 01 Nov 2019 10:56:31 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id d27sm1092561ill.64.2019.11.01.10.56.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 Nov 2019 10:56:30 -0700 (PDT)
+Subject: Re: BUG: unable to handle kernel paging request in io_wq_cancel_all
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+221cc24572a2fed23b6b@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Howells <dhowells@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, mchehab+samsung@kernel.org,
+        Ingo Molnar <mingo@redhat.com>, patrick.bellasi@arm.com,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+References: <00000000000069801e05961be5fb@google.com>
+ <0e2bc2bf-2a7a-73c5-03e2-9d08f89f0ffa@kernel.dk>
+ <CACT4Y+asiAtMVmA2QiNzTJC8OsX2NDXB7Dmj+v-Uy0tG5jpeFw@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <7fe298b7-4bc9-58e7-4173-63e3cbcbef25@kernel.dk>
+Date:   Fri, 1 Nov 2019 11:56:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACT4Y+asiAtMVmA2QiNzTJC8OsX2NDXB7Dmj+v-Uy0tG5jpeFw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On 11/1/19 11:50 AM, Dmitry Vyukov wrote:
+> On Wed, Oct 30, 2019 at 3:41 PM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> On 10/30/19 1:44 AM, syzbot wrote:
+>>> syzbot has bisected this bug to:
+>>>
+>>> commit ef0524d3654628ead811f328af0a4a2953a8310f
+>>> Author: Jens Axboe <axboe@kernel.dk>
+>>> Date:   Thu Oct 24 13:25:42 2019 +0000
+>>>
+>>>        io_uring: replace workqueue usage with io-wq
+>>>
+>>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16acf5d0e00000
+>>> start commit:   c57cf383 Add linux-next specific files for 20191029
+>>> git tree:       linux-next
+>>> final crash:    https://syzkaller.appspot.com/x/report.txt?x=15acf5d0e00000
+>>> console output: https://syzkaller.appspot.com/x/log.txt?x=11acf5d0e00000
+>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=cb86688f30db053d
+>>> dashboard link: https://syzkaller.appspot.com/bug?extid=221cc24572a2fed23b6b
+>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=168671d4e00000
+>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=140f4898e00000
+>>>
+>>> Reported-by: syzbot+221cc24572a2fed23b6b@syzkaller.appspotmail.com
+>>> Fixes: ef0524d36546 ("io_uring: replace workqueue usage with io-wq")
+>>
+>> Good catch, it's a case of NULL vs ERR_PTR() confusion. I'll fold in
+>> the below fix.
+> 
+> Hi Jens,
+> 
+> Please either add the syzbot tag to commit, or close manually with
+> "#syz fix" (though requires waiting until the fixed commit is in
+> linux-next).
+> See https://goo.gl/tpsmEJ#rebuilt-treesamended-patches for details.
+> Otherwise, the bug will be considered open and will waste time of
+> humans looking at open bugs and prevent syzbot from reporting new bugs
+> in io_uring.
 
-Please pull the latest sched-urgent-for-linus git tree from:
+It's queued up since two days ago:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-for-linus
+http://git.kernel.dk/cgit/linux-block/commit/?h=for-5.5/io_uring&id=975c99a570967dd48e917dd7853867fee3febabd
 
-   # HEAD: e284df705cf1eeedb5ec3a66ed82d17a64659150 sched/topology: Allow sched_asym_cpucapacity to be disabled
+and should have the right attributions, so hopefully it'll catch up
+eventually.
 
-Fix two scheduler topology bugs/oversights on Juno r0 2+4 big.LITTLE 
-systems.
+-- 
+Jens Axboe
 
- Thanks,
-
-	Ingo
-
------------------->
-Valentin Schneider (2):
-      sched/topology: Don't try to build empty sched domains
-      sched/topology: Allow sched_asym_cpucapacity to be disabled
-
-
- kernel/cgroup/cpuset.c  |  3 ++-
- kernel/sched/topology.c | 11 +++++++++--
- 2 files changed, 11 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index c52bc91f882b..c87ee6412b36 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -798,7 +798,8 @@ static int generate_sched_domains(cpumask_var_t **domains,
- 		    cpumask_subset(cp->cpus_allowed, top_cpuset.effective_cpus))
- 			continue;
- 
--		if (is_sched_load_balance(cp))
-+		if (is_sched_load_balance(cp) &&
-+		    !cpumask_empty(cp->effective_cpus))
- 			csa[csn++] = cp;
- 
- 		/* skip @cp's subtree if not a partition root */
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index b5667a273bf6..49b835f1305f 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1948,7 +1948,7 @@ static struct sched_domain_topology_level
- static int
- build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *attr)
- {
--	enum s_alloc alloc_state;
-+	enum s_alloc alloc_state = sa_none;
- 	struct sched_domain *sd;
- 	struct s_data d;
- 	struct rq *rq = NULL;
-@@ -1956,6 +1956,9 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
- 	struct sched_domain_topology_level *tl_asym;
- 	bool has_asym = false;
- 
-+	if (WARN_ON(cpumask_empty(cpu_map)))
-+		goto error;
-+
- 	alloc_state = __visit_domain_allocation_hell(&d, cpu_map);
- 	if (alloc_state != sa_rootdomain)
- 		goto error;
-@@ -2026,7 +2029,7 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
- 	rcu_read_unlock();
- 
- 	if (has_asym)
--		static_branch_enable_cpuslocked(&sched_asym_cpucapacity);
-+		static_branch_inc_cpuslocked(&sched_asym_cpucapacity);
- 
- 	if (rq && sched_debug_enabled) {
- 		pr_info("root domain span: %*pbl (max cpu_capacity = %lu)\n",
-@@ -2121,8 +2124,12 @@ int sched_init_domains(const struct cpumask *cpu_map)
-  */
- static void detach_destroy_domains(const struct cpumask *cpu_map)
- {
-+	unsigned int cpu = cpumask_any(cpu_map);
- 	int i;
- 
-+	if (rcu_access_pointer(per_cpu(sd_asym_cpucapacity, cpu)))
-+		static_branch_dec_cpuslocked(&sched_asym_cpucapacity);
-+
- 	rcu_read_lock();
- 	for_each_cpu(i, cpu_map)
- 		cpu_attach_domain(NULL, &def_root_domain, i);
