@@ -2,187 +2,116 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217D3CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FCDCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2D0820862
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F62020862
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CJ2q7aZ1"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fouVRXN9";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NCChyQLc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbfKAGzl (ORCPT
+        id S1728291AbfKAG7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 02:55:41 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:55131 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729234AbfKAGzj (ORCPT
+        Fri, 1 Nov 2019 02:59:25 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:32832 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbfKAG7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 02:55:39 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191101065537epoutp01cda44e9c254ea17c755e9ae9b149819b~S931cuKfx0431304313epoutp01F
-        for <linux-kernel@vger.kernel.org>; Fri,  1 Nov 2019 06:55:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191101065537epoutp01cda44e9c254ea17c755e9ae9b149819b~S931cuKfx0431304313epoutp01F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1572591337;
-        bh=6y5zp92aW7WyXIDBavkDiN5CumCyAgaC0bAZLoSm1yw=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=CJ2q7aZ1IB0XeQ7zBJ5isJU65mkxJEVnXiLqlNtFF8pK7yAFfyg2d/43f16WAOUtU
-         FeGCEDHpmlxvIQf+FvJlakXdimDlREtbx9eUep0qIlOluThP+5+9Kpn7W3n3186WGt
-         V5J7JxdFQBvzJSpC2ouFUAjVsg26N37t82ObFKZ4=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191101065537epcas1p20269cbb96d68c66c22a6b7333ec9eb2a~S931BNrMI1271412714epcas1p2U;
-        Fri,  1 Nov 2019 06:55:37 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 474Cd26YCnzMqYlv; Fri,  1 Nov
-        2019 06:55:34 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3F.A8.04068.6E6DBBD5; Fri,  1 Nov 2019 15:55:34 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191101065534epcas1p487ab18951c725c79495f546b8ff13bff~S93yl6a4I2361823618epcas1p4H;
-        Fri,  1 Nov 2019 06:55:34 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191101065534epsmtrp2df45c04e6aaa789ae1b25bf2be816d9e~S93ylHU4h0075400754epsmtrp2M;
-        Fri,  1 Nov 2019 06:55:34 +0000 (GMT)
-X-AuditID: b6c32a39-f47ff70000000fe4-a4-5dbbd6e69c6f
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B4.59.24756.6E6DBBD5; Fri,  1 Nov 2019 15:55:34 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191101065534epsmtip232091287ef28c718a1de871fa0077dad~S93yV-Gt70302403024epsmtip22;
-        Fri,  1 Nov 2019 06:55:34 +0000 (GMT)
-Subject: Re: [PATCH v7 15/19] PM / devfreq: tegra30: Disable consecutive
- interrupts when appropriate
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Peter Geis <pgwipeout@gmail.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <1e363539-c9fb-0b1c-8cf7-b1cf320a2d28@samsung.com>
-Date:   Fri, 1 Nov 2019 16:01:05 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191029220019.26773-16-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa1BMYRieb8/p7KmxfFbxyiCHGXTd07Y5IXIZdlxG4zY0kjPtsTXtbc7Z
-        EH/cV5EhY6YWyW0o45JW2tTE5hbCCOOWCTEYckkuI8OeTkb/nu95nu993vf7XprQnqZC6Uyb
-        UxBtvIWhgsjK+tExUa8fnE/VlTTFc8c/v0TcRvdBkmtc/17NNVXvpbj2/EuIy/3qprgn645R
-        XOPrmdzP6mKS237iLpUUZKxqPoyMXnez2pi/oY0ybveUIWP7mSHJASlZ4zME3iSIYYIt3W7K
-        tJkTmZnz0qakGeJ1bBSbwI1hwmy8VUhkps5KjpqWafE3xYSt4C3ZfiqZlyQmZsJ40Z7tFMIy
-        7JIzkREcJosjwREt8VYp22aOTrdbx7I6XazBb1yWlXH9Vy3heKNd9fT5b7QWneyThwJpwHHQ
-        4qkh8lAQrcVVCC48KkLK4QuC2w+3divfEDSW/ib+Xanc9IRUhFoEVwvWdbs+Ivje3tjl6oeX
-        w4UPRylZCMYHVXDi8rkugcCLod57XCVjCodD3ZuHlIz74GFw/8dLfzhNa/AEKHclyTSJR8CN
-        zg5CpkPwIrjRwcu0BveFhqJWUqYD8Rj448lRig+Ax637VQoeChvO7unu2aWGsvdxsh3wVOgs
-        sSp0P3h31aNWcCi0t9VSCl4DpQ2XupoHvAWBp+5OgCLooe7ILpVch8Cj4VR1jEIPA++vfUiJ
-        7Q1tHdsClCgNbNmsVSzDoamlWaXggXDIlUvtQIy7xyzuHgO4ewzg/h9Wgsgy1F9wSFazILEO
-        Q8+vPoO6tjU8oQpduTXLhzCNmF6awrzzqdoAfoWUY/UhoAkmWHPupJ/SmPic1YJoTxOzLYLk
-        Qwb/S+8kQkPS7f7dtznTWEOsXq/n4th4A8syAzSTjh5J1WIz7xSyBMEhiP/uqejA0LUo2FV0
-        7+3c6SGqzfS2ZxPv5nzbr/N1+FCnON9VeGtcftKniIVi3oJRs+ckV9avLM01H9AENwyeXTCS
-        rIgsLK9+1OKJ/Ci9q5kxNvLz5PW7L84oD7r/ovVO7CD7iKUH7N/Da2uKK1KuCaeO3Yx4vGQe
-        fqH3biqepO9rim4exKobXqV45zKklMGz4YQo8X8BnnTgQsMDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLIsWRmVeSWpSXmKPExsWy7bCSvO6za7tjDW5vkLdY/fExo0XLrEUs
-        Fmeb3rBbXN41h83ic+8RRovOL7PYLG43rmCzOPvM2+LnrnksFn1rL7E5cHnsuLuE0WPnrLvs
-        Hr3N79g8+rasYvT4vEkugDWKyyYlNSezLLVI3y6BK+PU773MBS+EKu48/MvYwLiOv4uRk0NC
-        wERiW+ttli5GLg4hgd2MEufX/2SDSEhKTLt4lLmLkQPIFpY4fLgYouYto8TsdbdZQWqEBdIk
-        DrxdzgaSEBFYwiRx9styZpAEs0CkRM/cLWwQHdsYJS71LQKbyiagJbH/xQ0wm19AUeLqj8eM
-        IBt4BewkNrY7gIRZBFQkTv/5CjZHVCBC4vn2G4wgNq+AoMTJmU9YQMo5Bcwl/m+phFilLvFn
-        3iWoteISt57MZ4Kw5SWat85mnsAoPAtJ9ywkLbOQtMxC0rKAkWUVo2RqQXFuem6xYYFhXmq5
-        XnFibnFpXrpecn7uJkZwpGlp7mC8vCT+EKMAB6MSD++Mrt2xQqyJZcWVuYcYJTiYlUR4t68D
-        CvGmJFZWpRblxxeV5qQWH2KU5mBREud9mncsUkggPbEkNTs1tSC1CCbLxMEp1cBYJuIjcdH/
-        Wc6e1vSGbXVvzcqjdiexr/m0ZpaRmHjAWdY2y53s61RKZqblBKpJrInJvzx7WZh61qudNeYz
-        Jq6SutHJulBrjn/grSNbd8vqOlyZkPk4VfnSJd+VWQExnreXzDy3pmzTkX9qC5SjP65zXTFJ
-        vuve/lynZ1MLP95xfFiv9eOGzd3XSizFGYmGWsxFxYkApulOP7ACAAA=
-X-CMS-MailID: 20191101065534epcas1p487ab18951c725c79495f546b8ff13bff
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191029220657epcas3p42c1eccf4499f36a57cdbd89a750fb60b
-References: <20191029220019.26773-1-digetx@gmail.com>
-        <CGME20191029220657epcas3p42c1eccf4499f36a57cdbd89a750fb60b@epcas3p4.samsung.com>
-        <20191029220019.26773-16-digetx@gmail.com>
+        Fri, 1 Nov 2019 02:59:24 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3F34160D4C; Fri,  1 Nov 2019 06:59:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572591563;
+        bh=SfMS6ugI/rbxN40RZqNQuk+KKQDvTM9lmtZxl8kl5+A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fouVRXN9i+GIe+yNFqu7GLWeB+vNlPCkh/VxSs9kWtfnPAsDvQqVoOGWIc3l+3u+e
+         rGoT2OJ/honfGmZurv24PifUyNVwHXvn196gZRXo0IxZ4tWmBpY0TWSm+SHPrLwrL7
+         MSheDSY9otv9EnbhUwX5fdmpH+ZGf36Iur8Ezd0g=
+Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0403360BF4;
+        Fri,  1 Nov 2019 06:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572591559;
+        bh=SfMS6ugI/rbxN40RZqNQuk+KKQDvTM9lmtZxl8kl5+A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=NCChyQLcN0/uqr0XwNlkbiPhqcQXduvY1sPUW1EqChXbIn11T7O9GQajpBD48TxdF
+         KiWtIX0jh8NTe892E9BLe+hpL47tzsca7iAZEIWZ0jGg0LfMQKc1dR9Gu+8yPUu3bM
+         B+xNMdHU8L3O6+N72dKiV63pVb1ndFBcQSu4ycRU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0403360BF4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
+From:   Kiran Gunda <kgunda@codeaurora.org>
+To:     bjorn.andersson@linaro.org, swboyd@chromium.org,
+        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V1] mfd: qcom-spmi-pmic: Add support for pm6150 and pm6150l
+Date:   Fri,  1 Nov 2019 12:29:03 +0530
+Message-Id: <1572591543-15501-1-git-send-email-kgunda@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 10. 30. 오전 7:00, Dmitry Osipenko wrote:
-> Consecutive interrupts should be disabled when boosting is completed.
-> 
-> Currently the disabling of "lower" interrupt happens only for MCCPU
-> monitor that uses dependency threshold, but even in a case of MCCPU the
-> interrupt isn't getting disabled if CPU's activity is above the threshold.
-> This results in a lot of dummy interrupt requests. The boosting feature is
-> used by both MCCPU and MCALL, boosting should be stopped once it reaches 0
-> for both of the monitors and regardless of the activity level.
-> 
-> The boosting stops to grow once the maximum limit is hit and thus the
-> "upper" interrupt needs to be disabled when the limit is reached.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra30-devfreq.c | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index a9336cf4b37a..b745a973c35a 100644
-> --- a/drivers/devfreq/tegra30-devfreq.c
-> +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -259,8 +259,10 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
->  
->  		dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
->  
-> -		if (dev->boost_freq >= tegra->max_freq)
-> +		if (dev->boost_freq >= tegra->max_freq) {
-> +			dev_ctrl &= ~ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
->  			dev->boost_freq = tegra->max_freq;
-> +		}
->  	} else if (intr_status & ACTMON_DEV_INTR_CONSECUTIVE_LOWER) {
->  		/*
->  		 * new_boost = old_boost * down_coef
-> @@ -271,15 +273,10 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
->  
->  		dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
->  
-> -		if (dev->boost_freq < (ACTMON_BOOST_FREQ_STEP >> 1))
-> -			dev->boost_freq = 0;
-> -	}
-> -
-> -	if (dev->config->avg_dependency_threshold) {
-> -		if (dev->avg_count >= dev->config->avg_dependency_threshold)
-> -			dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
-> -		else if (dev->boost_freq == 0)
-> +		if (dev->boost_freq < (ACTMON_BOOST_FREQ_STEP >> 1)) {
->  			dev_ctrl &= ~ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
-> +			dev->boost_freq = 0;
-> +		}
->  	}
->  
->  	device_writel(dev, dev_ctrl, ACTMON_DEV_CTRL);
-> 
+Add the compatibles and PMIC ids for pm6150 and pm6150l PMICs
+found on SC7180 based platforms.
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+---
+ Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt | 2 ++
+ drivers/mfd/qcom-spmi-pmic.c                             | 4 ++++
+ 2 files changed, 6 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+index 1437062..b5fc64e 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
++++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+@@ -32,6 +32,8 @@ Required properties:
+                    "qcom,pm8998",
+                    "qcom,pmi8998",
+                    "qcom,pm8005",
++		   "qcom,pm6150",
++		   "qcom,pm6150l",
+                    or generalized "qcom,spmi-pmic".
+ - reg:             Specifies the SPMI USID slave address for this device.
+                    For more information see:
+diff --git a/drivers/mfd/qcom-spmi-pmic.c b/drivers/mfd/qcom-spmi-pmic.c
+index e8fe705..d916aa8 100644
+--- a/drivers/mfd/qcom-spmi-pmic.c
++++ b/drivers/mfd/qcom-spmi-pmic.c
+@@ -34,6 +34,8 @@
+ #define PM8998_SUBTYPE		0x14
+ #define PMI8998_SUBTYPE		0x15
+ #define PM8005_SUBTYPE		0x18
++#define PM6150L_SUBTYPE		0x27
++#define PM6150_SUBTYPE		0x28
+ 
+ static const struct of_device_id pmic_spmi_id_table[] = {
+ 	{ .compatible = "qcom,spmi-pmic", .data = (void *)COMMON_SUBTYPE },
+@@ -53,6 +55,8 @@
+ 	{ .compatible = "qcom,pm8998",    .data = (void *)PM8998_SUBTYPE },
+ 	{ .compatible = "qcom,pmi8998",   .data = (void *)PMI8998_SUBTYPE },
+ 	{ .compatible = "qcom,pm8005",    .data = (void *)PM8005_SUBTYPE },
++	{ .compatible = "qcom,pm6150l",   .data = (void *)PM6150L_SUBTYPE },
++	{ .compatible = "qcom,pm6150",    .data = (void *)PM6150_SUBTYPE },
+ 	{ }
+ };
+ 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
+
