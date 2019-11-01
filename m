@@ -2,204 +2,269 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3412CA9ECE
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A20CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A167E20862
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D005120862
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 06:54:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="enpaHuDY"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="2KivfaIC";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="2KivfaIC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729734AbfKAGqJ (ORCPT
+        id S1729870AbfKAGyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 02:46:09 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:58954 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbfKAGqJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 02:46:09 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191101064605epoutp035a553a59f2ba776bfa7fd3f97ad0f472~S9vgymnjF3190131901epoutp03e
-        for <linux-kernel@vger.kernel.org>; Fri,  1 Nov 2019 06:46:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191101064605epoutp035a553a59f2ba776bfa7fd3f97ad0f472~S9vgymnjF3190131901epoutp03e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1572590765;
-        bh=oE1vKRf9KfKqu3zr6FieGsODlnie4bMmsyb+gfv+dTQ=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=enpaHuDYwXQPo3Zfcq56V26Y5sq/iIA+vdp+FznzNGNwMsDAkZ5xi4653DPD7xL0m
-         hp3ZjKghOO65sRffB4MN0rWVyBppakvTWToYjGAyLgkuLDzzE30TzgzvhZYnaqKvma
-         lVs83BI3qDamhC4J7RfqE2DTAVyYASJRnt4GhRkE=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191101064605epcas1p1323ab4351d7b964f67d531f2b6110bc5~S9vgY_6AN0373603736epcas1p1E;
-        Fri,  1 Nov 2019 06:46:05 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.156]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 474CQ25d6MzMqYkh; Fri,  1 Nov
-        2019 06:46:02 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AF.E7.04224.AA4DBBD5; Fri,  1 Nov 2019 15:46:02 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191101064602epcas1p10339b9c1a2eed204bac1acf3885d79a7~S9vdTg6lV0610206102epcas1p1R;
-        Fri,  1 Nov 2019 06:46:02 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191101064602epsmtrp2cd1980aeab7e3cfe894743e329be8b97~S9vdSpE4H2799827998epsmtrp2q;
-        Fri,  1 Nov 2019 06:46:02 +0000 (GMT)
-X-AuditID: b6c32a38-d5bff70000001080-d9-5dbbd4aa66dd
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D4.A6.25663.9A4DBBD5; Fri,  1 Nov 2019 15:46:01 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191101064601epsmtip2286b09d9f75b10b361a36590c3420d72~S9vdA0cqz2931229312epsmtip28;
-        Fri,  1 Nov 2019 06:46:01 +0000 (GMT)
-Subject: Re: [PATCH] PM / devfreq: events: fix excessive stack usage
-To:     Arnd Bergmann <arnd@arndb.de>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Lukasz Luba <l.luba@partner.samsung.com>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <e0d6b270-477a-9438-e992-263187bc52aa@samsung.com>
-Date:   Fri, 1 Nov 2019 15:51:32 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191022142703.1789898-1-arnd@arndb.de>
+        Fri, 1 Nov 2019 02:54:13 -0400
+Received: from mail-eopbgr70088.outbound.protection.outlook.com ([40.107.7.88]:5495
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725869AbfKAGyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 02:54:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Dwl4JXh3gudDNqqnWSO4qmhHyZFD7hivyUxQxR0plGY=;
+ b=2KivfaICzHYyUYef9HaUhEchtFV+Fvz/v3Dy7uOo9M37KlIU5zIWTmRioirZC5aRRqTwSmVVMNH3QniYAhm1qxo6EUEc/rjyGqWwCSjY0tYTKbsMGCZFcyO2znhNVSMvjcOn81E1Bp9VlttaxPlmJEEvW59tPPcw70owbKMFct4=
+Received: from VE1PR08CA0015.eurprd08.prod.outlook.com (2603:10a6:803:104::28)
+ by AM0PR08MB3812.eurprd08.prod.outlook.com (2603:10a6:208:fd::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.20; Fri, 1 Nov
+ 2019 06:54:05 +0000
+Received: from AM5EUR03FT048.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e08::204) by VE1PR08CA0015.outlook.office365.com
+ (2603:10a6:803:104::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2408.19 via Frontend
+ Transport; Fri, 1 Nov 2019 06:54:05 +0000
+Authentication-Results: spf=fail (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: Fail (protection.outlook.com: domain of arm.com does not
+ designate 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT048.mail.protection.outlook.com (10.152.17.177) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2387.20 via Frontend Transport; Fri, 1 Nov 2019 06:54:05 +0000
+Received: ("Tessian outbound 927f2cdd66cc:v33"); Fri, 01 Nov 2019 06:54:03 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 929eb414ead90db0
+X-CR-MTA-TID: 64aa7808
+Received: from a5a1095d5c28.2 (cr-mta-lb-1.cr-mta-net [104.47.12.50])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 0B309B24-EFC7-451E-BBDB-CD2C8B6C9A38.1;
+        Fri, 01 Nov 2019 06:53:58 +0000
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04lp2050.outbound.protection.outlook.com [104.47.12.50])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id a5a1095d5c28.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Fri, 01 Nov 2019 06:53:58 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b4K73owtHgtucvqFEUkoGVkrG0Z9vrQpINDNhylo5DUsXMeuH65pqzYxeTJsnA/P2HnzpMPR0O2qBiHLss4P2vIjB7jnFI7Oz2Vw/WHAYtXo9BYi0I18kwRJ1d8MmzbDBlEgOss9LXy9y/ItNWQQgfVjAYPhzltBkWtvc0DG5/tTI7N0LzhtGvgaR8Iws78XFwAYL4y3bMM+588PhtFXBqyzBeBcon1uyFdzSHf4HEf2k3KpfD9mO1MY3UbNCSOs2UN/eO/0gi0etocLc5xxArxLt/r5+xuPrG9vHjkryTMOXmFQpOvxzI20IUS1iH8knmugpJTuH93CKqyraWAJwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Dwl4JXh3gudDNqqnWSO4qmhHyZFD7hivyUxQxR0plGY=;
+ b=WQzAB7dSJx1S3J9sLVMloLHtn2+Cyg+gKsGHlSNBnambCNbJ7HfTxVsUiJFLwiFp0iHKWwG/FfL/m87dP27Z+94XGDWB/U2cfwG7FqYbyp7AnF6XK2SHvG/vBjO2u4Mi9xWc14ia/j3y1unnmHY8wFEjpsKqukW8JTAVl4LibvCgnpHxDxJ9lbnrClShLUb852vvWSj8KZSmh1dsZ9mKHWdtd/2h/6p5ppW7KbkIc3UTqvfFUYez5equbfvpUT/WvClfBhDn8xHSTRXtpyCGoLDz7q66m+QpM/l73w/+QrXYdG8eJHXyVAva9SskrJUrtyvqYKyPMxnEk0jtL2IvFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Dwl4JXh3gudDNqqnWSO4qmhHyZFD7hivyUxQxR0plGY=;
+ b=2KivfaICzHYyUYef9HaUhEchtFV+Fvz/v3Dy7uOo9M37KlIU5zIWTmRioirZC5aRRqTwSmVVMNH3QniYAhm1qxo6EUEc/rjyGqWwCSjY0tYTKbsMGCZFcyO2znhNVSMvjcOn81E1Bp9VlttaxPlmJEEvW59tPPcw70owbKMFct4=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1SPR01MB0002.eurprd08.prod.outlook.com (20.179.193.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.17; Fri, 1 Nov 2019 06:53:55 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::a809:417a:faf3:61a7]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::a809:417a:faf3:61a7%6]) with mapi id 15.20.2387.030; Fri, 1 Nov 2019
+ 06:53:55 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        Mihail Atanassov <Mihail.Atanassov@arm.com>,
+        "imirkin@alum.mit.edu" <imirkin@alum.mit.edu>
+CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Subject: [PATCH v8 2/4] drm/komeda: Add drm_lut_to_fgamma_coeffs()
+Thread-Topic: [PATCH v8 2/4] drm/komeda: Add drm_lut_to_fgamma_coeffs()
+Thread-Index: AQHVkIEgVFu/k1utEUml4A+vyEm+iQ==
+Date:   Fri, 1 Nov 2019 06:53:55 +0000
+Message-ID: <20191101065319.29251-3-james.qian.wang@arm.com>
+References: <20191101065319.29251-1-james.qian.wang@arm.com>
+In-Reply-To: <20191101065319.29251-1-james.qian.wang@arm.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOJsWRmVeSWpSXmKPExsWy7bCmge6qK7tjDVYtVrP4O+kYu0X/49fM
-        FufPb2C3ONv0ht3iVoOMxabH11gtLu+aw2bxufcIo8WM8/uYLG43rmBz4PL4/WsSo8emVZ1s
-        HpuX1HscfLeHyaNvyypGj8+b5ALYorJtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0t
-        zJUU8hJzU22VXHwCdN0yc4AOU1IoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUWBbo
-        FSfmFpfmpesl5+daGRoYGJkCFSZkZ1z7KlxwULRiwdmnzA2MEwW7GDk4JARMJE71hnQxcnEI
-        CexglFi/dDsLhPOJUeL9yilMEM43RomzB06zdzFygnU8n3SEGSKxl1Fi2fnXjBDOe0aJfbuW
-        sYBUCQu4SHy+/44NJCEisJ9RYvHt92AOs8BGRom9k6+BVbEJaEnsf3GDDcTmF1CUuPrjMSOI
-        zStgJ7Fs1xGwOIuAisTiKz/YQa4VFYiQOP01EaJEUOLkzCdgYzgFTCWW90K0MguIS9x6Mp8J
-        wpaXaN46G+xUCYF2dol5j+9D/eAise/tckYIW1ji1fEtUHEpic/v9rJB2NUSK08eYYNo7mCU
-        2LL/AitEwlhi/9LJTCAHMQtoSqzfpQ8RVpTY+Xsu1BF8Eu++9rBCQphXoqNNCKJEWeLyg7tM
-        ELakxOL2TrYJjEqzkLwzC8kLs5C8MAth2QJGllWMYqkFxbnpqcWGBSbIsb2JEZxotSx2MO45
-        53OIUYCDUYmHd0bX7lgh1sSy4srcQ4wSHMxKIrzb1wGFeFMSK6tSi/Lji0pzUosPMZoCA3si
-        s5Rocj4wC+SVxBuaGhkbG1uYGJqZGhoqifM6Ll8aKySQnliSmp2aWpBaBNPHxMEp1cC47siK
-        L7PSvTJn8FlJnQmdMO/1rXqxqpUP6j9U2t1tEZB8uSZ12b9X6flZF08pFjFfcmzZna/2/+vU
-        TfJFj5/OkFpzq+ywy2M75XPx6/4bPnh4oOmXGBvr8uzqtYEPPfU1V+RNPXGO6eq5cKmJ16v8
-        pm5ccaz13PcOFtNlsp+NWhSuLzDT6L2zQomlOCPRUIu5qDgRAP/Wx6fKAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsWy7bCSvO7KK7tjDRbdtrD4O+kYu0X/49fM
-        FufPb2C3ONv0ht3iVoOMxabH11gtLu+aw2bxufcIo8WM8/uYLG43rmBz4PL4/WsSo8emVZ1s
-        HpuX1HscfLeHyaNvyypGj8+b5ALYorhsUlJzMstSi/TtErgyrn0VLjgoWrHg7FPmBsaJgl2M
-        nBwSAiYSzycdYQaxhQR2M0o8eckLEZeUmHbxKFCcA8gWljh8uLiLkQuo5C2jxINvG1hAaoQF
-        XCQ+33/HBpIQEdjPKHHyz0FmEIdZYCNQ1eK5TBAtHYwS5z9fB1vBJqAlsf/FDTYQm19AUeLq
-        j8eMIDavgJ3Esl1HwOIsAioSi6/8YAexRQUiJJ5vvwFVIyhxcuYTsNWcAqYSy3shepkF1CX+
-        zLvEDGGLS9x6Mp8JwpaXaN46m3kCo/AsJO2zkLTMQtIyC0nLAkaWVYySqQXFuem5xYYFRnmp
-        5XrFibnFpXnpesn5uZsYwTGnpbWD8cSJ+EOMAhyMSjy8M7p2xwqxJpYVV+YeYpTgYFYS4d2+
-        DijEm5JYWZValB9fVJqTWnyIUZqDRUmcVz7/WKSQQHpiSWp2ampBahFMlomDU6qBMVBpyz35
-        GdPTFXjCAm7vafNsjNvAZCn0ff3cPQev6k014W5N1niz6FSY9bfLTokrC1mZH9bqvb71T+r9
-        yiWnFQPCWE8cSPp7V999yUJe4+7exmzdRtOPVht4y/xCLzN4uT862nPu41KOh+ezdi9Zu+e5
-        wedzn7epFK0Ma7djeMqgXr8pa7pJvRJLcUaioRZzUXEiALC0KYy1AgAA
-X-CMS-MailID: 20191101064602epcas1p10339b9c1a2eed204bac1acf3885d79a7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191022142726epcas3p4c09cde8944f5e8f1472b496e1e1fbccc
-References: <CGME20191022142726epcas3p4c09cde8944f5e8f1472b496e1e1fbccc@epcas3p4.samsung.com>
-        <20191022142703.1789898-1-arnd@arndb.de>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2PR0302CA0022.apcprd03.prod.outlook.com
+ (2603:1096:202::32) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 8767e92b-1232-4b0f-ab2f-08d75e984926
+X-MS-TrafficTypeDiagnostic: VE1SPR01MB0002:|VE1SPR01MB0002:|AM0PR08MB3812:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR08MB3812AB256AD176705825998DB3620@AM0PR08MB3812.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:2043;OLM:2043;
+x-forefront-prvs: 020877E0CB
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(39860400002)(346002)(366004)(199004)(189003)(66066001)(446003)(11346002)(2616005)(486006)(36756003)(8676002)(14454004)(5660300002)(476003)(103116003)(2501003)(2171002)(86362001)(3846002)(6116002)(305945005)(2201001)(25786009)(1076003)(6512007)(66476007)(52116002)(71200400001)(71190400001)(386003)(55236004)(6506007)(6436002)(102836004)(6486002)(7736002)(14444005)(186003)(99286004)(8936002)(110136005)(4326008)(54906003)(50226002)(478600001)(64756008)(2906002)(66446008)(81156014)(66556008)(316002)(66946007)(81166006)(76176011)(256004)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1SPR01MB0002;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: qZDG91QD8O+FoDU/18w1oR5vlENb4mdrhD6VlYHDQ+PoUMSGhGWABd5h8e9Dd6kpesqmxrji4Slb9dJzDcOZ5xsPvtAB6HLtwX0lc5jNPnKAcCo0Z2MwzQHe+WM2jb9ghP9BihkGhgb2n1czjlSIYGdueyPT75bqycGgYOjm/smWIQCsJ3h8iD7e7kye8KD9QBdO2DT1gjaVvdaX9Hk0X7+88fC2KnAMTC1kX7yLxzP6BBrZQj96LKk0Ml4J+I/La4uqUbBpVw4EBflGPYSpQuliReg49pFue14FQrrscrYjVKc9pNEgmidPQvEn4NonPx3uOfdgrOvQo8WXUlG/wHwKMdOxhnJlZ3ynQw2Fg1w17EUB+vp34uqok/RwE4lKEViCUJHX/8Z87PEEAH25B8YLrOvPWb6hHJLfT5uOutTSqzOgwauCAqoD3KoXFb6u
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1SPR01MB0002
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT048.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(376002)(39860400002)(1110001)(339900001)(199004)(189003)(22756006)(81166006)(4326008)(2201001)(81156014)(6506007)(8746002)(76176011)(23756003)(110136005)(11346002)(14454004)(25786009)(54906003)(5660300002)(386003)(8936002)(86362001)(36756003)(8676002)(476003)(2906002)(102836004)(50226002)(26005)(126002)(76130400001)(1076003)(7736002)(2501003)(3846002)(2616005)(356004)(486006)(186003)(2171002)(99286004)(336012)(26826003)(6116002)(446003)(305945005)(6486002)(70206006)(70586007)(36906005)(47776003)(66066001)(50466002)(103116003)(105606002)(6512007)(316002)(478600001)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB3812;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Fail;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 6063315d-7c59-40e9-bf82-08d75e984354
+NoDisclaimer: True
+X-Forefront-PRVS: 020877E0CB
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: MaqfOLxYuaZoEN7kbXn35N6lmYUgZiR8Bp5YvRsV/fsSwgbq8TjSQ2UxpBlMrtLiwEpLIH64RGlQfrsUeeWgFJ3/AYqMXARAmqEy6j5TokrTXcwsT7blN/yhhHpwK/4b7VqjygAEM9Ap34Grr7oTBCpdQN3yZKMVjOViOpntuzcPu67Z0zjVV70z1l71r/pZSdTlB7A28vU3dImhwqjFRXFULrtmhelbQ8tydcaagLKzS8t27Qf+z/4U0Sqx+SYnAI9i6WrvPf8E/dlc4Pn8MIGHszzpL/O/VLo99fxfaHxwH5c+6wEf/7cYZSaXsj95SDhK8Q9gOJ9yjYA7RRt7YM0CQ+2SP23fboMftgG22lTgt1lAmAppQtGDI+3zeXhl0hl2Ve3f9yZRPDFASINFS8bFVKqUdxB83U7rs1q8FGdUPz8Y3HTS4ABHNWDhX6Kg
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Nov 2019 06:54:05.0894
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8767e92b-1232-4b0f-ab2f-08d75e984926
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3812
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+This function is used to convert drm color lut to komeda HW required curve
+coeffs values.
 
-On 19. 10. 22. 오후 11:26, Arnd Bergmann wrote:
-> Putting a 'struct devfreq_event_dev' object on the stack is generally
-> a bad idea and here it leads to a warnig about potential stack overflow:
-> 
-> drivers/devfreq/event/exynos-ppmu.c:643:12: error: stack frame size of 1040 bytes in function 'exynos_ppmu_probe' [-Werror,-Wframe-larger-than=]
-> 
-> There is no real need for the device structure, only the string inside
-> it, so add an internal helper function that simply takes the string
-> as its argument and remove the device structure.
-> 
-> Fixes: 1dd62c66d345 ("PM / devfreq: events: extend events by type of counted data")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/devfreq/event/exynos-ppmu.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
-> index 87b42055e6bc..302e466549d3 100644
-> --- a/drivers/devfreq/event/exynos-ppmu.c
-> +++ b/drivers/devfreq/event/exynos-ppmu.c
-> @@ -101,17 +101,22 @@ static struct __exynos_ppmu_events {
->  	PPMU_EVENT(dmc1_1),
->  };
->  
-> -static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
-> +static int __exynos_ppmu_find_ppmu_id(const char *edev_name)
->  {
->  	int i;
->  
->  	for (i = 0; i < ARRAY_SIZE(ppmu_events); i++)
-> -		if (!strcmp(edev->desc->name, ppmu_events[i].name))
-> +		if (!strcmp(edev_name, ppmu_events[i].name))
->  			return ppmu_events[i].id;
->  
->  	return -EINVAL;
->  }
->  
-> +static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
-> +{
-> +	return __exynos_ppmu_find_ppmu_id(edev->desc->name);
-> +}
-> +
->  /*
->   * The devfreq-event ops structure for PPMU v1.1
->   */
-> @@ -556,13 +561,11 @@ static int of_get_devfreq_events(struct device_node *np,
->  			 * use default if not.
->  			 */
->  			if (info->ppmu_type == EXYNOS_TYPE_PPMU_V2) {
-> -				struct devfreq_event_dev edev;
->  				int id;
->  				/* Not all registers take the same value for
->  				 * read+write data count.
->  				 */
-> -				edev.desc = &desc[j];
-> -				id = exynos_ppmu_find_ppmu_id(&edev);
-> +				id = __exynos_ppmu_find_ppmu_id(desc->name);
+Signed-off-by: james qian wang (Arm Technology China) <james.qian.wang@arm.=
+com>
+Reviewed-by: Mihail Atanassov <mihail.atanassov@arm.com>
+---
+ .../arm/display/komeda/komeda_color_mgmt.c    | 52 +++++++++++++++++++
+ .../arm/display/komeda/komeda_color_mgmt.h    |  9 +++-
+ 2 files changed, 60 insertions(+), 1 deletion(-)
 
-I got that the original exynos_ppmu_find_ppmu_id() function
-has the bug. If 'events' node contains the one more events,
-it will be failed. Because 'events' node only contained
-the only one event on device-tree node on real use-case,
-the problem had not happened.
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.c b/drive=
+rs/gpu/drm/arm/display/komeda/komeda_color_mgmt.c
+index 9d14a92dbb17..c180ce70c26c 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.c
+@@ -65,3 +65,55 @@ const s32 *komeda_select_yuv2rgb_coeffs(u32 color_encodi=
+ng, u32 color_range)
+=20
+ 	return coeffs;
+ }
++
++struct gamma_curve_sector {
++	u32 boundary_start;
++	u32 num_of_segments;
++	u32 segment_width;
++};
++
++struct gamma_curve_segment {
++	u32 start;
++	u32 end;
++};
++
++static struct gamma_curve_sector sector_tbl[] =3D {
++	{ 0,    4,  4   },
++	{ 16,   4,  4   },
++	{ 32,   4,  8   },
++	{ 64,   4,  16  },
++	{ 128,  4,  32  },
++	{ 256,  4,  64  },
++	{ 512,  16, 32  },
++	{ 1024, 24, 128 },
++};
++
++static void
++drm_lut_to_coeffs(struct drm_property_blob *lut_blob, u32 *coeffs,
++		  struct gamma_curve_sector *sector_tbl, u32 num_sectors)
++{
++	struct drm_color_lut *lut;
++	u32 i, j, in, num =3D 0;
++
++	if (!lut_blob)
++		return;
++
++	lut =3D lut_blob->data;
++
++	for (i =3D 0; i < num_sectors; i++) {
++		for (j =3D 0; j < sector_tbl[i].num_of_segments; j++) {
++			in =3D sector_tbl[i].boundary_start +
++			     j * sector_tbl[i].segment_width;
++
++			coeffs[num++] =3D drm_color_lut_extract(lut[in].red,
++						KOMEDA_COLOR_PRECISION);
++		}
++	}
++
++	coeffs[num] =3D BIT(KOMEDA_COLOR_PRECISION);
++}
++
++void drm_lut_to_fgamma_coeffs(struct drm_property_blob *lut_blob, u32 *coe=
+ffs)
++{
++	drm_lut_to_coeffs(lut_blob, coeffs, sector_tbl, ARRAY_SIZE(sector_tbl));
++}
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.h b/drive=
+rs/gpu/drm/arm/display/komeda/komeda_color_mgmt.h
+index a2df218f58e7..08ab69281648 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.h
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.h
+@@ -11,7 +11,14 @@
+ #include <drm/drm_color_mgmt.h>
+=20
+ #define KOMEDA_N_YUV2RGB_COEFFS		12
++#define KOMEDA_N_RGB2YUV_COEFFS		12
++#define KOMEDA_COLOR_PRECISION		12
++#define KOMEDA_N_GAMMA_COEFFS		65
++#define KOMEDA_COLOR_LUT_SIZE		BIT(KOMEDA_COLOR_PRECISION)
++#define KOMEDA_N_CTM_COEFFS		9
++
++void drm_lut_to_fgamma_coeffs(struct drm_property_blob *lut_blob, u32 *coe=
+ffs);
+=20
+ const s32 *komeda_select_yuv2rgb_coeffs(u32 color_encoding, u32 color_rang=
+e);
+=20
+-#endif
++#endif /*_KOMEDA_COLOR_MGMT_H_*/
+--=20
+2.20.1
 
-'desc' indicates the array. So, instead of desc->name,
-have to use 'desc[j].name correctly. 
-
-And I'll fix the fundamental bug on separate patch.
-
->  
->  				switch (id) {
->  				case PPMU_PMNCNT0:
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
