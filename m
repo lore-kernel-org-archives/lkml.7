@@ -2,168 +2,270 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8DACA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A95CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4B91217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14544217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 17:34:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="3p9p1xUy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ixJofA81"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbfKAReG (ORCPT
+        id S1729538AbfKAReO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 13:34:06 -0400
-Received: from mail-eopbgr820042.outbound.protection.outlook.com ([40.107.82.42]:34496
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729138AbfKAReF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 13:34:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N14tV5hKaVRPsDzR6dtkZ+a3ghr3542h1dxWpewTPPSOxHbGlSiyEW+iQLi7yn/IpejZJLgu1CWeqUYx3WEmyDkPDRrJK0GyD+LydpXUy2F8b0lprq6gSRkDkTbo2Aq/TOSu2EqHxhFG0cyT0dpF7JnYDTlYiyMwI4HsAChldwSxDyHwIXsZ25FC/tZhJdtFuOS6vETDStLEE0ewVlxd3NGLZ+h+v40BW2uh3bb00qrK0jmaUkekoJUiHzWadsVcW1dXO7ggF5McGWCcQIBZwK/Nr2Q8HIfarnl4M+HOIcO9mOq4g+OKjO+mXgY6ifNfSiVfXQxqN5PL3eeTgcnk5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ukvZmZHoEw0wxITAiKHm0gtuQ6hWeOC+/X77rDtK+xM=;
- b=Z0/8+l/TcAqpzedTLXaFnuOpQI1wsB+u4lPzjm66sai30Ae9QBi0vT1xW+Gt0dDJpOhGnpx/aK+s7B+wLvtGSEYVpVlg1m1kPxjV2GqEBjCU48YV23q5W+N9rIbsyNXS/YX7AS3J5R9bws6cmbzFUNNBSlEixnLsPlingzlKSu6JKm23huwuW55EE09haUt3ECuVhZy0RfI3IuoZQdhLCpHtmkK8glhb4Dj8KvRDBdFwMdZGfvMmoO5AXP5njzd3v1PBb5CZzHFkvWKV7D7g3HGgJ4KJpukUHz5371w+hmvNoX9IBKY9uI4zKMejYxno4sfoPi03L/95euSK40s/2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ukvZmZHoEw0wxITAiKHm0gtuQ6hWeOC+/X77rDtK+xM=;
- b=3p9p1xUy9qHyjoFVNMU6tufOUHMdWGfEQxsvH2mY7/kjHvYwehVVk3NhAuGrCOcFuYHAF1Sax2/XX8zK32yKHw9DZcy63hCA5WyFDUI+jc1SYLcjyN05rdrLKQt7oZJNTyDfq56ipM302tardWOw1AkWBYxfbyxGzgt/pXJc8ts=
-Received: from BL0PR12MB2468.namprd12.prod.outlook.com (52.132.30.157) by
- BL0PR12MB2451.namprd12.prod.outlook.com (52.132.11.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.24; Fri, 1 Nov 2019 17:34:01 +0000
-Received: from BL0PR12MB2468.namprd12.prod.outlook.com
- ([fe80::748c:1f32:1a4d:acca]) by BL0PR12MB2468.namprd12.prod.outlook.com
- ([fe80::748c:1f32:1a4d:acca%7]) with mapi id 15.20.2387.028; Fri, 1 Nov 2019
- 17:34:00 +0000
-From:   "Moger, Babu" <Babu.Moger@amd.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>
-CC:     "x86@kernel.org" <x86@kernel.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Moger, Babu" <Babu.Moger@amd.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "nayna@linux.ibm.com" <nayna@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: [PATCH 4/4] x86/Kconfig: Rename UMIP config parameter
-Thread-Topic: [PATCH 4/4] x86/Kconfig: Rename UMIP config parameter
-Thread-Index: AQHVkNqMYpA3/AJr/06gaFyuP7Wa9g==
-Date:   Fri, 1 Nov 2019 17:34:00 +0000
-Message-ID: <157262963852.2838.14488338442051597577.stgit@naples-babu.amd.com>
-References: <157262960837.2838.17520432516398899751.stgit@naples-babu.amd.com>
-In-Reply-To: <157262960837.2838.17520432516398899751.stgit@naples-babu.amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0501CA0002.namprd05.prod.outlook.com
- (2603:10b6:803:40::15) To BL0PR12MB2468.namprd12.prod.outlook.com
- (2603:10b6:207:44::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Babu.Moger@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.78.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8dab568a-25a6-4fe0-ee76-08d75ef1aea3
-x-ms-traffictypediagnostic: BL0PR12MB2451:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BL0PR12MB24510010A98A84659156EBC695620@BL0PR12MB2451.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 020877E0CB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(346002)(39860400002)(396003)(136003)(189003)(199004)(8936002)(4326008)(54906003)(186003)(478600001)(64756008)(11346002)(66066001)(14454004)(7416002)(476003)(86362001)(316002)(486006)(71190400001)(99286004)(256004)(2906002)(14444005)(76176011)(81156014)(71200400001)(110136005)(8676002)(66556008)(66446008)(52116002)(102836004)(3846002)(386003)(2501003)(81166006)(5660300002)(6506007)(66476007)(66946007)(6436002)(6512007)(6486002)(6116002)(26005)(446003)(103116003)(2201001)(305945005)(25786009)(7736002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR12MB2451;H:BL0PR12MB2468.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dkNn2meK8hqMQ4HzHK+ivvauecgozFJE/Hznr6Dbj/Q0hdTXz9rD86mzV2fRnDiRfl+U5y7/cjHa8G4+gCoG54fyw2RJP4PN/3dwLdVUtanCmuTQK4NjJuTRPj6e+H9CS1of1nK9sp+r7xIMdJcFm+fRPc0JrhUPRrP7lJIYHSK0ksDlGJQZgnPGKOoeL7fOYJOTKOOkYU5GVCaUQia8GdWJuPmSICOu+RLhd9eejIZ3Wz527kqxnK38U17G/PF0xDNHhJJ3Sv9eLrm8IdZk2tfjnS81C42ijWDUqYLC+7/CLQUej9D5ODPAyFTqW7x5TT3adoRKxkaaaem5qZeGSeHgbnP7r0neaB67kj5daR2Dprx9iUFo69YTDG/Lh8qmkqOlBnpK/mMCLbADa5rkR1NkBIRWwN+9CyZKHR5H1964SyqmEXNqN06DuaOi71VB
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <682AA788FAC95F4EBD8959531CF1B4AE@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 1 Nov 2019 13:34:14 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59254 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729443AbfKAReN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 13:34:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572629651;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=BnSm/pyC1zFaEEQQT2Q7WTcKwm88OoHgQ5K89nMoPpE=;
+        b=ixJofA81OWIRjy2UNQaNI64lSQF7AhO2sdNk8XSx/HaGc9HfwxDjSf8ijz0dlwkHdeOyIX
+        dZLiCoDpjRDpmOWYDBcHOILPkCRDuVMvlptRlCEj0c9XcC/fk0L2Jk15Q1EJdT2W6R++vF
+        Ad04/v3TCCEUFa8DTSjmmBwX4t1ZhS4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-198-TbZ0HN8tPs2XGeG71slkgg-1; Fri, 01 Nov 2019 13:34:05 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE672800EB4;
+        Fri,  1 Nov 2019 17:34:03 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-40.rdu2.redhat.com [10.10.121.40])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D8DC6600D1;
+        Fri,  1 Nov 2019 17:34:00 +0000 (UTC)
+Subject: [RFC PATCH 00/11] pipe: Notification queue preparation [ver #3]
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     dhowells@redhat.com, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>, dhowells@redhat.com,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 01 Nov 2019 17:34:00 +0000
+Message-ID: <157262963995.13142.5568934007158044624.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8dab568a-25a6-4fe0-ee76-08d75ef1aea3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2019 17:34:00.8051
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: I354mym5Nu81hx9+jy50o0B4eKQrj9Yg2JNaq74tGz7UEmMqTOvE8mQE/xzxAO8m
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB2451
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: TbZ0HN8tPs2XGeG71slkgg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QU1EIDJuZCBnZW5lcmF0aW9uIEVQWUMgcHJvY2Vzc29ycyBzdXBwb3J0IHRoZSBVTUlQIChVc2Vy
-LU1vZGUNCkluc3RydWN0aW9uIFByZXZlbnRpb24pIGZlYXR1cmUuIFNvLCByZW5hbWUgWDg2X0lO
-VEVMX1VNSVAgdG8NCmdlbmVyaWMgWDg2X1VNSVAgYW5kIG1vZGlmeSB0aGUgdGV4dCB0byBjb3Zl
-ciBib3RoIEludGVsIGFuZCBBTUQuDQoNClNpZ25lZC1vZmYtYnk6IEJhYnUgTW9nZXIgPGJhYnUu
-bW9nZXJAYW1kLmNvbT4NCi0tLQ0KIGFyY2gveDg2L0tjb25maWcgICAgICAgICAgICAgICAgICAg
-ICAgICAgfCAgICA4ICsrKystLS0tDQogYXJjaC94ODYvaW5jbHVkZS9hc20vZGlzYWJsZWQtZmVh
-dHVyZXMuaCB8ICAgIDIgKy0NCiBhcmNoL3g4Ni9pbmNsdWRlL2FzbS91bWlwLmggICAgICAgICAg
-ICAgIHwgICAgNCArKy0tDQogYXJjaC94ODYva2VybmVsL01ha2VmaWxlICAgICAgICAgICAgICAg
-ICB8ICAgIDIgKy0NCiA0IGZpbGVzIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlv
-bnMoLSkNCg0KZGlmZiAtLWdpdCBhL2FyY2gveDg2L0tjb25maWcgYi9hcmNoL3g4Ni9LY29uZmln
-DQppbmRleCBkNmUxZmFhMjhjNTguLjgyMWI3Y2ViZmYzMSAxMDA2NDQNCi0tLSBhL2FyY2gveDg2
-L0tjb25maWcNCisrKyBiL2FyY2gveDg2L0tjb25maWcNCkBAIC0xODgwLDEzICsxODgwLDEzIEBA
-IGNvbmZpZyBYODZfU01BUA0KIA0KIAkgIElmIHVuc3VyZSwgc2F5IFkuDQogDQotY29uZmlnIFg4
-Nl9JTlRFTF9VTUlQDQorY29uZmlnIFg4Nl9VTUlQDQogCWRlZl9ib29sIHkNCi0JZGVwZW5kcyBv
-biBDUFVfU1VQX0lOVEVMDQotCXByb21wdCAiSW50ZWwgVXNlciBNb2RlIEluc3RydWN0aW9uIFBy
-ZXZlbnRpb24iIGlmIEVYUEVSVA0KKwlkZXBlbmRzIG9uIFg4NiAmJiAoQ1BVX1NVUF9JTlRFTCB8
-fCBDUFVfU1VQX0FNRCkNCisJcHJvbXB0ICJVc2VyIE1vZGUgSW5zdHJ1Y3Rpb24gUHJldmVudGlv
-biIgaWYgRVhQRVJUDQogCS0tLWhlbHAtLS0NCiAJICBUaGUgVXNlciBNb2RlIEluc3RydWN0aW9u
-IFByZXZlbnRpb24gKFVNSVApIGlzIGEgc2VjdXJpdHkNCi0JICBmZWF0dXJlIGluIG5ld2VyIElu
-dGVsIHByb2Nlc3NvcnMuIElmIGVuYWJsZWQsIGEgZ2VuZXJhbA0KKwkgIGZlYXR1cmUgaW4gbmV3
-ZXIgeDg2IHByb2Nlc3NvcnMuIElmIGVuYWJsZWQsIGEgZ2VuZXJhbA0KIAkgIHByb3RlY3Rpb24g
-ZmF1bHQgaXMgaXNzdWVkIGlmIHRoZSBTR0RULCBTTERULCBTSURULCBTTVNXDQogCSAgb3IgU1RS
-IGluc3RydWN0aW9ucyBhcmUgZXhlY3V0ZWQgaW4gdXNlciBtb2RlLiBUaGVzZSBpbnN0cnVjdGlv
-bnMNCiAJICB1bm5lY2Vzc2FyaWx5IGV4cG9zZSBpbmZvcm1hdGlvbiBhYm91dCB0aGUgaGFyZHdh
-cmUgc3RhdGUuDQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vZGlzYWJsZWQtZmVh
-dHVyZXMuaCBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL2Rpc2FibGVkLWZlYXR1cmVzLmgNCmluZGV4
-IGE1ZWE4NDFjYzZkMi4uOGUxZDBiYjQ2MzYxIDEwMDY0NA0KLS0tIGEvYXJjaC94ODYvaW5jbHVk
-ZS9hc20vZGlzYWJsZWQtZmVhdHVyZXMuaA0KKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vZGlz
-YWJsZWQtZmVhdHVyZXMuaA0KQEAgLTIyLDcgKzIyLDcgQEANCiAjIGRlZmluZSBESVNBQkxFX1NN
-QVAJKDE8PChYODZfRkVBVFVSRV9TTUFQICYgMzEpKQ0KICNlbmRpZg0KIA0KLSNpZmRlZiBDT05G
-SUdfWDg2X0lOVEVMX1VNSVANCisjaWZkZWYgQ09ORklHX1g4Nl9VTUlQDQogIyBkZWZpbmUgRElT
-QUJMRV9VTUlQCTANCiAjZWxzZQ0KICMgZGVmaW5lIERJU0FCTEVfVU1JUAkoMTw8KFg4Nl9GRUFU
-VVJFX1VNSVAgJiAzMSkpDQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vdW1pcC5o
-IGIvYXJjaC94ODYvaW5jbHVkZS9hc20vdW1pcC5oDQppbmRleCBkYjQzZjJhMGQ5MmMuLmFlZWQ5
-OGMzYzllMSAxMDA2NDQNCi0tLSBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL3VtaXAuaA0KKysrIGIv
-YXJjaC94ODYvaW5jbHVkZS9hc20vdW1pcC5oDQpAQCAtNCw5ICs0LDkgQEANCiAjaW5jbHVkZSA8
-bGludXgvdHlwZXMuaD4NCiAjaW5jbHVkZSA8YXNtL3B0cmFjZS5oPg0KIA0KLSNpZmRlZiBDT05G
-SUdfWDg2X0lOVEVMX1VNSVANCisjaWZkZWYgQ09ORklHX1g4Nl9VTUlQDQogYm9vbCBmaXh1cF91
-bWlwX2V4Y2VwdGlvbihzdHJ1Y3QgcHRfcmVncyAqcmVncyk7DQogI2Vsc2UNCiBzdGF0aWMgaW5s
-aW5lIGJvb2wgZml4dXBfdW1pcF9leGNlcHRpb24oc3RydWN0IHB0X3JlZ3MgKnJlZ3MpIHsgcmV0
-dXJuIGZhbHNlOyB9DQotI2VuZGlmICAvKiBDT05GSUdfWDg2X0lOVEVMX1VNSVAgKi8NCisjZW5k
-aWYgIC8qIENPTkZJR19YODZfVU1JUCAqLw0KICNlbmRpZiAgLyogX0FTTV9YODZfVU1JUF9IICov
-DQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL01ha2VmaWxlIGIvYXJjaC94ODYva2VybmVs
-L01ha2VmaWxlDQppbmRleCAzNTc4YWQyNDhiYzkuLjUyY2UxZTIzOTUyNSAxMDA2NDQNCi0tLSBh
-L2FyY2gveDg2L2tlcm5lbC9NYWtlZmlsZQ0KKysrIGIvYXJjaC94ODYva2VybmVsL01ha2VmaWxl
-DQpAQCAtMTM0LDcgKzEzNCw3IEBAIG9iai0kKENPTkZJR19FRkkpCQkJKz0gc3lzZmJfZWZpLm8N
-CiBvYmotJChDT05GSUdfUEVSRl9FVkVOVFMpCQkrPSBwZXJmX3JlZ3Mubw0KIG9iai0kKENPTkZJ
-R19UUkFDSU5HKQkJCSs9IHRyYWNlcG9pbnQubw0KIG9iai0kKENPTkZJR19TQ0hFRF9NQ19QUklP
-KQkJKz0gaXRtdC5vDQotb2JqLSQoQ09ORklHX1g4Nl9JTlRFTF9VTUlQKQkJKz0gdW1pcC5vDQor
-b2JqLSQoQ09ORklHX1g4Nl9VTUlQKQkJCSs9IHVtaXAubw0KIA0KIG9iai0kKENPTkZJR19VTldJ
-TkRFUl9PUkMpCQkrPSB1bndpbmRfb3JjLm8NCiBvYmotJChDT05GSUdfVU5XSU5ERVJfRlJBTUVf
-UE9JTlRFUikJKz0gdW53aW5kX2ZyYW1lLm8NCg0K
+
+Here's a set of preparatory patches for building a general notification
+queue on top of pipes.  It makes a number of significant changes:
+
+ (1) It removes the nr_exclusive argument from __wake_up_sync_key() as this
+     is always 1.  This prepares for step 2.
+
+ (2) Adds wake_up_interruptible_sync_poll_locked() so that poll can be
+     woken up from a function that's holding the poll waitqueue spinlock.
+
+ (3) Change the pipe buffer ring to be managed in terms of unbounded head
+     and tail indices rather than bounded index and length.  This means
+     that reading the pipe only needs to modify one index, not two.
+
+ (4) A selection of helper functions are provided to query the state of the
+     pipe buffer, plus a couple to apply updates to the pipe indices.
+
+ (5) The pipe ring is allowed to have kernel-reserved slots.  This allows
+     many notification messages to be spliced in by the kernel without
+     allowing userspace to pin too many pages if it writes to the same
+     pipe.
+
+ (6) Advance the head and tail indices inside the pipe waitqueue lock and
+     use step 2 to poke poll without having to take the lock twice.
+
+ (7) Rearrange pipe_write() to preallocate the buffer it is going to write
+     into and then drop the spinlock.  This allows kernel notifications to
+     then be added the ring whilst it is filling the buffer it allocated.
+     The read side is stalled because the pipe mutex is still held.
+
+ (8) Don't wake up readers on a pipe if there was already data in it when
+     we added more.
+
+ (9) Don't wake up writers on a pipe if the ring wasn't full before we
+     removed a buffer.
+
+The patches can be found here also:
+
+=09http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=
+=3Dnotifications-pipe-prep
+
+PATCHES=09BENCHMARK=09BEST=09=09TOTAL BYTES=09AVG BYTES=09STDDEV
+=3D=3D=3D=3D=3D=3D=3D=09=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=09=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=09=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=09=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=09=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+-=09pipe=09=09      307457969=09    36348556755=09      302904639=09       =
+10622403
+-=09splice=09=09      287117614=09    26933658717=09      224447155=09     =
+ 160777958
+-=09vmsplice=09      435180375=09    51302964090=09      427524700=09      =
+ 19083037
+
+rm-nrx=09pipe=09=09      311091179=09    37093181356=09      309109844=09  =
+      7221622
+rm-nrx=09splice=09=09      285628049=09    27916298942=09      232635824=09=
+      158296431
+rm-nrx=09vmsplice=09      417703153=09    47570362546=09      396419687=09 =
+      33960822
+
+wakesl=09pipe=09=09      310698731=09    36772541631=09      306437846=09  =
+      8249347
+wakesl=09splice=09=09      286193726=09    28600435451=09      238336962=09=
+      141169318
+wakesl=09vmsplice=09      436175803=09    50723895824=09      422699131=09 =
+      40724240
+
+ht=09pipe=09=09      305534565=09    36426079543=09      303550662=09      =
+  5673885
+ht=09splice=09=09      243632025=09    23319439010=09      194328658=09    =
+  150479853
+ht=09vmsplice=09      432825176=09    49101781001=09      409181508=09     =
+  44102509
+
+k-rsv=09pipe=09=09      308691523=09    36652267561=09      305435563=09   =
+    12972559
+k-rsv=09splice=09=09      244793528=09    23625172865=09      196876440=09 =
+     125319143
+k-rsv=09vmsplice=09      436119082=09    49460808579=09      412173404=09  =
+     55547525
+
+r-adv-t=09pipe=09=09      310094218=09    36860182219=09      307168185=09 =
+       8081101
+r-adv-t=09splice=09=09      285527382=09    27085052687=09      225708772=
+=09      206918887
+r-adv-t=09vmsplice=09      336885948=09    40128756927=09      334406307=09=
+        5895935
+
+r-cond=09pipe=09=09      308727804=09    36635828180=09      305298568=09  =
+      9976806
+r-cond=09splice=09=09      284467568=09    28445793054=09      237048275=09=
+      200284329
+r-cond=09vmsplice=09      449679489=09    51134833848=09      426123615=09 =
+      66790875
+
+w-preal=09pipe=09=09      307416578=09    36662086426=09      305517386=09 =
+       6216663
+w-preal=09splice=09=09      282655051=09    28455249109=09      237127075=
+=09      194154549
+w-preal=09vmsplice=09      437002601=09    47832160621=09      398601338=09=
+       96513019
+
+w-redun=09pipe=09=09      307279630=09    36329750422=09      302747920=09 =
+       8913567
+w-redun=09splice=09=09      284324488=09    27327152734=09      227726272=
+=09      219735663
+w-redun=09vmsplice=09      451141971=09    51485257719=09      429043814=09=
+       51388217
+
+w-ckful=09pipe=09=09      305055247=09    36374947350=09      303124561=09 =
+       5400728
+w-ckful=09splice=09=09      281575308=09    26841554544=09      223679621=
+=09      215942886
+w-ckful=09vmsplice=09      436653588=09    47564907110=09      396374225=09=
+       82255342
+
+The patches column indicates the point in the patchset at which the benchma=
+rks
+were taken:
+
+=090=09No patches
+=09rm-nrx=09"Remove the nr_exclusive argument from __wake_up_sync_key()"
+=09wakesl=09"Add wake_up_interruptible_sync_poll_locked()"
+=09ht=09"pipe: Use head and tail pointers for the ring, not cursor and leng=
+th"
+=09k-rsv=09"pipe: Allow pipes to have kernel-reserved slots"
+=09r-adv-t=09"pipe: Advance tail pointer inside of wait spinlock in pipe_re=
+ad()"
+=09r-cond=09"pipe: Conditionalise wakeup in pipe_read()"
+=09w-preal=09"pipe: Rearrange sequence in pipe_write() to preallocate slot"
+=09w-redun=09"pipe: Remove redundant wakeup from pipe_write()"
+=09w-ckful=09"pipe: Check for ring full inside of the spinlock in pipe_writ=
+e()"
+
+Changes:
+
+ ver #3:
+
+ (*) Get rid of pipe_commit_{read,write}.
+
+ (*) Port the virtio_console driver.
+
+ (*) Fix pipe_zero().
+
+ (*) Amend some comments.
+
+ (*) Added an additional patch that changes the threshold at which readers
+     wake writers for Konstantin Khlebnikov.
+
+ ver #2:
+
+ (*) Split the notification patches out into a separate branch.
+
+ (*) Removed the nr_exclusive parameter from __wake_up_sync_key().
+
+ (*) Renamed the locked wakeup function.
+
+ (*) Add helpers for empty, full, occupancy.
+
+ (*) Split the addition of ->max_usage out into its own patch.
+
+ (*) Fixed some bits pointed out by Rasmus Villemoes.
+
+ ver #1:
+
+ (*) Build on top of standard pipes instead of having a driver.
+
+David
+---
+David Howells (11):
+      pipe: Reduce #inclusion of pipe_fs_i.h
+      Remove the nr_exclusive argument from __wake_up_sync_key()
+      Add wake_up_interruptible_sync_poll_locked()
+      pipe: Use head and tail pointers for the ring, not cursor and length
+      pipe: Allow pipes to have kernel-reserved slots
+      pipe: Advance tail pointer inside of wait spinlock in pipe_read()
+      pipe: Conditionalise wakeup in pipe_read()
+      pipe: Rearrange sequence in pipe_write() to preallocate slot
+      pipe: Remove redundant wakeup from pipe_write()
+      pipe: Check for ring full inside of the spinlock in pipe_write()
+      pipe: Increase the writer-wakeup threshold to reduce context-switch c=
+ount
+
+
+ drivers/char/virtio_console.c |   16 +-
+ fs/exec.c                     |    1=20
+ fs/fuse/dev.c                 |   31 +++--
+ fs/ocfs2/aops.c               |    1=20
+ fs/pipe.c                     |  228 +++++++++++++++++++++--------------
+ fs/splice.c                   |  190 ++++++++++++++++++-----------
+ include/linux/pipe_fs_i.h     |   64 +++++++++-
+ include/linux/uio.h           |    4 -
+ include/linux/wait.h          |   11 +-
+ kernel/exit.c                 |    2=20
+ kernel/sched/wait.c           |   37 ++++--
+ lib/iov_iter.c                |  269 +++++++++++++++++++++++--------------=
+----
+ security/smack/smack_lsm.c    |    1=20
+ 13 files changed, 527 insertions(+), 328 deletions(-)
+
