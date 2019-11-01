@@ -2,156 +2,239 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F9FCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E85CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51C0B2085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B34217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:11:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hZXZMeFo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZanBpDPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfKAWJ4 (ORCPT
+        id S1727228AbfKAWLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 18:09:56 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:44248 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfKAWJz (ORCPT
+        Fri, 1 Nov 2019 18:11:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57509 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725989AbfKAWLc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 18:09:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UZ+SaEOWnCzvDrxTX6AG9Wwn8agTsJsGJeEc8woNULI=; b=hZXZMeFoazQYFUDfoHWbz7LR6
-        e61UZAeW9hl9TUo9DCf/pKzC8+hPb+F9EhM79CLzrW/Ev1L/hGh1JFwto8ECXGOCFwe9PVsMzKh55
-        KCldn3SwmblmCgp8M7n25aBYgxnykz6yzgoJDybAVe474AsmaL23jpZGL3eCfN/6623iv634ES8Rw
-        tYmHo3BdXtu+QabHkNtAYIXPWJeWYfVnOzmJA5Z0z0GAWMyXF065AXwdmiI7smdNbgaSpCJSGfYDe
-        3RHxJTfpBBLpupHAvfKzGBy9vMGchkwt3thhvw0vJRJtYoGicwMP0FiWOetF78qSo0YMegNQDQQx6
-        FVYky62hg==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:58018)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iQf71-0007UG-3j; Fri, 01 Nov 2019 22:09:43 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iQf6x-0007vG-Dj; Fri, 01 Nov 2019 22:09:39 +0000
-Date:   Fri, 1 Nov 2019 22:09:39 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Stefan Agner <stefan@agner.ch>
-Cc:     ndesaulniers@google.com, nico@fluxnic.net, rfranz@marvell.com,
-        linus.walleij@linaro.org, ard.biesheuvel@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] ARM: use APSR_nzcv instead of r15 as mrc operand
-Message-ID: <20191101220939.GK25745@shell.armlinux.org.uk>
-References: <472f8bd1f000f45343cc0c66a26380fe4b532147.1572644664.git.stefan@agner.ch>
+        Fri, 1 Nov 2019 18:11:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572646290;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=NtB8lZVxMteNuLvde5Uug6IaSN97jmYqJbZY5PhbQTw=;
+        b=ZanBpDPjvrl6TJ6/S/Kk/SEOCkaQ2wXQhMK00oJ8oWozHQKfr8Y/dMn33TkWcLs6O302Uq
+        tmJcBS//aG7G4bs0RveIMBTjrrpH32yXnB+HU5I69D9ouUdvH8zogKWJgrp2D0kDFvWuhg
+        cNrelijYOlJ/75JHShWLcubTKOKC9aM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-115-VbJCQgB5Ngm_RTQ11-aNwg-1; Fri, 01 Nov 2019 18:11:27 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8639B1005500;
+        Fri,  1 Nov 2019 22:11:25 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-116-33.ams2.redhat.com [10.36.116.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 04A9E600D1;
+        Fri,  1 Nov 2019 22:11:18 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Tang Chen <tangchen@cn.fujitsu.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>
+Subject: [PATCH v2] mm/memory_hotplug: Fix try_offline_node()
+Date:   Fri,  1 Nov 2019 23:11:18 +0100
+Message-Id: <20191101221118.5959-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <472f8bd1f000f45343cc0c66a26380fe4b532147.1572644664.git.stefan@agner.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: VbJCQgB5Ngm_RTQ11-aNwg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 10:47:58PM +0100, Stefan Agner wrote:
-> LLVM's integrated assembler does not accept r15 as mrc operand.
->   arch/arm/boot/compressed/head.S:1267:16: error: operand must be a register in range [r0, r14] or apsr_nzcv
->   1: mrc p15, 0, r15, c7, c14, 3 @ test,clean,invalidate D cache
->                  ^
-> 
-> Use APSR_nzcv instead of r15. The GNU assembler supports this
-> syntax since binutils 2.21 [0].
-> 
-> [0] https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=commit;h=db472d6ff0f438a21b357249a9b48e4b74498076
-> 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+try_offline_node() is pretty much broken right now:
+- The node span is updated when onlining memory, not when adding it. We
+  ignore memory that was mever onlined. Bad.
+- We touch possible garbage memmaps. The pfn_to_nid(pfn) can easily
+  trigger a kernel panic. Bad for memory that is offline but also bad
+  for subsection hotadd with ZONE_DEVICE, whereby the memmap of the first
+  PFN of a section might contain garbage.
+- Sections belonging to mixed nodes are not properly considered.
 
-Looks fine, please put it in the patch system; however, please note
-that I've been tweaking the patch system over the last week (mainly
-with the database, which has impacted almost everything) so there
-may be issues that I've not yet found...
+As memory blocks might belong to multiple nodes, we would have to walk all
+pageblocks (or at least subsections) within present sections. However,
+we don't have a way to identify whether a memmap that is not online was
+initialized (relevant for ZONE_DEVICE). This makes things more complicated.
 
-Thanks.
+Luckily, we can piggy pack on the node span and the nid stored in
+memory blocks. Currently, the node span is grown when calling
+move_pfn_range_to_zone() - e.g., when onlining memory, and shrunk when
+removing memory, before calling try_offline_node(). Sysfs links are
+created via link_mem_sections(), e.g., during boot or when adding memory.
 
-> ---
->  arch/arm/boot/compressed/head.S | 2 +-
->  arch/arm/mm/proc-arm1026.S      | 4 ++--
->  arch/arm/mm/proc-arm926.S       | 4 ++--
->  3 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
-> index 15ecad944847..ead21e5f2b80 100644
-> --- a/arch/arm/boot/compressed/head.S
-> +++ b/arch/arm/boot/compressed/head.S
-> @@ -1273,7 +1273,7 @@ iflush:
->  __armv5tej_mmu_cache_flush:
->  		tst	r4, #1
->  		movne	pc, lr
-> -1:		mrc	p15, 0, r15, c7, c14, 3	@ test,clean,invalidate D cache
-> +1:		mrc	p15, 0, APSR_nzcv, c7, c14, 3	@ test,clean,invalidate D cache
->  		bne	1b
->  		mcr	p15, 0, r0, c7, c5, 0	@ flush I cache
->  		mcr	p15, 0, r0, c7, c10, 4	@ drain WB
-> diff --git a/arch/arm/mm/proc-arm1026.S b/arch/arm/mm/proc-arm1026.S
-> index 10e21012380b..0bdf25a95b10 100644
-> --- a/arch/arm/mm/proc-arm1026.S
-> +++ b/arch/arm/mm/proc-arm1026.S
-> @@ -138,7 +138,7 @@ ENTRY(arm1026_flush_kern_cache_all)
->  	mov	ip, #0
->  __flush_whole_cache:
->  #ifndef CONFIG_CPU_DCACHE_DISABLE
-> -1:	mrc	p15, 0, r15, c7, c14, 3		@ test, clean, invalidate
-> +1:	mrc	p15, 0, APSR_nzcv, c7, c14, 3		@ test, clean, invalidate
->  	bne	1b
->  #endif
->  	tst	r2, #VM_EXEC
-> @@ -363,7 +363,7 @@ ENTRY(cpu_arm1026_switch_mm)
->  #ifdef CONFIG_MMU
->  	mov	r1, #0
->  #ifndef CONFIG_CPU_DCACHE_DISABLE
-> -1:	mrc	p15, 0, r15, c7, c14, 3		@ test, clean, invalidate
-> +1:	mrc	p15, 0, APSR_nzcv, c7, c14, 3		@ test, clean, invalidate
->  	bne	1b
->  #endif
->  #ifndef CONFIG_CPU_ICACHE_DISABLE
-> diff --git a/arch/arm/mm/proc-arm926.S b/arch/arm/mm/proc-arm926.S
-> index 3188ab2bac61..1ba253c2bce1 100644
-> --- a/arch/arm/mm/proc-arm926.S
-> +++ b/arch/arm/mm/proc-arm926.S
-> @@ -131,7 +131,7 @@ __flush_whole_cache:
->  #ifdef CONFIG_CPU_DCACHE_WRITETHROUGH
->  	mcr	p15, 0, ip, c7, c6, 0		@ invalidate D cache
->  #else
-> -1:	mrc	p15, 0, r15, c7, c14, 3 	@ test,clean,invalidate
-> +1:	mrc	p15, 0, APSR_nzcv, c7, c14, 3 	@ test,clean,invalidate
->  	bne	1b
->  #endif
->  	tst	r2, #VM_EXEC
-> @@ -358,7 +358,7 @@ ENTRY(cpu_arm926_switch_mm)
->  	mcr	p15, 0, ip, c7, c6, 0		@ invalidate D cache
->  #else
->  @ && 'Clean & Invalidate whole DCache'
-> -1:	mrc	p15, 0, r15, c7, c14, 3 	@ test,clean,invalidate
-> +1:	mrc	p15, 0, APSR_nzcv, c7, c14, 3 	@ test,clean,invalidate
->  	bne	1b
->  #endif
->  	mcr	p15, 0, ip, c7, c5, 0		@ invalidate I cache
-> -- 
-> 2.23.0
-> 
-> 
+If the node still spans memory or if any memory block belongs to the
+nid, we don't set the node offline. As memory blocks that span multiple
+nodes cannot get offlined, the nid stored in memory blocks is reliable
+enough (for such online memory blocks, the node still spans the memory).
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Note: We will soon stop shrinking the ZONE_DEVICE zone and the node span
+when removing ZONE_DEVICE memory to fix similar issues (access of garbage
+memmaps) - until we have a reliable way to identify whether these memmaps
+were properly initialized. This implies later, that once a node had
+ZONE_DEVICE memory, we won't be able to set a node offline -
+which should be acceptable.
+
+Since commit f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded
+memory to zones until online") memory that is added is not assoziated
+with a zone/node (memmap not initialized). The introducing
+commit 60a5a19e7419 ("memory-hotplug: remove sysfs file of node") already
+missed that we could have multiple nodes for a section and that the
+zone/node span is updated when onlining pages, not when adding them.
+
+I tested this by hotplugging two DIMMs to a memory-less and cpu-less NUMA
+node. The node is properly onlined when adding the DIMMs. When removing
+the DIMMs, the node is properly offlined.
+
+Fixes: 60a5a19e7419 ("memory-hotplug: remove sysfs file of node")
+Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory =
+to zones until online") # visiable after d0dc12e86b319
+Cc: Tang Chen <tangchen@cn.fujitsu.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: Nayna Jain <nayna@linux.ibm.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+
+v1 -> v2:
+- Drop sysfs handling, simplify, and add a comment
+- Make sure to include last section fully
+
+We stop shrinking the ZONE_DEVICE zone after the following patch:
+ [PATCH v6 04/10] mm/memory_hotplug: Don't access uninitialized memmaps
+ in shrink_zone_span()
+This implies, the above note regarding ZONE_DEVICE on a node blocking a
+node from getting offlined until we sorted out how to properly shrink
+the ZONE_DEVICE zone.
+
+This patch is especially important for:
+ [PATCH v6 05/10] mm/memory_hotplug: Shrink zones when offlining
+ memory
+As the BUG fixed with this patch becomes now easier to observe when memory
+is offlined (in contrast to when memory would never have been onlined
+before).
+
+As both patches are stable fixes and in next/master for a long time, we
+should probably pull this patch in front of both and also backport this
+patch at least to
+ Cc: stable@vger.kernel.org # v4.13+
+I have not checked yet if there are real blockers to do that. I guess not.
+
+---
+ mm/memory_hotplug.c | 45 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 29 insertions(+), 16 deletions(-)
+
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 0140c20837b6..b5f696491577 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1634,6 +1634,18 @@ static int check_cpu_on_node(pg_data_t *pgdat)
+ =09return 0;
+ }
+=20
++static int check_no_memblock_for_node_cb(struct memory_block *mem, void *a=
+rg)
++{
++=09int nid =3D *(int *)arg;
++
++=09/*
++=09 * If a memory block belongs to multiple nodes, the stored nid is not
++=09 * reliable. However, such blocks are always online (e.g., cannot get
++=09 * offlined) and, therefore, are still spanned by the node.
++=09 */
++=09return mem->nid =3D=3D nid ? -EEXIST : 0;
++}
++
+ /**
+  * try_offline_node
+  * @nid: the node ID
+@@ -1645,26 +1657,27 @@ static int check_cpu_on_node(pg_data_t *pgdat)
+  */
+ void try_offline_node(int nid)
+ {
++=09const unsigned long end_section_nr =3D __highest_present_section_nr + 1=
+;
+ =09pg_data_t *pgdat =3D NODE_DATA(nid);
+-=09unsigned long start_pfn =3D pgdat->node_start_pfn;
+-=09unsigned long end_pfn =3D start_pfn + pgdat->node_spanned_pages;
+-=09unsigned long pfn;
+-
+-=09for (pfn =3D start_pfn; pfn < end_pfn; pfn +=3D PAGES_PER_SECTION) {
+-=09=09unsigned long section_nr =3D pfn_to_section_nr(pfn);
+-
+-=09=09if (!present_section_nr(section_nr))
+-=09=09=09continue;
++=09int rc;
+=20
+-=09=09if (pfn_to_nid(pfn) !=3D nid)
+-=09=09=09continue;
++=09/*
++=09 * If the node still spans pages (especially ZONE_DEVICE), don't
++=09 * offline it. A node spans memory after move_pfn_range_to_zone(),
++=09 * e.g., after the memory block was onlined.
++=09 */
++=09if (pgdat->node_spanned_pages)
++=09=09return;
+=20
+-=09=09/*
+-=09=09 * some memory sections of this node are not removed, and we
+-=09=09 * can't offline node now.
+-=09=09 */
++=09/*
++=09 * Especially offline memory blocks might not be spanned by the
++=09 * node. They will get spanned by the node once they get onlined.
++=09 * However, they link to the node in sysfs and can get onlined later.
++=09 */
++=09rc =3D walk_memory_blocks(0, PFN_PHYS(section_nr_to_pfn(end_section_nr)=
+),
++=09=09=09=09&nid, check_no_memblock_for_node_cb);
++=09if (rc)
+ =09=09return;
+-=09}
+=20
+ =09if (check_cpu_on_node(pgdat))
+ =09=09return;
+--=20
+2.21.0
+
