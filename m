@@ -2,143 +2,141 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6126CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 23:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D08CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 23:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B542321897
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 23:39:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NzSkYAg3"
+	by mail.kernel.org (Postfix) with ESMTP id 4A36F21855
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 23:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfKAXji (ORCPT
+        id S1727413AbfKAXq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 19:39:38 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57577 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726932AbfKAXjh (ORCPT
+        Fri, 1 Nov 2019 19:46:26 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:40806 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfKAXqZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 19:39:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572651575;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=oBYEba37giIKH0qY+jTL36ZcV1ZjewOiLdyycI6S+wo=;
-        b=NzSkYAg3dxdim9U+dkqvmnAT43UhojaT4b5g5gXKKjIg/aWLRVL4wlNQg7mUVfUgGacgCy
-        gKOpRktfv6cKX5eYeZOqOe6mDTkpBsiekNylMN9os6QasPGOQJJFGRUiFHn4mS8F7z44DK
-        ABSQTcAA4XYD5brHLAI1gq4Kttbfqsw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-258-S09mapU2PbqGuKTDDtkcjQ-1; Fri, 01 Nov 2019 19:39:32 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B746F107ACC0;
-        Fri,  1 Nov 2019 23:39:30 +0000 (UTC)
-Received: from dustball.brq.redhat.com (unknown [10.43.17.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D6605D6B7;
-        Fri,  1 Nov 2019 23:39:28 +0000 (UTC)
-From:   Jan Stancek <jstancek@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     ltp@lists.linux.it, jstancek@redhat.com, viro@zeniv.linux.org.uk,
-        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, rfontana@redhat.com
-Subject: [PATCH] kernel: use ktime_get_real_ts64() to calculate acct.ac_btime
-Date:   Sat,  2 Nov 2019 00:39:24 +0100
-Message-Id: <a87876829697e1b3c63601b1401a07af79eddae6.1572651216.git.jstancek@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: S09mapU2PbqGuKTDDtkcjQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        Fri, 1 Nov 2019 19:46:25 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iQgcY-0003GU-3x; Fri, 01 Nov 2019 23:46:22 +0000
+Date:   Fri, 1 Nov 2019 23:46:22 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wugyuan@cn.ibm.com, jlayton@kernel.org, hsiangkao@aol.com,
+        Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH RESEND 1/1] vfs: Really check for inode ptr in lookup_fast
+Message-ID: <20191101234622.GM26530@ZenIV.linux.org.uk>
+References: <20190927044243.18856-1-riteshh@linux.ibm.com>
+ <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
+ <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
+ <20191022143736.GX26530@ZenIV.linux.org.uk>
+ <20191022201131.GZ26530@ZenIV.linux.org.uk>
+ <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fill_ac() calculates process creation time from current time as:
-   ac->ac_btime =3D get_seconds() - elapsed
+On Wed, Oct 23, 2019 at 04:35:50PM +0530, Ritesh Harjani wrote:
 
-get_seconds() doesn't accumulate nanoseconds as regular time getters.
-This creates race for user-space (e.g. LTP acct02), which typically
-uses gettimeofday(), because process creation time sometimes appear
-to be dated 'in past':
+> > > What we have guaranteed is
+> > > 	* ->d_lock serializes ->d_flags/->d_inode changes
+> > > 	* ->d_seq is bumped before/after such changes
+> > > 	* positive dentry never changes ->d_inode as long as you hold
+> > > a reference (negative dentry *can* become positive right under you)
+> > > 
+> > > So there are 3 classes of valid users: those holding ->d_lock, those
+> > > sampling and rechecking ->d_seq and those relying upon having observed
+> > > the sucker they've pinned to be positive.
+> 
+> :) Thanks for simplifying like this. Agreed.
 
-    acct("myfile");
-    time_t start_time =3D time(NULL);
-    if (fork()=3D=3D0) {
-        sleep(1);
-        exit(0);
-    }
-    waitpid(NULL);
-    acct(NULL);
+FWIW, after fixing several ceph bugs, add to that the following:
+	* all places that turn a negative dentry into positive one are
+holding its parent exclusive or dentry has not been observable for
+anybody else.  It had been present in the parent's list of children
+(negative and unhashed) and it might have been present in in-lookup
+hashtable.  However, nobody is going to grab a reference to it from there
+without having grabbed ->d_lock on it and observed the state after
+it became positive. 
 
-    // acct.ac_btime =3D=3D 1572616777
-    // start_time =3D=3D 1572616778
+Which means that holding a reference to dentry *and* holding its
+parent at least shared stabilizes both ->d_inode and type bits in
+->d_flags.  The situation with barriers is more subtle - *IF* we
+had sufficient barriers to have ->d_inode/type bits seen right
+after having gotten the reference, we are fine.  The only change
+possible after that point is negative->positive transition and
+that gets taken care of by barriers provided by ->i_rwsem.
 
-Testing: 10 hours of LTP acct02 on s390x with CONFIG_HZ=3D100,
-         test failed on unpatched kernel in 15 minutes
+If we'd obtained that reference by d_lookup() or __d_lookup(),
+we are fine - ->d_lock gives a barrier.  The same goes for places
+that grab references during a tree traversal, provided that they
+hold ->d_lock around that (fs/autofs/expire.c stuff).  The same goes
+for having it found in inode's aliases list (->i_lock).
 
-Signed-off-by: Jan Stancek <jstancek@redhat.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Richard Fontana <rfontana@redhat.com>
----
- kernel/acct.c   | 4 +++-
- kernel/tsacct.c | 4 +++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+I really hope that the same applies to accesses to file_dentry(file);
+on anything except alpha that would be pretty much automatic and
+on alpha we get the things along the lines of
 
-diff --git a/kernel/acct.c b/kernel/acct.c
-index 81f9831a7859..991c898160cd 100644
---- a/kernel/acct.c
-+++ b/kernel/acct.c
-@@ -417,6 +417,7 @@ static void fill_ac(acct_t *ac)
- =09struct pacct_struct *pacct =3D &current->signal->pacct;
- =09u64 elapsed, run_time;
- =09struct tty_struct *tty;
-+=09struct timespec64 ts;
-=20
- =09/*
- =09 * Fill the accounting struct with the needed info as recorded
-@@ -448,7 +449,8 @@ static void fill_ac(acct_t *ac)
- =09}
- #endif
- =09do_div(elapsed, AHZ);
--=09ac->ac_btime =3D get_seconds() - elapsed;
-+=09ktime_get_real_ts64(&ts);
-+=09ac->ac_btime =3D ts.tv_sec - elapsed;
- #if ACCT_VERSION=3D=3D2
- =09ac->ac_ahz =3D AHZ;
- #endif
-diff --git a/kernel/tsacct.c b/kernel/tsacct.c
-index 7be3e7530841..4d10854255ab 100644
---- a/kernel/tsacct.c
-+++ b/kernel/tsacct.c
-@@ -24,6 +24,7 @@ void bacct_add_tsk(struct user_namespace *user_ns,
- =09const struct cred *tcred;
- =09u64 utime, stime, utimescaled, stimescaled;
- =09u64 delta;
-+=09struct timespec64 ts;
-=20
- =09BUILD_BUG_ON(TS_COMM_LEN < TASK_COMM_LEN);
-=20
-@@ -34,7 +35,8 @@ void bacct_add_tsk(struct user_namespace *user_ns,
- =09stats->ac_etime =3D delta;
- =09/* Convert to seconds for btime */
- =09do_div(delta, USEC_PER_SEC);
--=09stats->ac_btime =3D get_seconds() - delta;
-+=09ktime_get_real_ts64(&ts);
-+=09stats->ac_btime =3D ts.tv_sec - delta;
- =09if (thread_group_leader(tsk)) {
- =09=09stats->ac_exitcode =3D tsk->exit_code;
- =09=09if (tsk->flags & PF_FORKNOEXEC)
---=20
-1.8.3.1
+	f = fdt[n]
+	mb
+	d = f->f_path.dentry
+	i = d->d_inode
+	assert(i != NULL)
+vs.
+	see that d->d_inode is non-NULL
+	f->f_path.dentry = d
+	mb
+	fdt[n] = f
 
+IOW, the barriers that make it safe to fetch the fields of struct file
+(rcu_dereference_raw() in __fcheck_files() vs. smp_store_release()
+in __fd_install() in the above) should *hopefully* take care of all
+stores visible by the time of do_dentry_open().  Sure, alpha cache
+coherency is insane, but AFAICS it's not _that_ insane.
+
+Question to folks familiar with alpha memory model:
+
+A = 0, B = NULL, C = NULL
+CPU1:
+	A = 1
+
+CPU2:
+	r1 = A
+	if (r1) {
+		B = &A
+		mb
+		C = &B
+	}
+
+CPU3:
+	r2 = C;
+	mb
+	if (r2) {	// &B
+		r3 = *r2	// &A
+		r4 = *r3	// 1
+		assert(r4 == 1)
+	}
+
+is the above safe on alpha?
+
+[snip]
+
+> We may also need similar guarantees with __d_clear_type_and_inode().
+
+Not really - pinned dentry can't go negative.  In any case, with the
+audit I've done so far, I don't believe that blanket solutions like
+that are good idea - most of the places doing checks are safe as it is.
+The surface that needs to be taken care of is fairly small, actually;
+most of that is in fs/namei.c and fs/dcache.c.
