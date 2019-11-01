@@ -2,65 +2,80 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DB3CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A157ECA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C02321734
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F51208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:54:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="CEtN9CI/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbfKAPxm (ORCPT
+        id S1729098AbfKAPyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 11:53:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:37790 "EHLO foss.arm.com"
+        Fri, 1 Nov 2019 11:54:25 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:52652 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727123AbfKAPxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 11:53:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F2ED328;
-        Fri,  1 Nov 2019 08:53:41 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B4E853F719;
-        Fri,  1 Nov 2019 08:53:40 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 15:53:38 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Julien Grall <julien@xen.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        suzuki.poulose@arm.com, Julien Grall <julien.grall@arm.com>
-Subject: Re: [PATCH] docs/arm64: cpu-feature-registers: Rewrite bitfields
- that don't follow [e, s]
-Message-ID: <20191101155338.GG17207@arrakis.emea.arm.com>
-References: <20191101152022.8853-1-julien@xen.org>
- <20191101153803.GC3287@willie-the-truck>
+        id S1727123AbfKAPyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 11:54:24 -0400
+Received: from nazgul.tnic (unknown [46.218.74.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 25F2B1EC0AD6;
+        Fri,  1 Nov 2019 16:54:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1572623663;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=vU6VGS46rfg0BH1qVh/1bYvbh3G5urqXBMKadSJ/iro=;
+        b=CEtN9CI/TgQxUo/VD7Kqn6nOrA9q5B2ao4s5aCW7j8Qmsw2QNYdFSTuignxxD4ju5GyXO1
+        hARQDoV7vZMX0kTTW7dteByHvEglKiVCfP9rVcQrrcC+jOoW+j7ltgLDCr/6hbGrW0bwaB
+        f2yNmiSyVSHHwMhuqmWXAJiDj4yt18Y=
+Date:   Fri, 1 Nov 2019 16:54:12 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/6] AMD64 EDAC: Check for nodes without memory, etc.
+Message-ID: <20191101155412.GA2300@nazgul.tnic>
+References: <20191022203448.13962-1-Yazen.Ghannam@amd.com>
+ <20191025133456.GA6483@zn.tnic>
+ <BYAPR12MB2630ED1425A3F01727E1C45BF8620@BYAPR12MB2630.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191101153803.GC3287@willie-the-truck>
+In-Reply-To: <BYAPR12MB2630ED1425A3F01727E1C45BF8620@BYAPR12MB2630.namprd12.prod.outlook.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 03:38:04PM +0000, Will Deacon wrote:
-> On Fri, Nov 01, 2019 at 03:20:22PM +0000, Julien Grall wrote:
-> > From: Julien Grall <julien.grall@arm.com>
-> > 
-> > Commit "docs/arm64: cpu-feature-registers: Documents missing visible
-> > fields" added bitfiels following the convention [s, e]. However, the
-> 
-> typo: bitfiels
-> 
-> > documentation is following [s, e] and so does the Arm ARM.
-> 
-> This should be [e, s], although I think you can spell it out as "end" and
-> "start" so people know what this is doing.
+On Fri, Nov 01, 2019 at 03:19:36PM +0000, Ghannam, Yazen wrote:
+> Is the module being probed twice? We have this problem in general, e.g. the
+> module gets loaded multiple times on failure.
 
-Thanks. I'll make the changes locally.
+Yap, it looks like it.
+
+> The clue for me is that node 0 gets detected twice. This is done in
+> per_family_init() early in probe_one_instance().
+>
+> In any case, I think we can make !ecc_enabled(pvt) in probe_one_instance() a
+> failure now that we have an explicit check for memory on a node. In other
+> words, if we have memory and ECC is disabled then this is a failure for the
+> module.
+
+Yeah, for that case we should be printing ecc_msg. Makes sense.
+
+Thx.
 
 -- 
-Catalin
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
