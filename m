@@ -2,83 +2,67 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11F3CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8685CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2C1121897
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:56:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="kC/rRorY"
+	by mail.kernel.org (Postfix) with ESMTP id A3F14217D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 20:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbfKAU45 (ORCPT
+        id S1727559AbfKAU47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 16:56:57 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48997 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfKAU45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 16:56:57 -0400
-Received: from hanvin-mobl2.amr.corp.intel.com ([192.55.55.45])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id xA1Ku1Hi3597880
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Fri, 1 Nov 2019 13:56:02 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com xA1Ku1Hi3597880
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019091901; t=1572641763;
-        bh=3An007NMR3t5lhDsOPVJ9K0dkZrEaxbrM0ul5cfaPa4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=kC/rRorYzspNXKHbAH3qWGpvmB1CgN+djkae1LWKmc8pl5Ljhbbx+OZuXSlpKJreR
-         EtmIjUtI1/wXaD16smKcAatpd3ZUb8CuJ/ILid1PZ2Djqz0Qx0r6nOFq8dQOwkznxf
-         meW8aP0YNx/p8Q2yGS61OPbIZg9oM3EASsRzsoYDoHaVVnQRdA+c+cCtFu5850FuJR
-         D526P2FtSBEK7HnfjwYPQsBOcJrcpTFR7lxr9RQkbnCcQTcPgVXF6iTqho0EyR/+Sw
-         IHfFNPB1eD3Mt7/NSMPdZojleTYu7yXr2Ti9Qo4IPDL30WRUfLF98uXYQNLpUGPHjs
-         ePcOqSIqHfEDg==
-Subject: Re: [PATCH v4 2/3] x86/boot: Introduce the kernel_info.setup_type_max
-To:     Daniel Kiper <daniel.kiper@oracle.com>, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org
-Cc:     ard.biesheuvel@linaro.org, boris.ostrovsky@oracle.com,
-        bp@alien8.de, corbet@lwn.net, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, eric.snowberg@oracle.com,
-        jgross@suse.com, kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
-        mingo@redhat.com, rdunlap@infradead.org, ross.philipson@oracle.com,
-        tglx@linutronix.de
-References: <20191024114814.6488-1-daniel.kiper@oracle.com>
- <20191024114814.6488-3-daniel.kiper@oracle.com>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <e094a1cf-6bf2-1e8a-94c7-47767d66138e@zytor.com>
-Date:   Fri, 1 Nov 2019 13:55:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 1 Nov 2019 16:56:59 -0400
+Received: from palmtree.beeroclock.net ([178.79.160.154]:44672 "EHLO
+        palmtree.beeroclock.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727144AbfKAU46 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 16:56:58 -0400
+Received: from beros.lan (89-160-129-47.du.xdsl.is [89.160.129.47])
+        by palmtree.beeroclock.net (Postfix) with ESMTPSA id 88A6C1F76B;
+        Fri,  1 Nov 2019 20:56:56 +0000 (UTC)
+From:   Karl Palsson <karlp@tweak.net.au>
+To:     mripard@kernel.org, wens@csie.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Karl Palsson <karlp@tweak.net.au>
+Subject: [PATCH 2/2] dt-bindings: arm: sunxi: add FriendlyARM NanoPi Duo2
+Date:   Fri,  1 Nov 2019 20:55:36 +0000
+Message-Id: <20191101205535.7896-2-karlp@tweak.net.au>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191101205535.7896-1-karlp@tweak.net.au>
+References: <20191101205535.7896-1-karlp@tweak.net.au>
 MIME-Version: 1.0
-In-Reply-To: <20191024114814.6488-3-daniel.kiper@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-24 04:48, Daniel Kiper wrote:
-> This field contains maximal allowed type for setup_data.
-> 
-> Now bump the setup_header version in arch/x86/boot/header.S.
+Adds bindings for the newly added NanoPi Duo2 board.
 
-Please don't bump the protocol revision here, otherwise we would create
-a very odd pseudo-revision of the protocol: 2.15 without SETUP_INDIRECT
-support, should patch 3/3 end up getting reverted.
+Signed-off-by: Karl Palsson <karlp@tweak.net.au>
+---
+ Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-(It is possible to detect, of course, but I feel pretty sure in saying
-that bootloaders won't get it right.)
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
+index 000a00d12d6a..152c0499b0a3 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.yaml
++++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+@@ -211,6 +211,11 @@ properties:
+           - const: friendlyarm,nanopi-a64
+           - const: allwinner,sun50i-a64
+ 
++      - description: FriendlyARM NanoPi Duo2
++        items:
++          - const: friendlyarm,nanopi-duo2
++          - const: allwinner,sun8i-h3
++
+       - description: FriendlyARM NanoPi M1
+         items:
+           - const: friendlyarm,nanopi-m1
+-- 
+2.20.1
 
-Other than that:
-
-Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-
-	-hpa
