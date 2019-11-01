@@ -2,85 +2,155 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA09CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDDECA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3343B217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:44:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572648259;
-	bh=jKdvO6K6agf1X5ZMKWmP5BbUA3Dp+9K9j78HOVQdQB0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Oj0Lw15ABbFEy++jL7N2h+TK9M4WFt3meQdIEJtu2yfQREBuzQP4TC7aL43t7bVgh
-	 NbIjCkXFnz4C+RDeUx2Y6itkFyj7Pj7kIXpSJy2bicoaQFcQqsdsySM/4pdBFKbiOY
-	 YePEil/FyEFjDQXRqQmaUQaa/CEZzMKNBw/Dk5TQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0AB9221855
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:47:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbfKAWoS (ORCPT
+        id S1727972AbfKAWr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 18:44:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727698AbfKAWoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 18:44:18 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49B6B20679;
-        Fri,  1 Nov 2019 22:44:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572648257;
-        bh=jKdvO6K6agf1X5ZMKWmP5BbUA3Dp+9K9j78HOVQdQB0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=mLfWOnV1eB6Wls7fOmu5HwS2ta7iYqfF+lU4Naj8OH/ubYXaEr3/kLNgW57+ZJltH
-         MHG42tXl03V3NabxM/fdpPL5bXs+Mb6BOmrlrLLyTlIHTeh05LbkbyHtDToOjdV8Gv
-         a+K5JEZAErTjNeGslhGLkVraqB0Ds2UAoyE5QOhg=
-Date:   Fri, 1 Nov 2019 17:44:16 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] Revert "nvme: Add quirk for Kingston NVME SSD running
- FW E8FK11.T"
-Message-ID: <20191101224416.GA225762@google.com>
+        Fri, 1 Nov 2019 18:47:26 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:52248 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727751AbfKAWrZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 18:47:25 -0400
+Received: from dread.disaster.area (pa49-180-67-183.pa.nsw.optusnet.com.au [49.180.67.183])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 1A8E043E42B;
+        Sat,  2 Nov 2019 09:47:17 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iQfhL-00070m-Nv; Sat, 02 Nov 2019 09:47:15 +1100
+Date:   Sat, 2 Nov 2019 09:47:15 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Boaz Harrosh <boaz@plexistor.com>, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 0/5] Enable per-file/directory DAX operations
+Message-ID: <20191101224715.GY4614@dread.disaster.area>
+References: <20191023221332.GE2044@dread.disaster.area>
+ <efffc9e7-8948-a117-dc7f-e394e50606ab@plexistor.com>
+ <20191024073446.GA4614@dread.disaster.area>
+ <fb4f8be7-bca6-733a-7f16-ced6557f7108@plexistor.com>
+ <20191024213508.GB4614@dread.disaster.area>
+ <ab101f90-6ec1-7527-1859-5f6309640cfa@plexistor.com>
+ <20191025003603.GE4614@dread.disaster.area>
+ <20191025204926.GA26184@iweiny-DESK2.sc.intel.com>
+ <20191027221039.GL4614@dread.disaster.area>
+ <20191031161757.GA14771@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191031133028.GA4617@lst.de>
+In-Reply-To: <20191031161757.GA14771@iweiny-DESK2.sc.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=3wLbm4YUAFX2xaPZIabsgw==:117 a=3wLbm4YUAFX2xaPZIabsgw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
+        a=7-415B0cAAAA:8 a=DDk79rDXCmxeI5gZc_4A:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 02:30:28PM +0100, Christoph Hellwig wrote:
-> On Thu, Oct 31, 2019 at 08:28:53AM -0500, Bjorn Helgaas wrote:
-> > On Thu, Oct 31, 2019 at 05:34:09PM +0800, Jian-Hong Pan wrote:
-> > > Since commit 253eaf4faaaa ("PCI/MSI: Fix incorrect MSI-X masking on
-> > > resume") is merged, we can revert the previous quirk now.
-> > 
-> > 253eaf4faaaa is pending on my pci/msi branch, planned to be merged
-> > during the v5.5 merge window.
-> > 
-> > This revert patch must not be merged before 253eaf4faaaa.  The easiest
-> > way to do that would be for me to merge this one as well; otherwise
-> > we have to try to make things happen in the right order during the
-> > merge window.
-> > 
-> > If the NVMe folks ack this idea and the patch, I'd be happy to merge
-> > it.
+On Thu, Oct 31, 2019 at 09:17:58AM -0700, Ira Weiny wrote:
+> On Mon, Oct 28, 2019 at 09:10:39AM +1100, Dave Chinner wrote:
+> > On Fri, Oct 25, 2019 at 01:49:26PM -0700, Ira Weiny wrote:
 > 
-> Fine with me.
+> [snip]
 > 
-> Acked-by: Christoph Hellwig <hch@lst.de>
+> > 
+> > > Currently this works if I remount the fs or if I use <procfs>/drop_caches like
+> > > Boaz mentioned.
+> > 
+> > drop_caches frees all the dentries that don't have an active
+> > references before it iterates over inodes, thereby dropping the
+> > cached reference(s) to the inode that pins it in memory before it
+> > iterates the inode LRU.
+> > 
+> > > Isn't there a way to get xfs to do that on it's own?
+> > 
+> > Not reliably. Killing all the dentries doesn't guarantee the inode
+> > will be reclaimed immediately. The ioctl() itself requires an open
+> > file reference to the inode, and there's no telling how many other
+> > references there are to the inode that the filesystem a) can't find,
+> > and b) even if it can find them, it is illegal to release them.
+> > 
+> > IOWs, if you are relying on being able to force eviction of inode
+> > from the cache for correct operation of a user controlled flag, then
+> > it's just not going to work.
+> 
+> Agree, I see the difficulty of forcing the effective flag to change in this
+> path.  However, the only thing I am relying on is that the ioctl will change
+> the physical flag.
+> 
+> IOW I am proposing that the semantic be that changing the physical flag does
+> _not_ immediately change the effective flag.  With that clarified up front the
+> user can adjust accordingly.
 
-OK, I'll ask Linus to merge this revert after my main PCI pull request
-for v5.5-rc1.
+Which makes it useless from an admin perspective. i.e. to change the
+way the application uses DAX now, admins are going to have to end up
+rebooting the machine to guarantee that the kernel has picked up the
+change in the on-disk flag.
+
+> After thinking about this more I think there is a strong use case to be able to
+> change the physical flag on a non-zero length file.  That use case is to be
+> able to restore files from backups.
+
+Why does that matter? Backup programs need to set the flag before
+the data is written into the destination file, just like they do
+with restoring other flags that influence data placement like the RT
+device bit and extent size hints...
+
+Basically, all these issues you keep trying to work around go away
+if we can come up with a way of swapping the aops vector safely.
+That's the problem we need to solve, anything else results in
+largely unacceptible user visible admin warts.
+
+> I propose the user has no direct control over this event and it is mainly used
+> to restore files from backups which is mainly an admin operation where a
+> remount is a reasonable thing to do.
+
+As soon as users understand that they flag can be changed, they are
+going to want to do that and they are going to want it to work
+reliably.
+
+> Users direct control of the effective flag is through inheritance.  The user
+> needs to create the file in a DAX enable dir and they get effective operation
+> right away.
+
+Until they realise the application is slow or broken because it is
+using DAX, and they want to turn DAX off for that application. Then
+they have *no control*. You cannot have it both ways - being able to
+turn something on but not turn it off is not "effective operation"
+or user friendly.
+
+> If in the future we can determine a safe way to trigger the a_ops change we can
+> add that to the semantic as an alternative for users.
+
+No, the flag does not get turned on until we've solved the problems
+that resulted in us turning it off. We've gone over this mutliple
+times, and nobody has solved the issues that need solving - everyone
+seems to just hack around the issues rather than solving it
+properly. If we thought taking some kind of shortcut full of
+compromises and gotchas was the right solution, we would have never
+turned the flag off in the first place.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
