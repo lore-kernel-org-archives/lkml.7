@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CB6CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E62CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60B3E21906
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7DD2085B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:12:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oC92Xyk4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WX+ZlyX9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbfKAWMX (ORCPT
+        id S1727956AbfKAWMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 18:12:23 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:43649 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727673AbfKAWMV (ORCPT
+        Fri, 1 Nov 2019 18:12:25 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:50323 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727907AbfKAWMW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 18:12:21 -0400
-Received: by mail-pl1-f202.google.com with SMTP id a3so7160581pls.10
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 15:12:19 -0700 (PDT)
+        Fri, 1 Nov 2019 18:12:22 -0400
+Received: by mail-pf1-f202.google.com with SMTP id e13so1781328pff.17
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 15:12:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=YuceP/m4Sv7I7vrWsOPJ1pSb3CxvhwOwQ1OQoGSTS4o=;
-        b=oC92Xyk4xx4OFjCywUW0xRGLKJPopJyks6H3DIWfvMcqM41QRHY8A6HpLSO2oO1inw
-         7nVZsYb0ejRziH+5dLCL9D9wKeQQKeMEb1VUrkYc1cMPvyFcm3It+tNXG+Hwcj7gshxb
-         6nHSjR+gi4hodQFSJLJDhZIR1+Kzve8eUQ6q7dVUcbIISZ2N2+mSkGwMJQvydH28gjMd
-         oRMh4SmcetuL5E9614gPeg7eJPENTgrxaRMgcD0aWe9YQNHjd9wnZeZVxQ0kRl59z7of
-         8623sjz/SPs/pQv7SS4ugqqYKNBb1daNI8KHgf/+dBsRhEhkLc4Q35KQzw9rmfiSpNPD
-         e0Yw==
+        bh=TmDnfQN5KSEC3g/578TQjZ7QNjxfyUPcu+BQjF9Yuvo=;
+        b=WX+ZlyX9au7TTis+HDd7Dbd6apXsSxGT4BjPuLcLwhq8XdU1hWXuu+jMmXXpmqn/ly
+         JnciDuOZ2YKOinrTMYHNYjglGY6CBM9JRa6UwI5ny+82cASaJNLEYq03XkrGGMRD/45C
+         080BYykDqPbpaWcEFlq6ukx4uUgLPbDYn8rQoXBjaKsPYUg8U6UVKNYt0gsSY+aCZh6t
+         sDQ/hg4YUpFcnNlIJocP1LkLyLwN/E6CPVe3fwUCeFBsqzz656n40juIl8qkmBDC5VxV
+         leO2fOlOj+kIu6XcB0vIjnzmxkmxh31gkv9F3DRvB4cNzr9altIj/aQ4Xeb30TvjIhYS
+         CEeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=YuceP/m4Sv7I7vrWsOPJ1pSb3CxvhwOwQ1OQoGSTS4o=;
-        b=mCZgZLUQpKNFZ1eC7nHlSGME0sXFjTMYY/ZxLyB4fpyVt+a4qw/DULLoHULk0bYwsL
-         i9y/vMLsnUYMk6iEQIA6wqwGKCOlipmHgEXbVMMoM4abPuQFGnZGHh+GShXc6KIfgURD
-         hSUmy39wW9LAB5Fcn7uc/u3FxVD39+z9x5bYacGJVt5jtQnqzOVqUJ0aiyeN8cR3DtIu
-         dhIJvSSWThDMC7VEf/5ITc4wRg4/IjHZVQzn+XLX1RAy1zCmLohTYnmf5CXyYW5Ra3s0
-         fPeGDo7KX+Q7RPlBnRGhSyS3eNqkh9sKadh6XWfqVbLbK72DtbD05DEWyzZb0ki+OA0Q
-         f5iA==
-X-Gm-Message-State: APjAAAVYLMprcjqfQtYtgaCSaq1rGd0n2Msk08KOP8+p4oBDcxArx3Z1
-        PYA6OcKlyc9l4YpjfoHl5iAdmhXLkrKbSkdlE3g=
-X-Google-Smtp-Source: APXvYqyESI1nj79EQYAfPNp7QT9azRRC93peb8wyxMPp245spxyPTFrWPJ4dhblj2gZ8cJDr8g3hFVKQrrU1shqGWxs=
-X-Received: by 2002:a63:2b8e:: with SMTP id r136mr2674046pgr.103.1572646338730;
- Fri, 01 Nov 2019 15:12:18 -0700 (PDT)
-Date:   Fri,  1 Nov 2019 15:11:42 -0700
+        bh=TmDnfQN5KSEC3g/578TQjZ7QNjxfyUPcu+BQjF9Yuvo=;
+        b=FQyLpGdLr/quxmidkg6XyJaF2FW4wvOQzvDOdnJ18Bs9j7+OKZAcSXfefruZNHR+Xm
+         DYOkQtvw9PulU/m0Vk0p+UoJvjblELBKA6/Z3Awy4mT2HjyrozJw2oDUFAH/phln1ssg
+         akmb60mKhay3P0STrleFyxLe89o+/zccwybST6Z+z/4Ct4cnq5NDTFORSvoV5aavNUpm
+         Im9B3ljipGgaMPnV1wVxMxTVmmvYhxgmq9xsusf6KUDtFxt/8gvIq5X1DYWtEVuIEScp
+         3qQ1Txo4JTKlv6bLxUXEIMRRl3AmsrVVQL03AIn8ANLGEehIz3Vnp79aF54pdOhkCjrv
+         N2EQ==
+X-Gm-Message-State: APjAAAV1N+Px2FbldOvJy9F6sIjdlQrI+juvcdnCN1zyomtt4PscYcS+
+        3bJ0SAsD+vmAhTVzqLXeYgGW9AnQ7kptBZY9BCs=
+X-Google-Smtp-Source: APXvYqzVngOFcUfwiWQ8eDwuiV8sr1oY1W9Y7iX+20vU9uQZSIlJayld9jxLG7yCiTZmX5C4MT0to41bsvZhb6iCe1E=
+X-Received: by 2002:a63:364d:: with SMTP id d74mr15884929pga.408.1572646341266;
+ Fri, 01 Nov 2019 15:12:21 -0700 (PDT)
+Date:   Fri,  1 Nov 2019 15:11:43 -0700
 In-Reply-To: <20191101221150.116536-1-samitolvanen@google.com>
-Message-Id: <20191101221150.116536-10-samitolvanen@google.com>
+Message-Id: <20191101221150.116536-11-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20191101221150.116536-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-Subject: [PATCH v4 09/17] arm64: kprobes: fix kprobes without CONFIG_KRETPROBES
+Subject: [PATCH v4 10/17] arm64: disable kretprobes with SCS
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -85,35 +85,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows CONFIG_KRETPROBES to be disabled without disabling
-kprobes entirely.
+With CONFIG_KRETPROBES, function return addresses are modified to
+redirect control flow to kretprobe_trampoline. This is incompatible
+with SCS.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm64/kernel/probes/kprobes.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-index c4452827419b..98230ae979ca 100644
---- a/arch/arm64/kernel/probes/kprobes.c
-+++ b/arch/arm64/kernel/probes/kprobes.c
-@@ -551,6 +551,7 @@ void __kprobes __used *trampoline_probe_handler(struct pt_regs *regs)
- 	return (void *)orig_ret_address;
- }
- 
-+#ifdef CONFIG_KRETPROBES
- void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
- 				      struct pt_regs *regs)
- {
-@@ -564,6 +565,7 @@ int __kprobes arch_trampoline_kprobe(struct kprobe *p)
- {
- 	return 0;
- }
-+#endif
- 
- int __init arch_init_kprobes(void)
- {
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 3f047afb982c..e7b57a8a5531 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -165,7 +165,7 @@ config ARM64
+ 	select HAVE_STACKPROTECTOR
+ 	select HAVE_SYSCALL_TRACEPOINTS
+ 	select HAVE_KPROBES
+-	select HAVE_KRETPROBES
++	select HAVE_KRETPROBES if !SHADOW_CALL_STACK
+ 	select HAVE_GENERIC_VDSO
+ 	select IOMMU_DMA if IOMMU_SUPPORT
+ 	select IRQ_DOMAIN
 -- 
 2.24.0.rc1.363.gb1bccd3e3d-goog
 
