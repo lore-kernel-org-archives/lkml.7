@@ -2,111 +2,123 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B16CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B3CCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95811217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 763C121855
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:53:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fvWxHBvt"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fef9ITir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbfKAWrz (ORCPT
+        id S1727876AbfKAWxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 18:47:55 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54729 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727355AbfKAWrz (ORCPT
+        Fri, 1 Nov 2019 18:53:40 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44600 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727718AbfKAWxk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 18:47:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572648473;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4AbnmotS4GX9fzPBPwmbaz4gXNWAgBddj71xKQDFLh8=;
-        b=fvWxHBvtLDj7sUcK/owIPp20UIfeG0tSTjP/ts3vIlJhnjG5+bJfKHimXmhx6kKOnO4CLk
-        0+WKmYnl8IrlWNVKO1iiG+UBfrmo2t4iEfDKjkcOmJd/tMlCZTGNOXDPM6ahCaupzFK0Se
-        iI3fBukuFYJ8Gp9A/i7p7SjhzBefnGI=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-Zq6Pj0PtME6stIvQrd-B8A-1; Fri, 01 Nov 2019 18:47:52 -0400
-Received: by mail-wr1-f71.google.com with SMTP id j17so6174179wru.13
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 15:47:52 -0700 (PDT)
+        Fri, 1 Nov 2019 18:53:40 -0400
+Received: by mail-io1-f66.google.com with SMTP id w12so12513511iol.11
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 15:53:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bf69Nkr7XBkmTO1YD+9sNVV+WBGtzvC5rxPzFLKlWNo=;
+        b=fef9ITiroUgvdPL9dSereSDmc2uHGR7fnIsdwnXDmA0MFiLxHlMcWFQLIHWQVYz488
+         wepTmOx6B3NDyuQStyl0eD2Y0ifgeBrEdd4uyG48SyEac7cZmtepCiNECLJ5HIE9h1Ku
+         nuK5ExP5bNiE27blrdbkdwG0Y7XVk8OxK0D1I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=1w2dwPc3mjEgCi5ISKwx4I9slR+xAJYMQCO80tIGzcw=;
-        b=Wha0rk3LMD/ZYsIiqv8jJs7jJKpMwDF8GFqBIhX6SxttQkD7AcdSs/zxjB1ZchNiZg
-         TXa80D5/JsT6O30mD3ID9MkTyZMJMoa2odrYMpG5/fu4HNUxEaHY+LKvdkkwle+kCSGC
-         Ra0AB8xeWVwRKAo9L8zMj9vDXuYzvyai6HhYGxKc6v0FYTeCj5v7BEOEGyuMm/8mjFXZ
-         jmBEgqdgE3ggGJFjb43lX26eZL7VirzGa8YS9IglCcivVf903Wy5GLGV0yFb7w1iLDUF
-         SksYbUblumwxaZ1M7uK3KiqlJTch2WKrLTxtGxd3zFeCFd9S92AE0jejUKqTuZ6UyXOr
-         FJsg==
-X-Gm-Message-State: APjAAAVLqJrWH0Frf6xEkRYJCgqbahP76zSj/+qZRBoiXmTrWycMpzXQ
-        dp8e3SqbZWEGlKSamKXISsge2fvIwxqIZhYtmG0gLGIl5W88fCgOwiSqpcpc7AXsl3ThCmegF+k
-        p77wsWha638OzfiMkTbV6xgKx
-X-Received: by 2002:a1c:c90c:: with SMTP id f12mr11715766wmb.97.1572648471201;
-        Fri, 01 Nov 2019 15:47:51 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwN/jcsNi/ctBdMAzUSO/Z1IRdnXDc72udPBZiDioY5UtZhUAZXY1QOnnbQRhBPBL4fgTL/cA==
-X-Received: by 2002:a1c:c90c:: with SMTP id f12mr11715756wmb.97.1572648471004;
-        Fri, 01 Nov 2019 15:47:51 -0700 (PDT)
-Received: from [192.168.3.122] (p5B0C68FD.dip0.t-ipconnect.de. [91.12.104.253])
-        by smtp.gmail.com with ESMTPSA id v16sm9025494wrc.84.2019.11.01.15.47.50
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bf69Nkr7XBkmTO1YD+9sNVV+WBGtzvC5rxPzFLKlWNo=;
+        b=P7jvD4Tvpukt3GfqfiGUDySKkuZSJIQdzVrXDX84WT36KvwvXOFTlA5bGDU9yVfy1G
+         AvGLts6+r/QAwIpMZTNXCJoVAAmBG4RJ2UQ9u8eBjUb8dI5ApNmLcYPCbdCAfMQNYXlP
+         u6X2uIakMi20ekAb4aQ6JCvgr2PU2chbvfJAR8qQWhU/l/moYT6ZixqIqZYn9S49scg2
+         GNoFvz5y6+/r8W3t7lOzg2VslHqk5njRlD3XRoZ4bkBdzx1aNaX/DdUggHafM3nk1vpg
+         YICNvyhJWwZSMIyI4J2bwsRJiO+SGd1vzuz/hoKQhi6pgeSim3B0jS6zwD/ajdFBoUq5
+         lNNg==
+X-Gm-Message-State: APjAAAVQ1KNDQWEKXrJZqLm+Ez3mXeo7OEmXtsDqj74u5ZioSMP96QWl
+        RPzJlg+F8x7237oeHgcedCvWixxer5A=
+X-Google-Smtp-Source: APXvYqx+QVvXgfeevL2lSk6GX1PQA2KYhmgQblLE3STqbwD964hC38xK11A0hjDHPk5zADNTUP/BhQ==
+X-Received: by 2002:a5d:9e58:: with SMTP id i24mr13407613ioi.255.1572648818983;
+        Fri, 01 Nov 2019 15:53:38 -0700 (PDT)
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com. [209.85.166.182])
+        by smtp.gmail.com with ESMTPSA id k20sm512379ioc.70.2019.11.01.15.53.37
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Nov 2019 15:47:50 -0700 (PDT)
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] drivers/base/memory.c: memory subsys init: skip search for missing blocks
-Date:   Fri, 1 Nov 2019 23:47:49 +0100
-Message-Id: <3B456200-E7A1-454E-A70B-92B4A72743C4@redhat.com>
-References: <b72983e6-0560-972a-57c8-9006942ab2a1@linux.vnet.ibm.com>
-Cc:     Scott Cheloha <cheloha@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nathanl@linux.ibm.com
-In-Reply-To: <b72983e6-0560-972a-57c8-9006942ab2a1@linux.vnet.ibm.com>
-To:     Rick Lindsley <ricklind@linux.vnet.ibm.com>
-X-Mailer: iPhone Mail (17A878)
-X-MC-Unique: Zq6Pj0PtME6stIvQrd-B8A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Fri, 01 Nov 2019 15:53:37 -0700 (PDT)
+Received: by mail-il1-f182.google.com with SMTP id t9so7715532ils.4
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 15:53:37 -0700 (PDT)
+X-Received: by 2002:a92:d0a:: with SMTP id 10mr14227736iln.218.1572648817422;
+ Fri, 01 Nov 2019 15:53:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1572526427.git.amit.kucheria@linaro.org> <18717de35f31098d3ebc12564c2767b6d54d37d8.1572526427.git.amit.kucheria@linaro.org>
+In-Reply-To: <18717de35f31098d3ebc12564c2767b6d54d37d8.1572526427.git.amit.kucheria@linaro.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 1 Nov 2019 15:53:26 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=X3o3JKye8pZZckEtk=9XNoajf-Kj8XGUemut7NS2bZjw@mail.gmail.com>
+Message-ID: <CAD=FV=X3o3JKye8pZZckEtk=9XNoajf-Kj8XGUemut7NS2bZjw@mail.gmail.com>
+Subject: Re: [PATCH v7 03/15] drivers: thermal: tsens: Add __func__ identifier
+ to debug statements
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Andy Gross <agross@kernel.org>, masneyb@onstation.org,
+        Stephen Boyd <swboyd@chromium.org>, julia.lawall@lip6.fr,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+On Thu, Oct 31, 2019 at 11:38 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> Printing the function name when enabling debugging makes logs easier to
+> read.
+>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>  drivers/thermal/qcom/tsens-common.c | 8 ++++----
+>  drivers/thermal/qcom/tsens.c        | 6 +++---
+>  2 files changed, 7 insertions(+), 7 deletions(-)
 
-> Am 01.11.2019 um 23:32 schrieb Rick Lindsley <ricklind@linux.vnet.ibm.com=
->:
->=20
-> =EF=BB=BFOn 11/1/19 12:00 PM, David Hildenbrand wrote:
->> No, I don't really like that. Can we please speed up the lookup via a ra=
-dix tree as noted in the comment of "find_memory_block()".
->=20
-> I agree with the general sentiment that a redesign is the correct long te=
-rm action - it has been for some time now - but implementing a new storage =
-and retrieval method and verifying that it introduces no new problems itsel=
-f is non-trivial.  There's a reason it remains a comment.
->=20
-> I don't see any issues with the patch itself.   Do we really want to fore=
-go the short term, low-hanging, low risk fruit in favor of waiting indefini=
-tely for that well-tested long-term solution?
+Obviously my opinion doesn't trump maintainers ones, but I have always
+heard that this is the wrong thing to do for "dev_xxx" debug
+statements.  Specifically:
 
-The low hanging fruit for me is to convert it to a simple VM_BUG_ON(). As I=
- said, this should never really happen with current code.
+* For "dev_xxx" statements, the device name is already printed which
+is pretty good for getting you to the right driver.
 
-Also, I don=E2=80=98t think adding a radix tree here is rocket science and =
-takes indefinitely ;) feel free to prove me wrong.
+* Once you're in the right driver, error messages should be unique
+enough to find the right function.
 
->=20
-> Rick
+If having __func__ in all messages was beneficial then the "dev_xxx"
+macros would include it by default.  They don't and such things just
+uglify the logs and chew up log space.  I suppose you could try
+including a CONFIG option to add it to all "dev_xxx" functions and see
+if it would be accepted?  Then you can turn it on locally.
 
+Using __func__ in cases where you don't happen to have a "struct
+device" (and can't get one easily) makes some sense, but otherwise I
+believe it should be kept out.
+
+-Doug
