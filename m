@@ -2,132 +2,122 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F989CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1396ECA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 543CF217D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC3A721734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:39:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eqlpi5vE"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="xRD+5G1O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfKANiz (ORCPT
+        id S1727345AbfKANj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 09:38:55 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55108 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbfKANiy (ORCPT
+        Fri, 1 Nov 2019 09:39:26 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:51210 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726792AbfKANj0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 09:38:54 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA1DZdgU083064;
-        Fri, 1 Nov 2019 13:38:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=pAWPZX5GeZndrulBLbi6FyYmwNdbtqqaIrrv2rvnQtw=;
- b=eqlpi5vEBsM/i0bfKTlJ01lv/ONzTi7P9Cs2n54nycHzTJ0vlL5pMp+Sawhpalop6aDY
- V0ndHjmLQdMxNLz6Cb3f3+l1VhJD5XmGBcbX+tlHhe5FHP8gsgmEbf/lThk9AGJp56mV
- 6jTXf34+iLWi0lmb4P4a9fjxCVBD1wSo05VDgJnPDLHbQ94G0LoSzmez/fjPX5cGxJQi
- yFg14kN+pkew2ZCcX0sz41LjmeYOGavRN2tAAtr4if7RZr6uMdio6/dSBaPe/Ms9nuDO
- IcflcgxtudcMM7rm08IQDsz6OwAKiGnvDCDZ6uibl7p7fhneguLPeW+VvkJQR2fizVu3 Bw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2vxwhg1uup-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 01 Nov 2019 13:38:30 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA1DZQH6005568;
-        Fri, 1 Nov 2019 13:36:30 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2vyqpg843y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 01 Nov 2019 13:36:29 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA1DaSLo023879;
-        Fri, 1 Nov 2019 13:36:28 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 01 Nov 2019 06:36:28 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH -next] nfsd: Drop LIST_HEAD where the variable it declares
- is never used.
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20191101114054.50225-1-maowenan@huawei.com>
-Date:   Fri, 1 Nov 2019 09:36:27 -0400
-Cc:     Bruce Fields <bfields@redhat.com>,
-        Trond Myklebust <trond.myklebust@primarydata.com>,
-        Dros Adamson <dros@primarydata.com>,
-        jeff.layton@primarydata.com, richard.sharpe@primarydata.com,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <7E1B5E17-FF35-472B-8316-D4C01085BAE4@oracle.com>
-References: <20191101114054.50225-1-maowenan@huawei.com>
-To:     Mao Wenan <maowenan@huawei.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9427 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911010136
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9427 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911010136
+        Fri, 1 Nov 2019 09:39:26 -0400
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 5860A2E155F;
+        Fri,  1 Nov 2019 16:39:22 +0300 (MSK)
+Received: from iva4-c987840161f8.qloud-c.yandex.net (iva4-c987840161f8.qloud-c.yandex.net [2a02:6b8:c0c:3da5:0:640:c987:8401])
+        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id EhlYfs7DX0-dJ0eLnKR;
+        Fri, 01 Nov 2019 16:39:22 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1572615562; bh=b+U9G81+nIuUfLnTbf5g4AsIvZj1ryKOtGI4+RzRof4=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=xRD+5G1OOXaMXP3BhUHEeEC081zYL4UPDBVk/bj3BK2Q20430vaadbFydx3/vyCqt
+         aJcOvOF95ry6L/j+PoVRkNOyMeu3SG2DGz3V711KMI3jg82BvCPN8GpqXYde3zRXQC
+         LiSq5R0i+WY6ftnJhMM1aMqCOyJfFoQC//V1d5po=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:b080:9508::1:e])
+        by iva4-c987840161f8.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id qT5bQKrq9n-dJVCBFfB;
+        Fri, 01 Nov 2019 16:39:19 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] x86/MCE/AMD: fix warning about sleep-in-atomic at early
+ boot
+To:     Borislav Petkov <bp@alien8.de>,
+        Yazen Ghannam <Yazen.Ghannam@amd.com>
+Cc:     Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
+        linux-edac@vger.kernel.org, x86@kernel.org
+References: <157252708836.3876.4604398213417262402.stgit@buzz>
+ <20191031142955.GA23693@nazgul.tnic>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <ad7a25d9-1ca5-0791-ae0a-63c524040bcb@yandex-team.ru>
+Date:   Fri, 1 Nov 2019 16:39:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191031142955.GA23693@nazgul.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mao-
+On 31/10/2019 17.29, Borislav Petkov wrote:
+> On Thu, Oct 31, 2019 at 04:04:48PM +0300, Konstantin Khlebnikov wrote:
+>> Function smca_configure() is called only for current cpu thus
+>> rdmsr_safe_on_cpu() could be replaced with atomic rdmsr_safe().
+>>
+>>   BUG: sleeping function called from invalid context at kernel/sched/completion.c:99
+>>   in_atomic(): 1, irqs_disabled(): 1, pid: 0, name: swapper/1
+>>   CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.19.79-16 #1
+> 					     ^^^^^^^^^^
+> 
+> I'm assuming you hit this on latest upstream too?
 
-> On Nov 1, 2019, at 7:40 AM, Mao Wenan <maowenan@huawei.com> wrote:
->=20
-> The declarations were introduced with the file, but the declared
-> variables were not used.
->=20
-> Fixes: 65294c1f2c5e ("nfsd: add a new struct file caching facility to =
-nfsd")
+I tried 5.4 once but there was no warning.
+Code in 4.19 and in mainline almost the same.
 
-I'm not sure a Fixes: tag is necessary here? 65294c1f2c5e
-works fine without this change, and it's not something we
-would need to backport into stable kernels.
+Probably hardware needs full power cycle to reset state or something else.
 
-This is more of a clean up patch.
-
-
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
-> fs/nfsd/filecache.c | 2 --
-> 1 file changed, 2 deletions(-)
->=20
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index ef55e9b..32a9bf2 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -685,8 +685,6 @@ nfsd_file_cache_purge(struct net *net)
-> void
-> nfsd_file_cache_shutdown(void)
-> {
-> -	LIST_HEAD(dispose);
-> -
-> 	set_bit(NFSD_FILE_SHUTDOWN, &nfsd_file_lru_flags);
->=20
-> 	lease_unregister_notifier(&nfsd_file_lease_notifier);
-> --=20
-> 2.7.4
->=20
-
---
-Chuck Lever
-
-
-
+> 
+>>   Hardware name: GIGABYTE R181-Z90-00/MZ91-FS0-00, BIOS R11 10/25/2019
+>>   Call Trace:
+>>    dump_stack+0x5c/0x7b
+>>    ___might_sleep+0xec/0x110
+>>    wait_for_completion+0x39/0x160
+>>    ? __rdmsr_safe_on_cpu+0x45/0x60
+>>    rdmsr_safe_on_cpu+0xae/0xf0
+>>    ? wrmsr_on_cpus+0x20/0x20
+>>    ? machine_check_poll+0xfd/0x1f0
+>>    ? mce_amd_feature_init+0x190/0x2d0
+>>    mce_amd_feature_init+0x190/0x2d0
+>>    mcheck_cpu_init+0x11a/0x460
+>>    identify_cpu+0x3e2/0x560
+>>    identify_secondary_cpu+0x13/0x80
+>>    smp_store_cpu_info+0x45/0x50
+>>    start_secondary+0xaa/0x200
+>>    secondary_startup_64+0xa4/0xb0
+>>
+>> Except warning in kernel log everything works fine.
+>>
+>> Fixes: 5896820e0aa3 ("x86/mce/AMD, EDAC/mce_amd: Define and use tables for known SMCA IP types")
+>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>> ---
+>>   arch/x86/kernel/cpu/mce/amd.c |    2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
+>> index 6ea7fdc82f3c..c7ab0d38af79 100644
+>> --- a/arch/x86/kernel/cpu/mce/amd.c
+>> +++ b/arch/x86/kernel/cpu/mce/amd.c
+>> @@ -269,7 +269,7 @@ static void smca_configure(unsigned int bank, unsigned int cpu)
+>>   	if (smca_banks[bank].hwid)
+>>   		return;
+>>   
+>> -	if (rdmsr_safe_on_cpu(cpu, MSR_AMD64_SMCA_MCx_IPID(bank), &low, &high)) {
+>> +	if (rdmsr_safe(MSR_AMD64_SMCA_MCx_IPID(bank), &low, &high)) {
+> 
+> Yazen, any objections?
+> 
