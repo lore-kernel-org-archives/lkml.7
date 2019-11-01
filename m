@@ -2,146 +2,225 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 196E9CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9140CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8AD020656
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E48218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:42:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U4cNJVCb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfKAVmG (ORCPT
+        id S1727254AbfKAVmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 17:42:06 -0400
-Received: from mga12.intel.com ([192.55.52.136]:36210 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbfKAVmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 17:42:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 14:42:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,257,1569308400"; 
-   d="scan'208";a="402361042"
-Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
-  by fmsmga006.fm.intel.com with ESMTP; 01 Nov 2019 14:42:05 -0700
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-To:     Julien Desfossez <jdesfossez@digitalocean.com>
-Cc:     Aubrey Li <aubrey.intel@gmail.com>,
-        Aaron Lu <aaron.lu@linux.alibaba.com>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com>
- <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
- <fab8eabb-1cfa-9bf6-02af-3afdff3f955d@linux.intel.com>
- <20190911140204.GA52872@aaronlu>
- <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
- <20190912120400.GA16200@aaronlu>
- <CAERHkrsrszO4hJqVy=g7P74h9d_YJzW7GY4ptPKykTX-mc9Mdg@mail.gmail.com>
- <20190915141402.GA1349@aaronlu>
- <CAERHkrs9u24NrcNUwHq8mTW922Ffhy9rPkBGVN_afm1RBhabsQ@mail.gmail.com>
- <ade66e6d-cc52-4575-2f8f-e4d96c07a33c@linux.intel.com>
- <20191029204058.GB13345@sinkpad>
-From:   Tim Chen <tim.c.chen@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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
- l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
-Message-ID: <58e3e7a5-7839-9a80-b374-fefceaa6d5fc@linux.intel.com>
-Date:   Fri, 1 Nov 2019 14:42:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20191029204058.GB13345@sinkpad>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 1 Nov 2019 17:42:43 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39148 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfKAVmm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 17:42:42 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p12so7260367pgn.6
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 14:42:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=qw73byJosffXkuqCyMjGKLHzCzbk8f/W13zIdru5UDs=;
+        b=U4cNJVCbks5NLLHVvES6/rHnlmhJhpSMl4fcP8dWEYgRQCUF/LViLyJ+r3ZlycmBiq
+         U61vGyoMRuhx302M6+QRUXjQcvBE4HNWxrXru+uO+01oARndC8BJr50YVp1WG45/cQiU
+         IJvSFPRE4mNvWR1Z9i7BOkTOp0rFTtS1gsvkL74U24eAVrwEgphnDYbo0igPqVCeSdSh
+         MvMeuNuGNFrUEYPMyMwzTYe+YmDFC2bTBhMqVytVriYjs6Axrx7ciK3b+DeQEkIWZvZr
+         64yYVOQqb68IRFRymdr40JyPViSmEmFS9TVzhXIL1EZcwONBU4aTh3HjJwlyrC6I31s3
+         4Ieg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qw73byJosffXkuqCyMjGKLHzCzbk8f/W13zIdru5UDs=;
+        b=ZDoDK/Wh1ulSbsAt8ZOiJ7yVEAmt8zWkogwLMJz8oLSNKH6UW4jy8g5lm1AER1Dxoa
+         ySUkDTzv53Qh7E4u7Tag4PmNWOvgOZckUlpuAr2XNUe7HK0yK6NllejelXpV9VdGzUvV
+         jGanZA21eTT09vAs3dNvkicXpBBoRWA+K/ZOe+UInWQ1Cy/pqnnMYpwhtrghPAwAMrKh
+         UcoqTnN2HizvyiYdEy9jQZLSPjvzjRpNSjL1RMk6XqL7C9psbRs0tc0zMneSqGfVA2H2
+         Pk+AZMO80DVvpnmfD/JOYheH1lF79n567BPoUbRiPtVRM0xfvmirhxPx44QgBlNnzB3M
+         GX4g==
+X-Gm-Message-State: APjAAAUNHUmbN0uX09FXpUQsmn7I7r5sTeykYMu1T3id8IKjVoaVGaZD
+        fX2w2MLOduqgAgF85cuhPPFR2uBwUFA=
+X-Google-Smtp-Source: APXvYqwPZQOJ824hOIpx+OQwUm86AFEzCF124ezoCY0dfNb/xkltqGVcYD5Tca7S+Udll9ZOgpadQQ==
+X-Received: by 2002:a63:6581:: with SMTP id z123mr15822936pgb.367.1572644561515;
+        Fri, 01 Nov 2019 14:42:41 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id u36sm8299058pgn.29.2019.11.01.14.42.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 14:42:41 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Dave Airlie <airlied@gmail.com>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH v14 0/5] DMA-BUF Heaps (destaging ION)
+Date:   Fri,  1 Nov 2019 21:42:33 +0000
+Message-Id: <20191101214238.78015-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/29/19 1:40 PM, Julien Desfossez wrote:
-> On 18-Sep-2019 01:40:58 PM, Tim Chen wrote:
->> I think the test that's of interest is to see my load balancing added on top
->> of Aaron's fairness patch, instead of using my previous version of
->> forced idle approach in coresched-v3-v5.1.5-test-tim branch. 
->>  
->> I've added my two load balance patches on top of Aaron's patches
->> in coresched-v3-v5.1.5-test-core_vruntime branch and put it in
->>
->> https://github.com/pdxChen/gang/tree/coresched-v3-v5.1.5-test-core_vruntime-lb
-> 
-> We have been trying to benchmark with the load balancer patches and have
-> experienced some hard lockups with the saturated test cases, but we
-> don't have traces for now.
-> 
-> Since we are mostly focused on testing the rebased v4 currently, we will
-> post it without those patches and then we can try to debug more.
-> 
+This again? I know!
 
-Aubrey has been experimenting with a couple of patches that tries to move
-task to cpu with matching cookie on wake up and load balance.  They are
-much simpler than mine and got better performance on the workload he was
-testing. He'll rebase those patches on v4 and post them.
+Apologies to all who hoped I'd stop bothering them with this
+patch set, but I ran afoul of the DRM tree rules by not
+getting the userland patches properly reviewed prior to the
+patches landing (I mistakenly was waiting for the patches to
+land upstream before pushing the userland patches). Thus,
+these were correctly reverted from the drm-misc-next tree.
 
-Tim
+My attempts to quickly fix the userland review issue didn't get
+very far, as the revert brought additional eyes to the patchset,
+and further interface changes were requested (comically, which
+is the exact reason I was waiting to push the userland changes
+:)
+
+So like groundhog day, here we are again, with v14:
+
+This patchset implements per-heap devices which can be opened
+directly and then an ioctl is used to allocate a dmabuf from the
+heap.
+
+The interface is similar, but much simpler then IONs, only
+providing an ALLOC ioctl (and a GET_FEATURES interface to help
+with any future changes to the interface).
+
+Also, I've provided relatively simple system and cma heaps.
+
+I've booted and tested these patches with AOSP on the HiKey960
+using the kernel tree here:
+  https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/dma-buf-heap
+
+And the userspace changes here:
+  https://android-review.googlesource.com/c/device/linaro/hikey/+/909436
+
+Compared to ION, this patchset is missing the system-contig,
+carveout and chunk heaps, as I don't have a device that uses
+those, so I'm unable to do much useful validation there.
+Additionally we have no upstream users of chunk or carveout,
+and the system-contig has been deprecated in the common/andoid-*
+kernels, so this should be ok.
+
+I've also removed the stats accounting, since any such
+accounting should be implemented by dma-buf core or the heaps
+themselves.
+
+New in v14:
+* Reworked ioctl handler to zero fill any difference in
+  structure size, similar to what the DRM core does, as
+  suggested by Dave Airlie
+* Removed now unnecessary reserved bits in allocate_data
+* Added get_features ioctl as suggested by Dave Airlie
+* Removed pr_warn_once messages as requested by Dave
+  Airlie
+* Fix missing argment to WARN() in dma_heap_buffer_destroy()
+  found and fixed by Dan Carpenter <dan.carpenter@oracle.com>
+* Add check in fault hanlder that pgoff isn't larger then
+  pagecount, reported by Dan Carpenter
+* Fix "redundant assignment to variable ret" issue reported
+  by Colin King and fixed by Andrew Davis
+* Fix a missing return value in kselftest
+* Add calls to test the GET_FEATURES ioctl in ksefltest
+* Build fix reported by kernel test robot <lkp@intel.com>
+  and fixed by Xiao Yang <ice_yangxiao@163.com> for kselftest
+* Minor kselftest Makefile cleanups
+
+Many thanks again to the folks above who found and submitted
+fixes to small issues while the patches were in -next! I've
+folded them in to the patch set here.
+
+The ioctl rework to avoid reserved fields, was mostly duplicated
+from the DRM core, but it does add some complexity to the ioctl
+handler so I'd appreciate extra review.
+
+It felt substantial enough that I've removed the previous reviewed
+by and acked-by tags, but please let me know if you'd like me to
+re-add yours back.
+
+Apologies again for my flub and the extra noise here!
+I really appreciate everyone's patience with with me.
+
+thanks
+-john
+
+
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Liam Mark <lmark@codeaurora.org>
+Cc: Pratik Patel <pratikp@codeaurora.org>
+Cc: Brian Starkey <Brian.Starkey@arm.com>
+Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
+Cc: Sudipto Paul <Sudipto.Paul@arm.com>
+Cc: Andrew F. Davis <afd@ti.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Chenbo Feng <fengc@google.com>
+Cc: Alistair Strachan <astrachan@google.com>
+Cc: Hridya Valsaraju <hridya@google.com>
+Cc: Sandeep Patil <sspatil@google.com>
+Cc: Hillf Danton <hdanton@sina.com>
+Cc: Dave Airlie <airlied@gmail.com>
+Cc: dri-devel@lists.freedesktop.org
+
+Andrew F. Davis (1):
+  dma-buf: Add dma-buf heaps framework
+
+John Stultz (4):
+  dma-buf: heaps: Add heap helpers
+  dma-buf: heaps: Add system heap to dmabuf heaps
+  dma-buf: heaps: Add CMA heap to dmabuf heaps
+  kselftests: Add dma-heap test
+
+ MAINTAINERS                                   |  18 +
+ drivers/dma-buf/Kconfig                       |  11 +
+ drivers/dma-buf/Makefile                      |   2 +
+ drivers/dma-buf/dma-heap.c                    | 313 ++++++++++++++++++
+ drivers/dma-buf/heaps/Kconfig                 |  14 +
+ drivers/dma-buf/heaps/Makefile                |   4 +
+ drivers/dma-buf/heaps/cma_heap.c              | 178 ++++++++++
+ drivers/dma-buf/heaps/heap-helpers.c          | 271 +++++++++++++++
+ drivers/dma-buf/heaps/heap-helpers.h          |  55 +++
+ drivers/dma-buf/heaps/system_heap.c           | 124 +++++++
+ include/linux/dma-heap.h                      |  59 ++++
+ include/uapi/linux/dma-heap.h                 |  77 +++++
+ tools/testing/selftests/dmabuf-heaps/Makefile |   6 +
+ .../selftests/dmabuf-heaps/dmabuf-heap.c      | 255 ++++++++++++++
+ 14 files changed, 1387 insertions(+)
+ create mode 100644 drivers/dma-buf/dma-heap.c
+ create mode 100644 drivers/dma-buf/heaps/Kconfig
+ create mode 100644 drivers/dma-buf/heaps/Makefile
+ create mode 100644 drivers/dma-buf/heaps/cma_heap.c
+ create mode 100644 drivers/dma-buf/heaps/heap-helpers.c
+ create mode 100644 drivers/dma-buf/heaps/heap-helpers.h
+ create mode 100644 drivers/dma-buf/heaps/system_heap.c
+ create mode 100644 include/linux/dma-heap.h
+ create mode 100644 include/uapi/linux/dma-heap.h
+ create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
+ create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+
+-- 
+2.17.1
+
