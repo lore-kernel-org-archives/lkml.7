@@ -6,74 +6,66 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB12CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 11:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C248CCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 11:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE092080F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 11:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EDB62080F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 11:13:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730347AbfKALNM (ORCPT
+        id S1730358AbfKALN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 07:13:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33264 "EHLO mx1.suse.de"
+        Fri, 1 Nov 2019 07:13:58 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48020 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726720AbfKALNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 07:13:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 53013B25F;
-        Fri,  1 Nov 2019 11:13:10 +0000 (UTC)
-Date:   Fri, 1 Nov 2019 11:13:08 +0000
-From:   Mel Gorman <mgorman@suse.de>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>
-Subject: Re: [RFC 02/10] autonuma: Reduce cache footprint when scanning page
- tables
-Message-ID: <20191101111308.GO28938@suse.de>
-References: <20191101075727.26683-1-ying.huang@intel.com>
- <20191101075727.26683-3-ying.huang@intel.com>
+        id S1726720AbfKALN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 07:13:58 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 45A7A34AB79BE287020A;
+        Fri,  1 Nov 2019 19:13:54 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Fri, 1 Nov 2019
+ 19:13:47 +0800
+Subject: Re: [PATCH v2 15/36] irqchip/gic-v4.1: Plumb skeletal VPE irqchip
+To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-kernel@vger.kernel.org>
+CC:     Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Andrew Murray" <Andrew.Murray@arm.com>,
+        Jayachandran C <jnair@marvell.com>,
+        "Robert Richter" <rrichter@marvell.com>
+References: <20191027144234.8395-1-maz@kernel.org>
+ <20191027144234.8395-16-maz@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <21c993cc-4c92-b70c-3c73-c254bd707870@huawei.com>
+Date:   Fri, 1 Nov 2019 19:13:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20191101075727.26683-3-ying.huang@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191027144234.8395-16-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 03:57:19PM +0800, Huang, Ying wrote:
-> From: Huang Ying <ying.huang@intel.com>
-> 
-> In auto NUMA balancing page table scanning, if the pte_protnone() is
-> true, the PTE needs not to be changed because it's in target state
-> already.  So other checking on corresponding struct page is
-> unnecessary too.
-> 
-> So, if we check pte_protnone() firstly for each PTE, we can avoid
-> unnecessary struct page accessing, so that reduce the cache footprint
-> of NUMA balancing page table scanning.
-> 
-> In the performance test of pmbench memory accessing benchmark with
-> 80:20 read/write ratio and normal access address distribution on a 2
-> socket Intel server with Optance DC Persistent Memory, perf profiling
-> shows that the autonuma page table scanning time reduces from 1.23% to
-> 0.97% (that is, reduced 21%) with the patch.
-> 
-> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Hi Marc,
 
-Acked-by: Mel Gorman <mgorman@suse.de>
+On 2019/10/27 22:42, Marc Zyngier wrote:
+> Just like for GICv4.0, each VPE has its own doorbell interrupt, and
+> thus an irqchip that manages them. Since the doorbell management is
+> quite different on GICv4.1, let's introduce an almost empty irqchip
+> the will get populated over the next new patches.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-This patch is independent of the series and should be resent separately.
-Alternatively Andrew, please pick this patch up on its own.
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
 
--- 
-Mel Gorman
-SUSE Labs
