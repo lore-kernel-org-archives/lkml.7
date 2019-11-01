@@ -2,107 +2,108 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CD8CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E42CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE5E21A4A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 897D320679
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 22:37:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bli3xmuB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TNdD3ggU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfKAWgT (ORCPT
+        id S1727772AbfKAWht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 18:36:19 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38016 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfKAWgT (ORCPT
+        Fri, 1 Nov 2019 18:37:49 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43709 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfKAWhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 18:36:19 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y23so11326462ljc.5
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 15:36:17 -0700 (PDT)
+        Fri, 1 Nov 2019 18:37:48 -0400
+Received: by mail-qt1-f195.google.com with SMTP id c26so15026163qtj.10
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 15:37:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VOVEnixRZLxQkCHgEpMJYKVl9naG8q4Bhsey3a4BJyw=;
-        b=Bli3xmuBt9/GwnfhQ+WLZeBpC+LGylrKEihKmG9wDJcaF6w3L/ZQ8vt3GI4YPWXFJQ
-         5Om7iCdkbv/lP18+LV92eRVs401olXcWreQAxfwPfepVtiVSDh9+nHAn2/3d+gfz9UVm
-         yMWAVezWZJNqsbBLHANyYxJW6QpG5vniX1o53MF1dl5bc0zwLsqDDWKMYaMNZ47JDbyE
-         v0XCStgcgsGwANfNW7O2l7MqWzWiGoQksAS9QIjgoVFUAhEy6735xDLs92DbjUK8gYCH
-         q+fHcZwm6Ytrc4SrW8PPtsChFVdCSMaGofeTewgiaGn6jHXy73Odpndaqn2pcpxNkMKy
-         K1qA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LGdeY7oWB17TnAUMaa0RtkRNLL4fGiuy6QxiZRPpPP8=;
+        b=TNdD3ggUUn77JBgZbx0bJOfzDhFbOZLSfI7IOLdB//bieFBARrcHiwoIH87O7YgV0R
+         ak+TPpvIhrrItkHz93pykSwRFdmCQr7bbo+ajQetvP4F4HGS7mB+HIZ/VcnUoPZDFkeg
+         bNN3HibPUGLwJ5C6qD+vjY+bp4BuGxABAxOQGxjk7Uh10EX13HCgH3NCLo1Qa/QFNEu5
+         37RNjHO7LDFzouXUAilGxaIiuZOmhX4QNavQEZI8SKa03uD0mhO7npP0qqjO5Crh0/r5
+         IkQpglJqe5tf/aqELFE4swyCAt5BQLVluT11BfqBPve6t5hS1Lh+iUPpYNtUi7w0NDQo
+         2DYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VOVEnixRZLxQkCHgEpMJYKVl9naG8q4Bhsey3a4BJyw=;
-        b=tvRPMcUo7ejiJ9Nivj2csyOE9EIrBhbYppj2/YwOf0jqu8r3clD6iZ6DLs+ZoQF5uS
-         vYdYHOR5VHFe/LnsGHyalrPQSi0gPrK5uD+6KcOUYrDJ5TGcba3kWkzzhwusv8HzRuec
-         bU1b3JIf7GlRuPSqqcOUMyUuXXZ6jj+omr+mZU10jjMNOV94IfqXZ0DWgjC1FBEChZP3
-         cPnQlQxVO9yx3X8tK34mGspdU8nblSWSwuP4DD9eZNxhVrK76dy8M4zJcqhoyjPQb5+l
-         e7oGegGxrXRPvIyP/9CJzXs3GOUO9kHJUctZ0CtbqSerHwh71iNq4O6DvmaIu8R0vANf
-         9M2g==
-X-Gm-Message-State: APjAAAUxR1SUKZQ5NkZfpEwTTQU6Wr4zjpkJ75TkXwZe05AjBAXb1JnS
-        1cV3VI5C/pdfsO1CUI/ioy9eck9fEf4PZD6KQLc=
-X-Google-Smtp-Source: APXvYqy3a3LpygwD50Ud81Z6exZF+LaVqLS3Tw+hEBAZP5UzR+Yt5u6jie3UaWjeMgSpzygcRllXXMsmSmfSgwH5eE4=
-X-Received: by 2002:a2e:8852:: with SMTP id z18mr9873721ljj.230.1572647776833;
- Fri, 01 Nov 2019 15:36:16 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LGdeY7oWB17TnAUMaa0RtkRNLL4fGiuy6QxiZRPpPP8=;
+        b=mBGXcTGJuSUh/APG4c0lZd6TgWwVhAa92DWugZUoxvCO+Zd9m/yjjOQCjsTDwNxJ4j
+         0ELx710oO0bRnPQQVCO0uSD4R69GQGt+/w3bklrOW3wok46kUCoSeJwbJcuK8Fw5JBUW
+         VhlX5uqvfqfew5lJCpDXq0x8J2eApW7UramsGzVcY/W1QDhA+x3RyM1bQvni9vA79Xfi
+         7mjBs+SXO6K7gS0n57zjB3kZ39EzkH7a2e5uh3aEIfaMcvRRgNgZL8TN8VSX2JbzXXYX
+         /mEfAFECAtCDgM0f8WdUw2kQegaslv1PNyv4BlwhWwgf7OMcmFk8XwSO4uI9a+Q+QnqM
+         yGtw==
+X-Gm-Message-State: APjAAAVL+Gub2m8oMl9TW24NBRtnyxkCdUWU5w0Wou/Zneo0jSVgnZCB
+        rGfD3/s6/PibVN1pMeitGgY=
+X-Google-Smtp-Source: APXvYqzRx6KDYglL02uS0KSCwKYUgED5SRybgScUirfxM9VudDlmhHkE8C/420B3/mS2oT6BWSddZQ==
+X-Received: by 2002:ac8:74c3:: with SMTP id j3mr1871355qtr.113.1572647866452;
+        Fri, 01 Nov 2019 15:37:46 -0700 (PDT)
+Received: from localhost.localdomain (179-241-199-14.3g.claro.net.br. [179.241.199.14])
+        by smtp.gmail.com with ESMTPSA id x64sm4192780qkd.88.2019.11.01.15.37.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 15:37:45 -0700 (PDT)
+From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+To:     outreachy-kernel@googlegroups.com, manasi.d.navare@intel.com,
+        rodrigosiqueiramelo@gmail.com, hamohammed.sa@gmail.com,
+        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Subject: [PATCH] drm/vkms: Update VKMS documentation
+Date:   Fri,  1 Nov 2019 19:37:35 -0300
+Message-Id: <20191101223735.2425-1-gabrielabittencourt00@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191101221150.116536-1-samitolvanen@google.com> <20191101221150.116536-6-samitolvanen@google.com>
-In-Reply-To: <20191101221150.116536-6-samitolvanen@google.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 1 Nov 2019 23:36:05 +0100
-Message-ID: <CANiq72=Z285XTHguDoL5Eq_7XRcounmBfscquFPRWk3BH5kLvA@mail.gmail.com>
-Subject: Re: [PATCH v4 05/17] add support for Clang's Shadow Call Stack (SCS)
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 11:12 PM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> This change adds generic support for Clang's Shadow Call Stack,
-> which uses a shadow stack to protect return addresses from being
-> overwritten by an attacker. Details are available here:
->
->   https://clang.llvm.org/docs/ShadowCallStack.html
->
-> Note that security guarantees in the kernel differ from the
-> ones documented for user space. The kernel must store addresses
-> of shadow stacks used by other tasks and interrupt handlers in
-> memory, which means an attacker capable reading and writing
-> arbitrary memory may be able to locate them and hijack control
-> flow by modifying shadow stacks that are not currently in use.
->
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+Small changes in the driver documentation, clarifing the description.
 
-Reviewed-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
 
-Cheers,
-Miguel
+---
+
+Tested using: make htmldocs
+---
+ drivers/gpu/drm/vkms/vkms_drv.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+index 80524a22412a..52e761bd6c2d 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.c
++++ b/drivers/gpu/drm/vkms/vkms_drv.c
+@@ -3,10 +3,10 @@
+ /**
+  * DOC: vkms (Virtual Kernel Modesetting)
+  *
+- * vkms is a software-only model of a kms driver that is useful for testing,
+- * or for running X (or similar) on headless machines and be able to still
+- * use the GPU. vkms aims to enable a virtual display without the need for
+- * a hardware display capability.
++ * VKMS is a software-only model of a KMS driver that is useful for testing
++ * and for running X (or similar) on headless machines. VKMS aims to enable
++ * a virtual display with no need of a hardware display capability, releasing
++ * the GPU in DRM API tests.
+  */
+ 
+ #include <linux/module.h>
+-- 
+2.20.1
+
