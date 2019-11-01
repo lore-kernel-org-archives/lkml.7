@@ -2,213 +2,301 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98711CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7E7CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 03:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F02B208CB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:52:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WcXfqTa9";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AcnIQkFY"
+	by mail.kernel.org (Postfix) with ESMTP id 93C4B2067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 03:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbfKACwl (ORCPT
+        id S1728659AbfKADBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 22:52:41 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41664 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727332AbfKACwk (ORCPT
+        Thu, 31 Oct 2019 23:01:17 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40749 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbfKADBQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 22:52:40 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id BA17660BEB; Fri,  1 Nov 2019 02:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572576759;
-        bh=x58V+NunLYh/zmTR/UxfKwPy55GnEu+CaVGBp6CoDvI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WcXfqTa9eSjKVggL6ZlpbI/Lw6rJMVwrnTUraKve080xqM0rFB3aBMMbwjX5lsVPG
-         XfW+4AuQTQ4vchi8o+FDVVsoi+eRbDylSjxgovVxnJof/uQIVdeSftRPVAvTBB03lD
-         2qGPbIYUuZ79iGeZzK4aZPfn2s2fzuEePI9BbPBA=
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D0FEC60913;
-        Fri,  1 Nov 2019 02:52:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572576757;
-        bh=x58V+NunLYh/zmTR/UxfKwPy55GnEu+CaVGBp6CoDvI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AcnIQkFYMc3hFZoMM+IOHQ4rLINNZxhYtZqCdbDffMO+AwKZ77baNi9dRrrw9lH1d
-         pXOTBU6RGQ2184iXz0dJZiGeoWN4Ac/5N/ikI70nlNJ2PFlNplDGTosKkGO30oaK1j
-         H1kg9oI8TAGFqrsWvdMYNbSdXWp3VymwGwrobMZA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D0FEC60913
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 2/2] scsi: ufs: Do not rely on prefetched data
-Date:   Thu, 31 Oct 2019 19:52:05 -0700
-Message-Id: <1572576725-31092-3-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1572576725-31092-1-git-send-email-cang@codeaurora.org>
-References: <1572576725-31092-1-git-send-email-cang@codeaurora.org>
+        Thu, 31 Oct 2019 23:01:16 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p59so6492114edp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 20:01:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ja69r3scSsFa5ExNkwUmGih/B4M0amxDhxiXxuJHmpY=;
+        b=o1+gCJPFZwFioHWR1x700X2zOxm9IVecMUK9bBdqvqd8HZDTpfDrNNI52IzogRCs3q
+         ZcYy781FM464vk/ucycnI9oR1OGFuBBwlsT6p6Gd6wGkXXCPw1Y01+k9oXbtg16LBd/I
+         G+CSdpNyv+jkIEps1KMvOUv9OguaWXGlCQnARLPUVk1Ita7A/3MtyYYI9gHY6AQTUbfd
+         ccwR09dQXT6/S5OVV8f0Ljjl7E9LWeofx4SN8BtrlQHISFogg1Zc5GPeHUabSupgLvOj
+         NTK0PF17ASo7YNlq4y28lvw7sd+Ub+q1nBel1e2h/8G+njRjSSb9cLb7YQUz5YUTPinD
+         4erQ==
+X-Gm-Message-State: APjAAAXIoHvmWs+78SueXpYJt7l7e2tWGq0QteuLz899gMCEVIUdgyaS
+        kd/cevMnp5QtNFloL0lC9oOGAG4cxYM=
+X-Google-Smtp-Source: APXvYqxlQ3kejwefW7bZQQXDzXrAyaEVDjEooDDJ/ki6PyxXkWIjFKNlqLdsRZqbAxyHlMgy4Kz86Q==
+X-Received: by 2002:a17:906:680c:: with SMTP id k12mr7609410ejr.118.1572577273916;
+        Thu, 31 Oct 2019 20:01:13 -0700 (PDT)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
+        by smtp.gmail.com with ESMTPSA id k25sm169423edv.28.2019.10.31.20.01.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 31 Oct 2019 20:01:13 -0700 (PDT)
+Received: by mail-wr1-f41.google.com with SMTP id o28so8345373wro.7
+        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 20:01:13 -0700 (PDT)
+X-Received: by 2002:a05:6000:1252:: with SMTP id j18mr8450718wrx.23.1572577273265;
+ Thu, 31 Oct 2019 20:01:13 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191031231216.30903-2-karlp@tweak.net.au>
+In-Reply-To: <20191031231216.30903-2-karlp@tweak.net.au>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Fri, 1 Nov 2019 11:01:01 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67PLemQvj+SOF2h_cfc4HcnAyvs866Bas7GRUF9Y1Lo1A@mail.gmail.com>
+Message-ID: <CAGb2v67PLemQvj+SOF2h_cfc4HcnAyvs866Bas7GRUF9Y1Lo1A@mail.gmail.com>
+Subject: Re: [PATCH 2/3] ARM: dts: sun8i: add FriendlyARM NanoPi Duo2
+To:     Karl Palsson <karlp@tweak.net.au>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We were setting bActiveICCLevel attribute for UFS device only once but
-type of this attribute has changed from persistent to volatile since UFS
-device specification v2.1. This attribute is set to the default value after
-power cycle or hardware reset event. It isn't safe to rely on prefetched
-data (only used for bActiveICCLevel attribute now). Hence this change
-removes the code related to data prefetching and set this parameter on
-every attempt to probe the UFS device.
+On Fri, Nov 1, 2019 at 7:12 AM Karl Palsson <karlp@tweak.net.au> wrote:
+>
+> This is an Allwinner H3 based board, with 512MB ram, a USB OTG port,
+> microsd slot, an onboard AP6212A wifi/bluetooth module, and a CSI
+> connector.
+>
+> Full details and schematic available from vendor:
+> http://wiki.friendlyarm.com/wiki/index.php/NanoPi_Duo2
+>
+> Signed-off-by: Karl Palsson <karlp@tweak.net.au>
+> ---
+>  arch/arm/boot/dts/Makefile                 |   1 +
+>  arch/arm/boot/dts/sun8i-h3-nanopi-duo2.dts | 161 +++++++++++++++++++++
+>  2 files changed, 162 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun8i-h3-nanopi-duo2.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 9159fa2cea90..d8bf02abcda1 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1096,6 +1096,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>         sun8i-h3-beelink-x2.dtb \
+>         sun8i-h3-libretech-all-h3-cc.dtb \
+>         sun8i-h3-mapleboard-mp130.dtb \
+> +       sun8i-h3-nanopi-duo2.dtb \
+>         sun8i-h3-nanopi-m1.dtb  \
+>         sun8i-h3-nanopi-m1-plus.dtb \
+>         sun8i-h3-nanopi-neo.dtb \
+> diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-duo2.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-duo2.dts
+> new file mode 100644
+> index 000000000000..ecfaaa0ec73e
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-h3-nanopi-duo2.dts
+> @@ -0,0 +1,161 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (C) 2019 Karl Palsson <karlp@tweak.net.au>
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun8i-h3.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +
+> +/ {
+> +       model = "FriendlyARM NanoPi Duo2";
+> +       compatible = "friendlyarm,nanopi-duo2", "allwinner,sun8i-h3";
+> +
+> +       aliases {
+> +               serial0 = &uart0;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = "serial0:115200n8";
+> +       };
+> +
+> +       leds {
+> +               compatible = "gpio-leds";
+> +
+> +               status {
+> +                       label = "nanopi:green:status";
+> +                       gpios = <&pio 0 10 GPIO_ACTIVE_HIGH>;
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- drivers/scsi/ufs/ufshcd.c | 30 +++++++++++++++---------------
- drivers/scsi/ufs/ufshcd.h | 13 -------------
- 2 files changed, 15 insertions(+), 28 deletions(-)
+Can you add the pin name as a comment after this, like you already have
+for most of the other gpios entries?
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 54ae643..fe31586 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6424,11 +6424,12 @@ static u32 ufshcd_find_max_sup_active_icc_level(struct ufs_hba *hba,
- 	return icc_level;
- }
- 
--static void ufshcd_init_icc_levels(struct ufs_hba *hba)
-+static void ufshcd_set_active_icc_lvl(struct ufs_hba *hba)
- {
- 	int ret;
- 	int buff_len = hba->desc_size.pwr_desc;
- 	u8 *desc_buf;
-+	u32 icc_level;
- 
- 	desc_buf = kmalloc(buff_len, GFP_KERNEL);
- 	if (!desc_buf)
-@@ -6442,20 +6443,17 @@ static void ufshcd_init_icc_levels(struct ufs_hba *hba)
- 		goto out;
- 	}
- 
--	hba->init_prefetch_data.icc_level =
--			ufshcd_find_max_sup_active_icc_level(hba,
--			desc_buf, buff_len);
--	dev_dbg(hba->dev, "%s: setting icc_level 0x%x",
--			__func__, hba->init_prefetch_data.icc_level);
-+	icc_level = ufshcd_find_max_sup_active_icc_level(hba, desc_buf,
-+							 buff_len);
-+	dev_dbg(hba->dev, "%s: setting icc_level 0x%x", __func__, icc_level);
- 
- 	ret = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_WRITE_ATTR,
--		QUERY_ATTR_IDN_ACTIVE_ICC_LVL, 0, 0,
--		&hba->init_prefetch_data.icc_level);
-+		QUERY_ATTR_IDN_ACTIVE_ICC_LVL, 0, 0, &icc_level);
- 
- 	if (ret)
- 		dev_err(hba->dev,
- 			"%s: Failed configuring bActiveICCLevel = %d ret = %d",
--			__func__, hba->init_prefetch_data.icc_level , ret);
-+			__func__, icc_level, ret);
- 
- out:
- 	kfree(desc_buf);
-@@ -6963,6 +6961,14 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
- 		}
- 	}
- 
-+	/*
-+	 * bActiveICCLevel is volatile for UFS device (as per latest v2.1 spec)
-+	 * and for removable UFS card as well, hence always set the parameter.
-+	 * Note: Error handler may issue the device reset hence resetting
-+	 *       bActiveICCLevel as well so it is always safe to set this here.
-+	 */
-+	ufshcd_set_active_icc_lvl(hba);
-+
- 	/* set the state as operational after switching to desired gear */
- 	hba->ufshcd_state = UFSHCD_STATE_OPERATIONAL;
- 
-@@ -6979,9 +6985,6 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
- 				QUERY_FLAG_IDN_PWR_ON_WPE, &flag))
- 			hba->dev_info.f_power_on_wp_en = flag;
- 
--		if (!hba->is_init_prefetch)
--			ufshcd_init_icc_levels(hba);
--
- 		/* Add required well known logical units to scsi mid layer */
- 		if (ufshcd_scsi_add_wlus(hba))
- 			goto out;
-@@ -7006,9 +7009,6 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
- 		pm_runtime_put_sync(hba->dev);
- 	}
- 
--	if (!hba->is_init_prefetch)
--		hba->is_init_prefetch = true;
--
- out:
- 	/*
- 	 * If we failed to initialize the device or the device is not
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index e0fe247..3089b81 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -405,15 +405,6 @@ struct ufs_clk_scaling {
- 	bool is_suspended;
- };
- 
--/**
-- * struct ufs_init_prefetch - contains data that is pre-fetched once during
-- * initialization
-- * @icc_level: icc level which was read during initialization
-- */
--struct ufs_init_prefetch {
--	u32 icc_level;
--};
--
- #define UFS_ERR_REG_HIST_LENGTH 8
- /**
-  * struct ufs_err_reg_hist - keeps history of errors
-@@ -505,8 +496,6 @@ struct ufs_stats {
-  * @intr_mask: Interrupt Mask Bits
-  * @ee_ctrl_mask: Exception event control mask
-  * @is_powered: flag to check if HBA is powered
-- * @is_init_prefetch: flag to check if data was pre-fetched in initialization
-- * @init_prefetch_data: data pre-fetched during initialization
-  * @eh_work: Worker to handle UFS errors that require s/w attention
-  * @eeh_work: Worker to handle exception events
-  * @errors: HBA errors
-@@ -657,8 +646,6 @@ struct ufs_hba {
- 	u32 intr_mask;
- 	u16 ee_ctrl_mask;
- 	bool is_powered;
--	bool is_init_prefetch;
--	struct ufs_init_prefetch init_prefetch_data;
- 
- 	/* Work Queues */
- 	struct work_struct eh_work;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> +                       linux,default-trigger = "heartbeat";
 
+I'm not so found of this. Unless the LED actually says "heartbeat",
+I don't think we should force a default.
+
+> +               };
+> +
+> +               pwr {
+> +                       label = "nanopi:red:pwr";
+> +                       gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
+
+Here as well.
+
+> +                       default-state = "on";
+> +               };
+> +       };
+> +
+> +       r_gpio_keys {
+> +               compatible = "gpio-keys";
+> +
+> +               k1 {
+> +                       label = "k1";
+> +                       linux,code = <BTN_0>;
+> +                       gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
+> +               };
+> +       };
+> +
+> +       reg_vdd_cpux: vdd-cpux-regulator {
+> +               compatible = "regulator-gpio";
+> +               regulator-name = "vdd-cpux";
+> +               regulator-boot-on;
+> +               regulator-always-on;
+> +               regulator-min-microvolt = <1100000>;
+> +               regulator-max-microvolt = <1300000>;
+> +               regulator-ramp-delay = <50>; /* 4ms */
+> +
+> +               gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
+
+This regulator also uses a GPIO line for its enable pin.
+Please include that.
+
+> +               enable-active-high;
+> +               gpios-states = <0x1>;
+> +               states = <1100000 0x0
+> +                         1300000 0x1>;
+> +       };
+
+Please also add the two other regulators, VDD-SYS and VCC-DRAM.
+
+> +
+> +       wifi_pwrseq: wifi_pwrseq {
+> +               compatible = "mmc-pwrseq-simple";
+> +               reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
+> +               clocks = <&rtc 1>;
+> +               clock-names = "ext_clock";
+> +       };
+> +
+> +};
+> +
+> +&cpu0 {
+> +       cpu-supply = <&reg_vdd_cpux>;
+> +};
+> +
+> +&usb_otg {
+> +       status = "okay";
+> +       dr_mode = "otg";
+> +};
+> +
+> +&ehci0 {
+> +       status = "okay";
+> +};
+> +
+> +&ohci0 {
+> +       status = "okay";
+> +};
+> +
+> +&reg_usb0_vbus {
+> +       gpio = <&r_pio 0 2 GPIO_ACTIVE_HIGH>; /* PL2 */
+> +       status = "okay";
+> +};
+> +
+> +&usbphy {
+> +       usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
+> +       usb0_vbus-supply = <&reg_usb0_vbus>;
+> +       status = "okay";
+> +};
+
+Please have the nodes in alphabetic order, not group them by function.
+
+> +
+> +&mmc0 {
+> +       bus-width = <4>;
+> +       cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
+> +       status = "okay";
+> +       vmmc-supply = <&reg_vcc3v3>;
+> +};
+> +
+> +&mmc1 {
+> +       vmmc-supply = <&reg_vcc3v3>;
+> +       vqmmc-supply = <&reg_vcc3v3>;
+> +       mmc-pwrseq = <&wifi_pwrseq>;
+> +       bus-width = <4>;
+> +       non-removable;
+> +       status = "okay";
+> +
+> +       sdio_wifi: sdio_wifi@1 {
+> +               reg = <1>;
+> +               compatible = "brcm,bcm4329-fmac";
+> +               interrupt-parent = <&pio>;
+> +               interrupts = <6 10 IRQ_TYPE_LEVEL_LOW>; /* PG10 / EINT10 */
+> +               interrupt-names = "host-wake";
+> +       };
+> +};
+> +
+> +&uart0 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&uart0_pa_pins>;
+> +       status = "okay";
+> +};
+> +
+> +&uart2 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&uart2_pins>, <&uart2_rts_cts_pins>;
+> +       uart-has-rtscts;
+> +       status = "okay";
+> +
+> +       bluetooth {
+> +               compatible = "brcm,bcm43438-bt";
+> +               //clocks = <&osc32k 1>;
+> +               clocks = <&rtc 1>; // this is what bananapi-m2-zero does, and it has same schematic...
+
+Yes, this is the correct setup. The module is taking the clock from
+the X32KFOUT on the SoC.
+This is an external output from the RTC module.
+
+> +               clock-names = "lpo";
+> +
+> +               // these are both fine..
+> +               vbat-supply = <&reg_vcc3v3>;
+> +               vddio-supply = <&reg_vcc3v3>;
+> +               // on opi-win, device-wakup is pl6 is AP-WAKE-BT is module pin 6, bt-wake.
+> +               // YES; PA8 is correct.
+> +               device-wakeup-gpios = <&pio 0 8 GPIO_ACTIVE_HIGH>; /* PA8 */
+> +
+> +               // on opi-win, hostwakeup (pl5) is bt-wake-ap is module pin 7, bt-host-wake
+> +               // YES; PA7 is correct
+> +               host-wakeup-gpios = <&pio 0 7 GPIO_ACTIVE_HIGH>; /* PA7 */
+> +
+> +               // on opi-win, shutdown is pl4, is BT-RST-N is moduel pin 34
+> +               // YES; PG13 is correct.
+
+I'm guessing all these comments are from your development cycle? Please
+remove them.
+
+> +               shutdown-gpios = <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
+> +       };
+> +};
+
+The board also has SPI flash. Can you add that as well?
+
+
+Thanks
+ChenYu
+
+> --
+> 2.20.1
+>
