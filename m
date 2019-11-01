@@ -2,125 +2,115 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89286CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FD2CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6919F21897
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1623721734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 18:35:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G+srrPkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbfKASdS (ORCPT
+        id S1727432AbfKASfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 14:33:18 -0400
-Received: from mga06.intel.com ([134.134.136.31]:56627 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726671AbfKASdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 14:33:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 11:33:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,256,1569308400"; 
-   d="scan'208";a="352026410"
-Received: from cepartan-mobl3.ger.corp.intel.com (HELO [10.249.40.248]) ([10.249.40.248])
-  by orsmga004.jf.intel.com with ESMTP; 01 Nov 2019 11:33:12 -0700
-Subject: Re: [PATCH 2/2] drm/atomic: clear new_state pointers at hw_done
-To:     Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Cc:     Sean Paul <seanpaul@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191101180713.5470-1-robdclark@gmail.com>
- <20191101180713.5470-2-robdclark@gmail.com>
-From:   Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Message-ID: <ec3c1d7b-231a-862f-ce12-8ac4c9616ca5@linux.intel.com>
-Date:   Fri, 1 Nov 2019 19:33:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 1 Nov 2019 14:35:55 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:35610 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbfKASfy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 14:35:54 -0400
+Received: by mail-il1-f195.google.com with SMTP id p8so9487932ilp.2
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 11:35:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GfaxDeopuNa0dXDvZ92N+KU9hxmW5s0v5yugFygMjC0=;
+        b=G+srrPkOdg6Gn6KDILn67Ot0L8IsUkUbFo9C5u/X4dPXxgM/+1TmEewkrPK8AR+BA3
+         KNg+IVuG18plQ9mwpeil2HvEejEJtx/iuhIE107LA3Fb33K1SauVlSD0eQZ7ogLtghwh
+         6YOR4XLneLs2DSPNXCZzY7MBeOwFK5ZST9B3ippqK3Zw1AgC+NH8fSxvP20GWW4HXC1P
+         5k4kEXcszA9C85DGP0fwdtYijWiq+7h59bQ5QToP6mX112UaBRI6jnNCmpmq4L5bJA08
+         Qb5OJ3PQUp02nEgqZpQLvy9Ye1oFhtb/9++m07SkujICwsNOGAdELW9bi2hPu706u8ZH
+         SWaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GfaxDeopuNa0dXDvZ92N+KU9hxmW5s0v5yugFygMjC0=;
+        b=S+HXiO0w+yy9rzVYKMixghmVG7/bEl/4P5joOACrctNqSt8DNB8oiAZpWWk0CUWnhN
+         +YIFxTuxt3ugdueSanMsaj3ulZD5GUgBWlLZTpJaxxsse5NriFYRtvkMCyzUtOXaiW09
+         rnew4jAlnSLTyagYcfVelkg66upID9NglFEWK7j1rWfJ130UWYZMbZ094yks6Ni8Sbd3
+         UOPfxZS4ON9FrIPvg8xbv8SSVZKl1DK4vbAVdEQMqIIgxgLs2yB3Ven19pf87gDdtdpy
+         CcM9fuZD55FUHadQPxIpw9691WVbHgk8Mx2yxrjuRyH5tVaDOozBgy4VgoFy6If8XIol
+         WzBg==
+X-Gm-Message-State: APjAAAXwwU7FzpbUXAx1faiFcnxIFXyGL/qlcO7Oetii+ON/4L+8+91B
+        eEcu1a5e6ox9O3HKaZHioVae/6VKEt61Ar/wDVL7NQ==
+X-Google-Smtp-Source: APXvYqzOn7ah6e5vdLNDoO5HN6CVIW1sVXN9pQz44iNP/TMk3A841MlGik3ysrzpLSLNTr0J7P2ReSu8pUDjDYt7cb4=
+X-Received: by 2002:a05:6e02:4c3:: with SMTP id f3mr3852324ils.296.1572633353353;
+ Fri, 01 Nov 2019 11:35:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191101180713.5470-2-robdclark@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <157262960837.2838.17520432516398899751.stgit@naples-babu.amd.com> <157262961597.2838.16953618909905259198.stgit@naples-babu.amd.com>
+In-Reply-To: <157262961597.2838.16953618909905259198.stgit@naples-babu.amd.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Fri, 1 Nov 2019 11:35:42 -0700
+Message-ID: <CALMp9eTb8N-WxgQ_J5_siU=8=DGNUjM=UZCN5YkAQoofZHx1hA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] kvm: x86: Dont set UMIP feature bit unconditionally
+To:     "Moger, Babu" <Babu.Moger@amd.com>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "nayna@linux.ibm.com" <nayna@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Op 01-11-2019 om 19:07 schreef Rob Clark:
-> From: Rob Clark <robdclark@chromium.org>
+On Fri, Nov 1, 2019 at 10:33 AM Moger, Babu <Babu.Moger@amd.com> wrote:
 >
-> The new state should not be accessed after this point.  Clear the
-> pointers to make that explicit.
+> The UMIP (User-Mode Instruction Prevention) feature bit should be
+> set if the emulation (kvm_x86_ops->umip_emulated) is supported
+> which is done already.
 >
-> This makes the error corrected in the previous patch more obvious.
+> Remove the unconditional setting of this bit.
 >
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-
-Would be nice if you could cc intel-gfx@lists.freedesktop.org next time, so I know our CI infrastructure is happy;
-
-It wouldn't surprise me if it catches 1 or 2 abuses in i915.
-
-Otherwise Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-
-Perhaps you could mail this to version to intel-gfx-trybot@lists.freedesktop.org using git-send-email so we at least get i915 results?
-
+> Fixes: ae3e61e1c28338d0 ("KVM: x86: add support for UMIP")
+>
+> Signed-off-by: Babu Moger <babu.moger@amd.com>
 > ---
->  drivers/gpu/drm/drm_atomic_helper.c | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
+>  arch/x86/kvm/cpuid.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> index 732bd0ce9241..176831df8163 100644
-> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> @@ -2234,13 +2234,42 @@ EXPORT_SYMBOL(drm_atomic_helper_fake_vblank);
->   */
->  void drm_atomic_helper_commit_hw_done(struct drm_atomic_state *old_state)
->  {
-> +	struct drm_connector *connector;
-> +	struct drm_connector_state *old_conn_state, *new_conn_state;
->  	struct drm_crtc *crtc;
->  	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> +	struct drm_plane *plane;
-> +	struct drm_plane_state *old_plane_state, *new_plane_state;
->  	struct drm_crtc_commit *commit;
-> +	struct drm_private_obj *obj;
-> +	struct drm_private_state *old_obj_state, *new_obj_state;
->  	int i;
->  
-> +	/*
-> +	 * After this point, drivers should not access the permanent modeset
-> +	 * state, so we also clear the new_state pointers to make this
-> +	 * restriction explicit.
-> +	 *
-> +	 * For the CRTC state, we do this in the same loop where we signal
-> +	 * hw_done, since we still need to new_crtc_state to fish out the
-> +	 * commit.
-> +	 */
-> +
-> +	for_each_oldnew_connector_in_state(old_state, connector, old_conn_state, new_conn_state, i) {
-> +		old_state->connectors[i].new_state = NULL;
-> +	}
-> +
-> +	for_each_oldnew_plane_in_state(old_state, plane, old_plane_state, new_plane_state, i) {
-> +		old_state->planes[i].new_state = NULL;
-> +	}
-> +
-> +	for_each_oldnew_private_obj_in_state(old_state, obj, old_obj_state, new_obj_state, i) {
-> +		old_state->private_objs[i].new_state = NULL;
-> +	}
-> +
->  	for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
->  		old_state->crtcs[i].new_self_refresh_active = new_crtc_state->self_refresh_active;
-> +		old_state->crtcs[i].new_state = NULL;
->  
->  		commit = new_crtc_state->commit;
->  		if (!commit)
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index f68c0c753c38..5b81ba5ad428 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -364,7 +364,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
+>         /* cpuid 7.0.ecx*/
+>         const u32 kvm_cpuid_7_0_ecx_x86_features =
+>                 F(AVX512VBMI) | F(LA57) | F(PKU) | 0 /*OSPKE*/ | F(RDPID) |
+> -               F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
+> +               F(AVX512_VPOPCNTDQ) | F(AVX512_VBMI2) | F(GFNI) |
+>                 F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
+>                 F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/;
+>
 
-
+This isn't unconditional. This is masked by the features on the boot
+CPU. Since UMIP can be virtualized (without emulation) on CPUs that
+support UMIP, you should leave this alone.
