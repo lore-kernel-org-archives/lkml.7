@@ -2,88 +2,124 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5282FCA9ECB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 00:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4722CA9ECB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 00:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D6832086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 00:48:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572569289;
-	bh=l/T2Eo7NBRTCHTpxC4Vn6W0SQHUz3JHpxcLyo1mPb7s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mAkKUnTZjTEy1pC9eTvIPz3WpWums70flql3j0zxiO2riI8aRfN+6gvKlLtrvwWyu
-	 WJWs8FrHiYDm2Hypc2N+18+snDxl0bpqEsMO41M7smNoYRMBHYZJ4qa0JgKkivn+Sa
-	 t3fnyjyOAgq8jM/yzx0RjisdU42Sz97h1EXWostU=
+	by mail.kernel.org (Postfix) with ESMTP id B92B42086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 00:48:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jb4OmT2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbfKAAsD (ORCPT
+        id S1728968AbfKAAsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 20:48:03 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54910 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727516AbfKAAsC (ORCPT
+        Thu, 31 Oct 2019 20:48:47 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:10301 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727516AbfKAAsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 20:48:02 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c12so3269493wml.4
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 17:48:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZDcOoW8/vlglme1diIrYvcv1YvXU5Io8xV2HIpph938=;
-        b=cgIvAdZuUV1fPd0PaBE3MA1gBAOGhnKyw6aaaTr5bFYRq8LMHOYTIL2YyMcndnnbRw
-         Fo1+QfleJcoQNdA1L6P9bRRH+Mm+yuCIQUK+CV2SQPowXOWy0EVHGkFkRfyEmGWEcwXW
-         0vuSHGxkcQkb47q7kK094hWvfjG2DjEoPeNkjHt+ROKkNDgTI+Zg+gkJTPWlXPnOiEJB
-         2NYQWwQohC8NGvxkbbHs9LBT6+mF/N/rZH3CyyZ3JuokxEq9qlZUDD+8jg7acMkI+Za8
-         5TTNmAxnWYrAS1KjoPBlqZnHyfPA9K/X4Bym3LsIGHnQ/al+S2VCEQ9IGtwlOK5dlxCz
-         FoIw==
-X-Gm-Message-State: APjAAAVsGJbHDsoQgODTo6GhQjkppURjyHAEND+Ccw3Nw+36yc2lOXhj
-        vw7EXXctIlZ08ESQ5k5AoAMzF2yP9161H2Zofg4=
-X-Google-Smtp-Source: APXvYqyFXMW4YTYm8Ru+2ngdCwqEnFaOn00xb8Kyb/FbCpc0gaoQJO6iMZ6LOAuAk2FLrTM5pmxnGdJVLInk6Mi+8x0=
-X-Received: by 2002:a1c:7ec2:: with SMTP id z185mr7713347wmc.79.1572569280606;
- Thu, 31 Oct 2019 17:48:00 -0700 (PDT)
+        Thu, 31 Oct 2019 20:48:46 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dbb80eb0000>; Thu, 31 Oct 2019 17:48:43 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 31 Oct 2019 17:48:37 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 31 Oct 2019 17:48:37 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 1 Nov
+ 2019 00:48:36 +0000
+Subject: Re: [PATCH 19/19] Documentation/vm: add pin_user_pages.rst
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20191030224930.3990755-1-jhubbard@nvidia.com>
+ <20191030224930.3990755-20-jhubbard@nvidia.com>
+ <20191031234922.GM14771@iweiny-DESK2.sc.intel.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <8f92713c-7df8-9463-93f2-40967eba27b5@nvidia.com>
+Date:   Thu, 31 Oct 2019 17:48:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191016125019.157144-1-namhyung@kernel.org> <20191016125019.157144-2-namhyung@kernel.org>
- <20191024174433.GA3622521@devbig004.ftw2.facebook.com> <CAM9d7chWpj105TYR0qP3T8FJ=-2wjp+sh6Rk8zkvJb_ugtL3Dw@mail.gmail.com>
- <20191025110623.GH3622521@devbig004.ftw2.facebook.com> <20191025184714.GJ3622521@devbig004.ftw2.facebook.com>
- <CAM9d7cguuEC1bpYgqX58KqX-H9C2B=XQE+grkxdsG2MQ8WyJnA@mail.gmail.com>
-In-Reply-To: <CAM9d7cguuEC1bpYgqX58KqX-H9C2B=XQE+grkxdsG2MQ8WyJnA@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 1 Nov 2019 09:47:49 +0900
-Message-ID: <CAM9d7ci3vXGGYD-Kgpc6-EmggSpc31ZETyB5dwfmAf26kSM6rg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] cgroup: Add generation number with cgroup id
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Song Liu <liu.song.a23@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191031234922.GM14771@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572569323; bh=5RHzCGcb3FFZzaA/uQgYrgLcorAAk8gLyrsrWdqCg0c=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=jb4OmT2UIK+29Kq6gyh3/B0GMYEYeQey6Q7av8aHODFF7iM3g87GXz+0+crrEhDuP
+         ES91FHKZ2TRd6nelEsvX1Ees+632xFVXWCQcNiNfBlThFOHS+Mq1DZ+VJ6HtPA43u6
+         Ynb5UhoXiX2+2DJcjRCsgJU7otXcWVOJr09yZe43vdQrzd13x1b0cKY4hBXDGaRMUL
+         j+EkbcXcmrT2jSkaz6YzKoEolu/+k4osy9BAQew7kbxk+1/wC4eflk8358pt5RFQn7
+         yh6waII5ieUtayl8B5UKc7eHNJXPir5mjj/cq3SpudLXylqcwjl1IrKdwtTrjKlzPg
+         OjOeqmfrEDTrQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tejun,
+On 10/31/19 4:49 PM, Ira Weiny wrote:
+> On Wed, Oct 30, 2019 at 03:49:30PM -0700, John Hubbard wrote:
+...
+>> +TODO: There is also a special case when the pages are DAX pages: in addition to
+>> +the above flags, the caller needs something like a layout lease on the
+>> +associated file. This is yet to be implemented. When it is implemented, it's
+>> +expected that the lease will be a prerequisite to setting FOLL_LONGTERM.
+> 
+> For now we probably want to leave this note out until we figure out how this is
+> going to work.  Best to say something like:
+> 
+> Some pages, such as DAX pages, can't be pinned with longterm pins and will
+> fail.
+> 
 
-On Sat, Oct 26, 2019 at 8:42 PM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> On Sat, Oct 26, 2019 at 3:47 AM Tejun Heo <tj@kernel.org> wrote:
-> > So, something like the following.  Just to show the direction.  Only
-> > compile tested and full of holes.  I'll see if I can get it working
-> > over the weekend.
+OK, I have this wording queued up for the v2 patch:
 
-Any update on this?  In the meantime, I played with it and
-managed to run the cgroup selftest.  I uploaded it to my tree at
+NOTE: Some pages, such as DAX pages, cannot be pinned with longterm pins. That's
+because DAX pages do not have a separate page cache, and so "pinning" implies
+locking down file system blocks, which is not (yet) supported in that way.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
-on the "cgroup/id-rework" branch.  I can send it to the list
-if you want.
+thanks,
 
-Thanks,
-Namhyung
+John Hubbard
+NVIDIA
