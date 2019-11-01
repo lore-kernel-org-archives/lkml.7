@@ -2,185 +2,216 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B064BCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8EECA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 861C020862
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BFC020862
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 13:56:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uncZ3qil"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfKANzo (ORCPT
+        id S1727780AbfKAN4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 09:55:44 -0400
-Received: from mga12.intel.com ([192.55.52.136]:1155 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726622AbfKANzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 09:55:43 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 06:55:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,255,1569308400"; 
-   d="scan'208";a="190964201"
-Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.74])
-  by orsmga007.jf.intel.com with ESMTP; 01 Nov 2019 06:55:40 -0700
-Date:   Fri, 1 Nov 2019 21:56:28 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-Subject: Re: [PATCH v4] vhost: introduce mdev based hardware backend
-Message-ID: <20191101135628.GA18045@___>
-References: <20191031140114.25615-1-tiwei.bie@intel.com>
- <f9036643-7aaf-7107-8bf0-85975ab95d4b@redhat.com>
+        Fri, 1 Nov 2019 09:56:14 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42144 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbfKAN4N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 09:56:13 -0400
+Received: by mail-lj1-f196.google.com with SMTP id a21so10316916ljh.9;
+        Fri, 01 Nov 2019 06:56:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QARoAkysEnXhZ8U4UHSm2hbxasucAbzuyPLqACWX3X4=;
+        b=uncZ3qilpfNYt7SNVRmywgFcCXAPVamxWceWgJaY+lb7IVw8ZoGkrPPZpeE2y5FvdD
+         VLQDutuyZnI2LpEaZmFT41222prNuBYZ5ssKZyAXTldLtYyLZXxFs89qpnQ2jWLR1aYP
+         TrrQ/fyBZpAfQXXXU0yljkMTNVe+QqjHzyzWN8o1+JJlpl8KVxz6OtRqSvmFQrqtn5xx
+         hBCr0h0+eB3puTY/HBNILfcUnS87oXss4q+XFN3AUWflPzsoRg9gj+GgtZFQK726FNWz
+         4buwn90y+9aKTaYGevmy2AetaZxebj612tZILBEfb1HgDlI6RPRiKmCZre67CVc5rY/g
+         Do0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QARoAkysEnXhZ8U4UHSm2hbxasucAbzuyPLqACWX3X4=;
+        b=t4QCxjjzCrrRaOdTrf72C7k5b6/s4yrKNbjM55gmEw+ls2ShNpcMS2SIhMXAiMyARL
+         pluTQ/88kdOW6o4x4HDLJAV6M5yhab4+L8qprY+yf3zXkC5BQS/IpGPMOyzB8f9XnK2j
+         cKJxlT2tjpHpxTBvZwbJEMCKWx8ZJo9DDtz/fNS4PaN1yHTZwaB+48XYx55SIW/YygGz
+         63rlMxwVxLbicjpYA5KkZioOLsTk59A7HkWPc9ZHCFWk+1atR9mlyw/z7urzqiJTwJj2
+         TKg8LHNwJTjBWT0UoY5aY2e0IvKgk8cVbczWDdApoybzEpRSH3nl/THzQSkLywy+V+GJ
+         8wcA==
+X-Gm-Message-State: APjAAAUD2AxMtrenrR7iwMYX2bbguWzH4TSZZRFWU+rv0rtjGw7B8mNo
+        IiZYIahDcgA1dKKlSLxsl3tKpH4n
+X-Google-Smtp-Source: APXvYqw8Qbb+Lo1YKz7WFgX9NUMZ34SC0m4h/ORfIWgV4GdDjIDEw/N6gfHRs6tf/+xfhpIdUwG+6g==
+X-Received: by 2002:a2e:420a:: with SMTP id p10mr8662905lja.16.1572616570109;
+        Fri, 01 Nov 2019 06:56:10 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id a26sm3586771lfg.50.2019.11.01.06.56.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Nov 2019 06:56:09 -0700 (PDT)
+Subject: Re: [PATCH v7 16/19] PM / devfreq: Add new interrupt_driven flag for
+ governors
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191029220019.26773-1-digetx@gmail.com>
+ <CGME20191029220705epcas5p1dc9787952bd19cefe9e0bff592642142@epcas5p1.samsung.com>
+ <20191029220019.26773-17-digetx@gmail.com>
+ <a4caf25c-5907-6347-f4d7-37800a077f29@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <fcf107da-a164-521d-f507-047b79b1578a@gmail.com>
+Date:   Fri, 1 Nov 2019 16:56:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <a4caf25c-5907-6347-f4d7-37800a077f29@samsung.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f9036643-7aaf-7107-8bf0-85975ab95d4b@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 03:17:39PM +0800, Jason Wang wrote:
-> On 2019/10/31 下午10:01, Tiwei Bie wrote:
-> > This patch introduces a mdev based hardware vhost backend.
-> > This backend is built on top of the same abstraction used
-> > in virtio-mdev and provides a generic vhost interface for
-> > userspace to accelerate the virtio devices in guest.
-> > 
-> > This backend is implemented as a mdev device driver on top
-> > of the same mdev device ops used in virtio-mdev but using
-> > a different mdev class id, and it will register the device
-> > as a VFIO device for userspace to use. Userspace can setup
-> > the IOMMU with the existing VFIO container/group APIs and
-> > then get the device fd with the device name. After getting
-> > the device fd of this device, userspace can use vhost ioctls
-> > to setup the backend.
-> > 
-> > Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
-> > ---
-> > This patch depends on below series:
-> > https://lkml.org/lkml/2019/10/30/62
-> > 
-> > v3 -> v4:
-> > - Rebase on top of virtio-mdev series v6;
-> > - Some minor tweaks and improvements;
-> > 
-> > v2 -> v3:
-> > - Fix the return value (Jason);
-> > - Don't cache unnecessary information in vhost-mdev (Jason);
-> > - Get rid of the memset in open (Jason);
-> > - Add comments for VHOST_SET_MEM_TABLE, ... (Jason);
-> > - Filter out unsupported features in vhost-mdev (Jason);
-> > - Add _GET_DEVICE_ID ioctl (Jason);
-> > - Add _GET_CONFIG/_SET_CONFIG ioctls (Jason);
-> > - Drop _GET_QUEUE_NUM ioctl (Jason);
-> > - Fix the copy-paste errors in _IOW/_IOR usage;
-> > - Some minor fixes and improvements;
-> > 
-> > v1 -> v2:
-> > - Replace _SET_STATE with _SET_STATUS (MST);
-> > - Check status bits at each step (MST);
-> > - Report the max ring size and max number of queues (MST);
-> > - Add missing MODULE_DEVICE_TABLE (Jason);
-> > - Only support the network backend w/o multiqueue for now;
-> > - Some minor fixes and improvements;
-> > - Rebase on top of virtio-mdev series v4;
-> > 
-> > RFC v4 -> v1:
-> > - Implement vhost-mdev as a mdev device driver directly and
-> >    connect it to VFIO container/group. (Jason);
-> > - Pass ring addresses as GPAs/IOVAs in vhost-mdev to avoid
-> >    meaningless HVA->GPA translations (Jason);
-> > 
-> > RFC v3 -> RFC v4:
-> > - Build vhost-mdev on top of the same abstraction used by
-> >    virtio-mdev (Jason);
-> > - Introduce vhost fd and pass VFIO fd via SET_BACKEND ioctl (MST);
-> > 
-> > RFC v2 -> RFC v3:
-> > - Reuse vhost's ioctls instead of inventing a VFIO regions/irqs
-> >    based vhost protocol on top of vfio-mdev (Jason);
-> > 
-> > RFC v1 -> RFC v2:
-> > - Introduce a new VFIO device type to build a vhost protocol
-> >    on top of vfio-mdev;
-> > 
-> >   drivers/vfio/mdev/mdev_core.c    |  20 ++
-> >   drivers/vfio/mdev/mdev_private.h |   1 +
-> >   drivers/vhost/Kconfig            |  12 +
-> >   drivers/vhost/Makefile           |   3 +
-> >   drivers/vhost/mdev.c             | 556 +++++++++++++++++++++++++++++++
-> >   include/linux/mdev.h             |   5 +
-> >   include/uapi/linux/vhost.h       |  18 +
-> >   include/uapi/linux/vhost_types.h |   8 +
-> >   8 files changed, 623 insertions(+)
-> >   create mode 100644 drivers/vhost/mdev.c
-> > 
-> > diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> > index 22ca589750d8..109dbac01a8f 100644
-> > --- a/drivers/vfio/mdev/mdev_core.c
-> > +++ b/drivers/vfio/mdev/mdev_core.c
-> > @@ -96,6 +96,26 @@ mdev_get_virtio_ops(struct mdev_device *mdev)
-> >   }
-> >   EXPORT_SYMBOL(mdev_get_virtio_ops);
-> > +/* Specify the vhost device ops for the mdev device, this
-> > + * must be called during create() callback for vhost mdev device.
-> > + */
-> > +void mdev_set_vhost_ops(struct mdev_device *mdev,
-> > +			const struct virtio_mdev_device_ops *vhost_ops)
-> > +{
-> > +	mdev_set_class(mdev, MDEV_CLASS_ID_VHOST);
-> > +	mdev->vhost_ops = vhost_ops;
-> > +}
-> > +EXPORT_SYMBOL(mdev_set_vhost_ops);
-> > +
-> > +/* Get the vhost device ops for the mdev device. */
-> > +const struct virtio_mdev_device_ops *
-> > +mdev_get_vhost_ops(struct mdev_device *mdev)
-> > +{
-> > +	WARN_ON(mdev->class_id != MDEV_CLASS_ID_VHOST);
-> > +	return mdev->vhost_ops;
-> > +}
-> > +EXPORT_SYMBOL(mdev_get_vhost_ops);
-> > +
-> >   struct device *mdev_dev(struct mdev_device *mdev)
-> >   {
-> >   	return &mdev->dev;
-> > diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
-> > index 7b47890c34e7..5597c846e52f 100644
-> > --- a/drivers/vfio/mdev/mdev_private.h
-> > +++ b/drivers/vfio/mdev/mdev_private.h
-> > @@ -40,6 +40,7 @@ struct mdev_device {
-> >   	union {
-> >   		const struct vfio_mdev_device_ops *vfio_ops;
-> >   		const struct virtio_mdev_device_ops *virtio_ops;
-> > +		const struct virtio_mdev_device_ops *vhost_ops;
+01.11.2019 10:32, Chanwoo Choi пишет:
+> Hi,
+> 
+> On 19. 10. 30. 오전 7:00, Dmitry Osipenko wrote:
+>> Currently interrupt-driven governors (like NVIDIA Tegra30 ACTMON governor)
+>> are used to set polling_ms=0 in order to avoid periodic polling of device
+>> status by devfreq core. This means that polling interval can't be changed
+>> by userspace for such governors.
+>>
+>> The new governor flag allows interrupt-driven governors to convey that
+>> devfreq core shouldn't perform polling of device status and thus generic
+>> devfreq polling interval could be supported by these governors now.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/devfreq/devfreq.c  | 14 +++++++++-----
+>>  drivers/devfreq/governor.h |  3 +++
+>>  2 files changed, 12 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>> index b905963cea7d..0ef972264841 100644
+>> --- a/drivers/devfreq/devfreq.c
+>> +++ b/drivers/devfreq/devfreq.c
+>> @@ -410,7 +410,8 @@ static void devfreq_monitor(struct work_struct *work)
+>>  void devfreq_monitor_start(struct devfreq *devfreq)
+>>  {
+>>  	INIT_DEFERRABLE_WORK(&devfreq->work, devfreq_monitor);
+>> -	if (devfreq->profile->polling_ms)
+>> +	if (devfreq->profile->polling_ms &&
+>> +	    !devfreq->governor->interrupt_driven)
+>>  		queue_delayed_work(devfreq_wq, &devfreq->work,
+>>  			msecs_to_jiffies(devfreq->profile->polling_ms));
+>>  }
+>> @@ -474,7 +475,8 @@ void devfreq_monitor_resume(struct devfreq *devfreq)
+>>  		goto out;
+>>  
+>>  	if (!delayed_work_pending(&devfreq->work) &&
+>> -			devfreq->profile->polling_ms)
+>> +			devfreq->profile->polling_ms &&
+>> +				!devfreq->governor->interrupt_driven)
+> 
+> Better to edit it as following for the indentation.
+> 
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index cea05b43225f..60c5540b2a55 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -477,7 +477,7 @@ void devfreq_monitor_resume(struct devfreq *devfreq)
+>  
+>         if (!delayed_work_pending(&devfreq->work) &&
+>                         devfreq->profile->polling_ms &&
+> -                               !devfreq->governor->interrupt_driven)
+> +                       !devfreq->governor->interrupt_driven)
 > 
 > 
-> Any reason why virtio_ops is not used for vhost here?
+> 
+>>  		queue_delayed_work(devfreq_wq, &devfreq->work,
+>>  			msecs_to_jiffies(devfreq->profile->polling_ms));
+>>  
+>> @@ -518,8 +520,9 @@ void devfreq_interval_update(struct devfreq *devfreq, unsigned int *delay)
+>>  
+>>  	/* if current delay is zero, start polling with new delay */
+>>  	if (!cur_delay) {
+>> -		queue_delayed_work(devfreq_wq, &devfreq->work,
+>> -			msecs_to_jiffies(devfreq->profile->polling_ms));
+>> +		if (!devfreq->governor->interrupt_driven)
+>> +			queue_delayed_work(devfreq_wq, &devfreq->work,
+>> +				msecs_to_jiffies(devfreq->profile->polling_ms));
+>>  		goto out;
+>>  	}
+>>  
+>> @@ -528,7 +531,8 @@ void devfreq_interval_update(struct devfreq *devfreq, unsigned int *delay)
+>>  		mutex_unlock(&devfreq->lock);
+>>  		cancel_delayed_work_sync(&devfreq->work);
+>>  		mutex_lock(&devfreq->lock);
+>> -		if (!devfreq->stop_polling)
+>> +		if (!devfreq->stop_polling &&
+>> +		    !devfreq->governor->interrupt_driven)
+>>  			queue_delayed_work(devfreq_wq, &devfreq->work,
+>>  				msecs_to_jiffies(devfreq->profile->polling_ms));
+>>  	}
+> 
+> In the devfreq_interval_update(), you better to modify this function as following:
+> It is more simple.
+> 
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index d3d12ed0ed29..80acb55d1686 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -510,6 +510,9 @@ void devfreq_interval_update(struct devfreq *devfreq, unsigned int *delay)
+>         if (devfreq->stop_polling)
+>                 goto out;
+>  
+> +       if (!devfreq->governor->interrupt_driven)
+> +               goto out;
+> +
+>         /* if new delay is zero, stop polling */
+>         if (!new_delay) {
+>                 mutex_unlock(&devfreq->lock);
+> 
+> 
+> 
+>> diff --git a/drivers/devfreq/governor.h b/drivers/devfreq/governor.h
+>> index bbe5ff9fcecf..dc7533ccc3db 100644
+>> --- a/drivers/devfreq/governor.h
+>> +++ b/drivers/devfreq/governor.h
+>> @@ -31,6 +31,8 @@
+>>   * @name:		Governor's name
+>>   * @immutable:		Immutable flag for governor. If the value is 1,
+>>   *			this govenror is never changeable to other governor.
+>> + * @interrupt_driven:	Devfreq core won't schedule polling work for this
+>> + *			governor if value is set to 1.
+>>   * @get_target_freq:	Returns desired operating frequency for the device.
+>>   *			Basically, get_target_freq will run
+>>   *			devfreq_dev_profile.get_dev_status() to get the
+>> @@ -49,6 +51,7 @@ struct devfreq_governor {
+>>  
+>>  	const char name[DEVFREQ_NAME_LEN];
+>>  	const unsigned int immutable;
+>> +	const unsigned int interrupt_driven;
+>>  	int (*get_target_freq)(struct devfreq *this, unsigned long *freq);
+>>  	int (*event_handler)(struct devfreq *devfreq,
+>>  				unsigned int event, void *data);
+>>
+> 
+> 
 
-I don't have a strong opinion on this.
-Will use virtio_ops directly.
-
-> 
-> Other looks good.
-
-Thanks!
-
-> 
-> Thanks
-> 
-> 
+Okay, I'll update this patch.
