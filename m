@@ -2,141 +2,189 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FA5CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E54DCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9586121855
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1ABF21734
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 19:20:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqTJjvNG"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="36FlxnRc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfKATOa (ORCPT
+        id S1727725AbfKATU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 15:14:30 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:32784 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbfKATOa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 15:14:30 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u23so7071214pgo.0;
-        Fri, 01 Nov 2019 12:14:28 -0700 (PDT)
+        Fri, 1 Nov 2019 15:20:27 -0400
+Received: from mail-eopbgr790088.outbound.protection.outlook.com ([40.107.79.88]:5088
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727473AbfKATU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 15:20:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MhZJkwEKgy+MaFPKc2TXdMoh4yo1GlPdV5XtBujAmI5k04lZItsZR1JQx482HmC3ClUmR/E7XMXrtuwqXD/puQFmuthqlG8EujzEtxxrN/J2WNMwJZW67NwNQf3XHjntAYtGwlMFFqGb2+I9qC+sX5S5W2vtHP6DuSy6OQSC4RihBFkDJCNyCP+7NVS1pZ5TqxwXo4Orn49AJoXRPDU/HjofChxPe0CGLkBxIu7azsy3rw3hBl2Lka3WYY+gCjSKqiLgkhHD4Faf7QZjfo+r9w+vVzHl6kTx83lGUnXwaIeeb32U35/ktpju8JjK4zwe1lqr22+QjPY/I+SRxLwUaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/R5moK+DnQnVpkiCBxjLl3gSdBYV1gu5KkOxZk+JDlw=;
+ b=eEftBnUuZshO8Pfw+mTzisVnep+L9ltyk2LpSB8MJXsqH1+NtS3IzaPavko/5uMJWJzBSMdZWT71n5u2BXNzV0EQd8r1qQTuhe7J0Whrv5bFQgmjJ0SYmyIyFoYallWE/kCXbiAl6dfUpUMrJpodo3UfMHirgVMUSO6sMXtSFGtTKlaKbXkK9/xjYhRXRKo8X8cvHIpV8pce2ivChK6ms0Db9hHR5UXkliWfRRK7HkVM2LHJj9KkUOxZpWf4ArsHcBshgJJwqLyY8xTbr3+7HqA2F1RfeO96fAZYKxUCV5XfHvxpVSg2aL/TsViaqkAZPtFt3pucrq1s5DXokfs7pg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=dxValgYvhHxSnFI6gnr2oyO17cKwpSxzLNQyRqzKdCA=;
-        b=EqTJjvNGDW7WZvYDnkDxvcome8PseIkxEJcxdi4JjfhktZRFgIdkmiajPLB44gOEyO
-         /AyQh/VB3aSYZswNeWPhcY1/py5PEXv6IofpKS8fZA0id8M2Je4YWQWX90+cnTFeMq2q
-         1GUtlZDx5IV5tNcrZpbtRwSbAZpaeJXP23gOz6ZGboEThQDs4QHPpzSz4KCCJOdZTjrH
-         3+7fWkUIt5MEC6SpzEKZhjZgQAjENCFj9objO7DLhCc0r9yEFcB3RyBNTe2OJ7fDbUUP
-         L/sCD2sjz/rMHxmxPX3e+hWUnftnU4amq9n0keWLp/KErtvtgpDwXaDEPp2uQwZ7vwJA
-         c8UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=dxValgYvhHxSnFI6gnr2oyO17cKwpSxzLNQyRqzKdCA=;
-        b=B/N4AIXHTohTLUEisVkdvDZFX4RJUmo+91QF9tTsDaWV8o10IZgtk5SdaCMJ2ra0E7
-         q9QK55FaUNclf+3wKyj+9Sve8eyqBxRE4volsfJJFe+kf5GmzjJFpBZ3fArHFJJpZ7Ny
-         5sx07s0X4BXBdGzrU2qzJlHv3EfdH0hWQkKAx4l0SVpRiQVoEk/fkyp8JX2dmfULgBNU
-         p9QL4OrIPNooWD3SI3ShPESISckGjYJ3+Si6Brde8uTQy5kiXgi4cTvYajNOMvvnw/7l
-         bRVOuGHftQDx4j5vogH7GdLhQZC3cTr3fAzZTrxSsWnak1JIU0Q/ZJQkrfV17LXBQR+U
-         3sXQ==
-X-Gm-Message-State: APjAAAUaOYk9G3ZpmKF5paLKB5XE5mAX2kRL/Rr/rkdns0mzOXXtoewX
-        tMgAq/QsD0iMG3JGUcHgwuk=
-X-Google-Smtp-Source: APXvYqzUe+fumh35OZfggMheJb3fdt8kBltkY6Q1u9Qw+Ozs70zXlYY4A97YV/+K1EIrFyWe0LbEIw==
-X-Received: by 2002:a63:cf4a:: with SMTP id b10mr14514939pgj.86.1572635668072;
-        Fri, 01 Nov 2019 12:14:28 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a18sm6722086pff.95.2019.11.01.12.14.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Nov 2019 12:14:26 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 12:14:25 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     Keith Busch <kbusch@kernel.org>, Chris Healy <cphealy@gmail.com>,
-        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org, Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v3] nvme: Add hardware monitoring support
-Message-ID: <20191101191425.GA16792@roeck-us.net>
-References: <20191101035646.25644-1-linux@roeck-us.net>
- <CAC5umyhiOiAiYWs2Y=L5133CCQNnAgi8oq6AbGzgkznZKz5f-w@mail.gmail.com>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/R5moK+DnQnVpkiCBxjLl3gSdBYV1gu5KkOxZk+JDlw=;
+ b=36FlxnRcteKIYk1UJQ3QWupvZrLnOalQXoVrRgJrU68jzDT6RhvT3ylb6RZIEA3/6QrzTGVBEWQBTMJDx3fHeKB8hClMIeErj9QQJqhz0vPhwuKL6MEppPuBb2J7MyYxef3WpeM1IFhiMXrKj7Cob4bszzAaKvcpdjWpa1tZgjY=
+Received: from BL0PR12MB2468.namprd12.prod.outlook.com (52.132.30.157) by
+ BL0PR12MB2417.namprd12.prod.outlook.com (52.132.31.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.22; Fri, 1 Nov 2019 19:20:21 +0000
+Received: from BL0PR12MB2468.namprd12.prod.outlook.com
+ ([fe80::748c:1f32:1a4d:acca]) by BL0PR12MB2468.namprd12.prod.outlook.com
+ ([fe80::748c:1f32:1a4d:acca%7]) with mapi id 15.20.2387.028; Fri, 1 Nov 2019
+ 19:20:21 +0000
+From:   "Moger, Babu" <Babu.Moger@amd.com>
+To:     Jim Mattson <jmattson@google.com>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "nayna@linux.ibm.com" <nayna@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH 2/4] kvm: svm: Enable UMIP feature on AMD
+Thread-Topic: [PATCH 2/4] kvm: svm: Enable UMIP feature on AMD
+Thread-Index: AQHVkNqD+3M/4HqTrkKsDppH5BsZ1qd2otoAgAAOPIA=
+Date:   Fri, 1 Nov 2019 19:20:21 +0000
+Message-ID: <669031a1-b9a6-8a45-9a05-a6ce5fb7fa8b@amd.com>
+References: <157262960837.2838.17520432516398899751.stgit@naples-babu.amd.com>
+ <157262962352.2838.15656190309312238595.stgit@naples-babu.amd.com>
+ <CALMp9eQT=a99YhraQZ+awMKOWK=3tg=m9NppZnsvK0Q1PWxbAw@mail.gmail.com>
+In-Reply-To: <CALMp9eQT=a99YhraQZ+awMKOWK=3tg=m9NppZnsvK0Q1PWxbAw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN6PR04CA0046.namprd04.prod.outlook.com
+ (2603:10b6:805:2a::23) To BL0PR12MB2468.namprd12.prod.outlook.com
+ (2603:10b6:207:44::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Babu.Moger@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.77.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ebf33a11-c35b-42d0-b43d-08d75f0089ea
+x-ms-traffictypediagnostic: BL0PR12MB2417:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <BL0PR12MB24175C0AF2734F6582C3242A95620@BL0PR12MB2417.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 020877E0CB
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(366004)(376002)(346002)(199004)(189003)(6306002)(316002)(14444005)(486006)(446003)(966005)(11346002)(52116002)(386003)(2616005)(31686004)(76176011)(476003)(53546011)(478600001)(6486002)(6506007)(6512007)(36756003)(6436002)(99286004)(256004)(26005)(6116002)(31696002)(25786009)(7416002)(7736002)(86362001)(229853002)(6916009)(66066001)(54906003)(14454004)(4326008)(71190400001)(8676002)(81166006)(186003)(81156014)(3846002)(66476007)(66446008)(305945005)(64756008)(6246003)(5660300002)(2906002)(66556008)(66946007)(8936002)(102836004)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR12MB2417;H:BL0PR12MB2468.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TvDHBMSFZbSiHEB1F5QYAIFZkT487F27L4xBZvbVbfxTnaScxiGNkQa37QqEImT0LbClpxWUJ7bydzhNevXh4FnbdjRZXYrXQvG+vKZnMJqCyAnERCXdy2YQskPQqelDJ66vKkyKl8HchUdQWw/o7g5jkyWvQ4u83xvPp+YwBQRHncAQ87PcTDcgwlaj7hgqqNmrE+noMZhafxbwlYi36MgTRhFX97LsB/ll0M1ClCT3b3c+ZP7joVMq8AhatBk9F4o5kJbr30XBXszVySawwsYCzyUhGfRhOxVjUlFe6gBO6xNMeZal/PoGPJOYsBnGmyQ5M8+0P53uX9rTqytZ4kX7KSZLfNCIZ+AfR1y6jVR+Wy5MA7fcErCxKjZBYCcELyZcRsimvqKm2s2BuRtm3YlRayHostPzZLH1CWjLzPLAbPZ3nxXQeEeyIKfYlR3GYrC+PqnMrMMpgLb5zKw8DjVsmlkFjqVyq24XFYuamog=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AC20B573BEC9534991B7EE959C516205@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAC5umyhiOiAiYWs2Y=L5133CCQNnAgi8oq6AbGzgkznZKz5f-w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ebf33a11-c35b-42d0-b43d-08d75f0089ea
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2019 19:20:21.7171
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 530wwO3AtG7QlTHcRGYsP8iEuPY2bCSpXn1eGs/mST+/hWM6vxyqsGSjPtGCMOCG
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB2417
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 02, 2019 at 01:19:03AM +0900, Akinobu Mita wrote:
-> 2019年11月1日(金) 12:56 Guenter Roeck <linux@roeck-us.net>:
-> > +void nvme_hwmon_init(struct nvme_ctrl *ctrl)
-> > +{
-> > +       struct device *dev = ctrl->device;
-> 
-> Should we use 'ctrl->dev' instead of 'ctrl->device'?
-> 
-
-Excellent point, and most definitely yes. I should have done that
-from the beginning.
-
-> The 'ctrl->device' is a pointer to char device and the '->of_node' member
-> is NULL.
-> 
-> So if devm_hwmon_device_register_with_info() (i.e. __hwmon_device_register)
-> is called with 'ctrl->device', it doesn't attempt to register a sensor to a
-> DT thermal zone (i.e. hwmon_thermal_add_sensor() is not called at all).
-> 
-> This change was required, when I tried this nvme hwmon patch with the
-> following DT thermal setup.
-> 
-> https://lore.kernel.org/linux-devicetree/1561990354-4084-3-git-send-email-akinobu.mita@gmail.com/
-> 
-> > +       struct nvme_hwmon_data *data;
-> > +       struct device *hwmon;
-> > +       int err;
-> > +
-> > +       data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> > +       if (!data)
-> > +               return;
-> > +
-> > +       data->ctrl = ctrl;
-> > +       mutex_init(&data->read_lock);
-> > +
-> > +       err = nvme_hwmon_get_smart_log(data);
-> > +       if (err) {
-> > +               dev_warn(dev, "Failed to read smart log (error %d)\n", err);
-> > +               devm_kfree(dev, data);
-> > +               return;
-> > +       }
-> > +
-> > +       hwmon = devm_hwmon_device_register_with_info(dev, dev_name(dev), data,
-> > +                                                    &nvme_hwmon_chip_info,
-> > +                                                    NULL);
-> 
-> If the above change is applied, the second 'name' argument is changed
-> from 'nvme0' to '0000:01:00.0' as a side effect.  So we may want to
-> change the second argument, too.
-> 
-
-Yes. I'll just name it "nvme"; after all, that is sufficient and more
-consistent with other drivers. Currently, we get something like
-	nvme0-pci-0100
-	nvme1-pci-2500
-if there are multiple drives, where the "0" and "1" are not really
-necessary.
-
-Thanks!
-Guenter
+DQoNCk9uIDExLzEvMTkgMToyOSBQTSwgSmltIE1hdHRzb24gd3JvdGU6DQo+IE9uIEZyaSwgTm92
+IDEsIDIwMTkgYXQgMTA6MzMgQU0gTW9nZXIsIEJhYnUgPEJhYnUuTW9nZXJAYW1kLmNvbT4gd3Jv
+dGU6DQo+Pg0KPj4gQU1EIDJuZCBnZW5lcmF0aW9uIEVQWUMgcHJvY2Vzc29ycyBzdXBwb3J0IFVN
+SVAgKFVzZXItTW9kZSBJbnN0cnVjdGlvbg0KPj4gUHJldmVudGlvbikgZmVhdHVyZS4gVGhlIFVN
+SVAgZmVhdHVyZSBwcmV2ZW50cyB0aGUgZXhlY3V0aW9uIG9mIGNlcnRhaW4NCj4+IGluc3RydWN0
+aW9ucyBpZiB0aGUgQ3VycmVudCBQcml2aWxlZ2UgTGV2ZWwgKENQTCkgaXMgZ3JlYXRlciB0aGFu
+IDAuDQo+PiBJZiBhbnkgb2YgdGhlc2UgaW5zdHJ1Y3Rpb25zIGFyZSBleGVjdXRlZCB3aXRoIENQ
+TCA+IDAgYW5kIFVNSVANCj4+IGlzIGVuYWJsZWQsIHRoZW4ga2VybmVsIHJlcG9ydHMgYSAjR1Ag
+ZXhjZXB0aW9uLg0KPj4NCj4+IFRoZSBpZGVhIGlzIHRha2VuIGZyb20gYXJ0aWNsZXM6DQo+PiBo
+dHRwczovL2x3bi5uZXQvQXJ0aWNsZXMvNzM4MjA5Lw0KPj4gaHR0cHM6Ly9sd24ubmV0L0FydGlj
+bGVzLzY5NDM4NS8NCj4+DQo+PiBFbmFibGUgdGhlIGZlYXR1cmUgaWYgc3VwcG9ydGVkIG9uIGJh
+cmUgbWV0YWwgYW5kIGVtdWxhdGUgaW5zdHJ1Y3Rpb25zDQo+PiB0byByZXR1cm4gZHVtbXkgdmFs
+dWVzIGZvciBjZXJ0YWluIGNhc2VzLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEJhYnUgTW9nZXIg
+PGJhYnUubW9nZXJAYW1kLmNvbT4NCj4+IC0tLQ0KPj4gIGFyY2gveDg2L2t2bS9zdm0uYyB8ICAg
+MjEgKysrKysrKysrKysrKysrKy0tLS0tDQo+PiAgMSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlv
+bnMoKyksIDUgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2t2bS9z
+dm0uYyBiL2FyY2gveDg2L2t2bS9zdm0uYw0KPj4gaW5kZXggNDE1M2NhOGNkZGI3Li43OWFiYmRl
+Y2ExNDggMTAwNjQ0DQo+PiAtLS0gYS9hcmNoL3g4Ni9rdm0vc3ZtLmMNCj4+ICsrKyBiL2FyY2gv
+eDg2L2t2bS9zdm0uYw0KPj4gQEAgLTI1MzMsNiArMjUzMywxMSBAQCBzdGF0aWMgdm9pZCBzdm1f
+ZGVjYWNoZV9jcjRfZ3Vlc3RfYml0cyhzdHJ1Y3Qga3ZtX3ZjcHUgKnZjcHUpDQo+PiAgew0KPj4g
+IH0NCj4+DQo+PiArc3RhdGljIGJvb2wgc3ZtX3VtaXBfZW11bGF0ZWQodm9pZCkNCj4+ICt7DQo+
+PiArICAgICAgIHJldHVybiBib290X2NwdV9oYXMoWDg2X0ZFQVRVUkVfVU1JUCk7DQo+PiArfQ0K
+PiANCj4gVGhpcyBtYWtlcyBubyBzZW5zZSB0byBtZS4gSWYgdGhlIGhhcmR3YXJlIGFjdHVhbGx5
+IHN1cHBvcnRzIFVNSVAsDQo+IHRoZW4gaXQgZG9lc24ndCBoYXZlIHRvIGJlIGVtdWxhdGVkLg0K
+TXkgdW5kZXJzdGFuZGluZy4uDQoNCklmIHRoZSBoYXJkd2FyZSBzdXBwb3J0cyB0aGUgVU1JUCwg
+aXQgd2lsbCBnZW5lcmF0ZSB0aGUgI0dQIGZhdWx0IHdoZW4NCnRoZXNlIGluc3RydWN0aW9ucyBh
+cmUgZXhlY3V0ZWQgYXQgQ1BMID4gMC4gUHVycG9zZSBvZiB0aGUgZW11bGF0aW9uIGlzIHRvDQp0
+cmFwIHRoZSBHUCBhbmQgcmV0dXJuIGEgZHVtbXkgdmFsdWUuIFNlZW1zIGxpa2UgdGhpcyByZXF1
+aXJlZCBpbiBjZXJ0YWluDQpsZWdhY3kgT1NlcyBydW5uaW5nIGluIHByb3RlY3RlZCBhbmQgdmly
+dHVhbC04MDg2IG1vZGVzLiBJbiBsb25nIG1vZGUgbm8NCm5lZWQgdG8gZW11bGF0ZS4gSGVyZSBp
+cyB0aGUgYml0IGV4cGxhbmF0aW9uIGh0dHBzOi8vbHduLm5ldC9BcnRpY2xlcy83MzgyMDkvDQoN
+CklmIHdlIGRvbid0IGNhcmUgYWJvdXQgdGhvc2UgbGVnYWN5IGNhc2VzIHdlIGRvbid0IG5lZWQg
+dG8gZW11bGF0ZS4NCg0KPiANCj4gVG8gdGhlIGV4dGVudCB0aGF0IGt2bSBlbXVsYXRlcyBVTUlQ
+IG9uIEludGVsIENQVXMgd2l0aG91dCBoYXJkd2FyZQ0KPiBVTUlQIChpLmUuIHNtc3cgaXMgc3Rp
+bGwgYWxsb3dlZCBhdCBDUEw+MCksIHdlIGNhbiBhbHdheXMgZG8gdGhlIHNhbWUNCj4gZW11bGF0
+aW9uIG9uIEFNRCwgYmVjYXVzZSBTVk0gaGFzIGFsd2F5cyBvZmZlcmVkIGludGVyY2VwdHMgb2Yg
+c2dkdCwNCj4gc2lkdCwgc2xkdCwgYW5kIHN0ci4gU28sIGlmIHlvdSByZWFsbHkgd2FudCB0byBv
+ZmZlciB0aGlzIGVtdWxhdGlvbiBvbg0KPiBwcmUtRVBZQyAyIENQVXMsIHRoaXMgZnVuY3Rpb24g
+c2hvdWxkIGp1c3QgcmV0dXJuIHRydWUuIEJ1dCwgSSBoYXZlIHRvDQo+IGFzaywgIndoeT8iDQoN
+Cg0KVHJ5aW5nIHRvIHN1cHBvcnQgVU1JUCBmZWF0dXJlIG9ubHkgb24gRVBZQyAyIGhhcmR3YXJl
+LiBObyBpbnRlbnRpb24gdG8NCnN1cHBvcnQgcHJlLUVQWUMgMi4NCg0KPiANCj4gKlZpcnR1YWxp
+emF0aW9uKiBvZiBVTUlQIG9uIEVQWUMgMiBhbHJlYWR5IHdvcmtzIHdpdGhvdXQgYW55IG9mIHRo
+ZXNlIGNoYW5nZXMuDQo+IA0KPj4gIHN0YXRpYyB2b2lkIHVwZGF0ZV9jcjBfaW50ZXJjZXB0KHN0
+cnVjdCB2Y3B1X3N2bSAqc3ZtKQ0KPj4gIHsNCj4+ICAgICAgICAgdWxvbmcgZ2NyMCA9IHN2bS0+
+dmNwdS5hcmNoLmNyMDsNCj4+IEBAIC00NDM4LDYgKzQ0NDMsMTMgQEAgc3RhdGljIGludCBpbnRl
+cnJ1cHRfd2luZG93X2ludGVyY2VwdGlvbihzdHJ1Y3QgdmNwdV9zdm0gKnN2bSkNCj4+ICAgICAg
+ICAgcmV0dXJuIDE7DQo+PiAgfQ0KPj4NCj4+ICtzdGF0aWMgaW50IHVtaXBfaW50ZXJjZXB0aW9u
+KHN0cnVjdCB2Y3B1X3N2bSAqc3ZtKQ0KPj4gK3sNCj4+ICsgICAgICAgc3RydWN0IGt2bV92Y3B1
+ICp2Y3B1ID0gJnN2bS0+dmNwdTsNCj4+ICsNCj4+ICsgICAgICAgcmV0dXJuIGt2bV9lbXVsYXRl
+X2luc3RydWN0aW9uKHZjcHUsIDApOw0KPj4gK30NCj4+ICsNCj4+ICBzdGF0aWMgaW50IHBhdXNl
+X2ludGVyY2VwdGlvbihzdHJ1Y3QgdmNwdV9zdm0gKnN2bSkNCj4+ICB7DQo+PiAgICAgICAgIHN0
+cnVjdCBrdm1fdmNwdSAqdmNwdSA9ICZzdm0tPnZjcHU7DQo+PiBAQCAtNDc3NSw2ICs0Nzg3LDEw
+IEBAIHN0YXRpYyBpbnQgKCpjb25zdCBzdm1fZXhpdF9oYW5kbGVyc1tdKShzdHJ1Y3QgdmNwdV9z
+dm0gKnN2bSkgPSB7DQo+PiAgICAgICAgIFtTVk1fRVhJVF9TTUldICAgICAgICAgICAgICAgICAg
+ICAgICAgICA9IG5vcF9vbl9pbnRlcmNlcHRpb24sDQo+PiAgICAgICAgIFtTVk1fRVhJVF9JTklU
+XSAgICAgICAgICAgICAgICAgICAgICAgICA9IG5vcF9vbl9pbnRlcmNlcHRpb24sDQo+PiAgICAg
+ICAgIFtTVk1fRVhJVF9WSU5UUl0gICAgICAgICAgICAgICAgICAgICAgICA9IGludGVycnVwdF93
+aW5kb3dfaW50ZXJjZXB0aW9uLA0KPj4gKyAgICAgICBbU1ZNX0VYSVRfSURUUl9SRUFEXSAgICAg
+ICAgICAgICAgICAgICAgPSB1bWlwX2ludGVyY2VwdGlvbiwNCj4+ICsgICAgICAgW1NWTV9FWElU
+X0dEVFJfUkVBRF0gICAgICAgICAgICAgICAgICAgID0gdW1pcF9pbnRlcmNlcHRpb24sDQo+PiAr
+ICAgICAgIFtTVk1fRVhJVF9MRFRSX1JFQURdICAgICAgICAgICAgICAgICAgICA9IHVtaXBfaW50
+ZXJjZXB0aW9uLA0KPj4gKyAgICAgICBbU1ZNX0VYSVRfVFJfUkVBRF0gICAgICAgICAgICAgICAg
+ICAgICAgPSB1bWlwX2ludGVyY2VwdGlvbiwNCj4+ICAgICAgICAgW1NWTV9FWElUX1JEUE1DXSAg
+ICAgICAgICAgICAgICAgICAgICAgID0gcmRwbWNfaW50ZXJjZXB0aW9uLA0KPj4gICAgICAgICBb
+U1ZNX0VYSVRfQ1BVSURdICAgICAgICAgICAgICAgICAgICAgICAgPSBjcHVpZF9pbnRlcmNlcHRp
+b24sDQo+PiAgICAgICAgIFtTVk1fRVhJVF9JUkVUXSAgICAgICAgICAgICAgICAgICAgICAgICA9
+IGlyZXRfaW50ZXJjZXB0aW9uLA0KPj4gQEAgLTU5NzYsMTEgKzU5OTIsNiBAQCBzdGF0aWMgYm9v
+bCBzdm1feHNhdmVzX3N1cHBvcnRlZCh2b2lkKQ0KPj4gICAgICAgICByZXR1cm4gYm9vdF9jcHVf
+aGFzKFg4Nl9GRUFUVVJFX1hTQVZFUyk7DQo+PiAgfQ0KPj4NCj4+IC1zdGF0aWMgYm9vbCBzdm1f
+dW1pcF9lbXVsYXRlZCh2b2lkKQ0KPj4gLXsNCj4+IC0gICAgICAgcmV0dXJuIGZhbHNlOw0KPj4g
+LX0NCj4+IC0NCj4+ICBzdGF0aWMgYm9vbCBzdm1fcHRfc3VwcG9ydGVkKHZvaWQpDQo+PiAgew0K
+Pj4gICAgICAgICByZXR1cm4gZmFsc2U7DQo+Pg0K
