@@ -2,102 +2,85 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05625CA9ECB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC690CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D813F208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 957FC208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 02:43:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGI71aBT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbfKACmv (ORCPT
+        id S1729450AbfKACnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 31 Oct 2019 22:42:51 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34840 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727516AbfKACmv (ORCPT
+        Thu, 31 Oct 2019 22:43:06 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34121 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727516AbfKACnG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 31 Oct 2019 22:42:51 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w3so4159154edt.2
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 19:42:50 -0700 (PDT)
+        Thu, 31 Oct 2019 22:43:06 -0400
+Received: by mail-pg1-f193.google.com with SMTP id e4so5502492pgs.1;
+        Thu, 31 Oct 2019 19:43:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=pdCTSNBzXMVNjxxGCg4sNnFLSh/Zm1ndkbOKTDQj3Xg=;
+        b=TGI71aBTwvspJiLiByHBuShrC9p+h55vSKn/6uObmDz/WBaIrbtw9VoPVVd87zC67F
+         i/nUq9dSm9HkOaJoc+9bADkSKian1Bhxilev7PuqKzCfuzIQJY4V7BRr9s0zeNSH8DlX
+         HIlf9ek9jnLRjLtWuB58UxuP8EuwFT8ErF+udgENhim/tfgB3JyrqOsgEFdtmuXBVhrJ
+         zIV2F0RY26VNkAgqPvHYtjCJoRfThxg9Sqpuj+BNcTRgHkh3VLUkra63yM9dJ04JxA9d
+         Co4sBAWieB54ae5yT3z7r3UQKI97sB6hm4aOzt8I8RzcpgTy1PiRG5d1W22oBRF5oPom
+         7WPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sEItDoI/WeAoU1peUct7EvzKqvglpEF7cvTUFCv7y5k=;
-        b=Ax8CJe1xZQhqemX4QOkAnEB9Bt8R1lIzge9gYO4I24yNxceCm1Vevke1WS7LbniRkj
-         grRIUhyxozl72bBQsxMzgpDTriwNrIbMWw93OMkFE3ygLSvbwRA6MCd6j/bQsN9EXEDd
-         J6Gw6J0wvq304/HX6Lmf4rf+cOxBQgQWG4oVEsYTpQv1PH+BDEHrKhKXfTfIucXnhPwy
-         W/XbnADkPOopOYqC6e8pTSNyn88M+PtIc7jZKB23oGBAECL1/d1DPFj5Gk3Dxk/z5H74
-         tyNgzxh8FO2hmx2QT2yp/jKtB8epbW2NTlTVfVCCqVQPa5WGk3HLjnO3OfMIQfyN/pmU
-         eRyA==
-X-Gm-Message-State: APjAAAVfKIATgeShUFD/kGoszhw9vx9zFXToiQv0ygyiUR5XQAUwqFvP
-        jPWhcA4jkYHr/w3RmlQbv5mHbQlil6A=
-X-Google-Smtp-Source: APXvYqww4BVLmD/vsl7CBDu0CZtZaIehqa1PQiEvm+PBnV32lVaeeFdhLoNxhwGJE/Ktp5cMvGWYXA==
-X-Received: by 2002:a50:eb49:: with SMTP id z9mr2185616edp.31.1572576169418;
-        Thu, 31 Oct 2019 19:42:49 -0700 (PDT)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com. [209.85.128.54])
-        by smtp.gmail.com with ESMTPSA id i6sm164142eds.96.2019.10.31.19.42.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 31 Oct 2019 19:42:49 -0700 (PDT)
-Received: by mail-wm1-f54.google.com with SMTP id q70so7980418wme.1
-        for <linux-kernel@vger.kernel.org>; Thu, 31 Oct 2019 19:42:48 -0700 (PDT)
-X-Received: by 2002:a7b:c925:: with SMTP id h5mr7292349wml.61.1572576168752;
- Thu, 31 Oct 2019 19:42:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191031231104.30725-1-karlp@tweak.net.au>
-In-Reply-To: <20191031231104.30725-1-karlp@tweak.net.au>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Fri, 1 Nov 2019 10:42:37 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64pYuA6yN3CYEv=MUeD+pSb49UauukehENzVsBvHhDx=w@mail.gmail.com>
-Message-ID: <CAGb2v64pYuA6yN3CYEv=MUeD+pSb49UauukehENzVsBvHhDx=w@mail.gmail.com>
-Subject: Re: [PATCH 1/3] ARM: dts: sunxi: h3/h5: add missing uart2 rts/cts pins
-To:     Karl Palsson <karlp@tweak.net.au>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pdCTSNBzXMVNjxxGCg4sNnFLSh/Zm1ndkbOKTDQj3Xg=;
+        b=pdNz6j826zumZXDxgXniGROAHmdEYn008R8t51sDH/NsLi7C3Fw/jsoJS/AYy6yiRh
+         9hn7Zfh1h8TU6hwEVrVHaSfQ0Vk/2a24G5YpHTsXK4okgT4jMMNzS8p4lG+PNCs4bEHB
+         g1geXisqbKdtiMYah/FrfALcxnhe+DnoX2+VyuY95gnpfhfjsiqBZPCJpLOGdmx49SLw
+         f+iRnGDPRw1GMGfimikWbuoFU0vwhQSludnpgIDEHwK5eBn7NMlftlEH8KZzAQDzRy2F
+         4di1riK8TdhZSHGq3x3fwAPiEC71IWXrzltaT7kf0umpeGI8pCnh8fnx7af2znCSKIUe
+         u85g==
+X-Gm-Message-State: APjAAAUQzc2yswM4yC4OqfVBNhvot6E5UKWGR8Pc9+CmM7062ta0tqzv
+        a2I9rrNVGtN0PKT8q6GK+nY=
+X-Google-Smtp-Source: APXvYqxsUtr/syuVlBUTHzCpCyixPYIDnjIN1yGv0EwxyHs5csyO/t3eaaC6ET2qXt8uFIFHmoJ6SQ==
+X-Received: by 2002:a17:90b:30d:: with SMTP id ay13mr12221327pjb.29.1572576185443;
+        Thu, 31 Oct 2019 19:43:05 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id a21sm3434162pjq.1.2019.10.31.19.43.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2019 19:43:04 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     agross@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH 0/2] Support for MSM8998 mss
+Date:   Thu, 31 Oct 2019 19:43:01 -0700
+Message-Id: <20191101024301.21919-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 7:16 AM Karl Palsson <karlp@tweak.net.au> wrote:
->
-> uart1 and uart3 had existing pin definitions for the rts/cts pairs.
-> Add definitions for uart2 as well.
->
-> Signed-off-by: Karl Palsson <karlp@tweak.net.au>
-> ---
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> index 84977d4eb97a..2d8637300321 100644
-> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> @@ -472,6 +472,11 @@
->                                 function = "uart2";
->                         };
->
-> +                       uart2_rts_cts_pins: uart2-rts-cts-pins {
+Booting mss on MSM8998 is a critical step to getting wifi functional - a
+rather useful feature for the MSM8998 based laptops.
 
-We started adding "/omit-if-no-ref/" for all pin definitions that
-aren't selected by default. I think we can do this wholesale for
-all the ones in this file after this patch is merged though. So,
+Jeffrey Hugo (2):
+  dt-bindings: remoteproc: qcom: Add Q6v5 Modem PIL binding for MSM8998
+  remoteproc: qcom_q6v5_mss: Add support for MSM8998
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+ .../bindings/remoteproc/qcom,q6v5.txt         |  6 +++
+ drivers/remoteproc/qcom_q6v5_mss.c            | 52 ++++++++++++++++---
+ 2 files changed, 52 insertions(+), 6 deletions(-)
 
-> +                               pins = "PA2", "PA3";
-> +                               function = "uart2";
-> +                       };
-> +
->                         uart3_pins: uart3-pins {
->                                 pins = "PA13", "PA14";
->                                 function = "uart3";
-> --
-> 2.20.1
->
+-- 
+2.17.1
+
