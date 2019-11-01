@@ -2,143 +2,115 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B70CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FF7CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06D882086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F5B21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:08:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="D6/bx9Qt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbfKAKIU (ORCPT
+        id S1729532AbfKAKIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 06:08:20 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34410 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729181AbfKAKIU (ORCPT
+        Fri, 1 Nov 2019 06:08:52 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41643 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728048AbfKAKIw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 06:08:20 -0400
-Received: by mail-oi1-f193.google.com with SMTP id l202so7740132oig.1;
-        Fri, 01 Nov 2019 03:08:19 -0700 (PDT)
+        Fri, 1 Nov 2019 06:08:52 -0400
+Received: by mail-qt1-f194.google.com with SMTP id o3so12262868qtj.8;
+        Fri, 01 Nov 2019 03:08:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dixvlRxBe1XqqJqVc1zgKXwNqGAEbJcLWXze4Juxj/A=;
+        b=D6/bx9Qt4Sz4Zl1m7/iyiTMXK4O//gXhNKiXB2chqIP3aluDGN2fva+Y6wVKBDNG0P
+         Li4oORgU/Hq8vdPn77G6Hk377QzmddzW+CNPZ9pO+TM2ikk2UmEM/qXJryAK1BMRT+/f
+         4kl53gQeEIhRpSQ2xOi1McdZWP5sJpnLuRBcI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+I3xQl9ln+lrGFb5a1qNX1dE+zwF+Br3GKgAcoIpVg0=;
-        b=E86Ut/9mOUJMvaqA5+eSoAUsqlTb0yuor9HT/pOHVQ0e/P60l6QqFmSQSwqJepTqwz
-         6vHFsDiAMAT4dxeniEOgv4V6oWtMGzYfvUPFAgZ3km+XuoqthlMWLOdxtZAvjxHjlB80
-         YCFKezgLzXYX9si5v4uRCGxO3FRtA18gqDdLpPc2IMTAhVwYXnSdSJZLL2zmxj4XGC/y
-         22tgHgKtfT7X3rh4wTR3WxWF/O/gBIwuhGkmWbMtDSoEum2xaMOa6YH0rCdfk8eCMPJz
-         2teCcFwMP8o2c5L+uaEktlxxj7z0F067R+kZ7TwRIpnEf9WEBpUC/xfRE8uDj6iw05TD
-         uSbQ==
-X-Gm-Message-State: APjAAAX6YY+SgGYZwfB8GMiwbFOKQyunaKGT6ZD0CFEpQjCYMTXDlJwz
-        l1bmMH/clREXZLeDbtkWwe8+bKgTtiA1yrTIwGo=
-X-Google-Smtp-Source: APXvYqyFWgpB6XEGfMCjZsYPk2WDJOLqiGcZrURCT7LaEN/S0hFYXldPAmBySb2Ylqn/7Yv1GVxJdkW9M3x45yHrDHI=
-X-Received: by 2002:aca:4ac5:: with SMTP id x188mr3592931oia.148.1572602898727;
- Fri, 01 Nov 2019 03:08:18 -0700 (PDT)
+        bh=dixvlRxBe1XqqJqVc1zgKXwNqGAEbJcLWXze4Juxj/A=;
+        b=XXZGWPBebJbuv9N3iytPGKYictHNdu8vBThWxQxklk36q6vo4c3fvECl2TVU0el6m5
+         f5cjaT03wEpcGQeAGw64KFkmu8/ML+jV+N43JGoFk051prb5+CZz+3MmNaEfyX2NpanX
+         Ncw4hTk/v+clYDO//wbdFS5Ubi0AP6olTIfD+W96x99Rg330AJHkCsF9wTyOnfnIzLq0
+         tr90fzv8Pq77Quxl97S94GLFcOziIrkLQNOc02j1wSXHHjD8EpWSeJz96kCiEIrE/hvY
+         Foz9qhsQ5PnU+IixVkbx+Qnw+5gSbE0Xj8x0+BWbCvVVGehCflxwVwYH4ypHaU2mgUt+
+         cceA==
+X-Gm-Message-State: APjAAAUErNBBCm3D3N7hG4RtQouHEuE5WJs2JQkzCQZM7qRjoohkz/7F
+        Dg0DEI8dHqoNYHKeDcAMYTAmBHrYMx4HanO2U/M=
+X-Google-Smtp-Source: APXvYqy0Z22TcpdNer9jICrspqvBdfKr5qP78g1hshmD7TQOwlJJKb1RCeY5BVLa6y96G8jOc0taqrKjoAq9DFAyCus=
+X-Received: by 2002:ac8:e03:: with SMTP id a3mr9899612qti.169.1572602929835;
+ Fri, 01 Nov 2019 03:08:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191021161351.20789-1-krzk@kernel.org> <20191021161351.20789-4-krzk@kernel.org>
-In-Reply-To: <20191021161351.20789-4-krzk@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 1 Nov 2019 11:08:07 +0100
-Message-ID: <CAMuHMdXr7_HP5NUQ_0D76N-eBuootQqyPusqmf6nyDnLN__ORA@mail.gmail.com>
-Subject: Re: [PATCH v4 4/7] dt-bindings: sram: Merge Renesas SRAM bindings
- into generic
-To:     Krzysztof Kozlowski <krzk@kernel.org>
+References: <20191021194820.293556-1-taoren@fb.com>
+In-Reply-To: <20191021194820.293556-1-taoren@fb.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Fri, 1 Nov 2019 10:08:35 +0000
+Message-ID: <CACPK8XcNxs5T=ZC_mRnvkOF_kqS1AvP=9PvMB6w9Fgn_XbtZQw@mail.gmail.com>
+Subject: Re: [PATCH 0/4] ARM: dts: aspeed: add dtsi for Facebook AST2500
+ Network BMCs
+To:     Tao Ren <taoren@fb.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Heiko Stuebner <heiko@sntech.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+Hi Tao,
 
-On Mon, Oct 21, 2019 at 6:15 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> The Renesas SRAM bindings list only compatible so integrate them into
-> generic SRAM bindings schema.
+On Mon, 21 Oct 2019 at 19:49, Tao Ren <taoren@fb.com> wrote:
 >
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> The patch series adds "facebook-netbmc-ast2500-common.dtsi" which defines
+> devices that are common cross all Facebook AST2500 Network BMC platforms.
+> The major purpose is to minimize duplicated device entries among Facebook
+> Network BMC dts files.
+>
+> Patch #1 (of 4) adds "facebook-netbmc-ast2500-common.dtsi" file, and the
+> remaining 3 patches update CMM, Minipack and Yamp device tree to consume
+> the new dtsi file.
 
-Thanks for your patch, whcih is now commit 0759b09eadd0d9a1 ("dt-bindings:
-sram: Merge Renesas SRAM bindings into generic") in Rob's for-next branch.
+The patches look okay to me. I modified the file name to match the
+convention used by other device trees in the arm directory, where it
+includes the SOC name first.
 
-> --- a/Documentation/devicetree/bindings/sram/renesas,smp-sram.txt
-> +++ /dev/null
-> @@ -1,27 +0,0 @@
-> -* Renesas SMP SRAM
-> -
-> -Renesas R-Car Gen2 and RZ/G1 SoCs need a small piece of SRAM for the jump stub
-> -for secondary CPU bringup and CPU hotplug.
-> -This memory is reserved by adding a child node to a "mmio-sram" node, cfr.
-> -Documentation/devicetree/bindings/sram/sram.txt.
-> -
-> -Required child node properties:
-> -  - compatible: Must be "renesas,smp-sram",
-> -  - reg: Address and length of the reserved SRAM.
-> -    The full physical (bus) address must be aligned to a 256 KiB boundary.
-> -
-> -
-> -Example:
-> -
-> -       icram1: sram@e63c0000 {
-> -               compatible = "mmio-sram";
-> -               reg = <0 0xe63c0000 0 0x1000>;
-> -               #address-cells = <1>;
-> -               #size-cells = <1>;
-> -               ranges = <0 0 0xe63c0000 0x1000>;
-> -
-> -               smp-sram@0 {
-> -                       compatible = "renesas,smp-sram";
-> -                       reg = <0 0x10>;
-> -               };
+I also reworded the commit messages a little.
 
-> --- a/Documentation/devicetree/bindings/sram/sram.yaml
-> +++ b/Documentation/devicetree/bindings/sram/sram.yaml
-
-> @@ -186,3 +187,17 @@ examples:
->              reg = <0x1ff80 0x8>;
->          };
->      };
-> +
-> +  - |
-> +    sram@e63c0000 {
-> +        compatible = "mmio-sram";
-> +        reg = <0xe63c0000 0x1000>;
-
-Is there any specific reason you converted the example from 64-bit to
-32-bit addressing?
-All Renesas SoCs using this have #address-cells and #size-cells = <2>.
+They have been merged into the aspeed tree for submission to 5.5.
 
 Thanks!
 
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        ranges = <0 0xe63c0000 0x1000>;
-> +
-> +        smp-sram@0 {
-> +            compatible = "renesas,smp-sram";
-> +            reg = <0 0x10>;
-> +        };
-> +    };
+Joel
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>
+> Tao Ren (4):
+>   ARM: dts: aspeed: add dtsi for Facebook AST2500 Network BMCs
+>   ARM: dts: aspeed: cmm: include dtsi for common network BMC devices
+>   ARM: dts: aspeed: minipack: include dtsi for common network BMC
+>     devices
+>   ARM: dts: aspeed: yamp: include dtsi for common network BMC devices
+>
+>  arch/arm/boot/dts/aspeed-bmc-facebook-cmm.dts | 66 ++++---------
+>  .../boot/dts/aspeed-bmc-facebook-minipack.dts | 59 ++++--------
+>  .../arm/boot/dts/aspeed-bmc-facebook-yamp.dts | 62 +-----------
+>  .../dts/facebook-netbmc-ast2500-common.dtsi   | 96 +++++++++++++++++++
+>  4 files changed, 136 insertions(+), 147 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/facebook-netbmc-ast2500-common.dtsi
+>
+> --
+> 2.17.1
+>
