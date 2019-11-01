@@ -2,224 +2,99 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9492FCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28196CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6312120650
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A53220650
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 15:40:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728836AbfKAPjs (ORCPT
+        id S1728856AbfKAPkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 11:39:48 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:35715 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727707AbfKAPjs (ORCPT
+        Fri, 1 Nov 2019 11:40:37 -0400
+Received: from smtprelay0245.hostedemail.com ([216.40.44.245]:49341 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727707AbfKAPkg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 11:39:48 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 9C5EDFF802;
-        Fri,  1 Nov 2019 15:39:41 +0000 (UTC)
-Date:   Fri, 1 Nov 2019 16:41:33 +0100
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Rich Felker <dalias@libc.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v7 0/9] backlight: gpio: simplify the driver
-Message-ID: <20191101154133.qqjj3uriwrl2j5r5@uno.localdomain>
-References: <20191022083630.28175-1-brgl@bgdev.pl>
- <CAMRc=MeyrDZgmHJ+2SMipP7y9NggxiVfkAh4kCLePFWvUku9aQ@mail.gmail.com>
- <20191023155941.q563d3cfizre4zvt@holly.lan>
- <20191024064726.GB15843@dell>
- <20191024071703.6keoebzlfnn2qmyd@uno.localdomain>
- <20191101085803.GD5700@dell>
+        Fri, 1 Nov 2019 11:40:36 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id B8E50181D341E;
+        Fri,  1 Nov 2019 15:40:34 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: rod52_793f56825b52c
+X-Filterd-Recvd-Size: 3011
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Fri,  1 Nov 2019 15:40:33 +0000 (UTC)
+Message-ID: <bb87f5753b949dee813f226c8317148f6cf5644f.camel@perches.com>
+Subject: Re: [PATCH 3.16 47/47] KVM: x86/vPMU: refine kvm_pmu err msg when
+ event creation failed
+From:   Joe Perches <joe@perches.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Ben Hutchings <ben@decadent.org.uk>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
+        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        Like Xu <like.xu@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Date:   Fri, 01 Nov 2019 08:40:23 -0700
+In-Reply-To: <20191101080745.GT1554@sasha-vm>
+References: <lsq.1572026582.631294584@decadent.org.uk>
+         <220d8f2c1b299d2e71fdcf50b98286aae5b0c6f2.camel@perches.com>
+         <05be6a70382f1990a2ba6aba9ac75dac0c55f7fb.camel@decadent.org.uk>
+         <3078d0a186cca2dfae741908ffff41f1bdb30eae.camel@perches.com>
+         <20191101080745.GT1554@sasha-vm>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mkrddyxkwo53ywov"
-Content-Disposition: inline
-In-Reply-To: <20191101085803.GD5700@dell>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 2019-11-01 at 04:07 -0400, Sasha Levin wrote:
+> On Thu, Oct 31, 2019 at 03:53:23PM -0700, Joe Perches wrote:
+> > On Thu, 2019-10-31 at 22:14 +0000, Ben Hutchings wrote:
+> > > On Fri, 2019-10-25 at 12:05 -0700, Joe Perches wrote:
+> > > > On Fri, 2019-10-25 at 19:03 +0100, Ben Hutchings wrote:
+> > > > > 3.16.76-rc1 review patch.  If anyone has any objections, please let me know.
+> > > > 
+> > > > This seems more like an enhancement than a bug fix.
+> > > > 
+> > > > Is this really the type of patch that is appropriate
+> > > > for stable?
+> > > 
+> > > Apparently so:
+> > > 
+> > > v4.14.135: eba797dbf352 KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
+> > > v4.19.61: ba27a25df6df KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
+> > > v4.4.187: 505c011f9f53 KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
+> > > v4.9.187: 3984eae04473 KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
+> > > v5.1.20: edadec197fbf KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
+> > > v5.2.3: 9f062aef7356 KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
+> > 
+> > I think not, but hey, maybe you and Greg do.
+> > 
+> > Porting enhancements, even trivial ones, imo is
+> > not a great thing for stable branches.
+> > 
+> > My perspective is that only bug fixes should be
+> > applied to stable branches.
+> 
+> Usability issues are just as bad as code bugs. Our human interface is at
+> least as important as the functionality of our code.
 
---mkrddyxkwo53ywov
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Umm.
 
-Hello,
-  as promised...
+#define DEBUG is not set here.
 
-On Fri, Nov 01, 2019 at 08:58:03AM +0000, Lee Jones wrote:
-> On Thu, 24 Oct 2019, Jacopo Mondi wrote:
->
-> > Hello,
-> >
-> > On Thu, Oct 24, 2019 at 07:47:26AM +0100, Lee Jones wrote:
-> > > On Wed, 23 Oct 2019, Daniel Thompson wrote:
-> > >
-> > > > On Tue, Oct 22, 2019 at 11:29:54AM +0200, Bartosz Golaszewski wrote:
-> > > > > wt., 22 pa=C5=BA 2019 o 10:36 Bartosz Golaszewski <brgl@bgdev.pl>=
- napisa=C5=82(a):
-> > > > > >
-> > > > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > > >
-> > > > > > While working on my other series related to gpio-backlight[1] I=
- noticed
-> > > > > > that we could simplify the driver if we made the only user of p=
-latform
-> > > > > > data use GPIO lookups and device properties. This series tries =
-to do
-> > > > > > that.
-> > > > > >
-> > > > > > First two patches contain minor fixes. Third patch makes the dr=
-iver
-> > > > > > explicitly drive the GPIO line. Fourth patch adds all necessary=
- data
-> > > > > > structures to ecovec24. Patch 5/9 unifies much of the code for =
-both
-> > > > > > pdata and non-pdata cases. Patches 6-7/9 remove unused platform=
- data
-> > > > > > fields. Last two patches contain additional improvements for th=
-e GPIO
-> > > > > > backlight driver while we're already modifying it.
-> > > > > >
-> > > > > > I don't have access to this HW but hopefully this works. Only c=
-ompile
-> > > > > > tested.
-> > > > > >
-> > > > > > [1] https://lkml.org/lkml/2019/6/25/900
-> > > > > >
-> > > > > > v1 -> v2:
-> > > > > > - rebased on top of v5.3-rc1 and adjusted to the recent changes=
- from Andy
-> > > > > > - added additional two patches with minor improvements
-> > > > > >
-> > > > > > v2 -> v3:
-> > > > > > - in patch 7/7: used initializers to set values for pdata and d=
-ev local vars
-> > > > > >
-> > > > > > v3 -> v4:
-> > > > > > - rebased on top of v5.4-rc1
-> > > > > > - removed changes that are no longer relevant after commit ec66=
-5b756e6f
-> > > > > >   ("backlight: gpio-backlight: Correct initial power state hand=
-ling")
-> > > > > > - added patch 7/7
-> > > > > >
-> > > > > > v4 -> v5:
-> > > > > > - in patch 7/7: added a comment replacing the name of the funct=
-ion being
-> > > > > >   pulled into probe()
-> > > > > >
-> > > > > > v5 -> v6:
-> > > > > > - added a patch making the driver explicitly set the direction =
-of the GPIO
-> > > > > >   to output
-> > > > > > - added a patch removing a redundant newline
-> > > > > >
-> > > > > > v6 -> v7:
-> > > > > > - renamed the function calculating the new GPIO value for statu=
-s update
-> > > > > > - collected more tags
-> > > > > >
-> > > > > > Bartosz Golaszewski (9):
-> > > > > >   backlight: gpio: remove unneeded include
-> > > > > >   backlight: gpio: remove stray newline
-> > > > > >   backlight: gpio: explicitly set the direction of the GPIO
-> > > > > >   sh: ecovec24: add additional properties to the backlight devi=
-ce
-> > > > > >   backlight: gpio: simplify the platform data handling
-> > > > > >   sh: ecovec24: don't set unused fields in platform data
-> > > > > >   backlight: gpio: remove unused fields from platform data
-> > > > > >   backlight: gpio: use a helper variable for &pdev->dev
-> > > > > >   backlight: gpio: pull gpio_backlight_initial_power_state() in=
-to probe
-> > > > > >
-> > > > > >  arch/sh/boards/mach-ecovec24/setup.c         |  33 +++--
-> > > > > >  drivers/video/backlight/gpio_backlight.c     | 128 +++++++----=
---------
-> > > > > >  include/linux/platform_data/gpio_backlight.h |   3 -
-> > > > > >  3 files changed, 69 insertions(+), 95 deletions(-)
-> > > > > >
-> > > > > >
-> > > > >
-> > > > > Lee, Daniel, Jingoo,
-> > > > >
-> > > > > Jacopo is travelling until November 1st and won't be able to test=
- this
-> > > > > again before this date. Do you think you can pick it up and in ca=
-se
-> > > > > anything's broken on SH, we can fix it after v5.5-rc1, so that it
-> > > > > doesn't miss another merge window?
-> > >
-> > > November 1st (-rc6) will be fine.
-> > >
-> > > I'd rather apply it late-tested than early-non-tested.
-> > >
-> > > Hopefully Jacopo can prioritise testing this on Thursday or Friday,
-> > > since Monday will be -rc7 which is really cutting it fine.
-> >
-> > I'll do my best, I'll get home Friday late afternoon :)
->
-> Welcome home!
->
-> Just a little reminder in your inbox. TIA. :)
-
-For the ecovec part:
-Tested-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-Thanks
-   j
+Changing from printk_once to pr_debug_ratelimited completely
+eliminates the output from non CONFIG_DYNAMIC_DEBUG configs,
+and this output message is not enabled by default either.
 
 
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Linaro Services Technical Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
---mkrddyxkwo53ywov
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl28UigACgkQcjQGjxah
-VjzGSRAArwHKUx3NL679rg20jhbM6i53yCGiIe5VhB7/jWpuNzDeg205l4yidgDI
-xOoxwxeWiNGTFdav95RWXi31C/BO7XRFelNejT4vSdZLZU8nWd6sRqUk26ZoxU5o
-bCwQR1Px6BDJpYCHyHx6JpyFqF6W6NHcvlwYt4ylz7ZmGXbmn3iKsSDrkswPOYvp
-t0msKUcCMFEpEPv2IKx0xjYg9pzqVpJWzG28qZbtnDoQoImgRCsu4mtwHj1LjF1S
-IFBmsGiGkmgRyVBR88JHCXGk0yA8RXzDjtwRhmOqfOZJLqtWOZaWaS8YhMsIt2FM
-SslzzFlI6gTqbwLGApVRWIt8xP9x+Arf280RKSK5jiIXBjdVS+B3Pi1C3VdiHC7R
-Bfn/jIUGoMM1BtywQXBCXNazZWcctMlIBSng12oDcBvhkB7GDPv77XL6mN8WpgIi
-tfeYIkRG1jD79B0+W3vSsuNxNO+dYpKaRbFc/FS0Qbpt8o15U55vMT0SXPs9M4zC
-5lYjN8CdE53JI3A/5YZx+mDwz8ujqZ46kWJRkUqmIjkKnTwW63wysQKNmONdb2BC
-tQIcu2ZRUoo/EwNGCfHfVpJbSS/DEnv6npqQBQqn6FKwlaLbGdyLdbI8ClSRy4sh
-23CZLEVgsB7zilBkNbD1YdOzvoCgNF1/Vi/wg5zuJoViXqP4cFk=
-=y0NH
------END PGP SIGNATURE-----
-
---mkrddyxkwo53ywov--
