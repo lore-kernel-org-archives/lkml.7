@@ -2,201 +2,163 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E391CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DAFCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 526572085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA1821835
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfKAO1o (ORCPT
+        id S1727321AbfKAO17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 10:27:44 -0400
-Received: from mga03.intel.com ([134.134.136.65]:24103 "EHLO mga03.intel.com"
+        Fri, 1 Nov 2019 10:27:59 -0400
+Received: from mga05.intel.com ([192.55.52.43]:9673 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727031AbfKAO1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 10:27:43 -0400
+        id S1726658AbfKAO17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 10:27:59 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 07:27:43 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 07:27:58 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,255,1569308400"; 
-   d="scan'208";a="203865040"
-Received: from marshy.an.intel.com ([10.122.105.159])
-  by orsmga003.jf.intel.com with ESMTP; 01 Nov 2019 07:27:42 -0700
-From:   richard.gong@linux.intel.com
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, dinguyen@kernel.org,
-        richard.gong@linux.intel.com, Richard Gong <richard.gong@intel.com>
-Subject: [PATCHv2] firmware: Fix incompatible function behavior for RSU driver
-Date:   Fri,  1 Nov 2019 09:41:43 -0500
-Message-Id: <1572619303-30554-1-git-send-email-richard.gong@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+   d="scan'208";a="375578378"
+Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
+  by orsmga005.jf.intel.com with ESMTP; 01 Nov 2019 07:27:57 -0700
+Message-ID: <221c36d6646ea9f88d208dc02494872a34d8b61f.camel@intel.com>
+Subject: Re: [PATCH v7 27/27] x86/cet/shstk: Add Shadow Stack instructions
+ to opcode map
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Date:   Fri, 01 Nov 2019 07:17:45 -0700
+In-Reply-To: <93e915b9-975d-9876-8f89-8b6f2bc4586e@intel.com>
+References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
+         <20190606200646.3951-28-yu-cheng.yu@intel.com>
+         <93e915b9-975d-9876-8f89-8b6f2bc4586e@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Gong <richard.gong@intel.com>
+On Fri, 2019-11-01 at 16:03 +0200, Adrian Hunter wrote:
+> On 6/06/19 11:06 PM, Yu-cheng Yu wrote:
+> > Add the following shadow stack management instructions.
+> > 
+> > INCSSP:
+> >     Increment shadow stack pointer by the steps specified.
+> > 
+> > RDSSP:
+> >     Read SSP register into a GPR.
+> > 
+> > SAVEPREVSSP:
+> >     Use "prev ssp" token at top of current shadow stack to
+> >     create a "restore token" on previous shadow stack.
+> > 
+> > RSTORSSP:
+> >     Restore from a "restore token" pointed by a GPR to SSP.
+> > 
+> > WRSS:
+> >     Write to kernel-mode shadow stack (kernel-mode instruction).
+> > 
+> > WRUSS:
+> >     Write to user-mode shadow stack (kernel-mode instruction).
+> > 
+> > SETSSBSY:
+> >     Verify the "supervisor token" pointed by IA32_PL0_SSP MSR,
+> >     if valid, set the token to busy, and set SSP to the value
+> >     of IA32_PL0_SSP MSR.
+> > 
+> > CLRSSBSY:
+> >     Verify the "supervisor token" pointed by a GPR, if valid,
+> >     clear the busy bit from the token.
+> 
+> Does the notrack prefix also need to be catered for somehow?
 
-The older versions of remote system update (RSU) firmware don't support
-retry and notify features then the kernel module dies when it queries
-the RSU retry counter or performs notify operation.
+Yes, I will fix it.
 
-Update the Intel service layer and RSU drivers to be compatible with
-all versions of RSU firmware.
+> 
+> > 
+> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> > ---
+> >  arch/x86/lib/x86-opcode-map.txt               | 26 +++++++++++++------
+> >  tools/objtool/arch/x86/lib/x86-opcode-map.txt | 26 +++++++++++++------
+> >  2 files changed, 36 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
+> > index e0b85930dd77..c5e825d44766 100644
+> > --- a/arch/x86/lib/x86-opcode-map.txt
+> > +++ b/arch/x86/lib/x86-opcode-map.txt
+> > @@ -366,7 +366,7 @@ AVXcode: 1
+> >  1b: BNDCN Gv,Ev (F2) | BNDMOV Ev,Gv (66) | BNDMK Gv,Ev (F3) | BNDSTX Ev,Gv
+> >  1c:
+> >  1d:
+> > -1e:
+> > +1e: RDSSP Rd (F3),REX.W
+> >  1f: NOP Ev
+> >  # 0x0f 0x20-0x2f
+> >  20: MOV Rd,Cd
+> > @@ -610,7 +610,17 @@ fe: paddd Pq,Qq | vpaddd Vx,Hx,Wx (66),(v1)
+> >  ff: UD0
+> >  EndTable
+> >  
+> > -Table: 3-byte opcode 1 (0x0f 0x38)
+> > +Table: 3-byte opcode 1 (0x0f 0x01)
+> > +Referrer:
+> > +AVXcode:
+> > +# Skip 0x00-0xe7
+> > +e8: SETSSBSY (f3)
+> > +e9:
+> > +ea: SAVEPREVSSP (f3)
+> > +# Skip 0xeb-0xff
+> > +EndTable
+> > +
+> > +Table: 3-byte opcode 2 (0x0f 0x38)
+> >  Referrer: 3-byte escape 1
+> >  AVXcode: 2
+> >  # 0x0f 0x38 0x00-0x0f
+> > @@ -789,12 +799,12 @@ f0: MOVBE Gy,My | MOVBE Gw,Mw (66) | CRC32 Gd,Eb (F2) | CRC32 Gd,Eb (66&F2)
+> >  f1: MOVBE My,Gy | MOVBE Mw,Gw (66) | CRC32 Gd,Ey (F2) | CRC32 Gd,Ew (66&F2)
+> >  f2: ANDN Gy,By,Ey (v)
+> >  f3: Grp17 (1A)
+> > -f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v)
+> > -f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
+> > +f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v) | WRUSS Pq,Qq (66),REX.W
+> > +f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v) | WRSS Pq,Qq (66),REX.W
+> 
+> AFAICT WRSS does not have 66 prefix
 
-Reported-by: Radu Barcau <radu.bacrau@intel.com>
-Signed-off-by: Richard Gong <richard.gong@intel.com>
----
-v2: update commit messages
----
- drivers/firmware/stratix10-rsu.c                   | 40 +++++++++-------------
- drivers/firmware/stratix10-svc.c                   | 18 +++++++++-
- .../linux/firmware/intel/stratix10-svc-client.h    |  8 +++++
- 3 files changed, 42 insertions(+), 24 deletions(-)
+I will check.
 
-diff --git a/drivers/firmware/stratix10-rsu.c b/drivers/firmware/stratix10-rsu.c
-index bb008c0..f9e1851 100644
---- a/drivers/firmware/stratix10-rsu.c
-+++ b/drivers/firmware/stratix10-rsu.c
-@@ -20,7 +20,6 @@
- #define RSU_VERSION_MASK		GENMASK_ULL(63, 32)
- #define RSU_ERROR_LOCATION_MASK		GENMASK_ULL(31, 0)
- #define RSU_ERROR_DETAIL_MASK		GENMASK_ULL(63, 32)
--#define RSU_FW_VERSION_MASK		GENMASK_ULL(15, 0)
- 
- #define RSU_TIMEOUT	(msecs_to_jiffies(SVC_RSU_REQUEST_TIMEOUT_MS))
- 
-@@ -109,9 +108,12 @@ static void rsu_command_callback(struct stratix10_svc_client *client,
- {
- 	struct stratix10_rsu_priv *priv = client->priv;
- 
--	if (data->status != BIT(SVC_STATUS_RSU_OK))
--		dev_err(client->dev, "RSU returned status is %i\n",
--			data->status);
-+	if (data->status == BIT(SVC_STATUS_RSU_NO_SUPPORT))
-+		dev_warn(client->dev, "Secure FW doesn't support notify\n");
-+	else if (data->status == BIT(SVC_STATUS_RSU_ERROR))
-+		dev_err(client->dev, "Failure, returned status is %i\n",
-+			BIT(data->status));
-+
- 	complete(&priv->completion);
- }
- 
-@@ -133,9 +135,11 @@ static void rsu_retry_callback(struct stratix10_svc_client *client,
- 
- 	if (data->status == BIT(SVC_STATUS_RSU_OK))
- 		priv->retry_counter = *counter;
-+	else if (data->status == BIT(SVC_STATUS_RSU_NO_SUPPORT))
-+		dev_warn(client->dev, "Secure FW doesn't support retry\n");
- 	else
- 		dev_err(client->dev, "Failed to get retry counter %i\n",
--			data->status);
-+			BIT(data->status));
- 
- 	complete(&priv->completion);
- }
-@@ -333,15 +337,10 @@ static ssize_t notify_store(struct device *dev,
- 		return ret;
- 	}
- 
--	/* only 19.3 or late version FW supports retry counter feature */
--	if (FIELD_GET(RSU_FW_VERSION_MASK, priv->status.version)) {
--		ret = rsu_send_msg(priv, COMMAND_RSU_RETRY,
--				   0, rsu_retry_callback);
--		if (ret) {
--			dev_err(dev,
--				"Error, getting RSU retry %i\n", ret);
--			return ret;
--		}
-+	ret = rsu_send_msg(priv, COMMAND_RSU_RETRY, 0, rsu_retry_callback);
-+	if (ret) {
-+		dev_err(dev, "Error, getting RSU retry %i\n", ret);
-+		return ret;
- 	}
- 
- 	return count;
-@@ -413,15 +412,10 @@ static int stratix10_rsu_probe(struct platform_device *pdev)
- 		stratix10_svc_free_channel(priv->chan);
- 	}
- 
--	/* only 19.3 or late version FW supports retry counter feature */
--	if (FIELD_GET(RSU_FW_VERSION_MASK, priv->status.version)) {
--		ret = rsu_send_msg(priv, COMMAND_RSU_RETRY, 0,
--				   rsu_retry_callback);
--		if (ret) {
--			dev_err(dev,
--				"Error, getting RSU retry %i\n", ret);
--			stratix10_svc_free_channel(priv->chan);
--		}
-+	ret = rsu_send_msg(priv, COMMAND_RSU_RETRY, 0, rsu_retry_callback);
-+	if (ret) {
-+		dev_err(dev, "Error, getting RSU retry %i\n", ret);
-+		stratix10_svc_free_channel(priv->chan);
- 	}
- 
- 	return ret;
-diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
-index b4853211..c6c3140 100644
---- a/drivers/firmware/stratix10-svc.c
-+++ b/drivers/firmware/stratix10-svc.c
-@@ -493,8 +493,24 @@ static int svc_normal_to_secure_thread(void *data)
- 			pdata->chan->scl->receive_cb(pdata->chan->scl, cbdata);
- 			break;
- 		default:
--			pr_warn("it shouldn't happen\n");
-+			pr_warn("Secure firmware doesn't support...\n");
-+
-+			/*
-+			 * be compatible with older version firmware which
-+			 * doesn't support RSU notify or retry
-+			 */
-+			if ((pdata->command == COMMAND_RSU_RETRY) ||
-+				(pdata->command == COMMAND_RSU_NOTIFY)) {
-+				cbdata->status =
-+					BIT(SVC_STATUS_RSU_NO_SUPPORT);
-+				cbdata->kaddr1 = NULL;
-+				cbdata->kaddr2 = NULL;
-+				cbdata->kaddr3 = NULL;
-+				pdata->chan->scl->receive_cb(
-+					pdata->chan->scl, cbdata);
-+			}
- 			break;
-+
- 		}
- 	};
- 
-diff --git a/include/linux/firmware/intel/stratix10-svc-client.h b/include/linux/firmware/intel/stratix10-svc-client.h
-index b6c4302..59bc6e2 100644
---- a/include/linux/firmware/intel/stratix10-svc-client.h
-+++ b/include/linux/firmware/intel/stratix10-svc-client.h
-@@ -41,6 +41,12 @@
-  *
-  * SVC_STATUS_RSU_OK:
-  * Secure firmware accepts the request of remote status update (RSU).
-+ *
-+ * SVC_STATUS_RSU_ERROR:
-+ * Error encountered during remote system update.
-+ *
-+ * SVC_STATUS_RSU_NO_SUPPORT:
-+ * Secure firmware doesn't support RSU retry or notify feature.
-  */
- #define SVC_STATUS_RECONFIG_REQUEST_OK		0
- #define SVC_STATUS_RECONFIG_BUFFER_SUBMITTED	1
-@@ -50,6 +56,8 @@
- #define SVC_STATUS_RECONFIG_ERROR		5
- #define SVC_STATUS_RSU_OK			6
- #define SVC_STATUS_RSU_ERROR			7
-+#define SVC_STATUS_RSU_NO_SUPPORT		8
-+
- /**
-  * Flag bit for COMMAND_RECONFIG
-  *
--- 
-2.7.4
-
+Thanks,
+Yu-cheng
