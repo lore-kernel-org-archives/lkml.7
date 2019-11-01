@@ -2,207 +2,231 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9B2CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BA6CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2525B2086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CECB9217F9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 10:05:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fujitsu.onmicrosoft.com header.i=@fujitsu.onmicrosoft.com header.b="BH2vruoW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="y1370jn8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbfKAKDZ (ORCPT
+        id S1729301AbfKAKFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 06:03:25 -0400
-Received: from esa2.fujitsucc.c3s2.iphmx.com ([68.232.152.246]:59945 "EHLO
-        esa2.fujitsucc.c3s2.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726771AbfKAKDY (ORCPT
+        Fri, 1 Nov 2019 06:05:02 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:41876 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbfKAKFC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 06:03:24 -0400
-X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Fri, 01 Nov 2019 06:03:22 EDT
-IronPort-SDR: fpAfgNYmekzmA5Hs3sXzEoar/SivzpCyGjOJ2ZIpNySNoLOzxj+ZN6zi+YeZDC7aEbVlHczzZZ
- qCGGdga9utKYPFVGBdAb0TthyFS16hNPdoF3WnUgSaQ9MFdLUBqLMJz7XyInJTDP2bUgaZkcuK
- FCC8T6GIpi23fWHevaAmhP0wEOftyFA/0jq1sclCyTRasnRYc2rXSmPGVjqw0LSPugdtQGCh/7
- VqphpeyXSFF9Y016XnqSeyLYZ2P78Kf85/4A4NhiOmBMfh/pRC/w+gM1DMq6ucFUpnNGm0ggx5
- NUE=
-X-IronPort-AV: E=McAfee;i="6000,8403,9427"; a="15546854"
-X-IronPort-AV: E=Sophos;i="5.68,254,1569250800"; 
-   d="scan'208";a="15546854"
-Received: from mail-ty1jpn01lp2052.outbound.protection.outlook.com (HELO JPN01-TY1-obe.outbound.protection.outlook.com) ([104.47.93.52])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-SHA384; 01 Nov 2019 18:56:08 +0900
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mmiCJ3kiSltUAJY1TXQ//MH1SWapHyS2tVxlGHeCRC9mF+fFZDM6cag0LOjGb2laGMMtXiRHvOBEto7HE9vXLiRppwPFLE6pjokEU7psBVBEOKBOFHe1GugN4junrmLyZE1bzMpj0eXYWPrmY1F6bVjhRAo/HfhrDzrYIGreYTL+OXwr6m01CoGAIF1bqVuusmvg3y3iK/R/fDtCV0vpdrdBemxGykuOLhmddPEkYlAHhkqfArpgkjRVCr/Uhx/YcLN8+cXeadhcO8opAQYLHj9W5cKMEpvC0x6cAQDvzk0opOTFbV6cphavLL/wTXuojeBDeXkd3ocZaBfcs3Tlfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FeRHjfNrL9B5OfN89QxebMEJWkuCAk2e2cr1fZNbkUY=;
- b=WD96+dTRD84CIIhfZ5vrrGdkK8ADhGPQxZfa9oDiccWJXYfNMJTJGAkW3wE60KYHgjDR7lYSEv94JGqs30rlWCmjjXTfNlj7MWfrIBSzUvnMncobd277GEWBWCUFuWylTLTNOi9u0OHyenaTKemGhTvfsWXkFJyGZ014bWmTyDdyVEMYvpeJ22L41h2M4li5VOeYlLkATHRaJk0IQz/CRItLt9SPvYip5wWNafQTkwfQRZXSNWJUGuWs7d5Z+863LfMjvIWvTrEW4Bh5C34jdlOq9Kor9/F2veLhDO6w8j0jZvqbdOKEbeUzvaXaaiwpDSo3cjRlbyxz9zOb4U1fzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fujitsu.onmicrosoft.com; s=selector2-fujitsu-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FeRHjfNrL9B5OfN89QxebMEJWkuCAk2e2cr1fZNbkUY=;
- b=BH2vruoWod1vusfqFwu8DctajE/f6CNOZELTOMLVrIfPQ4z13I7D8N2p5H3tE1aj7ebCNZc3zT5QIE8muzw07o6IxHA+Dswq5O35hJfvKIlrQ/RMYzqmD5BARTQHCipG73tjyPoggRXhv1kEK6kmsGvBM8FmSQwsch8meHrRlPg=
-Received: from OSBPR01MB3653.jpnprd01.prod.outlook.com (20.178.97.18) by
- OSBPR01MB5175.jpnprd01.prod.outlook.com (20.179.181.211) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.23; Fri, 1 Nov 2019 09:56:05 +0000
-Received: from OSBPR01MB3653.jpnprd01.prod.outlook.com
- ([fe80::d02e:9620:ee4:de50]) by OSBPR01MB3653.jpnprd01.prod.outlook.com
- ([fe80::d02e:9620:ee4:de50%4]) with mapi id 15.20.2408.019; Fri, 1 Nov 2019
- 09:56:05 +0000
-From:   "qi.fuli@fujitsu.com" <qi.fuli@fujitsu.com>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Itaru Kitayama <itaru.kitayama@gmail.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        Jon Masters <jcm@jonmasters.org>
-CC:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "qi.fuli@fujitsu.com" <qi.fuli@fujitsu.com>,
-        "indou.takao@fujitsu.com" <indou.takao@fujitsu.com>,
-        "maeda.naoaki@fujitsu.com" <maeda.naoaki@fujitsu.com>,
-        "misono.tomohiro@fujitsu.com" <misono.tomohiro@fujitsu.com>,
-        "tokamoto@jp.fujitsu.com" <tokamoto@jp.fujitsu.com>
-Subject: Re: [PATCH 0/2] arm64: Introduce boot parameter to disable TLB flush
- instruction within the same inner shareable domain
-Thread-Topic: [PATCH 0/2] arm64: Introduce boot parameter to disable TLB flush
- instruction within the same inner shareable domain
-Thread-Index: AQHVJRmVihUXsBTsv0iIDHwIrvWdbKd26vQA
-Date:   Fri, 1 Nov 2019 09:56:05 +0000
-Message-ID: <93009dbd-b31c-7364-86d2-21f0fac36676@jp.fujitsu.com>
-References: <20190617143255.10462-1-indou.takao@jp.fujitsu.com>
-In-Reply-To: <20190617143255.10462-1-indou.takao@jp.fujitsu.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=qi.fuli@fujitsu.com; 
-x-originating-ip: [211.13.147.181]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ff01006b-9784-41e9-5c79-08d75eb1b60d
-x-ms-traffictypediagnostic: OSBPR01MB5175:|OSBPR01MB5175:
-x-ms-exchange-transport-forked: True
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <OSBPR01MB5175F31E5990FBAD1304DAA8F7620@OSBPR01MB5175.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2512;
-x-forefront-prvs: 020877E0CB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(39860400002)(346002)(136003)(376002)(51914003)(189003)(199004)(14454004)(54906003)(76116006)(91956017)(110136005)(66946007)(7736002)(81166006)(81156014)(305945005)(476003)(66556008)(64756008)(66476007)(66446008)(3846002)(6116002)(8676002)(11346002)(8936002)(186003)(26005)(76176011)(99286004)(86362001)(316002)(6506007)(446003)(31696002)(53546011)(102836004)(107886003)(85182001)(478600001)(31686004)(2906002)(6246003)(6436002)(66066001)(4326008)(486006)(25786009)(14444005)(2501003)(966005)(71190400001)(71200400001)(6306002)(5660300002)(256004)(229853002)(6486002)(6512007)(777600001)(473944003);DIR:OUT;SFP:1101;SCL:1;SRVR:OSBPR01MB5175;H:OSBPR01MB3653.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IQVWh14TOt1/MS85b+poalc03TPsnxq6qdLYnUfv622w21U0cqY6XWA86IDMtMH94lORxCyqaHQw2kmRN85/x2YHNVHWe69WEqGZeYymiYH4Z/9VxGcDP1qQE5TKFmVAg8euL9ANMLCRhahWDm3yJpfz/6s0nQohAHq3cw8I8512YFAdvKCK6tUtcAO0B2zTqW7dNBO6XonRkSQredKk4/UBoX6Z4tcWm1OhjMFuZYnEVv+t0bAPN/kk8rVQrSb//uiIZVuoCXIUnyLCqkVI0RKFyqpgXMVIk93mG4gjoQgEhbK7tUd9r3r0+tfmbxQwqQgNGALfeh5qUrYol5Al/H56w0eR6fWNh6XD56wNgCMd7jPJMU1QUIaxsVe7voxBor9xstDPyl7b6Bpfe1a+FKsMmlLDdngytmwGohy7QmRwINUujztc9YR0u790MQVI1IjBCPhcYS4byoRlVTT0RZgzpPHV6JqRST8pQrFWNJw=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BD601C4E61A0204F9BCE39661D0CD546@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 1 Nov 2019 06:05:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=BJtEhFqYG8uOifm5mmlKegogKIvfMvjboDz3ts+GSu0=; b=y1370jn8j/57QtOIgRdTgTDfe
+        LcgNagsLO1zqKSY9aO4YhH4a6JpLRmjfakggcz7l80BFf6yOVZlg/erXG2Vj083+FuKmA7JSiDEkh
+        37awmuwzZ23auW5Cn6lDq3ui+5BsZOW38V7Ozb8R+whhLxIu4Xh0rNSXJEboDHXcsGneHySkj9cP9
+        Z26xp1b8W7S7nO8SkJU1D4L8jo7RB2YJ+AsEZbRDKkztc60RFUCFJs7jx5a9PtG6a4CUFdIBGE9lq
+        /CY0EIOi7X8Xqdk+cutkTyXRiH2G7dcFxmJffO65FJ1vMEsVZwE8nLG7bY63FgihEqNdZPgORLz0R
+        y0wSHoRTQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iQTnO-0005Q7-UI; Fri, 01 Nov 2019 10:04:43 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 60878300334;
+        Fri,  1 Nov 2019 11:03:38 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 59B4E26540347; Fri,  1 Nov 2019 11:04:40 +0100 (CET)
+Date:   Fri, 1 Nov 2019 11:04:40 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/6] perf/x86: Add perf text poke event
+Message-ID: <20191101100440.GU4131@hirez.programming.kicks-ass.net>
+References: <20191025130000.13032-1-adrian.hunter@intel.com>
+ <20191025130000.13032-2-adrian.hunter@intel.com>
+ <20191030104747.GA21153@leoy-ThinkPad-X240s>
+ <20191030124659.GQ4114@hirez.programming.kicks-ass.net>
+ <20191030141950.GB21153@leoy-ThinkPad-X240s>
+ <20191030162325.GT4114@hirez.programming.kicks-ass.net>
+ <20191031073136.GC21153@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
-X-OriginatorOrg: fujitsu.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff01006b-9784-41e9-5c79-08d75eb1b60d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2019 09:56:05.1196
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hAHXgp2QZ4EN609PZ0vfzmVZ9TFOP0NlfUsKT5r7TblJDvziXC7zlYS/4KQvhhg64dt06ER8+Q+dzVae6ZH4EA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB5175
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031073136.GC21153@leoy-ThinkPad-X240s>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCkZpcnN0IG9mIGFsbCB0aGFua3MgZm9yIHRoZSBjb21tZW50cyBmb3IgdGhlIHBhdGNo
-Lg0KDQpJJ20gc3RpbGwgc3RydWdnbGluZyB3aXRoIHRoaXMgcHJvYmxlbSB0byBmaW5kIG91dCB0
-aGUgc29sdXRpb24uDQpBcyBhIHJlc3VsdCBvZiBhbiBpbnZlc3RpZ2F0aW9uIG9uIHRoaXMgcHJv
-YmxlbSwgYWZ0ZXIgYWxsLCBJIHRoaW5rIGl0IA0KaXMgbmVjZXNzYXJ5IHRvIGltcHJvdmUgVExC
-IGZsdXNoIG1lY2hhbmlzbSBvZiB0aGUga2VybmVsIHRvIGZpeCB0aGlzIA0KcHJvYmxlbSBjb21w
-bGV0ZWx5Lg0KDQpTbywgSSdkIGxpa2UgdG8gcmVzdGFydCBhIGRpc2N1c3Npb24uIEF0IGZpcnN0
-LCBJIHN1bW1hcml6ZSB0aGlzIHByb2JsZW0gDQp0byByZWNhbGwgd2hhdCB3YXMgdGhlIHByb2Js
-ZW0gYW5kIHRoZW4gSSB3YW50IHRvIGRpc2N1c3MgaG93IHRvIGZpeCBpdC4NCg0KU3VtbWFyeSBv
-ZiB0aGUgcHJvYmxlbToNCkEgZmV3IG1vbnRocyBhZ28gSSBwcm9wb3NlZCBwYXRjaGVzIHRvIHNv
-bHZlIGEgcGVyZm9ybWFuY2UgcHJvYmxlbSBkdWUgDQp0byBUTEIgZmx1c2guWzFdDQoNCkEgcHJv
-YmxlbSBpcyB0aGF0IFRMQiBmbHVzaCBvbiBhIGNvcmUgYWZmZWN0cyBhbGwgb3RoZXIgY29yZXMg
-ZXZlbiBpZiANCmFsbCBvdGhlciBjb3JlcyBkbyBub3QgbmVlZCBhY3R1YWwgZmx1c2gsIGFuZCBp
-dCBjYXVzZXMgcGVyZm9ybWFuY2UgDQpkZWdyYWRhdGlvbi4NCg0KSW4gdGhpcyB0aHJlYWQsIEkg
-ZXhwbGFpbmVkIHRoYXQ6DQoqIEkgZm91bmQgYSBwZXJmb3JtYW5jZSBwcm9ibGVtIHdoaWNoIGlz
-IGNhdXNlZCBieSBUTEJJLWlzIGluc3RydWN0aW9uLg0KKiBUaGUgcHJvYmxlbSBvY2N1cnMgbGlr
-ZSB0aGlzOg0KICAxKSBPbiBhIGNvcmUsIE9TIHRyaWVzIHRvIGZsdXNoIFRMQiB1c2luZyBUTEJJ
-LWlzIGluc3RydWN0aW9uDQogIDIpIFRMQkktaXMgaW5zdHJ1Y3Rpb24gY2F1c2VzIGEgYnJvYWRj
-YXN0IHRvIGFsbCBvdGhlciBjb3JlcywgYW5kDQogIGVhY2ggY29yZSByZWNlaXZlZCBoYXJkLXdp
-cmVkIHNpZ25hbA0KICAzKSBFYWNoIGNvcmUgY2hlY2sgaWYgdGhlcmUgYXJlIFRMQiBlbnRyaWVz
-IHdoaWNoIGhhdmUgdGhlIHNwZWNpZmllZCANCkFTSUQvVkENCiAgNCkgVGhpcyBjaGVjayBjYXVz
-ZXMgcGVyZm9ybWFuY2UgZGVncmFkYXRpb24NCiogV2UgcmFuIEZXUVsyXSBhbmQgZGV0ZWN0ZWQg
-T1Mgaml0dGVyIGR1ZSB0byB0aGlzIHByb2JsZW0sIHRoaXMgbm9pc2UNCiAgaXMgc2VyaW91cyBm
-b3IgSFBDIHVzYWdlLg0KDQpUaGUgbm9pc2UgbWVhbnMgaGVyZSBhIGRpZmZlcmVuY2UgYmV0d2Vl
-biBtYXhpbXVtIHRpbWUgYW5kIG1pbmltdW0gdGltZSANCndoaWNoIHRoZSBzYW1lIHdvcmsgdGFr
-ZXMuDQoNCkhvdyB0byBmaXg6DQpJIHRoaW5rIHRoZSBjYXVzZSBpcyBUTEIgZmx1c2ggYnkgVExC
-SS1pcyBiZWNhdXNlIHRoZSBpbnN0cnVjdGlvbiANCmFmZmVjdHMgY29yZXMgdGhhdCBhcmUgbm90
-IHJlbGF0ZWQgdG8gaXRzIGZsdXNoLg0KDQpTbyB0aGUgcHJldmlvdXMgcGF0Y2ggSSBwb3N0ZWQg
-aXMNCiogVXNlIG1tX2NwdW1hc2sgaW4gbW1fc3RydWN0IHRvIGZpbmQgYXBwcm9wcmlhdGUgQ1BV
-cyBmb3IgVExCIGZsdXNoDQoqIEV4ZWMgVExCSSBpbnN0ZWFkIG9mIFRMQkktaXMgb25seSB0byBD
-UFVzIHNwZWNpZmllZCBieSBtbV9jcHVtYXNrDQogIChUaGlzIGlzIHRoZSBzYW1lIGJlaGF2aW9y
-IGFzIGFybTMyIGFuZCB4ODYpDQoNCkFuZCBhZnRlciB0aGUgZGlzY3Vzc2lvbiBhYm91dCB0aGlz
-IHBhdGNoLCBJIGdvdCB0aGUgZm9sbG93aW5nIGNvbW1lbnRzLg0KMSkgVGhpcyBwYXRjaCBzd2l0
-Y2hlcyB0aGUgYmVoYXZpb3IgKG9yaWdpbmFsIGZsdXNoIGJ5IFRMQkktaXMgYW5kIG5ldyANCmZs
-dXNoIGJ5IFRMQkkpIGJ5IGJvb3QgcGFyYW1ldGVyLCB0aGlzIGltcGxlbWVudGF0aW9uIGlzIG5v
-dCBhY2NlcHRhYmxlIA0KZHVlIHRvIGJhZCBtYWludGFpbmFiaWxpdHkuDQoyKSBFdmVuIGlmIHRo
-aXMgcGF0Y2ggZml4ZXMgdGhpcyBwcm9ibGVtLCBpdCBtYXkgY2F1c2UgYW5vdGhlciANCnBlcmZv
-cm1hbmNlIHByb2JsZW0uDQoNCkknZCBsaWtlIHRvIHN0YXJ0IG92ZXIgdGhlIGltcGxlbWVudGF0
-aW9uIGJ5IGNvbnNpZGVyaW5nIHRoZXNlIHBvaW50cy4NCkZvciB0aGUgc2Vjb25kIGNvbW1lbnQg
-YWJvdmUsIEkgd2lsbCBydW4gYSBiZW5jaG1hcmsgdGVzdCB0byBhbmFseXplIHRoZSANCmltcGFj
-dCBvbiBwZXJmb3JtYW5jZS4NClBsZWFzZSBsZXQgbWUga25vdyBpZiB0aGVyZSBhcmUgb3RoZXIg
-cG9pbnRzIEkgc2hvdWxkIHRha2UgaW50byANCmNvbnNpZGVyYXRpb24uDQoNClsxXSBodHRwczov
-L2xrbWwub3JnL2xrbWwvMjAxOS82LzE3LzcwMw0KWzJdIGh0dHBzOi8vYXNjLmxsbmwuZ292L3Nl
-cXVvaWEvYmVuY2htYXJrcy9GVFFfc3VtbWFyeV92MS4xLnBkZg0KDQpUaGFua3MsDQpRSSBGdWxp
-DQoNCg0KT24gNi8xNy8xOSAxMTozMiBQTSwgVGFrYW8gSW5kb2ggd3JvdGU6DQo+IEZyb206IFRh
-a2FvIEluZG9oIDxpbmRvdS50YWthb0BmdWppdHN1LmNvbT4NCj4gDQo+IEkgZm91bmQgYSBwZXJm
-b3JtYW5jZSBpc3N1ZSByZWxhdGVkIG9uIHRoZSBpbXBsZW1lbnRhdGlvbiBvZiBMaW51eCdzIFRM
-Qg0KPiBmbHVzaCBmb3IgYXJtNjQuDQo+IA0KPiBXaGVuIEkgcnVuIGEgc2luZ2xlLXRocmVhZGVk
-IHRlc3QgcHJvZ3JhbSBvbiBtb2RlcmF0ZSBlbnZpcm9ubWVudCwgaXQNCj4gdXN1YWxseSB0YWtl
-cyAzOW1zIHRvIGZpbmlzaCBpdHMgd29yay4gSG93ZXZlciwgd2hlbiBJIHB1dCBhIHNtYWxsDQo+
-IGFwcHJpY2F0aW9uLCB3aGljaCBqdXN0IGNhbGxzIG1wcm90ZXN0KCkgY29udGludW91c2x5LCBv
-biBvbmUgb2Ygc2libGluZw0KPiBjb3JlcyBhbmQgcnVuIGl0IHNpbXVsdGFuZW91c2x5LCB0aGUg
-dGVzdCBwcm9ncmFtIHNsb3dzIGRvd24gc2lnbmlmaWNhbnRseS4NCj4gSXQgYmVjb21lcyA0OW1z
-KDEyNSUpIG9uIFRodW5kZXJYMi4gSSBhbHNvIGRldGVjdGVkIHRoZSBzYW1lIHByb2JsZW0gb24N
-Cj4gVGh1bmRlclgxIGFuZCBGdWppdHN1IEE2NEZYLg0KPiANCj4gSSBzdXBwb3NlIHRoZSByb290
-IGNhdXNlIG9mIHRoaXMgaXNzdWUgaXMgdGhlIGltcGxlbWVudGF0aW9uIG9mIExpbnV4J3MgVExC
-DQo+IGZsdXNoIGZvciBhcm02NCwgZXNwZWNpYWxseSB1c2Ugb2YgVExCSS1pcyBpbnN0cnVjdGlv
-biB3aGljaCBpcyBhIGJyb2FkY2FzdA0KPiB0byBhbGwgcHJvY2Vzc29yIGNvcmUgb24gdGhlIHN5
-c3RlbS4gSW4gY2FzZSBvZiB0aGUgYWJvdmUgc2l0dWF0aW9uLA0KPiBUTEJJLWlzIGlzIGNhbGxl
-ZCBieSBtcHJvdGVjdCgpLg0KPiANCj4gVGhpcyBpcyBub3QgYSBwcm9ibGVtIGZvciBzbWFsbCBl
-bnZpcm9ubWVudCwgYnV0IHRoaXMgY2F1c2VzIGEgc2lnbmlmaWNhbnQNCj4gcGVyZm9ybWFuY2Ug
-bm9pc2UgZm9yIGxhcmdlLXNjYWxlIEhQQyBlbnZpcm9ubWVudCwgd2hpY2ggaGFzIG1vcmUgdGhh
-bg0KPiB0aG91c2FuZCBub2RlcyB3aXRoIGxvdyBsYXRlbmN5IGludGVyY29ubmVjdC4NCj4gDQo+
-IFRvIGZpeCB0aGlzIHByb2JsZW0sIHRoaXMgcGF0Y2ggYWRkcyBuZXcgYm9vdCBwYXJhbWV0ZXIN
-Cj4gJ2Rpc2FibGVfdGxiZmx1c2hfaXMnLiAgSW4gdGhlIGNhc2Ugb2YgZmx1c2hfdGxiX21tKCkg
-KndpdGhvdXQqIHRoaXMNCj4gcGFyYW1ldGVyLCBUTEIgZW50cnkgaXMgaW52YWxpZGF0ZWQgYnkg
-X190bGJpKGFzaWRlMWlzLCBhc2lkKS4gQnkgdGhpcw0KPiBpbnN0cnVjdGlvbiwgYWxsIENQVXMg
-d2l0aGluIHRoZSBzYW1lIGlubmVyIHNoYXJlYWJsZSBkb21haW4gY2hlY2sgaWYgdGhlcmUNCj4g
-YXJlIFRMQiBlbnRyaWVzIHdoaWNoIGhhdmUgdGhpcyBBU0lELCB0aGlzIGNhdXNlcyBwZXJmb3Jt
-YW5jZSBub2lzZS4gT1RPSCwNCj4gd2hlbiB0aGlzIG5ldyBwYXJhbWV0ZXIgaXMgc3BlY2lmaWVk
-LCBUTEIgZW50cnkgaXMgaW52YWxpZGF0ZWQgYnkNCj4gX190bGJpKGFzaWRlMSwgYXNpZCkgb25s
-eSBvbiB0aGUgQ1BVcyBzcGVjaWZpZWQgYnkgbW1fY3B1bWFzayhtbSkuDQo+IFRoZXJlZm9yZSBU
-TEIgZmx1c2ggaXMgZG9uZSBvbiBtaW5pbWFsIENQVXMgYW5kIHBlcmZvcm1hbmNlIHByb2JsZW0g
-ZG9lcw0KPiBub3Qgb2NjdXIuIEFjdHVhbGx5IEkgY29uZmlybSB0aGUgcGVyZm9ybWFuY2UgcHJv
-YmxlbSBpcyBmaXhlZCBieSB0aGlzDQo+IHBhdGNoLg0KPiANCj4gVGFrYW8gSW5kb2ggKDIpOg0K
-PiAgICBhcm02NDogbW06IFJlc3RvcmUgbW1fY3B1bWFzayAocmV2ZXJ0IGNvbW1pdCAzOGQ5NjI4
-NzUwNGEgKCJhcm02NDogbW06DQo+ICAgICAga2lsbCBtbV9jcHVtYXNrIHVzYWdlIikpDQo+ICAg
-IGFybTY0OiB0bGI6IEFkZCBib290IHBhcmFtZXRlciB0byBkaXNhYmxlIFRMQiBmbHVzaCB3aXRo
-aW4gdGhlIHNhbWUNCj4gICAgICBpbm5lciBzaGFyZWFibGUgZG9tYWluDQo+IA0KPiAgIC4uLi9h
-ZG1pbi1ndWlkZS9rZXJuZWwtcGFyYW1ldGVycy50eHQgICAgICAgICB8ICAgNCArDQo+ICAgYXJj
-aC9hcm02NC9pbmNsdWRlL2FzbS9tbXVfY29udGV4dC5oICAgICAgICAgIHwgICA3ICstDQo+ICAg
-YXJjaC9hcm02NC9pbmNsdWRlL2FzbS90bGJmbHVzaC5oICAgICAgICAgICAgIHwgIDYxICsrLS0t
-LS0NCj4gICBhcmNoL2FybTY0L2tlcm5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgfCAg
-IDIgKy0NCj4gICBhcmNoL2FybTY0L2tlcm5lbC9zbXAuYyAgICAgICAgICAgICAgICAgICAgICAg
-fCAgIDYgKw0KPiAgIGFyY2gvYXJtNjQva2VybmVsL3RsYmZsdXNoLmMgICAgICAgICAgICAgICAg
-ICB8IDE1NSArKysrKysrKysrKysrKysrKysNCj4gICBhcmNoL2FybTY0L21tL2NvbnRleHQuYyAg
-ICAgICAgICAgICAgICAgICAgICAgfCAgIDIgKw0KPiAgIDcgZmlsZXMgY2hhbmdlZCwgMTg2IGlu
-c2VydGlvbnMoKyksIDUxIGRlbGV0aW9ucygtKQ0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNo
-L2FybTY0L2tlcm5lbC90bGJmbHVzaC5jDQo+IA==
+On Thu, Oct 31, 2019 at 03:31:36PM +0800, Leo Yan wrote:
+
+> Before move farward, I'd like to step back to describe clearly what's
+> current problem on Arm64 and check one question for jump label:
+> 
+> I checked the kernel code, both kprobe and ftrace both uses
+> stop_machine() to alter instructions,
+
+That's not currect for Aargh64, see aarch64_insn_patch_text_nosync(),
+which is used in both ftrace and jump_label.
+
+> since all CPUs run into stop
+> machine's synchronization, there have no race condition between
+> instructions transition and CPUs execte the altered instruction; thus
+> it's safe for kprobe and ftrace to use perf event PERF_TEXT_POKE_UPDATE
+> to notify instruction transition and can allow us to read out 'correct'
+> instruction for decoder.
+
+Agreed, IFF patching happens using stop_machine(), things are easy. ARM
+is (so far) exclusively using stop_machine() based text_poking, although
+the last time I spoke to Will about this, he said the _nosync stuff is
+possible on 32bit too, just nobody has bothered implementing it.
+
+> But for jump label, it doesn't use the stop_machine() and perf event
+> PERF_TEXT_POKE_UPDATE will introduce race condition as below (Let's see
+> the example for transition from nop to branch):
+> 
+>               CPU0                                      CPU1
+>   NOP instruction
+>    `-> static_key_enable()
+>         `-> aarch64_insn_patch_text_nosync()
+>              `-> perf event PERF_TEXT_POKE_UPDATE
+>                                                      -> Execute nop
+>                                                         instruction
+>              `-> aarch64_insn_write()
+>              `-> __flush_icache_range()
+> 
+> Since x86 platform have INT3 as a mediate state, it can avoid the
+> race condition between CPU0 (who is do transition) and other CPUs (who
+> is possible to execute nop/branch).
+
+Ah, you found the _nosync thing in jump_label, here's the one in ftrace:
+
+arch/arm64/kernel/ftrace.c:     if (aarch64_insn_patch_text_nosync((void *)pc, new))
+
+And yes, this is racy.
+
+> > The thing is, as I argued, the instruction state between PRE and POST is
+> > ambiguous. This makes it impossible to decode the branch decision
+> > stream.
+> > 
+> > Suppose CPU0 emits the PRE event at T1 and the POST event at T5, but we
+> > have CPU1 covering the instruction at T3.
+> > 
+> > How do you decide where CPU1 goes and what the next conditional branch
+> > is?
+> 
+> Sorry for my not well thought.
+> 
+> I agree that T3 is an uncertain state with below flow:
+> 
+>       CPU0                                             CPU1
+>   perf event PERF_TEXT_POKE_UPDATE_PRE   -> T1
+> 
+>     Int3 / NOP                                       -> T3
+> 
+>     Int3 / branch                                    -> T3'
+> 
+>   perf event PERF_TEXT_POKE_UPDATE_POST  -> T5
+> 
+> Except if the trace has extra info and can use old/new instructions
+> combination for analysis, otherwise PRE/POST pair events aren't helpful
+> for resolve this issue (if trace decoder can do this, then the change in
+> kernel will be much simpler).
+> 
+> Below are two potential options we can use on Arm64 platform:
+> 
+> - Change to use stop_machine() for jump label; this might introduce
+>   performance issue if jump label is altered frequently.
+> 
+>   To mitigate the impaction, we can only use stop_machine() when
+>   detect the perf events are enabled, otherwise will rollback to use
+>   the old code path.
+> 
+> - We can use breakpoint to emulate the similiar flow with x86's int3,
+>   thus we can dismiss the race condition between one CPU alters
+>   instruction and other CPUs run into the alternative instruction.
+> 
+> @Will, @Mark, could you help review this?  Appreciate any comments
+> and suggestions.  And please let me know if you want to consolidate
+> related works with your side (or as you know if there have ongoing
+> discussion or someone works on this).
+
+Given people are building larger Aargh64 machines (I've heard about 100+
+CPUs already), I'm thinking the 3rd option is the most performant.
+
+But yes, as you mention earlier, we can make this optional on the
+TEXT_POKE_UPDATE event being in use.
+
+I'm thinking something along the lines of:
+
+static uintptr_t nosync_addr;
+static u32 nosync_insn;
+
+int __kprobes aarch64_insn_patch_text_nosync(void *addr, u32 insn)
+{
+	const u32 break = // some_breakpoint_insn;
+	uintptr_t tp = (uintptr_t)addr;
+	int ret;
+
+	lockdep_assert_held(&text_mutex);
+
+	/* A64 instructions must be word aligned */
+	if (tp & 0x3)
+		return -EINVAL;
+
+	if (perf_text_poke_update_enabled()) {
+
+		nosync_insn = insn;
+		smp_store_release(&nosync_addr, tp);
+
+		ret = aarch64_insn_write(addr, break);
+		if (ret == 0)
+			__flush_icache_range(tp, tp + AARCH64_INSN_SIZE);
+
+		perf_event_text_poke(....);
+	}
+
+	ret = aarch64_insn_write(addr, insn);
+	if (ret == 0)
+		__flush_icache_range(tp, tp + AARCH64_INSN_SIZE);
+
+	return ret;
+}
+
+And have the 'break' handler do:
+
+aarch64_insn_break_handler(struct pt_regs *regs)
+{
+	unsigned long addr = smp_load_acquire(&nosync_addr);
+	u32 insn = nosync_insn;
+
+	if (regs->ip != addr)
+		return;
+
+	// emulate @insn
+}
+
+I understood from Will the whole nosync scheme only works for a limited
+set of instructions, but you only have to implement emulation for the
+actual instructions used of course.
+
+(which is what we do on x86)
+
+Does this sound workable?
