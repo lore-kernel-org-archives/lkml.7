@@ -2,185 +2,87 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F80C47E49
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 324B6CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8B02085B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02DCF208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 14:43:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="by+aCiRb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfKAOk0 (ORCPT
+        id S1727361AbfKAOnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 10:40:26 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59211 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbfKAOk0 (ORCPT
+        Fri, 1 Nov 2019 10:43:06 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:45874 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727085AbfKAOnF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 10:40:26 -0400
-Received: from [91.217.168.176] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iQY6B-00083i-4c; Fri, 01 Nov 2019 14:40:23 +0000
-Date:   Fri, 1 Nov 2019 15:40:22 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-api@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] clone3: validate stack arguments
-Message-ID: <20191101144021.p6dh7utlvqecuhua@wittgenstein>
-References: <20191031113608.20713-1-christian.brauner@ubuntu.com>
- <20191031164653.GA24629@redhat.com>
- <20191101110639.icbfihw3fk2nzz4o@wittgenstein>
- <20191101123257.GA508@redhat.com>
+        Fri, 1 Nov 2019 10:43:05 -0400
+Received: by mail-il1-f194.google.com with SMTP id b12so8843183ilf.12
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 07:43:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pOsu2AcG2YG+DGQYkcK4IHDj0JhN9eSDbjkqK9jcdeU=;
+        b=by+aCiRbys++Hk7pZDZPyBKkx18BYYSC1DSo4Jvg0Y7Fw4nrTh42bNjln5w3wVp49S
+         6TFbd/JAY0l5wsaIoyBB7/+tjbY1DO2Z2Stwj31eHK5Fq+SgOUtpGZavHSW6z1aFuRyv
+         ky6qkBzmoN1F4xzhrekVLEUhwDFL19eoRbF7tzDD69FdBf2I9aq21ygAGFx9Ny+sxh3/
+         lENK43cv6xhuOk9n6XDje23lyxLdO4G3FVNVH/VoMD3yWRLFrPeVKf/K6VxC21VrNOvK
+         AwvWCSmLK6Krn+lHP+o9blGyQpqpqvM+FKGywyImb6hazbo3naiQZNZFDhcImgqITbHU
+         5Nxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pOsu2AcG2YG+DGQYkcK4IHDj0JhN9eSDbjkqK9jcdeU=;
+        b=mKMXV9IZp/khiSkWq5s/xBgdtVnZVBJnPMpkmJbhwaCubB0L3LNDXU6fW16fa+m8O6
+         /brjY2KJaIFM5TKNTmSTYNAD0WmTTTCJEudMgenotCa/EdHpYAU7BuuA+RHY4mFO4aZ3
+         Ocu7T3NZ4Yyg/6vsNWnP7WZyRC+1BOzSWtdzIQhVxJO0rU1tBJ2/sXYQvToLSTsE2Woe
+         130RJNmnnKCj/qe/0TfpgbJxzQDc6ubmPyBERYXe6UraTbr7KUNa0AtgjRdU9ik4P9Ab
+         HCxK0AEU+cZ3h2aKD7buy63bpzJiwSbz7X3a7YglUv3K0+SF4wM3SbrE4Dhk+MVhvT42
+         trhw==
+X-Gm-Message-State: APjAAAWFS8reb3SGwNHP/buQt8Fpr/NQcDQB8RasBA/c8Iygqn7pul0x
+        +Y1x7dybkWieNiqwsiGOqzt9gvrHAeYLJQ==
+X-Google-Smtp-Source: APXvYqxgmEpiVeLF3XJCoR505jhuWbx/CW7TxVDFN3I3miphrKm6TiRF71WtKd6tpywv2xpw6YwQrw==
+X-Received: by 2002:a05:6e02:546:: with SMTP id i6mr12379669ils.54.1572619384454;
+        Fri, 01 Nov 2019 07:43:04 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id n28sm985343ili.70.2019.11.01.07.43.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 Nov 2019 07:43:03 -0700 (PDT)
+Subject: Re: [PATCH] blk-mq: Make blk_mq_run_hw_queue() return void
+To:     John Garry <john.garry@huawei.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1572368370-139412-1-git-send-email-john.garry@huawei.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <411ad78b-ba8c-cbee-f4f4-19a626cbfc0f@kernel.dk>
+Date:   Fri, 1 Nov 2019 08:43:02 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <1572368370-139412-1-git-send-email-john.garry@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191101123257.GA508@redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 01:32:57PM +0100, Oleg Nesterov wrote:
-> On 11/01, Christian Brauner wrote:
-> >
-> > On Thu, Oct 31, 2019 at 05:46:53PM +0100, Oleg Nesterov wrote:
-> > > On 10/31, Christian Brauner wrote:
-> > > >
-> > > > --- a/include/uapi/linux/sched.h
-> > > > +++ b/include/uapi/linux/sched.h
-> > > > @@ -51,6 +51,10 @@
-> > > >   *               sent when the child exits.
-> > > >   * @stack:       Specify the location of the stack for the
-> > > >   *               child process.
-> > > > + *               Note, @stack is expected to point to the
-> > > > + *               lowest address. The stack direction will be
-> > > > + *               determined by the kernel and set up
-> > > > + *               appropriately based on @stack_size.
-> > >
-> > > I can't review this patch, I have no idea what does stack_size mean
-> > > if !arch/x86.
-> >
-> > In short: nothing at all if it weren't for ia64 (and maybe parisc).
-> > But let me provide some (hopefully useful) context.
-> 
-> Thanks...
-> 
-> > (Probably most of
-> > that is well-know,
-> 
-> Certainly not to me ;) Thanks.
-> 
-> > > > +static inline bool clone3_stack_valid(struct kernel_clone_args *kargs)
-> > > > +{
-> > > > +	if (kargs->stack == 0) {
-> > > > +		if (kargs->stack_size > 0)
-> > > > +			return false;
-> > > > +	} else {
-> > > > +		if (kargs->stack_size == 0)
-> > > > +			return false;
-> > >
-> > > So to implement clone3_wrapper(void *bottom_of_stack) you need to do
-> > >
-> > > 	clone3_wrapper(void *bottom_of_stack)
-> > > 	{
-> > > 		struct clone_args args = {
-> > > 			...
-> > > 			// make clone3_stack_valid() happy
-> > > 			.stack = bottom_of_stack - 1,
-> > > 			.stack_size = 1,
-> > > 		};
-> > > 	}
-> > >
-> > > looks a bit strange. OK, I agree, this example is very artificial.
-> > > But why do you think clone3() should nack stack_size == 0 ?
-> >
-> > In short, consistency.
-> 
-> And in my opinion this stack_size == 0 check destroys the consistency,
-> see below.
-> 
-> But just in case, let me say that overall I personally like this change.
-> 
-> > The best thing imho, is to clearly communicate to userspace that stack
-> > needs to point to the lowest address and stack_size to the initial range
-> > of the stack pointer
-> 
-> Agreed.
-> 
-> But the kernel can't verify that "stack" actually points to the lowest
-> address and stack_size is actually the stack size. Consider another
-> artificial
+On 10/29/19 10:59 AM, John Garry wrote:
+> Since commit 97889f9ac24f ("blk-mq: remove synchronize_rcu() from
+> blk_mq_del_queue_tag_set()"), the return value of blk_mq_run_hw_queue()
+> is never checked, so make it return void, which very marginally simplifies
+> the code.
 
-Sure, but that's the similar to other structs that are passed via a
-pointer and come with a size. You could pass:
+Applied, thanks.
 
-setxattr(..., ..., value - size, size, ...);
+-- 
+Jens Axboe
 
-and the kernel would be confused as well.
-
-> 
->     	clone3_wrapper(void *bottom_of_stack, unsigned long offs)
->     	{
->     		struct clone_args args = {
->     			...
->     			// make clone3_stack_valid() happy
->     			.stack = bottom_of_stack - offs,
->     			.stack_size = offs,
->     		};
->     		sys_clone3(args);
->     	}
-> 	
-> Now,
-> 
-> 	clone3_wrapper(bottom_of_stack, offs);
-> 
-> is same thing for _any_ offs except offs == 0 will fail. Why? To me this
-> is not consistent, I think the "stack_size == 0" check buys nothing and
-> only adds some confusion.
-
-I disagree. It's a very easy contract: pass a stack and a size or
-request copy-on-write by passing both as 0.
-Sure, you can flaunt that contract but that's true of every other
-pointer + size api. The point is: the api we endorse should be simple
-and stack + stack_size is very simple.
-
-> 
-> Say, stack_size == 1 is "obviously wrong" too, this certainly means that
-> "stack" doesn't point to the lowest address (or the child will corrupt the
-> memory), but it works.
-> 
-> OK, I won't insist. Perhaps it can help to detect the case when a user
-> forgets to pass the correct stack size.
-> 
-> > > > +		if (!access_ok((void __user *)kargs->stack, kargs->stack_size))
-> > > > +			return false;
-> > >
-> > > Why?
-> >
-> > It's nice of us to tell userspace _before_ we have created a thread that
-> > it messed up its parameters instead of starting a thread that then
-> > immediately crashes.
-> 
-> Heh. Then why this code doesn't verify that at least stack + stack_size is
-> properly mmaped with PROT_READ|WRITE?
-
-access_ok() is uncomplicated.
-The other check makes a lot more assumptions. Theare are users that might
-want to have a PROT_NONE part of their stack as their own "private"
-guard page (Jann just made that point) and there are other corner cases.
-
-Christian
