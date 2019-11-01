@@ -2,100 +2,77 @@ Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50200CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9777CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3097D2067D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB752067D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 21:40:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="fCkfsPf1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbfKAVko (ORCPT
+        id S1727123AbfKAVkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 17:40:44 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:43735 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725989AbfKAVko (ORCPT
+        Fri, 1 Nov 2019 17:40:49 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:42212 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfKAVks (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 17:40:44 -0400
-Received: from dread.disaster.area (pa49-180-67-183.pa.nsw.optusnet.com.au [49.180.67.183])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id DBCB03A0834;
-        Sat,  2 Nov 2019 08:40:40 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iQeeu-0006bm-DO; Sat, 02 Nov 2019 08:40:40 +1100
-Date:   Sat, 2 Nov 2019 08:40:40 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/28] xfs: Throttle commits on delayed background CIL
- push
-Message-ID: <20191101214040.GX4614@dread.disaster.area>
-References: <20191031234618.15403-1-david@fromorbit.com>
- <20191031234618.15403-3-david@fromorbit.com>
- <20191101120426.GC59146@bfoster>
+        Fri, 1 Nov 2019 17:40:48 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 656935C35E6;
+        Fri,  1 Nov 2019 22:40:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1572644446;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UQ0Zt0OUXYdDbK7jxc5SzMQz2nIcNAjdmM4xf+Xj0xg=;
+        b=fCkfsPf1F5hA9GJWCThZmjWj1+FNW5GZKdKpnKUwT5LWRVCdsb/CIVe7yEpxO2FlY037AN
+        jxLcritbSksusfUPz6luuuHmdYErc8fluMSWjV5+KAhmXzV4X+QvdDwqrjtcoLQLXJtTpR
+        NV5kDvWJBlXpbA9NcjAa+g8yI+ZPij0=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191101120426.GC59146@bfoster>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=G6BsK5s5 c=1 sm=1 tr=0
-        a=3wLbm4YUAFX2xaPZIabsgw==:117 a=3wLbm4YUAFX2xaPZIabsgw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
-        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=0MiyBbjkrBVIBRQmzFcA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 01 Nov 2019 22:40:46 +0100
+From:   Stefan Agner <stefan@agner.ch>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     s.hauer@pengutronix.de, linux@armlinux.org.uk,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: imx: use generic function to exit coherency
+In-Reply-To: <20190416042337.GA4690@X250.skyworth_vap>
+References: <3f58c55e48c28f41e92883e81c675b8478af6a5e.1554937960.git.stefan@agner.ch>
+ <20190416042337.GA4690@X250.skyworth_vap>
+Message-ID: <a99b439b8c8deb247f7ba2e6b598e808@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 08:04:26AM -0400, Brian Foster wrote:
-> On Fri, Nov 01, 2019 at 10:45:52AM +1100, Dave Chinner wrote:
-> > From: Dave Chinner <dchinner@redhat.com>
-> > 
-> > In certain situations the background CIL push can be indefinitely
-> > delayed. While we have workarounds from the obvious cases now, it
-> > doesn't solve the underlying issue. This issue is that there is no
-> > upper limit on the CIL where we will either force or wait for
-> > a background push to start, hence allowing the CIL to grow without
-> > bound until it consumes all log space.
-> > 
-> > To fix this, add a new wait queue to the CIL which allows background
-> > pushes to wait for the CIL context to be switched out. This happens
-> > when the push starts, so it will allow us to block incoming
-> > transaction commit completion until the push has started. This will
-> > only affect processes that are running modifications, and only when
-> > the CIL threshold has been significantly overrun.
-> > 
-> > This has no apparent impact on performance, and doesn't even trigger
-> > until over 45 million inodes had been created in a 16-way fsmark
-> > test on a 2GB log. That was limiting at 64MB of log space used, so
-> > the active CIL size is only about 3% of the total log in that case.
-> > The concurrent removal of those files did not trigger the background
-> > sleep at all.
-> > 
-> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> > Reviewed-by: Brian Foster <bfoster@redhat.com>
-> > ---
+Hi Shawn,
+
+On 2019-04-16 07:46, Shawn Guo wrote:
+> On Thu, Apr 11, 2019 at 01:14:12AM +0200, Stefan Agner wrote:
+>> The common ARM architecture code provides a generic function to exit
+>> coherency called v7_exit_coherency_flush(). Replace the machine
+>> specific implementation using the generic function.
+>>
+>> Tested on a i.MX 6Dual by hotplugging the secondary CPU under load
+>> through sysfs several 1000 times.
+>>
+>> Tested-by: Stefan Agner <stefan@agner.ch>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
 > 
-> I don't recall posting an R-b tag for this one...
+> Applied, thanks.
 
-Argh, sorry. I must have screwed up transcribing them from the
-mailing list.
+It seems like this patch never made it upstream. Any specific reason?
 
-> That said, I think my only outstanding feedback (side discussion aside)
-> was the code factoring in xlog_cil_push_background().
-
-I'll go back and look at that, 'cause clearly I was looking at the
-wrong patch when I screwed up the rvb tag...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--
+Stefan
