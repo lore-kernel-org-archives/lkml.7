@@ -2,149 +2,115 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C669CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B73CCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D742085B
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49CC421897
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:22:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Dy/nCnuY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kwLnMiSM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfKBGRd (ORCPT
+        id S1726983AbfKBGWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 02:17:33 -0400
-Received: from mail-eopbgr1300121.outbound.protection.outlook.com ([40.107.130.121]:6116
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726044AbfKBGRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 02:17:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f+Du7S6uSi5cJY2QzDCqW7iuEoboS2XTL4Teay42wSObyhkhmh6ZvzQVIohjQOYmCuYB3+HuqyeYMH2DDGJEfGsXQnQiBQAyiJ72BK9AWGQNgxMZNmygsge1LE/3x9oWSq2pPBm7M/dSNqQqsKz3DgIujVAc0BAiXaVCu48xNvlDYgPViGk67+PDZN56VW2SGv7IcREa6jfgh7l4CdUP0cuGx0mWASnfLCHBlJWo2wdbc2Wv4AyFYxeUAb7ZObpVuE5xdCM3zdHHZgURaslDzotSuF6BcH86YRYwAtB7dyr0FSEFYCUgvdj9qnNNdyXkDKhSbugQvHB3gFAI5Bw6wA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SO4sO1z+ffKrKW8H3i+vsIhAt/FsBZwTCu2jZkGHcSc=;
- b=ImovqjVAvrORk14lUdbvT7lswIphm09ljgVoBsPZ7yfW5uLWMT4XTZNlNwYFrzRPbo5Z1Rfn7z7NrdXlHOUcVJNFMLd/ZvbUHelI6BYTVc6vYWKqyY6RXG84VS15EtXdViYQChwNPvEx91aXoekuv6jjhOdKfVWfB/j3rj5GwaNVI25fPvrXbmdSU9UTwRmjktLe5l9bsSOhg8kkXiNHpNrKpUEOhl5dQUq0SL53AmRGygTr8xgjW0qdDE3ZtbXFmCl3GZy8hDjoNdptrW+HkYrF9OYpeExtGCyX5W0O8/SuQirc7kbpmh8leUCfsZt8gAOr93+Ky4f5BMgr3+P+mw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SO4sO1z+ffKrKW8H3i+vsIhAt/FsBZwTCu2jZkGHcSc=;
- b=Dy/nCnuY/t5SB5D9fWj3/pSwvVDWjBTIRvFz4y0img4qYBW/6r15YribGlXYTtqWk8lGlv+NhMbRXxtMzepqRT01Sz8bGoRpAmnSOimhw0f0m7oCLrpMPO99gGGM1svBdhdOCoX57R8+3jBVkyc32E5wWi5pjxFQpQcHp3YMRFI=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0186.APCP153.PROD.OUTLOOK.COM (10.170.187.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.7; Sat, 2 Nov 2019 06:17:22 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::69f1:c9:209a:1809]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::69f1:c9:209a:1809%2]) with mapi id 15.20.2430.010; Sat, 2 Nov 2019
- 06:17:22 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Wei Hu <weh@microsoft.com>,
-        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "sam@ravnborg.org" <sam@ravnborg.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "info@metux.net" <info@metux.net>, "arnd@arndb.de" <arnd@arndb.de>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "dcui@microsoft.com" <dcui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH] video: hyperv: hyperv_fb: Use physical memory for fb on
- HyperV Gen 1 VMs.
-Thread-Topic: [PATCH] video: hyperv: hyperv_fb: Use physical memory for fb on
- HyperV Gen 1 VMs.
-Thread-Index: AQHViMlWrXYtpApox02C+wFzOSr7Mqd3cNRA
-Date:   Sat, 2 Nov 2019 06:17:21 +0000
-Message-ID: <PU1P153MB01690579FA52DCDF964AE179BF7D0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <20191022110905.4032-1-weh@microsoft.com>
-In-Reply-To: <20191022110905.4032-1-weh@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-11-02T06:17:20.0215252Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4eba7dcd-726f-4dbc-aee3-a2c3ebaeee78;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:f1df:b100:5b7:2fb9]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7c71a8cf-bc8a-4aa3-ca6e-08d75f5c5278
-x-ms-traffictypediagnostic: PU1P153MB0186:|PU1P153MB0186:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB018663BCF459F3D1D197BE2FBF7D0@PU1P153MB0186.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0209425D0A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(376002)(39860400002)(346002)(136003)(189003)(199004)(76176011)(2906002)(9686003)(81166006)(6436002)(7416002)(2501003)(46003)(229853002)(5660300002)(186003)(52536014)(2201001)(14454004)(33656002)(102836004)(66556008)(74316002)(7736002)(81156014)(22452003)(305945005)(8676002)(66946007)(110136005)(66476007)(316002)(4744005)(8990500004)(7696005)(66446008)(86362001)(76116006)(99286004)(486006)(446003)(6506007)(14444005)(1511001)(64756008)(10290500003)(71190400001)(55016002)(8936002)(256004)(1250700005)(6116002)(11346002)(6246003)(476003)(478600001)(6636002)(71200400001)(25786009)(10090500001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0186;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: agcJjU65hYd96Mz4pYn562usIB46stdUd0ocknLZsYReDTi+C1KewR4XaxJnPFtWnL0ieEilE0reWrdeGoipper05wIeOQ8zogG6nIAY2G2I99npwKwPd+mJdMNYUzbCNBNi+RLcd1O4xuiikSil+2wAFZwIGBoTQkCpt2gDbEbBPJqK7k3apW9UX7azev/NUzgiSwhBuKozUmHzLdlZojrnqtnXhYKZQhKBWtk3uufsbG5Ke9bPmSF0HANrKbYQHhfBmPKhUc2vZgM4GS93tCoCHjvd8mPip42KaSXRjvfNQqORiJAq0wc4M5c3Ln6mOHf7llrC0l/n/hdDbNxrSSOpuJoUGWJh0s8q3ryC5cy1Q3x5Jlc77nsC4fdYJmCgGVKPx5JNSSfAveFmbiEmbZ3ts+msX/1BrasGLVKdasgC2yBkCez2d5iw+0VYYN37
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 2 Nov 2019 02:22:13 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36061 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfKBGWN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Nov 2019 02:22:13 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w18so11668722wrt.3;
+        Fri, 01 Nov 2019 23:22:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zhzCe9gexEx43QvM7xg8LGu1dhIv2+i6xu5dgHafDF4=;
+        b=kwLnMiSMatRxSK1C76ObCExaPa9R1/4BJEHxx4D1XjeiecZuJ2/NVbjoC4Ph/eJ/2c
+         RBOFwFKJImzh6GFcR5REGOsZiPm1EyZf5LViYrAM2YRo+OXh4tecrokck7kfBE9RpxIC
+         QTOvF1QlG0sdyLRcdI1muyz0WwVPzncurGKQH+losdQ7UINUTxzJfX+X4K54Au/xkqir
+         7DR79TKROUSQJ3ZfNdWabSGR3v/9EzbgQVsO/Rg7M7WoolGWIkdKNd3/rhR9C7VruSXe
+         HBwC7tDoUo57wB732gk+BCWqZL2be9kJ2Z3I/0Qq6H9cKZ81tv2Yl1078ZGLLf+APkTK
+         i6gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zhzCe9gexEx43QvM7xg8LGu1dhIv2+i6xu5dgHafDF4=;
+        b=ZCcioDf8vi5QS4T00S1dGsDJTaMAH22yaiCMmY+DFX/BKjYqFOJNQPwkz7humQsiVd
+         DRs3mTAa9ELpg3sdZue90Jx2wjvVyQZrsbBelKVWp0ho3AMKCJYjuAJBbTmLhNJHqzji
+         Aj+NuDkoMPzjOaTDjKXE2NDbtFRVC/nwqE2vFl+Vw/uJhh8HyXKmKKG2tQdrsbl+NhbY
+         M6t7Y2DWhSqEYq6zv7VdV6zZpJDFHHKZtKNj9rlTinFUSgdAaDYGX+XHlfJ7EScLCn5z
+         xCA//Uul9ocT9dQLYl6awK7YkpAQIXn5UWZs1Oztii2hQ7+J/Cbd2wcr4l3eiDHmO7Sp
+         RrMA==
+X-Gm-Message-State: APjAAAWB+iICh9qkzDhtNgp/EvSNcTzp2GQNwi/1E5RYXv+8NBPEfIJY
+        WJCY74lTiogXVPhbEos75Qsy1F3c8YA=
+X-Google-Smtp-Source: APXvYqzU8cyqw+/oDcKoSvzWSB/BEN+evKPThPEccSytbmI1say7JB4C0XssYGtF7LAmI3cV/QR2KA==
+X-Received: by 2002:a5d:4612:: with SMTP id t18mr13307058wrq.255.1572675729879;
+        Fri, 01 Nov 2019 23:22:09 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id u68sm11432918wmu.12.2019.11.01.23.22.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 23:22:09 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2] i2c: imx-lpi2c: add clk_disable_unprepare calls
+Date:   Sat,  2 Nov 2019 14:21:49 +0800
+Message-Id: <20191102062149.3957-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c71a8cf-bc8a-4aa3-ca6e-08d75f5c5278
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Nov 2019 06:17:21.6105
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SsM+tdNqUOiLKkfLPm6jswx+wJxwf/BI+oYiY1KA7KbDaZqSNbU4sQBCVJiJMA3ml28Iu9E+6ihZyhAhgCIYkQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0186
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: linux-hyperv-owner@vger.kernel.org
-> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Wei Hu
-> Sent: Tuesday, October 22, 2019 4:11 AM
-> ...=20
-> +	/* Allocate from CMA */
-> +	// request_pages =3D (request_size >> PAGE_SHIFT) + 1;
+The driver forgets to call clk_disable_unprepare when probe fails
+and remove.
+Add the two calls to fix the problem.
 
-"//" seems rare in Linux kernel code.
-IMO "/* */" is more common.
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+Changes in v2:
+  - Adjust the call order to make it consistent in probe failure and
+    removal.
 
-> +			pr_info("Unable to allocate enough contiguous physical memory
-> on Gen 1 VM. Use MMIO instead.\n");
+ drivers/i2c/busses/i2c-imx-lpi2c.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The line exceeds 80 chars.
-=20
-> @@ -1060,6 +1168,7 @@ static int hvfb_probe(struct hv_device *hdev,
->  	par =3D info->par;
->  	par->info =3D info;
->  	par->fb_ready =3D false;
-> +	par->need_docopy =3D false;
+diff --git a/drivers/i2c/busses/i2c-imx-lpi2c.c b/drivers/i2c/busses/i2c-imx-lpi2c.c
+index c92b56485fa6..f964693c0901 100644
+--- a/drivers/i2c/busses/i2c-imx-lpi2c.c
++++ b/drivers/i2c/busses/i2c-imx-lpi2c.c
+@@ -618,6 +618,7 @@ static int lpi2c_imx_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ rpm_disable:
++	clk_disable_unprepare(lpi2c_imx->clk);
+ 	pm_runtime_put(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ 	pm_runtime_dont_use_autosuspend(&pdev->dev);
+@@ -630,6 +631,7 @@ static int lpi2c_imx_remove(struct platform_device *pdev)
+ 	struct lpi2c_imx_struct *lpi2c_imx = platform_get_drvdata(pdev);
+ 
+ 	i2c_del_adapter(&lpi2c_imx->adapter);
++	clk_disable_unprepare(lpi2c_imx->clk);
+ 
+ 	pm_runtime_disable(&pdev->dev);
+ 	pm_runtime_dont_use_autosuspend(&pdev->dev);
+-- 
+2.23.0
 
-Maybe it's better if we set the default value to true? This way we can save
-the "	par->need_docopy =3D true;" in hvfb_getmem().
-
-Thanks,
--- Dexuan
