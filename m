@@ -5,71 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A09CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 02:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A02CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 03:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA65821855
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 02:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52239208CB
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 03:01:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sN9/IL9s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JAH37N/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbfKBC7F (ORCPT
+        id S1727992AbfKBDBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 22:59:05 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42271 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbfKBC7F (ORCPT
+        Fri, 1 Nov 2019 23:01:38 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37583 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbfKBDBi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 22:59:05 -0400
-Received: by mail-pf1-f196.google.com with SMTP id s5so3957pfh.9;
-        Fri, 01 Nov 2019 19:59:04 -0700 (PDT)
+        Fri, 1 Nov 2019 23:01:38 -0400
+Received: by mail-pl1-f194.google.com with SMTP id p13so5145252pll.4;
+        Fri, 01 Nov 2019 20:01:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:references:from:message-id:date:user-agent:mime-version
          :in-reply-to:content-language:content-transfer-encoding;
-        bh=Q47zQREG+oESU8wjXeLd7PXi0SzgYhGGKEYowlxWhPE=;
-        b=sN9/IL9sr13RJ6HGN3lSVp/q/nK4v0bRccmOBiY92WUjxX216DueFj230qt2tdFL+y
-         l0jpZt6HjZZ1/mbPXyvFos8MZAYi29MZW5gMmLm1JC5XtpV1ZLwE2Jtz1KZvb0Hk3OuO
-         JCBXzgIXQv5knGuIxdedD8nLB/w5S3KwQ5e6lIn+yv1wbeDk+cB6d3o8NGPXtLL01zQY
-         ugBinwyNKBdDTpSw8ZMMZNCARIwgm+sm3fydSoFo3TBs99jCRYgF+rj8zlwv0S+zBbz8
-         0TDJOVLiZnWV18X2/PxCjr/1afJCjrwg52GnsvJVvUXypwNMSruTnTsvGkEdafmPCB0e
-         bBYA==
+        bh=EjWmH7c40hv68dxdshtpr5niNeilJLAYp4ltJWbDHs8=;
+        b=JAH37N/df/EcgeYQfpHyDAZvKSb/ZR0MdnzmXJkKYauWno7oejE8t4VueJITh0VwZY
+         Naf2zF/gN5S/qno278qCDBj8Uxep8IQuLk94bFcPw9CQxnSs+4Wouqq9j5dslZXhPu4u
+         P0LjVXb9pdjuQTSDspMZPgNLz6G0julj2gpAhUpSZQuJiTmbnfvLvWrmTa7GH4BwCC4x
+         zcL3IaxA7e/r/Q1zGskuXeAMu3orSXX9YgssbFN/TuuZuNXvi1HHHaQYbct+/aU+8O33
+         1a/pOMpI/LkV9vEMWHdMCp8kK03esXa5XHPQ0lXylSxg7ZXmOjeKcA5j/uRtSW1KVmDc
+         CCsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Q47zQREG+oESU8wjXeLd7PXi0SzgYhGGKEYowlxWhPE=;
-        b=ODU9DFG00W3kp4afBNx2aLiRFX1vooGOoyXY7hGDe88kyUYWvXfvNc0+T2n1lMqiTB
-         0jzP5lCMMp6/zDJ32UwhNq1c5J4hSal5hLkCMgb+glL+sQ3mbSRkCGRwJDYYdlyAZTG9
-         zKinlNbWcJaFgga0QT4f47+CyA7Q4naajDVwEs0S7RJz7++Y46FWoiP9BwrXSA+Z5Na5
-         dWIb4kD4/hfVzg7sE/UciffS0w3PoguZQC6bjHtIiv1fzIaCkayyCW+tgDXnsLTCXBkx
-         Pjh0ACb5UdlbYUCcYvTNkFS9xJUJOT8fX1KMhY//klnzJfNkhBImambGgYCUYRGeVFWm
-         KhWQ==
-X-Gm-Message-State: APjAAAUmD9svbdS78ICYI75Zg9wVFRB7kUFfR3ZP/qBmXY7v8G2NsC/Q
-        XXt7VWpzrDvBpmSw1J3vJzdUToiA
-X-Google-Smtp-Source: APXvYqw3oQl92AlfZHpMHTHONZP/YcH1Lukwfd16CokLcAixyQ3erxyt42zzbJVoOpqHhEupgIxZsA==
-X-Received: by 2002:a17:90a:bcf:: with SMTP id x15mr3957701pjd.0.1572663543926;
-        Fri, 01 Nov 2019 19:59:03 -0700 (PDT)
+        bh=EjWmH7c40hv68dxdshtpr5niNeilJLAYp4ltJWbDHs8=;
+        b=ksvLmfx5r7oktlgyqrRU1j5VxWXQvvVPiBugxmNkvUhhNWAhj5Xze4vmslVXeE7BQn
+         QnSfBds/qGmzJvUlxLAGLaa3+qG9ZCQNPlM6S2PAp5+R8d1sHWcYPF38S5QoLcV/Z/Cw
+         3SP50ZFOWiLoZSxQLcIKQzfCXZpGPPD+GbN6wm72q0rvoHxOinYf0Q9ozvbhb8VdnMzU
+         0a153u54za6F8oO1q4jGGsHrnS59XkhpO/SH++51vmQFGZSShF3JHy8sPkE95tC856f6
+         jt0lWyyxgrGKsdf5qf1p+aEnfeTflu7+OB27iOt1StvU8MY2j0zQO/tVZpePcQwxUJg6
+         94vQ==
+X-Gm-Message-State: APjAAAVafcF+q4IvGPUJGdSCUQ7w8f+nhKnjVpt+sX0dEnzX1HamO2Tu
+        MnvjYYDRvpkdVVRR6LcsH97izVOT
+X-Google-Smtp-Source: APXvYqzGSPp9h55RP/UOjndogWg5NJIjr6BNtSuFue3n0bFtjgaOE+yRePf7nHg7nNpem9RmLpUxRw==
+X-Received: by 2002:a17:902:8f8a:: with SMTP id z10mr15369660plo.314.1572663696932;
+        Fri, 01 Nov 2019 20:01:36 -0700 (PDT)
 Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id 6sm8672246pfy.43.2019.11.01.19.59.02
+        by smtp.gmail.com with ESMTPSA id d4sm10396332pjs.9.2019.11.01.20.01.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Nov 2019 19:59:03 -0700 (PDT)
-Subject: Re: [PATCH 2/5] dt-bindings: net: phy: Add support for AT803X
+        Fri, 01 Nov 2019 20:01:36 -0700 (PDT)
+Subject: Re: [PATCH 3/5] net: phy: at803x: add device tree binding
 To:     Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, netdev@vger.kernel.org
 References: <20191102011351.6467-1-michael@walle.cc>
- <20191102011351.6467-3-michael@walle.cc>
+ <20191102011351.6467-4-michael@walle.cc>
 From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <50677172-0124-94cc-458c-ad4d394477f5@gmail.com>
-Date:   Fri, 1 Nov 2019 19:59:02 -0700
+Message-ID: <c93547d6-27fe-b4eb-d490-481a01f0b57a@gmail.com>
+Date:   Fri, 1 Nov 2019 20:01:35 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <20191102011351.6467-3-michael@walle.cc>
+In-Reply-To: <20191102011351.6467-4-michael@walle.cc>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -81,13 +81,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 11/1/2019 6:13 PM, Michael Walle wrote:
-> Document the Atheros AR803x PHY bindings.
+> Add support for configuring the CLK_25M pin as well as the RGMII I/O
+> voltage by the device tree.
 > 
 > Signed-off-by: Michael Walle <michael@walle.cc>
 
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-
-Nice, especially the way you have solved the regulator, this looks good
-to me.
 -- 
 Florian
