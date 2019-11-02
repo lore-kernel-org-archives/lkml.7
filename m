@@ -2,105 +2,129 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5613CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 14:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B7ECA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 15:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE0120663
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 14:58:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ERSvUmMz"
+	by mail.kernel.org (Postfix) with ESMTP id BC92D21855
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 15:05:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572707155;
+	bh=1y5Bat7vPpY5QvpEoK0Vmi+ZYimxQEsWhingPtGW4ow=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=KaSwaJwOsfJ6IStlLnmnDk5K9bmiGABDMR5+5vplid0KXD84idc+ySXyrxrc0zXPd
+	 w0K2IfgBq9XIYTWnYBmiqZQ8RA8lSqNoox1tWq8DQzUUrXM+DkcApT6C8Kf6YgI6KB
+	 zaymdbfEDUcRy0C/MiBY5RcumK86aQYOzhtirGQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfKBO6q (ORCPT
+        id S1726829AbfKBPFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 10:58:46 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46399 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbfKBO6q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 10:58:46 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 193so7688910pfc.13;
-        Sat, 02 Nov 2019 07:58:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=JlODO+Zw4HpnzLEHJkewQtttAbaBlBjwv58aYsKBJYM=;
-        b=ERSvUmMz4VDt5ZuGyU/O3KnGajZSRsagx/aKu/Dd9kFY0zfwh7yZ/K5YHYl2RWeLRU
-         brwHUPHKExoSCsK+Mp2Sf3hGJCU/wg558X0OpkihW5I5ZPjGB2XwcIF3cplQ9YFdaEGG
-         5hiM/Srgdy8tBTqYZmXW1gu3uzv1YortI1+KVfCXG+9xwt6V1ZBKjsWJXtCLGxGTFyP2
-         ZhlFovzzrfUuH/XjvhJgmYaNSn7gSdPnIoQcpqLLG7sbrJoa+gAEV4TdMYF97jrXr5JI
-         iOzcdLQ5Z/7+YVZNYWaG9LdOKbeJZ0HhMd9U96/3bWjkqdK84Qn2NLtmm2sX8Pt7VML5
-         dL6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=JlODO+Zw4HpnzLEHJkewQtttAbaBlBjwv58aYsKBJYM=;
-        b=LOItbPYPZmv+FBTrhnIUQ9Xrcj1RQ5vtpFaVq40vhHttdTxCkXhwHHTjzGsmaMOxC3
-         pBJaTI/YIQF5Xvlf6qhDbgxei3rBbQZnevXBxRj1p5kUxwV30SUv81VrmSQJycV2VBbs
-         b05Wj5vKogCv58GRMTnl5rb/7NM/2gTJKffjl8yH9wd0+l+d9AIAgY/RaAMMYvQzPFiv
-         vKl12CQrtWklbEK+0PceAaKGeXF7eRixXwVBwHQ8P1YjqJZ4RxSCCz0C11261oUnJP0I
-         8Vd0AWFVRNCrU07navtmxImXsUW3YIn9Q3tEv8D1OKDNX+TUpaVwnCBm4/7lSLxQ00ep
-         6EsA==
-X-Gm-Message-State: APjAAAXF4/uES9TXoKpqgGlfNo1uURMktX/jMOfPqlBXv8LP/oy6mK9Z
-        3LZvZOpTz1izLBu/7Rp2T9G8lB5a
-X-Google-Smtp-Source: APXvYqwoOvc5iUpfT8zdyokPGPzDNvrYCFkNAscJ6wBplzCLmsBvnxJ0W8LbHKUP4e2k0+occtOqlg==
-X-Received: by 2002:a63:ff26:: with SMTP id k38mr20868285pgi.128.1572706725314;
-        Sat, 02 Nov 2019 07:58:45 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c66sm11051057pfb.25.2019.11.02.07.58.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 02 Nov 2019 07:58:44 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] hwmon fixes for v5.4-rc6
-Date:   Sat,  2 Nov 2019 07:58:43 -0700
-Message-Id: <20191102145843.16952-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        Sat, 2 Nov 2019 11:05:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726437AbfKBPFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Nov 2019 11:05:47 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B22121726;
+        Sat,  2 Nov 2019 15:05:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572707145;
+        bh=1y5Bat7vPpY5QvpEoK0Vmi+ZYimxQEsWhingPtGW4ow=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=xyA4AUF+tlW9jBhFFCq7g81+9RfzwNjco+NkamqnMOz5TkvNuXuH6jgjmTtUacd+v
+         fYAGzZJhpWIwp8Bc0gy4EE2ZRFBR0Bpj3XRNSdmzf0A542iPAVeaxcxs8BsNLa0Bj6
+         vjebbariy1/0tvrXQJ+opODbI2VOub3kxsivCug8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 555153520402; Sat,  2 Nov 2019 08:05:45 -0700 (PDT)
+Date:   Sat, 2 Nov 2019 08:05:45 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Lai Jiangshan <laijs@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH V2 0/7] rcu: introduce percpu rcu_preempt_depth
+Message-ID: <20191102150545.GQ20975@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191102124559.1135-1-laijs@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191102124559.1135-1-laijs@linux.alibaba.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Sat, Nov 02, 2019 at 12:45:52PM +0000, Lai Jiangshan wrote:
+> Rather than using the generic version of preempt_count, x86 uses
+> a special version of preempt_count implementation that take advantage
+> of x86 (single instruction to access/add/decl/flip-bits of percpu
+> counter). It makes the preempt_count operations really cheap.
+> 
+> For x86, rcu_preempt_depth can also take the same advantage by
+> using the same technique.
+> 
+> After the patchset:
+>  - No function call when using rcu_read_[un]lock().
+>      It is minor improvement, other arch can also achieve it via
+>      moving ->rcu_read_lock_nesting and ->rcu_read_unlock_special
+>      to thread_info, but inlined rcu_read_[un]lock() generates
+>      more instructions and footprint in other arch generally.
+>  - Only single instruction for rcu_read_lock().
+>  - Only 2 instructions for the fast path of rcu_read_unlock().
+> 
+> Patch4 simplifies rcu_read_unlock() by avoid using negative
+> ->rcu_read_lock_nesting, Patch7 introduces the percpu rcu_preempt_depth.
+> Other patches are for preparation.
+> 
+> changed from v1:
+>   drop patch1/2 of the v1
+>   drop merged patches
+> 
+>   Using special.b.deferred_qs to avoid wakeup in v1 is changed to using
+>   preempt_count. And special.b.deferred_qs is removed.
+> 
+> Lai Jiangshan (7):
+>   rcu: use preempt_count to test whether scheduler locks is held
+>   rcu: cleanup rcu_preempt_deferred_qs()
+>   rcu: remove useless special.b.deferred_qs
+>   rcu: don't use negative ->rcu_read_lock_nesting
+>   rcu: wrap usages of rcu_read_lock_nesting
+>   rcu: clear the special.b.need_qs in rcu_note_context_switch()
+>   x86,rcu: use percpu rcu_preempt_depth
 
-Please pull hwmon fixes for Linux v5.4-rc6 from signed tag:
+I am getting on a plane shortly, so what I have done is start a longish
+rcutorture test on these.  I will take a look at them later on.
 
-    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.4-rc6
+And I presume that answers to my questions on some of the patches in
+this series will be forthcoming.  ;-)
 
-Thanks,
-Guenter
-------
+							Thanx, Paul
 
-The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
-
-  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v5.4-rc6
-
-for you to fetch changes up to 2ccb4f16d013a0954459061d38172b1c53553ba6:
-
-  hwmon: (ina3221) Fix read timeout issue (2019-10-28 18:46:55 -0700)
-
-----------------------------------------------------------------
-hwmon fixes for v5.4-rc6
-
-Fix read timeout problem in ina3221 driver
-Fix wrong bitmask in nct7904 driver
-
-----------------------------------------------------------------
-Nicolin Chen (1):
-      hwmon: (ina3221) Fix read timeout issue
-
-amy.shih (1):
-      hwmon: (nct7904) Fix the incorrect value of vsen_mask & tcpu_mask & temp_mode in nct7904_data struct.
-
- drivers/hwmon/ina3221.c |  2 +-
- drivers/hwmon/nct7904.c | 15 ++++++++++++---
- 2 files changed, 13 insertions(+), 4 deletions(-)
+>  arch/x86/Kconfig                         |   2 +
+>  arch/x86/include/asm/rcu_preempt_depth.h |  87 +++++++++++++++++++
+>  arch/x86/kernel/cpu/common.c             |   7 ++
+>  arch/x86/kernel/process_32.c             |   2 +
+>  arch/x86/kernel/process_64.c             |   2 +
+>  include/linux/rcupdate.h                 |  24 ++++++
+>  include/linux/sched.h                    |   2 +-
+>  init/init_task.c                         |   2 +-
+>  kernel/fork.c                            |   2 +-
+>  kernel/rcu/Kconfig                       |   3 +
+>  kernel/rcu/tree_exp.h                    |  35 ++------
+>  kernel/rcu/tree_plugin.h                 | 101 ++++++++++++++---------
+>  12 files changed, 196 insertions(+), 73 deletions(-)
+>  create mode 100644 arch/x86/include/asm/rcu_preempt_depth.h
+> 
+> -- 
+> 2.20.1
+> 
