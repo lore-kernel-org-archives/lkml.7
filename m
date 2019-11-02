@@ -2,99 +2,104 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F23CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 10:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2C1CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 10:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE6621726
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 10:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F9720862
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 10:18:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BIU0oQaL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726095AbfKBKBL (ORCPT
+        id S1726498AbfKBKS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 06:01:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58940 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbfKBKBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 06:01:10 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8761F85539
-        for <linux-kernel@vger.kernel.org>; Sat,  2 Nov 2019 10:01:10 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id f16so6719200wrr.16
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 03:01:10 -0700 (PDT)
+        Sat, 2 Nov 2019 06:18:29 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32795 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfKBKS3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Nov 2019 06:18:29 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u23so8041654pgo.0
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 03:18:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b0VbGsz0tFOaDztQnJeXi4+/d87WrDq2JyWlH+PKmwA=;
+        b=BIU0oQaLn63xipEB+oW5gRLvxLdvHmgJA2k7Dy0LQM3t0Hub22MTREtckXtr73bC7z
+         RKIupjJpZgKYzZ3zOjeVK3fedZSxQRa3Cw4YPHwnN7jhA/4OC8AEBHZd4u4V3S/YFmTZ
+         6V1jgsXq9WUb9oykYF7yib2wRIP9D5xbPQOf1pM2IG+6PufI/0qz2+kibt2QvGEcSIT2
+         +YH2yy//HUpShADH2bNJMhGhleaR3nIz9PRratohyAaqxWGaJAN7rSGs8bdumVY0qSoR
+         TUtsgcTKPwWbKmWn/VidDEkJI6KlJhHBfWWqOn3qSIdGpVnLigMSfYN7iBshJmH1/63F
+         5tYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9XNTKc5genliBm4pwVnGp5ocSwuijOny5znRUr/6AeE=;
-        b=kBQBt6UZN9OCblQ3Dq9ke/09kvElaH2SBuJ/yethiKpi54lyClgCSbnsufLY1XYNZ4
-         rwvAlNYltLNKgFTzAnO5Y5TRF36SeIB9x3pX5CKMpviWb6lmiqnT6KDfYgJtuwJLu59u
-         oXX9oFmDfesoshQ76kOpsMJRssfYWBBUc3wIJL5t9dlODjzeGSVTLKORxVVZK7OfuAsg
-         MqZeBcjvjlDnl8KBFHpgmQsq4iZiCUs1z6ihz1yxxyJPWPc+nTRFY1WRqhKxp4ptrmbG
-         AmN2b1khSWcSPIh9sZ6hmncoHL7wF7Sq19cQsiWUCgCxJQbT2UBKXWSzpB32NyV68Cuj
-         V85g==
-X-Gm-Message-State: APjAAAUtYcB614aWyJ/wdAlg1xff44ibUFPUHN2StlHOtpmpBQ6fpXzb
-        FMUQAq3sMDOgEchwNVT3KWNRBLtrSRbDF+ra0nMPXGyU7W7pbqEaTTth+EpzWM1clbV7nBI627h
-        XQMWm+/SkuA1EDJz6V4N5y/cr
-X-Received: by 2002:adf:b1d2:: with SMTP id r18mr14095113wra.138.1572688869239;
-        Sat, 02 Nov 2019 03:01:09 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzAbnbtaVvZ/Im2kHYX6IDEmFoBtWlaf3txs0fR9HacSgsiPdOBQBsCH7wyWCpWDEDQIlgeIg==
-X-Received: by 2002:adf:b1d2:: with SMTP id r18mr14095088wra.138.1572688868989;
-        Sat, 02 Nov 2019 03:01:08 -0700 (PDT)
-Received: from [192.168.42.35] (mob-31-159-163-247.net.vodafone.it. [31.159.163.247])
-        by smtp.gmail.com with ESMTPSA id w15sm10084861wro.65.2019.11.02.03.01.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 Nov 2019 03:01:08 -0700 (PDT)
-Subject: Re: [PATCH v4 12/17] svm: Temporary deactivate AVIC during ExtINT
- handling
-To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Cc:     "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "rkagan@virtuozzo.com" <rkagan@virtuozzo.com>,
-        "graf@amazon.com" <graf@amazon.com>,
-        "jschoenh@amazon.de" <jschoenh@amazon.de>,
-        "karahmed@amazon.de" <karahmed@amazon.de>,
-        "rimasluk@amazon.com" <rimasluk@amazon.com>,
-        "Grimm, Jon" <Jon.Grimm@amd.com>
-References: <1572648072-84536-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1572648072-84536-13-git-send-email-suravee.suthikulpanit@amd.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <e57e11f4-ec24-6ad1-22ce-97da1910ed02@redhat.com>
-Date:   Sat, 2 Nov 2019 11:01:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b0VbGsz0tFOaDztQnJeXi4+/d87WrDq2JyWlH+PKmwA=;
+        b=p9SZ7Mit4124dKVhHUV5qvrJh2mLvWplQfzvtiriZleVQhlufeQILs1L7i0MNGN7v+
+         JADyywlk6Fq4cifLl2i1qTIJNdFx56NruixYBteJNdgDH7uACKgR5Fo+k0PhshgBlFgh
+         O1YfU8a3mlfo0jil0/Pg76kZLxWSr/PGsDvOig1F+Cwtq7H6U+B/QRsjVIW9z0VgJhK9
+         w4vUcmYel21Gd8OXL2wo4SXXy7yncH3ajeJfT4bBwk0eQnaw6/xgPvjsXS3jwp4Wy7Sh
+         a23GXROptD9HDBaJWgbg6Ec1THrsJhXwU4wU9KNu8G6fxeJ3WeNrXsVGBdqrvr69wlrH
+         Owew==
+X-Gm-Message-State: APjAAAUQ57zRTcwc8lUJCu3k/mOQVl71qV3fEEksRNz2hn11AovRG6jy
+        6afw6UU1BomYCdXi7fgKz+ezJvFz2OEKm0c8j2M=
+X-Google-Smtp-Source: APXvYqyrlICLR7MyyJRxIjUOUiL7oFNzG+wc+AuDOYOeNpx5jwpR3c5ie0PM9mqRWEFII8GPJNiDE+kI594wozxbD80=
+X-Received: by 2002:a62:8701:: with SMTP id i1mr905972pfe.241.1572689908330;
+ Sat, 02 Nov 2019 03:18:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1572648072-84536-13-git-send-email-suravee.suthikulpanit@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191031133337.9306-1-pmladek@suse.com> <975eccc7-897c-fd14-ef4f-2486729eb67c@rasmusvillemoes.dk>
+ <20191031145112.thphlpnjvnykbzyy@pathway.suse.cz> <20191031150952.3ag6qa5y4wvikd76@pathway.suse.cz>
+In-Reply-To: <20191031150952.3ag6qa5y4wvikd76@pathway.suse.cz>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 2 Nov 2019 12:18:18 +0200
+Message-ID: <CAHp75VcBL8XFBSUs=UrdbfUQw535gHbTKQkHLE4Oj3H2_UKiWg@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Add VSPRINTF
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Joe Perches <joe@perches.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/11/19 23:41, Suthikulpanit, Suravee wrote:
-> +		/*
-> +		 * IRQ window is not needed when AVIC is enabled,
-> +		 * unless we have pending ExtINT since it cannot be injected
-> +		 * via AVIC. In such case, we need to temporarily disable AVIC,
-> +		 * and fallback to injecting IRQ via V_IRQ.
-> +		 */
-> +		if (kvm_vcpu_apicv_active(vcpu))
-> +			svm_request_update_avic(vcpu, false);
+On Thu, Oct 31, 2019 at 5:13 PM Petr Mladek <pmladek@suse.com> wrote:
+> On Thu 2019-10-31 15:51:12, Petr Mladek wrote:
+> > On Thu 2019-10-31 14:51:24, Rasmus Villemoes wrote:
+> > > On 31/10/2019 14.33, Petr Mladek wrote:
+> > > > printk maintainers have been reviewing patches against vsprintf code last
+> > > > few years. Most changes have been committed via printk.git last two years.
+> > > >
+> > > > New group is used because printk() is not the only vsprintf() user.
+> > > > Also the group of interested people is not the same.
+> > >
+> > > Can you add
+> > >
+> > > R: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> >
+> > Sure. The more reviewers the better :-)
+>
+> I acutally wanted to add also
+>
+> R: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-This must be pretty heavy-weight on SMP VMs, even if most ExtINT guests
-do not need SMP in the guest.  One alternative is to enable/disable
-APICv when LVT or IOAPIC registers are written with ExtINT mode.  Not a
-blocker, just an idea to consider.
+Ack
 
-Paolo
+
+-- 
+With Best Regards,
+Andy Shevchenko
