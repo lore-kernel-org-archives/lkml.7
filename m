@@ -2,91 +2,118 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EA8CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 18:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8F7CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 18:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8EF21726
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 18:40:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kragniz.eu header.i=@kragniz.eu header.b="XlDpXknG"
+	by mail.kernel.org (Postfix) with ESMTP id 87ED821783
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 18:54:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572720846;
+	bh=EiUQFbd4eCzqoWiWRCkqn8pp6zL45XyarvpaXrgunXs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EzQcGe7fQ6acuGWgx2WXopdBXK1B+/51k91vcM2bwHHFtWzJJipu8Xwiw7L/XYGY9
+	 macvnQuBgvpQNCDY6wlPWyHBcCszhf6NE9R9wUgaJZU1T32rNIR5MHR1NidA+FDMP1
+	 Dwo0/lpFmZcsdkP5DYl2/yANQyWGnon9PmxLAwqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbfKBSkh (ORCPT
+        id S1727053AbfKBSyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 14:40:37 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45945 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbfKBSkg (ORCPT
+        Sat, 2 Nov 2019 14:54:00 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39887 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfKBSyA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 14:40:36 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q13so12791814wrs.12
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 11:40:34 -0700 (PDT)
+        Sat, 2 Nov 2019 14:54:00 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y3so13473072ljj.6
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 11:53:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kragniz.eu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2qdnCZdWddclGH/M82OOZNX5o0Sz7VcqJqLNhFXWogM=;
-        b=XlDpXknG0rjKQ/6mwcKMyp9x19gH4LAkQpksTprJA7GF90xwpCjLaPqUBAZZm1Ruq+
-         wIJ8x7oQoSriDliGfFsBJFmjk0iF2TbAnqM+MVrBcvzaYmchiGeJs4/J9JUvfRdGxMe0
-         HwC+Xx9mfivXgzuIb6/++gavMi1gRePTXZK9Y=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UFZsrTxHj8UNSOV0MW3iX+ZNPh241BxYI9RJCfbRj4I=;
+        b=fwWi36Cjm33TVpJsMKyyeNJuPa+EzO/w2jcz8N5ivZnB2LBgFElTwve7u7JUY1CQlk
+         LBP3NYhj8mwMGDKFLZC3aAKJjtxEeb837zFLkONBVlInZ3n9BYz2CiSK5BYhQEqMplN+
+         cxbruKuD+a9IFTjckV4CYWfQYTCffHao0G3wg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2qdnCZdWddclGH/M82OOZNX5o0Sz7VcqJqLNhFXWogM=;
-        b=l1aK8ejTpW8Y0cDcXWs3APyh8dGdA7drReRJ14m3mb837t1XrbyA6akiJyA8PQBQZK
-         0evmGLLnMUp5nqKMpxH9Khhs5xGKZBNehNH5yeobRFdjq51iw0xEUeqQscSUevFtqT4B
-         GI6NM2PPHlCmGNc4UuQP9OlqZGQ/D1w5osHm8HzYcSxb7vrUDRM/DxQ1u3J3GGwb70jZ
-         V4uvvHprI/IcD0LaHeCg74jyf17N7j/vk0DwNqwJqOoKLAVvElwWLcKIKpSd22Z1W+Xd
-         vkit2sDN7WnuREn4Xuc3/zNBhsbHED1Wz0nsngh79lPgpw+ho+G/AYEdx2iyzZpIVRcx
-         BZ3g==
-X-Gm-Message-State: APjAAAV1JVykMvU/IZbPWgo2z32NgeGAD9aB7g+tZm7P9fTmwppzZ+Fb
-        1u5/QWYb56H/7ejyskEx+j8xnw==
-X-Google-Smtp-Source: APXvYqxVHNDgIw1CEvYiU+IQ8nERCitTwJtlTtr9h7hKHNVLgcMvE92IqO+CF9nOD2DjxZSZe/Mz7A==
-X-Received: by 2002:a5d:4684:: with SMTP id u4mr12611320wrq.352.1572720033399;
-        Sat, 02 Nov 2019 11:40:33 -0700 (PDT)
-Received: from localhost.localdomain ([2.31.167.245])
-        by smtp.gmail.com with ESMTPSA id u4sm3202638wrq.22.2019.11.02.11.40.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Nov 2019 11:40:32 -0700 (PDT)
-From:   Louis Taylor <louis@kragniz.eu>
-To:     mchehab@kernel.org
-Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Louis Taylor <louis@kragniz.eu>
-Subject: [PATCH] scripts/sphinx-pre-install: fix Arch latexmk dependency
-Date:   Sat,  2 Nov 2019 18:45:11 +0000
-Message-Id: <20191102184511.82011-1-louis@kragniz.eu>
-X-Mailer: git-send-email 2.23.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UFZsrTxHj8UNSOV0MW3iX+ZNPh241BxYI9RJCfbRj4I=;
+        b=CRldgUQBU8K5UFEjyFh6XVKVVkkd7KRSeaHkR/RaatyXX/J13Pf1M6zP7ISrUxIJbU
+         MEI573CFbgVpEO3kaEeiSxJIqUJ0nPcHwWv2mPuUX+MpXs2H0glDY9pnNiyN9rae8IvB
+         0RMTPEXcQUbiuUkxV65Yp7SORoXEj2Y8SVfH3NbBOw+VBFV3ZsoJalfPiS3zGqQBV6Ip
+         xn6TeUz+qp39eG+TEHG6kiSrs49lqH1vBgQARQVR4bs8mnmFHS5WR/EPdwm5IdbANlYW
+         0yNt/FKLhQ+4cECCPfKO6b1iVLAESAmY+nCdhB6JnbFazlGSLb0UHVxN8mXVgHY9Mya8
+         96uQ==
+X-Gm-Message-State: APjAAAWqljcuEYmsKKWmctpGSf6HjcTGaX8758uXHjGwSNdrURjUM9Tg
+        zTloRsN2Tl2HKVa8huLifeg+4c5fxdk=
+X-Google-Smtp-Source: APXvYqwNU7vs05wzdd1bLDRRjvHUMKPGJQMhOfviQMwS1xeMlNtgT9YmEQTRG/OSR80MGTi6ARjYSg==
+X-Received: by 2002:a2e:87c3:: with SMTP id v3mr12958629ljj.61.1572720837288;
+        Sat, 02 Nov 2019 11:53:57 -0700 (PDT)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id b141sm4276436lfg.67.2019.11.02.11.53.54
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 02 Nov 2019 11:53:54 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id j14so9443770lfb.8
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 11:53:54 -0700 (PDT)
+X-Received: by 2002:ac2:4c86:: with SMTP id d6mr11465241lfl.106.1572720834124;
+ Sat, 02 Nov 2019 11:53:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
+ <30394.1571936252@warthog.procyon.org.uk> <c6e044cc-5596-90b7-4418-6ad7009d6d79@yandex-team.ru>
+ <17311.1572534953@warthog.procyon.org.uk>
+In-Reply-To: <17311.1572534953@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 2 Nov 2019 11:53:38 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg_X_7JSYT-a3qHrzvuWGMyffDWtQ4n7adBp_fe5w0BsA@mail.gmail.com>
+Message-ID: <CAHk-=wg_X_7JSYT-a3qHrzvuWGMyffDWtQ4n7adBp_fe5w0BsA@mail.gmail.com>
+Subject: Re: [RFC PATCH 11/10] pipe: Add fsync() support [ver #2]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Arch Linux, latexmk is installed in the texlive-core package.
+On Thu, Oct 31, 2019 at 8:16 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
+>
+> > Similar synchronization is required for reusing memory after vmsplice()?
+> > I don't see other way how sender could safely change these pages.
+>
+> Sounds like a point - if you have multiple parallel contributors to the pipe
+> via vmsplice(), then FIONREAD is of no use.  To use use FIONREAD, you have to
+> let the pipe become empty before you can be sure.
 
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
----
- scripts/sphinx-pre-install | 1 +
- 1 file changed, 1 insertion(+)
+Well, the rules for vmsplice is simply to not change the source pages.
+It's zero-copy, after all.
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index 68385fa62ff4..470ccfe678aa 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -520,6 +520,7 @@ sub give_arch_linux_hints()
- 		"dot"			=> "graphviz",
- 		"convert"		=> "imagemagick",
- 		"xelatex"		=> "texlive-bin",
-+		"latexmk"		=> "texlive-core",
- 		"rsvg-convert"		=> "extra/librsvg",
- 	);
- 
--- 
-2.23.0
+If you want to change the source pages, you need to just use write() instead.
 
+That said, even then the right model isn't fsync(). If you really want
+to have something like "notify me when this buffer has been used", it
+should be some kind of sequence count thing, not a "wait for empty".
+
+Which might be useful in theory, but would be something quite
+different (and honestly, I wouldn't expect it to find all that
+widespread use)
+
+             Linus
