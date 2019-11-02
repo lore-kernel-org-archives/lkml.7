@@ -2,74 +2,77 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337CECA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 17:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97149CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 17:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 085E0218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 17:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A0A921897
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 17:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572714936;
-	bh=JRH15D+IdMKxdgu7eUhRM8tXguX2oE5TzoQ1vtI3gzY=;
+	s=default; t=1572715068;
+	bh=T85nNlBMcQ7FaKrFdoHDwU8ykleL6ryvf/pPxvfUhvE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fvQHTg3gxXl0UwSOW6JPJWXYcG0rHocNuj9uObCNK6U+MAvvIE/JPaOvERO6+/MvB
-	 avAs1RiMa0+CbkP7LHzjOPuPJQ6/i1H2e94mVuonQtK7nuNmnM3RvdyLKLYS/aS1ra
-	 1IlJ88xpWT3M2EYaS5aeiXC/E3sXscpwkuvxlbkI=
+	b=CO3dKyOn8hi/9Mt5qJQPk/0/Xd+L7ZkVNlLfKV4K/ZonIdMqkFLwKECl3E7FOOEbV
+	 a2uJCHgx0QXuet8y3m0hGPdjpEcgg/EeQKoU9Q+uDZcOfsL8+2wCbSoGwNzUaSRVZu
+	 INWViFDEnXhTQTvkQwr+NrmgwW4F5VVifLAjsqA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfKBRPe (ORCPT
+        id S1727012AbfKBRRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 13:15:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59788 "EHLO mail.kernel.org"
+        Sat, 2 Nov 2019 13:17:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbfKBRPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 13:15:34 -0400
+        id S1726454AbfKBRRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Nov 2019 13:17:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B1A221855;
-        Sat,  2 Nov 2019 17:15:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A05521726;
+        Sat,  2 Nov 2019 17:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572714934;
-        bh=JRH15D+IdMKxdgu7eUhRM8tXguX2oE5TzoQ1vtI3gzY=;
+        s=default; t=1572715066;
+        bh=T85nNlBMcQ7FaKrFdoHDwU8ykleL6ryvf/pPxvfUhvE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=x2CWS0kvy1eMthdQyrLjW2WXPpb9GcWQwF65NkzvgnhTrCNcfh4+5gBRzC0djQR/e
-         6P72kBOMHZijmXwIK1sroP60gwrLENZtLfxOCzUTeTw42QLjsQYrw4FgZSIfHmTjr+
-         yjNWZUl0PAkwqtzvZIfa+mg3q3AY0UaBoolwKMMQ=
-Date:   Sat, 2 Nov 2019 18:15:31 +0100
+        b=ovukNW3GhHPk5Es7HY1dqIbbqat6KBLRxIKajaxhqh4dBa4XrTMNua+cZJbCPqQwO
+         P9SHlRVfpeErpVspM9r28sPtDtLcM9yxzn93XyECMeDfS3XAG51N1M3aJdXt6VG0zK
+         ufkVIjEN1F7/66SIhjAwzjf11B+G5h89rwH0zK9Y=
+Date:   Sat, 2 Nov 2019 18:17:44 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] Thunderbolt fixes for v5.4
-Message-ID: <20191102171531.GD484428@kroah.com>
-References: <20191011101831.GC2819@lahna.fi.intel.com>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/12] driver: base: cpu: export device_online/offline
+Message-ID: <20191102171744.GA537494@kroah.com>
+References: <20191030153837.18107-1-qais.yousef@arm.com>
+ <20191030153837.18107-8-qais.yousef@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191011101831.GC2819@lahna.fi.intel.com>
+In-Reply-To: <20191030153837.18107-8-qais.yousef@arm.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 01:18:31PM +0300, Mika Westerberg wrote:
-> Hi Greg,
+On Wed, Oct 30, 2019 at 03:38:32PM +0000, Qais Yousef wrote:
+> And the {lock,unlock}_device_hotplug so that they can be used from
+> modules.
 > 
-> The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
+> This is in preparation to replace cpu_up/down with
+> device_online/offline; which kernel/torture.c will require to be
+> exported to be built as a module.
 > 
->   Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/westeri/thunderbolt.git tags/thunderbolt-fixes-for-v5.4-1
+> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> CC: "Rafael J. Wysocki" <rafael@kernel.org>
+> CC: linux-kernel@vger.kernel.org
+> ---
+>  drivers/base/core.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Sorry for the delay, pulled and pushed out, thanks.
-
-greg k-h
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
