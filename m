@@ -2,94 +2,94 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD127CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 19:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621F1CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 19:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F03820862
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 19:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6FC20862
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 19:36:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gAoDpQwZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BUAOjXEY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfKBTep (ORCPT
+        id S1727223AbfKBTgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 15:34:45 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44778 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726771AbfKBTen (ORCPT
+        Sat, 2 Nov 2019 15:36:39 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45963 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbfKBTgi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 15:34:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572723282;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=n9uy9Ir3Ut1yjzdM3qEpE4Hb5gck/P7uGMy2spM/hGs=;
-        b=gAoDpQwZG4XmAzvZSPh32H1ilDY+7nyAZa0E5EPt/qqoDYyben+F/MQ5dV9XzkXYX6Jd1I
-        eCh6pb+2UwYN9hvnC9otbxNsd2sAMmeRmbQyGazvoRMe1nnp6lYZ9tueKJtUDcpUsa9Coq
-        4IiE8g3MAaa3AIF5yAvV2/9BnHhXGpg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-430-oDDOJjWoN7W39XjMblURzQ-1; Sat, 02 Nov 2019 15:34:39 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 977298017E0;
-        Sat,  2 Nov 2019 19:34:36 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-40.rdu2.redhat.com [10.10.121.40])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EDFB85D9E2;
-        Sat,  2 Nov 2019 19:34:32 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=wg_X_7JSYT-a3qHrzvuWGMyffDWtQ4n7adBp_fe5w0BsA@mail.gmail.com>
-References: <CAHk-=wg_X_7JSYT-a3qHrzvuWGMyffDWtQ4n7adBp_fe5w0BsA@mail.gmail.com> <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk> <30394.1571936252@warthog.procyon.org.uk> <c6e044cc-5596-90b7-4418-6ad7009d6d79@yandex-team.ru> <17311.1572534953@warthog.procyon.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dhowells@redhat.com,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 11/10] pipe: Add fsync() support [ver #2]
+        Sat, 2 Nov 2019 15:36:38 -0400
+Received: by mail-io1-f68.google.com with SMTP id s17so14335289iol.12;
+        Sat, 02 Nov 2019 12:36:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=j9sn2mRAsDCQ6+VU7UlCupqMoFKLj6Ys+TMlg5SaVxY=;
+        b=BUAOjXEYCk+CjX8+RBLHNnOXet5x2qd3zrsZV+r9msUYPqdbUBhnPK98TuDdOyn9TB
+         MXlfVNlvbUHKJhI62sarw+IL9qMRrKv8j7fDsEOqIWBu0g4ejfJVzJWLqiBG7HfN5Idt
+         hoLcn6U5KYwVrxZrDtc9E7sbLY41ZU2chI5fMfYQYIl7/f4b8MMOMLuCgXk4btKKCEs9
+         H1YbXjHB1mSEnQTKWiS3tKEI5iSmerUGFhsVHpAeU39Qvw4/Aw37jjNyceLXHWP6sUMv
+         LgJKH0aXzxGyU8CmnIPMgdK6ctx/lweywFpAnjQL8qYEuXs1ibBCi7fiuZbny5ROMM0E
+         WZ/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=j9sn2mRAsDCQ6+VU7UlCupqMoFKLj6Ys+TMlg5SaVxY=;
+        b=WGP9CxAVwVS+tBPEryyU/kW4rsEOKe89TaCfKu9omgBgF2brpJSSZj2VAQGdy57+QF
+         ANM5gafM7qtMsneBJSOwmeb5KOZFsHe37okLf637uiQXPfRM2fn9dXVSO2ikaspIoF0F
+         YXCVm8iYhihL6HReuhaYmfRg7lKBWcSNWcwpTKpkZDbVDVszxz/Q/4sRnz5xXvgTVwWP
+         YyVDjgSju7+372dUJHzO5m4F95oMpFX0oXo9o/mmR5jn68XVNoJS485GG4Nu0TMa0ZXz
+         NOcqxfQeZrMQZEJAoesqjn/malCp3vCTo4we5rSu7EUzS6PLuHqgGSDm0oLlqkRj3Hff
+         p6xg==
+X-Gm-Message-State: APjAAAUUOzgM5mNupdcQbTXLFSqHjVltHZklQTABQoJCUbDHDTkNLXE+
+        7zKqL5YjyCRDhEd2hw8yKorMvXEFL6MTf2IVFylkcMBp
+X-Google-Smtp-Source: APXvYqxiuan+muqG76TGyIOdqdhVktM12bDwKcTn3yQFaY/muF1n60xImUC0kFw/Lf+x8TSNBfwASDgLhjKEWUY6fWc=
+X-Received: by 2002:a6b:fa12:: with SMTP id p18mr16363593ioh.272.1572723396149;
+ Sat, 02 Nov 2019 12:36:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-ID: <25885.1572723272.1@warthog.procyon.org.uk>
-Date:   Sat, 02 Nov 2019 19:34:32 +0000
-Message-ID: <25886.1572723272@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: oDDOJjWoN7W39XjMblURzQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+From:   Steve French <smfrench@gmail.com>
+Date:   Sat, 2 Nov 2019 14:36:25 -0500
+Message-ID: <CAH2r5mt+UYbU6=K4f_5FQLuDH2fJHwWhGKVGW3wzX-UYDcLMww@mail.gmail.com>
+Subject: [GIT PULL] SMB3 fix
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Please pull the following changes since commit
+d6d5df1db6e9d7f8f76d2911707f7d5877251b02:
 
-> > > Similar synchronization is required for reusing memory after vmsplice=
-()?
-> > > I don't see other way how sender could safely change these pages.
+  Linux 5.4-rc5 (2019-10-27 13:19:19 -0400)
 
-Actually, it's probably worse than that.  If the output of the pipe gets te=
-ed
-or spliced somewhere else, you still don't know when the vmspliced pages ar=
-e
-finished with.
+are available in the Git repository at:
 
-David
+  git://git.samba.org/sfrench/cifs-2.6.git tags/5.4-rc6-smb3-fix
 
+for you to fetch changes up to a08d897bc04f23c608dadde5c31ef194911e78bb:
+
+  fix memory leak in large read decrypt offload (2019-10-27 14:36:11 -0500)
+
+----------------------------------------------------------------
+a small smb3 memleak fix
+
+----------------------------------------------------------------
+Steve French (1):
+      fix memory leak in large read decrypt offload
+
+ fs/cifs/smb2ops.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+
+--
+Thanks,
+
+Steve
