@@ -2,102 +2,144 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA129CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 12:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CAECA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 12:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9140120679
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 12:04:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aAEU5z4+"
+	by mail.kernel.org (Postfix) with ESMTP id 1BD9020679
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 12:12:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfKBMEh (ORCPT
+        id S1726462AbfKBMMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 08:04:37 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55280 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbfKBMEg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 08:04:36 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c12so7432393wml.4;
-        Sat, 02 Nov 2019 05:04:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KRF6soD2g7xvJ30XDDz/0MGN7A3BH2BkkuXZbRs4kCo=;
-        b=aAEU5z4+aRVnyRNtP/pnpe3X94NWIZQKo0zfBG1bAX/c+4yZHpzsHaPfd1KlF+86qV
-         A0MqAbVpTrEueiSxpGDOVq8z3k+p7RpbUZW/Z4hvd9glNMJyVKfruic3rSaifuqdgVQb
-         Y5BchvHhEXjYY6NFqwWZu0cIXLwZuCGSFw1YaQV6uH7TP43efer2CVYUBwK80QXKe6TD
-         DED/6TmCEIJ+u2fMDrMpfTOvGELERlfCi3+s3rL5W6izrw228Wui1qoZ0JDD0thDpvO0
-         sJk5pG3asfA2Jl8O1MPvi2kwVoBHybnqAdSwQMpt599mIDWf6mNGCk9kSBufuL01fEOU
-         Gudg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KRF6soD2g7xvJ30XDDz/0MGN7A3BH2BkkuXZbRs4kCo=;
-        b=p9q5iuNqTsqLidOeK9Z3VIyzOejWB5Ts0FiR0ugdtWezTiSFVf2BohsVq0t1RdT23q
-         VABoCc6i9DFtwItuNsbr1LyU31GvML9AhCn2iZq8rrlj0DmY7of6gxfXWWdx9hX0v/AS
-         Cz+vidkXdM48CF0NTygK4HAWpL0O2W/zah+yCErO3Eq9+ZgLpPVkQxENS1Jo50LngaqF
-         QWlljIX5UpkihJNflmC3QO0VvPBJty/2bcqpQUJ5HJpMwpig4QS1DnNRdGEKSAhuOsAM
-         gkc0/KaFqvvHbCHPNnXZzWJa0pLv/WxD112dAaSpWD8GkWfzVFTEIV29cVpwWL0l4uoq
-         JXkA==
-X-Gm-Message-State: APjAAAUWdHdi2DOSZ5sdDa/m6ii0xQ3CXiN0teUiyqbTZSKBoB2wv7Uv
-        XrMnW5hPtToVBJVm1qLARcI=
-X-Google-Smtp-Source: APXvYqwz3x2ZjwhFLd2hLmE3ztByvTIwFUK1SdPMDbu0KHTbSwhBf7hj4LLTa3tNeN+XCOEQeYkMDQ==
-X-Received: by 2002:a1c:e404:: with SMTP id b4mr16009804wmh.90.1572696274241;
-        Sat, 02 Nov 2019 05:04:34 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id c144sm9680533wmd.1.2019.11.02.05.04.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Nov 2019 05:04:33 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>,
-        =?UTF-8?q?Jernej=20=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH] arm64: allwinner: h6: Enable GPU node for Tanix TX6
-Date:   Sat,  2 Nov 2019 13:04:27 +0100
-Message-Id: <20191102120427.19350-1-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 2 Nov 2019 08:12:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:46692 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726163AbfKBMMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Nov 2019 08:12:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 820ED31F;
+        Sat,  2 Nov 2019 05:12:32 -0700 (PDT)
+Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D83913F718;
+        Sat,  2 Nov 2019 05:12:27 -0700 (PDT)
+Subject: Re: [PATCHv2 0/8] arm64: ftrace cleanup + FTRACE_WITH_REGS
+To:     Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+        deller@gmx.de, duwe@suse.de, James.Bottomley@HansenPartnership.com,
+        james.morse@arm.com, jeyu@kernel.org, jpoimboe@redhat.com,
+        jthierry@redhat.com, linux-parisc@vger.kernel.org,
+        mingo@redhat.com, peterz@infradead.org, rostedt@goodmis.org,
+        svens@stackframe.org, takahiro.akashi@linaro.org, will@kernel.org
+References: <20191029165832.33606-1-mark.rutland@arm.com>
+From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
+Message-ID: <42c113ee-e7fc-3e94-cca0-f05f1c89fdb8@arm.com>
+Date:   Sat, 2 Nov 2019 17:42:25 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191029165832.33606-1-mark.rutland@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unlike other H6 boards, Tanix TX6 doesn't have a PMIC so we can enable
-the GPU without providing a specific power supply.
+Hi Mark,
 
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+On 10/29/19 10:28 PM, Mark Rutland wrote:
+> Hi,
+> 
+> This series is a reworked version of Torsten's FTRACE_WITH_REGS series
+> [1]. I've tried to rework the existing code in preparatory patches so
+> that the patchable-function-entry bits slot in with fewer surprises.
+> This version is based on v5.4-rc3, and can be found in my
+> arm64/ftrace-with-regs branch [2].
+> 
+> Patch 1 adds an (optional) ftrace_init_nop(), which the core code uses
+> to initialize callsites. This allows us to avoid a synthetic MCOUNT_ADDR
+> symbol, and more cleanly separates the one-time initialization of the
+> callsite from dynamic NOP<->CALL modification. Architectures which don't
+> implement this get the existing ftrace_make_nop() with MCOUNT_ADDR.
+> 
+> Recently parisc gained ftrace support using patchable-function-entry.
+> Patch 2 makes the handling of module callsite locations common in
+> kernel/module.c with a new FTRACE_CALLSITE_SECTION definition, and
+> removed the newly redundant bits from arch/parisc.
+> 
+> Patches 3 and 4 move the module PLT initialization to module load time,
+> which simplifies runtime callsite modification. This also means that we
+> don't transitently mark the module text RW, and will allow for the
+> removal of module_disable_ro().
+> 
+> Patches 5 and 6 add some trivial infrastructure, with patch 7 finally
+> adding FTRACE_WITH_REGS support. Additional work will be required for
+> livepatching (e.g. implementing reliable stack trace), which is
+> commented as part of patch 7.
+> 
+> Patch 8 is a trivial cleanup atop of the rest of the series, making the
+> code easier to read and less susceptible to config-specific breakage.
+I tested the whole series with my latest in-kernel ptrauth patches [1]
+and graph_tracer/function_graph_tracer works fine, So for the whole series,
+Tested-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-index 7e7cb10e3d96..bccfe1e65b6a 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-@@ -53,6 +53,10 @@
- 	status = "okay";
- };
- 
-+&gpu {
-+	status = "okay";
-+};
-+
- &hdmi {
- 	status = "okay";
- };
--- 
-2.20.1
+Also I gave few minor comments in the individual patches. With those
+comments,
+Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
 
+Thanks,
+Amit Daniel
+[1]: https://patchwork.kernel.org/cover/11195085/
+> 
+> Since v1 [3]:
+> * Add a couple of people to Cc
+> * Fold in Ard's Reviewed-by tag
+> * Rename ftrace_code_init_disabled() to ftrace_nop_initialize()
+> * Move ftrace_init_nop() to <linux/ftrace.h>, with kerneldoc
+> * Update kerneldoc for rec parameters
+> 
+> Thanks,
+> Mark.
+> 
+> [1] https://lore.kernel.org/r/20190208150826.44EBC68DD2@newverein.lst.de
+> [2] git://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git arm64/ftrace-with-regs
+> [3] https://lore.kernel.org/r/20191021163426.9408-1-mark.rutland@arm.com
+> 
+> Mark Rutland (7):
+>    ftrace: add ftrace_init_nop()
+>    module/ftrace: handle patchable-function-entry
+>    arm64: module: rework special section handling
+>    arm64: module/ftrace: intialize PLT at load time
+>    arm64: insn: add encoder for MOV (register)
+>    arm64: asm-offsets: add S_FP
+>    arm64: ftrace: minimize ifdeffery
+> 
+> Torsten Duwe (1):
+>    arm64: implement ftrace with regs
+> 
+>   arch/arm64/Kconfig               |   2 +
+>   arch/arm64/Makefile              |   5 ++
+>   arch/arm64/include/asm/ftrace.h  |  23 +++++++
+>   arch/arm64/include/asm/insn.h    |   3 +
+>   arch/arm64/include/asm/module.h  |   2 +-
+>   arch/arm64/kernel/asm-offsets.c  |   1 +
+>   arch/arm64/kernel/entry-ftrace.S | 140 +++++++++++++++++++++++++++++++++++++--
+>   arch/arm64/kernel/ftrace.c       | 123 ++++++++++++++++++++--------------
+>   arch/arm64/kernel/insn.c         |  13 ++++
+>   arch/arm64/kernel/module-plts.c  |   3 +-
+>   arch/arm64/kernel/module.c       |  57 +++++++++++++---
+>   arch/parisc/Makefile             |   1 -
+>   arch/parisc/kernel/module.c      |  10 ++-
+>   arch/parisc/kernel/module.lds    |   7 --
+>   include/linux/ftrace.h           |  40 ++++++++++-
+>   kernel/module.c                  |   2 +-
+>   kernel/trace/ftrace.c            |   6 +-
+>   17 files changed, 355 insertions(+), 83 deletions(-)
+>   delete mode 100644 arch/parisc/kernel/module.lds
+> 
