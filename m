@@ -2,90 +2,79 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A02CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 03:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7298CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 03:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52239208CB
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 03:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A3FD21897
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 03:07:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JAH37N/d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rujAWXWj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbfKBDBi (ORCPT
+        id S1727752AbfKBDHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 23:01:38 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37583 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbfKBDBi (ORCPT
+        Fri, 1 Nov 2019 23:07:34 -0400
+Received: from mail-lf1-f53.google.com ([209.85.167.53]:45009 "EHLO
+        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbfKBDHd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 23:01:38 -0400
-Received: by mail-pl1-f194.google.com with SMTP id p13so5145252pll.4;
-        Fri, 01 Nov 2019 20:01:37 -0700 (PDT)
+        Fri, 1 Nov 2019 23:07:33 -0400
+Received: by mail-lf1-f53.google.com with SMTP id v4so8517871lfd.11
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 20:07:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=EjWmH7c40hv68dxdshtpr5niNeilJLAYp4ltJWbDHs8=;
-        b=JAH37N/df/EcgeYQfpHyDAZvKSb/ZR0MdnzmXJkKYauWno7oejE8t4VueJITh0VwZY
-         Naf2zF/gN5S/qno278qCDBj8Uxep8IQuLk94bFcPw9CQxnSs+4Wouqq9j5dslZXhPu4u
-         P0LjVXb9pdjuQTSDspMZPgNLz6G0julj2gpAhUpSZQuJiTmbnfvLvWrmTa7GH4BwCC4x
-         zcL3IaxA7e/r/Q1zGskuXeAMu3orSXX9YgssbFN/TuuZuNXvi1HHHaQYbct+/aU+8O33
-         1a/pOMpI/LkV9vEMWHdMCp8kK03esXa5XHPQ0lXylSxg7ZXmOjeKcA5j/uRtSW1KVmDc
-         CCsQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=W30F2x/xesfK93BuIXjG/szWVIyAP5xi4+A90K/f+hY=;
+        b=rujAWXWj5Yl3jAfKY+q/MG2n+CoppKqen4NamtrysKRD8HHEhrhRb8qYPleAA0w5ZH
+         tkYNE8bFktGNHfzpL4eSzllwkNG+ilPznobSPC7QE5IZQkLY499zFT9dagzKqs0A6S4S
+         PQmcRKRlusb9bCw0vjwK/EjHqneDe8YFColAuaTtXnAQDGe3s/2c3sX1N/SQ5zzEQByE
+         nLUDkXRKjZxzo4eoaesD3WZZZuK+KVDe4VgO0RuHcAgVwx18COIkaCK/kdoDD5kCwJea
+         bIE5JOpVe5BvigSBtJtxzowrYEZ86sEVpR7nHwTxR5RVyKthGMIK4Vz3OSmFYwnbNKIQ
+         WDiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EjWmH7c40hv68dxdshtpr5niNeilJLAYp4ltJWbDHs8=;
-        b=ksvLmfx5r7oktlgyqrRU1j5VxWXQvvVPiBugxmNkvUhhNWAhj5Xze4vmslVXeE7BQn
-         QnSfBds/qGmzJvUlxLAGLaa3+qG9ZCQNPlM6S2PAp5+R8d1sHWcYPF38S5QoLcV/Z/Cw
-         3SP50ZFOWiLoZSxQLcIKQzfCXZpGPPD+GbN6wm72q0rvoHxOinYf0Q9ozvbhb8VdnMzU
-         0a153u54za6F8oO1q4jGGsHrnS59XkhpO/SH++51vmQFGZSShF3JHy8sPkE95tC856f6
-         jt0lWyyxgrGKsdf5qf1p+aEnfeTflu7+OB27iOt1StvU8MY2j0zQO/tVZpePcQwxUJg6
-         94vQ==
-X-Gm-Message-State: APjAAAVafcF+q4IvGPUJGdSCUQ7w8f+nhKnjVpt+sX0dEnzX1HamO2Tu
-        MnvjYYDRvpkdVVRR6LcsH97izVOT
-X-Google-Smtp-Source: APXvYqzGSPp9h55RP/UOjndogWg5NJIjr6BNtSuFue3n0bFtjgaOE+yRePf7nHg7nNpem9RmLpUxRw==
-X-Received: by 2002:a17:902:8f8a:: with SMTP id z10mr15369660plo.314.1572663696932;
-        Fri, 01 Nov 2019 20:01:36 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id d4sm10396332pjs.9.2019.11.01.20.01.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Nov 2019 20:01:36 -0700 (PDT)
-Subject: Re: [PATCH 3/5] net: phy: at803x: add device tree binding
-To:     Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org
-References: <20191102011351.6467-1-michael@walle.cc>
- <20191102011351.6467-4-michael@walle.cc>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <c93547d6-27fe-b4eb-d490-481a01f0b57a@gmail.com>
-Date:   Fri, 1 Nov 2019 20:01:35 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=W30F2x/xesfK93BuIXjG/szWVIyAP5xi4+A90K/f+hY=;
+        b=U9KQA/ISpy+zpDdc4JJm4vRVSdcxu83nyeouKoJHxrnpUZnN78jbuI+XwSDqpifZOX
+         tWlCFhsXYyRf0amzbpLc6lbsQKqKHd2DEPJbnJ6qtoC0fSPUj83ay9AvVxeCDWUX67OW
+         sc4ly5oUnRAGLr43cL1u53zD3cpWh7z8w4K5I1gRWZW7JnwkBKYxYOx3S3zhVqPt+k03
+         77a8lTO6MtOmTt4fYLYbrUaMC8ggUHcIoNELPgjMkCw33zqQshrbaVm33ecs13gP7osq
+         sMQX6XeZCJtkfdaNW9DgmeBCtPQbWcJy3c2uUUtwVMqikF8aP8H/XkjuWCZrnRy7KmYB
+         KpUQ==
+X-Gm-Message-State: APjAAAUWai953lfkFl5xvQj17YI7UuQv0DKU7U2l88GvQYPYYlAET8Rz
+        UV3Ns8YeN/3gkI7/2N2bBy/EYHIUKF0hCijNIdb21Q==
+X-Google-Smtp-Source: APXvYqyx9z7WWesg2+wLHiJVtsh50hS+hR6IVoZSQW5Mt2htON9/2QOHFjzdkPe/WFW1+bROKle0g7ohOfXWeY/S0M0=
+X-Received: by 2002:ac2:569c:: with SMTP id 28mr8497250lfr.139.1572664051644;
+ Fri, 01 Nov 2019 20:07:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191102011351.6467-4-michael@walle.cc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAO6QMdwgjCC7SmM=G=_aMVk68zP-t+AQfwVM8LWUDk18uCSURA@mail.gmail.com>
+In-Reply-To: <CAO6QMdwgjCC7SmM=G=_aMVk68zP-t+AQfwVM8LWUDk18uCSURA@mail.gmail.com>
+From:   Srinivas Murthy <the.srinivas.murthy@gmail.com>
+Date:   Fri, 1 Nov 2019 20:07:20 -0700
+Message-ID: <CAO6QMdwwJBR8GnpHZo=viA4qj8HN6QOS4+pBQwvHu28E-POnTg@mail.gmail.com>
+Subject: how to find thread that fork'd the current
+To:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From the current thread (in kernel) is there a way to tell which
+thread fork'd it?
 
+systemd -> proc1 --fork--> thread2
 
-On 11/1/2019 6:13 PM, Michael Walle wrote:
-> Add support for configuring the CLK_25M pin as well as the RGMII I/O
-> voltage by the device tree.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+thread2 detaches; thread2's parent set to systemd; thread2's tgid set
+to its pid;
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+I see that the detached threads have their tgid set to its own pid and
+its parent/real_parent set to the parent systemd
+
+Is there a way to reliably tell the parent proc/thread (proc1) from
+thread2's current (task_infostruct)?
