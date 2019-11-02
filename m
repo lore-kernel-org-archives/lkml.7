@@ -2,120 +2,119 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A88FCA9ED1
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 22:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B08CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 22:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FDC22084D
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 22:09:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572732572;
-	bh=M91BK//G0AGxiPTVbAufD9sXjzn7Sec8N7JlW6FjSq0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ipTtitQ3BpiUjziFOQLR9gKox5Vs054OnR3u2FtMg63sG3hJM7taivOY9DXkbKGW6
-	 xYXYT82QOvm3EYhQK0qsHkCw4ANIR8uBRyonpQgt3CFtd2W/PL6sbtovqOxtE//tpW
-	 v38En3ie6rErlTIZcE2r3hIWjg0owosARtsqhFeU=
+	by mail.kernel.org (Postfix) with ESMTP id E6F162084D
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 22:10:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="heUXVQ4V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbfKBWJb (ORCPT
+        id S1727278AbfKBWKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 18:09:31 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40817 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726861AbfKBWJ3 (ORCPT
+        Sat, 2 Nov 2019 18:10:31 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:42680 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfKBWKa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 18:09:29 -0400
-Received: by mail-lf1-f68.google.com with SMTP id f4so9591651lfk.7
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 15:09:28 -0700 (PDT)
+        Sat, 2 Nov 2019 18:10:30 -0400
+Received: by mail-yw1-f66.google.com with SMTP id d5so5526267ywk.9
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 15:10:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=w/G6EKdeKHyA10XyqtoNEQBxMdg61j9NrYNZ+OC/8O0=;
-        b=fiTiutJMMhzHoUatnMj/i0xks6LRSmy0r7/BRz4Oo2NzE6YmtOVVD9WTTp3vp/4Ftl
-         susZvLuDrEDv2Y0EisfAoYbNX8c8ba0GWiLrv658sEXczCmotmacJTxLnXp7ikF2o1OS
-         tH5KGMhlSFlbvPUr5HFJ0KdvbB3vKmi6HfEto=
+         :cc;
+        bh=a/y/UNWsWFAphECmr0SKpq/uUSIVYd2blpeaPLFHhBw=;
+        b=heUXVQ4VgTO2ElG0gwd7XEzTo2CN6hCnU2BwMj5n6t4b0IWTHitB6uFFkGY0EwRr+J
+         QzeSddu3NhLjytmiCRz81gR54305JeZxa4iJHjUf/oW3uEftSlC7P3BhNQq1TkY9s7c6
+         Z3tOkQFsryaKooRNEBI927kcGnXx4EmX295Cv8V2u7mTFBwFMG8Ur6ZS7Z+W4HVf61mg
+         vAV321FuHNBjpO5nLg0r/KIhhBxTYq1GkZWAQtbAH9MxFoxj7l3NdEeeZOFkFIpAVMVr
+         MFPWeapVqOj60ExILuL5ZjoMmNcabvxXt1zlAp6u1vK9XuBGPWNRCPhb0VFOAh+7QCUU
+         c0uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=w/G6EKdeKHyA10XyqtoNEQBxMdg61j9NrYNZ+OC/8O0=;
-        b=UEQLq6n4zUFWWEnP7BCQoDaajLnzbT/zguYpB+IfEgJjniASQSDoKRK14R2v5N1VUA
-         /p5g07SDWVNUc/KQ89zq6nksC2fbJFs9p65FzD4F95xvFpaIePN0XwuxnKS8Q/kUq1+V
-         58hA2TCA36R4hLExOjlntESNffsxnuwoTSiq7FXkmKg/XsZ3FU6DJ4+YI+qijdrHo3fs
-         XAIyISKxuW4VjwjHKZcyr7B03fNgbTZJIzO0g9tTCcmNG6FWl3LSGO+pEeClBcyP3oDS
-         bgmHz3MaW1stGFI0MB50Dgdx31mgug6CYzoQjKHqsjCHGl5FZlVwd73xVMzNPG2B/80+
-         s4zw==
-X-Gm-Message-State: APjAAAXpxvP3jWIqCN0rff+tIu4ALJA9ziljkKEl7TraaRKs8979Fdnb
-        XYIQHx1Pe3VAXU/E9VDijROgVevLmk8=
-X-Google-Smtp-Source: APXvYqwqIA6SHs5sCxXh+kxmfHNT+VNjmkG4VkafpQMkSEu2B+cWwXzVHSGZeUcBjnkZkFnKtk9WOA==
-X-Received: by 2002:a19:cc07:: with SMTP id c7mr12033510lfg.107.1572732566786;
-        Sat, 02 Nov 2019 15:09:26 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id c24sm4385013lfm.20.2019.11.02.15.09.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 Nov 2019 15:09:26 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id v8so9554963lfa.12
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 15:09:25 -0700 (PDT)
-X-Received: by 2002:a19:6f0e:: with SMTP id k14mr11937953lfc.79.1572732565288;
- Sat, 02 Nov 2019 15:09:25 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=a/y/UNWsWFAphECmr0SKpq/uUSIVYd2blpeaPLFHhBw=;
+        b=Bo8T20gEZbcIPUHbH0HtbIJK+fm+2h7pbk21pVF3mjxpvwFrNY76kBEGXy0z2uOwpm
+         qOv+RGgEM+dzsags7XByMFwgmLdcwwqTLOXS6gBrcZb+B/H/RbSW24CjRRkTsucjrgu6
+         GIiH0i7Kz4TfRjuy7ZLmWgopr4KUJm7TfiHWjzOh0IsiXU6CYeys0z9RIX3qcteLYlER
+         04rll3D8PXJ0QGtc20Ep1uYtIGst8cd56JsZjZvqcTK6nhA8iPw+fqYaDJ9STfd4mMVA
+         1ebOCF8F77d4wSgiTEgo2kXDPSTkJSXUhvKy/3FI+xm3ToVM4I8epGPm1jBPsHXEMWha
+         w57g==
+X-Gm-Message-State: APjAAAX+xOQY8Bp6hBEtC9QUt93wKEVrhyt9a3HFZEHOhbHrmecRyOWZ
+        1xuVVvfQgwVPf7sq7mLkIKyTEk5WU0cnvmbXoDhkjg==
+X-Google-Smtp-Source: APXvYqxINNb17LJVAwLl2mdJpih2iAqY6Ts1EsT3XUgN7FVa5da8FtQWRDFu1/Q1pN84nIHPSiNi6XxLe3W7pyY/XV4=
+X-Received: by 2002:a81:8486:: with SMTP id u128mr14394653ywf.337.1572732628718;
+ Sat, 02 Nov 2019 15:10:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <25886.1572723272@warthog.procyon.org.uk> <CC3328CC-2F05-461E-AAC3-8DEBAB1BA162@amacapital.net>
- <CAHk-=wj1BLz6s9cG9Ptk4ULxrTy=MkF7ZH=HF67d7M5HL1fd_A@mail.gmail.com>
-In-Reply-To: <CAHk-=wj1BLz6s9cG9Ptk4ULxrTy=MkF7ZH=HF67d7M5HL1fd_A@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 2 Nov 2019 15:09:09 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiNJYdEcomZKaD034S==-gEXg_V3JpW+DpKXFi5fJuruw@mail.gmail.com>
-Message-ID: <CAHk-=wiNJYdEcomZKaD034S==-gEXg_V3JpW+DpKXFi5fJuruw@mail.gmail.com>
-Subject: Re: [RFC PATCH 11/10] pipe: Add fsync() support [ver #2]
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     David Howells <dhowells@redhat.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191030100618.1.Ibf7a996e4a58e84f11eec910938cfc3f9159c5de@changeid>
+ <20191030173758.GC693@sol.localdomain> <CAD=FV=Uzma+eSGG1S1Aq6s3QdMNh4J-c=g-5uhB=0XBtkAawcA@mail.gmail.com>
+ <20191030190226.GD693@sol.localdomain> <20191030205745.GA216218@sol.localdomain>
+ <CAD=FV=X6Q3QZaND-tfYr9mf-KYMeKFmJDca3ee-i9roWj+GHsQ@mail.gmail.com>
+ <CAD=FV=URZX4t-TB2Ne8y5ZfeBGoyhsPZhcncQ0yPe3cRXi=1gw@mail.gmail.com>
+ <20191101043620.GA703@sol.localdomain> <CABXOdTddU2Kn8hJyofAC9eofZHAA4ddBhjNXc8GwC5dm3beMZA@mail.gmail.com>
+In-Reply-To: <CABXOdTddU2Kn8hJyofAC9eofZHAA4ddBhjNXc8GwC5dm3beMZA@mail.gmail.com>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Sat, 2 Nov 2019 15:10:17 -0700
+Message-ID: <CABXOdTeu3KdT=arT+AKAOiPPM0U45krUfmDx6NH5nmDZ0pPa=A@mail.gmail.com>
+Subject: Re: [PATCH] Revert "ext4 crypto: fix to check feature status before
+ get policy"
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Chao Yu <chao@kernel.org>,
+        Ryo Hashimoto <hashimoto@chromium.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Andrey Pronin <apronin@chromium.org>,
+        linux-doc@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 2, 2019 at 3:03 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Sat, Nov 2, 2019 at 1:31 PM Andy Lutomirski <luto@amacapital.net> wrot=
-e:
+On Fri, Nov 1, 2019 at 11:17 AM Guenter Roeck <groeck@google.com> wrote:
+[ ... ]
+> > Ah, I think I found it:
 > >
-> > Add in the fact that it=E2=80=99s not obvious that vmsplice *can* be us=
-ed correctly, and I=E2=80=99m wondering if we should just remove it or make=
- it just do write() under the hood.
+> > https://chromium.googlesource.com/chromiumos/overlays/chromiumos-overlay/+/2cbdedd5eca0a57d9596671a99da5fab8e60722b/sys-apps/upstart/files/upstart-1.2-dircrypto.patch
+> >
+> > The init process does EXT4_IOC_GET_ENCRYPTION_POLICY on /, and if the error is
+> > EOPNOTSUPP, it skips creating the "dircrypto" keyring.  So then cryptohome can't
+> > add keys later.  (Note the error message you got, "Error adding dircrypto key".)
+> >
+> > So it looks like the kernel patch broke both that and
+> > ext4_dir_encryption_supported().
+> >
 >
-> Sure it can. Just don't modify the data you vmsplice. It's really that si=
-mple.
+> ext4_dir_encryption_supported() was already changed to use the sysfs
+> file, and changing the upstart code to check the sysfs file does
+> indeed fix the problem for good. I'll do some more tests and push the
+> necessary changes into our code base if I don't hit some other issue.
 >
-> That said, if we don't have any actual users, then we should look at
-> removing it (maybe turning it into "write()" as you say). Not because
-> it's hard to use, but simply because it probably doesn't have that
-> many uses.
 
-Looking at debian code search, there are _some_ uses (including
-openssl and fuse):
+This change is now in our code base:
 
-  https://codesearch.debian.net/search?q=3D%3D+vmsplice%28&literal=3D1
+https://chromium.googlesource.com/chromiumos/overlays/chromiumos-overlay/+/5c5b06fded399013b9cce3d504c3d968ee84ab8b
 
-but I didn't check any more closely what they do.
+If the revert has not made it upstream, I would suggest to hold it off
+for the time being. I'll do more testing next week, but as it looks
+like it may no longer be needed, at least not from a Chrome OS
+perspective.
 
-             Linus
+Guenter
