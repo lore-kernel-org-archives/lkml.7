@@ -2,49 +2,56 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A78CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 01:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19532CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 01:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D06121897
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 01:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0ED421897
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 01:14:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="HTLnp9Id"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Be22zF5F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbfKBBOc (ORCPT
+        id S1728714AbfKBBOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 21:14:32 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:47277 "EHLO
+        Fri, 1 Nov 2019 21:14:40 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:48721 "EHLO
         ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727893AbfKBBOQ (ORCPT
+        with ESMTP id S1727814AbfKBBOP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 21:14:16 -0400
+        Fri, 1 Nov 2019 21:14:15 -0400
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id A895722EE9;
-        Sat,  2 Nov 2019 02:14:13 +0100 (CET)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id CD348224C1;
+        Sat,  2 Nov 2019 02:14:08 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
         s=mail2016061301; t=1572657253;
-        bh=Tekce+a4UBHA+ZvRFHAG5tjYO9rJR4cGDwNO6TzLSYg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HTLnp9IdbS8h36wUge56im3e1V8mU2M7jFgJKgyd/M+CmZjsOVgngBFciPD7aXDq8
-         iUsYK2uaa+6+47qzFNVqjk1zRz5iTmVX/armSiakfGtvgqX2yW8EZIQuBg4njXJf7X
-         TDRZu1fCIdSzJVRV9TU4HqZSacA6n4FmC3z/wkQM=
+        bh=coap/IZFRQ4M2syEqYhwbUnfZttYrUZ66xrrwe3nm60=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Be22zF5FD1O9jgvo3ulntDV80CWrh0L3745rj+Rsng7D/bvXHUYwn71K8UNqpSAer
+         /9itjG7lg1wG/05NpqcaR4fhTBiA5vK9JJU7a94cbyl/OhNKrxLhMv1MRvGxYBOK44
+         7T+yIpb+Sl4kwuI96Sfc5qr2mRnJK+wTLxnjicEs=
 From:   Michael Walle <michael@walle.cc>
 To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         netdev@vger.kernel.org
-Cc:     Michael Walle <michael@walle.cc>
-Subject: [PATCH 2/5] dt-bindings: net: phy: Add support for AT803X
-Date:   Sat,  2 Nov 2019 02:13:48 +0100
-Message-Id: <20191102011351.6467-3-michael@walle.cc>
+Cc:     Michael Walle <michael@walle.cc>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Simon Horman <simon.horman@netronome.com>
+Subject: [PATCH 0/5] net: phy: at803x device tree binding
+Date:   Sat,  2 Nov 2019 02:13:46 +0100
+Message-Id: <20191102011351.6467-1-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191102011351.6467-1-michael@walle.cc>
-References: <20191102011351.6467-1-michael@walle.cc>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Virus-Scanned: clamav-milter 0.101.4 at web
@@ -54,170 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the Atheros AR803x PHY bindings.
+Adds a device tree binding to configure the clock and the RGMII voltage.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- .../devicetree/bindings/net/qca,ar803x.yaml   | 111 ++++++++++++++++++
+Changes since the RFC:
+ - renamed the Kconfig entry to "Qualcomm Atheros.." and reordered the
+   item
+ - renamed the prefix from atheros to qca
+ - use the correct name AR803x (instead of AT803x) in new files and
+   dt-bindings.
+ - listed the PHY maintainers in the new schema. Hopefully, thats ok.
+ - fixed a typo in the bindings schema
+ - run dtb_checks and dt_binding_check and fixed the schema
+ - dropped the rgmii-io-1v8 property; instead provide two regulators vddh
+   and vddio, add one consumer vddio-supply
+ - fix the clock settings for the AR8030/AR8035
+ - only the AR8031 supports chaning the LDO and the PLL mode in software.
+   Check if we have the correct PHY.
+ - new patch to mention the AR8033 which is the same as the AR8031 just
+   without PTP support
+ - new patch which corrects any displayed PHY names and comments. Be
+   consistent.
+
+Michael Walle (5):
+  net: phy: at803x: fix Kconfig description
+  dt-bindings: net: phy: Add support for AT803X
+  net: phy: at803x: add device tree binding
+  net: phy: at803x: mention AR8033 as same as AR8031
+  net: phy: at803x: fix the PHY names
+
+ .../devicetree/bindings/net/qca,ar803x.yaml   | 111 +++++++
  MAINTAINERS                                   |   2 +
- include/dt-bindings/net/qca-ar803x.h          |  13 ++
- 3 files changed, 126 insertions(+)
+ drivers/net/phy/Kconfig                       |  10 +-
+ drivers/net/phy/at803x.c                      | 301 +++++++++++++++++-
+ include/dt-bindings/net/qca-ar803x.h          |  13 +
+ 5 files changed, 422 insertions(+), 15 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/net/qca,ar803x.yaml
  create mode 100644 include/dt-bindings/net/qca-ar803x.h
 
-diff --git a/Documentation/devicetree/bindings/net/qca,ar803x.yaml b/Documentation/devicetree/bindings/net/qca,ar803x.yaml
-new file mode 100644
-index 000000000000..5a6c9d20c0ba
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/qca,ar803x.yaml
-@@ -0,0 +1,111 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/qca,ar803x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Atheros AR803x PHY
-+
-+maintainers:
-+  - Andrew Lunn <andrew@lunn.ch>
-+  - Florian Fainelli <f.fainelli@gmail.com>
-+  - Heiner Kallweit <hkallweit1@gmail.com>
-+
-+description: |
-+  Bindings for Qualcomm Atheros AR803x PHYs
-+
-+allOf:
-+  - $ref: ethernet-phy.yaml#
-+
-+properties:
-+  qca,clk-out-frequency:
-+    description: Clock output frequency in Hertz.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [ 25000000, 50000000, 62500000, 125000000 ]
-+
-+  qca,clk-out-strength:
-+    description: Clock output driver strength.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [ 0, 1, 2 ]
-+
-+  qca,keep-pll-enabled:
-+    description: |
-+      If set, keep the PLL enabled even if there is no link. Useful if you
-+      want to use the clock output without an ethernet link.
-+
-+      Only supported on the AR8031.
-+    type: boolean
-+
-+  vddio-supply:
-+    description: |
-+      RGMII I/O voltage regulator (see regulator/regulator.yaml).
-+
-+      The PHY supports RGMII I/O voltages of 1.5V, 1.8V and 2.5V. You can
-+      either connect this to the vddio-regulator (1.5V / 1.8V) or the
-+      vddh-regulator (2.5V).
-+
-+      Only supported on the AR8031.
-+
-+  vddio-regulator:
-+    type: object
-+    description:
-+      Initial data for the VDDIO regulator. Set this to 1.5V or 1.8V.
-+    allOf:
-+      - $ref: /schemas/regulator/regulator.yaml
-+
-+  vddh-regulator:
-+    type: object
-+    description:
-+      Dummy subnode to model the external connection of the PHY VDDH
-+      regulator to VDDIO.
-+    allOf:
-+      - $ref: /schemas/regulator/regulator.yaml
-+
-+
-+examples:
-+  - |
-+    #include <dt-bindings/net/qca-ar803x.h>
-+
-+    ethernet {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        phy-mode = "rgmii-id";
-+
-+        ethernet-phy@0 {
-+            reg = <0>;
-+
-+            qca,clk-out-frequency = <125000000>;
-+            qca,clk-out-strength = <AR803X_STRENGTH_FULL>;
-+
-+            vddio-supply = <&vddio>;
-+
-+            vddio: vddio-regulator {
-+                regulator-min-microvolt = <1800000>;
-+                regulator-max-microvolt = <1800000>;
-+            };
-+        };
-+    };
-+  - |
-+    #include <dt-bindings/net/qca-ar803x.h>
-+
-+    ethernet {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        phy-mode = "rgmii-id";
-+
-+        ethernet-phy@0 {
-+            reg = <0>;
-+
-+            qca,clk-out-frequency = <50000000>;
-+            qca,keep-pll-enabled;
-+
-+            vddio-supply = <&vddh>;
-+
-+            vddh: vddh-regulator {
-+            };
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a69e6db80c79..2a68c255579e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6143,10 +6143,12 @@ S:	Maintained
- F:	Documentation/ABI/testing/sysfs-class-net-phydev
- F:	Documentation/devicetree/bindings/net/ethernet-phy.yaml
- F:	Documentation/devicetree/bindings/net/mdio*
-+F:	Documentation/devicetree/bindings/net/qca,ar803x.yaml
- F:	Documentation/networking/phy.rst
- F:	drivers/net/phy/
- F:	drivers/of/of_mdio.c
- F:	drivers/of/of_net.c
-+F:	include/dt-bindings/net/qca-ar803x.h
- F:	include/linux/*mdio*.h
- F:	include/linux/of_net.h
- F:	include/linux/phy.h
-diff --git a/include/dt-bindings/net/qca-ar803x.h b/include/dt-bindings/net/qca-ar803x.h
-new file mode 100644
-index 000000000000..9c046c7242ed
---- /dev/null
-+++ b/include/dt-bindings/net/qca-ar803x.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Device Tree constants for the Qualcomm Atheros AR803x PHYs
-+ */
-+
-+#ifndef _DT_BINDINGS_QCA_AR803X_H
-+#define _DT_BINDINGS_QCA_AR803X_H
-+
-+#define AR803X_STRENGTH_FULL		0
-+#define AR803X_STRENGTH_HALF		1
-+#define AR803X_STRENGTH_QUARTER		2
-+
-+#endif
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Simon Horman <simon.horman@netronome.com>
 -- 
 2.20.1
 
