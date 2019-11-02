@@ -2,150 +2,104 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1ABCA9ED1
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 13:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE71ACA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 13:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D97217D9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 13:45:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572702358;
-	bh=hcOz3DA5xjMU9j5XProL3u0GfNlbBE5x1vS4cV+kHb8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=DP7lfos5In8Dsj3i/Ehr63PnQEaHuUels4KOLIJRaqAqioHf27bFdq+0IMItAvw8k
-	 0it7jZu370Cir9AEAj8Xe95UfgSUsWD5x757/nzqorbJjGWRRl+nCW26AWEUBR/p/V
-	 SvUSmc3aNz1ru9tyRbVT5JsUl76KjaT/gON5TlXA=
+	by mail.kernel.org (Postfix) with ESMTP id B58C320862
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 13:48:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D4ht0Nl8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfKBNp5 (ORCPT
+        id S1726765AbfKBNsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 09:45:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56522 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbfKBNp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 09:45:57 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 393BF20862;
-        Sat,  2 Nov 2019 13:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572702356;
-        bh=hcOz3DA5xjMU9j5XProL3u0GfNlbBE5x1vS4cV+kHb8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=yofBJ2PLq58TcckStqdsMQHzfgkV64SLL6zf8c8twab9U3uQWIlQCNByU6IFB/4wB
-         VCV44Y9DHcvF4pgyIuHxZqTuxK5b3pFuPx3gbWfF1XZkfEdJ7+WxY/9K+LrwzTBEeJ
-         8Ux/YgfdqL1Cm1JzKEMeDr5CbGL8xrkuMevwEb5A=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 033F735200D6; Sat,  2 Nov 2019 06:45:56 -0700 (PDT)
-Date:   Sat, 2 Nov 2019 06:45:55 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Ryan Attard <ryanattard@ryanattard.info>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: linux-next: manual merge of the scsi tree with the rcu tree
-Message-ID: <20191102134555.GP20975@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191029150826.38c26ef8@canb.auug.org.au>
- <CAEXS_ixkUAPTz4=ta+=+YLrsnmrAcuG43bLNX11Dzffi4L-Upg@mail.gmail.com>
+        Sat, 2 Nov 2019 09:48:08 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38023 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbfKBNsI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Nov 2019 09:48:08 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v9so12364249wrq.5;
+        Sat, 02 Nov 2019 06:48:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c6XCwH0Bc3ksK3DNKL/I9xx6zN9r95PVwFoFmujv9Ko=;
+        b=D4ht0Nl8C0j6YIY13ogsQxOesmweTzfotAuALJLnmd9uUTNQS1gODqolDEiGGkjm2Q
+         ssW+WAebTIiTuP+uoWKqXVP+t3Cnss0M9xDmIkGDl3t0J3bLbBLcQ9Fu951UIsa/bo/C
+         sag+drqUbxFLH+JR98lyVhf9Wv9gzvd5V1n96GenNEo2ACXGJz3EQZ6S3EPYkZ05gqoG
+         eS8Mtaip/Ytu909u0IHN6Jhmd9Es3UgXts61u/VXSQrmziiusoT+gl1m4R2ej0Ka0DCA
+         xlJMhUyDpJi47XSyvSs5cy+bplGIMj6QYHjFPOhF6y/7XVtYHZWyCb0Ty40lA3jUU4Yp
+         RsQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c6XCwH0Bc3ksK3DNKL/I9xx6zN9r95PVwFoFmujv9Ko=;
+        b=prlAiHULTB2r0bcG6fpFDlZn/M+B79rsn+2HOP85aIosmdPVEMKNVahu9GSml+F5rC
+         jLDttQxr2v7xQAYZt/UbWZW2wxOcp7ovmNZCRpx39Fi70j/+f8sY87k7qLexCIGafoi4
+         xq86xsQ7EUX1/jp4znWi2BE6wk+fX2yaHiz7woNJJoQgDN28mcGyxWUO0e/C25aFdTKu
+         nsSow1iq9rrYYVeCHEBpOqoFvxbpXptEXsT3yR/v340MlHMu5Jy+wUAWzHQjVeNpuB6I
+         3sZQ06QhLldq2QwS+z+p8avccOlwfvBZBXWJ3OZ1a+///atEaPCnZmmyoM7TKs4P63HO
+         +Wlg==
+X-Gm-Message-State: APjAAAUeL5/ZifOUGjrFhT90cJNTObVheyeJimBBCkBGD69UDFp0+q4o
+        3pCBhYgFqQ1eThEHexyizDs=
+X-Google-Smtp-Source: APXvYqy8wDtLLHQaE1OgZSNrzDUgSTuigXrUi+tu6FdFgUhsiQppzOVCnhdOVg+cnbH8mo/obJYgSA==
+X-Received: by 2002:a05:6000:14a:: with SMTP id r10mr14868052wrx.310.1572702484342;
+        Sat, 02 Nov 2019 06:48:04 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id c15sm9051270wmb.45.2019.11.02.06.48.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Nov 2019 06:48:02 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] pwm: Fixes for v5.4-rc6
+Date:   Sat,  2 Nov 2019 14:48:00 +0100
+Message-Id: <20191102134800.3847540-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEXS_ixkUAPTz4=ta+=+YLrsnmrAcuG43bLNX11Dzffi4L-Upg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 07:28:22PM -0500, Ryan Attard wrote:
-> I can't quite tell if it's just the diff, but it looks like the paired
-> kfree_rcu(vpd_pg89, rcu) from the original patch got lopped off. Is there
-> somewhere I can see the full resultant file?
+Hi Linus,
 
-I see all four instances of kfree() in origin/master in -next:
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
 
-git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
 
-But please do double-check.
+are available in the Git repository at:
 
-							Thanx, Paul
+  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.4-rc6
 
-> Thanks,
-> Ryan
-> 
-> On Mon, Oct 28, 2019, 11:08 PM Stephen Rothwell <sfr@canb.auug.org.au>
-> wrote:
-> 
-> > Hi all,
-> >
-> > Today's linux-next merge of the scsi tree got a conflict in:
-> >
-> >   drivers/scsi/scsi_sysfs.c
-> >
-> > between commit:
-> >
-> >   81db81f82993 ("drivers/scsi: Replace rcu_swap_protected() with
-> > rcu_replace()")
-> >
-> > from the rcu tree and commit:
-> >
-> >   d188b0675b21 ("scsi: core: Add sysfs attributes for VPD pages 0h and
-> > 89h")
-> >
-> > from the scsi tree.
-> >
-> > I fixed it up (see below) and can carry the fix as necessary. This
-> > is now fixed as far as linux-next is concerned, but any non trivial
-> > conflicts should be mentioned to your upstream maintainer when your tree
-> > is submitted for merging.  You may also want to consider cooperating
-> > with the maintainer of the conflicting tree to minimise any particularly
-> > complex conflicts.
-> >
-> > --
-> > Cheers,
-> > Stephen Rothwell
-> >
-> > diff --cc drivers/scsi/scsi_sysfs.c
-> > index cc51f4756077,0fa2ed343c7f..000000000000
-> > --- a/drivers/scsi/scsi_sysfs.c
-> > +++ b/drivers/scsi/scsi_sysfs.c
-> > @@@ -466,12 -467,18 +467,18 @@@ static void scsi_device_dev_release_use
-> >         sdev->request_queue = NULL;
-> >
-> >         mutex_lock(&sdev->inquiry_mutex);
-> >  -      rcu_swap_protected(sdev->vpd_pg0, vpd_pg0,
-> >  -                         lockdep_is_held(&sdev->inquiry_mutex));
-> >  -      rcu_swap_protected(sdev->vpd_pg80, vpd_pg80,
-> >  -                         lockdep_is_held(&sdev->inquiry_mutex));
-> >  -      rcu_swap_protected(sdev->vpd_pg83, vpd_pg83,
-> >  -                         lockdep_is_held(&sdev->inquiry_mutex));
-> >  -      rcu_swap_protected(sdev->vpd_pg89, vpd_pg89,
-> >  -                         lockdep_is_held(&sdev->inquiry_mutex));
-> > ++      vpd_pg0 = rcu_replace_pointer(sdev->vpd_pg0, vpd_pg0,
-> > ++
-> > lockdep_is_held(&sdev->inquiry_mutex));
-> >  +      vpd_pg80 = rcu_replace_pointer(sdev->vpd_pg80, vpd_pg80,
-> >  +
-> >  lockdep_is_held(&sdev->inquiry_mutex));
-> >  +      vpd_pg83 = rcu_replace_pointer(sdev->vpd_pg83, vpd_pg83,
-> >  +
-> >  lockdep_is_held(&sdev->inquiry_mutex));
-> > ++      vpd_pg89 = rcu_replace_pointer(sdev->vpd_pg89, vpd_pg89,
-> > ++
-> >  lockdep_is_held(&sdev->inquiry_mutex));
-> >         mutex_unlock(&sdev->inquiry_mutex);
-> >
-> > +       if (vpd_pg0)
-> > +               kfree_rcu(vpd_pg0, rcu);
-> >         if (vpd_pg83)
-> >                 kfree_rcu(vpd_pg83, rcu);
-> >         if (vpd_pg80)
-> >
+for you to fetch changes up to 40a6b9a00930fd6b59aa2eb6135abc2efe5440c3:
+
+  Revert "pwm: Let pwm_get_state() return the last implemented state" (2019-10-21 16:48:52 +0200)
+
+Thanks,
+Thierry
+
+----------------------------------------------------------------
+pwm: Fixes for v5.4-rc6
+
+It turned out that relying solely on drivers storing all the PWM state
+in hardware was a little premature and causes a number of subtle (and
+some not so subtle) regressions. Revert the offending patch for now.
+
+----------------------------------------------------------------
+Thierry Reding (1):
+      Revert "pwm: Let pwm_get_state() return the last implemented state"
+
+ drivers/pwm/core.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
