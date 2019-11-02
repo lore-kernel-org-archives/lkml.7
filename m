@@ -2,194 +2,120 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4675ECA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E36CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 045E620862
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:11:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QbiM/OtB"
+	by mail.kernel.org (Postfix) with ESMTP id 112F82190F
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbfKBGLj (ORCPT
+        id S1727042AbfKBGRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 02:11:39 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:41363 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfKBGLj (ORCPT
+        Sat, 2 Nov 2019 02:17:09 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:45304 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfKBGRJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 02:11:39 -0400
-Received: by mail-yb1-f193.google.com with SMTP id b2so5398441ybr.8
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 23:11:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=mjOrQcYKLW2930x7QuK0UD/Ug/m/wLd6/vzT6tFMVg0=;
-        b=QbiM/OtBQBsVGjrINfMco5zXT8ZDez2zNcAZRW+8hDnrU017iIVmeCfe8+88eWgEa4
-         cAYabisKmvnihBEjbnsMEMxJoJBYpnS6XpZSG6j+Ra4RNm6BxAcvCjpTL5VGeFMlccXK
-         gR2cgWCTOFZOEmb2aW9+xV7aXL0uC4xQdeb1+6RLJcFe2FaQ3j6dVwAyoWNk1UoVD99H
-         eMqKHqgdjzHTDnxhT2mcl4xyXBFnujxKq0FlIAcO5uNldCXlsXO5BX2g0gZEO7+Zuj7q
-         K1p8jCTlwzzZBgi+fxSmYPAlTQ4rz5AygRNCr8cYQgzUaWF+8JDIYBHPyg0gZAv7HEl2
-         NC+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=mjOrQcYKLW2930x7QuK0UD/Ug/m/wLd6/vzT6tFMVg0=;
-        b=ocJ8jQzKLe7njWgxp4OIFb0rnAlmBaU+vgn0asre/A5nA8WHnwu+MUCJsTpQdaTTmh
-         OoDvU8NAHN7LisJWdlNZhYDUFCKUdR58/rzLUjozzBTpLW5u3IKDBEd6dNrkph3qHM2t
-         2ZhTHiwRfB1TjSUV+YLhzfVFi33CHAms+YS3xt3o4YxPOtP3tP0n8opSiPeFkDYCAXxH
-         PkqDur5otyKc9TwBC/ExW2d4i3DouNQThQlfes6CS3ruMHO94qQowafmtvJ+pM+B0cDO
-         /D1klX14ka7Nvns1znGu2N9bgTDE/NMZnaqyp2uO4Lfod8dsrPLMyI5YXOhGL1+N/m9x
-         7Pbg==
-X-Gm-Message-State: APjAAAUfSzO1UGWqJ0HDEY5X4oEWbcuTvSxNE01krMGU9jO6Iurwtcz7
-        n/wsFZRC9AphrpUEbJJQbYAXQg==
-X-Google-Smtp-Source: APXvYqxQAHaNExjSPjK0OQY1oZaTxr6QlVF2NqjriATi9ryeAv5RZRe9aIdkwtMvDHW211RNbxih7Q==
-X-Received: by 2002:a5b:f11:: with SMTP id x17mr390973ybr.430.1572675098338;
-        Fri, 01 Nov 2019 23:11:38 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li1038-30.members.linode.com. [45.33.96.30])
-        by smtp.gmail.com with ESMTPSA id u205sm2583186ywa.65.2019.11.01.23.11.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Nov 2019 23:11:37 -0700 (PDT)
-Date:   Sat, 2 Nov 2019 14:11:28 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Robert Walker <robert.walker@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Coresight ML <coresight@lists.linaro.org>
-Subject: Re: [PATCH v2 1/4] perf cs-etm: Continuously record last branches
-Message-ID: <20191102061128.GB26019@leoy-ThinkPad-X240s>
-References: <20191101020750.29063-1-leo.yan@linaro.org>
- <20191101020750.29063-2-leo.yan@linaro.org>
- <3dd30190-b266-826d-3e2d-91f1446cc5fc@arm.com>
+        Sat, 2 Nov 2019 02:17:09 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iQmig-0003Wx-Sb; Sat, 02 Nov 2019 06:17:07 +0000
+Date:   Sat, 2 Nov 2019 06:17:06 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wugyuan@cn.ibm.com, jlayton@kernel.org, hsiangkao@aol.com,
+        Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ritesh Harjani <riteshh@linux.ibm.com>
+Subject: Re: [PATCH RESEND 1/1] vfs: Really check for inode ptr in lookup_fast
+Message-ID: <20191102061706.GA10268@ZenIV.linux.org.uk>
+References: <20190927044243.18856-1-riteshh@linux.ibm.com>
+ <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
+ <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
+ <20191022143736.GX26530@ZenIV.linux.org.uk>
+ <20191022201131.GZ26530@ZenIV.linux.org.uk>
+ <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com>
+ <20191101234622.GM26530@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3dd30190-b266-826d-3e2d-91f1446cc5fc@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191101234622.GM26530@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-On Fri, Nov 01, 2019 at 03:30:19PM +0000, Robert Walker wrote:
-> On 01/11/2019 02:07, Leo Yan wrote:
-> > Every time synthesize instruction sample, the last branches recording
-> > will be reset.  This would be fine if the instruction period is big
-> > enough, for example if we use the option '--itrace=i100000', the last
-> > branch array is reset for every instruction sample (10000 instructions
-> > per period); before generate the next instruction sample, there has the
-> > enough packets coming to fill last branch array.  On the other hand,
-> > if set a very small period, the packets will be significantly reduced
-> > between two continuous instruction samples, thus if the last branch
-> > array is reset for the previous instruction sample, it's almost empty
-> > for the next instruction sample.
-> > 
-> > To allow the last branches to work for any instruction periods, this
-> > patch avoids to reset the last branches for every instruction sample
-> > and only reset it when flush the trace data.  The last branches will
-> > be reset only for two cases, one is for trace starting, another case
-> > is for discontinuous trace; thus it can continuously record last
-> > branches.
+On Fri, Nov 01, 2019 at 11:46:22PM +0000, Al Viro wrote:
+> on anything except alpha that would be pretty much automatic and
+> on alpha we get the things along the lines of
 > 
-> Is this the right thing to do?
-
-Thanks for reviewing and bringing up the questions.  To be honest, my
-concern was mainly related with AudoFDO but I don't aware other
-potential issues.  So any concern is welcome, in case I miss anything;
-hope we can get conclusion with some dicussion.  Please see more
-detailed explanation in below.
-
-> This would cause profiling tools to count
-> the same branch several times if it appears in multiple instruction samples,
-> which could result in a biased profile.
-
-Let's clarify for this.  Firstly, here the 'branch' doesn't refer to
-'branch' sample, it means the last branch recording for instruction
-samples.  So basically, neither instruction sample nor branch sample
-will be changed with this patch.
-
-This patch tries to fix the issue as below:
-
-Before this patch:
-
-  ffff800010083580 <el0_sync>:
-  ffff800010083580:  stp     x0, x1, [sp]         -> synthesize instruction sample(n),
-                                                     record the last branch,
-                                                     reset the last branch.
-  ffff800010083584:  stp     x2, x3, [sp,#16]
-  ffff800010083588:  stp     x4, x5, [sp,#32]     -> synthesize instruction sample(n+1),
-                                                     the last branch is empty which is
-                                                     reset by the instructiom sample(n).
-  ffff80001008358c:  stp     x6, x7, [sp,#48]
-  ffff800010083590:  stp     x8, x9, [sp,#64]     -> synthesize instruction sample(n+2),
-                                                     the last branch is empty which is
-                                                     reset by the instructiom sample(n).
-  [...]
-
-
-After this patch:
-
-  ffff800010083580 <el0_sync>:
-  ffff800010083580:  stp     x0, x1, [sp]         -> synthesize instruction sample(n),
-                                                     record the last branch.
-  ffff800010083584:  stp     x2, x3, [sp,#16]
-  ffff800010083588:  stp     x4, x5, [sp,#32]     -> synthesize instruction sample(n+1),
-                                                     record the last branch.
-  ffff80001008358c:  stp     x6, x7, [sp,#48]
-  ffff800010083590:  stp     x8, x9, [sp,#64]     -> synthesize instruction sample(n+2),
-                                                     record the last branch.
-  [...]
-
-
-So from my understanding, the last branch recording works as the
-affiliate info for instruction samples and it allows us (or tools) to
-know what's the execution flow for the instruction samples.  Seems to
-me, it doesn't change value for instruction sample, but we can have
-correct info of the last branch recording for every instruction samples.
-
-> The current implementation matches the behavior of intel_pt where the branch
-> buffer is reset after each sample, so  the instruction sample only includes
-> branches since the previous sample.
-
-Exactly.
-
-@Adrian, it would be nice if you could confirm intel_pt should apply
-the samiliar fixing or not?
-
-> However x86 lbr (perf record -b) does appear to repeat the same full branch
-> stack on several samples until a new stack is captured.
+> 	f = fdt[n]
+> 	mb
+> 	d = f->f_path.dentry
+> 	i = d->d_inode
+> 	assert(i != NULL)
+> vs.
+> 	see that d->d_inode is non-NULL
+> 	f->f_path.dentry = d
+> 	mb
+> 	fdt[n] = f
 > 
-> I'm not sure what the right or wrong answer is here.  For AutoFDO, we're
-> likely to use a much bigger period (>10000 instructions) so won't be
-> affected, but other tools might be.
+> IOW, the barriers that make it safe to fetch the fields of struct file
+> (rcu_dereference_raw() in __fcheck_files() vs. smp_store_release()
+> in __fd_install() in the above) should *hopefully* take care of all
+> stores visible by the time of do_dentry_open().  Sure, alpha cache
+> coherency is insane, but AFAICS it's not _that_ insane.
+> 
+> Question to folks familiar with alpha memory model:
+> 
+> A = 0, B = NULL, C = NULL
+> CPU1:
+> 	A = 1
+> 
+> CPU2:
+> 	r1 = A
+> 	if (r1) {
+> 		B = &A
+> 		mb
+> 		C = &B
+> 	}
+> 
+> CPU3:
+> 	r2 = C;
+> 	mb
+> 	if (r2) {	// &B
+> 		r3 = *r2	// &A
+> 		r4 = *r3	// 1
+> 		assert(r4 == 1)
+> 	}
+> 
+> is the above safe on alpha?
 
-Agree, if AutoFDO uses big period (e.g. --itrace=i10000), this patch
-will not change anything.  With big period, it has enough packets to
-generate branch recording between two instruction samples.
+Hmm...  After digging through alpha manuals, it should be -
 
-Could you elaborate what's 'other tools'?  If it's open sourced tool,
-I can try to test with this patch set.
+U1: W A, 1
 
-Thanks,
-Leo Yan
+V1: R A, 1
+V2: W B, &A
+V3: MB
+V4: W C, &B
+
+W1: R C, &B
+W2: MB
+W3: R B, &A
+W4: R A, 0
+
+is rejected since
+	U1 BEFORE V1 (storage and visibility)
+	V1 BEFORE V3 BEFORE V4 (processor issue order constraints)
+	V4 BEFORE W1 (storage and visibility)
+	W1 BEFORE W2 BEFORE W4 (processor issue order constraints)
+and W4 BEFORE U1 (storage and visibility), which is impossible
+due to BEFORE being acyclic and transitive.
+
+I might very well be missing something, though...  Paul, could you
+take a look and tell if the above makes sense?
