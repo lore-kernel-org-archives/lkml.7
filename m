@@ -4,39 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCB2CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 12:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 818A6CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 12:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE01214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 12:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58BC1214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 12:47:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfKBMrW (ORCPT
+        id S1726962AbfKBMr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 08:47:22 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:44642 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726380AbfKBMrV (ORCPT
+        Sat, 2 Nov 2019 08:47:26 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:44401 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726380AbfKBMrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 08:47:21 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R251e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Th-eIhK_1572698838;
-Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0Th-eIhK_1572698838)
+        Sat, 2 Nov 2019 08:47:25 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01451;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0Th-p52Z_1572698839;
+Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0Th-p52Z_1572698839)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 02 Nov 2019 20:47:19 +0800
+          Sat, 02 Nov 2019 20:47:20 +0800
 From:   Lai Jiangshan <laijs@linux.alibaba.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
         "Paul E. McKenney" <paulmck@kernel.org>,
         Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Lai Jiangshan <jiangshanlai@gmail.com>,
         Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-Subject: [PATCH V2 2/7] rcu: cleanup rcu_preempt_deferred_qs()
-Date:   Sat,  2 Nov 2019 12:45:54 +0000
-Message-Id: <20191102124559.1135-3-laijs@linux.alibaba.com>
+Subject: [PATCH V2 3/7] rcu: remove useless special.b.deferred_qs
+Date:   Sat,  2 Nov 2019 12:45:55 +0000
+Message-Id: <20191102124559.1135-4-laijs@linux.alibaba.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191102124559.1135-1-laijs@linux.alibaba.com>
 References: <20191102124559.1135-1-laijs@linux.alibaba.com>
@@ -48,41 +54,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't need to set ->rcu_read_lock_nesting negative, irq-protected
-rcu_preempt_deferred_qs_irqrestore() doesn't expect
-->rcu_read_lock_nesting to be negative to work, it even
-doesn't access to ->rcu_read_lock_nesting any more.
+->read_read_unlock_special.b.deferred_qs is set when
+->read_read_unlock_special is non-zero, and it is cleared when
+->read_read_unlock_special is cleared.
 
-It is true that NMI over rcu_preempt_deferred_qs_irqrestore()
-may access to ->rcu_read_lock_nesting, but it is still safe
-since rcu_read_unlock_special() can protect itself from NMI.
+So it is useless.
 
 Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
 ---
- kernel/rcu/tree_plugin.h | 5 -----
- 1 file changed, 5 deletions(-)
+ include/linux/sched.h    | 2 +-
+ kernel/rcu/tree_plugin.h | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 2c2e56bd8913..3ba392d71de9 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -604,7 +604,7 @@ union rcu_special {
+ 		u8			blocked;
+ 		u8			need_qs;
+ 		u8			exp_hint; /* Hint for performance. */
+-		u8			deferred_qs;
++		u8			pad; /* No garbage from compiler! */
+ 	} b; /* Bits. */
+ 	u32 s; /* Set of bits. */
+ };
 diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index aba5896d67e3..2fab8be2061f 100644
+index 2fab8be2061f..f2fd7d687bdb 100644
 --- a/kernel/rcu/tree_plugin.h
 +++ b/kernel/rcu/tree_plugin.h
-@@ -552,16 +552,11 @@ static bool rcu_preempt_need_deferred_qs(struct task_struct *t)
- static void rcu_preempt_deferred_qs(struct task_struct *t)
- {
- 	unsigned long flags;
--	bool couldrecurse = t->rcu_read_lock_nesting >= 0;
- 
- 	if (!rcu_preempt_need_deferred_qs(t))
+@@ -622,7 +622,6 @@ static void rcu_read_unlock_special(struct task_struct *t)
+ 				irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
+ 			}
+ 		}
+-		t->rcu_read_unlock_special.b.deferred_qs = true;
+ 		local_irq_restore(flags);
  		return;
--	if (couldrecurse)
--		t->rcu_read_lock_nesting -= RCU_NEST_BIAS;
- 	local_irq_save(flags);
- 	rcu_preempt_deferred_qs_irqrestore(t, flags);
--	if (couldrecurse)
--		t->rcu_read_lock_nesting += RCU_NEST_BIAS;
- }
- 
- /*
+ 	}
 -- 
 2.20.1
 
