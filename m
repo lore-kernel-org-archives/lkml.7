@@ -2,152 +2,332 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA78CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 18:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A14FCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 18:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 982DF20862
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 18:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1021221726
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 18:34:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="D6Oa+bKB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfKBSIr (ORCPT
+        id S1727024AbfKBSea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 14:08:47 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:53744 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfKBSIr (ORCPT
+        Sat, 2 Nov 2019 14:34:30 -0400
+Received: from gateway30.websitewelcome.com ([192.185.197.25]:28881 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726523AbfKBSea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 14:08:47 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iQxpK-00056q-97; Sat, 02 Nov 2019 18:08:42 +0000
-Date:   Sat, 2 Nov 2019 18:08:42 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Ritesh Harjani <riteshh@linux.ibm.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wugyuan@cn.ibm.com, jlayton@kernel.org, hsiangkao@aol.com,
-        Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH RESEND 1/1] vfs: Really check for inode ptr in lookup_fast
-Message-ID: <20191102180842.GN26530@ZenIV.linux.org.uk>
-References: <20190927044243.18856-1-riteshh@linux.ibm.com>
- <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
- <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
- <20191022143736.GX26530@ZenIV.linux.org.uk>
- <20191022201131.GZ26530@ZenIV.linux.org.uk>
- <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com>
- <20191101234622.GM26530@ZenIV.linux.org.uk>
- <20191102172229.GT20975@paulmck-ThinkPad-P72>
+        Sat, 2 Nov 2019 14:34:30 -0400
+X-Greylist: delayed 1299 seconds by postgrey-1.27 at vger.kernel.org; Sat, 02 Nov 2019 14:34:29 EDT
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 1FDC1609C
+        for <linux-kernel@vger.kernel.org>; Sat,  2 Nov 2019 13:12:50 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id QxtJiS8X03Qi0QxtKioHQQ; Sat, 02 Nov 2019 13:12:50 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=+g5tAwaZ2CLSWMBxol++9wXqEbouJExOmuVPL3x8TsE=; b=D6Oa+bKBQztv7UHbHDkomFfesI
+        heZLMjcWlKncM00SjWaLDKEkEmiTgXK646CmZbVYIYAoCNFt4LXpToc9haNc6pqk0IPF4tDQKIGDB
+        ztbwyyGemxm2qi9W41huTvrs1pnRaVdQOhqIgPyjufbxy8L8WWTj5XzW6XEyfuwr4CAK8O1u18XY5
+        3FEPzuR51IPEwIGN2gOmrvEFR9WDEKok93hgxlCQ/iGrCWR8fAxYwoSfVpHPY1i3Rpf1BU3vPfEjp
+        LUxTL1ccnernMXttw2mDEyndlbRwuTCaib6hAH8MtNu0ebtZZ6YiDf1+zed0la7mPNVjdUSCDZS+s
+        sjol9v9A==;
+Received: from [191.31.198.254] (port=58308 helo=[192.168.15.3])
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1iQxtJ-003Nkf-Bk; Sat, 02 Nov 2019 15:12:49 -0300
+Subject: Re: [PATCH v4 3/4] power: supply: max17040: Config alert SOC low
+ level threshold from FDT
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
+        lee.jones@linaro.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CAJKOXPdCtbsPaAgYp5iVBhkAsjXzOYWwttQBptgiUgzhbKi09w@mail.gmail.com>
+ <20191031184134.30621-1-matheus@castello.eng.br>
+ <20191031184134.30621-4-matheus@castello.eng.br> <20191101152755.GC28931@pi3>
+ <c18ab487-6242-4ac2-b2c2-ef78c899521a@castello.eng.br>
+Message-ID: <4acd4bcf-4488-01f2-cacc-0170c33e20c2@castello.eng.br>
+Date:   Sat, 2 Nov 2019 15:12:44 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191102172229.GT20975@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <c18ab487-6242-4ac2-b2c2-ef78c899521a@castello.eng.br>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: pt-BR
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.198.254
+X-Source-L: No
+X-Exim-ID: 1iQxtJ-003Nkf-Bk
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.3]) [191.31.198.254]:58308
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 10
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 02, 2019 at 10:22:29AM -0700, Paul E. McKenney wrote:
-> Ignoring the possibility of the more exotic compiler optimizations, if
-> the first task's load into f sees the value stored by the second task,
-> then the pair of memory barriers guarantee that the first task's load
-> into d will see the second task's store.
 
-The question was about the load into i being also safe.
 
-> In fact, you could instead say this in recent kernels:
+Em 11/1/19 1:52 PM, Matheus Castello escreveu:
 > 
-> 	f = READ_ONCE(fdt[n])  // provides dependency ordering via mb on Alpha
-> 	mb
-
-Er... that mb comes from expanded READ_ONCE(), actually - the call chain
-is
-	fdget_pos() -> __fdget_pos() -> __fdget() -> __fget_light() ->
-	__fcheck_files(), either directly or via
-			__fget() -> fcheck_files() -> __fcheck_files()
-	rcu_dereference_raw() -> READ_ONCE() -> smp_read_barrier_depends()
-which yields mb on alpha.
-						
-> 	d = f->f_path.dentry
-> 	i = d->d_inode  // But this is OK only if ->f_path.entry is
-> 			// constant throughout
-
-Yes, it is - once you hold a reference to a positive dentry, it can't
-be made negative by anybody else.  See d_delete() for details; basically,
-if you have refcount > 1, dentry will be unhashed, but not made negative.
-
-> The result of the first task's load into i requires information outside
-> of the two code fragments.
 > 
-> Or am I missing your point?
+> Em 11/1/19 12:27 PM, Krzysztof Kozlowski escreveu:
+>> On Thu, Oct 31, 2019 at 03:41:33PM -0300, Matheus Castello wrote:
+>>> For configuration of fuel gauge alert for a low level state of charge
+>>> interrupt we add a function to config level threshold and a device tree
+>>> binding property to set it in flatned device tree node.
+>>>
+>>> Now we can use "maxim,alert-low-soc-level" property with the values from
+>>> 1% up to 32% to configure alert interrupt threshold.
+>>>
+>>> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+>>> ---
+>>>   drivers/power/supply/max17040_battery.c | 88 +++++++++++++++++++++----
+>>>   1 file changed, 74 insertions(+), 14 deletions(-)
+>>>
+>>> diff --git a/drivers/power/supply/max17040_battery.c 
+>>> b/drivers/power/supply/max17040_battery.c
+>>> index 75459f76d02c..802575342c72 100644
+>>> --- a/drivers/power/supply/max17040_battery.c
+>>> +++ b/drivers/power/supply/max17040_battery.c
+>>> @@ -29,6 +29,9 @@
+>>>   #define MAX17040_DELAY        1000
+>>>   #define MAX17040_BATTERY_FULL    95
+>>>
+>>> +#define MAX17040_ATHD_MASK        0xFFC0
+>>> +#define MAX17040_ATHD_DEFAULT_POWER_UP    4
+>>> +
+>>>   struct max17040_chip {
+>>>       struct i2c_client        *client;
+>>>       struct delayed_work        work;
+>>> @@ -43,6 +46,8 @@ struct max17040_chip {
+>>>       int soc;
+>>>       /* State Of Charge */
+>>>       int status;
+>>> +    /* Low alert threshold from 32% to 1% of the State of Charge */
+>>> +    u32 low_soc_alert_threshold;
+>>>   };
+>>>
+>>>   static int max17040_get_property(struct power_supply *psy,
+>>> @@ -99,6 +104,22 @@ static void max17040_reset(struct i2c_client 
+>>> *client)
+>>>       max17040_write_reg(client, MAX17040_CMD, 0x0054);
+>>>   }
+>>>
+>>> +static int max17040_set_low_soc_threshold_alert(struct i2c_client 
+>>> *client,
+>>> +    u32 level)
+>>> +{
+>>> +    int ret;
+>>> +    u16 data;
+>>> +
+>>> +    level = 32 - level;
+>>> +    data = max17040_read_reg(client, MAX17040_RCOMP);
+>>> +    /* clear the alrt bit and set LSb 5 bits */
+>>> +    data &= MAX17040_ATHD_MASK;
+>>> +    data |= level;
+>>> +    ret = max17040_write_reg(client, MAX17040_RCOMP, data);
+>>> +
+>>> +    return ret;
+>>> +}
+>>> +
+>>>   static void max17040_get_vcell(struct i2c_client *client)
+>>>   {
+>>>       struct max17040_chip *chip = i2c_get_clientdata(client);
+>>> @@ -115,7 +136,6 @@ static void max17040_get_soc(struct i2c_client 
+>>> *client)
+>>>       u16 soc;
+>>>
+>>>       soc = max17040_read_reg(client, MAX17040_SOC);
+>>> -
+>>>       chip->soc = (soc >> 8);
+>>>   }
+>>>
+>>> @@ -161,6 +181,24 @@ static void max17040_get_status(struct 
+>>> i2c_client *client)
+>>>           chip->status = POWER_SUPPLY_STATUS_FULL;
+>>>   }
+>>>
+>>> +static int max17040_get_of_data(struct max17040_chip *chip)
+>>> +{
+>>> +    struct device *dev = &chip->client->dev;
+>>> +    struct device_node *np = dev->of_node;
+>>> +    int ret = 0;
+>>> +
+>>> +    if (of_property_read_u32(np, "maxim,alert-low-soc-level",
+>>> +            &chip->low_soc_alert_threshold)) {
+>>
+>> Please align the line break with line above. checkpatch --strict might
+>> give you hints about this.
+>> >> +        chip->low_soc_alert_threshold = 
+>> MAX17040_ATHD_DEFAULT_POWER_UP;
+>>> +    /* check if low_soc_alert_threshold is between 1% and 32% */
+>>
+>> The comment looks misleading here, like it belongs to previous block.
+>> Maybe put it inside else if {} block?
+>>
+>>> +    } else if (chip->low_soc_alert_threshold <= 0 ||
+>>> +            chip->low_soc_alert_threshold >= 33){
+>>
+>> Missing space before {.
+>>
+>>> +        ret = -EINVAL;
+>>> +    }
+>>> +
+>>> +    return ret;
+>>> +}
+>>> +
+>>>   static void max17040_check_changes(struct i2c_client *client)
+>>>   {
+>>>       max17040_get_vcell(client);
+>>> @@ -192,6 +230,10 @@ static irqreturn_t max17040_thread_handler(int 
+>>> id, void *dev)
+>>>       /* send uevent */
+>>>       power_supply_changed(chip->battery);
+>>>
+>>> +    /* reset alert bit */
+>>> +    max17040_set_low_soc_threshold_alert(client,
+>>> +        chip->low_soc_alert_threshold);
+>>
+>> Unless the continuation exceeds 80 character limit, please align it with
+>> previous line.
+>>
+>>> +
+>>>       return IRQ_HANDLED;
+>>>   }
+>>>
+>>> @@ -216,6 +258,7 @@ static int max17040_probe(struct i2c_client *client,
+>>>       struct i2c_adapter *adapter = client->adapter;
+>>>       struct power_supply_config psy_cfg = {};
+>>>       struct max17040_chip *chip;
+>>> +    int ret;
+>>>
+>>>       if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
+>>>           return -EIO;
+>>> @@ -226,6 +269,12 @@ static int max17040_probe(struct i2c_client 
+>>> *client,
+>>>
+>>>       chip->client = client;
+>>>       chip->pdata = client->dev.platform_data;
+>>> +    ret = max17040_get_of_data(chip);
+>>> +    if (ret) {
+>>> +        dev_err(&client->dev,
+>>> +            "failed: low SOC alert OF data out of bounds\n");
+>>> +        return ret;
+>>> +    }
+>>>
+>>>       i2c_set_clientdata(client, chip);
+>>>       psy_cfg.drv_data = chip;
+>>> @@ -242,20 +291,31 @@ static int max17040_probe(struct i2c_client 
+>>> *client,
+>>>
+>>>       /* check interrupt */
+>>>       if (client->irq) {
+>>> -        int ret;
+>>> -        unsigned int flags;
+>>> -
+>>> -        dev_info(&client->dev, "IRQ: enabled\n");
+>>> -        flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
+>>> -        ret = devm_request_threaded_irq(&client->dev, client->irq, 
+>>> NULL,
+>>> -                        max17040_thread_handler, flags,
+>>> -                        chip->battery->desc->name,
+>>> -                        chip);
+>>> -
+>>> -        if (ret) {
+>>> -            client->irq = 0;
+>>> +        if (of_device_is_compatible(client->dev.of_node,
+>>> +            "maxim,max77836-battery")) {
+>>
+>> Alignment.
+>>
+>>> +            ret = max17040_set_low_soc_threshold_alert(client,
+>>> +                chip->low_soc_alert_threshold);
+>>
+>> Ditto.
+>>
 
-My point is that barriers sufficient to guarantee visibility of *f in
-the reader will also suffice to guarantee visibility of *f->f_path.dentry.
+I am working to fix the alignments issues using the checkpath strict and 
+I have a doubt. Here for example if I fix the check "Alignment should 
+match open parenthesis" it will pass the 80 characters limit and will 
+show me a warning.
 
-On alpha it boils down to having load of d->d_inode when opening the
-file orders before the barrier prior to storing the reference to f
-in the descriptor table, so if it observes the store to d->d_inode done
-by the same CPU, that store is ordered before the barrier due to
-processor instruction order constraints and if it observes the store
-to d->d_inode done by some other CPU, that store is ordered before
-the load and before the barrier by transitivity.  So in either case
-that store is ordered before the store into descriptor table.
-IOW, the reader that has enough barriers to guarantee seing ->f_path.dentry
-will be guaranteed to see ->f_path.dentry->d_inode.
+>>> +            if (ret) {
+>>> +                dev_err(&client->dev,
+>>> +                    "Failed to set low SOC alert: err %d\n",
+>>> +                    ret);
+>>> +                return ret;
+>>> +            }
+>>> +
+>>> +            dev_info(&client->dev, "IRQ: enabled\n");
+>>> +            ret = devm_request_threaded_irq(&client->dev,
+>>> +                client->irq, NULL, max17040_thread_handler,
+>>> +                (client->flags | IRQF_ONESHOT),
+>>
+>> This looks unrelated. Befor ethis were IRQF_TRIGGER_FALLING |
+>> IRQF_ONESHOT, now you use client->flags. There is no reason why this
+>> commit should change >
+> 
+> I am using client->flags here to not overwrite the flag passed in device 
+> tree. Let me know what you think about it: if I should leave it as in 
+> the previous commit, or should I modify the previous commit too.
+> 
+>>> +                chip->battery->desc->name, chip);
+>>
+>> This breaks alignment which was here before.
+>>
 
-And yes, we will need some barriers added near some positivity checks in
-pathname resolution - that's what has started the entire thread.  This
-part ("any place looking at file->f_path.dentry will have ->d_inode and
-mode bits of ->d_flags visible and stable") covers quite a few places
-that come up in the analysis...
+The same here.
+How to proceed in this case?
 
-This morning catch, BTW:
+Best Regards,
+Matheus Castello
 
-    audit_get_nd(): don't unlock parent too early
-    
-    if the child has been negative and just went positive
-    under us, we want coherent d_is_positive() and ->d_inode.
-    Don't unlock the parent until we'd done that work...
-    
-    Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-
-diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
-index 1f31c2f1e6fc..4508d5e0cf69 100644
---- a/kernel/audit_watch.c
-+++ b/kernel/audit_watch.c
-@@ -351,12 +351,12 @@ static int audit_get_nd(struct audit_watch *watch, struct path *parent)
-        struct dentry *d = kern_path_locked(watch->path, parent);
-        if (IS_ERR(d))
-                return PTR_ERR(d);
--       inode_unlock(d_backing_inode(parent->dentry));
-        if (d_is_positive(d)) {
-                /* update watch filter fields */
-                watch->dev = d->d_sb->s_dev;
-                watch->ino = d_backing_inode(d)->i_ino;
-        }
-+       inode_unlock(d_backing_inode(parent->dentry));
-        dput(d);
-        return 0;
- }
-
-For other fun bits and pieces see ceph bugs caught this week and crap in
-dget_parent() (not posted yet).  The former had been ceph violating the
-"turning a previously observable dentry positive requires exclusive lock
-on parent" rule, the latter - genuine insufficient barriers in the fast
-path of dget_parent().
-
-It is converging to a reasonably small and understandable surface, actually,
-most of that being in core pathname resolution.  Two big piles of nightmares
-left to review - overlayfs and (somewhat surprisingly) setxattr call chains,
-the latter due to IMA/EVM/LSM insanity...
-
-There's also some secondary stuff dropping out of that (e.g. ceph seeding
-dcache on readdir and blindly unhashing dentries it sees stale instead of
-doing d_invalidate() as it ought to - leads to fun results if you had
-something mounted on a subdirectory that got removed/recreated on server),
-but that's a separate pile of joy - doesn't affect this analysis, so
-it'll have to be dealt with later.  It had been an interesting couple of
-weeks...
+>> Best regards,
+>> Krzysztof
+>>
+>>
+> 
+> Thanks for the review i will work on it.
+> 
+>>> +
+>>> +            if (ret) {
+>>> +                client->irq = 0;
+>>> +                dev_warn(&client->dev,
+>>> +                    "Failed to get IRQ err %d\n", ret);
+>>> +            }
+>>> +        } else {
+>>>               dev_warn(&client->dev,
+>>> -                "Failed to get IRQ err %d\n", ret);
+>>> +                "Device not compatible for IRQ");
+>>>           }
+>>>       }
+>>>
+>>> -- 
+>>> 2.24.0.rc2
+>>>
