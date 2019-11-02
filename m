@@ -2,119 +2,107 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B08CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 22:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4143BCA9ED0
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 22:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F162084D
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 22:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1774720862
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 22:30:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="heUXVQ4V"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="CkSX5kc/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfKBWKb (ORCPT
+        id S1727300AbfKBWax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 18:10:31 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:42680 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfKBWKa (ORCPT
+        Sat, 2 Nov 2019 18:30:53 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45085 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726762AbfKBWaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 18:10:30 -0400
-Received: by mail-yw1-f66.google.com with SMTP id d5so5526267ywk.9
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 15:10:29 -0700 (PDT)
+        Sat, 2 Nov 2019 18:30:52 -0400
+Received: by mail-pf1-f194.google.com with SMTP id z4so3440756pfn.12
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 15:30:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a/y/UNWsWFAphECmr0SKpq/uUSIVYd2blpeaPLFHhBw=;
-        b=heUXVQ4VgTO2ElG0gwd7XEzTo2CN6hCnU2BwMj5n6t4b0IWTHitB6uFFkGY0EwRr+J
-         QzeSddu3NhLjytmiCRz81gR54305JeZxa4iJHjUf/oW3uEftSlC7P3BhNQq1TkY9s7c6
-         Z3tOkQFsryaKooRNEBI927kcGnXx4EmX295Cv8V2u7mTFBwFMG8Ur6ZS7Z+W4HVf61mg
-         vAV321FuHNBjpO5nLg0r/KIhhBxTYq1GkZWAQtbAH9MxFoxj7l3NdEeeZOFkFIpAVMVr
-         MFPWeapVqOj60ExILuL5ZjoMmNcabvxXt1zlAp6u1vK9XuBGPWNRCPhb0VFOAh+7QCUU
-         c0uw==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=xB2VFGUZyiF2VFPR++wvNyybS4M2ews4nSbm+M32oPk=;
+        b=CkSX5kc/xSP4pt89qT83QwNwQ7pjcK33im2ZlbhbYQXnvP8/g2zNUH0NSVCIYSeeSq
+         j3Y5a76YdXpv39h+TCcl7eR3A2Zaq4m0LwZhwfjaSqxtIx+DoyS9Y8N34jYCjLZlOcpU
+         OacyhB7MI78+ikrdnLdb5UldAwtetjPopJeULyZutottZOgK28zSZK4tt8sPv8dzOYcJ
+         3h7oi0dTnHFvGd06RvAeCEs8oTRUkjWHbmdWP2/HCclucDdQa0KYua0Tf2SOsOmv0L2c
+         fwG5fQAv5NM6nNXrVTQh5NPv3OEq1btThojafBbfJ0IOFz01EE/XwSfA7caDXfwTSgL3
+         TBwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a/y/UNWsWFAphECmr0SKpq/uUSIVYd2blpeaPLFHhBw=;
-        b=Bo8T20gEZbcIPUHbH0HtbIJK+fm+2h7pbk21pVF3mjxpvwFrNY76kBEGXy0z2uOwpm
-         qOv+RGgEM+dzsags7XByMFwgmLdcwwqTLOXS6gBrcZb+B/H/RbSW24CjRRkTsucjrgu6
-         GIiH0i7Kz4TfRjuy7ZLmWgopr4KUJm7TfiHWjzOh0IsiXU6CYeys0z9RIX3qcteLYlER
-         04rll3D8PXJ0QGtc20Ep1uYtIGst8cd56JsZjZvqcTK6nhA8iPw+fqYaDJ9STfd4mMVA
-         1ebOCF8F77d4wSgiTEgo2kXDPSTkJSXUhvKy/3FI+xm3ToVM4I8epGPm1jBPsHXEMWha
-         w57g==
-X-Gm-Message-State: APjAAAX+xOQY8Bp6hBEtC9QUt93wKEVrhyt9a3HFZEHOhbHrmecRyOWZ
-        1xuVVvfQgwVPf7sq7mLkIKyTEk5WU0cnvmbXoDhkjg==
-X-Google-Smtp-Source: APXvYqxINNb17LJVAwLl2mdJpih2iAqY6Ts1EsT3XUgN7FVa5da8FtQWRDFu1/Q1pN84nIHPSiNi6XxLe3W7pyY/XV4=
-X-Received: by 2002:a81:8486:: with SMTP id u128mr14394653ywf.337.1572732628718;
- Sat, 02 Nov 2019 15:10:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191030100618.1.Ibf7a996e4a58e84f11eec910938cfc3f9159c5de@changeid>
- <20191030173758.GC693@sol.localdomain> <CAD=FV=Uzma+eSGG1S1Aq6s3QdMNh4J-c=g-5uhB=0XBtkAawcA@mail.gmail.com>
- <20191030190226.GD693@sol.localdomain> <20191030205745.GA216218@sol.localdomain>
- <CAD=FV=X6Q3QZaND-tfYr9mf-KYMeKFmJDca3ee-i9roWj+GHsQ@mail.gmail.com>
- <CAD=FV=URZX4t-TB2Ne8y5ZfeBGoyhsPZhcncQ0yPe3cRXi=1gw@mail.gmail.com>
- <20191101043620.GA703@sol.localdomain> <CABXOdTddU2Kn8hJyofAC9eofZHAA4ddBhjNXc8GwC5dm3beMZA@mail.gmail.com>
-In-Reply-To: <CABXOdTddU2Kn8hJyofAC9eofZHAA4ddBhjNXc8GwC5dm3beMZA@mail.gmail.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Sat, 2 Nov 2019 15:10:17 -0700
-Message-ID: <CABXOdTeu3KdT=arT+AKAOiPPM0U45krUfmDx6NH5nmDZ0pPa=A@mail.gmail.com>
-Subject: Re: [PATCH] Revert "ext4 crypto: fix to check feature status before
- get policy"
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Chao Yu <chao@kernel.org>,
-        Ryo Hashimoto <hashimoto@chromium.org>,
-        Vadim Sukhomlinov <sukhomlinov@google.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Andrey Pronin <apronin@chromium.org>,
-        linux-doc@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=xB2VFGUZyiF2VFPR++wvNyybS4M2ews4nSbm+M32oPk=;
+        b=cT9wI7mY3p6WhqxBvGCSHyT2SjbIN9S80KTz0BKuhgB1bJ/QOD5uCDZ5tuOgTznl3N
+         UKYkwMtxLMh4uaL91rl3eoLUvLxOYkikZTXIRUPHx02II8FVWNqbNLkoi7RymEl7ALnv
+         72e34PrSdCHUJlnKeFJ2x6VPSQdH1Jo3GemH+eAQB4EyTczyuFkG9wgTPeh8YxZfhjiw
+         ULD1Ai44GvQhuJagp/czfHQdLI3TTxfkMynjPbYKOD6Ht4DPMZaGMTQmyvs+TmZGxp2i
+         24cBqM/A+s9+Q3+ED1mm7WZ1rkZnh8BEwF8NNJWualOMJjI+xhr9dh7T1GLPWOPXmsv1
+         w41Q==
+X-Gm-Message-State: APjAAAWlnIcO75cCVxza22NgUERk8hNHuGD2MGgG/nIySSkNne2gmj51
+        1OrEExeWk9JsulBO+Q+aomrH6g==
+X-Google-Smtp-Source: APXvYqzDRQiggB/0IWOZncaQ86RpbPc/jYJAjFDxSvO1yjd56TQhdj02MFsX+oGquyWY0UEfcJYLwg==
+X-Received: by 2002:a63:cf46:: with SMTP id b6mr21945917pgj.90.1572733851860;
+        Sat, 02 Nov 2019 15:30:51 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b067:e6ce:10dd:e058:94b7:feca? ([2600:1010:b067:e6ce:10dd:e058:94b7:feca])
+        by smtp.gmail.com with ESMTPSA id e17sm9438491pgg.5.2019.11.02.15.30.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 02 Nov 2019 15:30:50 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC PATCH 11/10] pipe: Add fsync() support [ver #2]
+Date:   Sat, 2 Nov 2019 15:30:49 -0700
+Message-Id: <E590C3AF-1D09-4927-B83F-DD0A6A148B6D@amacapital.net>
+References: <CAHk-=wj1BLz6s9cG9Ptk4ULxrTy=MkF7ZH=HF67d7M5HL1fd_A@mail.gmail.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAHk-=wj1BLz6s9cG9Ptk4ULxrTy=MkF7ZH=HF67d7M5HL1fd_A@mail.gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 11:17 AM Guenter Roeck <groeck@google.com> wrote:
-[ ... ]
-> > Ah, I think I found it:
-> >
-> > https://chromium.googlesource.com/chromiumos/overlays/chromiumos-overlay/+/2cbdedd5eca0a57d9596671a99da5fab8e60722b/sys-apps/upstart/files/upstart-1.2-dircrypto.patch
-> >
-> > The init process does EXT4_IOC_GET_ENCRYPTION_POLICY on /, and if the error is
-> > EOPNOTSUPP, it skips creating the "dircrypto" keyring.  So then cryptohome can't
-> > add keys later.  (Note the error message you got, "Error adding dircrypto key".)
-> >
-> > So it looks like the kernel patch broke both that and
-> > ext4_dir_encryption_supported().
-> >
->
-> ext4_dir_encryption_supported() was already changed to use the sysfs
-> file, and changing the upstart code to check the sysfs file does
-> indeed fix the problem for good. I'll do some more tests and push the
-> necessary changes into our code base if I don't hit some other issue.
->
 
-This change is now in our code base:
 
-https://chromium.googlesource.com/chromiumos/overlays/chromiumos-overlay/+/5c5b06fded399013b9cce3d504c3d968ee84ab8b
+> On Nov 2, 2019, at 3:04 PM, Linus Torvalds <torvalds@linux-foundation.org>=
+ wrote:
+>=20
+> =EF=BB=BFOn Sat, Nov 2, 2019 at 1:31 PM Andy Lutomirski <luto@amacapital.n=
+et> wrote:
+>>=20
+>> Add in the fact that it=E2=80=99s not obvious that vmsplice *can* be used=
+ correctly, and I=E2=80=99m wondering if we should just remove it or make it=
+ just do write() under the hood.
+>=20
+> Sure it can. Just don't modify the data you vmsplice. It's really that sim=
+ple.
 
-If the revert has not made it upstream, I would suggest to hold it off
-for the time being. I'll do more testing next week, but as it looks
-like it may no longer be needed, at least not from a Chrome OS
-perspective.
+So you allocate memory, vmsplice, and munmap() without reusing it?  Just pla=
+in free() won=E2=80=99t be good enough. I suspect the TLB overhead will make=
+ this a loss in most workloads?
 
-Guenter
+Or maybe you vmsplice from a read-only mapping of a file that you know no on=
+e modifies?  This could be useful, but you can just splice() from the file d=
+irectly.=
