@@ -2,156 +2,166 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C66CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 17:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 785D3CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 17:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0935821897
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 17:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572715491;
-	bh=dFj8NAZBJwn8JB6ouldPBEYS8ERyP1np8D1tiIVWD3Q=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=m6bPzFQDuYWEMWb1fwO2fMdgnmCq8G/uR47XHlv2D/oXEXGWwOUIxb7Z/dLUM+BO2
-	 9qCwJOHrAyPlv7i+TSxRoaC2gWBoi7HI6znly2lPRiZeiuQ3XmspGLrobsxr9BLQ78
-	 jBe5mfRn6M+0Rgnqsn8iZPzZgc8yichgVTuzPEZo=
+	by mail.kernel.org (Postfix) with ESMTP id 467B72080F
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 17:31:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nZuWTF4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfKBRYt (ORCPT
+        id S1726952AbfKBRbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 13:24:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbfKBRYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 13:24:49 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [65.158.186.218])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30223217D9;
-        Sat,  2 Nov 2019 17:24:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572715488;
-        bh=dFj8NAZBJwn8JB6ouldPBEYS8ERyP1np8D1tiIVWD3Q=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=yuTvp7WvRnzQ0qd5ylYyP6sw4h01DHOO4nwOU4fk0N1ttS6Jmy3gP7qgrsVSkrNno
-         Zs3BSxWyQKRxdl5BFMvOyk41dPLnX/QBcdNRc46YU+RNBx07OYXwkuzpgMUsDiwOgZ
-         iU5yoU7dWFZgeCqtHCpdM7XB7PZorpnclWT0Ujkw=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 0159A35204A2; Sat,  2 Nov 2019 10:24:47 -0700 (PDT)
-Date:   Sat, 2 Nov 2019 10:24:47 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wugyuan@cn.ibm.com, jlayton@kernel.org, hsiangkao@aol.com,
-        Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ritesh Harjani <riteshh@linux.ibm.com>
-Subject: Re: [PATCH RESEND 1/1] vfs: Really check for inode ptr in lookup_fast
-Message-ID: <20191102172447.GU20975@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20190927044243.18856-1-riteshh@linux.ibm.com>
- <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
- <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
- <20191022143736.GX26530@ZenIV.linux.org.uk>
- <20191022201131.GZ26530@ZenIV.linux.org.uk>
- <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com>
- <20191101234622.GM26530@ZenIV.linux.org.uk>
- <20191102061706.GA10268@ZenIV.linux.org.uk>
+        Sat, 2 Nov 2019 13:31:19 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42044 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbfKBRbT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Nov 2019 13:31:19 -0400
+Received: by mail-pl1-f193.google.com with SMTP id j12so3771482plt.9
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 10:31:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=R5U6Kj8zEV9KobA96rVptQNqSLtfG2r+Wn7yLIJ/SjM=;
+        b=nZuWTF4BuB9R9IrgYRoEbpBnjy2uh+hDRXXBWx+J+/nKCK3Q9SqQb4rGc0o2JbS78Z
+         IGasXP4JcJlcZqvBr8jr42AoqszXdT6ZkfobJEO3q8eAMYsdFqaxFxfcOX/QrjMVv/qW
+         Gdq8mBjWvMInhMP1k9d4nI6SG1KYp3FJBWObE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=R5U6Kj8zEV9KobA96rVptQNqSLtfG2r+Wn7yLIJ/SjM=;
+        b=LOJp3z7i8UDC+FjJ9DraxVU6a2MRxDnAOQQlTB0HWe4Az/9yh0fwQMoxJcMIWBTVvP
+         jJ/DddhfceTwHoT6loBgkYLE5vQyste0lgjZFpnWBP9l4/MMow0zblbBqaO5gEPUbH3u
+         IiQwl7tkv3NB1snyWlgPKE43zpXQLAvrM4OHSQH0f8/SdT8pV1Lp0qV8jy1UwHgOPd6W
+         ITe0+tfh7t2aKvK6NEglzYeY4NvBo7eFe3WyA9/UJsfrgpL0/IMgvAbcpxPeIrQB90c5
+         4/0TKjKgrqfM3DXzwOAUVmtSfCZnA4TQ6bQFXO+GVJkJbGAWI0xfBMzlVRdpU1l2HXH6
+         kqEg==
+X-Gm-Message-State: APjAAAUtfyyIhAjJaN/6hQizVbq2M/FFZKpxsDL6tXvZg57sZSgiIJfz
+        FQAyofaxtlpjVukdOzzTaHTlvQ==
+X-Google-Smtp-Source: APXvYqwc02Tws2pGBZl8WuCjpMDz1HN7KL0ueLxBeqsIsd4eXR/cQCznRRNO20Nh24wWyn2g8VRU7w==
+X-Received: by 2002:a17:902:864a:: with SMTP id y10mr18474527plt.162.1572715878210;
+        Sat, 02 Nov 2019 10:31:18 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m13sm9636034pga.70.2019.11.02.10.31.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Nov 2019 10:31:16 -0700 (PDT)
+Date:   Sat, 2 Nov 2019 10:31:15 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 07/17] scs: add support for stack usage debugging
+Message-ID: <201911021030.88433384D9@keescook>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191101221150.116536-1-samitolvanen@google.com>
+ <20191101221150.116536-8-samitolvanen@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191102061706.GA10268@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191101221150.116536-8-samitolvanen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 02, 2019 at 06:17:06AM +0000, Al Viro wrote:
-> On Fri, Nov 01, 2019 at 11:46:22PM +0000, Al Viro wrote:
-> > on anything except alpha that would be pretty much automatic and
-> > on alpha we get the things along the lines of
-> > 
-> > 	f = fdt[n]
-> > 	mb
-> > 	d = f->f_path.dentry
-> > 	i = d->d_inode
-> > 	assert(i != NULL)
-> > vs.
-> > 	see that d->d_inode is non-NULL
-> > 	f->f_path.dentry = d
-> > 	mb
-> > 	fdt[n] = f
-> > 
-> > IOW, the barriers that make it safe to fetch the fields of struct file
-> > (rcu_dereference_raw() in __fcheck_files() vs. smp_store_release()
-> > in __fd_install() in the above) should *hopefully* take care of all
-> > stores visible by the time of do_dentry_open().  Sure, alpha cache
-> > coherency is insane, but AFAICS it's not _that_ insane.
-> > 
-> > Question to folks familiar with alpha memory model:
-> > 
-> > A = 0, B = NULL, C = NULL
-> > CPU1:
-> > 	A = 1
-> > 
-> > CPU2:
-> > 	r1 = A
-> > 	if (r1) {
-> > 		B = &A
-> > 		mb
-> > 		C = &B
-> > 	}
-> > 
-> > CPU3:
-> > 	r2 = C;
-> > 	mb
-> > 	if (r2) {	// &B
-> > 		r3 = *r2	// &A
-> > 		r4 = *r3	// 1
-> > 		assert(r4 == 1)
-> > 	}
-> > 
-> > is the above safe on alpha?
+On Fri, Nov 01, 2019 at 03:11:40PM -0700, Sami Tolvanen wrote:
+> Implements CONFIG_DEBUG_STACK_USAGE for shadow stacks. When enabled,
+> also prints out the highest shadow stack usage per process.
 > 
-> Hmm...  After digging through alpha manuals, it should be -
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+
+Thanks for helping me find this Kconfig. :) :)
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> ---
+>  kernel/scs.c | 39 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
 > 
-> U1: W A, 1
+> diff --git a/kernel/scs.c b/kernel/scs.c
+> index 7780fc4e29ac..67c43af627d1 100644
+> --- a/kernel/scs.c
+> +++ b/kernel/scs.c
+> @@ -167,6 +167,44 @@ int scs_prepare(struct task_struct *tsk, int node)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_DEBUG_STACK_USAGE
+> +static inline unsigned long scs_used(struct task_struct *tsk)
+> +{
+> +	unsigned long *p = __scs_base(tsk);
+> +	unsigned long *end = scs_magic(tsk);
+> +	uintptr_t s = (uintptr_t)p;
+> +
+> +	while (p < end && *p)
+> +		p++;
+> +
+> +	return (uintptr_t)p - s;
+> +}
+> +
+> +static void scs_check_usage(struct task_struct *tsk)
+> +{
+> +	static DEFINE_SPINLOCK(lock);
+> +	static unsigned long highest;
+> +	unsigned long used = scs_used(tsk);
+> +
+> +	if (used <= highest)
+> +		return;
+> +
+> +	spin_lock(&lock);
+> +
+> +	if (used > highest) {
+> +		pr_info("%s: highest shadow stack usage %lu bytes\n",
+> +			__func__, used);
+> +		highest = used;
+> +	}
+> +
+> +	spin_unlock(&lock);
+> +}
+> +#else
+> +static inline void scs_check_usage(struct task_struct *tsk)
+> +{
+> +}
+> +#endif
+> +
+>  bool scs_corrupted(struct task_struct *tsk)
+>  {
+>  	return *scs_magic(tsk) != SCS_END_MAGIC;
+> @@ -181,6 +219,7 @@ void scs_release(struct task_struct *tsk)
+>  		return;
+>  
+>  	WARN_ON(scs_corrupted(tsk));
+> +	scs_check_usage(tsk);
+>  
+>  	scs_account(tsk, -1);
+>  	task_set_scs(tsk, NULL);
+> -- 
+> 2.24.0.rc1.363.gb1bccd3e3d-goog
 > 
-> V1: R A, 1
 
-Assuming a compare and branch here ...
-
-> V2: W B, &A
-> V3: MB
-> V4: W C, &B
-> 
-> W1: R C, &B
-> W2: MB
-
-... and here ...
-
-> W3: R B, &A
-> W4: R A, 0
-> 
-> is rejected since
-> 	U1 BEFORE V1 (storage and visibility)
-> 	V1 BEFORE V3 BEFORE V4 (processor issue order constraints)
-> 	V4 BEFORE W1 (storage and visibility)
-> 	W1 BEFORE W2 BEFORE W4 (processor issue order constraints)
-> and W4 BEFORE U1 (storage and visibility), which is impossible
-> due to BEFORE being acyclic and transitive.
-> 
-> I might very well be missing something, though...  Paul, could you
-> take a look and tell if the above makes sense?
-
-...  then yes, agreed.  Alpha does respect control dependencies to
-stores, and you supplied the required mb for the last task that has
-a control dependency only to loads.
-
-I have to ask...  Are you seeing failures on Alpha?
-
-							Thanx, Paul
+-- 
+Kees Cook
