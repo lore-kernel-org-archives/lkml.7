@@ -2,98 +2,133 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8EDCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 00:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 062CBCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 00:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2B821855
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 00:42:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dCR+ereu"
+	by mail.kernel.org (Postfix) with ESMTP id D203C208CB
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 00:45:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbfKBAm0 (ORCPT
+        id S1728240AbfKBApy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 20:42:26 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35640 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbfKBAm0 (ORCPT
+        Fri, 1 Nov 2019 20:45:54 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:51966 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726932AbfKBApy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 20:42:26 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l10so11201680wrb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 17:42:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OebC6aVMcC2jE8zsuehSJZa7VRGYhUzWUik+Vnx7pS0=;
-        b=dCR+ereuD8LxHOyd/DrOqk/4Z2UB/vmMo0sE+MIaxM/mXEyDlA6z99rafM+yvWIIvb
-         utCF/mHGnwXbD3D2HJrGCzYFRnfTQCPu04oHH22mvdlrXAsXznVSoLE2n40cyu6Eprq2
-         6mfG5aLjYHbp5CCPCnreKLYvtUsuRselKHa20RKzWYssSTMd1aTt0Faj/ITpt2rYEOk7
-         CczhUgohsEf83N9OYkykkhv1d8jLf7DgUyueJwYurSpAdA/lcVjEsy6QkE4FZW0I3TKA
-         DqzKPJMAktIjESZTZ9nHKgSh/h8OqgD7tBezlt5w9hQNsg7ZQz7F4+z04WP4dqaHbKgM
-         eBmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OebC6aVMcC2jE8zsuehSJZa7VRGYhUzWUik+Vnx7pS0=;
-        b=hgRAjLNHrFPKxcoXuCg2QvJTqmVpAlJQ2gZ7kr66yldWzm6oR4JTiUJnk7BaXytnQO
-         5WSnvFYCX1asvH0yaxkbYA6WSM3sWj3j51RhV6nWmgIojqeU56ASsmJAhNQFEGQeX9lT
-         QYrtkQN1s9pGMsOlnsbfJRK5O7H9iQlg5RYDlpvzbFxQIk4yw5GrP4if0zmkS7E1XJBw
-         Qlhd6iV6Ntk3VlI0JymZ66/HEJrB+ew6cbK4RKfoph2YtKSWkV1F30r3NDrNC6b+equ+
-         Jo9RvManvVwrHw5dhZezFMyyEjsY9Rar9waoNoa6ljvpQoTXfSXQoT4zl44Wrs0F2Rlg
-         opSQ==
-X-Gm-Message-State: APjAAAW/VeaHig9gCO4KapaWobbkUss7v+n+io8bmioSr40uPBFYm21A
-        ImTZnMLRLotyP6SPvGJ2Mg==
-X-Google-Smtp-Source: APXvYqxsPeqTU5bA5Ce+J+KH23f7s/LwxT+2sDzXy6ocZsRTFxy5mYbSwBt9IPd/HRptGG90B4VN3g==
-X-Received: by 2002:adf:e944:: with SMTP id m4mr13514286wrn.49.1572655343846;
-        Fri, 01 Nov 2019 17:42:23 -0700 (PDT)
-Received: from ninjahub.lan (79-73-36-243.dynamic.dsl.as9105.com. [79.73.36.243])
-        by smtp.googlemail.com with ESMTPSA id d202sm8667642wmd.47.2019.11.01.17.42.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 17:42:23 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     outreachy-kernel@googlegroups.com
-Cc:     julia.lawall@lip6.fr, gregkh@linuxfoundation.org,
-        m.tretter@pengutronix.de, linux-kernel@vger.kernel.org,
-        Jules Irenge <jbi.octave@gmail.com>
-Subject: [PATCH] staging: allegreo-dvt: fix warning of comparison of 0/1 to bool
-Date:   Sat,  2 Nov 2019 00:42:13 +0000
-Message-Id: <20191102004213.24909-1-jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 1 Nov 2019 20:45:54 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TgxzPUJ_1572655540;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TgxzPUJ_1572655540)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 02 Nov 2019 08:45:41 +0800
+Subject: Re: [PATCH] sched/numa: advanced per-cgroup numa statistic
+To:     Mel Gorman <mgorman@suse.de>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, linux-kernel@vger.kernel.org
+References: <46b0fd25-7b73-aa80-372a-9fcd025154cb@linux.alibaba.com>
+ <20191030095505.GF28938@suse.de>
+ <6f5e43db-24f1-5283-0881-f264b0d5f835@linux.alibaba.com>
+ <20191031131731.GJ28938@suse.de>
+ <5d69ff1b-a477-31b5-8600-9233a38445c7@linux.alibaba.com>
+ <20191101091348.GM28938@suse.de>
+ <2573b108-7885-5c4f-a0ae-2b245d663250@linux.alibaba.com>
+ <20191101133528.GP28938@suse.de>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <9eac8254-2d53-5d09-1394-26438db9a6a9@linux.alibaba.com>
+Date:   Sat, 2 Nov 2019 08:45:40 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191101133528.GP28938@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix warning of comparison of 0/1 to bool variable.
-Warning reported by coccinelle tool.
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
----
- drivers/staging/media/allegro-dvt/nal-h264.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/allegro-dvt/nal-h264.c b/drivers/staging/media/allegro-dvt/nal-h264.c
-index 4e14b77851e1..bd48b8883572 100644
---- a/drivers/staging/media/allegro-dvt/nal-h264.c
-+++ b/drivers/staging/media/allegro-dvt/nal-h264.c
-@@ -235,7 +235,7 @@ static inline int rbsp_write_bit(struct rbsp *rbsp, bool value)
- 
- 	rbsp->pos++;
- 
--	if (value == 1 ||
-+	if (value ||
- 	    (rbsp->num_consecutive_zeros < 7 && (rbsp->pos % 8 == 0))) {
- 		rbsp->num_consecutive_zeros = 0;
- 	} else {
--- 
-2.21.0
+On 2019/11/1 下午9:35, Mel Gorman wrote:
+> On Fri, Nov 01, 2019 at 07:52:15PM +0800, ?????? wrote:
+>>> a much higher degree of flexibility on what information is tracked and
+>>> allow flexibility on 
+>>>
+>>> So, overall I think this can be done outside the kernel but recognise
+>>> that it may not be suitable in all cases. If you feel it must be done
+>>> inside the kernel, split out the patch that adds information on failed
+>>> page migrations as it stands apart. Put it behind its own kconfig entry
+>>> that is disabled by default -- do not tie it directly to NUMA balancing
+>>> because of the data structure changes. When enabled, it should still be
+>>> disabled by default at runtime and only activated via kernel command line
+>>> parameter so that the only people who pay the cost are those that take
+>>> deliberate action to enable it.
+>>
+>> Agree, we could have these per-task faults info there, give the possibility
+>> to implement maybe a practical userland tool,
+> 
+> I'd prefer not because that would still require the space in the locality
+> array to store the data. I'd also prefer that numa_faults_locality[]
+> information is not exposed unless this feature is enabled. That information
+> is subject to change and interpreting it requires knowledge of the
+> internals of automatic NUMA balancing.
+> 
+> There are just too many corner cases where the information is garbage.
+> Tasks with a memory policy would never update the counters, short-lived
+> tasks may not update it, interleaving will give confused information about
+> locality, the timing of the reads matter because it might be cleared,
+> the frequency at which they clear is unknown as the frequency is adaptive
+> -- the list goes on. I find it very very difficult to believe that a
+> tool based on faults_locality will be able to give anything but the
+> most superficial help and any sensible decision will require ftrace or
+> numa_maps to get real information.
 
+Yeah, there are no very good approach to estimate the numa efficiency
+since there are no per-task counter to tell the local & remote accessing
+on hardware level, numa balancing won't cover all the cases, otherwise
+we will have overhead issue again.
+
+Well, at least we will be able to know whether this feature itself is
+working well or not by reading locality, especially for cross nodes
+workloads, locality could at least tell us the numa balancing is helping,
+or just wasting resources :-P
+
+> 
+>> meanwhile have these kernel
+>> numa data disabled by default, folks who got no tool but want to do easy
+>> monitoring can just turn on the switch :-)
+>>
+>> Will have these in next version:
+>>
+>>  * separate patch for showing per-task faults info
+> 
+> Please only expose the failed= (or migfailed=) in that patch. Do not
+> expose numa_faults_locality unless it is explicitly enabled on behalf of
+> a tool that claims it can sensibly interpret it.
+
+Sounds fair enough, no such tool yet.
+
+> 
+>>  * new CONFIG for numa stat (disabled by default)
+>>  * dynamical runtime switch for numa stat (disabled by default)
+> 
+> Dynamic runtime enabling will mean that if it's turned on, the information
+> will be temporarily useless until stats are accumulated. Make sure to
+> note that in any associated documentation stating a preference to
+> enabling it with a kernel parameter.
+
+That's right, will highlight in the doc.
+
+Regards,
+Michael Wang
+
+> 
