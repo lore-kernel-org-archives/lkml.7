@@ -6,33 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC5FCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 07:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21563CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 07:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8850C20862
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 07:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B9A20862
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 07:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfKBH5Z (ORCPT
+        id S1727926AbfKBH6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 03:57:25 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5251 "EHLO huawei.com"
+        Sat, 2 Nov 2019 03:58:00 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43342 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726044AbfKBH5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 03:57:25 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 09E422574E8412012078;
-        Sat,  2 Nov 2019 15:57:22 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Sat, 2 Nov 2019
- 15:57:12 +0800
+        id S1726044AbfKBH6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Nov 2019 03:58:00 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 95F7F4DBF1AD9079E1F1;
+        Sat,  2 Nov 2019 15:57:55 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Sat, 2 Nov 2019
+ 15:57:48 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <edubezval@gmail.com>, <j-keerthy@ti.com>, <rui.zhang@intel.com>,
-        <daniel.lezcano@linaro.org>, <amit.kucheria@verdurent.com>
-CC:     <linux-pm@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+To:     <thierry.reding@gmail.com>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] thermal: ti-soc-thermal: Remove dev_err() on platform_get_irq() failure
-Date:   Sat, 2 Nov 2019 15:56:54 +0800
-Message-ID: <20191102075654.36700-1-yuehaibing@huawei.com>
+Subject: [PATCH -next] gpu: host1x: Remove dev_err() on platform_get_irq() failure
+Date:   Sat, 2 Nov 2019 15:57:44 +0800
+Message-ID: <20191102075744.6864-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -49,26 +48,25 @@ This is detected by coccinelle.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/thermal/ti-soc-thermal/ti-bandgap.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/gpu/host1x/dev.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-index 2fa78f7..89c3ba7 100644
---- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-+++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-@@ -787,10 +787,9 @@ static int ti_bandgap_talert_init(struct ti_bandgap *bgp,
- 	int ret;
+diff --git a/drivers/gpu/host1x/dev.c b/drivers/gpu/host1x/dev.c
+index a738ea5..388bcc2 100644
+--- a/drivers/gpu/host1x/dev.c
++++ b/drivers/gpu/host1x/dev.c
+@@ -339,10 +339,8 @@ static int host1x_probe(struct platform_device *pdev)
+ 	}
  
- 	bgp->irq = platform_get_irq(pdev, 0);
--	if (bgp->irq < 0) {
--		dev_err(&pdev->dev, "get_irq failed\n");
-+	if (bgp->irq < 0)
- 		return bgp->irq;
+ 	syncpt_irq = platform_get_irq(pdev, 0);
+-	if (syncpt_irq < 0) {
+-		dev_err(&pdev->dev, "failed to get IRQ: %d\n", syncpt_irq);
++	if (syncpt_irq < 0)
+ 		return syncpt_irq;
 -	}
-+
- 	ret = request_threaded_irq(bgp->irq, NULL,
- 				   ti_bandgap_talert_irq_handler,
- 				   IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+ 
+ 	mutex_init(&host->devices_lock);
+ 	INIT_LIST_HEAD(&host->devices);
 -- 
 2.7.4
 
