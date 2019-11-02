@@ -2,142 +2,104 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE89CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 00:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4BBCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 00:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 437262067D
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 00:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30BDF208CB
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 00:12:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ew0T8k9a"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ekUsmwbK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfKBAKV (ORCPT
+        id S1727944AbfKBAMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 20:10:21 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39840 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfKBAKU (ORCPT
+        Fri, 1 Nov 2019 20:12:16 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30785 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727806AbfKBAMP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 20:10:20 -0400
-Received: by mail-io1-f66.google.com with SMTP id k1so858674ioj.6
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 17:10:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=R4g9gOLIew2+KTvYBHfgUUJIvnc8PoIFwQ4bbvEGKSM=;
-        b=ew0T8k9aits0F01j0SCwzTDVdrwqraAac6R6T/eJc3oSA2z3b/L47RmzsCJDmrKCdm
-         xRmK251jDrQNYOCPOsfqriSuW+FWLrHxW/I13haysmKdGOl/yD/1OhzNCfKoeb5KaHJQ
-         PTrYhDqOCfRySq4ojgXSUbkhYs+BhrJxBuH4XpYljYx829VVbV7aP2Xz/O09EWhj0BQJ
-         /H5XaERUqLs4fsF2mOjqneZa7t6ac2FZpk/H09BNkp5hyWZ2e+RK2Nj4AbPaoKaopXXB
-         LgcXTa4dpNMQcX2TK/HPQlPOEVHaemD/CvJBb0zfSCPKqQROlSe91O/gAg84p7Gwl0C2
-         OlNQ==
+        Fri, 1 Nov 2019 20:12:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572653534;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=3a8267M+RHJNRr07VE5ml30G5v7tWW7jIUnKYNL4CMo=;
+        b=ekUsmwbKf6jrFZ/2TM+ZxaxFyAIm+fQ9bClpQI7RZ2sGpbZNtNeS5/HHrHtbMJZSLacqma
+        iAPvcnO/z0Kvf4PsVhZNi1fRypScuBdxpB4XNHA2qDi82YufZufXOvc7wxpop4y/giSMAV
+        n6DXhfWyLPPA1Zv8Blqq4u8QpOJJhHE=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-360-kKyKaigINz67XtZJy_eMew-1; Fri, 01 Nov 2019 20:12:11 -0400
+Received: by mail-wm1-f71.google.com with SMTP id b10so4859315wmh.6
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 17:12:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=R4g9gOLIew2+KTvYBHfgUUJIvnc8PoIFwQ4bbvEGKSM=;
-        b=Os5EpdQYGimgX+zB2rexjeucgxr7H7/5uHwOElGiNtRBR2vYhoPVnG1t+7ESpxmI9Y
-         tN/HKxe4xOnn00eoamQcgu3t8VfM1rW+urQRpjQemIyENTeyUA46Z14rT//aHzti77N6
-         Yl+3dZKy1UVTQ1oRoXnrYXXZwdb386ZFnKOkdp9VJ6Xz3C9CXUkHrrHEJEPVcYNODIyc
-         jdAXJUjP0mmbtyIxqeok5rXpBULEhwCzCzzgi55Vr7CpHQ7SVt5FMB9wZG1M8J8Gmtbo
-         GDe7Up46/z4F0NDKbjMD/Oe0gUq8SPDH+3VItGA2JPPufI9NMorpjNIgJTUuodImgRgf
-         8giw==
-X-Gm-Message-State: APjAAAUVTzou1BQpa3JGWeEU1cB15YGGo3re5daamL7/CPlMsQ11Qif/
-        7Em01MlPFrmbuHz4jUWF5uzH0g==
-X-Google-Smtp-Source: APXvYqxGpyL4YgS3iSeyRBb2/XoW4OF6ZRzRHuG1o1Desi8MbbyMgsZb3vvZgX51aCkTVbWIlDWxLg==
-X-Received: by 2002:a5d:94d8:: with SMTP id y24mr5101499ior.131.1572653418511;
-        Fri, 01 Nov 2019 17:10:18 -0700 (PDT)
-Received: from localhost (67-0-26-4.albq.qwest.net. [67.0.26.4])
-        by smtp.gmail.com with ESMTPSA id m9sm1259660ilc.44.2019.11.01.17.10.17
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VX6BMhZnxFI/3YJV1VoE+a6y4VVLv+nOV4fd/3YTNIk=;
+        b=DnFsW9KT84lWKz5OUOuJqlycgZKhRYrXd6lujVh72epP5082lPIdA95HgOsolAXAIN
+         0XNgrBinP7FIdByyHEAvZOJh3mZEfryRdK4I4ApGt8OaoOgdsfOJfMXB1yQQvf+1EfK/
+         JaBqKVAlosDJ0Jbwxcs2UVWl3c9Xr/J8nVKl2YZbW0mcqTx0ncILwkAKFvv35jlnaDIa
+         J+eL5JJzg3bj5a8vozjCG+hWb6ZDaxn8rMOpT3TvEkiY75DaxB2xB3B8fN+GzVACf6ua
+         q+ScIRy2rXTAFz9/jObvX9IwUrm1CweQKwjbxktMj2PNDvj8D0D2XaHKoMbyeyPiK6/u
+         SkMg==
+X-Gm-Message-State: APjAAAXy4zIdyZhCG5KGip54cHZF/b6JYHH1H1vJDI+91PiUUE4M4gpm
+        hKuQ5KmGJ1SYM6sTPx3Uo4+M96c90GYGgQ0IL0fSXVeIfoCsF3GinWz2ZShjKWjN4/Pv+RDQZ5j
+        /tI5QQaPlz1sfsDF/3NMDpi7P
+X-Received: by 2002:a1c:9ccd:: with SMTP id f196mr12489849wme.152.1572653530238;
+        Fri, 01 Nov 2019 17:12:10 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqw4oLNGypYFr8/Qg3GXixLBynH2wHCRqp7hWXE77wgSMGttnht7B+mbeCcRpbJfTfqxa6l+UQ==
+X-Received: by 2002:a1c:9ccd:: with SMTP id f196mr12489834wme.152.1572653530002;
+        Fri, 01 Nov 2019 17:12:10 -0700 (PDT)
+Received: from raver.teknoraver.net (net-109-115-41-234.cust.vodafonedsl.it. [109.115.41.234])
+        by smtp.gmail.com with ESMTPSA id a16sm13654781wmd.11.2019.11.01.17.12.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 17:10:18 -0700 (PDT)
-Date:   Fri, 1 Nov 2019 17:10:16 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     torvalds@linux-foundation.org
-cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] RISC-V updates for v5.4-rc6
-Message-ID: <alpine.DEB.2.21.9999.1911011707090.16921@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Fri, 01 Nov 2019 17:12:09 -0700 (PDT)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 0/2] icmp: move duplicate code in helper functions
+Date:   Sat,  2 Nov 2019 01:12:02 +0100
+Message-Id: <20191102001204.83883-1-mcroce@redhat.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MC-Unique: kKyKaigINz67XtZJy_eMew-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Remove some duplicate code by moving it in two helper functions.
+First patch adds the helpers, the second one uses it.
 
-The following changes since commit d6d5df1db6e9d7f8f76d2911707f7d5877251b02:
+Matteo Croce (2):
+  icmp: add helpers to recognize ICMP error packets
+  icmp: remove duplicate code
 
-  Linux 5.4-rc5 (2019-10-27 13:19:19 -0400)
+ include/linux/icmp.h                    | 15 +++++++++++++++
+ include/linux/icmpv6.h                  | 14 ++++++++++++++
+ net/ipv4/netfilter/nf_socket_ipv4.c     | 10 +---------
+ net/ipv4/route.c                        |  5 +----
+ net/ipv6/route.c                        |  5 +----
+ net/netfilter/nf_conntrack_proto_icmp.c |  6 +-----
+ net/netfilter/xt_HMARK.c                |  6 +-----
+ net/sched/act_nat.c                     |  4 +---
+ 8 files changed, 35 insertions(+), 30 deletions(-)
 
-are available in the Git repository at:
+--=20
+2.23.0
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.4-rc6
-
-for you to fetch changes up to 1d9b0b66c3ef03e42db63068e1a4e7250992e2b1:
-
-  MAINTAINERS: Change to my personal email address (2019-10-30 01:03:34 -0700)
-
-----------------------------------------------------------------
-RISC-V updates for v5.4-rc6
-
-One fix for PCIe users:
-
-- Fix legacy PCI I/O port access emulation
-
-One set of cleanups:
-
-- Resolve most of the warnings generated by sparse across arch/riscv.
-  No functional changes
-
-And one MAINTAINERS update:
-
-- Update Palmer's E-mail address
-
-----------------------------------------------------------------
-Palmer Dabbelt (1):
-      MAINTAINERS: Change to my personal email address
-
-Paul Walmsley (6):
-      riscv: add prototypes for assembly language functions from head.S
-      riscv: init: merge split string literals in preprocessor directive
-      riscv: mark some code and data as file-static
-      riscv: add missing header file includes
-      riscv: fp: add missing __user pointer annotations
-      riscv: for C functions called only from assembly, mark with __visible
-
-Yash Shah (1):
-      RISC-V: Add PCIe I/O BAR memory mapping
-
- MAINTAINERS                         |  6 +++---
- arch/riscv/include/asm/io.h         |  7 +++++++
- arch/riscv/include/asm/irq.h        |  3 +++
- arch/riscv/include/asm/pgtable.h    |  7 ++++++-
- arch/riscv/include/asm/switch_to.h  |  1 +
- arch/riscv/kernel/cpufeature.c      |  1 +
- arch/riscv/kernel/head.h            | 21 +++++++++++++++++++++
- arch/riscv/kernel/irq.c             |  2 +-
- arch/riscv/kernel/module-sections.c |  1 +
- arch/riscv/kernel/process.c         |  2 ++
- arch/riscv/kernel/ptrace.c          |  4 ++--
- arch/riscv/kernel/reset.c           |  1 +
- arch/riscv/kernel/setup.c           |  2 ++
- arch/riscv/kernel/signal.c          |  8 ++++----
- arch/riscv/kernel/smp.c             |  2 ++
- arch/riscv/kernel/smpboot.c         |  5 ++++-
- arch/riscv/kernel/syscall_table.c   |  1 +
- arch/riscv/kernel/time.c            |  1 +
- arch/riscv/kernel/traps.c           |  5 +++--
- arch/riscv/kernel/vdso.c            |  3 ++-
- arch/riscv/mm/context.c             |  1 +
- arch/riscv/mm/fault.c               |  2 ++
- arch/riscv/mm/init.c                |  5 +++--
- arch/riscv/mm/sifive_l2_cache.c     |  2 +-
- 24 files changed, 75 insertions(+), 18 deletions(-)
- create mode 100644 arch/riscv/kernel/head.h
