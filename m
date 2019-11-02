@@ -2,118 +2,154 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BD8CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 02:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C618CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 02:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBCF8208CB
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 02:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CA7821897
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 02:55:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SA9GgVQ2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JgBG/edD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbfKBC0U (ORCPT
+        id S1727581AbfKBCzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 22:26:20 -0400
-Received: from mail-io1-f49.google.com ([209.85.166.49]:35234 "EHLO
-        mail-io1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfKBC0T (ORCPT
+        Fri, 1 Nov 2019 22:55:14 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34801 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbfKBCzO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 22:26:19 -0400
-Received: by mail-io1-f49.google.com with SMTP id h9so12903646ioh.2;
-        Fri, 01 Nov 2019 19:26:17 -0700 (PDT)
+        Fri, 1 Nov 2019 22:55:14 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e4so7608543pgs.1;
+        Fri, 01 Nov 2019 19:55:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=km/bRRqzLSK+jYkK4Cv+iSycZzlFkGrMc7Hf3ZngsJQ=;
-        b=SA9GgVQ2tSIzkTNSJ0i6PsQ/bNWbOcs5/Z9xR3SDkH/vqZw8SKwdlrVtQHUctvcA9F
-         o8rVaPbF2ikSJNZ/riaPijDdixrl6+oMq8z6xNVOSxJpkaYpd870jUNjAT5oJ3oVPoYL
-         xPJeLQekf5Rq94VfZuZYecC2aIJ/UWrFGbB17wJSro4l0a0jY/KHY/WVFO2plrtGKBhn
-         0717FLIwcQ3jmcNawRowlCkuIIrL5VV1nEMb2et5eGblAbawfya6wGg55SpZKhU+aa+b
-         Q6U4y/rnbhxJO8gwf9J0GMzHXtkamzlCB5b8gKfYMyOikhfk1P7rLdaCFWvi3bmPym8i
-         eDIA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7ZNNTe5mkOuzZ1b3W8Xkq2eMV4qjyE7CsioiQ3occ8s=;
+        b=JgBG/edDtW18OFtkSYrEnJo1YamRpxQlTLQnoYLDbIDMyNZv3mVxKQzwAEE3KI9Cz0
+         iBJWao3C2C8VQJZrubB5eHV4+I4iKNohnhwjQJnnnjeVNOS1yRtI/7JuCO+vfwFDIzcw
+         npNswin/PMLjK5R9h/kE9NHOP2G4O3PJqiJJ3R1yy5zPY7JAQYidXb4UtSGO5Hapv70t
+         4aPLzEN9KCBVaK7EaUuWLb3SOKddLqc7A12/va8N2IoCRCShOy+M2MIq/H0v11X9TB/2
+         5+UdFuAo4sAX3kn5gIFCdgGvUd5585gtZybpTc0wdozCAp0DqtWFVeC/fTjcvYbuvdZk
+         RW0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=km/bRRqzLSK+jYkK4Cv+iSycZzlFkGrMc7Hf3ZngsJQ=;
-        b=pepfJcC1clE9osDufO25pgBT4wMe0EmeZPyRq9b1c6VWHYnA6a374CFMMkFtFgkcZN
-         x3z0vqrvRhiKH36hzT8ZMzWW/LG3PkSaYGnZ8R36I36ht4kuu6uKQv0SD+g4grGZVuZ1
-         YVk9/RpWqbyvQqs7nV5wGJwDoQJjOnYkBVcD3941LfHsEm4BQT56lfoCqJumUYlUwrQM
-         iwwqxK6Zoe1rZaWNUI5hHaZSzeDpiQtNhqoHvYaHZFDlhJjcmzd9OGdLL24/BoWKD4Nb
-         v3wA7oeIRONZlFhk6OlFh1GznBdoEtQAuimWhRFzHOUIxhT7KQjLFRDdxsy2XAL1HAIp
-         8uwA==
-X-Gm-Message-State: APjAAAUg/pUUX+phh5f8OvoFTk5GhLjad0L6oGHzW+ti5rSuYXlrStco
-        n3nNZ8jq8hB9GlpHG/3yFZuFXQo6jaR4cXNYpSJYd7j9zpU=
-X-Google-Smtp-Source: APXvYqwsxYiGowXq90USUBDJR75/1v4T+N1tzLJlspfc5iBedw3iuPuxluH9BJxqbCHvUfe22uvXr8AUydndzwo4KAA=
-X-Received: by 2002:a6b:8b0a:: with SMTP id n10mr13154119iod.280.1572661576984;
- Fri, 01 Nov 2019 19:26:16 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7ZNNTe5mkOuzZ1b3W8Xkq2eMV4qjyE7CsioiQ3occ8s=;
+        b=kltTa3xW/1BHZmpVhFCBtqjKtprBffxn6PG9Z6zan/qqTBbMrFxFUEaQ0uSTsdlVsd
+         YkrdsTHwCGjkBkL7NUI0ImbVBP0oSYuC8Q0O1HZwBUKux1RT9ome5swOSlN/Zr/ui7n5
+         omH2lKuzTGd6YExULRIKjj1LmtPmBDtGkGehWAJFLDugGydi1cEYZrTLXDFGz+LDsqwi
+         2vpbNjmCovaqa+824WIrz9hNhSm+zWMGifGEu0kJ9LoDqseYQmoGFRtP26aWjTFYnR3J
+         t9b3FaJlqE/QVFEIDbULuPLAWmg3n4qma4tKARBdRm8EYJAMfXFwf+eogOGSIDohalin
+         g0Sg==
+X-Gm-Message-State: APjAAAVWNUhZ865KwnefAzO8tZl0CLasX6UFngWZJoAqHB7xGWrk5swA
+        xRyYP0CJK/tlr5QXUiXX2nk=
+X-Google-Smtp-Source: APXvYqxg4OgJaYUyM3OKDwg+WHMVAXgkfTOYP2+s9ay3+BRTVdfbTd4PGssEzC8VuRD1mvWisVejHg==
+X-Received: by 2002:aa7:9639:: with SMTP id r25mr17314826pfg.17.1572663313252;
+        Fri, 01 Nov 2019 19:55:13 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id z14sm5449440pfq.66.2019.11.01.19.55.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Nov 2019 19:55:12 -0700 (PDT)
+Subject: Re: [PATCH 1/2] pinctrl: bcm: nsp: use gpiolib infrastructure for
+ interrupts
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        linus.walleij@linaro.org, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20191101015621.12451-1-chris.packham@alliedtelesis.co.nz>
+ <20191101015621.12451-2-chris.packham@alliedtelesis.co.nz>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <b681ed9d-a31a-e5cc-04ba-6f38a5cc745b@gmail.com>
+Date:   Fri, 1 Nov 2019 19:55:11 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-References: <CAOzgRdbjf7AkxXtgQ_ZxWU_QW2XqT+=CpSTBt0_T10+gynXtTw@mail.gmail.com>
- <CAOzgRdYLYB5eB2aNiGL7wuS5tvF7M8cEWiOqLFKcnMsWOe=zNA@mail.gmail.com>
-In-Reply-To: <CAOzgRdYLYB5eB2aNiGL7wuS5tvF7M8cEWiOqLFKcnMsWOe=zNA@mail.gmail.com>
-From:   youling 257 <youling257@gmail.com>
-Date:   Sat, 2 Nov 2019 10:26:03 +0800
-Message-ID: <CAOzgRdbhSwY3GY8V-w3b41eA-vz7MatkCSX2RbOL5Lk-06ZtSg@mail.gmail.com>
-Subject: Re: x86/boot: add ramoops.mem_size=1048576 boot parameter cause can't boot
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191101015621.12451-2-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ram map
 
-[ 0.000000] BIOS-provided physical RAM map:
-[ 0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000008efff] usable
-[ 0.000000] BIOS-e820: [mem 0x000000000008f000-0x000000000008ffff] ACPI NVS
-[ 0.000000] BIOS-e820: [mem 0x0000000000090000-0x000000000009ffff] usable
-[ 0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000001effffff] usable
-[ 0.000000] BIOS-e820: [mem 0x000000001f000000-0x00000000201fffff] reserved
-[ 0.000000] BIOS-e820: [mem 0x0000000020200000-0x00000000b6de7fff] usable
-[ 0.000000] BIOS-e820: [mem 0x00000000b6de8000-0x00000000b6e08fff] reserved
-[ 0.000000] BIOS-e820: [mem 0x00000000b6e09000-0x00000000ba608fff] usable
-[ 0.000000] BIOS-e820: [mem 0x00000000ba609000-0x00000000ba698fff] type 20
-[ 0.000000] BIOS-e820: [mem 0x00000000ba699000-0x00000000baf18fff] reserved
-[ 0.000000] BIOS-e820: [mem 0x00000000baf19000-0x00000000bb018fff] ACPI NVS
-[ 0.000000] BIOS-e820: [mem 0x00000000bb019000-0x00000000bb058fff] ACPI dat=
-a
-[ 0.000000] BIOS-e820: [mem 0x00000000bb059000-0x00000000bbffffff] usable
-[ 0.000000] BIOS-e820: [mem 0x00000000e0000000-0x00000000e3ffffff] reserved
-[ 0.000000] BIOS-e820: [mem 0x00000000fea00000-0x00000000feafffff] reserved
-[ 0.000000] BIOS-e820: [mem 0x00000000fec00000-0x00000000fec00fff] reserved
-[ 0.000000] BIOS-e820: [mem 0x00000000fed01000-0x00000000fed01fff] reserved
-[ 0.000000] BIOS-e820: [mem 0x00000000fed03000-0x00000000fed03fff] reserved
-[ 0.000000] BIOS-e820: [mem 0x00000000fed06000-0x00000000fed06fff] reserved
-[ 0.000000] BIOS-e820: [mem 0x00000000fed08000-0x00000000fed09fff] reserved
-[ 0.000000] BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1cfff] reserved
-[ 0.000000] BIOS-e820: [mem 0x00000000fed80000-0x00000000fedbffff] reserved
-[ 0.000000] BIOS-e820: [mem 0x00000000fee00000-0x00000000fee00fff] reserved
-[ 0.000000] BIOS-e820: [mem 0x00000000ffc00000-0x00000000ffffffff] reserved
-[ 0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000013fffffff] usable
-[ 0.000000] NX (Execute Disable) protection: active
-[ 0.000000] efi: EFI v2.40 by INSYDE Corp.
-[ 0.000000] efi: ACPI 2.0=3D0xbb058014 SMBIOS=3D0xba6a9000 ESRT=3D0xba6ac91=
-8
-[ 0.000000] SMBIOS 2.8 present.
-[ 0.000000] DMI: jumper EZpad/EZpad, BIOS Jumper8.S106x.A00C.1066 12/22/201=
-5
-[ 0.000000] tsc: Detected 1440.000 MHz processor
-[ 0.000298] e820: update [mem 0x00000000-0x00000fff] usable =3D=3D> reserve=
-d
-[ 0.000302] e820: remove [mem 0x000a0000-0x000fffff] usable
 
-youling 257 <youling257@gmail.com> =E4=BA=8E2019=E5=B9=B411=E6=9C=882=E6=97=
-=A5=E5=91=A8=E5=85=AD =E4=B8=8A=E5=8D=8810:23=E5=86=99=E9=81=93=EF=BC=9A
->
-> only add ramoops.mem_size=3D1048576 boot parameter cause can't boot on
-> my device, stop at booting command list, no anyting happen, no dmesg.
->
->
+On 10/31/2019 6:56 PM, Chris Packham wrote:
+> Use more of the gpiolib infrastructure for handling interrupts. The
+> root interrupt still needs to be handled manually as it is shared with
+> other peripherals on the SoC.
+> 
+> This will allow multiple instances of this driver to be supported and
+> will clean up gracefully on failure thanks to the device managed APIs.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+
+Just a couple of comments below:
+
+[snip]
+
+> +		irqc->name = dev_name(dev);
+
+The irq_chip used to be named "gpio-a" now it most likely will contain
+the address.unit-name notation from Device Tree, since this is visible
+in /proc/interrupts one might consider this to be an ABI breakage.
+
+> +		irqc->irq_ack = nsp_gpio_irq_ack;
+> +		irqc->irq_mask = nsp_gpio_irq_mask;
+> +		irqc->irq_unmask = nsp_gpio_irq_unmask;
+> +		irqc->irq_set_type = nsp_gpio_irq_set_type;
+>  
+> -			irq_set_chip_and_handler(irq, &nsp_gpio_irq_chip,
+> -						 handle_simple_irq);
+> -			irq_set_chip_data(irq, chip);
+> -		}
+> +		val = readl(chip->base + NSP_CHIP_A_INT_MASK);
+> +		val = val | NSP_CHIP_A_GPIO_INT_BIT;
+> +		writel(val, (chip->base + NSP_CHIP_A_INT_MASK));
+>  
+>  		/* Install ISR for this GPIO controller. */
+> -		ret = devm_request_irq(&pdev->dev, irq, nsp_gpio_irq_handler,
+> -				       IRQF_SHARED, "gpio-a", chip);
+> +		ret = devm_request_irq(dev, irq, nsp_gpio_irq_handler,
+> +				       IRQF_SHARED, "gpio-a", &chip->gc);
+>  		if (ret) {
+>  			dev_err(&pdev->dev, "Unable to request IRQ%d: %d\n",
+>  				irq, ret);
+> -			goto err_rm_gpiochip;
+> +			return ret;
+>  		}
+>  
+> -		val = readl(chip->base + NSP_CHIP_A_INT_MASK);
+> -		val = val | NSP_CHIP_A_GPIO_INT_BIT;
+> -		writel(val, (chip->base + NSP_CHIP_A_INT_MASK));
+> +		girq = &chip->gc.irq;
+> +		girq->chip = irqc;
+> +		/* This will let us handle the parent IRQ in the driver */
+> +		girq->parent_handler = NULL;
+> +		girq->num_parents = 0;
+> +		girq->parents = NULL;
+> +		girq->default_type = IRQ_TYPE_NONE;
+> +		girq->handler = handle_simple_irq;
+
+It might be worth creating a helper that can be called to initialize all
+relevant members to the values that indicate: let me manage the
+interrupt. This would make us more future proof with respect to
+assumptions being made in gpiolib as well as if new fields are added in
+the future. This would be a separate patch obviously.
+
+Other than that:
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
