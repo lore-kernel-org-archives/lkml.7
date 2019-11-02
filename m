@@ -2,124 +2,128 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A56ADCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 23:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC240CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 23:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A897217D9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 23:10:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572736218;
-	bh=yT2xfdk7VhanLkx0HAZLMAhJ+HGrris22TSXnZ7QnSc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pQQRslAQcDgNjGrQ1uKdYS96E5IebaYMWe+WSl9/gX7ZyIATRgwiLMA00mhu714MK
-	 fnHLhKhulno/4o5lPeYa8r0KxAea+MZe9U77AQGDx8xRCO8+F4M/o0/9KXOPUJrE6f
-	 4ZaUwrJ6fz+mVexmQHOuiBb37xIrOeaXKtwPGXCU=
+	by mail.kernel.org (Postfix) with ESMTP id 91095217D9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 23:11:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="kPUhMy2b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfKBXKR (ORCPT
+        id S1727460AbfKBXLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 19:10:17 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38929 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727367AbfKBXKQ (ORCPT
+        Sat, 2 Nov 2019 19:11:13 -0400
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:39340 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727431AbfKBXLN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 19:10:16 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 195so9618890lfj.6
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 16:10:15 -0700 (PDT)
+        Sat, 2 Nov 2019 19:11:13 -0400
+Received: by mail-vk1-f194.google.com with SMTP id j84so3006045vkj.6
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 16:11:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Uh8/ql1swcZ/RLJ8zkeObExj1w6DyGVNWtfZIlFMpeo=;
-        b=Vx52JGJ2fL2ca9BB2NXhwTThadLFJNdykQ5Qc2uEp2vn5uwNFrfyadC6EXLjhvKklV
-         KXMcjJQrv3h80vcy/cZZjfo/5qqKgj2fI2pWR4TA74i3RLzoy9MP14q5tRVf25F8gLLb
-         ceXpd5ICYbOD7PSidUN5wWZK5ccyx9qRkG23Y=
+        bh=WhCdznOj6/CiJO2ZBCw5MTKrC7FAnR3U/9q/Xf0fYOs=;
+        b=kPUhMy2b6zicwiCWrkHkenmU0jmo3gGF9Bs0Rmn4DTL1JrEavSguW0xAkZu7JYTk9d
+         ek8IxOBEjODgpTz1wIDnSHvaHaYUg2acex+4pJ64rJ2OrsvwI2ydLGnxtEupPtUw1+Op
+         NHeebKZLXWzDwgz8vud03b/98T/DrLKeDYY0V1bxaGpxgT4K+ee0JK5Z8DSnDGxp+/Mr
+         5tt+07jMW35wji3rbSAxYpL7GQxqhd0NjK0YBdE4VDw6LYdM2hjOrYGRD7h+PTYte0bA
+         7X0LiXwU+ZHiOa6xm09fMo8Up/hOYKjdmaNSoJ0nlDpVunAzKaGDXruwrcQr9vK9fn2M
+         H/2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Uh8/ql1swcZ/RLJ8zkeObExj1w6DyGVNWtfZIlFMpeo=;
-        b=egQqw9fSG2w08MLVsY4QrOzAdqo3/t7J/nnyD1vTESE64cCnMHF/ZH7h3CIPgZ3oMd
-         jytIxJNm7TePY+iDh2XRscIIg9IzwIddo1BzkNbC46cvGU73TvyTRNdF/zlgz7OU67ID
-         WVVnC3SaormNroDVJzSASSLUmD6kiS4IsYVYT7rzb9R1LxqZUWOBKwxsOmZWgoYqT208
-         v6OPvsx6wSl0Pir6K6hVtu98RLXhV54k14ivoa+wBUJbeZ8rOOwLDtY3awV4KcRI+Xvr
-         1EwzF+uPDMOpDTrCJ1jn31jmH1UCgBhaLVKRqniJWdfcsBV6WoQeW/tv90w/zBpoemGf
-         bB9Q==
-X-Gm-Message-State: APjAAAXbhpMdWspj/VNiihknpkcIN5GQNaCoFOfDHIxP+Gu85blwLHmg
-        +LNFPK4xvBL7tNK0FcWhffrECzvxWRE=
-X-Google-Smtp-Source: APXvYqx4zwfCcRGCtKRpViVLFpXMCJSG9KdZAbkBhNDk+6b6aOm6WyRiBGzvliMO9C50AFwQphDzdQ==
-X-Received: by 2002:a19:655b:: with SMTP id c27mr11791144lfj.122.1572736212976;
-        Sat, 02 Nov 2019 16:10:12 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id e26sm4193246ljj.76.2019.11.02.16.10.11
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 Nov 2019 16:10:11 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id y23so13362926ljc.5
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 16:10:11 -0700 (PDT)
-X-Received: by 2002:a2e:8919:: with SMTP id d25mr1543119lji.97.1572736211179;
- Sat, 02 Nov 2019 16:10:11 -0700 (PDT)
+        bh=WhCdznOj6/CiJO2ZBCw5MTKrC7FAnR3U/9q/Xf0fYOs=;
+        b=apN3PspZG077tk1OaLFAlbA3ToJ3UCxseKHUAzUtEkUlYHvyQSLsQLKOhwrYWiApXK
+         YpXvm7u7a9Dv6ANdJfH1ClLYGj6UtrRtg/gx9ViOCQUqDWvKs4RHD6Y8KJnYY2lbr/t1
+         N1C+s7zi0sDPrxSj1+xjO1GPczk5C6gkm/+SLzMedWmE0Yyr72g2xBRFtV/ZOwt6nuN1
+         kve7TN3DJwKGCGSFcS8ldRd1JCbFbcpSUXAq179/SFfjHgiJir5pta0znc1mjyjl/UXA
+         H4oTjVMNBNZFOd9OcqtXMUTgv0APiv/U6sAJxmIbd21Nx5mxsflOuuaYaZ25Pt17QTkA
+         nFAw==
+X-Gm-Message-State: APjAAAXppWmQ0RO3X55/oAyoZbEY9CrfQKaqQjfzZTqDPlbtQfBHerOx
+        RaPWVVIyeZpoSX97hEbw9MV0to6HcPRqTSyVjA4IZA==
+X-Google-Smtp-Source: APXvYqxJIcBiWVIk3ADbBtcrMcyxqe+BG4gUSg3SVRb9JK1xia4TWPS+eTtJs0k4OCYjK3nQfFB2IOa9/ZZZnGycrdg=
+X-Received: by 2002:a1f:2f51:: with SMTP id v78mr8770374vkv.101.1572736270640;
+ Sat, 02 Nov 2019 16:11:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHk-=wj1BLz6s9cG9Ptk4ULxrTy=MkF7ZH=HF67d7M5HL1fd_A@mail.gmail.com>
- <E590C3AF-1D09-4927-B83F-DD0A6A148B6D@amacapital.net> <CAHk-=wgzRU9RjkZG0L9_yrnFN69REkrSokTQOGZMUkvdispvuQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wgzRU9RjkZG0L9_yrnFN69REkrSokTQOGZMUkvdispvuQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 2 Nov 2019 16:09:55 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgPQutQ8d8kUCvAFi+hfNWgaNLiZPkbg-GXY2DCtD-Z5Q@mail.gmail.com>
-Message-ID: <CAHk-=wgPQutQ8d8kUCvAFi+hfNWgaNLiZPkbg-GXY2DCtD-Z5Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 11/10] pipe: Add fsync() support [ver #2]
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     David Howells <dhowells@redhat.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <HE1PR06MB401108289F09802C261374F8AC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <20191029012430.24566-1-jonas@kwiboo.se> <HE1PR06MB40116FEF3EBE4706E426A5FFAC610@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <CAAEAJfCjUe=V8Sqj2Yqy-Su7iE=ptFDz40vg92bYqUS8XrE73w@mail.gmail.com>
+In-Reply-To: <CAAEAJfCjUe=V8Sqj2Yqy-Su7iE=ptFDz40vg92bYqUS8XrE73w@mail.gmail.com>
+From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Date:   Sun, 3 Nov 2019 00:10:59 +0100
+Message-ID: <CAAEAJfDrNf+a03rJ-YnhPugDLb4a-1BJmNYDboMfXP_R8n23Eg@mail.gmail.com>
+Subject: Re: [PATCH v2 02/10] media: hantro: Fix motion vectors usage condition
+To:     Jonas Karlman <jonas@kwiboo.se>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Francois Buergisser <fbuergisser@chromium.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 2, 2019 at 4:02 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Sun, 3 Nov 2019 at 00:09, Ezequiel Garcia
+<ezequiel@vanguardiasur.com.ar> wrote:
 >
-> But I don't think anybody actually _did_ any of that. But that's
-> basically the argument for the three splice operations:
-> write/vmsplice/splice(). Which one you use depends on the lifetime and
-> the source of your data. write() is obviously for the copy case (the
-> source data might not be stable), while splice() is for the "data from
-> another source", and vmsplace() is "data is from stable data in my
-> vm".
+> On Tue, 29 Oct 2019 at 02:25, Jonas Karlman <jonas@kwiboo.se> wrote:
+> >
+> > From: Francois Buergisser <fbuergisser@chromium.org>
+> >
+> > The setting of the motion vectors usage and the setting of motion
+> > vectors address are currently done under different conditions.
+> >
+> > When decoding pre-recorded videos, this results of leaving the motion
+> > vectors address unset, resulting in faulty memory accesses. Fix it
+> > by using the same condition everywhere, which matches the profiles
+> > that support motion vectors.
+> >
+> > Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
+> > Signed-off-by: Francois Buergisser <fbuergisser@chromium.org>
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> > ---
+> >  drivers/staging/media/hantro/hantro_g1_h264_dec.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> > index 29130946dea4..a1cb18680200 100644
+> > --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> > +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+> > @@ -35,7 +35,7 @@ static void set_params(struct hantro_ctx *ctx)
+> >         if (sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD)
+> >                 reg |= G1_REG_DEC_CTRL0_SEQ_MBAFF_E;
+> >         reg |= G1_REG_DEC_CTRL0_PICORD_COUNT_E;
+> > -       if (dec_param->nal_ref_idc)
+> > +       if (sps->profile_idc > 66 && dec_param->nal_ref_idc)
+> >                 reg |= G1_REG_DEC_CTRL0_WRITE_MVS_E;
+> >
+> >         if (!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY) &&
+> > @@ -245,7 +245,7 @@ static void set_buffers(struct hantro_ctx *ctx)
+> >         vdpu_write_relaxed(vpu, dst_dma, G1_REG_ADDR_DST);
+> >
+> >         /* Higher profiles require DMV buffer appended to reference frames. */
+> > -       if (ctrls->sps->profile_idc > 66) {
+> > +       if (ctrls->sps->profile_idc > 66 && ctrls->decode->nal_ref_idc) {
+>
+> How about a one-line function (purposely not a macro,
+> to have type-checking) ? I think this should emphasize the fact that
+> the condition
+> needs to be the same.
+>
 
-Btw, it's really worth noting that "splice()" and friends are from a
-more happy-go-lucky time when we were experimenting with new
-interfaces, and in a day and age when people thought that interfaces
-like "sendpage()" and zero-copy and playing games with the VM was a
-great thing to do.
-
-It turns out that VM games are almost always more expensive than just
-copying the data in the first place, but hey, people didn't know that,
-and zero-copy was seen a big deal.
-
-The reality is that almost nobody uses splice and vmsplice at all, and
-they have been a much bigger headache than they are worth. If I could
-go back in time and not do them, I would. But there have been a few
-very special uses that seem to actually like the interfaces.
-
-But it's entirely possible that we should kill vmsplice() (likely by
-just implementing the semantics as "write()") because it's not common
-enough to have the complexity.
-
-             Linus
+Oops, just saw the next patch. Nevermind.
