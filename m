@@ -2,99 +2,94 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF213CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 01:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE13FC47E49
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 01:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE30208E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 01:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABAFA21897
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 01:14:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="p/uZlNxJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbfKBBNr (ORCPT
+        id S1728306AbfKBBOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 21:13:47 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:59692 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726892AbfKBBNr (ORCPT
+        Fri, 1 Nov 2019 21:14:15 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:40031 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbfKBBOP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 21:13:47 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TgyIBrx_1572657222;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TgyIBrx_1572657222)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 02 Nov 2019 09:13:43 +0800
-Subject: Re: [PATCH v2] sched/numa: advanced per-cgroup numa statistic
-To:     =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-References: <46b0fd25-7b73-aa80-372a-9fcd025154cb@linux.alibaba.com>
- <682ed1d4-abf1-92f6-851f-567ff9b9a841@linux.alibaba.com>
- <20191101173936.GB16165@blackbody.suse.cz>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Message-ID: <0b7a20a3-4ff4-6183-c6e1-7c8c37efd0e2@linux.alibaba.com>
-Date:   Sat, 2 Nov 2019 09:13:42 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Fri, 1 Nov 2019 21:14:15 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 676BC22EE4;
+        Sat,  2 Nov 2019 02:14:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
+        s=mail2016061301; t=1572657253;
+        bh=9jBTRlgT0tA/JEQgM/JP3C7ZF4qFmUkZTYW+fX9iAik=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=p/uZlNxJgtfiIuUuvwHsDubGyBJWiz44BmGk3uuwKtcKxU6Ou9av+FyogsT/xhcg0
+         wp5uGtLQTETtpESAcXKbsRJZM27OlQT3bUWKKDCKYL3SoM36LoBSD776+139R2QF+F
+         Qfy6Yr73Ueud8UO8981kvD4Haiq943iga8J/Ir10=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Michael Walle <michael@walle.cc>
+Subject: [PATCH 1/5] net: phy: at803x: fix Kconfig description
+Date:   Sat,  2 Nov 2019 02:13:47 +0100
+Message-Id: <20191102011351.6467-2-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191102011351.6467-1-michael@walle.cc>
+References: <20191102011351.6467-1-michael@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <20191101173936.GB16165@blackbody.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.101.4 at web
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Michal
+The name of the PHY is actually AR803x not AT803x. Additionally, add the
+name of the vendor and mention the AR8031 support.
 
-On 2019/11/2 上午1:39, Michal Koutný wrote:
-> Hello Yun.
-> 
-> On Tue, Oct 29, 2019 at 03:57:20PM +0800, 王贇 <yun.wang@linux.alibaba.com> wrote:
->> +static void update_numa_statistics(struct cfs_rq *cfs_rq)
->> +{
->> +	int idx;
->> +	unsigned long remote = current->numa_faults_locality[3];
->> +	unsigned long local = current->numa_faults_locality[4];
->> +
->> +	cfs_rq->nstat.jiffies++;
-> This statistics effectively doubles what
-> kernel/sched/cpuacct.c:cpuacct_charge() does (measuring per-cpu time).
-> Hence it seems redundant.
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ drivers/net/phy/Kconfig | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Yes, while there is no guarantee the cpu cgroup always binding
-with cpuacct in v1, we can't rely on that...
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index fe602648b99f..1b884ebb4e48 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -282,11 +282,6 @@ config AX88796B_PHY
+ 	  Currently supports the Asix Electronics PHY found in the X-Surf 100
+ 	  AX88796B package.
+ 
+-config AT803X_PHY
+-	tristate "AT803X PHYs"
+-	---help---
+-	  Currently supports the AT8030 and AT8035 model
+-
+ config BCM63XX_PHY
+ 	tristate "Broadcom 63xx SOCs internal PHY"
+ 	depends on BCM63XX || COMPILE_TEST
+@@ -444,6 +439,11 @@ config NXP_TJA11XX_PHY
+ 	---help---
+ 	  Currently supports the NXP TJA1100 and TJA1101 PHY.
+ 
++config AT803X_PHY
++	tristate "Qualcomm Atheros AR803X PHYs"
++	help
++	  Currently supports the AR8030, AR8031 and AR8035 model
++
+ config QSEMI_PHY
+ 	tristate "Quality Semiconductor PHYs"
+ 	---help---
+-- 
+2.20.1
 
-> 
->> +
->> +	if (!remote && !local)
->> +		return;
->> +
->> +	idx = (NR_NL_INTERVAL - 1) * local / (remote + local);
->> +	cfs_rq->nstat.locality[idx]++;
-> IIUC, the mechanism numa_faults_locality values, this statistics only
-> estimates the access locality based on NUMA balancing samples, i.e.
-> there exists more precise source of that information.>
-> All in all, I'd concur to Mel's suggestion of external measurement.
-
-Currently I can only find numa balancing who is telling the real story,
-at least we know after the PF, task do access the page on that CPU,
-although it can't cover all the cases, it still giving good hints :-)
-
-It would be great if we could find more similar indicators, like the
-migration failure counter Mel mentioned, which give good hints on
-memory policy problems, could be used as external measurement.
-
-Regards,
-Michael Wang
-
-> 
-> Michal
-> 
