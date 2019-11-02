@@ -2,58 +2,59 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19532CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 01:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F315CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 01:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0ED421897
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 01:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 371B221855
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 01:18:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Be22zF5F"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="g2fuM9Y8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbfKBBOk (ORCPT
+        id S1727963AbfKBBSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 21:14:40 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:48721 "EHLO
+        Fri, 1 Nov 2019 21:18:30 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:50439 "EHLO
         ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727814AbfKBBOP (ORCPT
+        with ESMTP id S1726892AbfKBBSa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 21:14:15 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Fri, 1 Nov 2019 21:18:30 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id CD348224C1;
-        Sat,  2 Nov 2019 02:14:08 +0100 (CET)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 9CF5322EE3;
+        Sat,  2 Nov 2019 02:18:27 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1572657253;
-        bh=coap/IZFRQ4M2syEqYhwbUnfZttYrUZ66xrrwe3nm60=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Be22zF5FD1O9jgvo3ulntDV80CWrh0L3745rj+Rsng7D/bvXHUYwn71K8UNqpSAer
-         /9itjG7lg1wG/05NpqcaR4fhTBiA5vK9JJU7a94cbyl/OhNKrxLhMv1MRvGxYBOK44
-         7T+yIpb+Sl4kwuI96Sfc5qr2mRnJK+wTLxnjicEs=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     Michael Walle <michael@walle.cc>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Simon Horman <simon.horman@netronome.com>
-Subject: [PATCH 0/5] net: phy: at803x device tree binding
-Date:   Sat,  2 Nov 2019 02:13:46 +0100
-Message-Id: <20191102011351.6467-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        s=mail2016061301; t=1572657507;
+        bh=+XXMSsxYm2vMYefd9H3iikK2rf+B2sGxbUw0sNsyyIc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=g2fuM9Y8yxXFcdkuLrmvGfO4q1qyj3O1jY2PZ4vYLIXevDEz+yS2JWLC2F3TuMxQf
+         6nah9fOoYOovMwNWoqkNvvVKK8q4vtSMx3bkhIKG135A9UBqa3Kui1tCGPe1W1GzoR
+         sXO5uOYpWyCyOsHakrSVBjpgcmQO2sRQ/VLPe7BE=
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+Date:   Sat, 02 Nov 2019 02:18:27 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [RFC PATCH 3/3] net: phy: at803x: add device tree binding
+In-Reply-To: <64c0dda8-d428-643e-5edf-ac5108c7ec5c@gmail.com>
+References: <20191030224251.21578-1-michael@walle.cc>
+ <20191030224251.21578-4-michael@walle.cc>
+ <754a493b-a557-c369-96e1-6701ba5d5a30@gmail.com>
+ <B3B13FB8-42D9-42F9-8106-536F574FA35B@walle.cc>
+ <e867d1a9a1e4b878aa0dafe413e9a6f7@walle.cc>
+ <64c0dda8-d428-643e-5edf-ac5108c7ec5c@gmail.com>
+Message-ID: <9de3e32f081c9b2d1227514b4e9f166e@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.2.3
 X-Virus-Scanned: clamav-milter 0.101.4 at web
 X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,52 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds a device tree binding to configure the clock and the RGMII voltage.
+Am 2019-10-31 18:35, schrieb Florian Fainelli:
+> On 10/31/19 10:22 AM, Michael Walle wrote:
+>> Am 2019-10-31 00:59, schrieb Michael Walle:
+>>>>> +
+>>>>> +    if (of_property_read_bool(node, "atheros,keep-pll-enabled"))
+>>>>> +        priv->flags |= AT803X_KEEP_PLL_ENABLED;
+>>>> 
+>>>> This should probably be a PHY tunable rather than a Device Tree
+>>>> property
+>>>> as this delves more into the policy than the pure hardware 
+>>>> description.
+>>> 
+>>> To be frank. I'll first need to look into PHY tunables before
+>>> answering ;)
+>>> But keep in mind that this clock output might be used anywhere on the
+>>> board. It must not have something to do with networking. The PHY has 
+>>> a
+>>> crystal and it can generate these couple of frequencies regardless of
+>>> its network operation.
+>> 
+>> Although it could be used to provide any clock on the board, I don't 
+>> know
+>> if that is possible at the moment, because the PHY is configured in
+>> config_init() which is only called when someone brings the interface 
+>> up,
+>> correct?
+>> 
+>> Anyway, I don't know if that is worth the hassle because in almost all
+>> cases the use case is to provide a fixed clock to the MAC for an RGMII
+>> interface. I don't know if that really fits a PHY tunable, because in
+>> the worst case the link won't work at all if the SoC expects an
+>> always-on clock.
+> 
+> Well, that was my question really, is the clock output being controlled
+> the actual RXC that will feed back to the MAC or is this is another
+> clock output pin (sorry if you indicated that before and I missed it)?
 
-Changes since the RFC:
- - renamed the Kconfig entry to "Qualcomm Atheros.." and reordered the
-   item
- - renamed the prefix from atheros to qca
- - use the correct name AR803x (instead of AT803x) in new files and
-   dt-bindings.
- - listed the PHY maintainers in the new schema. Hopefully, thats ok.
- - fixed a typo in the bindings schema
- - run dtb_checks and dt_binding_check and fixed the schema
- - dropped the rgmii-io-1v8 property; instead provide two regulators vddh
-   and vddio, add one consumer vddio-supply
- - fix the clock settings for the AR8030/AR8035
- - only the AR8031 supports chaning the LDO and the PLL mode in software.
-   Check if we have the correct PHY.
- - new patch to mention the AR8033 which is the same as the AR8031 just
-   without PTP support
- - new patch which corrects any displayed PHY names and comments. Be
-   consistent.
+No it is not the RX clock. The PHY has three clock pins, RX clock, TX
+clock and a general purpose CLK_25M pin.
 
-Michael Walle (5):
-  net: phy: at803x: fix Kconfig description
-  dt-bindings: net: phy: Add support for AT803X
-  net: phy: at803x: add device tree binding
-  net: phy: at803x: mention AR8033 as same as AR8031
-  net: phy: at803x: fix the PHY names
+> If this is the PHY's RXC, then does the configuration (DSP, PLL, XTAL)
+> matter at all on the generated output frequency, or is this just a
+> choice for the board designer, and whether the PHY is configured for
+> MII/RGMII, it outputs the appropriate clock at 25/125Mhz?
 
- .../devicetree/bindings/net/qca,ar803x.yaml   | 111 +++++++
- MAINTAINERS                                   |   2 +
- drivers/net/phy/Kconfig                       |  10 +-
- drivers/net/phy/at803x.c                      | 301 +++++++++++++++++-
- include/dt-bindings/net/qca-ar803x.h          |  13 +
- 5 files changed, 422 insertions(+), 15 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/qca,ar803x.yaml
- create mode 100644 include/dt-bindings/net/qca-ar803x.h
+The RXC changes the frequency according to the speed.
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Simon Horman <simon.horman@netronome.com>
 -- 
-2.20.1
-
+-michael
