@@ -2,114 +2,93 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A609ACA9ED1
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 04:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7EACA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 04:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C717218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 04:19:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572668341;
-	bh=L4yi9HZzSLKWoBVRW7HDpNcj9mWtZhcY8Rr5d7zt5oY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WsVraRi9j01qqhm2qvPQBP8pBTowqaaiHRZZRejiBmDzwcDTZjz15C8mGZdiPR9Zs
-	 F+AFQz9+67ZxGUk1cpDso3EKbbgPsovb4gA054jrJrefoqoiYq9o5iHuShtnUmQrc9
-	 deda2cnvOE2n3FaHF7Oe/3WFZtd0YSeV0JooZ+6A=
+	by mail.kernel.org (Postfix) with ESMTP id 512662084D
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 04:25:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="SHWv2jkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbfKBETA (ORCPT
+        id S1726935AbfKBEZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 00:19:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45662 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfKBETA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 00:19:00 -0400
-Received: from localhost (unknown [81.18.188.213])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C99E2084D;
-        Sat,  2 Nov 2019 04:18:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572668339;
-        bh=L4yi9HZzSLKWoBVRW7HDpNcj9mWtZhcY8Rr5d7zt5oY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OV6PhQG8AT4wISD+TKNP+5puVX214jsYAkuBxYKn+lbFmwpFQhtLjB7jIYxuYPZsk
-         lNYDsRGOTfq6wGhtM4XlUY23WM/uVwj2KX5rb8ZxHcKuLAcb0z/kjpbBIfYk/4g/I7
-         u5W+5DKEvI+fVyh7bhBsP3hW5pLRTxbNk2mj9pTQ=
-Date:   Sat, 2 Nov 2019 00:18:56 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Olaf Hering <olaf@aepfle.de>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "open list:Hyper-V CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] tools/hv: async name resolution in kvp_daemon
-Message-ID: <20191102041856.GY1554@sasha-vm>
-References: <20191024144943.26199-1-olaf@aepfle.de>
- <20191028161754.GF1554@sasha-vm>
- <20191028184955.24dbb7d4.olaf@aepfle.de>
+        Sat, 2 Nov 2019 00:25:28 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35211 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfKBEZ1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Nov 2019 00:25:27 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z6so10117737otb.2
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 21:25:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WVKY0SioYELJ6ImI8v503Lskf+dAkDXW4DKFTghrrvY=;
+        b=SHWv2jkO49HDcZocXLDXy78sL6G9/hjS58JuJUxYvtdb3mk1EEucfKJPlTLckUhr/J
+         YuA1vjvu+ra/1CvOsajcC5oiZ6IrRNsgwZQ4CefAkjgyaaVbYonwj6WcPQSTMaSlkFno
+         To/RTYODLOo8jttLyd+bE/2HvuMZRYa8SdNFzoCAjPx3wr+fSElVFlgBs/kxYnMgxq1A
+         +WiE9CcIUveR6MOhQHaTHl/UlIlugi9OMXaOxEkmYhIt32I/kYLnkgVpnYAroc7txWnC
+         HHR7UqKp5Bkie3I1vmlt0T6AJ9ifxAINOBUt4n04sEG4cVQfzRSP5Dyq0Q7T2CGrGfA1
+         OSmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WVKY0SioYELJ6ImI8v503Lskf+dAkDXW4DKFTghrrvY=;
+        b=L6R1sfF7N2jjkB2O6hasaAJjlcK9HM61DC6A5pK77XNX9JUqQDtCNzwbhxjSKudSrZ
+         b/sCe4t/fjdU5iePvgaSIwt/tNYDfT8+53zVXxNhNrCv2uruIXKqoBJDMm/i3USpZr2J
+         8lZ5TNPpki2tQIZjA5+XJ1omIKei/A+Gljpbqb4r6n4BRHIcuXgMksgzlhUhhv+dQlpj
+         ndrZc4EaMhhyhtjoYo1YHnVnmAw+xRP+kFdIhQmp6yPADE6wbeSJj+359WwPuX3/pvbE
+         zorTsoC5pEDKVYKfBro6tFLpFzIX0BpnIIW/alTLUeEQNRjBXFmti89kd+u1NsiAt0Ym
+         aIMQ==
+X-Gm-Message-State: APjAAAUgjHBC4jsMVBA61/QD8q5AyV8wgkK/NZiiJ/Xda5+Nx1w75l/O
+        CMamY6DJYhr0G8ksWVKeAh1Jkz7ZDxC1XbKXzyiZDg==
+X-Google-Smtp-Source: APXvYqzuhvuy068R2WZlsZs6OALu7q7vZmg+l5pCz59QbwFS6qu8b/RiiqHO1Swr/2p2mNuDWmNLcgvs2qICNDvAVow=
+X-Received: by 2002:a9d:2d89:: with SMTP id g9mr11067444otb.126.1572668726439;
+ Fri, 01 Nov 2019 21:25:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191028184955.24dbb7d4.olaf@aepfle.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191023221332.GE2044@dread.disaster.area> <efffc9e7-8948-a117-dc7f-e394e50606ab@plexistor.com>
+ <20191024073446.GA4614@dread.disaster.area> <fb4f8be7-bca6-733a-7f16-ced6557f7108@plexistor.com>
+ <20191024213508.GB4614@dread.disaster.area> <ab101f90-6ec1-7527-1859-5f6309640cfa@plexistor.com>
+ <20191025003603.GE4614@dread.disaster.area> <20191025204926.GA26184@iweiny-DESK2.sc.intel.com>
+ <20191027221039.GL4614@dread.disaster.area> <20191031161757.GA14771@iweiny-DESK2.sc.intel.com>
+ <20191101224715.GY4614@dread.disaster.area>
+In-Reply-To: <20191101224715.GY4614@dread.disaster.area>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 1 Nov 2019 21:25:15 -0700
+Message-ID: <CAPcyv4juj9E1qKSXzOVfugmd=rBLZAvfbDdZT6ut0LdWwza=xA@mail.gmail.com>
+Subject: Re: [PATCH 0/5] Enable per-file/directory DAX operations
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Boaz Harrosh <boaz@plexistor.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 06:49:55PM +0100, Olaf Hering wrote:
->Am Mon, 28 Oct 2019 12:17:54 -0400
->schrieb Sasha Levin <sashal@kernel.org>:
->
->> undefined reference to `pthread_create'
->
->Does "make V=1 -C tools/hv" work for you?
->This is what I use.
+On Fri, Nov 1, 2019 at 3:47 PM Dave Chinner <david@fromorbit.com> wrote:
+[..]
+> No, the flag does not get turned on until we've solved the problems
+> that resulted in us turning it off. We've gone over this mutliple
+> times, and nobody has solved the issues that need solving - everyone
+> seems to just hack around the issues rather than solving it
+> properly. If we thought taking some kind of shortcut full of
+> compromises and gotchas was the right solution, we would have never
+> turned the flag off in the first place.
 
-It works before I apply this patch, but breaks after:
-
-$ make V=1 -C tools/hv
-make: Entering directory '/home/sasha/linux/tools/hv'
-make -f /home/sasha/linux/tools/build/Makefile.build dir=. obj=hv_kvp_daemon
-make[1]: Entering directory '/home/sasha/linux/tools/hv'
-  gcc -Wp,-MD,./.hv_kvp_daemon.o.d -Wp,-MT,hv_kvp_daemon.o -O2 -Wall -g -D_GNU_SOURCE -Iinclude -D"BUILD_STR(s)=#s" -c -o hv_kvp_daemon.o hv_kvp_daemon.c
-   ld -r -o hv_kvp_daemon-in.o  hv_kvp_daemon.o
-make[1]: Leaving directory '/home/sasha/linux/tools/hv'
-gcc -O2 -Wall -g -D_GNU_SOURCE -Iinclude  hv_kvp_daemon-in.o -o hv_kvp_daemon
-make -f /home/sasha/linux/tools/build/Makefile.build dir=. obj=hv_vss_daemon
-make[1]: Entering directory '/home/sasha/linux/tools/hv'
-  gcc -Wp,-MD,./.hv_vss_daemon.o.d -Wp,-MT,hv_vss_daemon.o -O2 -Wall -g -D_GNU_SOURCE -Iinclude -D"BUILD_STR(s)=#s" -c -o hv_vss_daemon.o hv_vss_daemon.c
-   ld -r -o hv_vss_daemon-in.o  hv_vss_daemon.o
-make[1]: Leaving directory '/home/sasha/linux/tools/hv'
-gcc -O2 -Wall -g -D_GNU_SOURCE -Iinclude  hv_vss_daemon-in.o -o hv_vss_daemon
-make -f /home/sasha/linux/tools/build/Makefile.build dir=. obj=hv_fcopy_daemon
-make[1]: Entering directory '/home/sasha/linux/tools/hv'
-  gcc -Wp,-MD,./.hv_fcopy_daemon.o.d -Wp,-MT,hv_fcopy_daemon.o -O2 -Wall -g -D_GNU_SOURCE -Iinclude -D"BUILD_STR(s)=#s" -c -o hv_fcopy_daemon.o hv_fcopy_daemon.c
-   ld -r -o hv_fcopy_daemon-in.o  hv_fcopy_daemon.o
-make[1]: Leaving directory '/home/sasha/linux/tools/hv'
-gcc -O2 -Wall -g -D_GNU_SOURCE -Iinclude  hv_fcopy_daemon-in.o -o hv_fcopy_daemon
-make: Leaving directory '/home/sasha/linux/tools/hv'
-$ git am ~/incoming/_PATCH_v1_tools-hv_async_name_resolution_in_kvp_daemon.patch
-Applying: tools/hv: async name resolution in kvp_daemon
-$ make V=1 -C tools/hv
-make: Entering directory '/home/sasha/linux/tools/hv'
-make -f /home/sasha/linux/tools/build/Makefile.build dir=. obj=hv_kvp_daemon
-make[1]: Entering directory '/home/sasha/linux/tools/hv'
-  gcc -Wp,-MD,./.hv_kvp_daemon.o.d -Wp,-MT,hv_kvp_daemon.o -O2 -Wall -g -D_GNU_SOURCE -Iinclude -D"BUILD_STR(s)=#s" -c -o hv_kvp_daemon.o hv_kvp_daemon.c
-   ld -r -o hv_kvp_daemon-in.o  hv_kvp_daemon.o
-make[1]: Leaving directory '/home/sasha/linux/tools/hv'
-gcc -O2 -Wall -g -D_GNU_SOURCE -Iinclude -lpthread hv_kvp_daemon-in.o -o hv_kvp_daemon
-/usr/bin/ld: hv_kvp_daemon-in.o: in function `kvp_obtain_domain_name':
-/home/sasha/linux/tools/hv/hv_kvp_daemon.c:1372: undefined reference to `pthread_create'
-/usr/bin/ld: /home/sasha/linux/tools/hv/hv_kvp_daemon.c:1377: undefined reference to `pthread_detach'
-collect2: error: ld returned 1 exit status
-make: *** [Makefile:36: hv_kvp_daemon] Error 1
-make: Leaving directory '/home/sasha/linux/tools/hv'
-
--- 
-Thanks,
-Sasha
+My fault. I thought the effective vs physical distinction was worth
+taking an incremental step forward. Ira was continuing to look at the
+a_ops issue in the meantime.
