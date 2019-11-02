@@ -2,115 +2,124 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F406CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 07:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6022CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 07:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 363B42085B
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 07:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572680376;
-	bh=YEAQqDGj7v6sYWQ1kt+iZ4QoTk0LxJxXBQzcvHiakUg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PFRB5Ji4pjhoCcOvZ7od7iSZcQvvCDfKcH/amxkoQZidLc0zcbeauLDdbyKYXTJIs
-	 m4djaJAIq1mO+HX0ZQnUuaWiaTDmf2SxAowKgijYRkMVGoR0YaJKdJg+7PkZzaqOpM
-	 JFVwhOtOIK81OgaZ4qBqMPgZpjI+nh5GdFDfXIyk=
+	by mail.kernel.org (Postfix) with ESMTP id 8A22920862
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 07:52:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbfKBHjd (ORCPT
+        id S1727378AbfKBHw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 03:39:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfKBHjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 03:39:33 -0400
-Received: from localhost (smb-adpcdg1-02.hotspot.hub-one.net [213.174.99.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2844B2085B;
-        Sat,  2 Nov 2019 07:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572680372;
-        bh=YEAQqDGj7v6sYWQ1kt+iZ4QoTk0LxJxXBQzcvHiakUg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wTwraJcZhlgLkIKU0xVKzoIGr3OTqmQx+Sooqe0c1+rspsrVG2ES4pZih8I87f3s9
-         dFBPufPHU8T24popkM3cGEZQ8AqtHhEBw57rBVWAR/ygXyOg3knxX6P+2SGve0kICT
-         ILmciY53u/rmf1HUQvDKyzKaNOSvXWOdV8zgqnrc=
-Date:   Sat, 2 Nov 2019 03:39:30 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Ben Hutchings <ben@decadent.org.uk>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
-        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH 3.16 47/47] KVM: x86/vPMU: refine kvm_pmu err msg when
- event creation failed
-Message-ID: <20191102073930.GZ1554@sasha-vm>
-References: <lsq.1572026582.631294584@decadent.org.uk>
- <220d8f2c1b299d2e71fdcf50b98286aae5b0c6f2.camel@perches.com>
- <05be6a70382f1990a2ba6aba9ac75dac0c55f7fb.camel@decadent.org.uk>
- <3078d0a186cca2dfae741908ffff41f1bdb30eae.camel@perches.com>
- <20191101080745.GT1554@sasha-vm>
- <bb87f5753b949dee813f226c8317148f6cf5644f.camel@perches.com>
+        Sat, 2 Nov 2019 03:52:28 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5692 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726014AbfKBHw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Nov 2019 03:52:27 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B6E8D821B3C96911183C;
+        Sat,  2 Nov 2019 15:52:19 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Sat, 2 Nov 2019
+ 15:52:09 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <kvalo@codeaurora.org>, <davem@davemloft.net>,
+        <allison@lohutok.net>, <gregkh@linuxfoundation.org>,
+        <kstewart@linuxfoundation.org>, <info@metux.net>,
+        <tglx@linutronix.de>, <yuehaibing@huawei.com>
+CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] rtlwifi: rtl8225se: remove some unused const variables
+Date:   Sat, 2 Nov 2019 15:46:03 +0800
+Message-ID: <20191102074603.38516-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <bb87f5753b949dee813f226c8317148f6cf5644f.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 08:40:23AM -0700, Joe Perches wrote:
->On Fri, 2019-11-01 at 04:07 -0400, Sasha Levin wrote:
->> On Thu, Oct 31, 2019 at 03:53:23PM -0700, Joe Perches wrote:
->> > On Thu, 2019-10-31 at 22:14 +0000, Ben Hutchings wrote:
->> > > On Fri, 2019-10-25 at 12:05 -0700, Joe Perches wrote:
->> > > > On Fri, 2019-10-25 at 19:03 +0100, Ben Hutchings wrote:
->> > > > > 3.16.76-rc1 review patch.  If anyone has any objections, please let me know.
->> > > >
->> > > > This seems more like an enhancement than a bug fix.
->> > > >
->> > > > Is this really the type of patch that is appropriate
->> > > > for stable?
->> > >
->> > > Apparently so:
->> > >
->> > > v4.14.135: eba797dbf352 KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
->> > > v4.19.61: ba27a25df6df KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
->> > > v4.4.187: 505c011f9f53 KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
->> > > v4.9.187: 3984eae04473 KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
->> > > v5.1.20: edadec197fbf KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
->> > > v5.2.3: 9f062aef7356 KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
->> >
->> > I think not, but hey, maybe you and Greg do.
->> >
->> > Porting enhancements, even trivial ones, imo is
->> > not a great thing for stable branches.
->> >
->> > My perspective is that only bug fixes should be
->> > applied to stable branches.
->>
->> Usability issues are just as bad as code bugs. Our human interface is at
->> least as important as the functionality of our code.
->
->Umm.
->
->#define DEBUG is not set here.
->
->Changing from printk_once to pr_debug_ratelimited completely
->eliminates the output from non CONFIG_DYNAMIC_DEBUG configs,
->and this output message is not enabled by default either.
+drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:83:17: warning: 'rtl8225sez2_tx_power_cck' defined but not used [-Wunused-const-variable=]
+drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:79:17: warning: 'rtl8225sez2_tx_power_cck_A' defined but not used [-Wunused-const-variable=]
+drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:75:17: warning: 'rtl8225sez2_tx_power_cck_B' defined but not used [-Wunused-const-variable=]
+drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:71:17: warning: 'rtl8225sez2_tx_power_cck_ch14' defined but not used [-Wunused-const-variable=]
+drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:62:17: warning: 'rtl8225se_tx_power_ofdm' defined but not used [-Wunused-const-variable=]
+drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:53:17: warning: 'rtl8225se_tx_power_cck_ch14' defined but not used [-Wunused-const-variable=]
+drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:44:17: warning: 'rtl8225se_tx_power_cck' defined but not used [-Wunused-const-variable=]
+drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:40:17: warning: 'rtl8225se_tx_gain_cck_ofdm' defined but not used [-Wunused-const-variable=]
 
-Maybe I'm missing something, but Paolo explained why: it was a useless
-debug feature because it used to print once early on but not when it's
-actually needed. Now it's actually useful for users who want to debug
-but it won't flood regular users who are not inteterested in it.
+They are never used, so can be removed.
 
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ .../wireless/realtek/rtl818x/rtl8180/rtl8225se.c   | 42 ----------------------
+ 1 file changed, 42 deletions(-)
+
+diff --git a/drivers/net/wireless/realtek/rtl818x/rtl8180/rtl8225se.c b/drivers/net/wireless/realtek/rtl818x/rtl8180/rtl8225se.c
+index 23cd4ff..e1bf41c 100644
+--- a/drivers/net/wireless/realtek/rtl818x/rtl8180/rtl8225se.c
++++ b/drivers/net/wireless/realtek/rtl818x/rtl8180/rtl8225se.c
+@@ -37,53 +37,11 @@ static const u8 cck_ofdm_gain_settings[] = {
+ 	0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23,
+ };
+ 
+-static const u8 rtl8225se_tx_gain_cck_ofdm[] = {
+-	0x02, 0x06, 0x0e, 0x1e, 0x3e, 0x7e
+-};
+-
+-static const u8 rtl8225se_tx_power_cck[] = {
+-	0x18, 0x17, 0x15, 0x11, 0x0c, 0x08, 0x04, 0x02,
+-	0x1b, 0x1a, 0x17, 0x13, 0x0e, 0x09, 0x04, 0x02,
+-	0x1f, 0x1e, 0x1a, 0x15, 0x10, 0x0a, 0x05, 0x02,
+-	0x22, 0x21, 0x1d, 0x18, 0x11, 0x0b, 0x06, 0x02,
+-	0x26, 0x25, 0x21, 0x1b, 0x14, 0x0d, 0x06, 0x03,
+-	0x2b, 0x2a, 0x25, 0x1e, 0x16, 0x0e, 0x07, 0x03
+-};
+-
+-static const u8 rtl8225se_tx_power_cck_ch14[] = {
+-	0x18, 0x17, 0x15, 0x0c, 0x00, 0x00, 0x00, 0x00,
+-	0x1b, 0x1a, 0x17, 0x0e, 0x00, 0x00, 0x00, 0x00,
+-	0x1f, 0x1e, 0x1a, 0x0f, 0x00, 0x00, 0x00, 0x00,
+-	0x22, 0x21, 0x1d, 0x11, 0x00, 0x00, 0x00, 0x00,
+-	0x26, 0x25, 0x21, 0x13, 0x00, 0x00, 0x00, 0x00,
+-	0x2b, 0x2a, 0x25, 0x15, 0x00, 0x00, 0x00, 0x00
+-};
+-
+-static const u8 rtl8225se_tx_power_ofdm[] = {
+-	0x80, 0x90, 0xa2, 0xb5, 0xcb, 0xe4
+-};
+-
+ static const u32 rtl8225se_chan[] = {
+ 	0x0080, 0x0100, 0x0180, 0x0200, 0x0280, 0x0300, 0x0380,
+ 	0x0400, 0x0480, 0x0500, 0x0580, 0x0600, 0x0680, 0x074A,
+ };
+ 
+-static const u8 rtl8225sez2_tx_power_cck_ch14[] = {
+-	0x36, 0x35, 0x2e, 0x1b, 0x00, 0x00, 0x00, 0x00
+-};
+-
+-static const u8 rtl8225sez2_tx_power_cck_B[] = {
+-	0x30, 0x2f, 0x29, 0x21, 0x19, 0x10, 0x08, 0x04
+-};
+-
+-static const u8 rtl8225sez2_tx_power_cck_A[] = {
+-	0x33, 0x32, 0x2b, 0x23, 0x1a, 0x11, 0x08, 0x04
+-};
+-
+-static const u8 rtl8225sez2_tx_power_cck[] = {
+-	0x36, 0x35, 0x2e, 0x25, 0x1c, 0x12, 0x09, 0x04
+-};
+-
+ static const u8 ZEBRA_AGC[] = {
+ 	0x7E, 0x7E, 0x7E, 0x7E, 0x7D, 0x7C, 0x7B, 0x7A,
+ 	0x79, 0x78, 0x77, 0x76, 0x75, 0x74, 0x73, 0x72,
 -- 
-Thanks,
-Sasha
+2.7.4
+
+
