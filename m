@@ -2,71 +2,93 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA40CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 17:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E8BCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 17:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22D02217D9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 17:10:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572714654;
-	bh=fZkewWYuXTeElpKvFb4vXZ0PDkAB2kjd3Z1zk+ormOo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f8DEkozdMLll9HKfJcjnBjbH2sM/Q4/6zDIOErJYZ3/s7xxs8hJLU1h0gNy8OY/Ff
-	 g2TbzZVLZJniWvrMDxGfAmUEoCQ2Plq3197U+MCTXDXtGbxMdcbPOhfdylMC2+y3gU
-	 VgSYyw7svjm86FcIoZLpfUsL3R9EcELjgX5jXK48=
+	by mail.kernel.org (Postfix) with ESMTP id DB88D20862
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 17:12:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfKBRKx (ORCPT
+        id S1727110AbfKBRMD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 13:10:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58136 "EHLO mail.kernel.org"
+        Sat, 2 Nov 2019 13:12:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45724 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbfKBRKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 13:10:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726893AbfKBRMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Nov 2019 13:12:03 -0400
+Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com [209.85.210.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D148920862;
-        Sat,  2 Nov 2019 17:10:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572714652;
-        bh=fZkewWYuXTeElpKvFb4vXZ0PDkAB2kjd3Z1zk+ormOo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tVC5iBHKzgLhuG1k/wU2jKqC+IpHhbDldsQsExkVTS0DmhBnV+yzREsBwNAmcBTrL
-         bgYxZVS96AhudIYfZy5jgq5mrWQKHGOmW1hCR8YSF/9Kg+s9HT/aHMJi85vtmUANeq
-         YO4PZTUB2ziU+QASc8CfIzKgz4oYI7mXXSW0dpmU=
-Date:   Sat, 2 Nov 2019 18:10:50 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     akinobu.mita@gmail.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] fault-inject: use DEFINE_DEBUGFS_ATTRIBUTE to
- define debugfs fops
-Message-ID: <20191102171050.GB479906@kroah.com>
-References: <1572486977-14195-1-git-send-email-zhongjiang@huawei.com>
- <1572486977-14195-3-git-send-email-zhongjiang@huawei.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 30B2BC04BE1B
+        for <linux-kernel@vger.kernel.org>; Sat,  2 Nov 2019 17:12:03 +0000 (UTC)
+Received: by mail-ot1-f69.google.com with SMTP id f17so7971881otp.13
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 10:12:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zl9fDks+mlVguzbhaExkNR5P4dBXCVz91rnRw1qkYoM=;
+        b=bMHK0Fhd7ExIhxx0tSmQAwuU5Y+dy1WNNPmhXv0VuscxxjK4M7RRCifvDyaN9pn8dT
+         RkUJ7+8oolTPhytnK7HdmoASrhCv5H2YK6CyJkWv9VAnfGnMgDze/1frgrHqp2zZq0D0
+         XCYRukavmG1Z7cn2m2is1lVvhGkx4zpVykuPrUA3iz0U1GyvzuJ68WnmyDKCUvaEzCux
+         cOCYnpxMoWLVNlGT7aiPt7/ghshwNf9NmE+bUuV4zrl/ogHQwRp2r5rbuQ4dcVVFBiSa
+         oL9hQjgL27zACC2ZbuCIz0IITC/vwIHS9CMGFIBE4bqemAseF+5qJ1P+2+cTGzBUqpMo
+         QrYw==
+X-Gm-Message-State: APjAAAWg+vyGA7xTRipqWJ4jjE09l1WWfOEOzWfaaTVDkwmqXaJKvkdU
+        mjiFV7oWETrTO3AE9qj9i9kxdcThH3V8lFy6uIN/v+QsvvHTD/3Qt7YQFPH6y8lB619IdheZ1di
+        6HKCakYoMFkoZOuQLJwNPnFu2+5O5TMwwr3eC5OmL
+X-Received: by 2002:aca:b03:: with SMTP id 3mr8429427oil.24.1572714722655;
+        Sat, 02 Nov 2019 10:12:02 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzBeIHHDezjGUM47ip6RrosGeU264dgnNDsmFABP4CYUabIN4mVl/m2b8xL3KrISyeUZ+KMCTs+c2qfLxq5oBI=
+X-Received: by 2002:aca:b03:: with SMTP id 3mr8429400oil.24.1572714722376;
+ Sat, 02 Nov 2019 10:12:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572486977-14195-3-git-send-email-zhongjiang@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191031064741.4567-1-christophe.jaillet@wanadoo.fr>
+ <c7a0b6b0-96cd-1fd3-3d98-94a3692bda38@cogentembedded.com> <1b33ca33-a02b-1923-cbee-814e520b9700@wanadoo.fr>
+In-Reply-To: <1b33ca33-a02b-1923-cbee-814e520b9700@wanadoo.fr>
+From:   Stefano Garzarella <sgarzare@redhat.com>
+Date:   Sat, 2 Nov 2019 18:11:50 +0100
+Message-ID: <CAGxU2F5wS9VnNu5ETFbbFcyaCx+UPD9jqjBPVp_rKKZ0-am1tQ@mail.gmail.com>
+Subject: Re: [PATCH] vsock: Simplify '__vsock_release()'
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S. Miller" <davem@davemloft.net>, sunilmut@microsoft.com,
+        Willem de Bruijn <willemb@google.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>, ytht.net@gmail.com,
+        Arnd Bergmann <arnd@arndb.de>, tglx@linutronix.de,
+        Dexuan Cui <decui@microsoft.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 09:56:17AM +0800, zhong jiang wrote:
-> It is more clearly to use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs file
-> operation rather than DEFINE_SIMPLE_ATTRIBUTE.
-> 
-> Meanwhile, debugfs_create_file() in debugfs_create_stacktrace_depth() can
-> be replaced by debugfs_create_file_unsafe().
+On Thu, Oct 31, 2019 at 10:49 AM Christophe JAILLET
+<christophe.jaillet@wanadoo.fr> wrote:
+>
+> Le 31/10/2019 à 10:36, Sergei Shtylyov a écrit :
+> > Hello!
+> >
+> > On 31.10.2019 9:47, Christophe JAILLET wrote:
+> >
+> >> Use '__skb_queue_purge()' instead of re-implementing it.
+> >
+> >    In don't see that double underscore below...
+> This is a typo in the commit message.
+>
+> There is no need for __ because skb_dequeue was used.
+>
+> Could you fix it directly in the commit message (preferred solution for
+> me) or should I send a V2?
+>
 
-Why is it ok to do this replacement?  You should describe in detail how
-you determined this was ok to do.
+I think is better if you send a v2 fixing this and including the R-b tags.
+My R-b stays with that fixed :-)
 
-thanks,
-
-greg k-h
+Thanks,
+Stefano
