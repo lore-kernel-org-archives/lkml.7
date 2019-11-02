@@ -2,95 +2,86 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 437E0CA9ED1
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 02:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B1BCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 02:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6AD21855
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 02:55:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JzZ54Ca/"
+	by mail.kernel.org (Postfix) with ESMTP id D99AD21855
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 02:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbfKBCzv (ORCPT
+        id S1727893AbfKBC42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 22:55:51 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39111 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbfKBCzu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 22:55:50 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p12so7587993pgn.6;
-        Fri, 01 Nov 2019 19:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xFTNRYksg5hjJmBCliKtQprKj5dj8NPap0MuwQWTDx4=;
-        b=JzZ54Ca/aYsIg4kl18Pwqdb56A5YbfqFYibHegzjtPq+/nX8Jjnlx/bGP2fg4zmtwo
-         9xDBCMkAHy7y4Xdz9M9qSFy82GikNWN5LpelPlZx5XdwhziozECm7OoX7alN6A8m0X6u
-         r4qKj0mKq4G297mGlLafNrWWjo9yceMvuUh0wMF68fopww0lGjjLjdFOALD2wEXiEihp
-         Auhf9xfLG7yc8vaWgNvjwfNI7SxPj09U9GIlSQP4zFQTNES9deSfyvRgFOIlQuZNKBy+
-         +bykio1h3I2Z95fvIYqXzjvFzj/cRH/+JkJd/odg6JGebDGcB9b8xdBcH3EToVhG1iXF
-         IpMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xFTNRYksg5hjJmBCliKtQprKj5dj8NPap0MuwQWTDx4=;
-        b=BCLSO7MvFTHa9UJfjYzW43BIVWB9d0WMaC30H5/Qta3UNFGnZJ6p0wugKAA87FSLco
-         cfUKwHDajSiIpzNFedUUqzxuK3oqq3Aob6PId45TZDbdHHOfXy+xydpcHGt//hFQfBQP
-         if5svLd8cXx4TkcMr3BQyenCRaowTXO84IdZTKMPEb8zBSu0qqUdp5YwMw6tYhyuPP6u
-         b3PNDMPyPGXbIHH+M82sLdnujO8/uhO+sEUysRRkWpvHkqnRkiEbtji62/3P+GnsKUwF
-         V6wCwfVeutwfcwV4fWf5FmMpLPSDYonq9kqDxnJIrTBKZ4bgx7PJLh+IWek6yGke2iHE
-         EhkA==
-X-Gm-Message-State: APjAAAWIiNUar3OPuWxT1+DvZrOCAPYE2GojJ46t657WCzOSOd6IKZcY
-        bl0Qen6RclVjcbVpdGMU6Yo=
-X-Google-Smtp-Source: APXvYqzeyJwMJ3x8rKK5HX81hTOz8v7spnlXbx1lkmavVOINNHDRP65dyZnjDg9DB0XkFShAoj29Cw==
-X-Received: by 2002:a17:90a:9291:: with SMTP id n17mr19824023pjo.60.1572663349847;
-        Fri, 01 Nov 2019 19:55:49 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id a12sm3441851pfo.136.2019.11.01.19.55.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Nov 2019 19:55:49 -0700 (PDT)
-Subject: Re: [PATCH 2/2] pinctrl: bcm: nsp: implement get_direction
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        linus.walleij@linaro.org, rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20191101015621.12451-1-chris.packham@alliedtelesis.co.nz>
- <20191101015621.12451-3-chris.packham@alliedtelesis.co.nz>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <3cc0fc66-c6da-45ba-c2d5-32877a180b57@gmail.com>
-Date:   Fri, 1 Nov 2019 19:55:48 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
-MIME-Version: 1.0
-In-Reply-To: <20191101015621.12451-3-chris.packham@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 1 Nov 2019 22:56:28 -0400
+Received: from mga02.intel.com ([134.134.136.20]:33710 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727067AbfKBC42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 22:56:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 19:56:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,257,1569308400"; 
+   d="scan'208";a="226214138"
+Received: from allen-box.sh.intel.com ([10.239.159.136])
+  by fmsmga004.fm.intel.com with ESMTP; 01 Nov 2019 19:56:26 -0700
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Cc:     ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
+        kevin.tian@intel.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 1/1] MAINTAINERS: Update for INTEL IOMMU (VT-d) entry
+Date:   Sat,  2 Nov 2019 10:53:11 +0800
+Message-Id: <20191102025311.3440-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Update the INTEL IOMMU (VT-d) entry and add myself as the
+co-maintainer. I have several years of VT-d development
+experience and have actively contributed to Intel VT-d
+driver during recent two years. I volunteer to take this
+rule. With this role, I can better help review and test
+patches.
 
+Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+---
+ MAINTAINERS | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-On 10/31/2019 6:56 PM, Chris Packham wrote:
-> The get_direction api is strongly recommended to be implemented. In fact
-> if it is not implemented gpio-hogs will not get the correct direction.
-> Add an implementation of get_direction for the nsp-gpio driver.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cba1095547fd..86b999000fcb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8299,11 +8299,14 @@ F:	drivers/hid/intel-ish-hid/
+ 
+ INTEL IOMMU (VT-d)
+ M:	David Woodhouse <dwmw2@infradead.org>
++M:	Lu Baolu <baolu.lu@linux.intel.com>
+ L:	iommu@lists.linux-foundation.org
+-T:	git git://git.infradead.org/iommu-2.6.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
+ S:	Supported
+-F:	drivers/iommu/intel-iommu.c
++F:	drivers/iommu/dmar.c
++F:	drivers/iommu/intel*.[ch]
+ F:	include/linux/intel-iommu.h
++F:	include/linux/intel-svm.h
+ 
+ INTEL IOP-ADMA DMA DRIVER
+ R:	Dan Williams <dan.j.williams@intel.com>
 -- 
-Florian
+2.17.1
+
