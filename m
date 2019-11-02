@@ -2,178 +2,115 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86ACCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F406CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 07:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B638721897
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:31:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u2hXu0VE"
+	by mail.kernel.org (Postfix) with ESMTP id 363B42085B
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 07:39:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572680376;
+	bh=YEAQqDGj7v6sYWQ1kt+iZ4QoTk0LxJxXBQzcvHiakUg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PFRB5Ji4pjhoCcOvZ7od7iSZcQvvCDfKcH/amxkoQZidLc0zcbeauLDdbyKYXTJIs
+	 m4djaJAIq1mO+HX0ZQnUuaWiaTDmf2SxAowKgijYRkMVGoR0YaJKdJg+7PkZzaqOpM
+	 JFVwhOtOIK81OgaZ4qBqMPgZpjI+nh5GdFDfXIyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfKBGbG (ORCPT
+        id S1727439AbfKBHjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 02:31:06 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46867 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfKBGbG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 02:31:06 -0400
-Received: by mail-pl1-f193.google.com with SMTP id l4so34771plt.13;
-        Fri, 01 Nov 2019 23:31:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ke5QwnWASFDho231U5m1krwvnsmedZElujK4NoGmdbc=;
-        b=u2hXu0VEUam8DmMxLcIEEps/vNIiKTzmcj3Nmn8zDz2JXzxJg4RtYRWDr2s/lZrTPC
-         DBkG3LLd17osCmLMf8vgltXhTwP6yrLLN4ddPXzGc9GWOzTm6zFQuVzGFRW3UKzlXiTR
-         glFO32zBwMW/YSLN/jXjseh6+V4ClZgrWCUn63nmUBKHfqTqitIe/m/wBOFOvhWJhCKB
-         ZeqHicfNsCQMYJpwCd7hZ11oSGfwWWa450zEzMQ9lbGzctjR4foZbIWAevwe5DCZL3q5
-         yDZq8cwzDeDKXuLZnVjxR8b9TfDAdr26wf1pbT8PAv8uJD1kyICTq4tyhVOLFs7qhJWS
-         afkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ke5QwnWASFDho231U5m1krwvnsmedZElujK4NoGmdbc=;
-        b=FWG2fFfIv+V6P0H9bklaZZDQrZ6Ql/4H568yyW7eIsl1cygSPETo2MoWPhv9T5tHn/
-         etJkSKwFziwtfSDdXORosFJ7L+3kREHZC4w1Xdc4PqnbmBU5M0L8nK3wqu01GzkG1TCV
-         13ZRUCd7z4DxAiePs6pZs5bru4xiGXv5hKhshlcJce5QFTiSnm7S9/qizbBbEiO6bj/6
-         Uh+oCS8E1/kFSZ5s44WLSO2GO20da9DTP8Pb30lUZv1ZjqgdtyjJSTwIn1enpjGEUT9D
-         t8jIHmsFNId8Jw3q6ZK8bcH0Osbw6+4cZJUnQCMa3+q5p7lEyRL47J3gvxx5Skg5BbKf
-         jQ6Q==
-X-Gm-Message-State: APjAAAUcZqpZWYyA5ZT8ul5EaVe5KYYsVtpb1fCxdgaVQAD0++49qWJH
-        ZyoNsZftlCznPEOHeJp08uA=
-X-Google-Smtp-Source: APXvYqzQtL7ETyBUZiA2KkQ38XKMr3phJ9Egqa+w/lZ7VIRkm7K6XVqhx+gdDqGc5TQbcO9fKPsmUw==
-X-Received: by 2002:a17:902:6bc8:: with SMTP id m8mr16565886plt.49.1572676263510;
-        Fri, 01 Nov 2019 23:31:03 -0700 (PDT)
-Received: from Slackware.localdomain ([103.231.91.34])
-        by smtp.gmail.com with ESMTPSA id 66sm8470803pgi.49.2019.11.01.23.30.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 23:31:02 -0700 (PDT)
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     rdunlap@infradead.org
-Cc:     bfields@fieldses.org, yamada.masahiro@socionext.com,
-        michal.lkml@markovi.net, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Subject: [PATCH] scripts:prune-kernel:remove old kernels and modules dir from system
-Date:   Sat,  2 Nov 2019 12:00:36 +0530
-Message-Id: <20191102063036.28601-1-unixbhaskar@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Sat, 2 Nov 2019 03:39:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbfKBHjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Nov 2019 03:39:33 -0400
+Received: from localhost (smb-adpcdg1-02.hotspot.hub-one.net [213.174.99.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2844B2085B;
+        Sat,  2 Nov 2019 07:39:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572680372;
+        bh=YEAQqDGj7v6sYWQ1kt+iZ4QoTk0LxJxXBQzcvHiakUg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wTwraJcZhlgLkIKU0xVKzoIGr3OTqmQx+Sooqe0c1+rspsrVG2ES4pZih8I87f3s9
+         dFBPufPHU8T24popkM3cGEZQ8AqtHhEBw57rBVWAR/ygXyOg3knxX6P+2SGve0kICT
+         ILmciY53u/rmf1HUQvDKyzKaNOSvXWOdV8zgqnrc=
+Date:   Sat, 2 Nov 2019 03:39:30 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Ben Hutchings <ben@decadent.org.uk>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
+        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        Like Xu <like.xu@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH 3.16 47/47] KVM: x86/vPMU: refine kvm_pmu err msg when
+ event creation failed
+Message-ID: <20191102073930.GZ1554@sasha-vm>
+References: <lsq.1572026582.631294584@decadent.org.uk>
+ <220d8f2c1b299d2e71fdcf50b98286aae5b0c6f2.camel@perches.com>
+ <05be6a70382f1990a2ba6aba9ac75dac0c55f7fb.camel@decadent.org.uk>
+ <3078d0a186cca2dfae741908ffff41f1bdb30eae.camel@perches.com>
+ <20191101080745.GT1554@sasha-vm>
+ <bb87f5753b949dee813f226c8317148f6cf5644f.camel@perches.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <bb87f5753b949dee813f226c8317148f6cf5644f.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allow you to remove old kernels and associated modules
-directory from the system.You can do it at once with the -r flag
-and interactively with the -i flag.
+On Fri, Nov 01, 2019 at 08:40:23AM -0700, Joe Perches wrote:
+>On Fri, 2019-11-01 at 04:07 -0400, Sasha Levin wrote:
+>> On Thu, Oct 31, 2019 at 03:53:23PM -0700, Joe Perches wrote:
+>> > On Thu, 2019-10-31 at 22:14 +0000, Ben Hutchings wrote:
+>> > > On Fri, 2019-10-25 at 12:05 -0700, Joe Perches wrote:
+>> > > > On Fri, 2019-10-25 at 19:03 +0100, Ben Hutchings wrote:
+>> > > > > 3.16.76-rc1 review patch.  If anyone has any objections, please let me know.
+>> > > >
+>> > > > This seems more like an enhancement than a bug fix.
+>> > > >
+>> > > > Is this really the type of patch that is appropriate
+>> > > > for stable?
+>> > >
+>> > > Apparently so:
+>> > >
+>> > > v4.14.135: eba797dbf352 KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
+>> > > v4.19.61: ba27a25df6df KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
+>> > > v4.4.187: 505c011f9f53 KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
+>> > > v4.9.187: 3984eae04473 KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
+>> > > v5.1.20: edadec197fbf KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
+>> > > v5.2.3: 9f062aef7356 KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
+>> >
+>> > I think not, but hey, maybe you and Greg do.
+>> >
+>> > Porting enhancements, even trivial ones, imo is
+>> > not a great thing for stable branches.
+>> >
+>> > My perspective is that only bug fixes should be
+>> > applied to stable branches.
+>>
+>> Usability issues are just as bad as code bugs. Our human interface is at
+>> least as important as the functionality of our code.
+>
+>Umm.
+>
+>#define DEBUG is not set here.
+>
+>Changing from printk_once to pr_debug_ratelimited completely
+>eliminates the output from non CONFIG_DYNAMIC_DEBUG configs,
+>and this output message is not enabled by default either.
 
-Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
----
- scripts/prune-kernel | 82 +++++++++++++++++++++++++++++++++++---------
- 1 file changed, 65 insertions(+), 17 deletions(-)
+Maybe I'm missing something, but Paolo explained why: it was a useless
+debug feature because it used to print once early on but not when it's
+actually needed. Now it's actually useful for users who want to debug
+but it won't flood regular users who are not inteterested in it.
 
-diff --git a/scripts/prune-kernel b/scripts/prune-kernel
-index e8aa940bc0a9..01d0778db71f 100755
---- a/scripts/prune-kernel
-+++ b/scripts/prune-kernel
-@@ -1,21 +1,69 @@
- #!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
-+#This script will remove old kernels and modules directory related to it.
-+#"-r" or "--remove" show how to silently remove old kernel and modules dir.
-+# "-h" or "--help" show how to use this script or show without parameter.
-+#"-i" or "--interactive" show how to remove interactively.
-+
-+flag=$1
-+kernel_version=$2
-+modules_version=$3
-+boot_dir=/boot
-+modules_dir=/lib/modules
-+
-+remove_old_kernel() {
-+	cd $boot_dir
-+	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
-+	return 0
-+}
-+
-+remove_old_modules_dir() {
-+	cd $modules_dir
-+	rm -rf $modules_version
-+	return 0
-+}
-+
-+usage() {
-+	printf "Usage: $(basename $0) [-ri]\n"
-+	printf "\n -r or --remove  kernel_version modules_version\n"
-+	printf "\n -i or --interactive do as interactive way\n"
-+	return 0
-+}
-+
-+case "$flag" in
-+	-i | --interactive)
-+		printf "\nEnter kernel version to remove or blank/empty to exit:"
-+		read kernel_version
-+		if [[ $kernel_version != "" ]]; then
-+			remove_old_kernel
-+			printf "\nRemoved kernel version:$kernel_version from the system.\n\n"
-+			printf "Please give the full modules directory name to remove:"
-+			read modules_version
-+			if [[ $modules_version != "" ]]; then
-+				remove_old_modules_dir
-+				printf "\n\nRemoved modules directory:$modules_version from the system.\n\n"
-+			else
-+				exit 1
-+			fi
-+		fi
-+		;;
-+	-h | --help)
-+		usage
-+		exit 0
-+		;;
-+	-r | --remove)
-+		if [[ $# -ne 3 ]]; then
-+			 printf "You need to provide kernel version and modules directory name.\n"
-+			 exit 1
-+		 else
-+			 remove_old_kernel
-+			 remove_old_modules_dir
-+		fi
-+		;;
-+	*)
-+		usage
-+		exit 1
-+		;;
-+esac
-
--# because I use CONFIG_LOCALVERSION_AUTO, not the same version again and
--# again, /boot and /lib/modules/ eventually fill up.
--# Dumb script to purge that stuff:
-
--for f in "$@"
--do
--        if rpm -qf "/lib/modules/$f" >/dev/null; then
--                echo "keeping $f (installed from rpm)"
--        elif [ $(uname -r) = "$f" ]; then
--                echo "keeping $f (running kernel) "
--        else
--                echo "removing $f"
--                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
--                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
--                rm -rf "/lib/modules/$f"
--                new-kernel-pkg --remove $f
--        fi
--done
---
-2.23.0
-
+-- 
+Thanks,
+Sasha
