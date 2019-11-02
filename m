@@ -2,85 +2,99 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02226C47E49
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 01:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63510CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 01:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C13E021855
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 01:19:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="saPz2s6h"
+	by mail.kernel.org (Postfix) with ESMTP id 3661521855
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 01:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbfKBBTa (ORCPT
+        id S1728320AbfKBBUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 21:19:30 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:45271 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbfKBBTa (ORCPT
+        Fri, 1 Nov 2019 21:20:44 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:33314 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbfKBBUn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 21:19:30 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 1 Nov 2019 21:20:43 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 22898615C4; Sat,  2 Nov 2019 01:20:43 +0000 (UTC)
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 6E82F22EE3;
-        Sat,  2 Nov 2019 02:19:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1572657568;
-        bh=n66wFU9e1/5ztF0THaHhCzZ3VIo+nOfWFB7o1vML1lo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=saPz2s6hGS8wq8C6OL64p7OwNim0A/yqVlEr+HsXB1K5E7gFBTvFgc6xueABHqPZ7
-         C64Tkme19wbyJTvhRT1cOJCP9fkuDfTQccscpsQ9cCKVwxV7Zo+oLI0pQ9Wg7ptxRz
-         bFGrjH5YX4q1oqfpkJNCidtakI1R/42sun1lhVpY=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 02 Nov 2019 02:19:28 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Simon Horman <simon.horman@netronome.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [RFC PATCH 2/3] dt-bindings: net: phy: Add support for AT803X
-In-Reply-To: <20191101150322.GB5859@netronome.com>
-References: <20191030224251.21578-1-michael@walle.cc>
- <20191030224251.21578-3-michael@walle.cc>
- <20191101150322.GB5859@netronome.com>
-Message-ID: <46da54da56ce8b5203cfadcf6c86af6b@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.2.3
-X-Virus-Scanned: clamav-milter 0.101.4 at web
-X-Virus-Status: Clean
+        (Authenticated sender: cang@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EC9FA61587;
+        Sat,  2 Nov 2019 01:20:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EC9FA61587
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=pass (p=none dis=none) header.from=qti.qualcomm.com
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=pass smtp.mailfrom=cang@qti.qualcomm.com
+From:   Can Guo <cang@qti.qualcomm.com>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 1/5] scsi: Adjust DBD setting in mode sense for caching mode page per LLD
+Date:   Fri,  1 Nov 2019 18:20:26 -0700
+Message-Id: <1572657631-25749-2-git-send-email-cang@qti.qualcomm.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1572657631-25749-1-git-send-email-cang@qti.qualcomm.com>
+References: <1572657631-25749-1-git-send-email-cang@qti.qualcomm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2019-11-01 16:03, schrieb Simon Horman:
-> On Wed, Oct 30, 2019 at 11:42:50PM +0100, Michael Walle wrote:
->> Document the Atheros AR803x PHY bindings.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> ---
->>  .../bindings/net/atheros,at803x.yaml          | 58 
->> +++++++++++++++++++
->>  include/dt-bindings/net/atheros-at803x.h      | 13 +++++
->>  2 files changed, 71 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/net/atheros,at803x.yaml
->>  create mode 100644 include/dt-bindings/net/atheros-at803x.h
-> 
-> Hi Michael,
-> 
-> please run the schema past dtbs_check as per the instructions in
-> Documentation/devicetree/writing-schema.rst
+From: Can Guo <cang@codeaurora.org>
 
-Hi Simon,
+Host sends MODE_SENSE_10 with caching mode page, to check if the device
+supports the cache feature.
+UFS JEDEC standards require DBD field to be set to 1.
 
-Thank you, I've run the tests and fixed the errors.
+This patch allows LLD to define the setting of DBD if required.
 
+Signed-off-by: Can Guo <cang@codeaurora.org>
+---
+ drivers/scsi/sd.c        | 2 +-
+ include/scsi/scsi_host.h | 6 ++++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index aab4ed8..a9cca2f 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -2660,7 +2660,7 @@ static int sd_try_rc16_first(struct scsi_device *sdp)
+ 		dbd = 8;
+ 	} else {
+ 		modepage = 8;
+-		dbd = 0;
++		dbd = sdp->host->set_dbd_for_caching ? 8 : 0;
+ 	}
+ 
+ 	/* cautiously ask */
+diff --git a/include/scsi/scsi_host.h b/include/scsi/scsi_host.h
+index 2c3f0c5..3900987 100644
+--- a/include/scsi/scsi_host.h
++++ b/include/scsi/scsi_host.h
+@@ -650,6 +650,12 @@ struct Scsi_Host {
+ 	unsigned no_scsi2_lun_in_cdb:1;
+ 
+ 	/*
++	 * Set "DBD" field in mode_sense caching mode page in case it is
++	 * mandatory by LLD standard.
++	 */
++	unsigned set_dbd_for_caching:1;
++
++	/*
+ 	 * Optional work queue to be utilized by the transport
+ 	 */
+ 	char work_q_name[20];
 -- 
--michael
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
