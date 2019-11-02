@@ -2,101 +2,100 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5364CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 08:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B23CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 09:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8F820862
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 08:50:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="cgalMXuO"
+	by mail.kernel.org (Postfix) with ESMTP id C88D420679
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 09:51:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfKBIuw (ORCPT
+        id S1727621AbfKBJvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 04:50:52 -0400
-Received: from mout.gmx.net ([212.227.17.22]:53987 "EHLO mout.gmx.net"
+        Sat, 2 Nov 2019 05:51:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48050 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726529AbfKBIuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 04:50:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1572684641;
-        bh=g6NSlVrdYozZKmLDMtTnXGfyrkAJufS1AfHzOLf/s+M=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=cgalMXuO5P7Q4QBYDwV8Rk4rYa8Zr/I83JcUR4URsomxP24BQ+XozR5uAazIWZx43
-         rRGxZnR+4cPKh1zYuKVJxsTq+dRkToMlNZiZi/e295DsDlAKKozysGP9xKVya1MAab
-         z2U/YLz9bVx0uWPo53lJSLsnD/htZS4g7FuWxJDs=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.43.192] ([80.187.110.91]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MCbEp-1iIKWY1xcB-009dyo; Sat, 02
- Nov 2019 09:50:41 +0100
-Subject: Re: [GIT PULL] parisc architecture fix for kernel v5.4
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-parisc@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        John David Anglin <dave.anglin@bell.net>,
-        Sven Schnelle <svens@stackframe.org>
-References: <20191101202019.GA22999@ls3530>
- <CAHk-=whPiZSgzj_FtrDWbP1x6rssAQaD6t4zvwC_s9UbsOwM=A@mail.gmail.com>
-From:   Helge Deller <deller@gmx.de>
-Message-ID: <fcc5e547-9512-e416-a640-0d8c1d50318c@gmx.de>
-Date:   Sat, 2 Nov 2019 09:50:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1726670AbfKBJvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Nov 2019 05:51:31 -0400
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A302D85A07
+        for <linux-kernel@vger.kernel.org>; Sat,  2 Nov 2019 09:51:30 +0000 (UTC)
+Received: by mail-wr1-f72.google.com with SMTP id t2so7007352wri.18
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 02:51:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=l8qAdWRObZ9diNurmyFj32RwamTbc6O7HnqjMAubn+g=;
+        b=F/4kmTglVBiuG5IX8kiCRKCTSlknKlq+DHJS3l7yRRHw42DE3CnnpfAO+/CcY4m+Az
+         1NaVtqBxGjpY76B6EGmAXyM2zuC+oyuRBpQInlN8M7tED930bPQ5YWBBL3pTXAcWVgF1
+         Zi+FcQKByXUdaZYG4Ma/LcXq3ZorDWR5VIeKKGAAlWJJ9C5fk9CPR1iAi7ztdXjq7vAX
+         m2Z7LSxVlvswkERBoR4OvljvnvbVcA5DRLQNjEkT7A9m+9167b9XQZcsXE3ZhoYDZEqt
+         bmOOlRsE5jDwCst9zk0ubEaPJZ1Slazr0GlQbyqrbSlCuhZHHydkJy/RkY0IL+H3Qt11
+         NfCQ==
+X-Gm-Message-State: APjAAAUPPHXuQZWf6sxJ1NM1tRbBQadgJGmb+f59MAJXS8bSD6VlTT48
+        OC7HKCdR69EDMtYLx91dpp+ptmsvRYltbEVI7GewNGZ+kuZ8Tbesey/Z0nxHhRyQ/euzLxJqSAR
+        vsxYOa11+vtxdPPTOKlpgeSpo
+X-Received: by 2002:a5d:69c8:: with SMTP id s8mr14694472wrw.167.1572688289338;
+        Sat, 02 Nov 2019 02:51:29 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqw2zf793oOTw8eZP9mFlJz05v9GK0WJFS03MxDK0c2oafYGNsvzIm/OUePbHZdoEfHUhIp0ag==
+X-Received: by 2002:a5d:69c8:: with SMTP id s8mr14694452wrw.167.1572688289015;
+        Sat, 02 Nov 2019 02:51:29 -0700 (PDT)
+Received: from [192.168.42.35] (mob-31-159-163-247.net.vodafone.it. [31.159.163.247])
+        by smtp.gmail.com with ESMTPSA id d20sm14673270wra.4.2019.11.02.02.51.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 02 Nov 2019 02:51:28 -0700 (PDT)
+Subject: Re: [PATCH v4 03/17] kvm: x86: Introduce APICv deactivate bits
+To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc:     "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "rkagan@virtuozzo.com" <rkagan@virtuozzo.com>,
+        "graf@amazon.com" <graf@amazon.com>,
+        "jschoenh@amazon.de" <jschoenh@amazon.de>,
+        "karahmed@amazon.de" <karahmed@amazon.de>,
+        "rimasluk@amazon.com" <rimasluk@amazon.com>,
+        "Grimm, Jon" <Jon.Grimm@amd.com>
+References: <1572648072-84536-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <1572648072-84536-4-git-send-email-suravee.suthikulpanit@amd.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <d947359d-0eb8-1e6f-ef53-54bcec0410c7@redhat.com>
+Date:   Sat, 2 Nov 2019 10:51:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=whPiZSgzj_FtrDWbP1x6rssAQaD6t4zvwC_s9UbsOwM=A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1572648072-84536-4-git-send-email-suravee.suthikulpanit@amd.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ayd2mbjpXRKCL8+qiqAUH9D9htmjCIA8oGZvRMJw82kZB1R3rzG
- TK5LSV4tf8pgSGBYQSdcnxibfzlYrj2kZHpsm2WjSXO9UJaHjm7lQKHirahldd4r8kZwqAC
- 74x0H73GiEZMr9qxDZ2cTFzGmy/+vO+6C1H6jHIbJRQiNxXRzX7VaGJ0HBA15dMR3v2pOfA
- +pExvu800cBQUJo1oc/yQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KGryRhUcfIc=:ciB7MouVYJuL3x6BCHzJ/3
- cRx8WIoj0yD40RUJD/ffw19eWqO620mnVg6EWJKHbJpHaKRoqKdIBYUjIpggTydIILVSWYEiz
- Yp7sJeIOS5NPWluZ1+INkQybwGjeD56MQUbE5FwYWgiQ6CBauffnZZQBVLCS6nBBF0woQHgVt
- aBXJBSN1w0pJAJ0632P2KayQTVEyj4YoXLK2YKUBKLwSRzAaTGjD7RTIOp2Y8jyL329wQaKq3
- W2PKAzOmU3xDENDH5srrrzPkon6kdm5fiQjYymm9RqYcmQJVcmLsqD62Y7VoekwsTbr0KLHiy
- pIZ5dsvWNnQc29Mfay19YIuW4zDKjSK32cls3TY1jX2iQDjT6Qdavk3CjZu4PRc6DbQZqI6aq
- F4+sTYM4RR2Yi4Wk99YWQ5WiBztAlQhw4bFXbbzNFMA4dfdikHYumYz5oUf30hfRTrWIKbUO6
- 6IHaJvdlNYiQ8xpQ5qoaKYB51HAk/FDccC8j1mkcUUKL6O4W1IOk5+obVKS61ecFi0tJSqlgk
- e0ev6k5FjQoOefnVXQnt1aTRpeibWnb2wyAk9xP3acm9kAb/7RtBOhPhxXJiOPxVZs8lOF2ui
- Zb9orxwT8c7DFue2DyiN8643VMeWl4dwajLKGYXVk+MpXaMGRfmYr4GB+PedjW7XX3ARVbDYS
- IjCFJwdFwJjpXHDO3x+FBSQ2fsIBsBneRznNoUDps0NWxO/TqwK2mdkDNQENsAyqlyMi/76s8
- W0iBlIn/WM0pQwLO41JJRo/Q3WFddim5P19GThlX1CxF9B88cPn5Qz5ikUFRBvWa1BrP59Nbz
- rwNOil8P4RF7NoLVLOmj1PiknriiVF8H4RzwTgFjwYZBLOb/t+gkBjAtkdYRkB367tclGT28m
- 96yB37r+JeCOMSSJ9sim+FRGwja9+g57q3l26yLrprgtQMPZsjH9uyZRM/shZU8c1oun2fz1c
- XVDjL5xc1wAU/bOtbL0PTLeuFhmBvRZyje/tZme3151MGDPUfyLDxI8nPyNONTGpdmLxqn4J4
- zNHx/XHs08qqXaQmTxJ8qO3A9Xk1xoyuLGpAZptwjIJLxxsjq9fmDZiKZjJI5AyKU5tFhbI19
- ZilZ9Rj0iVQmk2yHPTEGDceECxoG9HteRP9appFLc7LCGY1ntn/Xq3gnERG3EMaDYMVF/Omx7
- YYz0C3j4ZnmU/P5rwVOoMSK3iljNdRX2zejlPxH+djoWKcIy8nNSUmUIfIR50fcI6/r5CIBVe
- xGEcLOWNr1bZlaWXT6AUI8iG5zfGIF5oqkWTlJw==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.11.19 23:17, Linus Torvalds wrote:
-> On Fri, Nov 1, 2019 at 1:20 PM Helge Deller <deller@gmx.de> wrote:
->>
->> please pull a one-line fix for the parisc architecture for kernel 5.4 f=
-rom:
->
-> You do say "one-line fix", but I'd still like to see a diffstat for it.
-> Pulled, but please check your pull-request script.
+On 01/11/19 23:41, Suthikulpanit, Suravee wrote:
+> +	unsigned long apicv_deact_msk;
 
-Oh, sorry. I deleted the diffstat manually by mistake before sending.
-For the record, here is the changelog and diffstat again:
-=2D---------------------------------------------------------------
-Sven Schnelle (1):
-       parisc: fix frame pointer in ftrace_regs_caller()
+No abbrev fld names. :)  I can change this to something like
+apicv_inhibit_reasons if there are no other issues (and likewise
+s/APICV_DEACT_BIT_/APICV_INHIBIT_REASON_/).
 
-  arch/parisc/kernel/entry.S | 2 +-
-  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> +bool kvm_apicv_activated(struct kvm *kvm)
+> +{
+> +	return (READ_ONCE(kvm->arch.apicv_deact_msk) == 0);
+> +}
 
+Using READ_ONCE introduces a risk of races.  I'll check during a more
+thorough review if it's worth introducing separate kvm_apicv_active and
+kvm_apicv_active_nolock functions.
 
-Helge
+Paolo
