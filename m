@@ -2,118 +2,177 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8F7CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 18:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3707CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 19:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87ED821783
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 18:54:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572720846;
-	bh=EiUQFbd4eCzqoWiWRCkqn8pp6zL45XyarvpaXrgunXs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EzQcGe7fQ6acuGWgx2WXopdBXK1B+/51k91vcM2bwHHFtWzJJipu8Xwiw7L/XYGY9
-	 macvnQuBgvpQNCDY6wlPWyHBcCszhf6NE9R9wUgaJZU1T32rNIR5MHR1NidA+FDMP1
-	 Dwo0/lpFmZcsdkP5DYl2/yANQyWGnon9PmxLAwqk=
+	by mail.kernel.org (Postfix) with ESMTP id C35E62080F
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 19:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfKBSyA (ORCPT
+        id S1727021AbfKBTDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 14:54:00 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39887 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfKBSyA (ORCPT
+        Sat, 2 Nov 2019 15:03:43 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36822 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfKBTDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 14:54:00 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y3so13473072ljj.6
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 11:53:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UFZsrTxHj8UNSOV0MW3iX+ZNPh241BxYI9RJCfbRj4I=;
-        b=fwWi36Cjm33TVpJsMKyyeNJuPa+EzO/w2jcz8N5ivZnB2LBgFElTwve7u7JUY1CQlk
-         LBP3NYhj8mwMGDKFLZC3aAKJjtxEeb837zFLkONBVlInZ3n9BYz2CiSK5BYhQEqMplN+
-         cxbruKuD+a9IFTjckV4CYWfQYTCffHao0G3wg=
+        Sat, 2 Nov 2019 15:03:43 -0400
+Received: by mail-lf1-f67.google.com with SMTP id a6so6053396lfo.3;
+        Sat, 02 Nov 2019 12:03:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UFZsrTxHj8UNSOV0MW3iX+ZNPh241BxYI9RJCfbRj4I=;
-        b=CRldgUQBU8K5UFEjyFh6XVKVVkkd7KRSeaHkR/RaatyXX/J13Pf1M6zP7ISrUxIJbU
-         MEI573CFbgVpEO3kaEeiSxJIqUJ0nPcHwWv2mPuUX+MpXs2H0glDY9pnNiyN9rae8IvB
-         0RMTPEXcQUbiuUkxV65Yp7SORoXEj2Y8SVfH3NbBOw+VBFV3ZsoJalfPiS3zGqQBV6Ip
-         xn6TeUz+qp39eG+TEHG6kiSrs49lqH1vBgQARQVR4bs8mnmFHS5WR/EPdwm5IdbANlYW
-         0yNt/FKLhQ+4cECCPfKO6b1iVLAESAmY+nCdhB6JnbFazlGSLb0UHVxN8mXVgHY9Mya8
-         96uQ==
-X-Gm-Message-State: APjAAAWqljcuEYmsKKWmctpGSf6HjcTGaX8758uXHjGwSNdrURjUM9Tg
-        zTloRsN2Tl2HKVa8huLifeg+4c5fxdk=
-X-Google-Smtp-Source: APXvYqwNU7vs05wzdd1bLDRRjvHUMKPGJQMhOfviQMwS1xeMlNtgT9YmEQTRG/OSR80MGTi6ARjYSg==
-X-Received: by 2002:a2e:87c3:: with SMTP id v3mr12958629ljj.61.1572720837288;
-        Sat, 02 Nov 2019 11:53:57 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id b141sm4276436lfg.67.2019.11.02.11.53.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 Nov 2019 11:53:54 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id j14so9443770lfb.8
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 11:53:54 -0700 (PDT)
-X-Received: by 2002:ac2:4c86:: with SMTP id d6mr11465241lfl.106.1572720834124;
- Sat, 02 Nov 2019 11:53:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OwXkGlWC6FY9JCKWqS9fhbxPEPEvk7bQIiDtUDxVeTs=;
+        b=O1Yz+RC1ehoKp70tqg6wqH1fSa6eyUIOrof1nvCJ9y/LZkPhD/rS8QGJHmkKsXsIhS
+         59gIRb3K95NrVGUpCnoHgV+NlBQCP4VaMwyztFh0Ev+wvBlJTyvchkZI4SNzv3ZdGamp
+         WrwJES+qhnfCUcNctyvDR5C72Yn0SQeL3HnWqK8jK5taGZVUzKogtA04PPt6B7gAQKAZ
+         gIZMjebysofhKV3iF+7PpF/TlQ02exGC8KB11az9G0UQnCzxHZeiKKKWckOUjGcdowEe
+         NMSt5etbqyFAI6ChIraWL5pvIchNZdO1rzTGjlhYdGoRAKYNLjBjIXQPyJkCDzQJ17X+
+         nlXQ==
+X-Gm-Message-State: APjAAAU6Q7etxEC1gZQh/haxWjejOMUOtscZ4+/ZkXRsVof1lMtnKfMY
+        CHxetH1eAc+3WSb/879RIDA=
+X-Google-Smtp-Source: APXvYqxoXDEgxHyApwxHiv/FJz2JyDq5/2hgWj23wncfFQR+APHe6LpBkzVfuWzfxqx8LfwSBsCYhA==
+X-Received: by 2002:a19:41c8:: with SMTP id o191mr11564028lfa.101.1572721421272;
+        Sat, 02 Nov 2019 12:03:41 -0700 (PDT)
+Received: from hackbase.lan ([213.234.229.88])
+        by smtp.gmail.com with ESMTPSA id c3sm3989149lfi.32.2019.11.02.12.03.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Nov 2019 12:03:40 -0700 (PDT)
+From:   Alexander Popov <alex.popov@linux.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Security Officers <security@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Popov <alex.popov@linux.com>
+Subject: [PATCH v3 1/1] media: vivid: Fix wrong locking that causes race conditions on streaming stop
+Date:   Sat,  2 Nov 2019 22:03:27 +0300
+Message-Id: <20191102190327.24903-1-alex.popov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
- <30394.1571936252@warthog.procyon.org.uk> <c6e044cc-5596-90b7-4418-6ad7009d6d79@yandex-team.ru>
- <17311.1572534953@warthog.procyon.org.uk>
-In-Reply-To: <17311.1572534953@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 2 Nov 2019 11:53:38 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg_X_7JSYT-a3qHrzvuWGMyffDWtQ4n7adBp_fe5w0BsA@mail.gmail.com>
-Message-ID: <CAHk-=wg_X_7JSYT-a3qHrzvuWGMyffDWtQ4n7adBp_fe5w0BsA@mail.gmail.com>
-Subject: Re: [RFC PATCH 11/10] pipe: Add fsync() support [ver #2]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 8:16 AM David Howells <dhowells@redhat.com> wrote:
->
-> Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
->
-> > Similar synchronization is required for reusing memory after vmsplice()?
-> > I don't see other way how sender could safely change these pages.
->
-> Sounds like a point - if you have multiple parallel contributors to the pipe
-> via vmsplice(), then FIONREAD is of no use.  To use use FIONREAD, you have to
-> let the pipe become empty before you can be sure.
+There is the same incorrect approach to locking implemented in
+vivid_stop_generating_vid_cap(), vivid_stop_generating_vid_out() and
+sdr_cap_stop_streaming().
 
-Well, the rules for vmsplice is simply to not change the source pages.
-It's zero-copy, after all.
+These functions are called during streaming stopping with vivid_dev.mutex
+locked. And they all do the same mistake while stopping their kthreads,
+which need to lock this mutex as well. See the example from
+vivid_stop_generating_vid_cap():
+  /* shutdown control thread */
+  vivid_grab_controls(dev, false);
+  mutex_unlock(&dev->mutex);
+  kthread_stop(dev->kthread_vid_cap);
+  dev->kthread_vid_cap = NULL;
+  mutex_lock(&dev->mutex);
 
-If you want to change the source pages, you need to just use write() instead.
+But when this mutex is unlocked, another vb2_fop_read() can lock it
+instead of vivid_thread_vid_cap() and manipulate the buffer queue.
+That causes a use-after-free access later.
 
-That said, even then the right model isn't fsync(). If you really want
-to have something like "notify me when this buffer has been used", it
-should be some kind of sequence count thing, not a "wait for empty".
+To fix those issues let's:
+  1. avoid unlocking the mutex in vivid_stop_generating_vid_cap(),
+vivid_stop_generating_vid_out() and sdr_cap_stop_streaming();
+  2. use mutex_trylock() with schedule_timeout() in the loops
+of the vivid kthread handlers.
 
-Which might be useful in theory, but would be something quite
-different (and honestly, I wouldn't expect it to find all that
-widespread use)
+Signed-off-by: Alexander Popov <alex.popov@linux.com>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+---
+ drivers/media/platform/vivid/vivid-kthread-cap.c | 8 +++++---
+ drivers/media/platform/vivid/vivid-kthread-out.c | 8 +++++---
+ drivers/media/platform/vivid/vivid-sdr-cap.c     | 8 +++++---
+ 3 files changed, 15 insertions(+), 9 deletions(-)
 
-             Linus
+diff --git a/drivers/media/platform/vivid/vivid-kthread-cap.c b/drivers/media/platform/vivid/vivid-kthread-cap.c
+index 003319d7816d..27b9c78d2d05 100644
+--- a/drivers/media/platform/vivid/vivid-kthread-cap.c
++++ b/drivers/media/platform/vivid/vivid-kthread-cap.c
+@@ -796,7 +796,11 @@ static int vivid_thread_vid_cap(void *data)
+ 		if (kthread_should_stop())
+ 			break;
+ 
+-		mutex_lock(&dev->mutex);
++		if (!mutex_trylock(&dev->mutex)) {
++			schedule_timeout(1);
++			continue;
++		}
++
+ 		cur_jiffies = jiffies;
+ 		if (dev->cap_seq_resync) {
+ 			dev->jiffies_vid_cap = cur_jiffies;
+@@ -956,8 +960,6 @@ void vivid_stop_generating_vid_cap(struct vivid_dev *dev, bool *pstreaming)
+ 
+ 	/* shutdown control thread */
+ 	vivid_grab_controls(dev, false);
+-	mutex_unlock(&dev->mutex);
+ 	kthread_stop(dev->kthread_vid_cap);
+ 	dev->kthread_vid_cap = NULL;
+-	mutex_lock(&dev->mutex);
+ }
+diff --git a/drivers/media/platform/vivid/vivid-kthread-out.c b/drivers/media/platform/vivid/vivid-kthread-out.c
+index ce5bcda2348c..a657b0d20e2f 100644
+--- a/drivers/media/platform/vivid/vivid-kthread-out.c
++++ b/drivers/media/platform/vivid/vivid-kthread-out.c
+@@ -143,7 +143,11 @@ static int vivid_thread_vid_out(void *data)
+ 		if (kthread_should_stop())
+ 			break;
+ 
+-		mutex_lock(&dev->mutex);
++		if (!mutex_trylock(&dev->mutex)) {
++			schedule_timeout(1);
++			continue;
++		}
++
+ 		cur_jiffies = jiffies;
+ 		if (dev->out_seq_resync) {
+ 			dev->jiffies_vid_out = cur_jiffies;
+@@ -301,8 +305,6 @@ void vivid_stop_generating_vid_out(struct vivid_dev *dev, bool *pstreaming)
+ 
+ 	/* shutdown control thread */
+ 	vivid_grab_controls(dev, false);
+-	mutex_unlock(&dev->mutex);
+ 	kthread_stop(dev->kthread_vid_out);
+ 	dev->kthread_vid_out = NULL;
+-	mutex_lock(&dev->mutex);
+ }
+diff --git a/drivers/media/platform/vivid/vivid-sdr-cap.c b/drivers/media/platform/vivid/vivid-sdr-cap.c
+index 9acc709b0740..590080716962 100644
+--- a/drivers/media/platform/vivid/vivid-sdr-cap.c
++++ b/drivers/media/platform/vivid/vivid-sdr-cap.c
+@@ -141,7 +141,11 @@ static int vivid_thread_sdr_cap(void *data)
+ 		if (kthread_should_stop())
+ 			break;
+ 
+-		mutex_lock(&dev->mutex);
++		if (!mutex_trylock(&dev->mutex)) {
++			schedule_timeout(1);
++			continue;
++		}
++
+ 		cur_jiffies = jiffies;
+ 		if (dev->sdr_cap_seq_resync) {
+ 			dev->jiffies_sdr_cap = cur_jiffies;
+@@ -303,10 +307,8 @@ static void sdr_cap_stop_streaming(struct vb2_queue *vq)
+ 	}
+ 
+ 	/* shutdown control thread */
+-	mutex_unlock(&dev->mutex);
+ 	kthread_stop(dev->kthread_sdr_cap);
+ 	dev->kthread_sdr_cap = NULL;
+-	mutex_lock(&dev->mutex);
+ }
+ 
+ static void sdr_cap_buf_request_complete(struct vb2_buffer *vb)
+-- 
+2.21.0
+
