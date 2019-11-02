@@ -2,113 +2,178 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 751ECCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86ACCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49A842085B
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B638721897
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:31:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gzn/rwXq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u2hXu0VE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfKBGXA (ORCPT
+        id S1727272AbfKBGbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 02:23:00 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46332 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKBGW7 (ORCPT
+        Sat, 2 Nov 2019 02:31:06 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46867 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfKBGbG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 02:22:59 -0400
-Received: by mail-wr1-f68.google.com with SMTP id b3so5869299wrs.13;
-        Fri, 01 Nov 2019 23:22:58 -0700 (PDT)
+        Sat, 2 Nov 2019 02:31:06 -0400
+Received: by mail-pl1-f193.google.com with SMTP id l4so34771plt.13;
+        Fri, 01 Nov 2019 23:31:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=DnZE3w7CCpcMCHJ+iwQEUcQqE2nSKRrJMboCP3KTQFY=;
-        b=gzn/rwXqJRcCt1bE63KrnbWrGThu6dSsxNrSdOxHXNMzoWQuG34U4G8FwVOQy+KXNi
-         2r6MRhmJnhigebh2twlSWo4Tsw5RarmpKSiMgSRE+CPgzxGhz8YJLqCxkBV84PEuw0BE
-         sD5M9GMVwhUsnnp0JwsGygnkEfYIPrYPjWgaTuMNDVG4tfHERbwcH2HjkaOVbVgZ7Myy
-         8TyIcW/SPuwuhHg3cb+y7p11ZDkpDSEF2MoMDtCCO9GYGQPp9QpZraLahlZDOu965mtB
-         buRoevjobAyRXdsrHCixxYmJwsmglmWRtn3KEpi/YtYBZNKlgnpEij1ZdJoHmCX218SU
-         O8mw==
+        bh=ke5QwnWASFDho231U5m1krwvnsmedZElujK4NoGmdbc=;
+        b=u2hXu0VEUam8DmMxLcIEEps/vNIiKTzmcj3Nmn8zDz2JXzxJg4RtYRWDr2s/lZrTPC
+         DBkG3LLd17osCmLMf8vgltXhTwP6yrLLN4ddPXzGc9GWOzTm6zFQuVzGFRW3UKzlXiTR
+         glFO32zBwMW/YSLN/jXjseh6+V4ClZgrWCUn63nmUBKHfqTqitIe/m/wBOFOvhWJhCKB
+         ZeqHicfNsCQMYJpwCd7hZ11oSGfwWWa450zEzMQ9lbGzctjR4foZbIWAevwe5DCZL3q5
+         yDZq8cwzDeDKXuLZnVjxR8b9TfDAdr26wf1pbT8PAv8uJD1kyICTq4tyhVOLFs7qhJWS
+         afkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=DnZE3w7CCpcMCHJ+iwQEUcQqE2nSKRrJMboCP3KTQFY=;
-        b=QfBnFOon5/ALC2G96KHi365XaccnYKLYWruaLU4VDiwdaEYNPKy2dJUDE0bZwva/pW
-         ajFtrt9aAbDZIZgBvk0YCW1ONSDQ5YSDvISNpuJuMu3lrBNC5RhOZCbk+d/1tTZRQcNx
-         NoLJPI7P/vWKAIFG/gb15efMvCmBerPAjz894v16XQV/73XUr79R/XSc7VEcp0hpV+da
-         SZl6O90eUWpxLLj7ia35ipNyZh0lRkEp1GzStVFjjPGlkxIJWt/BWRNfLape7pABXbt4
-         GXOz6myZshpKh/Zl03LWDAbI78sd7txSzyPo6mS70u3I6sGs4u9vgX9xZOGiNd18nsTU
-         F+Kg==
-X-Gm-Message-State: APjAAAUyzmjhQ9srSWUCyGm84rmCWtN77aQ9POyaizZzVZu0o3HyDUSK
-        N8QulXFQO4Y0v0X9j+MzOLVKBzhO8LE=
-X-Google-Smtp-Source: APXvYqx4COqSgTZachBr5uNbIjy9sIhMhq07HGD74ExGQfsHvrVHnROwXefzKiaVHqCizyBR0rd7eg==
-X-Received: by 2002:adf:bc91:: with SMTP id g17mr13253833wrh.71.1572675777478;
-        Fri, 01 Nov 2019 23:22:57 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id i3sm9621147wrw.69.2019.11.01.23.22.53
+        bh=ke5QwnWASFDho231U5m1krwvnsmedZElujK4NoGmdbc=;
+        b=FWG2fFfIv+V6P0H9bklaZZDQrZ6Ql/4H568yyW7eIsl1cygSPETo2MoWPhv9T5tHn/
+         etJkSKwFziwtfSDdXORosFJ7L+3kREHZC4w1Xdc4PqnbmBU5M0L8nK3wqu01GzkG1TCV
+         13ZRUCd7z4DxAiePs6pZs5bru4xiGXv5hKhshlcJce5QFTiSnm7S9/qizbBbEiO6bj/6
+         Uh+oCS8E1/kFSZ5s44WLSO2GO20da9DTP8Pb30lUZv1ZjqgdtyjJSTwIn1enpjGEUT9D
+         t8jIHmsFNId8Jw3q6ZK8bcH0Osbw6+4cZJUnQCMa3+q5p7lEyRL47J3gvxx5Skg5BbKf
+         jQ6Q==
+X-Gm-Message-State: APjAAAUcZqpZWYyA5ZT8ul5EaVe5KYYsVtpb1fCxdgaVQAD0++49qWJH
+        ZyoNsZftlCznPEOHeJp08uA=
+X-Google-Smtp-Source: APXvYqzQtL7ETyBUZiA2KkQ38XKMr3phJ9Egqa+w/lZ7VIRkm7K6XVqhx+gdDqGc5TQbcO9fKPsmUw==
+X-Received: by 2002:a17:902:6bc8:: with SMTP id m8mr16565886plt.49.1572676263510;
+        Fri, 01 Nov 2019 23:31:03 -0700 (PDT)
+Received: from Slackware.localdomain ([103.231.91.34])
+        by smtp.gmail.com with ESMTPSA id 66sm8470803pgi.49.2019.11.01.23.30.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 23:22:57 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] usb: host: fotg210: add missed clk_put calls
-Date:   Sat,  2 Nov 2019 14:22:45 +0800
-Message-Id: <20191102062245.4014-1-hslester96@gmail.com>
+        Fri, 01 Nov 2019 23:31:02 -0700 (PDT)
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     rdunlap@infradead.org
+Cc:     bfields@fieldses.org, yamada.masahiro@socionext.com,
+        michal.lkml@markovi.net, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Subject: [PATCH] scripts:prune-kernel:remove old kernels and modules dir from system
+Date:   Sat,  2 Nov 2019 12:00:36 +0530
+Message-Id: <20191102063036.28601-1-unixbhaskar@gmail.com>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to call clk_put when probe fails and remove.
-Add the calls to fix it.
+This patch allow you to remove old kernels and associated modules
+directory from the system.You can do it at once with the -r flag
+and interactively with the -i flag.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
 ---
- drivers/usb/host/fotg210-hcd.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ scripts/prune-kernel | 82 +++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 65 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/usb/host/fotg210-hcd.c b/drivers/usb/host/fotg210-hcd.c
-index 9e0c98d6bdb0..f967adf2d8df 100644
---- a/drivers/usb/host/fotg210-hcd.c
-+++ b/drivers/usb/host/fotg210-hcd.c
-@@ -5646,8 +5646,10 @@ static int fotg210_hcd_probe(struct platform_device *pdev)
- 	return retval;
- 
- failed_dis_clk:
--	if (!IS_ERR(fotg210->pclk))
-+	if (!IS_ERR(fotg210->pclk)) {
- 		clk_disable_unprepare(fotg210->pclk);
-+		clk_put(fotg210->pclk);
-+	}
- failed_put_hcd:
- 	usb_put_hcd(hcd);
- fail_create_hcd:
-@@ -5665,8 +5667,10 @@ static int fotg210_hcd_remove(struct platform_device *pdev)
- 	struct usb_hcd *hcd = platform_get_drvdata(pdev);
- 	struct fotg210_hcd *fotg210 = hcd_to_fotg210(hcd);
- 
--	if (!IS_ERR(fotg210->pclk))
-+	if (!IS_ERR(fotg210->pclk)) {
- 		clk_disable_unprepare(fotg210->pclk);
-+		clk_put(fotg210->pclk);
-+	}
- 
- 	usb_remove_hcd(hcd);
- 	usb_put_hcd(hcd);
--- 
+diff --git a/scripts/prune-kernel b/scripts/prune-kernel
+index e8aa940bc0a9..01d0778db71f 100755
+--- a/scripts/prune-kernel
++++ b/scripts/prune-kernel
+@@ -1,21 +1,69 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
++#This script will remove old kernels and modules directory related to it.
++#"-r" or "--remove" show how to silently remove old kernel and modules dir.
++# "-h" or "--help" show how to use this script or show without parameter.
++#"-i" or "--interactive" show how to remove interactively.
++
++flag=$1
++kernel_version=$2
++modules_version=$3
++boot_dir=/boot
++modules_dir=/lib/modules
++
++remove_old_kernel() {
++	cd $boot_dir
++	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
++	return 0
++}
++
++remove_old_modules_dir() {
++	cd $modules_dir
++	rm -rf $modules_version
++	return 0
++}
++
++usage() {
++	printf "Usage: $(basename $0) [-ri]\n"
++	printf "\n -r or --remove  kernel_version modules_version\n"
++	printf "\n -i or --interactive do as interactive way\n"
++	return 0
++}
++
++case "$flag" in
++	-i | --interactive)
++		printf "\nEnter kernel version to remove or blank/empty to exit:"
++		read kernel_version
++		if [[ $kernel_version != "" ]]; then
++			remove_old_kernel
++			printf "\nRemoved kernel version:$kernel_version from the system.\n\n"
++			printf "Please give the full modules directory name to remove:"
++			read modules_version
++			if [[ $modules_version != "" ]]; then
++				remove_old_modules_dir
++				printf "\n\nRemoved modules directory:$modules_version from the system.\n\n"
++			else
++				exit 1
++			fi
++		fi
++		;;
++	-h | --help)
++		usage
++		exit 0
++		;;
++	-r | --remove)
++		if [[ $# -ne 3 ]]; then
++			 printf "You need to provide kernel version and modules directory name.\n"
++			 exit 1
++		 else
++			 remove_old_kernel
++			 remove_old_modules_dir
++		fi
++		;;
++	*)
++		usage
++		exit 1
++		;;
++esac
+
+-# because I use CONFIG_LOCALVERSION_AUTO, not the same version again and
+-# again, /boot and /lib/modules/ eventually fill up.
+-# Dumb script to purge that stuff:
+
+-for f in "$@"
+-do
+-        if rpm -qf "/lib/modules/$f" >/dev/null; then
+-                echo "keeping $f (installed from rpm)"
+-        elif [ $(uname -r) = "$f" ]; then
+-                echo "keeping $f (running kernel) "
+-        else
+-                echo "removing $f"
+-                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
+-                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
+-                rm -rf "/lib/modules/$f"
+-                new-kernel-pkg --remove $f
+-        fi
+-done
+--
 2.23.0
 
