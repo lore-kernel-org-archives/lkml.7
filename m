@@ -1,100 +1,143 @@
-Return-Path: <SRS0=OzJr=YZ=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28541CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 23:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE89CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 00:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF60D20881
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Nov 2019 23:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437262067D
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 00:10:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ew0T8k9a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfKAX7q (ORCPT
+        id S1727597AbfKBAKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 19:59:46 -0400
-Received: from mga04.intel.com ([192.55.52.120]:63645 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfKAX7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 19:59:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Nov 2019 16:59:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,257,1569308400"; 
-   d="scan'208";a="199469570"
-Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
-  by fmsmga008.fm.intel.com with ESMTP; 01 Nov 2019 16:59:15 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v10 1/8] PCI/ERR: Update error status after reset_link()
-Date:   Fri,  1 Nov 2019 16:56:49 -0700
-Message-Id: <77b72b9ee3ef5927cf6af215c4f9fe94849c0d32.1572652041.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1572652041.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <cover.1572652041.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        Fri, 1 Nov 2019 20:10:21 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39840 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfKBAKU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Nov 2019 20:10:20 -0400
+Received: by mail-io1-f66.google.com with SMTP id k1so858674ioj.6
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 17:10:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=R4g9gOLIew2+KTvYBHfgUUJIvnc8PoIFwQ4bbvEGKSM=;
+        b=ew0T8k9aits0F01j0SCwzTDVdrwqraAac6R6T/eJc3oSA2z3b/L47RmzsCJDmrKCdm
+         xRmK251jDrQNYOCPOsfqriSuW+FWLrHxW/I13haysmKdGOl/yD/1OhzNCfKoeb5KaHJQ
+         PTrYhDqOCfRySq4ojgXSUbkhYs+BhrJxBuH4XpYljYx829VVbV7aP2Xz/O09EWhj0BQJ
+         /H5XaERUqLs4fsF2mOjqneZa7t6ac2FZpk/H09BNkp5hyWZ2e+RK2Nj4AbPaoKaopXXB
+         LgcXTa4dpNMQcX2TK/HPQlPOEVHaemD/CvJBb0zfSCPKqQROlSe91O/gAg84p7Gwl0C2
+         OlNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=R4g9gOLIew2+KTvYBHfgUUJIvnc8PoIFwQ4bbvEGKSM=;
+        b=Os5EpdQYGimgX+zB2rexjeucgxr7H7/5uHwOElGiNtRBR2vYhoPVnG1t+7ESpxmI9Y
+         tN/HKxe4xOnn00eoamQcgu3t8VfM1rW+urQRpjQemIyENTeyUA46Z14rT//aHzti77N6
+         Yl+3dZKy1UVTQ1oRoXnrYXXZwdb386ZFnKOkdp9VJ6Xz3C9CXUkHrrHEJEPVcYNODIyc
+         jdAXJUjP0mmbtyIxqeok5rXpBULEhwCzCzzgi55Vr7CpHQ7SVt5FMB9wZG1M8J8Gmtbo
+         GDe7Up46/z4F0NDKbjMD/Oe0gUq8SPDH+3VItGA2JPPufI9NMorpjNIgJTUuodImgRgf
+         8giw==
+X-Gm-Message-State: APjAAAUVTzou1BQpa3JGWeEU1cB15YGGo3re5daamL7/CPlMsQ11Qif/
+        7Em01MlPFrmbuHz4jUWF5uzH0g==
+X-Google-Smtp-Source: APXvYqxGpyL4YgS3iSeyRBb2/XoW4OF6ZRzRHuG1o1Desi8MbbyMgsZb3vvZgX51aCkTVbWIlDWxLg==
+X-Received: by 2002:a5d:94d8:: with SMTP id y24mr5101499ior.131.1572653418511;
+        Fri, 01 Nov 2019 17:10:18 -0700 (PDT)
+Received: from localhost (67-0-26-4.albq.qwest.net. [67.0.26.4])
+        by smtp.gmail.com with ESMTPSA id m9sm1259660ilc.44.2019.11.01.17.10.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2019 17:10:18 -0700 (PDT)
+Date:   Fri, 1 Nov 2019 17:10:16 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     torvalds@linux-foundation.org
+cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] RISC-V updates for v5.4-rc6
+Message-ID: <alpine.DEB.2.21.9999.1911011707090.16921@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Linus,
 
-Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery") uses
-reset_link() to recover from fatal errors. But, if the reset is
-successful there is no need to continue the rest of the error recovery
-checks. Also, during fatal error recovery, if the initial value of error
-status is PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER then
-even after successful recovery (using reset_link()) pcie_do_recovery()
-will report the recovery result as failure. So update the status of
-error after reset_link().
+The following changes since commit d6d5df1db6e9d7f8f76d2911707f7d5877251b02:
 
-Fixes: bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Acked-by: Keith Busch <keith.busch@intel.com>
----
- drivers/pci/pcie/err.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+  Linux 5.4-rc5 (2019-10-27 13:19:19 -0400)
 
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index b0e6048a9208..53cd9200ec2c 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -204,9 +204,12 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
- 	else
- 		pci_walk_bus(bus, report_normal_detected, &status);
- 
--	if (state == pci_channel_io_frozen &&
--	    reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
--		goto failed;
-+	if (state == pci_channel_io_frozen) {
-+		status = reset_link(dev, service);
-+		if (status != PCI_ERS_RESULT_RECOVERED)
-+			goto failed;
-+		goto done;
-+	}
- 
- 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
- 		status = PCI_ERS_RESULT_RECOVERED;
-@@ -228,6 +231,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
- 	if (status != PCI_ERS_RESULT_RECOVERED)
- 		goto failed;
- 
-+done:
- 	pci_dbg(dev, "broadcast resume message\n");
- 	pci_walk_bus(bus, report_resume, &status);
- 
--- 
-2.21.0
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.4-rc6
+
+for you to fetch changes up to 1d9b0b66c3ef03e42db63068e1a4e7250992e2b1:
+
+  MAINTAINERS: Change to my personal email address (2019-10-30 01:03:34 -0700)
+
+----------------------------------------------------------------
+RISC-V updates for v5.4-rc6
+
+One fix for PCIe users:
+
+- Fix legacy PCI I/O port access emulation
+
+One set of cleanups:
+
+- Resolve most of the warnings generated by sparse across arch/riscv.
+  No functional changes
+
+And one MAINTAINERS update:
+
+- Update Palmer's E-mail address
+
+----------------------------------------------------------------
+Palmer Dabbelt (1):
+      MAINTAINERS: Change to my personal email address
+
+Paul Walmsley (6):
+      riscv: add prototypes for assembly language functions from head.S
+      riscv: init: merge split string literals in preprocessor directive
+      riscv: mark some code and data as file-static
+      riscv: add missing header file includes
+      riscv: fp: add missing __user pointer annotations
+      riscv: for C functions called only from assembly, mark with __visible
+
+Yash Shah (1):
+      RISC-V: Add PCIe I/O BAR memory mapping
+
+ MAINTAINERS                         |  6 +++---
+ arch/riscv/include/asm/io.h         |  7 +++++++
+ arch/riscv/include/asm/irq.h        |  3 +++
+ arch/riscv/include/asm/pgtable.h    |  7 ++++++-
+ arch/riscv/include/asm/switch_to.h  |  1 +
+ arch/riscv/kernel/cpufeature.c      |  1 +
+ arch/riscv/kernel/head.h            | 21 +++++++++++++++++++++
+ arch/riscv/kernel/irq.c             |  2 +-
+ arch/riscv/kernel/module-sections.c |  1 +
+ arch/riscv/kernel/process.c         |  2 ++
+ arch/riscv/kernel/ptrace.c          |  4 ++--
+ arch/riscv/kernel/reset.c           |  1 +
+ arch/riscv/kernel/setup.c           |  2 ++
+ arch/riscv/kernel/signal.c          |  8 ++++----
+ arch/riscv/kernel/smp.c             |  2 ++
+ arch/riscv/kernel/smpboot.c         |  5 ++++-
+ arch/riscv/kernel/syscall_table.c   |  1 +
+ arch/riscv/kernel/time.c            |  1 +
+ arch/riscv/kernel/traps.c           |  5 +++--
+ arch/riscv/kernel/vdso.c            |  3 ++-
+ arch/riscv/mm/context.c             |  1 +
+ arch/riscv/mm/fault.c               |  2 ++
+ arch/riscv/mm/init.c                |  5 +++--
+ arch/riscv/mm/sifive_l2_cache.c     |  2 +-
+ 24 files changed, 75 insertions(+), 18 deletions(-)
+ create mode 100644 arch/riscv/kernel/head.h
