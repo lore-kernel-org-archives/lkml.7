@@ -8,67 +8,62 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B73CCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 751ECCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CC421897
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A842085B
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 06:23:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kwLnMiSM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gzn/rwXq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKBGWN (ORCPT
+        id S1727437AbfKBGXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 02:22:13 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36061 "EHLO
+        Sat, 2 Nov 2019 02:23:00 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46332 "EHLO
         mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfKBGWN (ORCPT
+        with ESMTP id S1726293AbfKBGW7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 02:22:13 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w18so11668722wrt.3;
-        Fri, 01 Nov 2019 23:22:10 -0700 (PDT)
+        Sat, 2 Nov 2019 02:22:59 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b3so5869299wrs.13;
+        Fri, 01 Nov 2019 23:22:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=zhzCe9gexEx43QvM7xg8LGu1dhIv2+i6xu5dgHafDF4=;
-        b=kwLnMiSMatRxSK1C76ObCExaPa9R1/4BJEHxx4D1XjeiecZuJ2/NVbjoC4Ph/eJ/2c
-         RBOFwFKJImzh6GFcR5REGOsZiPm1EyZf5LViYrAM2YRo+OXh4tecrokck7kfBE9RpxIC
-         QTOvF1QlG0sdyLRcdI1muyz0WwVPzncurGKQH+losdQ7UINUTxzJfX+X4K54Au/xkqir
-         7DR79TKROUSQJ3ZfNdWabSGR3v/9EzbgQVsO/Rg7M7WoolGWIkdKNd3/rhR9C7VruSXe
-         HBwC7tDoUo57wB732gk+BCWqZL2be9kJ2Z3I/0Qq6H9cKZ81tv2Yl1078ZGLLf+APkTK
-         i6gw==
+        bh=DnZE3w7CCpcMCHJ+iwQEUcQqE2nSKRrJMboCP3KTQFY=;
+        b=gzn/rwXqJRcCt1bE63KrnbWrGThu6dSsxNrSdOxHXNMzoWQuG34U4G8FwVOQy+KXNi
+         2r6MRhmJnhigebh2twlSWo4Tsw5RarmpKSiMgSRE+CPgzxGhz8YJLqCxkBV84PEuw0BE
+         sD5M9GMVwhUsnnp0JwsGygnkEfYIPrYPjWgaTuMNDVG4tfHERbwcH2HjkaOVbVgZ7Myy
+         8TyIcW/SPuwuhHg3cb+y7p11ZDkpDSEF2MoMDtCCO9GYGQPp9QpZraLahlZDOu965mtB
+         buRoevjobAyRXdsrHCixxYmJwsmglmWRtn3KEpi/YtYBZNKlgnpEij1ZdJoHmCX218SU
+         O8mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=zhzCe9gexEx43QvM7xg8LGu1dhIv2+i6xu5dgHafDF4=;
-        b=ZCcioDf8vi5QS4T00S1dGsDJTaMAH22yaiCMmY+DFX/BKjYqFOJNQPwkz7humQsiVd
-         DRs3mTAa9ELpg3sdZue90Jx2wjvVyQZrsbBelKVWp0ho3AMKCJYjuAJBbTmLhNJHqzji
-         Aj+NuDkoMPzjOaTDjKXE2NDbtFRVC/nwqE2vFl+Vw/uJhh8HyXKmKKG2tQdrsbl+NhbY
-         M6t7Y2DWhSqEYq6zv7VdV6zZpJDFHHKZtKNj9rlTinFUSgdAaDYGX+XHlfJ7EScLCn5z
-         xCA//Uul9ocT9dQLYl6awK7YkpAQIXn5UWZs1Oztii2hQ7+J/Cbd2wcr4l3eiDHmO7Sp
-         RrMA==
-X-Gm-Message-State: APjAAAWB+iICh9qkzDhtNgp/EvSNcTzp2GQNwi/1E5RYXv+8NBPEfIJY
-        WJCY74lTiogXVPhbEos75Qsy1F3c8YA=
-X-Google-Smtp-Source: APXvYqzU8cyqw+/oDcKoSvzWSB/BEN+evKPThPEccSytbmI1say7JB4C0XssYGtF7LAmI3cV/QR2KA==
-X-Received: by 2002:a5d:4612:: with SMTP id t18mr13307058wrq.255.1572675729879;
-        Fri, 01 Nov 2019 23:22:09 -0700 (PDT)
+        bh=DnZE3w7CCpcMCHJ+iwQEUcQqE2nSKRrJMboCP3KTQFY=;
+        b=QfBnFOon5/ALC2G96KHi365XaccnYKLYWruaLU4VDiwdaEYNPKy2dJUDE0bZwva/pW
+         ajFtrt9aAbDZIZgBvk0YCW1ONSDQ5YSDvISNpuJuMu3lrBNC5RhOZCbk+d/1tTZRQcNx
+         NoLJPI7P/vWKAIFG/gb15efMvCmBerPAjz894v16XQV/73XUr79R/XSc7VEcp0hpV+da
+         SZl6O90eUWpxLLj7ia35ipNyZh0lRkEp1GzStVFjjPGlkxIJWt/BWRNfLape7pABXbt4
+         GXOz6myZshpKh/Zl03LWDAbI78sd7txSzyPo6mS70u3I6sGs4u9vgX9xZOGiNd18nsTU
+         F+Kg==
+X-Gm-Message-State: APjAAAUyzmjhQ9srSWUCyGm84rmCWtN77aQ9POyaizZzVZu0o3HyDUSK
+        N8QulXFQO4Y0v0X9j+MzOLVKBzhO8LE=
+X-Google-Smtp-Source: APXvYqx4COqSgTZachBr5uNbIjy9sIhMhq07HGD74ExGQfsHvrVHnROwXefzKiaVHqCizyBR0rd7eg==
+X-Received: by 2002:adf:bc91:: with SMTP id g17mr13253833wrh.71.1572675777478;
+        Fri, 01 Nov 2019 23:22:57 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id u68sm11432918wmu.12.2019.11.01.23.22.01
+        by smtp.gmail.com with ESMTPSA id i3sm9621147wrw.69.2019.11.01.23.22.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 23:22:09 -0700 (PDT)
+        Fri, 01 Nov 2019 23:22:57 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] i2c: imx-lpi2c: add clk_disable_unprepare calls
-Date:   Sat,  2 Nov 2019 14:21:49 +0800
-Message-Id: <20191102062149.3957-1-hslester96@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] usb: host: fotg210: add missed clk_put calls
+Date:   Sat,  2 Nov 2019 14:22:45 +0800
+Message-Id: <20191102062245.4014-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -78,39 +73,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver forgets to call clk_disable_unprepare when probe fails
-and remove.
-Add the two calls to fix the problem.
+The driver forgets to call clk_put when probe fails and remove.
+Add the calls to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
-Changes in v2:
-  - Adjust the call order to make it consistent in probe failure and
-    removal.
+ drivers/usb/host/fotg210-hcd.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
- drivers/i2c/busses/i2c-imx-lpi2c.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/i2c/busses/i2c-imx-lpi2c.c b/drivers/i2c/busses/i2c-imx-lpi2c.c
-index c92b56485fa6..f964693c0901 100644
---- a/drivers/i2c/busses/i2c-imx-lpi2c.c
-+++ b/drivers/i2c/busses/i2c-imx-lpi2c.c
-@@ -618,6 +618,7 @@ static int lpi2c_imx_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/drivers/usb/host/fotg210-hcd.c b/drivers/usb/host/fotg210-hcd.c
+index 9e0c98d6bdb0..f967adf2d8df 100644
+--- a/drivers/usb/host/fotg210-hcd.c
++++ b/drivers/usb/host/fotg210-hcd.c
+@@ -5646,8 +5646,10 @@ static int fotg210_hcd_probe(struct platform_device *pdev)
+ 	return retval;
  
- rpm_disable:
-+	clk_disable_unprepare(lpi2c_imx->clk);
- 	pm_runtime_put(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
- 	pm_runtime_dont_use_autosuspend(&pdev->dev);
-@@ -630,6 +631,7 @@ static int lpi2c_imx_remove(struct platform_device *pdev)
- 	struct lpi2c_imx_struct *lpi2c_imx = platform_get_drvdata(pdev);
+ failed_dis_clk:
+-	if (!IS_ERR(fotg210->pclk))
++	if (!IS_ERR(fotg210->pclk)) {
+ 		clk_disable_unprepare(fotg210->pclk);
++		clk_put(fotg210->pclk);
++	}
+ failed_put_hcd:
+ 	usb_put_hcd(hcd);
+ fail_create_hcd:
+@@ -5665,8 +5667,10 @@ static int fotg210_hcd_remove(struct platform_device *pdev)
+ 	struct usb_hcd *hcd = platform_get_drvdata(pdev);
+ 	struct fotg210_hcd *fotg210 = hcd_to_fotg210(hcd);
  
- 	i2c_del_adapter(&lpi2c_imx->adapter);
-+	clk_disable_unprepare(lpi2c_imx->clk);
+-	if (!IS_ERR(fotg210->pclk))
++	if (!IS_ERR(fotg210->pclk)) {
+ 		clk_disable_unprepare(fotg210->pclk);
++		clk_put(fotg210->pclk);
++	}
  
- 	pm_runtime_disable(&pdev->dev);
- 	pm_runtime_dont_use_autosuspend(&pdev->dev);
+ 	usb_remove_hcd(hcd);
+ 	usb_put_hcd(hcd);
 -- 
 2.23.0
 
