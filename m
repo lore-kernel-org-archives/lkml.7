@@ -2,234 +2,259 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B369CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 11:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4717CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 11:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D8721929
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 11:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B174921906
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 11:24:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Ksx0a45r"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dtN6RuT4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfKBLYM (ORCPT
+        id S1727415AbfKBLYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 07:24:12 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:31081 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727230AbfKBLX7 (ORCPT
+        Sat, 2 Nov 2019 07:24:14 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54654 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726939AbfKBLYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 07:23:59 -0400
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: JdUGV/WMeuQGeQZkK9iYG/k22eE3WxE5SXsB6x1mpkM2L/d+DhOp5BYFcf2biEynHkpwrpurIv
- sY1cEf1k+A3rst/sB6uSNpoNoIxvvWG0hvwSCEypED0F5ePnYwkK17a4aweisVCaDtwQpj5LdF
- TFF/rg3G8hLwrkesbZK84uQWt/hrE5VwetsmvQ1DWxLfpIqQpjWaHj/2kepmF03o6Z+TQVD6/b
- swPXbpJkUHYZrCJMsAUeDjMYtFLhTDeXwNahwFvImUcMscjwZIAcYD4iJ8690iQ5mKruxkOrEl
- fBE=
-X-IronPort-AV: E=Sophos;i="5.68,259,1569308400"; 
-   d="scan'208";a="53870323"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Nov 2019 04:23:59 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 2 Nov 2019 04:23:57 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Sat, 2 Nov 2019 04:23:58 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MVDpkTh7UYUoWFKOH8I3bMD5Khyi+hQzHreftVEFBPi4k+AodSw+TbO70cqWK0cSxwbXv39x6cmIk7YjY4qIcZWY3iGwweKaVFETrzktQ2opSsa0J5Sdmt4n4PqxId5hAueW8rdw3VfQKZjF+5OUxoSqb4XvrpFr72VyHMyQ6e891hq5NLjIkoqfhlrTp+4lbAHCxbM5P6FvO9zHkxONrLJwrBRhWDHla3fStZavH/ipZbTgYAqZvBJIAY2VLt500+u1GmayK9XitOcI3z02ctl3h+7YuyBqnHuQfa6A9+lGnxCzWOaKbF5BNVZCGoSIRZPJgIn/pO1aCey5WzD1IQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g9P054MaXSdfZyzciDQ9c6wsq1QayE5hk8eVcXStzco=;
- b=ak6aUsNe4f0VJbz+iFcHEmBlIVZAKwbnA0OddM/pDbF+9mortib4kdOyAtUaxLq7RRJkMfZ0zGd5UcbEyvg18Vhn58sBRa9CXHOcCfP0EjNToMgKaaga738NWe28GXCsdbSyNe68gWSFxcPXMsO3qZbaMEDRTNNfcih0xy1xuuwGFtgfDhn93mQ1dsrovjhFyj8oPolCm1wFGBdb+KACkOj36YmgApoHT/PC8EYm+iQmrc5FyybTBHrx+g+td3iiSbopayFsLvOC5LfnatYbYzm4RjMWveHAthbXnN/zsLWoZ/0mEFk0RwGdyeMeQ5YBFIEdXNTKNrlU4KuRPcYUoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g9P054MaXSdfZyzciDQ9c6wsq1QayE5hk8eVcXStzco=;
- b=Ksx0a45rWT3cssnmM0O1Npg1fvsQqV3CPHpC96NK6HqTH6qwkaMbLJg1FBWdichek1xAXoRcb5WkbE8uhZyQvwUahha0nGmpY17yh53Ft2Xb5oCFV0b5mYmlxqF0IFOB0UoUEWqm09MKIeuentkh1mWxyOaggmpMF/4U9DvD/Mg=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB3711.namprd11.prod.outlook.com (20.178.254.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20; Sat, 2 Nov 2019 11:23:56 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::c09c:36c8:3301:4457]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::c09c:36c8:3301:4457%5]) with mapi id 15.20.2408.018; Sat, 2 Nov 2019
- 11:23:56 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <boris.brezillon@collabora.com>, <vigneshr@ti.com>
-CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <Tudor.Ambarus@microchip.com>
-Subject: [PATCH v4 18/20] mtd: spi-nor: Rename macronix_quad_enable to
- spi_nor_sr1_bit6_quad_enable
-Thread-Topic: [PATCH v4 18/20] mtd: spi-nor: Rename macronix_quad_enable to
- spi_nor_sr1_bit6_quad_enable
-Thread-Index: AQHVkXADY6j1zfPLZU+XlaRtPvq+6A==
-Date:   Sat, 2 Nov 2019 11:23:56 +0000
-Message-ID: <20191102112316.20715-19-tudor.ambarus@microchip.com>
-References: <20191102112316.20715-1-tudor.ambarus@microchip.com>
-In-Reply-To: <20191102112316.20715-1-tudor.ambarus@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR07CA0143.eurprd07.prod.outlook.com
- (2603:10a6:802:16::30) To MN2PR11MB4448.namprd11.prod.outlook.com
- (2603:10b6:208:193::29)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.9.5
-x-originating-ip: [86.120.239.29]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f59bb2b8-a19e-4d6d-b50a-08d75f87262c
-x-ms-traffictypediagnostic: MN2PR11MB3711:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB371152C2A10517ABD48BCDD8F07D0@MN2PR11MB3711.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0209425D0A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(1496009)(366004)(136003)(346002)(376002)(396003)(39850400004)(189003)(199004)(64756008)(386003)(316002)(446003)(4326008)(5660300002)(81166006)(6506007)(2616005)(76176011)(81156014)(11346002)(110136005)(476003)(25786009)(54906003)(8936002)(86362001)(486006)(14454004)(8676002)(102836004)(26005)(66476007)(50226002)(2906002)(6116002)(1076003)(2501003)(7736002)(3846002)(99286004)(71200400001)(36756003)(71190400001)(66556008)(256004)(305945005)(6486002)(6436002)(66946007)(66066001)(6512007)(66446008)(478600001)(186003)(52116002)(14444005)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3711;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Jg5805awfYoR8FdgomsTp2jy3ESHm6RJtBQf7Rxs94fuKpMQgdpXTdxpxYbv4mYLKga7Hlcp0vjm91XPHhbBN2h2bHyBlvLQxh9eZ2CXrGXUJmMreqCBT7tWpIWMmUoD2D5UhAkH596NE7x54CntZ3CMqjVTIVRdhIpFPL6511DFTc+SSpjV6uPtDF25C4R1GkK5QbJl29LgnMlu5Ccf/uPsgfPmLQK9XNQ0k0suX7per6CNH7Z/hO9VSon8ZFxsEQEZ1cDyUqSSgcHjx+23sHLSx6/XF3S/SG4MM00rVQh4tzsuT6oGI9EkFx7YgfO9n8jVZq4nRnzd6NkxTGhD6hqmpT9T9UmIxnlk0CRWntze9HZsTuR3DoJmeCBbkuZFuivp51yx1Jf8Sd/3iC0ArcdzcmXfN9XGzFrEFoJBZ5olfowtZGjaEAFCQ5WoLBWz
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 2 Nov 2019 07:24:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572693840;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jYxznwBlff51oTY0T/3kF9sJKP54f67dFipH+ZtQLPo=;
+        b=dtN6RuT4cdkFpFs6mmiDF83OVKFYJPvsUxmh9G1k0GftByXz0WtJkhCH8Fq1os+SOhxIdv
+        dI5ITignCXy2d3wvmpDoN9jUHavH4Sysc5GTo1LePsQT62p1SJJsyC/Z4ShYODEMoyDpVS
+        Y0RxtBiOY50W1UdT4e5UWoVuTRwgD2M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-43-87shtdxlNnOYgmCCtnFLPg-1; Sat, 02 Nov 2019 07:23:58 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 906E32A3;
+        Sat,  2 Nov 2019 11:23:56 +0000 (UTC)
+Received: from [10.36.116.109] (ovpn-116-109.ams2.redhat.com [10.36.116.109])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 533045C54A;
+        Sat,  2 Nov 2019 11:23:53 +0000 (UTC)
+Subject: Re: [PATCH v2] mm/memory_hotplug: Fix try_offline_node()
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, Tang Chen <tangchen@cn.fujitsu.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>
+References: <20191101221118.5959-1-david@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <3e6849d9-b6d8-521b-394d-6747b85592f2@redhat.com>
+Date:   Sat, 2 Nov 2019 12:23:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f59bb2b8-a19e-4d6d-b50a-08d75f87262c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Nov 2019 11:23:56.4770
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2Kw8DSlM0F71xJTab8Gegy9CqglxQv6DVZTYFH+K1FerutHWsuQ5VqGRLKLAo2Spnykr+3JkVf/pVkGraqCVikTE4LocZgxj/+ArTWnNJ+o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3711
+In-Reply-To: <20191101221118.5959-1-david@redhat.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: 87shtdxlNnOYgmCCtnFLPg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
+On 01.11.19 23:11, David Hildenbrand wrote:
+> try_offline_node() is pretty much broken right now:
+> - The node span is updated when onlining memory, not when adding it. We
+>    ignore memory that was mever onlined. Bad.
+> - We touch possible garbage memmaps. The pfn_to_nid(pfn) can easily
+>    trigger a kernel panic. Bad for memory that is offline but also bad
+>    for subsection hotadd with ZONE_DEVICE, whereby the memmap of the firs=
+t
+>    PFN of a section might contain garbage.
+> - Sections belonging to mixed nodes are not properly considered.
+>=20
+> As memory blocks might belong to multiple nodes, we would have to walk al=
+l
+> pageblocks (or at least subsections) within present sections. However,
+> we don't have a way to identify whether a memmap that is not online was
+> initialized (relevant for ZONE_DEVICE). This makes things more complicate=
+d.
+>=20
+> Luckily, we can piggy pack on the node span and the nid stored in
+> memory blocks. Currently, the node span is grown when calling
+> move_pfn_range_to_zone() - e.g., when onlining memory, and shrunk when
+> removing memory, before calling try_offline_node(). Sysfs links are
+> created via link_mem_sections(), e.g., during boot or when adding memory.
+>=20
+> If the node still spans memory or if any memory block belongs to the
+> nid, we don't set the node offline. As memory blocks that span multiple
+> nodes cannot get offlined, the nid stored in memory blocks is reliable
+> enough (for such online memory blocks, the node still spans the memory).
+>=20
+> Note: We will soon stop shrinking the ZONE_DEVICE zone and the node span
+> when removing ZONE_DEVICE memory to fix similar issues (access of garbage
+> memmaps) - until we have a reliable way to identify whether these memmaps
+> were properly initialized. This implies later, that once a node had
+> ZONE_DEVICE memory, we won't be able to set a node offline -
+> which should be acceptable.
+>=20
+> Since commit f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded
+> memory to zones until online") memory that is added is not assoziated
+> with a zone/node (memmap not initialized). The introducing
+> commit 60a5a19e7419 ("memory-hotplug: remove sysfs file of node") already
+> missed that we could have multiple nodes for a section and that the
+> zone/node span is updated when onlining pages, not when adding them.
+>=20
+> I tested this by hotplugging two DIMMs to a memory-less and cpu-less NUMA
+> node. The node is properly onlined when adding the DIMMs. When removing
+> the DIMMs, the node is properly offlined.
+>=20
+> Fixes: 60a5a19e7419 ("memory-hotplug: remove sysfs file of node")
+> Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memor=
+y to zones until online") # visiable after d0dc12e86b319
+> Cc: Tang Chen <tangchen@cn.fujitsu.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+> Cc: Jani Nikula <jani.nikula@intel.com>
+> Cc: Nayna Jain <nayna@linux.ibm.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>=20
+> v1 -> v2:
+> - Drop sysfs handling, simplify, and add a comment
+> - Make sure to include last section fully
+>=20
+> We stop shrinking the ZONE_DEVICE zone after the following patch:
+>   [PATCH v6 04/10] mm/memory_hotplug: Don't access uninitialized memmaps
+>   in shrink_zone_span()
+> This implies, the above note regarding ZONE_DEVICE on a node blocking a
+> node from getting offlined until we sorted out how to properly shrink
+> the ZONE_DEVICE zone.
+>=20
+> This patch is especially important for:
+>   [PATCH v6 05/10] mm/memory_hotplug: Shrink zones when offlining
+>   memory
+> As the BUG fixed with this patch becomes now easier to observe when memor=
+y
+> is offlined (in contrast to when memory would never have been onlined
+> before).
+>=20
+> As both patches are stable fixes and in next/master for a long time, we
+> should probably pull this patch in front of both and also backport this
+> patch at least to
+>   Cc: stable@vger.kernel.org # v4.13+
+> I have not checked yet if there are real blockers to do that. I guess not=
+.
+>=20
+> ---
+>   mm/memory_hotplug.c | 45 +++++++++++++++++++++++++++++----------------
+>   1 file changed, 29 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 0140c20837b6..b5f696491577 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1634,6 +1634,18 @@ static int check_cpu_on_node(pg_data_t *pgdat)
+>   =09return 0;
+>   }
+>  =20
+> +static int check_no_memblock_for_node_cb(struct memory_block *mem, void =
+*arg)
+> +{
+> +=09int nid =3D *(int *)arg;
+> +
+> +=09/*
+> +=09 * If a memory block belongs to multiple nodes, the stored nid is not
+> +=09 * reliable. However, such blocks are always online (e.g., cannot get
+> +=09 * offlined) and, therefore, are still spanned by the node.
+> +=09 */
+> +=09return mem->nid =3D=3D nid ? -EEXIST : 0;
+> +}
+> +
+>   /**
+>    * try_offline_node
+>    * @nid: the node ID
+> @@ -1645,26 +1657,27 @@ static int check_cpu_on_node(pg_data_t *pgdat)
+>    */
+>   void try_offline_node(int nid)
+>   {
+> +=09const unsigned long end_section_nr =3D __highest_present_section_nr +=
+ 1;
+>   =09pg_data_t *pgdat =3D NODE_DATA(nid);
+> -=09unsigned long start_pfn =3D pgdat->node_start_pfn;
+> -=09unsigned long end_pfn =3D start_pfn + pgdat->node_spanned_pages;
+> -=09unsigned long pfn;
+> -
+> -=09for (pfn =3D start_pfn; pfn < end_pfn; pfn +=3D PAGES_PER_SECTION) {
+> -=09=09unsigned long section_nr =3D pfn_to_section_nr(pfn);
+> -
+> -=09=09if (!present_section_nr(section_nr))
+> -=09=09=09continue;
+> +=09int rc;
+>  =20
+> -=09=09if (pfn_to_nid(pfn) !=3D nid)
+> -=09=09=09continue;
+> +=09/*
+> +=09 * If the node still spans pages (especially ZONE_DEVICE), don't
+> +=09 * offline it. A node spans memory after move_pfn_range_to_zone(),
+> +=09 * e.g., after the memory block was onlined.
+> +=09 */
+> +=09if (pgdat->node_spanned_pages)
+> +=09=09return;
+>  =20
+> -=09=09/*
+> -=09=09 * some memory sections of this node are not removed, and we
+> -=09=09 * can't offline node now.
+> -=09=09 */
+> +=09/*
+> +=09 * Especially offline memory blocks might not be spanned by the
+> +=09 * node. They will get spanned by the node once they get onlined.
+> +=09 * However, they link to the node in sysfs and can get onlined later.
+> +=09 */
+> +=09rc =3D walk_memory_blocks(0, PFN_PHYS(section_nr_to_pfn(end_section_n=
+r)),
+> +=09=09=09=09&nid, check_no_memblock_for_node_cb);
 
-Rename method to a generic name: spi_nor_sr1_bit6_quad_enable().
+walk_memory_block() might be fairly inefficient for this use case (as it=20
+uses subsys_find_device_by_id() on any possible memory block, which is a=20
+list scan).
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
----
- drivers/mtd/spi-nor/spi-nor.c | 19 +++++++++----------
- include/linux/mtd/spi-nor.h   |  2 +-
- 2 files changed, 10 insertions(+), 11 deletions(-)
+I guess I will introduce a walk_each_memory_block() that uses=20
+bus_for_each_dev() under the hood.
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 8bc29cc073a0..85e5a56fb2d7 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -2078,16 +2078,15 @@ static int spi_nor_is_locked(struct mtd_info *mtd, =
-loff_t ofs, uint64_t len)
- }
-=20
- /**
-- * macronix_quad_enable() - set QE bit in Status Register.
-+ * spi_nor_sr1_bit6_quad_enable() - Set the Quad Enable BIT(6) in the Stat=
-us
-+ * Register 1.
-  * @nor:	pointer to a 'struct spi_nor'
-  *
-- * Set the Quad Enable (QE) bit in the Status Register.
-- *
-- * bit 6 of the Status Register is the QE bit for Macronix like QSPI memor=
-ies.
-+ * Bit 6 of the Status Register 1 is the QE bit for Macronix like QSPI mem=
-ories.
-  *
-  * Return: 0 on success, -errno otherwise.
-  */
--static int macronix_quad_enable(struct spi_nor *nor)
-+static int spi_nor_sr1_bit6_quad_enable(struct spi_nor *nor)
- {
- 	int ret;
-=20
-@@ -2095,10 +2094,10 @@ static int macronix_quad_enable(struct spi_nor *nor=
-)
- 	if (ret)
- 		return ret;
-=20
--	if (nor->bouncebuf[0] & SR_QUAD_EN_MX)
-+	if (nor->bouncebuf[0] & SR1_QUAD_EN_BIT6)
- 		return 0;
-=20
--	nor->bouncebuf[0] |=3D SR_QUAD_EN_MX;
-+	nor->bouncebuf[0] |=3D SR1_QUAD_EN_BIT6;
-=20
- 	return spi_nor_write_sr1_and_check(nor, nor->bouncebuf[0]);
- }
-@@ -2349,7 +2348,7 @@ static void gd25q256_default_init(struct spi_nor *nor=
-)
- 	 * indicate the quad_enable method for this case, we need
- 	 * to set it in the default_init fixup hook.
- 	 */
--	nor->params.quad_enable =3D macronix_quad_enable;
-+	nor->params.quad_enable =3D spi_nor_sr1_bit6_quad_enable;
- }
-=20
- static struct spi_nor_fixups gd25q256_fixups =3D {
-@@ -3729,7 +3728,7 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
-=20
- 	case BFPT_DWORD15_QER_SR1_BIT6:
- 		nor->flags &=3D ~SNOR_F_HAS_16BIT_SR;
--		params->quad_enable =3D macronix_quad_enable;
-+		params->quad_enable =3D spi_nor_sr1_bit6_quad_enable;
- 		break;
-=20
- 	case BFPT_DWORD15_QER_SR2_BIT7:
-@@ -4627,7 +4626,7 @@ static int spi_nor_setup(struct spi_nor *nor,
-=20
- static void macronix_set_default_init(struct spi_nor *nor)
- {
--	nor->params.quad_enable =3D macronix_quad_enable;
-+	nor->params.quad_enable =3D spi_nor_sr1_bit6_quad_enable;
- 	nor->params.set_4byte =3D macronix_set_4byte;
- }
-=20
-diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index f626e0e52909..6d703df97f13 100644
---- a/include/linux/mtd/spi-nor.h
-+++ b/include/linux/mtd/spi-nor.h
-@@ -133,7 +133,7 @@
- #define SR_E_ERR		BIT(5)
- #define SR_P_ERR		BIT(6)
-=20
--#define SR_QUAD_EN_MX		BIT(6)	/* Macronix Quad I/O */
-+#define SR1_QUAD_EN_BIT6	BIT(6)
-=20
- /* Enhanced Volatile Configuration Register bits */
- #define EVCR_QUAD_EN_MICRON	BIT(7)	/* Micron Quad I/O */
+Sorry for the noise :)
+
+
 --=20
-2.9.5
+
+Thanks,
+
+David / dhildenb
 
