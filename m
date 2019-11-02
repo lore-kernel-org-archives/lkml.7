@@ -2,63 +2,65 @@ Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4BBCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 00:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E756CA9ED1
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 00:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30BDF208CB
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 00:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C1F208CB
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 00:12:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ekUsmwbK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OG3qsF2N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfKBAMQ (ORCPT
+        id S1728060AbfKBAM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Nov 2019 20:12:16 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30785 "EHLO
+        Fri, 1 Nov 2019 20:12:29 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25283 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727806AbfKBAMP (ORCPT
+        by vger.kernel.org with ESMTP id S1726230AbfKBAM2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Nov 2019 20:12:15 -0400
+        Fri, 1 Nov 2019 20:12:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572653534;
+        s=mimecast20190719; t=1572653547;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=3a8267M+RHJNRr07VE5ml30G5v7tWW7jIUnKYNL4CMo=;
-        b=ekUsmwbKf6jrFZ/2TM+ZxaxFyAIm+fQ9bClpQI7RZ2sGpbZNtNeS5/HHrHtbMJZSLacqma
-        iAPvcnO/z0Kvf4PsVhZNi1fRypScuBdxpB4XNHA2qDi82YufZufXOvc7wxpop4y/giSMAV
-        n6DXhfWyLPPA1Zv8Blqq4u8QpOJJhHE=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-360-kKyKaigINz67XtZJy_eMew-1; Fri, 01 Nov 2019 20:12:11 -0400
-Received: by mail-wm1-f71.google.com with SMTP id b10so4859315wmh.6
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 17:12:11 -0700 (PDT)
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=24Z5Dmk2W6pqkfE5O4Ag7+iuU/YlK1vTn8paqS2R4cA=;
+        b=OG3qsF2NLWqu7qY1pnZoQR2cMKf79yy6IXF/oVInIj5vmtGk8yrH4ptmDQi9AXfsH/Fnfr
+        TspDXLVFdQ59eOzydfW2IGDQnpfrmVN1RBheZlfh1RYKppsSH8VVj/8V90wOGB5iz+mHz9
+        cHXR04u8UU0MBcNRgZ/Qxzjoc/O9maI=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-354-NefiEWMgO-CxHgjLr1dIcg-1; Fri, 01 Nov 2019 20:12:25 -0400
+Received: by mail-wr1-f69.google.com with SMTP id e25so6514779wra.9
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Nov 2019 17:12:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VX6BMhZnxFI/3YJV1VoE+a6y4VVLv+nOV4fd/3YTNIk=;
-        b=DnFsW9KT84lWKz5OUOuJqlycgZKhRYrXd6lujVh72epP5082lPIdA95HgOsolAXAIN
-         0XNgrBinP7FIdByyHEAvZOJh3mZEfryRdK4I4ApGt8OaoOgdsfOJfMXB1yQQvf+1EfK/
-         JaBqKVAlosDJ0Jbwxcs2UVWl3c9Xr/J8nVKl2YZbW0mcqTx0ncILwkAKFvv35jlnaDIa
-         J+eL5JJzg3bj5a8vozjCG+hWb6ZDaxn8rMOpT3TvEkiY75DaxB2xB3B8fN+GzVACf6ua
-         q+ScIRy2rXTAFz9/jObvX9IwUrm1CweQKwjbxktMj2PNDvj8D0D2XaHKoMbyeyPiK6/u
-         SkMg==
-X-Gm-Message-State: APjAAAXy4zIdyZhCG5KGip54cHZF/b6JYHH1H1vJDI+91PiUUE4M4gpm
-        hKuQ5KmGJ1SYM6sTPx3Uo4+M96c90GYGgQ0IL0fSXVeIfoCsF3GinWz2ZShjKWjN4/Pv+RDQZ5j
-        /tI5QQaPlz1sfsDF/3NMDpi7P
-X-Received: by 2002:a1c:9ccd:: with SMTP id f196mr12489849wme.152.1572653530238;
-        Fri, 01 Nov 2019 17:12:10 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqw4oLNGypYFr8/Qg3GXixLBynH2wHCRqp7hWXE77wgSMGttnht7B+mbeCcRpbJfTfqxa6l+UQ==
-X-Received: by 2002:a1c:9ccd:: with SMTP id f196mr12489834wme.152.1572653530002;
-        Fri, 01 Nov 2019 17:12:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=imZgvp23lfZ+nv681BvgXkR6J3pvu0v66299B/OZGnI=;
+        b=D15v86KzQcsa1oddCJbGmgvZxF0OfsbPffQUFxRZoIiuOFHr8HNQ7ihsGOauzK0mOp
+         P/Zka8KRheSYmPwFN/mx4F+eKOTbnnEq+gm5b+fyBh2FTZPo0dcuFWyTzm+gYKtHxSKG
+         P6+QjBSRioRVcN6ZbLL1RpSyJa+FaomouqW6q1Lwmwqil11UEtzexQH5iXNCtM8I+kfi
+         q8kNzAzvjMvQjzOx/2PjpWzEKRYS+59GpP7/37hFPCqprPIIWjOaCoQ4a/xgHhTfgGve
+         JFVb/pNNRkWnejhEITb9cPlkAO5oKSV1h2oelF8y9DJpl606tuJumGAbwPdykJk+/rPG
+         ikLA==
+X-Gm-Message-State: APjAAAU0Dm6mdAGJa1+Z0Y9x/GjU9IASb6ZRgx8lvb4pZUySpCKVqiwb
+        pIH1LEzCrOHVohIxe9CeUwlCxAtYIrMsj3lrIQP8+Rf7+MmuaWFKJMh2EuH+knJitzpGgrdUha/
+        1dCI+w4heTPZiyvSFaQ1PxSyn
+X-Received: by 2002:a05:6000:350:: with SMTP id e16mr13725129wre.276.1572653544508;
+        Fri, 01 Nov 2019 17:12:24 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzrrgm+aZgrekUoxbZhWGa28h831L3PmKrlzPbLge7raoNp6P+19vb+UswK4a+j1f1IkqU1Bg==
+X-Received: by 2002:a05:6000:350:: with SMTP id e16mr13725109wre.276.1572653544302;
+        Fri, 01 Nov 2019 17:12:24 -0700 (PDT)
 Received: from raver.teknoraver.net (net-109-115-41-234.cust.vodafonedsl.it. [109.115.41.234])
-        by smtp.gmail.com with ESMTPSA id a16sm13654781wmd.11.2019.11.01.17.12.08
+        by smtp.gmail.com with ESMTPSA id z189sm13915168wmc.25.2019.11.01.17.12.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Nov 2019 17:12:09 -0700 (PDT)
+        Fri, 01 Nov 2019 17:12:23 -0700 (PDT)
 From:   Matteo Croce <mcroce@redhat.com>
 To:     netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
         coreteam@netfilter.org
@@ -69,12 +71,14 @@ Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
         Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
         Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 0/2] icmp: move duplicate code in helper functions
-Date:   Sat,  2 Nov 2019 01:12:02 +0100
-Message-Id: <20191102001204.83883-1-mcroce@redhat.com>
+Subject: [PATCH net-next 1/2] icmp: add helpers to recognize ICMP error packets
+Date:   Sat,  2 Nov 2019 01:12:03 +0100
+Message-Id: <20191102001204.83883-2-mcroce@redhat.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191102001204.83883-1-mcroce@redhat.com>
+References: <20191102001204.83883-1-mcroce@redhat.com>
 MIME-Version: 1.0
-X-MC-Unique: kKyKaigINz67XtZJy_eMew-1
+X-MC-Unique: NefiEWMgO-CxHgjLr1dIcg-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -83,23 +87,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove some duplicate code by moving it in two helper functions.
-First patch adds the helpers, the second one uses it.
+Add two helper functions, one for IPv4 and one for IPv6, to recognize
+the ICMP packets which are error responses.
+This packets are special because they have as payload the original
+header of the packet which generated it (RFC 792 says at least 8 bytes,
+but Linux actually includes much more than that).
 
-Matteo Croce (2):
-  icmp: add helpers to recognize ICMP error packets
-  icmp: remove duplicate code
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+---
+ include/linux/icmp.h   | 15 +++++++++++++++
+ include/linux/icmpv6.h | 14 ++++++++++++++
+ 2 files changed, 29 insertions(+)
 
- include/linux/icmp.h                    | 15 +++++++++++++++
- include/linux/icmpv6.h                  | 14 ++++++++++++++
- net/ipv4/netfilter/nf_socket_ipv4.c     | 10 +---------
- net/ipv4/route.c                        |  5 +----
- net/ipv6/route.c                        |  5 +----
- net/netfilter/nf_conntrack_proto_icmp.c |  6 +-----
- net/netfilter/xt_HMARK.c                |  6 +-----
- net/sched/act_nat.c                     |  4 +---
- 8 files changed, 35 insertions(+), 30 deletions(-)
-
+diff --git a/include/linux/icmp.h b/include/linux/icmp.h
+index 2d8aaf7d4b9e..81ca84ce3119 100644
+--- a/include/linux/icmp.h
++++ b/include/linux/icmp.h
+@@ -20,4 +20,19 @@ static inline struct icmphdr *icmp_hdr(const struct sk_b=
+uff *skb)
+ {
+ =09return (struct icmphdr *)skb_transport_header(skb);
+ }
++
++static inline bool icmp_is_err(int type)
++{
++=09switch (type) {
++=09case ICMP_DEST_UNREACH:
++=09case ICMP_SOURCE_QUENCH:
++=09case ICMP_REDIRECT:
++=09case ICMP_TIME_EXCEEDED:
++=09case ICMP_PARAMETERPROB:
++=09=09return true;
++=09}
++
++=09return false;
++}
++
+ #endif=09/* _LINUX_ICMP_H */
+diff --git a/include/linux/icmpv6.h b/include/linux/icmpv6.h
+index a8f888976137..ef1cbb5f454f 100644
+--- a/include/linux/icmpv6.h
++++ b/include/linux/icmpv6.h
+@@ -46,4 +46,18 @@ extern void=09=09=09=09icmpv6_flow_init(struct sock *sk,
+ =09=09=09=09=09=09=09 const struct in6_addr *saddr,
+ =09=09=09=09=09=09=09 const struct in6_addr *daddr,
+ =09=09=09=09=09=09=09 int oif);
++
++static inline bool icmpv6_is_err(int type)
++{
++=09switch (type) {
++=09case ICMPV6_DEST_UNREACH:
++=09case ICMPV6_PKT_TOOBIG:
++=09case ICMPV6_TIME_EXCEED:
++=09case ICMPV6_PARAMPROB:
++=09=09return true;
++=09}
++
++=09return false;
++}
++
+ #endif
 --=20
 2.23.0
 
