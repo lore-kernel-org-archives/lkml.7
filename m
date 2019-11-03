@@ -2,179 +2,89 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF77CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64900CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C9F2084D
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:08:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572779330;
-	bh=FbaoVaWioLqr0Z7FxL6DKXeAOHtNY6YOT3zMnzdc8eU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Azy0Lnfb5gZtfqKHW0HawBX1JQCFKfoJ4Ltx8FJvyu23ij43HpbfW61h0rj5U1el3
-	 gZVbgREPCllU4clhlZu4h21RyGcH385ERsr39kPU5LUAYMQgszNTfs+eWmzDER9JA+
-	 jhv2TeYDGuuvIZJSzi9LGOvr0Pbsv2CuAHr+NwUE=
+	by mail.kernel.org (Postfix) with ESMTP id 1B663214E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:17:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LXy92CR4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfKCLIt (ORCPT
+        id S1727604AbfKCLRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 06:08:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726676AbfKCLIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 06:08:49 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9974820842;
-        Sun,  3 Nov 2019 11:08:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572779327;
-        bh=FbaoVaWioLqr0Z7FxL6DKXeAOHtNY6YOT3zMnzdc8eU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aD6PQEf1YtBiqkJF3yrAS2+/Z6KUwhqc68hNZX6/JK6K79E/SC6l/MJJK/XPvHMVo
-         FKFtMgi5uMvstFpoEvL8wAOJ/0IAUtx1un5J0bwBbMya+o7K3qc6EBB8uSXwD0/x9c
-         +PTJWqhrPJrpGPKRQQy4w5Ow7wodiZeOSRK/hR54=
-Date:   Sun, 3 Nov 2019 11:08:41 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
-        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <lee.jones@linaro.org>, <thierry.reding@gmail.com>,
-        <u.kleine-koenig@pengutronix.de>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH 2/4] dt-bindings: iio: timer: Convert stm32 IIO trigger
- bindings to json-schema
-Message-ID: <20191103110841.3ad3ecfb@archlinux>
-In-Reply-To: <20191031123040.26316-3-benjamin.gaignard@st.com>
-References: <20191031123040.26316-1-benjamin.gaignard@st.com>
-        <20191031123040.26316-3-benjamin.gaignard@st.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 3 Nov 2019 06:17:48 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:32776 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbfKCLRr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 06:17:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nz7EeA/pso7yMSwd3q6jsDYEXyDCyd3V9F+OMmOTChs=; b=LXy92CR4HL0oTq7JTykoQQLtE
+        SGKVsKAzYb1PwV3Gq8PdfuHGciDSvKRaKgcR4X1HQB5/fzRUDPXomELSZWlsNNRV1WbDs7ja9giZH
+        M1U7NSDBiii9QO30HFuBwZWLjPZ99JMe3D3inERtfrJAEtylGMsZpvcBapUSGlgN4u3nyLJCwJPzH
+        QO1Y2mZLzcarwVPeHpqfulMSNhddMrG/NenKwf6FMxdJD/LNwHkNoRqlhtRajtx9Y8zEOCchc9ro5
+        83AEKUmFAj2E6lRkfs9QlCpL1c6FUvQAYI+iHVsqsTkpkrCOfFimTNRv3w3D3Bs12V1BBF1F9eJ7a
+        LtHFoEpPw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iRDt5-0008GJ-2Z; Sun, 03 Nov 2019 11:17:39 +0000
+Date:   Sun, 3 Nov 2019 03:17:38 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring,
+ not cursor and length [ver #2]
+Message-ID: <20191103111738.GC15832@bombadil.infradead.org>
+References: <CAHk-=wh7cf3ANq-G9MmwSQiUK2d-=083C0HV_8hTGe2Mb4X7JA@mail.gmail.com>
+ <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
+ <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
+ <24075.1572533871@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <24075.1572533871@warthog.procyon.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 31 Oct 2019 13:30:38 +0100
-Benjamin Gaignard <benjamin.gaignard@st.com> wrote:
-
-> Convert the STM32 IIO trigger binding to DT schema format using json-schema
+On Thu, Oct 31, 2019 at 02:57:51PM +0000, David Howells wrote:
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-I'm far from great on these as still haven't taken the time I should to learn
-the yaml syntax properly.  A few comments inline however based mostly on this
-doesn't quite look like other ones I've seen recently.
-
-Thanks,
-
-Jonathan
-
-> ---
->  .../bindings/iio/timer/st,stm32-timer-trigger.yaml | 44 ++++++++++++++++++++++
->  .../bindings/iio/timer/stm32-timer-trigger.txt     | 25 ------------
->  2 files changed, 44 insertions(+), 25 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
->  delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
+> > It's shorter and more obvious to just write
+> > 
+> >    pipe->head = head;
+> > 
+> > than it is to write
+> > 
+> >    pipe_commit_write(pipe, head);
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
-> new file mode 100644
-> index 000000000000..1c8c8b55e8cd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
-> @@ -0,0 +1,44 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/timer/st,stm32-timer-trigger.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectronics STM32 Timers IIO timer bindings
-> +
-> +maintainers:
-> +  - Benjamin Gaignard <benjamin.gaignard@st.com>
-> +  - Fabrice Gasnier <fabrice.gasnier@st.com>
-> +
-> +properties:
-> +  $nodemane:
+> But easier to find the latter.  But whatever.
 
-nodename?
+May I suggest that you use a name that's easier to grep for?
 
-> +    pattern: "^timer@[0-9]+$"
-> +    type: object
-> +
-> +    description:
-> +      must be a sub-node of an STM32 Timer device tree node
-> +
-> +    properties:
-> +      compatible:
-> +        oneOf:
-
-enum is I think preferred for these.
-
-> +          - const: st,stm32-timer-trigger
-> +          - const: st,stm32h7-timer-trigger
-> +            
-> +      reg: true
-
-Normally some info for what the reg value is..
-
-> +
-> +    required:
-> +      - compatible
-> +      - reg
-> +
-> +examples:
-> +  - |
-> +    timers2: timer@40000000 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      timer@0 {
-> +        compatible = "st,stm32-timer-trigger";
-> +        reg = <0>;
-> +      };
-> +    };
-> +    
-> +...
-> diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> deleted file mode 100644
-> index b8e8c769d434..000000000000
-> --- a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> +++ /dev/null
-> @@ -1,25 +0,0 @@
-> -STMicroelectronics STM32 Timers IIO timer bindings
-> -
-> -Must be a sub-node of an STM32 Timers device tree node.
-> -See ../mfd/stm32-timers.txt for details about the parent node.
-> -
-> -Required parameters:
-> -- compatible:	Must be one of:
-> -		"st,stm32-timer-trigger"
-> -		"st,stm32h7-timer-trigger"
-> -- reg:		Identify trigger hardware block.
-> -
-> -Example:
-> -	timers@40010000 {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		compatible = "st,stm32-timers";
-> -		reg = <0x40010000 0x400>;
-> -		clocks = <&rcc 0 160>;
-> -		clock-names = "int";
-> -
-> -		timer@0 {
-> -			compatible = "st,stm32-timer-trigger";
-> -			reg = <0>;
-> -		};
-> -	};
+$ git grep -cw p_tail
+drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c:9
+$ git grep -cw p_head
+drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c:3
 
