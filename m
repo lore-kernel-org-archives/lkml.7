@@ -2,89 +2,109 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE90CCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 00:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B000CCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 01:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F5120862
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 00:59:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qe/QV06/"
+	by mail.kernel.org (Postfix) with ESMTP id 90F9320663
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 01:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfKCA7L (ORCPT
+        id S1727417AbfKCBgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 20:59:11 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:34794 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727335AbfKCA7L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 20:59:11 -0400
-Received: by mail-yb1-f193.google.com with SMTP id f6so1600066ybp.1
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 17:59:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=7q6Xq7rmHNSrovKS8aUtbAZiEFB5v4eQ1NKAasuvin0=;
-        b=qe/QV06/xian0rDAQgM+qAbX7/ACLaPY6U1qvPK/JYxMuZyLu2TBZKiDYgtCNho9yN
-         X/5uQFQKrr2HY5fpULDVYzwpvHhOFgiz7Fd4ZyBYRMyU2ETDArGOjhuYvUXOtANWQcac
-         mI9wPqYc4Q73sSkILRIey5fKQbxxgp1Akcpc9cwO4HkDMu2b2iTk8/7ALLRm0pTYEVPd
-         pWUd2f3unLUTvaCnhekTDYQuKrwTE4o13OL1L3RiKIlFlAsjiDxeyJ/QhK1Vmn8WtS7K
-         6vd9nU2q0zw7sgG95ROLQ0qOptvzbgC/xh6BWQ0ay+Dc8LTqOs19AGR0dcJJWiTt1c43
-         ytOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=7q6Xq7rmHNSrovKS8aUtbAZiEFB5v4eQ1NKAasuvin0=;
-        b=js1t0gOsrEE5BKrPgMmPp9Sa+AEgfvRqIBC9yY6HesFjzkbZPA1Qk5yQGVWk5nS2cT
-         vbIHw/LE8P8SawTFB7iNsbSNvltgpWPYgONkiukwd7naqNTdvDX5ewz/IX/VJccVVIMc
-         1QG8d1mv7Vq6ohczQNL4RjDr4W5WG0pzmVO7LZkGVmi2zUrhlbzBzDfMcK0c1DQkDsDi
-         M3jhAvpzxMk2f1UsWB68PcHWfo7bJfgxz4H5lJD5yI76sWwGrhRM13HlBJmCvuMn5weR
-         twNWSSJzxz/ysfphKhrZl+0EjlWcUZ1OkQbh+0cpF6JwC1SG6TgOwjK5sMA+A8n2y4et
-         ZiUg==
-X-Gm-Message-State: APjAAAVkqrgZD8pcO6HCjaWnzEvgJMip8x1fibSu0Fwnj3FI8lWC47Gp
-        zXbWSFGL6c7XsgrLCYPzrZ0=
-X-Google-Smtp-Source: APXvYqxSp4k92cn+p3Zvs5Fp7XQQ7Lm/W5dD+hONzeMlFEuxTsXcX1OL+HSDoXeqW8IDYsqLL5yIHg==
-X-Received: by 2002:a25:13ca:: with SMTP id 193mr17124173ybt.196.1572742750301;
-        Sat, 02 Nov 2019 17:59:10 -0700 (PDT)
-Received: from rkanasun-VirtualBox.ad.cirrus.com ([141.131.2.3])
-        by smtp.gmail.com with ESMTPSA id 203sm5240896ywp.76.2019.11.02.17.59.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Nov 2019 17:59:09 -0700 (PDT)
-From:   rama <ramakumar.kanasundara@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     jeremy@azazel.net, nishadkamdar@gmail.com,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        rama <ramakumar.kanasundara@gmail.com>
-Subject: [PATCH] FBTFT: fb_sh: Changed udelay() to usleep_range() based on the Document, Documentation/timers/timers-howto.rst Excerpt from the document: -SLEEPING FOR ~USECS OR SMALL MSECS ( 10us - 20ms):           * Use usleep_range
-Date:   Sat,  2 Nov 2019 19:59:06 -0500
-Message-Id: <20191103005906.17112-1-ramakumar.kanasundara@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 2 Nov 2019 21:36:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59408 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727346AbfKCBgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Nov 2019 21:36:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DAAC3AF26;
+        Sun,  3 Nov 2019 01:36:52 +0000 (UTC)
+From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+To:     linux-realtek-soc@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [RFC 01/11] dt-bindings: soc: Add Realtek RTD1195 chip info binding
+Date:   Sun,  3 Nov 2019 02:36:35 +0100
+Message-Id: <20191103013645.9856-2-afaerber@suse.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191103013645.9856-1-afaerber@suse.de>
+References: <20191103013645.9856-1-afaerber@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
----
- drivers/staging/fbtft/fb_agm1264k-fl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Define a binding for RTD1195 and later SoCs' chip info registers.
+Add the new directory to MAINTAINERS.
 
-diff --git a/drivers/staging/fbtft/fb_agm1264k-fl.c b/drivers/staging/fbtft/fb_agm1264k-fl.c
-index eeeeec97ad27..471a145e3c00 100644
---- a/drivers/staging/fbtft/fb_agm1264k-fl.c
-+++ b/drivers/staging/fbtft/fb_agm1264k-fl.c
-@@ -85,7 +85,7 @@ static void reset(struct fbtft_par *par)
- 	dev_dbg(par->info->device, "%s()\n", __func__);
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ Note: The binding gets extended compatibly later for up to three reg entries.
  
- 	gpiod_set_value(par->gpio.reset, 0);
--	udelay(20);
-+	usleep_range(20,20);
- 	gpiod_set_value(par->gpio.reset, 1);
- 	mdelay(120);
- }
+ .../bindings/soc/realtek/realtek,rtd1195-chip.yaml | 32 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml
+
+diff --git a/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml b/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml
+new file mode 100644
+index 000000000000..565ad2419553
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml
+@@ -0,0 +1,32 @@
++# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/soc/realtek/realtek,rtd1195-chip.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Realtek RTD1195 chip identification
++
++maintainers:
++  - Andreas Färber <afaerber@suse.de>
++
++description: |
++  The Realtek SoCs have some registers to identify the chip and revision.
++
++properties:
++  compatible:
++    const: "realtek,rtd1195-chip"
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    chip-info@1801a200 {
++        compatible = "realtek,rtd1195-chip";
++        reg = <0x1801a200 0x8>;
++    };
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f33adc430230..5c61cf5a44cb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2188,6 +2188,7 @@ L:	linux-realtek-soc@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	arch/arm64/boot/dts/realtek/
+ F:	Documentation/devicetree/bindings/arm/realtek.yaml
++F:	Documentation/devicetree/bindings/soc/realtek/
+ 
+ ARM/RENESAS ARM64 ARCHITECTURE
+ M:	Geert Uytterhoeven <geert+renesas@glider.be>
 -- 
-2.17.1
+2.16.4
 
