@@ -2,110 +2,288 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 797A0CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 12:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2478CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 12:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 485D02080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 12:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F03120842
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 12:37:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572784544;
-	bh=BK+D11+cHY70edHKin0so2otIas8a6H8FGw7tK2gm0A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L9qnaHx5BD1X9+HmKFB1Nuh4b0ZKaEfOvHS+kHzRrqNP2Jo4u6h4QkSfkvbQIpps2
-	 AkqBmvBJuVkgDeZ46JXiYq5FRlh5Ip69rnoHloJPnyt0viTnF2Sh5fp8OQESd5E+hu
-	 qic8MT7Xzdwa8WPiN8ASmAyTDTuOYkFNJahdmB4I=
+	s=default; t=1572784663;
+	bh=FpEd4P1rK+FmEKUtkOe9tb688DrGh7BwSAAv8ZekNzk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oghthleTolTbsLSpWr1wPGwPr1WmjNyVxq4N/7gZZidsQ4RHfTGLqMhRCId+SgHlu
+	 GEVfPhF1EI3kP4Sw7FOPCIwv7eDRm0evrscLHU1fwqnQQ+vlvVlAq0sC2WsMTnKbXA
+	 Fkp3JBOd/eaHeKIUthFrceaHrz9nQDoSBW1R1LEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfKCMfn (ORCPT
+        id S1727698AbfKCMhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 07:35:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51302 "EHLO mail.kernel.org"
+        Sun, 3 Nov 2019 07:37:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727377AbfKCMfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 07:35:42 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1727377AbfKCMhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 07:37:42 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FD1D2080F;
-        Sun,  3 Nov 2019 12:35:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0215F2080F;
+        Sun,  3 Nov 2019 12:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572784540;
-        bh=BK+D11+cHY70edHKin0so2otIas8a6H8FGw7tK2gm0A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I1yyuyK5TLDhI39cGDdu78riruurLy+CQ/IxmIXX2JVPEI3xSJZBLG4f8bu/lFF89
-         KHBPHm4NjHnkVqDvJ0Nswc2NfEvrBTe/cZZPHNWg+V9HX0J2N/28IEVVQ363/qUkvo
-         R7sLDqJ0FA4In7icqVPgIlmHFlm3c7nRzrTkNqGc=
-Date:   Sun, 3 Nov 2019 13:35:38 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     rama <ramakumar.kanasundara@gmail.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        nishadkamdar@gmail.com
-Subject: Re: [PATCH] FBTFT: fb_sh: Changed udelay() to usleep_range() based
- on the Document, Documentation/timers/timers-howto.rst Excerpt from the
- document: -SLEEPING FOR ~USECS OR SMALL MSECS ( 10us - 20ms): * Use
- usleep_range
-Message-ID: <20191103123538.GA604630@kroah.com>
-References: <20191103005906.17112-1-ramakumar.kanasundara@gmail.com>
+        s=default; t=1572784660;
+        bh=FpEd4P1rK+FmEKUtkOe9tb688DrGh7BwSAAv8ZekNzk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RZ/2FteWTccZlfRZRJKK1HN4TEoe2iVQ3fbrQaouqJ7RZj+iJES1dznoX95K8dRZF
+         uQBWcz4T6NeYiKH+D8mOBjD7/GTJeE6CpxVzpsoRCnIMikwl3k0hZAYNZQ+1YTIaNn
+         ExVTJH2A0v78o8hebPfH+lKpFyz4wJ2QLQIGnzXo=
+Date:   Sun, 3 Nov 2019 12:37:34 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     briannorris@chromium.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
+        enric.balletbo@collabora.com, dianders@chromium.org,
+        groeck@chromium.org, fabien.lahoudere@collabora.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH v3 02/18] mfd: cros_ec: Add sensor_count and make
+ check_features public
+Message-ID: <20191103123734.7ce80e48@archlinux>
+In-Reply-To: <20191027230921.205251-3-gwendal@chromium.org>
+References: <20191027230921.205251-1-gwendal@chromium.org>
+        <20191027230921.205251-3-gwendal@chromium.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191103005906.17112-1-ramakumar.kanasundara@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 02, 2019 at 07:59:06PM -0500, rama wrote:
+On Sun, 27 Oct 2019 16:09:05 -0700
+Gwendal Grignou <gwendal@chromium.org> wrote:
+
+> Add a new function to return the number of MEMS sensors available in a
+> ChromeOS Embedded Controller.
+> It uses MOTIONSENSE_CMD_DUMP if available or a specific memory map ACPI
+> registers to find out.
+> 
+> Also, make check_features public as it can be useful for other drivers
+> to know what the Embedded Controller supports.
+> 
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+
+Lee acked this one so you should have picked that up.
+
+Also Enric had some comments that are not addressed in here
+and I can't see a reply to his review.
+
+
 > ---
->  drivers/staging/fbtft/fb_agm1264k-fl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Changes in v3:
+>   Fix doxygen comments.
 
-Hi,
+kernel-doc.
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+> Changes in v2:
+>   Fix spelling in commit message.
+>   Cleanup the case where DUMP command is not supported.
+>   Move code from mfd to platform/chrome/
+> 
+>  drivers/mfd/cros_ec_dev.c                   |  32 ------
+>  drivers/platform/chrome/cros_ec_proto.c     | 117 ++++++++++++++++++++
+>  include/linux/platform_data/cros_ec_proto.h |   5 +
+>  3 files changed, 122 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> index 6e6dfd6c18711..a35104e35cb4e 100644
+> --- a/drivers/mfd/cros_ec_dev.c
+> +++ b/drivers/mfd/cros_ec_dev.c
+> @@ -112,38 +112,6 @@ static const struct mfd_cell cros_ec_vbc_cells[] = {
+>  	{ .name = "cros-ec-vbc", }
+>  };
+>  
+> -static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
+> -{
+> -	struct cros_ec_command *msg;
+> -	int ret;
+> -
+> -	if (ec->features[0] == -1U && ec->features[1] == -1U) {
+> -		/* features bitmap not read yet */
+> -		msg = kzalloc(sizeof(*msg) + sizeof(ec->features), GFP_KERNEL);
+> -		if (!msg)
+> -			return -ENOMEM;
+> -
+> -		msg->command = EC_CMD_GET_FEATURES + ec->cmd_offset;
+> -		msg->insize = sizeof(ec->features);
+> -
+> -		ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+> -		if (ret < 0) {
+> -			dev_warn(ec->dev, "cannot get EC features: %d/%d\n",
+> -				 ret, msg->result);
+> -			memset(ec->features, 0, sizeof(ec->features));
+> -		} else {
+> -			memcpy(ec->features, msg->data, sizeof(ec->features));
+> -		}
+> -
+> -		dev_dbg(ec->dev, "EC features %08x %08x\n",
+> -			ec->features[0], ec->features[1]);
+> -
+> -		kfree(msg);
+> -	}
+> -
+> -	return ec->features[feature / 32] & EC_FEATURE_MASK_0(feature);
+> -}
+> -
+>  static void cros_ec_class_release(struct device *dev)
+>  {
+>  	kfree(to_cros_ec_dev(dev));
+> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+> index 7db58771ec77c..91a4977f3a622 100644
+> --- a/drivers/platform/chrome/cros_ec_proto.c
+> +++ b/drivers/platform/chrome/cros_ec_proto.c
+> @@ -717,3 +717,120 @@ u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev)
+>  	return host_event;
+>  }
+>  EXPORT_SYMBOL(cros_ec_get_host_event);
+> +
+> +/**
+> + * cros_ec_check_features - Test for the presence of EC features
+> + *
+> + * @ec: EC device, does not have to be connected directly to the AP,
+> + *      can be daisy chained through another device.
+> + * @feature: One of ec_feature_code bit.
+> + *
+> + * Call this function to test whether the ChromeOS EC supports a feature.
+> + *
+> + * Return: 1 if supported, 0 if not
+> + */
+> +int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
+> +{
+> +	struct cros_ec_command *msg;
+> +	int ret;
+> +
+> +	if (ec->features[0] == -1U && ec->features[1] == -1U) {
+> +		/* features bitmap not read yet */
+> +		msg = kzalloc(sizeof(*msg) + sizeof(ec->features), GFP_KERNEL);
+> +		if (!msg)
+> +			return -ENOMEM;
+> +
+> +		msg->command = EC_CMD_GET_FEATURES + ec->cmd_offset;
+> +		msg->insize = sizeof(ec->features);
+> +
+> +		ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+> +		if (ret < 0) {
+> +			dev_warn(ec->dev, "cannot get EC features: %d/%d\n",
+> +				 ret, msg->result);
+> +			memset(ec->features, 0, sizeof(ec->features));
+> +		} else {
+> +			memcpy(ec->features, msg->data, sizeof(ec->features));
+> +		}
+> +
+> +		dev_dbg(ec->dev, "EC features %08x %08x\n",
+> +			ec->features[0], ec->features[1]);
+> +
+> +		kfree(msg);
+> +	}
+> +
+> +	return ec->features[feature / 32] & EC_FEATURE_MASK_0(feature);
+> +}
+> +EXPORT_SYMBOL_GPL(cros_ec_check_features);
+> +
+> +/**
+> + * cros_ec_get_sensor_count - Return the number of MEMS sensors supported.
+> + *
+> + * @ec: EC device, does not have to be connected directly to the AP,
+> + *      can be daisy chained through another device.
+> + * Return: < 0 in case of error.
+> + */
+> +int cros_ec_get_sensor_count(struct cros_ec_dev *ec)
+> +{
+> +	/*
+> +	 * Issue a command to get the number of sensor reported.
+> +	 * If not supported, check for legacy mode.
+> +	 */
+> +	int ret, sensor_count;
+> +	struct ec_params_motion_sense *params;
+> +	struct ec_response_motion_sense *resp;
+> +	struct cros_ec_command *msg;
+> +	struct cros_ec_device *ec_dev = ec->ec_dev;
+> +	u8 status;
+> +
+> +	msg = kzalloc(sizeof(struct cros_ec_command) +
+> +			max(sizeof(*params), sizeof(*resp)), GFP_KERNEL);
+> +	if (!msg)
+> +		return -ENOMEM;
+> +
+> +	msg->version = 1;
+> +	msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
+> +	msg->outsize = sizeof(*params);
+> +	msg->insize = sizeof(*resp);
+> +
+> +	params = (struct ec_params_motion_sense *)msg->data;
+> +	params->cmd = MOTIONSENSE_CMD_DUMP;
+> +
+> +	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
+> +	if (ret < 0) {
+> +		sensor_count = ret;
+> +	} else if (msg->result != EC_RES_SUCCESS) {
+> +		sensor_count = -EPROTO;
+> +	} else {
+> +		resp = (struct ec_response_motion_sense *)msg->data;
+> +		sensor_count = resp->dump.sensor_count;
+> +	}
+> +	kfree(msg);
+> +
+> +	/*
+> +	 * Check legacy mode: Let's find out if sensors are accessible
+> +	 * via LPC interface.
+> +	 */
+> +	if (sensor_count == -EPROTO &&
+> +	    ec->cmd_offset == 0 &&
+> +	    ec_dev->cmd_readmem) {
+> +		ret = ec_dev->cmd_readmem(ec_dev, EC_MEMMAP_ACC_STATUS,
+> +				1, &status);
+> +		if ((ret >= 0) &&
+> +		    (status & EC_MEMMAP_ACC_STATUS_PRESENCE_BIT)) {
+> +			/*
+> +			 * We have 2 sensors, one in the lid, one in the base.
+> +			 */
+> +			sensor_count = 2;
+> +		} else {
+> +			/*
+> +			 * EC uses LPC interface and no sensors are presented.
+> +			 */
+> +			sensor_count = 0;
+> +		}
+> +	} else if (sensor_count == -EPROTO) {
+> +		/* EC responded, but does not understand DUMP command. */
+> +		sensor_count = 0;
+> +	}
+> +	return sensor_count;
+> +}
+> +EXPORT_SYMBOL_GPL(cros_ec_get_sensor_count);
+> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+> index 0d4e4aaed37af..f3de0662135d5 100644
+> --- a/include/linux/platform_data/cros_ec_proto.h
+> +++ b/include/linux/platform_data/cros_ec_proto.h
+> @@ -12,6 +12,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/notifier.h>
+>  
+> +#include <linux/mfd/cros_ec.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  
+>  #define CROS_EC_DEV_NAME	"cros_ec"
+> @@ -213,4 +214,8 @@ int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event);
+>  
+>  u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev);
+>  
+> +int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
+> +
+> +int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
+> +
+>  #endif /* __LINUX_CROS_EC_PROTO_H */
 
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- Your patch does not have a Signed-off-by: line.  Please read the
-  kernel file, Documentation/SubmittingPatches and resend it after
-  adding that line.  Note, the line needs to be in the body of the
-  email, before the patch, not at the bottom of the patch or in the
-  email signature.
-
-- You did not specify a description of why the patch is needed, or
-  possibly, any description at all, in the email body.  Please read the
-  section entitled "The canonical patch format" in the kernel file,
-  Documentation/SubmittingPatches for what is needed in order to
-  properly describe the change.
-
-- You did not write a descriptive Subject: for the patch, allowing Greg,
-  and everyone else, to know what this patch is all about.  Please read
-  the section entitled "The canonical patch format" in the kernel file,
-  Documentation/SubmittingPatches for what a proper Subject: line should
-  look like.
-
-- It looks like you did not use your "real" name for the patch on either
-  the Signed-off-by: line, or the From: line (both of which have to
-  match).  Please read the kernel file, Documentation/SubmittingPatches
-  for how to do this correctly.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
