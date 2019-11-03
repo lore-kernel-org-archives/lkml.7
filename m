@@ -2,89 +2,145 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64900CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7C7CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B663214E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:17:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LXy92CR4"
+	by mail.kernel.org (Postfix) with ESMTP id 51E322084D
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:25:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572780348;
+	bh=iVW9cBPnp0fjG+zTXydLaRUI+YAsffRYMHdiQGWeTNo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=i6+ojkFTpCQQU2wLB3i6Kq8z+XkOy2g67XRFWvwxdcW4Ca6z2iRxv6xdZ/wjCax+w
+	 PefoR/A0jf0nX1lrlhXoQ5cveQvN9idVEh3q7VqCSvOOYMhmUkXKdavoRHLx64+/0P
+	 12BOmGpQ34wEFcV4QbHkvRDOxeZZCU/RuZO3FHYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfKCLRs (ORCPT
+        id S1727634AbfKCLZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 06:17:48 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:32776 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbfKCLRr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 06:17:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nz7EeA/pso7yMSwd3q6jsDYEXyDCyd3V9F+OMmOTChs=; b=LXy92CR4HL0oTq7JTykoQQLtE
-        SGKVsKAzYb1PwV3Gq8PdfuHGciDSvKRaKgcR4X1HQB5/fzRUDPXomELSZWlsNNRV1WbDs7ja9giZH
-        M1U7NSDBiii9QO30HFuBwZWLjPZ99JMe3D3inERtfrJAEtylGMsZpvcBapUSGlgN4u3nyLJCwJPzH
-        QO1Y2mZLzcarwVPeHpqfulMSNhddMrG/NenKwf6FMxdJD/LNwHkNoRqlhtRajtx9Y8zEOCchc9ro5
-        83AEKUmFAj2E6lRkfs9QlCpL1c6FUvQAYI+iHVsqsTkpkrCOfFimTNRv3w3D3Bs12V1BBF1F9eJ7a
-        LtHFoEpPw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iRDt5-0008GJ-2Z; Sun, 03 Nov 2019 11:17:39 +0000
-Date:   Sun, 3 Nov 2019 03:17:38 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring,
- not cursor and length [ver #2]
-Message-ID: <20191103111738.GC15832@bombadil.infradead.org>
-References: <CAHk-=wh7cf3ANq-G9MmwSQiUK2d-=083C0HV_8hTGe2Mb4X7JA@mail.gmail.com>
- <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
- <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
- <24075.1572533871@warthog.procyon.org.uk>
+        Sun, 3 Nov 2019 06:25:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727554AbfKCLZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 06:25:46 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AB602080F;
+        Sun,  3 Nov 2019 11:25:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572780345;
+        bh=iVW9cBPnp0fjG+zTXydLaRUI+YAsffRYMHdiQGWeTNo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KnLJ+ocoKBFLnYGZIbVgwmWNxa5NTEVReT7rXqEDHZFdSgW8ESY92vPuukCGO5mN5
+         y9vqz0hcZ3nU0N3F5FZomd4QzsIqsOyxrHhXvE+x5X+YxUZ9W2fXjI1LxKiU3qhAkW
+         xI7w+lUfCUUpXO6DQQ9rXH3gMMs4gyKQZjNPR5QU=
+Date:   Sun, 3 Nov 2019 11:25:40 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     zhong jiang <zhongjiang@huawei.com>
+Cc:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH 1/2] iio: imu: adis16460: use DEFINE_DEBUGFS_ATTRIBUTE
+ to define debugfs fops
+Message-ID: <20191103112540.5fdfccad@archlinux>
+In-Reply-To: <5DB958DA.7080305@huawei.com>
+References: <1572423581-59762-1-git-send-email-zhongjiang@huawei.com>
+        <1572423581-59762-2-git-send-email-zhongjiang@huawei.com>
+        <fb8722ad2c1ef51944dc814a7b24433f4348721e.camel@analog.com>
+        <5DB958DA.7080305@huawei.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <24075.1572533871@warthog.procyon.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 02:57:51PM +0000, David Howells wrote:
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> 
-> > It's shorter and more obvious to just write
-> > 
-> >    pipe->head = head;
-> > 
-> > than it is to write
-> > 
-> >    pipe_commit_write(pipe, head);
-> 
-> But easier to find the latter.  But whatever.
+On Wed, 30 Oct 2019 17:33:14 +0800
+zhong jiang <zhongjiang@huawei.com> wrote:
 
-May I suggest that you use a name that's easier to grep for?
+> On 2019/10/30 17:13, Ardelean, Alexandru wrote:
+> > On Wed, 2019-10-30 at 16:19 +0800, zhong jiang wrote:  
+> >> [External]
+> >>
+> >> It is more clear to use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs file
+> >> operation rather than DEFINE_SIMPLE_ATTRIBUTE.  
+> > Not sure if "more clear" is the word.  
+> Should be more clearly. :-)
+> > But it is more correct to use DEFINE_DEBUGFS_ATTRIBUTE(), since they are
+> > debugfs attrs.
+> >
+> > In any case, this is no big deal.
+> > So:
+> >
+> > Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> >  
+> >> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+I started looking into why this attributes were introduced.
+There are potential issues, so Alex can you confirm you've tested this
+series.  Whilst it looks right, it seems some other patches making this
+change have had to switch over to the unsafe registration functions.
 
-$ git grep -cw p_tail
-drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c:9
-$ git grep -cw p_head
-drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c:3
+https://patchwork.kernel.org/patch/11051725/
+https://lkml.org/lkml/2019/10/30/144
+
+The reference counting is subtly different between the two versions.
+Seems you are getting some push back on similar patches.
+
+Perhaps a v2 with reference to the other threads if those get resolved
+to say it is sensible to make this change.
+
+Thanks,
+
+Jonathan
+
+
+> >> ---
+> >>  drivers/iio/imu/adis16460.c | 6 +++---
+> >>  1 file changed, 3 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/iio/imu/adis16460.c b/drivers/iio/imu/adis16460.c
+> >> index 6aed9e8..2e7a582 100644
+> >> --- a/drivers/iio/imu/adis16460.c
+> >> +++ b/drivers/iio/imu/adis16460.c
+> >> @@ -87,7 +87,7 @@ static int adis16460_show_serial_number(void *arg, u64
+> >> *val)
+> >>  
+> >>  	return 0;
+> >>  }
+> >> -DEFINE_SIMPLE_ATTRIBUTE(adis16460_serial_number_fops,
+> >> +DEFINE_DEBUGFS_ATTRIBUTE(adis16460_serial_number_fops,
+> >>  	adis16460_show_serial_number, NULL, "0x%.4llx\n");
+> >>  
+> >>  static int adis16460_show_product_id(void *arg, u64 *val)
+> >> @@ -105,7 +105,7 @@ static int adis16460_show_product_id(void *arg, u64
+> >> *val)
+> >>  
+> >>  	return 0;
+> >>  }
+> >> -DEFINE_SIMPLE_ATTRIBUTE(adis16460_product_id_fops,
+> >> +DEFINE_DEBUGFS_ATTRIBUTE(adis16460_product_id_fops,
+> >>  	adis16460_show_product_id, NULL, "%llu\n");
+> >>  
+> >>  static int adis16460_show_flash_count(void *arg, u64 *val)
+> >> @@ -123,7 +123,7 @@ static int adis16460_show_flash_count(void *arg, u64
+> >> *val)
+> >>  
+> >>  	return 0;
+> >>  }
+> >> -DEFINE_SIMPLE_ATTRIBUTE(adis16460_flash_count_fops,
+> >> +DEFINE_DEBUGFS_ATTRIBUTE(adis16460_flash_count_fops,
+> >>  	adis16460_show_flash_count, NULL, "%lld\n");
+> >>  
+> >>  static int adis16460_debugfs_init(struct iio_dev *indio_dev)  
+> 
+> 
 
