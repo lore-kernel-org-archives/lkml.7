@@ -2,332 +2,160 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 245A9CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 17:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D81CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 17:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD2D20578
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 17:27:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GeBoxngE";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hha+JUFe"
+	by mail.kernel.org (Postfix) with ESMTP id CEFFF2086D
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 17:32:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572802352;
+	bh=UzLLL1Ca+sjdIQykVRqTI78sHlr2eCUpPuADKt3IhL0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ecpwrR92fajNLb1ABC0EBh4mT7PbmFv29N2AVP+LXPzFBOY/ut5xcPPkh+AAdCuVK
+	 kCkHAEqU+3OYhEFO6uUlhbFIx7b/PT4riGER2eDYRbKJFIPYc2DpDx7J+a+2QsiJ5A
+	 TqUd5Nj/NfvtyMyhVxRQKxIGbsjo2Gv724+bC09M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbfKCR1b (ORCPT
+        id S1727859AbfKCRcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 12:27:31 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:54650 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727444AbfKCR1b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 12:27:31 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9FEFB6146C; Sun,  3 Nov 2019 17:27:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572802050;
-        bh=IFE+63smCDWoDt/0woRS2mcV78/GgXb+lPWFsBFdH3A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GeBoxngEk7NiAq1Tvxd8YWimm3G+78kWmp3NrNPXyp/8twgpR0knQ7jGp6wkyLebj
-         hGs27kjenmU2r35MBFy85/FfFZn+R80pJnKYZI1BIwLRC9/8sKD8X2Phlhs5IaXGez
-         cDTfYix/rri7GUvr3myWVKKo1mNce6dN2zm8x/rw=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 2B51861327;
-        Sun,  3 Nov 2019 17:27:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572802049;
-        bh=IFE+63smCDWoDt/0woRS2mcV78/GgXb+lPWFsBFdH3A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hha+JUFeOBcjuLIWOkReecH5D6sRgiVQjdazICbYcl1EeVTAn2PS/v7pgUxs5ifVA
-         r/ABBdpU6lbmhbBdXDAI9bViHxPWmcRN4jB4EMjvS+4pG/wU9NRQUNMgbmivlB1QgX
-         ywT3ewwZil65n20PGCPjQa8+FIePGWmyYstYtmDM=
+        Sun, 3 Nov 2019 12:32:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56842 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727488AbfKCRcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 12:32:31 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6A782080F;
+        Sun,  3 Nov 2019 17:32:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572802350;
+        bh=UzLLL1Ca+sjdIQykVRqTI78sHlr2eCUpPuADKt3IhL0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A1fyaYe43+mDax1rBL8Mn178Q81As7bkN3B8ZbBrGbLDS82jKqipE6imQiPJYGnlz
+         M+9e1IPNj3aLpjH6GHNqG9sApJmYWFEOAuYOM6PybzHSwjH+lDSQ+ENzyJ1mXiZ7us
+         nslC1hLxRXdLoLVYm6Ma8hr3egT4FlCHajlZSJHU=
+Date:   Sun, 3 Nov 2019 18:32:27 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH v11 4/7] drm/sun4i: dsi: Handle bus clock explicitly
+Message-ID: <20191103173227.GF7001@gilmour>
+References: <20191025175625.8011-1-jagan@amarulasolutions.com>
+ <20191025175625.8011-5-jagan@amarulasolutions.com>
+ <20191028153427.pc3tnoz2d23filhx@hendrix>
+ <CAMty3ZCisTrFGjzHyqSofqFAsKSLV1n2xP5Li3Lonhdi0WUZVA@mail.gmail.com>
+ <20191029085401.gvqpwmmpyml75vis@hendrix>
+ <CAMty3ZAWPZSHtAZDf_0Dpx588YGGv3pJX1cXMfkZus3+WF94cA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 03 Nov 2019 22:57:29 +0530
-From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
-To:     Claire Chang <tientzu@chromium.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>, rjliao@codeaurora.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Bluetooth: hci_qca: add PM support
-In-Reply-To: <20191031104614.165120-1-tientzu@chromium.org>
-References: <20191031104614.165120-1-tientzu@chromium.org>
-Message-ID: <d26c1c852352dfcc6be2a44c22fed28b@codeaurora.org>
-X-Sender: bgodavar@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dFWYt1i2NyOo1oI9"
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZAWPZSHtAZDf_0Dpx588YGGv3pJX1cXMfkZus3+WF94cA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-31 16:16, Claire Chang wrote:
-> Add PM suspend/resume callbacks for hci_qca driver.
-> 
-> BT host will make sure both Rx and Tx go into sleep state in
-> qca_suspend. Without this, Tx may still remain in awake state, which
-> prevents BTSOC from entering deep sleep. For example, BlueZ will send
-> Set Event Mask to device when suspending and this will wake the device
-> Rx up. However, the Tx idle timeout on the host side is 2000 ms. If the
-> host is suspended before its Tx idle times out, it won't send
-> HCI_IBS_SLEEP_IND to the device and the device Rx will remain awake.
-> 
-> We implement this by canceling relevant work in workqueue, sending
-> HCI_IBS_SLEEP_IND to the device and then waiting HCI_IBS_SLEEP_IND sent
-> by the device.
-> 
-> In order to prevent the device from being awaken again after 
-> qca_suspend
-> is called, we introduce QCA_SUSPEND flag. QCA_SUSPEND is set in the
-> beginning of qca_suspend to indicate system is suspending and that we'd
-> like to ignore any further wake events.
-> 
-> With QCA_SUSPEND and spinlock, we can avoid race condition, e.g. if
-> qca_enqueue acquires qca->hci_ibs_lock before qca_suspend calls
-> cancel_work_sync and then qca_enqueue adds a new qca->ws_awake_device
-> work after the previous one is cancelled.
-> 
-> If BTSOC wants to wake the whole system up after qca_suspend is called,
-> it will keep sending HCI_IBS_WAKE_IND and uart driver will take care of
-> waking the system. For example, uart driver will reconfigure its Rx pin
-> to a normal GPIO pin and enable irq wake on that pin when suspending.
-> Once host detects Rx falling, the system will begin resuming. Then, the
-> BT host clears QCA_SUSPEND flag in qca_resume and begins dealing with
-> normal HCI packets. By doing so, only a few HCI_IBS_WAKE_IND packets 
-> are
-> lost and there is no data packet loss.
-> 
-> Signed-off-by: Claire Chang <tientzu@chromium.org>
-> ---
->  drivers/bluetooth/hci_qca.c | 127 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 124 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index c591a8ba9d93..c2062087b46b 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -43,7 +43,8 @@
->  #define HCI_MAX_IBS_SIZE	10
-> 
->  #define IBS_WAKE_RETRANS_TIMEOUT_MS	100
-> -#define IBS_TX_IDLE_TIMEOUT_MS		2000
-> +#define IBS_BTSOC_TX_IDLE_TIMEOUT_MS	40
-> +#define IBS_HOST_TX_IDLE_TIMEOUT_MS	2000
->  #define CMD_TRANS_TIMEOUT_MS		100
-> 
->  /* susclk rate */
-> @@ -55,6 +56,7 @@
->  enum qca_flags {
->  	QCA_IBS_ENABLED,
->  	QCA_DROP_VENDOR_EVENT,
-> +	QCA_SUSPENDING,
->  };
-> 
->  /* HCI_IBS transmit side sleep protocol states */
-> @@ -100,6 +102,7 @@ struct qca_data {
->  	struct work_struct ws_tx_vote_off;
->  	unsigned long flags;
->  	struct completion drop_ev_comp;
-> +	wait_queue_head_t suspend_wait_q;
-> 
->  	/* For debugging purpose */
->  	u64 ibs_sent_wacks;
-> @@ -437,6 +440,12 @@ static void hci_ibs_wake_retrans_timeout(struct
-> timer_list *t)
->  	spin_lock_irqsave_nested(&qca->hci_ibs_lock,
->  				 flags, SINGLE_DEPTH_NESTING);
-> 
-> +	/* Don't retransmit the HCI_IBS_WAKE_IND when suspending. */
-> +	if (test_bit(QCA_SUSPENDING, &qca->flags)) {
-> +		spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
-> +		return;
-> +	}
-> +
->  	switch (qca->tx_ibs_state) {
->  	case HCI_IBS_TX_WAKING:
->  		/* No WAKE_ACK, retransmit WAKE */
-> @@ -496,6 +505,8 @@ static int qca_open(struct hci_uart *hu)
->  	INIT_WORK(&qca->ws_rx_vote_off, qca_wq_serial_rx_clock_vote_off);
->  	INIT_WORK(&qca->ws_tx_vote_off, qca_wq_serial_tx_clock_vote_off);
-> 
-> +	init_waitqueue_head(&qca->suspend_wait_q);
-> +
->  	qca->hu = hu;
->  	init_completion(&qca->drop_ev_comp);
-> 
-> @@ -532,7 +543,7 @@ static int qca_open(struct hci_uart *hu)
->  	qca->wake_retrans = IBS_WAKE_RETRANS_TIMEOUT_MS;
-> 
->  	timer_setup(&qca->tx_idle_timer, hci_ibs_tx_idle_timeout, 0);
-> -	qca->tx_idle_delay = IBS_TX_IDLE_TIMEOUT_MS;
-> +	qca->tx_idle_delay = IBS_HOST_TX_IDLE_TIMEOUT_MS;
-> 
->  	BT_DBG("HCI_UART_QCA open, tx_idle_delay=%u, wake_retrans=%u",
->  	       qca->tx_idle_delay, qca->wake_retrans);
-> @@ -647,6 +658,12 @@ static void device_want_to_wakeup(struct hci_uart 
-> *hu)
-> 
->  	qca->ibs_recv_wakes++;
-> 
-> +	/* Don't wake the rx up when suspending. */
-> +	if (test_bit(QCA_SUSPENDING, &qca->flags)) {
-> +		spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
-> +		return;
-> +	}
-> +
->  	switch (qca->rx_ibs_state) {
->  	case HCI_IBS_RX_ASLEEP:
->  		/* Make sure clock is on - we may have turned clock off since
-> @@ -711,6 +728,8 @@ static void device_want_to_sleep(struct hci_uart 
-> *hu)
->  		break;
->  	}
-> 
-> +	wake_up_interruptible(&qca->suspend_wait_q);
-> +
->  	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
->  }
-> 
-> @@ -728,6 +747,12 @@ static void device_woke_up(struct hci_uart *hu)
-> 
->  	qca->ibs_recv_wacks++;
-> 
-> +	/* Don't react to the wake-up-acknowledgment when suspending. */
-> +	if (test_bit(QCA_SUSPENDING, &qca->flags)) {
-> +		spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
-> +		return;
-> +	}
-> +
->  	switch (qca->tx_ibs_state) {
->  	case HCI_IBS_TX_AWAKE:
->  		/* Expect one if we send 2 WAKEs */
-> @@ -780,8 +805,10 @@ static int qca_enqueue(struct hci_uart *hu,
-> struct sk_buff *skb)
-> 
->  	/* Don't go to sleep in middle of patch download or
->  	 * Out-Of-Band(GPIOs control) sleep is selected.
-> +	 * Don't wake the device up when suspending.
->  	 */
-> -	if (!test_bit(QCA_IBS_ENABLED, &qca->flags)) {
-> +	if (!test_bit(QCA_IBS_ENABLED, &qca->flags) ||
-> +	    test_bit(QCA_SUSPENDING, &qca->flags)) {
->  		skb_queue_tail(&qca->txq, skb);
->  		spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
->  		return 0;
-> @@ -1539,6 +1566,99 @@ static void qca_serdev_remove(struct
-> serdev_device *serdev)
->  	hci_uart_unregister_device(&qcadev->serdev_hu);
->  }
-> 
-> +static int __maybe_unused qca_suspend(struct device *dev)
-> +{
-> +	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
-> +	struct hci_uart *hu = hci_get_drvdata(hdev);
-> +	struct qca_data *qca = hu->priv;
-> +	unsigned long flags;
-> +	int ret = 0;
-> +	u8 cmd;
-> +
-> +	set_bit(QCA_SUSPENDING, &qca->flags);
-> +
-> +	/* Device is downloading patch or doesn't support in-band sleep. */
-> +	if (!test_bit(QCA_IBS_ENABLED, &qca->flags))
-> +		return 0;
-> +
-> +	cancel_work_sync(&qca->ws_awake_device);
-> +	cancel_work_sync(&qca->ws_awake_rx);
-> +
-> +	spin_lock_irqsave_nested(&qca->hci_ibs_lock,
-> +				 flags, SINGLE_DEPTH_NESTING);
-> +
-> +	switch (qca->tx_ibs_state) {
-> +	case HCI_IBS_TX_WAKING:
-> +		del_timer(&qca->wake_retrans_timer);
-> +		/* Fall through */
-> +	case HCI_IBS_TX_AWAKE:
-> +		del_timer(&qca->tx_idle_timer);
-> +
-> +		serdev_device_write_flush(hu->serdev);
-> +		cmd = HCI_IBS_SLEEP_IND;
-> +		ret = serdev_device_write_buf(hu->serdev, &cmd, sizeof(cmd));
-> +
-> +		if (ret < 0) {
-> +			BT_ERR("Failed to send SLEEP to device");
-> +			break;
-> +		}
-> +
-> +		qca->tx_ibs_state = HCI_IBS_TX_ASLEEP;
-> +		qca->ibs_sent_slps++;
-> +
-> +		qca_wq_serial_tx_clock_vote_off(&qca->ws_tx_vote_off);
-> +		break;
-> +
-> +	case HCI_IBS_TX_ASLEEP:
-> +		break;
-> +
-> +	default:
-> +		BT_ERR("Spurious tx state %d", qca->tx_ibs_state);
-> +		ret = -EINVAL;
-> +		break;
-> +	}
-> +
-> +	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
-> +
-> +	if (ret < 0)
-> +		goto error;
-> +
-> +	serdev_device_wait_until_sent(hu->serdev,
-> +				      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
-> +
-> +	/* Wait for HCI_IBS_SLEEP_IND sent by device to indicate its Tx is 
-> going
-> +	 * to sleep, so that the packet does not wake the system later.
-> +	 */
-> +
-> +	ret = wait_event_interruptible_timeout(qca->suspend_wait_q,
-> +			qca->rx_ibs_state == HCI_IBS_RX_ASLEEP,
-> +			msecs_to_jiffies(IBS_BTSOC_TX_IDLE_TIMEOUT_MS));
-> +
-> +	if (ret > 0)
-> +		return 0;
-> +
-> +	if (ret == 0)
-> +		ret = -ETIMEDOUT;
-> +
-> +error:
-> +	clear_bit(QCA_SUSPENDING, &qca->flags);
-> +
-> +	return ret;
-> +}
-> +
-> +static int __maybe_unused qca_resume(struct device *dev)
-> +{
-> +	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
-> +	struct hci_uart *hu = hci_get_drvdata(hdev);
-> +	struct qca_data *qca = hu->priv;
-> +
-> +	clear_bit(QCA_SUSPENDING, &qca->flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(qca_pm_ops, qca_suspend, qca_resume);
-> +
->  static const struct of_device_id qca_bluetooth_of_match[] = {
->  	{ .compatible = "qcom,qca6174-bt" },
->  	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data_wcn3990},
-> @@ -1553,6 +1673,7 @@ static struct serdev_device_driver 
-> qca_serdev_driver = {
->  	.driver = {
->  		.name = "hci_uart_qca",
->  		.of_match_table = qca_bluetooth_of_match,
-> +		.pm = &qca_pm_ops,
->  	},
->  };
 
-Reviewed-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
--- 
-Regards
-Balakrishna.
+--dFWYt1i2NyOo1oI9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Nov 01, 2019 at 07:42:55PM +0530, Jagan Teki wrote:
+> Hi Maxime,
+>
+> On Tue, Oct 29, 2019 at 2:24 PM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > On Tue, Oct 29, 2019 at 04:03:56AM +0530, Jagan Teki wrote:
+> > > > > explicit handling of common clock would require since the A64
+> > > > > doesn't need to mention the clock-names explicitly in dts since it
+> > > > > support only one bus clock.
+> > > > >
+> > > > > Also pass clk_id NULL instead "bus" to regmap clock init function
+> > > > > since the single clock variants no need to mention clock-names
+> > > > > explicitly.
+> > > >
+> > > > You don't need explicit clock handling. Passing NULL as the argument
+> > > > in regmap_init_mmio_clk will make it use the first clock, which is the
+> > > > bus clock.
+> > >
+> > > Indeed I tried that, since NULL clk_id wouldn't enable the bus clock
+> > > during regmap_mmio_gen_context code, passing NULL triggering vblank
+> > > timeout.
+> >
+> > There's a bunch of users of NULL in tree, so finding out why NULL
+> > doesn't work is the way forward.
+>
+> I'd have looked the some of the users before checking the code as
+> well. As I said passing NULL clk_id to devm_regmap_init_mmio_clk =>
+> __devm_regmap_init_mmio_clk would return before processing the clock.
+>
+> Here is the code snippet on the tree just to make sure I'm on the same
+> page or not.
+>
+> static struct regmap_mmio_context *regmap_mmio_gen_context(struct device *dev,
+>                                         const char *clk_id,
+>                                         void __iomem *regs,
+>                                         const struct regmap_config *config)
+> {
+>         -----------------------
+>         --------------
+>         if (clk_id == NULL)
+>                 return ctx;
+>
+>         ctx->clk = clk_get(dev, clk_id);
+>         if (IS_ERR(ctx->clk)) {
+>                 ret = PTR_ERR(ctx->clk);
+>                 goto err_free;
+>         }
+>
+>         ret = clk_prepare(ctx->clk);
+>         if (ret < 0) {
+>                 clk_put(ctx->clk);
+>                 goto err_free;
+>         }
+>         -------------
+>         ---------------
+> }
+>
+> Yes, I did check on the driver in the tree before committing explicit
+> clock handle, which make similar requirements like us in [1]. this
+> imx2 wdt driver is handling the explicit clock as well. I'm sure this
+> driver is updated as I have seen few changes related to this driver in
+> ML.
+
+I guess we have two ways to go at this then.
+
+Either we remove the return, but it might have a few side-effects, or
+we call clk_get with NULL or bus depending on the case, and then call
+regmap_mmio_attach_clk.
+
+Maxime
+
+--dFWYt1i2NyOo1oI9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXb8PKwAKCRDj7w1vZxhR
+xRo6AQC7cJgPCdmPtwa3+DvnOiO0l+RhF95zulrMO4b+JAewRgEA74E3tqth973g
+U2/28LW5VnoPT0M0gUDV7UgvhyVeGQA=
+=PgiZ
+-----END PGP SIGNATURE-----
+
+--dFWYt1i2NyOo1oI9--
