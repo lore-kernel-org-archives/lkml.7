@@ -2,101 +2,133 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A284ACA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 19:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F314CCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 19:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA1F21929
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 19:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C489A21929
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 19:10:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572808221;
+	bh=IV9nBbv9UlUlAYSL8Q4xZmErOQeIioKLcfprZApOgfk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DYwSrH8aAVLT5urwHRp8zSXYVZp7/aJsTxYqxP8ldeootsdLLd07WkGIo1S0yDSXi
+	 /AJeK+cbZoBn30YOi8jNvMhCKKMZFbY6wJpZpgJTtlfJ0mrO6LkAF+F7+Mt8HA4CzN
+	 HEpmljXTFx5sTbERLHypYnpo1kzFh3ajnAIxGdiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728095AbfKCTDZ (ORCPT
+        id S1728093AbfKCTKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 14:03:25 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:40918 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727322AbfKCTDZ (ORCPT
+        Sun, 3 Nov 2019 14:10:03 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35146 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbfKCTKC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 14:03:25 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iRL9n-0003sS-Ft; Sun, 03 Nov 2019 19:03:23 +0000
-Date:   Sun, 3 Nov 2019 19:03:23 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Ritesh Harjani <riteshh@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, wugyuan@cn.ibm.com,
-        jlayton@kernel.org, hsiangkao@aol.com, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        ecryptfs@vger.kernel.org
-Subject: [PATCH][RFC] ecryptfs_lookup_interpose(): lower_dentry->d_parent is
- not stable either
-Message-ID: <20191103190323.GS26530@ZenIV.linux.org.uk>
-References: <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
- <20191022143736.GX26530@ZenIV.linux.org.uk>
- <20191022201131.GZ26530@ZenIV.linux.org.uk>
- <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com>
- <20191101234622.GM26530@ZenIV.linux.org.uk>
- <20191102172229.GT20975@paulmck-ThinkPad-P72>
- <20191102180842.GN26530@ZenIV.linux.org.uk>
- <20191103163524.GO26530@ZenIV.linux.org.uk>
- <20191103182058.GQ26530@ZenIV.linux.org.uk>
- <20191103185133.GR26530@ZenIV.linux.org.uk>
+        Sun, 3 Nov 2019 14:10:02 -0500
+Received: by mail-wr1-f67.google.com with SMTP id l10so14666506wrb.2;
+        Sun, 03 Nov 2019 11:10:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=C0rob5sFAjpqukpmpefdlqNTPai5iEaFFr8gvrVBR3Q=;
+        b=Q+lnISVamhjpceZ6AOa8Tnuy0SKyRtJ2O6C2wm/XOowXFQWDoIBbHBRk73XZ9ssiPi
+         oPBfrx+iCmdCz701fbtqyDwyo1yin5fJZHp3U9dJeURTpRMJ7bRgWTU9KK2ENtO73/JB
+         SWTzFX0qlq2oiXgF7thBippmF7L2fAR0MhXVGRsk29eILEnFw6/ohrouinQRPhBN/iX6
+         /cuu7wSMFiXO/mVsd+obuhlksNN8rEuo6VeA1r+Ttmt6CiSI8/2Wf2LQSwwp6wK5qiL6
+         cFmBIv5zSa9RwkdpmIHvJdlPVzvCCISt4CDmwPoGnJwP7pbD2+iCemMDcFlVK7ShhU1h
+         geNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=C0rob5sFAjpqukpmpefdlqNTPai5iEaFFr8gvrVBR3Q=;
+        b=P31Dn1/d1/EI91hFj6PBo4WjebD1KvfvdgL+vpeNscv6dW/6yB0OUxlZznIeDFJqyP
+         JAX3dG4CiwgJ5g81vVyDT5wE63vVJ5eRj3PqBaZyN/+BoIUM15NDAnD1cGhq1vY7rpas
+         br7JGkETP2YFqN0GbfVAVaqhdpuwFP/xPIcmPcoR/TqML39mcowsJmgsQs6Bb279Sduf
+         mQHP71ufRhiqDIO5mrWwmCOuFiNMqJNIjwZbJPlocZI1bC+1LH0P2CKxRfu/PNHKPEgI
+         xOfsK0FJPhnOBuny0SpcsJylplfEwJ9tPixfBwQaVBvQyKwHTCNDzdznPwp79+jLiQ+A
+         aWPg==
+X-Gm-Message-State: APjAAAVb3rBGvyRIP05dGE98+JeIxZ/OhsSX0uEgwskuIXltk6+R/A7v
+        pub/mPl1GL/HOutoil7jSbg=
+X-Google-Smtp-Source: APXvYqyVsuAIEBIlTUeeKNe/pqxn/kPXT+EmjI/Q3D/wBB2k+kLN1kv8jVWC5bpu9Jds9d/T5/b1DA==
+X-Received: by 2002:adf:eb87:: with SMTP id t7mr18444822wrn.294.1572808200563;
+        Sun, 03 Nov 2019 11:10:00 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id a16sm21893335wmd.11.2019.11.03.11.09.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Nov 2019 11:09:59 -0800 (PST)
+Date:   Sun, 3 Nov 2019 20:09:57 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        Dietmar.Eggemann@arm.com, morten.rasmussen@arm.com,
+        qperret@google.com,
+        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Subject: Re: [PATCH] sched/topology, cpuset: Account for housekeeping CPUs to
+ avoid empty cpumasks
+Message-ID: <20191103190957.GA39453@gmail.com>
+References: <20191102001406.10208-1-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191103185133.GR26530@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191102001406.10208-1-valentin.schneider@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to get the underlying dentry of parent; sure, absent the races
-it is the parent of underlying dentry, but there's nothing to prevent
-losing a timeslice to preemtion in the middle of evaluation of
-lower_dentry->d_parent->d_inode, having another process move lower_dentry
-around and have its (ex)parent not pinned anymore and freed on memory
-pressure.  Then we regain CPU and try to fetch ->d_inode from memory
-that is freed by that point.
 
-dentry->d_parent *is* stable here - it's an argument of ->lookup() and
-we are guaranteed that it won't be moved anywhere until we feed it
-to d_add/d_splice_alias.  So we safely go that way to get to its
-underlying dentry.
+* Valentin Schneider <valentin.schneider@arm.com> wrote:
 
-Cc: stable@vger.kernel.org # since 2009 or so
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> Michal noted that a cpuset's effective_cpus can be a non-empy mask, but
+> because of the masking done with housekeeping_cpumask(HK_FLAG_DOMAIN)
+> further down the line, we can still end up with an empty cpumask being
+> passed down to partition_sched_domains_locked().
+> 
+> Do the proper thing and don't just check the mask is non-empty - check
+> that its intersection with housekeeping_cpumask(HK_FLAG_DOMAIN) is
+> non-empty.
+> 
+> Fixes: cd1cb3350561 ("sched/topology: Don't try to build empty sched domains")
+> Reported-by: Michal Koutný <mkoutny@suse.com>
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> ---
+>  kernel/cgroup/cpuset.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index c87ee6412b36..e4c10785dc7c 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -798,9 +798,14 @@ static int generate_sched_domains(cpumask_var_t **domains,
+>  		    cpumask_subset(cp->cpus_allowed, top_cpuset.effective_cpus))
+>  			continue;
+>  
+> +		/*
+> +		 * Skip cpusets that would lead to an empty sched domain.
+> +		 * That could be because effective_cpus is empty, or because
+> +		 * it's only spanning CPUs outside the housekeeping mask.
+> +		 */
+>  		if (is_sched_load_balance(cp) &&
+> -		    !cpumask_empty(cp->effective_cpus))
+> +		    cpumask_intersects(cp->effective_cpus,
+> +				       housekeeping_cpumask(HK_FLAG_DOMAIN)))
+>  			csa[csn++] = cp;
 
-diff --git a/fs/ecryptfs/inode.c b/fs/ecryptfs/inode.c
-index 3c2298721359..e23752d9a79f 100644
---- a/fs/ecryptfs/inode.c
-+++ b/fs/ecryptfs/inode.c
-@@ -319,9 +319,9 @@ static int ecryptfs_i_size_read(struct dentry *dentry, struct inode *inode)
- static struct dentry *ecryptfs_lookup_interpose(struct dentry *dentry,
- 				     struct dentry *lower_dentry)
- {
-+	struct path *path = ecryptfs_dentry_to_lower_path(dentry->d_parent);
- 	struct inode *inode, *lower_inode;
- 	struct ecryptfs_dentry_info *dentry_info;
--	struct vfsmount *lower_mnt;
- 	int rc = 0;
- 
- 	dentry_info = kmem_cache_alloc(ecryptfs_dentry_info_cache, GFP_KERNEL);
-@@ -330,13 +330,12 @@ static struct dentry *ecryptfs_lookup_interpose(struct dentry *dentry,
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
--	lower_mnt = mntget(ecryptfs_dentry_to_lower_mnt(dentry->d_parent));
- 	fsstack_copy_attr_atime(d_inode(dentry->d_parent),
--				d_inode(lower_dentry->d_parent));
-+				d_inode(path->dentry));
- 	BUG_ON(!d_count(lower_dentry));
- 
- 	ecryptfs_set_dentry_private(dentry, dentry_info);
--	dentry_info->lower_path.mnt = lower_mnt;
-+	dentry_info->lower_path.mnt = mntget(path->mnt);
- 	dentry_info->lower_path.dentry = lower_dentry;
- 
- 	/*
+
+This patch doesn't apply cleanly to Linus's latest tree - which tree is 
+this against?
+
+Thanks,
+
+	Ingo
