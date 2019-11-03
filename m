@@ -2,120 +2,156 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0866CCA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 18:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDCACA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 18:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D66DA21744
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 18:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0AF21744
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 18:24:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="H9JGfR6H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbfKCSVB (ORCPT
+        id S1728037AbfKCSYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 13:21:01 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:40442 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727322AbfKCSVB (ORCPT
+        Sun, 3 Nov 2019 13:24:07 -0500
+Received: from mail.kmu-office.ch ([178.209.48.109]:35842 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbfKCSYH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 13:21:01 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iRKUk-0002oj-47; Sun, 03 Nov 2019 18:20:58 +0000
-Date:   Sun, 3 Nov 2019 18:20:58 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Ritesh Harjani <riteshh@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, wugyuan@cn.ibm.com,
-        jlayton@kernel.org, hsiangkao@aol.com, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        ecryptfs@vger.kernel.org
-Subject: Re: [RFC] lookup_one_len_unlocked() lousy calling conventions
-Message-ID: <20191103182058.GQ26530@ZenIV.linux.org.uk>
-References: <20190927044243.18856-1-riteshh@linux.ibm.com>
- <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
- <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
- <20191022143736.GX26530@ZenIV.linux.org.uk>
- <20191022201131.GZ26530@ZenIV.linux.org.uk>
- <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com>
- <20191101234622.GM26530@ZenIV.linux.org.uk>
- <20191102172229.GT20975@paulmck-ThinkPad-P72>
- <20191102180842.GN26530@ZenIV.linux.org.uk>
- <20191103163524.GO26530@ZenIV.linux.org.uk>
+        Sun, 3 Nov 2019 13:24:07 -0500
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 34EDB5C007C;
+        Sun,  3 Nov 2019 19:24:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1572805444;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9fntE1N5AsxqOETEl0Wde7bowPGM0/SedoanyW84npw=;
+        b=H9JGfR6Hnx3O3JQWlqYwe5gxmek/VvGEgb/LxRsQIy00QvWxciE48gTPkgGsOItjFt1qPf
+        RNogeHnunwNSbTpTqhAHOI0h9tPfXiYrb5LgyC5EGlfjHlyuX139zaF0JvbqUBfxLiniac
+        rHYlaY+bnWNmsdSin9GegTwXicQoZdk=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191103163524.GO26530@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 03 Nov 2019 19:24:04 +0100
+From:   Stefan Agner <stefan@agner.ch>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     ndesaulniers@google.com, nico@fluxnic.net, rfranz@marvell.com,
+        linus.walleij@linaro.org, ard.biesheuvel@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] ARM: use APSR_nzcv instead of r15 as mrc operand
+In-Reply-To: <20191101220939.GK25745@shell.armlinux.org.uk>
+References: <472f8bd1f000f45343cc0c66a26380fe4b532147.1572644664.git.stefan@agner.ch>
+ <20191101220939.GK25745@shell.armlinux.org.uk>
+Message-ID: <0a24fe5e4aeba78c5fada3fca0bbeb99@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 03, 2019 at 04:35:24PM +0000, Al Viro wrote:
+Hi Russell,
 
-> lookup_one_len_unlocked() calling conventions are wrong for its callers.
-> Namely, 11 out of 12 callers really want ERR_PTR(-ENOENT) on negatives.
-> Most of them take care to check, some rely upon that being impossible in
-> their case.  Interactions with dentry turning positive right after
-> lookup_one_len_unlocked() has returned it are of varying bugginess...
+On 2019-11-01 23:09, Russell King - ARM Linux admin wrote:
+> On Fri, Nov 01, 2019 at 10:47:58PM +0100, Stefan Agner wrote:
+>> LLVM's integrated assembler does not accept r15 as mrc operand.
+>>   arch/arm/boot/compressed/head.S:1267:16: error: operand must be a register in range [r0, r14] or apsr_nzcv
+>>   1: mrc p15, 0, r15, c7, c14, 3 @ test,clean,invalidate D cache
+>>                  ^
+>>
+>> Use APSR_nzcv instead of r15. The GNU assembler supports this
+>> syntax since binutils 2.21 [0].
+>>
+>> [0] https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=commit;h=db472d6ff0f438a21b357249a9b48e4b74498076
+>>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
 > 
-> The only exception is ecryptfs, where we do lookup in the underlying fs
-> on ecryptfs_lookup() and want to retain a negative dentry if we get one.
+> Looks fine, please put it in the patch system; however, please note
+> that I've been tweaking the patch system over the last week (mainly
+> with the database, which has impacted almost everything) so there
+> may be issues that I've not yet found...
 
-Looking at that code... the thing that deals with the result of lookup in
-underlying fs is ecryptfs_lookup_interpose(), and there we have this:
-        struct inode *inode, *lower_inode = d_inode(lower_dentry);
-...
-        dentry_info = kmem_cache_alloc(ecryptfs_dentry_info_cache, GFP_KERNEL);
-...
-        if (d_really_is_negative(lower_dentry)) {
-                /* We want to add because we couldn't find in lower */
-                d_add(dentry, NULL);
-                return NULL;
-        }
-        inode = __ecryptfs_get_inode(lower_inode, dentry->d_sb);
+I used the form to submit the patch. From what I can tell it worked
+fine, patch number is 8929/1.
 
-If lower dentry used to be negative, but went positive while we'd
-been doing allocation, we'll get d_really_is_negative() (i.e.
-!lower_dentry->d_inode) false, but lower_inode (fetched earlier)
-still NULL.  __ecryptfs_get_inode() starts with
-        if (lower_inode->i_sb != ecryptfs_superblock_to_lower(sb))
-                return ERR_PTR(-EXDEV);
-which won't be happy in that situation...  That has nothing to do
-with barriers, ->d_flags, etc. - the window is rather wide here.
-GFP_KERNEL allocation can block just fine.
+--
+Stefan
 
-IOW, the only caller of lookup_one_len_unlocked() that does not
-reject negative dentries doesn't manage to handle them correctly ;-/
-
-And then in the same ecryptfs_lookup_interpose() we have e.g.
-        fsstack_copy_attr_atime(d_inode(dentry->d_parent),
-                                d_inode(lower_dentry->d_parent));
-Now, dentry->d_parent is stable; dentry is guaranteed to be new
-and not yet visible to anybody else, besides it's negative and
-the parent is held shared, so it couldn't have been moved around
-even if it had been seen by somebody else.
-
-However, lower_dentry->d_parent is a different story.  We are not holding
-the lock on its parent anymore; it could've been moved around by somebody
-mounting the underlying layer elsewhere and accessing it directly.
-Moreover, there's nothing to guarantee that the pointer we fetch from
-lower_dentry->d_parent won't be pointing to freed memory by the
-time we get around to looking at its inode - lose the timeslice to
-preemption just after fetching ->d_parent, have another process move
-the damn thing around and there's nothing to keep the ex-parent
-around by the time you regain CPU.
-
-The problem goes all way back to addd65ad8d19 "eCryptfs: Filename Encryption:
-filldir, lookup, and readlink" from 2009.  That turned
-	lower_dir_dentry = ecryptfs_dentry_to_lower(dentry->d_parent);
-into
-	lower_dir_dentry = lower_dentry->d_parent;
-and it had hit the fan...
-
-Sure, "somebody mounted the underlying fs elsewhere and is actively
-trying to screw us over" is not how ecryptfs is supposed to be used
-and it can demonstrate unexpected behavior - odd errors, etc.
-But that behaviour should not include oopsen and access to freed
-kernel memory...
+> 
+> Thanks.
+> 
+>> ---
+>>  arch/arm/boot/compressed/head.S | 2 +-
+>>  arch/arm/mm/proc-arm1026.S      | 4 ++--
+>>  arch/arm/mm/proc-arm926.S       | 4 ++--
+>>  3 files changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+>> index 15ecad944847..ead21e5f2b80 100644
+>> --- a/arch/arm/boot/compressed/head.S
+>> +++ b/arch/arm/boot/compressed/head.S
+>> @@ -1273,7 +1273,7 @@ iflush:
+>>  __armv5tej_mmu_cache_flush:
+>>  		tst	r4, #1
+>>  		movne	pc, lr
+>> -1:		mrc	p15, 0, r15, c7, c14, 3	@ test,clean,invalidate D cache
+>> +1:		mrc	p15, 0, APSR_nzcv, c7, c14, 3	@ test,clean,invalidate D cache
+>>  		bne	1b
+>>  		mcr	p15, 0, r0, c7, c5, 0	@ flush I cache
+>>  		mcr	p15, 0, r0, c7, c10, 4	@ drain WB
+>> diff --git a/arch/arm/mm/proc-arm1026.S b/arch/arm/mm/proc-arm1026.S
+>> index 10e21012380b..0bdf25a95b10 100644
+>> --- a/arch/arm/mm/proc-arm1026.S
+>> +++ b/arch/arm/mm/proc-arm1026.S
+>> @@ -138,7 +138,7 @@ ENTRY(arm1026_flush_kern_cache_all)
+>>  	mov	ip, #0
+>>  __flush_whole_cache:
+>>  #ifndef CONFIG_CPU_DCACHE_DISABLE
+>> -1:	mrc	p15, 0, r15, c7, c14, 3		@ test, clean, invalidate
+>> +1:	mrc	p15, 0, APSR_nzcv, c7, c14, 3		@ test, clean, invalidate
+>>  	bne	1b
+>>  #endif
+>>  	tst	r2, #VM_EXEC
+>> @@ -363,7 +363,7 @@ ENTRY(cpu_arm1026_switch_mm)
+>>  #ifdef CONFIG_MMU
+>>  	mov	r1, #0
+>>  #ifndef CONFIG_CPU_DCACHE_DISABLE
+>> -1:	mrc	p15, 0, r15, c7, c14, 3		@ test, clean, invalidate
+>> +1:	mrc	p15, 0, APSR_nzcv, c7, c14, 3		@ test, clean, invalidate
+>>  	bne	1b
+>>  #endif
+>>  #ifndef CONFIG_CPU_ICACHE_DISABLE
+>> diff --git a/arch/arm/mm/proc-arm926.S b/arch/arm/mm/proc-arm926.S
+>> index 3188ab2bac61..1ba253c2bce1 100644
+>> --- a/arch/arm/mm/proc-arm926.S
+>> +++ b/arch/arm/mm/proc-arm926.S
+>> @@ -131,7 +131,7 @@ __flush_whole_cache:
+>>  #ifdef CONFIG_CPU_DCACHE_WRITETHROUGH
+>>  	mcr	p15, 0, ip, c7, c6, 0		@ invalidate D cache
+>>  #else
+>> -1:	mrc	p15, 0, r15, c7, c14, 3 	@ test,clean,invalidate
+>> +1:	mrc	p15, 0, APSR_nzcv, c7, c14, 3 	@ test,clean,invalidate
+>>  	bne	1b
+>>  #endif
+>>  	tst	r2, #VM_EXEC
+>> @@ -358,7 +358,7 @@ ENTRY(cpu_arm926_switch_mm)
+>>  	mcr	p15, 0, ip, c7, c6, 0		@ invalidate D cache
+>>  #else
+>>  @ && 'Clean & Invalidate whole DCache'
+>> -1:	mrc	p15, 0, r15, c7, c14, 3 	@ test,clean,invalidate
+>> +1:	mrc	p15, 0, APSR_nzcv, c7, c14, 3 	@ test,clean,invalidate
+>>  	bne	1b
+>>  #endif
+>>  	mcr	p15, 0, ip, c7, c5, 0		@ invalidate I cache
+>> --
+>> 2.23.0
+>>
+>>
