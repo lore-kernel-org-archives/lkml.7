@@ -2,133 +2,103 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F314CCA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 19:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E7DCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 19:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C489A21929
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 19:10:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572808221;
-	bh=IV9nBbv9UlUlAYSL8Q4xZmErOQeIioKLcfprZApOgfk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DYwSrH8aAVLT5urwHRp8zSXYVZp7/aJsTxYqxP8ldeootsdLLd07WkGIo1S0yDSXi
-	 /AJeK+cbZoBn30YOi8jNvMhCKKMZFbY6wJpZpgJTtlfJ0mrO6LkAF+F7+Mt8HA4CzN
-	 HEpmljXTFx5sTbERLHypYnpo1kzFh3ajnAIxGdiw=
+	by mail.kernel.org (Postfix) with ESMTP id 29EAC21744
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 19:24:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQbAHQUE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbfKCTKD (ORCPT
+        id S1728090AbfKCTYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 14:10:03 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35146 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727322AbfKCTKC (ORCPT
+        Sun, 3 Nov 2019 14:24:32 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45407 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727913AbfKCTYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 14:10:02 -0500
-Received: by mail-wr1-f67.google.com with SMTP id l10so14666506wrb.2;
-        Sun, 03 Nov 2019 11:10:01 -0800 (PST)
+        Sun, 3 Nov 2019 14:24:32 -0500
+Received: by mail-lj1-f194.google.com with SMTP id n21so1640199ljg.12;
+        Sun, 03 Nov 2019 11:24:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=C0rob5sFAjpqukpmpefdlqNTPai5iEaFFr8gvrVBR3Q=;
-        b=Q+lnISVamhjpceZ6AOa8Tnuy0SKyRtJ2O6C2wm/XOowXFQWDoIBbHBRk73XZ9ssiPi
-         oPBfrx+iCmdCz701fbtqyDwyo1yin5fJZHp3U9dJeURTpRMJ7bRgWTU9KK2ENtO73/JB
-         SWTzFX0qlq2oiXgF7thBippmF7L2fAR0MhXVGRsk29eILEnFw6/ohrouinQRPhBN/iX6
-         /cuu7wSMFiXO/mVsd+obuhlksNN8rEuo6VeA1r+Ttmt6CiSI8/2Wf2LQSwwp6wK5qiL6
-         cFmBIv5zSa9RwkdpmIHvJdlPVzvCCISt4CDmwPoGnJwP7pbD2+iCemMDcFlVK7ShhU1h
-         geNA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=Cn+TTapRLyVC5hXpBcuynf0UtMJbDzZiiqHnWWqVcxk=;
+        b=XQbAHQUEXAph8jh6KhXJIuUOdDoO/EBJecQlBnsil0vmMdvd1uDPNKeSt39/cP+m9I
+         7C6inMHs5AJMnB8QWk1pstsGIif9Z/W8dK5S7c4fmnhVWiYYkra23J/iRvsY+1NFUVIk
+         ehioaSP3YlJYWK4GQIzsYr9eabziBpMyWyb3cUSze0aq64pyE5ll1IJYFHC+Jg7HcwAv
+         qo76D83s+5ZLfPdNVc/gsH8NkdxTHPYAoVEaGiPkCvM6BuQ+HNLdx3cWyJfRYzFT9U/+
+         Z7kvmkSBGqGAY/MNfW+S/592BgXuejYp8TRc1TN/dMHReBK4OQVxeTatYr+Fl4ekXBWJ
+         odBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=C0rob5sFAjpqukpmpefdlqNTPai5iEaFFr8gvrVBR3Q=;
-        b=P31Dn1/d1/EI91hFj6PBo4WjebD1KvfvdgL+vpeNscv6dW/6yB0OUxlZznIeDFJqyP
-         JAX3dG4CiwgJ5g81vVyDT5wE63vVJ5eRj3PqBaZyN/+BoIUM15NDAnD1cGhq1vY7rpas
-         br7JGkETP2YFqN0GbfVAVaqhdpuwFP/xPIcmPcoR/TqML39mcowsJmgsQs6Bb279Sduf
-         mQHP71ufRhiqDIO5mrWwmCOuFiNMqJNIjwZbJPlocZI1bC+1LH0P2CKxRfu/PNHKPEgI
-         xOfsK0FJPhnOBuny0SpcsJylplfEwJ9tPixfBwQaVBvQyKwHTCNDzdznPwp79+jLiQ+A
-         aWPg==
-X-Gm-Message-State: APjAAAVb3rBGvyRIP05dGE98+JeIxZ/OhsSX0uEgwskuIXltk6+R/A7v
-        pub/mPl1GL/HOutoil7jSbg=
-X-Google-Smtp-Source: APXvYqyVsuAIEBIlTUeeKNe/pqxn/kPXT+EmjI/Q3D/wBB2k+kLN1kv8jVWC5bpu9Jds9d/T5/b1DA==
-X-Received: by 2002:adf:eb87:: with SMTP id t7mr18444822wrn.294.1572808200563;
-        Sun, 03 Nov 2019 11:10:00 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id a16sm21893335wmd.11.2019.11.03.11.09.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Nov 2019 11:09:59 -0800 (PST)
-Date:   Sun, 3 Nov 2019 20:09:57 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
-        peterz@infradead.org, vincent.guittot@linaro.org,
-        Dietmar.Eggemann@arm.com, morten.rasmussen@arm.com,
-        qperret@google.com,
-        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Subject: Re: [PATCH] sched/topology, cpuset: Account for housekeeping CPUs to
- avoid empty cpumasks
-Message-ID: <20191103190957.GA39453@gmail.com>
-References: <20191102001406.10208-1-valentin.schneider@arm.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=Cn+TTapRLyVC5hXpBcuynf0UtMJbDzZiiqHnWWqVcxk=;
+        b=RNRIvQhZ68r5955yRht/dkbBDCG55YqHFXfYyxX3xYyW44GpIGSGd1zR7WPbnTMJNK
+         jAKueyEYfcBEZSd/EONzXk/FqXjwoc479wojqRez+ictJh6iv2lCTE94AAyeLx+dfqhc
+         i9oLmGnLZc84x4i+KMP8ODdE9pWX8yVBCU6HiVo60YyiYzzQ6rwn2HYXaT2Yl+aqXkAj
+         6Lg+aXbi1epfMTZH+9jpyCoG7ISoqcd0vJC+cU/jD9OoBROi7NuXaYT9CQbDOJiPs56N
+         RcmsbWOzDMpIvT65SBjwEuK/tRoI76psBB15s9jKwsw48OPito9Um+eRQZXLxDMYxthS
+         ctfw==
+X-Gm-Message-State: APjAAAV7p7l70BxvJ1PJTNvDYFfZ/FufxbFWhFVOcPSuJ8EFzf6WtdeP
+        WKmP+kjv/wqYNLvzuLcKAgOuBC7s
+X-Google-Smtp-Source: APXvYqwUIZAyYXiBwtW09jUHGCsQ29gpEInO9eR0oD1e+HyzRTbRa5GCW7l3dapLf38f580FPFeQ3g==
+X-Received: by 2002:a2e:9216:: with SMTP id k22mr4238773ljg.157.1572809069716;
+        Sun, 03 Nov 2019 11:24:29 -0800 (PST)
+Received: from [192.168.1.36] (88-114-211-119.elisa-laajakaista.fi. [88.114.211.119])
+        by smtp.gmail.com with ESMTPSA id d28sm5604066lfn.33.2019.11.03.11.24.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 03 Nov 2019 11:24:29 -0800 (PST)
+Subject: Re: [PATCH] Allow restricting permissions in /proc/sys
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:FILESYSTEMS (VFS and infrastructure)" 
+        <linux-fsdevel@vger.kernel.org>
+References: <74a91362-247c-c749-5200-7bdce704ed9e@gmail.com>
+ <20191103175648.GA4603@mit.edu>
+From:   Topi Miettinen <toiwoton@gmail.com>
+Message-ID: <226c6c2b-df7a-7eb1-e8c5-60fc23998f89@gmail.com>
+Date:   Sun, 3 Nov 2019 21:24:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191102001406.10208-1-valentin.schneider@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191103175648.GA4603@mit.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Valentin Schneider <valentin.schneider@arm.com> wrote:
-
-> Michal noted that a cpuset's effective_cpus can be a non-empy mask, but
-> because of the masking done with housekeeping_cpumask(HK_FLAG_DOMAIN)
-> further down the line, we can still end up with an empty cpumask being
-> passed down to partition_sched_domains_locked().
+On 3.11.2019 19.56, Theodore Y. Ts'o wrote:
+> On Sun, Nov 03, 2019 at 04:55:48PM +0200, Topi Miettinen wrote:
+>> Several items in /proc/sys need not be accessible to unprivileged
+>> tasks. Let the system administrator change the permissions, but only
+>> to more restrictive modes than what the sysctl tables allow.
+>>
+>> Signed-off-by: Topi Miettinen <toiwoton@gmail.com>
 > 
-> Do the proper thing and don't just check the mask is non-empty - check
-> that its intersection with housekeeping_cpumask(HK_FLAG_DOMAIN) is
-> non-empty.
+> Why should restruct the system administrator from changing the
+> permissions to one which is more lax than what the sysctl tables?
 > 
-> Fixes: cd1cb3350561 ("sched/topology: Don't try to build empty sched domains")
-> Reported-by: Michal Koutný <mkoutny@suse.com>
-> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-> ---
->  kernel/cgroup/cpuset.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> index c87ee6412b36..e4c10785dc7c 100644
-> --- a/kernel/cgroup/cpuset.c
-> +++ b/kernel/cgroup/cpuset.c
-> @@ -798,9 +798,14 @@ static int generate_sched_domains(cpumask_var_t **domains,
->  		    cpumask_subset(cp->cpus_allowed, top_cpuset.effective_cpus))
->  			continue;
->  
-> +		/*
-> +		 * Skip cpusets that would lead to an empty sched domain.
-> +		 * That could be because effective_cpus is empty, or because
-> +		 * it's only spanning CPUs outside the housekeeping mask.
-> +		 */
->  		if (is_sched_load_balance(cp) &&
-> -		    !cpumask_empty(cp->effective_cpus))
-> +		    cpumask_intersects(cp->effective_cpus,
-> +				       housekeeping_cpumask(HK_FLAG_DOMAIN)))
->  			csa[csn++] = cp;
+> The system administrator is already very much trusted.  Why should we
+> take that discretion away from the system administrator?
 
+That could make sense, in addition changing UID/GID would allow even 
+more flexibility. The current checks and restrictions which prevent 
+those changes were already present in original code in 2007. I didn't 
+want to change the logic too much. Perhaps loosening the restrictions 
+could be a follow-up patch, as it may give chance to use more of generic 
+proc or fslib code and thus a larger restructuring.
 
-This patch doesn't apply cleanly to Linus's latest tree - which tree is 
-this against?
-
-Thanks,
-
-	Ingo
+-Topi
