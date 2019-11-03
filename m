@@ -2,90 +2,107 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D0CCA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 16:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 003EFCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 16:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6E020578
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 16:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B3C2080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 16:45:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572799553;
+	bh=DMaNjRVWAYnvr8ic3Grl+yVkjaBXpaltz8Sf2gsuMqk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=x0FnxPWr8Af89cYPkY6baD4HyyGhfD0c6PXAL6a7IqeGtBCSYa2KeWg/Gm+9Kml4L
+	 RPdyg3F48mY56W63TJ34EjJ3BekU6kHIJl/YAD/Vd3WQNTOvzUU/+y8LBIxh4R39+e
+	 IeQMM1GxnCspCW+rv4v3rEHIdvLbTz0rDyGcTTRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbfKCQf1 (ORCPT
+        id S1727855AbfKCQpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 11:35:27 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:39232 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727717AbfKCQf1 (ORCPT
+        Sun, 3 Nov 2019 11:45:46 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43109 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727717AbfKCQpp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 11:35:27 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iRIqa-0000LY-4u; Sun, 03 Nov 2019 16:35:24 +0000
-Date:   Sun, 3 Nov 2019 16:35:24 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Ritesh Harjani <riteshh@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, wugyuan@cn.ibm.com,
-        jlayton@kernel.org, hsiangkao@aol.com, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [RFC] lookup_one_len_unlocked() lousy calling conventions
-Message-ID: <20191103163524.GO26530@ZenIV.linux.org.uk>
-References: <20190927044243.18856-1-riteshh@linux.ibm.com>
- <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
- <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
- <20191022143736.GX26530@ZenIV.linux.org.uk>
- <20191022201131.GZ26530@ZenIV.linux.org.uk>
- <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com>
- <20191101234622.GM26530@ZenIV.linux.org.uk>
- <20191102172229.GT20975@paulmck-ThinkPad-P72>
- <20191102180842.GN26530@ZenIV.linux.org.uk>
+        Sun, 3 Nov 2019 11:45:45 -0500
+Received: by mail-lj1-f196.google.com with SMTP id y23so4128014ljh.10
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 08:45:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ksEu0A0KjLwy1M0pwU6CUlXpOlz1Dc+D61V1TG3xX/c=;
+        b=Puv7vmSp8hqtr7dTSpIERhXWbuCG6m92q8NpW8kfcLLCpTj2WmtgknmsiAhxP7lWV6
+         7+Vkeqs7gpDvpz9+OB1fTJzaOGKN3uQHkO587f1Z9kaGu38OIBzIX2T6wxkdCPz+6XAO
+         iIYgAnhZTNw8f+CmIl6V01mf3+EqjV1hHwUwk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ksEu0A0KjLwy1M0pwU6CUlXpOlz1Dc+D61V1TG3xX/c=;
+        b=BGZYcplok6kTjtjNCgtzAqjMk5Zt5XFuZh0mR79sfvrvu3tDdlTXeWb4nkh7xSAsVu
+         3cPPa+UQG2Mzlfq9SItvhdNj6j+LUyP0YFWc9+epnVdk6Ou7jxaAWuF3xaaxxer1V6gW
+         u+v0Tt7x0m9ejQoU0cqzzz1TWeOzXjZGO0Yo71zl09WPN5AM70vFK7qLA+gthMAickPz
+         NIuIIGo7f+L5/9NMZ6gJDg10TL+Fve7UvoWe2LR6L4zyBAH2ycXbRwHxOnbXq8cgPwi1
+         3JDsoO7cWwLnT4RcKt/Gtkz+A5RGcyKPsYlA8fD7B4BliCGHxJTPIP64mcfV6+0L3Uju
+         mk1g==
+X-Gm-Message-State: APjAAAWWHqNiHSd0cEXXXxpoL43N04+Oz9h5AfIXwcc1hEXRirac7sOe
+        tmBm2L1s5byZHrMYtyYwgltjow2lufo=
+X-Google-Smtp-Source: APXvYqy/OyHs8CB4WErTbADp/vNx7Ksq5Ic2faoeo5eF3JJPBqDw3dGrT3jNPGidc1CNh5xU4TQAeg==
+X-Received: by 2002:a05:651c:305:: with SMTP id a5mr16010610ljp.144.1572799543255;
+        Sun, 03 Nov 2019 08:45:43 -0800 (PST)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
+        by smtp.gmail.com with ESMTPSA id y189sm9284556lfc.9.2019.11.03.08.45.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 03 Nov 2019 08:45:42 -0800 (PST)
+Received: by mail-lf1-f45.google.com with SMTP id v4so10463339lfd.11
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 08:45:41 -0800 (PST)
+X-Received: by 2002:ac2:4c86:: with SMTP id d6mr13812625lfl.106.1572799541430;
+ Sun, 03 Nov 2019 08:45:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191102180842.GN26530@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191102190327.24903-1-alex.popov@linux.com>
+In-Reply-To: <20191102190327.24903-1-alex.popov@linux.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 3 Nov 2019 08:45:25 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgE-veRb7+mw9oMmsD97BLnL+q8Gxu0QRrK65S2yQfMdQ@mail.gmail.com>
+Message-ID: <CAHk-=wgE-veRb7+mw9oMmsD97BLnL+q8Gxu0QRrK65S2yQfMdQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] media: vivid: Fix wrong locking that causes race
+ conditions on streaming stop
+To:     Alexander Popov <alex.popov@linux.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Security Officers <security@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 02, 2019 at 06:08:42PM +0000, Al Viro wrote:
+On Sat, Nov 2, 2019 at 12:03 PM Alexander Popov <alex.popov@linux.com> wrote:
+>
+> -               mutex_lock(&dev->mutex);
+> +               if (!mutex_trylock(&dev->mutex)) {
+> +                       schedule_timeout(1);
+> +                       continue;
+> +               }
+> +
 
-> It is converging to a reasonably small and understandable surface, actually,
-> most of that being in core pathname resolution.  Two big piles of nightmares
-> left to review - overlayfs and (somewhat surprisingly) setxattr call chains,
-> the latter due to IMA/EVM/LSM insanity...
+I just realized that this too is wrong. It _works_, but because it
+doesn't actually set the task state to anything particular before
+scheduling, it's basically pointless. It calls the scheduler, but it
+won't delay anything, because the task stays runnable.
 
-One thing found while digging through overlayfs (and responsible for several
-remaining pieces from the assorted pile):
+So what you presumably want to use is either "cond_resched()" (to make
+sure others get to run with no delay) or
+"schedule_timeout_uninterruptible(1)" which actually sets the process
+state to TASK_UNINTERRUPTIBLE.
 
-lookup_one_len_unlocked() calling conventions are wrong for its callers.
-Namely, 11 out of 12 callers really want ERR_PTR(-ENOENT) on negatives.
-Most of them take care to check, some rely upon that being impossible in
-their case.  Interactions with dentry turning positive right after
-lookup_one_len_unlocked() has returned it are of varying bugginess...
+The above works, but it's basically nonsensical. My bad for not
+noticing earlier.
 
-The only exception is ecryptfs, where we do lookup in the underlying fs
-on ecryptfs_lookup() and want to retain a negative dentry if we get one.
-
-Not sure what's the best way to handle that - it looks like we want
-a primitive with different behaviour on negatives, so the most conservative
-variant would be to add such, leaving lookup_one_len_unlocked() use
-for ecryptfs (and dealing with barriers properly in there), with
-everybody else switching to lookup_positive_unlocked(), or whatever
-we call that new primitive.
-
-Other variants:
-
-1) add a primitve with existing lookup_one_len_unlocked() behaviour,
-changing lookup_one_len_unlocked() itselt to new calling conventions.
-Switch ecryptfs to that, drop now-useless checks from other callers.
-
-2) get rid of pinning negative underlying dentries in ecryptfs.
-The cost will be doing lookup in underlying layer twice on something
-like mkdir(2), the second one quite likely served out of dcache.
-That would make _all_ callers of lookup_one_len_unlocked() need
-the same calling conventions.
-
-Preferences?
+               Linus
