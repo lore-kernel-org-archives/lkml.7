@@ -2,145 +2,82 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7C7CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6D1CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E322084D
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:25:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572780348;
-	bh=iVW9cBPnp0fjG+zTXydLaRUI+YAsffRYMHdiQGWeTNo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=i6+ojkFTpCQQU2wLB3i6Kq8z+XkOy2g67XRFWvwxdcW4Ca6z2iRxv6xdZ/wjCax+w
-	 PefoR/A0jf0nX1lrlhXoQ5cveQvN9idVEh3q7VqCSvOOYMhmUkXKdavoRHLx64+/0P
-	 12BOmGpQ34wEFcV4QbHkvRDOxeZZCU/RuZO3FHYs=
+	by mail.kernel.org (Postfix) with ESMTP id EB64720679
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:40:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aL37phAd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfKCLZr (ORCPT
+        id S1727707AbfKCLkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 06:25:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727554AbfKCLZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 06:25:46 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AB602080F;
-        Sun,  3 Nov 2019 11:25:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572780345;
-        bh=iVW9cBPnp0fjG+zTXydLaRUI+YAsffRYMHdiQGWeTNo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KnLJ+ocoKBFLnYGZIbVgwmWNxa5NTEVReT7rXqEDHZFdSgW8ESY92vPuukCGO5mN5
-         y9vqz0hcZ3nU0N3F5FZomd4QzsIqsOyxrHhXvE+x5X+YxUZ9W2fXjI1LxKiU3qhAkW
-         xI7w+lUfCUUpXO6DQQ9rXH3gMMs4gyKQZjNPR5QU=
-Date:   Sun, 3 Nov 2019 11:25:40 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH 1/2] iio: imu: adis16460: use DEFINE_DEBUGFS_ATTRIBUTE
- to define debugfs fops
-Message-ID: <20191103112540.5fdfccad@archlinux>
-In-Reply-To: <5DB958DA.7080305@huawei.com>
-References: <1572423581-59762-1-git-send-email-zhongjiang@huawei.com>
-        <1572423581-59762-2-git-send-email-zhongjiang@huawei.com>
-        <fb8722ad2c1ef51944dc814a7b24433f4348721e.camel@analog.com>
-        <5DB958DA.7080305@huawei.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 3 Nov 2019 06:40:20 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:37844 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727500AbfKCLkS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 06:40:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=xB56QOFXMB7/GEsT5PtYQijX3jcE5vIgtO8nEiAckIU=; b=aL37phAdv4YF+oXutPl/u5jKOp
+        wLyx4rh/cEYHUcGjY+rpYPjdvH5wQhUZ2+XahG2V3/75OIRF96O+ffQ9rEIyC1AB4HvLKn81PufHF
+        DRYVWuBaXnLu5lUmEQTnDIZbCDvGlb+12WdaRCM/wJx17iaFqPzXR9LIkXBFSLaua4X/+8uLoQxy5
+        JEEFVjie+UNN8a6GDH5PIFmid6v0WWtBGbOXQ3vRZgKiobGozHxWdj01ZSXcU7UV7b1m4hol+Iogx
+        8Q9j2zGrRPavPXDWlenqnxjKNXPXekTZ5Mu+A9z2m833DWDSRDCKlQd7MwCOnwJDCmQdBy2R7dfKv
+        z6QL0ZMg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iREEz-0007qX-QM; Sun, 03 Nov 2019 11:40:17 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Subject: [PATCH 5/5] idr: Fix idr_alloc_u32 on 32-bit systems
+Date:   Sun,  3 Nov 2019 03:40:12 -0800
+Message-Id: <20191103114012.30027-7-willy@infradead.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191103114012.30027-1-willy@infradead.org>
+References: <20191103114012.30027-1-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 30 Oct 2019 17:33:14 +0800
-zhong jiang <zhongjiang@huawei.com> wrote:
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-> On 2019/10/30 17:13, Ardelean, Alexandru wrote:
-> > On Wed, 2019-10-30 at 16:19 +0800, zhong jiang wrote:  
-> >> [External]
-> >>
-> >> It is more clear to use DEFINE_DEBUGFS_ATTRIBUTE to define debugfs file
-> >> operation rather than DEFINE_SIMPLE_ATTRIBUTE.  
-> > Not sure if "more clear" is the word.  
-> Should be more clearly. :-)
-> > But it is more correct to use DEFINE_DEBUGFS_ATTRIBUTE(), since they are
-> > debugfs attrs.
-> >
-> > In any case, this is no big deal.
-> > So:
-> >
-> > Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> >  
-> >> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-I started looking into why this attributes were introduced.
-There are potential issues, so Alex can you confirm you've tested this
-series.  Whilst it looks right, it seems some other patches making this
-change have had to switch over to the unsafe registration functions.
+Attempting to allocate an entry at 0xffffffff when one is already
+present would succeed in allocating one at 2^32, which would confuse
+everything.  Return -ENOSPC in this case, as expected.
 
-https://patchwork.kernel.org/patch/11051725/
-https://lkml.org/lkml/2019/10/30/144
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ lib/radix-tree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The reference counting is subtly different between the two versions.
-Seems you are getting some push back on similar patches.
-
-Perhaps a v2 with reference to the other threads if those get resolved
-to say it is sensible to make this change.
-
-Thanks,
-
-Jonathan
-
-
-> >> ---
-> >>  drivers/iio/imu/adis16460.c | 6 +++---
-> >>  1 file changed, 3 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/drivers/iio/imu/adis16460.c b/drivers/iio/imu/adis16460.c
-> >> index 6aed9e8..2e7a582 100644
-> >> --- a/drivers/iio/imu/adis16460.c
-> >> +++ b/drivers/iio/imu/adis16460.c
-> >> @@ -87,7 +87,7 @@ static int adis16460_show_serial_number(void *arg, u64
-> >> *val)
-> >>  
-> >>  	return 0;
-> >>  }
-> >> -DEFINE_SIMPLE_ATTRIBUTE(adis16460_serial_number_fops,
-> >> +DEFINE_DEBUGFS_ATTRIBUTE(adis16460_serial_number_fops,
-> >>  	adis16460_show_serial_number, NULL, "0x%.4llx\n");
-> >>  
-> >>  static int adis16460_show_product_id(void *arg, u64 *val)
-> >> @@ -105,7 +105,7 @@ static int adis16460_show_product_id(void *arg, u64
-> >> *val)
-> >>  
-> >>  	return 0;
-> >>  }
-> >> -DEFINE_SIMPLE_ATTRIBUTE(adis16460_product_id_fops,
-> >> +DEFINE_DEBUGFS_ATTRIBUTE(adis16460_product_id_fops,
-> >>  	adis16460_show_product_id, NULL, "%llu\n");
-> >>  
-> >>  static int adis16460_show_flash_count(void *arg, u64 *val)
-> >> @@ -123,7 +123,7 @@ static int adis16460_show_flash_count(void *arg, u64
-> >> *val)
-> >>  
-> >>  	return 0;
-> >>  }
-> >> -DEFINE_SIMPLE_ATTRIBUTE(adis16460_flash_count_fops,
-> >> +DEFINE_DEBUGFS_ATTRIBUTE(adis16460_flash_count_fops,
-> >>  	adis16460_show_flash_count, NULL, "%lld\n");
-> >>  
-> >>  static int adis16460_debugfs_init(struct iio_dev *indio_dev)  
-> 
-> 
+diff --git a/lib/radix-tree.c b/lib/radix-tree.c
+index 18c1dfbb1765..c8fa1d274530 100644
+--- a/lib/radix-tree.c
++++ b/lib/radix-tree.c
+@@ -1529,7 +1529,7 @@ void __rcu **idr_get_free(struct radix_tree_root *root,
+ 			offset = radix_tree_find_next_bit(node, IDR_FREE,
+ 							offset + 1);
+ 			start = next_index(start, node, offset);
+-			if (start > max)
++			if (start > max || start == 0)
+ 				return ERR_PTR(-ENOSPC);
+ 			while (offset == RADIX_TREE_MAP_SIZE) {
+ 				offset = node->offset + 1;
+-- 
+2.24.0.rc1
 
