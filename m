@@ -2,125 +2,117 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2F8CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 16:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C41CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 16:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F3420848
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 16:19:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="iVhQ666t"
+	by mail.kernel.org (Postfix) with ESMTP id 92D022084D
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 16:22:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572798166;
+	bh=MdoURyUZcQbm9ELJ4P+9FxCOSf3poCqyZ7a+DoWIQyE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y/nO/wT9L/m0zLY6Wan7KtjNdVoPeBU/PNUWke0XzSJ2+S7lQGWRUxJPjd+va6MyL
+	 iMTSRQHPTJb34znyexTBFB3zkECQbpkgEmq5JGi+GYfCkEfMjv7qF4jvoQ5291Th7t
+	 LDQZQsmONFpdOCsKjF0dB124K7EXdPrqPLjpmBHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbfKCQTo (ORCPT
+        id S1727843AbfKCQWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 11:19:44 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34141 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727541AbfKCQTo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 11:19:44 -0500
-Received: by mail-pg1-f193.google.com with SMTP id e4so9685372pgs.1
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 08:19:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=k2y2VEQ6EOQqU8lpzmH1pyg0O79K2DS1lBypqABiboQ=;
-        b=iVhQ666t3tQ+qZCwGRKpXthAY72vAJ8S2et2Isra+GmB0R+eRKw4eBg7nMJZ2I12Nf
-         9WR9tuuxUA7+zVMLNtT4wMwhrE/utRm/DR4tge4D3EBin2y3TLk88NiCqB3yaJVZ5kQa
-         uag/9V99OvbuikTW97n8gJP1hGliHrqE2V99OAn6SYrth3JxRvx2PYuQIqmFKFwh2jva
-         G1DsvsYdPvIGixktN9CiVc20/ELD3ofGUAVk1VmvDcXRKHvVLbRphEF7p/JXQuAX5MMj
-         j+OSeC0FGNyRYGPRURN1CpRgdVYfoAY7v56W2mvhYifdOIC9lCd5ChczW2YnpZ874zq0
-         Zwvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k2y2VEQ6EOQqU8lpzmH1pyg0O79K2DS1lBypqABiboQ=;
-        b=DVR46rIeaXBNvfi9ezQ7XaBL7xAhq9aRRCKjFJkepOIz1NfZ3s5aSr4iA+QK+RJ5ca
-         rvbp6eFP4k5SFSpUe+N3DoRc75v1lkMmc3ogQrnfaieoTzG487lqfXs3a3Go2aJdKBmC
-         JZ5rSVpSjVpJ+3TGS0mTuM9CAh3x5bPa3gTpjl526BANslrRlOXcqK38j4dxv7Vtmb6M
-         LlUMMfmiqDrnDe5fz2jowHjlEDFG94E8GK/faB817QNVa/7qpJSc0kqiTjiM6qDjg7Ss
-         l1cdl+ruTQmvtceP/Gf/RI68yGvwpKZqiJaI58HRsFEqHGAJhM2K9JnwnbTj/TojUqeS
-         bl5A==
-X-Gm-Message-State: APjAAAXbg2l53tIVAVZxs0lLMs6+hvImncgT1CGWoR3ExqMCOf2nakcJ
-        MSa9crqZQmIEIYCNo/3HEGV+YA==
-X-Google-Smtp-Source: APXvYqyDL/BMS4PI9TBgOSpGlTSmx5TlQ08Dmxa6IvrSo6XiAfT3jNCe1N1gHULjcF8YFx3kqqC37A==
-X-Received: by 2002:a62:fb0f:: with SMTP id x15mr26702010pfm.59.1572797981783;
-        Sun, 03 Nov 2019 08:19:41 -0800 (PST)
-Received: from localhost ([66.167.121.235])
-        by smtp.gmail.com with ESMTPSA id u65sm14087510pfb.35.2019.11.03.08.19.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Nov 2019 08:19:41 -0800 (PST)
-Date:   Sun, 3 Nov 2019 08:19:37 -0800
-From:   Sandeep Patil <sspatil@android.com>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Dave Airlie <airlied@gmail.com>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v14 3/5] dma-buf: heaps: Add system heap to dmabuf heaps
-Message-ID: <20191103161937.GB12805@google.com>
-References: <20191101214238.78015-1-john.stultz@linaro.org>
- <20191101214238.78015-4-john.stultz@linaro.org>
+        Sun, 3 Nov 2019 11:22:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727733AbfKCQWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 11:22:45 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08E2120848;
+        Sun,  3 Nov 2019 16:22:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572798164;
+        bh=MdoURyUZcQbm9ELJ4P+9FxCOSf3poCqyZ7a+DoWIQyE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=g/cUA6VvRX7z30gTnCo/+VC+PGcOH9r5T840xs199WPGBApWOGRy2Wm5LUaX4j0pY
+         EoI5jgyoy363VH9KVlPR4UtMIYvtwz2tccFji240s4eGESkaS7oL7T8mNgz3hl/c98
+         xgD8raEyuuEVMwpz5R+QWGG1CM7lg+36MzEpGLbI=
+Date:   Sun, 3 Nov 2019 17:22:41 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Karl Palsson <karlp@tweak.net.au>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "wens@csie.org" <wens@csie.org>
+Subject: Re: [PATCH 3/3] ARM: dts: sun8i: add FriendlyARM NanoPi Duo2-IoT Box
+Message-ID: <20191103162241.GE7001@gilmour>
+References: <20191101091050.iw3n4qiqyueoymif@hendrix>
+ <kCnyFRBTNPaksjpFGz3Vnx92t6yIivNcqixk5m2h238c@mailpile>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="u65IjBhB3TIa72Vp"
 Content-Disposition: inline
-In-Reply-To: <20191101214238.78015-4-john.stultz@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <kCnyFRBTNPaksjpFGz3Vnx92t6yIivNcqixk5m2h238c@mailpile>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 09:42:36PM +0000, John Stultz wrote:
-> This patch adds system heap to the dma-buf heaps framework.
-> 
-> This allows applications to get a page-allocator backed dma-buf
-> for non-contiguous memory.
-> 
-> This code is an evolution of the Android ION implementation, so
-> thanks to its original authors and maintainters:
->   Rebecca Schultz Zavin, Colin Cross, Laura Abbott, and others!
-> 
-> Cc: Laura Abbott <labbott@redhat.com>
-> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Cc: Liam Mark <lmark@codeaurora.org>
-> Cc: Pratik Patel <pratikp@codeaurora.org>
-> Cc: Brian Starkey <Brian.Starkey@arm.com>
-> Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
-> Cc: Sudipto Paul <Sudipto.Paul@arm.com>
-> Cc: Andrew F. Davis <afd@ti.com>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Chenbo Feng <fengc@google.com>
-> Cc: Alistair Strachan <astrachan@google.com>
-> Cc: Hridya Valsaraju <hridya@google.com>
-> Cc: Sandeep Patil <sspatil@google.com>
-> Cc: Hillf Danton <hdanton@sina.com>
-> Cc: Dave Airlie <airlied@gmail.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Reviewed-by: Brian Starkey <brian.starkey@arm.com>
-> Acked-by: Laura Abbott <labbott@redhat.com>
-> Tested-by: Ayan Kumar Halder <ayan.halder@arm.com>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
 
-Acked-by: Sandeep Patil <sspatil@android.com>
+--u65IjBhB3TIa72Vp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Nov 01, 2019 at 09:55:41AM -0000, Karl Palsson wrote:
+>
+> Maxime Ripard <mripard@kernel.org> wrote:
+> > On Thu, Oct 31, 2019 at 11:12:16PM +0000, Karl Palsson wrote:
+> > > The IoT-Box is a dock for the NanoPi Duo2, adding two USB host ports, a
+> > > 10/100 ethernet port, a variety of pin headers for i2c and uarts, and a
+> > > quad band 2G GSM module, a SIM800C.
+> > >
+> > > Full documentation and schematics available from vendor:
+> > > http://wiki.friendlyarm.com/wiki/index.php/NanoPi_Duo2_IoT-Box
+> > >
+> > > Signed-off-by: Karl Palsson <karlp@tweak.net.au>
+> >
+> > It seems like it's something that can be connected /
+> > disconnected at will?
+> >
+> > If so, then it should be an overlay, not a full blown DTS.
+>
+> Fine with me, I wasn't sure on the best procedure for things like
+> this. It's not something you plug / unplug at run time, you'd
+> tend to just always have this, or not. Is it best to just have
+> user space distributions handle selecting the overlay then? and
+> they maintain the overlay file?
+
+Another option would be to do it at the bootloader level, based on a
+discovery mechanism (eeproms storing data / the overlay itself, the
+presence of some devices on buses that you can probe (i2c, mmc, etc).
+
+> I'd considered overlays something for _per user_ customization,
+> but I'm perfectly happy if it it's intended to be used for per
+> product customization too if that's the right method.
+
+Overlays are for dynamic configuration. The user customization is one
+of its use case, but add-on boards are another (being used by the RPi
+and the Beaglebones), just like FPGA configuration for example.
+
+Maxime
+
+--u65IjBhB3TIa72Vp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXb7+0QAKCRDj7w1vZxhR
+xUOhAQDZpbpB1JhUwpEpa1m0lL+I/g1BtVN/bGFs5sVjL+uXpAD/eo1qcpSUyU3K
+al1o/BWKh2teIAwI9z/EMruIiD4CZgk=
+=8zLz
+-----END PGP SIGNATURE-----
+
+--u65IjBhB3TIa72Vp--
