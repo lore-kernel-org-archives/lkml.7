@@ -2,152 +2,154 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5422BCA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 21:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253FFCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 21:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2DD214D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 21:48:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="Ypuu2IDe"
+	by mail.kernel.org (Postfix) with ESMTP id E4C37214D9
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 21:49:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbfKCVsZ (ORCPT
+        id S1728298AbfKCVto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 16:48:25 -0500
-Received: from mail-eopbgr720075.outbound.protection.outlook.com ([40.107.72.75]:31778
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727380AbfKCVsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 16:48:24 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I6rXaW0cWt/OEdmRSPX0uEcOwcumCzz0Q1q5oxaUBMJEiz1o2Jr2L8Nt06r2xdouxRUt/NEDyZ/nhMhL7QpMc7IGj8kLFEooaQ9tHNCExKJc/oh90UcLIEpujvNxWlpymvs02IFV+lRCPa2f81UolWiyHhJ1lTPmItSdW74BDky/IqEI9StFiDj/01x11KfiKz5mwCB7ms9Ejq2xP9IoNN6Mi7wVyCwSn4aHmRzwHP/TP09rTda28e7e72xxbHmXTKt+jKy4dVWfByAdb/5qLuz+KiHJ7H8qluZ8ALdxzJ+d5+o1MxHgEFTROayThwCWkKAQl+ePAWRjveLV+2vbPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zejbrqEKQGDYF/KIwYBptiqiFlWq9BFmXv/lk+2w4J4=;
- b=S5dL0l0TavrQDEzakk/+zz/4KkpsRgNSPpatoso4Tj3jBC1p05my6RBQKaAx97AgnnWZI8UTyDQK+G3/04gg6lgxxQ63yYRY1VV4tLPtiOvGEwqs15QUXNm3OOd6kHoqawRSFmZ2oKxWga72LXixRitS0eJbkU1NG65uPtkBLsT1CwslYIqLdPYdLzAO/pcrX5uwWAyrnKi/j4XE2qOw7XYD1d6HTmlJSZUKC/dCtXl6l8v17eys5LvPe63Ria7B7R1rqyyaHRH4+YpyvNQYMLIh0IbCuCcr6oXBRzQY1Jt7eAa8hk58R5NUJZp2mwePIOEAwc7y61KZwb7oash59w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
- dkim=pass header.d=micron.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zejbrqEKQGDYF/KIwYBptiqiFlWq9BFmXv/lk+2w4J4=;
- b=Ypuu2IDehUdmULwUKHS39y+LxdbXBrUgovwgEcKqVtRXNM3CU4Hao7j3iesMr5e+CnGNNhN4qah4zxL4W5C8nfIWJhusEEJfKs0x/vPuZzIfth43HhgbRk6VvnH2c3QEEv9G72476weZwrX7ss5shsZOy/M6Br0zzIKjy55L7uw=
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
- BN7PR08MB4243.namprd08.prod.outlook.com (52.133.223.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.24; Sun, 3 Nov 2019 21:48:12 +0000
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::a91a:c2f5:c557:4285]) by BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::a91a:c2f5:c557:4285%6]) with mapi id 15.20.2408.024; Sun, 3 Nov 2019
- 21:48:12 +0000
-From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
-To:     Can Guo <cang@codeaurora.org>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
-        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        "saravanak@google.com" <saravanak@google.com>,
-        "salyzyn@google.com" <salyzyn@google.com>
-CC:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] [PATCH v1 1/6] scsi: ufs: Add device reset in link recovery
- path
-Thread-Topic: [EXT] [PATCH v1 1/6] scsi: ufs: Add device reset in link
- recovery path
-Thread-Index: AQHVkTrz6+VE0soB0Uye9d1xl2uesqd5/YiQ
-Date:   Sun, 3 Nov 2019 21:48:12 +0000
-Message-ID: <BN7PR08MB56845B4A5F206A319CAFD3B1DB7C0@BN7PR08MB5684.namprd08.prod.outlook.com>
-References: <1572671016-883-1-git-send-email-cang@codeaurora.org>
- <1572671016-883-2-git-send-email-cang@codeaurora.org>
-In-Reply-To: <1572671016-883-2-git-send-email-cang@codeaurora.org>
-Accept-Language: en-150, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLWEwMTlkMDA2LWZlODMtMTFlOS04Yjg1LWRjNzE5NjFmOWRkM1xhbWUtdGVzdFxhMDE5ZDAwOC1mZTgzLTExZTktOGI4NS1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjEyNDgiIHQ9IjEzMjE3MjkxMjkwMTg4Nzg2MyIgaD0iQk5wL2N5Tk5PdmVaSUEzWHF2ODhTVTJwdkpBPSIgaWQ9IiIgYmw9IjAiIGJvPSIxIi8+PC9tZXRhPg==
-x-dg-rorf: true
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=beanhuo@micron.com; 
-x-originating-ip: [165.225.80.130]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f56c60cf-14ca-42a1-f629-08d760a78649
-x-ms-traffictypediagnostic: BN7PR08MB4243:|BN7PR08MB4243:|BN7PR08MB4243:
-x-microsoft-antispam-prvs: <BN7PR08MB4243AA86F2394957ADE0664ADB7C0@BN7PR08MB4243.namprd08.prod.outlook.com>
-x-ms-exchange-transport-forked: True
-x-ms-oob-tlc-oobclassifiers: OLM:660;
-x-forefront-prvs: 0210479ED8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(396003)(376002)(366004)(189003)(199004)(71190400001)(26005)(446003)(2501003)(76116006)(76176011)(7696005)(25786009)(66946007)(64756008)(66476007)(66066001)(2906002)(99286004)(55016002)(2201001)(14454004)(86362001)(66446008)(6506007)(110136005)(186003)(316002)(55236004)(102836004)(54906003)(229853002)(7416002)(5024004)(14444005)(476003)(11346002)(5660300002)(8936002)(478600001)(66556008)(81166006)(9686003)(81156014)(6246003)(33656002)(305945005)(4326008)(486006)(74316002)(256004)(6436002)(8676002)(71200400001)(6116002)(3846002)(52536014)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB4243;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: micron.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: oo+NqyPxcJcrZ02y0xPhOpDl+ee/ZpARE+iR4hQNrKXRimZYaMooyvS78XtYMml+11BLBeEhCgt/+g2ctLLL39zjxmycnHtjMbLStmmz394ms8Vs7/bGWel1s7s7jDnie48e9hzvsQ1nnTJB8FMTwrcTLYrEOKDsN+Du5onpb6vDclBtUSSbkSa8rbNMK9CgEiOQybbN2yKytIgyHh7pdJKisMPRZdLg/7NLAWldF9qfoQJ9WRyzu+Kp+uwVWn6M7SNseL3mWLyhin6appOrSLhj9ky1fBRhCfgSEjGoRCPGBwYe+QRomLcprJ6F04VFuxBc0QmGXk/NmNwApNwVygwMiMIO8ThaEv7PByVghvjUEKVM+lMcYMqSDliV8ozGl2VNWasjQ2j2/jP4CKoK4Id/k9mgPb9+TxFBj/AM88uv9kJfnm4UKMcj82eAccee
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 3 Nov 2019 16:49:44 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46679 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727380AbfKCVto (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 16:49:44 -0500
+Received: by mail-lj1-f195.google.com with SMTP id e9so2163477ljp.13;
+        Sun, 03 Nov 2019 13:49:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=yvffdycxNBwgpU3LU9SuxVJbqRvIU33ihFBNPv6gC7I=;
+        b=YC3q7hQx4Wdn9a7lvBf3sNRgYqSo7VuFt/qp739qXrfCWKTCIf7TMJoCIVwRjUoG/o
+         4bLT8+KRH6CiO8EBwWJPDP059P9ClkWcHcKvaaOlVbkl29j7yNiU0w27cb1vicc+zByT
+         nuCPV7BUVhegPXeKwYBRkWQXJ+Gefwvj58+dSsDwCljRtZBe0/zPIr5/lWFlxXHDCif9
+         qeeJJcBYbDzZQLcQOLDZpgXRJ41dZX9aOsOiYEp1eLK0NhpHqIZ6A04keK/0Ii/0NxYV
+         9lpO5Vrexmy8VJ5z5tKuYMp20TkQQ/2o224ALGTtYlOTMofft/Zu9VCnx99CiNe+KgOF
+         bsTw==
+X-Gm-Message-State: APjAAAUxq6YkG8pPgpGBGIKhda6hg7HYUb18S8Gvtxo9PTJs8h0Qr7vK
+        VpdpGxF37+ZpH5ZVB+T2Jf0=
+X-Google-Smtp-Source: APXvYqwszZFVzcpBYbF1AygeSMGbm2SLWC9bxHThW1tANhHWxm1XLP3O7uysmVsAlCa4EXsFFr6Eiw==
+X-Received: by 2002:a2e:8e27:: with SMTP id r7mr16590670ljk.101.1572817454047;
+        Sun, 03 Nov 2019 13:44:14 -0800 (PST)
+Received: from [192.168.1.183] (128-68-70-109.broadband.corbina.ru. [128.68.70.109])
+        by smtp.gmail.com with ESMTPSA id x5sm7505573lfg.71.2019.11.03.13.44.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 03 Nov 2019 13:44:13 -0800 (PST)
+Reply-To: alex.popov@linux.com
+Subject: Re: [PATCH v3 1/1] media: vivid: Fix wrong locking that causes race
+ conditions on streaming stop
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Security Officers <security@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Popov <alex.popov@linux.com>
+References: <20191102190327.24903-1-alex.popov@linux.com>
+ <CAHk-=wgE-veRb7+mw9oMmsD97BLnL+q8Gxu0QRrK65S2yQfMdQ@mail.gmail.com>
+From:   Alexander Popov <alex.popov@linux.com>
+Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
+ 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
+ j3lCqPk=
+Message-ID: <7ec33848-67a6-069a-132c-f8550f6e090f@linux.com>
+Date:   Mon, 4 Nov 2019 00:44:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f56c60cf-14ca-42a1-f629-08d760a78649
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Nov 2019 21:48:12.2614
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SuPm61+DRUIRHRw0GSxoGRpDCiAyFFBmkXgJ83RbVOOmgiwglVWK2DLWysIbsCeB7gtklZEs8aVLEe4F15WXkw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4243
+In-Reply-To: <CAHk-=wgE-veRb7+mw9oMmsD97BLnL+q8Gxu0QRrK65S2yQfMdQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Can Guo
+On 03.11.2019 19:45, Linus Torvalds wrote:
+> On Sat, Nov 2, 2019 at 12:03 PM Alexander Popov <alex.popov@linux.com> wrote:
+>>
+>> -               mutex_lock(&dev->mutex);
+>> +               if (!mutex_trylock(&dev->mutex)) {
+>> +                       schedule_timeout(1);
+>> +                       continue;
+>> +               }
+>> +
+> 
+> I just realized that this too is wrong. It _works_, but because it
+> doesn't actually set the task state to anything particular before
+> scheduling, it's basically pointless. It calls the scheduler, but it
+> won't delay anything, because the task stays runnable.
 
-> In order to recover from hibern8 exit failure, perform a reset in link re=
-covery
-> path before issuing link start-up.
->=20
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> ---
->  drivers/scsi/ufs/ufshcd.c | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c index
-> c28c144..525f8e6 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -3859,6 +3859,9 @@ static int ufshcd_link_recovery(struct ufs_hba *hba=
-)
->  	ufshcd_set_eh_in_progress(hba);
->  	spin_unlock_irqrestore(hba->host->host_lock, flags);
->=20
-> +	/* Reset the attached device */
-> +	ufshcd_vops_device_reset(hba);
-> +
->  	ret =3D ufshcd_host_reset_and_restore(hba);
->=20
-There is time consumption in reset,  It is true that reset can hide/solve s=
-ome issues.
-I don't know if you experienced issue resulting from an absent reset in thi=
-s case mentioned in
-Patch commit comment.
+Linus, thanks for noticing that.
 
->  	spin_lock_irqsave(hba->host->host_lock, flags);
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum=
-,
-> a Linux Foundation Collaborative Project
+I've double-checked: I didn't manage to get a deadlock with schedule_timeout(1)
+on the kernel with CONFIG_FREEZER disabled and CONFIG_PREEMPT_NONE=y.
+But setting a bigger timeout argument (e.g. 1000) doesn't change the behavior,
+which agrees with your statement.
 
+> So what you presumably want to use is either "cond_resched()" (to make
+> sure others get to run with no delay) or
+> "schedule_timeout_uninterruptible(1)" which actually sets the process
+> state to TASK_UNINTERRUPTIBLE.
+
+I changed it to schedule_timeout_uninterruptible(1).
+
+I'll send the v4 shortly as a reply to this thread, because I refer to it in the
+oss-security mailing list.
+
+> The above works, but it's basically nonsensical. My bad for not
+> noticing earlier.
+
+Thank you, now I know.
+
+Best regards,
+Alexander
