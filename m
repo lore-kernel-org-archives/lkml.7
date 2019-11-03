@@ -2,36 +2,38 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A76CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 13:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D79F6CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 13:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF0AB20842
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 13:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB0C20842
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 13:15:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbfKCNHX (ORCPT
+        id S1727701AbfKCNPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 08:07:23 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:43371 "EHLO
+        Sun, 3 Nov 2019 08:15:44 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:43525 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727377AbfKCNHW (ORCPT
+        with ESMTP id S1727505AbfKCNPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 08:07:22 -0500
+        Sun, 3 Nov 2019 08:15:44 -0500
 Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <colin.king@canonical.com>)
-        id 1iRFbE-0000Tq-OM; Sun, 03 Nov 2019 13:07:20 +0000
+        id 1iRFjG-0000uQ-Tu; Sun, 03 Nov 2019 13:15:39 +0000
 From:   Colin King <colin.king@canonical.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
+To:     Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Huazhong Tan <tanhuazhong@huawei.com>, netdev@vger.kernel.org
 Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: siano: fix spelling mistake "ENBALE" -> "ENABLE"
-Date:   Sun,  3 Nov 2019 13:07:20 +0000
-Message-Id: <20191103130720.22459-1-colin.king@canonical.com>
+Subject: [PATCH] net: hns3: remove unused macros
+Date:   Sun,  3 Nov 2019 13:15:38 +0000
+Message-Id: <20191103131538.25234-1-colin.king@canonical.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -43,45 +45,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Colin Ian King <colin.king@canonical.com>
 
-Macros MSG_SMS_ENBALE_TS_INTERFACE_REQ and MSG_SMS_ENBALE_TS_INTERFACE_RES
-contain a spelling mistake. Fix these by replacing ENBALE with ENABLE.
+The macros HCLGE_MPF_ENBALE and HCLGEVF_MPF_ENBALE are defined but never
+used.  I was going to fix the spelling mistake "ENBALE" -> "ENABLE" but
+found these macros are not used, so they can be removed.
 
 Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/media/common/siano/smscoreapi.c | 4 ++--
- drivers/media/common/siano/smscoreapi.h | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h   | 2 --
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h | 2 --
+ 2 files changed, 4 deletions(-)
 
-diff --git a/drivers/media/common/siano/smscoreapi.c b/drivers/media/common/siano/smscoreapi.c
-index 0ba51dacc580..c1511094fdc7 100644
---- a/drivers/media/common/siano/smscoreapi.c
-+++ b/drivers/media/common/siano/smscoreapi.c
-@@ -230,8 +230,8 @@ static char *siano_msgs[] = {
- 	[MSG_SMS_FLASH_DL_REQ                        - MSG_TYPE_BASE_VAL] = "MSG_SMS_FLASH_DL_REQ",
- 	[MSG_SMS_EXEC_TEST_1_REQ                     - MSG_TYPE_BASE_VAL] = "MSG_SMS_EXEC_TEST_1_REQ",
- 	[MSG_SMS_EXEC_TEST_1_RES                     - MSG_TYPE_BASE_VAL] = "MSG_SMS_EXEC_TEST_1_RES",
--	[MSG_SMS_ENBALE_TS_INTERFACE_REQ             - MSG_TYPE_BASE_VAL] = "MSG_SMS_ENBALE_TS_INTERFACE_REQ",
--	[MSG_SMS_ENBALE_TS_INTERFACE_RES             - MSG_TYPE_BASE_VAL] = "MSG_SMS_ENBALE_TS_INTERFACE_RES",
-+	[MSG_SMS_ENABLE_TS_INTERFACE_REQ             - MSG_TYPE_BASE_VAL] = "MSG_SMS_ENABLE_TS_INTERFACE_REQ",
-+	[MSG_SMS_ENABLE_TS_INTERFACE_RES             - MSG_TYPE_BASE_VAL] = "MSG_SMS_ENABLE_TS_INTERFACE_RES",
- 	[MSG_SMS_SPI_SET_BUS_WIDTH_REQ               - MSG_TYPE_BASE_VAL] = "MSG_SMS_SPI_SET_BUS_WIDTH_REQ",
- 	[MSG_SMS_SPI_SET_BUS_WIDTH_RES               - MSG_TYPE_BASE_VAL] = "MSG_SMS_SPI_SET_BUS_WIDTH_RES",
- 	[MSG_SMS_SEND_EMM_REQ                        - MSG_TYPE_BASE_VAL] = "MSG_SMS_SEND_EMM_REQ",
-diff --git a/drivers/media/common/siano/smscoreapi.h b/drivers/media/common/siano/smscoreapi.h
-index a2f95f4899c2..b3b793b5caf3 100644
---- a/drivers/media/common/siano/smscoreapi.h
-+++ b/drivers/media/common/siano/smscoreapi.h
-@@ -434,8 +434,8 @@ enum msg_types {
- 	MSG_SMS_FLASH_DL_REQ = 732,
- 	MSG_SMS_EXEC_TEST_1_REQ = 734,
- 	MSG_SMS_EXEC_TEST_1_RES = 735,
--	MSG_SMS_ENBALE_TS_INTERFACE_REQ = 736,
--	MSG_SMS_ENBALE_TS_INTERFACE_RES = 737,
-+	MSG_SMS_ENABLE_TS_INTERFACE_REQ = 736,
-+	MSG_SMS_ENABLE_TS_INTERFACE_RES = 737,
- 	MSG_SMS_SPI_SET_BUS_WIDTH_REQ = 738,
- 	MSG_SMS_SPI_SET_BUS_WIDTH_RES = 739,
- 	MSG_SMS_SEND_EMM_REQ = 740,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 9e59f0e074be..0b20b42f8ceb 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -226,8 +226,6 @@ enum hclge_evt_cause {
+ 	HCLGE_VECTOR0_EVENT_OTHER,
+ };
+ 
+-#define HCLGE_MPF_ENBALE 1
+-
+ enum HCLGE_MAC_SPEED {
+ 	HCLGE_MAC_SPEED_UNKNOWN = 0,		/* unknown */
+ 	HCLGE_MAC_SPEED_10M	= 10,		/* 10 Mbps */
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+index ef86155de9e0..2f4c81bf4169 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+@@ -150,8 +150,6 @@ enum hclgevf_states {
+ 	HCLGEVF_STATE_CMD_DISABLE,
+ };
+ 
+-#define HCLGEVF_MPF_ENBALE 1
+-
+ struct hclgevf_mac {
+ 	u8 media_type;
+ 	u8 module_type;
 -- 
 2.20.1
 
