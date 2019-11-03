@@ -2,129 +2,148 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEE2CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 20:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 287F2CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 20:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C3721744
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 20:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F26872190F
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 20:20:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="KNYR2v1q";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="g24be1C2"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cVdRMZAI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfKCUON (ORCPT
+        id S1727967AbfKCUUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 15:14:13 -0500
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:2664 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbfKCUOM (ORCPT
+        Sun, 3 Nov 2019 15:20:22 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:16575 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbfKCUUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 15:14:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1572812054; x=1604348054;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=TPR2Ja254OcNAjqJYZIR6qF4CTahRKAttamanF+Tdz0=;
-  b=KNYR2v1qydEe7HXHUNguwCMyZrEkTgc1cWbbGdWK8mr5d2y/wXutySy9
-   7dMBf4LfbzpbgPjnYxK9Qjm4Key7G6zqvGPiNKW6yrSUgbb7iJ2Pk0LTc
-   G888onyT6fdnJROn1aj6jKZcV1om1MjGtDjxNbg4YMNpT+QYW1GlhEDWB
-   BKM8SLREeF3D36uELDYM1NgLlwe4fIibjf2HJ9P5rLSCPwrpz+04LTNYg
-   a11uC0r3NmU8wVHv0aj56cklKrhra+LGoD+4QHyh4q9pKfjyWHfZPmBpc
-   T++W3YeUTlmE8/CSBrEa32jKCIVLwVdOOiOaIYoXfmVhs1qlCJwKNY9zz
-   g==;
-IronPort-SDR: 6u4hlUp1WsJroJQ7v4U07w3MfBVaHeEeOWAOiQNiti8dEvNo7fv+Qyo9svyesgHSALefMiNDVu
- JTucqC1z5F1nDIx924gsoYgrCqyTCfyaZaqxFe8OJb1isfeaLHQmWJ2F5L56ee8L0UETlskr2v
- /0T4RQm7tZPRpuYA2xyikHSPFNP3gUC8x3dZxvOVoZ36Kf7qw+fSnvLNSCxwmrFjsQ0Pp8Ox3N
- S8EqQtjfx+te0D6+pdDN9467fOdYjUjmNoYgAW0ZIOYkhGYb7ftVXkIf/qZuBUQ3+M9CHy/jQ3
- zNM=
-X-IronPort-AV: E=Sophos;i="5.68,264,1569254400"; 
-   d="scan'208";a="223189753"
-Received: from mail-bn3nam04lp2050.outbound.protection.outlook.com (HELO NAM04-BN3-obe.outbound.protection.outlook.com) ([104.47.46.50])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Nov 2019 04:14:12 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LfWm0BEmWyqR4s5XWsYDaqNgypjTI9qy82C/ZR9CYn7iL560lGouMHSlEqjvqAhuUOl3UtUFP5kyt6mfzX+KVr4QqYzHcD1z/6gHAdpVk4pWcCR5WOEFXEZ4TbDKERTQw3ElWfTi7//+rhVJ5kkdnk+ul1QPOho3HpRO9vRSDQBH2Wlkmsb0uRak28EislEX0qo5F2AS8UUm+z2yqlCSuGr1Eqgh1wcmzzxXJYZ9N6pQ7f+k4wID6VEDveAeW/vFAt5Y0pStZU6BM3eprjLPCb04Wxd0pewo9CQ8Y5sRGnHvxQ2suj6EKkz4oPSAKQbV7H+f8eEaBQBa3/sxUe19Zg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TPR2Ja254OcNAjqJYZIR6qF4CTahRKAttamanF+Tdz0=;
- b=DI02RagDYhZlg5owsCGKcRSym7hZT3QK3dS1bTNu3rFizf+94aZxukXD5hoOo4mjcLoGNtijgIRezaA5Hhu4mneCYm/B+GAnAOBUnDVMuY4VZSRk1aErLxCOg1+LzfX1974ywH7cZuV64in2DtFVhPd9pFKlYST8FmSKSOLhSf6ou6EbvC4eRjfTloFt3laB4EVdV+2f554QGcCuHlxvaO5/XvMht51ZgfbM615LM+xV28lAiNQeYcB8E5RacpgNa2aHEgK1h9s0bcsXOlSMsOXKiGmprxI48pntojmVJrgfOkegzgxWrCwRyiyIamS0kgs1jQIY8ot0bynmuC+niA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TPR2Ja254OcNAjqJYZIR6qF4CTahRKAttamanF+Tdz0=;
- b=g24be1C2whit+N00Kw8cblhR6vkGqakmVFjwWFGoxmviv0Qw3W4atU/z1kWrj0wPTU6Z5Z7IRRowiLa8vVZiIsvdViVlfCQfrduJkKWEToNNLMM0Y3pR0lY+UJpHdYhmsCqFalC2tNtnofnoqsfw4sPbvHjpefeYlzZU0ei0QsU=
-Received: from BYAPR04MB5749.namprd04.prod.outlook.com (20.179.57.21) by
- BYAPR04MB3781.namprd04.prod.outlook.com (52.135.213.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Sun, 3 Nov 2019 20:14:09 +0000
-Received: from BYAPR04MB5749.namprd04.prod.outlook.com
- ([fe80::6066:cd5d:206:5e04]) by BYAPR04MB5749.namprd04.prod.outlook.com
- ([fe80::6066:cd5d:206:5e04%6]) with mapi id 15.20.2408.024; Sun, 3 Nov 2019
- 20:14:09 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Daniel Wagner <dwagner@suse.de>
-CC:     Sagi Grimberg <sagi@grimberg.me>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-Subject: Re: [RFC] nvmet: Always remove processed AER elements from list
-Thread-Topic: [RFC] nvmet: Always remove processed AER elements from list
-Thread-Index: AQHVjzYhgmqnvQGm+02Suay/wXEq1Q==
-Date:   Sun, 3 Nov 2019 20:14:09 +0000
-Message-ID: <BYAPR04MB5749B6370CC8DECC4DABF702867C0@BYAPR04MB5749.namprd04.prod.outlook.com>
-References: <20191030152418.23753-1-dwagner@suse.de>
- <20191031145127.GC6024@lst.de>
- <BYAPR04MB574907EE2666D6DA48DE30AD867C0@BYAPR04MB5749.namprd04.prod.outlook.com>
- <BYAPR04MB5749D02B62E8F4BB12F8DB9A867C0@BYAPR04MB5749.namprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
-x-originating-ip: [199.255.45.62]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 1f4ec2f5-8646-4a89-0bc8-08d7609a6289
-x-ms-traffictypediagnostic: BYAPR04MB3781:
-x-microsoft-antispam-prvs: <BYAPR04MB3781F0B10608152D6AF9C22A867C0@BYAPR04MB3781.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
-x-forefront-prvs: 0210479ED8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(39860400002)(136003)(396003)(366004)(199004)(189003)(76176011)(26005)(558084003)(256004)(186003)(14454004)(7696005)(66946007)(33656002)(305945005)(2906002)(7736002)(478600001)(476003)(446003)(6436002)(86362001)(81166006)(4326008)(8936002)(229853002)(81156014)(66066001)(8676002)(66476007)(76116006)(66446008)(64756008)(66556008)(5660300002)(6246003)(486006)(74316002)(102836004)(52536014)(6506007)(3846002)(6116002)(55016002)(53546011)(110136005)(71200400001)(54906003)(9686003)(71190400001)(99286004)(316002)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB3781;H:BYAPR04MB5749.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7CM4xYTW9IZJDXlXQY6s956H+zRUJvZrjUlzCRCgtEPKR6apcPfnmt8ZUfJWOQFoBuWAz2mdZ+cvg7QkZ8D49bjpXpHWCDIGogEJSsyeoMg5NqQGodQakf+OlzRJBBMx9u5sV3biq3Gab07AmTFtkLFTmjFkwmThvWBzvdCHLVuO2gFkP1jvXI8cTT7z5nQrhssq6DZXaGT4rIe9A65uzgzjqqbArw3SNGkX9Ix9/9HKgxt5OaI2hLGhNcjtcQKYMJixDXXGaVeukROhNQueeQXKRubcMaVjvRRJw/cL/pwup7z2hB3Hy22nziwpGBsFZc9kJvMum2DZTKlFM8da7PpX4mqIAnr30PhQBGT9zYgdICIjiuJA2bAGpIQK5GB5OepDg+avVVQFmypicV/ZepSU6R6rTA+kbm//vwVZkqqHiqGCiNX7RDgzyIhXvqDD
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 3 Nov 2019 15:20:22 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dbf36850000>; Sun, 03 Nov 2019 12:20:22 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 03 Nov 2019 12:20:16 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 03 Nov 2019 12:20:16 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 3 Nov
+ 2019 20:20:16 +0000
+Subject: Re: [RFC] mm: gup: add helper page_try_gup_pin(page)
+To:     Hillf Danton <hdanton@sina.com>, linux-mm <linux-mm@kvack.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, Jan Kara <jack@suse.cz>,
+        Mel Gorman <mgorman@suse.de>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <20191103112113.8256-1-hdanton@sina.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <51e8cee5-704f-9a6f-7e39-2c8b5050e0a9@nvidia.com>
+Date:   Sun, 3 Nov 2019 12:20:10 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f4ec2f5-8646-4a89-0bc8-08d7609a6289
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Nov 2019 20:14:09.0363
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Dl//aLc4PYCuK4bFPUxyweObgyWClVkU0IbkL3+rT26zABmyfcWAh+HqN7wti97iDCy4F1P8lOMDbAmH2vNJlysuAfJgp1shbAeN5gry4ns=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB3781
+In-Reply-To: <20191103112113.8256-1-hdanton@sina.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572812422; bh=1WddofDs8AP/zQmou9ypT/z1t2lraSgfbS9gxVcbq6U=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=cVdRMZAINoC1A6ZGOjFs6GdIiGRwP8AFIAgl8jDDTddHbTX+V8XJWdwgcYl10lSSJ
+         LHAMVpVQwCecnPJox/CxdaNu7mZjrr/maNMRb/LyLUDZYOvOwdYdUERfBOqrT/MEJz
+         jRSH2UH95go64w9djr8LWCDXx7GuZA9ERPhSKeh4z5/Tr8ihsFgDQQT8kLOJOkJSyv
+         /y/WeEFfgaFt+EQNQ70pRYlvYNnKlno/E8oYClA49TIk1Pi1+I2H0bhKcUtjsCi/D+
+         FAzcDkt15R4oSRJR2kpVlUu8QNBAE4t86i58g33XEY+sSmmesHyUXTVIiDTP5oq/rQ
+         jBXNdZlKLsrSw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sent out a patch with fix, please have a look.=0A=
-=0A=
-On 11/03/2019 11:48 AM, Chaitanya Kulkarni wrote:=0A=
-> It will not work as it will consume outstanding command=0A=
-> posted by host for which aen is not generated yet, and=0A=
-> when aen is generated it will not have command in the=0A=
-> async_event_cmds[].=0A=
-=0A=
+On 11/3/19 3:21 AM, Hillf Danton wrote:
+> 
+> A helper is added for mitigating the gup issue described at
+> https://lwn.net/Articles/784574/. It is unsafe to write out
+> a dirty page that is already gup pinned for DMA.
+> 
+> In the current writeback context, dirty pages are written out with
+> no detecting whether they have been gup pinned; Nor mark to keep
+> gupers off. In the gup context, file pages can be pinned with other
+> gupers and writeback ignored.
+> 
+> The factor, that no room, supposedly even one bit, in the current
+> page struct can be used for tracking gupers, makes the issue harder
+> to tackle.
+
+Well, as long as we're counting bits, I've taken 21 bits (!) to track
+"gupers". :)  More accurately, I'm sharing 31 bits with get_page()...please
+see my recently posted patchset for tracking dma-pinned pages:
+
+https://lore.kernel.org/r/20191030224930.3990755-1-jhubbard@nvidia.com
+
+Once that is merged, you will have this available:
+
+   static inline bool page_dma_pinned(struct page *page);
+
+...which will reliably track dma-pinned pages.
+
+After that, we still need to convert a some more call sites (block/bio 
+in particular) to the new pin_user_pages()/put_user_page() system, in 
+order for filesystems to take advantage of it, but this approach has 
+the advantage of actually tracking such pages, rather than faking it by 
+hoping that there is only one gup caller at a time.
+
+
+> 
+> The approach here is, because it makes no sense to allow a file page
+> to have multiple gupers at the same time, looking to make gupers
+
+ohhh...no, that's definitely not a claim you can make.
+
+
+> mutually exclusive, and then guper's singulairty helps to tell if a
+> guper is existing by staring at the change in page count.
+> 
+> The result of that sigularity is not yet 100% correct but something
+> of "best effort" as the effect of random get_page() is perhaps also
+> folded in it.
+> It is assumed the best effort is feasible/acceptable in practice
+> without the the cost of growing the page struct size by one bit,
+> were it true that something similar has been applied to the page
+> migrate and reclaim contexts for a while.
+> 
+> With the helper in place, we skip writing out a dirty page if a
+> guper is detected; On gupping, we give up pinning a file page due
+> to writeback or losing the race to become a guper.
+> 
+> The end result is, no gup-pinned page will be put under writeback.
+
+I think you must have missed the many contentious debates about the
+tension between gup-pinned pages, and writeback. File systems can't
+just ignore writeback in all cases. This patch leads to either
+system hangs or filesystem corruption, in the presence of long-lasting
+gup pins.
+
+Really, this won't work. sorry.
+
+
+thanks,
+
+John Hubbard
+NVIDIA
