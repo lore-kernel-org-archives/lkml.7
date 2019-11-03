@@ -2,264 +2,94 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 349C5CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 14:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF8CCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 15:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8B572067D
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 14:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED6E20656
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 15:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tVl+SWCq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W2yDnmY7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbfKCOz4 (ORCPT
+        id S1727753AbfKCPL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 09:55:56 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41340 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727425AbfKCOzz (ORCPT
+        Sun, 3 Nov 2019 10:11:56 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59370 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727648AbfKCPLz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 09:55:55 -0500
-Received: by mail-lf1-f67.google.com with SMTP id j14so10360450lfb.8;
-        Sun, 03 Nov 2019 06:55:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:from:subject:message-id:date:user-agent:mime-version;
-        bh=hcEBVwLdQ7KFp2y3GqExvxoN2G3Q32x8oD7k9TAOa3Q=;
-        b=tVl+SWCqXTBfPwaPD/c9yz/BhYqH5BLokn6etckg6iJzQ+t6qFfyFO56t9oSsmdw3i
-         Cd2zIZ7MIGIF7pb6tdc3OwMderKAHHRjzJ97VCta54w6i+jlpMwgAKpOLFt+ul4xPcGX
-         r65+uVKiAcP1gOKbpDBlzXRsWd9/SHrbcbaXxRoR6wtCumt8oZxEowpKiSRL97xuMH4b
-         OaGQOK3RBxGLUnQm3RQUjGbS1FpqM1QFWpJczfY1mhFH2n1FHdGEWcwBura5dU6ChH7n
-         DZmIiy8HrPvQ5k7RFdzbTNtSWzdDz9CK0s8YGgg5DCUfiq9ObrR8eKHFkDzCh8/g7dq6
-         yUWw==
+        Sun, 3 Nov 2019 10:11:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572793914;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pKeQqHTNm2rKMXKnKYnKXv0/Zvs8TwJgyMSIjxTYZk4=;
+        b=W2yDnmY7szGa8v+H1u8PGwx/uOGKoOt4nqr3IEj6GDPBrhvzEFtwx+B8csYIa+dAyAkOY3
+        Il7bUQzGAhNZCOCfcBWjxhwbvgTIGkAPXhZysfjsLWexuwO7sUUDnHFbn+kYDCo3P1JZ0h
+        A16vLBlIV/vrwltAF0Cbkp2qkrQVF+A=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-428-QeFZRFkJO02tuALSiz7RpA-1; Sun, 03 Nov 2019 10:11:52 -0500
+Received: by mail-lf1-f70.google.com with SMTP id a4so116417lfg.23
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 07:11:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version;
-        bh=hcEBVwLdQ7KFp2y3GqExvxoN2G3Q32x8oD7k9TAOa3Q=;
-        b=KdFlxA9w3pqTSVusqLh1TQKr4sx72/oatWA1ep+t1G1Zdxb54wYe9Ty5uc/OuwbZHo
-         oqq/fbZzHbFZDg+eJ25j63FWEtkYj/G7Usx8Eo/rSeDqw6GHwv7v0Hk9XsmBb+Xgu9IT
-         /eXV7BCjoUOxXWZmej3rmYNnpdWIeee2Vo/2uCh+v7BaEQHcdcsUZ7mW0lTl8dnKJZPf
-         YOCbxvnNvaSZ5ISn1ymitCYumHVwDXUnSARP8xWfKhKCDk4EGoILUwAlYWwfF2+K5Ocs
-         oKoTECJLJrBacQHxONp/ORDlaHTGGSJjbN7hhY3puI8QpfEJ7a1v/b9BvXeBJBM3eyFY
-         lQGQ==
-X-Gm-Message-State: APjAAAUquDbfuzdSJMeikI5hEbukELo0ayXenWC9pN9Ek1g/KS/B2vw1
-        IO7R3SSAw1TEQmk/0PH3jJuqB+P6
-X-Google-Smtp-Source: APXvYqxh2UEMuAK4eJp+YttAtwqIEOogKlFvou7FwWw32vQtWjZ1l4rX7SBEIXwDp7rxIa1WgVToCQ==
-X-Received: by 2002:a19:c6d6:: with SMTP id w205mr12599036lff.17.1572792951003;
-        Sun, 03 Nov 2019 06:55:51 -0800 (PST)
-Received: from [192.168.1.36] (88-114-211-119.elisa-laajakaista.fi. [88.114.211.119])
-        by smtp.gmail.com with ESMTPSA id h14sm4937581ljl.43.2019.11.03.06.55.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 Nov 2019 06:55:50 -0800 (PST)
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>
-From:   Topi Miettinen <toiwoton@gmail.com>
-Subject: [PATCH] Allow restricting permissions in /proc/sys
-Message-ID: <74a91362-247c-c749-5200-7bdce704ed9e@gmail.com>
-Date:   Sun, 3 Nov 2019 16:55:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hYLWafxRH7qP066b4Mp7DMWQe6c3nTG9BEtUCE6Dw9w=;
+        b=OtaMB8EZM2V4C2LWNRo7a+Fxb9PcAXSUP3+wxir3Niz7RZNgdGdk2K1brS8KrBBqfo
+         RLMtfnIGE/Df+d3e5oP35s8RwFpVdQc30uKj34O37HwJRK4RIM9im+vUy23lJKSjR3br
+         z6kksgGyJCjmaXhBPwp8VjiA3KF5SUx1r0Kn4jOFl7zNdO1Lc90U+VVXBS32i/Q5Y/0U
+         son0mrAS6JyjyZIRfnW0ic5oHQvje0NGSWnZDE8PQjq3pTrVZPtSftXLqqolVUfQlKSC
+         W7toZW2U3bV3iWwmQkIJVropBU8T/m5lRhyOE+Dzd3WY0W76qdLWCI+WmFyV7S+iq5e3
+         h+pw==
+X-Gm-Message-State: APjAAAVzb5WmUkdW6CXq2dmeMAQGHRwRwMyVRAEt+Px4i8UZN+8yWvGx
+        MaJl1mM5tgqJsGfEh+Gs8KAOqLYFzJxMUJwjceC8cpBptyjUebyd2XN9b+lHNMsHC2iSVXzOJ7x
+        eO4cln5heq44TUSEi8K8TWbZ1udMQvfd2zKU5hnik
+X-Received: by 2002:a2e:85c3:: with SMTP id h3mr2400848ljj.122.1572793911421;
+        Sun, 03 Nov 2019 07:11:51 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxJINflfnixbbcQ99J2apjempSeXAlWGD/Q7p/bS1pLZID2PiNqKOal81VXjgLT7btCyZkPFqFUHydQLoy/tN4=
+X-Received: by 2002:a2e:85c3:: with SMTP id h3mr2400839ljj.122.1572793911266;
+ Sun, 03 Nov 2019 07:11:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------2C999EEEA5A4675594E98B4F"
+References: <20191009151019.13488-1-mcroce@redhat.com>
+In-Reply-To: <20191009151019.13488-1-mcroce@redhat.com>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Sun, 3 Nov 2019 16:11:15 +0100
+Message-ID: <CAGnkfhzj-X-R_4toZdJ2eBfhpq1t0dHYq=P+0w-VD30ZAh59qQ@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Add make dir-pkg build option
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        LKML <linux-kernel@vger.kernel.org>
+X-MC-Unique: QeFZRFkJO02tuALSiz7RpA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------2C999EEEA5A4675594E98B4F
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+On Wed, Oct 9, 2019 at 5:10 PM Matteo Croce <mcroce@redhat.com> wrote:
+>
+> Add a 'dir-pkg' target which just creates the same directory structures
+> as in tar-pkg, but doesn't package anything.
+> Useful when the user wants to copy the kernel tree on a machine using
+> ssh, rsync or whatever.
+>
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
 
-Several items in /proc/sys need not be accessible to unprivileged
-tasks. Let the system administrator change the permissions, but only
-to more restrictive modes than what the sysctl tables allow.
+Hi,
 
-Signed-off-by: Topi Miettinen <toiwoton@gmail.com>
----
-  fs/proc/proc_sysctl.c | 41 +++++++++++++++++++++++++++++++----------
-  1 file changed, 31 insertions(+), 10 deletions(-)
+any comment on this?
 
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index d80989b6c344..88c4ca7d2782 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -818,6 +818,10 @@ static int proc_sys_permission(struct inode *inode, 
-int mask)
-         if ((mask & MAY_EXEC) && S_ISREG(inode->i_mode))
-                 return -EACCES;
+--=20
+Matteo Croce
+per aspera ad upstream
 
-+       error = generic_permission(inode, mask);
-+       if (error)
-+               return error;
-+
-         head = grab_header(inode);
-         if (IS_ERR(head))
-                 return PTR_ERR(head);
-@@ -837,9 +841,35 @@ static int proc_sys_setattr(struct dentry *dentry, 
-struct iattr *attr)
-         struct inode *inode = d_inode(dentry);
-         int error;
-
--       if (attr->ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID))
-+       if (attr->ia_valid & (ATTR_UID | ATTR_GID))
-                 return -EPERM;
-
-+       if (attr->ia_valid & ATTR_MODE) {
-+               struct ctl_table_header *head = grab_header(inode);
-+               struct ctl_table *table = PROC_I(inode)->sysctl_entry;
-+               umode_t max_mode = 0777; /* Only these bits may change */
-+
-+               if (IS_ERR(head))
-+                       return PTR_ERR(head);
-+
-+               if (!table) /* global root - r-xr-xr-x */
-+                       max_mode &= ~0222;
-+               else /*
-+                     * Don't allow permissions to become less
-+                     * restrictive than the sysctl table entry
-+                     */
-+                       max_mode &= table->mode;
-+
-+               sysctl_head_finish(head);
-+
-+               /* Execute bits only allowed for directories */
-+               if (!S_ISDIR(inode->i_mode))
-+                       max_mode &= ~0111;
-+
-+               if (attr->ia_mode & ~S_IFMT & ~max_mode)
-+                       return -EPERM;
-+       }
-+
-         error = setattr_prepare(dentry, attr);
-         if (error)
-                 return error;
-@@ -853,17 +883,8 @@ static int proc_sys_getattr(const struct path 
-*path, struct kstat *stat,
-                             u32 request_mask, unsigned int query_flags)
-  {
-         struct inode *inode = d_inode(path->dentry);
--       struct ctl_table_header *head = grab_header(inode);
--       struct ctl_table *table = PROC_I(inode)->sysctl_entry;
--
--       if (IS_ERR(head))
--               return PTR_ERR(head);
-
-         generic_fillattr(inode, stat);
--       if (table)
--               stat->mode = (stat->mode & S_IFMT) | table->mode;
--
--       sysctl_head_finish(head);
-         return 0;
-  }
-
--- 
-2.24.0.rc1
-
-
---------------2C999EEEA5A4675594E98B4F
-Content-Type: text/x-diff;
- name="0001-Allow-restricting-permissions-in-proc-sys.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="0001-Allow-restricting-permissions-in-proc-sys.patch"
-
-From 14ad2d9034ecb43b60f59f6422e597a780c65cd9 Mon Sep 17 00:00:00 2001
-From: Topi Miettinen <toiwoton@gmail.com>
-Date: Sun, 3 Nov 2019 16:36:43 +0200
-Subject: [PATCH] Allow restricting permissions in /proc/sys
-
-Several items in /proc/sys need not be accessible to unprivileged
-tasks. Let the system administrator change the permissions, but only
-to more restrictive modes than what the sysctl tables allow.
-
-Signed-off-by: Topi Miettinen <toiwoton@gmail.com>
----
- fs/proc/proc_sysctl.c | 41 +++++++++++++++++++++++++++++++----------
- 1 file changed, 31 insertions(+), 10 deletions(-)
-
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index d80989b6c344..88c4ca7d2782 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -818,6 +818,10 @@ static int proc_sys_permission(struct inode *inode, int mask)
- 	if ((mask & MAY_EXEC) && S_ISREG(inode->i_mode))
- 		return -EACCES;
- 
-+	error = generic_permission(inode, mask);
-+	if (error)
-+		return error;
-+
- 	head = grab_header(inode);
- 	if (IS_ERR(head))
- 		return PTR_ERR(head);
-@@ -837,9 +841,35 @@ static int proc_sys_setattr(struct dentry *dentry, struct iattr *attr)
- 	struct inode *inode = d_inode(dentry);
- 	int error;
- 
--	if (attr->ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID))
-+	if (attr->ia_valid & (ATTR_UID | ATTR_GID))
- 		return -EPERM;
- 
-+	if (attr->ia_valid & ATTR_MODE) {
-+		struct ctl_table_header *head = grab_header(inode);
-+		struct ctl_table *table = PROC_I(inode)->sysctl_entry;
-+		umode_t max_mode = 0777; /* Only these bits may change */
-+
-+		if (IS_ERR(head))
-+			return PTR_ERR(head);
-+
-+		if (!table) /* global root - r-xr-xr-x */
-+			max_mode &= ~0222;
-+		else /*
-+		      * Don't allow permissions to become less
-+		      * restrictive than the sysctl table entry
-+		      */
-+			max_mode &= table->mode;
-+
-+		sysctl_head_finish(head);
-+
-+		/* Execute bits only allowed for directories */
-+		if (!S_ISDIR(inode->i_mode))
-+			max_mode &= ~0111;
-+
-+		if (attr->ia_mode & ~S_IFMT & ~max_mode)
-+			return -EPERM;
-+	}
-+
- 	error = setattr_prepare(dentry, attr);
- 	if (error)
- 		return error;
-@@ -853,17 +883,8 @@ static int proc_sys_getattr(const struct path *path, struct kstat *stat,
- 			    u32 request_mask, unsigned int query_flags)
- {
- 	struct inode *inode = d_inode(path->dentry);
--	struct ctl_table_header *head = grab_header(inode);
--	struct ctl_table *table = PROC_I(inode)->sysctl_entry;
--
--	if (IS_ERR(head))
--		return PTR_ERR(head);
- 
- 	generic_fillattr(inode, stat);
--	if (table)
--		stat->mode = (stat->mode & S_IFMT) | table->mode;
--
--	sysctl_head_finish(head);
- 	return 0;
- }
- 
--- 
-2.24.0.rc1
-
-
---------------2C999EEEA5A4675594E98B4F--
