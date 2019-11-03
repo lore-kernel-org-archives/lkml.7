@@ -2,140 +2,179 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 664ADCA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 13:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B3DCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 14:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7D22084D
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 13:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C1620663
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 14:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572790541;
+	bh=KwKea9wG7NCc77KWgSF90cuPCTzxWH/G6MaeQJtW3t0=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=EBtvbCblFOwdLGXA5lDiJW9ItdxEa/PQEZ2CcBVhlFmu7Op/cara381oqDe/2+Crm
+	 /dEjiEhzXs71MTvAjhRiMFX+9o5cN/OQXEf0ZDlLiz2kbyNuSqzTt8lkvBe5q9tw9t
+	 sAowfOQnGvtOHrvlfIqscwFq2z6KGW0GH9GkfiSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727647AbfKCN1t (ORCPT
+        id S1727672AbfKCOPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 08:27:49 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:52296 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727425AbfKCN1s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 08:27:48 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
+        Sun, 3 Nov 2019 09:15:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727505AbfKCOPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 09:15:38 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9D80A28A619;
-        Sun,  3 Nov 2019 13:27:46 +0000 (GMT)
-Date:   Sun, 3 Nov 2019 14:27:41 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Chuanhong Guo <gch981213@gmail.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-mtd@lists.infradead.org,
-        Jeff Kletsky <git-commits@allycomm.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Stefan Roese <sr@denx.de>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][RFC] mtd: spinand: fix detection of GD5FxGQ4xA flash
-Message-ID: <20191103142741.7b2a2bf0@collabora.com>
-In-Reply-To: <CAJsYDVJgwRfg2kfmuG4P-NCEAZ4box+=Yb53d0J+rAjLRpc3Ww@mail.gmail.com>
-References: <20191016013845.23508-1-gch981213@gmail.com>
-        <20191028174131.65c3d580@xps13>
-        <CAJsYDVJgwRfg2kfmuG4P-NCEAZ4box+=Yb53d0J+rAjLRpc3Ww@mail.gmail.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AFE420663;
+        Sun,  3 Nov 2019 14:15:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572790536;
+        bh=KwKea9wG7NCc77KWgSF90cuPCTzxWH/G6MaeQJtW3t0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=oAoxmB3sIQIJd2HkxbMJ8wmf+NLBHr1KO0klRV1eDtEGUqQdGi9HFpRG18CQCSlW/
+         am1qPgEupkyl6M08e8yECsEJlbq+nabgHiV1yXMe1DxMklL+RNVTQ+iLqkCpSpq5VC
+         +ZecbpBbtAsMbV5nsZ6QkFRVAobgt4iYaT20LaMA=
+Date:   Sun, 3 Nov 2019 15:15:34 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [GIT PULL] USB fixes for 5.4-rc6
+Message-ID: <20191103141534.GA661190@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 3 Nov 2019 20:03:21 +0800
-Chuanhong Guo <gch981213@gmail.com> wrote:
+The following changes since commit d6d5df1db6e9d7f8f76d2911707f7d5877251b02:
 
-> Hi!
-> 
-> On Tue, Oct 29, 2019 at 12:41 AM Miquel Raynal
-> <miquel.raynal@bootlin.com> wrote:
-> >
-> > Hello,
-> >
-> > Chuanhong Guo <gch981213@gmail.com> wrote on Wed, 16 Oct 2019 09:38:24
-> > +0800:
-> >  
-> > > GD5FxGQ4xA didn't follow the SPI spec to keep MISO low while slave is
-> > > reading, and instead MISO is kept high. As a result, the first byte
-> > > of id becomes 0xFF.
-> > > Since the first byte isn't supposed to be checked at all, this patch
-> > > just removed that check.
-> > >
-> > > While at it, redo the comment above to better explain what's happening.
-> > >
-> > > Fixes: cfd93d7c908e ("mtd: spinand: Add support for GigaDevice GD5F1GQ4UFxxG")
-> > > Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
-> > > CC: Jeff Kletsky <git-commits@allycomm.com>
-> > > ---
-> > > RFC:
-> > > I doubt whether this patch is a proper fix for the underlying problem:
-> > > The actual problem is that we have two different implementation of read id
-> > > command: One replies immediately after master sending 0x9f and the other
-> > > need to send 0x9f and an offset byte (found in winbond and early GD flashes.)  
-> 
-> Correction: Only early GigaDevice nand chips uses this implementation.
-> Winbond chips uses a dummy byte instead of an address byte so there's
-> no problem for Winbond chips.
-> 
-> > > Current code only works if SPI master is properly implemented (i.e. keep MOSI
-> > > low while reading.)  
-> >
-> > I am not entirely against the fix, but this is a SPI host controller
-> > issue, right? Can you try to fix the controller driver instead?  
-> 
-> I think this is a spi nand framework issue. GigaDevice uses an unusual
-> READ ID implementation, and as a result, both host controller and chip
-> are reading during the first byte after 0x9f command: chip is reading
-> the address/offset byte and host is expecting the first ID byte.
-> Here lies two problems:
-> 1. According to the sequence diagram in their datasheet, MISO pin is
-> in High-Z state during the 0x9f command and the offset byte, and host
-> could read anything during this time instead of a fixed 0x0 or 0xff
-> byte, so the check of first byte should be removed. This is what this
-> patch is doing.
-> 2. If there's a buggy SPI host controller that didn't keep MOSI low
-> during reading operation, the chip will get 0xff as ID offset, causing
-> the read vendor/device ID to be swapped. I never met such a controller
-> so far, but if there is one, it will be a silicon bug that can't be
-> fixed by software. To fix this one, we'll have to make a second
-> read-id implementation in spi nand framework.
+  Linux 5.4-rc5 (2019-10-27 13:19:19 -0400)
 
-I realize how fragile this ID-based detection is when manufacturers
-decide to not follow the standard READID semantic (one 0x9f command byte
-followed by 1 or more input cycles encoding the ID). Let's imagine you
-have a valid manuf ID byte in ID[0], and the device ID (ID[1]) matches
-the Winbond or Gigadevice manufacturer ID, and ID[3] (extended Device ID
-byte?) matches a valid Winbond/Gigadevice device ID. If you skip the
-check on ID[0] you might erroneously detect a Winbond or Gigadevice
-NAND, while it's actually something else.
+are available in the Git repository at:
 
-Note that I don't really have a solution to make this detection more
-robust.
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.4-rc6
 
-> 
-> The second problem only exist in theory, so my preference is to apply
-> this patch and fix only the first problem for now.
+for you to fetch changes up to d8eca64eec7103ab1fbabc0a187dbf6acfb2af93:
 
-I think we should fix that problem now. Maybe by doing a 3 steps
-detection:
+  usb: dwc3: gadget: fix race when disabling ep with cancelled xfers (2019-10-31 18:57:54 +0100)
 
-1/ READID + ID[]
-2/ READID + DUMMY + ID[]
-3/ READID + ADDR + ID[]
+----------------------------------------------------------------
+USB fixes for 5.4-rc6
 
-At each step we would check if the returned ID matches a valid NAND,
-and if it does, stop there.
+The USB sub-maintainers woke up this past week and sent a bunch of tiny
+fixes.  Here are a lot of small patches that that resolve a bunch of
+reported issues in the USB core, drivers, serial drivers, gadget
+drivers, and of course, xhci :)
+
+All of these have been in linux-next with no reported issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Alan Stern (4):
+      USB: Skip endpoints with 0 maxpacket length
+      usb-storage: Revert commit 747668dbc061 ("usb-storage: Set virt_boundary_mask to avoid SG overflows")
+      UAS: Revert commit 3ae62a42090f ("UAS: fix alignment of scatter/gather segments")
+      USB: gadget: Reject endpoints with 0 maxpacket value
+
+Arnd Bergmann (1):
+      usb: dwc3: select CONFIG_REGMAP_MMIO
+
+Ben Dooks (Codethink) (5):
+      usb: mtu3: fix missing include of mtu3_dr.h
+      usb: cdns3: include host-export,h for cdns3_host_init
+      usb: renesas_usbhs: fix __le16 warnings
+      usb: renesas_usbhs: fix type of buf
+      usb: xhci: fix __le32/__le64 accessors in debugfs code
+
+Chandana Kishori Chiluveru (1):
+      usb: gadget: composite: Fix possible double free memory bug
+
+Cristian Birsan (1):
+      usb: gadget: udc: atmel: Fix interrupt storm in FIFO mode.
+
+Felipe Balbi (1):
+      usb: dwc3: gadget: fix race when disabling ep with cancelled xfers
+
+Greg Kroah-Hartman (1):
+      Merge tag 'fixes-for-v5.4-rc5' of git://git.kernel.org/.../balbi/usb into usb-linus
+
+GwanYeong Kim (1):
+      usbip: tools: Fix read_usb_vudc_device() error path handling
+
+Johan Hovold (5):
+      USB: ldusb: fix ring-buffer locking
+      USB: ldusb: use unsigned size format specifiers
+      USB: ldusb: fix control-message timeout
+      USB: serial: whiteheat: fix potential slab corruption
+      USB: serial: whiteheat: fix line-speed endianness
+
+Mathias Nyman (1):
+      xhci: Fix use-after-free regression in xhci clear hub TT implementation
+
+Navid Emamdoost (1):
+      usb: dwc3: pci: prevent memory leak in dwc3_pci_probe
+
+Nikhil Badola (1):
+      usb: fsl: Check memory resource before releasing it
+
+Peter Chen (1):
+      usb: gadget: configfs: fix concurrent issue between composite APIs
+
+Roger Quadros (2):
+      usb: cdns3: gadget: Don't manage pullups
+      usb: cdns3: gadget: Fix g_audio use case when connected to Super-Speed host
+
+Samuel Holland (1):
+      usb: xhci: fix Immediate Data Transfer endianness
+
+Sanket Parmar (1):
+      usb: cdns3: gadget: reset EP_CLAIMED flag while unloading
+
+Suwan Kim (1):
+      usbip: Fix free of unallocated memory in vhci tx
+
+Yinbo Zhu (1):
+      usb: dwc3: remove the call trace of USBx_GFLADJ
+
+Yoshihiro Shimoda (2):
+      usb: gadget: udc: renesas_usb3: Fix __le16 warnings
+      usb: renesas_usbhs: Fix warnings in usbhsg_recip_handler_std_set_device()
+
+ drivers/usb/cdns3/gadget.c                   |  37 ++++++---
+ drivers/usb/cdns3/host-export.h              |   1 -
+ drivers/usb/cdns3/host.c                     |   1 +
+ drivers/usb/core/config.c                    |   5 ++
+ drivers/usb/dwc3/Kconfig                     |   1 +
+ drivers/usb/dwc3/core.c                      |   3 +-
+ drivers/usb/dwc3/dwc3-pci.c                  |   2 +-
+ drivers/usb/dwc3/gadget.c                    |   6 ++
+ drivers/usb/gadget/composite.c               |   4 +
+ drivers/usb/gadget/configfs.c                | 110 +++++++++++++++++++++++++--
+ drivers/usb/gadget/udc/atmel_usba_udc.c      |   6 +-
+ drivers/usb/gadget/udc/core.c                |  11 +++
+ drivers/usb/gadget/udc/fsl_udc_core.c        |   2 +-
+ drivers/usb/gadget/udc/renesas_usb3.c        |  11 +--
+ drivers/usb/host/xhci-debugfs.c              |  24 +++---
+ drivers/usb/host/xhci-ring.c                 |   2 +
+ drivers/usb/host/xhci.c                      |  54 ++++++++++---
+ drivers/usb/misc/ldusb.c                     |  13 ++--
+ drivers/usb/mtu3/mtu3_core.c                 |   1 +
+ drivers/usb/renesas_usbhs/common.c           |  12 +--
+ drivers/usb/renesas_usbhs/mod_gadget.c       |   4 +-
+ drivers/usb/serial/whiteheat.c               |  13 +++-
+ drivers/usb/serial/whiteheat.h               |   2 +-
+ drivers/usb/storage/scsiglue.c               |  10 ---
+ drivers/usb/storage/uas.c                    |  20 -----
+ drivers/usb/usbip/vhci_tx.c                  |   3 +
+ tools/usb/usbip/libsrc/usbip_device_driver.c |   6 +-
+ 27 files changed, 267 insertions(+), 97 deletions(-)
