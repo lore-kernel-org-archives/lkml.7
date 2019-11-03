@@ -2,159 +2,58 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CCFCA9ED0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 07:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5936CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 07:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF39E205C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 07:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B9D214D8
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 07:33:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfKCHcK (ORCPT
+        id S1727514AbfKCHdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 02:32:10 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:39333 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfKCHcK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 02:32:10 -0500
-Received: by mail-il1-f198.google.com with SMTP id o11so12827830ilc.6
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 00:32:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=OxWi94xHP31q5a9KApVWh0caRuymGgMlgK/O/hLQdiM=;
-        b=Brgizx5EYO6NOae+fvwZXuygPJH+Y2B0GsVpXJ41YCZ9mg7nJBk6XFzht9+k02wzxW
-         y8BMcGB9jo52+dggMgSP4foxgAra/HOnyElPJ+FYWkAJA26+BBfB6DLhYwGV0EojbtmM
-         2VQT14NsMpM0y3dmZyFZx+1Z/Mcwi+y/XtMQHRxew51gUtnnt24ctTKzVc7DKpQ4HRt1
-         D8wfSkzT7zwzh8p/zlRVVJ7Jnlazy3mx9+qAJ/gn5mlyo6O9MWSCP3ZP0UPAVNL7V0r8
-         j7umDTpJ8bFvEwYJXjQRKckA7lL+ww7J2Z0wql5fyTs6E3YxCmCLHuAGm5rnnqXXfz2n
-         BSdQ==
-X-Gm-Message-State: APjAAAUXJ50oiyybpH96cGaA+htlElhUP5PvBTiVb2zGBPE7g9t9vBMd
-        TN7tYimRCLYh92CWtMYJPt91Ces48Q6cf3/WrvKgspO3zYyk
-X-Google-Smtp-Source: APXvYqwx8axyi1n5oNv2qIOcSdMZnOXjXYppWlnlU7QlEY9jEb/qgC3xcn5wilu8IkYhXVt7AUijeM9eL4UP8M/HfH/aw6wSSlno
+        Sun, 3 Nov 2019 02:33:36 -0500
+Received: from hn.kd.ny.adsl ([42.231.162.229]:4243 "HELO zoosbook.com"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+        id S1726522AbfKCHdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 02:33:35 -0500
+Received: from smtp.mixedthings.net ([186.250.29.122]) by asx121.turbo-inline.com with ESMTP; Sun, 03 Nov 2019 07:28:10 +0000
+Message-ID: <9E644131.E35A031F@zoosbook.com>
+Date:   Sun, 03 Nov 2019 07:22:59 +0000
+Reply-To: "zoosbook.com" <admin@zoosbook.com>
+From:   "zoosbook.com" <admin@zoosbook.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; de-DE; rv:1.7.6) Gecko/20050317 Thunderbird/1.0.2
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:626:: with SMTP id h6mr2440063jar.113.1572766328902;
- Sun, 03 Nov 2019 00:32:08 -0700 (PDT)
-Date:   Sun, 03 Nov 2019 00:32:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000595be405966c3231@google.com>
-Subject: general protection fault in j1939_priv_get_by_ndev_locked
-From:   syzbot <syzbot+feff46f1778030d14234@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kernel@pengutronix.de,
-        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
-        robin@protonic.nl, socketcan@hartkopp.net,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+To:     <linux-assembly@vger.kernel.org>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-msdos@vger.kernel.org>,
+        <linux-raid@vger.kernel.org>
+Subject: FREE Bestiality Social Network
+Content-Type: text/plain;
+        charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hello, 
 
-syzbot found the following crash on:
+Bestiality Social Networking Platform. With pictures, videos and friend
+about bestiality and zoophilia porn. 
+Here you can meet and talk with people that love zoo sex.
 
-HEAD commit:    7de08690 powerpc/bpf: Fix tail call implementation
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=178ba242e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2cc209e226c8fbbd
-dashboard link: https://syzkaller.appspot.com/bug?extid=feff46f1778030d14234
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1726e97ce00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1678e4ece00000
+Register for a free account with us today
+https://www.zoosbook.com/register
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+feff46f1778030d14234@syzkaller.appspotmail.com
+Let your animalic thoughts get alive.
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 8769 Comm: syz-executor448 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:j1939_ndev_to_priv net/can/j1939/main.c:210 [inline]
-RIP: 0010:j1939_priv_get_by_ndev_locked+0xf5/0x190 net/can/j1939/main.c:222
-Code: 03 80 3c 02 00 0f 85 ae 00 00 00 48 8b 9b 88 05 00 00 48 b8 00 00 00  
-00 00 fc ff df 48 8d bb 28 60 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75  
-7f 4c 8b a3 28 60 00 00 4d 85 e4 74 12 e8 e4 9c f4
-RSP: 0018:ffff8880949bf8e8 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff867e77c7
-RDX: 0000000000000c05 RSI: ffffffff867e77d4 RDI: 0000000000006028
-RBP: ffff8880949bf900 R08: ffff8880a879c340 R09: ffffed1012937f10
-R10: ffffed1012937f0f R11: 0000000000000003 R12: 0000000000000000
-R13: 0000000000000118 R14: dffffc0000000000 R15: 0000000000000000
-FS:  0000000000789880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f8c146c1518 CR3: 000000009fc92000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  j1939_priv_get_by_ndev net/can/j1939/main.c:234 [inline]
-  j1939_netdev_notify+0x47/0x120 net/can/j1939/main.c:344
-  notifier_call_chain+0xc2/0x230 kernel/notifier.c:95
-  __raw_notifier_call_chain kernel/notifier.c:396 [inline]
-  raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:403
-  call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1668
-  call_netdevice_notifiers_extack net/core/dev.c:1680 [inline]
-  call_netdevice_notifiers net/core/dev.c:1694 [inline]
-  rollback_registered_many+0x9b9/0xfc0 net/core/dev.c:8521
-  rollback_registered+0x109/0x1d0 net/core/dev.c:8563
-  unregister_netdevice_queue net/core/dev.c:9655 [inline]
-  unregister_netdevice_queue+0x1ee/0x2c0 net/core/dev.c:9648
-  unregister_netdevice include/linux/netdevice.h:2637 [inline]
-  __tun_detach+0xd8a/0x1040 drivers/net/tun.c:723
-  tun_detach drivers/net/tun.c:740 [inline]
-  tun_chr_close+0xe0/0x180 drivers/net/tun.c:3448
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  exit_task_work include/linux/task_work.h:22 [inline]
-  do_exit+0x904/0x2e60 kernel/exit.c:817
-  do_group_exit+0x135/0x360 kernel/exit.c:921
-  __do_sys_exit_group kernel/exit.c:932 [inline]
-  __se_sys_exit_group kernel/exit.c:930 [inline]
-  __x64_sys_exit_group+0x44/0x50 kernel/exit.c:930
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x43ee08
-Code: Bad RIP value.
-RSP: 002b:00007fff3faf5578 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043ee08
-RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
-RBP: 00000000004be608 R08: 00000000000000e7 R09: ffffffffffffffd0
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00000000006d0180 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 78c1c985ae8b77ec ]---
-RIP: 0010:j1939_ndev_to_priv net/can/j1939/main.c:210 [inline]
-RIP: 0010:j1939_priv_get_by_ndev_locked+0xf5/0x190 net/can/j1939/main.c:222
-Code: 03 80 3c 02 00 0f 85 ae 00 00 00 48 8b 9b 88 05 00 00 48 b8 00 00 00  
-00 00 fc ff df 48 8d bb 28 60 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75  
-7f 4c 8b a3 28 60 00 00 4d 85 e4 74 12 e8 e4 9c f4
-RSP: 0018:ffff8880949bf8e8 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff867e77c7
-RDX: 0000000000000c05 RSI: ffffffff867e77d4 RDI: 0000000000006028
-RBP: ffff8880949bf900 R08: ffff8880a879c340 R09: ffffed1012937f10
-R10: ffffed1012937f0f R11: 0000000000000003 R12: 0000000000000000
-R13: 0000000000000118 R14: dffffc0000000000 R15: 0000000000000000
-FS:  0000000000789880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000043edde CR3: 000000009fc92000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+After you`ll get a feeling of the things inside, please give us a nice
+review here
+https://www.scamadviser.com/check-website/zoosbook.com
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+See you inside
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+
