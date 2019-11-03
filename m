@@ -2,421 +2,159 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966D7CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 06:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CCFCA9ED0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 07:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 477A42084D
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 06:35:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p7G4fyaN"
+	by mail.kernel.org (Postfix) with ESMTP id AF39E205C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 07:32:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbfKCGfb (ORCPT
+        id S1727453AbfKCHcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 01:35:31 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34541 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfKCGfb (ORCPT
+        Sun, 3 Nov 2019 02:32:10 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:39333 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfKCHcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 01:35:31 -0500
-Received: by mail-pg1-f195.google.com with SMTP id e4so9187409pgs.1;
-        Sat, 02 Nov 2019 23:35:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jeORO5ZUt0doBbSOV8Th41chv6HfjPxHBvvQzP2DtFU=;
-        b=p7G4fyaN54oVu/0M70fNAPO3f1gs0zB2xPsyxPB9uCFTBsWwKywXwo9U+WU5+pmvHM
-         kIESnbiZfdX1wn5NEHDeE+8fxvlmoJiIq00dpz1A8NBf3lpUuS+6ePFXaubYfHnAhJT/
-         sCINDYT432NiM4gkxZdbjytzd1epdbo4rS3UUlyNp6RprWYXQc4xfre9DOfUKAmIAm3O
-         FWo5M4pxmO1WV4QVt3Rd66ndP57XABpdb1g8MxrrxxTD8Rb6CGXEcFWI0AzZfxxBL/hM
-         9+Fkb4qr2QVGpIdjVaOOpHaJU4zFxqCqMJq/zHoZALamDSohgxlQmjzX+KWg8Z2iPaxX
-         XQeQ==
+        Sun, 3 Nov 2019 02:32:10 -0500
+Received: by mail-il1-f198.google.com with SMTP id o11so12827830ilc.6
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 00:32:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jeORO5ZUt0doBbSOV8Th41chv6HfjPxHBvvQzP2DtFU=;
-        b=dXMdn6XRRA/Irbc55JnOld3xa2RM+xOAhaLwUOprqWfVB5+7wqd/cZtJielAAvPlRR
-         BXiT1KqLj5U35z/ZwSfZk9wArbVgOYO+VoyeaoyLtU77xjZJGHz5xdyB6ITXO7igMshH
-         AbV59sXezdzPPlMQHxrTWWAfgUcp4jbi9tLJnYLQXPmAaklClLotI7Gvg61q1wqf+LuD
-         nloD9hRB+/zVAAsyCns1uEU0Cxhr2SCXs8PgAbqNWhniPvRcghw1862IlnymfeGST1WU
-         P5QPlWnoO2ATxLUwzWkXhXiqF+aFfpsCSiwKeXANv8cKvpldIwk/hZYVd2RzztPTiEBk
-         Im+g==
-X-Gm-Message-State: APjAAAXEWoEWMNbCN5/j2wDksIc0QyeVJh92FrCcsvB81pXiMuQhxUEw
-        17rmN2/WWYIhtMQ6gTG4Z/s=
-X-Google-Smtp-Source: APXvYqx271aN3RuZ2nR+1q03x5UtMuyA+O3itqVgVpWzZDZVn8g3e3g4g5rgkuZcPUEpPZPlB5Q4tQ==
-X-Received: by 2002:a17:90a:741:: with SMTP id s1mr23133821pje.122.1572762930141;
-        Sat, 02 Nov 2019 23:35:30 -0700 (PDT)
-Received: from workstation-kernel-dev ([139.5.252.170])
-        by smtp.gmail.com with ESMTPSA id w27sm11766547pgc.20.2019.11.02.23.35.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Nov 2019 23:35:29 -0700 (PDT)
-Date:   Sun, 3 Nov 2019 12:05:22 +0530
-From:   Amol Grover <frextrite@gmail.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>, rcu@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        madhuparnabhowmik04@gmail.com, tranmanphong@gmail.com
-Subject: Re: [PATCH] Documentation: RCU: rcu_dereference: Convert to
- rcu_dereference.rst
-Message-ID: <20191103063522.GA828@workstation-kernel-dev>
-References: <20191102080107.GA3066@workstation-kernel-dev>
- <20191102165734.GS20975@paulmck-ThinkPad-P72>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=OxWi94xHP31q5a9KApVWh0caRuymGgMlgK/O/hLQdiM=;
+        b=Brgizx5EYO6NOae+fvwZXuygPJH+Y2B0GsVpXJ41YCZ9mg7nJBk6XFzht9+k02wzxW
+         y8BMcGB9jo52+dggMgSP4foxgAra/HOnyElPJ+FYWkAJA26+BBfB6DLhYwGV0EojbtmM
+         2VQT14NsMpM0y3dmZyFZx+1Z/Mcwi+y/XtMQHRxew51gUtnnt24ctTKzVc7DKpQ4HRt1
+         D8wfSkzT7zwzh8p/zlRVVJ7Jnlazy3mx9+qAJ/gn5mlyo6O9MWSCP3ZP0UPAVNL7V0r8
+         j7umDTpJ8bFvEwYJXjQRKckA7lL+ww7J2Z0wql5fyTs6E3YxCmCLHuAGm5rnnqXXfz2n
+         BSdQ==
+X-Gm-Message-State: APjAAAUXJ50oiyybpH96cGaA+htlElhUP5PvBTiVb2zGBPE7g9t9vBMd
+        TN7tYimRCLYh92CWtMYJPt91Ces48Q6cf3/WrvKgspO3zYyk
+X-Google-Smtp-Source: APXvYqwx8axyi1n5oNv2qIOcSdMZnOXjXYppWlnlU7QlEY9jEb/qgC3xcn5wilu8IkYhXVt7AUijeM9eL4UP8M/HfH/aw6wSSlno
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191102165734.GS20975@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a05:6638:626:: with SMTP id h6mr2440063jar.113.1572766328902;
+ Sun, 03 Nov 2019 00:32:08 -0700 (PDT)
+Date:   Sun, 03 Nov 2019 00:32:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000595be405966c3231@google.com>
+Subject: general protection fault in j1939_priv_get_by_ndev_locked
+From:   syzbot <syzbot+feff46f1778030d14234@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kernel@pengutronix.de,
+        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
+        robin@protonic.nl, socketcan@hartkopp.net,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 02, 2019 at 09:57:34AM -0700, Paul E. McKenney wrote:
-> On Sat, Nov 02, 2019 at 01:31:07PM +0530, Amol Grover wrote:
-> > This patch converts rcu_dereference.txt to rcu_dereference.rst and
-> > adds it to index.rst
-> > 
-> > Signed-off-by: Amol Grover <frextrite@gmail.com>
-> 
-> Queued and pushed for review and testing.  Assuming all goes well, I will
-> push it for the v5.6 merge window.
-> 
-> Could you please take a look at the similar commits from Madhuparna and
-> Phong?  No time like the present to also gain experience with review
-> and testing!
-> 
-> 							Thanx, Paul
+Hello,
 
-Sure thing Paul!
+syzbot found the following crash on:
 
-Thank you
-Amol
+HEAD commit:    7de08690 powerpc/bpf: Fix tail call implementation
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=178ba242e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2cc209e226c8fbbd
+dashboard link: https://syzkaller.appspot.com/bug?extid=feff46f1778030d14234
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1726e97ce00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1678e4ece00000
 
-> 
-> > ---
-> >  Documentation/RCU/index.rst                   |  1 +
-> >  ...cu_dereference.txt => rcu_dereference.rst} | 75 ++++++++++---------
-> >  2 files changed, 42 insertions(+), 34 deletions(-)
-> >  rename Documentation/RCU/{rcu_dereference.txt => rcu_dereference.rst} (88%)
-> > 
-> > diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
-> > index 627128c230dc..585f3d8abd76 100644
-> > --- a/Documentation/RCU/index.rst
-> > +++ b/Documentation/RCU/index.rst
-> > @@ -8,6 +8,7 @@ RCU concepts
-> >     :maxdepth: 3
-> >  
-> >     arrayRCU
-> > +   rcu_dereference
-> >     rcu
-> >     listRCU
-> >     NMI-RCU
-> > diff --git a/Documentation/RCU/rcu_dereference.txt b/Documentation/RCU/rcu_dereference.rst
-> > similarity index 88%
-> > rename from Documentation/RCU/rcu_dereference.txt
-> > rename to Documentation/RCU/rcu_dereference.rst
-> > index bf699e8cfc75..c9667eb0d444 100644
-> > --- a/Documentation/RCU/rcu_dereference.txt
-> > +++ b/Documentation/RCU/rcu_dereference.rst
-> > @@ -1,4 +1,7 @@
-> > +.. _rcu_dereference_doc:
-> > +
-> >  PROPER CARE AND FEEDING OF RETURN VALUES FROM rcu_dereference()
-> > +===============================================================
-> >  
-> >  Most of the time, you can use values from rcu_dereference() or one of
-> >  the similar primitives without worries.  Dereferencing (prefix "*"),
-> > @@ -8,7 +11,7 @@ subtraction of constants, and casts all work quite naturally and safely.
-> >  It is nevertheless possible to get into trouble with other operations.
-> >  Follow these rules to keep your RCU code working properly:
-> >  
-> > -o	You must use one of the rcu_dereference() family of primitives
-> > +-	You must use one of the rcu_dereference() family of primitives
-> >  	to load an RCU-protected pointer, otherwise CONFIG_PROVE_RCU
-> >  	will complain.  Worse yet, your code can see random memory-corruption
-> >  	bugs due to games that compilers and DEC Alpha can play.
-> > @@ -25,24 +28,24 @@ o	You must use one of the rcu_dereference() family of primitives
-> >  	for an example where the compiler can in fact deduce the exact
-> >  	value of the pointer, and thus cause misordering.
-> >  
-> > -o	You are only permitted to use rcu_dereference on pointer values.
-> > +-	You are only permitted to use rcu_dereference on pointer values.
-> >  	The compiler simply knows too much about integral values to
-> >  	trust it to carry dependencies through integer operations.
-> >  	There are a very few exceptions, namely that you can temporarily
-> >  	cast the pointer to uintptr_t in order to:
-> >  
-> > -	o	Set bits and clear bits down in the must-be-zero low-order
-> > +	-	Set bits and clear bits down in the must-be-zero low-order
-> >  		bits of that pointer.  This clearly means that the pointer
-> >  		must have alignment constraints, for example, this does
-> >  		-not- work in general for char* pointers.
-> >  
-> > -	o	XOR bits to translate pointers, as is done in some
-> > +	-	XOR bits to translate pointers, as is done in some
-> >  		classic buddy-allocator algorithms.
-> >  
-> >  	It is important to cast the value back to pointer before
-> >  	doing much of anything else with it.
-> >  
-> > -o	Avoid cancellation when using the "+" and "-" infix arithmetic
-> > +-	Avoid cancellation when using the "+" and "-" infix arithmetic
-> >  	operators.  For example, for a given variable "x", avoid
-> >  	"(x-(uintptr_t)x)" for char* pointers.	The compiler is within its
-> >  	rights to substitute zero for this sort of expression, so that
-> > @@ -54,16 +57,16 @@ o	Avoid cancellation when using the "+" and "-" infix arithmetic
-> >  	"p+a-b" is safe because its value still necessarily depends on
-> >  	the rcu_dereference(), thus maintaining proper ordering.
-> >  
-> > -o	If you are using RCU to protect JITed functions, so that the
-> > +-	If you are using RCU to protect JITed functions, so that the
-> >  	"()" function-invocation operator is applied to a value obtained
-> >  	(directly or indirectly) from rcu_dereference(), you may need to
-> >  	interact directly with the hardware to flush instruction caches.
-> >  	This issue arises on some systems when a newly JITed function is
-> >  	using the same memory that was used by an earlier JITed function.
-> >  
-> > -o	Do not use the results from relational operators ("==", "!=",
-> > +-	Do not use the results from relational operators ("==", "!=",
-> >  	">", ">=", "<", or "<=") when dereferencing.  For example,
-> > -	the following (quite strange) code is buggy:
-> > +	the following (quite strange) code is buggy::
-> >  
-> >  		int *p;
-> >  		int *q;
-> > @@ -81,11 +84,11 @@ o	Do not use the results from relational operators ("==", "!=",
-> >  	after such branches, but can speculate loads, which can again
-> >  	result in misordering bugs.
-> >  
-> > -o	Be very careful about comparing pointers obtained from
-> > +-	Be very careful about comparing pointers obtained from
-> >  	rcu_dereference() against non-NULL values.  As Linus Torvalds
-> >  	explained, if the two pointers are equal, the compiler could
-> >  	substitute the pointer you are comparing against for the pointer
-> > -	obtained from rcu_dereference().  For example:
-> > +	obtained from rcu_dereference().  For example::
-> >  
-> >  		p = rcu_dereference(gp);
-> >  		if (p == &default_struct)
-> > @@ -93,7 +96,7 @@ o	Be very careful about comparing pointers obtained from
-> >  
-> >  	Because the compiler now knows that the value of "p" is exactly
-> >  	the address of the variable "default_struct", it is free to
-> > -	transform this code into the following:
-> > +	transform this code into the following::
-> >  
-> >  		p = rcu_dereference(gp);
-> >  		if (p == &default_struct)
-> > @@ -105,14 +108,14 @@ o	Be very careful about comparing pointers obtained from
-> >  
-> >  	However, comparisons are OK in the following cases:
-> >  
-> > -	o	The comparison was against the NULL pointer.  If the
-> > +	-	The comparison was against the NULL pointer.  If the
-> >  		compiler knows that the pointer is NULL, you had better
-> >  		not be dereferencing it anyway.  If the comparison is
-> >  		non-equal, the compiler is none the wiser.  Therefore,
-> >  		it is safe to compare pointers from rcu_dereference()
-> >  		against NULL pointers.
-> >  
-> > -	o	The pointer is never dereferenced after being compared.
-> > +	-	The pointer is never dereferenced after being compared.
-> >  		Since there are no subsequent dereferences, the compiler
-> >  		cannot use anything it learned from the comparison
-> >  		to reorder the non-existent subsequent dereferences.
-> > @@ -124,31 +127,31 @@ o	Be very careful about comparing pointers obtained from
-> >  		dereferenced, rcu_access_pointer() should be used in place
-> >  		of rcu_dereference().
-> >  
-> > -	o	The comparison is against a pointer that references memory
-> > +	-	The comparison is against a pointer that references memory
-> >  		that was initialized "a long time ago."  The reason
-> >  		this is safe is that even if misordering occurs, the
-> >  		misordering will not affect the accesses that follow
-> >  		the comparison.  So exactly how long ago is "a long
-> >  		time ago"?  Here are some possibilities:
-> >  
-> > -		o	Compile time.
-> > +		-	Compile time.
-> >  
-> > -		o	Boot time.
-> > +		-	Boot time.
-> >  
-> > -		o	Module-init time for module code.
-> > +		-	Module-init time for module code.
-> >  
-> > -		o	Prior to kthread creation for kthread code.
-> > +		-	Prior to kthread creation for kthread code.
-> >  
-> > -		o	During some prior acquisition of the lock that
-> > +		-	During some prior acquisition of the lock that
-> >  			we now hold.
-> >  
-> > -		o	Before mod_timer() time for a timer handler.
-> > +		-	Before mod_timer() time for a timer handler.
-> >  
-> >  		There are many other possibilities involving the Linux
-> >  		kernel's wide array of primitives that cause code to
-> >  		be invoked at a later time.
-> >  
-> > -	o	The pointer being compared against also came from
-> > +	-	The pointer being compared against also came from
-> >  		rcu_dereference().  In this case, both pointers depend
-> >  		on one rcu_dereference() or another, so you get proper
-> >  		ordering either way.
-> > @@ -159,13 +162,13 @@ o	Be very careful about comparing pointers obtained from
-> >  		of such an RCU usage bug is shown in the section titled
-> >  		"EXAMPLE OF AMPLIFIED RCU-USAGE BUG".
-> >  
-> > -	o	All of the accesses following the comparison are stores,
-> > +	-	All of the accesses following the comparison are stores,
-> >  		so that a control dependency preserves the needed ordering.
-> >  		That said, it is easy to get control dependencies wrong.
-> >  		Please see the "CONTROL DEPENDENCIES" section of
-> >  		Documentation/memory-barriers.txt for more details.
-> >  
-> > -	o	The pointers are not equal -and- the compiler does
-> > +	-	The pointers are not equal -and- the compiler does
-> >  		not have enough information to deduce the value of the
-> >  		pointer.  Note that the volatile cast in rcu_dereference()
-> >  		will normally prevent the compiler from knowing too much.
-> > @@ -175,7 +178,7 @@ o	Be very careful about comparing pointers obtained from
-> >  		comparison will provide exactly the information that the
-> >  		compiler needs to deduce the value of the pointer.
-> >  
-> > -o	Disable any value-speculation optimizations that your compiler
-> > +-	Disable any value-speculation optimizations that your compiler
-> >  	might provide, especially if you are making use of feedback-based
-> >  	optimizations that take data collected from prior runs.  Such
-> >  	value-speculation optimizations reorder operations by design.
-> > @@ -188,11 +191,12 @@ o	Disable any value-speculation optimizations that your compiler
-> >  
-> >  
-> >  EXAMPLE OF AMPLIFIED RCU-USAGE BUG
-> > +----------------------------------
-> >  
-> >  Because updaters can run concurrently with RCU readers, RCU readers can
-> >  see stale and/or inconsistent values.  If RCU readers need fresh or
-> >  consistent values, which they sometimes do, they need to take proper
-> > -precautions.  To see this, consider the following code fragment:
-> > +precautions.  To see this, consider the following code fragment::
-> >  
-> >  	struct foo {
-> >  		int a;
-> > @@ -244,7 +248,7 @@ to some reordering from the compiler and CPUs is beside the point.
-> >  
-> >  But suppose that the reader needs a consistent view?
-> >  
-> > -Then one approach is to use locking, for example, as follows:
-> > +Then one approach is to use locking, for example, as follows::
-> >  
-> >  	struct foo {
-> >  		int a;
-> > @@ -299,6 +303,7 @@ As always, use the right tool for the job!
-> >  
-> >  
-> >  EXAMPLE WHERE THE COMPILER KNOWS TOO MUCH
-> > +-----------------------------------------
-> >  
-> >  If a pointer obtained from rcu_dereference() compares not-equal to some
-> >  other pointer, the compiler normally has no clue what the value of the
-> > @@ -308,7 +313,7 @@ guarantees that RCU depends on.  And the volatile cast in rcu_dereference()
-> >  should prevent the compiler from guessing the value.
-> >  
-> >  But without rcu_dereference(), the compiler knows more than you might
-> > -expect.  Consider the following code fragment:
-> > +expect.  Consider the following code fragment::
-> >  
-> >  	struct foo {
-> >  		int a;
-> > @@ -354,6 +359,7 @@ dereference the resulting pointer.
-> >  
-> >  
-> >  WHICH MEMBER OF THE rcu_dereference() FAMILY SHOULD YOU USE?
-> > +------------------------------------------------------------
-> >  
-> >  First, please avoid using rcu_dereference_raw() and also please avoid
-> >  using rcu_dereference_check() and rcu_dereference_protected() with a
-> > @@ -370,7 +376,7 @@ member of the rcu_dereference() to use in various situations:
-> >  
-> >  2.	If the access might be within an RCU read-side critical section
-> >  	on the one hand, or protected by (say) my_lock on the other,
-> > -	use rcu_dereference_check(), for example:
-> > +	use rcu_dereference_check(), for example::
-> >  
-> >  		p1 = rcu_dereference_check(p->rcu_protected_pointer,
-> >  					   lockdep_is_held(&my_lock));
-> > @@ -378,14 +384,14 @@ member of the rcu_dereference() to use in various situations:
-> >  
-> >  3.	If the access might be within an RCU read-side critical section
-> >  	on the one hand, or protected by either my_lock or your_lock on
-> > -	the other, again use rcu_dereference_check(), for example:
-> > +	the other, again use rcu_dereference_check(), for example::
-> >  
-> >  		p1 = rcu_dereference_check(p->rcu_protected_pointer,
-> >  					   lockdep_is_held(&my_lock) ||
-> >  					   lockdep_is_held(&your_lock));
-> >  
-> >  4.	If the access is on the update side, so that it is always protected
-> > -	by my_lock, use rcu_dereference_protected():
-> > +	by my_lock, use rcu_dereference_protected()::
-> >  
-> >  		p1 = rcu_dereference_protected(p->rcu_protected_pointer,
-> >  					       lockdep_is_held(&my_lock));
-> > @@ -410,18 +416,19 @@ member of the rcu_dereference() to use in various situations:
-> >  
-> >  
-> >  SPARSE CHECKING OF RCU-PROTECTED POINTERS
-> > +-----------------------------------------
-> >  
-> >  The sparse static-analysis tool checks for direct access to RCU-protected
-> >  pointers, which can result in "interesting" bugs due to compiler
-> >  optimizations involving invented loads and perhaps also load tearing.
-> > -For example, suppose someone mistakenly does something like this:
-> > +For example, suppose someone mistakenly does something like this::
-> >  
-> >  	p = q->rcu_protected_pointer;
-> >  	do_something_with(p->a);
-> >  	do_something_else_with(p->b);
-> >  
-> >  If register pressure is high, the compiler might optimize "p" out
-> > -of existence, transforming the code to something like this:
-> > +of existence, transforming the code to something like this::
-> >  
-> >  	do_something_with(q->rcu_protected_pointer->a);
-> >  	do_something_else_with(q->rcu_protected_pointer->b);
-> > @@ -435,7 +442,7 @@ Load tearing could of course result in dereferencing a mashup of a pair
-> >  of pointers, which also might fatally disappoint your code.
-> >  
-> >  These problems could have been avoided simply by making the code instead
-> > -read as follows:
-> > +read as follows::
-> >  
-> >  	p = rcu_dereference(q->rcu_protected_pointer);
-> >  	do_something_with(p->a);
-> > @@ -448,7 +455,7 @@ or as a formal parameter, with "__rcu", which tells sparse to complain if
-> >  this pointer is accessed directly.  It will also cause sparse to complain
-> >  if a pointer not marked with "__rcu" is accessed using rcu_dereference()
-> >  and friends.  For example, ->rcu_protected_pointer might be declared as
-> > -follows:
-> > +follows::
-> >  
-> >  	struct foo __rcu *rcu_protected_pointer;
-> >  
-> > -- 
-> > 2.20.1
-> > 
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+feff46f1778030d14234@syzkaller.appspotmail.com
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 8769 Comm: syz-executor448 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:j1939_ndev_to_priv net/can/j1939/main.c:210 [inline]
+RIP: 0010:j1939_priv_get_by_ndev_locked+0xf5/0x190 net/can/j1939/main.c:222
+Code: 03 80 3c 02 00 0f 85 ae 00 00 00 48 8b 9b 88 05 00 00 48 b8 00 00 00  
+00 00 fc ff df 48 8d bb 28 60 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75  
+7f 4c 8b a3 28 60 00 00 4d 85 e4 74 12 e8 e4 9c f4
+RSP: 0018:ffff8880949bf8e8 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff867e77c7
+RDX: 0000000000000c05 RSI: ffffffff867e77d4 RDI: 0000000000006028
+RBP: ffff8880949bf900 R08: ffff8880a879c340 R09: ffffed1012937f10
+R10: ffffed1012937f0f R11: 0000000000000003 R12: 0000000000000000
+R13: 0000000000000118 R14: dffffc0000000000 R15: 0000000000000000
+FS:  0000000000789880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f8c146c1518 CR3: 000000009fc92000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  j1939_priv_get_by_ndev net/can/j1939/main.c:234 [inline]
+  j1939_netdev_notify+0x47/0x120 net/can/j1939/main.c:344
+  notifier_call_chain+0xc2/0x230 kernel/notifier.c:95
+  __raw_notifier_call_chain kernel/notifier.c:396 [inline]
+  raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:403
+  call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1668
+  call_netdevice_notifiers_extack net/core/dev.c:1680 [inline]
+  call_netdevice_notifiers net/core/dev.c:1694 [inline]
+  rollback_registered_many+0x9b9/0xfc0 net/core/dev.c:8521
+  rollback_registered+0x109/0x1d0 net/core/dev.c:8563
+  unregister_netdevice_queue net/core/dev.c:9655 [inline]
+  unregister_netdevice_queue+0x1ee/0x2c0 net/core/dev.c:9648
+  unregister_netdevice include/linux/netdevice.h:2637 [inline]
+  __tun_detach+0xd8a/0x1040 drivers/net/tun.c:723
+  tun_detach drivers/net/tun.c:740 [inline]
+  tun_chr_close+0xe0/0x180 drivers/net/tun.c:3448
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x904/0x2e60 kernel/exit.c:817
+  do_group_exit+0x135/0x360 kernel/exit.c:921
+  __do_sys_exit_group kernel/exit.c:932 [inline]
+  __se_sys_exit_group kernel/exit.c:930 [inline]
+  __x64_sys_exit_group+0x44/0x50 kernel/exit.c:930
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x43ee08
+Code: Bad RIP value.
+RSP: 002b:00007fff3faf5578 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043ee08
+RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+RBP: 00000000004be608 R08: 00000000000000e7 R09: ffffffffffffffd0
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00000000006d0180 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 78c1c985ae8b77ec ]---
+RIP: 0010:j1939_ndev_to_priv net/can/j1939/main.c:210 [inline]
+RIP: 0010:j1939_priv_get_by_ndev_locked+0xf5/0x190 net/can/j1939/main.c:222
+Code: 03 80 3c 02 00 0f 85 ae 00 00 00 48 8b 9b 88 05 00 00 48 b8 00 00 00  
+00 00 fc ff df 48 8d bb 28 60 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75  
+7f 4c 8b a3 28 60 00 00 4d 85 e4 74 12 e8 e4 9c f4
+RSP: 0018:ffff8880949bf8e8 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff867e77c7
+RDX: 0000000000000c05 RSI: ffffffff867e77d4 RDI: 0000000000006028
+RBP: ffff8880949bf900 R08: ffff8880a879c340 R09: ffffed1012937f10
+R10: ffffed1012937f0f R11: 0000000000000003 R12: 0000000000000000
+R13: 0000000000000118 R14: dffffc0000000000 R15: 0000000000000000
+FS:  0000000000789880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000043edde CR3: 000000009fc92000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
