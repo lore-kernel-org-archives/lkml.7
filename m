@@ -2,100 +2,102 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF81CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 12:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF835CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 12:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73CBA20842
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 12:37:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="k94a7PKg"
+	by mail.kernel.org (Postfix) with ESMTP id 7D3EB20842
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 12:42:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572784927;
+	bh=xbgHsJBJRvoxAQ7KVYp/h1DOPwN2mmCDsuUBaPIhuf0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pew00n/JXHZEJwW275uLsz3IjubAmMjFnzCo8uan87/dg0HbAmMiJlThCPbZTI7Q2
+	 wlP28m0DSVV7wZnvsOIQsUBNgIdICniW1uT+WVtDJzgqRWaFVMmM2D2G2mNuccytJa
+	 i/LFYpb88qZVnCyk8eaea7oSrjeeKB50OHLqLCKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbfKCMhq (ORCPT
+        id S1727611AbfKCMmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 07:37:46 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:48260 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727377AbfKCMhp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 07:37:45 -0500
-Received: from grover.flets-west.jp (softbank126021098169.bbtec.net [126.21.98.169]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id xA3CaIVC018623;
-        Sun, 3 Nov 2019 21:36:18 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xA3CaIVC018623
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1572784579;
-        bh=iCIrgjy/jBJIf7jd88C0TplYGpd505IJ9u3iionPOJc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=k94a7PKgsuhGwzrYW+HBq+d1x8NxPSysqFdJPm243dZ4BqqhP0dVDEZ0UtIFzcnqT
-         xEqRRE3szsW3yOb82Kc+ne5P2W+rFpq3a6uLw0feK2WsLlWZmoa/3s/M1QMgWUmbSX
-         f+w8mATLjKjscOy0aV6inAfVfJcsM7vlfUobBihxLdvtK2M6eKM4Rau8UcGqq/vHhc
-         sZeS5Elo3QaFRcvLNxyfzLMmBQSdlOCUpMbUZx36H0y5XD12krQKATfIbyZxlbgMVp
-         DsQfTYH2QMzY2WQZDEsovfM9aYvaAdoaV6VlWpQ8cLG+1nvWqsbaDONTDVTtSb/KwF
-         c93WuDR7Jvt2w==
-X-Nifty-SrcIP: [126.21.98.169]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        David Hildenbrand <david@redhat.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Steve Capper <steve.capper@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yu Zhao <yuzhao@google.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: mm: simplify the page end calculation in __create_pgd_mapping()
-Date:   Sun,  3 Nov 2019 21:35:58 +0900
-Message-Id: <20191103123559.8866-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 3 Nov 2019 07:42:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52220 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727377AbfKCMmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 07:42:04 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F4A32080F;
+        Sun,  3 Nov 2019 12:42:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572784923;
+        bh=xbgHsJBJRvoxAQ7KVYp/h1DOPwN2mmCDsuUBaPIhuf0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mF2mfMyfseqyne4SCDmzGdBzWYPpkcIoSgPZRVnZz9wjd9L3pQc9Y8EhfHVqFBVhF
+         jgi9RVkJcqDkt6VwMyDk6IuFHp1cdBEjCdtgp70+DMZbyqHJoU8HePyDqflDbMCYkL
+         gQ0WbiZxk/B5tsnMrSBhfJV1LROvcrgRK6b4l2nI=
+Date:   Sun, 3 Nov 2019 13:42:01 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     hui yang <yanghui.def@gmail.com>
+Cc:     balbi@kernel.org, mirq-linux@rere.qmqm.pl,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] USB(u_serial.c): it has a NULL point
+Message-ID: <20191103124201.GB619218@kroah.com>
+References: <1572749044-6091-1-git-send-email-yanghui.def@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572749044-6091-1-git-send-email-yanghui.def@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calculate the page-aligned end address more simply.
+On Sun, Nov 03, 2019 at 10:44:04AM +0800, hui yang wrote:
+> From: YangHui <yanghui.def@gmail.com>
+> 
+> Unable to handle kernel NULL pointer dereference at virtual address 000002a0
+> Kernel BUG at tty_wakeup+0x18/0x8c
+> [<0000000095135e9d>] tty_wakeup+0x18/0x8c
+> [<00000000c35f19e4>] gs_start_io+0xc8/0x158
+> [<00000000b11b184e>] gserial_connect+0xd0/0x174
+> [<00000000642201de>] acm_set_alt+0x70/0x180
+> [<00000000a9d38e8b>] composite_setup+0x1848/0x1a7c
+> [<0000000072c88781>] android_setup+0x1ec/0x1f4
+> [<000000004c0127a5>] msm_udc_irq+0x8d0/0xc0c
+> [<00000000f8bb9acf>] __handle_irq_event_percpu+0x74/0x294
+> [<00000000afd57256>] handle_irq_event+0x60/0xc8
+> [<0000000076719b24>] handle_fasteoi_irq+0xc8/0x1c4
+> [<00000000421f3d87>] generic_handle_irq+0x34/0x4c
+> [<00000000b2f2d343>] __handle_domain_irq+0x6c/0xbc
+> [<00000000c74325e8>] gic_handle_irq+0x6c/0xe0
+> yes,we can see the port->port.tty==NULL, so system crashed
+> 
+> Signed-off-by: YangHui <yanghui.def@gmail.com>
+> ---
+>  drivers/usb/gadget/function/u_serial.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
+> index 65f634e..a1c2ac2 100644
+> --- a/drivers/usb/gadget/function/u_serial.c
+> +++ b/drivers/usb/gadget/function/u_serial.c
+> @@ -562,6 +562,8 @@ static int gs_start_io(struct gs_port *port)
+>  
+>  	/* unblock any pending writes into our circular buffer */
+>  	if (started) {
+> +		if (port->port.tty == NULL)
+> +			return -EIO;
 
-The local variable, "length" is unneeded.
+How can this happen?  Shouldn't this be handled earlier?
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+If not, can you document this how this can be true and what should be
+done about it?
 
- arch/arm64/mm/mmu.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+thanks,
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 60c929f3683b..a9f541912289 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -338,7 +338,7 @@ static void __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
- 				 phys_addr_t (*pgtable_alloc)(int),
- 				 int flags)
- {
--	unsigned long addr, length, end, next;
-+	unsigned long addr, end, next;
- 	pgd_t *pgdp = pgd_offset_raw(pgdir, virt);
- 
- 	/*
-@@ -350,9 +350,8 @@ static void __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
- 
- 	phys &= PAGE_MASK;
- 	addr = virt & PAGE_MASK;
--	length = PAGE_ALIGN(size + (virt & ~PAGE_MASK));
-+	end = PAGE_ALIGN(virt + size);
- 
--	end = addr + length;
- 	do {
- 		next = pgd_addr_end(addr, end);
- 		alloc_init_pud(pgdp, addr, next, phys, prot, pgtable_alloc,
--- 
-2.17.1
-
+greg k-h
