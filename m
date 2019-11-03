@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F4CCA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 551E5CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B908020679
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2359F20679
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:40:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k2UFyBNO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YqhpuaUX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfKCLkT (ORCPT
+        id S1727761AbfKCLk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 06:40:19 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:37826 "EHLO
+        Sun, 3 Nov 2019 06:40:26 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:37838 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727425AbfKCLkS (ORCPT
+        with ESMTP id S1727710AbfKCLkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 06:40:18 -0500
+        Sun, 3 Nov 2019 06:40:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=XkmRPUeClc7nYwmMTVch/YYfTYfzG+tL2jIbHBdAbug=; b=k2UFyBNO9lQmQ4PtZ2UmuS0oIa
-        waVp7M57NalvnM06boakfBuF48Dlke19XeUxonB7qd/6mYtMSgl06r0xfmFDoaEl0mkF7VpBX0gpe
-        b5eAJxNGLAFiANN8RcQ40207KGf5bdDgMWXhHavSU5kF+uQjlc0wFqaPAiyX8Y235awfwBMrR3SsB
-        5r0/FVqH5HaNDfvQgJdmAOzIMVB1EDdiFbo7v7Z/6fkHQxd/70ZIRZk6tlH3GVi0FO+U+P3RaOGhG
-        raJxplfEwD2UiDKjfmm19BiPyAO04Vv38XYh+WiT6IrIJ2To00WIGJvrVV611QeTq8hI+4YkTlxZK
-        QXpvJMpg==;
+        bh=PhFqymQzLwUkpt9aZptmbnpE1l5x6Ym+qjsu62LkOys=; b=YqhpuaUXXDwH++xOSzBJBtTcgs
+        MbPMHVwV5xt7v4HpI9ENS8XABr+chG9i2Rprb+FFRQvxyr1E24KfJIHrbiv/Yp/JEK5mGi+dUEM+q
+        GIAEbwAQVYPyKkfuY7H3XQqG/xLKCfzjqt5+Fc4b/3MvUgD0T2th3VIvgON50cArweDmJHOHSHmwG
+        smIpHSu7EvYEBAJzjhxejMymHQtTNxJCMzhWokD2l/PqrXD0EWRnDH0vJYF6v1pJB5TsI6HlVlKqB
+        K05jsYeeZZQogyyFbkAlNrllPnjlJaBbmn0i489zpyUAj/uYJN9yP66hMu5eadgtyiAwXcl65CAl6
+        /1uweMMw==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iREEz-0007q5-Lf; Sun, 03 Nov 2019 11:40:17 +0000
+        id 1iREEz-0007qS-PI; Sun, 03 Nov 2019 11:40:17 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+Cc:     Matthew Wilcox <willy@infradead.org>,
         Cong Wang <xiyou.wangcong@gmail.com>
-Subject: [PATCH 2/5] idr: Fix idr_get_next_ul race with idr_remove
-Date:   Sun,  3 Nov 2019 03:40:08 -0800
-Message-Id: <20191103114012.30027-3-willy@infradead.org>
+Subject: [PATCH 4/5] idr: Handle integer overflow correctly
+Date:   Sun,  3 Nov 2019 03:40:11 -0800
+Message-Id: <20191103114012.30027-6-willy@infradead.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191103114012.30027-1-willy@infradead.org>
 References: <20191103114012.30027-1-willy@infradead.org>
@@ -54,92 +54,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+If there is an entry at INT_MAX then idr_for_each_entry() will increment
+id after handling it.  This is undefined behaviour, and is caught by
+UBSAN.  Adding 1U to id forces the operation to be carried out as an
+unsigned addition which (when assigned to id) will result in INT_MIN.
+Since there is never an entry stored at INT_MIN, idr_get_next() will
+return NULL, ending the loop as expected.
 
-Commit 5c089fd0c734 ("idr: Fix idr_get_next race with idr_remove")
-neglected to fix idr_get_next_ul().  As far as I can tell, nobody's
-actually using this interface under the RCU read lock, but fix it now
-before anybody decides to use it.
-
-Fixes: 5c089fd0c734 ("idr: Fix idr_get_next race with idr_remove")
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Signed-off-by: Matthew Wilcox <willy@infradead.org>
 ---
- lib/idr.c | 31 +++++++++++--------------------
- 1 file changed, 11 insertions(+), 20 deletions(-)
+ include/linux/idr.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/idr.c b/lib/idr.c
-index 66a374892482..c2cf2c52bbde 100644
---- a/lib/idr.c
-+++ b/lib/idr.c
-@@ -215,7 +215,7 @@ int idr_for_each(const struct idr *idr,
- EXPORT_SYMBOL(idr_for_each);
- 
- /**
-- * idr_get_next() - Find next populated entry.
-+ * idr_get_next_ul() - Find next populated entry.
-  * @idr: IDR handle.
-  * @nextid: Pointer to an ID.
-  *
-@@ -224,7 +224,7 @@ EXPORT_SYMBOL(idr_for_each);
-  * to the ID of the found value.  To use in a loop, the value pointed to by
-  * nextid must be incremented by the user.
+diff --git a/include/linux/idr.h b/include/linux/idr.h
+index ee7abae143d3..dc09bd646bcb 100644
+--- a/include/linux/idr.h
++++ b/include/linux/idr.h
+@@ -185,7 +185,7 @@ static inline void idr_preload_end(void)
+  * is convenient for a "not found" value.
   */
--void *idr_get_next(struct idr *idr, int *nextid)
-+void *idr_get_next_ul(struct idr *idr, unsigned long *nextid)
- {
- 	struct radix_tree_iter iter;
- 	void __rcu **slot;
-@@ -245,18 +245,14 @@ void *idr_get_next(struct idr *idr, int *nextid)
- 	}
- 	if (!slot)
- 		return NULL;
--	id = iter.index + base;
--
--	if (WARN_ON_ONCE(id > INT_MAX))
--		return NULL;
- 
--	*nextid = id;
-+	*nextid = iter.index + base;
- 	return entry;
- }
--EXPORT_SYMBOL(idr_get_next);
-+EXPORT_SYMBOL(idr_get_next_ul);
+ #define idr_for_each_entry(idr, entry, id)			\
+-	for (id = 0; ((entry) = idr_get_next(idr, &(id))) != NULL; ++id)
++	for (id = 0; ((entry) = idr_get_next(idr, &(id))) != NULL; id += 1U)
  
  /**
-- * idr_get_next_ul() - Find next populated entry.
-+ * idr_get_next() - Find next populated entry.
-  * @idr: IDR handle.
-  * @nextid: Pointer to an ID.
-  *
-@@ -265,22 +261,17 @@ EXPORT_SYMBOL(idr_get_next);
-  * to the ID of the found value.  To use in a loop, the value pointed to by
-  * nextid must be incremented by the user.
-  */
--void *idr_get_next_ul(struct idr *idr, unsigned long *nextid)
-+void *idr_get_next(struct idr *idr, int *nextid)
- {
--	struct radix_tree_iter iter;
--	void __rcu **slot;
--	unsigned long base = idr->idr_base;
- 	unsigned long id = *nextid;
-+	void *entry = idr_get_next_ul(idr, &id);
- 
--	id = (id < base) ? 0 : id - base;
--	slot = radix_tree_iter_find(&idr->idr_rt, &iter, id);
--	if (!slot)
-+	if (WARN_ON_ONCE(id > INT_MAX))
- 		return NULL;
--
--	*nextid = iter.index + base;
--	return rcu_dereference_raw(*slot);
-+	*nextid = id;
-+	return entry;
- }
--EXPORT_SYMBOL(idr_get_next_ul);
-+EXPORT_SYMBOL(idr_get_next);
- 
- /**
-  * idr_replace() - replace pointer for given ID.
+  * idr_for_each_entry_ul() - Iterate over an IDR's elements of a given type.
 -- 
 2.24.0.rc1
 
