@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC50C47E49
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87198CA9EB0
 	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 23:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83EF121A4A
+	by mail.kernel.org (Postfix) with ESMTP id 637EF20659
 	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 23:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbfKCXaW (ORCPT
+        id S1728381AbfKCXaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 18:30:22 -0500
+        Sun, 3 Nov 2019 18:30:19 -0500
 Received: from mga06.intel.com ([134.134.136.31]:59008 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728144AbfKCXaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 18:30:21 -0500
+        id S1728144AbfKCXaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 18:30:19 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Nov 2019 15:30:21 -0800
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Nov 2019 15:30:19 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,265,1569308400"; 
-   d="scan'208";a="204445711"
+   d="scan'208";a="204445701"
 Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.25])
-  by orsmga003.jf.intel.com with ESMTP; 03 Nov 2019 15:30:21 -0800
+  by orsmga003.jf.intel.com with ESMTP; 03 Nov 2019 15:30:19 -0800
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V5 02/14] perf/x86/intel: Set correct mask for TOPDOWN.SLOTS
-Date:   Sun,  3 Nov 2019 15:29:08 -0800
-Message-Id: <20191103232920.20309-3-kan.liang@linux.intel.com>
+Subject: [PATCH V5 01/14] perf/x86/intel: Introduce the fourth fixed counter
+Date:   Sun,  3 Nov 2019 15:29:07 -0800
+Message-Id: <20191103232920.20309-2-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191103232920.20309-1-kan.liang@linux.intel.com>
 References: <20191103232920.20309-1-kan.liang@linux.intel.com>
@@ -47,40 +47,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-TOPDOWN.SLOTS(0x0400) is not a generic event. It is only available on
-fixed counter3.
+The fourth fixed counter, TOPDOWN.SLOTS, is introduced in Ice Lake.
 
-Don't extend its mask to generic counters.
+Add MSR address and macros for the new fixed counter, which will be used
+in the following patch.
+
+Add comments to explain the event encoding rules for fixed counters.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
 
-No changes since V4
+Changes since V4:
+- Add description regarding to event-code naming for fixed counters
 
- arch/x86/events/intel/core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/perf_event.h | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index dc64b16e6b71..b61e81316c2b 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -5118,12 +5118,14 @@ __init int intel_pmu_init(void)
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index ee26e9215f18..55a4d05ba6ec 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -146,12 +146,22 @@ struct x86_pmu_capability {
+  */
  
- 	if (x86_pmu.event_constraints) {
- 		/*
--		 * event on fixed counter2 (REF_CYCLES) only works on this
-+		 * event on fixed counter2 (REF_CYCLES) and
-+		 * fixed counter3 (TOPDOWN.SLOTS) only work on this
- 		 * counter, so do not extend mask to generic counters
- 		 */
- 		for_each_event_constraint(c, x86_pmu.event_constraints) {
- 			if (c->cmask == FIXED_EVENT_FLAGS
--			    && c->idxmsk64 != INTEL_PMC_MSK_FIXED_REF_CYCLES) {
-+			    && c->idxmsk64 != INTEL_PMC_MSK_FIXED_REF_CYCLES
-+			    && c->idxmsk64 != INTEL_PMC_MSK_FIXED_SLOTS) {
- 				c->idxmsk64 |= (1ULL << x86_pmu.num_counters) - 1;
- 			}
- 			c->idxmsk64 &=
+ /*
+- * All 3 fixed-mode PMCs are configured via this single MSR:
++ * All fixed-mode PMCs are configured via this single MSR:
+  */
+ #define MSR_ARCH_PERFMON_FIXED_CTR_CTRL	0x38d
+ 
+ /*
+- * The counts are available in three separate MSRs:
++ * There is no event-code assigned to fixed-mode PMCs.
++ * For the fixed-mode PMC which has an equivalent event on general-purpose PMCs,
++ * using the event-code of the equivalent event for the fixed-mode PMC.
++ * E.g. Instr_Retired.Any, CPU_CLK_Unhalted.Core
++ *
++ * For the fixed-mode PMCs which doesn't have an equivalent event,
++ * using pseudo-encoding, e.g. CPU_CLK_Unhalted.Ref, TOPDOWN.SLOTS.
++ * The event-code for fixed-mode PMCs must be 0x00.
++ * The umask-code is 0x0X. X indicates the index of the fixed counter.
++ *
++ * The counts are available in separate MSRs:
+  */
+ 
+ /* Instr_Retired.Any: */
+@@ -162,11 +172,16 @@ struct x86_pmu_capability {
+ #define MSR_ARCH_PERFMON_FIXED_CTR1	0x30a
+ #define INTEL_PMC_IDX_FIXED_CPU_CYCLES	(INTEL_PMC_IDX_FIXED + 1)
+ 
+-/* CPU_CLK_Unhalted.Ref: */
++/* CPU_CLK_Unhalted.Ref: event=0x00,umask=0x3 (pseudo-encoding) */
+ #define MSR_ARCH_PERFMON_FIXED_CTR2	0x30b
+ #define INTEL_PMC_IDX_FIXED_REF_CYCLES	(INTEL_PMC_IDX_FIXED + 2)
+ #define INTEL_PMC_MSK_FIXED_REF_CYCLES	(1ULL << INTEL_PMC_IDX_FIXED_REF_CYCLES)
+ 
++/* TOPDOWN.SLOTS: event=0x00,umask=0x4 (pseudo-encoding) */
++#define MSR_ARCH_PERFMON_FIXED_CTR3	0x30c
++#define INTEL_PMC_IDX_FIXED_SLOTS	(INTEL_PMC_IDX_FIXED + 3)
++#define INTEL_PMC_MSK_FIXED_SLOTS	(1ULL << INTEL_PMC_IDX_FIXED_SLOTS)
++
+ /*
+  * We model BTS tracing as another fixed-mode PMC.
+  *
 -- 
 2.17.1
 
