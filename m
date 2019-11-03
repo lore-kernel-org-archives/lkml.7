@@ -2,82 +2,70 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F8FCA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 08:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F898CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 08:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A13C2084D
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 08:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4CF2084D
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 08:13:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572768802;
+	bh=O6Sl/WudcHVmvZ80SOwx1ethvyuH+iLA+GM2fSi1sgs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gWnHqHWJsZFL92p8RKww/YPD9Tm+VgsMQCfSZn5ZFdu192f+7tEwQvvUM/f3LI/oS
+	 x/NsTfKz/kzAJrm+IEybiXtCmgPpHVmbxDQ1+LC+IANOGjS5od+UHk2n9TOhj+17NA
+	 5SE4iwkm6MPFQg/pFi2nukjPsEkLaTdw08C8O5H8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfKCIEC (ORCPT
+        id S1727511AbfKCINT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 03:04:02 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:41330 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbfKCIEC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 03:04:02 -0500
-Received: by mail-io1-f71.google.com with SMTP id v5so4236238iot.8
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 01:04:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=zseyQcg9WNy0u+ZF8nDZWMDUBvH4F12JJ+AwXYNDi7k=;
-        b=G/TwKxxzeGbcqrzRr9303SXdFrqVMPcm6PS5TwhzpXuKlcas4bZaXssf9naRacG2HO
-         jLXV4Zu2kxGQaQcYcA/nMY3Lu5fuhlvB/pcqLbHF572FYOr+v+840cnD4YVRDuJcKj8G
-         e8CIZ3mMk69S3KGMX/18NxDqrqT8LLAFG+XXGGmPIyOswqVUYVdvODNTvJ3Xn3yiQ89Z
-         56Gm2e4nCuIR+k4hJG7Jcz56GyPwYqL1PoWr1G4QypKsTUiQy+Y0Uj1VFwul1/rijHdb
-         HobLtcA8VuOGM+O0/dnCEaS7JnvW33phIYgVrjgDm9vJH8DkT9bpuBswY1s4/57Cyg+C
-         +ebQ==
-X-Gm-Message-State: APjAAAVEAUb5OMFjiWbZOOxpTg1HRx+4cAPbtfL2HBA28R92qD0kWm8N
-        31alOOYjHmUED667InBebe6EErKNt+uWsZbS77OWjkL7hpxC
-X-Google-Smtp-Source: APXvYqxhpKGHhcgtYbw7xsqihd/PM8MbI+nKemnT0QhuOdgsKosxm+PpEDNBXQGgcoZ/5EDuT2djHH4Mdf+3AZesnhq9ApTQpTn+
+        Sun, 3 Nov 2019 03:13:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727156AbfKCINT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 03:13:19 -0500
+Received: from localhost (unknown [106.206.31.209])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BB6D2084D;
+        Sun,  3 Nov 2019 08:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572768798;
+        bh=O6Sl/WudcHVmvZ80SOwx1ethvyuH+iLA+GM2fSi1sgs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lF3rTgqQIDJOKT6EJtQc5fSgYoCY9pcDJe4Yvnr+FYdtchoUmabp904LiWUE7zHPN
+         wZP6mmlwNsnSLUf6xUCyjs8iNqFk62PLkieN84qmkYYs6x6oo3cJBEGFr3WpvUSQ/T
+         apkjijqjwn05w9gKPLjKYiGhXC7iqE91WYVxNAm0=
+Date:   Sun, 3 Nov 2019 13:43:11 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/11] arm64: dts: qcom: msm8996: Introduce IFC6640
+Message-ID: <20191103081311.GM2695@vkoul-mobl.Dlink>
+References: <20191021051322.297560-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:99d1:: with SMTP id t78mr21495252ilk.122.1572768240955;
- Sun, 03 Nov 2019 01:04:00 -0700 (PDT)
-Date:   Sun, 03 Nov 2019 01:04:00 -0700
-In-Reply-To: <000000000000595be405966c3231@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000050f87c05966ca43a@google.com>
-Subject: Re: general protection fault in j1939_priv_get_by_ndev_locked
-From:   syzbot <syzbot+feff46f1778030d14234@syzkaller.appspotmail.com>
-To:     bst@pengutronix.de, davem@davemloft.net,
-        dev.kurt@vandijck-laurijssen.be, ecathinds@gmail.com,
-        kernel@pengutronix.de, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@rempel-privat.de,
-        lkp@intel.com, maxime.jayat@mobile-devices.fr, mkl@pengutronix.de,
-        netdev@vger.kernel.org, o.rempel@pengutronix.de, robin@protonic.nl,
-        socketcan@hartkopp.net, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021051322.297560-1-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On 20-10-19, 22:13, Bjorn Andersson wrote:
+> Refactor msm8996 and db820c in order to make it follow the structure of newer
+> platforms, move db820c specific things to db820c.dtsi and then introduce the
+> Informace 6640 Single Board Computer.
 
-commit 9d71dd0c70099914fcd063135da3c580865e924c
-Author: The j1939 authors <linux-can@vger.kernel.org>
-Date:   Mon Oct 8 09:48:36 2018 +0000
+This has patch 9/11 missing. But rest look good to me.
 
-     can: add support of SAE J1939 protocol
+Acked-by: Vinod Koul <vkoul@kernel.org>
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11267914e00000
-start commit:   7de08690 powerpc/bpf: Fix tail call implementation
-git tree:       bpf
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=13267914e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15267914e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2cc209e226c8fbbd
-dashboard link: https://syzkaller.appspot.com/bug?extid=feff46f1778030d14234
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1726e97ce00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1678e4ece00000
-
-Reported-by: syzbot+feff46f1778030d14234@syzkaller.appspotmail.com
-Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+~Vinod
