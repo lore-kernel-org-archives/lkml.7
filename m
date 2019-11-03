@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2B3CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 05:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BD3CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 05:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F179215EA
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 05:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 324A4215EA
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 05:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572759013;
-	bh=9oqXe3JHVRI89OqTwF0y1fkMeszReKpL2VFA38BTlXs=;
+	s=default; t=1572759173;
+	bh=sWpt+8gx2UCKCgB2KXVS3k69C+FooSSl8zh1C67GoGw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bSXdsGX80X7HbuFA0gXtKsec/D2ooDdrC1Bp3HpEEtQudqaj9pKhJc0hI8AE+USfI
-	 l2My72Bmww7/RB7KPEkDKR/QDArFHMl2ScsTjf3j+VlArkeJKlPijfruVxXB7FgWsd
-	 M05ZZL3LRorcqDwWYshI9eWDkjgDPlihycqdDy/Y=
+	b=r1NbgTlmUhlreswiziOziegIXhCnkkzDm74SpVg3g18ln9Zv8mctGCyJFfHao2oyD
+	 7j3p8bCfqAbpLcfWqaho+rCPcL7ja65IVeJzmGVaYO6F+gRnJwmzG4BZgJurWgPRla
+	 Rfjh2IAsOh6HGvcqjN470kYA3xXCPDgrnhXdpkyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfKCFaM (ORCPT
+        id S1727481AbfKCFcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 01:30:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58112 "EHLO mail.kernel.org"
+        Sun, 3 Nov 2019 01:32:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbfKCFaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 01:30:12 -0400
+        id S1726354AbfKCFcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 01:32:51 -0400
 Received: from localhost (unknown [106.206.115.146])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08C69214D8;
-        Sun,  3 Nov 2019 05:30:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F42C20848;
+        Sun,  3 Nov 2019 05:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572759011;
-        bh=9oqXe3JHVRI89OqTwF0y1fkMeszReKpL2VFA38BTlXs=;
+        s=default; t=1572759170;
+        bh=sWpt+8gx2UCKCgB2KXVS3k69C+FooSSl8zh1C67GoGw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VjDLVTeMMZD4pw16JgzV5sc6WawxToDl0wHuKA2iOd+3d/yxqsedyBk1bJNeRhSb+
-         PKpyZJR2PKIzFkJTpcMUBdKuHFcr7PtpZNolj5UFLoVJHT+N6Ww1uK3AtGGd2kJe0F
-         JtRu1o/h9CLriPHA6v3lqF61Lv1+KpN97N+Zf7Dg=
-Date:   Sun, 3 Nov 2019 11:00:03 +0530
+        b=b+V868ELK1D52quKLVGl8UHoVERdMDQV+Cr9+e2uPPQsfFKUGlLKA9zdLqQtPREfM
+         kub4ts0/RKcabrscvpgQNVm/ZUCVTPx2yLSD08SccaKNyha2lYPjUfoG0WYzY79NT7
+         o2qywTz1CkFBzx826wuhuF0UuP8U2k8Oc+psUTqg=
+Date:   Sun, 3 Nov 2019 11:02:43 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
@@ -50,15 +50,14 @@ Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         Rander Wang <rander.wang@linux.intel.com>,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH 04/14] soundwire: bus_type: rename sdw_drv_ to
- sdw_slave_drv
-Message-ID: <20191103053003.GH2695@vkoul-mobl.Dlink>
+Subject: Re: [PATCH 06/14] soundwire: add support for sdw_slave_type
+Message-ID: <20191103053243.GI2695@vkoul-mobl.Dlink>
 References: <20191023212823.608-1-pierre-louis.bossart@linux.intel.com>
- <20191023212823.608-5-pierre-louis.bossart@linux.intel.com>
+ <20191023212823.608-7-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191023212823.608-5-pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <20191023212823.608-7-pierre-louis.bossart@linux.intel.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -66,67 +65,87 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 23-10-19, 16:28, Pierre-Louis Bossart wrote:
-> Before we add master driver support, make sure there is no ambiguity
-> and no occirrences of sdw_drv_ functions.
-        ^^^^^^^^^^^
-typo
-
-> 
-> No functionality change.
+> Currently the bus does not have any explicit support for master
+> devices.  Add explicit support for sdw_slave_type, so that in
+> follow-up patches we can add support for the sdw_md_type (md==Master
+> Device), following the Grey Bus example.
 > 
 > Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 > ---
->  drivers/soundwire/bus_type.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  drivers/soundwire/bus_type.c       | 9 ++++++++-
+>  drivers/soundwire/slave.c          | 7 ++++++-
+>  include/linux/soundwire/sdw_type.h | 6 ++++++
+>  3 files changed, 20 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
-> index 2b2830b622fa..9a0fd3ee1014 100644
+> index 9a0fd3ee1014..5df095f4e12f 100644
 > --- a/drivers/soundwire/bus_type.c
 > +++ b/drivers/soundwire/bus_type.c
-> @@ -67,7 +67,7 @@ struct bus_type sdw_bus_type = {
->  };
->  EXPORT_SYMBOL_GPL(sdw_bus_type);
+> @@ -49,9 +49,16 @@ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size)
 >  
-> -static int sdw_drv_probe(struct device *dev)
-> +static int sdw_slave_drv_probe(struct device *dev)
+>  static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
 >  {
->  	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	struct sdw_driver *drv = to_sdw_slave_driver(dev->driver);
-> @@ -113,7 +113,7 @@ static int sdw_drv_probe(struct device *dev)
->  	return 0;
+> -	struct sdw_slave *slave = to_sdw_slave_device(dev);
+> +	struct sdw_slave *slave;
+>  	char modalias[32];
+>  
+> +	if (is_sdw_slave(dev)) {
+> +		slave = to_sdw_slave_device(dev);
+> +	} else {
+> +		dev_warn(dev, "uevent for unknown Soundwire type\n");
+> +		return -EINVAL;
+
+when is the case where this would be triggered?
+
+> +	}
+> +
+>  	sdw_slave_modalias(slave, modalias, sizeof(modalias));
+>  
+>  	if (add_uevent_var(env, "MODALIAS=%s", modalias))
+> diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
+> index 48a513680db6..c87267f12a3b 100644
+> --- a/drivers/soundwire/slave.c
+> +++ b/drivers/soundwire/slave.c
+> @@ -14,6 +14,11 @@ static void sdw_slave_release(struct device *dev)
+>  	kfree(slave);
 >  }
 >  
-> -static int sdw_drv_remove(struct device *dev)
-> +static int sdw_slave_drv_remove(struct device *dev)
+> +struct device_type sdw_slave_type = {
+> +	.name =		"sdw_slave",
+> +	.release =	sdw_slave_release,
+> +};
+> +
+>  static int sdw_slave_add(struct sdw_bus *bus,
+>  			 struct sdw_slave_id *id, struct fwnode_handle *fwnode)
 >  {
->  	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	struct sdw_driver *drv = to_sdw_slave_driver(dev->driver);
-> @@ -127,7 +127,7 @@ static int sdw_drv_remove(struct device *dev)
->  	return ret;
->  }
->  
-> -static void sdw_drv_shutdown(struct device *dev)
-> +static void sdw_slave_drv_shutdown(struct device *dev)
->  {
->  	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	struct sdw_driver *drv = to_sdw_slave_driver(dev->driver);
-> @@ -155,13 +155,13 @@ int __sdw_register_slave_driver(struct sdw_driver *drv,
+> @@ -41,9 +46,9 @@ static int sdw_slave_add(struct sdw_bus *bus,
+>  			     id->class_id, id->unique_id);
 >  	}
 >  
->  	drv->driver.owner = owner;
-> -	drv->driver.probe = sdw_drv_probe;
-> +	drv->driver.probe = sdw_slave_drv_probe;
+> -	slave->dev.release = sdw_slave_release;
+>  	slave->dev.bus = &sdw_bus_type;
+>  	slave->dev.of_node = of_node_get(to_of_node(fwnode));
+> +	slave->dev.type = &sdw_slave_type;
+>  	slave->bus = bus;
+>  	slave->status = SDW_SLAVE_UNATTACHED;
+>  	slave->dev_num = 0;
+> diff --git a/include/linux/soundwire/sdw_type.h b/include/linux/soundwire/sdw_type.h
+> index 7d4bc6a979bf..c681b3426478 100644
+> --- a/include/linux/soundwire/sdw_type.h
+> +++ b/include/linux/soundwire/sdw_type.h
+> @@ -5,6 +5,12 @@
+>  #define __SOUNDWIRE_TYPES_H
 >  
->  	if (drv->remove)
-> -		drv->driver.remove = sdw_drv_remove;
-> +		drv->driver.remove = sdw_slave_drv_remove;
+>  extern struct bus_type sdw_bus_type;
+> +extern struct device_type sdw_slave_type;
+> +
+> +static inline int is_sdw_slave(const struct device *dev)
+> +{
+> +	return dev->type == &sdw_slave_type;
+> +}
 >  
->  	if (drv->shutdown)
-> -		drv->driver.shutdown = sdw_drv_shutdown;
-> +		drv->driver.shutdown = sdw_slave_drv_shutdown;
->  
->  	return driver_register(&drv->driver);
->  }
+>  #define to_sdw_slave_driver(_drv) \
+>  	container_of(_drv, struct sdw_driver, driver)
 > -- 
 > 2.20.1
 
