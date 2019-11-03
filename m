@@ -2,141 +2,149 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 018DECA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 21:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE710CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 21:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877412067D
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 21:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928412246E
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 21:18:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ndWpDzkF"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CrZf2JZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbfKCVRq (ORCPT
+        id S1728327AbfKCVSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 16:17:46 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:43002 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbfKCVRq (ORCPT
+        Sun, 3 Nov 2019 16:18:18 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:10547 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728237AbfKCVSR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 16:17:46 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id AEA2A886BF;
-        Mon,  4 Nov 2019 10:17:43 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1572815863;
-        bh=dwIa5UBqxZ5+WyHNhpTgf/cGLb9kltXhBmUP4qmi7jE=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=ndWpDzkFk75cG//mnByCLXMkD1lu1yvb1b7YgyL/WPGfOZ9O8n9zTwpQtpMKNp16R
-         DeJ6BvGIloDQerULQymfXYM93VpuiuRVQfjtKOMiRjf6fdnhbkKPrUdgD0w7FRjlTt
-         LBDKByXEZJ2NEEEPcsXQf446JXEBB0Sklx7QLWl9wxWnw+D5ou942K8Cz3tyb841oR
-         ecoJ+mIjpaCWtQbdSd8cQOv7JxZUd9vLF+YXXzvAj867RefIPuqru+9gZEyYIEKNDk
-         WvtSC9IE8Pzds/kFRg5a1rDdLzoY8aBLtFg9HYE5tsj0pZ35LKy+N6Qrvzb5DUcDVm
-         feIcG/xW3az7w==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5dbf43f70000>; Mon, 04 Nov 2019 10:17:43 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Mon, 4 Nov 2019 10:17:40 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Mon, 4 Nov 2019 10:17:40 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "rjui@broadcom.com" <rjui@broadcom.com>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH 1/2] pinctrl: bcm: nsp: use gpiolib infrastructure for
- interrupts
-Thread-Topic: [PATCH 1/2] pinctrl: bcm: nsp: use gpiolib infrastructure for
- interrupts
-Thread-Index: AQHVkFeSBgXJhb3KgUu11iFh5fDST6d2V0WAgALGW4A=
-Date:   Sun, 3 Nov 2019 21:17:39 +0000
-Message-ID: <f6ac1bc26d404aa99b9b1f619552bdc441c37f6c.camel@alliedtelesis.co.nz>
-References: <20191101015621.12451-1-chris.packham@alliedtelesis.co.nz>
-         <20191101015621.12451-2-chris.packham@alliedtelesis.co.nz>
-         <b681ed9d-a31a-e5cc-04ba-6f38a5cc745b@gmail.com>
-In-Reply-To: <b681ed9d-a31a-e5cc-04ba-6f38a5cc745b@gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:c5c6:9a61:cb8f:b19f]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DEC19D1D8A2BCA428FDDA13688F0F327@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Sun, 3 Nov 2019 16:18:17 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dbf441e0000>; Sun, 03 Nov 2019 13:18:22 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 03 Nov 2019 13:18:15 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 03 Nov 2019 13:18:15 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 3 Nov
+ 2019 21:18:15 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sun, 3 Nov 2019 21:18:15 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dbf44170000>; Sun, 03 Nov 2019 13:18:15 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v2 03/18] goldish_pipe: rename local pin_user_pages() routine
+Date:   Sun, 3 Nov 2019 13:17:58 -0800
+Message-ID: <20191103211813.213227-4-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191103211813.213227-1-jhubbard@nvidia.com>
+References: <20191103211813.213227-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572815902; bh=yxndnpa6bj0xuoqPqvRY6Qkte9w9GoWasaTzIgTLBt4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=CrZf2JZ8Z1BYEcbLmYpFUD1ZNvhKRHAjpH0YXVbR2NxZF7sRz7rzdYCVUfbyeDKkX
+         2g2B6QpG23BEG3g/71RW3OuY9p0N3tXefMp1ZYbFTW1iz2PLwALdJ+mkuVyb1iqsZr
+         F8sWxJDJO54yzjEP4wU9YZdl8I/hsHy8pE37+OizFKv6wlKVuaPeh5mzoi0KCgmnBg
+         /Y00qBw+/btgnF7T7NnqeETOhIof/gF2HPnAs7yZ+7cxOlyZsmzW+pd420DMcmtwfZ
+         vgdXxoB17ve4yALSsXuszIbA5INhDD5JbZJUAmVEfJrKoaspcnukDpzoiq6VEYRf9+
+         tELlqsr98UjAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTExLTAxIGF0IDE5OjU1IC0wNzAwLCBGbG9yaWFuIEZhaW5lbGxpIHdyb3Rl
-Og0KPiANCj4gT24gMTAvMzEvMjAxOSA2OjU2IFBNLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPiA+
-IFVzZSBtb3JlIG9mIHRoZSBncGlvbGliIGluZnJhc3RydWN0dXJlIGZvciBoYW5kbGluZyBpbnRl
-cnJ1cHRzLiBUaGUNCj4gPiByb290IGludGVycnVwdCBzdGlsbCBuZWVkcyB0byBiZSBoYW5kbGVk
-IG1hbnVhbGx5IGFzIGl0IGlzIHNoYXJlZCB3aXRoDQo+ID4gb3RoZXIgcGVyaXBoZXJhbHMgb24g
-dGhlIFNvQy4NCj4gPiANCj4gPiBUaGlzIHdpbGwgYWxsb3cgbXVsdGlwbGUgaW5zdGFuY2VzIG9m
-IHRoaXMgZHJpdmVyIHRvIGJlIHN1cHBvcnRlZCBhbmQNCj4gPiB3aWxsIGNsZWFuIHVwIGdyYWNl
-ZnVsbHkgb24gZmFpbHVyZSB0aGFua3MgdG8gdGhlIGRldmljZSBtYW5hZ2VkIEFQSXMuDQo+ID4g
-DQo+ID4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0
-ZWxlc2lzLmNvLm56Pg0KPiA+IC0tLQ0KPiANCj4gSnVzdCBhIGNvdXBsZSBvZiBjb21tZW50cyBi
-ZWxvdzoNCj4gDQo+IFtzbmlwXQ0KPiANCj4gPiArCQlpcnFjLT5uYW1lID0gZGV2X25hbWUoZGV2
-KTsNCj4gDQo+IFRoZSBpcnFfY2hpcCB1c2VkIHRvIGJlIG5hbWVkICJncGlvLWEiIG5vdyBpdCBt
-b3N0IGxpa2VseSB3aWxsIGNvbnRhaW4NCj4gdGhlIGFkZHJlc3MudW5pdC1uYW1lIG5vdGF0aW9u
-IGZyb20gRGV2aWNlIFRyZWUsIHNpbmNlIHRoaXMgaXMgdmlzaWJsZQ0KPiBpbiAvcHJvYy9pbnRl
-cnJ1cHRzIG9uZSBtaWdodCBjb25zaWRlciB0aGlzIHRvIGJlIGFuIEFCSSBicmVha2FnZS4NCj4g
-DQoNCk9vcHMgbXkgYmFkLiBJJ2QgZXZlbiBiZWVuIHRvbGQgYXMgbXVjaCBmcm9tIGFub3RoZXIg
-cGF0Y2guIEZpeGVkIGluDQp2My4NCg0KPiA+ICsJCWlycWMtPmlycV9hY2sgPSBuc3BfZ3Bpb19p
-cnFfYWNrOw0KPiA+ICsJCWlycWMtPmlycV9tYXNrID0gbnNwX2dwaW9faXJxX21hc2s7DQo+ID4g
-KwkJaXJxYy0+aXJxX3VubWFzayA9IG5zcF9ncGlvX2lycV91bm1hc2s7DQo+ID4gKwkJaXJxYy0+
-aXJxX3NldF90eXBlID0gbnNwX2dwaW9faXJxX3NldF90eXBlOw0KPiA+ICANCj4gPiAtCQkJaXJx
-X3NldF9jaGlwX2FuZF9oYW5kbGVyKGlycSwgJm5zcF9ncGlvX2lycV9jaGlwLA0KPiA+IC0JCQkJ
-CQkgaGFuZGxlX3NpbXBsZV9pcnEpOw0KPiA+IC0JCQlpcnFfc2V0X2NoaXBfZGF0YShpcnEsIGNo
-aXApOw0KPiA+IC0JCX0NCj4gPiArCQl2YWwgPSByZWFkbChjaGlwLT5iYXNlICsgTlNQX0NISVBf
-QV9JTlRfTUFTSyk7DQo+ID4gKwkJdmFsID0gdmFsIHwgTlNQX0NISVBfQV9HUElPX0lOVF9CSVQ7
-DQo+ID4gKwkJd3JpdGVsKHZhbCwgKGNoaXAtPmJhc2UgKyBOU1BfQ0hJUF9BX0lOVF9NQVNLKSk7
-DQo+ID4gIA0KPiA+ICAJCS8qIEluc3RhbGwgSVNSIGZvciB0aGlzIEdQSU8gY29udHJvbGxlci4g
-Ki8NCj4gPiAtCQlyZXQgPSBkZXZtX3JlcXVlc3RfaXJxKCZwZGV2LT5kZXYsIGlycSwgbnNwX2dw
-aW9faXJxX2hhbmRsZXIsDQo+ID4gLQkJCQkgICAgICAgSVJRRl9TSEFSRUQsICJncGlvLWEiLCBj
-aGlwKTsNCj4gPiArCQlyZXQgPSBkZXZtX3JlcXVlc3RfaXJxKGRldiwgaXJxLCBuc3BfZ3Bpb19p
-cnFfaGFuZGxlciwNCj4gPiArCQkJCSAgICAgICBJUlFGX1NIQVJFRCwgImdwaW8tYSIsICZjaGlw
-LT5nYyk7DQo+ID4gIAkJaWYgKHJldCkgew0KPiA+ICAJCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJV
-bmFibGUgdG8gcmVxdWVzdCBJUlElZDogJWRcbiIsDQo+ID4gIAkJCQlpcnEsIHJldCk7DQo+ID4g
-LQkJCWdvdG8gZXJyX3JtX2dwaW9jaGlwOw0KPiA+ICsJCQlyZXR1cm4gcmV0Ow0KPiA+ICAJCX0N
-Cj4gPiAgDQo+ID4gLQkJdmFsID0gcmVhZGwoY2hpcC0+YmFzZSArIE5TUF9DSElQX0FfSU5UX01B
-U0spOw0KPiA+IC0JCXZhbCA9IHZhbCB8IE5TUF9DSElQX0FfR1BJT19JTlRfQklUOw0KPiA+IC0J
-CXdyaXRlbCh2YWwsIChjaGlwLT5iYXNlICsgTlNQX0NISVBfQV9JTlRfTUFTSykpOw0KPiA+ICsJ
-CWdpcnEgPSAmY2hpcC0+Z2MuaXJxOw0KPiA+ICsJCWdpcnEtPmNoaXAgPSBpcnFjOw0KPiA+ICsJ
-CS8qIFRoaXMgd2lsbCBsZXQgdXMgaGFuZGxlIHRoZSBwYXJlbnQgSVJRIGluIHRoZSBkcml2ZXIg
-Ki8NCj4gPiArCQlnaXJxLT5wYXJlbnRfaGFuZGxlciA9IE5VTEw7DQo+ID4gKwkJZ2lycS0+bnVt
-X3BhcmVudHMgPSAwOw0KPiA+ICsJCWdpcnEtPnBhcmVudHMgPSBOVUxMOw0KPiA+ICsJCWdpcnEt
-PmRlZmF1bHRfdHlwZSA9IElSUV9UWVBFX05PTkU7DQo+ID4gKwkJZ2lycS0+aGFuZGxlciA9IGhh
-bmRsZV9zaW1wbGVfaXJxOw0KPiANCj4gSXQgbWlnaHQgYmUgd29ydGggY3JlYXRpbmcgYSBoZWxw
-ZXIgdGhhdCBjYW4gYmUgY2FsbGVkIHRvIGluaXRpYWxpemUgYWxsDQo+IHJlbGV2YW50IG1lbWJl
-cnMgdG8gdGhlIHZhbHVlcyB0aGF0IGluZGljYXRlOiBsZXQgbWUgbWFuYWdlIHRoZQ0KPiBpbnRl
-cnJ1cHQuIFRoaXMgd291bGQgbWFrZSB1cyBtb3JlIGZ1dHVyZSBwcm9vZiB3aXRoIHJlc3BlY3Qg
-dG8NCj4gYXNzdW1wdGlvbnMgYmVpbmcgbWFkZSBpbiBncGlvbGliIGFzIHdlbGwgYXMgaWYgbmV3
-IGZpZWxkcyBhcmUgYWRkZWQgaW4NCj4gdGhlIGZ1dHVyZS4gVGhpcyB3b3VsZCBiZSBhIHNlcGFy
-YXRlIHBhdGNoIG9idmlvdXNseS4NCg0KRm9yIG5vdyBJJ2xsIGxlYXZlIHRoaXMgYXMtaXMuIExp
-bnVzIFcgd2FzIHRoaW5raW5nIGFib3V0IHdoYXQgYW4gQVBJDQpmb3IgZGV2aWNlcyByZXF1aXJp
-bmcgc2hhcmVkIGlycXMgd291bGQgbG9vayBsaWtlLiBJZiB0aGF0IGhhcHBlbnMgc29vbg0KdGhl
-biB0aGVuIHRoaXMgZHJpdmVyIGNvdWxkIHN3aXRjaCB0byB1c2UgdGhpcyBBUEkuIElmIGl0J3Mg
-Z29pbmcgdG8gYmUNCmEgd2hpbGUgSSdsbCBsb29rIGF0IGFkZGluZyBhIGhlbHBlciBhcyBzdWdn
-ZXN0ZWQgYW5kIHVwZGF0aW5nIHRoZSAzDQpkcml2ZXJzIHRoYXQgSSBrbm93IG9mIHRoYXQgY291
-bGQgYmVuZWZpdCBmcm9tIGl0Lg0KDQo+IA0KPiBPdGhlciB0aGFuIHRoYXQ6DQo+IA0KPiBSZXZp
-ZXdlZC1ieTogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+DQo=
+1. Avoid naming conflicts: rename local static function from
+"pin_user_pages()" to "pin_goldfish_pages()".
+
+An upcoming patch will introduce a global pin_user_pages()
+function.
+
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ drivers/platform/goldfish/goldfish_pipe.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/platform/goldfish/goldfish_pipe.c b/drivers/platform/g=
+oldfish/goldfish_pipe.c
+index cef0133aa47a..7ed2a21a0bac 100644
+--- a/drivers/platform/goldfish/goldfish_pipe.c
++++ b/drivers/platform/goldfish/goldfish_pipe.c
+@@ -257,12 +257,12 @@ static int goldfish_pipe_error_convert(int status)
+ 	}
+ }
+=20
+-static int pin_user_pages(unsigned long first_page,
+-			  unsigned long last_page,
+-			  unsigned int last_page_size,
+-			  int is_write,
+-			  struct page *pages[MAX_BUFFERS_PER_COMMAND],
+-			  unsigned int *iter_last_page_size)
++static int pin_goldfish_pages(unsigned long first_page,
++			      unsigned long last_page,
++			      unsigned int last_page_size,
++			      int is_write,
++			      struct page *pages[MAX_BUFFERS_PER_COMMAND],
++			      unsigned int *iter_last_page_size)
+ {
+ 	int ret;
+ 	int requested_pages =3D ((last_page - first_page) >> PAGE_SHIFT) + 1;
+@@ -354,9 +354,9 @@ static int transfer_max_buffers(struct goldfish_pipe *p=
+ipe,
+ 	if (mutex_lock_interruptible(&pipe->lock))
+ 		return -ERESTARTSYS;
+=20
+-	pages_count =3D pin_user_pages(first_page, last_page,
+-				     last_page_size, is_write,
+-				     pipe->pages, &iter_last_page_size);
++	pages_count =3D pin_goldfish_pages(first_page, last_page,
++					 last_page_size, is_write,
++					 pipe->pages, &iter_last_page_size);
+ 	if (pages_count < 0) {
+ 		mutex_unlock(&pipe->lock);
+ 		return pages_count;
+--=20
+2.23.0
+
