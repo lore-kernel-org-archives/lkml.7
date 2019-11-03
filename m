@@ -2,65 +2,89 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8266ACA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7E4CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 539FE20679
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95CAD20679
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 11:45:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EH5LoO9v"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="A2tZ/oa4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbfKCLll (ORCPT
+        id S1727619AbfKCLpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 06:41:41 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:37938 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727764AbfKCLlk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 06:41:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZCPsWSsvJ2X47Dg/6yvRov7fxoPfL44SgTK8bR4lcPw=; b=EH5LoO9v8Pw5HZZ4RveUD7JCC
-        /4dfubxFytG37zFYuBQoIkDEUFao0oYjlLSMqGJmSHbGa4Q3LlCS1C6E+v+jAoWplTUyWSBSuCtAt
-        OUN23ZQ+g5ZWKP+SRH3qS4J9ncw6devdRy6DnlP7+13U/7fWe0q89zWzG4yTX8Mndh07F38amTIYk
-        tGhJIrRYi+uoA6yn9/GcIe5L9/vdKLjlSZbH7caVS9YJvSnnDYf3ENdpnD33dTItadE0gCNVBLEBe
-        sgGYyZo1yqtJNCejaU3ojn+aDZPbeNStMOkAoOkmWo7LGa8JwMwxYjyMUOs7HQFI/EB7Yp5as+xtW
-        e7FeocOkg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iREGK-00080P-O9; Sun, 03 Nov 2019 11:41:40 +0000
-Date:   Sun, 3 Nov 2019 03:41:40 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>
-Subject: Re: [PATCH 4/5] idr: Handle integer overflow correctly
-Message-ID: <20191103114140.GD15832@bombadil.infradead.org>
-References: <20191103114012.30027-1-willy@infradead.org>
- <20191103114012.30027-6-willy@infradead.org>
+        Sun, 3 Nov 2019 06:45:17 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:57984 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726998AbfKCLpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 06:45:17 -0500
+Received: from zn.tnic (p200300EC2F2568006945035F0EB2C779.dip0.t-ipconnect.de [IPv6:2003:ec:2f25:6800:6945:35f:eb2:c779])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8C3BD1EC0ABC;
+        Sun,  3 Nov 2019 12:45:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1572781515;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=8E2ALKhLLvBcj/jgrlLIW0mqpKQojqG24RxOuFeCDMU=;
+        b=A2tZ/oa4JEamcjO6BX9HHvwLgMa05KjK1eT8oMnhQrYIx5eYtcPPfqI2B9AE3xo+FQ3AaY
+        dePnBMsXe48LqLL3aUhGs8cOU/EOD9Q4MxhOhaLztx4VvUsS5DQLXvPP44WmgpA9Tvl/MK
+        wSNM/zPF2w34wgT3Z4kgyB5OOw2u+K0=
+Date:   Sun, 3 Nov 2019 12:45:16 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Moger, Babu" <Babu.Moger@amd.com>
+Cc:     Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "nayna@linux.ibm.com" <nayna@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH 2/4] kvm: svm: Enable UMIP feature on AMD
+Message-ID: <20191103114516.GA32261@zn.tnic>
+References: <157262960837.2838.17520432516398899751.stgit@naples-babu.amd.com>
+ <157262962352.2838.15656190309312238595.stgit@naples-babu.amd.com>
+ <CALMp9eQT=a99YhraQZ+awMKOWK=3tg=m9NppZnsvK0Q1PWxbAw@mail.gmail.com>
+ <669031a1-b9a6-8a45-9a05-a6ce5fb7fa8b@amd.com>
+ <CALCETrXdo2arN=s9Bt1LmYkPajcBj1NuTPC8dwuw2mMZqT0tRw@mail.gmail.com>
+ <91a05d64-36c0-c4c4-fe49-83a4db1ade10@amd.com>
+ <CALMp9eRWjj1b7bPdiJO3ZT2xDCyV=Ypf6GUcQLkXnqr7YrXDRg@mail.gmail.com>
+ <DM5PR12MB2471947F435B18CBC1F68142957D0@DM5PR12MB2471.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191103114012.30027-6-willy@infradead.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <DM5PR12MB2471947F435B18CBC1F68142957D0@DM5PR12MB2471.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 03, 2019 at 03:40:11AM -0800, Matthew Wilcox wrote:
-> If there is an entry at INT_MAX then idr_for_each_entry() will increment
-> id after handling it.  This is undefined behaviour, and is caught by
-> UBSAN.  Adding 1U to id forces the operation to be carried out as an
-> unsigned addition which (when assigned to id) will result in INT_MIN.
-> Since there is never an entry stored at INT_MIN, idr_get_next() will
-> return NULL, ending the loop as expected.
+On Sat, Nov 02, 2019 at 07:23:45PM +0000, Moger, Babu wrote:
+> How about updating the Kconfig (patch #4) and update it to
+> CONFIG_X86_UMIP (instead of CONFIG_X86_INTEL_UMIP).
 
-This was an earlier version which got left around in the git format-patch
-directory.  Please ignore.
+Yes, pls do that and make it depend on CPU_SUP_AMD too.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
