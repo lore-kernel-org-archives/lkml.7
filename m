@@ -2,223 +2,140 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92482CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 13:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 664ADCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 13:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F92720663
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 13:20:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="muXjX6Ek"
+	by mail.kernel.org (Postfix) with ESMTP id 3D7D22084D
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 13:27:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727729AbfKCNUe (ORCPT
+        id S1727647AbfKCN1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 08:20:34 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35997 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727425AbfKCNUe (ORCPT
+        Sun, 3 Nov 2019 08:27:49 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52296 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727425AbfKCN1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 08:20:34 -0500
-Received: by mail-qt1-f195.google.com with SMTP id y10so12996407qto.3
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 05:20:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XvZDTg6KgNl1RRJLKsvptgnVUd3pDUaVxrmsOG02VjE=;
-        b=muXjX6EkZezEHv58wqoRy0ZDpqiHE3fYf2yWpgKEtHHZtSeOS67EAC1dFDnPwOBG1p
-         su1tdgHJeeFhUPw32pEMm8FshW8CXCSa3TLituQX/LqemUCa7mRUswutyhqTnLtB8gnJ
-         YTfbMDoie4ol7c1QHHTlzNJ01UVHaRtcczAGNrWFv3ZDc6wJYhY1h1OIpAmwh3p7L+jg
-         LCUrjcQOszBo5RrRpaDTh864H5qHc92SPQi349h5BclEeBBuPnO/uWjY/Eq4uM576jY4
-         l8mTHXBXF/bc8hF/hSb+WXSCn2ViBfMS4zybBwXnPfUfbUU8rOeIEO7cknSRmgBVWHHu
-         hDJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XvZDTg6KgNl1RRJLKsvptgnVUd3pDUaVxrmsOG02VjE=;
-        b=DYOMDf8jcWLZzU963rh6n7fUUDP5RRtZfCMyhb3h4bc+Sy02vh4LhKCNxZJUvKXzkP
-         gyzQCqhHatgT8WDv7FODBs1QK5B4HL3jsXZueQ1LWdQCrEiI53T3k44GCbXTEFM5sQy6
-         E404x31C5n8pLfTIKISHBULuNITxIwP8SqfQFVo3gTvMsbniZRVFpCuXwgUYateu2u1W
-         zQ9xT5iVn7wgTVdMU35esjju5v+Pm8T3/FMl2MzWJAJy/qtuTzZOqV6RWWFfK+rGJBwk
-         rkTS1bs/6J0GHfeXTWIaMGEe5KC/VMQHmmphXuPdmvrS9JiOZwDoe78EpoSB4AS4UXMG
-         V6xw==
-X-Gm-Message-State: APjAAAWiRcqiPNXvDykdcYt/Ov1z92Qd+MxB62U3MVM01d2EIikR4Cnr
-        f4cBwuusGAypqN20UuZT8v7vhtBdj9OpHR71epopxQ==
-X-Google-Smtp-Source: APXvYqy0g3Hr5wgbS0e99pI1t0rYFYpkV7KVM+rnH00eH2yx1wUc986D3sOmkMxjtt04cl411iCoHuUNzIFo7+FiCms=
-X-Received: by 2002:ac8:4157:: with SMTP id e23mr8391764qtm.158.1572787232201;
- Sun, 03 Nov 2019 05:20:32 -0800 (PST)
+        Sun, 3 Nov 2019 08:27:48 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9D80A28A619;
+        Sun,  3 Nov 2019 13:27:46 +0000 (GMT)
+Date:   Sun, 3 Nov 2019 14:27:41 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Chuanhong Guo <gch981213@gmail.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-mtd@lists.infradead.org,
+        Jeff Kletsky <git-commits@allycomm.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Stefan Roese <sr@denx.de>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][RFC] mtd: spinand: fix detection of GD5FxGQ4xA flash
+Message-ID: <20191103142741.7b2a2bf0@collabora.com>
+In-Reply-To: <CAJsYDVJgwRfg2kfmuG4P-NCEAZ4box+=Yb53d0J+rAjLRpc3Ww@mail.gmail.com>
+References: <20191016013845.23508-1-gch981213@gmail.com>
+        <20191028174131.65c3d580@xps13>
+        <CAJsYDVJgwRfg2kfmuG4P-NCEAZ4box+=Yb53d0J+rAjLRpc3Ww@mail.gmail.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20191020173010.GA14744@avx2> <CANpmjNPzkYQjQ1mtJ6-h+6-=igD=GSnN9Sr6B6jpXrH9UJEUxg@mail.gmail.com>
- <20191021183216.GA28801@avx2>
-In-Reply-To: <20191021183216.GA28801@avx2>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Sun, 3 Nov 2019 14:20:20 +0100
-Message-ID: <CACT4Y+Y2JzAZ5OJg-5Ng3ArcGD3xyjNqgg2x4QnJLoc03znbLA@mail.gmail.com>
-Subject: Re: [PATCH] proc: fix inode uid/gid writeback race
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     Marco Elver <elver@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 8:32 PM Alexey Dobriyan <adobriyan@gmail.com> wrote:
->
-> On Mon, Oct 21, 2019 at 11:24:27AM +0200, Marco Elver wrote:
-> > On Sun, 20 Oct 2019 at 19:30, Alexey Dobriyan <adobriyan@gmail.com> wrote:
+On Sun, 3 Nov 2019 20:03:21 +0800
+Chuanhong Guo <gch981213@gmail.com> wrote:
+
+> Hi!
+> 
+> On Tue, Oct 29, 2019 at 12:41 AM Miquel Raynal
+> <miquel.raynal@bootlin.com> wrote:
+> >
+> > Hello,
+> >
+> > Chuanhong Guo <gch981213@gmail.com> wrote on Wed, 16 Oct 2019 09:38:24
+> > +0800:
+> >  
+> > > GD5FxGQ4xA didn't follow the SPI spec to keep MISO low while slave is
+> > > reading, and instead MISO is kept high. As a result, the first byte
+> > > of id becomes 0xFF.
+> > > Since the first byte isn't supposed to be checked at all, this patch
+> > > just removed that check.
 > > >
-> > > (euid, egid) pair is snapshotted correctly from task under RCU,
-> > > but writeback to inode can be done in any order.
+> > > While at it, redo the comment above to better explain what's happening.
 > > >
-> > > Fix by doing writeback under inode->i_lock where necessary
-> > > (/proc/* , /proc/*/fd/* , /proc/*/map_files/* revalidate).
-> > >
-> > > Reported-by: syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com
-> > > Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+> > > Fixes: cfd93d7c908e ("mtd: spinand: Add support for GigaDevice GD5F1GQ4UFxxG")
+> > > Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+> > > CC: Jeff Kletsky <git-commits@allycomm.com>
 > > > ---
+> > > RFC:
+> > > I doubt whether this patch is a proper fix for the underlying problem:
+> > > The actual problem is that we have two different implementation of read id
+> > > command: One replies immediately after master sending 0x9f and the other
+> > > need to send 0x9f and an offset byte (found in winbond and early GD flashes.)  
+> 
+> Correction: Only early GigaDevice nand chips uses this implementation.
+> Winbond chips uses a dummy byte instead of an address byte so there's
+> no problem for Winbond chips.
+> 
+> > > Current code only works if SPI master is properly implemented (i.e. keep MOSI
+> > > low while reading.)  
 > >
-> > Thanks!
-> >
-> > This certainly fixes the problem of inconsistent uid/gid pair due to
-> > racing writebacks, as well as the data-race. If that is the only
-> > purpose of this patch, then from what I see this is fine:
-> >
-> > Acked-by: Marco Elver <elver@google.com>
-> >
-> > However, there is probably still a more fundamental problem as outlined below.
-> >
-> > >  fs/proc/base.c     |   25 +++++++++++++++++++++++--
-> > >  fs/proc/fd.c       |    2 +-
-> > >  fs/proc/internal.h |    2 ++
-> > >  3 files changed, 26 insertions(+), 3 deletions(-)
-> > >
-> > > --- a/fs/proc/base.c
-> > > +++ b/fs/proc/base.c
-> > > @@ -1743,6 +1743,25 @@ void task_dump_owner(struct task_struct *task, umode_t mode,
-> > >         *rgid = gid;
-> > >  }
-> > >
-> > > +/* use if inode is live */
-> > > +void task_dump_owner_to_inode(struct task_struct *task, umode_t mode,
-> > > +                             struct inode *inode)
-> > > +{
-> > > +       kuid_t uid;
-> > > +       kgid_t gid;
-> > > +
-> > > +       task_dump_owner(task, mode, &uid, &gid);
-> > > +       /*
-> > > +        * There is no atomic "change all credentials at once" system call,
-> > > +        * guaranteeing more than _some_ snapshot from "struct cred" ends up
-> > > +        * in inode is not possible.
-> > > +        */
-> > > +       spin_lock(&inode->i_lock);
-> > > +       inode->i_uid = uid;
-> > > +       inode->i_gid = gid;
-> > > +       spin_unlock(&inode->i_lock);
-> >
-> > 2 tasks can still race here, and the inconsistent scenario I outlined in
-> > https://lore.kernel.org/linux-fsdevel/000000000000328b2905951a7667@google.com/
-> > could still happen I think (although extremely unlikely). Mainly,
-> > causality may still be violated -- but I may be wrong as I don't know
-> > the rest of the code (so please be critical of my suggestion).
-> >
-> > The problem is that if 2 threads race here, one has snapshotted old
-> > uid/gid, and the other the new uid/gid. Then it is still possible for
-> > the old uid/gid to be written back after new uid/gid, which would
-> > result in this bad scenario:
-> >
-> > === TASK 1 ===
-> > | seteuid(1000);
-> > | seteuid(0);
-> > | stat("/proc/<pid-of-task-1>", &fstat);
-> > | assert(fstat.st_uid == 0);  // fails
-> > === TASK 2 ===
-> > | stat("/proc/<pid-of-task-1>", ...);
-> >
-> > AFAIK it's not something that can easily be fixed without some
-> > timestamp on the uid/gid pair (timestamp updated after setuid/seteuid
-> > etc) obtained in the RCU reader critical section. Then in this
-> > critical section, uid/gid should only be written if the current pair
-> > in inode is older according to snapshot timestamp.
->
-> This probably requires bloating "struct cred" with generation number.
-> I'm not sure what to do other than cc our credential overlords.
+> > I am not entirely against the fix, but this is a SPI host controller
+> > issue, right? Can you try to fix the controller driver instead?  
+> 
+> I think this is a spi nand framework issue. GigaDevice uses an unusual
+> READ ID implementation, and as a result, both host controller and chip
+> are reading during the first byte after 0x9f command: chip is reading
+> the address/offset byte and host is expecting the first ID byte.
+> Here lies two problems:
+> 1. According to the sequence diagram in their datasheet, MISO pin is
+> in High-Z state during the 0x9f command and the offset byte, and host
+> could read anything during this time instead of a fixed 0x0 or 0xff
+> byte, so the check of first byte should be removed. This is what this
+> patch is doing.
+> 2. If there's a buggy SPI host controller that didn't keep MOSI low
+> during reading operation, the chip will get 0xff as ID offset, causing
+> the read vendor/device ID to be swapped. I never met such a controller
+> so far, but if there is one, it will be a silicon bug that can't be
+> fixed by software. To fix this one, we'll have to make a second
+> read-id implementation in spi nand framework.
 
-Just in case, this bug can lead to bad observable behavior, e.g.
-bypassing LSM checks (apparmor) and this patch does not fix the
-underlying problem. For details see:
-https://groups.google.com/d/msg/syzkaller-bugs/mzwiXt4ml68/GuAUQrWtBQAJ
+I realize how fragile this ID-based detection is when manufacturers
+decide to not follow the standard READID semantic (one 0x9f command byte
+followed by 1 or more input cycles encoding the ID). Let's imagine you
+have a valid manuf ID byte in ID[0], and the device ID (ID[1]) matches
+the Winbond or Gigadevice manufacturer ID, and ID[3] (extended Device ID
+byte?) matches a valid Winbond/Gigadevice device ID. If you skip the
+check on ID[0] you might erroneously detect a Winbond or Gigadevice
+NAND, while it's actually something else.
 
+Note that I don't really have a solution to make this detection more
+robust.
 
-> > > +}
-> > > +
-> > >  struct inode *proc_pid_make_inode(struct super_block * sb,
-> > >                                   struct task_struct *task, umode_t mode)
-> > >  {
-> > > @@ -1769,6 +1788,7 @@ struct inode *proc_pid_make_inode(struct super_block * sb,
-> > >         if (!ei->pid)
-> > >                 goto out_unlock;
-> > >
-> > > +       /* fresh inode -- no races */
-> > >         task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
-> > >         security_task_to_inode(task, inode);
-> > >
-> > > @@ -1802,6 +1822,7 @@ int pid_getattr(const struct path *path, struct kstat *stat,
-> > >                          */
-> > >                         return -ENOENT;
-> > >                 }
-> > > +               /* "struct kstat" is thread local, atomic snapshot is enough */
-> > >                 task_dump_owner(task, inode->i_mode, &stat->uid, &stat->gid);
-> > >         }
-> > >         rcu_read_unlock();
-> > > @@ -1815,7 +1836,7 @@ int pid_getattr(const struct path *path, struct kstat *stat,
-> > >   */
-> > >  void pid_update_inode(struct task_struct *task, struct inode *inode)
-> > >  {
-> > > -       task_dump_owner(task, inode->i_mode, &inode->i_uid, &inode->i_gid);
-> > > +       task_dump_owner_to_inode(task, inode->i_mode, inode);
-> > >
-> > >         inode->i_mode &= ~(S_ISUID | S_ISGID);
-> > >         security_task_to_inode(task, inode);
-> > > @@ -1990,7 +2011,7 @@ static int map_files_d_revalidate(struct dentry *dentry, unsigned int flags)
-> > >         mmput(mm);
-> > >
-> > >         if (exact_vma_exists) {
-> > > -               task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
-> > > +               task_dump_owner_to_inode(task, 0, inode);
-> > >
-> > >                 security_task_to_inode(task, inode);
-> > >                 status = 1;
-> > > --- a/fs/proc/fd.c
-> > > +++ b/fs/proc/fd.c
-> > > @@ -101,7 +101,7 @@ static bool tid_fd_mode(struct task_struct *task, unsigned fd, fmode_t *mode)
-> > >  static void tid_fd_update_inode(struct task_struct *task, struct inode *inode,
-> > >                                 fmode_t f_mode)
-> > >  {
-> > > -       task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
-> > > +       task_dump_owner_to_inode(task, 0, inode);
-> > >
-> > >         if (S_ISLNK(inode->i_mode)) {
-> > >                 unsigned i_mode = S_IFLNK;
-> > > --- a/fs/proc/internal.h
-> > > +++ b/fs/proc/internal.h
-> > > @@ -123,6 +123,8 @@ static inline struct task_struct *get_proc_task(const struct inode *inode)
-> > >
-> > >  void task_dump_owner(struct task_struct *task, umode_t mode,
-> > >                      kuid_t *ruid, kgid_t *rgid);
-> > > +void task_dump_owner_to_inode(struct task_struct *task, umode_t mode,
-> > > +                             struct inode *inode);
-> > >
-> > >  unsigned name_to_int(const struct qstr *qstr);
-> > >  /*
+> 
+> The second problem only exist in theory, so my preference is to apply
+> this patch and fix only the first problem for now.
+
+I think we should fix that problem now. Maybe by doing a 3 steps
+detection:
+
+1/ READID + ID[]
+2/ READID + DUMMY + ID[]
+3/ READID + ADDR + ID[]
+
+At each step we would check if the returned ID matches a valid NAND,
+and if it does, stop there.
