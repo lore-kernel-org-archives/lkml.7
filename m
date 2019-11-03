@@ -2,99 +2,202 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC21ECA9EBB
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 22:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EE7CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 22:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17F421655
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 22:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8893205C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 22:41:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RW20B4Hi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="otjkL/AL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbfKCWfz (ORCPT
+        id S1728197AbfKCWlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 17:35:55 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40295 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727602AbfKCWfz (ORCPT
+        Sun, 3 Nov 2019 17:41:44 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55145 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727602AbfKCWlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 17:35:55 -0500
-Received: by mail-lf1-f65.google.com with SMTP id f4so10794777lfk.7
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 14:35:53 -0800 (PST)
+        Sun, 3 Nov 2019 17:41:44 -0500
+Received: by mail-wm1-f68.google.com with SMTP id z26so1520964wmi.4;
+        Sun, 03 Nov 2019 14:41:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EHtdTbqBxd9JTKBkMBRWhQaNOyW/MKSbbKYTSzXac2s=;
-        b=RW20B4HiwisBi+QgKxV78+/7ahWabvD2Ujxzw9C0QLTzC4lFBaXW/aDjyAQ4YzYlJm
-         f3LfHiRVzK5cZLHWD9MeQlwlfdoZAjS0ICQyJePB3LKjdzNjnECwfLNrAWcp5S+jkwtA
-         WPDyoXQ9ItnxCrxoSpzzcO5bYucDWQQTO87rEgzoli2PkRZMdJK111r8tuZVp0oFLzQK
-         DftFukh3yFDXJqncuJ8LLANgiTMpNxAgOfEBLnDayf5GlGhIxOjJZGUaRg2AW3zSvU5V
-         2xdXlUKsIfdOzrVQ1iVZG87Be66/5/OwWDKbuMP0yL9EO+wmE6Qz/J/7Ur7JDRTiaP9v
-         RHqg==
+         :cc:content-transfer-encoding;
+        bh=HucD2g+iFY7eRxKaYG+od4LZ3/It4oehK1OgkAW2Ebg=;
+        b=otjkL/ALDBy2mJUdrrWFPnq2yf3HqrRGFDZE80/A8COATIC9Hc6JNFMRGgABBxOVAY
+         P7RPsU30qmVptlpHZ+zLTWSe/vjyrTqJpw+tMt8LcWdzHz4qBAPwkWcePBzVCzTjzsEF
+         OVIib/9Y5u7HBVgU1bZHNu52yPzhxSb+lDEMeHssv36yl/KJGMoxC57LQCrpM8q43qv6
+         AeyTGh92EvqjtIi4Y2uNN2RJVIJjRvkbFWgK9e1mBbg4pkjmLXEs31mHXrAUztA1SJwE
+         3oQ/KVwrOegtFu6EHPvLRNma05r0u8ht/ICBPzE7RawXhLC0M1rp8payzY6fzvv5v8Y5
+         6nYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EHtdTbqBxd9JTKBkMBRWhQaNOyW/MKSbbKYTSzXac2s=;
-        b=PrwFM7xw6riKoow977XMNrLEYSmda5D4gO10kVVrzS5yaNv8x1I16lT+mzH/RET4yg
-         GxUQUIpalGkDNfNMGjHuPPBHnLSRH0LfUg4v/5kNLcOcMkIb8XntgQ+Cqs1GYPX1dTlQ
-         gi/cgwiPYJGz99ACoMC3wrA5PhveTSCwWXVsBCOMqsuNFv37kEXSVvTJiD/oK0lRGieo
-         gV96wPiRpeZdCNg4pE+w0YoKfqxO/c+nfvVm9zrhIo1gwsF2qdl5aKjt4iTJdqD3Ym3B
-         TOaVoL3UjMuxHmZbco9OTwhd6W4xvyYAL2LJSeNgNxVOIuYfnRwli8Hr8CjagOLvqgRt
-         IW3g==
-X-Gm-Message-State: APjAAAXEZLniBpsYrUK40ZOHRHAtK827o3pSbAdipZHyA1nABfJlAjYm
-        6A8gS1y/0TUwRAbLuMTbx/GUc35NNAPUgYqCakq+dQ==
-X-Google-Smtp-Source: APXvYqzgwn2ea3wgkeAplcvs+z5xFC8B7B9ZgEIYnEjFBzdQK4niVCmNaMSjFFIdFzKBhXKld0V8HRZoBmyNEWVxAhg=
-X-Received: by 2002:a19:651b:: with SMTP id z27mr14242065lfb.117.1572820553199;
- Sun, 03 Nov 2019 14:35:53 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HucD2g+iFY7eRxKaYG+od4LZ3/It4oehK1OgkAW2Ebg=;
+        b=TDXiWxJo3qt9Z4UMN2rDBUEH8m72t4YqMYzFaP4TxEKfJ3d6j/kObRRXKDfcL64rki
+         6NvY68g8QR162Ija3UzG4Nm7QyitywQ5xl743EZs2XGgS2P7aOl9Z/pOt8GeSWNC8eSF
+         pjOKQmLQMj7EWdTYrWN/JP3Ztqav2Ou6fCjv4Scf8elnq8pSK2UpGeYV65OQVXLDKDSi
+         wTIlVHk5vGkfAhXIWz603tEnghxjM5uNGefTr9A73d1sqRIGlpE11ugxqm76y5ffeJtc
+         Qmswy8JQ4e0HBCVRuVP0AOD7WlNHs0L2XLkbRpzYDh9nC/3cQkj/LJbzMqSEKPf3DW27
+         XOfQ==
+X-Gm-Message-State: APjAAAXQC36M9oCLTx+a1k7ZlziwXRX7anwLmgNg7cfiFae/PM/3nr4U
+        rVhApaUn1+K9WtHIXHCQGudIABi/UALVbMQz7CI=
+X-Google-Smtp-Source: APXvYqyPEG01MLTsUGrMY+CVoElO++aDFQdqiZWzgRrFyzj2FCjI2etJek/jIGaF5IazlkvECznyA2C6wFfHjsHLshs=
+X-Received: by 2002:a1c:a512:: with SMTP id o18mr19098688wme.4.1572820900868;
+ Sun, 03 Nov 2019 14:41:40 -0800 (PST)
 MIME-Version: 1.0
-References: <20191101092031.24896-1-codrin.ciubotariu@microchip.com>
-In-Reply-To: <20191101092031.24896-1-codrin.ciubotariu@microchip.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 3 Nov 2019 23:35:41 +0100
-Message-ID: <CACRpkdZh-gV8T6cN2R9DrLE32EPGk9g07z_K00W9n+kbiSW7Wg@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: at91: Enable slewrate by default on SAM9X60
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
+References: <20191103203334.10539-5-peron.clem@gmail.com> <201911040602.AEBKHjBk%lkp@intel.com>
+In-Reply-To: <201911040602.AEBKHjBk%lkp@intel.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Sun, 3 Nov 2019 23:41:29 +0100
+Message-ID: <CAJiuCcd-uBAuCNk36iRKNP9F7162tZScWX2aPDVxyYiHMuo1Fw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] pwm: sun4i: Add support to output source clock directly
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 10:20 AM Codrin Ciubotariu
-<codrin.ciubotariu@microchip.com> wrote:
+Hi,
 
-> On SAM9X60, slewrate should be enabled on pins with a switching frequency
-> below 50Mhz. Since most of our pins do not exceed this value, we enable
-> slewrate by default. Pins with a switching value that exceeds 50Mhz will
-> have to explicitly disable slewrate.
+On Sun, 3 Nov 2019 at 23:30, kbuild test robot <lkp@intel.com> wrote:
 >
-> This patch changes the ABI. However, the slewrate macros are only used
-> by SAM9X60 and, at this moment, there are no device-tree files available
-> for this platform.
+> Hi "Cl=C3=A9ment,
 >
-> Suggested-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> I love your patch! Yet something to improve:
+>
+> [auto build test ERROR on sunxi/sunxi/for-next]
+> [also build test ERROR on v5.4-rc5 next-20191031]
+> [if your patch is applied to the wrong git tree, please drop us a note to=
+ help
+> improve the system. BTW, we also suggest to use '--base' option to specif=
+y the
+> base tree in git format-patch, please see https://stackoverflow.com/a/374=
+06982]
+>
+> url:    https://github.com/0day-ci/linux/commits/Cl-ment-P-ron/Add-suppor=
+t-for-H6-PWM/20191104-043621
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux.git s=
+unxi/for-next
+> config: riscv-allmodconfig (attached as .config)
+> compiler: riscv64-linux-gcc (GCC) 7.4.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbi=
+n/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=3D7.4.0 make.cross ARCH=3Driscv
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>    drivers//pwm/pwm-sun4i.c: In function 'sun4i_pwm_get_state':
+> >> drivers//pwm/pwm-sun4i.c:132:6: error: 'data' undeclared (first use in=
+ this function)
+>          data->has_direct_mod_clk_output) {
+>          ^~~~
+
+Arg, bad last minute indent fix :
+This should be "sun4i_pwm->data->has_direct_mod_clk_output"
+
+Sorry for that,
+Cl=C3=A9ment
+
+>    drivers//pwm/pwm-sun4i.c:132:6: note: each undeclared identifier is re=
+ported only once for each function it appears in
+>
+> vim +/data +132 drivers//pwm/pwm-sun4i.c
+>
+>    112
+>    113  static void sun4i_pwm_get_state(struct pwm_chip *chip,
+>    114                                  struct pwm_device *pwm,
+>    115                                  struct pwm_state *state)
+>    116  {
+>    117          struct sun4i_pwm_chip *sun4i_pwm =3D to_sun4i_pwm_chip(ch=
+ip);
+>    118          u64 clk_rate, tmp;
+>    119          u32 val;
+>    120          unsigned int prescaler;
+>    121
+>    122          clk_rate =3D clk_get_rate(sun4i_pwm->clk);
+>    123
+>    124          val =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+>    125
+>    126          /*
+>    127           * PWM chapter in H6 manual has a diagram which explains =
+that if bypass
+>    128           * bit is set, no other setting has any meaning. Even mor=
+e, experiment
+>    129           * proved that also enable bit is ignored in this case.
+>    130           */
+>    131          if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
+>  > 132              data->has_direct_mod_clk_output) {
+>    133                  state->period =3D DIV_ROUND_CLOSEST_ULL(NSEC_PER_=
+SEC, clk_rate);
+>    134                  state->duty_cycle =3D state->period / 2;
+>    135                  state->polarity =3D PWM_POLARITY_NORMAL;
+>    136                  state->enabled =3D true;
+>    137                  return;
+>    138          }
+>    139
+>    140          if ((PWM_REG_PRESCAL(val, pwm->hwpwm) =3D=3D PWM_PRESCAL_=
+MASK) &&
+>    141              sun4i_pwm->data->has_prescaler_bypass)
+>    142                  prescaler =3D 1;
+>    143          else
+>    144                  prescaler =3D prescaler_table[PWM_REG_PRESCAL(val=
+, pwm->hwpwm)];
+>    145
+>    146          if (prescaler =3D=3D 0)
+>    147                  return;
+>    148
+>    149          if (val & BIT_CH(PWM_ACT_STATE, pwm->hwpwm))
+>    150                  state->polarity =3D PWM_POLARITY_NORMAL;
+>    151          else
+>    152                  state->polarity =3D PWM_POLARITY_INVERSED;
+>    153
+>    154          if ((val & BIT_CH(PWM_CLK_GATING | PWM_EN, pwm->hwpwm)) =
+=3D=3D
+>    155              BIT_CH(PWM_CLK_GATING | PWM_EN, pwm->hwpwm))
+>    156                  state->enabled =3D true;
+>    157          else
+>    158                  state->enabled =3D false;
+>    159
+>    160          val =3D sun4i_pwm_readl(sun4i_pwm, PWM_CH_PRD(pwm->hwpwm)=
+);
+>    161
+>    162          tmp =3D prescaler * NSEC_PER_SEC * PWM_REG_DTY(val);
+>    163          state->duty_cycle =3D DIV_ROUND_CLOSEST_ULL(tmp, clk_rate=
+);
+>    164
+>    165          tmp =3D prescaler * NSEC_PER_SEC * PWM_REG_PRD(val);
+>    166          state->period =3D DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
+>    167  }
+>    168
+>
 > ---
->
-> Changes in v2:
->  - updated commit message to reflect the ABI change
-
-Patch applied with the ACKs.
-
-Yours,
-Linus Walleij
+> 0-DAY kernel test infrastructure                Open Source Technology Ce=
+nter
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corpora=
+tion
