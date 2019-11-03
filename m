@@ -2,121 +2,100 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25999CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 15:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E936CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 15:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC2322080F
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 15:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C8F2067D
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 15:40:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aE/p2FZz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JN89MVqm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbfKCPZY (ORCPT
+        id S1727749AbfKCPkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 10:25:24 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43830 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727541AbfKCPZY (ORCPT
+        Sun, 3 Nov 2019 10:40:10 -0500
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:42524 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727523AbfKCPkJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 10:25:24 -0500
-Received: by mail-lj1-f196.google.com with SMTP id y23so4006514ljh.10;
-        Sun, 03 Nov 2019 07:25:22 -0800 (PST)
+        Sun, 3 Nov 2019 10:40:09 -0500
+Received: by mail-yb1-f195.google.com with SMTP id 4so6727010ybq.9
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 07:40:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rn9KeNDT4iKdtNBCSH/cL/Z9GtPYoGbYGu5A9HzK+V8=;
-        b=aE/p2FZzEKu66BHJpH4hj/dEDXQxyxWCua3xFzwKaHe96+IqbqAZXWZ1HxJfYa+fZq
-         vC1ViJa2PsNRG45cQ+AstJS0+7eLZC2QkBcw9fkLaGyNvu/18xfnyhSFaDktZ2NngReA
-         ke4jYoVYTdkf2TzqyqyrKHAbpAucd9C2AXHnwIJS+I3TTwVncu9uY5jAjUyCAKpKEp+4
-         6jY3mtkliZbn1K5Ai7NlxacFZw66GV4rL+WhnTC0peCc2729BDsLhIa1xh8+rCN9uaAp
-         fYJcl5K83+hTGMV1WSo0B+9OtEfUwu0ofXDvrWyhsUI3ir0zWBBZoBSGPGHRMJlfz7Nc
-         kLLw==
+        h=from:to:cc:subject:date:message-id;
+        bh=x4j/IlwUnW0oXPf0xwxr4LoLQSGvtIg5s+az3FiNtkk=;
+        b=JN89MVqm93zYD9LofbK1mpWPJSkcvJZhCAFdIoMo1g0lKy+MWTXz7uUKlQgjMG+kB7
+         HfTYu6hm2ODG1nw/wUCI3KqWVNhqflhEmlipICvTbMKM3MkX9/b5+Yt68qGHRw4DJgo9
+         PBMqp5mgAl5C54D4Jyg7mvSpVW85NgMNKZngxTcfu+BwzX1MTn4jJrX8g0IUFv/cMXzZ
+         LaxZ/QLE52C22WXO/2Bgm0I8OzUklElVmeN85r3HKyQGXRqN/oeshFu2hnfNRAnUYsBp
+         PtR7f+9K1wtWV4xSjjmdrhfVUqOsQlDFTXnnO0u6lqF5TAoCXe0/YyiLTgPCTCs9deXy
+         twcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rn9KeNDT4iKdtNBCSH/cL/Z9GtPYoGbYGu5A9HzK+V8=;
-        b=fBEAR4qPVhh5+B9r4zBa0a/JsdpRUWqr1w/Iv7oTeql4VMfkkatCuow/go5tTDHrSF
-         5iVGK2oMZkzeLz+h5CnkCvyadmLAvgcDF+U0De/xHXu9/N64CQa31OuqhkgHPKt//bDr
-         FDNS1dABY6waowM8iNFItIAF0WItmqES44vwl3kv6OkmSgkofyWPuKgw3W1DO+Hhv2pR
-         zZgk35+ZMskdTGmWvVbjVdudP2W00KAsIln5ufTfXyyZ/litcpr8TMri96eZV3JTxQAj
-         rhCHbkAkbxSrKWwtieTCGDknOOodqY/t9IgPqDwHSXocIcA4qjabqeXNo50BkHnlUDDO
-         KsSw==
-X-Gm-Message-State: APjAAAWMCl4zzCYuVTVUm99MNDVB/jFyE1nmf8WnkNOCNwjG8dt11nxa
-        LzMJfbvl0KGWee33cm/7vU9Jzq6q
-X-Google-Smtp-Source: APXvYqybUK3ykGyF1yNXnJXyTeInwvIxLz2b6crTmz2O69lefh6fgNByWl410QpolqgTMdDb+P3uiQ==
-X-Received: by 2002:a2e:3016:: with SMTP id w22mr15687484ljw.117.1572794721360;
-        Sun, 03 Nov 2019 07:25:21 -0800 (PST)
-Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id q26sm5372252lfo.65.2019.11.03.07.25.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 Nov 2019 07:25:20 -0800 (PST)
-Subject: Re: [PATCH v7 17/19] PM / devfreq: tegra30: Support variable polling
- interval
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191029220019.26773-1-digetx@gmail.com>
- <20191029220019.26773-18-digetx@gmail.com>
- <20191101215816.GB8724@qmqm.qmqm.pl>
- <590f47a4-c75a-e8c9-88b8-b3cd98578969@gmail.com>
-Message-ID: <71a16d74-5908-ea97-ae98-4b7d0e99a765@gmail.com>
-Date:   Sun, 3 Nov 2019 18:25:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <590f47a4-c75a-e8c9-88b8-b3cd98578969@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=x4j/IlwUnW0oXPf0xwxr4LoLQSGvtIg5s+az3FiNtkk=;
+        b=nKOhzvVKx1Q3RnJzXAQIxDa0r100jf5fSx0r2nIrxIwvYqJvO48CIxTN8sDa5Mc2TK
+         7l1tLskl1NdTeW4wBrOYQWGRG3uPvKNGS1xMpqTNkqY43ypE7nE9sQhRUdGfkn6Zz+mi
+         d+PgDhP9JaQj9PYzsXTr7p7LkUpR2x20U4p7cBXOs5Ee3Qc3h6bQiDJnxo1HOf4bAY/i
+         WFYsONt7as+qsKxcRNcVxgK61nBRruTq61g14TYxRr7kuAYBDHQIuJZKty6NDZj5VddI
+         /DSXZ3mqiKFv6rFJRAZLXp0f1QxGd6if1vlgPfeGnWd0LJG97AlMmB5L69oYjeiQpEYC
+         ShIA==
+X-Gm-Message-State: APjAAAX+VWyvk2/rHeTp5dG1lnqtalE/SAoFdVuq8j6gChste1FlsBwr
+        4JQZkNv7P7Uod2X3K7bij0M=
+X-Google-Smtp-Source: APXvYqxbZxQYVugnGwmYAPCnUUXS9jZ+q1NxK1xEmrIBsy4Hp57ulLZLpZ6OslMRU75zEHAjWFI5Ng==
+X-Received: by 2002:a25:3ce:: with SMTP id 197mr18238973ybd.255.1572795608598;
+        Sun, 03 Nov 2019 07:40:08 -0800 (PST)
+Received: from rkanasun-VirtualBox.ad.cirrus.com ([141.131.2.3])
+        by smtp.gmail.com with ESMTPSA id l76sm12569294ywl.24.2019.11.03.07.40.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Nov 2019 07:40:08 -0800 (PST)
+From:   Rama Kumar <ramakumar.kanasundara@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     jeremy@azazel.net, nishadkamdar@gmail.com,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Rama Kumar <ramakumar.kanasundara@gmail.com>
+Subject: [PATCH] FBTFT: Changed delay function.
+Date:   Sun,  3 Nov 2019 09:40:03 -0600
+Message-Id: <20191103154003.2739-1-ramakumar.kanasundara@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-02.11.2019 01:23, Dmitry Osipenko пишет:
-> 02.11.2019 00:58, Michał Mirosław пишет:
->> On Wed, Oct 30, 2019 at 01:00:17AM +0300, Dmitry Osipenko wrote:
->>> The ACTMON governor is interrupt-driven and currently hardware's polling
->>> interval is fixed to 16ms in the driver. Devfreq supports variable polling
->>> interval by the generic governors, let's re-use the generic interface for
->>> changing of the polling interval. Now the polling interval can be changed
->>> dynamically via /sys/class/devfreq/devfreq0/polling_interval.
->> [...]
->>> @@ -308,7 +308,7 @@ static unsigned long actmon_device_target_freq(struct tegra_devfreq *tegra,
->>>  	unsigned int avg_sustain_coef;
->>>  	unsigned long target_freq;
->>>  
->>> -	target_freq = dev->avg_count / ACTMON_SAMPLING_PERIOD;
->>> +	target_freq = dev->avg_count / tegra->devfreq->profile->polling_ms;
->>>  	avg_sustain_coef = 100 * 100 / dev->config->boost_up_threshold;
->>>  	target_freq = do_percent(target_freq, avg_sustain_coef);
->>>  	target_freq += dev->boost_freq;
->>
->> Noting a comment in patch 13, if this is hot path you could try reciprocal_divide().
-> 
-> Hello Michał,
-> 
-> This not really a hot path, I just wanted to optimize that case to keep
-> things a bit nicer.
-> 
-> Please take a look at the arch/arm/boot/compressed/lib1funcs.S, firstly
-> it checks whether divisor is a power of 2 value and then takes optimized
-> code path that uses a single shift. Hence the patch 13 still applies here.
 
-On the other hand, there is now only a single case of the division by
-polling_ms in the driver which won't bring much benefit, so it indeed
-makes sense to skip the patch 13 for now.
+Hi,
+
+Changed udelay() to usleep_range() based on the document in the path, "Documentation/timers/timers-howto.rst". It was suggested to use usleep_range() function for sleeping duration between 10us - 20 ms. original code used udelay() for sleeping 20 us.
+ 
+---
+drivers/staging/fbtft/fb_agm1264k-fl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/fbtft/fb_agm1264k-fl.c b/drivers/staging/fbtft/fb_agm1264k-fl.c
+index eeeeec97ad27..471a145e3c00 100644
+--- a/drivers/staging/fbtft/fb_agm1264k-fl.c
++++ b/drivers/staging/fbtft/fb_agm1264k-fl.c
+@@ -85,7 +85,7 @@ static void reset(struct fbtft_par *par)
+ 	dev_dbg(par->info->device, "%s()\n", __func__);
+ 
+ 	gpiod_set_value(par->gpio.reset, 0);
+-	udelay(20);
++	usleep_range(20,20);
+ 	gpiod_set_value(par->gpio.reset, 1);
+ 	mdelay(120);
+ }
+-- 
+Signed-off-by: Rama Kumar <ramakumar.kanasundara@gmail.com>
+
+Thanks,
+Rama Kumar
+
+2.17.1
+
