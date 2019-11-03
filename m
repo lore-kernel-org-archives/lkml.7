@@ -2,85 +2,92 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA82CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 08:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D74CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 08:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 941D3215EA
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 08:28:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572769688;
-	bh=+fzWTobamhGrK8+G2X8RepZguerf8UBR732qIjN5bOU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fPas2TM3Hyac7afckTXeYfYXBpMzzvbd63svDQgp3MkDgsY0LgsTeZPspQfIt0v1r
-	 035UKgNTjfv5hYW4noddIIgZkjwyH3qK5hjLMmyghPnqp7nYVvfcOZE19gtBn1HQ9j
-	 MPgxpKabat4J+0xTF7Gwoau1AGsdaQKJSZaQNPZU=
+	by mail.kernel.org (Postfix) with ESMTP id C125C2084D
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 08:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbfKCI2H (ORCPT
+        id S1727483AbfKCI7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 03:28:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbfKCI2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 03:28:07 -0500
-Received: from localhost (unknown [106.206.31.209])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6958214D8;
-        Sun,  3 Nov 2019 08:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572769686;
-        bh=+fzWTobamhGrK8+G2X8RepZguerf8UBR732qIjN5bOU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r0yJa2hsvmGGBe6njZasq5fj1OZVbCxOx9AQN5QHXEOOPGLGWT7enDmtk0ghVwh32
-         eCl0FTUZiIKDJUiJ4OcvpblgrYj0gKNLDh9pXYHFwzmkEkZJxtliytpKoapv8fzaza
-         nODSLw/1NEHqlMo7cMjD8T7M2ikbOsZgPuLPkJDM=
-Date:   Sun, 3 Nov 2019 13:57:59 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] arm64: dts: qcom: sdm845: Add PCIe nodes
-Message-ID: <20191103082759.GR2695@vkoul-mobl.Dlink>
-References: <20191102003148.4091335-1-bjorn.andersson@linaro.org>
+        Sun, 3 Nov 2019 03:59:49 -0500
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:39017 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726408AbfKCI7t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 03:59:49 -0500
+X-IronPort-AV: E=Sophos;i="5.68,262,1569276000"; 
+   d="scan'208";a="410041714"
+Received: from abo-45-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.45])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Nov 2019 09:59:47 +0100
+Date:   Sun, 3 Nov 2019 09:59:47 +0100 (CET)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Can Guo <cang@codeaurora.org>
+cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        kbuild-all@lists.01.org
+Subject: [PATCH] scsi: ufs: fix call_kern.cocci warnings
+Message-ID: <alpine.DEB.2.21.1911030955460.2744@hadrien>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191102003148.4091335-1-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-11-19, 17:31, Bjorn Andersson wrote:
-> Add PCIe controller and PHY nodes for SDM845 and enable them for the
-> Dragonboard 845c.
+From: kbuild test robot <lkp@intel.com>
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Function ufshcd_dump_regs called from ufshcd_intr inside a lock
+but uses GFP_KERNEL.
 
-> 
-> The two series' that adding the PHY drivers and controller support can be found
-> here:
-> https://lore.kernel.org/linux-arm-msm/20191102001628.4090861-1-bjorn.andersson@linaro.org/T/#m6a892f4d6a8eefdd2c16b29b1cebb0023c69eac0
-> https://lore.kernel.org/linux-arm-msm/20191102002721.4091180-1-bjorn.andersson@linaro.org/T/#m42ca469f4b23d534000a4b45a55d9739edbebdc4
-> 
-> Bjorn Andersson (3):
->   arm64: dts: qcom: sdm845: Add first PCIe controller and PHY
->   arm64: dts: qcom: sdm845: Add second PCIe PHY and controller
->   arm64: dts: qcom: db845c: Enable PCIe controllers
-> 
->  arch/arm64/boot/dts/qcom/sdm845-db845c.dts |  91 +++++++++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi       | 215 +++++++++++++++++++++
->  2 files changed, 306 insertions(+)
-> 
-> -- 
-> 2.23.0
+Generated by: scripts/coccinelle/locks/call_kern.cocci
 
--- 
-~Vinod
+Fixes: 3393ec7d5dc1 ("scsi: ufs: Fix irq return code")
+CC: Venkat Gopalakrishnan <venkatg@codeaurora.org>
+Signed-off-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
+---
+
+url:    https://github.com/0day-ci/linux/commits/Can-Guo/UFS-driver-general-fixes-bundle-3/20191103-092121
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git for-next
+:::::: branch date: 2 hours ago
+:::::: commit date: 2 hours ago
+
+Another approach would be to reorganize the code to not use this function
+in printing the error message from the interrupt handler, or to reorganize
+the code in some other way.
+
+ ufshcd.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -117,7 +117,7 @@ int ufshcd_dump_regs(struct ufs_hba *hba
+ 	if (offset % 4 != 0 || len % 4 != 0) /* keep readl happy */
+ 		return -EINVAL;
+
+-	regs = kzalloc(len, GFP_KERNEL);
++	regs = kzalloc(len, GFP_ATOMIC);
+ 	if (!regs)
+ 		return -ENOMEM;
+
