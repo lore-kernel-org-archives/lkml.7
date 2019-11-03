@@ -2,307 +2,421 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29173CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 06:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966D7CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 06:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A512084D
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 06:34:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572762888;
-	bh=TTaEmdSMoXFvWJB8M9tF7dDrCSl0UeZB4Ed8rEoKX+A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GQ457yWuq+G4L3S9tgGJ6XaRif6cw5IZ8nCRfb9EuPH/xsOrpRpj2st3Hx1JlUbck
-	 Ab14+wTeLxMNEWNrXuOZkgigsNIx0dfXI5yDnTYGHXqP2GO/TGn8M9kd3yU0u04HHn
-	 83lqJhhYQkPgvMhY4w/8hgpTSN4okSb6/x++7vjk=
+	by mail.kernel.org (Postfix) with ESMTP id 477A42084D
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 06:35:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p7G4fyaN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbfKCGa7 (ORCPT
+        id S1727470AbfKCGfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 01:30:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52490 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726379AbfKCGa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 01:30:59 -0500
-Received: from localhost (unknown [106.206.31.209])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B16892084D;
-        Sun,  3 Nov 2019 06:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572762658;
-        bh=TTaEmdSMoXFvWJB8M9tF7dDrCSl0UeZB4Ed8rEoKX+A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L9Vs1KFVvTRE29YW4iQUNjc5yulAUWAWx7E9qgfAEIoK9iDbYiYW0/6lmNH39iV47
-         q4lQIa3d7XE2ukY4rdyctuAAFZf6I4V/EqOgS8mRDucr2waG1rPWGgtTfpyRYaN18n
-         V8fB9LecZMCZQA1acVt/BkeIJ3nArcij2sJy99eY=
-Date:   Sun, 3 Nov 2019 12:00:51 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH 07/14] soundwire: add initial definitions for
- sdw_master_device
-Message-ID: <20191103063051.GJ2695@vkoul-mobl.Dlink>
-References: <20191023212823.608-1-pierre-louis.bossart@linux.intel.com>
- <20191023212823.608-8-pierre-louis.bossart@linux.intel.com>
+        Sun, 3 Nov 2019 01:35:31 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34541 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfKCGfb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 01:35:31 -0500
+Received: by mail-pg1-f195.google.com with SMTP id e4so9187409pgs.1;
+        Sat, 02 Nov 2019 23:35:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jeORO5ZUt0doBbSOV8Th41chv6HfjPxHBvvQzP2DtFU=;
+        b=p7G4fyaN54oVu/0M70fNAPO3f1gs0zB2xPsyxPB9uCFTBsWwKywXwo9U+WU5+pmvHM
+         kIESnbiZfdX1wn5NEHDeE+8fxvlmoJiIq00dpz1A8NBf3lpUuS+6ePFXaubYfHnAhJT/
+         sCINDYT432NiM4gkxZdbjytzd1epdbo4rS3UUlyNp6RprWYXQc4xfre9DOfUKAmIAm3O
+         FWo5M4pxmO1WV4QVt3Rd66ndP57XABpdb1g8MxrrxxTD8Rb6CGXEcFWI0AzZfxxBL/hM
+         9+Fkb4qr2QVGpIdjVaOOpHaJU4zFxqCqMJq/zHoZALamDSohgxlQmjzX+KWg8Z2iPaxX
+         XQeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jeORO5ZUt0doBbSOV8Th41chv6HfjPxHBvvQzP2DtFU=;
+        b=dXMdn6XRRA/Irbc55JnOld3xa2RM+xOAhaLwUOprqWfVB5+7wqd/cZtJielAAvPlRR
+         BXiT1KqLj5U35z/ZwSfZk9wArbVgOYO+VoyeaoyLtU77xjZJGHz5xdyB6ITXO7igMshH
+         AbV59sXezdzPPlMQHxrTWWAfgUcp4jbi9tLJnYLQXPmAaklClLotI7Gvg61q1wqf+LuD
+         nloD9hRB+/zVAAsyCns1uEU0Cxhr2SCXs8PgAbqNWhniPvRcghw1862IlnymfeGST1WU
+         P5QPlWnoO2ATxLUwzWkXhXiqF+aFfpsCSiwKeXANv8cKvpldIwk/hZYVd2RzztPTiEBk
+         Im+g==
+X-Gm-Message-State: APjAAAXEWoEWMNbCN5/j2wDksIc0QyeVJh92FrCcsvB81pXiMuQhxUEw
+        17rmN2/WWYIhtMQ6gTG4Z/s=
+X-Google-Smtp-Source: APXvYqx271aN3RuZ2nR+1q03x5UtMuyA+O3itqVgVpWzZDZVn8g3e3g4g5rgkuZcPUEpPZPlB5Q4tQ==
+X-Received: by 2002:a17:90a:741:: with SMTP id s1mr23133821pje.122.1572762930141;
+        Sat, 02 Nov 2019 23:35:30 -0700 (PDT)
+Received: from workstation-kernel-dev ([139.5.252.170])
+        by smtp.gmail.com with ESMTPSA id w27sm11766547pgc.20.2019.11.02.23.35.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Nov 2019 23:35:29 -0700 (PDT)
+Date:   Sun, 3 Nov 2019 12:05:22 +0530
+From:   Amol Grover <frextrite@gmail.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>, rcu@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        madhuparnabhowmik04@gmail.com, tranmanphong@gmail.com
+Subject: Re: [PATCH] Documentation: RCU: rcu_dereference: Convert to
+ rcu_dereference.rst
+Message-ID: <20191103063522.GA828@workstation-kernel-dev>
+References: <20191102080107.GA3066@workstation-kernel-dev>
+ <20191102165734.GS20975@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191023212823.608-8-pierre-louis.bossart@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191102165734.GS20975@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-10-19, 16:28, Pierre-Louis Bossart wrote:
-> Since we want an explicit support for the SoundWire Master device, add
-> the definitions, following the Grey Bus example.
+On Sat, Nov 02, 2019 at 09:57:34AM -0700, Paul E. McKenney wrote:
+> On Sat, Nov 02, 2019 at 01:31:07PM +0530, Amol Grover wrote:
+> > This patch converts rcu_dereference.txt to rcu_dereference.rst and
+> > adds it to index.rst
+> > 
+> > Signed-off-by: Amol Grover <frextrite@gmail.com>
 > 
-> Open: do we need to set a variable when dealing with the master uevent?
+> Queued and pushed for review and testing.  Assuming all goes well, I will
+> push it for the v5.6 merge window.
+> 
+> Could you please take a look at the similar commits from Madhuparna and
+> Phong?  No time like the present to also gain experience with review
+> and testing!
+> 
+> 							Thanx, Paul
 
-I dont think we want that or we need that!
+Sure thing Paul!
 
-And to prevent that rather than adding a variable, can you please
-modify the device_type and use separate ones for master_device and
-slave_device
+Thank you
+Amol
 
 > 
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
->  drivers/soundwire/Makefile         |  2 +-
->  drivers/soundwire/bus_type.c       | 16 +++++---
->  drivers/soundwire/master.c         | 62 ++++++++++++++++++++++++++++++
->  include/linux/soundwire/sdw.h      | 35 +++++++++++++++++
->  include/linux/soundwire/sdw_type.h |  9 +++++
->  5 files changed, 117 insertions(+), 7 deletions(-)
->  create mode 100644 drivers/soundwire/master.c
-> 
-> diff --git a/drivers/soundwire/Makefile b/drivers/soundwire/Makefile
-> index 563894e5ecaf..89b29819dd3a 100644
-> --- a/drivers/soundwire/Makefile
-> +++ b/drivers/soundwire/Makefile
-> @@ -4,7 +4,7 @@
->  #
->  
->  #Bus Objs
-> -soundwire-bus-objs := bus_type.o bus.o slave.o mipi_disco.o stream.o
-> +soundwire-bus-objs := bus_type.o bus.o master.o slave.o mipi_disco.o stream.o
->  obj-$(CONFIG_SOUNDWIRE) += soundwire-bus.o
->  
->  ifdef CONFIG_DEBUG_FS
-> diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
-> index 5df095f4e12f..cf33f63773f0 100644
-> --- a/drivers/soundwire/bus_type.c
-> +++ b/drivers/soundwire/bus_type.c
-> @@ -49,21 +49,25 @@ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size)
->  
->  static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
->  {
-> +	struct sdw_master_device *md;
->  	struct sdw_slave *slave;
->  	char modalias[32];
->  
-> -	if (is_sdw_slave(dev)) {
-> +	if (is_sdw_md(dev)) {
-> +		md = to_sdw_master_device(dev);
-
-md seems unused?
-
-> +		/* TODO: do we need to call add_uevent_var() ? */
-> +	} else if (is_sdw_slave(dev)) {
->  		slave = to_sdw_slave_device(dev);
-> +
-> +		sdw_slave_modalias(slave, modalias, sizeof(modalias));
-> +
-> +		if (add_uevent_var(env, "MODALIAS=%s", modalias))
-> +			return -ENOMEM;
->  	} else {
->  		dev_warn(dev, "uevent for unknown Soundwire type\n");
->  		return -EINVAL;
->  	}
->  
-> -	sdw_slave_modalias(slave, modalias, sizeof(modalias));
-> -
-> -	if (add_uevent_var(env, "MODALIAS=%s", modalias))
-> -		return -ENOMEM;
-> -
->  	return 0;
->  }
->  
-> diff --git a/drivers/soundwire/master.c b/drivers/soundwire/master.c
-> new file mode 100644
-> index 000000000000..6210098c892b
-> --- /dev/null
-> +++ b/drivers/soundwire/master.c
-> @@ -0,0 +1,62 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> +// Copyright(c) 2019 Intel Corporation.
-> +
-> +#include <linux/device.h>
-> +#include <linux/acpi.h>
-> +#include <linux/soundwire/sdw.h>
-> +#include <linux/soundwire/sdw_type.h>
-> +#include "bus.h"
-> +
-> +static void sdw_md_release(struct device *dev)
-> +{
-> +	struct sdw_master_device *md = to_sdw_master_device(dev);
-> +
-> +	kfree(md);
-> +}
-> +
-> +struct device_type sdw_md_type = {
-> +	.name =		"soundwire_master",
-> +	.release =	sdw_md_release,
-> +};
-> +
-> +struct sdw_master_device *sdw_md_add(struct sdw_md_driver *driver,
-> +				     struct device *parent,
-> +				     struct fwnode_handle *fwnode,
-> +				     int link_id)
-> +{
-> +	struct sdw_master_device *md;
-> +	int ret;
-> +
-> +	if (!driver->probe) {
-> +		dev_err(parent, "mandatory probe callback missing\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	md = kzalloc(sizeof(*md), GFP_KERNEL);
-> +	if (!md)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	md->link_id = link_id;
-> +
-> +	md->driver = driver;
-> +
-> +	md->dev.parent = parent;
-> +	md->dev.fwnode = fwnode;
-> +	md->dev.bus = &sdw_bus_type;
-> +	md->dev.type = &sdw_md_type;
-> +	md->dev.dma_mask = md->dev.parent->dma_mask;
-> +	dev_set_name(&md->dev, "sdw-master-%d", md->link_id);
-> +
-> +	ret = device_register(&md->dev);
-> +	if (ret) {
-> +		dev_err(parent, "Failed to add master: ret %d\n", ret);
-> +		/*
-> +		 * On err, don't free but drop ref as this will be freed
-> +		 * when release method is invoked.
-> +		 */
-> +		put_device(&md->dev);
-> +	}
-> +
-> +	return md;
-> +}
-> +EXPORT_SYMBOL(sdw_md_add);
-> diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-> index d6e5a0e42819..6f8b6a0cbcb7 100644
-> --- a/include/linux/soundwire/sdw.h
-> +++ b/include/linux/soundwire/sdw.h
-> @@ -573,6 +573,16 @@ struct sdw_slave {
->  #define to_sdw_slave_device(d) \
->  	container_of(d, struct sdw_slave, dev)
->  
-> +struct sdw_master_device {
-> +	struct device dev;
-> +	int link_id;
-> +	struct sdw_md_driver *driver;
-> +	void *pdata; /* core does not touch */
-
-what is the use for this, also please add kernel-doc style comments for
-core structs
-
-> +};
-> +
-> +#define to_sdw_master_device(d)	\
-> +	container_of(d, struct sdw_master_device, dev)
-> +
->  struct sdw_driver {
->  	const char *name;
->  
-> @@ -587,6 +597,26 @@ struct sdw_driver {
->  	struct device_driver driver;
->  };
->  
-> +struct sdw_md_driver {
-> +	/* initializations and allocations */
-> +	int (*probe)(struct sdw_master_device *md, void *link_ctx);
-> +	/* hardware enablement, all clock/power dependencies are available */
-> +	int (*startup)(struct sdw_master_device *md);
-> +	/* hardware disabled */
-> +	int (*shutdown)(struct sdw_master_device *md);
-> +	/* free all resources */
-> +	int (*remove)(struct sdw_master_device *md);
-> +	/*
-> +	 * enable/disable driver control while in clock-stop mode,
-> +	 * typically in always-on/D0ix modes. When the driver yields
-> +	 * control, another entity in the system (typically firmware
-> +	 * running on an always-on microprocessor) is responsible to
-> +	 * tracking Slave-initiated wakes
-> +	 */
-> +	int (*autonomous_clock_stop_enable)(struct sdw_master_device *md,
-> +					    bool state);
-> +};
-> +
->  #define SDW_SLAVE_ENTRY(_mfg_id, _part_id, _drv_data) \
->  	{ .mfg_id = (_mfg_id), .part_id = (_part_id), \
->  	  .driver_data = (unsigned long)(_drv_data) }
-> @@ -776,6 +806,11 @@ struct sdw_bus {
->  int sdw_add_bus_master(struct sdw_bus *bus);
->  void sdw_delete_bus_master(struct sdw_bus *bus);
->  
-> +struct sdw_master_device *sdw_md_add(struct sdw_md_driver *driver,
-> +				     struct device *parent,
-> +				     struct fwnode_handle *fwnode,
-> +				     int link_id);
-> +
->  /**
->   * sdw_port_config: Master or Slave Port configuration
->   *
-> diff --git a/include/linux/soundwire/sdw_type.h b/include/linux/soundwire/sdw_type.h
-> index c681b3426478..463d6d018d56 100644
-> --- a/include/linux/soundwire/sdw_type.h
-> +++ b/include/linux/soundwire/sdw_type.h
-> @@ -6,15 +6,24 @@
->  
->  extern struct bus_type sdw_bus_type;
->  extern struct device_type sdw_slave_type;
-> +extern struct device_type sdw_md_type;
->  
->  static inline int is_sdw_slave(const struct device *dev)
->  {
->  	return dev->type == &sdw_slave_type;
->  }
->  
-> +static inline int is_sdw_md(const struct device *dev)
-> +{
-> +	return dev->type == &sdw_md_type;
-> +}
-> +
->  #define to_sdw_slave_driver(_drv) \
->  	container_of(_drv, struct sdw_driver, driver)
->  
-> +#define to_sdw_md_driver(_drv) \
-> +	container_of(_drv, struct sdw_md_driver, driver)
-> +
->  #define sdw_register_slave_driver(drv) \
->  	__sdw_register_slave_driver(drv, THIS_MODULE)
->  
-> -- 
-> 2.20.1
-
--- 
-~Vinod
+> > ---
+> >  Documentation/RCU/index.rst                   |  1 +
+> >  ...cu_dereference.txt => rcu_dereference.rst} | 75 ++++++++++---------
+> >  2 files changed, 42 insertions(+), 34 deletions(-)
+> >  rename Documentation/RCU/{rcu_dereference.txt => rcu_dereference.rst} (88%)
+> > 
+> > diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
+> > index 627128c230dc..585f3d8abd76 100644
+> > --- a/Documentation/RCU/index.rst
+> > +++ b/Documentation/RCU/index.rst
+> > @@ -8,6 +8,7 @@ RCU concepts
+> >     :maxdepth: 3
+> >  
+> >     arrayRCU
+> > +   rcu_dereference
+> >     rcu
+> >     listRCU
+> >     NMI-RCU
+> > diff --git a/Documentation/RCU/rcu_dereference.txt b/Documentation/RCU/rcu_dereference.rst
+> > similarity index 88%
+> > rename from Documentation/RCU/rcu_dereference.txt
+> > rename to Documentation/RCU/rcu_dereference.rst
+> > index bf699e8cfc75..c9667eb0d444 100644
+> > --- a/Documentation/RCU/rcu_dereference.txt
+> > +++ b/Documentation/RCU/rcu_dereference.rst
+> > @@ -1,4 +1,7 @@
+> > +.. _rcu_dereference_doc:
+> > +
+> >  PROPER CARE AND FEEDING OF RETURN VALUES FROM rcu_dereference()
+> > +===============================================================
+> >  
+> >  Most of the time, you can use values from rcu_dereference() or one of
+> >  the similar primitives without worries.  Dereferencing (prefix "*"),
+> > @@ -8,7 +11,7 @@ subtraction of constants, and casts all work quite naturally and safely.
+> >  It is nevertheless possible to get into trouble with other operations.
+> >  Follow these rules to keep your RCU code working properly:
+> >  
+> > -o	You must use one of the rcu_dereference() family of primitives
+> > +-	You must use one of the rcu_dereference() family of primitives
+> >  	to load an RCU-protected pointer, otherwise CONFIG_PROVE_RCU
+> >  	will complain.  Worse yet, your code can see random memory-corruption
+> >  	bugs due to games that compilers and DEC Alpha can play.
+> > @@ -25,24 +28,24 @@ o	You must use one of the rcu_dereference() family of primitives
+> >  	for an example where the compiler can in fact deduce the exact
+> >  	value of the pointer, and thus cause misordering.
+> >  
+> > -o	You are only permitted to use rcu_dereference on pointer values.
+> > +-	You are only permitted to use rcu_dereference on pointer values.
+> >  	The compiler simply knows too much about integral values to
+> >  	trust it to carry dependencies through integer operations.
+> >  	There are a very few exceptions, namely that you can temporarily
+> >  	cast the pointer to uintptr_t in order to:
+> >  
+> > -	o	Set bits and clear bits down in the must-be-zero low-order
+> > +	-	Set bits and clear bits down in the must-be-zero low-order
+> >  		bits of that pointer.  This clearly means that the pointer
+> >  		must have alignment constraints, for example, this does
+> >  		-not- work in general for char* pointers.
+> >  
+> > -	o	XOR bits to translate pointers, as is done in some
+> > +	-	XOR bits to translate pointers, as is done in some
+> >  		classic buddy-allocator algorithms.
+> >  
+> >  	It is important to cast the value back to pointer before
+> >  	doing much of anything else with it.
+> >  
+> > -o	Avoid cancellation when using the "+" and "-" infix arithmetic
+> > +-	Avoid cancellation when using the "+" and "-" infix arithmetic
+> >  	operators.  For example, for a given variable "x", avoid
+> >  	"(x-(uintptr_t)x)" for char* pointers.	The compiler is within its
+> >  	rights to substitute zero for this sort of expression, so that
+> > @@ -54,16 +57,16 @@ o	Avoid cancellation when using the "+" and "-" infix arithmetic
+> >  	"p+a-b" is safe because its value still necessarily depends on
+> >  	the rcu_dereference(), thus maintaining proper ordering.
+> >  
+> > -o	If you are using RCU to protect JITed functions, so that the
+> > +-	If you are using RCU to protect JITed functions, so that the
+> >  	"()" function-invocation operator is applied to a value obtained
+> >  	(directly or indirectly) from rcu_dereference(), you may need to
+> >  	interact directly with the hardware to flush instruction caches.
+> >  	This issue arises on some systems when a newly JITed function is
+> >  	using the same memory that was used by an earlier JITed function.
+> >  
+> > -o	Do not use the results from relational operators ("==", "!=",
+> > +-	Do not use the results from relational operators ("==", "!=",
+> >  	">", ">=", "<", or "<=") when dereferencing.  For example,
+> > -	the following (quite strange) code is buggy:
+> > +	the following (quite strange) code is buggy::
+> >  
+> >  		int *p;
+> >  		int *q;
+> > @@ -81,11 +84,11 @@ o	Do not use the results from relational operators ("==", "!=",
+> >  	after such branches, but can speculate loads, which can again
+> >  	result in misordering bugs.
+> >  
+> > -o	Be very careful about comparing pointers obtained from
+> > +-	Be very careful about comparing pointers obtained from
+> >  	rcu_dereference() against non-NULL values.  As Linus Torvalds
+> >  	explained, if the two pointers are equal, the compiler could
+> >  	substitute the pointer you are comparing against for the pointer
+> > -	obtained from rcu_dereference().  For example:
+> > +	obtained from rcu_dereference().  For example::
+> >  
+> >  		p = rcu_dereference(gp);
+> >  		if (p == &default_struct)
+> > @@ -93,7 +96,7 @@ o	Be very careful about comparing pointers obtained from
+> >  
+> >  	Because the compiler now knows that the value of "p" is exactly
+> >  	the address of the variable "default_struct", it is free to
+> > -	transform this code into the following:
+> > +	transform this code into the following::
+> >  
+> >  		p = rcu_dereference(gp);
+> >  		if (p == &default_struct)
+> > @@ -105,14 +108,14 @@ o	Be very careful about comparing pointers obtained from
+> >  
+> >  	However, comparisons are OK in the following cases:
+> >  
+> > -	o	The comparison was against the NULL pointer.  If the
+> > +	-	The comparison was against the NULL pointer.  If the
+> >  		compiler knows that the pointer is NULL, you had better
+> >  		not be dereferencing it anyway.  If the comparison is
+> >  		non-equal, the compiler is none the wiser.  Therefore,
+> >  		it is safe to compare pointers from rcu_dereference()
+> >  		against NULL pointers.
+> >  
+> > -	o	The pointer is never dereferenced after being compared.
+> > +	-	The pointer is never dereferenced after being compared.
+> >  		Since there are no subsequent dereferences, the compiler
+> >  		cannot use anything it learned from the comparison
+> >  		to reorder the non-existent subsequent dereferences.
+> > @@ -124,31 +127,31 @@ o	Be very careful about comparing pointers obtained from
+> >  		dereferenced, rcu_access_pointer() should be used in place
+> >  		of rcu_dereference().
+> >  
+> > -	o	The comparison is against a pointer that references memory
+> > +	-	The comparison is against a pointer that references memory
+> >  		that was initialized "a long time ago."  The reason
+> >  		this is safe is that even if misordering occurs, the
+> >  		misordering will not affect the accesses that follow
+> >  		the comparison.  So exactly how long ago is "a long
+> >  		time ago"?  Here are some possibilities:
+> >  
+> > -		o	Compile time.
+> > +		-	Compile time.
+> >  
+> > -		o	Boot time.
+> > +		-	Boot time.
+> >  
+> > -		o	Module-init time for module code.
+> > +		-	Module-init time for module code.
+> >  
+> > -		o	Prior to kthread creation for kthread code.
+> > +		-	Prior to kthread creation for kthread code.
+> >  
+> > -		o	During some prior acquisition of the lock that
+> > +		-	During some prior acquisition of the lock that
+> >  			we now hold.
+> >  
+> > -		o	Before mod_timer() time for a timer handler.
+> > +		-	Before mod_timer() time for a timer handler.
+> >  
+> >  		There are many other possibilities involving the Linux
+> >  		kernel's wide array of primitives that cause code to
+> >  		be invoked at a later time.
+> >  
+> > -	o	The pointer being compared against also came from
+> > +	-	The pointer being compared against also came from
+> >  		rcu_dereference().  In this case, both pointers depend
+> >  		on one rcu_dereference() or another, so you get proper
+> >  		ordering either way.
+> > @@ -159,13 +162,13 @@ o	Be very careful about comparing pointers obtained from
+> >  		of such an RCU usage bug is shown in the section titled
+> >  		"EXAMPLE OF AMPLIFIED RCU-USAGE BUG".
+> >  
+> > -	o	All of the accesses following the comparison are stores,
+> > +	-	All of the accesses following the comparison are stores,
+> >  		so that a control dependency preserves the needed ordering.
+> >  		That said, it is easy to get control dependencies wrong.
+> >  		Please see the "CONTROL DEPENDENCIES" section of
+> >  		Documentation/memory-barriers.txt for more details.
+> >  
+> > -	o	The pointers are not equal -and- the compiler does
+> > +	-	The pointers are not equal -and- the compiler does
+> >  		not have enough information to deduce the value of the
+> >  		pointer.  Note that the volatile cast in rcu_dereference()
+> >  		will normally prevent the compiler from knowing too much.
+> > @@ -175,7 +178,7 @@ o	Be very careful about comparing pointers obtained from
+> >  		comparison will provide exactly the information that the
+> >  		compiler needs to deduce the value of the pointer.
+> >  
+> > -o	Disable any value-speculation optimizations that your compiler
+> > +-	Disable any value-speculation optimizations that your compiler
+> >  	might provide, especially if you are making use of feedback-based
+> >  	optimizations that take data collected from prior runs.  Such
+> >  	value-speculation optimizations reorder operations by design.
+> > @@ -188,11 +191,12 @@ o	Disable any value-speculation optimizations that your compiler
+> >  
+> >  
+> >  EXAMPLE OF AMPLIFIED RCU-USAGE BUG
+> > +----------------------------------
+> >  
+> >  Because updaters can run concurrently with RCU readers, RCU readers can
+> >  see stale and/or inconsistent values.  If RCU readers need fresh or
+> >  consistent values, which they sometimes do, they need to take proper
+> > -precautions.  To see this, consider the following code fragment:
+> > +precautions.  To see this, consider the following code fragment::
+> >  
+> >  	struct foo {
+> >  		int a;
+> > @@ -244,7 +248,7 @@ to some reordering from the compiler and CPUs is beside the point.
+> >  
+> >  But suppose that the reader needs a consistent view?
+> >  
+> > -Then one approach is to use locking, for example, as follows:
+> > +Then one approach is to use locking, for example, as follows::
+> >  
+> >  	struct foo {
+> >  		int a;
+> > @@ -299,6 +303,7 @@ As always, use the right tool for the job!
+> >  
+> >  
+> >  EXAMPLE WHERE THE COMPILER KNOWS TOO MUCH
+> > +-----------------------------------------
+> >  
+> >  If a pointer obtained from rcu_dereference() compares not-equal to some
+> >  other pointer, the compiler normally has no clue what the value of the
+> > @@ -308,7 +313,7 @@ guarantees that RCU depends on.  And the volatile cast in rcu_dereference()
+> >  should prevent the compiler from guessing the value.
+> >  
+> >  But without rcu_dereference(), the compiler knows more than you might
+> > -expect.  Consider the following code fragment:
+> > +expect.  Consider the following code fragment::
+> >  
+> >  	struct foo {
+> >  		int a;
+> > @@ -354,6 +359,7 @@ dereference the resulting pointer.
+> >  
+> >  
+> >  WHICH MEMBER OF THE rcu_dereference() FAMILY SHOULD YOU USE?
+> > +------------------------------------------------------------
+> >  
+> >  First, please avoid using rcu_dereference_raw() and also please avoid
+> >  using rcu_dereference_check() and rcu_dereference_protected() with a
+> > @@ -370,7 +376,7 @@ member of the rcu_dereference() to use in various situations:
+> >  
+> >  2.	If the access might be within an RCU read-side critical section
+> >  	on the one hand, or protected by (say) my_lock on the other,
+> > -	use rcu_dereference_check(), for example:
+> > +	use rcu_dereference_check(), for example::
+> >  
+> >  		p1 = rcu_dereference_check(p->rcu_protected_pointer,
+> >  					   lockdep_is_held(&my_lock));
+> > @@ -378,14 +384,14 @@ member of the rcu_dereference() to use in various situations:
+> >  
+> >  3.	If the access might be within an RCU read-side critical section
+> >  	on the one hand, or protected by either my_lock or your_lock on
+> > -	the other, again use rcu_dereference_check(), for example:
+> > +	the other, again use rcu_dereference_check(), for example::
+> >  
+> >  		p1 = rcu_dereference_check(p->rcu_protected_pointer,
+> >  					   lockdep_is_held(&my_lock) ||
+> >  					   lockdep_is_held(&your_lock));
+> >  
+> >  4.	If the access is on the update side, so that it is always protected
+> > -	by my_lock, use rcu_dereference_protected():
+> > +	by my_lock, use rcu_dereference_protected()::
+> >  
+> >  		p1 = rcu_dereference_protected(p->rcu_protected_pointer,
+> >  					       lockdep_is_held(&my_lock));
+> > @@ -410,18 +416,19 @@ member of the rcu_dereference() to use in various situations:
+> >  
+> >  
+> >  SPARSE CHECKING OF RCU-PROTECTED POINTERS
+> > +-----------------------------------------
+> >  
+> >  The sparse static-analysis tool checks for direct access to RCU-protected
+> >  pointers, which can result in "interesting" bugs due to compiler
+> >  optimizations involving invented loads and perhaps also load tearing.
+> > -For example, suppose someone mistakenly does something like this:
+> > +For example, suppose someone mistakenly does something like this::
+> >  
+> >  	p = q->rcu_protected_pointer;
+> >  	do_something_with(p->a);
+> >  	do_something_else_with(p->b);
+> >  
+> >  If register pressure is high, the compiler might optimize "p" out
+> > -of existence, transforming the code to something like this:
+> > +of existence, transforming the code to something like this::
+> >  
+> >  	do_something_with(q->rcu_protected_pointer->a);
+> >  	do_something_else_with(q->rcu_protected_pointer->b);
+> > @@ -435,7 +442,7 @@ Load tearing could of course result in dereferencing a mashup of a pair
+> >  of pointers, which also might fatally disappoint your code.
+> >  
+> >  These problems could have been avoided simply by making the code instead
+> > -read as follows:
+> > +read as follows::
+> >  
+> >  	p = rcu_dereference(q->rcu_protected_pointer);
+> >  	do_something_with(p->a);
+> > @@ -448,7 +455,7 @@ or as a formal parameter, with "__rcu", which tells sparse to complain if
+> >  this pointer is accessed directly.  It will also cause sparse to complain
+> >  if a pointer not marked with "__rcu" is accessed using rcu_dereference()
+> >  and friends.  For example, ->rcu_protected_pointer might be declared as
+> > -follows:
+> > +follows::
+> >  
+> >  	struct foo __rcu *rcu_protected_pointer;
+> >  
+> > -- 
+> > 2.20.1
+> > 
