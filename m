@@ -2,60 +2,128 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D7ACA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 14:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B75CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 14:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0668820842
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 14:16:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572790610;
-	bh=5fdRE0Vf9HsjaP8y0vf5TwsptV7mEynWeNXAagIs/RA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fAFRJJKhnwzqzrvAAy0moODh1Kfui3ZI0Zkssc7tdVcqwOwMWXeRdu6/3XbRmScA3
-	 UpvlY2dKnS6Pyw6C3GSJZRJ1ZN+CmnzUvKpCgeknWwep4iysuEE4kRjYA/pY6GyLe+
-	 Bzhw0J4WMaMxR4hXD90GXMiTLLJ0TtssF3sSkbpk=
+	by mail.kernel.org (Postfix) with ESMTP id 5962120679
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 14:35:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbfKCOQt (ORCPT
+        id S1727662AbfKCOff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 09:16:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42736 "EHLO mail.kernel.org"
+        Sun, 3 Nov 2019 09:35:35 -0500
+Received: from mga18.intel.com ([134.134.136.126]:31578 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727444AbfKCOQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 09:16:48 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83F2120663;
-        Sun,  3 Nov 2019 14:16:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572790608;
-        bh=5fdRE0Vf9HsjaP8y0vf5TwsptV7mEynWeNXAagIs/RA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TzeJVEBYPhxfzXDpw7cQT/WHPK28cfEViYLjWQMjPF3EEj8tGlHdcOpWPGF0hfYbe
-         m/KJC3AKuagNksKGDLcpXI+hrzPV07myxb48iguDV53tz68nSymy5BGL8pboUQRdid
-         mGOH4d1vUs2P4JiggrI45B/HQJJ+Rd6QPCnluaI4=
-Date:   Sun, 3 Nov 2019 15:16:45 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "yanghui.def@gmail.com" <yanghui.def@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, mirq-linux@rere.qmqm.pl,
-        balbi@kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 2/2] USB(u_serial.c): it has a NULL point
-Message-ID: <20191103141645.GA661271@kroah.com>
-References: <5dbeddab.1c69fb81.244fa.5f8c@mx.google.com>
+        id S1727350AbfKCOfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 09:35:34 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Nov 2019 06:35:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,263,1569308400"; 
+   d="scan'208";a="195205369"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 03 Nov 2019 06:35:32 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iRGya-0008Wg-4E; Sun, 03 Nov 2019 22:35:32 +0800
+Date:   Sun, 3 Nov 2019 22:34:55 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Alexander Gordeev <a.gordeev.box@gmail.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Alexander Gordeev <a.gordeev.box@gmail.com>,
+        dmaengine@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
+ for PCIe
+Message-ID: <201911032232.QyQMzYkg%lkp@intel.com>
+References: <d5301a136caa6cd1cfcfedf31e426a18a7c05c12.1572441900.git.a.gordeev.box@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5dbeddab.1c69fb81.244fa.5f8c@mx.google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <d5301a136caa6cd1cfcfedf31e426a18a7c05c12.1572441900.git.a.gordeev.box@gmail.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 03, 2019 at 10:01:11PM +0800, yanghui.def@gmail.com wrote:
+Hi Alexander,
 
-html email is deleted by the list :(
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on linus/master]
+[also build test WARNING on v5.4-rc5]
+[cannot apply to next-20191031]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Alexander-Gordeev/dmaengine-avalon-Intel-Avalon-MM-DMA-Interface-for-PCIe/20191102-044059
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 0dbe6cb8f7e05bc9611602ef45980a6c57b245a3
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-6-g57f8611-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/dma/avalon/avalon-hw.c:17:22: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [usertype] src_lo @@    got restrunsigned int [usertype] src_lo @@
+>> drivers/dma/avalon/avalon-hw.c:17:22: sparse:    expected unsigned int [usertype] src_lo
+>> drivers/dma/avalon/avalon-hw.c:17:22: sparse:    got restricted __le32 [usertype]
+>> drivers/dma/avalon/avalon-hw.c:18:22: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [usertype] src_hi @@    got restrunsigned int [usertype] src_hi @@
+>> drivers/dma/avalon/avalon-hw.c:18:22: sparse:    expected unsigned int [usertype] src_hi
+   drivers/dma/avalon/avalon-hw.c:18:22: sparse:    got restricted __le32 [usertype]
+>> drivers/dma/avalon/avalon-hw.c:19:22: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [usertype] dst_lo @@    got restrunsigned int [usertype] dst_lo @@
+>> drivers/dma/avalon/avalon-hw.c:19:22: sparse:    expected unsigned int [usertype] dst_lo
+   drivers/dma/avalon/avalon-hw.c:19:22: sparse:    got restricted __le32 [usertype]
+>> drivers/dma/avalon/avalon-hw.c:20:22: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [usertype] dst_hi @@    got restrunsigned int [usertype] dst_hi @@
+>> drivers/dma/avalon/avalon-hw.c:20:22: sparse:    expected unsigned int [usertype] dst_hi
+   drivers/dma/avalon/avalon-hw.c:20:22: sparse:    got restricted __le32 [usertype]
+>> drivers/dma/avalon/avalon-hw.c:21:27: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [usertype] ctl_dma_len @@    got restrunsigned int [usertype] ctl_dma_len @@
+>> drivers/dma/avalon/avalon-hw.c:21:27: sparse:    expected unsigned int [usertype] ctl_dma_len
+   drivers/dma/avalon/avalon-hw.c:21:27: sparse:    got restricted __le32 [usertype]
+>> drivers/dma/avalon/avalon-hw.c:22:27: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int @@    got restricted __le32unsigned int @@
+>> drivers/dma/avalon/avalon-hw.c:22:27: sparse:    expected unsigned int
+   drivers/dma/avalon/avalon-hw.c:22:27: sparse:    got restricted __le32 [usertype]
+   drivers/dma/avalon/avalon-hw.c:23:27: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int @@    got restricted __le32unsigned int @@
+   drivers/dma/avalon/avalon-hw.c:23:27: sparse:    expected unsigned int
+   drivers/dma/avalon/avalon-hw.c:23:27: sparse:    got restricted __le32 [usertype]
+   drivers/dma/avalon/avalon-hw.c:24:27: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int @@    got restricted __le32unsigned int @@
+   drivers/dma/avalon/avalon-hw.c:24:27: sparse:    expected unsigned int
+   drivers/dma/avalon/avalon-hw.c:24:27: sparse:    got restricted __le32 [usertype]
+--
+>> drivers/dma/avalon/avalon-core.c:346:27: sparse: sparse: mixing different enum types:
+>> drivers/dma/avalon/avalon-core.c:346:27: sparse:    unsigned int enum dma_transfer_direction
+>> drivers/dma/avalon/avalon-core.c:346:27: sparse:    unsigned int enum dma_data_direction
+
+vim +17 drivers/dma/avalon/avalon-hw.c
+
+    13	
+    14	static void setup_desc(struct dma_desc *desc, u32 desc_id,
+    15			       u64 dest, u64 src, u32 size)
+    16	{
+  > 17		desc->src_lo = cpu_to_le32(src & 0xfffffffful);
+  > 18		desc->src_hi = cpu_to_le32((src >> 32));
+  > 19		desc->dst_lo = cpu_to_le32(dest & 0xfffffffful);
+  > 20		desc->dst_hi = cpu_to_le32((dest >> 32));
+  > 21		desc->ctl_dma_len = cpu_to_le32((size >> 2) | (desc_id << 18));
+  > 22		desc->reserved[0] = cpu_to_le32(0x0);
+    23		desc->reserved[1] = cpu_to_le32(0x0);
+    24		desc->reserved[2] = cpu_to_le32(0x0);
+    25	}
+    26	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
