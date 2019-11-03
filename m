@@ -2,104 +2,150 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4B5CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 22:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3616CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 22:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D113E2190F
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 22:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D692190F
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 22:24:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QRCiTT4R"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BA/FML9x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfKCWXg (ORCPT
+        id S1727928AbfKCWYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 17:23:36 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46518 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727473AbfKCWXg (ORCPT
+        Sun, 3 Nov 2019 17:24:50 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25348 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727796AbfKCWYu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 17:23:36 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 19so5627324lft.13
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 14:23:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ESUhhN6edmpvHFOV1Utv000unf+voyNT/XqNjo94L3E=;
-        b=QRCiTT4RtFkcbSgtjNd916P8LiP+fVE6O67kBgLv/qfB9arXpn+JSLOI9BH4ht8w5p
-         KO911xAHoIUr2XcjLsIrtSJrqAIg3Qasmv8+1w5kf9IBMmZCyRQju63Wp5V55a43xrXN
-         8ovnfJqkCmPQcjvSEwLq70modMTgbPR99uE3DigW7sy3fcFtk2miLcyWe1QfTA2wL+m4
-         dg8noVdcjht1feN13oMlJxV2e5zNNV2q5SsIQ8N1+oERo0Zcwm0tnPK1UutkbuGvAh0v
-         +BrnKqpxrWpfpHLar2RvsTp9piW4rgejaoXD1dWiwwDCLFBp2hXa7Ab6zkyeU8jcSK4a
-         bz6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ESUhhN6edmpvHFOV1Utv000unf+voyNT/XqNjo94L3E=;
-        b=MYyacYWvu9tz0aWQMTP8LFSPLaFZDqThPLUMrBU5fSzkHVzTA8AVCGFKGjNljbqT8D
-         cudc/yfGI/b3e3U5vyIdtlQIgMDFUKGVL5vPhpYmGPDxLSTh5YM4E7oyEADUDet4C+oA
-         zyYRJ2lBURx+64ojvcc1GtlK6cCcRSXtPAg+fZIYOJbpvIqxfpt8LR4qRfnGZnJw1dIn
-         WQ0InDE5hNNP6lScPnYgq2FzG4dHTG8seQa5JCsqjQDMU7iYJE2nyCkt8YEKBo33Qn4J
-         ybxcZQGflG/p7ZMTVq0iP/ckGYEkxvLcPKb55fJ9zrEvsYsjkCCreEPQSSVd3GSNYRso
-         TX8w==
-X-Gm-Message-State: APjAAAUXGJ2inHogOwVbOiphNySv3FxZ02eCMB1cF8vM+mscVr+SQJfu
-        5JLV5pexw7sTpqg4+qO7H2o6PSyXNyPmUC2TCJcU9yCjPkY=
-X-Google-Smtp-Source: APXvYqxPSzDXNKfugYnnHKUIKKHIHEvHG3nXTxP1PlQspCYo+knQSZ/r4By3eoLa9c19qr7bRZjXcrwmJ2fir+v3Ops=
-X-Received: by 2002:a19:ca13:: with SMTP id a19mr14186914lfg.133.1572819812751;
- Sun, 03 Nov 2019 14:23:32 -0800 (PST)
+        Sun, 3 Nov 2019 17:24:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572819889;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=R8uxxoIgt0pDImRWxsOSsk8Zak5f+7K0iwQd4EDqnUs=;
+        b=BA/FML9xBLo2sXHMlrZEREL3mjDz1L/pPuHWmji2SzKmFajY8C6OeMQ3F2FPsSa4k9iPkE
+        Gam0vAnhmgmfMAmIeuLhWebglRo3Xi+zrluk3MVjbaBW6rCTj6kW11ldrZkM7tGwkrRu/b
+        HnN3seSFklGYT3x24NINyuBW2SIVSOc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-304-MM-1I0IzM9iA6Geo2B1xkQ-1; Sun, 03 Nov 2019 17:24:45 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5571E800EBA;
+        Sun,  3 Nov 2019 22:24:44 +0000 (UTC)
+Received: from krava (ovpn-204-70.brq.redhat.com [10.40.204.70])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 77B3F1001B23;
+        Sun,  3 Nov 2019 22:24:42 +0000 (UTC)
+Date:   Sun, 3 Nov 2019 23:24:41 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: [RFC] perf session: Fix compression processing
+Message-ID: <20191103222441.GE8251@krava>
 MIME-Version: 1.0
-References: <20191101015621.12451-1-chris.packham@alliedtelesis.co.nz>
- <20191101015621.12451-2-chris.packham@alliedtelesis.co.nz> <b681ed9d-a31a-e5cc-04ba-6f38a5cc745b@gmail.com>
-In-Reply-To: <b681ed9d-a31a-e5cc-04ba-6f38a5cc745b@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 3 Nov 2019 23:23:21 +0100
-Message-ID: <CACRpkdZ6xOmRUnNCRBAPak1Q_g9WSNYKGpLeU-ajroUbB_gSeA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: bcm: nsp: use gpiolib infrastructure for interrupts
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: MM-1I0IzM9iA6Geo2B1xkQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 2, 2019 at 3:55 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+hi,
+I'm not sure I follow everything on compression,
+so I might have missed something, but patch below
+fixes the issue for me.
 
-> > +             girq = &chip->gc.irq;
-> > +             girq->chip = irqc;
-> > +             /* This will let us handle the parent IRQ in the driver */
-> > +             girq->parent_handler = NULL;
-> > +             girq->num_parents = 0;
-> > +             girq->parents = NULL;
-> > +             girq->default_type = IRQ_TYPE_NONE;
-> > +             girq->handler = handle_simple_irq;
->
-> It might be worth creating a helper that can be called to initialize all
-> relevant members to the values that indicate: let me manage the
-> interrupt. This would make us more future proof with respect to
-> assumptions being made in gpiolib as well as if new fields are added in
-> the future. This would be a separate patch obviously.
+jirka
 
-I have some different plans for this, but first I want to pull all
-struct gpiolib_irq_chip *girq setup over to the new API,
-so I can get rid of the old helper functions.
 
-First chained variants, when that is done, threaded variants,
-when that is done abstract this type that is using its own
-parent handler and then eventually delete the old helper
-functions.
+---
+The compressed data processing occasionally fails with:
+  $ perf report --stdio -vv
+  decomp (B): 44519 to 163000
+  decomp (B): 48119 to 174800
+  decomp (B): 65527 to 131072
+  fetch_mmaped_event: head=3D0x1ffe0 event->header_size=3D0x28, mmap_size=
+=3D0x20000: fuzzed perf.data?
+  Error:
+  failed to process sample
+  ...
 
-Then I can think about adding new helper functions :D
+It's caused by recent fuzzer fix that does not take into account
+that compressed data do not need to by fully present in the buffer,
+so it's ok to just return NULL and not to fail.
 
-Yours,
-Linus Walleij
+Fixes: 57fc032ad643 ("perf session: Avoid infinite loop when seeing invalid=
+ header.size")
+Link: http://lkml.kernel.org/n/tip-q1biqscs4stcmc9bs1iokfro@git.kernel.org
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/util/session.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index f07b8ecb91bc..3589ed14a629 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1959,7 +1959,7 @@ static int __perf_session__process_pipe_events(struct=
+ perf_session *session)
+=20
+ static union perf_event *
+ fetch_mmaped_event(struct perf_session *session,
+-=09=09   u64 head, size_t mmap_size, char *buf)
++=09=09   u64 head, size_t mmap_size, char *buf, bool decomp)
+ {
+ =09union perf_event *event;
+=20
+@@ -1979,6 +1979,8 @@ fetch_mmaped_event(struct perf_session *session,
+ =09=09/* We're not fetching the event so swap back again */
+ =09=09if (session->header.needs_swap)
+ =09=09=09perf_event_header__bswap(&event->header);
++=09=09if (decomp)
++=09=09=09return NULL;
+ =09=09pr_debug("%s: head=3D%#" PRIx64 " event->header_size=3D%#x, mmap_siz=
+e=3D%#zx: fuzzed perf.data?\n",
+ =09=09=09 __func__, head, event->header.size, mmap_size);
+ =09=09return ERR_PTR(-EINVAL);
+@@ -1997,7 +1999,7 @@ static int __perf_session__process_decomp_events(stru=
+ct perf_session *session)
+ =09=09return 0;
+=20
+ =09while (decomp->head < decomp->size && !session_done()) {
+-=09=09union perf_event *event =3D fetch_mmaped_event(session, decomp->head=
+, decomp->size, decomp->data);
++=09=09union perf_event *event =3D fetch_mmaped_event(session, decomp->head=
+, decomp->size, decomp->data, true);
+=20
+ =09=09if (IS_ERR(event))
+ =09=09=09return PTR_ERR(event);
+@@ -2100,7 +2102,7 @@ reader__process_events(struct reader *rd, struct perf=
+_session *session,
+ =09}
+=20
+ more:
+-=09event =3D fetch_mmaped_event(session, head, mmap_size, buf);
++=09event =3D fetch_mmaped_event(session, head, mmap_size, buf, false);
+ =09if (IS_ERR(event))
+ =09=09return PTR_ERR(event);
+=20
+--=20
+2.21.0
+
