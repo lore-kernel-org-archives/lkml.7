@@ -2,94 +2,70 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AB4CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 18:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B54CCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 18:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFF5214D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 18:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89B92190F
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 18:54:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572807252;
+	bh=/Fp7rJRFyNxy/xi8McFrIAyKVvI085F99glKGb/E+gw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yjk5BQkBmWQmcOU9r25g35dBaOKBEpkkI3AkQoihS4JFQ4FTY71LipUmDpghGfhk1
+	 LaBFLOucdat8jZLtRhF6CpdfZ/NFQqipJS6G0wAd7Kv3WJmAssujEQPdaBg4Pm3Z3v
+	 sLmtS/2hWW127y2Nx+nkAk7ZWuf2UtSpNkKNJAEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbfKCSvg (ORCPT
+        id S1728074AbfKCSyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 13:51:36 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:40794 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727322AbfKCSvg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 13:51:36 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iRKyL-0003ah-Hr; Sun, 03 Nov 2019 18:51:33 +0000
-Date:   Sun, 3 Nov 2019 18:51:33 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Ritesh Harjani <riteshh@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, wugyuan@cn.ibm.com,
-        jlayton@kernel.org, hsiangkao@aol.com, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        ecryptfs@vger.kernel.org
-Subject: [PATCH][RFC] =?iso-8859-1?Q?ecryptfs=5Floo?=
- =?iso-8859-1?B?a3VwX2ludGVycG9zZSgpOqBsb3dlcl9kZW50cnktPmRfaW5vZA==?=
- =?iso-8859-1?Q?e?= is not stable
-Message-ID: <20191103185133.GR26530@ZenIV.linux.org.uk>
-References: <20191015040730.6A84742047@d06av24.portsmouth.uk.ibm.com>
- <20191022133855.B1B4752050@d06av21.portsmouth.uk.ibm.com>
- <20191022143736.GX26530@ZenIV.linux.org.uk>
- <20191022201131.GZ26530@ZenIV.linux.org.uk>
- <20191023110551.D04AE4C044@d06av22.portsmouth.uk.ibm.com>
- <20191101234622.GM26530@ZenIV.linux.org.uk>
- <20191102172229.GT20975@paulmck-ThinkPad-P72>
- <20191102180842.GN26530@ZenIV.linux.org.uk>
- <20191103163524.GO26530@ZenIV.linux.org.uk>
- <20191103182058.GQ26530@ZenIV.linux.org.uk>
+        Sun, 3 Nov 2019 13:54:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46828 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727322AbfKCSyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 13:54:11 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55AB52190F;
+        Sun,  3 Nov 2019 18:54:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572807250;
+        bh=/Fp7rJRFyNxy/xi8McFrIAyKVvI085F99glKGb/E+gw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z0GSLE2GRdg5EPuxBK07F3ljN5RKjQUcyOmiiZgimTk2OnoFa2gFPheZoo4css9tK
+         xILaSia6I4WJDK3q6uidE54n/lU/xo/zN21qdex85ZQ9ZBjOaKT44Zt0wwumGUbCwI
+         pm9jOqG3rW1v1QR3enD5CvlfddIZXDlD/92+FzRM=
+Date:   Sun, 3 Nov 2019 19:54:08 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Johannes Thumshirn <jthumshirn@suse.de>
+Cc:     Linux Kernel Mailinglist <linux-kernel@vger.kernel.org>,
+        Michael Moese <mmoese@suse.de>, Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH] drivers: mcb: use symbol namespaces
+Message-ID: <20191103185408.GA966077@kroah.com>
+References: <20191016100158.1400-1-jthumshirn@suse.de>
+ <20191016125139.GA26497@kroah.com>
+ <48f87640-d277-fdb6-3d6e-3f88b7623f22@suse.de>
+ <20191016135300.GA302460@kroah.com>
+ <c4e3216e-df8d-65cb-d60a-98eb159b9205@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191103182058.GQ26530@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <c4e3216e-df8d-65cb-d60a-98eb159b9205@suse.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-lower_dentry can't go from positive to negative (we have it pinned),
-but it *can* go from negative to positive.  So fetching ->d_inode
-into a local variable, doing a blocking allocation, checking that
-now ->d_inode is non-NULL and feeding the value we'd fetched
-earlier to a function that won't accept NULL is not a good idea.
+On Tue, Oct 29, 2019 at 10:20:58AM +0100, Johannes Thumshirn wrote:
+> On 16/10/2019 15:53, Greg KH wrote:
+> [...]
+> > I can take this now, into my -next tree.  I'll do so later this week
+> > unless you object.
+> 
+> Ping?
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
-diff --git a/fs/ecryptfs/inode.c b/fs/ecryptfs/inode.c
-index a905d5f4f3b0..3c2298721359 100644
---- a/fs/ecryptfs/inode.c
-+++ b/fs/ecryptfs/inode.c
-@@ -319,7 +319,7 @@ static int ecryptfs_i_size_read(struct dentry *dentry, struct inode *inode)
- static struct dentry *ecryptfs_lookup_interpose(struct dentry *dentry,
- 				     struct dentry *lower_dentry)
- {
--	struct inode *inode, *lower_inode = d_inode(lower_dentry);
-+	struct inode *inode, *lower_inode;
- 	struct ecryptfs_dentry_info *dentry_info;
- 	struct vfsmount *lower_mnt;
- 	int rc = 0;
-@@ -339,7 +339,15 @@ static struct dentry *ecryptfs_lookup_interpose(struct dentry *dentry,
- 	dentry_info->lower_path.mnt = lower_mnt;
- 	dentry_info->lower_path.dentry = lower_dentry;
- 
--	if (d_really_is_negative(lower_dentry)) {
-+	/*
-+	 * negative dentry can go positive under us here - its parent is not
-+	 * locked.  That's OK and that could happen just as we return from
-+	 * ecryptfs_lookup() anyway.  Just need to be careful and fetch
-+	 * ->d_inode only once - it's not stable here.
-+	 */
-+	lower_inode = READ_ONCE(lower_dentry->d_inode);
-+
-+	if (!lower_inode) {
- 		/* We want to add because we couldn't find in lower */
- 		d_add(dentry, NULL);
- 		return NULL;
+Sorry, been traveling, will get to this now...
