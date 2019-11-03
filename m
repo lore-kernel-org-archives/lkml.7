@@ -2,82 +2,103 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6E7CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 23:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7648BCA9ED0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 23:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1799E2086D
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 23:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B60B21D56
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 23:38:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iPuiMxC0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbfKCXaZ (ORCPT
+        id S1728347AbfKCXif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 18:30:25 -0500
-Received: from mga06.intel.com ([134.134.136.31]:59008 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728144AbfKCXaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 18:30:23 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Nov 2019 15:30:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,265,1569308400"; 
-   d="scan'208";a="204445722"
-Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.25])
-  by orsmga003.jf.intel.com with ESMTP; 03 Nov 2019 15:30:23 -0800
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, acme@kernel.org, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V5 03/14] perf/x86/intel: Move BTS index to 47
-Date:   Sun,  3 Nov 2019 15:29:09 -0800
-Message-Id: <20191103232920.20309-4-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191103232920.20309-1-kan.liang@linux.intel.com>
-References: <20191103232920.20309-1-kan.liang@linux.intel.com>
+        Sun, 3 Nov 2019 18:38:35 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46024 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728100AbfKCXif (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 18:38:35 -0500
+Received: by mail-io1-f65.google.com with SMTP id s17so16438887iol.12;
+        Sun, 03 Nov 2019 15:38:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wefieWfVXRUmsFQFvnmJ+ImMxYqnpmfAgbzmiqaDkVw=;
+        b=iPuiMxC0DxIEHfVnhFcSH1oPop1EawM1Y+X/5CvZcuyNsWF0QalnLJxE3PgZx1XfEo
+         Zo/VcoXYpf71GJ0e6K49dz88lyj4jGfeC9AeqXqZ5tjXW77IHZCLBrkev49qIKxvXS+J
+         ezbttOo5HVj7h9j+x4TJMlf9MaOVpVxqYI4wsef+v1nM4nV+JbnzyS3SN0VDGKJUOyYV
+         auKXpCep7njbi3GdtzmGSHVaWom4OcjPPoYBNDaxiZDou+DV9G4mcav/HFq2N0zici6Y
+         5TShkRWuzy9HvEAmWS91TPf83GBwpMWkyUu35T4QqlFJ+DVHnOfihZXyeli4lCThdbmp
+         P04g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wefieWfVXRUmsFQFvnmJ+ImMxYqnpmfAgbzmiqaDkVw=;
+        b=N9UbWEbQO+8bSR2vVgYeDVWs5JkoJXw643qvueuaRU22j/PAsklkgwk3o0FHzH97kK
+         l35qmV0Lvtb8jBjqJ1EgT3FBIRnXC3Mj2uoUXlD7fjumDiutogTgrrfvFIRcL2ib8v2i
+         aC4Y4ziuRQ5lKWOb5wJFrzqqOjGK5JRn63kNq/+CfzeyytZA9mpbOtHE5YlvPg7GaHxe
+         mUtqET43ND8mHOPSVqxMuLax3q9guCb7Y5QV5RTYkJbM69pgr7O8e6u+x4MhGr73tbaY
+         X6cL4o1ePkq9AzKtQRhiDJUjaZQMzpoAYCn5ySg4KhwFscbrpvzwerM5JRDE12muLb4W
+         PhIg==
+X-Gm-Message-State: APjAAAVO8YBPwZUv64KMUfoV9FKDl9n5SNo/MPsihhM74LOB/El9KRBC
+        jA74DZLv5YMN6un1AMKGNB7exwbAVTyGyEcibgk=
+X-Google-Smtp-Source: APXvYqwiK+MZRpUAnFnSJakJwzQcxVUrHRRlILr3AcPOqISHEvMncac1YAGrLNuARG22iDwUYsQFcnicgI7jhfs+KXc=
+X-Received: by 2002:a05:6638:928:: with SMTP id 8mr5239100jak.124.1572824314443;
+ Sun, 03 Nov 2019 15:38:34 -0800 (PST)
+MIME-Version: 1.0
+References: <CAG=yYwmQHyp62qKDoiM091iXKs5iP8rNBLs9kc7Wi_PDCgMrbw@mail.gmail.com>
+In-Reply-To: <CAG=yYwmQHyp62qKDoiM091iXKs5iP8rNBLs9kc7Wi_PDCgMrbw@mail.gmail.com>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Mon, 4 Nov 2019 10:38:23 +1100
+Message-ID: <CAOSf1CFn7F_3gLk4sCetDd3JGUiTv50=KSqQuicpPkcRZPVKNQ@mail.gmail.com>
+Subject: Re: PROBLEM: PCIe Bus Error atleast
+To:     Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
+Cc:     Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-pci@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Sat, Nov 2, 2019 at 5:46 AM Jeffrin Thalakkottoor
+<jeffrin@rajagiritech.edu.in> wrote:
+>
+> hello ,
+>
+> i found a error message  as the output of "sudo dmesg -l err"
+> i have attached related to that in this email.
+> i  think i found this in 5.3.8 kernel
 
-The bit 48 in the PERF_GLOBAL_STATUS is used to indicate the overflow
-status of PERF_METRICS counters now.
+Use "uname -a" to get the current kernel version, architecture.
 
-Move BTS index to 47.
+> But i think when i tried again today i could not reproduce it
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
+That's unfortunate, but it might have just been a transient problem.
+The log has a pile of these AER errors:
 
-No changes since V4
+[  283.723848] pcieport 0000:00:1c.5: AER: PCIe Bus Error:
+severity=Corrected, type=Data Link Layer, (Transmitter ID)
+[  283.723855] pcieport 0000:00:1c.5: AER:   device [8086:9d15] error
+status/mask=00001000/00002000
+[  283.723859] pcieport 0000:00:1c.5: AER:    [12] Timeout
 
- arch/x86/include/asm/perf_event.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Which looks like a root port is getting a timeouts while trying to
+talk to its downstream device. It's hard to say anything more without
+knowing what the downstream device is, or what the system is. If this
+is a laptop it might be due to buggy power management, but it might
+just be flakey hardware.
 
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 55a4d05ba6ec..7df1d5b78aa8 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -185,11 +185,11 @@ struct x86_pmu_capability {
- /*
-  * We model BTS tracing as another fixed-mode PMC.
-  *
-- * We choose a value in the middle of the fixed event range, since lower
-+ * We choose value 47 for the fixed index of BTS, since lower
-  * values are used by actual fixed events and higher values are used
-  * to indicate other overflow conditions in the PERF_GLOBAL_STATUS msr.
-  */
--#define INTEL_PMC_IDX_FIXED_BTS				(INTEL_PMC_IDX_FIXED + 16)
-+#define INTEL_PMC_IDX_FIXED_BTS				(INTEL_PMC_IDX_FIXED + 15)
- 
- #define GLOBAL_STATUS_COND_CHG				BIT_ULL(63)
- #define GLOBAL_STATUS_BUFFER_OVF			BIT_ULL(62)
--- 
-2.17.1
+Can you provide the full dmesg and the output of lspci -vv?
 
+Oliver
