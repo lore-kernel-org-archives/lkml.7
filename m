@@ -2,47 +2,59 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CEF8CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 22:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D0CCA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 22:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588C52086D
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 22:08:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="W8pOGWDm"
+	by mail.kernel.org (Postfix) with ESMTP id 512C12190F
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 22:17:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfKCWIr (ORCPT
+        id S1727742AbfKCWRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 17:08:47 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:48220 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727267AbfKCWIr (ORCPT
+        Sun, 3 Nov 2019 17:17:40 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39362 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727267AbfKCWRk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 17:08:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1572818919; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=r9CTqsD8THptmQCEFpxg/CwZExeN/PvOr/4dsnWEMO0=;
-        b=W8pOGWDmj2ldrU84zVPols6Lq75fbS0kom6Io3T7zzw8WUh9SyJTApYIfie4c4p9N9V6dB
-        m/ojr+m1ywiEGbSW/s4dnf/ZA17sUGJeHSzuo4KBJp/y8/5FodLw7bzzDsCJ1z5UL60N68
-        DzknqJdY3WkAMm+PTcHWaXefp9l86i0=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, od@zcrc.me,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/2] power/supply: Add generic USB charger driver
-Date:   Sun,  3 Nov 2019 23:08:01 +0100
-Message-Id: <20191103220801.10666-2-paul@crapouillou.net>
-In-Reply-To: <20191103220801.10666-1-paul@crapouillou.net>
-References: <20191103220801.10666-1-paul@crapouillou.net>
+        Sun, 3 Nov 2019 17:17:40 -0500
+Received: by mail-lf1-f66.google.com with SMTP id 195so10766778lfj.6;
+        Sun, 03 Nov 2019 14:17:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5P6x4fcjhCNPz0bYZMr2G+onFRZjnWkYqyaikTzDXQI=;
+        b=bt9YS41fJQw/LjOlLbXgRg8jGz+03C0ARULPhrI962E6iTXFwCzh9QM6QBQ9MVMvfc
+         ilAsuL0pZDmKFoqdGBRsPP+7d4G7q4ABeJGrDIYWruYczQ+1fwNG9AeIJqWY7hrwTPTX
+         MwWgWvGP39NicvgQapyeLKmcjsvfNPmGZVSSBrLLrP258vXxLGAs+KHdT1gCJHQgyPRd
+         Lnpclgp609SBRE19/ayw/0l+dI07GSWag73+k7DI4s28Dategagfb0xTorHcDQh6cO8t
+         gpOYiH7eBgBAgFwawUoCAu408ZY4UXR+igRUr3dXdmGtBhzJWIBpfFxGZ9Iwm6OC2A6H
+         yBAg==
+X-Gm-Message-State: APjAAAX0GOD33te9/7G0i9UagIJh/f9LVf6enixkwNM6b5JofL8ASNIY
+        Jtvjd6rORq8t/qye8yImE8w=
+X-Google-Smtp-Source: APXvYqxSmjg6gFmy1E2pl250WjWYTqSfdYWrKEQ2vSeGKReEMOKFuAcxDt6zFJO0HBatLUMoS5gTMQ==
+X-Received: by 2002:a19:c790:: with SMTP id x138mr14538989lff.61.1572819456145;
+        Sun, 03 Nov 2019 14:17:36 -0800 (PST)
+Received: from hackbase.lan (128-68-70-109.broadband.corbina.ru. [128.68.70.109])
+        by smtp.gmail.com with ESMTPSA id g26sm5961766lfh.1.2019.11.03.14.17.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Nov 2019 14:17:35 -0800 (PST)
+From:   Alexander Popov <alex.popov@linux.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Security Officers <security@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Popov <alex.popov@linux.com>
+Subject: [PATCH v4 1/1] media: vivid: Fix wrong locking that causes race conditions on streaming stop
+Date:   Mon,  4 Nov 2019 01:17:19 +0300
+Message-Id: <20191103221719.27118-1-alex.popov@linux.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <7ec33848-67a6-069a-132c-f8550f6e090f@linux.com>
+References: <7ec33848-67a6-069a-132c-f8550f6e090f@linux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,193 +62,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This simple charger driver uses the USB PHY framework to detect the
-presence of a charger.
+There is the same incorrect approach to locking implemented in
+vivid_stop_generating_vid_cap(), vivid_stop_generating_vid_out() and
+sdr_cap_stop_streaming().
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+These functions are called during streaming stopping with vivid_dev.mutex
+locked. And they all do the same mistake while stopping their kthreads,
+which need to lock this mutex as well. See the example from
+vivid_stop_generating_vid_cap():
+  /* shutdown control thread */
+  vivid_grab_controls(dev, false);
+  mutex_unlock(&dev->mutex);
+  kthread_stop(dev->kthread_vid_cap);
+  dev->kthread_vid_cap = NULL;
+  mutex_lock(&dev->mutex);
+
+But when this mutex is unlocked, another vb2_fop_read() can lock it
+instead of vivid_thread_vid_cap() and manipulate the buffer queue.
+That causes a use-after-free access later.
+
+To fix those issues let's:
+  1. avoid unlocking the mutex in vivid_stop_generating_vid_cap(),
+vivid_stop_generating_vid_out() and sdr_cap_stop_streaming();
+  2. use mutex_trylock() with schedule_timeout_uninterruptible() in
+the loops of the vivid kthread handlers.
+
+Signed-off-by: Alexander Popov <alex.popov@linux.com>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
 ---
- drivers/power/supply/Kconfig               |   7 ++
- drivers/power/supply/Makefile              |   1 +
- drivers/power/supply/generic-usb-charger.c | 140 +++++++++++++++++++++
- 3 files changed, 148 insertions(+)
- create mode 100644 drivers/power/supply/generic-usb-charger.c
+ drivers/media/platform/vivid/vivid-kthread-cap.c | 8 +++++---
+ drivers/media/platform/vivid/vivid-kthread-out.c | 8 +++++---
+ drivers/media/platform/vivid/vivid-sdr-cap.c     | 8 +++++---
+ 3 files changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index c84a7b1caeb6..069a91d89a42 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -51,6 +51,13 @@ config GENERIC_ADC_BATTERY
- 	  Say Y here to enable support for the generic battery driver
- 	  which uses IIO framework to read adc.
+diff --git a/drivers/media/platform/vivid/vivid-kthread-cap.c b/drivers/media/platform/vivid/vivid-kthread-cap.c
+index 003319d7816d..31f78d6a05a4 100644
+--- a/drivers/media/platform/vivid/vivid-kthread-cap.c
++++ b/drivers/media/platform/vivid/vivid-kthread-cap.c
+@@ -796,7 +796,11 @@ static int vivid_thread_vid_cap(void *data)
+ 		if (kthread_should_stop())
+ 			break;
  
-+config GENERIC_USB_CHARGER
-+	tristate "Generic USB charger"
-+	depends on USB_PHY
-+	help
-+	  Say Y here to enable a generic USB charger driver which uses
-+	  the USB PHY framework to detect the presence of the charger.
+-		mutex_lock(&dev->mutex);
++		if (!mutex_trylock(&dev->mutex)) {
++			schedule_timeout_uninterruptible(1);
++			continue;
++		}
 +
- config MAX8925_POWER
- 	tristate "MAX8925 battery charger support"
- 	depends on MFD_MAX8925
-diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-index 6c7da920ea83..03f9b553bdfc 100644
---- a/drivers/power/supply/Makefile
-+++ b/drivers/power/supply/Makefile
-@@ -8,6 +8,7 @@ power_supply-$(CONFIG_LEDS_TRIGGERS)	+= power_supply_leds.o
- obj-$(CONFIG_POWER_SUPPLY)	+= power_supply.o
- obj-$(CONFIG_POWER_SUPPLY_HWMON) += power_supply_hwmon.o
- obj-$(CONFIG_GENERIC_ADC_BATTERY)	+= generic-adc-battery.o
-+obj-$(CONFIG_GENERIC_USB_CHARGER)	+= generic-usb-charger.o
+ 		cur_jiffies = jiffies;
+ 		if (dev->cap_seq_resync) {
+ 			dev->jiffies_vid_cap = cur_jiffies;
+@@ -956,8 +960,6 @@ void vivid_stop_generating_vid_cap(struct vivid_dev *dev, bool *pstreaming)
  
- obj-$(CONFIG_PDA_POWER)		+= pda_power.o
- obj-$(CONFIG_APM_POWER)		+= apm_power.o
-diff --git a/drivers/power/supply/generic-usb-charger.c b/drivers/power/supply/generic-usb-charger.c
-new file mode 100644
-index 000000000000..d005acfc33c7
---- /dev/null
-+++ b/drivers/power/supply/generic-usb-charger.c
-@@ -0,0 +1,140 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Simple USB charger driver
-+ * Copyright (c) 2019 Paul Cercueil <paul@crapouillou.net>
-+ */
+ 	/* shutdown control thread */
+ 	vivid_grab_controls(dev, false);
+-	mutex_unlock(&dev->mutex);
+ 	kthread_stop(dev->kthread_vid_cap);
+ 	dev->kthread_vid_cap = NULL;
+-	mutex_lock(&dev->mutex);
+ }
+diff --git a/drivers/media/platform/vivid/vivid-kthread-out.c b/drivers/media/platform/vivid/vivid-kthread-out.c
+index ce5bcda2348c..1e165a6a2207 100644
+--- a/drivers/media/platform/vivid/vivid-kthread-out.c
++++ b/drivers/media/platform/vivid/vivid-kthread-out.c
+@@ -143,7 +143,11 @@ static int vivid_thread_vid_out(void *data)
+ 		if (kthread_should_stop())
+ 			break;
+ 
+-		mutex_lock(&dev->mutex);
++		if (!mutex_trylock(&dev->mutex)) {
++			schedule_timeout_uninterruptible(1);
++			continue;
++		}
 +
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/power_supply.h>
-+#include <linux/usb/phy.h>
+ 		cur_jiffies = jiffies;
+ 		if (dev->out_seq_resync) {
+ 			dev->jiffies_vid_out = cur_jiffies;
+@@ -301,8 +305,6 @@ void vivid_stop_generating_vid_out(struct vivid_dev *dev, bool *pstreaming)
+ 
+ 	/* shutdown control thread */
+ 	vivid_grab_controls(dev, false);
+-	mutex_unlock(&dev->mutex);
+ 	kthread_stop(dev->kthread_vid_out);
+ 	dev->kthread_vid_out = NULL;
+-	mutex_lock(&dev->mutex);
+ }
+diff --git a/drivers/media/platform/vivid/vivid-sdr-cap.c b/drivers/media/platform/vivid/vivid-sdr-cap.c
+index 9acc709b0740..2b7522e16efc 100644
+--- a/drivers/media/platform/vivid/vivid-sdr-cap.c
++++ b/drivers/media/platform/vivid/vivid-sdr-cap.c
+@@ -141,7 +141,11 @@ static int vivid_thread_sdr_cap(void *data)
+ 		if (kthread_should_stop())
+ 			break;
+ 
+-		mutex_lock(&dev->mutex);
++		if (!mutex_trylock(&dev->mutex)) {
++			schedule_timeout_uninterruptible(1);
++			continue;
++		}
 +
-+struct usb_charger {
-+	struct usb_phy *phy;
-+	struct notifier_block nb;
-+	struct power_supply_desc desc;
-+	struct power_supply *charger;
-+};
-+
-+static enum power_supply_property usb_charger_properties[] = {
-+	POWER_SUPPLY_PROP_ONLINE,
-+};
-+
-+static int usb_charger_get_property(struct power_supply *psy,
-+				    enum power_supply_property psp,
-+				    union power_supply_propval *val)
-+{
-+	struct usb_charger *charger = power_supply_get_drvdata(psy);
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_ONLINE:
-+		val->intval = charger->phy->chg_state == USB_CHARGER_PRESENT;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int usb_charger_event(struct notifier_block *nb,
-+			     unsigned long event, void *d)
-+{
-+	struct usb_charger *charger = container_of(nb, struct usb_charger, nb);
-+
-+	power_supply_changed(charger->charger);
-+
-+	return 0;
-+}
-+
-+static int usb_charger_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct power_supply_desc *desc;
-+	struct usb_charger *charger;
-+	struct power_supply_config cfg = {
-+		.of_node = dev->of_node,
-+	};
-+	int err;
-+
-+	charger = devm_kzalloc(dev, sizeof(*charger), GFP_KERNEL);
-+	if (!charger)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, charger);
-+	charger->nb.notifier_call = usb_charger_event;
-+	cfg.drv_data = charger;
-+
-+	if (dev->of_node)
-+		charger->phy = devm_usb_get_phy_by_phandle(dev, "phys", 0);
-+	else
-+		charger->phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-+	if (IS_ERR(charger->phy)) {
-+		err = PTR_ERR(charger->phy);
-+		if (err != -EPROBE_DEFER)
-+			dev_err(dev, "No transceiver configured");
-+		return err;
-+	}
-+
-+	desc = &charger->desc;
-+	desc->name = "usb-charger";
-+	desc->properties = usb_charger_properties;
-+	desc->num_properties = ARRAY_SIZE(usb_charger_properties);
-+	desc->get_property = usb_charger_get_property;
-+
-+	switch (charger->phy->chg_type) {
-+	case SDP_TYPE:
-+		desc->type = POWER_SUPPLY_TYPE_USB;
-+		break;
-+	case DCP_TYPE:
-+		desc->type = POWER_SUPPLY_TYPE_USB_DCP;
-+		break;
-+	case CDP_TYPE:
-+		desc->type = POWER_SUPPLY_TYPE_USB_CDP;
-+		break;
-+	case ACA_TYPE:
-+		desc->type = POWER_SUPPLY_TYPE_USB_ACA;
-+		break;
-+	default:
-+		desc->type = POWER_SUPPLY_TYPE_UNKNOWN;
-+	}
-+
-+	charger->charger = devm_power_supply_register(dev, desc, &cfg);
-+	if (IS_ERR(charger->charger)) {
-+		dev_err(dev, "Unable to register charger");
-+		return PTR_ERR(charger->charger);
-+	}
-+
-+	return usb_register_notifier(charger->phy, &charger->nb);
-+}
-+
-+static int usb_charger_remove(struct platform_device *pdev)
-+{
-+	struct usb_charger *charger = platform_get_drvdata(pdev);
-+
-+	usb_unregister_notifier(charger->phy, &charger->nb);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id usb_charger_of_match[] = {
-+	{ .compatible = "usb-charger" },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, usb_charger_of_match);
-+#endif
-+
-+static struct platform_driver usb_charger_driver = {
-+	.driver = {
-+		.name = "usb-charger",
-+		.of_match_table = of_match_ptr(usb_charger_of_match),
-+	},
-+	.probe = usb_charger_probe,
-+	.remove = usb_charger_remove,
-+};
-+module_platform_driver(usb_charger_driver);
-+
-+MODULE_DESCRIPTION("Simple USB charger driver");
-+MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
-+MODULE_LICENSE("GPL");
+ 		cur_jiffies = jiffies;
+ 		if (dev->sdr_cap_seq_resync) {
+ 			dev->jiffies_sdr_cap = cur_jiffies;
+@@ -303,10 +307,8 @@ static void sdr_cap_stop_streaming(struct vb2_queue *vq)
+ 	}
+ 
+ 	/* shutdown control thread */
+-	mutex_unlock(&dev->mutex);
+ 	kthread_stop(dev->kthread_sdr_cap);
+ 	dev->kthread_sdr_cap = NULL;
+-	mutex_lock(&dev->mutex);
+ }
+ 
+ static void sdr_cap_buf_request_complete(struct vb2_buffer *vb)
 -- 
-2.24.0.rc1
+2.21.0
 
