@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94ACACA9ED0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 05:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2B3CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 05:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1FA215EA
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 05:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F179215EA
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 05:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572758892;
-	bh=cvam81HvGg9ZQ0IrNks1c973+J7RmTVab91Ktr6klEs=;
+	s=default; t=1572759013;
+	bh=9oqXe3JHVRI89OqTwF0y1fkMeszReKpL2VFA38BTlXs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EOvmZ0K0XKk8vYyYUQIhh6MeDHT1e2kPtZ9DS4ZEJRRSv3P7Q80X3UTrYHVGxNy1p
-	 Ci3RvLRj5XsISl3eszQIs/+9c8bYnvQRohNPGH/t7aMJXD7y1exB/6fhqygEM5hKbi
-	 pD23Q/igAZ6jsP5hcHxtrAk0Hbdf7aJrAUQzOjlE=
+	b=bSXdsGX80X7HbuFA0gXtKsec/D2ooDdrC1Bp3HpEEtQudqaj9pKhJc0hI8AE+USfI
+	 l2My72Bmww7/RB7KPEkDKR/QDArFHMl2ScsTjf3j+VlArkeJKlPijfruVxXB7FgWsd
+	 M05ZZL3LRorcqDwWYshI9eWDkjgDPlihycqdDy/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfKCF2L (ORCPT
+        id S1727461AbfKCFaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 01:28:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57490 "EHLO mail.kernel.org"
+        Sun, 3 Nov 2019 01:30:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbfKCF2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 01:28:10 -0400
+        id S1726354AbfKCFaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 01:30:12 -0400
 Received: from localhost (unknown [106.206.115.146])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55933214D8;
-        Sun,  3 Nov 2019 05:28:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08C69214D8;
+        Sun,  3 Nov 2019 05:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572758889;
-        bh=cvam81HvGg9ZQ0IrNks1c973+J7RmTVab91Ktr6klEs=;
+        s=default; t=1572759011;
+        bh=9oqXe3JHVRI89OqTwF0y1fkMeszReKpL2VFA38BTlXs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OqyL7puLO99ghwhmde0V6PYs3nxFmw/iYYZH52LsG0pdDNPTdsvWzHBimZmtltQIj
-         urUoHfDHd+aqXlj66fWCujKcK/BpqA+FyF4IGvrQbmx0IQ/ZwpVDItlwu182K+2dd6
-         EWm1RmySk0b3/rSEpLFz6TTMwHkbKw59w6fAfpTI=
-Date:   Sun, 3 Nov 2019 10:58:01 +0530
+        b=VjDLVTeMMZD4pw16JgzV5sc6WawxToDl0wHuKA2iOd+3d/yxqsedyBk1bJNeRhSb+
+         PKpyZJR2PKIzFkJTpcMUBdKuHFcr7PtpZNolj5UFLoVJHT+N6Ww1uK3AtGGd2kJe0F
+         JtRu1o/h9CLriPHA6v3lqF61Lv1+KpN97N+Zf7Dg=
+Date:   Sun, 3 Nov 2019 11:00:03 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        broonie@kernel.org
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
         Bard liao <yung-chuan.liao@linux.intel.com>,
         Rander Wang <rander.wang@linux.intel.com>,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH 02/14] soundwire: rename dev_to_sdw_dev macro
-Message-ID: <20191103052801.GG2695@vkoul-mobl.Dlink>
+Subject: Re: [PATCH 04/14] soundwire: bus_type: rename sdw_drv_ to
+ sdw_slave_drv
+Message-ID: <20191103053003.GH2695@vkoul-mobl.Dlink>
 References: <20191023212823.608-1-pierre-louis.bossart@linux.intel.com>
- <20191023212823.608-3-pierre-louis.bossart@linux.intel.com>
+ <20191023212823.608-5-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191023212823.608-3-pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <20191023212823.608-5-pierre-louis.bossart@linux.intel.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -66,135 +66,67 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 23-10-19, 16:28, Pierre-Louis Bossart wrote:
-> Since we want to introduce master devices, rename macro so that we
-> have consistency between slave and master device access, following the
-> Grey Bus example.
+> Before we add master driver support, make sure there is no ambiguity
+> and no occirrences of sdw_drv_ functions.
+        ^^^^^^^^^^^
+typo
+
+> 
+> No functionality change.
 > 
 > Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 > ---
->  drivers/base/regmap/regmap-sdw.c |  4 ++--
-
-This needs Mark's ACK
-
->  drivers/soundwire/bus.c          |  2 +-
->  drivers/soundwire/bus_type.c     | 11 ++++++-----
->  drivers/soundwire/slave.c        |  2 +-
->  include/linux/soundwire/sdw.h    |  3 ++-
->  5 files changed, 12 insertions(+), 10 deletions(-)
+>  drivers/soundwire/bus_type.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/base/regmap/regmap-sdw.c b/drivers/base/regmap/regmap-sdw.c
-> index 50a66382d87d..d1fc0c22180a 100644
-> --- a/drivers/base/regmap/regmap-sdw.c
-> +++ b/drivers/base/regmap/regmap-sdw.c
-> @@ -10,7 +10,7 @@
->  static int regmap_sdw_write(void *context, unsigned int reg, unsigned int val)
->  {
->  	struct device *dev = context;
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  
->  	return sdw_write(slave, reg, val);
->  }
-> @@ -18,7 +18,7 @@ static int regmap_sdw_write(void *context, unsigned int reg, unsigned int val)
->  static int regmap_sdw_read(void *context, unsigned int reg, unsigned int *val)
->  {
->  	struct device *dev = context;
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	int read;
->  
->  	read = sdw_read(slave, reg);
-> diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-> index be5d437058ed..4b22ee996a65 100644
-> --- a/drivers/soundwire/bus.c
-> +++ b/drivers/soundwire/bus.c
-> @@ -110,7 +110,7 @@ EXPORT_SYMBOL(sdw_add_bus_master);
->  
->  static int sdw_delete_slave(struct device *dev, void *data)
->  {
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	struct sdw_bus *bus = slave->bus;
->  
->  	sdw_slave_debugfs_exit(slave);
 > diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
-> index 370b94752662..c0585bcc8a41 100644
+> index 2b2830b622fa..9a0fd3ee1014 100644
 > --- a/drivers/soundwire/bus_type.c
 > +++ b/drivers/soundwire/bus_type.c
-> @@ -33,7 +33,7 @@ sdw_get_device_id(struct sdw_slave *slave, struct sdw_driver *drv)
+> @@ -67,7 +67,7 @@ struct bus_type sdw_bus_type = {
+>  };
+>  EXPORT_SYMBOL_GPL(sdw_bus_type);
 >  
->  static int sdw_bus_match(struct device *dev, struct device_driver *ddrv)
+> -static int sdw_drv_probe(struct device *dev)
+> +static int sdw_slave_drv_probe(struct device *dev)
 >  {
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	struct sdw_driver *drv = drv_to_sdw_slave_driver(ddrv);
+>  	struct sdw_slave *slave = to_sdw_slave_device(dev);
+>  	struct sdw_driver *drv = to_sdw_slave_driver(dev->driver);
+> @@ -113,7 +113,7 @@ static int sdw_drv_probe(struct device *dev)
+>  	return 0;
+>  }
 >  
->  	return !!sdw_get_device_id(slave, drv);
-> @@ -49,7 +49,7 @@ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size)
->  
->  static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
+> -static int sdw_drv_remove(struct device *dev)
+> +static int sdw_slave_drv_remove(struct device *dev)
 >  {
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	char modalias[32];
+>  	struct sdw_slave *slave = to_sdw_slave_device(dev);
+>  	struct sdw_driver *drv = to_sdw_slave_driver(dev->driver);
+> @@ -127,7 +127,7 @@ static int sdw_drv_remove(struct device *dev)
+>  	return ret;
+>  }
 >  
->  	sdw_slave_modalias(slave, modalias, sizeof(modalias));
-> @@ -69,7 +69,7 @@ EXPORT_SYMBOL_GPL(sdw_bus_type);
->  
->  static int sdw_drv_probe(struct device *dev)
+> -static void sdw_drv_shutdown(struct device *dev)
+> +static void sdw_slave_drv_shutdown(struct device *dev)
 >  {
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	struct sdw_driver *drv = drv_to_sdw_slave_driver(dev->driver);
->  	const struct sdw_device_id *id;
->  	int ret;
-> @@ -115,8 +115,9 @@ static int sdw_drv_probe(struct device *dev)
+>  	struct sdw_slave *slave = to_sdw_slave_device(dev);
+>  	struct sdw_driver *drv = to_sdw_slave_driver(dev->driver);
+> @@ -155,13 +155,13 @@ int __sdw_register_slave_driver(struct sdw_driver *drv,
+>  	}
 >  
->  static int sdw_drv_remove(struct device *dev)
->  {
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	struct sdw_driver *drv = drv_to_sdw_slave_driver(dev->driver);
-> +
->  	int ret = 0;
+>  	drv->driver.owner = owner;
+> -	drv->driver.probe = sdw_drv_probe;
+> +	drv->driver.probe = sdw_slave_drv_probe;
 >  
 >  	if (drv->remove)
-> @@ -129,7 +130,7 @@ static int sdw_drv_remove(struct device *dev)
->  
->  static void sdw_drv_shutdown(struct device *dev)
->  {
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	struct sdw_driver *drv = drv_to_sdw_slave_driver(dev->driver);
+> -		drv->driver.remove = sdw_drv_remove;
+> +		drv->driver.remove = sdw_slave_drv_remove;
 >  
 >  	if (drv->shutdown)
-> diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
-> index 19919975bb6d..48a513680db6 100644
-> --- a/drivers/soundwire/slave.c
-> +++ b/drivers/soundwire/slave.c
-> @@ -9,7 +9,7 @@
+> -		drv->driver.shutdown = sdw_drv_shutdown;
+> +		drv->driver.shutdown = sdw_slave_drv_shutdown;
 >  
->  static void sdw_slave_release(struct device *dev)
->  {
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  
->  	kfree(slave);
+>  	return driver_register(&drv->driver);
 >  }
-> diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-> index 0c4e59dfaca3..d6e5a0e42819 100644
-> --- a/include/linux/soundwire/sdw.h
-> +++ b/include/linux/soundwire/sdw.h
-> @@ -570,7 +570,8 @@ struct sdw_slave {
->  	struct completion enumeration_complete;
->  };
->  
-> -#define dev_to_sdw_dev(_dev) container_of(_dev, struct sdw_slave, dev)
-> +#define to_sdw_slave_device(d) \
-> +	container_of(d, struct sdw_slave, dev)
->  
->  struct sdw_driver {
->  	const char *name;
 > -- 
 > 2.20.1
 
