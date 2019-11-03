@@ -2,162 +2,89 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF5DCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 00:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE90CCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 00:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED7E520663
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 00:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F5120862
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 00:59:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qe/QV06/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfKCA1K (ORCPT
+        id S1727387AbfKCA7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 20:27:10 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:43921 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727350AbfKCA1K (ORCPT
+        Sat, 2 Nov 2019 20:59:11 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:34794 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727335AbfKCA7L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 20:27:10 -0400
-Received: by mail-io1-f72.google.com with SMTP id i2so10434665ioo.10
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 17:27:09 -0700 (PDT)
+        Sat, 2 Nov 2019 20:59:11 -0400
+Received: by mail-yb1-f193.google.com with SMTP id f6so1600066ybp.1
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 17:59:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=7q6Xq7rmHNSrovKS8aUtbAZiEFB5v4eQ1NKAasuvin0=;
+        b=qe/QV06/xian0rDAQgM+qAbX7/ACLaPY6U1qvPK/JYxMuZyLu2TBZKiDYgtCNho9yN
+         X/5uQFQKrr2HY5fpULDVYzwpvHhOFgiz7Fd4ZyBYRMyU2ETDArGOjhuYvUXOtANWQcac
+         mI9wPqYc4Q73sSkILRIey5fKQbxxgp1Akcpc9cwO4HkDMu2b2iTk8/7ALLRm0pTYEVPd
+         pWUd2f3unLUTvaCnhekTDYQuKrwTE4o13OL1L3RiKIlFlAsjiDxeyJ/QhK1Vmn8WtS7K
+         6vd9nU2q0zw7sgG95ROLQ0qOptvzbgC/xh6BWQ0ay+Dc8LTqOs19AGR0dcJJWiTt1c43
+         ytOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=43PAAd5DFXqouo/qdBe/GRiW0b/rALk2NjJmB3iEVew=;
-        b=A+VpDMPC4WF3C0dXH+TNtN2jHbL//LP0D84RHsoSHj0fBimuMKwnUVpzZKVPSuwziJ
-         jBGMG72Pzs97LIBymef+hbVhMiG+t37vk5r54nAR+1Ey56YGVenJkkb/NyVzcUHgAY0j
-         RYAuzdphiWCoPKjwyh8kkXBdo7rOJk0mkhaVvvp9RaAqZpvNUppwyvcZ1FHpd9pFjnp3
-         M7fUJaeQaOVtLVNshRjeas4uht69PpNgvGR/Zjm34ou0ob2tixzhL1pPlIiQcx8arfTq
-         fIDxIuGYwFrVUTv7tvzPnuMi4l3ke83eXSrBJXdcyWJ85o+wbpjYbYaP+Ozi62zWAQcr
-         QBNA==
-X-Gm-Message-State: APjAAAU9Jm3ql2mpLeAOGxF2XHwtFOrCZftZx1DzIKxUACwSvaEAHcKX
-        En0WuQE0NDg7QOgcIpum8T1EWRIrJ1CSM2FPiPpu4G500KmN
-X-Google-Smtp-Source: APXvYqyFE/g8ce3eQOpNPhHAlB4bc2H196GHPApJWaZ8g2trlWRrsAZclg6hDJm52CJZ8FWwo+oSTe6B6N7+oLR7+4AtAJRjHzKx
-MIME-Version: 1.0
-X-Received: by 2002:a92:9edd:: with SMTP id s90mr20815527ilk.244.1572740829259;
- Sat, 02 Nov 2019 17:27:09 -0700 (PDT)
-Date:   Sat, 02 Nov 2019 17:27:09 -0700
-In-Reply-To: <000000000000bd85b40596657dfa@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000073b15c05966642c3@google.com>
-Subject: Re: WARNING: suspicious RCU usage in kvm_dev_ioctl
-From:   syzbot <syzbot+75475908cd0910f141ee@syzkaller.appspotmail.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, rkrcmar@redhat.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7q6Xq7rmHNSrovKS8aUtbAZiEFB5v4eQ1NKAasuvin0=;
+        b=js1t0gOsrEE5BKrPgMmPp9Sa+AEgfvRqIBC9yY6HesFjzkbZPA1Qk5yQGVWk5nS2cT
+         vbIHw/LE8P8SawTFB7iNsbSNvltgpWPYgONkiukwd7naqNTdvDX5ewz/IX/VJccVVIMc
+         1QG8d1mv7Vq6ohczQNL4RjDr4W5WG0pzmVO7LZkGVmi2zUrhlbzBzDfMcK0c1DQkDsDi
+         M3jhAvpzxMk2f1UsWB68PcHWfo7bJfgxz4H5lJD5yI76sWwGrhRM13HlBJmCvuMn5weR
+         twNWSSJzxz/ysfphKhrZl+0EjlWcUZ1OkQbh+0cpF6JwC1SG6TgOwjK5sMA+A8n2y4et
+         ZiUg==
+X-Gm-Message-State: APjAAAVkqrgZD8pcO6HCjaWnzEvgJMip8x1fibSu0Fwnj3FI8lWC47Gp
+        zXbWSFGL6c7XsgrLCYPzrZ0=
+X-Google-Smtp-Source: APXvYqxSp4k92cn+p3Zvs5Fp7XQQ7Lm/W5dD+hONzeMlFEuxTsXcX1OL+HSDoXeqW8IDYsqLL5yIHg==
+X-Received: by 2002:a25:13ca:: with SMTP id 193mr17124173ybt.196.1572742750301;
+        Sat, 02 Nov 2019 17:59:10 -0700 (PDT)
+Received: from rkanasun-VirtualBox.ad.cirrus.com ([141.131.2.3])
+        by smtp.gmail.com with ESMTPSA id 203sm5240896ywp.76.2019.11.02.17.59.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Nov 2019 17:59:09 -0700 (PDT)
+From:   rama <ramakumar.kanasundara@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     jeremy@azazel.net, nishadkamdar@gmail.com,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        rama <ramakumar.kanasundara@gmail.com>
+Subject: [PATCH] FBTFT: fb_sh: Changed udelay() to usleep_range() based on the Document, Documentation/timers/timers-howto.rst Excerpt from the document: -SLEEPING FOR ~USECS OR SMALL MSECS ( 10us - 20ms):           * Use usleep_range
+Date:   Sat,  2 Nov 2019 19:59:06 -0500
+Message-Id: <20191103005906.17112-1-ramakumar.kanasundara@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+---
+ drivers/staging/fbtft/fb_agm1264k-fl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-HEAD commit:    9d234505 Merge tag 'hwmon-for-v5.4-rc6' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15bf068ae00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cbbed3e8d4eb64bf
-dashboard link: https://syzkaller.appspot.com/bug?extid=75475908cd0910f141ee
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14e20268e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15209b84e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+75475908cd0910f141ee@syzkaller.appspotmail.com
-
-=============================
-WARNING: suspicious RCU usage
-5.4.0-rc5+ #0 Not tainted
------------------------------
-include/linux/kvm_host.h:534 suspicious rcu_dereference_check() usage!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active = 2, debug_locks = 1
-no locks held by syz-executor978/9604.
-
-stack backtrace:
-CPU: 0 PID: 9604 Comm: syz-executor978 Not tainted 5.4.0-rc5+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  lockdep_rcu_suspicious+0x153/0x15d kernel/locking/lockdep.c:5438
-  kvm_get_bus include/linux/kvm_host.h:534 [inline]
-  kvm_get_bus include/linux/kvm_host.h:532 [inline]
-  kvm_create_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:706 [inline]
-  kvm_dev_ioctl_create_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:3444  
-[inline]
-  kvm_dev_ioctl+0x100c/0x1610 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3496
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441159
-Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffdef5e0888 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441159
-RDX: 0000000000000002 RSI: 000000000000ae01 RDI: 0000000000000003
-RBP: 00000000006cb018 R08: 00000000004002c8 R09: 00000000004002c8
-R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000401f80
-R13: 0000000000402010 R14: 0000000000000000 R15: 0000000000000000
-
-=============================
-WARNING: suspicious RCU usage
-5.4.0-rc5+ #0 Not tainted
------------------------------
-include/linux/kvm_host.h:629 suspicious rcu_dereference_check() usage!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active = 2, debug_locks = 1
-no locks held by syz-executor978/9604.
-
-stack backtrace:
-CPU: 0 PID: 9604 Comm: syz-executor978 Not tainted 5.4.0-rc5+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  lockdep_rcu_suspicious+0x153/0x15d kernel/locking/lockdep.c:5438
-  __kvm_memslots include/linux/kvm_host.h:629 [inline]
-  __kvm_memslots include/linux/kvm_host.h:626 [inline]
-  kvm_create_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:708 [inline]
-  kvm_dev_ioctl_create_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:3444  
-[inline]
-  kvm_dev_ioctl+0x116c/0x1610 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3496
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441159
-Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffdef5e0888 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441159
-RDX: 0000000000000002 RSI: 000000000000ae01 RDI: 0000000000000003
-RBP: 00000000006cb018 R08: 00000000004002c8 R09: 00000000004002c8
-R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000401f80
-R13: 0000000000402010 R14: 0000000000000000 R15: 0000000000000000
+diff --git a/drivers/staging/fbtft/fb_agm1264k-fl.c b/drivers/staging/fbtft/fb_agm1264k-fl.c
+index eeeeec97ad27..471a145e3c00 100644
+--- a/drivers/staging/fbtft/fb_agm1264k-fl.c
++++ b/drivers/staging/fbtft/fb_agm1264k-fl.c
+@@ -85,7 +85,7 @@ static void reset(struct fbtft_par *par)
+ 	dev_dbg(par->info->device, "%s()\n", __func__);
+ 
+ 	gpiod_set_value(par->gpio.reset, 0);
+-	udelay(20);
++	usleep_range(20,20);
+ 	gpiod_set_value(par->gpio.reset, 1);
+ 	mdelay(120);
+ }
+-- 
+2.17.1
 
