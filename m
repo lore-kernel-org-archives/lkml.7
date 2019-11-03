@@ -7,62 +7,75 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55A7CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 23:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FF4CA9EB0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 23:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A56EF206BA
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 23:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B2C2086D
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 23:57:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sst1iyXC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQpQbIVE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbfKCX4K (ORCPT
+        id S1728433AbfKCX5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 18:56:10 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45125 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728258AbfKCX4K (ORCPT
+        Sun, 3 Nov 2019 18:57:19 -0500
+Received: from mail-il1-f181.google.com ([209.85.166.181]:44071 "EHLO
+        mail-il1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728261AbfKCX5S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 18:56:10 -0500
-Received: by mail-io1-f67.google.com with SMTP id s17so16460922iol.12;
-        Sun, 03 Nov 2019 15:56:09 -0800 (PST)
+        Sun, 3 Nov 2019 18:57:18 -0500
+Received: by mail-il1-f181.google.com with SMTP id w1so4406197ilq.11;
+        Sun, 03 Nov 2019 15:57:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tJ6SImAE5bBoHYBCW+S1n9LSWyT51AlKJPtj4WQ4frM=;
-        b=Sst1iyXCX97oratlkRhsLlha9WX8ofivjl1jgu5UOsVM6CK8InNY2yRxCUEb0FauIR
-         U9IR9pEuTzjsMnZFNDKEArjK4TbpMrgeHke9ILCcgWQmg6o4M/fus1L57FP7rZ8Lq91k
-         nUvl83HLP01tDCJtKz7OwvErumRZx8OICbEsf3NqrA84Q5KT6Uys2y8DRSrSA7xQNba/
-         pKcy5aWXckP9cAMBR+6gNk44YQvukSjx6CQeS2VefsdFMuYv2twDAkVp4a9TyW/9ZMgd
-         QWZLZHQnPrZiMqbResl6DyILpg/GsdjciQ5eZE6Y/Cjv8kYdwN0OchhBi1qt5VzfwJsx
-         6tMg==
+        bh=DcgIA0yPIvsIGKQnb70qIrRbOwcnGxkyD0NueTd0dnM=;
+        b=mQpQbIVEcDI8CRk9oBXSsEWOIPA/u3lVHQtEmp62/AhDqcgq5susW8Vxp3qi+W27N/
+         Jwgk5pLmPI9eQ4ZzQi+KXT/MBd6rk1bPKIMVw9A3WHlu9ebn7Z47dkEqNkL+JaqaKiJV
+         2CRFfgYKvNWRPUBMgH++C8RNvTw9fZSy5ib0qf7oQNke18BttFMBnf1dA59IsanXEbyb
+         e1nSY+RKs5Q9/WGf7akhzwwX/IpaGr3Eecs8KZnAkRSX3zhFKMdCd8MqULW/lAzP6cCM
+         X8l1tpCp9fjC+qySDE62qrv/JRYo2DGYedkYvBDkTlqMoal8gNesB0QEsEjGkPseU2bO
+         rkWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tJ6SImAE5bBoHYBCW+S1n9LSWyT51AlKJPtj4WQ4frM=;
-        b=eDiMQGZiHzQCRIwR39rLCIsIWeUDFaxyui8oaq5ax0TJqSpozOwunzVqjMFHErWe1T
-         2CL7za3ZYAp03vbDuPIyNZf/tKD7SQaQYah92qtBxYIgAR7zrqTLt3F/Yuyo3zK61Mx6
-         YC8+oOgpubMGYTmrM/nYE09BbncNvKyyzvy+HDtQNBXCEnplvyfZs88rSmVbKHcXce3p
-         +jhcbuxpi3kFA30qwqc+9sb/Xz2haAkvjjsVe8U4KFX3sK4v29rhjxFPpoNh+8hMhKEW
-         ulxH3F1yTLXBQEpslo1i/LxWy7SIHIZamgq7EJmexCQaXMXXSyzVfH1Nw92SU9veEln2
-         zwrA==
-X-Gm-Message-State: APjAAAVqIZqeZc+vgamC8pufIhVuv0AuD22La9SK/4ky+yIiFQRO82WZ
-        psrKjCORGHJzfhOoRLIILpsZ/45m9w2/BfEk2Oo=
-X-Google-Smtp-Source: APXvYqzJ3138JUvEx/iZsyEk2rzt/M/4z0RDxd0AvebVuASHN0b6ISXY+iVwBbphQehbILaLdnFb7/cZo4+ACSg41AM=
-X-Received: by 2002:a02:3309:: with SMTP id c9mr1010109jae.52.1572825369041;
- Sun, 03 Nov 2019 15:56:09 -0800 (PST)
+        bh=DcgIA0yPIvsIGKQnb70qIrRbOwcnGxkyD0NueTd0dnM=;
+        b=mXP6znkabUtgSDpOsPrNDT+ktEqSSCQD/dS8jtjIS9jkGi/UKqx8BHdfJgLmyJ1Zb3
+         c2A4GEI7k5/CToy3I875cq5QTvnqGNKjkaRHEGWEgxjSSzR1I8NniIiSJjcPEPxU/5H3
+         UHExHeRBitwKzFwQU/Se4DOrvwbkq0hLroOPd0iC18G4XS+nusaab5kJwpwk3Mc/2NCJ
+         0L1tQ9VLb2TJv85vk07Ad4FRoYlRoJqZOnZRwJfC0nAcYD06We63XraZN45bqOxTncfv
+         LPX8hZzGMsOCTysKRJekJ2ITLIgWX3VGg2KEQjfRYINascki6D8ooYimzmkQ5qnOuNwK
+         waAA==
+X-Gm-Message-State: APjAAAWaB5KadEM73C5eOZSglHNFDP2+ahWuykRSTiLoPolIafhmuNH3
+        ysDWZALjoGWu2BSbqGGgh/Fq55R633kwc0fZDDM=
+X-Google-Smtp-Source: APXvYqzsWmLb0DjMjZwq0MkhUknk7p77iFlglOlOoE6vmOhYuH2jllnY836U34CV+1ovT1Gc4DFK7Erea6o9XsK7iUI=
+X-Received: by 2002:a92:395a:: with SMTP id g87mr26581440ila.206.1572825437554;
+ Sun, 03 Nov 2019 15:57:17 -0800 (PST)
 MIME-Version: 1.0
-References: <20190302141704.32547-1-marex@denx.de> <20191101204801.16328-1-TheSven73@gmail.com>
-In-Reply-To: <20191101204801.16328-1-TheSven73@gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Sun, 3 Nov 2019 17:55:57 -0600
-Message-ID: <CAHCN7xL4aNDf+4TiStSp4PMiA_FKj9VOmCpe-o42WBhMdoj_Ew@mail.gmail.com>
-Subject: Re: [PATCH 2/2] Input: ili210x - add ILI2117 support
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Marek Vasut <marex@denx.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org,
+References: <20190620062246.2665-1-e5ten.arch@gmail.com> <20191029210250.17007-1-e5ten.arch@gmail.com>
+ <CBCA4048-A9C1-42E6-A821-1EE36AE8CDC7@zytor.com> <CAMEGPioV_MTKO9DK6JT5355b7x0py-D_K467etDDnxWSYAbEig@mail.gmail.com>
+ <40DC5B42-6C0D-4A5B-B23E-884ADB0108F0@zytor.com>
+In-Reply-To: <40DC5B42-6C0D-4A5B-B23E-884ADB0108F0@zytor.com>
+From:   Ethan Sommer <e5ten.arch@gmail.com>
+Date:   Sun, 3 Nov 2019 18:57:06 -0500
+Message-ID: <CAMEGPiqq1aoVNgezkx5DdQO7Jm2NL+pZzzY-N0AoU=+s470LcQ@mail.gmail.com>
+Subject: Re: [PATCH v3] replace timeconst bc script with an sh script
+To:     "H . Peter Anvin" <hpa@zytor.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Corey Minyard <cminyard@mvista.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-doc@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,56 +83,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 3:48 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
->
-> Dmitry / Marek,
->
-> There have been two attempts to add ILI2117 touch controller support.
-> I was about to add a third, but luckily I checked the mailing list
-> before writing any code :)
->
-> Adding this support would clearly be beneficial for the common good.
-> What can we do to get this in motion again?
->
-> Last time I checked, Marek posted a patch which added the 2117, but Dmitry
-> objected, because the code became too unwieldy. Dmitry then posted a cleanup
-> patch, which did not work for Marek. So everything came to a halt.
-> See:
-> https://patchwork.kernel.org/patch/10836651/
-> https://www.spinics.net/lists/linux-input/msg62670.html
->
-> Dmitry, would you perhaps be willing to accept Marek's patch, and perform the
-> cleanup later?
->
-> Marek, would you perhaps be willing to invest some time to debug Dmitry's
-> cleanup patch?
->
-> On my end, I've reviewed Dmitry's patch and it looks mostly ok. I saw one
-> difference with ILI210X which could explain Marek's results, but I can't be
-> sure - because I could not locate the 210X's register layout on the web.
->
-> In Dmitry's patch, we see:
->
->         touch = ili210x_report_events(priv, touchdata);
->         if (touch || chip->continue_polling(touchdata))
->                 schedule_delayed_work(&priv->dwork,
->                                       msecs_to_jiffies(priv->poll_period));
->
-> but this is not exactly equivalent to the original. Because in the original,
-> the 210X's decision to kick off delayed work is completely independent of
-> the value of touch.
->
-
-If anyone is interested, I posted a patch to add ili2117A.
-https://patchwork.kernel.org/patch/10849877/
-
-I am not sure if it's compatible with the non-A version.
-
-
-> Suggested replacement:
->
->         touch = ili210x_report_events(priv, touchdata);
->         if (chip->continue_polling)
->                 touch = chip->continue_polling(touchdata);
->
-> Sven
+> The point isn't to make it work *now*, but getting it to *stay* work.
+Since the only thing that can change to affect the outcome of the script
+or program is the value of CONFIG_HZ, isn't knowing that it works within
+a range of any reasonable values to set CONFIG_HZ to enough to know that
+it will stay working? I just tested again using the bc script and my C
+program, and this time I tested every possible value up to 100000, and
+they both still matched output. It doesn't seem like there's something
+that would cause the C program to stop working in the future due to
+precision issues.
