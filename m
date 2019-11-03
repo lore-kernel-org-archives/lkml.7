@@ -2,98 +2,78 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A19CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 10:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5A5CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 10:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C250214D8
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 10:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572777076;
-	bh=20l8v/y2V3ek5NI+W8ID8qa7S1TqL/BeyjegTojxYIk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=iPO/vEY3IzUIWH6xEnlGXsxDRj+LSGBA0OGcUJ/xblp133tLcFmpLye5TXtn3ClaC
-	 W/oQKvfFAL0bz0BKnz6S2zFgkUtP4awJ9jzqoe9VupSjddUbZy8je1t545kQH7e0xZ
-	 A2yB6H4jLq8he7bcWfpjgOKKBzzzow7QaZvIOvTc=
+	by mail.kernel.org (Postfix) with ESMTP id F2C9A2080F
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 10:35:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbfKCKbP (ORCPT
+        id S1727609AbfKCKfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 05:31:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726408AbfKCKbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 05:31:14 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E13992080F;
-        Sun,  3 Nov 2019 10:31:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572777074;
-        bh=20l8v/y2V3ek5NI+W8ID8qa7S1TqL/BeyjegTojxYIk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MZX2QdfeJVHnNlbg1uGWwQTvF3A2/JmXrlYm6bNiiXpJxecg9O+lUkLqJIJaeAE4d
-         wr7MeS0gQLvVS4XG1LqtIGBJlcMKDRqxn9MTdrqveO0TOzrKWVmKegNoaOCxD3aaRF
-         7ThQWgAXtTZLt0fwygqYNrrNXEtaMpI4MasF6XV4=
-Date:   Sun, 3 Nov 2019 10:31:09 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <dragos.bogdan@analog.com>
-Subject: Re: [PATCH 05/10] iio: imu: adis: check ret val for non-zero vs
- less-than-zero
-Message-ID: <20191103103109.37849bc2@archlinux>
-In-Reply-To: <20191101093505.9408-6-alexandru.ardelean@analog.com>
-References: <20191101093505.9408-1-alexandru.ardelean@analog.com>
-        <20191101093505.9408-6-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 3 Nov 2019 05:35:06 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56866 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727156AbfKCKfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 05:35:06 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3C42FB114;
+        Sun,  3 Nov 2019 10:35:04 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-mips@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>
+Subject: [net v2 2/4] net: sgi: ioc3-eth: fix usage of GFP_* flags
+Date:   Sun,  3 Nov 2019 11:34:31 +0100
+Message-Id: <20191103103433.26826-2-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191103103433.26826-1-tbogendoerfer@suse.de>
+References: <20191103103433.26826-1-tbogendoerfer@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 Nov 2019 11:35:00 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+From: Christoph Hellwig <hch@lst.de>
 
-> The ADIS library functions return zero on success, and negative values for
-> error. Positive values aren't returned, but we only care about the success
-> value (which is zero).
-> 
-> This change is mostly needed so that the compiler won't make any inferences
-> about some about values being potentially un-initialized. This only
-> triggers after making some functions inline, because the compiler can
-> better follow return paths.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Applied.
+dma_alloc_coherent always zeroes memory, there is no need for
+__GFP_ZERO.  Also doing a GFP_ATOMIC allocation just before a GFP_KERNEL
+one is clearly bogus.
 
-thanks,
+Fixes: ed870f6a7aa2 ("net: sgi: ioc3-eth: use dma-direct for dma allocations")
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/net/ethernet/sgi/ioc3-eth.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Jonathan
-
-> ---
->  drivers/iio/imu/adis.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
-> index 1631c255deab..dc2f9e061d98 100644
-> --- a/drivers/iio/imu/adis.c
-> +++ b/drivers/iio/imu/adis.c
-> @@ -286,7 +286,7 @@ int adis_check_status(struct adis *adis)
->  	int i;
->  
->  	ret = adis_read_reg_16(adis, adis->data->diag_stat_reg, &status);
-> -	if (ret < 0)
-> +	if (ret)
->  		return ret;
->  
->  	status &= adis->data->status_error_mask;
+diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
+index 4879dedf1f60..d1546f04d1fd 100644
+--- a/drivers/net/ethernet/sgi/ioc3-eth.c
++++ b/drivers/net/ethernet/sgi/ioc3-eth.c
+@@ -1244,7 +1244,7 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	/* Allocate rx ring.  4kb = 512 entries, must be 4kb aligned */
+ 	ip->rxr = dma_alloc_coherent(ip->dma_dev, RX_RING_SIZE, &ip->rxr_dma,
+-				     GFP_ATOMIC);
++				     GFP_KERNEL);
+ 	if (!ip->rxr) {
+ 		pr_err("ioc3-eth: rx ring allocation failed\n");
+ 		err = -ENOMEM;
+@@ -1253,7 +1253,7 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	/* Allocate tx rings.  16kb = 128 bufs, must be 16kb aligned  */
+ 	ip->tx_ring = dma_alloc_coherent(ip->dma_dev, TX_RING_SIZE + SZ_16K - 1,
+-					 &ip->txr_dma, GFP_KERNEL | __GFP_ZERO);
++					 &ip->txr_dma, GFP_KERNEL);
+ 	if (!ip->tx_ring) {
+ 		pr_err("ioc3-eth: tx ring allocation failed\n");
+ 		err = -ENOMEM;
+-- 
+2.16.4
 
