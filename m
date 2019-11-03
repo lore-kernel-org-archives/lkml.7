@@ -1,117 +1,203 @@
-Return-Path: <SRS0=TDlZ=Y2=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 467B0CA9ED0
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 23:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF5DCA9ED1
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 00:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B721215EA
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Nov 2019 23:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 460AD21783
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 00:08:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y0grKuDc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l+2tg7Uw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfKBXzl (ORCPT
+        id S1727348AbfKCAIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Nov 2019 19:55:41 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40923 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbfKBXzl (ORCPT
+        Sat, 2 Nov 2019 20:08:16 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43102 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbfKCAIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Nov 2019 19:55:41 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e3so3859940plt.7
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Nov 2019 16:55:39 -0700 (PDT)
+        Sat, 2 Nov 2019 20:08:16 -0400
+Received: by mail-qt1-f194.google.com with SMTP id l24so22307qtp.10;
+        Sat, 02 Nov 2019 17:08:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=z0bgko71g/IEmBKD3Kro6mR4U+O8GKl/Z/Ms7dBzsH4=;
-        b=Y0grKuDcaYtkpumf209OEt0taRJ7Y6eOtn7rvFJPq1VMFZ+BoXqfMZNRq9rLCrW12u
-         D8VNlbfWEqIKt3A1Wl+k1SxaU9X2kXhZXXesNApA/aYan2qyIkNS8pgyMMfIvkD0w4VS
-         U6msNXpe1KK9KZZGIiGmJNMpwNFaKC+VtlKzW5GbBSjRIjnen7Tk66LtCmd6uh5QJN6G
-         8oIubEqXAwVIFxaXfQiQrJEYD0VQHXDkafpol8yjZhyMnR0FWJGrB2uvS0BHdLFhgof7
-         K7QbS5Styk3SYEeVaUYq45g2bzeTAhcNl2Lg/i35OjWCROKCu7YX5GPeBPv+2Rq222E3
-         dl9g==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ENs6i/0Ekm4YgubOks9MIfw6KzO9IBeI4tnjjFdS0V0=;
+        b=l+2tg7UwbaIqIoayNNsFMQBE3ag2lc35vvjvy+6gDE3Wezq4yPhnyW0RAtByE+oFVY
+         +lcXFTyjbKT+vHLWdTEQs2G9jmHqoWtWD5oAgosXeQLAhfjeB/1U8RktWifqRw0lwORX
+         Qcq9XAVi6aMyaAmwIUHH5Ed2kMR0jCbURCxGXtDN811MmvEjqkGg8vHiwnX2GRp3d1Oc
+         Kb25mB27sbeW9XSWWJrNRVGKoODE/NDmh9dDcHsal7TPIgdlUG2kf6mXzIDhtMUjMyvj
+         Om8lG5AUfI1liEqUxMk8bBCC6zOtH3qdwfHmu/M5vCwEwlJH23q91iInbc+uqDP86oLN
+         5ikw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=z0bgko71g/IEmBKD3Kro6mR4U+O8GKl/Z/Ms7dBzsH4=;
-        b=WRkQf5ZbkQzSnrU+2fO1RP0i4QaqAkIIU+fruhDFUGPUYwtlfAKezype+gvAU5A1ev
-         PMXZimIfK15Dj6aRI9b8vDCB60uT2oyK+cu0nJjlBb1iV0HPYjBf2JG2MYfrJcXjgZB4
-         0Vl0TES7RQI2+7TlS+i5ufxvQTwAMSbpRPSYN7LXa/1axQAeihuLrw4VG+vrsIK3mVpn
-         Yb5es9mrxTXzmHRX/3V5U25ECKJLIcwM8sc3OjynquiArRyn1SFfjfGQdvWd9IoDEj3Y
-         j/gOVUoe4sukea75+mTCv3HjaEmr5/gFTa7e+Ylp8Mcix4ZY9ttmQNWeePwXMPg1cgC4
-         SvVg==
-X-Gm-Message-State: APjAAAU2DMg6u/lyNcb0wI9YzP+HpgclgphRqLK4C9HInQ8cSdKs6d5Z
-        HPZjTaN5XRfsLvQpvJuCk/gS8w==
-X-Google-Smtp-Source: APXvYqw7xUJMFwKAO6VdFjMCpsRiabe8H2rE/jwkyhOUOIw7HwwCAPhxRAcxaZmTJgrYrlWPCCdchQ==
-X-Received: by 2002:a17:902:6909:: with SMTP id j9mr19271681plk.276.1572738938992;
-        Sat, 02 Nov 2019 16:55:38 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id c66sm11767706pfb.25.2019.11.02.16.55.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Nov 2019 16:55:38 -0700 (PDT)
-Date:   Sat, 2 Nov 2019 16:55:37 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH] mm/memcontrol: update documentation about invoking oom
- killer
-In-Reply-To: <157270779336.1961.6528158720593572480.stgit@buzz>
-Message-ID: <alpine.DEB.2.21.1911021654020.34229@chino.kir.corp.google.com>
-References: <157270779336.1961.6528158720593572480.stgit@buzz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ENs6i/0Ekm4YgubOks9MIfw6KzO9IBeI4tnjjFdS0V0=;
+        b=kt601pLWEmu4SjWfFhDXwKLHWG7FzRymnKPKquLx2g4tWDFjgOUdwu7TXwhumGiXhV
+         D2eegnTdeokHyeV9nfg4/Yf8hhjRGOYswoZYIU7u8eA8lpH5yEa4oSVuzJbxOczVCt/2
+         d+Ci6HgkKQPUvZjiT530babsiW/AbYY8UNfJcUgGKJ1KvFunC1ppsMzkDlWAJYulVBaU
+         Oa4cSWMxFUlBiI8eYq4oCVNVfpQOCgBYgNiOzOaPm2FEVvthh1bXbsCqaofwoeyG/lzR
+         mbadQsN+PhT4kwpOYQ7Rc04lHBYwdHIgg1SXrNUglLspa+LAvX8A+kKlPkaekF4JCBZT
+         Z0+Q==
+X-Gm-Message-State: APjAAAXk0ZP35uAEkH4A3d+pWORT0+ZT7dJlwRKUxQk75ZH8sJv7hshT
+        mMnK6zfUiGohQI2jY0GFBabR1gwHYnwziVZccKI=
+X-Google-Smtp-Source: APXvYqxycb2165plHZ7ekwUWL99R8defuAMaFEriMyJlNzPIdw3U7sweRkERm7SGMwLi9vKD4nnJyfYzCdsowuXaZy0=
+X-Received: by 2002:a0c:a602:: with SMTP id s2mr7586138qva.12.1572739694357;
+ Sat, 02 Nov 2019 17:08:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20191030092956.17934-1-sanjay.govind9@gmail.com>
+In-Reply-To: <20191030092956.17934-1-sanjay.govind9@gmail.com>
+From:   Roderick Colenbrander <thunderbird2k@gmail.com>
+Date:   Sat, 2 Nov 2019 17:08:03 -0700
+Message-ID: <CAEc3jaA3Quz+hbvL3oWa92T4d0c_-J6ZVkshMGVVi3OA_Pjt6Q@mail.gmail.com>
+Subject: Re: [PATCH] HID: sony: Add support for Guitar Hero Guitars
+To:     sanjay.govind9@gmail.com
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2 Nov 2019, Konstantin Khlebnikov wrote:
+Hi Sanjay,
 
-> Since commit 29ef680ae7c2 ("memcg, oom: move out_of_memory back to the
-> charge path") memcg invokes oom killer not only for user page-faults.
-> This means 0-order allocation will either succeed or task get killed.
-> 
-> Fixes: 8e675f7af507 ("mm/oom_kill: count global and memory cgroup oom kills")
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Thanks for sharing your patch. The code itself looks fine at first
+glance, but I have been thinking about where this code belongs. I'm a
+bit reluctant of adding code to hid-sony for essentially non-sony
+devices. As Sony we are now supporting this driver unmodified in an
+official capacity on various devices (all Android devices starting
+Android 10) mostly for DualShock devices. I would rather convolute the
+driver more with devices, which we don't have ourselves to test (and
+nor for our partners as Google to test and QA).
+
+Since these devices are non-Sony (though one of them use a Sony
+partner vendor ID), I would prefer to have them in a "hid-activision"
+driver.
+
+Thanks,
+Roderick
+
+On Wed, Oct 30, 2019 at 2:40 AM <sanjay.govind9@gmail.com> wrote:
+>
+> From: Sanjay Govind <sanjay.govind9@gmail.com>
+>
+> Guitar Hero Guitars use the accelerometer x axis for tilt. Currently,
+> they are treated as a regular HID device, and this does not allow the
+> usage of the accelerometer. Add in support for both the PS3 and the
+> PC guitars (they are the same guitars, with different vids and pids).
+>
+> Signed-off-by: Sanjay Govind <sanjay.govind9@gmail.com>
 > ---
->  Documentation/admin-guide/cgroup-v2.rst |    9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-> index 5361ebec3361..eb47815e137b 100644
-> --- a/Documentation/admin-guide/cgroup-v2.rst
-> +++ b/Documentation/admin-guide/cgroup-v2.rst
-> @@ -1219,8 +1219,13 @@ PAGE_SIZE multiple when read back.
->  
->  		Failed allocation in its turn could be returned into
->  		userspace as -ENOMEM or silently ignored in cases like
-> -		disk readahead.  For now OOM in memory cgroup kills
-> -		tasks iff shortage has happened inside page fault.
-> +		disk readahead.
+>  drivers/hid/hid-ids.h  |  5 +++++
+>  drivers/hid/hid-sony.c | 26 ++++++++++++++++++++++++++
+>  2 files changed, 31 insertions(+)
+>
+> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+> index 447e8db21174..1d640f94c5bc 100644
+> --- a/drivers/hid/hid-ids.h
+> +++ b/drivers/hid/hid-ids.h
+> @@ -40,6 +40,9 @@
+>  #define USB_VENDOR_ID_ACTIONSTAR       0x2101
+>  #define USB_DEVICE_ID_ACTIONSTAR_1011  0x1011
+>
+> +#define USB_VENDOR_ID_ACTIVISION 0x1430
+> +#define USB_DEVICE_ID_ACTIVISION_GUITAR 0x474c
 > +
-> +		Before 4.19 OOM in memory cgroup killed tasks iff
-> +		shortage has happened inside page fault, random
-> +		syscall may fail with ENOMEM or EFAULT. Since 4.19
-> +		failed memory cgroup allocation invokes oom killer and
-> +		keeps retrying until it succeeds.
->  
->  		This event is not raised if the OOM killer is not
->  		considered as an option, e.g. for failed high-order
-
-The previous text is obviously incorrect for today's kernels, but I'm 
-curious if we should be conflating the documentation here by describing 
-the pre-4.19 behavior.  OOM killing no longer happens only on page fault 
-so maybe better to document the exact behavior today and not attempt to 
-describe differences with previous versions?
+>  #define USB_VENDOR_ID_ADS_TECH         0x06e1
+>  #define USB_DEVICE_ID_ADS_TECH_RADIO_SI470X    0xa155
+>
+> @@ -1031,6 +1034,7 @@
+>
+>
+>  #define USB_VENDOR_ID_SONY                     0x054c
+> +#define USB_VENDOR_ID_SONY2                    0x12BA
+>  #define USB_DEVICE_ID_SONY_VAIO_VGX_MOUSE      0x024b
+>  #define USB_DEVICE_ID_SONY_VAIO_VGP_MOUSE      0x0374
+>  #define USB_DEVICE_ID_SONY_PS3_BDREMOTE                0x0306
+> @@ -1042,6 +1046,7 @@
+>  #define USB_DEVICE_ID_SONY_NAVIGATION_CONTROLLER       0x042f
+>  #define USB_DEVICE_ID_SONY_BUZZ_CONTROLLER             0x0002
+>  #define USB_DEVICE_ID_SONY_WIRELESS_BUZZ_CONTROLLER    0x1000
+> +#define USB_DEVICE_ID_SONY_GUITAR_CONTROLLER 0x0100
+>
+>  #define USB_VENDOR_ID_SINO_LITE                        0x1345
+>  #define USB_DEVICE_ID_SINO_LITE_CONTROLLER     0x3008
+> diff --git a/drivers/hid/hid-sony.c b/drivers/hid/hid-sony.c
+> index 4c6ed6ef31f1..410c855fb830 100644
+> --- a/drivers/hid/hid-sony.c
+> +++ b/drivers/hid/hid-sony.c
+> @@ -56,6 +56,7 @@
+>  #define NSG_MR5U_REMOTE_BT        BIT(14)
+>  #define NSG_MR7U_REMOTE_BT        BIT(15)
+>  #define SHANWAN_GAMEPAD           BIT(16)
+> +#define GH_GUITAR_CONTROLLER      BIT(17)
+>
+>  #define SIXAXIS_CONTROLLER (SIXAXIS_CONTROLLER_USB | SIXAXIS_CONTROLLER_BT)
+>  #define MOTION_CONTROLLER (MOTION_CONTROLLER_USB | MOTION_CONTROLLER_BT)
+> @@ -507,6 +508,8 @@ struct motion_output_report_02 {
+>  #define SIXAXIS_INPUT_REPORT_ACC_X_OFFSET 41
+>  #define SIXAXIS_ACC_RES_PER_G 113
+>
+> +#define GUITAR_TILT_USAGE 44
+> +
+>  static DEFINE_SPINLOCK(sony_dev_list_lock);
+>  static LIST_HEAD(sony_device_list);
+>  static DEFINE_IDA(sony_device_id_allocator);
+> @@ -757,6 +760,20 @@ static int navigation_mapping(struct hid_device *hdev, struct hid_input *hi,
+>         return -1;
+>  }
+>
+> +static int guitar_mapping(struct hid_device *hdev, struct hid_input *hi,
+> +                         struct hid_field *field, struct hid_usage *usage,
+> +                         unsigned long **bit, int *max)
+> +{
+> +       if ((usage->hid & HID_USAGE_PAGE) == HID_UP_MSVENDOR) {
+> +               unsigned int abs = usage->hid & HID_USAGE;
+> +
+> +               if (abs == GUITAR_TILT_USAGE) {
+> +                       hid_map_usage_clear(hi, usage, bit, max, EV_ABS, ABS_RY);
+> +                       return 1;
+> +               }
+> +       }
+> +       return 0;
+> +}
+>
+>  static int sixaxis_mapping(struct hid_device *hdev, struct hid_input *hi,
+>                           struct hid_field *field, struct hid_usage *usage,
+> @@ -1340,6 +1357,9 @@ static int sony_mapping(struct hid_device *hdev, struct hid_input *hi,
+>         if (sc->quirks & SIXAXIS_CONTROLLER)
+>                 return sixaxis_mapping(hdev, hi, field, usage, bit, max);
+>
+> +       if (sc->quirks & GH_GUITAR_CONTROLLER)
+> +               return guitar_mapping(hdev, hi, field, usage, bit, max);
+> +
+>         if (sc->quirks & DUALSHOCK4_CONTROLLER)
+>                 return ds4_mapping(hdev, hi, field, usage, bit, max);
+>
+> @@ -2950,6 +2970,12 @@ static int sony_resume(struct hid_device *hdev)
+>  #endif
+>
+>  static const struct hid_device_id sony_devices[] = {
+> +       { HID_USB_DEVICE(USB_VENDOR_ID_ACTIVISION, USB_DEVICE_ID_ACTIVISION_GUITAR),
+> +               .driver_data = GH_GUITAR_CONTROLLER },
+> +       { HID_USB_DEVICE(USB_VENDOR_ID_SONY2, USB_DEVICE_ID_SONY_GUITAR_CONTROLLER),
+> +               .driver_data = GH_GUITAR_CONTROLLER },
+> +       { HID_USB_DEVICE(USB_VENDOR_ID_SONY, USB_DEVICE_ID_SONY_PS3_CONTROLLER),
+> +               .driver_data = SIXAXIS_CONTROLLER_USB },
+>         { HID_USB_DEVICE(USB_VENDOR_ID_SONY, USB_DEVICE_ID_SONY_PS3_CONTROLLER),
+>                 .driver_data = SIXAXIS_CONTROLLER_USB },
+>         { HID_USB_DEVICE(USB_VENDOR_ID_SONY, USB_DEVICE_ID_SONY_NAVIGATION_CONTROLLER),
+> --
+> 2.23.0
+>
