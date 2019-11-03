@@ -2,150 +2,113 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3616CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 22:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D59DCA9EBB
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 22:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D692190F
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 22:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725632190F
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 22:27:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BA/FML9x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TuHGE1F1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbfKCWYu (ORCPT
+        id S1728107AbfKCW1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 17:24:50 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25348 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727796AbfKCWYu (ORCPT
+        Sun, 3 Nov 2019 17:27:16 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38254 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728039AbfKCW1P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 17:24:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572819889;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=R8uxxoIgt0pDImRWxsOSsk8Zak5f+7K0iwQd4EDqnUs=;
-        b=BA/FML9xBLo2sXHMlrZEREL3mjDz1L/pPuHWmji2SzKmFajY8C6OeMQ3F2FPsSa4k9iPkE
-        Gam0vAnhmgmfMAmIeuLhWebglRo3Xi+zrluk3MVjbaBW6rCTj6kW11ldrZkM7tGwkrRu/b
-        HnN3seSFklGYT3x24NINyuBW2SIVSOc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-304-MM-1I0IzM9iA6Geo2B1xkQ-1; Sun, 03 Nov 2019 17:24:45 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5571E800EBA;
-        Sun,  3 Nov 2019 22:24:44 +0000 (UTC)
-Received: from krava (ovpn-204-70.brq.redhat.com [10.40.204.70])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 77B3F1001B23;
-        Sun,  3 Nov 2019 22:24:42 +0000 (UTC)
-Date:   Sun, 3 Nov 2019 23:24:41 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: [RFC] perf session: Fix compression processing
-Message-ID: <20191103222441.GE8251@krava>
+        Sun, 3 Nov 2019 17:27:15 -0500
+Received: by mail-lf1-f68.google.com with SMTP id q28so10813439lfa.5
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 14:27:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IzPJeK2cpUMQjH/975cPTUdiwrvG/dQ6KV42xRB7wAA=;
+        b=TuHGE1F1+ZfQMWfZYOEceMUBeLUnTeKK5wwL276Sz2hY+xKk8yxeRPuxVCLI4K8K1b
+         xc/+Bs3KENTr75oENU5Oij2awZZ1CEWkkAhr9YxWRcPvSoAZ0jwnjIPdTOs9KHH+bkjA
+         gFA/bMn9usVK1w4Rsab/nFcqIguaiTrbPF90x6B7U0CPqlgL7IVMYuqCg0LkJ7UmqPtp
+         nbt7syLDUloMjZ2JaJ7lBtj1V/QwAg3ng3c13tJGYyVP8U5en7JxXggkdqBp6at+kXvj
+         ITQxqRfoZDCgVCzD0WsGKF7ftP+d2VB9+BO8PhPn6vdBZfC19rjv4tRamOHUEGXgKOd+
+         5IUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IzPJeK2cpUMQjH/975cPTUdiwrvG/dQ6KV42xRB7wAA=;
+        b=YItuxH+zUPXEmXAFYeMXitRB2VCbZeey2zL/7MNV4KVLZqC3wL38V//q3j4An79KBl
+         4TXZVxf0HitXCVv4H1PTHUCgT0Tk3XnfSfrBO5LoeZxR3pcptXm0bmJouaIDwC3Tp3kF
+         st1rV04leG8JgqB6zLa6CUWwpkthf3yMgWcpQmZjVVgVunWJQW6XFQX+Qhhy+eBFttjk
+         YuwtYKThcRZg4gsqZNk4cfysXft1D9WRvWlozoZ7HcBTOX9TCMBbcbnZODXolYUbTj3W
+         86AlWmhRpc7II2XmKOIyxzCK6+d/jBKLqa8tUknvoDLj2zyYiTXrTuzPXHP2VS5hc0xR
+         i0ag==
+X-Gm-Message-State: APjAAAVC1ONXxWyGb+7cjvBcWWsBDeD/Bb3BBLOkjL8YLAFNh50PBVAh
+        JihpzLAuK0Z+wDivqn17hmAMVPofUc2+xo6T1T52YA==
+X-Google-Smtp-Source: APXvYqyjdYFNN9CDPrBMD1LL8+RPj9zGpSDVydNpsun9Cd81xB4a7KEsrKrdBFbr3NcThDQn/dcVLwc/glAw4mUAc7w=
+X-Received: by 2002:a19:6a0d:: with SMTP id u13mr5835609lfu.86.1572820033814;
+ Sun, 03 Nov 2019 14:27:13 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: MM-1I0IzM9iA6Geo2B1xkQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com> <2a8fa03308b08b2a15019d9b457d9bff7aafce94.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <2a8fa03308b08b2a15019d9b457d9bff7aafce94.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 3 Nov 2019 23:27:02 +0100
+Message-ID: <CACRpkdZYw3QQcQ4h5y_C0UD6+4Wz9AdmQ0qSrrjfUweuJj8hyQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 10/15] regulator: bd71828: Add GPIO based run-level
+ control for regulators
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi,
-I'm not sure I follow everything on compression,
-so I might have missed something, but patch below
-fixes the issue for me.
+On Fri, Nov 1, 2019 at 12:43 PM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
 
-jirka
+> Bucks 1,2,6 and 7 on ROHM BD71828 can be either controlled as
+> individual regulartors - or they can be grouped to a group of
+> regulators that are controlled by 'run levels'. This can be
+> done via I2C. Each regulator can be assigned a voltage and
+> enable/disable status for each run-level. These statuses are
+> also changeable via I2C.
+>
+> Run-levels can then be changed either by I2C or GPIO. This
+> control mechanism is selected by data in one time programmable
+> area (during production) and can't be changed later.
+>
+> Allow regulators to be controlled via run-levels and allow
+> getting/setting the current run-level also via GPIO.
+>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 
+I like the way you use the gpio API so FWIW:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
----
-The compressed data processing occasionally fails with:
-  $ perf report --stdio -vv
-  decomp (B): 44519 to 163000
-  decomp (B): 48119 to 174800
-  decomp (B): 65527 to 131072
-  fetch_mmaped_event: head=3D0x1ffe0 event->header_size=3D0x28, mmap_size=
-=3D0x20000: fuzzed perf.data?
-  Error:
-  failed to process sample
-  ...
+I do not understand the regulator parts of the patch.
 
-It's caused by recent fuzzer fix that does not take into account
-that compressed data do not need to by fully present in the buffer,
-so it's ok to just return NULL and not to fail.
-
-Fixes: 57fc032ad643 ("perf session: Avoid infinite loop when seeing invalid=
- header.size")
-Link: http://lkml.kernel.org/n/tip-q1biqscs4stcmc9bs1iokfro@git.kernel.org
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/util/session.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index f07b8ecb91bc..3589ed14a629 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1959,7 +1959,7 @@ static int __perf_session__process_pipe_events(struct=
- perf_session *session)
-=20
- static union perf_event *
- fetch_mmaped_event(struct perf_session *session,
--=09=09   u64 head, size_t mmap_size, char *buf)
-+=09=09   u64 head, size_t mmap_size, char *buf, bool decomp)
- {
- =09union perf_event *event;
-=20
-@@ -1979,6 +1979,8 @@ fetch_mmaped_event(struct perf_session *session,
- =09=09/* We're not fetching the event so swap back again */
- =09=09if (session->header.needs_swap)
- =09=09=09perf_event_header__bswap(&event->header);
-+=09=09if (decomp)
-+=09=09=09return NULL;
- =09=09pr_debug("%s: head=3D%#" PRIx64 " event->header_size=3D%#x, mmap_siz=
-e=3D%#zx: fuzzed perf.data?\n",
- =09=09=09 __func__, head, event->header.size, mmap_size);
- =09=09return ERR_PTR(-EINVAL);
-@@ -1997,7 +1999,7 @@ static int __perf_session__process_decomp_events(stru=
-ct perf_session *session)
- =09=09return 0;
-=20
- =09while (decomp->head < decomp->size && !session_done()) {
--=09=09union perf_event *event =3D fetch_mmaped_event(session, decomp->head=
-, decomp->size, decomp->data);
-+=09=09union perf_event *event =3D fetch_mmaped_event(session, decomp->head=
-, decomp->size, decomp->data, true);
-=20
- =09=09if (IS_ERR(event))
- =09=09=09return PTR_ERR(event);
-@@ -2100,7 +2102,7 @@ reader__process_events(struct reader *rd, struct perf=
-_session *session,
- =09}
-=20
- more:
--=09event =3D fetch_mmaped_event(session, head, mmap_size, buf);
-+=09event =3D fetch_mmaped_event(session, head, mmap_size, buf, false);
- =09if (IS_ERR(event))
- =09=09return PTR_ERR(event);
-=20
---=20
-2.21.0
-
+Yours,
+Linus Walleij
