@@ -2,114 +2,113 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFA0CA9EB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 10:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D27C8CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 10:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEC1F214E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 10:47:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="lE13eQSa"
+	by mail.kernel.org (Postfix) with ESMTP id A97F2214E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 10:50:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572778200;
+	bh=ne/vHOE3Urg25Rv7TiV6GHwnQ1v7+5j+IHPyOIHr81E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=c9Qfd85f/nypzd8KDsuzNjuqxJzJpU5mD0vO/o2x+wI1y+v97kc+S+QSphGy5mozI
+	 tfdcUi9xJUq9N38miOG5xtgx70XOVwVi+LEEuiQw1nf/8YlcLbeFTLHHXnUlDeyaUr
+	 sWQO5rJEankmbNNX3qO4Z0MZJjpBNo3dXXt+GSJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfKCKrG (ORCPT
+        id S1727575AbfKCKt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 05:47:06 -0500
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:54846 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726408AbfKCKrG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 05:47:06 -0500
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 5C90D2E12F1;
-        Sun,  3 Nov 2019 13:47:02 +0300 (MSK)
-Received: from myt5-6212ef07a9ec.qloud-c.yandex.net (myt5-6212ef07a9ec.qloud-c.yandex.net [2a02:6b8:c12:3b2d:0:640:6212:ef07])
-        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id KHJR1XQOJA-kwROc7Pv;
-        Sun, 03 Nov 2019 13:47:01 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1572778021; bh=8XearGK11qBc8jFq4PW5InTouWf44DKhrpzFPg+Gueo=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=lE13eQSas0qHhNiasm2ObqKIkaStVX1Bl/Oof1cHomYycmF+AqaCUCFnFygtZe51t
-         cs47xowN98FlJ3SPPgFC/g/p1NFvOdKgw++8jKGe4BbDJIljmDq/LYcsgndyL+Fww/
-         SUjmai6T44Gtsi621bYmFOKMqVXtvXoF5h9yVh7c=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:7101::1:7])
-        by myt5-6212ef07a9ec.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id Cpf51azSdT-kwV8oddc;
-        Sun, 03 Nov 2019 13:46:58 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] mm/memcontrol: update documentation about invoking oom
- killer
-To:     David Rientjes <rientjes@google.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>
-References: <157270779336.1961.6528158720593572480.stgit@buzz>
- <alpine.DEB.2.21.1911021654020.34229@chino.kir.corp.google.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <fdef5cf2-553a-4f4f-aec9-129391834e9b@yandex-team.ru>
-Date:   Sun, 3 Nov 2019 13:46:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 3 Nov 2019 05:49:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56620 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726408AbfKCKt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 05:49:59 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39AEF2084D;
+        Sun,  3 Nov 2019 10:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572778198;
+        bh=ne/vHOE3Urg25Rv7TiV6GHwnQ1v7+5j+IHPyOIHr81E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ii63cUivDRAooYv8gyFF45y899rLgQFq2bMHNalmT51C5vIZ7jUKvdYvLMqRqZZbq
+         VyUQjdNzEkN+6PaUaccuk3fYpudIzEcgpztEQmqjCHPGpD/2B87n6hr7vwdyxFKZQD
+         9LcUQ1iX7nltUNrpa6riVijZF3EemDVW9Y71em7o=
+Date:   Sun, 3 Nov 2019 10:49:54 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <dragos.bogdan@analog.com>
+Subject: Re: [PATCH 10/10] iio: imu: adis: assign value only if return code
+ zero in read funcs
+Message-ID: <20191103104954.445e1e21@archlinux>
+In-Reply-To: <20191101093505.9408-11-alexandru.ardelean@analog.com>
+References: <20191101093505.9408-1-alexandru.ardelean@analog.com>
+        <20191101093505.9408-11-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1911021654020.34229@chino.kir.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/11/2019 02.55, David Rientjes wrote:
-> On Sat, 2 Nov 2019, Konstantin Khlebnikov wrote:
-> 
->> Since commit 29ef680ae7c2 ("memcg, oom: move out_of_memory back to the
->> charge path") memcg invokes oom killer not only for user page-faults.
->> This means 0-order allocation will either succeed or task get killed.
->>
->> Fixes: 8e675f7af507 ("mm/oom_kill: count global and memory cgroup oom kills")
->> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
->> ---
->>   Documentation/admin-guide/cgroup-v2.rst |    9 +++++++--
->>   1 file changed, 7 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
->> index 5361ebec3361..eb47815e137b 100644
->> --- a/Documentation/admin-guide/cgroup-v2.rst
->> +++ b/Documentation/admin-guide/cgroup-v2.rst
->> @@ -1219,8 +1219,13 @@ PAGE_SIZE multiple when read back.
->>   
->>   		Failed allocation in its turn could be returned into
->>   		userspace as -ENOMEM or silently ignored in cases like
->> -		disk readahead.  For now OOM in memory cgroup kills
->> -		tasks iff shortage has happened inside page fault.
->> +		disk readahead.
->> +
->> +		Before 4.19 OOM in memory cgroup killed tasks iff
->> +		shortage has happened inside page fault, random
->> +		syscall may fail with ENOMEM or EFAULT. Since 4.19
->> +		failed memory cgroup allocation invokes oom killer and
->> +		keeps retrying until it succeeds.
->>   
->>   		This event is not raised if the OOM killer is not
->>   		considered as an option, e.g. for failed high-order
-> 
-> The previous text is obviously incorrect for today's kernels, but I'm
-> curious if we should be conflating the documentation here by describing
-> the pre-4.19 behavior.  OOM killing no longer happens only on page fault
-> so maybe better to document the exact behavior today and not attempt to
-> describe differences with previous versions?
-> 
+On Fri, 1 Nov 2019 11:35:05 +0200
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-Previous behaviour was here for ages and 4.19 is not so old.
-According too https://www.kernel.org/category/releases.html pre-4.19 will
-be maintained for couple years at least. Let's keep this tombstone.
+> The inline read functions in the ADIS library don't check the return value
+> of the `adis_read_reg()` function and assign the value of `tmp` regardless.
+> 
+> Fix this by checking if return value is zero and only then assigning the
+> value of `tmp`.
+> 
+> Fixes: 57a1228a06b7a ("iio:imu:adis: Add support for 32bit registers")
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Again, I added a note to say I don't think this is stable material.
+As far as I know we don't have any actual bugs caused by this as we always
+check the return value further up the stack.
 
-I've seen a lot of strange side effects of old behaviour.
-Most obscure was a hang inside libc fork() when clone(CLONE_CHILD_SETTID)
-silently fails to set child pid =)
-https://lore.kernel.org/lkml/20150206162301.18031.32251.stgit@buzz/
+Let me know if I've missed something.
+
+Applied to the togreg branch of iio.git and pushed out as testing.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  include/linux/iio/imu/adis.h | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
+> index 4c53815bb729..92aae14593bf 100644
+> --- a/include/linux/iio/imu/adis.h
+> +++ b/include/linux/iio/imu/adis.h
+> @@ -129,7 +129,8 @@ static inline int adis_read_reg_16(struct adis *adis, unsigned int reg,
+>  	int ret;
+>  
+>  	ret = adis_read_reg(adis, reg, &tmp, 2);
+> -	*val = tmp;
+> +	if (ret == 0)
+> +		*val = tmp;
+>  
+>  	return ret;
+>  }
+> @@ -147,7 +148,8 @@ static inline int adis_read_reg_32(struct adis *adis, unsigned int reg,
+>  	int ret;
+>  
+>  	ret = adis_read_reg(adis, reg, &tmp, 4);
+> -	*val = tmp;
+> +	if (ret == 0)
+> +		*val = tmp;
+>  
+>  	return ret;
+>  }
+
