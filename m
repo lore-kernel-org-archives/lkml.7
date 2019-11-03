@@ -2,82 +2,161 @@ Return-Path: <SRS0=Ba5y=Y3=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F518C47E49
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 12:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6BDC47E49
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 12:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76306214D8
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 12:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95BAB214D8
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Nov 2019 12:30:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572784250;
+	bh=PNPF44YhCOUJNjbBKup8kBjb0LPnZL460Sat0XzGxQ0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ryMjoVAVMe8Jal/o80fUM8VlbqyZwqBYmv4cvDT9LOHlJFWqa21McISWKOMZV8Xn5
+	 /me5IY6AON3mtLlsGlLazHuEzn0e/kibswcQFtrk8kyExVThUa2T/0S3pPBSjUx39W
+	 Z7erAa+biCbS0iR5/7pIAt1gjZ3UVFIPC0RzY/3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbfKCMLB (ORCPT
+        id S1727590AbfKCMat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 07:11:01 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:56561 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbfKCMLB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 07:11:01 -0500
-Received: by mail-io1-f70.google.com with SMTP id o2so11080098ioa.23
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 04:11:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=Xwpp1TpBnHfvp2xyxP9sGt3bT4ULRP3XGkhH7PJ6jAk=;
-        b=nJw029I4Hwvg1D3o47/NtoYqkSvLb76OeBjc3Viyy8Q7/sAVQh1HqFsuOXoO+LGBzx
-         INWYzfDExWagDjqH+JTzQA38eWWGTvHGxtiM4GJ/3mWSZjQiao1X3ZYeuFYXWeYfCYu2
-         PKe2PZ3Dyyd9tum6sLLX8m7vxAptT0Qfoe2BR1FAW+nMThFPRjTrU9yLNJXOHXLznVIf
-         3qJlJZtV/jSQez8zEdVvU8FLKq+7RqmfTyStVUpH1Djt9POmYCI5Y9kqZoaYR0hgvmS9
-         +rEuZpKPS6WUZjQemKGYzdac2wR+LAOsZL+Tjouczsts1AKYF7iZvUOL8X28VZAeJ3o4
-         r+dw==
-X-Gm-Message-State: APjAAAVxYcs+a/OPNr7PTfdnuHAs1hO3wG+eOkSzs25Q7YmdgyJhJ8+j
-        o5K89i5jmFFNEeVxuugjjTeFEG99+dgcRuZPRkhOzdKqpL/j
-X-Google-Smtp-Source: APXvYqx324ib1pU4r9irwayKJOfblhDSkACmPuLheadxHDJ3/934Bk8/0s2wIFbkvhgpGWnUhpc83GCO/s2Ut414yZgxr1V+W8Ix
+        Sun, 3 Nov 2019 07:30:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727377AbfKCMat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 07:30:49 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D73C20842;
+        Sun,  3 Nov 2019 12:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572784248;
+        bh=PNPF44YhCOUJNjbBKup8kBjb0LPnZL460Sat0XzGxQ0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zsRLQbpfkbDimsx8z0xKv1+ICJB4EipEgoeBKG6wcRvU9aRWy8ltG5qNC3vW4I1qW
+         HSOzdxqWfeeHSf1ilBAUTI3i7ZbkjLK1dHmcQk9CahRHMm12XMjYI/HsVafHGFLwKX
+         4nLYzNRARDPy8xoo2RLzzE/GEYpCwwCcIb7rYUzk=
+Date:   Sun, 3 Nov 2019 12:30:42 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     <robh+dt@kernel.org>, <alexandre.torgue@st.com>,
+        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] iio: adc: stm32: allow to tune analog clock
+Message-ID: <20191103123042.54c82559@archlinux>
+In-Reply-To: <1572279108-25916-3-git-send-email-fabrice.gasnier@st.com>
+References: <1572279108-25916-1-git-send-email-fabrice.gasnier@st.com>
+        <1572279108-25916-3-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Received: by 2002:a5e:d90c:: with SMTP id n12mr18996926iop.140.1572783060398;
- Sun, 03 Nov 2019 04:11:00 -0800 (PST)
-Date:   Sun, 03 Nov 2019 04:11:00 -0800
-In-Reply-To: <000000000000251bba05966d7473@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009fb83d05967017a0@google.com>
-Subject: Re: INFO: task hung in synchronize_rcu
-From:   syzbot <syzbot+89a8060879fa0bd2db4f@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        junaids@google.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Mon, 28 Oct 2019 17:11:48 +0100
+Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-commit 9121923c457d1d8667a6e3a67302c29e5c5add6b
-Author: Jim Mattson <jmattson@google.com>
-Date:   Thu Oct 24 23:03:26 2019 +0000
+> Add new optional dt property to tune analog clock prescaler.
+> Driver looks for optional "st,max-clk-rate-hz", then computes
+> best approximation below that rate, using ADC internal prescaler.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+If the previous email I wrote on this got to anyone before I hit
+cancel, please ignore. Had completely failed to read the code correctly.
 
-     kvm: Allocate memslots and buses before calling kvm_arch_init_vm
+Anyhow this seems fine to me, but given there are a lot of existing
+clk related bindings I'd like to give a little longer for Rob to
+have a chance to take a look at the binding.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14b34f5ce00000
-start commit:   9d234505 Merge tag 'hwmon-for-v5.4-rc6' of git://git.kerne..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=16b34f5ce00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12b34f5ce00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cbbed3e8d4eb64bf
-dashboard link: https://syzkaller.appspot.com/bug?extid=89a8060879fa0bd2db4f
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13509b84e00000
+Give me a poke if I seem to have lost this in a week or so.
 
-Reported-by: syzbot+89a8060879fa0bd2db4f@syzkaller.appspotmail.com
-Fixes: 9121923c457d ("kvm: Allocate memslots and buses before calling  
-kvm_arch_init_vm")
+Thanks,
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Jonathan
+
+
+
+> ---
+>  drivers/iio/adc/stm32-adc-core.c | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+> index 20c626c..6537f4f 100644
+> --- a/drivers/iio/adc/stm32-adc-core.c
+> +++ b/drivers/iio/adc/stm32-adc-core.c
+> @@ -79,6 +79,7 @@ struct stm32_adc_priv_cfg {
+>   * @domain:		irq domain reference
+>   * @aclk:		clock reference for the analog circuitry
+>   * @bclk:		bus clock common for all ADCs, depends on part used
+> + * @max_clk_rate:	desired maximum clock rate
+>   * @booster:		booster supply reference
+>   * @vdd:		vdd supply reference
+>   * @vdda:		vdda analog supply reference
+> @@ -95,6 +96,7 @@ struct stm32_adc_priv {
+>  	struct irq_domain		*domain;
+>  	struct clk			*aclk;
+>  	struct clk			*bclk;
+> +	u32				max_clk_rate;
+>  	struct regulator		*booster;
+>  	struct regulator		*vdd;
+>  	struct regulator		*vdda;
+> @@ -141,7 +143,7 @@ static int stm32f4_adc_clk_sel(struct platform_device *pdev,
+>  	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(stm32f4_pclk_div); i++) {
+> -		if ((rate / stm32f4_pclk_div[i]) <= priv->cfg->max_clk_rate_hz)
+> +		if ((rate / stm32f4_pclk_div[i]) <= priv->max_clk_rate)
+>  			break;
+>  	}
+>  	if (i >= ARRAY_SIZE(stm32f4_pclk_div)) {
+> @@ -230,7 +232,7 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
+>  			if (ckmode)
+>  				continue;
+>  
+> -			if ((rate / div) <= priv->cfg->max_clk_rate_hz)
+> +			if ((rate / div) <= priv->max_clk_rate)
+>  				goto out;
+>  		}
+>  	}
+> @@ -250,7 +252,7 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
+>  		if (!ckmode)
+>  			continue;
+>  
+> -		if ((rate / div) <= priv->cfg->max_clk_rate_hz)
+> +		if ((rate / div) <= priv->max_clk_rate)
+>  			goto out;
+>  	}
+>  
+> @@ -655,6 +657,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct device_node *np = pdev->dev.of_node;
+>  	struct resource *res;
+> +	u32 max_rate;
+>  	int ret;
+>  
+>  	if (!pdev->dev.of_node)
+> @@ -731,6 +734,13 @@ static int stm32_adc_probe(struct platform_device *pdev)
+>  	priv->common.vref_mv = ret / 1000;
+>  	dev_dbg(&pdev->dev, "vref+=%dmV\n", priv->common.vref_mv);
+>  
+> +	ret = of_property_read_u32(pdev->dev.of_node, "st,max-clk-rate-hz",
+> +				   &max_rate);
+> +	if (!ret)
+> +		priv->max_clk_rate = min(max_rate, priv->cfg->max_clk_rate_hz);
+> +	else
+> +		priv->max_clk_rate = priv->cfg->max_clk_rate_hz;
+> +
+>  	ret = priv->cfg->clk_sel(pdev, priv);
+>  	if (ret < 0)
+>  		goto err_hw_stop;
+
