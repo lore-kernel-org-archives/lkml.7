@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 514AECA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE44ACA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BCAB205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83F762084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905302;
-	bh=d/6zc+tZJQ0l59lFjH5IKUXNkBz2OQ9GKqznhzOEnoA=;
+	s=default; t=1572905308;
+	bh=/g46P0TulW0h/dwsxG3+s4Jb4S23l9pXlIPSTXCiciA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=epmuIH9rbeZb1PoVeJrI+vJb8ye/omUzIy+m5TxjUXF4X2tl32t/XuZo1JQNlhomc
-	 faLxPWKoiz9o5ytIVGxnZXruEBtZr2h5ItM6esHilWg50yxLB+z3qyfjTbJSemEBri
-	 4UFeNjChADBJwsIej46/t7HJAiiXV0HeaXRd+QJo=
+	b=WHHm0w/FXj+xyP2VoHAEA9UA/4navSouJ7J2Q5aH+c02/v21aq0FVmWs7o8g73+so
+	 ayv+Po83uweLhT1YP02JmxYoUsAO3pcGJupcz4UqU8PBd1Es7rkkmB/h90ZWl5EGul
+	 3J6CfZ+k5l5kgtVpDZoudtDmaR/2djykBHdQBRrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390218AbfKDWIV (ORCPT
+        id S2390224AbfKDWI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:08:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41104 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:08:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389799AbfKDWIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:08:15 -0500
+        id S2390219AbfKDWIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:08:22 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C03C2084D;
-        Mon,  4 Nov 2019 22:08:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F5E82084D;
+        Mon,  4 Nov 2019 22:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905295;
-        bh=d/6zc+tZJQ0l59lFjH5IKUXNkBz2OQ9GKqznhzOEnoA=;
+        s=default; t=1572905300;
+        bh=/g46P0TulW0h/dwsxG3+s4Jb4S23l9pXlIPSTXCiciA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IQKQH2l+S5EDi9t+QnEQh4khUtUuLH8aPn6yUqEZRPP1VOPefiq4NIZKgmYh4hFqb
-         MCvCsUQSIc7Kf68JNQhIVZFIApEyajy0nyNq4T+R59SFZFygDY0ILHyyDshmsYjgii
-         L9AEkZ7L0QQuPMntDO0VUVwxvRMh1aZ58oudHzcI=
+        b=WByDid6dcBIMGtJ2fBkyt7D8C1bpJoZ6a0j3ctdsBSYBeAM3B0pVJi20ggAGt8Wlw
+         KZMdgMxhuYgQIiuyObYa1gHyvcL3xnh6Pn+YgUnzXUjCFc84mkjsBF2H8TYFOzll5t
+         JNRrgGlLePfW2lRKwiJUxFhjx0CExxquT8Rj6RKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vincent Chen <vincent.chen@sifive.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 054/163] riscv: avoid kernel hangs when trapped in BUG()
-Date:   Mon,  4 Nov 2019 22:44:04 +0100
-Message-Id: <20191104212144.063503330@linuxfoundation.org>
+Subject: [PATCH 5.3 046/163] arm64: vdso32: Detect binutils support for dmb ishld
+Date:   Mon,  4 Nov 2019 22:43:56 +0100
+Message-Id: <20191104212143.556017848@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -61,56 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Chen <vincent.chen@sifive.com>
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-[ Upstream commit 8b04825ed205da38754f86f4c07ea8600d8c2a65 ]
+[ Upstream commit 0df2c90eba60791148cee1823c0bf5fc66e3465c ]
 
-When the CONFIG_GENERIC_BUG is disabled by disabling CONFIG_BUG, if a
-kernel thread is trapped by BUG(), the whole system will be in the
-loop that infinitely handles the ebreak exception instead of entering the
-die function. To fix this problem, the do_trap_break() will always call
-the die() to deal with the break exception as the type of break is
-BUG_TRAP_TYPE_BUG.
+Older versions of binutils (prior to 2.24) do not support the "ISHLD"
+option for memory barrier instructions, which leads to a build failure
+when assembling the vdso32 library.
 
-Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Add a compilation time mechanism that detects if binutils supports those
+instructions and configure the kernel accordingly.
+
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Reported-by: Will Deacon <will@kernel.org>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Tested-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/kernel/traps.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/include/asm/vdso/compat_barrier.h | 2 +-
+ arch/arm64/kernel/vdso32/Makefile            | 9 +++++++++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index 424eb72d56b10..055a937aca70a 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -124,23 +124,23 @@ static inline unsigned long get_break_insn_length(unsigned long pc)
+diff --git a/arch/arm64/include/asm/vdso/compat_barrier.h b/arch/arm64/include/asm/vdso/compat_barrier.h
+index fb60a88b5ed41..3fd8fd6d8fc25 100644
+--- a/arch/arm64/include/asm/vdso/compat_barrier.h
++++ b/arch/arm64/include/asm/vdso/compat_barrier.h
+@@ -20,7 +20,7 @@
  
- asmlinkage void do_trap_break(struct pt_regs *regs)
- {
--#ifdef CONFIG_GENERIC_BUG
- 	if (!user_mode(regs)) {
- 		enum bug_trap_type type;
+ #define dmb(option) __asm__ __volatile__ ("dmb " #option : : : "memory")
  
- 		type = report_bug(regs->sepc, regs);
- 		switch (type) {
-+#ifdef CONFIG_GENERIC_BUG
- 		case BUG_TRAP_TYPE_NONE:
- 			break;
- 		case BUG_TRAP_TYPE_WARN:
- 			regs->sepc += get_break_insn_length(regs->sepc);
- 			break;
- 		case BUG_TRAP_TYPE_BUG:
-+#endif /* CONFIG_GENERIC_BUG */
-+		default:
- 			die(regs, "Kernel BUG");
- 		}
- 	}
--#endif /* CONFIG_GENERIC_BUG */
--
- 	force_sig_fault(SIGTRAP, TRAP_BRKPT, (void __user *)(regs->sepc));
- }
+-#if __LINUX_ARM_ARCH__ >= 8
++#if __LINUX_ARM_ARCH__ >= 8 && defined(CONFIG_AS_DMB_ISHLD)
+ #define aarch32_smp_mb()	dmb(ish)
+ #define aarch32_smp_rmb()	dmb(ishld)
+ #define aarch32_smp_wmb()	dmb(ishst)
+diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+index 19e0d3115ffe0..77aa613403747 100644
+--- a/arch/arm64/kernel/vdso32/Makefile
++++ b/arch/arm64/kernel/vdso32/Makefile
+@@ -15,6 +15,8 @@ cc32-disable-warning = $(call try-run,\
+ 	$(COMPATCC) -W$(strip $(1)) -c -x c /dev/null -o "$$TMP",-Wno-$(strip $(1)))
+ cc32-ldoption = $(call try-run,\
+         $(COMPATCC) $(1) -nostdlib -x c /dev/null -o "$$TMP",$(1),$(2))
++cc32-as-instr = $(call try-run,\
++	printf "%b\n" "$(1)" | $(COMPATCC) $(VDSO_AFLAGS) -c -x assembler -o "$$TMP" -,$(2),$(3))
  
+ # We cannot use the global flags to compile the vDSO files, the main reason
+ # being that the 32-bit compiler may be older than the main (64-bit) compiler
+@@ -53,6 +55,7 @@ endif
+ VDSO_CAFLAGS += -fPIC -fno-builtin -fno-stack-protector
+ VDSO_CAFLAGS += -DDISABLE_BRANCH_PROFILING
+ 
++
+ # Try to compile for ARMv8. If the compiler is too old and doesn't support it,
+ # fall back to v7. There is no easy way to check for what architecture the code
+ # is being compiled, so define a macro specifying that (see arch/arm/Makefile).
+@@ -89,6 +92,12 @@ VDSO_CFLAGS += -Wno-int-to-pointer-cast
+ VDSO_AFLAGS := $(VDSO_CAFLAGS)
+ VDSO_AFLAGS += -D__ASSEMBLY__
+ 
++# Check for binutils support for dmb ishld
++dmbinstr := $(call cc32-as-instr,dmb ishld,-DCONFIG_AS_DMB_ISHLD=1)
++
++VDSO_CFLAGS += $(dmbinstr)
++VDSO_AFLAGS += $(dmbinstr)
++
+ VDSO_LDFLAGS := $(VDSO_CPPFLAGS)
+ # From arm vDSO Makefile
+ VDSO_LDFLAGS += -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1
 -- 
 2.20.1
 
