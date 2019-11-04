@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535BECA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA509CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A93A204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BE18204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906465;
-	bh=BsxHL3S8VftW+A9yjq2g9FK3Yhwlbn0CHF3H3mKZX/I=;
+	s=default; t=1572906470;
+	bh=3fIb/XpE5v/FmqlNuybYCPwnbwJAl3gVKkv+KO2OZGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RRT5wbPQdV/FvLdT4pMPJfdJZBxIoZXnaX8jqio3PPwPbygTDgsYFzxh15ZV31pq/
-	 d4Xd3Ac+6D5EB0Zb46n0vEsoHoq7mVsYXS8ATfmWu1Vj4G8NLaPOIy32DxgLLdyVsp
-	 z7yRQDn/X3m3X9xFxLbkoGPmdFiCn4VAS1ry9oeo=
+	b=AMvshhADsBas1mx3KGH10w2m7VuaH7gHMR6aoOQiBgjKKEe4c7B6CIjvtVxIg0aig
+	 1yWdbIy+TmpSM+LHuuHN2/5o036aWDlMoRJKQaUwU1z7yqwNHmgXaBlBFRyrgdAy2h
+	 dmNVNW/w2Urc9h16vb5gFfJRi+xNUU56iGmvx2rE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387566AbfKDVt6 (ORCPT
+        id S2387526AbfKDVtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:49:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41590 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:49:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387551AbfKDVtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:49:55 -0500
+        id S2387507AbfKDVts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:49:48 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62F6A217F4;
-        Mon,  4 Nov 2019 21:49:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D03E214D8;
+        Mon,  4 Nov 2019 21:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904194;
-        bh=BsxHL3S8VftW+A9yjq2g9FK3Yhwlbn0CHF3H3mKZX/I=;
+        s=default; t=1572904187;
+        bh=3fIb/XpE5v/FmqlNuybYCPwnbwJAl3gVKkv+KO2OZGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HtFeqwqssS9AXGTrtTR73qQDC9o59z+Zm5aplkKKpDIFYPWdt7iwlGBeeZ72DEKuq
-         mgsrNx28a6wFx+cJVihfHH4NA8dojTdfjXES4e5OEvXsszVvwmRddSIVxYdtOh/UCt
-         1y6+LRwU/9AqAryqdzumB8j5Ln0jsaQpJSvYiXck=
+        b=Xye1jrAhiedSxORzutKvOF7Gt6dnamNJtTtdy7QPuhGGNwiTCbwz5tEvDIVOu822Q
+         CT03B7lJt42mVDkPCfNa2ij7fSUD6JF8L85IM1gsPtaEAEBVVB7r0jxn/rDMhyNRqd
+         witlRRVRh4b2kGtvUmiIa19h4Fn+cEauVPB0dqYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Samuel Dionne-Riel <samuel@dionne-riel.com>,
+        Richard Weinberger <richard.weinberger@gmail.com>,
+        Graham Christensen <graham@grahamc.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 15/62] perf jevents: Fix period for Intel fixed counters
-Date:   Mon,  4 Nov 2019 22:44:37 +0100
-Message-Id: <20191104211916.986259854@linuxfoundation.org>
+Subject: [PATCH 4.9 12/62] exec: load_script: Do not exec truncated interpreter path
+Date:   Mon,  4 Nov 2019 22:44:34 +0100
+Message-Id: <20191104211913.597157089@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -61,51 +66,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 6bdfd9f118bd59cf0f85d3bf4b72b586adea17c1 ]
+[ Upstream commit b5372fe5dc84235dbe04998efdede3c4daa866a9 ]
 
-The Intel fixed counters use a special table to override the JSON
-information.
+Commit 8099b047ecc4 ("exec: load_script: don't blindly truncate
+shebang string") was trying to protect against a confused exec of a
+truncated interpreter path. However, it was overeager and also refused
+to truncate arguments as well, which broke userspace, and it was
+reverted. This attempts the protection again, but allows arguments to
+remain truncated. In an effort to improve readability, helper functions
+and comments have been added.
 
-During this override the period information from the JSON file got
-dropped, which results in inst_retired.any and similar running with
-frequency mode instead of a period.
-
-Just specify the expected period in the table.
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20190927233546.11533-2-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Co-developed-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Samuel Dionne-Riel <samuel@dionne-riel.com>
+Cc: Richard Weinberger <richard.weinberger@gmail.com>
+Cc: Graham Christensen <graham@grahamc.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/pmu-events/jevents.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/binfmt_script.c | 57 ++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 48 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 016d12af68773..0619054bd7a0d 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -311,12 +311,12 @@ static struct fixed {
- 	const char *name;
- 	const char *event;
- } fixed[] = {
--	{ "inst_retired.any", "event=0xc0" },
--	{ "inst_retired.any_p", "event=0xc0" },
--	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
--	{ "cpu_clk_unhalted.thread", "event=0x3c" },
--	{ "cpu_clk_unhalted.core", "event=0x3c" },
--	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
-+	{ "inst_retired.any", "event=0xc0,period=2000003" },
-+	{ "inst_retired.any_p", "event=0xc0,period=2000003" },
-+	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03,period=2000003" },
-+	{ "cpu_clk_unhalted.thread", "event=0x3c,period=2000003" },
-+	{ "cpu_clk_unhalted.core", "event=0x3c,period=2000003" },
-+	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1,period=2000003" },
- 	{ NULL, NULL},
- };
+diff --git a/fs/binfmt_script.c b/fs/binfmt_script.c
+index afdf4e3cafc2a..37c2093a24d3c 100644
+--- a/fs/binfmt_script.c
++++ b/fs/binfmt_script.c
+@@ -14,14 +14,31 @@
+ #include <linux/err.h>
+ #include <linux/fs.h>
  
++static inline bool spacetab(char c) { return c == ' ' || c == '\t'; }
++static inline char *next_non_spacetab(char *first, const char *last)
++{
++	for (; first <= last; first++)
++		if (!spacetab(*first))
++			return first;
++	return NULL;
++}
++static inline char *next_terminator(char *first, const char *last)
++{
++	for (; first <= last; first++)
++		if (spacetab(*first) || !*first)
++			return first;
++	return NULL;
++}
++
+ static int load_script(struct linux_binprm *bprm)
+ {
+ 	const char *i_arg, *i_name;
+-	char *cp;
++	char *cp, *buf_end;
+ 	struct file *file;
+ 	char interp[BINPRM_BUF_SIZE];
+ 	int retval;
+ 
++	/* Not ours to exec if we don't start with "#!". */
+ 	if ((bprm->buf[0] != '#') || (bprm->buf[1] != '!'))
+ 		return -ENOEXEC;
+ 
+@@ -34,18 +51,40 @@ static int load_script(struct linux_binprm *bprm)
+ 	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
+ 		return -ENOENT;
+ 
+-	/*
+-	 * This section does the #! interpretation.
+-	 * Sorta complicated, but hopefully it will work.  -TYT
+-	 */
+-
++	/* Release since we are not mapping a binary into memory. */
+ 	allow_write_access(bprm->file);
+ 	fput(bprm->file);
+ 	bprm->file = NULL;
+ 
+-	bprm->buf[BINPRM_BUF_SIZE - 1] = '\0';
+-	if ((cp = strchr(bprm->buf, '\n')) == NULL)
+-		cp = bprm->buf+BINPRM_BUF_SIZE-1;
++	/*
++	 * This section handles parsing the #! line into separate
++	 * interpreter path and argument strings. We must be careful
++	 * because bprm->buf is not yet guaranteed to be NUL-terminated
++	 * (though the buffer will have trailing NUL padding when the
++	 * file size was smaller than the buffer size).
++	 *
++	 * We do not want to exec a truncated interpreter path, so either
++	 * we find a newline (which indicates nothing is truncated), or
++	 * we find a space/tab/NUL after the interpreter path (which
++	 * itself may be preceded by spaces/tabs). Truncating the
++	 * arguments is fine: the interpreter can re-read the script to
++	 * parse them on its own.
++	 */
++	buf_end = bprm->buf + sizeof(bprm->buf) - 1;
++	cp = strnchr(bprm->buf, sizeof(bprm->buf), '\n');
++	if (!cp) {
++		cp = next_non_spacetab(bprm->buf + 2, buf_end);
++		if (!cp)
++			return -ENOEXEC; /* Entire buf is spaces/tabs */
++		/*
++		 * If there is no later space/tab/NUL we must assume the
++		 * interpreter path is truncated.
++		 */
++		if (!next_terminator(cp, buf_end))
++			return -ENOEXEC;
++		cp = buf_end;
++	}
++	/* NUL-terminate the buffer and any trailing spaces/tabs. */
+ 	*cp = '\0';
+ 	while (cp > bprm->buf) {
+ 		cp--;
 -- 
 2.20.1
 
