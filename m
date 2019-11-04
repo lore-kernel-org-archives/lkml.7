@@ -3,97 +3,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 496C6CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78504CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27EA420848
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 533F620848
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:21:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbfKDQSi (ORCPT
+        id S1729318AbfKDQVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 11:18:38 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45944 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727838AbfKDQSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 11:18:37 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E80B7AB8F;
-        Mon,  4 Nov 2019 16:18:35 +0000 (UTC)
-Subject: Re: [Xen-devel] [PATCH] xen/events: remove event handling recursion
- detection
-To:     Jan Beulich <jbeulich@suse.com>
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-References: <20191104135812.2314-1-jgross@suse.com>
- <40cba9d9-24b0-3141-4ba8-02e03049f1bf@suse.com>
- <acaf58cb-47f2-7e7e-f25d-ff83ae8a8066@suse.com>
- <b1171c0c-7928-d7a1-7bdc-e3f18f67eaac@suse.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <e6b8fcc2-2e2c-60f8-e68c-972cc7951e6b@suse.com>
-Date:   Mon, 4 Nov 2019 17:18:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 4 Nov 2019 11:21:09 -0500
+Received: from mga14.intel.com ([192.55.52.115]:37244 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727838AbfKDQVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 11:21:09 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 08:21:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,267,1569308400"; 
+   d="scan'208";a="212343225"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 04 Nov 2019 08:21:04 -0800
+Received: by lahna (sSMTP sendmail emulation); Mon, 04 Nov 2019 18:21:03 +0200
+Date:   Mon, 4 Nov 2019 18:21:03 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Mario Limonciello <mario.limonciello@dell.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Christian Kellner <ck@xatom.net>, linux-kernel@vger.kernel.org,
+        Anthony Wong <anthony.wong@canonical.com>
+Subject: Re: USB devices on Dell TB16 dock stop working after resuming
+Message-ID: <20191104162103.GI2552@lahna.fi.intel.com>
+References: <5d2b39bc-5952-c2b6-63b3-bce28122ffd5@molgen.mpg.de>
+ <20191104142459.GC2552@lahna.fi.intel.com>
+ <20191104144436.GD2552@lahna.fi.intel.com>
+ <20191104154446.GH2552@lahna.fi.intel.com>
+ <ea829adedf0445c0845e25d6e4b47905@AUSX13MPC105.AMER.DELL.COM>
+ <d8cb6bc6-8145-eaed-5ba4-d7291478bdd7@molgen.mpg.de>
 MIME-Version: 1.0
-In-Reply-To: <b1171c0c-7928-d7a1-7bdc-e3f18f67eaac@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <d8cb6bc6-8145-eaed-5ba4-d7291478bdd7@molgen.mpg.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.11.19 16:19, Jan Beulich wrote:
-> On 04.11.2019 16:09, Jürgen Groß wrote:
->> On 04.11.19 15:35, Jan Beulich wrote:
->>> On 04.11.2019 14:58, Juergen Gross wrote:
->>>> __xen_evtchn_do_upcall() contains guards against being called
->>>> recursively. This mechanism was introduced in the early pvops times
->>>> (kernel 2.6.26) when there were still Xen versions around not honoring
->>>> disabled interrupts for sending events to pv guests.
->>>>
->>>> This was changed in Xen 3.0, which is much older than any Xen version
->>>> supported by the kernel, so the recursion detection can be removed.
->>>
->>> Would you mind pointing out which exact change(s) this was(were)?
->>
->> Linux kernel: 229664bee6126e01f8662976a5fe2e79813b77c8
->> Xen: d8263e8dbaf5ef1445bee0662143a0fcb6d43466
+On Mon, Nov 04, 2019 at 05:11:10PM +0100, Paul Menzel wrote:
+> Dear Mika, dear Mario,
 > 
-> Are you sure about the latter, touching only header files underneath
-> xen/, and there mostly public interface ones?
-
-No, you are right, this was a false interpretation of mine.
-
 > 
->>> It had always been my understanding that the recursion detection
->>> was mainly to guard against drivers re-enabling interrupts
->>> transiently in their handlers (which in turn may no longer be an
->>> issue in modern Linux kernels).
->>
->> This would have been doable with a simple bool. The more complex
->> xchg based logic was IMO for recursion detection at any point.
+> On 2019-11-04 16:49, Mario.Limonciello@dell.com wrote:
 > 
-> Well, the respective XenoLinux c/s 13098 has no mention of this, i.e.
-> it simply leaves open what the actual reason was:
+> >> From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> >> Sent: Monday, November 4, 2019 9:45 AM
 > 
-> "[LINUX] Disallow nested event delivery.
+> >> On Mon, Nov 04, 2019 at 04:44:40PM +0200, Mika Westerberg wrote:
+> >>> On Mon, Nov 04, 2019 at 04:25:03PM +0200, Mika Westerberg wrote:
 > 
->   This eliminates the risk of overflowing the kernel stack and is a
->   reasonable policy given that we have no concept of priorities among
->   event sources."
+> >>>> On Mon, Nov 04, 2019 at 02:13:13PM +0100, Paul Menzel wrote:
+> 
+> >>>>> On the Dell XPS 13 9380 with Debian Sid/unstable with Linux 5.3.7
+> >>>>> suspending the system, and resuming with Dell’s Thunderbolt TB16
+> >>>>> dock connected, the USB input devices, keyboard and mouse,
+> >>>>> connected to the TB16 stop working. They work for a few seconds
+> >>>>> (mouse cursor can be moved), but then stop working. The laptop
+> >>>>> keyboard and touchpad still works fine. All firmware is up-to-date
+> >>>>> according to `fwupdmgr`.
+> >>>>
+> >>>> What are the exact steps to reproduce? Just "echo mem >
+> >>>> /sys/power/state" and then resume by pressing power button?
+> 
+> GNOME Shell 3.34.1+git20191024-1 is used, and the user just closes the
+> display. So more than `echo mem > /sys/power/state` is done. What
+> distribution do you use?
 
-For XenoLinux it makes at least a little bit sense, as interrupts
-were enabled during calls of some handlers AFAIK. The complexity is
-rather strange, though, as the bool would have been much easier to
-understand.
+I have buildroot based "distro" so there is no UI running.
 
-I'll adapt the commit message.
+> >>> I tried v5.4-rc6 on my 9380 with TB16 dock connected and did a couple of
+> >>> suspend/resume cycles (to s2idle) but I don't see any issues.
+> >>>
+> >>> I may have older/different firmware than you, though.
+> >>
+> >> Upgraded BIOS to 1.8.0 and TBT NVM to v44 but still can't reproduce this
+> >> on my system :/
+> 
+> The user reported the issue with the previous firmwares 1.x and TBT NVM v40.
+> Updating to the recent version (I got the logs with) did not fix the issue.
 
+I also tried v40 (that was originally on that system) but I was not able
+to reproduce it.
 
-Juergen
+Do you know if the user changed any BIOS settings?
