@@ -2,65 +2,51 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE580CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A232BCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE4B2084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77098214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904976;
-	bh=bhZyzt5jNJv5rZYKFKakbsYlNulrMGxOM/5JzLduPEM=;
+	s=default; t=1572904979;
+	bh=WUYtsEowu6tUKxR++J7FijFndFCjk6G0o2q2sXvWxvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uVo/zzFSIFUgFTUrAlm9q7yW7Og92yJCRKxw7bHqdyPpF7My04nq6Ctuzz6KDim8G
-	 h1uHaNO9eVA6WH5TfMSUiEsE0ZuBq9Hj72wYY/iJiMPEoiwyIY0d+svxU2WisqRJ7/
-	 dNWEn0nKWyJAfIXMzRhhkfp4XBBZ2gf53T60IhGY=
+	b=upKcJBIME0fPtykxuPZdkpIc241dn/3UyTQ97ZugQXhViNGaf8v0MxXlRHnG913qs
+	 K2jq/m/VOfJxP6zrw8dDNRrPUZE4y01t7UKNs/OMeiyV8cMgRsCeofJio3xDe+iyGX
+	 uFwSk1v6fVyhtJNNRuhXOKUydN4a7JkllysUJ2Yk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388680AbfKDWCz (ORCPT
+        id S2389428AbfKDWC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:02:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33088 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:02:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389403AbfKDWCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:02:52 -0500
+        id S2389416AbfKDWCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:02:54 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3143120650;
-        Mon,  4 Nov 2019 22:02:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ACCC205C9;
+        Mon,  4 Nov 2019 22:02:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904971;
-        bh=bhZyzt5jNJv5rZYKFKakbsYlNulrMGxOM/5JzLduPEM=;
+        s=default; t=1572904973;
+        bh=WUYtsEowu6tUKxR++J7FijFndFCjk6G0o2q2sXvWxvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wlKpWtXUHbFCqVjWTPfF3fyGMkd9jnkHIaNsiR2GCTUeC/xPU60Wy+jsCAsZ51KQm
-         55ip79Dcpt21JqqV7Z+ydfXSwhjyU97G+Jby3pBvkU+agHkZJhK/ZP54VqaYwiB12Y
-         c6sb6LmqEvXY2Aqnn1xvouOsEsTzPM0SnxGfgfE4=
+        b=Qp2yz9aMcYn2IoImbPC1u8pEwqNLCwi9Tscdo/7O/CyKxSr22uy/U9RELyu9lHR7I
+         VLUvqO8Kvzek6c1iy1ASQ66GEsJPb6UIPpkFm4nUyFoGKwIUBnvC+07OIqsZ+QwSj1
+         0z5CS3d5WWgMlg7/S/f/KmLB5ZD5VDDzioDM8kew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Dave Young <dyoung@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Octavian Purdila <octavian.purdila@intel.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Scott Talbert <swt@techie.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 081/149] efi/cper: Fix endianness of PCIe class code
-Date:   Mon,  4 Nov 2019 22:44:34 +0100
-Message-Id: <20191104212142.274068642@linuxfoundation.org>
+        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.19 128/149] s390/idle: fix cpu idle time calculation
+Date:   Mon,  4 Nov 2019 22:45:21 +0100
+Message-Id: <20191104212145.431494357@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -73,61 +59,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-[ Upstream commit 6fb9367a15d1a126d222d738b2702c7958594a5f ]
+commit 3d7efa4edd07be5c5c3ffa95ba63e97e070e1f3f upstream.
 
-The CPER parser assumes that the class code is big endian, but at least
-on this edk2-derived Intel Purley platform it's little endian:
+The idle time reported in /proc/stat sometimes incorrectly contains
+huge values on s390. This is caused by a bug in arch_cpu_idle_time().
 
-    efi: EFI v2.50 by EDK II BIOS ID:PLYDCRB1.86B.0119.R05.1701181843
-    DMI: Intel Corporation PURLEY/PURLEY, BIOS PLYDCRB1.86B.0119.R05.1701181843 01/18/2017
+The kernel tries to figure out when a different cpu entered idle by
+accessing its per-cpu data structure. There is an ordering problem: if
+the remote cpu has an idle_enter value which is not zero, and an
+idle_exit value which is zero, it is assumed it is idle since
+"now". The "now" timestamp however is taken before the idle_enter
+value is read.
 
-    {1}[Hardware Error]:   device_id: 0000:5d:00.0
-    {1}[Hardware Error]:   slot: 0
-    {1}[Hardware Error]:   secondary_bus: 0x5e
-    {1}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x2030
-    {1}[Hardware Error]:   class_code: 000406
-                                       ^^^^^^ (should be 060400)
+Which in turn means that "now" can be smaller than idle_enter of the
+remote cpu. Unconditionally subtracting idle_enter from "now" can thus
+lead to a negative value (aka large unsigned value).
 
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Matthew Garrett <mjg59@google.com>
-Cc: Octavian Purdila <octavian.purdila@intel.com>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Scott Talbert <swt@techie.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191002165904.8819-2-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix this by moving the get_tod_clock() invocation out of the
+loop. While at it also make the code a bit more readable.
+
+A similar bug also exists for show_idle_time(). Fix this is as well.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/firmware/efi/cper.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/kernel/idle.c |   29 ++++++++++++++++++++++-------
+ 1 file changed, 22 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-index 4045098ddb860..116989cf3d457 100644
---- a/drivers/firmware/efi/cper.c
-+++ b/drivers/firmware/efi/cper.c
-@@ -393,7 +393,7 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
- 		printk("%s""vendor_id: 0x%04x, device_id: 0x%04x\n", pfx,
- 		       pcie->device_id.vendor_id, pcie->device_id.device_id);
- 		p = pcie->device_id.class_code;
--		printk("%s""class_code: %02x%02x%02x\n", pfx, p[0], p[1], p[2]);
-+		printk("%s""class_code: %02x%02x%02x\n", pfx, p[2], p[1], p[0]);
- 	}
- 	if (pcie->validation_bits & CPER_PCIE_VALID_SERIAL_NUMBER)
- 		printk("%s""serial number: 0x%04x, 0x%04x\n", pfx,
--- 
-2.20.1
-
+--- a/arch/s390/kernel/idle.c
++++ b/arch/s390/kernel/idle.c
+@@ -69,18 +69,26 @@ DEVICE_ATTR(idle_count, 0444, show_idle_
+ static ssize_t show_idle_time(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+ {
++	unsigned long long now, idle_time, idle_enter, idle_exit, in_idle;
+ 	struct s390_idle_data *idle = &per_cpu(s390_idle, dev->id);
+-	unsigned long long now, idle_time, idle_enter, idle_exit;
+ 	unsigned int seq;
+ 
+ 	do {
+-		now = get_tod_clock();
+ 		seq = read_seqcount_begin(&idle->seqcount);
+ 		idle_time = READ_ONCE(idle->idle_time);
+ 		idle_enter = READ_ONCE(idle->clock_idle_enter);
+ 		idle_exit = READ_ONCE(idle->clock_idle_exit);
+ 	} while (read_seqcount_retry(&idle->seqcount, seq));
+-	idle_time += idle_enter ? ((idle_exit ? : now) - idle_enter) : 0;
++	in_idle = 0;
++	now = get_tod_clock();
++	if (idle_enter) {
++		if (idle_exit) {
++			in_idle = idle_exit - idle_enter;
++		} else if (now > idle_enter) {
++			in_idle = now - idle_enter;
++		}
++	}
++	idle_time += in_idle;
+ 	return sprintf(buf, "%llu\n", idle_time >> 12);
+ }
+ DEVICE_ATTR(idle_time_us, 0444, show_idle_time, NULL);
+@@ -88,17 +96,24 @@ DEVICE_ATTR(idle_time_us, 0444, show_idl
+ u64 arch_cpu_idle_time(int cpu)
+ {
+ 	struct s390_idle_data *idle = &per_cpu(s390_idle, cpu);
+-	unsigned long long now, idle_enter, idle_exit;
++	unsigned long long now, idle_enter, idle_exit, in_idle;
+ 	unsigned int seq;
+ 
+ 	do {
+-		now = get_tod_clock();
+ 		seq = read_seqcount_begin(&idle->seqcount);
+ 		idle_enter = READ_ONCE(idle->clock_idle_enter);
+ 		idle_exit = READ_ONCE(idle->clock_idle_exit);
+ 	} while (read_seqcount_retry(&idle->seqcount, seq));
+-
+-	return cputime_to_nsecs(idle_enter ? ((idle_exit ?: now) - idle_enter) : 0);
++	in_idle = 0;
++	now = get_tod_clock();
++	if (idle_enter) {
++		if (idle_exit) {
++			in_idle = idle_exit - idle_enter;
++		} else if (now > idle_enter) {
++			in_idle = now - idle_enter;
++		}
++	}
++	return cputime_to_nsecs(in_idle);
+ }
+ 
+ void arch_cpu_idle_enter(void)
 
 
