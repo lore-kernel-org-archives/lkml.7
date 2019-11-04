@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA4FCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DE1CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A71321744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD7121E6F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904802;
-	bh=RKoO/50WWCrVLJkafaQkr4EOtCU9gOnnE+awNfgmwaM=;
+	s=default; t=1572904805;
+	bh=BYsbJjo25ob2w4vEbmdMvtR1SJRInPAA1UGSNr2lkXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tbw4Fz/CascTrnWn3LrtI+Rp8oB3i8Zyp/xwDFyJO9WcVXFZpCmenN1y8WzVNxieH
-	 M1zpg+tecX2h8+JB2hoRjpRGsnTrBZASgf5qQVP2eVBTRk8adw4ANxSq/H6ymnk3zw
-	 lIuwwfQWnoDrXEhUaR/Ayxob2BJNMSLHqdj3EREo=
+	b=etI+2NsyC8LDfG7j+pqX8V2BnUJyT2i7N7rIhnCNtoiB0Awt8dY02zTXoBpNVPgHY
+	 ve7rTAU/MB0nzCQ/RbbDoE2olTp8U2Y8beT2Q/oiNTQrfRSAL4mCPQHvQOjK/+yc2u
+	 p7hSVzlj+caP8DsbqXJRdyP9+uvddS/JTwLvLn2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387969AbfKDWAB (ORCPT
+        id S2388795AbfKDWAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:00:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57386 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:00:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388362AbfKDV77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:59:59 -0500
+        id S2388377AbfKDWAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:00:02 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBA3C214E0;
-        Mon,  4 Nov 2019 21:59:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A2B320650;
+        Mon,  4 Nov 2019 22:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904798;
-        bh=RKoO/50WWCrVLJkafaQkr4EOtCU9gOnnE+awNfgmwaM=;
+        s=default; t=1572904801;
+        bh=BYsbJjo25ob2w4vEbmdMvtR1SJRInPAA1UGSNr2lkXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FCiHyt+N1isHd3qCTzIMP4w2ZSHkUdo3OHz56dwhN1gEfy04QduVcT8Y3y/Tgu2pa
-         uY88f0yV4+FSK35mfcNeexFwHI2B13o0GDqxpXU8/AvQiChu5gBcTbBT02fu3d4XWy
-         81lBjilYmSlXUCEuRpIw+R/3DvMOUQUbUk7BPRfs=
+        b=tEyz9tq2L5/8/TXx3BXjMGDbadYS/bQ57orfzrncrvJ8aUvgyajL0aPq90Wy9HqTw
+         VzmTvO6fyfu/f8HxFI8FQecH4EO3TR4rJ0eu1NDT56TtbHiqdLfzWMmQGXsbfBCdgT
+         eLSrzbTa7KVaT/7SC715dbRTIlLfI+2Acqu8xAYE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 073/149] HID: hyperv: Use in-place iterator API in the channel callback
-Date:   Mon,  4 Nov 2019 22:44:26 +0100
-Message-Id: <20191104212141.806741875@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 074/149] nfs: Fix nfsi->nrequests count error on nfs_inode_remove_request
+Date:   Mon,  4 Nov 2019 22:44:27 +0100
+Message-Id: <20191104212141.859801797@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -59,97 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 
-[ Upstream commit 6a297c90efa68b2864483193b8bfb0d19478600c ]
+[ Upstream commit 33ea5aaa87cdae0f9af4d6b7ee4f650a1a36fd1d ]
 
-Simplify the ring buffer handling with the in-place API.
+When xfstests testing, there are some WARNING as below:
 
-Also avoid the dynamic allocation and the memory leak in the channel
-callback function.
+WARNING: CPU: 0 PID: 6235 at fs/nfs/inode.c:122 nfs_clear_inode+0x9c/0xd8
+Modules linked in:
+CPU: 0 PID: 6235 Comm: umount.nfs
+Hardware name: linux,dummy-virt (DT)
+pstate: 60000005 (nZCv daif -PAN -UAO)
+pc : nfs_clear_inode+0x9c/0xd8
+lr : nfs_evict_inode+0x60/0x78
+sp : fffffc000f68fc00
+x29: fffffc000f68fc00 x28: fffffe00c53155c0
+x27: fffffe00c5315000 x26: fffffc0009a63748
+x25: fffffc000f68fd18 x24: fffffc000bfaaf40
+x23: fffffc000936d3c0 x22: fffffe00c4ff5e20
+x21: fffffc000bfaaf40 x20: fffffe00c4ff5d10
+x19: fffffc000c056000 x18: 000000000000003c
+x17: 0000000000000000 x16: 0000000000000000
+x15: 0000000000000040 x14: 0000000000000228
+x13: fffffc000c3a2000 x12: 0000000000000045
+x11: 0000000000000000 x10: 0000000000000000
+x9 : 0000000000000000 x8 : 0000000000000000
+x7 : 0000000000000000 x6 : fffffc00084b027c
+x5 : fffffc0009a64000 x4 : fffffe00c0e77400
+x3 : fffffc000c0563a8 x2 : fffffffffffffffb
+x1 : 000000000000764e x0 : 0000000000000001
+Call trace:
+ nfs_clear_inode+0x9c/0xd8
+ nfs_evict_inode+0x60/0x78
+ evict+0x108/0x380
+ dispose_list+0x70/0xa0
+ evict_inodes+0x194/0x210
+ generic_shutdown_super+0xb0/0x220
+ nfs_kill_super+0x40/0x88
+ deactivate_locked_super+0xb4/0x120
+ deactivate_super+0x144/0x160
+ cleanup_mnt+0x98/0x148
+ __cleanup_mnt+0x38/0x50
+ task_work_run+0x114/0x160
+ do_notify_resume+0x2f8/0x308
+ work_pending+0x8/0x14
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Acked-by: Jiri Kosina <jkosina@suse.cz>
+The nrequest should be increased/decreased only if PG_INODE_REF flag
+was setted.
+
+But in the nfs_inode_remove_request function, it maybe decrease when
+no PG_INODE_REF flag, this maybe lead nrequests count error.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-hyperv.c | 56 +++++++---------------------------------
- 1 file changed, 10 insertions(+), 46 deletions(-)
+ fs/nfs/write.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
-index 704049e62d58a..4d1496f60071f 100644
---- a/drivers/hid/hid-hyperv.c
-+++ b/drivers/hid/hid-hyperv.c
-@@ -322,60 +322,24 @@ static void mousevsc_on_receive(struct hv_device *device,
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 5ab997912d8d5..117ffd90419e2 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -783,7 +783,6 @@ static void nfs_inode_remove_request(struct nfs_page *req)
+ 	struct nfs_inode *nfsi = NFS_I(inode);
+ 	struct nfs_page *head;
  
- static void mousevsc_on_channel_callback(void *context)
- {
--	const int packet_size = 0x100;
--	int ret;
- 	struct hv_device *device = context;
--	u32 bytes_recvd;
--	u64 req_id;
- 	struct vmpacket_descriptor *desc;
--	unsigned char	*buffer;
--	int	bufferlen = packet_size;
--
--	buffer = kmalloc(bufferlen, GFP_ATOMIC);
--	if (!buffer)
--		return;
--
--	do {
--		ret = vmbus_recvpacket_raw(device->channel, buffer,
--					bufferlen, &bytes_recvd, &req_id);
--
--		switch (ret) {
--		case 0:
--			if (bytes_recvd <= 0) {
--				kfree(buffer);
--				return;
--			}
--			desc = (struct vmpacket_descriptor *)buffer;
--
--			switch (desc->type) {
--			case VM_PKT_COMP:
--				break;
--
--			case VM_PKT_DATA_INBAND:
--				mousevsc_on_receive(device, desc);
--				break;
--
--			default:
--				pr_err("unhandled packet type %d, tid %llx len %d\n",
--					desc->type, req_id, bytes_recvd);
--				break;
--			}
+-	atomic_long_dec(&nfsi->nrequests);
+ 	if (nfs_page_group_sync_on_bit(req, PG_REMOVE)) {
+ 		head = req->wb_head;
  
-+	foreach_vmbus_pkt(desc, device->channel) {
-+		switch (desc->type) {
-+		case VM_PKT_COMP:
- 			break;
+@@ -796,8 +795,10 @@ static void nfs_inode_remove_request(struct nfs_page *req)
+ 		spin_unlock(&mapping->private_lock);
+ 	}
  
--		case -ENOBUFS:
--			kfree(buffer);
--			/* Handle large packet */
--			bufferlen = bytes_recvd;
--			buffer = kmalloc(bytes_recvd, GFP_ATOMIC);
--
--			if (!buffer)
--				return;
-+		case VM_PKT_DATA_INBAND:
-+			mousevsc_on_receive(device, desc);
-+			break;
- 
-+		default:
-+			pr_err("Unhandled packet type %d, tid %llx len %d\n",
-+			       desc->type, desc->trans_id, desc->len8 * 8);
- 			break;
- 		}
--	} while (1);
--
+-	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags))
++	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags)) {
+ 		nfs_release_request(req);
++		atomic_long_dec(&nfsi->nrequests);
 +	}
  }
  
- static int mousevsc_connect_to_vsp(struct hv_device *device)
+ static void
 -- 
 2.20.1
 
