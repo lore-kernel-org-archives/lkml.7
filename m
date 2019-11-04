@@ -2,198 +2,95 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D18E5CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D33CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A738721D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E86222C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:52:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YjUYLUPT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfKDLvo (ORCPT
+        id S1728397AbfKDLwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:51:44 -0500
-Received: from foss.arm.com ([217.140.110.172]:40822 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726633AbfKDLvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 06:51:44 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6535A1FB;
-        Mon,  4 Nov 2019 03:51:43 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 29D123F6C4;
-        Mon,  4 Nov 2019 03:51:41 -0800 (PST)
-Date:   Mon, 4 Nov 2019 11:51:39 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 03/17] arm64: kvm: stop treating register x18 as
- caller save
-Message-ID: <20191104115138.GB45140@lakrids.cambridge.arm.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191101221150.116536-1-samitolvanen@google.com>
- <20191101221150.116536-4-samitolvanen@google.com>
+        Mon, 4 Nov 2019 06:52:07 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43930 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbfKDLwH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 06:52:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Z45EwIm/nVJd7d8qmHSBF95/M8CehBnDBQi1wTICEOU=; b=YjUYLUPTB/RXa6Ktkoz1wCjTz
+        4MwPhuteCIwgB1TZ1JwEvX+IhXAVoZOOKoeDptaDYKIShVe3JtHyY9YqCAHH4MobpRws9984uz2HU
+        fPYfKCYTgBC2e3J+JYA0hVDhGrTeaQQDCJu2vaGesZmbUynrnhEV6dpeanDQnGpZTERFZSE/o3k5+
+        i3Xw3FU7OLMpZMBewKCYOWRs7sAGVEQMTPs0DomKXKGT8GoOSj+oiwjFfIoFRDabIzMHLMSDrvogH
+        iquYwc7lBREVKR1QYHI0yG5nY5ms2KRZq0WiQvynjqPxu/FYvWX8c25lxNyOESynm3P8KVPY+h2u4
+        YABuW4BZA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iRatv-0006On-RA; Mon, 04 Nov 2019 11:52:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3F052305FC2;
+        Mon,  4 Nov 2019 12:50:58 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 51D022B4220F7; Mon,  4 Nov 2019 12:52:01 +0100 (CET)
+Date:   Mon, 4 Nov 2019 12:52:01 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Doug Smythies <dsmythies@telus.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cpuidle: Consolidate disabled state checks
+Message-ID: <20191104115201.GG4131@hirez.programming.kicks-ass.net>
+References: <2717750.dCEzHT3DVQ@kreacher>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191101221150.116536-4-samitolvanen@google.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <2717750.dCEzHT3DVQ@kreacher>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 03:11:36PM -0700, Sami Tolvanen wrote:
-> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+On Mon, Nov 04, 2019 at 12:16:17PM +0100, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> In preparation of reserving x18, stop treating it as caller save in
-> the KVM guest entry/exit code. Currently, the code assumes there is
-> no need to preserve it for the host, given that it would have been
-> assumed clobbered anyway by the function call to __guest_enter().
-> Instead, preserve its value and restore it upon return.
+> There are two reasons why CPU idle states may be disabled: either
+> because the driver has disabled them or because they have been
+> disabled by user space via sysfs.
 > 
-> Link: https://patchwork.kernel.org/patch/9836891/
-> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> [Sami: updated commit message, switched from x18 to x29 for the guest context]
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/arm64/kvm/hyp/entry.S | 41 +++++++++++++++++++-------------------
->  1 file changed, 20 insertions(+), 21 deletions(-)
+> In the former case, the state's "disabled" flag is set once during
+> the initialization of the driver and it is never cleared later (it
+> is read-only effectively).  In the latter case, the "disable" field
+> of the given state's cpuidle_state_usage struct is set and it may be
+> changed via sysfs.  Thus checking whether or not an idle state has
+> been disabled involves reading these two flags every time.
 > 
-> diff --git a/arch/arm64/kvm/hyp/entry.S b/arch/arm64/kvm/hyp/entry.S
-> index e5cc8d66bf53..c3c2d842c609 100644
-> --- a/arch/arm64/kvm/hyp/entry.S
-> +++ b/arch/arm64/kvm/hyp/entry.S
-> @@ -23,6 +23,7 @@
->  	.pushsection	.hyp.text, "ax"
->  
-
-Could we please add a note here, e.g.
-
-/*
- * We treat x18 as callee-saved as the host may use it as a platform
- * register (e.g. for shadow call stack).
- */
-
-... as that will avoid anyone trying to optimize this away in future
-after reading the AAPCS.
-
->  .macro save_callee_saved_regs ctxt
-> +	str	x18,      [\ctxt, #CPU_XREG_OFFSET(18)]
->  	stp	x19, x20, [\ctxt, #CPU_XREG_OFFSET(19)]
->  	stp	x21, x22, [\ctxt, #CPU_XREG_OFFSET(21)]
->  	stp	x23, x24, [\ctxt, #CPU_XREG_OFFSET(23)]
-> @@ -32,6 +33,8 @@
->  .endm
->  
->  .macro restore_callee_saved_regs ctxt
-> +	// We assume \ctxt is not x18-x28
-
-Probably worth s/assume/require/ here.
-
-Otherwise, this looks godo to me:
-
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark.
-
-> +	ldr	x18,      [\ctxt, #CPU_XREG_OFFSET(18)]
->  	ldp	x19, x20, [\ctxt, #CPU_XREG_OFFSET(19)]
->  	ldp	x21, x22, [\ctxt, #CPU_XREG_OFFSET(21)]
->  	ldp	x23, x24, [\ctxt, #CPU_XREG_OFFSET(23)]
-> @@ -48,7 +51,7 @@ ENTRY(__guest_enter)
->  	// x0: vcpu
->  	// x1: host context
->  	// x2-x17: clobbered by macros
-> -	// x18: guest context
-> +	// x29: guest context
->  
->  	// Store the host regs
->  	save_callee_saved_regs x1
-> @@ -67,31 +70,28 @@ alternative_else_nop_endif
->  	ret
->  
->  1:
-> -	add	x18, x0, #VCPU_CONTEXT
-> +	add	x29, x0, #VCPU_CONTEXT
->  
->  	// Macro ptrauth_switch_to_guest format:
->  	// 	ptrauth_switch_to_guest(guest cxt, tmp1, tmp2, tmp3)
->  	// The below macro to restore guest keys is not implemented in C code
->  	// as it may cause Pointer Authentication key signing mismatch errors
->  	// when this feature is enabled for kernel code.
-> -	ptrauth_switch_to_guest x18, x0, x1, x2
-> +	ptrauth_switch_to_guest x29, x0, x1, x2
->  
->  	// Restore guest regs x0-x17
-> -	ldp	x0, x1,   [x18, #CPU_XREG_OFFSET(0)]
-> -	ldp	x2, x3,   [x18, #CPU_XREG_OFFSET(2)]
-> -	ldp	x4, x5,   [x18, #CPU_XREG_OFFSET(4)]
-> -	ldp	x6, x7,   [x18, #CPU_XREG_OFFSET(6)]
-> -	ldp	x8, x9,   [x18, #CPU_XREG_OFFSET(8)]
-> -	ldp	x10, x11, [x18, #CPU_XREG_OFFSET(10)]
-> -	ldp	x12, x13, [x18, #CPU_XREG_OFFSET(12)]
-> -	ldp	x14, x15, [x18, #CPU_XREG_OFFSET(14)]
-> -	ldp	x16, x17, [x18, #CPU_XREG_OFFSET(16)]
-> -
-> -	// Restore guest regs x19-x29, lr
-> -	restore_callee_saved_regs x18
-> -
-> -	// Restore guest reg x18
-> -	ldr	x18,      [x18, #CPU_XREG_OFFSET(18)]
-> +	ldp	x0, x1,   [x29, #CPU_XREG_OFFSET(0)]
-> +	ldp	x2, x3,   [x29, #CPU_XREG_OFFSET(2)]
-> +	ldp	x4, x5,   [x29, #CPU_XREG_OFFSET(4)]
-> +	ldp	x6, x7,   [x29, #CPU_XREG_OFFSET(6)]
-> +	ldp	x8, x9,   [x29, #CPU_XREG_OFFSET(8)]
-> +	ldp	x10, x11, [x29, #CPU_XREG_OFFSET(10)]
-> +	ldp	x12, x13, [x29, #CPU_XREG_OFFSET(12)]
-> +	ldp	x14, x15, [x29, #CPU_XREG_OFFSET(14)]
-> +	ldp	x16, x17, [x29, #CPU_XREG_OFFSET(16)]
-> +
-> +	// Restore guest regs x18-x29, lr
-> +	restore_callee_saved_regs x29
->  
->  	// Do not touch any register after this!
->  	eret
-> @@ -114,7 +114,7 @@ ENTRY(__guest_exit)
->  	// Retrieve the guest regs x0-x1 from the stack
->  	ldp	x2, x3, [sp], #16	// x0, x1
->  
-> -	// Store the guest regs x0-x1 and x4-x18
-> +	// Store the guest regs x0-x1 and x4-x17
->  	stp	x2, x3,   [x1, #CPU_XREG_OFFSET(0)]
->  	stp	x4, x5,   [x1, #CPU_XREG_OFFSET(4)]
->  	stp	x6, x7,   [x1, #CPU_XREG_OFFSET(6)]
-> @@ -123,9 +123,8 @@ ENTRY(__guest_exit)
->  	stp	x12, x13, [x1, #CPU_XREG_OFFSET(12)]
->  	stp	x14, x15, [x1, #CPU_XREG_OFFSET(14)]
->  	stp	x16, x17, [x1, #CPU_XREG_OFFSET(16)]
-> -	str	x18,      [x1, #CPU_XREG_OFFSET(18)]
->  
-> -	// Store the guest regs x19-x29, lr
-> +	// Store the guest regs x18-x29, lr
->  	save_callee_saved_regs x1
->  
->  	get_host_ctxt	x2, x3
-> -- 
-> 2.24.0.rc1.363.gb1bccd3e3d-goog
+> In order to avoid the additional check of the state's "disabled" flag
+> (which is effectively read-only anyway), use the value of it at the
+> init time to set a (new) flag in the "disable" field of that state's
+> cpuidle_state_usage structure and use the sysfs interface to
+> manipulate another (new) flag in it.  This way the state is disabled
+> whenever the "disable" field of its cpuidle_state_usage structure is
+> nonzero, whatever the reason, and it is the only place to look into
+> to check whether or not the state has been disabled.
 > 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+Much thanks, that always bugged me.
+
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
