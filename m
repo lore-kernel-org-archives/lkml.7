@@ -4,57 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA63CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A565CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E95921D71
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19C42080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905201;
-	bh=l4ufX9DFTWVEsodenjVNjo/1QN5IcvrZe4Qls64Ta0g=;
+	s=default; t=1572905205;
+	bh=M5sVEkLfwvxy3JlQ9ejc5M3w1uVEQ8hslW83InsFHO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UaG5JaW4zE5mh537MdXY9fU5PwkDuRrenR5RFeRM2gr/rhKNJ0cKH8dMdtTq3Mj3b
-	 k66DfDcrw92HNr+ggeffDdJ3Vb1U1h3HYZmBEGFosX/qlgumJ444wir09ovZ5o8Vj+
-	 igUlOemG4lJ4c/i0/JVGXGLeABHc1AQHyjCAl9F0=
+	b=KzZ1u3qpD54OSh1uSBRDqI5q6ly51Pkeea5s742d1Rni8J97xakkD/bIks9HEJjMz
+	 e9hIvRIneQc+N4TlqHuZKA75imdCnNV/uvihR7uE58JLf9vrM6i245tWCld86k8l5/
+	 IVoGEiZbS0zVYnesY54zEg1YF7o1lVbmKY4yWSo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389995AbfKDWGi (ORCPT
+        id S2390052AbfKDWGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:06:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38434 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:06:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389044AbfKDWGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:06:33 -0500
+        id S2389978AbfKDWGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:06:35 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA93221744;
-        Mon,  4 Nov 2019 22:06:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A21AB20650;
+        Mon,  4 Nov 2019 22:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905192;
-        bh=l4ufX9DFTWVEsodenjVNjo/1QN5IcvrZe4Qls64Ta0g=;
+        s=default; t=1572905195;
+        bh=M5sVEkLfwvxy3JlQ9ejc5M3w1uVEQ8hslW83InsFHO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e0tpWy91MziLzKuyO4d2YYC+Et6nug1/3RxGKOGBowt8tL2ZhX1sYbVGvYXNolGvP
-         80trMnp2Ho4NG2GNYiMPiidcUfSkWxww0jvTgrWj4ZvAHrGpBY8RFpgS4BijYxT/Sk
-         DovGPHpVeS0TqlWXJPaVBbDp7jHoAByBtOdfCjkY=
+        b=HlDbbDwMHeWoyKEuCiK1M9yExZXDO1pf2N/+Q1KtYDhdk6sU3dg9XOyCPdkaowF+i
+         EsRvxFQ4U6Cjw6pZ7FKVCgqk0FtBo07XjDchS/TJz3r4upNP4jZIaApZKz0rnvdNgL
+         kUxIeXaGbKKfb9f7/06o3pgZwvxfU+J/aC+Jee1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Austin Kim <austindh.kim@gmail.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 061/163] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_info_scan_inode_alloc()
-Date:   Mon,  4 Nov 2019 22:44:11 +0100
-Message-Id: <20191104212144.472508122@linuxfoundation.org>
+Subject: [PATCH 5.3 062/163] btrfs: silence maybe-uninitialized warning in clone_range
+Date:   Mon,  4 Nov 2019 22:44:12 +0100
+Message-Id: <20191104212144.521512803@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -67,56 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Austin Kim <austindh.kim@gmail.com>
 
-[ Upstream commit 2abb7d3b12d007c30193f48bebed781009bebdd2 ]
+[ Upstream commit 431d39887d6273d6d84edf3c2eab09f4200e788a ]
 
-In ocfs2_info_scan_inode_alloc(), there is an if statement on line 283
-to check whether inode_alloc is NULL:
+GCC throws warning message as below:
 
-    if (inode_alloc)
+‘clone_src_i_size’ may be used uninitialized in this function
+[-Wmaybe-uninitialized]
+ #define IS_ALIGNED(x, a)  (((x) & ((typeof(x))(a) - 1)) == 0)
+                       ^
+fs/btrfs/send.c:5088:6: note: ‘clone_src_i_size’ was declared here
+ u64 clone_src_i_size;
+   ^
+The clone_src_i_size is only used as call-by-reference
+in a call to get_inode_info().
 
-When inode_alloc is NULL, it is used on line 287:
+Silence the warning by initializing clone_src_i_size to 0.
 
-    ocfs2_inode_lock(inode_alloc, &bh, 0);
-        ocfs2_inode_lock_full_nested(inode, ...)
-            struct ocfs2_super *osb = OCFS2_SB(inode->i_sb);
+Note that the warning is a false positive and reported by older versions
+of GCC (eg. 7.x) but not eg 9.x. As there have been numerous people, the
+patch is applied. Setting clone_src_i_size to 0 does not otherwise make
+sense and would not do any action in case the code changes in the future.
 
-Thus, a possible null-pointer dereference may occur.
-
-To fix this bug, inode_alloc is checked on line 286.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Link: http://lkml.kernel.org/r/20190726033717.32359-1-baijiaju1990@gmail.com
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ add note ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/ioctl.c | 2 +-
+ fs/btrfs/send.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
-index d6f7b299eb236..efeea208fdebd 100644
---- a/fs/ocfs2/ioctl.c
-+++ b/fs/ocfs2/ioctl.c
-@@ -283,7 +283,7 @@ static int ocfs2_info_scan_inode_alloc(struct ocfs2_super *osb,
- 	if (inode_alloc)
- 		inode_lock(inode_alloc);
+diff --git a/fs/btrfs/send.c b/fs/btrfs/send.c
+index c3c0c064c25da..91c702b4cae9d 100644
+--- a/fs/btrfs/send.c
++++ b/fs/btrfs/send.c
+@@ -5070,7 +5070,7 @@ static int clone_range(struct send_ctx *sctx,
+ 	struct btrfs_path *path;
+ 	struct btrfs_key key;
+ 	int ret;
+-	u64 clone_src_i_size;
++	u64 clone_src_i_size = 0;
  
--	if (o2info_coherent(&fi->ifi_req)) {
-+	if (inode_alloc && o2info_coherent(&fi->ifi_req)) {
- 		status = ocfs2_inode_lock(inode_alloc, &bh, 0);
- 		if (status < 0) {
- 			mlog_errno(status);
+ 	/*
+ 	 * Prevent cloning from a zero offset with a length matching the sector
 -- 
 2.20.1
 
