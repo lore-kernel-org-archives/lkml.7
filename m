@@ -2,53 +2,52 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18738CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF57CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E144C214E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1172D214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905371;
-	bh=pfsObuW+C2EvHwuzLuq6BbLA7QNXiNdMae4pEfSAyCM=;
+	s=default; t=1572905375;
+	bh=rAJzLnzBVgEPuV8kR1+7VCm/ydjwode9suZJvidJaO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wpla/0D/j7ZsJKNmsZMfPnI5hiY//hdxfZPOsF4Q7EVWmeXx7erraxqsVMf3SuMho
-	 C69qsIEQd1vbZN5IdtHdzyZZSFl+ZUedO8+SCfoNQhD6xiiBNVt34F8vOgTcWBV2X1
-	 YrNOcOmelKz2rbEDCCF62Wkr2cyrtjCRQYxHom3s=
+	b=U9RAQxioUneLU8x67zcVd6hp2YmkMRpTrugcEkt2dm3M/kKo3klftGHgSvQ/Oo1gc
+	 ueBiENs5MgwgwUnVTUKtRD1QIo3xazIZeomdF326uN2TDFeRMKA2bnQelhcKa7ePhm
+	 j14/T8UMZycltMvQz49P4RmpF/rHesPYiIhcEGBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390414AbfKDWJ3 (ORCPT
+        id S2390420AbfKDWJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:09:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42542 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:09:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389648AbfKDWJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:09:26 -0500
+        id S2390410AbfKDWJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:09:29 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 732AC20650;
-        Mon,  4 Nov 2019 22:09:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BCC2205C9;
+        Mon,  4 Nov 2019 22:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905366;
-        bh=pfsObuW+C2EvHwuzLuq6BbLA7QNXiNdMae4pEfSAyCM=;
+        s=default; t=1572905369;
+        bh=rAJzLnzBVgEPuV8kR1+7VCm/ydjwode9suZJvidJaO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VBfbdr4YxDnPRj8SRrjprInKBut0E5bWg7gxgHND/cJmeEk2UJ9Na/Tsn1jH1uSo9
-         EK1F8o8hOVbFIWFTGVGAJCthaGMwPda4PO0yr+bCQ1MR0QLFfddOOz8IIc9/K8HpKV
-         Ze4y7nhX4DnPda8tUebedDJpERUHhRueEvmfC9Sk=
+        b=HfFB5GuiEk3eLVVUzcpMJ340Z1NTOaU8ZsZjuaGyUdMoNwIKyfar0npfGU8h0DOhV
+         Sqcp7UJJ4jXh3/wGWZPRACExJ+0E+P0IEY5myio5+8uWPFfypAkfdJ9/nayR132I07
+         TbHJVo9qK9bNQGM9Sb/agBxq3ZG4oWoGsQy0zU7s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Peng <benquike@gmail.com>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 094/163] ath6kl: fix a NULL-ptr-deref bug in ath6kl_usb_alloc_urb_from_pipe()
-Date:   Mon,  4 Nov 2019 22:44:44 +0100
-Message-Id: <20191104212146.960880995@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.3 121/163] um-ubd: Entrust re-queue to the upper layers
+Date:   Mon,  4 Nov 2019 22:45:11 +0100
+Message-Id: <20191104212148.975125444@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -61,77 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Peng <benquike@gmail.com>
+From: Anton Ivanov <anton.ivanov@cambridgegreys.com>
 
-[ Upstream commit 39d170b3cb62ba98567f5c4f40c27b5864b304e5 ]
+commit d848074b2f1eb11a38691285f7366bce83087014 upstream.
 
-The `ar_usb` field of `ath6kl_usb_pipe_usb_pipe` objects
-are initialized to point to the containing `ath6kl_usb` object
-according to endpoint descriptors read from the device side, as shown
-below in `ath6kl_usb_setup_pipe_resources`:
+Fixes crashes due to ubd requeue logic conflicting with the block-mq
+logic. Crash is reproducible in 5.0 - 5.3.
 
-for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
-	endpoint = &iface_desc->endpoint[i].desc;
+Fixes: 53766defb8c8 ("um: Clean-up command processing in UML UBD driver")
+Cc: stable@vger.kernel.org # v5.0+
+Signed-off-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-	// get the address from endpoint descriptor
-	pipe_num = ath6kl_usb_get_logical_pipe_num(ar_usb,
-						endpoint->bEndpointAddress,
-						&urbcount);
-	......
-	// select the pipe object
-	pipe = &ar_usb->pipes[pipe_num];
-
-	// initialize the ar_usb field
-	pipe->ar_usb = ar_usb;
-}
-
-The driver assumes that the addresses reported in endpoint
-descriptors from device side  to be complete. If a device is
-malicious and does not report complete addresses, it may trigger
-NULL-ptr-deref `ath6kl_usb_alloc_urb_from_pipe` and
-`ath6kl_usb_free_urb_to_pipe`.
-
-This patch fixes the bug by preventing potential NULL-ptr-deref
-(CVE-2019-15098).
-
-Signed-off-by: Hui Peng <benquike@gmail.com>
-Reported-by: Hui Peng <benquike@gmail.com>
-Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath6kl/usb.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/um/drivers/ubd_kern.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath6kl/usb.c b/drivers/net/wireless/ath/ath6kl/usb.c
-index 4defb7a0330f4..53b66e9434c99 100644
---- a/drivers/net/wireless/ath/ath6kl/usb.c
-+++ b/drivers/net/wireless/ath/ath6kl/usb.c
-@@ -132,6 +132,10 @@ ath6kl_usb_alloc_urb_from_pipe(struct ath6kl_usb_pipe *pipe)
- 	struct ath6kl_urb_context *urb_context = NULL;
- 	unsigned long flags;
+--- a/arch/um/drivers/ubd_kern.c
++++ b/arch/um/drivers/ubd_kern.c
+@@ -1403,8 +1403,12 @@ static blk_status_t ubd_queue_rq(struct
  
-+	/* bail if this pipe is not initialized */
-+	if (!pipe->ar_usb)
-+		return NULL;
-+
- 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
- 	if (!list_empty(&pipe->urb_list_head)) {
- 		urb_context =
-@@ -150,6 +154,10 @@ static void ath6kl_usb_free_urb_to_pipe(struct ath6kl_usb_pipe *pipe,
- {
- 	unsigned long flags;
+ 	spin_unlock_irq(&ubd_dev->lock);
  
-+	/* bail if this pipe is not initialized */
-+	if (!pipe->ar_usb)
-+		return;
-+
- 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
- 	pipe->urb_cnt++;
+-	if (ret < 0)
+-		blk_mq_requeue_request(req, true);
++	if (ret < 0) {
++		if (ret == -ENOMEM)
++			res = BLK_STS_RESOURCE;
++		else
++			res = BLK_STS_DEV_RESOURCE;
++	}
  
--- 
-2.20.1
-
+ 	return res;
+ }
 
 
