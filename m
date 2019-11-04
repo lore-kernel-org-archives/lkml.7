@@ -2,50 +2,51 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A759BCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10910CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D823214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE30920650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905548;
-	bh=Ao8ASdD9CZf78DrIKEabNV1v+VH8aKwvSs13qNzXdkQ=;
+	s=default; t=1572905552;
+	bh=fKVtyvE5Vtf/zeKnqiucULgLROOSqzSjwshGsT3tSp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kOzA4Amh9efA6gKAXPYpRSwd7BMK5qcvC9desPO1xndsAmb1OmNomTLfK7WjP/aBP
-	 HBM5ue2lmAuCwnk7Z95KIUCWLK5VyG2sAoUN/PHeRlR076nvSVJ49y7xkZzF02csGT
-	 eX4dDLv7erWn6Ir341WUK0+J+lwQDESyFg+oxjFE=
+	b=y0AoQ6dc+V2rTYgN/bJI7T9wvhZoqj1acGgoX127OFI1WVDV4jWUdUon/2f6CHOMO
+	 Nk127src8vd1xO49iV/du3Y7DQHu/OZrj+v0ztPe+yRqBEe+6cIZzrqFTpYYxnMB5c
+	 EF5XQnRVIEdT9NG8z+ClFZfSKFAy9VsZZm1On8vg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390622AbfKDWLS (ORCPT
+        id S2390279AbfKDWMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:11:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44508 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:12:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390122AbfKDWLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:11:12 -0500
+        id S2390329AbfKDWLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:11:17 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41718214D9;
-        Mon,  4 Nov 2019 22:11:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B048220650;
+        Mon,  4 Nov 2019 22:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905471;
-        bh=Ao8ASdD9CZf78DrIKEabNV1v+VH8aKwvSs13qNzXdkQ=;
+        s=default; t=1572905477;
+        bh=fKVtyvE5Vtf/zeKnqiucULgLROOSqzSjwshGsT3tSp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WVbbC5Eww0qeGfWhqz9VRn5bi5kmZg9dM9q5u8bvePxy33pYCZP++e/lbWKTgaW0p
-         1QVcuwcb9VWhi7wea3TRPIgTdOg/jjdx2bBDOkrSZCuxHqkJ2GXIZiouQUY+NpT4OA
-         nWGqgJBQzoxBF3HKzQUlOC6dyFoQJQu2AX/hspEY=
+        b=DlRvSepN6i3XP06ss1hG2WAgMUuzbUrWx/1r52xi1wHWMEVMj1D2V/jUexk4Y4cGq
+         8H1DeNwMD0aopBfADI3zSx6ooZm2scZ1oY0u7K1ND16qNWp6x0RIYDQ6v+nLu5zKLA
+         g2Gt6bfdOQSoAr7RG3RUsE52KwTXcQXTZl2SDpgg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>
-Subject: [PATCH 5.3 157/163] iwlwifi: exclude GEO SAR support for 3168
-Date:   Mon,  4 Nov 2019 22:45:47 +0100
-Message-Id: <20191104212151.635874148@linuxfoundation.org>
+        stable@vger.kernel.org, Jussi Laako <jussi@sonarnerd.net>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 159/163] ALSA: usb-audio: DSD auto-detection for Playback Designs
+Date:   Mon,  4 Nov 2019 22:45:49 +0100
+Message-Id: <20191104212151.793274768@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -58,49 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Coelho <luciano.coelho@intel.com>
+From: Jussi Laako <jussi@sonarnerd.net>
 
-commit 12e36d98d3e5acf5fc57774e0a15906d55f30cb9 upstream.
+[ Upstream commit eb7505d52a2f8b0cfc3fd7146d8cb2dab5a73f0d ]
 
-We currently support two NICs in FW version 29, namely 7265D and 3168.
-Out of these, only 7265D supports GEO SAR, so adjust the function that
-checks for it accordingly.
+Add DSD support auto-detection for newer Playback Designs devices. Older
+device generations have a different USB interface implementation.
 
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Fixes: f5a47fae6aa3 ("iwlwifi: mvm: fix version check for GEO_TX_POWER_LIMIT support")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Keep the auto-detection VID whitelist sorted.
 
+Signed-off-by: Jussi Laako <jussi@sonarnerd.net>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c |   16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ sound/usb/quirks.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-@@ -887,15 +887,17 @@ static bool iwl_mvm_sar_geo_support(stru
- 	 * firmware versions.  Unfortunately, we don't have a TLV API
- 	 * flag to rely on, so rely on the major version which is in
- 	 * the first byte of ucode_ver.  This was implemented
--	 * initially on version 38 and then backported to29 and 17.
--	 * The intention was to have it in 36 as well, but not all
--	 * 8000 family got this feature enabled.  The 8000 family is
--	 * the only one using version 36, so skip this version
--	 * entirely.
-+	 * initially on version 38 and then backported to 17.  It was
-+	 * also backported to 29, but only for 7265D devices.  The
-+	 * intention was to have it in 36 as well, but not all 8000
-+	 * family got this feature enabled.  The 8000 family is the
-+	 * only one using version 36, so skip this version entirely.
- 	 */
- 	return IWL_UCODE_SERIAL(mvm->fw->ucode_ver) >= 38 ||
--	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 ||
--	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17;
-+	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17 ||
-+	       (IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 &&
-+		((mvm->trans->hw_rev & CSR_HW_REV_TYPE_MSK) ==
-+		 CSR_HW_REV_TYPE_7265D));
- }
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index b6f7b13768a10..6f228b4ec8c3e 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1563,7 +1563,8 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
+ 	struct usb_interface *iface;
  
- int iwl_mvm_get_sar_geo_profile(struct iwl_mvm *mvm)
+ 	/* Playback Designs */
+-	if (USB_ID_VENDOR(chip->usb_id) == 0x23ba) {
++	if (USB_ID_VENDOR(chip->usb_id) == 0x23ba &&
++	    USB_ID_PRODUCT(chip->usb_id) < 0x0110) {
+ 		switch (fp->altsetting) {
+ 		case 1:
+ 			fp->dsd_dop = true;
+@@ -1651,8 +1652,9 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
+ 	 * from XMOS/Thesycon
+ 	 */
+ 	switch (USB_ID_VENDOR(chip->usb_id)) {
+-	case 0x20b1:  /* XMOS based devices */
+ 	case 0x152a:  /* Thesycon devices */
++	case 0x20b1:  /* XMOS based devices */
++	case 0x23ba:  /* Playback Designs */
+ 	case 0x25ce:  /* Mytek devices */
+ 	case 0x2ab6:  /* T+A devices */
+ 	case 0x3842:  /* EVGA */
+-- 
+2.20.1
+
 
 
