@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25446CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C5ECA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED25B214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7366B214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905377;
-	bh=mY9b+i7LidgwnXe/Qx61bnZHFbA9frZCx9Me8Ze/Sm8=;
+	s=default; t=1572905381;
+	bh=WUYtsEowu6tUKxR++J7FijFndFCjk6G0o2q2sXvWxvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wCooPToTRKSBqfjI56aLXbPsDGPd2+RfJR8w7vw260JHYu71ovDSvuMHelaf6HGM2
-	 bJcmu3noxWmbu+XPawhGF+pkohJ2kZB6Lok5ZMPUwBMt0DiOsvBFiO6TL6pKpvC2uY
-	 K8SIUNtmpn5KHz79G6pldRzolfxDJTEiPcU/+mJU=
+	b=jfMHOteEv+urmdnfrXXTRvjdCjW0dCuODwziyk0LptULXwvRaEApklmxFQHf6FeQQ
+	 aWRZysT/WVdz9B6LPGo+sVcl5RIq6SdCI3VUnetwQZOfOsCQtJBfFb8SjGjtNQo0Il
+	 mYCmeTSY/tmeUXnqdXsRWNrpzcGxt6A6nZBGd40E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390430AbfKDWJf (ORCPT
+        id S2390444AbfKDWJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:09:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42670 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:09:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390418AbfKDWJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:09:33 -0500
+        id S2390055AbfKDWJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:09:38 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CE6F20650;
-        Mon,  4 Nov 2019 22:09:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EFBA214D8;
+        Mon,  4 Nov 2019 22:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905372;
-        bh=mY9b+i7LidgwnXe/Qx61bnZHFbA9frZCx9Me8Ze/Sm8=;
+        s=default; t=1572905377;
+        bh=WUYtsEowu6tUKxR++J7FijFndFCjk6G0o2q2sXvWxvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dNDp+mcmL1zuYWBTxNAQLuu0C/CbAHV3KSZJ7oDyUZtuyv26uOcv86rY1xqHGKhu+
-         JnWXioVG94lrxitryGRF8Aqk29ZzUaraAq99Tmpbkdh62nOstTpt5tje93XrO5rv6i
-         nqyZbhJiVsTAGcrUfP1u6T2KgpPoPBjhwsYdc05A=
+        b=SNLF9UQsZ2I8F1fWJmUIbA1skzUX8yGJR/HrGnTByGuOFquvqjpGYHBaRmIBNUWI6
+         BSsy0299Td4hQ0Vy99azXZJY0fZIaILcw+8oE3oJLm3vwB7yOnR/56UcHHSMBg38tp
+         3yUICoCvoSSneaH7W90kha54tW3oDRoJVF47vUFs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.3 122/163] s390/unwind: fix mixing regs and sp
-Date:   Mon,  4 Nov 2019 22:45:12 +0100
-Message-Id: <20191104212149.057129464@linuxfoundation.org>
+Subject: [PATCH 5.3 124/163] s390/idle: fix cpu idle time calculation
+Date:   Mon,  4 Nov 2019 22:45:14 +0100
+Message-Id: <20191104212149.211530990@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -60,96 +59,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-commit a1d863ac3e1085e1fea9caafd87252d08731de2e upstream.
+commit 3d7efa4edd07be5c5c3ffa95ba63e97e070e1f3f upstream.
 
-unwind_for_each_frame stops after the first frame if regs->gprs[15] <=
-sp.
+The idle time reported in /proc/stat sometimes incorrectly contains
+huge values on s390. This is caused by a bug in arch_cpu_idle_time().
 
-The reason is that in case regs are specified, the first frame should be
-regs->psw.addr and the second frame should be sp->gprs[8]. However,
-currently the second frame is regs->gprs[15], which confuses
-outside_of_stack().
+The kernel tries to figure out when a different cpu entered idle by
+accessing its per-cpu data structure. There is an ordering problem: if
+the remote cpu has an idle_enter value which is not zero, and an
+idle_exit value which is zero, it is assumed it is idle since
+"now". The "now" timestamp however is taken before the idle_enter
+value is read.
 
-Fix by introducing a flag to distinguish this special case from
-unwinding the interrupt handler, for which the current behavior is
-appropriate.
+Which in turn means that "now" can be smaller than idle_enter of the
+remote cpu. Unconditionally subtracting idle_enter from "now" can thus
+lead to a negative value (aka large unsigned value).
 
-Fixes: 78c98f907413 ("s390/unwind: introduce stack unwind API")
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: stable@vger.kernel.org # v5.2+
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Fix this by moving the get_tod_clock() invocation out of the
+loop. While at it also make the code a bit more readable.
+
+A similar bug also exists for show_idle_time(). Fix this is as well.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/unwind.h |    1 +
- arch/s390/kernel/unwind_bc.c   |   18 +++++++++++++-----
- 2 files changed, 14 insertions(+), 5 deletions(-)
+ arch/s390/kernel/idle.c |   29 ++++++++++++++++++++++-------
+ 1 file changed, 22 insertions(+), 7 deletions(-)
 
---- a/arch/s390/include/asm/unwind.h
-+++ b/arch/s390/include/asm/unwind.h
-@@ -35,6 +35,7 @@ struct unwind_state {
- 	struct task_struct *task;
- 	struct pt_regs *regs;
- 	unsigned long sp, ip;
-+	bool reuse_sp;
- 	int graph_idx;
- 	bool reliable;
- 	bool error;
---- a/arch/s390/kernel/unwind_bc.c
-+++ b/arch/s390/kernel/unwind_bc.c
-@@ -46,10 +46,15 @@ bool unwind_next_frame(struct unwind_sta
- 
- 	regs = state->regs;
- 	if (unlikely(regs)) {
--		sp = READ_ONCE_NOCHECK(regs->gprs[15]);
--		if (unlikely(outside_of_stack(state, sp))) {
--			if (!update_stack_info(state, sp))
--				goto out_err;
-+		if (state->reuse_sp) {
-+			sp = state->sp;
-+			state->reuse_sp = false;
-+		} else {
-+			sp = READ_ONCE_NOCHECK(regs->gprs[15]);
-+			if (unlikely(outside_of_stack(state, sp))) {
-+				if (!update_stack_info(state, sp))
-+					goto out_err;
-+			}
- 		}
- 		sf = (struct stack_frame *) sp;
- 		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-@@ -107,9 +112,9 @@ void __unwind_start(struct unwind_state
+--- a/arch/s390/kernel/idle.c
++++ b/arch/s390/kernel/idle.c
+@@ -69,18 +69,26 @@ DEVICE_ATTR(idle_count, 0444, show_idle_
+ static ssize_t show_idle_time(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
  {
- 	struct stack_info *info = &state->stack_info;
- 	unsigned long *mask = &state->stack_mask;
-+	bool reliable, reuse_sp;
- 	struct stack_frame *sf;
- 	unsigned long ip;
--	bool reliable;
++	unsigned long long now, idle_time, idle_enter, idle_exit, in_idle;
+ 	struct s390_idle_data *idle = &per_cpu(s390_idle, dev->id);
+-	unsigned long long now, idle_time, idle_enter, idle_exit;
+ 	unsigned int seq;
  
- 	memset(state, 0, sizeof(*state));
- 	state->task = task;
-@@ -134,10 +139,12 @@ void __unwind_start(struct unwind_state
- 	if (regs) {
- 		ip = READ_ONCE_NOCHECK(regs->psw.addr);
- 		reliable = true;
-+		reuse_sp = true;
- 	} else {
- 		sf = (struct stack_frame *) sp;
- 		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
- 		reliable = false;
-+		reuse_sp = false;
- 	}
- 
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
-@@ -151,5 +158,6 @@ void __unwind_start(struct unwind_state
- 	state->sp = sp;
- 	state->ip = ip;
- 	state->reliable = reliable;
-+	state->reuse_sp = reuse_sp;
+ 	do {
+-		now = get_tod_clock();
+ 		seq = read_seqcount_begin(&idle->seqcount);
+ 		idle_time = READ_ONCE(idle->idle_time);
+ 		idle_enter = READ_ONCE(idle->clock_idle_enter);
+ 		idle_exit = READ_ONCE(idle->clock_idle_exit);
+ 	} while (read_seqcount_retry(&idle->seqcount, seq));
+-	idle_time += idle_enter ? ((idle_exit ? : now) - idle_enter) : 0;
++	in_idle = 0;
++	now = get_tod_clock();
++	if (idle_enter) {
++		if (idle_exit) {
++			in_idle = idle_exit - idle_enter;
++		} else if (now > idle_enter) {
++			in_idle = now - idle_enter;
++		}
++	}
++	idle_time += in_idle;
+ 	return sprintf(buf, "%llu\n", idle_time >> 12);
  }
- EXPORT_SYMBOL_GPL(__unwind_start);
+ DEVICE_ATTR(idle_time_us, 0444, show_idle_time, NULL);
+@@ -88,17 +96,24 @@ DEVICE_ATTR(idle_time_us, 0444, show_idl
+ u64 arch_cpu_idle_time(int cpu)
+ {
+ 	struct s390_idle_data *idle = &per_cpu(s390_idle, cpu);
+-	unsigned long long now, idle_enter, idle_exit;
++	unsigned long long now, idle_enter, idle_exit, in_idle;
+ 	unsigned int seq;
+ 
+ 	do {
+-		now = get_tod_clock();
+ 		seq = read_seqcount_begin(&idle->seqcount);
+ 		idle_enter = READ_ONCE(idle->clock_idle_enter);
+ 		idle_exit = READ_ONCE(idle->clock_idle_exit);
+ 	} while (read_seqcount_retry(&idle->seqcount, seq));
+-
+-	return cputime_to_nsecs(idle_enter ? ((idle_exit ?: now) - idle_enter) : 0);
++	in_idle = 0;
++	now = get_tod_clock();
++	if (idle_enter) {
++		if (idle_exit) {
++			in_idle = idle_exit - idle_enter;
++		} else if (now > idle_enter) {
++			in_idle = now - idle_enter;
++		}
++	}
++	return cputime_to_nsecs(in_idle);
+ }
+ 
+ void arch_cpu_idle_enter(void)
 
 
