@@ -2,116 +2,215 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BDCCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD72CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB7020659
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D2F20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:15:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TM2hXBvB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729608AbfKDVOl (ORCPT
+        id S1729627AbfKDVPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:14:41 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:38912 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728377AbfKDVOf (ORCPT
+        Mon, 4 Nov 2019 16:15:14 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:33824 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728377AbfKDVPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:14:35 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iRjgF-0005ZM-Tw; Mon, 04 Nov 2019 22:14:32 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 692A21C0017;
-        Mon,  4 Nov 2019 22:14:31 +0100 (CET)
-Date:   Mon, 04 Nov 2019 21:14:31 -0000
-From:   "tip-bot2 for Cyrill Gorcunov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/fpu] x86/fpu: Use XFEATURE_FP/SSE enum values instead of
- hardcoded numbers
-Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191101130153.GG1615@uranus.lan>
-References: <20191101130153.GG1615@uranus.lan>
+        Mon, 4 Nov 2019 16:15:13 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4Kx87k156243;
+        Mon, 4 Nov 2019 21:15:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=Gx9KwExmMMzjVr3YxjcHGknRiK3FRatTEn7SFiCRVlo=;
+ b=TM2hXBvBRL2mJ1WqhIcE9gohEfsiVsssaD0IqYV6WNyJ//+yc3LZsjXkHjiiPkAbPufX
+ xtm39fbNG4ySxAmUEteThrRIB5XoxGNWIZg4r274Wr4jzdIMDIE69cMPcLjAmEbIvv9b
+ j27Jok6QfXHPRZ5nwnTentwZ3wie8PDuU68+7NpHywDIDHd7oyKhB5SU1Xc7aY9G+OAf
+ 6pQX3kcMb4mWfmwU5zbzYm62juOPyGqzJS9gS5pQC9EluewTF0HY/w8T4d9RTzJc7TsL
+ gneOdJzwwKICikiPjEOoRwBcyqWKt+uXwpeyxRZyo0bpE9UbuH5cPOu8YS7yc8uqRIEx Gg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2w117tt6du-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Nov 2019 21:15:06 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4L3ioJ148578;
+        Mon, 4 Nov 2019 21:15:06 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2w1k8vh5tf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Nov 2019 21:15:05 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA4LF3CE029403;
+        Mon, 4 Nov 2019 21:15:03 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 Nov 2019 13:15:03 -0800
+Subject: Re: [PATCH v8 5/9] hugetlb: disable region_add file_region coalescing
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     shuah <shuah@kernel.org>, open list <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        cgroups@vger.kernel.org,
+        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>
+References: <20191030013701.39647-1-almasrymina@google.com>
+ <20191030013701.39647-5-almasrymina@google.com>
+ <1c060bde-8d44-146c-6d67-a7b145aa1b59@oracle.com>
+ <CAHS8izPTvybLq9Y9Fn6Z+hSc7gLP+goQ-ixzjxa1XJ-qhWM8ow@mail.gmail.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <a5f991c8-3f74-6000-cbd3-09fb8626e3f5@oracle.com>
+Date:   Mon, 4 Nov 2019 13:15:02 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Message-ID: <157290207104.29376.2447130677768331870.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <CAHS8izPTvybLq9Y9Fn6Z+hSc7gLP+goQ-ixzjxa1XJ-qhWM8ow@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1911040203
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1911040203
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/fpu branch of tip:
+On 11/4/19 1:04 PM, Mina Almasry wrote:
+> On Fri, Nov 1, 2019 at 4:23 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>>
+>> On 10/29/19 6:36 PM, Mina Almasry wrote:
+>>>  static long add_reservation_in_range(struct resv_map *resv, long f, long t,
+>>> -                                  bool count_only)
+>>> +                                  long *regions_needed, bool count_only)
+>>>  {
+>>> -     long chg = 0;
+>>> +     long add = 0;
+>>>       struct list_head *head = &resv->regions;
+>>> +     long last_accounted_offset = f;
+>>>       struct file_region *rg = NULL, *trg = NULL, *nrg = NULL;
+>>>
+>>> -     /* Locate the region we are before or in. */
+>>> -     list_for_each_entry (rg, head, link)
+>>> -             if (f <= rg->to)
+>>> -                     break;
+>>> +     if (regions_needed)
+>>> +             *regions_needed = 0;
+>>>
+>>> -     /* Round our left edge to the current segment if it encloses us. */
+>>> -     if (f > rg->from)
+>>> -             f = rg->from;
+>>> -
+>>> -     chg = t - f;
+>>> +     /* In this loop, we essentially handle an entry for the range
+>>> +      * [last_accounted_offset, rg->from), at every iteration, with some
+>>> +      * bounds checking.
+>>> +      */
+>>> +     list_for_each_entry_safe(rg, trg, head, link) {
+>>> +             /* Skip irrelevant regions that start before our range. */
+>>> +             if (rg->from < f) {
+>>> +                     /* If this region ends after the last accounted offset,
+>>> +                      * then we need to update last_accounted_offset.
+>>> +                      */
+>>> +                     if (rg->to > last_accounted_offset)
+>>> +                             last_accounted_offset = rg->to;
+>>> +                     continue;
+>>> +             }
+>>>
+>>> -     /* Check for and consume any regions we now overlap with. */
+>>> -     nrg = rg;
+>>> -     list_for_each_entry_safe (rg, trg, rg->link.prev, link) {
+>>> -             if (&rg->link == head)
+>>> -                     break;
+>>> +             /* When we find a region that starts beyond our range, we've
+>>> +              * finished.
+>>> +              */
+>>>               if (rg->from > t)
+>>>                       break;
+>>>
+>>> -             /* We overlap with this area, if it extends further than
+>>> -              * us then we must extend ourselves.  Account for its
+>>> -              * existing reservation.
+>>> +             /* Add an entry for last_accounted_offset -> rg->from, and
+>>> +              * update last_accounted_offset.
+>>>                */
+>>> -             if (rg->to > t) {
+>>> -                     chg += rg->to - t;
+>>> -                     t = rg->to;
+>>> +             if (rg->from > last_accounted_offset) {
+>>> +                     add += rg->from - last_accounted_offset;
+>>> +                     if (!count_only) {
+>>> +                             nrg = get_file_region_entry_from_cache(
+>>> +                                     resv, last_accounted_offset, rg->from);
+>>> +                             list_add(&nrg->link, rg->link.prev);
+>>> +                     } else if (regions_needed)
+>>> +                             *regions_needed += 1;
+>>>               }
+>>> -             chg -= rg->to - rg->from;
+>>>
+>>> -             if (!count_only && rg != nrg) {
+>>> -                     list_del(&rg->link);
+>>> -                     kfree(rg);
+>>> -             }
+>>> +             last_accounted_offset = rg->to;
+>>
+>> That last assignment is unneeded.  Correct?
+>>
+> 
+> Not to make you nervous, but this assignment is needed.
+> 
+> The basic idea is that there are 2 loop invariants here:
+> 1. Everything before last_accounted_offset is filled in with file_regions.
+> 2. rg points to the first region past last_account_offset.
+> 
+> Each loop iteration compares rg->from to last_accounted_offset, and if
+> there is a gap, it creates a new region to fill this gap. Then this
+> assignment restores loop invariant #2 by assigning
+> last_accounted_offset to rg->to, since now everything before rg->to is
+> filled in with file_regions.
+> 
 
-Commit-ID:     446e693ca30b7c7c2aaeaf09e90ec224c7538fec
-Gitweb:        https://git.kernel.org/tip/446e693ca30b7c7c2aaeaf09e90ec224c7538fec
-Author:        Cyrill Gorcunov <gorcunov@gmail.com>
-AuthorDate:    Fri, 01 Nov 2019 16:01:53 +03:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 04 Nov 2019 22:10:07 +01:00
+My apologies!
 
-x86/fpu: Use XFEATURE_FP/SSE enum values instead of hardcoded numbers
+>>>       }
+>>>
+>>> -     if (!count_only) {
+>>> -             nrg->from = f;
+>>> -             nrg->to = t;
+>>> +     /* Handle the case where our range extends beyond
+>>> +      * last_accounted_offset.
+>>> +      */
+>>> +     if (last_accounted_offset < t) {
+>>> +             add += t - last_accounted_offset;
+>>> +             if (!count_only) {
+>>> +                     nrg = get_file_region_entry_from_cache(
+>>> +                             resv, last_accounted_offset, t);
+>>> +                     list_add(&nrg->link, rg->link.prev);
+>>> +             } else if (regions_needed)
+>>> +                     *regions_needed += 1;
+>>> +             last_accounted_offset = t;
 
-When setting up sizes and offsets for legacy header entries the code uses
-hardcoded 0/1 instead of the corresponding enum values XFEATURE_FP and
-XFEATURE_SSE.
+The question about an unnecessary assignment was supposed to be
+directed at the above line.
 
-Replace the hardcoded numbers which enhances readability of the code and
-also makes this code the first user of those enum values..
+-- 
+Mike Kravetz
 
-Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191101130153.GG1615@uranus.lan
----
- arch/x86/kernel/fpu/xstate.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index a8bd5c0..319be93 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -254,10 +254,13 @@ static void __init setup_xstate_features(void)
- 	 * in the fixed offsets in the xsave area in either compacted form
- 	 * or standard form.
- 	 */
--	xstate_offsets[0] = 0;
--	xstate_sizes[0] = offsetof(struct fxregs_state, xmm_space);
--	xstate_offsets[1] = xstate_sizes[0];
--	xstate_sizes[1] = FIELD_SIZEOF(struct fxregs_state, xmm_space);
-+	xstate_offsets[XFEATURE_FP]	= 0;
-+	xstate_sizes[XFEATURE_FP]	= offsetof(struct fxregs_state,
-+						   xmm_space);
-+
-+	xstate_offsets[XFEATURE_SSE]	= xstate_sizes[XFEATURE_FP];
-+	xstate_sizes[XFEATURE_SSE]	= FIELD_SIZEOF(struct fxregs_state,
-+						       xmm_space);
- 
- 	for (i = FIRST_EXTENDED_XFEATURE; i < XFEATURE_MAX; i++) {
- 		if (!xfeature_enabled(i))
-@@ -350,8 +353,9 @@ static void __init setup_xstate_comp(void)
- 	 * in the fixed offsets in the xsave area in either compacted form
- 	 * or standard form.
- 	 */
--	xstate_comp_offsets[0] = 0;
--	xstate_comp_offsets[1] = offsetof(struct fxregs_state, xmm_space);
-+	xstate_comp_offsets[XFEATURE_FP] = 0;
-+	xstate_comp_offsets[XFEATURE_SSE] = offsetof(struct fxregs_state,
-+						     xmm_space);
- 
- 	if (!boot_cpu_has(X86_FEATURE_XSAVES)) {
- 		for (i = FIRST_EXTENDED_XFEATURE; i < XFEATURE_MAX; i++) {
+>>>       }
+>>>
+>>> -     return chg;
+>>> +     return add;
+>>>  }
