@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE36CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488D8CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23642214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B80220650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906368;
-	bh=QMUjP7/xk8cI4iGd54vDyzBBl3zgStXVnzmzUoipMP4=;
+	s=default; t=1572906371;
+	bh=a/CrEaRPI9p2L9QvfTnm1Yau+XWCrkMuGwhTOPbUtpo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BQBAw2jq1qaIar159IGXYI6NXXdSC2mGdcRyepcyXh+Koe9eUDG+bXw8RD6CxHKxI
-	 p4cyIP9WvI5hDBH4kAUJj1SjGE4QZTWt7BFnZhJXVyJlsgLth4x0ImYLE/guj7vqe5
-	 A/yuSTceavWzzPPU8WEgSQ+4rxda+A62YDaYZbZQ=
+	b=UWLEZlCNMTIicdjOsemzAZH8xIPEdG197I05m+681q+x+EG6afUng0KfBx9MobNvc
+	 jdNKULFz7TNYCzHqi8QGdORjCBUmRL1xhokRjmzeLvU3C7cJCSiHXbhxZ77Tpx/Oli
+	 fTyhGBkQEqVtp1gs3Xf8aqyIjnYFcFUNcKpQ6k4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbfKDVvX (ORCPT
+        id S1730062AbfKDW0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:51:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44194 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:26:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730046AbfKDVvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:51:17 -0500
+        id S1730503AbfKDVvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:51:24 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56415217F4;
-        Mon,  4 Nov 2019 21:51:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D4EE21850;
+        Mon,  4 Nov 2019 21:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904276;
-        bh=QMUjP7/xk8cI4iGd54vDyzBBl3zgStXVnzmzUoipMP4=;
+        s=default; t=1572904284;
+        bh=a/CrEaRPI9p2L9QvfTnm1Yau+XWCrkMuGwhTOPbUtpo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hy0bT+9IrrJgzT2RXhTNI0gp+DyekdObsfk9/ZR5OSj0bBw62ZI73lvGzJX/PiLFg
-         SIeqCEtiCvav9inPdcMaZbMFrK6ZEr/iqR0I+A7wyzYbpAvGIAIkNKqsY/VAURf7J3
-         m3jGIgUIbQ9UQcaC017KddA8a0GbgFjDzR43rALA=
+        b=UrQaLgC//uQ7xqhXEdBQYjjZHlTwCkNTtWjftk2N4yb41Fwsi5Qf/Z9RdjjxSaI5C
+         6tCHU533UbL6zz5PkK5ryVPKdmokAs7P3QdEyC8HnmFutxJrz5J0oJQHf6ge/Qhv+H
+         azACpNwo4JMW1IMqnPc4fQlkNhsTX4H4KOLJbmZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.9 47/62] nl80211: fix validation of mesh path nexthop
-Date:   Mon,  4 Nov 2019 22:45:09 +0100
-Message-Id: <20191104211949.807075592@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Tony Lindgren <tony@atomide.com>, Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 4.9 50/62] dmaengine: cppi41: Fix cppi41_dma_prep_slave_sg() when idle
+Date:   Mon,  4 Nov 2019 22:45:12 +0100
+Message-Id: <20191104211953.108084720@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -59,35 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Theil <markus.theil@tu-ilmenau.de>
+From: Tony Lindgren <tony@atomide.com>
 
-commit 1fab1b89e2e8f01204a9c05a39fd0b6411a48593 upstream.
+commit bacdcb6675e170bb2e8d3824da220e10274f42a7 upstream.
 
-Mesh path nexthop should be a ethernet address, but current validation
-checks against 4 byte integers.
+Yegor Yefremov <yegorslists@googlemail.com> reported that musb and ftdi
+uart can fail for the first open of the uart unless connected using
+a hub.
 
-Cc: stable@vger.kernel.org
-Fixes: 2ec600d672e74 ("nl80211/cfg80211: support for mesh, sta dumping")
-Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
-Link: https://lore.kernel.org/r/20191029093003.10355-1-markus.theil@tu-ilmenau.de
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+This is because the first dma call done by musb_ep_program() must wait
+if cppi41 is PM runtime suspended. Otherwise musb_ep_program() continues
+with other non-dma packets before the DMA transfer is started causing at
+least ftdi uarts to fail to receive data.
+
+Let's fix the issue by waking up cppi41 with PM runtime calls added to
+cppi41_dma_prep_slave_sg() and return NULL if still idled. This way we
+have musb_ep_program() continue with PIO until cppi41 is awake.
+
+Fixes: fdea2d09b997 ("dmaengine: cppi41: Add basic PM runtime support")
+Reported-by: Yegor Yefremov <yegorslists@googlemail.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Cc: stable@vger.kernel.org # v4.9+
+Link: https://lore.kernel.org/r/20191023153138.23442-1-tony@atomide.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/nl80211.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/dma/cppi41.c |   21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -295,7 +295,8 @@ static const struct nla_policy nl80211_p
- 	[NL80211_ATTR_MNTR_FLAGS] = { /* NLA_NESTED can't be empty */ },
- 	[NL80211_ATTR_MESH_ID] = { .type = NLA_BINARY,
- 				   .len = IEEE80211_MAX_MESH_ID_LEN },
--	[NL80211_ATTR_MPATH_NEXT_HOP] = { .type = NLA_U32 },
-+	[NL80211_ATTR_MPATH_NEXT_HOP] = { .type = NLA_BINARY,
-+					  .len = ETH_ALEN },
+--- a/drivers/dma/cppi41.c
++++ b/drivers/dma/cppi41.c
+@@ -586,9 +586,22 @@ static struct dma_async_tx_descriptor *c
+ 	enum dma_transfer_direction dir, unsigned long tx_flags, void *context)
+ {
+ 	struct cppi41_channel *c = to_cpp41_chan(chan);
++	struct dma_async_tx_descriptor *txd = NULL;
++	struct cppi41_dd *cdd = c->cdd;
+ 	struct cppi41_desc *d;
+ 	struct scatterlist *sg;
+ 	unsigned int i;
++	int error;
++
++	error = pm_runtime_get(cdd->ddev.dev);
++	if (error < 0) {
++		pm_runtime_put_noidle(cdd->ddev.dev);
++
++		return NULL;
++	}
++
++	if (cdd->is_suspended)
++		goto err_out_not_ready;
  
- 	[NL80211_ATTR_REG_ALPHA2] = { .type = NLA_STRING, .len = 2 },
- 	[NL80211_ATTR_REG_RULES] = { .type = NLA_NESTED },
+ 	d = c->desc;
+ 	for_each_sg(sgl, sg, sg_len, i) {
+@@ -611,7 +624,13 @@ static struct dma_async_tx_descriptor *c
+ 		d++;
+ 	}
+ 
+-	return &c->txd;
++	txd = &c->txd;
++
++err_out_not_ready:
++	pm_runtime_mark_last_busy(cdd->ddev.dev);
++	pm_runtime_put_autosuspend(cdd->ddev.dev);
++
++	return txd;
+ }
+ 
+ static void cppi41_compute_td_desc(struct cppi41_desc *d)
 
 
