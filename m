@@ -2,143 +2,108 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5ACCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDF8CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 096FB204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905902;
-	bh=dbfnmF4MTitvESuoiUp5eiYv2w4XZsqdp7uk+45n8Lk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LEKhPP11YvI49c649uzv0rDMm7dsJXnQkaxLhcn6r9lK5PiaK3G21VgUFHjIJAERb
-	 lwWaAOYj8xIg2meBXP1Z1joz6+BFYzMrUIcI3DEXET/UH+0m3NC0GM+g70vcHztE/0
-	 CBm7kLMvqESq5/NTVDFYYc447h633lzpt0geSLeA=
+	by mail.kernel.org (Postfix) with ESMTP id EE58E214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jnd4hIvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388749AbfKDWSV (ORCPT
+        id S2389077AbfKDWBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:18:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388613AbfKDWCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:02:01 -0500
-Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E5C620650;
-        Mon,  4 Nov 2019 22:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904920;
-        bh=dbfnmF4MTitvESuoiUp5eiYv2w4XZsqdp7uk+45n8Lk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n2bs2C6tL5g5Z2tdCRHTSaMSEgD2MsIsVTmPnRZXL6q8RHFg0wsAnzvyoxtVo8WR4
-         egnAbKJsQe2/edfluTH1Y8SqdRiPAWhGvWqYVHjN0tBD4YcIpIz2MK6O+G/XSuIT6N
-         a/U0ZZ5Ir4FqEqKSBDGlvc4WRUElKAaVz7u3WR/8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Seth Bollinger <Seth.Bollinger@digi.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-Subject: [PATCH 4.19 116/149] usb-storage: Revert commit 747668dbc061 ("usb-storage: Set virt_boundary_mask to avoid SG overflows")
-Date:   Mon,  4 Nov 2019 22:45:09 +0100
-Message-Id: <20191104212144.459583669@linuxfoundation.org>
+        Mon, 4 Nov 2019 17:01:54 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40808 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388979AbfKDWBN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:01:13 -0500
+Received: by mail-lj1-f196.google.com with SMTP id q2so12847107ljg.7;
+        Mon, 04 Nov 2019 14:01:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=poTJBSF/GUDkNTSs4u0rRqSIrUnXV6hdBnQ1YS7E5D8=;
+        b=jnd4hIvxBfGM3BwmmoAgZifQmAV1bkMm/UctTvqlbRpUbU8MxGIKVLlooMYyjNju/5
+         umBHr+YS5YZec95U7fShlVigQnntezfk1GYJ2651gyIu2GQAkPAFOceNra8DXxXP6E3Z
+         vMsPtOOpyvm1q/dtkcVc37aHIsidMH3tC60i97NR+qQQMcPb18FYlzK92CmMjBIfY95g
+         wIBdAIWsEUP/BZH/JMFFIt8UnQRWbaEI/RPBlBup6AyUMBR588LDPP80DkTikjPoE377
+         xbV7wIywbBX1KjYv6Xv00QnKMMyfKI4xlGt6xsN4tLyOQLmAklzY/BP6TBXP6zdrTD5+
+         Fgdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=poTJBSF/GUDkNTSs4u0rRqSIrUnXV6hdBnQ1YS7E5D8=;
+        b=OVm8imJX/G1h+RCxPHhnO3S/fGnMIXPcyLNroxhES2kwFCxcxk+S5/oUslKNHfzdrv
+         p8hMtF7nyFZO3MYztVEhJFUtD7kY5aLZF3R2bdfgXFXO0GDeKWkfXDolxvhLvc74Klvl
+         n1r127Yi/bHXXKxqofP9NoqbwA2Tw0wufEuygNbzZJSJLKTpKOwXUQSxx0tVlaLwie4T
+         GWgsqYJuLUN0GPain/ElOXiNkNahRD+YTkUZRIohguguThoJecmkR2E6VdzsD7oifj0t
+         aupsTmFAhpaVOvPCA1kwifFERz+qxpiOzF/m6Chh5Cot8gEDpO2i0a4fPQ08zLTn6p08
+         7K2w==
+X-Gm-Message-State: APjAAAVMC72mSyT7hn5WG/vhEKxPeP1mMYWOQGyLrCUjes+D8CRP7Z5L
+        otL2+qcfV98eiI58fFsNsAo=
+X-Google-Smtp-Source: APXvYqy7ugXp6y2JKp7I43IqVyG5wWQmxrO2L4CODFzHF2NcCLMRQ+fBBc5rH/3tVmnrxZcP6Xdk2w==
+X-Received: by 2002:a05:651c:10e:: with SMTP id a14mr19835328ljb.177.1572904871025;
+        Mon, 04 Nov 2019 14:01:11 -0800 (PST)
+Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.gmail.com with ESMTPSA id g3sm7454669ljj.59.2019.11.04.14.01.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 14:01:10 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v9 12/19] PM / devfreq: tegra30: Include appropriate header
+Date:   Tue,  5 Nov 2019 00:56:10 +0300
+Message-Id: <20191104215617.25544-13-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
-References: <20191104212126.090054740@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20191104215617.25544-1-digetx@gmail.com>
+References: <20191104215617.25544-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+It's not very correct to include mod_devicetable.h for the OF device
+drivers and of_device.h should be included instead.
 
-commit 9a976949613132977098fc49510b46fa8678d864 upstream.
-
-Commit 747668dbc061 ("usb-storage: Set virt_boundary_mask to avoid SG
-overflows") attempted to solve a problem involving scatter-gather I/O
-and USB/IP by setting the virt_boundary_mask for mass-storage devices.
-
-However, it now turns out that this interacts badly with commit
-09324d32d2a0 ("block: force an unlimited segment size on queues with a
-virt boundary"), which was added later.  A typical error message is:
-
-	ehci-pci 0000:00:13.2: swiotlb buffer is full (sz: 327680 bytes),
-	total 32768 (slots), used 97 (slots)
-
-There is no longer any reason to keep the virt_boundary_mask setting
-for usb-storage.  It was needed in the first place only for handling
-devices with a block size smaller than the maxpacket size and where
-the host controller was not capable of fully general scatter-gather
-operation (that is, able to merge two SG segments into a single USB
-packet).  But:
-
-	High-speed or slower connections never use a bulk maxpacket
-	value larger than 512;
-
-	The SCSI layer does not handle block devices with a block size
-	smaller than 512 bytes;
-
-	All the host controllers capable of SuperSpeed operation can
-	handle fully general SG;
-
-	Since commit ea44d190764b ("usbip: Implement SG support to
-	vhci-hcd and stub driver") was merged, the USB/IP driver can
-	also handle SG.
-
-Therefore all supported device/controller combinations should be okay
-with no need for any special virt_boundary_mask.  So in order to fix
-the swiotlb problem, this patch reverts commit 747668dbc061.
-
-Reported-and-tested-by: Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
-Link: https://marc.info/?l=linux-usb&m=157134199501202&w=2
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: Seth Bollinger <Seth.Bollinger@digi.com>
-CC: <stable@vger.kernel.org>
-Fixes: 747668dbc061 ("usb-storage: Set virt_boundary_mask to avoid SG overflows")
-Acked-by: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910211145520.1673-100000@iolanthe.rowland.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Tested-by: Peter Geis <pgwipeout@gmail.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/usb/storage/scsiglue.c |   10 ----------
- 1 file changed, 10 deletions(-)
+ drivers/devfreq/tegra30-devfreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/storage/scsiglue.c
-+++ b/drivers/usb/storage/scsiglue.c
-@@ -65,7 +65,6 @@ static const char* host_info(struct Scsi
- static int slave_alloc (struct scsi_device *sdev)
- {
- 	struct us_data *us = host_to_us(sdev->host);
--	int maxp;
- 
- 	/*
- 	 * Set the INQUIRY transfer length to 36.  We don't use any of
-@@ -75,15 +74,6 @@ static int slave_alloc (struct scsi_devi
- 	sdev->inquiry_len = 36;
- 
- 	/*
--	 * USB has unusual scatter-gather requirements: the length of each
--	 * scatterlist element except the last must be divisible by the
--	 * Bulk maxpacket value.  Fortunately this value is always a
--	 * power of 2.  Inform the block layer about this requirement.
--	 */
--	maxp = usb_maxpacket(us->pusb_dev, us->recv_bulk_pipe, 0);
--	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
--
--	/*
- 	 * Some host controllers may have alignment requirements.
- 	 * We'll play it safe by requiring 512-byte alignment always.
- 	 */
-
+diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+index 9bd4dd982927..7c8126e74750 100644
+--- a/drivers/devfreq/tegra30-devfreq.c
++++ b/drivers/devfreq/tegra30-devfreq.c
+@@ -13,7 +13,7 @@
+ #include <linux/io.h>
+ #include <linux/irq.h>
+ #include <linux/module.h>
+-#include <linux/mod_devicetable.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_opp.h>
+ #include <linux/reset.h>
+-- 
+2.23.0
 
