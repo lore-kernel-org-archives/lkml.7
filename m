@@ -2,117 +2,122 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8292CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA199CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E35C20848
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4ED20848
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:44:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rKoYLnzq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KQcEZHNm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729415AbfKDVnp (ORCPT
+        id S1729649AbfKDVo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:43:45 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44119 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728409AbfKDVno (ORCPT
+        Mon, 4 Nov 2019 16:44:29 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33819 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728409AbfKDVo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:43:44 -0500
-Received: by mail-ot1-f66.google.com with SMTP id n48so15763699ota.11;
-        Mon, 04 Nov 2019 13:43:44 -0800 (PST)
+        Mon, 4 Nov 2019 16:44:29 -0500
+Received: by mail-pg1-f196.google.com with SMTP id e4so12399314pgs.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 13:44:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HqgsGp53OtlR6neqVOzYFTFQROyiEWTcquDxocb9OCI=;
-        b=rKoYLnzq0DyJN6YnznKHfWTUnH5xlWLMgunCpjXOUAPQKbi1s6hW12cgqc3z997Wix
-         hWVHKAy61sZDse7QZAV+1H38ZXD9uNumjjaRBfocXsAIpbbY71tB4DwG0VUItBdm20A8
-         fqKmjl4B4Ut0f/MNYMe+B5xxZff7P1mTrGJWNUmJSj0uPUESmoLEwYehsRFqXXec1QTH
-         NsC5T3xvpLWeFfsyJXkeogzBN3mwhMy4liDUO3iHmEQtwndgYAw/I7Td4fQEuvdatGQU
-         4v/u2ZsxDfX2T+xZHmxLMLCFicFRRog6ueCEX1IX2Sie1oblMnoxMrpqtIcvFgw8MTWc
-         l80A==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:subject:from:to:user-agent:date;
+        bh=oDBr9/oFH4uj0TcWt5+hNxdLZNFzTGYbiWx7cDw1BXk=;
+        b=KQcEZHNmmz0KcwFTyLZr214Hyq78kr87VR/k9odOVNnbzAJL+GLXRuxzL4jRfJ8fAb
+         8NDz/wkG7qrmwBW89xK3lrqy7czNP39gNhn5TP44WRi2UhnE916/a8s/Uzu505IjIono
+         NdyE0yEXI5SUoDpRq6j3bN9m4KTjeYxyJrmUE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HqgsGp53OtlR6neqVOzYFTFQROyiEWTcquDxocb9OCI=;
-        b=NNeWiqtv+IhnrjF1Us3fB9aRz1UwPROjn8qIiVnVkMIudGNjqnm3GvkES+89goGYv0
-         JU/T14ML3OAse+vVlzrvve7+/VYKpYDSdpTHrPQQEYaOPtvcKaUnV8Pw4P6CKpldfmZ0
-         vIXGg0c8GzKUBcvvr+jthSFICYzWL5t2sHu0ILOvL9kRd265DNJ33qquUW4Nf548jiiL
-         HVI+n65DsmdZWNfGTCL/y8lo3fFxzVau5V1kQMX2vexHBqllWglWVvz3tW/hKgPMpY33
-         LDEX/Zyuk+yzKuJ3rGfQUakY3SBXRhRNmjJqlvgc0M6NQbA+6poSeZ5vb1ySYKs35VJO
-         xt+A==
-X-Gm-Message-State: APjAAAXg0aLBDmAbr2XOzKWVBfiADBmSbd0QwS0CtC7Popc1unHtvN52
-        zXJl4YCkUzDE06kNE4NWRW0+oHSvk7uN9+Cz0AKkkGp9
-X-Google-Smtp-Source: APXvYqyBkkUvqZgxzUUjvR+AW6uTCN7bzCA6HUt9VFBPvsLnErJvmzyH79ZRpGqofhHq5x2faMIpi0D+Zn+saszXe90=
-X-Received: by 2002:a05:6830:11d2:: with SMTP id v18mr15278490otq.116.1572903823498;
- Mon, 04 Nov 2019 13:43:43 -0800 (PST)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:subject:from:to
+         :user-agent:date;
+        bh=oDBr9/oFH4uj0TcWt5+hNxdLZNFzTGYbiWx7cDw1BXk=;
+        b=o2XuFb+n6oV6FXYAFY7UCFqARt2rIuBZmRVMYR52SoeRevk7xwNaGDgb9HO+teZhXL
+         5ku2/LTIezPNWXCNGsXO91/8RPeS9LbN40vmQbJEiA0lkw5jB1l5DUxi7dZmBmQi3fVs
+         WLtCVJebNaS83w1hIc9BiwHNZkb1x7FRIAldz2ma9NBSu04lyBTjLQYOETmHpVVfoomx
+         xOJAXWlsMhovJd13e78bTD+WYSdDuyhHp2egryQ/pBqfAYAMzRRbf3vfYh5Sohug1ozQ
+         Ndlz1/sPPBZq60DMte02CeJ7Ipr9V5VTqauSuQ5pZVcNjguoDk5NkREBGi2HA14QfdpK
+         UWxQ==
+X-Gm-Message-State: APjAAAWpI0O+gmC9+08eYUXkgX3tnjksL6+n2BzDmR8J/BUPddxVDsqZ
+        aLvfKvcBeIAoxcHrOxG/R/zyXQ==
+X-Google-Smtp-Source: APXvYqxULdu2yok9osG2dgC/wKOKO0AYP4xnZcw5ULrVYfDMRd3mLMzhSqWhO9gPC7VRZ3QfMrhwrA==
+X-Received: by 2002:a65:49c7:: with SMTP id t7mr5242177pgs.431.1572903868384;
+        Mon, 04 Nov 2019 13:44:28 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id w26sm27836645pfj.123.2019.11.04.13.44.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 13:44:27 -0800 (PST)
+Message-ID: <5dc09bbb.1c69fb81.196e5.9770@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191104070116.GM57214@dtor-ws> <20191104183702.8894-1-TheSven73@gmail.com>
- <CAHCN7xJc6DeyQV27OVjD14a8hZT+_Fo9qo-iHgLO414t3y6hVQ@mail.gmail.com>
-In-Reply-To: <CAHCN7xJc6DeyQV27OVjD14a8hZT+_Fo9qo-iHgLO414t3y6hVQ@mail.gmail.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 4 Nov 2019 16:43:32 -0500
-Message-ID: <CAGngYiXp52g7X=KLVqxTAhK0AJ9mpgGyaptbkYvhwWfRkQCaXQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] Input: ili210x - add ILI2117 support
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Marek Vasut <marex@denx.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1572610108-1363-2-git-send-email-rkambl@codeaurora.org>
+References: <1572610108-1363-1-git-send-email-rkambl@codeaurora.org> <1572610108-1363-2-git-send-email-rkambl@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sivaa@codeaurora.org,
+        sanm@codeaurora.org, Rajeshwari <rkambl@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH 1/1] arm64: dts: qcom: sc7180:  Add device node support for TSENS in SC7180
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rajeshwari <rkambl@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 04 Nov 2019 13:44:27 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+Quoting Rajeshwari (2019-11-01 05:08:28)
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/q=
+com/sc7180.dtsi
+> index 07ea393..06ded1d 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -449,6 +465,508 @@
+>                 };
+>         };
+> =20
+> +       thermal-zones {
+> +               aoss-0-usr {
+> +                       polling-delay-passive =3D <0>;
+> +                       polling-delay =3D <0>;
 
-On Mon, Nov 4, 2019 at 4:28 PM Adam Ford <aford173@gmail.com> wrote:
->
-> I am using IRQ_TYPE_EDGE_RISING for the 2117A.  Is that correct?  For
-> my touchscreen, the IRQ line is low until a touch is detected, so I
-> assume we want to capure on the rising edge.
+Can we get real polling delays instead of 0?
 
-That is correct for the 2117A, as far as I know. I am using the same
-setting.
+> +                       thermal-governor =3D "user_space";
+> +                       thermal-sensors =3D <&tsens0 0>;
+> +                       wake-capable-sensor;
 
->
-> Regarding Dmitry's patch,
-> Is it a good idea to use msleep in an IRQ?  It seems like using the
-> schedule_delayed_work() call seems like it will get in and get out of
-> the ISR faster.
->
-> If we use msleep and scan again, isn't it possible to starve other processes?
+What is this property?
 
-I believe using msleep() is ok because this is not a "real" interrupt handler,
-but a threaded one. It runs in a regular kernel thread, with its interrupt
-turned off (but all other interrupts remain enabled). Its interrupt is
-re-enabled automatically after the threaded handler returns.
+> +                       trips {
+> +                               active-config0 {
+> +                                       temperature =3D <125000>;
+> +                                       hysteresis =3D <1000>;
+> +                                       type =3D "passive";
+> +                               };
+> +                               reset-mon-cfg {
+> +                                       temperature =3D <115000>;
+> +                                       hysteresis =3D <5000>;
+> +                                       type =3D "passive";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu-0-0-usr {
+> +                       polling-delay-passive =3D <0>;
+> +                       polling-delay =3D <0>;
+> +                       thermal-governor =3D "user_space";
 
-See
-https://elixir.bootlin.com/linux/latest/source/include/linux/interrupt.h#L50
+What is this property?
 
-> > @@ -268,7 +278,7 @@ static irqreturn_t ili210x_irq(int irq, void *irq_data)
-> >                 }
-> >
-> >                 touch = ili210x_report_events(priv, touchdata);
-> > -               keep_polling = touch || chip->continue_polling(touchdata);
-> > +               keep_polling = chip->continue_polling(touchdata, touch);
-> >                 if (keep_polling)
->
-> Why not just check the value of touch instead of invoking the function
-> pointer which takes the value of touch in as a parameter?
->
-
-The value of touch must be checked inside the callback, because
-some variants use it to decide if they should poll again, and
-some do not, such as the ili211x.
-
-If I have misinterpreted your suggestion, could you perhaps
-express it in C, so I can understand better?
