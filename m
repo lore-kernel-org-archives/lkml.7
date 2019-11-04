@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6432FCA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAF0CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C2A21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FA52214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905179;
-	bh=G5pKNjcnkNNPHkV30b5C3lXTmo7n6JwR2DffNliNQoU=;
+	s=default; t=1572905187;
+	bh=QhHN1i/apWtfsJxZ56V2XWINw49Kv7/OXH9TlRgBoH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p8Gs6+qwf6PfDtD+Lkm0eyB/wo2k/GVLwfYGRLEbXM4E6qdALrSQTWNshaU2oE8Se
-	 /zzhzJ3DrKt4bAzECcN/wF53uvpC529XkiTG+35XetOHj3eIPdnTp0589cIZku0+v9
-	 4nHIU2HzB1Py7yK2LdYBI6Ip5av9JD7rUckwQj90=
+	b=K8D/ueDCwkxfWCrpw53TEO/QhXswOhxumE7llAEGvWmhDonYu2fm9uC99WKyomzL/
+	 USrAG24FPYjwxgB7q9Y9r8n4aTGLb3m/ijm4M3Xd702oK1WKGN69TQNBo6NIZTSw/K
+	 7wDZWBQ5+Y0XKOzV/9JFz7Fgumr/rK6krb40iTfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389938AbfKDWGR (ORCPT
+        id S2389442AbfKDWGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:06:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37966 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:06:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389924AbfKDWGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:06:13 -0500
+        id S2389932AbfKDWGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:06:22 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0938D214D8;
-        Mon,  4 Nov 2019 22:06:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B30E720650;
+        Mon,  4 Nov 2019 22:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905172;
-        bh=G5pKNjcnkNNPHkV30b5C3lXTmo7n6JwR2DffNliNQoU=;
+        s=default; t=1572905181;
+        bh=QhHN1i/apWtfsJxZ56V2XWINw49Kv7/OXH9TlRgBoH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a9VC8xag4KUFM5lx6PWsb6H1irX90wSI/dp6NETxR1LOremWj6SNvuxFDOWV0t6OS
-         KnmNucdJeEWlGNMPhEtF1SQ8xoeNOnfFYaJHtLTRfBGhdUqu4ZyU+6hK6oYmUJFGTS
-         MisUfIeGkNbPN4LCkYf3RQtXR3TJpUZH/bKc8lZQ=
+        b=yGqmuEwNgA7ycpxESvUgH528/wv7aWhJhZfvESFyjqgwvI4NmhgaeWYbgI4SUgP/b
+         goNoefgSxSN8wD2LApo9tygZeCQcYJCyh5zOL4T1wOD8OXN+DA+J72McezK8v0bQgA
+         xFh9ypR7myMavomUdr+gtRf2nXi3LYU6sXV50FRU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, James Dingwall <james@dingwall.me.uk>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 005/163] btrfs: qgroup: Always free PREALLOC META reserve in btrfs_delalloc_release_extents()
-Date:   Mon,  4 Nov 2019 22:43:15 +0100
-Message-Id: <20191104212140.708341879@linuxfoundation.org>
+Subject: [PATCH 5.3 057/163] x86/xen: Return from panic notifier
+Date:   Mon,  4 Nov 2019 22:44:07 +0100
+Message-Id: <20191104212144.235807229@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -60,329 +61,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-[ Upstream commit 8702ba9396bf7bbae2ab93c94acd4bd37cfa4f09 ]
+[ Upstream commit c6875f3aacf2a5a913205accddabf0bfb75cac76 ]
 
-[Background]
-Btrfs qgroup uses two types of reserved space for METADATA space,
-PERTRANS and PREALLOC.
+Currently execution of panic() continues until Xen's panic notifier
+(xen_panic_event()) is called at which point we make a hypercall that
+never returns.
 
-PERTRANS is metadata space reserved for each transaction started by
-btrfs_start_transaction().
-While PREALLOC is for delalloc, where we reserve space before joining a
-transaction, and finally it will be converted to PERTRANS after the
-writeback is done.
+This means that any notifier that is supposed to be called later as
+well as significant part of panic() code (such as pstore writes from
+kmsg_dump()) is never executed.
 
-[Inconsistency]
-However there is inconsistency in how we handle PREALLOC metadata space.
+There is no reason for xen_panic_event() to be this last point in
+execution since panic()'s emergency_restart() will call into
+xen_emergency_restart() from where we can perform our hypercall.
 
-The most obvious one is:
-In btrfs_buffered_write():
-	btrfs_delalloc_release_extents(BTRFS_I(inode), reserve_bytes, true);
+Nevertheless, we will provide xen_legacy_crash boot option that will
+preserve original behavior during crash. This option could be used,
+for example, if running kernel dumper (which happens after panic
+notifiers) is undesirable.
 
-We always free qgroup PREALLOC meta space.
-
-While in btrfs_truncate_block():
-	btrfs_delalloc_release_extents(BTRFS_I(inode), blocksize, (ret != 0));
-
-We only free qgroup PREALLOC meta space when something went wrong.
-
-[The Correct Behavior]
-The correct behavior should be the one in btrfs_buffered_write(), we
-should always free PREALLOC metadata space.
-
-The reason is, the btrfs_delalloc_* mechanism works by:
-- Reserve metadata first, even it's not necessary
-  In btrfs_delalloc_reserve_metadata()
-
-- Free the unused metadata space
-  Normally in:
-  btrfs_delalloc_release_extents()
-  |- btrfs_inode_rsv_release()
-     Here we do calculation on whether we should release or not.
-
-E.g. for 64K buffered write, the metadata rsv works like:
-
-/* The first page */
-reserve_meta:	num_bytes=calc_inode_reservations()
-free_meta:	num_bytes=0
-total:		num_bytes=calc_inode_reservations()
-/* The first page caused one outstanding extent, thus needs metadata
-   rsv */
-
-/* The 2nd page */
-reserve_meta:	num_bytes=calc_inode_reservations()
-free_meta:	num_bytes=calc_inode_reservations()
-total:		not changed
-/* The 2nd page doesn't cause new outstanding extent, needs no new meta
-   rsv, so we free what we have reserved */
-
-/* The 3rd~16th pages */
-reserve_meta:	num_bytes=calc_inode_reservations()
-free_meta:	num_bytes=calc_inode_reservations()
-total:		not changed (still space for one outstanding extent)
-
-This means, if btrfs_delalloc_release_extents() determines to free some
-space, then those space should be freed NOW.
-So for qgroup, we should call btrfs_qgroup_free_meta_prealloc() other
-than btrfs_qgroup_convert_reserved_meta().
-
-The good news is:
-- The callers are not that hot
-  The hottest caller is in btrfs_buffered_write(), which is already
-  fixed by commit 336a8bb8e36a ("btrfs: Fix wrong
-  btrfs_delalloc_release_extents parameter"). Thus it's not that
-  easy to cause false EDQUOT.
-
-- The trans commit in advance for qgroup would hide the bug
-  Since commit f5fef4593653 ("btrfs: qgroup: Make qgroup async transaction
-  commit more aggressive"), when btrfs qgroup metadata free space is slow,
-  it will try to commit transaction and free the wrongly converted
-  PERTRANS space, so it's not that easy to hit such bug.
-
-[FIX]
-So to fix the problem, remove the @qgroup_free parameter for
-btrfs_delalloc_release_extents(), and always pass true to
-btrfs_inode_rsv_release().
-
-Reported-by: Filipe Manana <fdmanana@suse.com>
-Fixes: 43b18595d660 ("btrfs: qgroup: Use separate meta reservation type for delalloc")
-CC: stable@vger.kernel.org # 4.19+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reported-by: James Dingwall <james@dingwall.me.uk>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ctree.h          |  3 +--
- fs/btrfs/delalloc-space.c |  6 ++----
- fs/btrfs/file.c           |  7 +++----
- fs/btrfs/inode-map.c      |  4 ++--
- fs/btrfs/inode.c          | 12 ++++++------
- fs/btrfs/ioctl.c          |  6 ++----
- fs/btrfs/relocation.c     |  9 ++++-----
- 7 files changed, 20 insertions(+), 27 deletions(-)
+ .../admin-guide/kernel-parameters.txt         |  4 +++
+ arch/x86/xen/enlighten.c                      | 28 +++++++++++++++++--
+ 2 files changed, 29 insertions(+), 3 deletions(-)
 
-diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-index e7a1ec075c652..180749080fd85 100644
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -2758,8 +2758,7 @@ int btrfs_subvolume_reserve_metadata(struct btrfs_root *root,
- 				     int nitems, bool use_global_rsv);
- void btrfs_subvolume_release_metadata(struct btrfs_fs_info *fs_info,
- 				      struct btrfs_block_rsv *rsv);
--void btrfs_delalloc_release_extents(struct btrfs_inode *inode, u64 num_bytes,
--				    bool qgroup_free);
-+void btrfs_delalloc_release_extents(struct btrfs_inode *inode, u64 num_bytes);
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 4c1971960afa3..5ea005c9e2d60 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -5267,6 +5267,10 @@
+ 				the unplug protocol
+ 			never -- do not unplug even if version check succeeds
  
- int btrfs_delalloc_reserve_metadata(struct btrfs_inode *inode, u64 num_bytes);
- int btrfs_inc_block_group_ro(struct btrfs_block_group_cache *cache);
-diff --git a/fs/btrfs/delalloc-space.c b/fs/btrfs/delalloc-space.c
-index 934521fe7e71d..8d2bb28ff5e0e 100644
---- a/fs/btrfs/delalloc-space.c
-+++ b/fs/btrfs/delalloc-space.c
-@@ -407,7 +407,6 @@ void btrfs_delalloc_release_metadata(struct btrfs_inode *inode, u64 num_bytes,
-  * btrfs_delalloc_release_extents - release our outstanding_extents
-  * @inode: the inode to balance the reservation for.
-  * @num_bytes: the number of bytes we originally reserved with
-- * @qgroup_free: do we need to free qgroup meta reservation or convert them.
-  *
-  * When we reserve space we increase outstanding_extents for the extents we may
-  * add.  Once we've set the range as delalloc or created our ordered extents we
-@@ -415,8 +414,7 @@ void btrfs_delalloc_release_metadata(struct btrfs_inode *inode, u64 num_bytes,
-  * temporarily tracked outstanding_extents.  This _must_ be used in conjunction
-  * with btrfs_delalloc_reserve_metadata.
-  */
--void btrfs_delalloc_release_extents(struct btrfs_inode *inode, u64 num_bytes,
--				    bool qgroup_free)
-+void btrfs_delalloc_release_extents(struct btrfs_inode *inode, u64 num_bytes)
- {
- 	struct btrfs_fs_info *fs_info = inode->root->fs_info;
- 	unsigned num_extents;
-@@ -430,7 +428,7 @@ void btrfs_delalloc_release_extents(struct btrfs_inode *inode, u64 num_bytes,
- 	if (btrfs_is_testing(fs_info))
- 		return;
- 
--	btrfs_inode_rsv_release(inode, qgroup_free);
-+	btrfs_inode_rsv_release(inode, true);
++	xen_legacy_crash	[X86,XEN]
++			Crash from Xen panic notifier, without executing late
++			panic() code such as dumping handler.
++
+ 	xen_nopvspin	[X86,XEN]
+ 			Disables the ticketlock slowpath using Xen PV
+ 			optimizations.
+diff --git a/arch/x86/xen/enlighten.c b/arch/x86/xen/enlighten.c
+index 750f46ad018a0..205b1176084f5 100644
+--- a/arch/x86/xen/enlighten.c
++++ b/arch/x86/xen/enlighten.c
+@@ -269,19 +269,41 @@ void xen_reboot(int reason)
+ 		BUG();
  }
  
- /**
-diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
-index d68add0bf3462..a8a2adaf222f4 100644
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -1692,7 +1692,7 @@ again:
- 				    force_page_uptodate);
- 		if (ret) {
- 			btrfs_delalloc_release_extents(BTRFS_I(inode),
--						       reserve_bytes, true);
-+						       reserve_bytes);
- 			break;
- 		}
++static int reboot_reason = SHUTDOWN_reboot;
++static bool xen_legacy_crash;
+ void xen_emergency_restart(void)
+ {
+-	xen_reboot(SHUTDOWN_reboot);
++	xen_reboot(reboot_reason);
+ }
  
-@@ -1704,7 +1704,7 @@ again:
- 			if (extents_locked == -EAGAIN)
- 				goto again;
- 			btrfs_delalloc_release_extents(BTRFS_I(inode),
--						       reserve_bytes, true);
-+						       reserve_bytes);
- 			ret = extents_locked;
- 			break;
- 		}
-@@ -1772,8 +1772,7 @@ again:
- 		else
- 			free_extent_state(cached_state);
+ static int
+ xen_panic_event(struct notifier_block *this, unsigned long event, void *ptr)
+ {
+-	if (!kexec_crash_loaded())
+-		xen_reboot(SHUTDOWN_crash);
++	if (!kexec_crash_loaded()) {
++		if (xen_legacy_crash)
++			xen_reboot(SHUTDOWN_crash);
++
++		reboot_reason = SHUTDOWN_crash;
++
++		/*
++		 * If panic_timeout==0 then we are supposed to wait forever.
++		 * However, to preserve original dom0 behavior we have to drop
++		 * into hypervisor. (domU behavior is controlled by its
++		 * config file)
++		 */
++		if (panic_timeout == 0)
++			panic_timeout = -1;
++	}
+ 	return NOTIFY_DONE;
+ }
  
--		btrfs_delalloc_release_extents(BTRFS_I(inode), reserve_bytes,
--					       true);
-+		btrfs_delalloc_release_extents(BTRFS_I(inode), reserve_bytes);
- 		if (ret) {
- 			btrfs_drop_pages(pages, num_pages);
- 			break;
-diff --git a/fs/btrfs/inode-map.c b/fs/btrfs/inode-map.c
-index 10a73c97f8966..e2f49615c4297 100644
---- a/fs/btrfs/inode-map.c
-+++ b/fs/btrfs/inode-map.c
-@@ -484,13 +484,13 @@ again:
- 	ret = btrfs_prealloc_file_range_trans(inode, trans, 0, 0, prealloc,
- 					      prealloc, prealloc, &alloc_hint);
- 	if (ret) {
--		btrfs_delalloc_release_extents(BTRFS_I(inode), prealloc, true);
-+		btrfs_delalloc_release_extents(BTRFS_I(inode), prealloc);
- 		btrfs_delalloc_release_metadata(BTRFS_I(inode), prealloc, true);
- 		goto out_put;
- 	}
- 
- 	ret = btrfs_write_out_ino_cache(root, trans, path, inode);
--	btrfs_delalloc_release_extents(BTRFS_I(inode), prealloc, false);
-+	btrfs_delalloc_release_extents(BTRFS_I(inode), prealloc);
- out_put:
- 	iput(inode);
- out_release:
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index b3453adb214da..1b85278471f62 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -2167,7 +2167,7 @@ again:
- 
- 	ClearPageChecked(page);
- 	set_page_dirty(page);
--	btrfs_delalloc_release_extents(BTRFS_I(inode), PAGE_SIZE, false);
-+	btrfs_delalloc_release_extents(BTRFS_I(inode), PAGE_SIZE);
- out:
- 	unlock_extent_cached(&BTRFS_I(inode)->io_tree, page_start, page_end,
- 			     &cached_state);
-@@ -4912,7 +4912,7 @@ again:
- 	if (!page) {
- 		btrfs_delalloc_release_space(inode, data_reserved,
- 					     block_start, blocksize, true);
--		btrfs_delalloc_release_extents(BTRFS_I(inode), blocksize, true);
-+		btrfs_delalloc_release_extents(BTRFS_I(inode), blocksize);
- 		ret = -ENOMEM;
- 		goto out;
- 	}
-@@ -4980,7 +4980,7 @@ out_unlock:
- 	if (ret)
- 		btrfs_delalloc_release_space(inode, data_reserved, block_start,
- 					     blocksize, true);
--	btrfs_delalloc_release_extents(BTRFS_I(inode), blocksize, (ret != 0));
-+	btrfs_delalloc_release_extents(BTRFS_I(inode), blocksize);
- 	unlock_page(page);
- 	put_page(page);
- out:
-@@ -8685,7 +8685,7 @@ static ssize_t btrfs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
- 		} else if (ret >= 0 && (size_t)ret < count)
- 			btrfs_delalloc_release_space(inode, data_reserved,
- 					offset, count - (size_t)ret, true);
--		btrfs_delalloc_release_extents(BTRFS_I(inode), count, false);
-+		btrfs_delalloc_release_extents(BTRFS_I(inode), count);
- 	}
- out:
- 	if (wakeup)
-@@ -9038,7 +9038,7 @@ again:
- 	unlock_extent_cached(io_tree, page_start, page_end, &cached_state);
- 
- 	if (!ret2) {
--		btrfs_delalloc_release_extents(BTRFS_I(inode), PAGE_SIZE, true);
-+		btrfs_delalloc_release_extents(BTRFS_I(inode), PAGE_SIZE);
- 		sb_end_pagefault(inode->i_sb);
- 		extent_changeset_free(data_reserved);
- 		return VM_FAULT_LOCKED;
-@@ -9047,7 +9047,7 @@ again:
- out_unlock:
- 	unlock_page(page);
- out:
--	btrfs_delalloc_release_extents(BTRFS_I(inode), PAGE_SIZE, (ret != 0));
-+	btrfs_delalloc_release_extents(BTRFS_I(inode), PAGE_SIZE);
- 	btrfs_delalloc_release_space(inode, data_reserved, page_start,
- 				     reserved_space, (ret != 0));
- out_noreserve:
-diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-index 818f7ec8bb0ee..8dad66df74ed7 100644
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -1360,8 +1360,7 @@ again:
- 		unlock_page(pages[i]);
- 		put_page(pages[i]);
- 	}
--	btrfs_delalloc_release_extents(BTRFS_I(inode), page_cnt << PAGE_SHIFT,
--				       false);
-+	btrfs_delalloc_release_extents(BTRFS_I(inode), page_cnt << PAGE_SHIFT);
- 	extent_changeset_free(data_reserved);
- 	return i_done;
- out:
-@@ -1372,8 +1371,7 @@ out:
- 	btrfs_delalloc_release_space(inode, data_reserved,
- 			start_index << PAGE_SHIFT,
- 			page_cnt << PAGE_SHIFT, true);
--	btrfs_delalloc_release_extents(BTRFS_I(inode), page_cnt << PAGE_SHIFT,
--				       true);
-+	btrfs_delalloc_release_extents(BTRFS_I(inode), page_cnt << PAGE_SHIFT);
- 	extent_changeset_free(data_reserved);
- 	return ret;
- 
-diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index 074947bebd165..572314aebdf11 100644
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -3277,7 +3277,7 @@ static int relocate_file_extent_cluster(struct inode *inode,
- 				btrfs_delalloc_release_metadata(BTRFS_I(inode),
- 							PAGE_SIZE, true);
- 				btrfs_delalloc_release_extents(BTRFS_I(inode),
--							PAGE_SIZE, true);
-+							PAGE_SIZE);
- 				ret = -ENOMEM;
- 				goto out;
- 			}
-@@ -3298,7 +3298,7 @@ static int relocate_file_extent_cluster(struct inode *inode,
- 				btrfs_delalloc_release_metadata(BTRFS_I(inode),
- 							PAGE_SIZE, true);
- 				btrfs_delalloc_release_extents(BTRFS_I(inode),
--							       PAGE_SIZE, true);
-+							       PAGE_SIZE);
- 				ret = -EIO;
- 				goto out;
- 			}
-@@ -3327,7 +3327,7 @@ static int relocate_file_extent_cluster(struct inode *inode,
- 			btrfs_delalloc_release_metadata(BTRFS_I(inode),
- 							 PAGE_SIZE, true);
- 			btrfs_delalloc_release_extents(BTRFS_I(inode),
--			                               PAGE_SIZE, true);
-+			                               PAGE_SIZE);
- 
- 			clear_extent_bits(&BTRFS_I(inode)->io_tree,
- 					  page_start, page_end,
-@@ -3343,8 +3343,7 @@ static int relocate_file_extent_cluster(struct inode *inode,
- 		put_page(page);
- 
- 		index++;
--		btrfs_delalloc_release_extents(BTRFS_I(inode), PAGE_SIZE,
--					       false);
-+		btrfs_delalloc_release_extents(BTRFS_I(inode), PAGE_SIZE);
- 		balance_dirty_pages_ratelimited(inode->i_mapping);
- 		btrfs_throttle(fs_info);
- 	}
++static int __init parse_xen_legacy_crash(char *arg)
++{
++	xen_legacy_crash = true;
++	return 0;
++}
++early_param("xen_legacy_crash", parse_xen_legacy_crash);
++
+ static struct notifier_block xen_panic_block = {
+ 	.notifier_call = xen_panic_event,
+ 	.priority = INT_MIN
 -- 
 2.20.1
 
