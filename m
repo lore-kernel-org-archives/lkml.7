@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F8ACA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91B8CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9AE21D71
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B086217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904327;
-	bh=6bX3JZ0mNSoPeAZpx5MEgdqiywAKLyT661TKt6eO82w=;
+	s=default; t=1572904330;
+	bh=mYd5k0bcAslfQXtqRzDxbAAlG4fVKFpnhVJcJBQUoz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KZ1WC9zjpcG15GfT+OrkXI1qWrEAiR+RVsf9r/P4uarDBLSwYz5ylyoMtLX0udKrG
-	 i3RsCnBrsRmVRFDAX9I3yURABe0nhfY2/4h6KYkSIMObbVsZEDnoZydujP/jBS3yyJ
-	 mqtVWI7pVpnSKMMEN1PtXa+CuoeKFYeueQuyDJVc=
+	b=MixHULvHmeepKnPzr4LgDSHDTKiRk+RqmbHNztdOF55//W0kYFe8TAtjt3cuJn+ef
+	 ZubCnjwZOY/MU1Ank4+/i5ik+89xkhJecJnW96nXNENVN7v/ZfdXPhe2oOlm0Dg2g7
+	 tws38Hba+qKsmtQ64Wznw2AXOvaJyviRTPx+CET0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730672AbfKDVwG (ORCPT
+        id S1730680AbfKDVwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:52:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45158 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:52:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730220AbfKDVwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:52:01 -0500
+        id S1730221AbfKDVwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:52:05 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF3F82053B;
-        Mon,  4 Nov 2019 21:51:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4413C21D7F;
+        Mon,  4 Nov 2019 21:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904320;
-        bh=6bX3JZ0mNSoPeAZpx5MEgdqiywAKLyT661TKt6eO82w=;
+        s=default; t=1572904324;
+        bh=mYd5k0bcAslfQXtqRzDxbAAlG4fVKFpnhVJcJBQUoz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qi8cKb0D0ezUspQEsHit3hvrI+aatrdPtFGWxcJLu4CQL07iTfCN1Pe2KG+QiC7dG
-         7WDEA/zoBgwjGOm6wAohSRhBqSev8ucfTmRUspBFYrjdK23lYeFSh+5s2/dvYzABnU
-         tRJtokSxq/WtY+l3COiz+sCR3pseVEjtLhpRvgRk=
+        b=LNsaJ2CixmvmkaflWuOF60LoD7peX22r/IbTpX/6vCuvi5zQvhSnM92W8F4/DbH4m
+         3tNk7VcgdRgf00uo5DaDbqJ+E9DpohWWtIHZDGiEkEuBV8DsYUgdwqjn0wfueCm+of
+         JRadf+iZLpM3dEcZ32pnYUuYIysiuMAwDlF7tj+Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia Guo <guojia12@huawei.com>,
-        Yiwen Jiang <jiangyiwen@huawei.com>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
         Mark Fasheh <mark@fasheh.com>,
         Joel Becker <jlbec@evilplan.org>,
         Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <joseph.qi@huawei.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 23/62] ocfs2: clear zero in unaligned direct IO
-Date:   Mon,  4 Nov 2019 22:44:45 +0100
-Message-Id: <20191104211923.705375566@linuxfoundation.org>
+Subject: [PATCH 4.9 25/62] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_write_end_nolock()
+Date:   Mon,  4 Nov 2019 22:44:47 +0100
+Message-Id: <20191104211924.179336931@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -66,91 +67,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia Guo <guojia12@huawei.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 7a243c82ea527cd1da47381ad9cd646844f3b693 ]
+[ Upstream commit 583fee3e12df0e6f1f66f063b989d8e7fed0e65a ]
 
-Unused portion of a part-written fs-block-sized block is not set to zero
-in unaligned append direct write.This can lead to serious data
-inconsistencies.
+In ocfs2_write_end_nolock(), there are an if statement on lines 1976,
+2047 and 2058, to check whether handle is NULL:
 
-Ocfs2 manage disk with cluster size(for example, 1M), part-written in
-one cluster will change the cluster state from UN-WRITTEN to WRITTEN,
-VFS(function dio_zero_block) doesn't do the cleaning because bh's state
-is not set to NEW in function ocfs2_dio_wr_get_block when we write a
-WRITTEN cluster.  For example, the cluster size is 1M, file size is 8k
-and we direct write from 14k to 15k, then 12k~14k and 15k~16k will
-contain dirty data.
+    if (handle)
 
-We have to deal with two cases:
- 1.The starting position of direct write is outside the file.
- 2.The starting position of direct write is located in the file.
+When handle is NULL, it is used on line 2045:
 
-We need set bh's state to NEW in the first case.  In the second case, we
-need mapped twice because bh's state of area out file should be set to
-NEW while area in file not.
+	ocfs2_update_inode_fsync_trans(handle, inode, 1);
+        oi->i_sync_tid = handle->h_transaction->t_tid;
 
-[akpm@linux-foundation.org: coding style fixes]
-Link: http://lkml.kernel.org/r/5292e287-8f1a-fd4a-1a14-661e555e0bed@huawei.com
-Signed-off-by: Jia Guo <guojia12@huawei.com>
-Reviewed-by: Yiwen Jiang <jiangyiwen@huawei.com>
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, handle is checked before calling
+ocfs2_update_inode_fsync_trans().
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Link: http://lkml.kernel.org/r/20190726033705.32307-1-baijiaju1990@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
 Cc: Mark Fasheh <mark@fasheh.com>
 Cc: Joel Becker <jlbec@evilplan.org>
 Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Joseph Qi <joseph.qi@huawei.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/aops.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ fs/ocfs2/aops.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/fs/ocfs2/aops.c b/fs/ocfs2/aops.c
-index c26d046adaaac..7c20a23c0ed7d 100644
+index 7c20a23c0ed7d..6ad76397b31de 100644
 --- a/fs/ocfs2/aops.c
 +++ b/fs/ocfs2/aops.c
-@@ -2143,13 +2143,30 @@ static int ocfs2_dio_wr_get_block(struct inode *inode, sector_t iblock,
- 	struct ocfs2_dio_write_ctxt *dwc = NULL;
- 	struct buffer_head *di_bh = NULL;
- 	u64 p_blkno;
--	loff_t pos = iblock << inode->i_sb->s_blocksize_bits;
-+	unsigned int i_blkbits = inode->i_sb->s_blocksize_bits;
-+	loff_t pos = iblock << i_blkbits;
-+	sector_t endblk = (i_size_read(inode) - 1) >> i_blkbits;
- 	unsigned len, total_len = bh_result->b_size;
- 	int ret = 0, first_get_block = 0;
- 
- 	len = osb->s_clustersize - (pos & (osb->s_clustersize - 1));
- 	len = min(total_len, len);
- 
-+	/*
-+	 * bh_result->b_size is count in get_more_blocks according to write
-+	 * "pos" and "end", we need map twice to return different buffer state:
-+	 * 1. area in file size, not set NEW;
-+	 * 2. area out file size, set  NEW.
-+	 *
-+	 *		   iblock    endblk
-+	 * |--------|---------|---------|---------
-+	 * |<-------area in file------->|
-+	 */
-+
-+	if ((iblock <= endblk) &&
-+	    ((iblock + ((len - 1) >> i_blkbits)) > endblk))
-+		len = (endblk - iblock + 1) << i_blkbits;
-+
- 	mlog(0, "get block of %lu at %llu:%u req %u\n",
- 			inode->i_ino, pos, len, total_len);
- 
-@@ -2233,6 +2250,9 @@ static int ocfs2_dio_wr_get_block(struct inode *inode, sector_t iblock,
- 	if (desc->c_needs_zero)
- 		set_buffer_new(bh_result);
- 
-+	if (iblock > endblk)
-+		set_buffer_new(bh_result);
-+
- 	/* May sleep in end_io. It should not happen in a irq context. So defer
- 	 * it to dio work queue. */
- 	set_buffer_defer_completion(bh_result);
+@@ -2046,7 +2046,8 @@ out_write_size:
+ 		inode->i_mtime = inode->i_ctime = current_time(inode);
+ 		di->i_mtime = di->i_ctime = cpu_to_le64(inode->i_mtime.tv_sec);
+ 		di->i_mtime_nsec = di->i_ctime_nsec = cpu_to_le32(inode->i_mtime.tv_nsec);
+-		ocfs2_update_inode_fsync_trans(handle, inode, 1);
++		if (handle)
++			ocfs2_update_inode_fsync_trans(handle, inode, 1);
+ 	}
+ 	if (handle)
+ 		ocfs2_journal_dirty(handle, wc->w_di_bh);
 -- 
 2.20.1
 
