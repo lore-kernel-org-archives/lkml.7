@@ -2,114 +2,96 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD27CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E1DCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4706521D81
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C3A521E6F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:01:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FaSodyjq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728745AbfKDO6a (ORCPT
+        id S1728624AbfKDPBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 09:58:30 -0500
-Received: from mga17.intel.com ([192.55.52.151]:21717 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727788AbfKDO63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 09:58:29 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 06:58:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,267,1569308400"; 
-   d="scan'208";a="212329826"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 04 Nov 2019 06:58:26 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 04 Nov 2019 16:58:25 +0200
-Date:   Mon, 4 Nov 2019 16:58:25 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Christian Kellner <ck@xatom.net>,
-        intel-gfx@lists.freedesktop.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mario Limonciello <mario.limonciello@dell.com>
-Subject: Re: snd_hda_intel 0000:00:1f.3: No response from codec, resetting
- bus: last cmd=
-Message-ID: <20191104145825.GE2552@lahna.fi.intel.com>
-References: <b31b8649-cb2d-890b-2d4d-881e47895ee6@molgen.mpg.de>
- <20191104131024.GB2552@lahna.fi.intel.com>
- <s5heeynwzhi.wl-tiwai@suse.de>
+        Mon, 4 Nov 2019 10:01:03 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52933 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727788AbfKDPBD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 10:01:03 -0500
+Received: by mail-wm1-f68.google.com with SMTP id c17so9664259wmk.2;
+        Mon, 04 Nov 2019 07:01:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BT9YBqZKiz2HvVHCMcbm7iccT4OKFPOob8w/3y/w+v0=;
+        b=FaSodyjqCmumV/TI2UFoHmOMF5dU8qpXnDR/6g8ZCMlTjZxbIOUmDoeb1AnVwHanzy
+         rl7SRzfoYF3NBlcUcKzef1i8DuJfgIPjKfisMn7spZcGTjOT/pMsHSuf5EjtALtPTPBc
+         pqM/DvR9Fmi5yx0vX8O3R0Pik/x2sudIzNUh31s8yn59geRGi/mlbJSq+ZMEHOf4S62g
+         E0WI2oRnHdGK7kCjDvn3xD9k3c4Kg8OKX0tl86VfnEXtQugQg7kaMP1CkVOVprtdimRy
+         PXdspFR7bbRdkQr1FMUIKkQ6+rYBZxaSkA0BvbM0IGMAZwqMk7V5r4W5ZkJhDy/DuIrG
+         qTJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BT9YBqZKiz2HvVHCMcbm7iccT4OKFPOob8w/3y/w+v0=;
+        b=Ygmsa0ONSMksV7Hr987DGXt1tbV6vLvPlQpeCxRylwFz0aZEJTeVnpG3oTJJVSj4+t
+         85aXT3DxZKNHAtU6avdZdvrIFI5A34lCsTPAS/r99K/cUp78+cAaKm99TfjR1tj7cv2Y
+         C1A5X7V0AENR/s/BYH6QESjgODUYRT6ZnaoaDM6pAn063eGL/cKYG+eTDeiWHRqmOl1U
+         O9L8T+CZp2/sk3rdRjLxdOu4sNb3FJyA8q66gHApNCIa60WGptLj8FWmYuNjt1Y/4wz9
+         YulshQ3CoEzy9arkWju9bQZl3XhlO4zRGNOX8daU9xJfzVTh9WWsThtjf7Pe4NI10BQ6
+         2dLQ==
+X-Gm-Message-State: APjAAAVoSYw1Naq9X9lDogATDk+7lSqtzgFAYIPosX2B16nzYsRAaIS1
+        8Hp/0L8qpIrpYa19y+kzaQtFG8UnxXA=
+X-Google-Smtp-Source: APXvYqywGRSQBr9zY0NjGjdjmaAK99TtLJdTvgBXgMEVATksrpdgAlZ/2mjRQBlZqUAt6uzAJOlOPw==
+X-Received: by 2002:a7b:c84b:: with SMTP id c11mr16963467wml.158.1572879660689;
+        Mon, 04 Nov 2019 07:01:00 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id o25sm21377302wro.21.2019.11.04.07.00.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 07:01:00 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] i2c: hix5hd2: add missed clk_disable_unprepare in remove
+Date:   Mon,  4 Nov 2019 23:00:48 +0800
+Message-Id: <20191104150049.6366-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <s5heeynwzhi.wl-tiwai@suse.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 02:19:21PM +0100, Takashi Iwai wrote:
-> On Mon, 04 Nov 2019 14:10:24 +0100,
-> Mika Westerberg wrote:
-> > 
-> > Hi,
-> > 
-> > On Mon, Nov 04, 2019 at 01:57:54PM +0100, Paul Menzel wrote:
-> > > Dear Linux folks,
-> > > 
-> > > 
-> > > On the Dell XPS 13 9380 with Debian Sid/unstable with Linux 5.3.7
-> > > resuming0with Dell’s Thunderbolt TB16 dock connected, Linux spews
-> > > the errors below.
-> > 
-> > I have this machine here so can try to reproduce it as well.
-> > 
-> > > ```
-> > > [    0.000000] Linux version 5.3.0-1-amd64 (debian-kernel@lists.debian.org) (gcc version 9.2.1 20191008 (Debian 9.2.1-9)) #1 SMP Debian 5.3.7-1 (2019-10-19)
-> > > […]
-> > > [    1.596619] pci 0000:00:1f.3: Adding to iommu group 12
-> > > [   14.536274] snd_hda_intel 0000:00:1f.3: enabling device (0000 -> 0002)
-> > > [   14.544100] snd_hda_intel 0000:00:1f.3: bound 0000:00:02.0 (ops i915_audio_component_bind_ops [i915])
-> > > [   14.760751] input: HDA Intel PCH Headphone Mic as /devices/pci0000:00/0000:00:1f.3/sound/card0/input16
-> > > [   14.760790] input: HDA Intel PCH HDMI as /devices/pci0000:00/0000:00:1f.3/sound/card0/input17
-> > > [  156.614284] snd_hda_intel 0000:00:1f.3: No response from codec, disabling MSI: last cmd=0x20270503
-> > > [  157.622232] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20270503
-> > > [  158.626371] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20370503
-> > > [  159.634102] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x201f0500
-> > > [  161.678121] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20270503
-> > > [  162.682272] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20370503
-> > > [  163.694234] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x201f0500
-> > > [  165.730142] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20270503
-> > > […]
-> > > ```
-> > > 
-> > > In the bug report *[Intel Ice Lake, snd-hda-intel, HDMI] "No
-> > > response from codec" (after display hotplug?)* [1], note it’s a
-> > > different model, Takashi comments that this is a Thunderbolt or
-> > > i915 issue.
-> > 
-> > 0000:00:1f.3 is on PCH so not sure how it could be related to
-> > Thunderbolt, well or i915 for that matter.
-> 
-> It's the HD-audio controller PCI device and both HDMI and onboard
-> codecs are on that bus.  HDMI codec a shadow device of GPU, so it has
-> a strong dependency on i915 GPU driver.  The power of HD-audio bus and
-> codec is controlled over DRM audio component ops, so the power-on must
-> have been notified to GPU side, but still something seems missing.
-> ANd, with the dock, the other parties come to play into the game, so
-> it becomes more complex...
+The driver forgets to disable and unprepare clk when remove.
+Add a call to clk_disable_unprepare to fix it.
 
-OK, thanks for explaining. Then I guess i915 may be related. However,
-that traffic for sure does not go over Thunderbolt fabric (PCIe and DP
-does).
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/i2c/busses/i2c-hix5hd2.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/i2c/busses/i2c-hix5hd2.c b/drivers/i2c/busses/i2c-hix5hd2.c
+index 8497c7a95dd4..224f830f77f9 100644
+--- a/drivers/i2c/busses/i2c-hix5hd2.c
++++ b/drivers/i2c/busses/i2c-hix5hd2.c
+@@ -477,6 +477,7 @@ static int hix5hd2_i2c_remove(struct platform_device *pdev)
+ 	i2c_del_adapter(&priv->adap);
+ 	pm_runtime_disable(priv->dev);
+ 	pm_runtime_set_suspended(priv->dev);
++	clk_disable_unprepare(priv->clk);
+ 
+ 	return 0;
+ }
+-- 
+2.23.0
+
