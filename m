@@ -2,137 +2,337 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 930A0CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CD2CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC5620848
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:14:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572894888;
-	bh=xsHYsB2zXyMTH2IKEVWf2hBE7o2ppclJRWbNmU8ydpk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=edIl00BnLChOFk7T1HK1yHsPM5Ow7BIvksVEWUJH3S7Xe12dPzFgcgkFucmJ0k9GD
-	 +dfKeSA3XckQj2IwimF0Z5WamZ2GvyhrmbskPWcuTkD/8OlKgXtdKqGtbiJV3Of429
-	 hwEwNn7EB4NFBTtJvQVy6ga+p3FCvtA3Ae8gAJn4=
+	by mail.kernel.org (Postfix) with ESMTP id 97CDD20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:15:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZWLhtpw5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbfKDTOr (ORCPT
+        id S1729131AbfKDTPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:14:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728510AbfKDTOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 14:14:47 -0500
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFA6820869;
-        Mon,  4 Nov 2019 19:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572894885;
-        bh=xsHYsB2zXyMTH2IKEVWf2hBE7o2ppclJRWbNmU8ydpk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=U3LKG6Z8BwDtzgs/xqc5kRZSSzXrXQJmbRdShYkUcXr/7ApyP8BRc6im67plsC1UD
-         I4EvP4bgUndg5SxM+vQZLbKyU7hJLSWOYngXl4go9i1uQtqdc+Jyd38Iaz0j7R1EyG
-         g565xCQR68R0FrSrBsXrNLdkAW7GLmbTmX2dtnwY=
-Received: by mail-qt1-f181.google.com with SMTP id x21so25552645qto.12;
-        Mon, 04 Nov 2019 11:14:45 -0800 (PST)
-X-Gm-Message-State: APjAAAUV06GpFc6nSxAQlfhdEb5CzZu8ZrxoHhRhtpsRise+YRxUeG2p
-        +p+HUjuF0gpWFAslDIk2pfzds/8yToFml+G/3g==
-X-Google-Smtp-Source: APXvYqwDm4nm4amh56WMcaZv0m6i+1qGGjr7WZUR++nmINh861qFieVIg3CDST02eujwAAYxYo0uuF3bzl8SqvtkCl8=
-X-Received: by 2002:ac8:48c5:: with SMTP id l5mr14006694qtr.110.1572894884938;
- Mon, 04 Nov 2019 11:14:44 -0800 (PST)
+        Mon, 4 Nov 2019 14:15:31 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41014 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728409AbfKDTPb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 14:15:31 -0500
+Received: by mail-wr1-f68.google.com with SMTP id p4so18405142wrm.8
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 11:15:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CGfA4APfEubm1amTj9pnW92uq+9vWWfdcxYaVFU+qyQ=;
+        b=ZWLhtpw5Y8itG6RdER5q3n+rKh3sxSogacSppWVjEnucwPabPz7TSMwVd8Q3IxhR/x
+         xd9rJG0zFeNNRoegVWki21EcIlfG7MFA5px9clBkL3jwcQk357K3Pw73aaaQV74hbNKb
+         dZc75UJUpSvSNKGnKVMMnrJXiTRXKyXbWdOEJcHQ5CVvXSQpJ8OgjFg5grcjpjz0KKPx
+         ahYvImzL0jhEqszyhL/ifHOG/f66GN8xxUrErSK2+3BXgF5pyF3Xys7mQxpzfALLA6f5
+         dWziZCL+sx2eVzmnCLyKQxCPlpGAcBovAobu9+0gvmfTT1l7CcoVrUz6hQzp0Mc1orEc
+         I20Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CGfA4APfEubm1amTj9pnW92uq+9vWWfdcxYaVFU+qyQ=;
+        b=A5qjj+hnugTtl/ZVGVHWmhez0SkZoem8thLvvmwHfAtAGrZpxEpUYnyCpg6iajqpma
+         5Em3MDK+l0AseYtUOww7EEsz3wOsUQyQ3M//UGS/vg9vvAWpL/gEjPobS2d/44989IJL
+         Zcd7Qe52ZGoWrcOOihJDbujEwT2IPXYQoM6AGPIGMsV4Zjem2i3cPrhLcriILs+15vFl
+         iwaZgItlnVLcWyrwNhir+OyNtj2e6ZoJMCzpW61zDEUatVqv39FAcMF4aMvep8AUw5gL
+         BfoAr/xuvKZzCnOzCxExMx3CwTzHOCkHISFx5LZDklDON4MZtcG49jHicXrSxFWxFMRF
+         3XKg==
+X-Gm-Message-State: APjAAAUEXs7FannpSbh6skGaacSy8RAbOJ2LkKH1Fu8PZ2xKi56jTgaN
+        ORcni53Nn1y1kdajlx5oMBwkFg==
+X-Google-Smtp-Source: APXvYqzgRnspvZEPDvCYUC+JCKvP8etQsmMwHGGdX9adwW1yl8y7jQUzMGxQNSrYKNikdLccPHWlBg==
+X-Received: by 2002:adf:d1a3:: with SMTP id w3mr26484328wrc.9.1572894927195;
+        Mon, 04 Nov 2019 11:15:27 -0800 (PST)
+Received: from lophozonia ([85.195.192.192])
+        by smtp.gmail.com with ESMTPSA id t24sm28146473wra.55.2019.11.04.11.15.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 11:15:26 -0800 (PST)
+Date:   Mon, 4 Nov 2019 20:15:24 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/7] iommu/arm-smmu-v3: Allow building as a module
+Message-ID: <20191104191524.GA2786242@lophozonia>
+References: <20191030145112.19738-1-will@kernel.org>
+ <20191030145112.19738-6-will@kernel.org>
+ <20191030193148.GA8432@8bytes.org>
+ <20191031154247.GB28061@willie-the-truck>
 MIME-Version: 1.0
-References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-6-saravanak@google.com>
- <CAL_Jsq+obCEeaNjpvJ6VvO6b2F6A5oHcRD8PYAifUvBQHbQ_Og@mail.gmail.com> <CAGETcx_CL9P3svctyDuGpavG4Ykd+o2G-rxDAE5OUvxL+sj6xA@mail.gmail.com>
-In-Reply-To: <CAGETcx_CL9P3svctyDuGpavG4Ykd+o2G-rxDAE5OUvxL+sj6xA@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 4 Nov 2019 13:14:33 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJA8awLeEmcxXFRqrd+ftP99+Sjjie9bFYLEpwXWEwzoA@mail.gmail.com>
-Message-ID: <CAL_JsqJA8awLeEmcxXFRqrd+ftP99+Sjjie9bFYLEpwXWEwzoA@mail.gmail.com>
-Subject: Re: [PATCH v1 5/5] of: property: Skip adding device links to
- suppliers that aren't devices
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="UlVJffcvxoiEqYs2"
+Content-Disposition: inline
+In-Reply-To: <20191031154247.GB28061@willie-the-truck>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 1:02 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Mon, Nov 4, 2019 at 7:18 AM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Mon, Oct 28, 2019 at 5:00 PM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > Some devices need to be initialized really early and can't wait for
-> > > driver core or drivers to be functional.  These devices are typically
-> > > initialized without creating a struct device for their device nodes.
-> > >
-> > > If a supplier ends up being one of these devices, skip trying to add
-> > > device links to them.
-> > >
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > ---
-> > >  drivers/of/property.c | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/of/property.c b/drivers/of/property.c
-> > > index f16f85597ccc..21c9d251318a 100644
-> > > --- a/drivers/of/property.c
-> > > +++ b/drivers/of/property.c
-> > > @@ -1038,6 +1038,7 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
-> > >         struct device *sup_dev;
-> > >         int ret = 0;
-> > >         struct device_node *tmp_np = sup_np;
-> > > +       int is_populated;
-> > >
-> > >         of_node_get(sup_np);
-> > >         /*
-> > > @@ -1062,9 +1063,10 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
-> > >                 return -EINVAL;
-> > >         }
-> > >         sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
-> > > +       is_populated = of_node_check_flag(sup_np, OF_POPULATED);
-> > >         of_node_put(sup_np);
-> > >         if (!sup_dev)
-> > > -               return -EAGAIN;
-> > > +               return is_populated ? 0 : -EAGAIN;
-> >
-> > You're only using the flag in one spot and a comment would be good
-> > here, so I'd just do:
-> >
-> > if (of_node_check_flag(sup_np, OF_POPULATED))
-> >         return 0; /* Early device without a struct device */
->
-> Hi Rob,
->
-> Thanks for the review.
->
-> I'm using the flag to keep the error handling code simple/cleaner. I
-> can't do the check like that after I do a put on the sup_np.
 
-Ah, right. Nevermind.
+--UlVJffcvxoiEqYs2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Yeah, I was actually planning to add a dev_dbg() message when this
-> happens and returning a -EINVAL (that'll be ignored by the caller)
-> instead of -EAGAIN (that's NOT ignored by the caller).
->
-> Looks like these changes go pulled into driver-core-next. So I'll send
-> a delta patch to add the dbg message and also address you nit on the
-> other patch.
+On Thu, Oct 31, 2019 at 03:42:47PM +0000, Will Deacon wrote:
+> > Sorry for the stupid question, but what prevents the iommu module from
+> > being unloaded when there are active users? There are no symbol
+> > dependencies to endpoint device drivers, because the interface is only
+> > exposed through the iommu-api, right? Is some sort of manual module
+> > reference counting needed?
+> 
+> Generally, I think unloading the IOMMU driver module while there are
+> active users is a pretty bad idea, much like unbinding the driver via
+> /sys in the same situation would also be fairly daft. However, I *think*
+> the code in __device_release_driver() tries to deal with this by
+> iterating over the active consumers and ->remove()ing them first.
 
-I didn't notice Greg applied already. Don't worry about the nit then.
+> I'm without hardware access at the moment, so I haven't been able to
+> test this myself. We could nobble the module_exit() hook, but there's
+> still the "force unload" option depending on the .config.
 
-Rob
+Shame that we can't completely prevent module unloading, because handling
+rmmod cleanly is tricky.
+
+On module unload we also need to tidy up the bus->iommu_ops installed by
+bus_set_iommu(), and remove the IOMMU groups (and probably other leaks I
+missed). I have a solution for the bus->iommu_ops, which is simply adding
+a bus_unset_iommu() counterpart with a refcount, but it doesn't deal with
+the IOMMU groups cleanly. If there are multiple IOMMU instances managing
+one bus, then we should only remove the IOMMU groups belonging to the
+instance that is being removed.
+
+I'll think about this more, but the simple solution is attached if you
+want to test. It at least works with a single IOMMU now:
+
+$ modprobe virtio-iommu
+[   25.180965] virtio_iommu virtio0: input address: 64 bits
+[   25.181437] virtio_iommu virtio0: page mask: 0xfffffffffffff000
+[   25.214493] virtio-pci 0000:00:03.0: Adding to iommu group 0
+[   25.233252] virtio-pci 0000:00:03.0: enabling device (0000 -> 0003)
+[   25.334810] e1000e 0000:00:02.0: Adding to iommu group 1
+[   25.348997] e1000e 0000:00:02.0: enabling device (0000 -> 0002)
+... net test etc
+
+$ rmmod virtio-iommu
+[   34.084816] e1000e: eth1 NIC Link is Down
+[   34.212152] pci 0000:00:02.0: Removing from iommu group 1
+[   34.250558] pci 0000:00:03.0: Removing from iommu group 0
+[   34.261570] virtio_iommu virtio0: device removed
+
+$ modprobe virtio-iommu
+[   34.828982] virtio_iommu virtio0: input address: 64 bits
+[   34.829442] virtio_iommu virtio0: page mask: 0xfffffffffffff000
+[   34.844576] virtio-pci 0000:00:03.0: Adding to iommu group 0
+[   34.916449] e1000e 0000:00:02.0: Adding to iommu group 1
+
+Thanks,
+Jean
+
+--UlVJffcvxoiEqYs2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-iommu-Add-bus_unset_iommu.patch"
+
+From 5437fcaabe1d4671e2dc5b90b7898c0bf698111b Mon Sep 17 00:00:00 2001
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Date: Mon, 4 Nov 2019 15:52:36 +0100
+Subject: [PATCH] iommu: Add bus_unset_iommu()
+
+Let modular IOMMU drivers undo bus_set_iommu(). Keep track of bus
+registrations with a list and refcount, and remove the iommu_ops from
+the bus when there are no IOMMU providers anymore.
+
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+---
+ drivers/iommu/iommu.c | 101 ++++++++++++++++++++++++++++++++++--------
+ include/linux/iommu.h |   1 +
+ 2 files changed, 84 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 393a5376d7c6..f9bac5633f2a 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -31,6 +31,9 @@ static unsigned int iommu_def_domain_type __read_mostly;
+ static bool iommu_dma_strict __read_mostly = true;
+ static u32 iommu_cmd_line __read_mostly;
+ 
++static DEFINE_MUTEX(iommu_bus_notifiers_lock);
++static LIST_HEAD(iommu_bus_notifiers);
++
+ struct iommu_group {
+ 	struct kobject kobj;
+ 	struct kobject *devices_kobj;
+@@ -58,6 +61,14 @@ struct iommu_group_attribute {
+ 			 const char *buf, size_t count);
+ };
+ 
++struct iommu_bus_notifier {
++	struct notifier_block	nb;
++	const struct iommu_ops	*ops;
++	struct bus_type		*bus;
++	struct list_head	list;
++	refcount_t		refs;
++};
++
+ static const char * const iommu_group_resv_type_string[] = {
+ 	[IOMMU_RESV_DIRECT]			= "direct",
+ 	[IOMMU_RESV_DIRECT_RELAXABLE]		= "direct-relaxable",
+@@ -1494,15 +1505,29 @@ static int iommu_bus_notifier(struct notifier_block *nb,
+ static int iommu_bus_init(struct bus_type *bus, const struct iommu_ops *ops)
+ {
+ 	int err;
+-	struct notifier_block *nb;
++	struct iommu_bus_notifier *iommu_notifier;
+ 
+-	nb = kzalloc(sizeof(struct notifier_block), GFP_KERNEL);
+-	if (!nb)
+-		return -ENOMEM;
++	list_for_each_entry(iommu_notifier, &iommu_bus_notifiers, list) {
++		if (iommu_notifier->ops == ops && iommu_notifier->bus == bus) {
++			refcount_inc(&iommu_notifier->refs);
++			return 0;
++		}
++	}
++
++	bus->iommu_ops = ops;
++
++	iommu_notifier = kzalloc(sizeof(*iommu_notifier), GFP_KERNEL);
++	if (!iommu_notifier) {
++		err = -ENOMEM;
++		goto out_clear;
++	}
+ 
+-	nb->notifier_call = iommu_bus_notifier;
++	iommu_notifier->ops = ops;
++	iommu_notifier->bus = bus;
++	iommu_notifier->nb.notifier_call = iommu_bus_notifier;
++	refcount_set(&iommu_notifier->refs, 1);
+ 
+-	err = bus_register_notifier(bus, nb);
++	err = bus_register_notifier(bus, &iommu_notifier->nb);
+ 	if (err)
+ 		goto out_free;
+ 
+@@ -1510,20 +1535,47 @@ static int iommu_bus_init(struct bus_type *bus, const struct iommu_ops *ops)
+ 	if (err)
+ 		goto out_err;
+ 
+-
++	list_add(&iommu_notifier->list, &iommu_bus_notifiers);
+ 	return 0;
+ 
+ out_err:
+ 	/* Clean up */
+ 	bus_for_each_dev(bus, NULL, NULL, remove_iommu_group);
+-	bus_unregister_notifier(bus, nb);
+-
++	bus_unregister_notifier(bus, &iommu_notifier->nb);
+ out_free:
+-	kfree(nb);
++	kfree(iommu_notifier);
++out_clear:
++	bus->iommu_ops = NULL;
+ 
+ 	return err;
+ }
+ 
++static int iommu_bus_remove(struct bus_type *bus, const struct iommu_ops *ops)
++{
++	struct iommu_bus_notifier *tmp;
++	struct iommu_bus_notifier *iommu_notifier = NULL;
++
++	list_for_each_entry(tmp, &iommu_bus_notifiers, list) {
++		if (tmp->ops == ops && tmp->bus == bus) {
++			iommu_notifier = tmp;
++			break;
++		}
++	}
++
++	if (!iommu_notifier)
++		return -ESRCH;
++
++	if (!refcount_dec_and_test(&iommu_notifier->refs))
++		return 0;
++
++	list_del(&iommu_notifier->list);
++	bus_for_each_dev(bus, NULL, NULL, remove_iommu_group);
++	bus_unregister_notifier(bus, &iommu_notifier->nb);
++	kfree(iommu_notifier);
++	bus->iommu_ops = NULL;
++	return 0;
++}
++
+ /**
+  * bus_set_iommu - set iommu-callbacks for the bus
+  * @bus: bus.
+@@ -1541,20 +1593,33 @@ int bus_set_iommu(struct bus_type *bus, const struct iommu_ops *ops)
+ {
+ 	int err;
+ 
+-	if (bus->iommu_ops != NULL)
+-		return -EBUSY;
+-
+-	bus->iommu_ops = ops;
+-
+ 	/* Do IOMMU specific setup for this bus-type */
+-	err = iommu_bus_init(bus, ops);
+-	if (err)
+-		bus->iommu_ops = NULL;
++	mutex_lock(&iommu_bus_notifiers_lock);
++	if (bus->iommu_ops != NULL && bus->iommu_ops != ops)
++		err = -EBUSY;
++	else
++		err = iommu_bus_init(bus, ops);
++	mutex_unlock(&iommu_bus_notifiers_lock);
+ 
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(bus_set_iommu);
+ 
++int bus_unset_iommu(struct bus_type *bus, const struct iommu_ops *ops)
++{
++	int err;
++
++	mutex_lock(&iommu_bus_notifiers_lock);
++	if (bus->iommu_ops != ops)
++		err = -EINVAL;
++	else
++		err = iommu_bus_remove(bus, ops);
++	mutex_unlock(&iommu_bus_notifiers_lock);
++
++	return err;
++}
++EXPORT_SYMBOL_GPL(bus_unset_iommu);
++
+ bool iommu_present(struct bus_type *bus)
+ {
+ 	return bus->iommu_ops != NULL;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 29bac5345563..15c9115e31ff 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -408,6 +408,7 @@ static inline void iommu_iotlb_gather_init(struct iommu_iotlb_gather *gather)
+ #define IOMMU_GROUP_NOTIFY_UNBOUND_DRIVER	6 /* Post Driver unbind */
+ 
+ extern int bus_set_iommu(struct bus_type *bus, const struct iommu_ops *ops);
++extern int bus_unset_iommu(struct bus_type *bus, const struct iommu_ops *ops);
+ extern bool iommu_present(struct bus_type *bus);
+ extern bool iommu_capable(struct bus_type *bus, enum iommu_cap cap);
+ extern struct iommu_domain *iommu_domain_alloc(struct bus_type *bus);
+-- 
+2.23.0
+
+
+--UlVJffcvxoiEqYs2--
