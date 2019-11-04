@@ -7,43 +7,46 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BEBCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0446FCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C9421929
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE23D2084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905072;
-	bh=zm7yG+3kxIcdd+11wso79gPFDd+Tjus8jTpuCGsKBhw=;
+	s=default; t=1572905074;
+	bh=oVOeKJXMi/4L8ddaH2Ou/ffyVHk8XoU2AZ/+BO6rhXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VL1OJ4U/1IPyj90MW+4oTUMa2fekxl66/hqFxKnJwNkI9PdGxZwX/qDJDjSnGGVAq
-	 aRLkuYisXGjyFAz63AsPKMeldnmen3OTba7a1ttZxqmH4CNljvXRtSFUXre7Yz1+nm
-	 FTB5oY2CiaP3MqfHQzGG26zELMuN7ytsNQ+EW5DE=
+	b=SbfbAZwvuMPVrZhZXw3M0Gazw/LZW0K58Zb9d+T9bRXHWulJEtenV2MaDJacY0HXs
+	 s9s+xAn0rfsq7Tnujn0xPalOvrEJXacInUyf35ajM076/kSbkF2gn4xPQy97jEO4Dl
+	 lD3N/1HmVtxJ2I/7UEcIw5yGBDGMKuHV+9/exv60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389686AbfKDWEb (ORCPT
+        id S2389694AbfKDWEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:04:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35180 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:04:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389666AbfKDWE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:04:28 -0500
+        id S2389683AbfKDWEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:04:31 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12398205C9;
-        Mon,  4 Nov 2019 22:04:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD1DF214D8;
+        Mon,  4 Nov 2019 22:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905067;
-        bh=zm7yG+3kxIcdd+11wso79gPFDd+Tjus8jTpuCGsKBhw=;
+        s=default; t=1572905070;
+        bh=oVOeKJXMi/4L8ddaH2Ou/ffyVHk8XoU2AZ/+BO6rhXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EHS+SZbqkE1NdM5O/3UMt+PIRcr8ur2N+SfE4z0l0CMGmQcK7AbDmbvqZKQTCihSr
-         L/4qW+pvI6DnAovmsnjV9QsAjJ3FYldAhgfN3AZ6hD6dP0pCwCeuj3O+oCMD1g3F3A
-         /4f5XEsdHAd7zUOMbhkN3JhMJz9cLV7udICH18sI=
+        b=AbonSPmIrERasShx0EE7Cebx9QMLEVTpa3c2XuaGzOPWTxLiho4lA8koNswGZfK/d
+         ZZqZQ6ONTVCHV2h4E07P8b3iCsi0vI4Jiw80Pg9tKtrUshU/dcWmhd1vTebdaGBtGQ
+         EK1Iv484fdfOXwma9+tlucwd6SCmuGjv9Ekppz58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
@@ -52,9 +55,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 5.3 018/163] perf annotate: Return appropriate error code for allocation failures
-Date:   Mon,  4 Nov 2019 22:43:28 +0100
-Message-Id: <20191104212141.722815156@linuxfoundation.org>
+Subject: [PATCH 5.3 019/163] perf annotate: Dont return -1 for error when doing BPF disassembly
+Date:   Mon,  4 Nov 2019 22:43:29 +0100
+Message-Id: <20191104212141.810505019@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -69,48 +72,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 16ed3c1e91159e28b02f11f71ff4ce4cbc6f99e4 ]
+[ Upstream commit 11aad897f6d1a28eae3b7e5b293647c522d65819 ]
 
-We should return errno or the annotation extra range understood by
-symbol__strerror_disassemble() instead of -1, fix it, returning ENOMEM
-instead.
+Return errno when open_memstream() fails and add two new speciall error
+codes for when an invalid, non BPF file or one without BTF is passed to
+symbol__disassemble_bpf(), so that its callers can rely on
+symbol__strerror_disassemble() to convert that to a human readable error
+message that can help figure out what is wrong, with hints even.
 
-Reported-by: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>,
 Cc: Will Deacon <will@kernel.org>
-Link: https://lkml.kernel.org/n/tip-8of1cmj3rz0mppfcshc9bbqq@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-usevw9r2gcipfcrbpaueurw0@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/annotate.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/annotate.c | 19 +++++++++++++++----
+ tools/perf/util/annotate.h |  2 ++
+ 2 files changed, 17 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index b475449f955ef..ab7851ec0ce53 100644
+index ab7851ec0ce53..fb8756026a805 100644
 --- a/tools/perf/util/annotate.c
 +++ b/tools/perf/util/annotate.c
-@@ -1662,7 +1662,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+@@ -1631,6 +1631,13 @@ int symbol__strerror_disassemble(struct symbol *sym __maybe_unused, struct map *
+ 	case SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_CPUID_PARSING:
+ 		scnprintf(buf, buflen, "Problems while parsing the CPUID in the arch specific initialization.");
+ 		break;
++	case SYMBOL_ANNOTATE_ERRNO__BPF_INVALID_FILE:
++		scnprintf(buf, buflen, "Invalid BPF file: %s.", dso->long_name);
++		break;
++	case SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF:
++		scnprintf(buf, buflen, "The %s BPF file has no BTF section, compile with -g or use pahole -J.",
++			  dso->long_name);
++		break;
+ 	default:
+ 		scnprintf(buf, buflen, "Internal error: Invalid %d error code\n", errnum);
+ 		break;
+@@ -1713,13 +1720,13 @@ static int symbol__disassemble_bpf(struct symbol *sym,
+ 	char tpath[PATH_MAX];
+ 	size_t buf_size;
+ 	int nr_skip = 0;
+-	int ret = -1;
+ 	char *buf;
+ 	bfd *bfdf;
++	int ret;
+ 	FILE *s;
  
- 	build_id_path = strdup(filename);
- 	if (!build_id_path)
+ 	if (dso->binary_type != DSO_BINARY_TYPE__BPF_PROG_INFO)
 -		return -1;
-+		return ENOMEM;
++		return SYMBOL_ANNOTATE_ERRNO__BPF_INVALID_FILE;
  
- 	/*
- 	 * old style build-id cache has name of XX/XXXXXXX.. while
-@@ -2971,7 +2971,7 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *ev
+ 	pr_debug("%s: handling sym %s addr %" PRIx64 " len %" PRIx64 "\n", __func__,
+ 		  sym->name, sym->start, sym->end - sym->start);
+@@ -1732,8 +1739,10 @@ static int symbol__disassemble_bpf(struct symbol *sym,
+ 	assert(bfd_check_format(bfdf, bfd_object));
  
- 	notes->offsets = zalloc(size * sizeof(struct annotation_line *));
- 	if (notes->offsets == NULL)
--		return -1;
-+		return ENOMEM;
+ 	s = open_memstream(&buf, &buf_size);
+-	if (!s)
++	if (!s) {
++		ret = errno;
+ 		goto out;
++	}
+ 	init_disassemble_info(&info, s,
+ 			      (fprintf_ftype) fprintf);
  
- 	if (perf_evsel__is_group_event(evsel))
- 		nr_pcnt = evsel->nr_members;
+@@ -1742,8 +1751,10 @@ static int symbol__disassemble_bpf(struct symbol *sym,
+ 
+ 	info_node = perf_env__find_bpf_prog_info(dso->bpf_prog.env,
+ 						 dso->bpf_prog.id);
+-	if (!info_node)
++	if (!info_node) {
++		return SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF;
+ 		goto out;
++	}
+ 	info_linear = info_node->info_linear;
+ 	sub_id = dso->bpf_prog.sub_id;
+ 
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index a1191995fe77e..2004e2cf0211b 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -372,6 +372,8 @@ enum symbol_disassemble_errno {
+ 	SYMBOL_ANNOTATE_ERRNO__NO_LIBOPCODES_FOR_BPF,
+ 	SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_CPUID_PARSING,
+ 	SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_REGEXP,
++	SYMBOL_ANNOTATE_ERRNO__BPF_INVALID_FILE,
++	SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF,
+ 
+ 	__SYMBOL_ANNOTATE_ERRNO__END,
+ };
 -- 
 2.20.1
 
