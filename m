@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1E0CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28262CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E55214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17AD204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:20:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906051;
-	bh=vj/8ObRPRjWFmRGY3nBsYaYGTcbH47acTDF/rjhkA78=;
+	s=default; t=1572906055;
+	bh=ne9QAjeb1S8nb93Ake9Lq8Wna3eB+iMjKjixdd5/Lj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oaQ9Ej/k1/iCg3shoKDS1HOkZy6ZJenoA2ldg1NB+4gGeZ4hNnhCeEMHh9FMxQlF9
-	 9Shwol12F2kY8h/KMfXkTQXzvxvIsTJsLtHIVSb4rDSsoyLtbZZsL7hH41CWUukQi5
-	 BWKjRd3bxrdKOWB7GdFdAv584Yb4Kv35eISWjooM=
+	b=Wm1wt8tz1d/b4HyT+MjBh2a4aFIcKNgIbcm8aU7cLL3obvpMYnI24rUyQhvYfebF9
+	 JZJ5CLAXQr4MHLPevQlfdk6dblQ5wflLsg8jUOVwUWwFuFgz5ooNM7AunJ3tRoGy1A
+	 f1tde5J9cwXYnpgYzqXfYXsKv/pHa+15j40Gib18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389253AbfKDWUq (ORCPT
+        id S1731046AbfKDV7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:20:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56366 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:59:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731068AbfKDV7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:59:15 -0500
+        id S1730893AbfKDV7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:59:00 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 135BB20659;
-        Mon,  4 Nov 2019 21:59:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71FFC214E0;
+        Mon,  4 Nov 2019 21:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904754;
-        bh=vj/8ObRPRjWFmRGY3nBsYaYGTcbH47acTDF/rjhkA78=;
+        s=default; t=1572904738;
+        bh=ne9QAjeb1S8nb93Ake9Lq8Wna3eB+iMjKjixdd5/Lj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RGrTBV5rruDD0PS0QusRk1tpCEls6HWheQ9Z9CqWBWuo3K6UFhq25SS6D2jM/tNkw
-         JmZBencveVnGUMQ3RiiOvEmdItTM/P1FNG76FVKVSgsn1mpSd0AXseJNTlQFv3rL6F
-         tCZ+umeZOi5gpPnm92i9axcD1agZc7qdV287vUa8=
+        b=Fm1+L4zo5W+UED7Wg/StclxZscoJwFk2F9GPt4smLml7zbnx4gSfQNmJ9kIIurpja
+         O7CGKgaEctWA2y3s84KC7nquboPe5Vgv0zUPZ7pw8fcyc8C8b1aECrqx1ImkQyN08W
+         S8Olo2hqzmGCubZj/hLCBXXlWrTqvSzQBMBhqDaw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Elie Roudninski <xademax@gmail.com>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Samuel Dionne-Riel <samuel@dionne-riel.com>,
+        Richard Weinberger <richard.weinberger@gmail.com>,
+        Graham Christensen <graham@grahamc.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 058/149] iio: adc: meson_saradc: Fix memory allocation order
-Date:   Mon,  4 Nov 2019 22:44:11 +0100
-Message-Id: <20191104212140.540433212@linuxfoundation.org>
+Subject: [PATCH 4.19 053/149] exec: load_script: Do not exec truncated interpreter path
+Date:   Mon,  4 Nov 2019 22:44:06 +0100
+Message-Id: <20191104212139.993310316@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -63,58 +66,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Remi Pommarel <repk@triplefau.lt>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit de10ac47597e7a3596b27631d0d5ce5f48d2c099 ]
+[ Upstream commit b5372fe5dc84235dbe04998efdede3c4daa866a9 ]
 
-meson_saradc's irq handler uses priv->regmap so make sure that it is
-allocated before the irq get enabled.
+Commit 8099b047ecc4 ("exec: load_script: don't blindly truncate
+shebang string") was trying to protect against a confused exec of a
+truncated interpreter path. However, it was overeager and also refused
+to truncate arguments as well, which broke userspace, and it was
+reverted. This attempts the protection again, but allows arguments to
+remain truncated. In an effort to improve readability, helper functions
+and comments have been added.
 
-This also fixes crash when CONFIG_DEBUG_SHIRQ is enabled, as device
-managed resources are freed in the inverted order they had been
-allocated, priv->regmap was freed before the spurious fake irq that
-CONFIG_DEBUG_SHIRQ adds called the handler.
-
-Fixes: 3af109131b7eb8 ("iio: adc: meson-saradc: switch from polling to interrupt mode")
-Reported-by: Elie Roudninski <xademax@gmail.com>
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Tested-by: Elie ROUDNINSKI <xademax@gmail.com>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Co-developed-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Samuel Dionne-Riel <samuel@dionne-riel.com>
+Cc: Richard Weinberger <richard.weinberger@gmail.com>
+Cc: Graham Christensen <graham@grahamc.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/meson_saradc.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ fs/binfmt_script.c | 57 ++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 48 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
-index 5dd104cf0939b..6e0ef9bb2497f 100644
---- a/drivers/iio/adc/meson_saradc.c
-+++ b/drivers/iio/adc/meson_saradc.c
-@@ -1023,6 +1023,11 @@ static int meson_sar_adc_probe(struct platform_device *pdev)
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
+diff --git a/fs/binfmt_script.c b/fs/binfmt_script.c
+index 7cde3f46ad263..e996174cbfc02 100644
+--- a/fs/binfmt_script.c
++++ b/fs/binfmt_script.c
+@@ -14,13 +14,30 @@
+ #include <linux/err.h>
+ #include <linux/fs.h>
  
-+	priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
-+					     priv->data->param->regmap_config);
-+	if (IS_ERR(priv->regmap))
-+		return PTR_ERR(priv->regmap);
++static inline bool spacetab(char c) { return c == ' ' || c == '\t'; }
++static inline char *next_non_spacetab(char *first, const char *last)
++{
++	for (; first <= last; first++)
++		if (!spacetab(*first))
++			return first;
++	return NULL;
++}
++static inline char *next_terminator(char *first, const char *last)
++{
++	for (; first <= last; first++)
++		if (spacetab(*first) || !*first)
++			return first;
++	return NULL;
++}
 +
- 	irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
- 	if (!irq)
- 		return -EINVAL;
-@@ -1032,11 +1037,6 @@ static int meson_sar_adc_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
+ static int load_script(struct linux_binprm *bprm)
+ {
+ 	const char *i_arg, *i_name;
+-	char *cp;
++	char *cp, *buf_end;
+ 	struct file *file;
+ 	int retval;
  
--	priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
--					     priv->data->param->regmap_config);
--	if (IS_ERR(priv->regmap))
--		return PTR_ERR(priv->regmap);
++	/* Not ours to exec if we don't start with "#!". */
+ 	if ((bprm->buf[0] != '#') || (bprm->buf[1] != '!'))
+ 		return -ENOEXEC;
+ 
+@@ -33,18 +50,40 @@ static int load_script(struct linux_binprm *bprm)
+ 	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
+ 		return -ENOENT;
+ 
+-	/*
+-	 * This section does the #! interpretation.
+-	 * Sorta complicated, but hopefully it will work.  -TYT
+-	 */
 -
- 	priv->clkin = devm_clk_get(&pdev->dev, "clkin");
- 	if (IS_ERR(priv->clkin)) {
- 		dev_err(&pdev->dev, "failed to get clkin\n");
++	/* Release since we are not mapping a binary into memory. */
+ 	allow_write_access(bprm->file);
+ 	fput(bprm->file);
+ 	bprm->file = NULL;
+ 
+-	bprm->buf[BINPRM_BUF_SIZE - 1] = '\0';
+-	if ((cp = strchr(bprm->buf, '\n')) == NULL)
+-		cp = bprm->buf+BINPRM_BUF_SIZE-1;
++	/*
++	 * This section handles parsing the #! line into separate
++	 * interpreter path and argument strings. We must be careful
++	 * because bprm->buf is not yet guaranteed to be NUL-terminated
++	 * (though the buffer will have trailing NUL padding when the
++	 * file size was smaller than the buffer size).
++	 *
++	 * We do not want to exec a truncated interpreter path, so either
++	 * we find a newline (which indicates nothing is truncated), or
++	 * we find a space/tab/NUL after the interpreter path (which
++	 * itself may be preceded by spaces/tabs). Truncating the
++	 * arguments is fine: the interpreter can re-read the script to
++	 * parse them on its own.
++	 */
++	buf_end = bprm->buf + sizeof(bprm->buf) - 1;
++	cp = strnchr(bprm->buf, sizeof(bprm->buf), '\n');
++	if (!cp) {
++		cp = next_non_spacetab(bprm->buf + 2, buf_end);
++		if (!cp)
++			return -ENOEXEC; /* Entire buf is spaces/tabs */
++		/*
++		 * If there is no later space/tab/NUL we must assume the
++		 * interpreter path is truncated.
++		 */
++		if (!next_terminator(cp, buf_end))
++			return -ENOEXEC;
++		cp = buf_end;
++	}
++	/* NUL-terminate the buffer and any trailing spaces/tabs. */
+ 	*cp = '\0';
+ 	while (cp > bprm->buf) {
+ 		cp--;
 -- 
 2.20.1
 
