@@ -2,140 +2,182 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1E9CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC320CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05EA20650
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:01:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904917;
-	bh=pTNpI8krUYYgmHKAFknIIvE6NqLq8p5eAggBhfZj+Vw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tmTplY3AdPTtb9tHPMd0QXuG79wXsae26JPi9iHlaN9fA+Fc96xaNKj+L4QeENXBu
-	 +wKbDORGp5/ZcV0japto0U5SS/nUZ3cnM87Wq2LG2C7K2bMCojNw7LXfrnyHtMrae3
-	 KkwjqLX//CaOze0qt9B4NC/vaIbgCJwyiSKiDWb4=
+	by mail.kernel.org (Postfix) with ESMTP id A424820659
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="upNJ9E2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389103AbfKDWBz (ORCPT
+        id S2387465AbfKDWB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:01:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388997AbfKDWBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:15 -0500
-Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4CF72084D;
-        Mon,  4 Nov 2019 22:01:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904874;
-        bh=pTNpI8krUYYgmHKAFknIIvE6NqLq8p5eAggBhfZj+Vw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QjLcbp/uzpNM70jrUXP7xEJIFnAgWo/F0sSoIZpePPGnBmSkARfEh6GbaNAuh1Inu
-         KnB/6e5EmekgyK6Kj2rwfzlBZvl3YNDNEV9oo6puIuL8vu42F4eqSH94oD3gFJ2oMR
-         QCuZiB40UH6imoakEvG/yh2xB3UIjVb7r5Jnn8pQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 101/149] tracing: Initialize iter->seq after zeroing in tracing_read_pipe()
-Date:   Mon,  4 Nov 2019 22:44:54 +0100
-Message-Id: <20191104212143.566999230@linuxfoundation.org>
+        Mon, 4 Nov 2019 17:01:59 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37767 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388640AbfKDWBQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:01:16 -0500
+Received: by mail-lf1-f65.google.com with SMTP id b20so13460581lfp.4;
+        Mon, 04 Nov 2019 14:01:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0ir9eKbXc6Lss3IzWfP9NOi9af5oEA76jnD0uxcVIaA=;
+        b=upNJ9E2jKEUAAb3pTAh964SRIQ//jhLdM2MAyOGmORh7sLTiMZmBSNBk/sIZ+8f2yQ
+         W8vwBRe7jIFoG7FRGzZStkDFoojr3rpirz+FlYDXGKlNR4YX54FEQ/gZC0Hmy8sFaTOR
+         7HsQNXMHExEnImP+RAjlJbbxZa3sG5i+57U+dDqvYWEhVnkPgsVgNRfYklrx4jx9k/Zh
+         dRLpx6kFq/DowueKVfcqZ6WyozjFkehC9g5pvF7yJ2VqlQuEK/dMSBnNfBM1oUNOqotz
+         9OwjYsfnydBS5pGCJp5y8dDDqToZZqTWRf4/fwRySumcUOhv8+IMDTIF/OW9aV7yfqbG
+         LsTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0ir9eKbXc6Lss3IzWfP9NOi9af5oEA76jnD0uxcVIaA=;
+        b=nFd6C8eOjGR7rdCsCIB1O8YMxk+IkXzVj6OAOjkXFVJJQwmv5Im16kRFovbLndpYvx
+         tG9ZjOwWg0Y1hTY1FO4527O0TcpMFvqUgb2cpMfrnmkUikDWA0huqiQCVs5WwVBQe+48
+         tOvgoxoLS2gcmSSW/KrSIOuyI/zsIlFVUPL5BwXkwdKqsTGQ99S/XVdmIi85VWQbhZlV
+         zOnliemiHUZacuIWoCBsA0/DE2yx4OkKkebxX6kPXxxofbQJFgm9yGdSTgY+rEcWS8Ox
+         nb4mM5vWrzFf+Fb+t3pBqilSM8fKW2D5VPU/6bmdz0ElN0LORqjw/OYWsdPXr2fzI5EQ
+         pBIg==
+X-Gm-Message-State: APjAAAXcQnZ1PB8mReYKcYe7pstog15JylC+hJ4qwGoXjYG/fzf/UmS1
+        mqAC+h/WgqY3XT9/QsvsXl0=
+X-Google-Smtp-Source: APXvYqyi2f0gTy3fSarJeQdztzRxkcb9mXJ3w4lR7MaZJKVMcWZQ9I7l3ogdw8WyZtfaIGANdfz3QA==
+X-Received: by 2002:a19:7515:: with SMTP id y21mr17999797lfe.96.1572904873837;
+        Mon, 04 Nov 2019 14:01:13 -0800 (PST)
+Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.gmail.com with ESMTPSA id g3sm7454669ljj.59.2019.11.04.14.01.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 14:01:13 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v9 15/19] PM / devfreq: tegra30: Use kHz units for dependency threshold
+Date:   Tue,  5 Nov 2019 00:56:13 +0300
+Message-Id: <20191104215617.25544-16-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
-References: <20191104212126.090054740@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20191104215617.25544-1-digetx@gmail.com>
+References: <20191104215617.25544-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Mladek <pmladek@suse.com>
+The dependency threshold designates a memory activity level below which
+CPU's frequency isn't accounted. Currently the threshold is given in
+"memory cycle" units and that value depends on the polling interval which
+is fixed to 12ms in the driver. Later on we'd want to add support for a
+variable polling interval and thus the threshold value either needs to be
+scaled in accordance to the polling interval or it needs to be represented
+in a units that do not depend on the polling interval.
 
-[ Upstream commit d303de1fcf344ff7c15ed64c3f48a991c9958775 ]
+It is nicer to have threshold value being defined independently of the
+polling interval, thus this patch converts the dependency threshold units
+from "cycle" to "kHz". Having this change as a separate-preparatory patch
+will make easier to follow further patches.
 
-A customer reported the following softlockup:
-
-[899688.160002] NMI watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [test.sh:16464]
-[899688.160002] CPU: 0 PID: 16464 Comm: test.sh Not tainted 4.12.14-6.23-azure #1 SLE12-SP4
-[899688.160002] RIP: 0010:up_write+0x1a/0x30
-[899688.160002] Kernel panic - not syncing: softlockup: hung tasks
-[899688.160002] RIP: 0010:up_write+0x1a/0x30
-[899688.160002] RSP: 0018:ffffa86784d4fde8 EFLAGS: 00000257 ORIG_RAX: ffffffffffffff12
-[899688.160002] RAX: ffffffff970fea00 RBX: 0000000000000001 RCX: 0000000000000000
-[899688.160002] RDX: ffffffff00000001 RSI: 0000000000000080 RDI: ffffffff970fea00
-[899688.160002] RBP: ffffffffffffffff R08: ffffffffffffffff R09: 0000000000000000
-[899688.160002] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8b59014720d8
-[899688.160002] R13: ffff8b59014720c0 R14: ffff8b5901471090 R15: ffff8b5901470000
-[899688.160002]  tracing_read_pipe+0x336/0x3c0
-[899688.160002]  __vfs_read+0x26/0x140
-[899688.160002]  vfs_read+0x87/0x130
-[899688.160002]  SyS_read+0x42/0x90
-[899688.160002]  do_syscall_64+0x74/0x160
-
-It caught the process in the middle of trace_access_unlock(). There is
-no loop. So, it must be looping in the caller tracing_read_pipe()
-via the "waitagain" label.
-
-Crashdump analyze uncovered that iter->seq was completely zeroed
-at this point, including iter->seq.seq.size. It means that
-print_trace_line() was never able to print anything and
-there was no forward progress.
-
-The culprit seems to be in the code:
-
-	/* reset all but tr, trace, and overruns */
-	memset(&iter->seq, 0,
-	       sizeof(struct trace_iterator) -
-	       offsetof(struct trace_iterator, seq));
-
-It was added by the commit 53d0aa773053ab182877 ("ftrace:
-add logic to record overruns"). It was v2.6.27-rc1.
-It was the time when iter->seq looked like:
-
-     struct trace_seq {
-	unsigned char		buffer[PAGE_SIZE];
-	unsigned int		len;
-     };
-
-There was no "size" variable and zeroing was perfectly fine.
-
-The solution is to reinitialize the structure after or without
-zeroing.
-
-Link: http://lkml.kernel.org/r/20191011142134.11997-1-pmladek@suse.com
-
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- kernel/trace/trace.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/devfreq/tegra30-devfreq.c | 30 +++++++++++++++++-------------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 27b17ea44f745..bdd7f3d78724e 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5766,6 +5766,7 @@ waitagain:
- 	       sizeof(struct trace_iterator) -
- 	       offsetof(struct trace_iterator, seq));
- 	cpumask_clear(iter->started);
-+	trace_seq_init(&iter->seq);
- 	iter->pos = -1;
+diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+index 852bde6249c7..3bd920829bfd 100644
+--- a/drivers/devfreq/tegra30-devfreq.c
++++ b/drivers/devfreq/tegra30-devfreq.c
+@@ -96,9 +96,10 @@ struct tegra_devfreq_device_config {
+ 	unsigned int	boost_down_threshold;
  
- 	trace_event_read_lock();
+ 	/*
+-	 * Threshold of activity (cycles) below which the CPU frequency isn't
+-	 * to be taken into account. This is to avoid increasing the EMC
+-	 * frequency when the CPU is very busy but not accessing the bus often.
++	 * Threshold of activity (cycles translated to kHz) below which the
++	 * CPU frequency isn't to be taken into account. This is to avoid
++	 * increasing the EMC frequency when the CPU is very busy but not
++	 * accessing the bus often.
+ 	 */
+ 	u32		avg_dependency_threshold;
+ };
+@@ -126,7 +127,7 @@ static const struct tegra_devfreq_device_config actmon_device_configs[] = {
+ 		.boost_down_coeff = 90,
+ 		.boost_up_threshold = 27,
+ 		.boost_down_threshold = 10,
+-		.avg_dependency_threshold = 50000,
++		.avg_dependency_threshold = 16000, /* 16MHz in kHz units */
+ 	},
+ };
+ 
+@@ -311,7 +312,6 @@ static unsigned long actmon_device_target_freq(struct tegra_devfreq *tegra,
+ 	target_freq = dev->avg_count / ACTMON_SAMPLING_PERIOD;
+ 	avg_sustain_coef = 100 * 100 / dev->config->boost_up_threshold;
+ 	target_freq = do_percent(target_freq, avg_sustain_coef);
+-	target_freq += dev->boost_freq;
+ 
+ 	return target_freq;
+ }
+@@ -322,15 +322,18 @@ static void actmon_update_target(struct tegra_devfreq *tegra,
+ 	unsigned long cpu_freq = 0;
+ 	unsigned long static_cpu_emc_freq = 0;
+ 
+-	if (dev->config->avg_dependency_threshold) {
++	dev->target_freq = actmon_device_target_freq(tegra, dev);
++
++	if (dev->config->avg_dependency_threshold &&
++	    dev->config->avg_dependency_threshold <= dev->target_freq) {
+ 		cpu_freq = cpufreq_quick_get(0);
+ 		static_cpu_emc_freq = actmon_cpu_to_emc_rate(tegra, cpu_freq);
+-	}
+ 
+-	dev->target_freq = actmon_device_target_freq(tegra, dev);
+-
+-	if (dev->avg_count >= dev->config->avg_dependency_threshold)
++		dev->target_freq += dev->boost_freq;
+ 		dev->target_freq = max(dev->target_freq, static_cpu_emc_freq);
++	} else {
++		dev->target_freq += dev->boost_freq;
++	}
+ }
+ 
+ static irqreturn_t actmon_thread_isr(int irq, void *data)
+@@ -396,15 +399,16 @@ static unsigned long
+ tegra_actmon_cpufreq_contribution(struct tegra_devfreq *tegra,
+ 				  unsigned int cpu_freq)
+ {
++	struct tegra_devfreq_device *actmon_dev = &tegra->devices[MCCPU];
+ 	unsigned long static_cpu_emc_freq, dev_freq;
+ 
++	dev_freq = actmon_device_target_freq(tegra, actmon_dev);
++
+ 	/* check whether CPU's freq is taken into account at all */
+-	if (tegra->devices[MCCPU].avg_count <
+-	    tegra->devices[MCCPU].config->avg_dependency_threshold)
++	if (dev_freq < actmon_dev->config->avg_dependency_threshold)
+ 		return 0;
+ 
+ 	static_cpu_emc_freq = actmon_cpu_to_emc_rate(tegra, cpu_freq);
+-	dev_freq = actmon_device_target_freq(tegra, &tegra->devices[MCCPU]);
+ 
+ 	if (dev_freq >= static_cpu_emc_freq)
+ 		return 0;
 -- 
-2.20.1
-
-
+2.23.0
 
