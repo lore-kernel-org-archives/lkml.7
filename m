@@ -2,107 +2,100 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A5BCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22797CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A59D8218BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:14:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JKbtk3On"
+	by mail.kernel.org (Postfix) with ESMTP id EE76D218BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:14:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbfKDOOC (ORCPT
+        id S1728532AbfKDOOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 09:14:02 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35284 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727782AbfKDOOC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 09:14:02 -0500
-Received: by mail-qk1-f196.google.com with SMTP id i19so8589074qki.2;
-        Mon, 04 Nov 2019 06:14:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=2MwvcJ5K000qPvOxUI6F4rY+oHfSb/j9RCrs2a/aoEc=;
-        b=JKbtk3On316fhVk3EO/By03AL5Lb/tbyMeNbuKix2nc8WDTh0Hv77IEaL+QyuMLDNg
-         mHzmDwPWpuag4cnuYHktiL1EWs0NiWo9Eaonot/GhaYr54BWoR0o69kUsMeX4VkEjC8I
-         itqDk29w6YiLIsd8wKaiv009FrcNDQqmCQOH2mHdqaRjUHV27MGZJ4cjSxA/0WC95QhX
-         CcGGKP3z/I1wcVG+9VaQotfdVR0RWS7D3ugP7IYxRzGyNnfTBgpVtJ2BxfK00LuwDeFT
-         a7ggU32FJ+Ddd/7dFS46f1hYvDe0pbkh4nBp3UNvFcHhRsXdpNTwSoDbYfJ1VvJj9y7s
-         9Auw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=2MwvcJ5K000qPvOxUI6F4rY+oHfSb/j9RCrs2a/aoEc=;
-        b=SMhhWELO9o0X+wCHpf0LquSkkvYSaJ/9Epmk0jsSij/iY7vS/6PHSOCNXg4xfsCL4p
-         XVxCZA0oIQ25QWkggU5KvoVU7cxRst8VTjYzlPoSDonK5gZUaem8b/W2kw0gz5/yk9sw
-         G31BQgDAToOL4qrLH1CBdFukphSsPqv41zrIxlxqJs8XY6FVESCNqRPAytgv6EXHRHKY
-         hA8vKjAl69t0gWJ8jeJSsVn9u/XDUnVZuiBjyAwza9c6HBS1kRYl4Pq3hDBAjl3MWUda
-         eJsd6pJl2DiQTnsX6hZ3xZQhcZqddN04CAk7+CKM1FPGuKt9OdZCpHyJ1XkKIq0VDNBd
-         GJNA==
-X-Gm-Message-State: APjAAAU3MedIxWGYM2fwv/DS0DEF49funql51REbSGTHk8p9yXWGN8DG
-        xU2rTImgFmOSQkFPgkwMQQ0TZOKG9cM3ZmqG5rY=
-X-Google-Smtp-Source: APXvYqyTkyVDI6shpM35BlKsNyWc4Zwh6+fM+wEX2WfNRiBubJwKDDEEPNhB3tDkmA2dQv+8/nGS1MEF3I8/aCf4mJw=
-X-Received: by 2002:ae9:e708:: with SMTP id m8mr1789934qka.428.1572876841206;
- Mon, 04 Nov 2019 06:14:01 -0800 (PST)
+        Mon, 4 Nov 2019 09:14:37 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:51446 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727838AbfKDOOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 09:14:36 -0500
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iRd7j-0001gt-I1; Mon, 04 Nov 2019 15:14:27 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Markus Reichl <m.reichl@fivetechno.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: dts: rockchip: Split rk3399-roc-pc for with and without mezzanine board.
+Date:   Mon, 04 Nov 2019 15:14:26 +0100
+Message-ID: <7600269.ktiZa05prH@diego>
+In-Reply-To: <17c7c736-46a2-fee6-9bf3-f351a7871e20@fivetechno.de>
+References: <17c7c736-46a2-fee6-9bf3-f351a7871e20@fivetechno.de>
 MIME-Version: 1.0
-Received: by 2002:ad4:54a5:0:0:0:0:0 with HTTP; Mon, 4 Nov 2019 06:14:00 -0800 (PST)
-In-Reply-To: <20191104132508.GA53856@localhost.localdomain>
-References: <1572451637-14085-1-git-send-email-wallyzhao@gmail.com>
- <20191104084635.GM29418@shao2-debian> <20191104132508.GA53856@localhost.localdomain>
-From:   Wei Zhao <wallyzhao@gmail.com>
-Date:   Mon, 4 Nov 2019 22:14:00 +0800
-Message-ID: <CAFRmqq6vNg5sBYp7voT4SoVR+i+L8fDqUUZOF68cRdcKkQcZmw@mail.gmail.com>
-Subject: Re: [sctp] 327fecdaf3: BUG:kernel_NULL_pointer_dereference,address
-To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc:     kernel test robot <rong.a.chen@intel.com>, vyasevich@gmail.com,
-        nhorman@tuxdriver.com, davem@davemloft.net,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wally.zhao@nokia-sbell.com,
-        lkp@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/4/19, Marcelo Ricardo Leitner <marcelo.leitner@gmail.com> wrote:
-> On Mon, Nov 04, 2019 at 04:46:35PM +0800, kernel test robot wrote:
->> [   35.312661] BUG: kernel NULL pointer dereference, address:
->> 00000000000005d8
->> [   35.316225] #PF: supervisor read access in kernel mode
->> [   35.319178] #PF: error_code(0x0000) - not-present page
->> [   35.322078] PGD 800000021b569067 P4D 800000021b569067 PUD 21b688067 PMD
->> 0
->> [   35.325629] Oops: 0000 [#1] SMP PTI
->> [   35.327965] CPU: 0 PID: 3148 Comm: trinity-c5 Not tainted
->> 5.4.0-rc3-01107-g327fecdaf39ab #12
->> [   35.332863] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
->> 1.10.2-1 04/01/2014
->> [   35.337932] RIP: 0010:sctp_packet_transmit+0x767/0x822
->
-> Right, as asoc can be NULL by then. (per the check on it a few lines
-> before the change here).
+Hi Markus,
 
-Yes, apologize for missing the NULL check (Actually I realized some
-further check is need to correctly identify the first in flight
-packet, as outstanding_bytes has already been increased by this first
-in flight packet itself before getting into sctp_packet_transmit).
+Am Montag, 4. November 2019, 15:08:55 CET schrieb Markus Reichl:
+> For rk3399-roc-pc is a mezzanine board available that carries M.2 and
+> POE interfaces. Use it with a separate dts.
+> 
+> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+> ---
+> v2: Add new compatible string for roc-pc with mezzanine board.
+> ---
+>  .../devicetree/bindings/arm/rockchip.yaml     |   7 +-
+>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>  .../boot/dts/rockchip/rk3399-roc-pc-mezz.dts  |  72 ++
+>  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 757 +----------------
+>  .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 770 ++++++++++++++++++
+>  5 files changed, 850 insertions(+), 757 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> index bf86e8237363..e46af071a5fe 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> @@ -87,11 +87,16 @@ properties:
+>            - const: firefly,roc-rk3328-cc
+>            - const: rockchip,rk3328
+>  
+> -      - description: Firefly ROC-RK3399-PC
+> +      - description: Firefly ROC-RK3399-PC standalone
+>          items:
+>            - const: firefly,roc-rk3399-pc
+>            - const: rockchip,rk3399
+>  
+> +      - description: Firefly ROC-RK3399-PC with mezzanine
+> +        items:
+> +          - const: firefly,roc-rk3399-pc-mezz
+> +          - const: rockchip,rk3399
+> +
 
-Anyway, I think I do not need further action, as the patch is anyway
-not going to be merged, the 0day robot picks up the patch from the
-mail list directly instead of git repo, right?
+Please do this similar to like the NanoPC boards, so like
 
-Thanks a lot,
-Wally
+      - description: Firefly ROC-RK3399-PC
+         items:
+          - enum:
+              - firefly,roc-rk3399-pc
+              - firefly,roc-rk3399-pc-mezzanine
+           - const: rockchip,rk3399
 
->
->   Marcelo
->
+including using the full name (-mezzanine) here and in the
+actual dts filename+compatible.
+
+Thanks
+Heiko
+
+
