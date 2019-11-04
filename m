@@ -2,135 +2,143 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85057CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D9DCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 206D020578
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:38:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="my0RNJHJ"
+	by mail.kernel.org (Postfix) with ESMTP id 9A92820578
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:41:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbfKDGiv (ORCPT
+        id S1727817AbfKDGlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 01:38:51 -0500
-Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:40732 "EHLO
-        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727444AbfKDGiu (ORCPT
+        Mon, 4 Nov 2019 01:41:09 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:52750 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727368AbfKDGlI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 01:38:50 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 5640F41AFC;
-        Mon,  4 Nov 2019 07:38:47 +0100 (CET)
-Authentication-Results: ste-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=my0RNJHJ;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
-        dkim=pass (1024-bit key) header.d=shipmail.org
-Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id pK6rnnTSfQBb; Mon,  4 Nov 2019 07:38:46 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id B34E641AFA;
-        Mon,  4 Nov 2019 07:38:45 +0100 (CET)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id F237236012A;
-        Mon,  4 Nov 2019 07:38:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1572849525; bh=ydDZUZ35VQE4vWMXu02FIV1ozT0iHAO9SLQ7IoS/ubY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=my0RNJHJsk6/dLj4EG+CvrhDf/re4in48FYJE2/MIvfNMztiDK5Bvr145799JT+it
-         yVeZi+1zBWDJBd6IO3gbJ26E8YOHB/Xbh7hBXNCgoG+JwI4KffkGWPxF6EdAA/kVbS
-         H4UgawSszoGdpMvTXIoJ3phEzwNdYqxeFGUUM1hs=
-Subject: Re: dma coherent memory user-space maps
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <b811f66d-2353-23c6-c9fa-e279cdb0f832@shipmail.org>
- <20191031215415.GA9809@infradead.org>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <7d5f8ec3-41a2-2ceb-aaa1-0bf3aa03d9a1@shipmail.org>
-Date:   Mon, 4 Nov 2019 07:38:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 4 Nov 2019 01:41:08 -0500
+Received: by mail-il1-f197.google.com with SMTP id t23so14879865ila.19
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 22:41:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=zjUEm4n2QGZiAjQ0l6i1nAlpzkEMT32Bo7zHdLCO1XU=;
+        b=tg8JnUy9N+A/Hmkr6SgHR5H1vAm/+plfYtU9cVlynscQG462a0kGEonMYhwY9DMnIo
+         SIIttD7zjSOSG0Df+hjUMEB0Fvvno/b/y7XEIjrKG74iczsrHGNHvwwXhqMLs6MhUYg0
+         sRluq8ZX1BJwipYJqatcqAbyjns1XYBhHNFMRfZ79wcmcazq8/sSx4PcRrA1apGPGakD
+         fHqNAHGxMKaHBHVeiFJ/oXWCq9wmGWHtH8w9VRyMna3+jkkxE70O2tKo7diw1/5Vt3Ds
+         iljneiYjtJ/u5Crh+ympFUwe2gbOU7uGOyp/HS269LyK16t1RuSwijAE8uMgXjEmbNKE
+         r+DA==
+X-Gm-Message-State: APjAAAWATIYfTn9pafT3rnBUgYeYXSz/OI5KVu221TyiCS8aRnaTzeDv
+        xy//4Qo4eqNG+F6Sd5o6dvUov00TnAepIa2vHMStTQ/p2eTI
+X-Google-Smtp-Source: APXvYqw+nreieLrPYdIUFcEgEIU44O5Aj8bhewrX26iSFPuIizX+8N8mif2nt3olFQIV1G+LODV1ZggdSh1NHF3G1yy+tzwEuBRx
 MIME-Version: 1.0
-In-Reply-To: <20191031215415.GA9809@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-Received: by 2002:a5e:d716:: with SMTP id v22mr21059204iom.152.1572849667938;
+ Sun, 03 Nov 2019 22:41:07 -0800 (PST)
+Date:   Sun, 03 Nov 2019 22:41:07 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000be219705967f9963@google.com>
+Subject: general protection fault in kvm_coalesced_mmio_init
+From:   syzbot <syzbot+e27e7027eb2b80e44225@syzkaller.appspotmail.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Crhistoph,
+Hello,
 
-On 10/31/19 10:54 PM, Christoph Hellwig wrote:
-> Hi Thomas,
->
-> sorry for the delay.  I've been travelling way to much laterly and had
-> a hard time keeping up.
->
-> On Tue, Oct 08, 2019 at 02:34:17PM +0200, Thomas Hellström (VMware) wrote:
->> /* Obtain struct dma_pfn pointers from a dma coherent allocation */
->> int dma_get_dpfns(struct device *dev, void *cpu_addr, dma_addr_t dma_addr,
->>            pgoff_t offset, pgoff_t num, dma_pfn_t dpfns[]);
->>
->> I figure, for most if not all architectures we could use an ordinary pfn as
->> dma_pfn_t, but the dma layer would still have control over how those pfns
->> are obtained and how they are used in the kernel's mapping APIs.
->>
->> If so, I could start looking at this, time permitting,  for the cases where
->> the pfn can be obtained from the kernel address or from
->> arch_dma_coherent_to_pfn(), and also the needed work to have a tailored
->> vmap_pfn().
-> I'm not sure that infrastructure is all that helpful unfortunately, even
-> if it ended up working.  The problem with the 'coherent' DMA mappings
-> is that we they have a few different backends.  For architectures that
-> are DMA coherent everything is easy and we use the normal page
-> allocator, and your above is trivially doable as wrappers around the
-> existing functionality.  Other remap ptes to be uncached, either
-> in-place or using vmap, and the remaining ones use weird special
-> allocators for which almost everything we can mormally do in the VM
-> will fail.
+syzbot found the following crash on:
 
-Hmm, yes I was hoping one could hide that behind the dma_pfn_t and the 
-interface, so that non-trivial backends would be able to define the 
-dma_pfn_t as needed and also if needed have their own special 
-implementation of the interface functions. The interface was spec'ed 
-from the user's (TTM) point of view assuming that with a page-prot and 
-an opaque dma_pfn_t we'd be able to support most non-trivial backends, 
-but that's perhaps not the case?
+HEAD commit:    9d234505 Merge tag 'hwmon-for-v5.4-rc6' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1780f6a4e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cbbed3e8d4eb64bf
+dashboard link: https://syzkaller.appspot.com/bug?extid=e27e7027eb2b80e44225
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
->
-> I promised Christian an uncached DMA allocator a while ago, and still
-> haven't finished that either unfortunately.  But based on looking at
-> the x86 pageattr code I'm now firmly down the road of using the
-> set_memory_* helpers that change the pte attributes in place, as
-> everything else can't actually work on x86 which doesn't allow
-> aliasing of PTEs with different caching attributes.  The arm64 folks
-> also would prefer in-place remapping even if they don't support it
-> yet, and that is something the i915 code already does in a somewhat
-> hacky way, and something the msm drm driver wants.  So I decided to
-> come up with an API that gives back 'coherent' pages on the
-> architectures that support it and otherwise just fail.
->
-> Do you care about architectures other than x86 and arm64?  If not I'll
-> hopefully have something for you soon.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-For VMware we only care about x86 and arm64, but i think Christian needs 
-to fill in here.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e27e7027eb2b80e44225@syzkaller.appspotmail.com
 
-Thanks,
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 19030 Comm: syz-executor.1 Not tainted 5.4.0-rc5+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:kvm_coalesced_mmio_init+0x67/0x120  
+arch/x86/kvm/../../../virt/kvm/coalesced_mmio.c:121
+Code: 00 48 01 c3 48 89 fa 48 b8 00 00 00 00 80 88 ff ff 48 c1 fb 06 48 c1  
+ea 03 48 c1 e3 0c 48 01 c3 48 b8 00 00 00 00 00 fc ff df <80> 3c 02 00 0f  
+85 9a 00 00 00 49 89 9c 24 d8 96 00 00 48 c7 c2 60
+RSP: 0018:ffff88808e5cfc08 EFLAGS: 00010286
+RAX: dffffc0000000000 RBX: ffff88809a815000 RCX: ffffc90008156000
+RDX: 00000000000012db RSI: ffffffff8108569c RDI: 00000000000096d8
+RBP: ffff88808e5cfc18 R08: 0000000000000000 R09: ffffed1015d06b75
+R10: ffffed1015d06b74 R11: ffff8880ae835ba3 R12: 0000000000000000
+R13: dffffc0000000000 R14: ffffc90001921000 R15: ffff88805bf80000
+FS:  00007f1e8b8a5700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020800000 CR3: 0000000097aee000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  kvm_dev_ioctl_create_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:3448  
+[inline]
+  kvm_dev_ioctl+0x81e/0x1610 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3496
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459f49
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f1e8b8a4c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459f49
+RDX: 0000000000000000 RSI: 000000000000ae01 RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f1e8b8a56d4
+R13: 00000000004c30a8 R14: 00000000004d7018 R15: 00000000ffffffff
+Modules linked in:
+---[ end trace bc86b75fc185a9a9 ]---
+RIP: 0010:kvm_coalesced_mmio_init+0x67/0x120  
+arch/x86/kvm/../../../virt/kvm/coalesced_mmio.c:121
+Code: 00 48 01 c3 48 89 fa 48 b8 00 00 00 00 80 88 ff ff 48 c1 fb 06 48 c1  
+ea 03 48 c1 e3 0c 48 01 c3 48 b8 00 00 00 00 00 fc ff df <80> 3c 02 00 0f  
+85 9a 00 00 00 49 89 9c 24 d8 96 00 00 48 c7 c2 60
+RSP: 0018:ffff88808e5cfc08 EFLAGS: 00010286
+RAX: dffffc0000000000 RBX: ffff88809a815000 RCX: ffffc90008156000
+RDX: 00000000000012db RSI: ffffffff8108569c RDI: 00000000000096d8
+RBP: ffff88808e5cfc18 R08: 0000000000000000 R09: ffffed1015d06b75
+R10: ffffed1015d06b74 R11: ffff8880ae835ba3 R12: 0000000000000000
+R13: dffffc0000000000 R14: ffffc90001921000 R15: ffff88805bf80000
+FS:  00007f1e8b8a5700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fbe165b8330 CR3: 0000000097aee000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-Thomas
 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
