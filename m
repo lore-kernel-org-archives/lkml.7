@@ -2,218 +2,105 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49452CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 04:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C22CA9ED2
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 04:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 111B2222C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 04:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6990C21D71
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 04:55:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eFq6chB+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oe027GXI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727687AbfKDErI (ORCPT
+        id S1727717AbfKDEzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 23:47:08 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39893 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727267AbfKDErH (ORCPT
+        Sun, 3 Nov 2019 23:55:12 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33153 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbfKDEzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 23:47:07 -0500
-Received: by mail-pl1-f195.google.com with SMTP id o9so371472plk.6
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 20:47:07 -0800 (PST)
+        Sun, 3 Nov 2019 23:55:12 -0500
+Received: by mail-pf1-f194.google.com with SMTP id c184so11345648pfb.0
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 20:55:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=sI8SdyDQlg9PptexVD4FINeW/bRt7Aqgu7Py4pibvoI=;
-        b=eFq6chB+gXLpAY+mYAbZbDbJQb9ZE7Vlh57ve/G8w/VOOU6NqFKVMf+FzIBnv3Ry9S
-         YrgkE1MLRUd572nOPSh7FD8qMc/g7/9hMP+NBUHfI4NcEJdb4gOmVIbMUJ04IiEcZ4Zc
-         Hi7YWwFXJg7Uv0drDmfOonbg9+1xtbf7Sa/L9F5kHhP81/YkA9ww1k2nU6IrfD2FA+zy
-         +wXraksfhSIa/SIWBSuF2oo2tUT1on4Z+LJz1Ea6Wy3XiCM32UnlC/f+oxoeqM8ku9TY
-         GjUryJUyHzBVTrsTXTg1/PNUIN5p9fpE6pjUUyockXxJSjqVI5kcNVceosUokq5EUFTY
-         5/YA==
+        bh=5E1F/8ZpGkp0JFWHPBZzhYupEtvMBHGaGPCEq4HCJd8=;
+        b=oe027GXIIXbVYu+L6R++Ex0ivkxkIGJmbtLj87bIkCastqwv2GdYj2aluSVznMtBKH
+         cnN6LYXh2rCuHhCo92VZDGPy7iGchD4cza9qvLPXOU7+lD233p3f2M+SuJFm2hl70kpj
+         wLxO02Mdg1L4bSC2kPDyTndpSHMDSk+/o13Z7ic37Lnib4qK6suKaOnKlvIBfF6vLvSC
+         dI20i7Qy02sgCpt4wH7XFMzEGkCfxpF0LVE5IO0zZ+HldzkBgoj16x9WCfgb0IUqLfwN
+         pa1+RlebJ2AF+Jrb4nacKHWHjaO1ZFxgLMhsRK8Tmk4FBp5bvPXNR1hgBxgVArnNggTb
+         X3Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sI8SdyDQlg9PptexVD4FINeW/bRt7Aqgu7Py4pibvoI=;
-        b=ltiPiUjjOobkRCl43HTrt+dLyS5+DCaRch3CpZ04oDuz2U+5sbmwzZJYIMaMnzMzCt
-         VX5DloR6Ahqo4qT1YWenDxqPy+xglZSR691Azvi8ZS3tC6P9Xlk6l92jrNn1+1XCZiD1
-         evlOKgTVoMvekVxquzOmfZ2jIZUmczgUZdypgyRcpUFvSJgGlsEy4JdGRu+sJV1fCFJN
-         sb9aBTRgNLViFIOv4uw87cU3VeoBAXiAWLpZ/suIpPzhvFW+WUOfZmUcjI/8m609cIjZ
-         7eEkTw+g4tXBHTt4jMFYE8CBTWi/gEQRLiTx5AUnPMwrpnTd+eEUbgiyoi96MHjHsgOr
-         toyQ==
-X-Gm-Message-State: APjAAAUNYDjm5e24tvBN6F7/KypCvCeSooNyLfqoliV+49HI81bKL0+W
-        VL1JQ/cVnkM7HqdphKdG9TDU8Q==
-X-Google-Smtp-Source: APXvYqx13e72R6oJZBfFP6N2KVZXH2P+1oWapalahijz52zzjzDPZpajzSI9ywU2qThoxeVPP3Q44Q==
-X-Received: by 2002:a17:902:322:: with SMTP id 31mr24604389pld.293.1572842826478;
-        Sun, 03 Nov 2019 20:47:06 -0800 (PST)
+        bh=5E1F/8ZpGkp0JFWHPBZzhYupEtvMBHGaGPCEq4HCJd8=;
+        b=ES1gNjfJ/5d/Ul/U/mJFzOZLN0yZGc6MtIFhMATPaci03Axrt5fbAyB1fRnjIZcykY
+         i8E53g95Re74SMa31pGAJdJniudO2Q2ysOXRLJ/IThSWQRGEd7Nn4rkOVvL0Us+LnZ9h
+         q5x/n5/t4nvcP3RarGnxP0OTiVgVKyPwdYPUSvLsukGsB5wncICTlX17rZK9O3OSTqh6
+         9rxUKdMDsPlVHTvIAbXXLIjBed3l9HI2ldDGxTlI8C914dOlZXG2+NXLXtxkxpim7E3+
+         EupVR6wFLtpUhVzGMvdFAOjaL5k5oXfnP6mL9wELiQspuOMHJ6hxXVEFX+wYhpZElT32
+         +VHQ==
+X-Gm-Message-State: APjAAAWmMm5bHavTBGl65bX7m+2w6+/saSfeHpP9CSYdNFlVMkwSmy8z
+        rMor+MWYRZSavwKvQFqeY2Kgnw==
+X-Google-Smtp-Source: APXvYqxS77pEs+QxOH7S2eE8c8E78rzeBq9iwCG53FN9NDCO7r/Y6hxTjoGCJ5yqLH9E8bXRZlFQfQ==
+X-Received: by 2002:a17:90a:2623:: with SMTP id l32mr33443825pje.70.1572843311000;
+        Sun, 03 Nov 2019 20:55:11 -0800 (PST)
 Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id i71sm15994359pfe.103.2019.11.03.20.47.05
+        by smtp.gmail.com with ESMTPSA id x2sm2276885pfn.167.2019.11.03.20.55.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Nov 2019 20:47:05 -0800 (PST)
-Date:   Sun, 3 Nov 2019 20:47:03 -0800
+        Sun, 03 Nov 2019 20:55:10 -0800 (PST)
+Date:   Sun, 3 Nov 2019 20:55:07 -0800
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] phy: qcom: qmp: Add SDM845 QHP PCIe PHY
-Message-ID: <20191104044703.GQ1929@tuxbook-pro>
-References: <20191102001628.4090861-1-bjorn.andersson@linaro.org>
- <20191102001628.4090861-6-bjorn.andersson@linaro.org>
- <20191103082147.GO2695@vkoul-mobl.Dlink>
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/11] arm64: dts: qcom: msm8996: Introduce IFC6640
+Message-ID: <20191104045507.GA28034@tuxbook-pro>
+References: <20191021051322.297560-1-bjorn.andersson@linaro.org>
+ <20191103081311.GM2695@vkoul-mobl.Dlink>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191103082147.GO2695@vkoul-mobl.Dlink>
+In-Reply-To: <20191103081311.GM2695@vkoul-mobl.Dlink>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 03 Nov 01:21 PDT 2019, Vinod Koul wrote:
-> On 01-11-19, 17:16, Bjorn Andersson wrote:
-[..]
-> > +/* PCIE GEN3 COM registers */
-> > +#define PCIE_GEN3_QHP_COM_SYSCLK_EN_SEL			0xdc
-> 
-> No QPHY_ tag with these?
+On Sun 03 Nov 01:13 PDT 2019, Vinod Koul wrote:
 
-These are the actual register names from the hardware specification, do
-you foresee any issues with naming them like this?
-
-> > +#define PCIE_GEN3_QHP_COM_SSC_EN_CENTER			0x14
+> On 20-10-19, 22:13, Bjorn Andersson wrote:
+> > Refactor msm8996 and db820c in order to make it follow the structure of newer
+> > platforms, move db820c specific things to db820c.dtsi and then introduce the
+> > Informace 6640 Single Board Computer.
 > 
-> Can we sort these please!
+> This has patch 9/11 missing. But rest look good to me.
 > 
 
-Yes, that sounds reasonable. I'll respin with these sorted by address.
+That's really odd, I copy pasted the recipients into all the patches.
+But I'm unable to find it under linux-arm-msm on lore as well.
+
+It's under LKML though, can you please have a look and let me know if I
+can extend your ack to patch 9/11 as well?
+
+https://lore.kernel.org/lkml/20191021051322.297560-10-bjorn.andersson@linaro.org/
+
+> Acked-by: Vinod Koul <vkoul@kernel.org>
+
+Thank you for the review Vinod!
 
 Regards,
 Bjorn
 
-> > +#define PCIE_GEN3_QHP_COM_SSC_PER1			0x20
-> > +#define PCIE_GEN3_QHP_COM_SSC_PER2			0x24
-> > +#define PCIE_GEN3_QHP_COM_SSC_STEP_SIZE1		0x28
-> > +#define PCIE_GEN3_QHP_COM_SSC_STEP_SIZE2		0x2c
-> > +#define PCIE_GEN3_QHP_COM_SSC_STEP_SIZE1_MODE1		0x34
-> > +#define PCIE_GEN3_QHP_COM_SSC_STEP_SIZE2_MODE1		0x38
-> > +#define PCIE_GEN3_QHP_COM_BIAS_EN_CKBUFLR_EN		0x54
-> > +#define PCIE_GEN3_QHP_COM_CLK_ENABLE1			0x58
-> > +#define PCIE_GEN3_QHP_COM_LOCK_CMP1_MODE0		0x6c
-> > +#define PCIE_GEN3_QHP_COM_LOCK_CMP2_MODE0		0x70
-> > +#define PCIE_GEN3_QHP_COM_LOCK_CMP1_MODE1		0x78
-> > +#define PCIE_GEN3_QHP_COM_LOCK_CMP2_MODE1		0x7c
-> > +#define PCIE_GEN3_QHP_COM_CP_CTRL_MODE0			0xb4
-> > +#define PCIE_GEN3_QHP_COM_CP_CTRL_MODE1			0xb8
-> > +#define PCIE_GEN3_QHP_COM_PLL_RCTRL_MODE0		0xc0
-> > +#define PCIE_GEN3_QHP_COM_PLL_RCTRL_MODE1		0xc4
-> > +#define PCIE_GEN3_QHP_COM_PLL_CCTRL_MODE0		0xcc
-> > +#define PCIE_GEN3_QHP_COM_PLL_CCTRL_MODE1		0xd0
-> > +#define PCIE_GEN3_QHP_COM_RESTRIM_CTRL2			0xf0
-> > +#define PCIE_GEN3_QHP_COM_LOCK_CMP_EN			0xf8
-> > +#define PCIE_GEN3_QHP_COM_DEC_START_MODE0		0x100
-> > +#define PCIE_GEN3_QHP_COM_DEC_START_MODE1		0x108
-> > +#define PCIE_GEN3_QHP_COM_DIV_FRAC_START1_MODE0		0x11c
-> > +#define PCIE_GEN3_QHP_COM_DIV_FRAC_START2_MODE0		0x120
-> > +#define PCIE_GEN3_QHP_COM_DIV_FRAC_START3_MODE0		0x124
-> > +#define PCIE_GEN3_QHP_COM_DIV_FRAC_START1_MODE1		0x128
-> > +#define PCIE_GEN3_QHP_COM_DIV_FRAC_START2_MODE1		0x12c
-> > +#define PCIE_GEN3_QHP_COM_DIV_FRAC_START3_MODE1		0x130
-> > +#define PCIE_GEN3_QHP_COM_INTEGLOOP_GAIN0_MODE0		0x150
-> > +#define PCIE_GEN3_QHP_COM_INTEGLOOP_GAIN0_MODE1		0x158
-> > +#define PCIE_GEN3_QHP_COM_VCO_TUNE_MAP			0x178
-> > +#define PCIE_GEN3_QHP_COM_CLK_SELECT			0x1cc
-> > +#define PCIE_GEN3_QHP_COM_HSCLK_SEL1			0x1d0
-> > +#define PCIE_GEN3_QHP_COM_CORECLK_DIV			0x1e0
-> > +#define PCIE_GEN3_QHP_COM_CORE_CLK_EN			0x1e8
-> > +#define PCIE_GEN3_QHP_COM_CMN_CONFIG			0x1f0
-> > +#define PCIE_GEN3_QHP_COM_SVS_MODE_CLK_SEL		0x1fc
-> > +#define PCIE_GEN3_QHP_COM_CORECLK_DIV_MODE1		0x21c
-> > +#define PCIE_GEN3_QHP_COM_CMN_MODE			0x224
-> > +#define PCIE_GEN3_QHP_COM_VREGCLK_DIV1			0x228
-> > +#define PCIE_GEN3_QHP_COM_VREGCLK_DIV2			0x22c
-> > +#define PCIE_GEN3_QHP_COM_BGV_TRIM			0x98
-> > +#define PCIE_GEN3_QHP_COM_BG_CTRL			0x1c8
-> > +
-> > +/* PCIE GEN3 QHP Lane registers */
-> > +#define PCIE_GEN3_QHP_L0_DRVR_CTRL0			0xc
-> > +#define PCIE_GEN3_QHP_L0_DRVR_TAP_EN			0x18
-> > +#define PCIE_GEN3_QHP_L0_TX_BAND_MODE			0x60
-> > +#define PCIE_GEN3_QHP_L0_LANE_MODE			0x64
-> > +#define PCIE_GEN3_QHP_L0_PARALLEL_RATE			0x7c
-> > +#define PCIE_GEN3_QHP_L0_CML_CTRL_MODE0			0xc0
-> > +#define PCIE_GEN3_QHP_L0_CML_CTRL_MODE1			0xc4
-> > +#define PCIE_GEN3_QHP_L0_CML_CTRL_MODE2			0xc8
-> > +#define PCIE_GEN3_QHP_L0_PREAMP_CTRL_MODE1		0xd0
-> > +#define PCIE_GEN3_QHP_L0_PREAMP_CTRL_MODE2		0xd4
-> > +#define PCIE_GEN3_QHP_L0_MIXER_CTRL_MODE0		0xd8
-> > +#define PCIE_GEN3_QHP_L0_MIXER_CTRL_MODE1		0xdc
-> > +#define PCIE_GEN3_QHP_L0_MIXER_CTRL_MODE2		0xe0
-> > +#define PCIE_GEN3_QHP_L0_CTLE_THRESH_DFE		0xfc
-> > +#define PCIE_GEN3_QHP_L0_CGA_THRESH_DFE			0x100
-> > +#define PCIE_GEN3_QHP_L0_RXENGINE_EN0			0x108
-> > +#define PCIE_GEN3_QHP_L0_CTLE_TRAIN_TIME		0x114
-> > +#define PCIE_GEN3_QHP_L0_CTLE_DFE_OVRLP_TIME		0x118
-> > +#define PCIE_GEN3_QHP_L0_DFE_REFRESH_TIME		0x11c
-> > +#define PCIE_GEN3_QHP_L0_DFE_ENABLE_TIME		0x120
-> > +#define PCIE_GEN3_QHP_L0_VGA_GAIN			0x124
-> > +#define PCIE_GEN3_QHP_L0_DFE_GAIN			0x128
-> > +#define PCIE_GEN3_QHP_L0_EQ_GAIN			0x130
-> > +#define PCIE_GEN3_QHP_L0_OFFSET_GAIN			0x134
-> > +#define PCIE_GEN3_QHP_L0_PRE_GAIN			0x138
-> > +#define PCIE_GEN3_QHP_L0_EQ_INTVAL			0x154
-> > +#define PCIE_GEN3_QHP_L0_EDAC_INITVAL			0x160
-> > +#define PCIE_GEN3_QHP_L0_RXEQ_INITB0			0x168
-> > +#define PCIE_GEN3_QHP_L0_RXEQ_INITB1			0x16c
-> > +#define PCIE_GEN3_QHP_L0_RCVRDONE_THRESH1		0x178
-> > +#define PCIE_GEN3_QHP_L0_RXEQ_CTRL			0x180
-> > +#define PCIE_GEN3_QHP_L0_UCDR_FO_GAIN_MODE0		0x184
-> > +#define PCIE_GEN3_QHP_L0_UCDR_FO_GAIN_MODE1		0x188
-> > +#define PCIE_GEN3_QHP_L0_UCDR_FO_GAIN_MODE2		0x18c
-> > +#define PCIE_GEN3_QHP_L0_UCDR_SO_GAIN_MODE0		0x190
-> > +#define PCIE_GEN3_QHP_L0_UCDR_SO_GAIN_MODE1		0x194
-> > +#define PCIE_GEN3_QHP_L0_UCDR_SO_GAIN_MODE2		0x198
-> > +#define PCIE_GEN3_QHP_L0_UCDR_SO_CONFIG			0x19c
-> > +#define PCIE_GEN3_QHP_L0_RX_BAND			0x1a4
-> > +#define PCIE_GEN3_QHP_L0_RX_RCVR_PATH1_MODE0		0x1c0
-> > +#define PCIE_GEN3_QHP_L0_RX_RCVR_PATH1_MODE1		0x1c4
-> > +#define PCIE_GEN3_QHP_L0_RX_RCVR_PATH1_MODE2		0x1c8
-> > +#define PCIE_GEN3_QHP_L0_SIGDET_ENABLES			0x230
-> > +#define PCIE_GEN3_QHP_L0_SIGDET_CNTRL			0x234
-> > +#define PCIE_GEN3_QHP_L0_SIGDET_DEGLITCH_CNTRL		0x238
-> > +#define PCIE_GEN3_QHP_L0_DCC_GAIN			0x2a4
-> > +#define PCIE_GEN3_QHP_L0_RX_EN_SIGNAL			0x2ac
-> > +#define PCIE_GEN3_QHP_L0_PSM_RX_EN_CAL			0x2b0
-> > +#define PCIE_GEN3_QHP_L0_RX_MISC_CNTRL0			0x2b8
-> > +#define PCIE_GEN3_QHP_L0_TS0_TIMER			0x2c0
-> > +#define PCIE_GEN3_QHP_L0_DLL_HIGHDATARATE		0x2c4
-> > +#define PCIE_GEN3_QHP_L0_DRVR_CTRL1			0x10
-> > +#define PCIE_GEN3_QHP_L0_DRVR_CTRL2			0x14
-> > +#define PCIE_GEN3_QHP_L0_RX_RESETCODE_OFFSET		0x2cc
-> > +#define PCIE_GEN3_QHP_L0_VGA_INITVAL			0x13c
-> > +#define PCIE_GEN3_QHP_L0_RSM_START			0x2a8
-> > +
-> > +/* PCIE GEN3 PCS registers */
-> > +#define PCIE_GEN3_QHP_PHY_POWER_STATE_CONFIG		0x15c
-> > +#define PCIE_GEN3_QHP_PHY_PCS_TX_RX_CONFIG		0x174
-> > +#define PCIE_GEN3_QHP_PHY_TXMGN_MAIN_V0_M3P5DB		0x2c
-> > +#define PCIE_GEN3_QHP_PHY_TXMGN_POST_V0_M3P5DB		0x40
-> > +#define PCIE_GEN3_QHP_PHY_TXMGN_MAIN_V0_M6DB		0x54
-> > +#define PCIE_GEN3_QHP_PHY_TXMGN_POST_V0_M6DB		0x68
-> > +#define PCIE_GEN3_QHP_PHY_POWER_STATE_CONFIG5		0x16c
-> > +
-> >  #endif
-> > -- 
-> > 2.23.0
 > 
 > -- 
 > ~Vinod
