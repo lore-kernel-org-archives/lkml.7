@@ -2,144 +2,132 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B186DCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DDBCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8770D20869
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E358B20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:48:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b="RCT4Y9Ka";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Utbmnlpl"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Yhst2fvn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbfKDUrm (ORCPT
+        id S1729530AbfKDUsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 15:47:42 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:47545 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728392AbfKDUrm (ORCPT
+        Mon, 4 Nov 2019 15:48:18 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:7854 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbfKDUsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 15:47:42 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 81A4A21B4C;
-        Mon,  4 Nov 2019 15:47:40 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 04 Nov 2019 15:47:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alyssa.is; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=XmRwftF81yg852f+UvjXfdQjfz
-        O1tQWIo/qB1nRcCIM=; b=RCT4Y9KaK7JUgkB0GJjZKwT63HfUP8OSbRYq0dhFrB
-        XkJErq8NyARygfMeYWy3KGL3X176f6aps41+M2opU7N9DRgsnLDIg4RCeaF+av53
-        3F+sAxki+oRjbbQo9W/uDxR+QaRmU3V7y/g3gzXPyb6bLHeBONCv4Dd+KdzvO8ne
-        eaal/GNltBJJKI8yHImoNcSiPos5e7G+sl/2brX+rzyJJhD93UXT9icBAvcHL7aX
-        wxBjBGEcYOjofIrn2eX+wANDD4v3U67p81gphGS2eAWbap+0LF/SUp9fCwnCE8Hx
-        JfcxqFEqVwtylBuL0aFIbJqD8ibXxs8vROq35kWhADtg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=XmRwftF81yg852f+U
-        vjXfdQjfzO1tQWIo/qB1nRcCIM=; b=UtbmnlplIaNObTZGtWoQCXfoAFA0vDkQu
-        pVK8J94JkNfA0gZ5wnGWIBzLoNz9Yy4AVdhOzUwRjrYI5sZtnnkI/km31g+UpYV3
-        11nP1TaPgr63m1PjrSGUs/T0wI7Ll/3RjAXzAHRTo+oSoiCpGSLXn/i7qmXZpalE
-        E/q2hLZZSsBcd5Taf4o6pVeumxwNu32O2rSmD5DVoBF5fTadBjShRDCBoqm8mt0X
-        p1W0wDXwh44PULFz4ujtd6PrrL0WvW4GokJyRi3Mh2XMl+EBCqlXq6NbGT9gCAUO
-        xfqkQD8nPlxA/ukockdrGiQXQvN5NeLXqslwdtqWbfvoneEE82t2Q==
-X-ME-Sender: <xms:a47AXeT4srDBpkPPaBG_APvd0RZ58LMryC6fHhkiyISLqqk2vMwTvw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedruddufedgudegudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomheptehlhihsshgr
-    ucftohhsshcuoehhihesrghlhihsshgrrdhisheqnecukfhppeekgedrudekgedrvdefje
-    druddufeenucfrrghrrghmpehmrghilhhfrhhomhepqhihlhhishhsseigvddvtddrqhih
-    lhhishhsrdhnvghtnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:a47AXeFN2yHZt7auarc7NqlOxcsb_xwyP_cf-bRJDjYWCReypLRZJw>
-    <xmx:a47AXWE5JBnJC8Ax7DkDHXcMXu1yQbAJqeFygfZCWZt-mnQIskK17Q>
-    <xmx:a47AXQSJFynteyOeVPSOLd9wZECsDmfgHHcBHRE5XAf2qfqBpNRXhw>
-    <xmx:bI7AXQ2JYH0docpGusjS_K-wPBKnSOtjrjveueewWgCqTf6i68QkLw>
-Received: from x220.qyliss.net (p54b8ed71.dip0.t-ipconnect.de [84.184.237.113])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 013E63060060;
-        Mon,  4 Nov 2019 15:47:39 -0500 (EST)
-Received: by x220.qyliss.net (Postfix, from userid 1000)
-        id 24E841400EA; Mon,  4 Nov 2019 20:47:36 +0000 (UTC)
-From:   Alyssa Ross <hi@alyssa.is>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org, Alyssa Ross <hi@alyssa.is>
-Subject: [PATCH] kconfig: be more helpful if pkg-config is missing
-Date:   Mon,  4 Nov 2019 20:44:54 +0000
-Message-Id: <20191104204453.20115-1-hi@alyssa.is>
-X-Mailer: git-send-email 2.23.0
+        Mon, 4 Nov 2019 15:48:17 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dc08e930000>; Mon, 04 Nov 2019 12:48:19 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 04 Nov 2019 12:48:14 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 04 Nov 2019 12:48:14 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 Nov
+ 2019 20:48:13 +0000
+Subject: Re: [PATCH v2 07/18] infiniband: set FOLL_PIN, FOLL_LONGTERM via
+ pin_longterm_pages*()
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20191103211813.213227-1-jhubbard@nvidia.com>
+ <20191103211813.213227-8-jhubbard@nvidia.com>
+ <20191104203346.GF30938@ziepe.ca>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <578c1760-7221-4961-9f7d-c07c22e5c259@nvidia.com>
+Date:   Mon, 4 Nov 2019 12:48:13 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191104203346.GF30938@ziepe.ca>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572900499; bh=/CIgIUDm2203i17lURbkYa+rDusoBTvPAWSv4QBC930=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Yhst2fvnnBPG5D1itfKb9hWxMLjbVqSUWfqLvh0Fn/i71mLFE3e5+ptkQVEJi3MDe
+         qvaT1Tf+d7ek6vNTBSdtBp5CUQEtAg8UWqTgqXAGToNZygsVb5ro7FYsz0ILbTU2vU
+         CHYuf1412PLOn7MH7eTBhi57kffHLHkpA6icq7phiDnf8zBahThiB3Ps2f/yPxHzSq
+         q07AwvC3mSpeq/SRv5bYDV+8pVUTKGMpYVp0AVV6TI0S7zM3JQt7/R+ADu5r+VHpiq
+         Z5GWG1l9M6HD/AHMOed3MzO4wKmITLxC/eG+US5I7mvuRcIYO8agMI/4/XmcSLU9xl
+         +RKSvRaoFFIeg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If ncurses is installed, but at a non-default location, the previous
-error message was not helpful in resolving the situation.  Now, if
-ncurses can't be found, and pkg-config is not installed, it will
-suggest that pkg-config might need to be installed in addition to
-ncurses.
+On 11/4/19 12:33 PM, Jason Gunthorpe wrote:
+...
+>> diff --git a/drivers/infiniband/core/umem.c b/drivers/infiniband/core/umem.c
+>> index 24244a2f68cc..c5a78d3e674b 100644
+>> +++ b/drivers/infiniband/core/umem.c
+>> @@ -272,11 +272,10 @@ struct ib_umem *ib_umem_get(struct ib_udata *udata, unsigned long addr,
+>>  
+>>  	while (npages) {
+>>  		down_read(&mm->mmap_sem);
+>> -		ret = get_user_pages(cur_base,
+>> +		ret = pin_longterm_pages(cur_base,
+>>  				     min_t(unsigned long, npages,
+>>  					   PAGE_SIZE / sizeof (struct page *)),
+>> -				     gup_flags | FOLL_LONGTERM,
+>> -				     page_list, NULL);
+>> +				     gup_flags, page_list, NULL);
+> 
+> FWIW, this one should be converted to fast as well, I think we finally
+> got rid of all the blockers for that?
+> 
 
-Signed-off-by: Alyssa Ross <hi@alyssa.is>
----
- scripts/kconfig/mconf-cfg.sh | 14 ++++++++++++--
- scripts/kconfig/nconf-cfg.sh | 14 ++++++++++++--
- 2 files changed, 24 insertions(+), 4 deletions(-)
+I'm not aware of any blockers on the gup.c end, anyway. The only broken thing we
+have there is "gup remote + FOLL_LONGTERM". But we can do "gup fast + LONGTERM". 
 
-diff --git a/scripts/kconfig/mconf-cfg.sh b/scripts/kconfig/mconf-cfg.sh
-index c812872d7f9d..f547b13f77f6 100755
---- a/scripts/kconfig/mconf-cfg.sh
-+++ b/scripts/kconfig/mconf-cfg.sh
-@@ -41,7 +41,17 @@ fi
- 
- echo >&2 "*"
- echo >&2 "* Unable to find the ncurses package."
--echo >&2 "* Install ncurses (ncurses-devel or libncurses-dev"
--echo >&2 "* depending on your distribution)."
-+echo >&2 "*"
-+if [ -n "$(command -v pkg-config)" ]; then
-+	echo >&2 "* Install ncurses (ncurses-devel or libncurses-dev"
-+	echo >&2 "* depending on your distribution)."
-+else
-+	echo >&2 "* You may need to install ncurses"
-+	echo >&2 "* (ncurses-devel or libncurses-dev"
-+	echo >&2 "* depending on your distribution)."
-+	echo >&2 "*"
-+	echo >&2 "* If you have ncurses installed,"
-+	echo >&2 "* you may also need to install pkg-config."
-+fi
- echo >&2 "*"
- exit 1
-diff --git a/scripts/kconfig/nconf-cfg.sh b/scripts/kconfig/nconf-cfg.sh
-index 001559ef0a60..569226f1b497 100755
---- a/scripts/kconfig/nconf-cfg.sh
-+++ b/scripts/kconfig/nconf-cfg.sh
-@@ -41,7 +41,17 @@ fi
- 
- echo >&2 "*"
- echo >&2 "* Unable to find the ncurses package."
--echo >&2 "* Install ncurses (ncurses-devel or libncurses-dev"
--echo >&2 "* depending on your distribution)."
-+echo >&2 "*"
-+if [ -n "$(command -v pkg-config)" ]; then
-+	echo >&2 "* Install ncurses (ncurses-devel or libncurses-dev"
-+	echo >&2 "* depending on your distribution)."
-+else
-+	echo >&2 "* You may need to install ncurses"
-+	echo >&2 "* (ncurses-devel or libncurses-dev"
-+	echo >&2 "* depending on your distribution)."
-+	echo >&2 "*"
-+	echo >&2 "* If you have ncurses installed,"
-+	echo >&2 "* you may also need to install pkg-config."
-+fi
- echo >&2 "*"
- exit 1
--- 
-2.23.0
+Unless I'm really missing something, in which case several other call sites
+would need changes.
 
+I'll change it to pin_longterm_pages_fast().
+
+thanks,
+
+John Hubbard
+NVIDIA
