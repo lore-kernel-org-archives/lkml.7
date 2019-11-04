@@ -2,102 +2,121 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB83CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF07CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E690621D81
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 034BC21D81
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:52:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbfKDLwo (ORCPT
+        id S1728616AbfKDLwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:52:44 -0500
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:34911 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727782AbfKDLwn (ORCPT
+        Mon, 4 Nov 2019 06:52:43 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:51114 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726100AbfKDLwn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 Nov 2019 06:52:43 -0500
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id RauUi817QTzKrRauXiltg7; Mon, 04 Nov 2019 12:52:41 +0100
-Subject: Re: [PATCH 4/4] v4l2-ctl: Support setting V4L2_CTRL_TYPE_AREA
- controls
-To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
-Cc:     linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191101112509.29723-1-ribalda@kernel.org>
- <20191101112509.29723-4-ribalda@kernel.org>
- <31815641-550c-88ab-c037-2e743cea59b3@xs4all.nl>
- <CAPybu_3DQbmuamHmTXWnF15B1tzPzf1Sh_YJe6VS-Uk8z81q1Q@mail.gmail.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <82bd9ce8-bf1e-7071-914e-f321a8467476@xs4all.nl>
-Date:   Mon, 4 Nov 2019 12:52:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+X-UUID: 3cbef7e6586948899fbff3153634440c-20191104
+X-UUID: 3cbef7e6586948899fbff3153634440c-20191104
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <chao.hao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2146603920; Mon, 04 Nov 2019 19:52:36 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 4 Nov 2019 19:52:35 +0800
+Received: from localhost.localdomain (10.15.20.246) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 4 Nov 2019 19:52:31 +0800
+From:   Chao Hao <chao.hao@mediatek.com>
+To:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Jun Yan <jun.yan@mediatek.com>,
+        Cui Zhang <cui.zhang@mediatek.com>,
+        Guangming Cao <guangming.cao@mediatek.com>,
+        Yong Wu <yong.wu@mediatek.com>,
+        Anan Sun <anan.sun@mediatek.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Chao Hao <chao.hao@mediatek.com>
+Subject: [RESEND,PATCH 00/13] MT6779 IOMMU SUPPORT
+Date:   Mon, 4 Nov 2019 19:52:25 +0800
+Message-ID: <20191104115238.2394-1-chao.hao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <CAPybu_3DQbmuamHmTXWnF15B1tzPzf1Sh_YJe6VS-Uk8z81q1Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfGrkqGV2Xg+2z6dntFkrabUjC190MQDxXDgUm2QiUL25QOkDz+O+drfg7ijgBwJ/kqmPHcMNcrPTa+qrQNppMdOFVKDygZ5vLzEejArpVXgj9tcM4Q01
- pGnuMHaceaLStm7LfKKjmjVD7Ug6y2y1kSpNgoUFTN3BeYynavXX2b+WL+Qlb46Cs048riFWIBkfshlhnUJHgiPG2LnffOTAgeLfNchb+yP4ne0FE5dR91ac
- O+TfZthAKVIOzMbjG80/LQ==
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/4/19 12:21 PM, Ricardo Ribalda Delgado wrote:
-> Hi Hans
-> 
-> Sure I will fix this. Shall I resend it once you have updated the
-> headers on v4l-utils?
+I am sorry that previous patchset(2019/10/28) has a problem with e-mail format, some websites don't recevied it,
+so please based on this patchset to review, thanks!
 
-Don't wait for that, just resend. I can merge this as soon as the new
-headers are in.
+This patchset adds mt6779 iommu support and adjusts mtk iommu software architecture mainly.
+1. Add mt6779 basic function, such as smi_larb port define, registers define and so on.
+2. In addition, this patchset will adjust current mtk iommu SW architecture mainly to adapt all the mtk platforms:
+   Firstly, mt6779 iommu can support more HW modules, but some modules have special requirements for iova region,
+   for example, CCU only can access 0x4000_0000~0x47ff_ffff, VPU only can access 0x7da0_0000~0x7fbf_ffff. Current
+   architecture only support one iommu domain(include 0~4GB), all the modules allocate iova from 0~4GB region, so
+   it doesn't ensure to allocate expected iova region for special module(CCU and VPU). In order to resolve the problem,
+   we will create different iommu domains for special module, and every domain can include iova region which module
+   needs.
+   Secondly, all the iommus share one page table for current architecture by "mtk_iommu_get_m4u_data", to make the
+   architecture look clearly, we will create a global page table firstly(mtk_iommu_pgtable), and all the iommus can
+   use it. One page table can include 4GB iova space, so multiple iommu domains are created based on the same page
+   table. New SW architecture diagram is as below:
 
-Regards,
+                          iommu0   iommu1
+                             |        |
+                             ----------
+                                  |
+                         mtk_iommu_pgtable
+                                  |
+             ------------------------------------------
+             |                    |                   |
+       mtk_iommu_domain1   mtk_iommu_domain2   mtk_iommu_domain3
+             |                    |                   |
+        iommu_group1         iommu_group2        iommu_group3
+             |                    |                   |
+        iommu_domain1       iommu_domain2        iommu_domain3
+             |                    |                   |
+      iova region1(normal)  iova region2(CCU)   iova region3(VPU)
 
-	Hans
+This patchset depends on "Improve tlb range flush"[1] and based on v5.4-rc1.
+[1]http://lists.infradead.org/pipermail/linux-mediatek/2019-October/024207.html
 
-> 
-> Best regards
-> 
-> On Mon, Nov 4, 2019 at 10:41 AM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
->>
->> On 11/1/19 12:25 PM, Ricardo Ribalda Delgado wrote:
->>> $ v4l2-ctl  -d /dev/video1  -c area=123123x233
->>>
->>> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
->>> ---
->>>  utils/v4l2-ctl/v4l2-ctl-common.cpp | 4 ++++
->>>  1 file changed, 4 insertions(+)
->>>
->>> diff --git a/utils/v4l2-ctl/v4l2-ctl-common.cpp b/utils/v4l2-ctl/v4l2-ctl-common.cpp
->>> index 95339561..676b05e0 100644
->>> --- a/utils/v4l2-ctl/v4l2-ctl-common.cpp
->>> +++ b/utils/v4l2-ctl/v4l2-ctl-common.cpp
->>> @@ -973,6 +973,10 @@ void common_set(cv4l_fd &_fd)
->>>                                       strncpy(ctrl.string, iter->second.c_str(), qc.maximum);
->>>                                       ctrl.string[qc.maximum] = 0;
->>>                                       break;
->>> +                             case V4L2_CTRL_TYPE_AREA:
->>> +                                     sscanf(iter->second.c_str(), "%dx%d",
->>
->> Use %ux%u since these are unsigned values.
->>
->> Regards,
->>
->>         Hans
->>
->>> +                                            &ctrl.p_area->width, &ctrl.p_area->height);
->>> +                                     break;
->>>                               default:
->>>                                       fprintf(stderr, "%s: unsupported payload type\n",
->>>                                                       qc.name);
->>>
->>
+Chao Hao (13):
+  dt-bindings: mediatek: Add bindings for MT6779
+  iommu/mediatek: Add mt6779 IOMMU basic support
+  iommu/mediatek: Add mtk_iommu_pgtable structure
+  iommu/mediatek: Remove mtk_iommu_domain_finalise
+  iommu/mediatek: Remove pgtable info in mtk_iommu_domain
+  iommu/mediatek: Change get the way of m4u_group
+  iommu/mediatek: Add smi_larb info about device
+  iommu/mediatek: Add mtk_domain_data structure
+  iommu/mediatek: Remove the usage of m4u_dom variable
+  iommu/mediatek: Remove mtk_iommu_get_m4u_data api
+  iommu/mediatek: Add iova reserved function
+  iommu/mediatek: Change single domain to multiple domains
+  iommu/mediatek: Add multiple mtk_iommu_domain support for mt6779
+
+ .../bindings/iommu/mediatek,iommu.txt         |   2 +
+ drivers/iommu/mtk_iommu.c                     | 488 +++++++++++++++---
+ drivers/iommu/mtk_iommu.h                     |  50 +-
+ include/dt-bindings/memory/mt6779-larb-port.h | 217 ++++++++
+ 4 files changed, 685 insertions(+), 72 deletions(-)
+
+--
+2.18.0
+
+
 
