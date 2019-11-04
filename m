@@ -2,95 +2,90 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30967CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A08CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0469B21D7D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:25:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nq/YeMXL"
+	by mail.kernel.org (Postfix) with ESMTP id 850CB222C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:25:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729045AbfKDNZN (ORCPT
+        id S1729099AbfKDNZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:25:13 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33292 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727332AbfKDNZN (ORCPT
+        Mon, 4 Nov 2019 08:25:47 -0500
+Received: from smtprelay0064.hostedemail.com ([216.40.44.64]:48142 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727332AbfKDNZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:25:13 -0500
-Received: by mail-qt1-f194.google.com with SMTP id y39so23906317qty.0;
-        Mon, 04 Nov 2019 05:25:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DKdIIDMLF5QN6l/0M8nP34uwWbd87SXNqY0koiCvQwQ=;
-        b=nq/YeMXLeglOeQcEZQFkaG+fSMvfxip3W9YvwMRMWj4zIgxjKGo6a3t5NZ5iYPfG6F
-         h1V2nyKF3f8fZHZU8QICqnMecncDfNxQsGwCYFjHsfF714asOAHYlDiGiuMgwsN7RtDL
-         EpsQifi/nryaSXVlvXoA7eZNDiTELpitMBcDimKTuVrxBg54r8dgQcDuu/fcr7kjfOiO
-         cqTDFPTv+szVRT8RSCIAyrYW3GT0geuRSzq+TCQuxBNnpulgoDLssBvD7/kTbEcy9rdt
-         IadRrExN+ey1/Q47MRPfO+KjjrGtl8KchREcAeDVz5/mTFbkCnA4UmZ9BSjBztvQkKAe
-         dnCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DKdIIDMLF5QN6l/0M8nP34uwWbd87SXNqY0koiCvQwQ=;
-        b=HJnXZjTyj87ErG7fFe5aDooxchJkj1I84GO0iNJpK0bK/uPyJRTpeDuJaGr923d2Ts
-         9Ss0asqNlteGz2vDSmV4d2VnWypLPpiWuqjocL4Vv4TPu8EplIMTRKG1/hK5+cSNhhZ8
-         oD2rfTpnPjQQ8VST4XhZAR1r1G5Utcpgx5PY2I3ZriXU4i+g/5CIIfy5jc7cxyD4NZJE
-         wZWG1IqqVuGr5O2nhNMoVpOqaEG3C5QV2Tm5/QcyLYAxNf5cOUODYXsmpRTCCaFRYObg
-         f3j/Ed8axhNb0P2tgJTUmJuNi21LW+dIWgd0UWv+YRztPgZvXiGVkf4OWMC2cSx7psau
-         NA1A==
-X-Gm-Message-State: APjAAAUUskIIG/sEFCxT6DboZhNOUgg4zjl+HSv00Wg86u4ZoNsnmIWJ
-        2gFfi61rlCuHywlzq/3+P9c=
-X-Google-Smtp-Source: APXvYqzmCpE1cXbKa+7oOSqluO7m5Rw1WPEyu+SjAQGUgdWquBeOGPMqq/aU3poYB+1xyXiqbzHL1g==
-X-Received: by 2002:ad4:5386:: with SMTP id i6mr15440858qvv.84.1572873912147;
-        Mon, 04 Nov 2019 05:25:12 -0800 (PST)
-Received: from localhost.localdomain ([2001:1284:f013:146d:7dd5:a83f:defc:1791])
-        by smtp.gmail.com with ESMTPSA id h186sm2546430qkf.64.2019.11.04.05.25.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 05:25:11 -0800 (PST)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id DD7B9C16E7; Mon,  4 Nov 2019 10:25:08 -0300 (-03)
-Date:   Mon, 4 Nov 2019 10:25:08 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Wally Zhao <wallyzhao@gmail.com>, vyasevich@gmail.com,
-        nhorman@tuxdriver.com, davem@davemloft.net,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wally.zhao@nokia-sbell.com,
-        lkp@lists.01.org
-Subject: Re: [sctp] 327fecdaf3: BUG:kernel_NULL_pointer_dereference,address
-Message-ID: <20191104132508.GA53856@localhost.localdomain>
-References: <1572451637-14085-1-git-send-email-wallyzhao@gmail.com>
- <20191104084635.GM29418@shao2-debian>
+        Mon, 4 Nov 2019 08:25:47 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 8F764100E7B4D;
+        Mon,  4 Nov 2019 13:25:45 +0000 (UTC)
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-HE-Tag: crush17_8910377eab214
+X-Filterd-Recvd-Size: 2742
+Received: from grimm.local.home (unknown [146.247.46.6])
+        (Authenticated sender: rostedt@goodmis.org)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  4 Nov 2019 13:25:41 +0000 (UTC)
+Date:   Mon, 4 Nov 2019 08:25:38 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, Jessica Yu <jeyu@kernel.org>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        linux-kernel@vger.kernel.org, amit.kachhap@arm.com,
+        catalin.marinas@arm.com, duwe@suse.de, james.morse@arm.com,
+        jpoimboe@redhat.com, jthierry@redhat.com,
+        linux-parisc@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, svens@stackframe.org,
+        takahiro.akashi@linaro.org, will@kernel.org
+Subject: Re: [PATCHv2 2/8] module/ftrace: handle patchable-function-entry
+Message-ID: <20191104082538.292b501a@grimm.local.home>
+In-Reply-To: <20191029165832.33606-3-mark.rutland@arm.com>
+References: <20191029165832.33606-1-mark.rutland@arm.com>
+        <20191029165832.33606-3-mark.rutland@arm.com>
+X-Mailer: Claws Mail 3.17.4git49 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191104084635.GM29418@shao2-debian>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 04:46:35PM +0800, kernel test robot wrote:
-> [   35.312661] BUG: kernel NULL pointer dereference, address: 00000000000005d8
-> [   35.316225] #PF: supervisor read access in kernel mode
-> [   35.319178] #PF: error_code(0x0000) - not-present page
-> [   35.322078] PGD 800000021b569067 P4D 800000021b569067 PUD 21b688067 PMD 0 
-> [   35.325629] Oops: 0000 [#1] SMP PTI
-> [   35.327965] CPU: 0 PID: 3148 Comm: trinity-c5 Not tainted 5.4.0-rc3-01107-g327fecdaf39ab #12
-> [   35.332863] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-> [   35.337932] RIP: 0010:sctp_packet_transmit+0x767/0x822
+On Tue, 29 Oct 2019 16:58:26 +0000
+Mark Rutland <mark.rutland@arm.com> wrote:
 
-Right, as asoc can be NULL by then. (per the check on it a few lines
-before the change here).
+> When using patchable-function-entry, the compiler will record the
+> callsites into a section named "__patchable_function_entries" rather
+> than "__mcount_loc". Let's abstract this difference behind a new
+> FTRACE_CALLSITE_SECTION, so that architectures don't have to handle this
+> explicitly (e.g. with custom module linker scripts).
+> 
+> As parisc currently handles this explicitly, it is fixed up accordingly,
+> with its custom linker script removed. Since FTRACE_CALLSITE_SECTION is
+> only defined when DYNAMIC_FTRACE is selected, the parisc module loading
+> code is updated to only use the definition in that case. When
+> DYNAMIC_FTRACE is not selected, modules shouldn't have this section, so
+> this removes some redundant work in that case.
+> 
+> I built parisc generic-{32,64}bit_defconfig with DYNAMIC_FTRACE enabled,
+> and verified that the section made it into the .ko files for modules.
+> 
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: Helge Deller <deller@gmx.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
+> Cc: Jessica Yu <jeyu@kernel.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Sven Schnelle <svens@stackframe.org>
+> Cc: linux-parisc@vger.kernel.org
+> 
 
-  Marcelo
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
