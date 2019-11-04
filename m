@@ -2,54 +2,53 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6F3CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6E6CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE03204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EAB204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905729;
-	bh=7duB7oODTX8w4GpIVinanna0tcK5zRXrUUR8iZN821M=;
+	s=default; t=1572905732;
+	bh=9+ICddfZi98XsuN/HkDELNh3ybAfa/RqmjvYrgcKWMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IIU+YhDd0npGNiMmg7+z+TnjSGxaZ2o4i5ss17K11Y32rhsAJ/XXZAcTxqFHJCHPV
-	 bB9KpVOKUL/Npo9329KHrrS110Rrsm8Cn10s4FBuvKEX3r1dYn84y1f7T0hA+rsmIh
-	 SP6axKa1Gq96kC2v0h0q//MOzZZkfoRYbMpAb2yI=
+	b=q9FDjWC9L/9aCsIBDwHdpbHaixiQyXkUFL5aqfAGYqOZWi0Yv8BImTQXZTcspDGqe
+	 Q8PhWy8lBF5qJlOrFBgb8NZDes8RHwxQDFTiYyM6Bb9TKRAlSfe5oTnw9G9qGFhRKh
+	 hL3dUu/THCRMR+eP/KgegSvaRL14Ihnigk8Yerj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390433AbfKDWP2 (ORCPT
+        id S2390091AbfKDWP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:15:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37832 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:15:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388396AbfKDWGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:06:07 -0500
+        id S2389904AbfKDWGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:06:04 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3099820650;
-        Mon,  4 Nov 2019 22:06:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A10B21744;
+        Mon,  4 Nov 2019 22:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905166;
-        bh=7duB7oODTX8w4GpIVinanna0tcK5zRXrUUR8iZN821M=;
+        s=default; t=1572905164;
+        bh=9+ICddfZi98XsuN/HkDELNh3ybAfa/RqmjvYrgcKWMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XEbY/M5t/z1tj4z+nT4P4ocUydE7z+GxkroZZaw2vk+dsufXcu84I2+sxrqrKcJ8O
-         14D7CeOZt/jHneKozxQN0fyG7uio65+IzQN/eGBuN9Lp80MMO0vhAKt2gUXuxSZa3z
-         XbXc1rOBmvtAbb5p3yiAn7Q6W27twXrDz11xObBc=
+        b=Sc3G1hzwm/Y7xM5SQRXicCoSrI0H8yv2AnOR4+CYJmno18ociCEZzvkpN3zAuwd8t
+         EcaCqd31zt2+bR4rE1JZt2LVQcMbRrVjt8K35eC34ig8Ayyn362XIi0TrJIf3UH8pt
+         Z+w2AO6MAgoQeFj/LvQXSujjEoNkHOQpD8KYYcyM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 013/163] perf tools: Propagate get_cpuid() error
-Date:   Mon,  4 Nov 2019 22:43:23 +0100
-Message-Id: <20191104212141.418276447@linuxfoundation.org>
+Subject: [PATCH 5.3 012/163] perf jevents: Fix period for Intel fixed counters
+Date:   Mon,  4 Nov 2019 22:43:22 +0100
+Message-Id: <20191104212141.364499073@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -62,136 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-[ Upstream commit f67001a4a08eb124197ed4376941e1da9cf94b42 ]
+[ Upstream commit 6bdfd9f118bd59cf0f85d3bf4b72b586adea17c1 ]
 
-For consistency, propagate the exact cause for get_cpuid() to have
-failed.
+The Intel fixed counters use a special table to override the JSON
+information.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+During this override the period information from the JSON file got
+dropped, which results in inst_retired.any and similar running with
+frequency mode instead of a period.
+
+Just specify the expected period in the table.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-9ig269f7ktnhh99g4l15vpu2@git.kernel.org
+Link: http://lore.kernel.org/lkml/20190927233546.11533-2-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/arch/powerpc/util/header.c | 3 ++-
- tools/perf/arch/s390/util/header.c    | 9 +++++----
- tools/perf/arch/x86/util/header.c     | 3 ++-
- tools/perf/builtin-kvm.c              | 7 ++++---
- 4 files changed, 13 insertions(+), 9 deletions(-)
+ tools/perf/pmu-events/jevents.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
-index 0b242664f5ea7..e46be9ef5a688 100644
---- a/tools/perf/arch/powerpc/util/header.c
-+++ b/tools/perf/arch/powerpc/util/header.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <sys/types.h>
-+#include <errno.h>
- #include <unistd.h>
- #include <stdio.h>
- #include <stdlib.h>
-@@ -31,7 +32,7 @@ get_cpuid(char *buffer, size_t sz)
- 		buffer[nb-1] = '\0';
- 		return 0;
- 	}
--	return -1;
-+	return ENOBUFS;
- }
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index d413761621b09..fa85e33762f72 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -449,12 +449,12 @@ static struct fixed {
+ 	const char *name;
+ 	const char *event;
+ } fixed[] = {
+-	{ "inst_retired.any", "event=0xc0" },
+-	{ "inst_retired.any_p", "event=0xc0" },
+-	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
+-	{ "cpu_clk_unhalted.thread", "event=0x3c" },
+-	{ "cpu_clk_unhalted.core", "event=0x3c" },
+-	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
++	{ "inst_retired.any", "event=0xc0,period=2000003" },
++	{ "inst_retired.any_p", "event=0xc0,period=2000003" },
++	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03,period=2000003" },
++	{ "cpu_clk_unhalted.thread", "event=0x3c,period=2000003" },
++	{ "cpu_clk_unhalted.core", "event=0x3c,period=2000003" },
++	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1,period=2000003" },
+ 	{ NULL, NULL},
+ };
  
- char *
-diff --git a/tools/perf/arch/s390/util/header.c b/tools/perf/arch/s390/util/header.c
-index 8b0b018d896ab..7933f6871c818 100644
---- a/tools/perf/arch/s390/util/header.c
-+++ b/tools/perf/arch/s390/util/header.c
-@@ -8,6 +8,7 @@
-  */
- 
- #include <sys/types.h>
-+#include <errno.h>
- #include <unistd.h>
- #include <stdio.h>
- #include <string.h>
-@@ -54,7 +55,7 @@ int get_cpuid(char *buffer, size_t sz)
- 
- 	sysinfo = fopen(SYSINFO, "r");
- 	if (sysinfo == NULL)
--		return -1;
-+		return errno;
- 
- 	while ((read = getline(&line, &line_sz, sysinfo)) != -1) {
- 		if (!strncmp(line, SYSINFO_MANU, strlen(SYSINFO_MANU))) {
-@@ -89,7 +90,7 @@ int get_cpuid(char *buffer, size_t sz)
- 
- 	/* Missing manufacturer, type or model information should not happen */
- 	if (!manufacturer[0] || !type[0] || !model[0])
--		return -1;
-+		return EINVAL;
- 
- 	/*
- 	 * Scan /proc/service_levels and return the CPU-MF counter facility
-@@ -133,14 +134,14 @@ skip_sysinfo:
- 	else
- 		nbytes = snprintf(buffer, sz, "%s,%s,%s", manufacturer, type,
- 				  model);
--	return (nbytes >= sz) ? -1 : 0;
-+	return (nbytes >= sz) ? ENOBUFS : 0;
- }
- 
- char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
- {
- 	char *buf = malloc(128);
- 
--	if (buf && get_cpuid(buf, 128) < 0)
-+	if (buf && get_cpuid(buf, 128))
- 		zfree(&buf);
- 	return buf;
- }
-diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/util/header.c
-index af9a9f2600be4..a089af60906a0 100644
---- a/tools/perf/arch/x86/util/header.c
-+++ b/tools/perf/arch/x86/util/header.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <sys/types.h>
-+#include <errno.h>
- #include <unistd.h>
- #include <stdio.h>
- #include <stdlib.h>
-@@ -57,7 +58,7 @@ __get_cpuid(char *buffer, size_t sz, const char *fmt)
- 		buffer[nb-1] = '\0';
- 		return 0;
- 	}
--	return -1;
-+	return ENOBUFS;
- }
- 
- int
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index b33c834891208..44ff3ea1da23f 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -699,14 +699,15 @@ static int process_sample_event(struct perf_tool *tool,
- 
- static int cpu_isa_config(struct perf_kvm_stat *kvm)
- {
--	char buf[64], *cpuid;
-+	char buf[128], *cpuid;
- 	int err;
- 
- 	if (kvm->live) {
- 		err = get_cpuid(buf, sizeof(buf));
- 		if (err != 0) {
--			pr_err("Failed to look up CPU type\n");
--			return err;
-+			pr_err("Failed to look up CPU type: %s\n",
-+			       str_error_r(err, buf, sizeof(buf)));
-+			return -err;
- 		}
- 		cpuid = buf;
- 	} else
 -- 
 2.20.1
 
