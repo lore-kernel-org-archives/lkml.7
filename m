@@ -2,106 +2,108 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CBECA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B16BCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAFC214B2
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:47:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Xdl7ya/n"
+	by mail.kernel.org (Postfix) with ESMTP id 681CE20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:48:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729346AbfKDPrY (ORCPT
+        id S1729358AbfKDPsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:47:24 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33660 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbfKDPrY (ORCPT
+        Mon, 4 Nov 2019 10:48:33 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:49486 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727838AbfKDPsc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:47:24 -0500
-Received: by mail-qt1-f195.google.com with SMTP id y39so24630957qty.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 07:47:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=L8x9fkwneHCR6wxkSArxVaQnd8zzbF9wl94xgUfTw0M=;
-        b=Xdl7ya/n9X+9F/h7stlvF9B+2GbuX93zP1aJLC7uJ2Ug90K4LHZOPzDf9h5icgO1su
-         qA4iYNTafrzK96F0IZGyqMg710hfAaD9qH7nDv9adhOTRS3AnXbTzfj/GZEENRnBcXlQ
-         OODsJi1Kec+UrlUmkzETLvU3F7B5bjkUQJxCTbsPo7EOSaHbP/7iGr5j6kQqLvJZFL7g
-         h96E7wGEq8fwH8z9lq/IopzW/1QMcR17Ow1HNGBjAvwyApG/hODp7p25rS0xsk4hgS7j
-         gVG6mdDoYyRNilO5n92nzF4PEiE0Nm29rlD+FAF2Hme1tmmzaRTaqwmCP+NhAoGfCL7e
-         HCbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=L8x9fkwneHCR6wxkSArxVaQnd8zzbF9wl94xgUfTw0M=;
-        b=s9KT/EpyIjbHlM2XF7tegLbi8oh/yjowuzoD4LCi+MadJ+qYKmCT30azfJZDgTj8Qv
-         ABvHq3bEE8YyK4hsaboglETLkOHG0fVUxmyX0pXYVeNPB8LksZehziNMGV2Iza9Zlm9t
-         4fhZnwOZkB4zycWqHy2K/ECaJuPQ+R88zG3zzZygheqO5L4HRnk4PqyrZ5Xp49ribtY6
-         /4EJiYRt7WqSkg4+ssTzI1Yrm94Y9h53TQS2/kLqZo+gRDsSooRYNENzcFt2YlgeQbkM
-         xIDgsaf/0i1alhhK8ayQdH++EQLW/sxNYzXTGuaY31Z8cwyRy851yM0TT46IhBGQ5K/t
-         Jmvw==
-X-Gm-Message-State: APjAAAWM6rwZQML3BGzreaEdunLU9mPwYXHNvt1Sp4NdV8eoYNbp/Oxg
-        4HRT2yLHSL29WD/inUQKvfYAyBBQYauMVQ==
-X-Google-Smtp-Source: APXvYqzwYBayyLWeoeKSZ/10HUhTy7G1ejrmK4EH9o6dmQZoqFWpwpFTRC5MsROwoZO+puEQ9ZDCXA==
-X-Received: by 2002:ad4:57d4:: with SMTP id y20mr9997613qvx.63.1572882443391;
-        Mon, 04 Nov 2019 07:47:23 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::1:2362])
-        by smtp.gmail.com with ESMTPSA id 70sm2094778qkl.92.2019.11.04.07.47.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 07:47:22 -0800 (PST)
-Date:   Mon, 4 Nov 2019 10:47:21 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, kernel-team@fb.com,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] MAINTAINERS: update information for "MEMORY MANAGEMENT"
-Message-ID: <20191104154721.GA24011@cmpxchg.org>
-References: <20191030202217.3498133-1-songliubraving@fb.com>
- <4e4ff9c9-064c-7515-41ea-9f20b9889e51@suse.cz>
+        Mon, 4 Nov 2019 10:48:32 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-92-5dc0484eb3ae
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id DB.5F.08102.E4840CD5; Mon,  4 Nov 2019 16:48:30 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Mon, 4 Nov 2019 16:48:17 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>
+Subject: Re: [RFC PATCH v3 14/15] gpio: Add definition for GPIO direction
+Thread-Topic: [RFC PATCH v3 14/15] gpio: Add definition for GPIO direction
+Thread-Index: AQHVkKp+hdqKw9vEbUql9O/haZZyiad5+mgAgAEiGoA=
+Date:   Mon, 4 Nov 2019 15:48:17 +0000
+Message-ID: <411ac5e107cd2a6c628d1fb46e7d284c8f594768.camel@fi.rohmeurope.com>
+References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+         <f08d265c12ebf185c0e1dbbfe0a3f86de4907194.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+         <CACRpkdYhasTEQq2btQ_3GSo=hMJetp128jFo-6hE=JMeX4MJSA@mail.gmail.com>
+In-Reply-To: <CACRpkdYhasTEQq2btQ_3GSo=hMJetp128jFo-6hE=JMeX4MJSA@mail.gmail.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [176.93.201.147]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FFD78040917F6B49BA61C44DADDD2B28@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e4ff9c9-064c-7515-41ea-9f20b9889e51@suse.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Ta1BMYRzGvee2p9bh2Mq+FuGMcScZH14m5ANODY3LjHGZJoeOdml3c3ZD
+        jJkdMw1tzGQmyU4Xk80lTSlChLValzWDnbbUqIiGKU2NEYZWnNOiPp1n/s/z/H/nw/+lcc0b
+        SkcbTFZRMgmpHBVKuC4NVM1P4F2JCx82RCOnr1GFjvVeUKH+Qi+BTnd0Uqi4/jmJsp9dJ9Hr
+        mqsEevPVA9A3/3EM5QYuYujziXYSXSsOANRwu4BCNT0VAD264qdQ6SsfhgpKnxDI512F2rwe
+        CmXerVehwaYqIjaCLy8qB3xfc6aKLyo/zNc62lR8dVkWxbc21VH84+abGH+m6AfGX7ryXcV/
+        qY5cH7pNHbNTsO7fZEgxRS3fodb7jwbItHvqg80v8oAN5KvtgKYhuxja8yU7CKE1bCOAg2cN
+        dhAq68cA9g4OkEqGYmOgvUWlZMLZJfDhkwJCyeBsAQ0vtz8nFSOMjYP3A96/oXiYe86FB/VS
+        +LP4BqXsIdjpsKomUhkzbAJ0dvWQQdYnAD1f3w11Q9gN8PJbN6ZowE6GWbbeIY2zWlj94fsQ
+        C7IsdNa9wIM6Ana9H/w752Ddj/OYwsLZ2bDydlSwGgt/nSoDQT0N5mZ3qIL/MA4+PdtJ5IDx
+        jhEEx3DbMaLtGNF2jGifA2QZgEbBkJoiWMXoBZKYvkAy643yZ5fZWA2CB9N/C/x2x7kBRgM3
+        mEBjXAQzb6krUTNmpzk5Qy9Y9ElSeqpocQNI41w448u/m6hhkoWMQ6Jk/mdNpAlOy8zsOJWo
+        YRXWXlFME6V/7iSa5iAjrJGXjpPEFPHgbkOqddjG6BBleagu3CKakkVJSLfqk5TrSLLI56FY
+        o2Xuy9VynbGkCUZ5Gqx6wVw6p6uwBKfrC0tLcA1hMptEnZaZrZBYJapPN/0HdQMtDbgwhpCf
+        h2a0/Gr+7+mWEZiMWPv+noKwCsOWzgYyMm2v26+POuI/U7KnJeBRG1p1TVvIGyVgirZ1c9TJ
+        FdbAjMw7O/zTKxbFGwce9FMr76w5IOZE5rU4Y27647K291QkVNZGSfatz7oLN66bld3ZV3Ts
+        wthArWNCw4x9bpfN53I3ZuX9Mve5yp0NVxM8c8LamM9Tr3H3Y8d+7KvULuMIi16InoNLFuEP
+        d930ovIDAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 03:53:18PM +0100, Vlastimil Babka wrote:
-> On 10/30/19 9:22 PM, Song Liu wrote:
-> > I was trying to find the mm tree in MAINTAINERS by searching "Morton".
-> > Unfortunately, I didn't find one. And I didn't even locate the MEMORY
-> > MANAGEMENT section quickly, because Andrew's name was not listed there.
-> > 
-> > Thanks to Johannes who helped me find the mm tree.
-> > 
-> > Let save other's time searching around by adding:
-> > 
-> > M:	Andrew Morton <akpm@linux-foundation.org>
-> > T:	git git://github.com/hnaz/linux-mm.git
-> 
-> Not sure about the git part. It's not a real development tree, but a
-> secondary "mirror" of the quilt tree, with unstable commit ID's. Could
-> it be somehow indicated? Also right now it seems there's just mainline
-> master stuck at 5.4-rc5 and nothing else?
-
-I think at the least we should put the quilt trees before the git
-tree, since that's the primary source of truth.
-
-Not sure how to annotate the git tree, though, it looks like people
-were trying to keep the format machine-readable:
-
-        T: *SCM* tree type and location.
-           Type is one of: git, hg, quilt, stgit, topgit
-
-Re: master branch, it looks like git quiltimport broke :( I'll
-investigate.
+SGVsbG8gQWxsLA0KDQpPbiBTdW4sIDIwMTktMTEtMDMgYXQgMjM6MzAgKzAxMDAsIExpbnVzIFdh
+bGxlaWogd3JvdGU6DQo+IEhpIE1hdHRpIQ0KPiANCj4gR29vZCBpbml0aWF0aXZlIChhbmQgSSB3
+aWxsIHNlZSBhIHRvbiBvZiBqYW5pdG9yaWFsIHBhdGNoZXMgYXMgYQ0KPiByZXN1bHQgb2YgdGhp
+cy4uLikNCg0KSSBoYXZlIHNvbWV3aGVyZSBuZWFyIDYyIHBhdGNoZXMgd2FpdGluZyB0byBiZSBz
+ZW50ID0pIFRoZXkncmUgcHJldHR5DQpzbWFsbCBidXQgSSdkIGFwcHJlY2lhdGUgdGhvcm91Z2gg
+cmV2aWV3IGFzIHRoZXkncmUgbW9zdGx5IHVudGVzdGVkLi4uDQpEbyB5b3UgbWluZCByZWNlaXZp
+bmcgdGhlbSBhbGwgaW4gb25lIGdvPyBPciBkbyB5b3UgdGhpbmsgSSBzaG91bGQgc2VuZA0KdGhl
+IHNlcmllcyBpbiBzbWFsbGVyIGNodW5ja3M/DQoNCj4gT24gRnJpLCBOb3YgMSwgMjAxOSBhdCAx
+Mjo1MCBQTSBNYXR0aSBWYWl0dGluZW4NCj4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2htZXVyb3Bl
+LmNvbT4gd3JvdGU6DQo+IA0KPiA+IEF0IGxlYXN0IGZvciBtZSBpdCBpcyBkaWZmaWN1bHQgdG8g
+cmVtZW1iZXIgdGhlIG1lYW5pbmcgb2YgR1BJTw0KPiA+IGRpcmVjdGlvbiB2YWx1ZXMuIERlZmlu
+ZSBHUElPX0lOIGFuZCBHUElPX09VVCBzbyB0aGF0IG9jY2FzaW9uYWwNCj4gPiBHUElPIGNvbnRy
+aWJ1dG9ycyB3b3VsZCBub3QgbmVlZCB0byBhbHdheXMgY2hlY2sgdGhlIG1lYW5pbmcgb2YNCj4g
+PiBoYXJkIGNvZGVkIHZhbHVlcyAxIGFuZCAwLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1h
+dHRpIFZhaXR0aW5lbiA8bWF0dGkudmFpdHRpbmVuQGZpLnJvaG1ldXJvcGUuY29tPg0KPiAoLi4u
+KQ0KPiA+ICsjZGVmaW5lIEdQSU9fSU4gICAgICAgICAgICAgICAgMQ0KPiA+ICsjZGVmaW5lIEdQ
+SU9fT1VUICAgICAgIDANCj4gDQo+IFBsZWFzZSBzcGVsbCBpdCBvdXQgb3IgcGVvcGxlIHdpbGwg
+YmUgY29uZnVzZWQ6DQo+IA0KPiBHUElPX0xJTkVfRElSRUNUSU9OX0lODQo+IEdQSU9fTElORV9E
+SVJFQ1RJT05fT1VUDQo+IA0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0KDQo=
