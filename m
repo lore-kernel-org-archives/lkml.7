@@ -2,108 +2,120 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27E6CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5C1CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9058222C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:32:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ttg4n6OD";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ttg4n6OD"
+	by mail.kernel.org (Postfix) with ESMTP id 6BBD621D81
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572863554;
+	bh=ScqUgBBmRpqzOBhrkXnuQEd1xbsl4ZRZh7AIASAi5bU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Sm56LIzJ33+qdu5ixJsn+k1iyI7Wb5+U/04gAY5fX+BjzsioFSBtaTPguI5blNsL/
+	 4y8i/ABqkD+F1SKivIGEBk3qGaSLKKLSUpPpnHpDqBRR36x4mtJIK971TJextCiVlu
+	 ZqhuRmDuTyUYV3AnGVahBLlVloVKQhk8HVg2LrWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbfKDKcS (ORCPT
+        id S1728517AbfKDKcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:32:18 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:53746 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbfKDKcS (ORCPT
+        Mon, 4 Nov 2019 05:32:33 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45817 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728437AbfKDKcd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 05:32:18 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 8EC2A60BE6; Mon,  4 Nov 2019 10:32:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572863537;
-        bh=XEMORj6CAxshiDtzXTqMIOoW7d5P5+yV2qS8l6858TM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Ttg4n6ODEEHEjhxaYVCBdGZx1P1/oLQVW9Be0x0LvsoNV76mnkbDGjJfp5pZQHtzp
-         NtVuJP96IuLDYgYJ/Pup4lFFB80iVPScdxpcQU9gxvurpgphyubhzX18XwpKXvjYsY
-         kIZV8q521JtJfPQco47Fsjz9h5RP6XbOfSVAZa6A=
-Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0E4D960B72;
-        Mon,  4 Nov 2019 10:32:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572863537;
-        bh=XEMORj6CAxshiDtzXTqMIOoW7d5P5+yV2qS8l6858TM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Ttg4n6ODEEHEjhxaYVCBdGZx1P1/oLQVW9Be0x0LvsoNV76mnkbDGjJfp5pZQHtzp
-         NtVuJP96IuLDYgYJ/Pup4lFFB80iVPScdxpcQU9gxvurpgphyubhzX18XwpKXvjYsY
-         kIZV8q521JtJfPQco47Fsjz9h5RP6XbOfSVAZa6A=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0E4D960B72
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 1/1] arm64: dts: sc7180: Add qupv3_0 and qupv3_1
-To:     Roja Rani Yarubandi <rojay@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     mgautam@codeaurora.org, akashast@codeaurora.org,
-        msavaliy@codeaurora.org, sanm@codeaurora.org,
-        skakit@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191031074500.28523-1-rojay@codeaurora.org>
- <20191031074500.28523-2-rojay@codeaurora.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <9a52fee5-7e80-639f-248a-8a563113c470@codeaurora.org>
-Date:   Mon, 4 Nov 2019 16:02:09 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 4 Nov 2019 05:32:33 -0500
+Received: by mail-oi1-f196.google.com with SMTP id k2so13596386oij.12;
+        Mon, 04 Nov 2019 02:32:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y6lyDAj0tuP2cHmlqSgAsnFiMmf3nt5wMrq1nXuIoEc=;
+        b=BuUjb8Rxz2vp5pk60DpXqq8QwZhHbvj0nieZIOFzX9mGQnbLRHLie7FYtTz5j6JsM6
+         QEc5VSy5sHDY7lndLexjdNn6mIHpt1fR+wC5lYeScLAf8gWlsusYHrqYKBwY8p1zqv1b
+         fXrko93hG2r/Zo4SB/FwsBk1nzGeLE0jy3f95cRHDxsWeYoPanYjfOoepWFHSilUBTT3
+         kOxKElSe3O8/XalnMzFS/FjvuZP8oWRzBBxLDUwXpXItQ0h/hLA+b+MY9FLb2VmgUMEv
+         Ngqtq6PDcRXj12M0lYgzr+1xB+NyihtcPOz7JDxROEnkJpMn0st1BQ5RW5qoQ920Z8hw
+         XF4g==
+X-Gm-Message-State: APjAAAVwYML/c7AJ5kxzzGBiA16WxpQylERwV0Iy0AiWK+cjhTYrPBY3
+        iidkedmTTxCoHae6US9x1Pl5vBjt1ebzxS9EleU=
+X-Google-Smtp-Source: APXvYqxGAHWKlMyhVxsNbtFeB4L54p9HKFB0LZbkk3IeP9bk4jL4QIw8uTzzMkD3oHv5XJjHlOz+XGDjNdV7iG8625Q=
+X-Received: by 2002:aca:fdd8:: with SMTP id b207mr8232972oii.57.1572863551996;
+ Mon, 04 Nov 2019 02:32:31 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191031074500.28523-2-rojay@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191101204558.210235-1-helgaas@kernel.org> <20191101204558.210235-5-helgaas@kernel.org>
+In-Reply-To: <20191101204558.210235-5-helgaas@kernel.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 4 Nov 2019 11:32:21 +0100
+Message-ID: <CAJZ5v0hOrVXkBie4Ub31OJA4Cuc_4AdZBx2DFnk6HWToJUk4jQ@mail.gmail.com>
+Subject: Re: [PATCH 4/6] xen-platform: Convert to generic power management
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        KarimAllah Ahmed <karahmed@amazon.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Nov 1, 2019 at 9:46 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> Convert xen-platform from the legacy PCI power management callbacks to the
+> generic operations.  This is one step towards removing support for the
+> legacy PCI callbacks.
+>
+> The generic .resume_noirq() operation is called by pci_pm_resume_noirq() at
+> the same point the legacy PCI .resume_early() callback was, so this patch
+> should not change the xen-platform behavior.
+>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Stefano Stabellini <sstabellini@kernel.org>
+> Cc: KarimAllah Ahmed <karahmed@amazon.de>
 
+Good idea:
 
-On 10/31/2019 1:15 PM, Roja Rani Yarubandi wrote:
-> Add QUP SE instances configuration for sc7180.
-> 
-> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
 > ---
->   arch/arm64/boot/dts/qcom/sc7180-idp.dts | 152 +++++-
->   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 683 +++++++++++++++++++++++-
->   2 files changed, 828 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index e0724ef3317d..189254f5ae95 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -17,7 +17,8 @@
->   	compatible = "qcom,sc7180-idp";
->   
->   	aliases {
-> -		serial0 = &uart10;
-
-I will fix this up in the patch that added this when I respin.
-I seemed to have overlooked the fact that each QUP instance on sc7180
-has only 6 SEs (and not 8)
-
-> +		hsuart0 = &uart3;
-> +		serial0 = &uart8;
-
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+>  drivers/xen/platform-pci.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/xen/platform-pci.c b/drivers/xen/platform-pci.c
+> index 5e30602fdbad..e06e8769eb84 100644
+> --- a/drivers/xen/platform-pci.c
+> +++ b/drivers/xen/platform-pci.c
+> @@ -168,13 +168,17 @@ static const struct pci_device_id platform_pci_tbl[] = {
+>         {0,}
+>  };
+>
+> +static struct dev_pm_ops platform_pm_ops = {
+> +       .resume_noirq =   platform_pci_resume,
+> +};
+> +
+>  static struct pci_driver platform_driver = {
+>         .name =           DRV_NAME,
+>         .probe =          platform_pci_probe,
+>         .id_table =       platform_pci_tbl,
+> -#ifdef CONFIG_PM
+> -       .resume_early =   platform_pci_resume,
+> -#endif
+> +       .driver = {
+> +               .pm =     &platform_pm_ops,
+> +       },
+>  };
+>
+>  builtin_pci_driver(platform_driver);
+> --
+> 2.24.0.rc1.363.gb1bccd3e3d-goog
+>
