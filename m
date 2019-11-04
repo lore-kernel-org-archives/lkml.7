@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2D0CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BA1CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B08AF20650
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50CD920659
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904808;
-	bh=g01Pj0tf7hlnryPghFku7R8JDx+a9JzwcwCkVwtqZnY=;
+	s=default; t=1572904813;
+	bh=a7lsjfD5XOqATd/HHMEqnA12kAyKJex2d6w/wuLsBQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=soGTZRufSBgJVinOWLHzrH4XCkqXM2t0EsVwy3RPq3ui3c16A/EK0jC2/TsBQ3Os5
-	 b1rQYNAo3+re6tSPs0PI8X8/rN18OPoLyIccP2/vbDk6lkfLdgSRbHSu/23Ojyja2H
-	 Q+h6Sd75WfXt9czI2n7sDuZYcCgoeU7fHYpydAkM=
+	b=DADUqMsmn8uWXz+StNstRsShPcJkVuSstwWsD15omZmfKnEO5N4Oj8BfO+p/YIxXI
+	 +jHasA2IDRXU0an2BWpekD8DaPJX7pdVD8cHmUtmZ4BxXvrziLLmwJFvRymWZyOCN9
+	 k1o0wOgFZ5aPIlNMZMPY7S2TlHM8gJiKSbTjEQgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388801AbfKDWAH (ORCPT
+        id S2388814AbfKDWAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:00:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57590 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:00:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388796AbfKDWAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:00:05 -0500
+        id S2388238AbfKDWAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:00:10 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FCF721744;
-        Mon,  4 Nov 2019 22:00:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0DB420650;
+        Mon,  4 Nov 2019 22:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904804;
-        bh=g01Pj0tf7hlnryPghFku7R8JDx+a9JzwcwCkVwtqZnY=;
+        s=default; t=1572904809;
+        bh=a7lsjfD5XOqATd/HHMEqnA12kAyKJex2d6w/wuLsBQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LOFyOKeutuuY5aD39Uf6yu3b0OQX5fNWVG8sPpq217b9DlyVPPmcHW0va24n3dg2A
-         1wgmE/sBP5I6wgj6UhomNtkVwjYkXXE4TwpoVIoVpNOC4lf85AC2e7MOw8j+tXBNZ1
-         Dle4JidSuwX4Q925DcTQUDwMa83Bslqgd0SwV7uw=
+        b=TTCWu1CZPMORKzJvJb7xZM04CHgQrQq+XuEXICFYshV91zKLoIWyTRkKrp5c694um
+         8El2vpRR/ST3Zj4BakIbNejdORfsaNFHPfWJP6XTnEsXbUUsDpoq2AmEXX/yhbI/7p
+         SI3U2pyYovvMrwTbueBgPbUH9bgWsl/eKPds3VFI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 075/149] arm64: ftrace: Ensure synchronisation in PLT setup for Neoverse-N1 #1542419
-Date:   Mon,  4 Nov 2019 22:44:28 +0100
-Message-Id: <20191104212141.913474570@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 076/149] tty: serial: owl: Fix the link time qualifier of owl_uart_exit()
+Date:   Mon,  4 Nov 2019 22:44:29 +0100
+Message-Id: <20191104212141.969200638@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -59,62 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit dd8a1f13488438c6c220b7cafa500baaf21a6e53 ]
+[ Upstream commit 6264dab6efd6069f0387efb078a9960b5642377b ]
 
-CPUs affected by Neoverse-N1 #1542419 may execute a stale instruction if
-it was recently modified. The affected sequence requires freshly written
-instructions to be executable before a branch to them is updated.
+'exit' functions should be marked as __exit, not __init.
 
-There are very few places in the kernel that modify executable text,
-all but one come with sufficient synchronisation:
- * The module loader's flush_module_icache() calls flush_icache_range(),
-   which does a kick_all_cpus_sync()
- * bpf_int_jit_compile() calls flush_icache_range().
- * Kprobes calls aarch64_insn_patch_text(), which does its work in
-   stop_machine().
- * static keys and ftrace both patch between nops and branches to
-   existing kernel code (not generated code).
-
-The affected sequence is the interaction between ftrace and modules.
-The module PLT is cleaned using __flush_icache_range() as the trampoline
-shouldn't be executable until we update the branch to it.
-
-Drop the double-underscore so that this path runs kick_all_cpus_sync()
-too.
-
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: fc60a8b675bd ("tty: serial: owl: Implement console driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/20190910041129.6978-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/ftrace.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/tty/serial/owl-uart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
-index 7eff8afa035fd..b6618391be8c6 100644
---- a/arch/arm64/kernel/ftrace.c
-+++ b/arch/arm64/kernel/ftrace.c
-@@ -119,10 +119,16 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+diff --git a/drivers/tty/serial/owl-uart.c b/drivers/tty/serial/owl-uart.c
+index 29a6dc6a8d23c..73fcc6bdb0312 100644
+--- a/drivers/tty/serial/owl-uart.c
++++ b/drivers/tty/serial/owl-uart.c
+@@ -742,7 +742,7 @@ static int __init owl_uart_init(void)
+ 	return ret;
+ }
  
- 			/*
- 			 * Ensure updated trampoline is visible to instruction
--			 * fetch before we patch in the branch.
-+			 * fetch before we patch in the branch. Although the
-+			 * architecture doesn't require an IPI in this case,
-+			 * Neoverse-N1 erratum #1542419 does require one
-+			 * if the TLB maintenance in module_enable_ro() is
-+			 * skipped due to rodata_enabled. It doesn't seem worth
-+			 * it to make it conditional given that this is
-+			 * certainly not a fast-path.
- 			 */
--			__flush_icache_range((unsigned long)&dst[0],
--					     (unsigned long)&dst[1]);
-+			flush_icache_range((unsigned long)&dst[0],
-+					   (unsigned long)&dst[1]);
- 		}
- 		addr = (unsigned long)dst;
- #else /* CONFIG_ARM64_MODULE_PLTS */
+-static void __init owl_uart_exit(void)
++static void __exit owl_uart_exit(void)
+ {
+ 	platform_driver_unregister(&owl_uart_platform_driver);
+ 	uart_unregister_driver(&owl_uart_driver);
 -- 
 2.20.1
 
