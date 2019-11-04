@@ -2,144 +2,384 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDC3CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51A8CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603D120869
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:05:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VoQ4R3Ob"
+	by mail.kernel.org (Postfix) with ESMTP id B1DF020848
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729496AbfKDTFC (ORCPT
+        id S1727998AbfKDTFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:05:02 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34872 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728709AbfKDTFB (ORCPT
+        Mon, 4 Nov 2019 14:05:32 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38332 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728377AbfKDTFc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 14:05:01 -0500
-Received: by mail-oi1-f196.google.com with SMTP id n16so15142130oig.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 11:05:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MYANoUNhVHHjzkfi60XF5k8Eu5GIth/T5JcxpoKJXY0=;
-        b=VoQ4R3Ob8oRCb76tNmEXI+WfY2qFjXVsfjr7uf4OczplOi6CXNyP7MBGr5IFxqs64F
-         hkfF5gDgIsz2+fNXNx9Y/DdLkXy1Jm0eS+KYclq+y5auzOiNrFZTF9Qo/nbzVkAid4ti
-         FtDajpPrHbk8P8ml1g1s7AKzYTG+4jGaPhhue5yMsiK4mvavB3TQteAbfVf7/ocUCWr8
-         lmJPbIo+mxAnHQdop8tZXrbwRp8qXvy1SGPh0/rr5WXIv6KneAbIBCvufzVwWKLT2VAq
-         CTdmalU/lmZcyBW84XtqaueyMv1WKBwL7pJcKtE2M5ur0sxFP0wXytMyWUAfKIiOLHH8
-         Y9yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MYANoUNhVHHjzkfi60XF5k8Eu5GIth/T5JcxpoKJXY0=;
-        b=n+az4AX9ed9ocGs1+Ldn+TqKNzMuZ4G/jgEFOIWncWtFIGk6BsiBOcPfOc9LKqwg8L
-         aYC2UmsXRJE07JX/cBGdaFL2V6krh7pI+qH54l0clSNt0cEYmYALzyQMc44fKwKcyner
-         E79p5RJAh8WYD52V8Z37JqNStDhUmW7BZ/7nHX1IGnzcBFSfuHi5fdbWO07cGHLe/rl/
-         wAOe8F0NnlmG1czOJqezoPOxnQLh/oLQkTxEDS1zihY/NF41K4tv3+XpryhhmXk5WPKz
-         +fkd9unv8xTfwZLWRS9h98tmTCmoiXqv1G6h230Zv/GTiWDbPNX3PXDJksfDAy/h0HBb
-         UCrQ==
-X-Gm-Message-State: APjAAAXqLnAzAOdzNVzOgIGANq53NojSxLRWr3kv5E5Lm/QGJXwC4fUe
-        XeFCj0ur1Z2uIXXYW8COwZMnRB4ri4HPFmxy0CWZ/Q==
-X-Google-Smtp-Source: APXvYqzeOsO3lJGp75lvE1QRaAg9xgdEsSMkzfIhUjg6Z229ywUMz4CiybXTkTy+v3KlkaLnO+EIgYmrbUDN5vzHXaY=
-X-Received: by 2002:aca:5116:: with SMTP id f22mr550365oib.30.1572894300567;
- Mon, 04 Nov 2019 11:05:00 -0800 (PST)
+        Mon, 4 Nov 2019 14:05:32 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iRhfE-0003cU-49; Mon, 04 Nov 2019 20:05:20 +0100
+Date:   Mon, 4 Nov 2019 20:05:18 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        ludovic.desroches@microchip.com, daniel.lezcano@linaro.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] clocksource/drivers/timer-microchip-pit64b: add
+ Microchip PIT64B support
+In-Reply-To: <1572880204-4514-3-git-send-email-claudiu.beznea@microchip.com>
+Message-ID: <alpine.DEB.2.21.1911041851230.17054@nanos.tec.linutronix.de>
+References: <1572880204-4514-1-git-send-email-claudiu.beznea@microchip.com> <1572880204-4514-3-git-send-email-claudiu.beznea@microchip.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-5-saravanak@google.com>
- <CAL_JsqJQ9siUGgmGqZnF_Wk3mVau29yVZRL_3LxFKgD8=mccQQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqJQ9siUGgmGqZnF_Wk3mVau29yVZRL_3LxFKgD8=mccQQ@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 4 Nov 2019 11:04:24 -0800
-Message-ID: <CAGETcx-cj9K0G4EcRd1saQOuFdMaXpvaf8Hz9M_XwG1BGH-qEQ@mail.gmail.com>
-Subject: Re: [PATCH v1 4/5] of: property: Make sure child dependencies don't
- block probing of parent
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 9:01 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Mon, Oct 28, 2019 at 5:00 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > When creating device links to proxy the sync_state() needs of child
-> > dependencies, create SYNC_STATE_ONLY device links so that children
-> > dependencies don't block probing of the parent.
-> >
-> > Also, differentiate between missing suppliers of parent device vs
-> > missing suppliers of child devices so that driver core doesn't block
-> > parent device probing when only child supplier dependencies are missing.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/of/property.c | 17 ++++++++++++-----
-> >  1 file changed, 12 insertions(+), 5 deletions(-)
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Mon, 4 Nov 2019, Claudiu Beznea wrote:
+> +struct mchp_pit64b_common_data {
+> +	void __iomem *base;
+> +	struct clk *pclk;
+> +	struct clk *gclk;
+> +	u64 cycles;
+> +	u8 pres;
 
-Thank you!
+Can you please make the members tabular for readability sake in all the
+structs?
 
-> One nit below:
->
-> >
-> > diff --git a/drivers/of/property.c b/drivers/of/property.c
-> > index 2808832b2e86..f16f85597ccc 100644
-> > --- a/drivers/of/property.c
-> > +++ b/drivers/of/property.c
-> > @@ -1032,10 +1032,10 @@ static bool of_is_ancestor_of(struct device_node *test_ancestor,
-> >   * - -EINVAL if the supplier link is invalid and should not be created
-> >   * - -ENODEV if there is no device that corresponds to the supplier phandle
-> >   */
-> > -static int of_link_to_phandle(struct device *dev, struct device_node *sup_np)
-> > +static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
-> > +                             u32 dl_flags)
-> >  {
-> >         struct device *sup_dev;
-> > -       u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
-> >         int ret = 0;
-> >         struct device_node *tmp_np = sup_np;
-> >
-> > @@ -1195,13 +1195,20 @@ static int of_link_property(struct device *dev, struct device_node *con_np,
-> >         unsigned int i = 0;
-> >         bool matched = false;
-> >         int ret = 0;
-> > +       u32 dl_flags;
-> > +
-> > +       if (dev->of_node == con_np)
-> > +               dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
-> > +       else
-> > +               dl_flags = DL_FLAG_SYNC_STATE_ONLY;
-> >
-> >         /* Do not stop at first failed link, link all available suppliers. */
-> >         while (!matched && s->parse_prop) {
-> >                 while ((phandle = s->parse_prop(con_np, prop_name, i))) {
-> >                         matched = true;
-> >                         i++;
-> > -                       if (of_link_to_phandle(dev, phandle) == -EAGAIN)
-> > +                       if (of_link_to_phandle(dev, phandle, dl_flags)
-> > +                                                               == -EAGAIN)
->
-> nit: I'd just keep this one line or at least move '==' up.
-
-You'd keep it one line even if it's > 80 cols? Ok, I'll move the "==" up.
+struct mchp_pit64b_common_data {
+	void __iomem	*base;
+	struct clk	*pclk;
+	struct clk	*gclk;
+	u64		cycles;
+	u8		pres;
+};
 
 
--Saravana
+> +static struct mchp_pit64b_data {
+> +	struct mchp_pit64b_clksrc_data *csd;
+> +	struct mchp_pit64b_clkevt_data *ced;
+> +} data;
+
+This is suboptimal style for two reasons:
+
+     1) Having a seperate struct and instance declaration is way simpler to
+     	parse.
+
+     2) Naming a global variable with a generic name is unintuitive and is
+     	too easily confused with local variable names. See below.
+
+> +static inline u64 mchp_pit64b_get_period(void __iomem *base)
+> +{
+> +	u32 lsb, msb;
+
+lsb and msb are not really correct here. They stand for Least/Most
+Significant Bit (Byte).
+
+lsw/msw would be more correct, but 'high/low' would be sufficiently self
+explaining as well.
+
+      /*
+       * Please use proper multi-line comments and not the network style.
+       * below. Can you spot the difference?
+       */
+
+> +	/* LSB must be read first to guarantee an atomic read of the 64 bit
+> +	 * timer.
+> +	 */
+
+Does that mean that the hardware latches the upper 32bit when the lower
+32bit are read? If so, please write it out.
+
+But aside of that this is fundamentally broken not only on SMP, but also on
+UP because the clocksource read function can be called in preemptible
+and/or interruptible context.
+
+   thread()
+     ktime_get))
+       t = clocksource->read()
+          low = read(LSW); <- Latches MSW
+
+---> interrupt or preemption
+
+       ktime_get))
+         t = clocksource->read()
+            low = read(LSW);    <- Latches MSW
+	    high = read(MSW);   <- Reads correct MSW
+
+<--- interrupt or preemption ends
+
+          high = read(MSW);     <- Read incorrect MSW
+
+On SMP the same issue exists between two CPUs....
+
+> +	lsb = mchp_pit64b_read(base, MCHP_PIT64B_TLSBR);
+> +	msb = mchp_pit64b_read(base, MCHP_PIT64B_TMSBR);
+
+> +static inline void mchp_pit64b_set_period(void __iomem *base, u64 cycles)
+> +{
+> +	u32 lsb, msb;
+> +
+> +	lsb = cycles & MCHP_PIT64B_LSBMASK;
+> +	msb = cycles >> 32;
+> +
+> +	/* LSB must be write last to guarantee an atomic update of the timer
+
+s/write/written/
+
+> +	 * even when SMOD=1.
+> +	 */
+> +	mchp_pit64b_write(base, MCHP_PIT64B_MSB_PR, msb);
+> +	mchp_pit64b_write(base, MCHP_PIT64B_LSB_PR, lsb);
+> +}
+> +
+> +static inline void mchp_pit64b_reset(struct mchp_pit64b_common_data *data,
+
+And this is exactly the issue I mentioned above. You have a local argument
+name which shadows a global variable name. Bah.
+
+> +				     u32 mode, bool irq_ena)
+> +{
+> +	mode |= MCHP_PIT64B_PRESCALER(data->pres);
+> +	if (data->gclk)
+> +		mode |= MCHP_PIT64B_MR_SGCLK;
+> +
+> +	mchp_pit64b_write(data->base, MCHP_PIT64B_CR, MCHP_PIT64B_CR_SWRST);
+> +	mchp_pit64b_write(data->base, MCHP_PIT64B_MR, mode);
+> +	mchp_pit64b_set_period(data->base, data->cycles);
+> +	if (irq_ena)
+> +		mchp_pit64b_write(data->base, MCHP_PIT64B_IER,
+> +				  MCHP_PIT64B_IER_PERIOD);
+
+This lacks brackets as after the condition follows a multi-line statement.
+It's techincally a single line, but visually a multi-line statement due to
+the line break.
+
+> +	mchp_pit64b_write(data->base, MCHP_PIT64B_CR, MCHP_PIT64B_CR_START);
+> +}
+> +
+> +static u64 mchp_pit64b_read_clk(struct clocksource *cs)
+> +{
+> +	return mchp_pit64b_get_period(data.csd->cd->base);
+
+Lot of indirection here in the hotpath. You surely could avoid touching
+multiple cache-lines here by restructuring your data layout so that you
+have the only interesting element of 'common data', i.e. base, in the
+structure which encapsulates the 'clocksource'.
+
+struct mchp_cs {
+	void __iomem		*base;
+	struct clocksource 	cs;
+};
+
+And then your read function becomes either:
+{
+    struct mchp_cs *mcs = container_of(cs, struct mchp_cs, cs);
+
+    return read_cs(mcs->base);
+}
+
+or if you have he clocksource statically allocated, i.e.:
+
+struct mchp_cs mchp_clksource = { /* init here */ };
+
+{
+	return read_cs(mchp_clksource.base);
+}
+	
+> +static u64 mchp_sched_read_clk(void)
+> +{
+> +	return mchp_pit64b_get_period(data.csd->cd->base);
+
+Ditto
+
+> +
+> +static int mchp_pit64b_clkevt_set_next_event(unsigned long evt,
+> +					     struct clock_event_device *cedev)
+> +{
+> +	mchp_pit64b_set_period(data.ced->cd->base, evt);
+> +	mchp_pit64b_write(data.ced->cd->base, MCHP_PIT64B_CR,
+> +			  MCHP_PIT64B_CR_START);
+
+Same issue here.
+
+> +static irqreturn_t mchp_pit64b_interrupt(int irq, void *dev_id)
+> +{
+> +	struct mchp_pit64b_clkevt_data *irq_data = dev_id;
+> +
+> +	if (data.ced != irq_data)
+> +		return IRQ_NONE;
+
+How is this supposed to happen?
+
+> +
+> +	if (mchp_pit64b_read(irq_data->cd->base, MCHP_PIT64B_ISR) &
+> +	    MCHP_PIT64B_ISR_PERIOD) {
+
+Why are you reading this from the device and not from the mode information
+of the clockevent which would be faster obviously?
+
+> +static int __init mchp_pit64b_pres_compute(u32 *pres, u32 clk_rate,
+> +					   u32 max_rate)
+> +{
+> +	u32 tmp;
+> +
+> +	for (*pres = 0; *pres < MCHP_PIT64B_PRES_MAX; (*pres)++) {
+> +		tmp = clk_rate / (*pres + 1);
+> +		if (tmp <= max_rate)
+> +			break;
+> +	}
+> +
+> +	if (*pres == MCHP_PIT64B_PRES_MAX)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init mchp_pit64b_pres_prepare(struct mchp_pit64b_common_data *cd,
+> +					   unsigned long max_rate)
+> +{
+> +	unsigned long pclk_rate, diff = 0, best_diff = ULONG_MAX;
+> +	long gclk_round = 0;
+> +	u32 pres, best_pres = 0;
+> +	int ret = 0;
+> +
+> +	pclk_rate = clk_get_rate(cd->pclk);
+> +	if (!pclk_rate)
+> +		return -EINVAL;
+> +
+> +	if (cd->gclk) {
+> +		gclk_round = clk_round_rate(cd->gclk, max_rate);
+> +		if (gclk_round < 0)
+> +			goto pclk;
+> +
+> +		if (pclk_rate / gclk_round < 3)
+> +			goto pclk;
+> +
+> +		ret = mchp_pit64b_pres_compute(&pres, gclk_round, max_rate);
+> +		if (ret)
+> +			best_diff = abs(gclk_round - max_rate);
+> +		else
+> +			best_diff = abs(gclk_round / (pres + 1) - max_rate);
+> +		best_pres = pres;
+> +	}
+> +
+> +pclk:
+> +	/* Check if requested rate could be obtained using PCLK. */
+> +	ret = mchp_pit64b_pres_compute(&pres, pclk_rate, max_rate);
+> +	if (ret)
+> +		diff = abs(pclk_rate - max_rate);
+> +	else
+> +		diff = abs(pclk_rate / (pres + 1) - max_rate);
+> +
+> +	if (best_diff > diff) {
+> +		/* Use PCLK. */
+> +		cd->gclk = NULL;
+> +		best_pres = pres;
+> +	} else {
+> +		clk_set_rate(cd->gclk, gclk_round);
+> +	}
+> +
+> +	cd->pres = best_pres;
+> +
+> +	pr_info("PIT64B: using clk=%s with prescaler %u, freq=%lu [Hz]\n",
+> +		cd->gclk ? "gclk" : "pclk", cd->pres,
+> +		cd->gclk ? gclk_round / (cd->pres + 1)
+> +			 : pclk_rate / (cd->pres + 1));
+> +
+> +	return 0;
+
+Lots of undocumented functionality which open codes stuff which exists
+already in the clk framework AFAICT.
+
+Why are you not simply implementing this as clk framework components?
+
+
+            |-----|
+  gclk ---->|     |    |---------|
+            | MUX |--->| Divider |->
+  pclk ---->|     |    |---------|
+            |-----|
+
+which is exaxtly how your hardware looks like. The clk framework has all
+the selection mechanisms in place and all this conditional clock stuff can
+be removed all over the place simply because you just ask for the desired
+frequency on init. Also suspend/resume and all the other stuff just works
+without all the mess involved.
+
+> +free:
+> +	kfree(csd);
+> +	data.csd = NULL;
+
+It does not matter here, but for correctness sake this is the wrong
+order and triggers my built-in UAF-race detector.
+
+You need to NULL the pointer _before_ freeing the underlying memory.
+
+> +static int __init mchp_pit64b_dt_init(struct device_node *node)
+> +{
+> +	struct mchp_pit64b_common_data *cd;
+> +	u32 irq;
+> +	int ret;
+> +
+> +	if (data.csd && data.ced)
+> +		return -EBUSY;
+
+Huch?
+
+> +	cd = kzalloc(sizeof(*cd), GFP_KERNEL);
+> +	if (!cd)
+> +		return -ENOMEM;
+
+If either data.csd or data.ced exists then the common data exists as
+well. Why would you allocate another instance?
+
+> +
+> +	cd->pclk = of_clk_get_by_name(node, "pclk");
+> +	if (IS_ERR(cd->pclk)) {
+> +		ret = PTR_ERR(cd->pclk);
+> +		goto free;
+> +	}
+
+....
+
+> +	if (!data.ced) {
+
+And here you actually have a conditional which is confusing at best.
+
+> +		irq = irq_of_parse_and_map(node, 0);
+> +		if (!irq) {
+> +			pr_debug("%s: Failed to get PIT64B clockevent IRQ!\n",
+> +				 MCHP_PIT64B_NAME);
+> +			ret = -ENODEV;
+> +			goto gclk_unprepare;
+> +		}
+> +		ret = mchp_pit64b_dt_init_clkevt(cd, irq);
+> +		if (ret)
+> +			goto irq_unmap;
+> +	} else {
+> +		ret = mchp_pit64b_dt_init_clksrc(cd);
+> +		if (ret)
+> +			goto gclk_unprepare;
+> +	}
+
+So the first invocation of this init function is supposed to init the clock
+event device and the second one inits the clock source. And both allocate
+common data. How is that common?
+
+Thanks,
+
+	tglx
