@@ -7,48 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB08CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DCACA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2C832184C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD132053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:54:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904468;
-	bh=rYBP9i4imPsXK8XDuA0lcxALZkLP9yyjhkhdTDFv5LI=;
+	s=default; t=1572904471;
+	bh=6lfw3MQx37kk/pOuC3qfn5dmCfIy7mklSWz7Kk50wx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FsTqb7z0lFRWIfx2Q3+LRVe3kdoBu5FWTg/7b9KhJUCK99B8cLHSNbP7EqtzwMdgb
-	 ktrN/99DkULPU/u+PpvaPD/yVH3XAw3SNJekQ22Vi+4JiX1Dtl0u/hyH9Zs1Y/LHbQ
-	 Le1PLfM7Ji8YClMUOYcRVFDNSatLhraGohoMjQXQ=
+	b=mesikexW1wta27ooc0f+D4Fs/Xm+B3zLQxyy+hiWaL2o5RgapFE3MkAeGcCl2AO8D
+	 0Dp8ElMiySPcUdpt2A7kgjaG4XDDCcSVq3MCWVIOcUip6YYzuzo5/LqNxNZcysImkn
+	 IgX5ov0iw6mkXX2usNom8bkpDB5nM3nLH0bTlowY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387938AbfKDVy0 (ORCPT
+        id S2387951AbfKDVya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:54:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49120 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:54:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387921AbfKDVyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:54:23 -0500
+        id S2387459AbfKDVyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:54:25 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE127217F5;
-        Mon,  4 Nov 2019 21:54:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80E2D2053B;
+        Mon,  4 Nov 2019 21:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904462;
-        bh=rYBP9i4imPsXK8XDuA0lcxALZkLP9yyjhkhdTDFv5LI=;
+        s=default; t=1572904465;
+        bh=6lfw3MQx37kk/pOuC3qfn5dmCfIy7mklSWz7Kk50wx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lNqGEgdALRygvooupRbCSVAMQTWBUn638vvK5lHQEloZRfZfAUAUKiRt8MkOO6DqN
-         5O78I047fN+oM84RXJWyD1qG2KMWEK77ImujzHmc4RBhl5dhQ3S4dP3PHWK4u+Zy9m
-         1RmsRPWlXlt0chBHbNvEfXWNDf0ACA8tBsaS3RaE=
+        b=WDR/9lZOggmZ/c0CjwKKBF5CeAGH+1FxHPTVszepReFC8L+1Q1iNtK51nd5zKeudQ
+         P0KFKGy8+y8Kj1vNfNrXLAF43aca1pYpzdSUoDQJdRi9OFkCE+dgbJ7MNbTAJ1vwHK
+         2GZKW+PTtgl4KEykn3H4hL6rMdUw37RyxS3AqeKw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Nikos Tsironis <ntsironis@arrikto.com>,
-        Mike Snitzer <snitzer@redhat.com>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 03/95] dm snapshot: introduce account_start_copy() and account_end_copy()
-Date:   Mon,  4 Nov 2019 22:44:01 +0100
-Message-Id: <20191104212039.349667948@linuxfoundation.org>
+Subject: [PATCH 4.14 48/95] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_info_scan_inode_alloc()
+Date:   Mon,  4 Nov 2019 22:44:46 +0100
+Message-Id: <20191104212103.355281543@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -61,71 +67,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit a2f83e8b0c82c9500421a26c49eb198b25fcdea3 ]
+[ Upstream commit 2abb7d3b12d007c30193f48bebed781009bebdd2 ]
 
-This simple refactoring moves code for modifying the semaphore cow_count
-into separate functions to prepare for changes that will extend these
-methods to provide for a more sophisticated mechanism for COW
-throttling.
+In ocfs2_info_scan_inode_alloc(), there is an if statement on line 283
+to check whether inode_alloc is NULL:
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Reviewed-by: Nikos Tsironis <ntsironis@arrikto.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+    if (inode_alloc)
+
+When inode_alloc is NULL, it is used on line 287:
+
+    ocfs2_inode_lock(inode_alloc, &bh, 0);
+        ocfs2_inode_lock_full_nested(inode, ...)
+            struct ocfs2_super *osb = OCFS2_SB(inode->i_sb);
+
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, inode_alloc is checked on line 286.
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Link: http://lkml.kernel.org/r/20190726033717.32359-1-baijiaju1990@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-snap.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ fs/ocfs2/ioctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/dm-snap.c b/drivers/md/dm-snap.c
-index 8b1556e77a0a0..a9575122a0c6e 100644
---- a/drivers/md/dm-snap.c
-+++ b/drivers/md/dm-snap.c
-@@ -1399,6 +1399,16 @@ static void snapshot_dtr(struct dm_target *ti)
- 	kfree(s);
- }
+diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
+index ab30c005cc4bc..9fa98abecfc6b 100644
+--- a/fs/ocfs2/ioctl.c
++++ b/fs/ocfs2/ioctl.c
+@@ -290,7 +290,7 @@ static int ocfs2_info_scan_inode_alloc(struct ocfs2_super *osb,
+ 	if (inode_alloc)
+ 		inode_lock(inode_alloc);
  
-+static void account_start_copy(struct dm_snapshot *s)
-+{
-+	down(&s->cow_count);
-+}
-+
-+static void account_end_copy(struct dm_snapshot *s)
-+{
-+	up(&s->cow_count);
-+}
-+
- /*
-  * Flush a list of buffers.
-  */
-@@ -1581,7 +1591,7 @@ static void copy_callback(int read_err, unsigned long write_err, void *context)
- 		}
- 		list_add(&pe->out_of_order_entry, lh);
- 	}
--	up(&s->cow_count);
-+	account_end_copy(s);
- }
- 
- /*
-@@ -1605,7 +1615,7 @@ static void start_copy(struct dm_snap_pending_exception *pe)
- 	dest.count = src.count;
- 
- 	/* Hand over to kcopyd */
--	down(&s->cow_count);
-+	account_start_copy(s);
- 	dm_kcopyd_copy(s->kcopyd_client, &src, 1, &dest, 0, copy_callback, pe);
- }
- 
-@@ -1625,7 +1635,7 @@ static void start_full_bio(struct dm_snap_pending_exception *pe,
- 	pe->full_bio = bio;
- 	pe->full_bio_end_io = bio->bi_end_io;
- 
--	down(&s->cow_count);
-+	account_start_copy(s);
- 	callback_data = dm_kcopyd_prepare_callback(s->kcopyd_client,
- 						   copy_callback, pe);
- 
+-	if (o2info_coherent(&fi->ifi_req)) {
++	if (inode_alloc && o2info_coherent(&fi->ifi_req)) {
+ 		status = ocfs2_inode_lock(inode_alloc, &bh, 0);
+ 		if (status < 0) {
+ 			mlog_errno(status);
 -- 
 2.20.1
 
