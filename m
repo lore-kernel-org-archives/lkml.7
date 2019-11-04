@@ -2,133 +2,133 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 805B9CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2371ACA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545F32084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E44EB20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:22:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zVPQ4vLm"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="wjMvY796"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbfKDTVe (ORCPT
+        id S1729438AbfKDTWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:21:34 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39088 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728322AbfKDTVe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 14:21:34 -0500
-Received: by mail-ot1-f67.google.com with SMTP id e17so6889619otk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 11:21:33 -0800 (PST)
+        Mon, 4 Nov 2019 14:22:48 -0500
+Received: from mail-eopbgr820087.outbound.protection.outlook.com ([40.107.82.87]:53408
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728761AbfKDTWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 14:22:47 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UUs5WSr6gV28imt1YuKUtuRniP/xg3tZ7Z01se2uW6Xv8AuLVSjCr7LYT2X8+mN38R4D91dUqzM9ij7Ih6rnGBerPjM55gaeiTGSx6Kb5LZzQ66EXpr3gqidQsMfeuap0ChTjFjaHiRSQ6RZKbD319n5iNEkTV9a9n1Fe9+1Xp6VV4EQ2MlI7+CRsMYXlw4phz196KkVfGVXyrIc3oqPwd05Fdi+JZ5jcYAlxbMOSZ2KQF6x4lHc1sLWp539ps5DVmJTohfkp+KEmDoulC5SQG7uadAL/jM8DqndUBIVVI1/YFnsQtQXGulsT3qzqMwwySdc5U8JcCELNOrQlZc3OQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rkEJLUr6eETY8oSz5eP/66yJTSEuDSFMDhnsUF35kjc=;
+ b=OW3S8nUE7fp3BaLhMw7Kn+zZG7ZZWYu6/Ir/S8iAw6VmtalKvBTPXPYevfbGuIi5tckuHO5ahWzbKnKfBmfBC1ro2boQwEVonMUDUX5C3pGQxolBrHb4M4q6UmWs/QD3iybzIQSht1SByzoybVVJ0KNVyW/Du3vXNCfhmm92EIt2Vzoga3gb3K0Al+l5d67c0qkrqxmQwswwEtmgfbwwy2HKwcOcTziplAmCRDhb0XdX6YLrD17BioE+oUqRcK7eH/ugnX3blHd8tBzM9Bv1q2ZxsKzwjNQyN6dQwjRuWIAZWoFPPZpKDMkRibYOXVIGeWNcaL/eCrCQx+gMH3dTNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7y4ipuWmdaUi9fFnH1wHoo3ikrWXbFhBkhRytiSTYvM=;
-        b=zVPQ4vLmRwkhdd0deIKHT+LjfpSu5/1hNMNrNyCY5UyhgmQipJ3kXUzGIJuFkl/dNU
-         HdpL8bcUL77aYoY+kohtMB6aXbjOEwuUHr8jZTJ0mgGXwlNntn4N/nsps4YDowaZIJWA
-         DeLbG7z94g3xeyjqijOwgvQnKtts/1Y14A42VqZq/VcLXvgkUId5HzK+jMR8qqRm/UTE
-         pgE2orq6ejxaiuwBzJtm/2YBf8DrrkEfoHEUd3uHNEtt7TL7mvqzqSn6bTqvkQzrlz1+
-         5ug4sXR4YSdZ7Iqfs8jDpvXpVY9RWekZ1tsK+UKlHupS1IH7MURM3yP2qU/xLi4GCk7n
-         jXrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7y4ipuWmdaUi9fFnH1wHoo3ikrWXbFhBkhRytiSTYvM=;
-        b=QbD2F9WxvuAisNr3R3hVRGUtqtIeOsOMHC1x440bqEpWHnmha5rNKYHWnKN0WKPPZw
-         ieEYqDk6u8sttfWrXFn2qQywTgFQ06bpjClbDLAcPUWrAc4cmRoKKEYaBDmkg0AuX7uY
-         USmJC5OfmSS03Fmf5QA23C7Lsb/rPjsXCFfK2OK9IWjLNnRgtjbAttufGONiKsVn2rrn
-         wgrI3gb3vKfVO5+MD2g11mw+1z7L+9dmcZ/J96ZF8/KFsYLu+xSr9lsKnpJw0/mEKHYi
-         54/FAQGv8x/N+6TTBPXF7JUr0KsAUCTxsf09PxWkIOKiiMAo760egKno+W5EyT9cP8Yk
-         HXoQ==
-X-Gm-Message-State: APjAAAVpP1tZKKCdHtf4aHXOVSzLoAggCAy48e5+2+w9BarhSMTICgVj
-        JjRsrPcpDcyP5T+BNcqu0A4GNm3VxMVy5JKbP8n0vQ==
-X-Google-Smtp-Source: APXvYqwovk2ws6gw1x2ffiii11kkOdQ/I1Hg2skTx4vPM9AnnETFCFUC9S25MTgg9Czm7z5Rwb5icomH1IGIUSXKBjE=
-X-Received: by 2002:a9d:5a0b:: with SMTP id v11mr18805680oth.102.1572895292765;
- Mon, 04 Nov 2019 11:21:32 -0800 (PST)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rkEJLUr6eETY8oSz5eP/66yJTSEuDSFMDhnsUF35kjc=;
+ b=wjMvY796V15eq2kMdqMhGPEX6pPPiEFegoCmlD4KQ/o3en+meP3E4PU5OawvsEmmltzLvtNHoUMPTjHfgjwaT5BxCC0zPa65c73LDPr4KB3QcLRBl7L8neBPeo836kvawU0UI/ChHx1oR4MoioauDTa5e8krX7D4W3G+UmnTtYg=
+Received: from DM6PR12MB3865.namprd12.prod.outlook.com (10.255.173.210) by
+ DM6PR12MB3274.namprd12.prod.outlook.com (20.179.106.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Mon, 4 Nov 2019 19:22:44 +0000
+Received: from DM6PR12MB3865.namprd12.prod.outlook.com
+ ([fe80::4898:93e0:3c0c:d862]) by DM6PR12MB3865.namprd12.prod.outlook.com
+ ([fe80::4898:93e0:3c0c:d862%6]) with mapi id 15.20.2408.024; Mon, 4 Nov 2019
+ 19:22:44 +0000
+From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "rkagan@virtuozzo.com" <rkagan@virtuozzo.com>,
+        "graf@amazon.com" <graf@amazon.com>,
+        "jschoenh@amazon.de" <jschoenh@amazon.de>,
+        "karahmed@amazon.de" <karahmed@amazon.de>,
+        "rimasluk@amazon.com" <rimasluk@amazon.com>,
+        "Grimm, Jon" <Jon.Grimm@amd.com>
+Subject: Re: [PATCH v4 04/17] kvm: x86: Add support for activate/de-activate
+ APICv at runtime
+Thread-Topic: [PATCH v4 04/17] kvm: x86: Add support for activate/de-activate
+ APICv at runtime
+Thread-Index: AQHVkQV/8CsVLszkbEWXIyta1bn49Kd3pGIAgAPEBQA=
+Date:   Mon, 4 Nov 2019 19:22:43 +0000
+Message-ID: <32d5c485-7ee8-fffd-a461-4c01101a2396@amd.com>
+References: <1572648072-84536-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <1572648072-84536-5-git-send-email-suravee.suthikulpanit@amd.com>
+ <c83eb23c-2d4f-fd22-ed9f-d4eeffa8bcd6@redhat.com>
+In-Reply-To: <c83eb23c-2d4f-fd22-ed9f-d4eeffa8bcd6@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.2.0
+x-originating-ip: [165.204.25.250]
+x-clientproxiedby: BN6PR22CA0051.namprd22.prod.outlook.com
+ (2603:10b6:404:ca::13) To DM6PR12MB3865.namprd12.prod.outlook.com
+ (2603:10b6:5:1c8::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6ffe8cf3-5e49-40e6-7e92-08d7615c5dee
+x-ms-traffictypediagnostic: DM6PR12MB3274:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB3274538B791FB5DED8B4B841F37F0@DM6PR12MB3274.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0211965D06
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(346002)(39860400002)(396003)(136003)(189003)(199004)(305945005)(4744005)(31696002)(99286004)(7416002)(110136005)(54906003)(316002)(6512007)(66066001)(65806001)(65956001)(58126008)(229853002)(6436002)(71190400001)(71200400001)(66946007)(2201001)(5660300002)(6246003)(3846002)(6116002)(2906002)(4326008)(14444005)(256004)(31686004)(26005)(53546011)(14454004)(386003)(102836004)(6506007)(8936002)(8676002)(81156014)(81166006)(6486002)(64756008)(66556008)(66446008)(66476007)(86362001)(478600001)(2501003)(476003)(36756003)(11346002)(446003)(2616005)(186003)(486006)(52116002)(76176011)(25786009)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3274;H:DM6PR12MB3865.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Q1BUFwtucBab17Bpst9JvuQNuVyQCgUed+7aNIXMuoeBUsqP+DvrfDuepjhgy7p49k6m3XGXKxWs07zr75R4tesDy27s+9VPnWZVwl48QFweddCfypCw4QfgJih9WR9iFt2sdLQjNOwiC52wh+l1zR2QKs7UhmBoV+InFW1sBhgxw2f7k7PqZU8DByidRLHlXp1VxKxr8xL5psG2FKb7KRd3VlbwQyIgwF+zqFb0IONSKn1Y9TBAvy+zV6sb/MrjYLCO4C3B3V1lUPSUm7Exm4fAO+5T/pFBouCp2Kq39C+SPp9ki/zbLep2nrmhtmZ8WlAthBlqod3thhGlg2zjwW0xPB8UC07E6PK2+ba2XeBLPLOnSNkoMdU67HE5nrqyQK9lGvVGx/VNW6iVPx9hivuk/F2M+EvG81WZl4okomfnoacJbCJksw7ab8Ze27Jd
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E6EC74D100AA0B4E96B6B27190E5EFAB@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191101214238.78015-1-john.stultz@linaro.org> <20191104101807.79503286@eldfell.localdomain>
-In-Reply-To: <20191104101807.79503286@eldfell.localdomain>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Mon, 4 Nov 2019 11:21:21 -0800
-Message-ID: <CALAqxLXYUKNGebU6ZBVsX5xQ_hUL+imxcyOkuV5M10UxdpZuSA@mail.gmail.com>
-Subject: Re: [PATCH v14 0/5] DMA-BUF Heaps (destaging ION)
-To:     Pekka Paalanen <ppaalanen@gmail.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Hillf Danton <hdanton@sina.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Liam Mark <lmark@codeaurora.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Pratik Patel <pratikp@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6ffe8cf3-5e49-40e6-7e92-08d7615c5dee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Nov 2019 19:22:43.9849
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jchNoby3v07VlqhslL9UTkuigJXR4exoKWA8h30xqGRcwIyiKP+TX5JMNHybHVHQlgMriWDzeVu7yK9HdstuoA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3274
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 12:18 AM Pekka Paalanen <ppaalanen@gmail.com> wrote:
-> On Fri,  1 Nov 2019 21:42:33 +0000
-> John Stultz <john.stultz@linaro.org> wrote:
->
-> > This again? I know!
-> >
-> > Apologies to all who hoped I'd stop bothering them with this
-> > patch set, but I ran afoul of the DRM tree rules by not
-> > getting the userland patches properly reviewed prior to the
-> > patches landing (I mistakenly was waiting for the patches to
-> > land upstream before pushing the userland patches). Thus,
-> > these were correctly reverted from the drm-misc-next tree.
->
-> Hi John,
->
-> mind, you have to get userland patches reviewed and accepted but *not
-> pushed*.
->
-> You cannot push/merge userland patches before the kernel patches have
-> properly landed, that bit you got right. But the supposedly confusing
-> bit is that for kernel patches to land, the userspace patches must be
-> reviewed and accepted first.
->
-> I just wanted to clarify this since you wrote "before pushing the
-> userland patches" above.
-
-Yea. Sorry, "pushed" isn't a very clear term. In AOSP, one must push a
-patch to Gerrit before it is reviewed.
-However, once something is reviewed it usually is merged immediately
-(pending automated precommit testing).
-
-So I tend to use the term "pushed for review" as submitting patches
-for review as ready to be merged. In this case, technically I had
-actually "pushed" the changes to Gerrit, but hadn't added anyone to
-review, to ensure the patches were not' accidentally reviewed and
-merged.
-But If you look at the Gerrit log now, you'll see I've added reviewers
-and provided a note explicitly to not merge the changes.
-
-So apologies for the confusion. I do believe I understand the
-requirement now, and am doing my best to adhere to them.
-
-That said, given different userland projects use different approaches,
-I do find it a little strange on the insistence that userland patches
-cannot be merged to their project before the kernel changes land.
-Obviously no interface is final and any userland that does so has some
-risk that it will change and break, but there are many cases where
-distros support new features in their userland not yet merged
-upstream.  Ensuring there is a real opensource user for the kernel
-feature is important, but I'm not sure I understand why the kernel is
-dictating rules as to how userspace merges code.
-
-thanks
--john
+UGFvbG8sDQoNCk9uIDExLzIvMTkgNDo1MiBBTSwgUGFvbG8gQm9uemluaSB3cm90ZToNCj4gT24g
+MDEvMTEvMTkgMjM6NDEsIFN1dGhpa3VscGFuaXQsIFN1cmF2ZWUgd3JvdGU6DQo+PiArdm9pZCBr
+dm1fcmVxdWVzdF9hcGljdl91cGRhdGUoc3RydWN0IGt2bSAqa3ZtLCBib29sIGFjdGl2YXRlLCB1
+bG9uZyBiaXQpDQo+PiArew0KPj4gKwlpZiAoYWN0aXZhdGUpIHsNCj4+ICsJCWlmICghdGVzdF9h
+bmRfY2xlYXJfYml0KGJpdCwgJmt2bS0+YXJjaC5hcGljdl9kZWFjdF9tc2spIHx8DQo+PiArCQkg
+ICAgIWt2bV9hcGljdl9hY3RpdmF0ZWQoa3ZtKSkNCj4+ICsJCQlyZXR1cm47DQo+PiArCX0gZWxz
+ZSB7DQo+PiArCQlpZiAodGVzdF9hbmRfc2V0X2JpdChiaXQsICZrdm0tPmFyY2guYXBpY3ZfZGVh
+Y3RfbXNrKSB8fA0KPj4gKwkJICAgIGt2bV9hcGljdl9hY3RpdmF0ZWQoa3ZtKSkNCj4+ICsJCQly
+ZXR1cm47DQo+PiArCX0NCj4+ICsNCj4+ICsJa3ZtX21ha2VfYWxsX2NwdXNfcmVxdWVzdChrdm0s
+IEtWTV9SRVFfQVBJQ1ZfVVBEQVRFKTsNCj4+ICt9DQo+PiArRVhQT1JUX1NZTUJPTF9HUEwoa3Zt
+X3JlcXVlc3RfYXBpY3ZfdXBkYXRlKTsNCj4+ICsNCj4gDQo+IEl0J3Mgd29ydGggZG9jdW1lbnRp
+bmcgdGhlIGxvY2tpbmcgcmVxdWlyZW1lbnRzIG9mDQo+IGt2bV9yZXF1ZXN0X2FwaWN2X3VwZGF0
+ZSAoaXQgY2FuIGFsc28gYmUgbmVnYXRpdmUgcmVxdWlyZW1lbnRzLCBzdWNoIGFzDQo+ICJkb24n
+dCBob2xkIGFueSBsb2NrIiksIGJlY2F1c2Uga3ZtX21ha2VfYWxsX2NwdXNfcmVxdWVzdCBpcyBh
+IHNvbWV3aGF0DQo+IGRlYWRsb2NrLXByb25lIEFQSS4NCg0KQ3VycmVudGx5LCBJIGhhdmUgYSBj
+b21tZW50IGluIHRoZSBzdm1fcmVxdWVzdF91cGRhdGVfYXZpYygpLCB3aGVyZSBpdCANCmNhbGxz
+IGt2bV9yZXF1ZXN0X2FwaWN2X3VwZGF0ZS4gSSdsbCBtb3ZlIGl0IGhlcmUgaW5zdGVhZCBhbmQg
+ZW5oYW5jZSANCnRoZSBjb21tZW50Lg0KDQpUaGFua3MsDQpTdXJhdmVlDQo=
