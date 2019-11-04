@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 689E2CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E1ECA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E412218BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02AE721929
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:04:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905094;
-	bh=9NnODbZOz4a/iwhi9I2k4MwlKVQmuVTUJBtV1kF9jBM=;
+	s=default; t=1572905098;
+	bh=j4NMKFZCEhXHqiCHNdvO7vjenNr3RiF8my1Dx+JIa0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iBhP1DBS1nHOoAXLtNXRtBvWiJUTvzblzNDQWvV1EsgG9t2zs/213Et7JRHOoLub/
-	 QBjsHVvb9qYPvkmAHM0h6cou7URnzSKH10ll3RAdDho2q/NDdN7rVt3gW0eZkVcFU3
-	 k7z6pCuHcAN+GJGOSfbNyobRd6T9dklKkh41es8o=
+	b=RyQ1WA2ZQ7JhHP9mlY2uwDB+x6L4umZaERd9p9WXnw5Qn1gGw+06qoyWSto9pHk45
+	 GcNY+3z4kL8a0R2DymobptjWY6WDxuxvHkkYnqJQeWDcFkg8qTFD9XVdjiITXsvVaZ
+	 VL7bUP7l+nIHQ2wqpibj/kLK1r6umAU+oqRUPgOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389738AbfKDWEw (ORCPT
+        id S2389746AbfKDWE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:04:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35622 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:04:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388176AbfKDWEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:04:48 -0500
+        id S2388176AbfKDWEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:04:54 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C15C217F4;
-        Mon,  4 Nov 2019 22:04:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91B6A217F5;
+        Mon,  4 Nov 2019 22:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905087;
-        bh=9NnODbZOz4a/iwhi9I2k4MwlKVQmuVTUJBtV1kF9jBM=;
+        s=default; t=1572905094;
+        bh=j4NMKFZCEhXHqiCHNdvO7vjenNr3RiF8my1Dx+JIa0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QRZJBOwU4ymp5R1kaWZZf+IZD3DEXY1zUVzZ1pGBMS5WWWVPxET9nlhAE3id4UUhy
-         0Z60kPylyBldQYmQa83J0YP9cH6SPycG/UsHQf23VxweJ4S/0yop7fXTi1M4jM4QXf
-         5IaecPvSz0ZlVcH6iVxP5DbY7lM0AxUvjmhIaOfs=
+        b=UPAD0hYBECTAgADFweRj6iVOVfQ+Pc7Fqtor1kX9VDz+CGmMQrZMhFsvmvCxSsAXS
+         3acrZ51mj20EzrnFndvMQ14xpFA2eH1E9zVUl6FJB7BYJtFzZ8fyBcvALjQvDF4ftO
+         bk0J2eOnmt5Ubcxsb9/Lot04cMHVxO1B6rwqJOiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pascal Bouwmann <bouwmann@tau-tec.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 007/163] iio: fix center temperature of bmc150-accel-core
-Date:   Mon,  4 Nov 2019 22:43:17 +0100
-Message-Id: <20191104212141.047893534@linuxfoundation.org>
+Subject: [PATCH 5.3 026/163] kselftest: exclude failed TARGETS from runlist
+Date:   Mon,  4 Nov 2019 22:43:36 +0100
+Message-Id: <20191104212142.240096927@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -60,37 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pascal Bouwmann <bouwmann@tau-tec.de>
+From: Cristian Marussi <cristian.marussi@arm.com>
 
-[ Upstream commit 6c59a962e081df6d8fe43325bbfabec57e0d4751 ]
+[ Upstream commit 131b30c94fbc0adb15f911609884dd39dada8f00 ]
 
-The center temperature of the supported devices stored in the constant
-BMC150_ACCEL_TEMP_CENTER_VAL is not 24 degrees but 23 degrees.
+A TARGET which failed to be built/installed should not be included in the
+runlist generated inside the run_kselftest.sh script.
 
-It seems that some datasheets were inconsistent on this value leading
-to the error.  For most usecases will only make minor difference so
-not queued for stable.
-
-Signed-off-by: Pascal Bouwmann <bouwmann@tau-tec.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/accel/bmc150-accel-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/iio/accel/bmc150-accel-core.c b/drivers/iio/accel/bmc150-accel-core.c
-index cf6c0e3a83d38..121b4e89f038c 100644
---- a/drivers/iio/accel/bmc150-accel-core.c
-+++ b/drivers/iio/accel/bmc150-accel-core.c
-@@ -117,7 +117,7 @@
- #define BMC150_ACCEL_SLEEP_1_SEC		0x0F
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 25b43a8c2b159..1779923d7a7b8 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -198,8 +198,12 @@ ifdef INSTALL_PATH
+ 	echo "  cat /dev/null > \$$logfile" >> $(ALL_SCRIPT)
+ 	echo "fi" >> $(ALL_SCRIPT)
  
- #define BMC150_ACCEL_REG_TEMP			0x08
--#define BMC150_ACCEL_TEMP_CENTER_VAL		24
-+#define BMC150_ACCEL_TEMP_CENTER_VAL		23
- 
- #define BMC150_ACCEL_AXIS_TO_REG(axis)	(BMC150_ACCEL_REG_XOUT_L + (axis * 2))
- #define BMC150_AUTO_SUSPEND_DELAY_MS		2000
++	@# While building run_kselftest.sh skip also non-existent TARGET dirs:
++	@# they could be the result of a build failure and should NOT be
++	@# included in the generated runlist.
+ 	for TARGET in $(TARGETS); do \
+ 		BUILD_TARGET=$$BUILD/$$TARGET;	\
++		[ ! -d $$INSTALL_PATH/$$TARGET ] && echo "Skipping non-existent dir: $$TARGET" && continue; \
+ 		echo "[ -w /dev/kmsg ] && echo \"kselftest: Running tests in $$TARGET\" >> /dev/kmsg" >> $(ALL_SCRIPT); \
+ 		echo "cd $$TARGET" >> $(ALL_SCRIPT); \
+ 		echo -n "run_many" >> $(ALL_SCRIPT); \
 -- 
 2.20.1
 
