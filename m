@@ -2,50 +2,54 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFA9CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56084CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF2C4214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BCED214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905336;
-	bh=HhEdyHXPyQomiK5smnYHE2hSZwsoR1/PnK7r2SFJUMY=;
+	s=default; t=1572905340;
+	bh=LCcfkCOh2sKhl+CJURGrELfHhNY9DuqerqxwPCTQnJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zKN6PnKEN09Fwze/c4SM8U8salLrUY6CS9hzsa0j+VLnhbeYJlgT/at5diDBeWbii
-	 MOLreodBNU4usVTN/d62oeWjVbl6rswWU9ucgSXCGCMR5wcCvxXNWbMV3/lpge+f99
-	 ObJ1bzsAeq0SJxhpvIC76uZD1mB1X3Sux0hcsTdo=
+	b=0SJktxsrYsQCqeeB97o9oW98XByDvl1ceUCof02+70I6YUi9volhrNbV9lhrwEDtF
+	 gaz99ySC4amsn201QgoDPWIS7tIODR3foyHTGWGIkBVhVqCXs1XcImMCOgMijJArDE
+	 f6pyOXNv1AKXl+WtXsaKbkdDcx6gKpdTQeSpwz6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389891AbfKDWIz (ORCPT
+        id S2390323AbfKDWI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:08:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41846 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:08:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388158AbfKDWIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:08:53 -0500
+        id S2388158AbfKDWI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:08:56 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 791BD214E0;
-        Mon,  4 Nov 2019 22:08:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42DF3214E0;
+        Mon,  4 Nov 2019 22:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905333;
-        bh=HhEdyHXPyQomiK5smnYHE2hSZwsoR1/PnK7r2SFJUMY=;
+        s=default; t=1572905335;
+        bh=LCcfkCOh2sKhl+CJURGrELfHhNY9DuqerqxwPCTQnJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AGSunWCPBbpq0XZnj3tL0oepdu1YaaJuJCVV0iBap0FDdRPL2OthzEJ2lkg2GXTDJ
-         Wts9RsGARsUR1htzyZkFUQga64Z56QfFBfgDL6nDwuaQcsNdCSySewAvxRx6Fwq76l
-         GJ02lL1oZEw4gsaSbxgz+J6dlSip1OgFOxS3qQMw=
+        b=Kk3lZuLkpbxF0jhoC5YKVcNljSMivdw9xalQaX+G/gPBjHiNWejjLJUF9nuDC4T3q
+         Ai+vN0BnRjgTv2aTwhOzH15j3sY1l0cHvfhrN7loFNGP1JjkzcW3shtQD5Ltr703rd
+         Ytk7Gst+gesrnucEUUdmhEAJ/Lqq+4TTDbOwo9xg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.3 110/163] USB: serial: whiteheat: fix potential slab corruption
-Date:   Mon,  4 Nov 2019 22:45:00 +0100
-Message-Id: <20191104212148.223831241@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 093/163] thunderbolt: Use 32-bit writes when writing ring producer/consumer
+Date:   Mon,  4 Nov 2019 22:44:43 +0100
+Message-Id: <20191104212146.895567720@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -58,35 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit 1251dab9e0a2c4d0d2d48370ba5baa095a5e8774 upstream.
+[ Upstream commit 943795219d3cb9f8ce6ce51cad3ffe1f61e95c6b ]
 
-Fix a user-controlled slab buffer overflow due to a missing sanity check
-on the bulk-out transfer buffer used for control requests.
+The register access should be using 32-bit reads/writes according to the
+datasheet. With the previous generation hardware 16-bit writes have been
+working but starting with ICL this is not the case anymore so fix
+producer/consumer register update to use correct width register address.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191029102354.2733-2-johan@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Yehezkel Bernat <YehezkelShB@gmail.com>
+Tested-by: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/whiteheat.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/thunderbolt/nhi.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/serial/whiteheat.c
-+++ b/drivers/usb/serial/whiteheat.c
-@@ -559,6 +559,10 @@ static int firm_send_command(struct usb_
+diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
+index 27fbe62c7ddd4..9c782706e652f 100644
+--- a/drivers/thunderbolt/nhi.c
++++ b/drivers/thunderbolt/nhi.c
+@@ -143,9 +143,20 @@ static void __iomem *ring_options_base(struct tb_ring *ring)
+ 	return io;
+ }
  
- 	command_port = port->serial->port[COMMAND_PORT];
- 	command_info = usb_get_serial_port_data(command_port);
+-static void ring_iowrite16desc(struct tb_ring *ring, u32 value, u32 offset)
++static void ring_iowrite_cons(struct tb_ring *ring, u16 cons)
+ {
+-	iowrite16(value, ring_desc_base(ring) + offset);
++	/*
++	 * The other 16-bits in the register is read-only and writes to it
++	 * are ignored by the hardware so we can save one ioread32() by
++	 * filling the read-only bits with zeroes.
++	 */
++	iowrite32(cons, ring_desc_base(ring) + 8);
++}
 +
-+	if (command_port->bulk_out_size < datasize + 1)
-+		return -EIO;
-+
- 	mutex_lock(&command_info->mutex);
- 	command_info->command_finished = false;
++static void ring_iowrite_prod(struct tb_ring *ring, u16 prod)
++{
++	/* See ring_iowrite_cons() above for explanation */
++	iowrite32(prod << 16, ring_desc_base(ring) + 8);
+ }
  
+ static void ring_iowrite32desc(struct tb_ring *ring, u32 value, u32 offset)
+@@ -197,7 +208,10 @@ static void ring_write_descriptors(struct tb_ring *ring)
+ 			descriptor->sof = frame->sof;
+ 		}
+ 		ring->head = (ring->head + 1) % ring->size;
+-		ring_iowrite16desc(ring, ring->head, ring->is_tx ? 10 : 8);
++		if (ring->is_tx)
++			ring_iowrite_prod(ring, ring->head);
++		else
++			ring_iowrite_cons(ring, ring->head);
+ 	}
+ }
+ 
+@@ -662,7 +676,7 @@ void tb_ring_stop(struct tb_ring *ring)
+ 
+ 	ring_iowrite32options(ring, 0, 0);
+ 	ring_iowrite64desc(ring, 0, 0);
+-	ring_iowrite16desc(ring, 0, ring->is_tx ? 10 : 8);
++	ring_iowrite32desc(ring, 0, 8);
+ 	ring_iowrite32desc(ring, 0, 12);
+ 	ring->head = 0;
+ 	ring->tail = 0;
+-- 
+2.20.1
+
 
 
