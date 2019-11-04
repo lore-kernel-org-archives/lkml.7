@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA3BCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F85CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68E5A20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F3920B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbfKDRyU (ORCPT
+        id S1729498AbfKDRyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:54:20 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:38028 "EHLO
+        Mon, 4 Nov 2019 12:54:21 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38029 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbfKDRyT (ORCPT
+        with ESMTP id S1728377AbfKDRyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:54:19 -0500
+        Mon, 4 Nov 2019 12:54:20 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iRgYR-0002aA-Tt; Mon, 04 Nov 2019 18:54:15 +0100
+        id 1iRgYQ-0002ZK-Lo; Mon, 04 Nov 2019 18:54:14 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 974501C0017;
-        Mon,  4 Nov 2019 18:54:15 +0100 (CET)
-Date:   Mon, 04 Nov 2019 17:54:15 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4AE6F1C0426;
+        Mon,  4 Nov 2019 18:54:14 +0100 (CET)
+Date:   Mon, 04 Nov 2019 17:54:14 -0000
 From:   "tip-bot2 for Geert Uytterhoeven" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/timer-of: Convert last
- full_name to %pOF
+Subject: [tip: timers/core] clocksource/drivers/renesas-ostm: Use unique
+ device name instead of ostm
 Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191016144747.29538-2-geert+renesas@glider.be>
-References: <20191016144747.29538-2-geert+renesas@glider.be>
+In-Reply-To: <20191016144747.29538-5-geert+renesas@glider.be>
+References: <20191016144747.29538-5-geert+renesas@glider.be>
 MIME-Version: 1.0
-Message-ID: <157289005530.29376.16415534797520052620.tip-bot2@tip-bot2>
+Message-ID: <157289005402.29376.6102945736763616341.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,39 +58,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     ccb80012481fd8d16c7557c00bb54c42103eef9d
-Gitweb:        https://git.kernel.org/tip/ccb80012481fd8d16c7557c00bb54c42103eef9d
+Commit-ID:     b35a5e5961f814799b75a97a16c9b51e0d477c06
+Gitweb:        https://git.kernel.org/tip/b35a5e5961f814799b75a97a16c9b51e0d477c06
 Author:        Geert Uytterhoeven <geert+renesas@glider.be>
-AuthorDate:    Wed, 16 Oct 2019 16:47:44 +02:00
+AuthorDate:    Wed, 16 Oct 2019 16:47:47 +02:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
 CommitterDate: Mon, 04 Nov 2019 10:38:46 +01:00
 
-clocksource/drivers/timer-of: Convert last full_name to %pOF
+clocksource/drivers/renesas-ostm: Use unique device name instead of ostm
 
-Commit 469869d18a886e04 ("clocksource: Convert to using %pOF instead of
-full_name") converted all but the one just added before by commit
-32f2fea6e77e64cd ("clocksource/drivers/timer-of: Handle
-of_irq_get_byname() result correctly").
+Currently all OSTM devices are called "ostm", also in kernel messages.
+
+As there can be multiple instances in an SoC, this can confuse the user.
+Hence construct a unique name from the DT node name, like is done for
+platform devices.
+
+On RSK+RZA1, the boot log changes like:
+
+    -clocksource: ostm: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 57352151442 ns
+    +clocksource: timer@fcfec000: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 57352151442 ns
+     sched_clock: 32 bits at 33MHz, resolution 30ns, wraps every 64440619504ns
+    -ostm: used for clocksource
+    -ostm: used for clock events
+    +/soc/timer@fcfec000: used for clocksource
+    +/soc/timer@fcfec400: used for clock events
+     ...
+    -clocksource: Switched to clocksource ostm
+    +clocksource: Switched to clocksource timer@fcfec000
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20191016144747.29538-2-geert+renesas@glider.be
+Link: https://lore.kernel.org/r/20191016144747.29538-5-geert+renesas@glider.be
 ---
- drivers/clocksource/timer-of.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/clocksource/renesas-ostm.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
-index d8c2bd4..3843942 100644
---- a/drivers/clocksource/timer-of.c
-+++ b/drivers/clocksource/timer-of.c
-@@ -55,8 +55,8 @@ static __init int timer_of_irq_init(struct device_node *np,
- 	if (of_irq->name) {
- 		of_irq->irq = ret = of_irq_get_byname(np, of_irq->name);
- 		if (ret < 0) {
--			pr_err("Failed to get interrupt %s for %s\n",
--			       of_irq->name, np->full_name);
-+			pr_err("Failed to get interrupt %s for %pOF\n",
-+			       of_irq->name, np);
- 			return ret;
- 		}
- 	} else	{
+diff --git a/drivers/clocksource/renesas-ostm.c b/drivers/clocksource/renesas-ostm.c
+index 46012d9..3d06ba6 100644
+--- a/drivers/clocksource/renesas-ostm.c
++++ b/drivers/clocksource/renesas-ostm.c
+@@ -64,9 +64,9 @@ static int __init ostm_init_clksrc(struct timer_of *to)
+ 	writeb(CTL_FREERUN, timer_of_base(to) + OSTM_CTL);
+ 	writeb(TS, timer_of_base(to) + OSTM_TS);
+ 
+-	return clocksource_mmio_init(timer_of_base(to) + OSTM_CNT, "ostm",
+-				     timer_of_rate(to), 300, 32,
+-				     clocksource_mmio_readl_up);
++	return clocksource_mmio_init(timer_of_base(to) + OSTM_CNT,
++				     to->np->full_name, timer_of_rate(to), 300,
++				     32, clocksource_mmio_readl_up);
+ }
+ 
+ static u64 notrace ostm_read_sched_clock(void)
+@@ -190,13 +190,13 @@ static int __init ostm_init(struct device_node *np)
+ 			goto err_cleanup;
+ 
+ 		ostm_init_sched_clock(to);
+-		pr_info("ostm: used for clocksource\n");
++		pr_info("%pOF: used for clocksource\n", np);
+ 	} else {
+ 		ret = ostm_init_clkevt(to);
+ 		if (ret)
+ 			goto err_cleanup;
+ 
+-		pr_info("ostm: used for clock events\n");
++		pr_info("%pOF: used for clock events\n", np);
+ 	}
+ 
+ 	return 0;
