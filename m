@@ -2,46 +2,51 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0C3CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810DECA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6AC21882
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6096420663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:41:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbfKDXlU (ORCPT
+        id S1729936AbfKDXlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 18:41:20 -0500
+        Mon, 4 Nov 2019 18:41:22 -0500
 Received: from Galois.linutronix.de ([193.142.43.55]:39134 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728810AbfKDXlT (ORCPT
+        with ESMTP id S1729871AbfKDXlV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 18:41:19 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        Mon, 4 Nov 2019 18:41:21 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iRlyC-00019P-9m; Tue, 05 Nov 2019 00:41:12 +0100
-Date:   Tue, 5 Nov 2019 00:41:11 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-cc:     Kar Hin Ong <kar.hin.ong@ni.com>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-x86_64@vger.kernel.org, linux-pci@vger.kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: "oneshot" interrupt causes another interrupt to be fired
- erroneously in Haswell system
-In-Reply-To: <20191031230532.GA170712@google.com>
-Message-ID: <alpine.DEB.2.21.1911050017410.17054@nanos.tec.linutronix.de>
-References: <20191031230532.GA170712@google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iRlg1-00012v-EZ; Tue, 05 Nov 2019 00:22:26 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A45E61C0105;
+        Tue,  5 Nov 2019 00:22:24 +0100 (CET)
+Date:   Mon, 04 Nov 2019 23:22:24 -0000
+From:   "tip-bot2 for Jan Beulich" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/apic/32: Avoid bogus LDR warnings
+Cc:     Jan Beulich <jbeulich@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <666d8f91-b5a8-1afd-7add-821e72a35f03@suse.com>
+References: <666d8f91-b5a8-1afd-7add-821e72a35f03@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <157290974421.29376.16287501451478726858.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -50,58 +55,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 31 Oct 2019, Bjorn Helgaas wrote:
-> On Thu, Oct 31, 2019 at 03:53:50AM +0000, Kar Hin Ong wrote:
-> > I've an Intel Haswell system running Linux kernel v4.14 with
-> > preempt_rt patch. The system contain 2 IOAPICs: IOAPIC 1 is on the
-> > PCH where IOAPIC 2 is on the CPU.
-> > 
-> > I observed that whenever a PCI device is firing interrupt (INTx) to
-> > Pin 20 of IOAPIC 2 (GSI 44); the kernel will receives 2 interrupts: 
-> >    1. Interrupt from Pin 20 of IOAPIC 2  -> Expected
-> >    2. Interrupt from Pin 19 of IOAPIC 1  -> UNEXPECTED, erroneously
-> >       triggered
-> >
-> > The unexpected interrupt is unhandled eventually. When this scenario
-> > happen more than 99,000 times, kernel disables the interrupt line
-> > (Pin 19 of IOAPIC 1) and causing device that has requested it become
-> > malfunction.
-> > 
-> > I managed to also reproduced this issue on RHEL 8 and Ubuntu 19-04
-> > (without preempt_rt patch) after added "threadirqs" to the kernel
-> > command line.
-> > 
-> > After digging further, I noticed that the said issue is happened
-> > whenever an interrupt pin on IOAPIC 2 is masked:
-> >  - Masking Pin 20 of IOAPIC 2 triggers Pin 19 of IOAPIC 1  
-> >  - Masking Pin 22 of IOAPIC 2 triggers Pin 18 of IOAPIC 1
+The following commit has been merged into the x86/urgent branch of tip:
 
-This is pretty much the same problem which we had analyzed and worked
-around years ago.
+Commit-ID:     fe6f85ca121e9c74e7490fe66b0c5aae38e332c3
+Gitweb:        https://git.kernel.org/tip/fe6f85ca121e9c74e7490fe66b0c5aae38e332c3
+Author:        Jan Beulich <jbeulich@suse.com>
+AuthorDate:    Tue, 29 Oct 2019 10:34:19 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 05 Nov 2019 00:11:00 +01:00
 
-> > From Intel Xeon Processor E5/E7 v3 Product Family External Design
-> > Specification (EDS), Volume One: Architecture, section 13.1 (Legacy
-> > PCI Interrupt Handling), it mention: "If the I/OxAPIC entry is
-> > masked (via the 'mask' bit in the corresponding Redirection Table
-> > Entry), then the corresponding PCI Express interrupt(s) is forwarded
-> > to the legacy PCH"
+x86/apic/32: Avoid bogus LDR warnings
 
-Oh well. Really useful behaviour - NOT!
+The removal of the LDR initialization in the bigsmp_32 APIC code unearthed
+a problem in setup_local_APIC().
 
-> > I would like to understand if my interpretation is make sense. If
-> > yes, should the "oneshot" algorithm need to be updated to support
-> > Haswell system?
+The code checks unconditionally for a mismatch of the logical APIC id by
+comparing the early APIC id which was initialized in get_smp_config() with
+the actual LDR value in the APIC.
 
-No. You cannot change the oneshot algorithm.
+Due to the removal of the bogus LDR initialization the check now can
+trigger on bigsmp_32 APIC systems emitting a warning for every booting
+CPU. This is of course a false positive because the APIC is not using
+logical destination mode.
 
-The workarounds for this are enabled by PCI quirls and either
-CONFIG_X86_REROUTE_FOR_BROKEN_BOOT_IRQS=y or 'ioapicreroute' on the command
-line.
+Restrict the check and the possibly resulting fixup to systems which are
+actually using the APIC in logical destination mode.
 
-It might be wortha try to add the PCI ID of that box to the quirk list,
-i.e. the PCI ID matches in drivers/pci/quirks.c which belong to the
-function: quirk_reroute_to_boot_interrupts_intel().
+[ tglx: Massaged changelog and added Cc stable ]
 
-Thanks,
+Fixes: bae3a8d3308 ("x86/apic: Do not initialize LDR and DFR for bigsmp")
+Signed-off-by: Jan Beulich <jbeulich@suse.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/666d8f91-b5a8-1afd-7add-821e72a35f03@suse.com
+---
+ arch/x86/kernel/apic/apic.c | 28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
-	tglx
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 9e2dd2b..2b0faf8 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1586,9 +1586,6 @@ static void setup_local_APIC(void)
+ {
+ 	int cpu = smp_processor_id();
+ 	unsigned int value;
+-#ifdef CONFIG_X86_32
+-	int logical_apicid, ldr_apicid;
+-#endif
+ 
+ 	if (disable_apic) {
+ 		disable_ioapic_support();
+@@ -1626,16 +1623,21 @@ static void setup_local_APIC(void)
+ 	apic->init_apic_ldr();
+ 
+ #ifdef CONFIG_X86_32
+-	/*
+-	 * APIC LDR is initialized.  If logical_apicid mapping was
+-	 * initialized during get_smp_config(), make sure it matches the
+-	 * actual value.
+-	 */
+-	logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
+-	ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
+-	WARN_ON(logical_apicid != BAD_APICID && logical_apicid != ldr_apicid);
+-	/* always use the value from LDR */
+-	early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
++	if (apic->dest_logical) {
++		int logical_apicid, ldr_apicid;
++
++		/*
++		 * APIC LDR is initialized.  If logical_apicid mapping was
++		 * initialized during get_smp_config(), make sure it matches
++		 * the actual value.
++		 */
++		logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
++		ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
++		if (logical_apicid != BAD_APICID)
++			WARN_ON(logical_apicid != ldr_apicid);
++		/* Always use the value from LDR. */
++		early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
++	}
+ #endif
+ 
+ 	/*
