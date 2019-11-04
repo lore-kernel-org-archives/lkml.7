@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7099CCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB24CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 436E1204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4141E204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905821;
-	bh=UUWyLzojf/Zc9gwtlPTyBsk6pLDJ7tKQg7iqzvGhiO0=;
+	s=default; t=1572905827;
+	bh=IpYPmy4gmiZam1d7YuHwmPD3cJ6PWCD00aouV9b9iUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DJS9p3qVr2RFwcnfpGN0eSadxO89Moy0YJh9nVHPEs24NtypWbPgujMFuPy3+4b6J
-	 un/FfSRbLJ+/khS42/o/jknsXWfst5Vkdu1W7cMIz+AUVJPbdCim4UcrdVNy1tOaeb
-	 sKX+cYFVdStHOCrXiaVsM5kHKW5c15oXcs1cNvlQ=
+	b=Yoo8gip6cCkMeHSLApfrn2rOfgIfRJz5Rd5iKS58RyJoOUuY6pSebhftOzInQCFFb
+	 G817M4Y18CsgpsFpOqILawAL3uMY2z/fjAcv7jn9T4ZdtW9y6vxK0L0Cmf3KhqEGSd
+	 s18TD3FXJiMM2TRDRGdhVK0n2Up/xezGBTlmP/1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389495AbfKDWDY (ORCPT
+        id S2389465AbfKDWDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:03:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33626 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:03:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387970AbfKDWDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:03:19 -0500
+        id S2389452AbfKDWDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:03:06 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 978162084D;
-        Mon,  4 Nov 2019 22:03:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C10F205C9;
+        Mon,  4 Nov 2019 22:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904997;
-        bh=UUWyLzojf/Zc9gwtlPTyBsk6pLDJ7tKQg7iqzvGhiO0=;
+        s=default; t=1572904985;
+        bh=IpYPmy4gmiZam1d7YuHwmPD3cJ6PWCD00aouV9b9iUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R9VB28x1qeah9FjNE19rZUOKIISuka37uhX5HNnZCSDwkpRiVMC92FAp2Q5XdPh/2
-         ORsWfiWzpcmO9+PNCSRXt5vnc2p9rW0rXF9x3fc23f7S9wlmiweAamYQSek/i5xHdF
-         09R/8j0FTDEpbCmmy3bjSceh6/L9/rkPbknq7aLI=
+        b=c0yrNFtUxsXQatgc7gL3LCMikXzfaoQnqQvDg7gBzBA5vnsoPU7mOjDcxfOSWybg0
+         nqg59GWubcygby4QrTMYhYz1d/2oBaHwPYqWyJ0DwaAm2lwrlGdsp3WLUmRKHNy+uv
+         jLrNp4TPf+SVNAiIU6palRaknPf1rZu+nxHbp+B4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 144/149] sch_netem: fix rcu splat in netem_enqueue()
-Date:   Mon,  4 Nov 2019 22:45:37 +0100
-Message-Id: <20191104212146.800662268@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com,
+        David Howells <dhowells@redhat.com>
+Subject: [PATCH 4.19 140/149] rxrpc: Fix trace-after-put looking at the put peer record
+Date:   Mon,  4 Nov 2019 22:45:33 +0100
+Message-Id: <20191104212146.540148141@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -60,102 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: David Howells <dhowells@redhat.com>
 
-commit 159d2c7d8106177bd9a986fd005a311fe0d11285 upstream.
+commit 55f6c98e3674ce16038a1949c3f9ca5a9a99f289 upstream.
 
-qdisc_root() use from netem_enqueue() triggers a lockdep warning.
+rxrpc_put_peer() calls trace_rxrpc_peer() after it has done the decrement
+of the refcount - which looks at the debug_id in the peer record.  But
+unless the refcount was reduced to zero, we no longer have the right to
+look in the record and, indeed, it may be deleted by some other thread.
 
-__dev_queue_xmit() uses rcu_read_lock_bh() which is
-not equivalent to rcu_read_lock() + local_bh_disable_bh as far
-as lockdep is concerned.
+Fix this by getting the debug_id out before decrementing the refcount and
+then passing that into the tracepoint.
 
-WARNING: suspicious RCU usage
-5.3.0-rc7+ #0 Not tainted
------------------------------
-include/net/sch_generic.h:492 suspicious rcu_dereference_check() usage!
+This can cause the following symptoms:
 
-other info that might help us debug this:
+    BUG: KASAN: use-after-free in __rxrpc_put_peer net/rxrpc/peer_object.c:411
+    [inline]
+    BUG: KASAN: use-after-free in rxrpc_put_peer+0x685/0x6a0
+    net/rxrpc/peer_object.c:435
+    Read of size 8 at addr ffff888097ec0058 by task syz-executor823/24216
 
-rcu_scheduler_active = 2, debug_locks = 1
-3 locks held by syz-executor427/8855:
- #0: 00000000b5525c01 (rcu_read_lock_bh){....}, at: lwtunnel_xmit_redirect include/net/lwtunnel.h:92 [inline]
- #0: 00000000b5525c01 (rcu_read_lock_bh){....}, at: ip_finish_output2+0x2dc/0x2570 net/ipv4/ip_output.c:214
- #1: 00000000b5525c01 (rcu_read_lock_bh){....}, at: __dev_queue_xmit+0x20a/0x3650 net/core/dev.c:3804
- #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
- #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: __dev_xmit_skb net/core/dev.c:3502 [inline]
- #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: __dev_queue_xmit+0x14b8/0x3650 net/core/dev.c:3838
-
-stack backtrace:
-CPU: 0 PID: 8855 Comm: syz-executor427 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- lockdep_rcu_suspicious+0x153/0x15d kernel/locking/lockdep.c:5357
- qdisc_root include/net/sch_generic.h:492 [inline]
- netem_enqueue+0x1cfb/0x2d80 net/sched/sch_netem.c:479
- __dev_xmit_skb net/core/dev.c:3527 [inline]
- __dev_queue_xmit+0x15d2/0x3650 net/core/dev.c:3838
- dev_queue_xmit+0x18/0x20 net/core/dev.c:3902
- neigh_hh_output include/net/neighbour.h:500 [inline]
- neigh_output include/net/neighbour.h:509 [inline]
- ip_finish_output2+0x1726/0x2570 net/ipv4/ip_output.c:228
- __ip_finish_output net/ipv4/ip_output.c:308 [inline]
- __ip_finish_output+0x5fc/0xb90 net/ipv4/ip_output.c:290
- ip_finish_output+0x38/0x1f0 net/ipv4/ip_output.c:318
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip_mc_output+0x292/0xf40 net/ipv4/ip_output.c:417
- dst_output include/net/dst.h:436 [inline]
- ip_local_out+0xbb/0x190 net/ipv4/ip_output.c:125
- ip_send_skb+0x42/0xf0 net/ipv4/ip_output.c:1555
- udp_send_skb.isra.0+0x6b2/0x1160 net/ipv4/udp.c:887
- udp_sendmsg+0x1e96/0x2820 net/ipv4/udp.c:1174
- inet_sendmsg+0x9e/0xe0 net/ipv4/af_inet.c:807
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:657
- ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
- __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
- __do_sys_sendmmsg net/socket.c:2442 [inline]
- __se_sys_sendmmsg net/socket.c:2439 [inline]
- __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2439
- do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 1159d4b496f5 ("rxrpc: Add a tracepoint to track rxrpc_peer refcounting")
+Reported-by: syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/sch_generic.h |    5 +++++
- net/sched/sch_netem.c     |    2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ include/trace/events/rxrpc.h |    6 +++---
+ net/rxrpc/peer_object.c      |   11 +++++++----
+ 2 files changed, 10 insertions(+), 7 deletions(-)
 
---- a/include/net/sch_generic.h
-+++ b/include/net/sch_generic.h
-@@ -421,6 +421,11 @@ static inline struct Qdisc *qdisc_root(c
- 	return q;
+--- a/include/trace/events/rxrpc.h
++++ b/include/trace/events/rxrpc.h
+@@ -527,10 +527,10 @@ TRACE_EVENT(rxrpc_local,
+ 	    );
+ 
+ TRACE_EVENT(rxrpc_peer,
+-	    TP_PROTO(struct rxrpc_peer *peer, enum rxrpc_peer_trace op,
++	    TP_PROTO(unsigned int peer_debug_id, enum rxrpc_peer_trace op,
+ 		     int usage, const void *where),
+ 
+-	    TP_ARGS(peer, op, usage, where),
++	    TP_ARGS(peer_debug_id, op, usage, where),
+ 
+ 	    TP_STRUCT__entry(
+ 		    __field(unsigned int,	peer		)
+@@ -540,7 +540,7 @@ TRACE_EVENT(rxrpc_peer,
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->peer = peer->debug_id;
++		    __entry->peer = peer_debug_id;
+ 		    __entry->op = op;
+ 		    __entry->usage = usage;
+ 		    __entry->where = where;
+--- a/net/rxrpc/peer_object.c
++++ b/net/rxrpc/peer_object.c
+@@ -385,7 +385,7 @@ struct rxrpc_peer *rxrpc_get_peer(struct
+ 	int n;
+ 
+ 	n = atomic_inc_return(&peer->usage);
+-	trace_rxrpc_peer(peer, rxrpc_peer_got, n, here);
++	trace_rxrpc_peer(peer->debug_id, rxrpc_peer_got, n, here);
+ 	return peer;
  }
  
-+static inline struct Qdisc *qdisc_root_bh(const struct Qdisc *qdisc)
-+{
-+	return rcu_dereference_bh(qdisc->dev_queue->qdisc);
-+}
-+
- static inline struct Qdisc *qdisc_root_sleeping(const struct Qdisc *qdisc)
+@@ -399,7 +399,7 @@ struct rxrpc_peer *rxrpc_get_peer_maybe(
+ 	if (peer) {
+ 		int n = atomic_fetch_add_unless(&peer->usage, 1, 0);
+ 		if (n > 0)
+-			trace_rxrpc_peer(peer, rxrpc_peer_got, n + 1, here);
++			trace_rxrpc_peer(peer->debug_id, rxrpc_peer_got, n + 1, here);
+ 		else
+ 			peer = NULL;
+ 	}
+@@ -430,11 +430,13 @@ static void __rxrpc_put_peer(struct rxrp
+ void rxrpc_put_peer(struct rxrpc_peer *peer)
  {
- 	return qdisc->dev_queue->qdisc_sleeping;
---- a/net/sched/sch_netem.c
-+++ b/net/sched/sch_netem.c
-@@ -474,7 +474,7 @@ static int netem_enqueue(struct sk_buff
- 	 * skb will be queued.
- 	 */
- 	if (count > 1 && (skb2 = skb_clone(skb, GFP_ATOMIC)) != NULL) {
--		struct Qdisc *rootq = qdisc_root(sch);
-+		struct Qdisc *rootq = qdisc_root_bh(sch);
- 		u32 dupsave = q->duplicate; /* prevent duplicating a dup... */
+ 	const void *here = __builtin_return_address(0);
++	unsigned int debug_id;
+ 	int n;
  
- 		q->duplicate = 0;
+ 	if (peer) {
++		debug_id = peer->debug_id;
+ 		n = atomic_dec_return(&peer->usage);
+-		trace_rxrpc_peer(peer, rxrpc_peer_put, n, here);
++		trace_rxrpc_peer(debug_id, rxrpc_peer_put, n, here);
+ 		if (n == 0)
+ 			__rxrpc_put_peer(peer);
+ 	}
+@@ -447,10 +449,11 @@ void rxrpc_put_peer(struct rxrpc_peer *p
+ void rxrpc_put_peer_locked(struct rxrpc_peer *peer)
+ {
+ 	const void *here = __builtin_return_address(0);
++	unsigned int debug_id = peer->debug_id;
+ 	int n;
+ 
+ 	n = atomic_dec_return(&peer->usage);
+-	trace_rxrpc_peer(peer, rxrpc_peer_put, n, here);
++	trace_rxrpc_peer(debug_id, rxrpc_peer_put, n, here);
+ 	if (n == 0) {
+ 		hash_del_rcu(&peer->hash_link);
+ 		list_del_init(&peer->keepalive_link);
 
 
