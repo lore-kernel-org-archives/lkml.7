@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB68BCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB30CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1D73217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB9920650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905194;
-	bh=CU+Jwbn70AzlpxNRKMIooxKiYLzL3JFn5/kueyOSaTg=;
+	s=default; t=1572905197;
+	bh=jQsDchaHHk7q+hECoo6OxNL9DQD/CglCbpxAufwSRk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WPQ7+W3igqYEh2pMjzaLy/uhcTRJdIol2XpJDVoFiiF7w/k1QDs8+h3sJ5S0jEOvo
-	 rIINfn1zv6KauGsbDcRwhX+cF6+rx1PwBZdSfN1ARSb+J1TuPrenOUKN2LzXTxSXBO
-	 egxK9qyQBbBsbBrLjt14CsnGg/WUeAoDPEkVPioc=
+	b=v3rsnZIeekPy8j5Txoz7CHeaL3ZEmGIbQmkXsiKAGn2ZxrrBP3XM0M96a6KOrtkMw
+	 A717pR53xeD+cUDTLJ0hsGvxmoc2rhCVCj6X6HTIPNgGdAEUSSKEcZYnBI0qXimoTE
+	 +d4gjFJpUpxjjWayyZ97LI40N7WGncy5Doz1SAko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389969AbfKDWGd (ORCPT
+        id S2389979AbfKDWGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:06:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38332 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:06:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388994AbfKDWGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:06:30 -0500
+        id S2389965AbfKDWG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:06:27 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20F1C214D8;
-        Mon,  4 Nov 2019 22:06:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4205020650;
+        Mon,  4 Nov 2019 22:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905189;
-        bh=CU+Jwbn70AzlpxNRKMIooxKiYLzL3JFn5/kueyOSaTg=;
+        s=default; t=1572905186;
+        bh=jQsDchaHHk7q+hECoo6OxNL9DQD/CglCbpxAufwSRk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2SYs+LB5Q5G7Pr9mKR7PafQTeHLNKg0QlYaH6V2lwKnzwkzEstuBd3NGCKb8VXEki
-         FLqbPQkPMcJByxEEU/DOv+QW4s2UZ334VAXeS7n47t1Gh0yqJjNBPrzD1U4L2UpsNj
-         xzOz+ixaJEgqweJ1AX8kljyXYsAjXdOLNUbFQC44=
+        b=X+qMSEBbG0b8HVhuOST1WsYpD2tML3Fyj6bG5Mwn+q3rAsZscbC27+ys1O9cAUZLI
+         dH7/Lv/9iRV1KtGsdhx9zAFue9FblZZWaqmE7cQyUcukh5Hfvx62++++9damTOZAjJ
+         cqy+uXZYe/yUWteXCIjYwATsPgRZDUk2ZHwUFCMs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -49,12 +49,13 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Junxiao Bi <junxiao.bi@oracle.com>,
         Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
         Jun Piao <piaojun@huawei.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 060/163] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_write_end_nolock()
-Date:   Mon,  4 Nov 2019 22:44:10 +0100
-Message-Id: <20191104212144.415251652@linuxfoundation.org>
+Subject: [PATCH 5.3 059/163] fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()
+Date:   Mon,  4 Nov 2019 22:44:09 +0100
+Message-Id: <20191104212144.352654938@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -69,26 +70,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 583fee3e12df0e6f1f66f063b989d8e7fed0e65a ]
+[ Upstream commit 56e94ea132bb5c2c1d0b60a6aeb34dcb7d71a53d ]
 
-In ocfs2_write_end_nolock(), there are an if statement on lines 1976,
-2047 and 2058, to check whether handle is NULL:
+In ocfs2_xa_prepare_entry(), there is an if statement on line 2136 to
+check whether loc->xl_entry is NULL:
 
-    if (handle)
+    if (loc->xl_entry)
 
-When handle is NULL, it is used on line 2045:
+When loc->xl_entry is NULL, it is used on line 2158:
 
-	ocfs2_update_inode_fsync_trans(handle, inode, 1);
-        oi->i_sync_tid = handle->h_transaction->t_tid;
+    ocfs2_xa_add_entry(loc, name_hash);
+        loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
+        loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
 
-Thus, a possible null-pointer dereference may occur.
+and line 2164:
 
-To fix this bug, handle is checked before calling
-ocfs2_update_inode_fsync_trans().
+    ocfs2_xa_add_namevalue(loc, xi);
+        loc->xl_entry->xe_value_size = cpu_to_le64(xi->xi_value_len);
+        loc->xl_entry->xe_name_len = xi->xi_name_len;
 
-This bug is found by a static analysis tool STCheck written by us.
+Thus, possible null-pointer dereferences may occur.
 
-Link: http://lkml.kernel.org/r/20190726033705.32307-1-baijiaju1990@gmail.com
+To fix these bugs, if loc-xl_entry is NULL, ocfs2_xa_prepare_entry()
+abnormally returns with -EINVAL.
+
+These bugs are found by a static analysis tool STCheck written by us.
+
+[akpm@linux-foundation.org: remove now-unused ocfs2_xa_add_entry()]
+Link: http://lkml.kernel.org/r/20190726101447.9153-1-baijiaju1990@gmail.com
 Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
 Cc: Mark Fasheh <mark@fasheh.com>
@@ -97,27 +106,90 @@ Cc: Junxiao Bi <junxiao.bi@oracle.com>
 Cc: Changwei Ge <gechangwei@live.cn>
 Cc: Gang He <ghe@suse.com>
 Cc: Jun Piao <piaojun@huawei.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/aops.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ocfs2/xattr.c | 56 ++++++++++++++++++++----------------------------
+ 1 file changed, 23 insertions(+), 33 deletions(-)
 
-diff --git a/fs/ocfs2/aops.c b/fs/ocfs2/aops.c
-index 3e0a93e799ea1..9b827143a3504 100644
---- a/fs/ocfs2/aops.c
-+++ b/fs/ocfs2/aops.c
-@@ -2042,7 +2042,8 @@ out_write_size:
- 		inode->i_mtime = inode->i_ctime = current_time(inode);
- 		di->i_mtime = di->i_ctime = cpu_to_le64(inode->i_mtime.tv_sec);
- 		di->i_mtime_nsec = di->i_ctime_nsec = cpu_to_le32(inode->i_mtime.tv_nsec);
--		ocfs2_update_inode_fsync_trans(handle, inode, 1);
-+		if (handle)
-+			ocfs2_update_inode_fsync_trans(handle, inode, 1);
- 	}
- 	if (handle)
- 		ocfs2_journal_dirty(handle, wc->w_di_bh);
+diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
+index 90c830e3758e2..d8507972ee135 100644
+--- a/fs/ocfs2/xattr.c
++++ b/fs/ocfs2/xattr.c
+@@ -1490,18 +1490,6 @@ static int ocfs2_xa_check_space(struct ocfs2_xa_loc *loc,
+ 	return loc->xl_ops->xlo_check_space(loc, xi);
+ }
+ 
+-static void ocfs2_xa_add_entry(struct ocfs2_xa_loc *loc, u32 name_hash)
+-{
+-	loc->xl_ops->xlo_add_entry(loc, name_hash);
+-	loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
+-	/*
+-	 * We can't leave the new entry's xe_name_offset at zero or
+-	 * add_namevalue() will go nuts.  We set it to the size of our
+-	 * storage so that it can never be less than any other entry.
+-	 */
+-	loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
+-}
+-
+ static void ocfs2_xa_add_namevalue(struct ocfs2_xa_loc *loc,
+ 				   struct ocfs2_xattr_info *xi)
+ {
+@@ -2133,29 +2121,31 @@ static int ocfs2_xa_prepare_entry(struct ocfs2_xa_loc *loc,
+ 	if (rc)
+ 		goto out;
+ 
+-	if (loc->xl_entry) {
+-		if (ocfs2_xa_can_reuse_entry(loc, xi)) {
+-			orig_value_size = loc->xl_entry->xe_value_size;
+-			rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
+-			if (rc)
+-				goto out;
+-			goto alloc_value;
+-		}
++	if (!loc->xl_entry) {
++		rc = -EINVAL;
++		goto out;
++	}
+ 
+-		if (!ocfs2_xattr_is_local(loc->xl_entry)) {
+-			orig_clusters = ocfs2_xa_value_clusters(loc);
+-			rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
+-			if (rc) {
+-				mlog_errno(rc);
+-				ocfs2_xa_cleanup_value_truncate(loc,
+-								"overwriting",
+-								orig_clusters);
+-				goto out;
+-			}
++	if (ocfs2_xa_can_reuse_entry(loc, xi)) {
++		orig_value_size = loc->xl_entry->xe_value_size;
++		rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
++		if (rc)
++			goto out;
++		goto alloc_value;
++	}
++
++	if (!ocfs2_xattr_is_local(loc->xl_entry)) {
++		orig_clusters = ocfs2_xa_value_clusters(loc);
++		rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
++		if (rc) {
++			mlog_errno(rc);
++			ocfs2_xa_cleanup_value_truncate(loc,
++							"overwriting",
++							orig_clusters);
++			goto out;
+ 		}
+-		ocfs2_xa_wipe_namevalue(loc);
+-	} else
+-		ocfs2_xa_add_entry(loc, name_hash);
++	}
++	ocfs2_xa_wipe_namevalue(loc);
+ 
+ 	/*
+ 	 * If we get here, we have a blank entry.  Fill it.  We grow our
 -- 
 2.20.1
 
