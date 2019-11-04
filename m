@@ -2,53 +2,58 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6050BCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F39CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361D820659
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16AB220650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904767;
-	bh=XYF7y0BM07GfP9nY7zrjKzNbEKYrD2mjyfQAzvcSNZg=;
+	s=default; t=1572904769;
+	bh=zR7PEpWo1SHxfPoogzU2Cy0kOuipPdgvp9JuFhSZZqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PTJoRr8ENRlsygle8jwSlgqlnLKauuLCJWAlBdiNI3aj6/E7sZVSLJrF66zJnUkaM
-	 mdlcTEcHX9oKoQ+0HGEDk6ItFK/IODd9wASHyfFFgYkXJ7qDH/psssbCQl6HPwsMaP
-	 5tXn6WXxYGF6pWU7YOTXwKPcnTfQusLFyaj3yCug=
+	b=zzo5OOunYRVGXgkdCeUMkARBZ88VJHHwno35hPRMBmuOUVtmwOl/ZqVTnOasCVvnp
+	 zqLQMkJ1eFpL69RvyPD0Zu7Gf4wxNbjtxppUqe6NaD8uMVnmE3nAM1q6aJeZTFfASv
+	 Q5N/aZL5tVAUBd3W7k6Q+dTpKoGzO9/6NqWtN2Vc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388101AbfKDV7Z (ORCPT
+        id S2388165AbfKDV71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:59:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56342 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:59:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731058AbfKDV7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:59:12 -0500
+        id S1731089AbfKDV7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:59:20 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66C1D20650;
-        Mon,  4 Nov 2019 21:59:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BB2520659;
+        Mon,  4 Nov 2019 21:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904751;
-        bh=XYF7y0BM07GfP9nY7zrjKzNbEKYrD2mjyfQAzvcSNZg=;
+        s=default; t=1572904759;
+        bh=zR7PEpWo1SHxfPoogzU2Cy0kOuipPdgvp9JuFhSZZqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pB4geZxWm38YoYQSfjrGmomzVb7ml2HroDnldWNif6WhdIcVtpJg9UUzldVOBRu0W
-         rQE7JvXp+9bKqW2Ns4TSjhg8f0e8wcIXknn55TIb3+2Fmobsye6qvNGmnj/L7rbFxl
-         uaVv2m9tQeNtoAKjlgo7knB0eDvaJuSdq7ICzDWA=
+        b=Jy9uumJgMAbiQfa7pafR54nnsFJUaOM9LJ6jMGuxxMbCzqco4hpAJ4tGDNP0vUVBU
+         /UiV/Vmm74NI6mNXqR2owEEPh7F3Nmfq5mi+jX/l/m2NYjk8jfhlufVu8ALlGUO3Pq
+         OmE8+htznrs/z2dzl7GQJXYLAQQKO866t7H2WrRQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Kurz <akurz@blala.de>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org, Ian Rogers <irogers@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 057/149] power: supply: max14656: fix potential use-after-free
-Date:   Mon,  4 Nov 2019 22:44:10 +0100
-Message-Id: <20191104212140.394613573@linuxfoundation.org>
+Subject: [PATCH 4.19 060/149] libsubcmd: Make _FORTIFY_SOURCE defines dependent on the feature
+Date:   Mon,  4 Nov 2019 22:44:13 +0100
+Message-Id: <20191104212140.899265038@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -61,69 +66,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit 252fbeb86ceffa549af9842cefca2412d53a7653 ]
+[ Upstream commit 4b0b2b096da9d296e0e5668cdfba8613bd6f5bc8 ]
 
-Explicitly cancel/sync the irq_work delayed work, otherwise
-there's a chance that it will run after the device is removed,
-which would result in a use-after-free.
+Unconditionally defining _FORTIFY_SOURCE can break tools that don't work
+with it, such as memory sanitizers:
 
-Note that cancel/sync should happen:
-- after irq's have been disabled, as the isr re-schedules the work
-- before the power supply is unregistered, because the work func
-    uses the power supply handle.
+  https://github.com/google/sanitizers/wiki/AddressSanitizer#faq
 
-Cc: Alexander Kurz <akurz@blala.de>
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Fixes: 4b6ab94eabe4 ("perf subcmd: Create subcmd library")
+Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lore.kernel.org/lkml/20190925195924.152834-1-irogers@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../power/supply/max14656_charger_detector.c    | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ tools/lib/subcmd/Makefile | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/max14656_charger_detector.c b/drivers/power/supply/max14656_charger_detector.c
-index d19307f791c68..9e6472834e373 100644
---- a/drivers/power/supply/max14656_charger_detector.c
-+++ b/drivers/power/supply/max14656_charger_detector.c
-@@ -240,6 +240,14 @@ static enum power_supply_property max14656_battery_props[] = {
- 	POWER_SUPPLY_PROP_MANUFACTURER,
- };
+diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+index ed61fb3a46c08..5b2cd5e58df09 100644
+--- a/tools/lib/subcmd/Makefile
++++ b/tools/lib/subcmd/Makefile
+@@ -20,7 +20,13 @@ MAKEFLAGS += --no-print-directory
+ LIBFILE = $(OUTPUT)libsubcmd.a
  
-+static void stop_irq_work(void *data)
-+{
-+	struct max14656_chip *chip = data;
+ CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
+-CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -fPIC
++CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
 +
-+	cancel_delayed_work_sync(&chip->irq_work);
-+}
-+
-+
- static int max14656_probe(struct i2c_client *client,
- 			  const struct i2c_device_id *id)
- {
-@@ -278,8 +286,6 @@ static int max14656_probe(struct i2c_client *client,
- 	if (ret)
- 		return -ENODEV;
++ifeq ($(DEBUG),0)
++  ifeq ($(feature-fortify-source), 1)
++    CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
++  endif
++endif
  
--	INIT_DELAYED_WORK(&chip->irq_work, max14656_irq_worker);
--
- 	chip->detect_psy = devm_power_supply_register(dev,
- 		       &chip->psy_desc, &psy_cfg);
- 	if (IS_ERR(chip->detect_psy)) {
-@@ -287,6 +293,13 @@ static int max14656_probe(struct i2c_client *client,
- 		return -EINVAL;
- 	}
- 
-+	INIT_DELAYED_WORK(&chip->irq_work, max14656_irq_worker);
-+	ret = devm_add_action(dev, stop_irq_work, chip);
-+	if (ret) {
-+		dev_err(dev, "devm_add_action %d failed\n", ret);
-+		return ret;
-+	}
-+
- 	ret = devm_request_irq(dev, chip->irq, max14656_irq,
- 			       IRQF_TRIGGER_FALLING,
- 			       MAX14656_NAME, chip);
+ ifeq ($(CC_NO_CLANG), 0)
+   CFLAGS += -O3
 -- 
 2.20.1
 
