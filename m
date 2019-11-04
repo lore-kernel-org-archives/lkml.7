@@ -5,49 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2ECCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B569CCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF2F204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87876204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906300;
-	bh=BT5g7okK7GOY7awUj1RlSha07wwJtV+TgL6wEfrCD0Y=;
+	s=default; t=1572906307;
+	bh=ChdGGD+txzjN2zotCun5b3jNdy1Ga0tyEkZHwi0rZMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HX0W4TGiX98al4rTwI432YcGk/RPgqp5nK97b4ao9bJV/qZWFdGMiE+pSApFXEpYH
-	 2x9s4wuhrKajvTv2BxaqBqTMZJPkj3lvKci5mt1TkpgJnu1n/TcFgpW6GNydA+BEGQ
-	 zTSCeNFFQeBn+7LSSBmYb6gPBLtARzvRM19CYS1s=
+	b=SOcfsn4IpOK62HIIfXSqCajDYBeBBF4Gk9rjBIcA+ZTH6em1xnsc6LRfKD7reP87B
+	 4CDgCx8v9xR6Xo4F2/4iV7t9vXz7UPAchqi75DMgyik65JLhLK4fhuH/Wb8mfULO9Y
+	 8qioAvz8H6yZewEw6MKS3GnKP1uH/t1wuIjyD/Jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730349AbfKDVwN (ORCPT
+        id S2388169AbfKDWZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:52:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45472 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:25:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730221AbfKDVwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:52:10 -0500
+        id S1730661AbfKDVwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:52:03 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F04C62184C;
-        Mon,  4 Nov 2019 21:52:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0410C2184C;
+        Mon,  4 Nov 2019 21:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904329;
-        bh=BT5g7okK7GOY7awUj1RlSha07wwJtV+TgL6wEfrCD0Y=;
+        s=default; t=1572904322;
+        bh=ChdGGD+txzjN2zotCun5b3jNdy1Ga0tyEkZHwi0rZMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JX/m7e44ETkJW0PHd1d3XvSunr22qtMAjEHJgNlgrZyZn9RTxpt5x0H/tyxwov7UH
-         QVMx/IHNoLg11hqPeGPzUuuawsdX4lr9TBo8rpAM5RyUHCo9SGbzGlqSItga9iPEnt
-         C7mUeRO/G0C3P1icY7F0vB6LDNdZQvxY34R3zg1o=
+        b=y/rSIT/Ui8+KDqaXRZHy/ZlHD9x+nqnhD4TNtEtn1Bkg52sOB+8Ln9yFCKZE0zBEh
+         bEprtWsqUzIp5v0hw1b3sOthjiK/rqWEba/9KJTLS56a5bU93ODO+7nsWLsSE3rsdB
+         BKEmTtLH08dWPHDUj1Onc+RBbnHtgK8J6JNs1EHk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 17/62] RDMA/iwcm: Fix a lock inversion issue
-Date:   Mon,  4 Nov 2019 22:44:39 +0100
-Message-Id: <20191104211918.043711182@linuxfoundation.org>
+Subject: [PATCH 4.9 24/62] fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()
+Date:   Mon,  4 Nov 2019 22:44:46 +0100
+Message-Id: <20191104211923.803443309@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -60,85 +68,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit b66f31efbdad95ec274345721d99d1d835e6de01 ]
+[ Upstream commit 56e94ea132bb5c2c1d0b60a6aeb34dcb7d71a53d ]
 
-This patch fixes the lock inversion complaint:
+In ocfs2_xa_prepare_entry(), there is an if statement on line 2136 to
+check whether loc->xl_entry is NULL:
 
-============================================
-WARNING: possible recursive locking detected
-5.3.0-rc7-dbg+ #1 Not tainted
---------------------------------------------
-kworker/u16:6/171 is trying to acquire lock:
-00000000035c6e6c (&id_priv->handler_mutex){+.+.}, at: rdma_destroy_id+0x78/0x4a0 [rdma_cm]
+    if (loc->xl_entry)
 
-but task is already holding lock:
-00000000bc7c307d (&id_priv->handler_mutex){+.+.}, at: iw_conn_req_handler+0x151/0x680 [rdma_cm]
+When loc->xl_entry is NULL, it is used on line 2158:
 
-other info that might help us debug this:
- Possible unsafe locking scenario:
+    ocfs2_xa_add_entry(loc, name_hash);
+        loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
+        loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
 
-       CPU0
-       ----
-  lock(&id_priv->handler_mutex);
-  lock(&id_priv->handler_mutex);
+and line 2164:
 
- *** DEADLOCK ***
+    ocfs2_xa_add_namevalue(loc, xi);
+        loc->xl_entry->xe_value_size = cpu_to_le64(xi->xi_value_len);
+        loc->xl_entry->xe_name_len = xi->xi_name_len;
 
- May be due to missing lock nesting notation
+Thus, possible null-pointer dereferences may occur.
 
-3 locks held by kworker/u16:6/171:
- #0: 00000000e2eaa773 ((wq_completion)iw_cm_wq){+.+.}, at: process_one_work+0x472/0xac0
- #1: 000000001efd357b ((work_completion)(&work->work)#3){+.+.}, at: process_one_work+0x476/0xac0
- #2: 00000000bc7c307d (&id_priv->handler_mutex){+.+.}, at: iw_conn_req_handler+0x151/0x680 [rdma_cm]
+To fix these bugs, if loc-xl_entry is NULL, ocfs2_xa_prepare_entry()
+abnormally returns with -EINVAL.
 
-stack backtrace:
-CPU: 3 PID: 171 Comm: kworker/u16:6 Not tainted 5.3.0-rc7-dbg+ #1
-Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
-Workqueue: iw_cm_wq cm_work_handler [iw_cm]
-Call Trace:
- dump_stack+0x8a/0xd6
- __lock_acquire.cold+0xe1/0x24d
- lock_acquire+0x106/0x240
- __mutex_lock+0x12e/0xcb0
- mutex_lock_nested+0x1f/0x30
- rdma_destroy_id+0x78/0x4a0 [rdma_cm]
- iw_conn_req_handler+0x5c9/0x680 [rdma_cm]
- cm_work_handler+0xe62/0x1100 [iw_cm]
- process_one_work+0x56d/0xac0
- worker_thread+0x7a/0x5d0
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
+These bugs are found by a static analysis tool STCheck written by us.
 
-This is not a bug as there are actually two lock classes here.
-
-Link: https://lore.kernel.org/r/20190930231707.48259-3-bvanassche@acm.org
-Fixes: de910bd92137 ("RDMA/cma: Simplify locking needed for serialization of callbacks")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+[akpm@linux-foundation.org: remove now-unused ocfs2_xa_add_entry()]
+Link: http://lkml.kernel.org/r/20190726101447.9153-1-baijiaju1990@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ocfs2/xattr.c | 56 ++++++++++++++++++++----------------------------
+ 1 file changed, 23 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 85d4ef319c905..dcfbf326f45c9 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -2119,9 +2119,10 @@ static int iw_conn_req_handler(struct iw_cm_id *cm_id,
- 		conn_id->cm_id.iw = NULL;
- 		cma_exch(conn_id, RDMA_CM_DESTROYING);
- 		mutex_unlock(&conn_id->handler_mutex);
-+		mutex_unlock(&listen_id->handler_mutex);
- 		cma_deref_id(conn_id);
- 		rdma_destroy_id(&conn_id->id);
--		goto out;
-+		return ret;
- 	}
+diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
+index e108c945ac1f8..c387467d574cb 100644
+--- a/fs/ocfs2/xattr.c
++++ b/fs/ocfs2/xattr.c
+@@ -1497,18 +1497,6 @@ static int ocfs2_xa_check_space(struct ocfs2_xa_loc *loc,
+ 	return loc->xl_ops->xlo_check_space(loc, xi);
+ }
  
- 	mutex_unlock(&conn_id->handler_mutex);
+-static void ocfs2_xa_add_entry(struct ocfs2_xa_loc *loc, u32 name_hash)
+-{
+-	loc->xl_ops->xlo_add_entry(loc, name_hash);
+-	loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
+-	/*
+-	 * We can't leave the new entry's xe_name_offset at zero or
+-	 * add_namevalue() will go nuts.  We set it to the size of our
+-	 * storage so that it can never be less than any other entry.
+-	 */
+-	loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
+-}
+-
+ static void ocfs2_xa_add_namevalue(struct ocfs2_xa_loc *loc,
+ 				   struct ocfs2_xattr_info *xi)
+ {
+@@ -2140,29 +2128,31 @@ static int ocfs2_xa_prepare_entry(struct ocfs2_xa_loc *loc,
+ 	if (rc)
+ 		goto out;
+ 
+-	if (loc->xl_entry) {
+-		if (ocfs2_xa_can_reuse_entry(loc, xi)) {
+-			orig_value_size = loc->xl_entry->xe_value_size;
+-			rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
+-			if (rc)
+-				goto out;
+-			goto alloc_value;
+-		}
++	if (!loc->xl_entry) {
++		rc = -EINVAL;
++		goto out;
++	}
+ 
+-		if (!ocfs2_xattr_is_local(loc->xl_entry)) {
+-			orig_clusters = ocfs2_xa_value_clusters(loc);
+-			rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
+-			if (rc) {
+-				mlog_errno(rc);
+-				ocfs2_xa_cleanup_value_truncate(loc,
+-								"overwriting",
+-								orig_clusters);
+-				goto out;
+-			}
++	if (ocfs2_xa_can_reuse_entry(loc, xi)) {
++		orig_value_size = loc->xl_entry->xe_value_size;
++		rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
++		if (rc)
++			goto out;
++		goto alloc_value;
++	}
++
++	if (!ocfs2_xattr_is_local(loc->xl_entry)) {
++		orig_clusters = ocfs2_xa_value_clusters(loc);
++		rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
++		if (rc) {
++			mlog_errno(rc);
++			ocfs2_xa_cleanup_value_truncate(loc,
++							"overwriting",
++							orig_clusters);
++			goto out;
+ 		}
+-		ocfs2_xa_wipe_namevalue(loc);
+-	} else
+-		ocfs2_xa_add_entry(loc, name_hash);
++	}
++	ocfs2_xa_wipe_namevalue(loc);
+ 
+ 	/*
+ 	 * If we get here, we have a blank entry.  Fill it.  We grow our
 -- 
 2.20.1
 
