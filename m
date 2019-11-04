@@ -2,188 +2,375 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11323CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAC0CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D89AF21D7D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F5021D81
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:19:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sv1OUIAr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbfKDNQa (ORCPT
+        id S1728600AbfKDNTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:16:30 -0500
-Received: from smtprelay0185.hostedemail.com ([216.40.44.185]:43847 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727236AbfKDNQa (ORCPT
+        Mon, 4 Nov 2019 08:19:09 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54608 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727236AbfKDNTJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:16:30 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 3E06C18223820;
-        Mon,  4 Nov 2019 13:16:29 +0000 (UTC)
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-HE-Tag: bun95_37f61587f310e
-X-Filterd-Recvd-Size: 6513
-Received: from grimm.local.home (unknown [146.247.46.6])
-        (Authenticated sender: rostedt@goodmis.org)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  4 Nov 2019 13:16:24 +0000 (UTC)
-Date:   Mon, 4 Nov 2019 08:16:20 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        amit.kachhap@arm.com, catalin.marinas@arm.com, deller@gmx.de,
-        duwe@suse.de, James.Bottomley@HansenPartnership.com,
-        james.morse@arm.com, jeyu@kernel.org, jpoimboe@redhat.com,
-        jthierry@redhat.com, linux-parisc@vger.kernel.org,
-        mingo@redhat.com, peterz@infradead.org, svens@stackframe.org,
-        takahiro.akashi@linaro.org, will@kernel.org
-Subject: Re: [PATCHv2 1/8] ftrace: add ftrace_init_nop()
-Message-ID: <20191104081620.732320a8@grimm.local.home>
-In-Reply-To: <20191029165832.33606-2-mark.rutland@arm.com>
-References: <20191029165832.33606-1-mark.rutland@arm.com>
-        <20191029165832.33606-2-mark.rutland@arm.com>
-X-Mailer: Claws Mail 3.17.4git49 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 4 Nov 2019 08:19:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572873546;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=xL1c5yWHlmNgn8UfJhR2tbzkAdQMb4IMQtfsSSpu4zw=;
+        b=Sv1OUIAr5Zunkg5YEzAd6kAUXO0B+WrlzUIcRWTHTP+oPPJoL5rFr1DoBExU2/1EN+yRv8
+        uyHdZdZvHSXsP0flMdQJiAAtwPEjdiKCLVf8JJen0eX0XKqLv3aHbHk29QCZXbcszNnly9
+        cbFR9A8dwSAEwz2xfxeabit86Hoehoc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-68-GE9xVdCHMGaT-MW0gM8SxQ-1; Mon, 04 Nov 2019 08:19:02 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70D1B107ACC2;
+        Mon,  4 Nov 2019 13:19:01 +0000 (UTC)
+Received: from dcbz.redhat.com (ovpn-116-108.ams2.redhat.com [10.36.116.108])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 855B05C553;
+        Mon,  4 Nov 2019 13:18:57 +0000 (UTC)
+From:   Adrian Reber <areber@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        linux-kselftest@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Adrian Reber <areber@redhat.com>
+Subject: [PATCH v2] selftests: add tests for clone3()
+Date:   Mon,  4 Nov 2019 14:18:46 +0100
+Message-Id: <20191104131846.1076814-1-areber@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: GE9xVdCHMGaT-MW0gM8SxQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 16:58:25 +0000
-Mark Rutland <mark.rutland@arm.com> wrote:
+This adds tests for clone3() with different values and sizes
+of struct clone_args.
 
-> Architectures may need to perform special initialization of ftrace
-> callsites, and today they do so by special-casing ftrace_make_nop() when
-> the expected branch address is MCOUNT_ADDR. In some cases (e.g. for
-> patchable-function-entry), we don't have an mcount-like symbol and don't
-> want a synthetic MCOUNT_ADDR, but we may need to perform some
-> initialization of callsites.
-> 
-> To make it possible to separate initialization from runtime
-> modification, and to handle cases without an mcount-like symbol, this
-> patch adds an optional ftrace_init_nop() function that architectures can
-> implement, which does not pass a branch address.
-> 
-> Where an architecture does not provide ftrace_init_nop(), we will fall
-> back to the existing behaviour of calling ftrace_make_nop() with
-> MCOUNT_ADDR.
-> 
-> At the same time, ftrace_code_disable() is renamed to
-> ftrace_nop_initialize() to make it clearer that it is intended to
-> intialize a callsite into a disabled state, and is not for disabling a
-> callsite that has been runtime enabled. The kerneldoc description of rec
-> arguments is updated to cover non-mcount callsites.
-> 
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
+This selftest was initially part of of the clone3() with PID selftest.
+After that patch was almost merged Eugene sent out a couple of patches
+to fix problems with these test.
 
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+This commit now only contains the clone3() selftest after the LPC
+decision to rework clone3() with PID to allow setting the PID in
+multiple PID namespaces including all of Eugene's patches.
 
--- Steve
+Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+Signed-off-by: Adrian Reber <areber@redhat.com>
+---
+v2:
+ - Applied Christian's suggestions
+ - Skip root-only tests when running as non-root
+---
+ MAINTAINERS                               |   1 +
+ tools/testing/selftests/Makefile          |   1 +
+ tools/testing/selftests/clone3/.gitignore |   1 +
+ tools/testing/selftests/clone3/Makefile   |   7 +
+ tools/testing/selftests/clone3/clone3.c   | 225 ++++++++++++++++++++++
+ 5 files changed, 235 insertions(+)
+ create mode 100644 tools/testing/selftests/clone3/.gitignore
+ create mode 100644 tools/testing/selftests/clone3/Makefile
+ create mode 100644 tools/testing/selftests/clone3/clone3.c
 
-> Cc: Torsten Duwe <duwe@suse.de>
-> ---
->  include/linux/ftrace.h | 35 ++++++++++++++++++++++++++++++++---
->  kernel/trace/ftrace.c  |  6 +++---
->  2 files changed, 35 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index 8a8cb3c401b2..9867d90d635e 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
-> @@ -499,7 +499,7 @@ static inline int ftrace_disable_ftrace_graph_caller(void) { return 0; }
->  /**
->   * ftrace_make_nop - convert code into nop
->   * @mod: module structure if called by module load initialization
-> - * @rec: the mcount call site record
-> + * @rec: the call site record (e.g. mcount/fentry)
->   * @addr: the address that the call site should be calling
->   *
->   * This is a very sensitive operation and great care needs
-> @@ -520,9 +520,38 @@ static inline int ftrace_disable_ftrace_graph_caller(void) { return 0; }
->  extern int ftrace_make_nop(struct module *mod,
->  			   struct dyn_ftrace *rec, unsigned long addr);
->  
-> +
-> +/**
-> + * ftrace_init_nop - initialize a nop call site
-> + * @mod: module structure if called by module load initialization
-> + * @rec: the call site record (e.g. mcount/fentry)
-> + *
-> + * This is a very sensitive operation and great care needs
-> + * to be taken by the arch.  The operation should carefully
-> + * read the location, check to see if what is read is indeed
-> + * what we expect it to be, and then on success of the compare,
-> + * it should write to the location.
-> + *
-> + * The code segment at @rec->ip should contain the contents created by
-> + * the compiler
-> + *
-> + * Return must be:
-> + *  0 on success
-> + *  -EFAULT on error reading the location
-> + *  -EINVAL on a failed compare of the contents
-> + *  -EPERM  on error writing to the location
-> + * Any other value will be considered a failure.
-> + */
-> +#ifndef ftrace_init_nop
-> +static inline int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
-> +{
-> +	return ftrace_make_nop(mod, rec, MCOUNT_ADDR);
-> +}
-> +#endif
-> +
->  /**
->   * ftrace_make_call - convert a nop call site into a call to addr
-> - * @rec: the mcount call site record
-> + * @rec: the call site record (e.g. mcount/fentry)
->   * @addr: the address that the call site should call
->   *
->   * This is a very sensitive operation and great care needs
-> @@ -545,7 +574,7 @@ extern int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr);
->  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
->  /**
->   * ftrace_modify_call - convert from one addr to another (no nop)
-> - * @rec: the mcount call site record
-> + * @rec: the call site record (e.g. mcount/fentry)
->   * @old_addr: the address expected to be currently called to
->   * @addr: the address to change to
->   *
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index f296d89be757..5259d4dea675 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -2494,14 +2494,14 @@ struct dyn_ftrace *ftrace_rec_iter_record(struct ftrace_rec_iter *iter)
->  }
->  
->  static int
-> -ftrace_code_disable(struct module *mod, struct dyn_ftrace *rec)
-> +ftrace_nop_initialize(struct module *mod, struct dyn_ftrace *rec)
->  {
->  	int ret;
->  
->  	if (unlikely(ftrace_disabled))
->  		return 0;
->  
-> -	ret = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
-> +	ret = ftrace_init_nop(mod, rec);
->  	if (ret) {
->  		ftrace_bug_type = FTRACE_BUG_INIT;
->  		ftrace_bug(ret, rec);
-> @@ -2943,7 +2943,7 @@ static int ftrace_update_code(struct module *mod, struct ftrace_page *new_pgs)
->  			 * to the NOP instructions.
->  			 */
->  			if (!__is_defined(CC_USING_NOP_MCOUNT) &&
-> -			    !ftrace_code_disable(mod, p))
-> +			    !ftrace_nop_initialize(mod, p))
->  				break;
->  
->  			update_cnt++;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cba1095547fd..0040b7a6410b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12829,6 +12829,7 @@ S:=09Maintained
+ T:=09git git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git
+ F:=09samples/pidfd/
+ F:=09tools/testing/selftests/pidfd/
++F:=09tools/testing/selftests/clone3/
+ K:=09(?i)pidfd
+ K:=09(?i)clone3
+ K:=09\b(clone_args|kernel_clone_args)\b
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Mak=
+efile
+index 4cdbae6f4e61..ad442364218a 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -4,6 +4,7 @@ TARGETS +=3D bpf
+ TARGETS +=3D breakpoints
+ TARGETS +=3D capabilities
+ TARGETS +=3D cgroup
++TARGETS +=3D clone3
+ TARGETS +=3D cpufreq
+ TARGETS +=3D cpu-hotplug
+ TARGETS +=3D drivers/dma-buf
+diff --git a/tools/testing/selftests/clone3/.gitignore b/tools/testing/self=
+tests/clone3/.gitignore
+new file mode 100644
+index 000000000000..85d9d3ba2524
+--- /dev/null
++++ b/tools/testing/selftests/clone3/.gitignore
+@@ -0,0 +1 @@
++clone3
+diff --git a/tools/testing/selftests/clone3/Makefile b/tools/testing/selfte=
+sts/clone3/Makefile
+new file mode 100644
+index 000000000000..ea922c014ae4
+--- /dev/null
++++ b/tools/testing/selftests/clone3/Makefile
+@@ -0,0 +1,7 @@
++# SPDX-License-Identifier: GPL-2.0
++
++CFLAGS +=3D -I../../../../usr/include/
++
++TEST_GEN_PROGS :=3D clone3
++
++include ../lib.mk
+diff --git a/tools/testing/selftests/clone3/clone3.c b/tools/testing/selfte=
+sts/clone3/clone3.c
+new file mode 100644
+index 000000000000..a982d95189bf
+--- /dev/null
++++ b/tools/testing/selftests/clone3/clone3.c
+@@ -0,0 +1,225 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/* Based on Christian Brauner's clone3() example */
++
++#define _GNU_SOURCE
++#include <errno.h>
++#include <inttypes.h>
++#include <linux/types.h>
++#include <linux/sched.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <sys/syscall.h>
++#include <sys/types.h>
++#include <sys/un.h>
++#include <sys/wait.h>
++#include <unistd.h>
++#include <sched.h>
++
++#include "../kselftest.h"
++
++/*
++ * Different sizes of struct clone_args
++ */
++#ifndef CLONE3_ARGS_SIZE_V0
++#define CLONE3_ARGS_SIZE_V0 64
++#endif
++
++enum test_mode {
++=09CLONE3_ARGS_NO_TEST,
++=09CLONE3_ARGS_ALL_0,
++=09CLONE3_ARGS_ALL_1,
++=09CLONE3_ARGS_INVAL_EXIT_SIGNAL_BIG,
++=09CLONE3_ARGS_INVAL_EXIT_SIGNAL_NEG,
++=09CLONE3_ARGS_INVAL_EXIT_SIGNAL_CSIG,
++=09CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG,
++};
++
++static pid_t raw_clone(struct clone_args *args, size_t size)
++{
++=09return syscall(__NR_clone3, args, size);
++}
++
++static int call_clone3(uint64_t flags, size_t size, enum test_mode test_mo=
+de)
++{
++=09struct clone_args args =3D {
++=09=09.flags =3D flags,
++=09=09.exit_signal =3D SIGCHLD,
++=09};
++
++=09struct clone_args_extended {
++=09=09struct clone_args args;
++=09=09__aligned_u64 excess_space[2];
++=09} args_ext;
++
++=09pid_t pid =3D -1;
++=09int status;
++
++=09memset(&args_ext, 0, sizeof(args_ext));
++=09if (size > sizeof(struct clone_args))
++=09=09args_ext.excess_space[1] =3D 1;
++
++=09if (size =3D=3D 0)
++=09=09size =3D sizeof(struct clone_args);
++
++=09switch (test_mode) {
++=09case CLONE3_ARGS_ALL_0:
++=09=09args.flags =3D 0;
++=09=09args.exit_signal =3D 0;
++=09=09break;
++=09case CLONE3_ARGS_ALL_1:
++=09=09args.flags =3D 1;
++=09=09args.pidfd =3D 1;
++=09=09args.child_tid =3D 1;
++=09=09args.parent_tid =3D 1;
++=09=09args.exit_signal =3D 1;
++=09=09args.stack =3D 1;
++=09=09args. stack_size =3D 1;
++=09=09args.tls =3D 1;
++=09=09break;
++=09case CLONE3_ARGS_INVAL_EXIT_SIGNAL_BIG:
++=09=09args.exit_signal =3D 0xbadc0ded00000000ULL;
++=09=09break;
++=09case CLONE3_ARGS_INVAL_EXIT_SIGNAL_NEG:
++=09=09args.exit_signal =3D 0x0000000080000000ULL;
++=09=09break;
++=09case CLONE3_ARGS_INVAL_EXIT_SIGNAL_CSIG:
++=09=09args.exit_signal =3D 0x0000000000000100ULL;
++=09=09break;
++=09case CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG:
++=09=09args.exit_signal =3D 0x00000000000000f0ULL;
++=09=09break;
++=09}
++
++=09memcpy(&args_ext.args, &args, sizeof(struct clone_args));
++
++=09pid =3D raw_clone((struct clone_args *)&args_ext, size);
++=09if (pid < 0) {
++=09=09ksft_print_msg("%s - Failed to create new process\n",
++=09=09=09=09strerror(errno));
++=09=09return -errno;
++=09}
++
++=09if (pid =3D=3D 0) {
++=09=09ksft_print_msg("I am the child, my PID is %d\n", getpid());
++=09=09_exit(EXIT_SUCCESS);
++=09}
++
++=09ksft_print_msg("I am the parent (%d). My child's pid is %d\n",
++=09=09=09getpid(), pid);
++
++=09if (wait(&status) < 0) {
++=09=09ksft_print_msg("Child returned %s\n", strerror(errno));
++=09=09return -errno;
++=09}
++=09if (WEXITSTATUS(status))
++=09=09return WEXITSTATUS(status);
++
++=09return 0;
++}
++
++static void test_clone3(uint64_t flags, size_t size, int expected,
++=09=09       enum test_mode test_mode)
++{
++=09int ret;
++
++=09ksft_print_msg(
++=09=09"[%d] Trying clone3() with flags %#" PRIx64 " (size %zu)\n",
++=09=09getpid(), flags, size);
++=09ret =3D call_clone3(flags, size, test_mode);
++=09ksft_print_msg("[%d] clone3() with flags says: %d expected %d\n",
++=09=09=09getpid(), ret, expected);
++=09if (ret !=3D expected)
++=09=09ksft_test_result_fail(
++=09=09=09"[%d] Result (%d) is different than expected (%d)\n",
++=09=09=09getpid(), ret, expected);
++=09else
++=09=09ksft_test_result_pass(
++=09=09=09"[%d] Result (%d) matches expectation (%d)\n",
++=09=09=09getpid(), ret, expected);
++}
++int main(int argc, char *argv[])
++{
++=09pid_t pid;
++
++=09uid_t uid =3D getuid();
++
++=09ksft_print_header();
++=09ksft_set_plan(17);
++
++=09/* Just a simple clone3() should return 0.*/
++=09test_clone3(0, 0, 0, CLONE3_ARGS_NO_TEST);
++
++=09/* Do a clone3() in a new PID NS.*/
++=09if (uid =3D=3D 0)
++=09=09test_clone3(CLONE_NEWPID, 0, 0, CLONE3_ARGS_NO_TEST);
++=09else
++=09=09ksft_test_result_skip("Skipping clone3() with CLONE_NEWPID\n");
++
++=09/* Do a clone3() with CLONE3_ARGS_SIZE_V0. */
++=09test_clone3(0, CLONE3_ARGS_SIZE_V0, 0, CLONE3_ARGS_NO_TEST);
++
++=09/* Do a clone3() with CLONE3_ARGS_SIZE_V0 - 8 */
++=09test_clone3(0, CLONE3_ARGS_SIZE_V0 - 8, -EINVAL, CLONE3_ARGS_NO_TEST);
++
++=09/* Do a clone3() with sizeof(struct clone_args) + 8 */
++=09test_clone3(0, sizeof(struct clone_args) + 8, 0, CLONE3_ARGS_NO_TEST);
++
++=09/* Do a clone3() with all members set to 1 */
++=09test_clone3(0, 0, -EINVAL, CLONE3_ARGS_ALL_1);
++
++=09/* Do a clone3() with exit_signal having highest 32 bits non-zero */
++=09test_clone3(0, 0, -EINVAL, CLONE3_ARGS_INVAL_EXIT_SIGNAL_BIG);
++
++=09/* Do a clone3() with negative 32-bit exit_signal */
++=09test_clone3(0, 0, -EINVAL, CLONE3_ARGS_INVAL_EXIT_SIGNAL_NEG);
++
++=09/* Do a clone3() with exit_signal not fitting into CSIGNAL mask */
++=09test_clone3(0, 0, -EINVAL, CLONE3_ARGS_INVAL_EXIT_SIGNAL_CSIG);
++
++=09/* Do a clone3() with NSIG < exit_signal < CSIG */
++=09test_clone3(0, 0, -EINVAL, CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG);
++
++=09/*
++=09 * Do a clone3() with sizeof(struct clone_args) + 8
++=09 * and all members set to 0. This resets exit_signal and wait()
++=09 * will not get a result.
++=09 */
++=09test_clone3(0, sizeof(struct clone_args) + 8, -ECHILD,
++=09=09=09CLONE3_ARGS_ALL_0);
++
++=09/*
++=09 * Do a clone3() with sizeof(struct clone_args) + 8
++=09 * and all members set to 0.
++=09 */
++=09test_clone3(0, sizeof(struct clone_args) + 8, -EINVAL,
++=09=09=09CLONE3_ARGS_ALL_1);
++
++=09/* Do a clone3() with > page size */
++=09test_clone3(0, getpagesize() + 8, -E2BIG, CLONE3_ARGS_NO_TEST);
++
++=09/* Do a clone3() with CLONE3_ARGS_SIZE_V0 in a new PID NS. */
++=09if (uid =3D=3D 0)
++=09=09test_clone3(CLONE_NEWPID, CLONE3_ARGS_SIZE_V0, 0,
++=09=09=09=09CLONE3_ARGS_NO_TEST);
++=09else
++=09=09ksft_test_result_skip("Skipping clone3() with CLONE_NEWPID\n");
++
++=09/* Do a clone3() with CLONE3_ARGS_SIZE_V0 - 8 in a new PID NS */
++=09test_clone3(CLONE_NEWPID, CLONE3_ARGS_SIZE_V0 - 8, -EINVAL,
++=09=09=09CLONE3_ARGS_NO_TEST);
++
++=09/* Do a clone3() with sizeof(struct clone_args) + 8 in a new PID NS */
++=09if (uid =3D=3D 0)
++=09=09test_clone3(CLONE_NEWPID, sizeof(struct clone_args) + 8, 0,
++=09=09=09=09CLONE3_ARGS_NO_TEST);
++=09else
++=09=09ksft_test_result_skip("Skipping clone3() with CLONE_NEWPID\n");
++
++=09/* Do a clone3() with > page size in a new PID NS */
++=09test_clone3(CLONE_NEWPID, getpagesize() + 8, -E2BIG,
++=09=09=09CLONE3_ARGS_NO_TEST);
++
++=09return !ksft_get_fail_cnt() ? ksft_exit_pass() : ksft_exit_fail();
++}
+--=20
+2.23.0
 
