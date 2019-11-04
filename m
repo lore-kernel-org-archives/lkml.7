@@ -2,183 +2,221 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2871CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CD4CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC5321D71
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01DD921D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729195AbfKDDel convert rfc822-to-8bit (ORCPT
+        id S1729202AbfKDDhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 22:34:41 -0500
-Received: from mx7.zte.com.cn ([202.103.147.169]:59622 "EHLO mxct.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbfKDDel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 22:34:41 -0500
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id 1C669989B3F1B7C30B8C;
-        Mon,  4 Nov 2019 11:34:38 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id xA43XC9q090748;
-        Mon, 4 Nov 2019 11:33:12 +0800 (GMT-8)
-        (envelope-from zhong.shiqi@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019110411331571-271048 ;
-          Mon, 4 Nov 2019 11:33:15 +0800 
-From:   zhongshiqi <zhong.shiqi@zte.com.cn>
-To:     Julia.Lawall@lip6.fr
-Cc:     Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
-        michal.lkml@markovi.net, corbet@lwn.net, cocci@systeme.lip6.fr,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        cheng.shengyu@zte.com.cn, zhongshiqi <zhong.shiqi@zte.com.cn>
-Subject: [PATCH v6] coccicheck: Support search for SmPL scripts within selected directory hierarchy
-Date:   Mon, 4 Nov 2019 11:35:55 +0800
-Message-Id: <1572838555-12101-1-git-send-email-zhong.shiqi@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
+        Sun, 3 Nov 2019 22:37:35 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5696 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728414AbfKDDhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 22:37:34 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CCD336EF61E6B9F7A9E4;
+        Mon,  4 Nov 2019 11:37:30 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Mon, 4 Nov 2019
+ 11:37:20 +0800
+Subject: Re: [PATCH] lib: optimize cpumask_local_spread()
+To:     Michal Hocko <mhocko@kernel.org>
+References: <1572501813-2125-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20191031073905.GD13102@dhcp22.suse.cz>
+CC:     <linux-kernel@vger.kernel.org>, yuqi jin <jinyuqi@huawei.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Paul Burton" <paul.burton@mips.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <97943c12-5704-e8a2-3736-4d0c23e2ff80@hisilicon.com>
+Date:   Mon, 4 Nov 2019 11:37:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-11-04 11:33:15,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-11-04 11:33:13
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-MAIL: mse-fl1.zte.com.cn xA43XC9q090748
+In-Reply-To: <20191031073905.GD13102@dhcp22.suse.cz>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-*Allow defining the environment variable “COCCI” as a directory to
-search SmPL scripts.
+Hi Michal,
 
-*Start a corresponding file determination if it contains an acceptable
-path.
+On 2019/10/31 15:39, Michal Hocko wrote:
+> On Thu 31-10-19 14:03:33, Shaokun Zhang wrote:
+>> From: yuqi jin <jinyuqi@huawei.com>
+>>
+>> In the multi-processor and NUMA system, A device may have many numa
+>> nodes belonging to multiple cpus. When we get a local numa, it is better
+>> to find the node closest to the local numa node to return instead of
+>> going to the online cpu immediately.
+>>
+>> For example, In Huawei Kunpeng 920 system, there are 4 NUMA node(0 -3)
+>> in the 2-socket system(0 - 1). If the I/O device is in socket1
+>> and the local NUMA node is 2, we shall choose the non-local node3 in
+>> the same socket when cpu core in NUMA node2 is less that I/O requirements.
+>> If we directly pick one cpu core from all online ones, it may be in
+>> the another socket and it is not friendly for performance.
+> 
+> My previous review feedback included a request for a much better
+> description of the actual problem and how much of a performance gain we
+> are talking about along with a workoload description.
+> 
 
-*Update coccinelle.rst documents for use coccicheck with a directory
-selection
+Ok, I will update both in next version.
 
-Signed-off-by: zhongshiqi <zhong.shiqi@zte.com.cn>
----
-Changes in v6:
-	update coccinelle.rst documents and add instructions for use this
+> Besides that I do not think that the implementation is great either.
 
-Changes in v5:
-	rewrite change description as an enumeration
+Ok, Agree, so I sent it as RFC firstly and wanted to discuss this issue,
+I will fix it more reasonable.
 
-Changes in v4:
-	rewrite change description in another wording
+> Relying on GFP_ATOMIC is very dubious. Is there any specific reason why
+> the data structure cannot pre reallocated? The comment for
 
-Changes in v3:
-	1:rewrite change description
-	2:fix patch subject
-	3:modify commit log
+Ok, will do it.
 
-Changes in v2:
-	1.fix patch subject according to the reply by Markus
-	<Markus.Elfring@web.de>
-	2.change description in “imperative mood”
+> cpumask_local_spread says that this is not the most efficient function
+> so users should better be prepared to not call it from hot paths AFAIU.
+> That would imply that an internal locking should be acceptable as well
+> so a preallocated data structure could be used.
 
- Documentation/dev-tools/coccinelle.rst | 51 ++++++++++++++++++++++------------
- scripts/coccicheck                     |  4 +++
- 2 files changed, 38 insertions(+), 17 deletions(-)
+Ok.
 
-diff --git a/Documentation/dev-tools/coccinelle.rst b/Documentation/dev-tools/coccinelle.rst
-index 00a3409..6af3201 100644
---- a/Documentation/dev-tools/coccinelle.rst
-+++ b/Documentation/dev-tools/coccinelle.rst
-@@ -100,8 +100,8 @@ Two other modes provide some common combinations of these modes.
-   It should be used with the C option (described later)
-   which checks the code on a file basis.
- 
--Examples
--~~~~~~~~
-+Using Coccinelle with defalut value
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
- To make a report for every semantic patch, run the following command::
- 
-@@ -127,6 +127,38 @@ To enable verbose messages set the V= variable, for example::
- 
-    make coccicheck MODE=report V=1
- 
-+Using Coccinelle with a single file selection
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+The optional make variable COCCI can be used to check a single
-+semantic patch. In that case, the variable must be initialized with
-+the name of the semantic patch to apply.
-+
-+For instance::
-+
-+	make coccicheck COCCI=<my_SP.cocci> MODE=patch
-+
-+or::
-+
-+	make coccicheck COCCI=<my_SP.cocci> MODE=report
-+
-+
-+Using Coccinelle with directory selection
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+The optional make variable COCCI can be used to search SmPL scripts in a
-+directory. In that case, the variable must be initialized with the name of
-+a directory which contains scripts for the semantic patch language.
-+
-+For instance::
-+
-+	make coccicheck COCCI=<my_SPDIR> MODE=patch
-+
-+or::
-+
-+	make coccicheck COCCI=<my_SPDIR> MODE=report
-+
-+
- Coccinelle parallelization
- ---------------------------
- 
-@@ -148,21 +180,6 @@ When parmap is enabled, if an error occurs in Coccinelle, this error
- value is propagated back, the return value of the ``make coccicheck``
- captures this return value.
- 
--Using Coccinelle with a single semantic patch
-----------------------------------------------
--
--The optional make variable COCCI can be used to check a single
--semantic patch. In that case, the variable must be initialized with
--the name of the semantic patch to apply.
--
--For instance::
--
--	make coccicheck COCCI=<my_SP.cocci> MODE=patch
--
--or::
--
--	make coccicheck COCCI=<my_SP.cocci> MODE=report
--
- 
- Controlling Which Files are Processed by Coccinelle
- ---------------------------------------------------
-diff --git a/scripts/coccicheck b/scripts/coccicheck
-index e04d328..bfe0c94 100755
---- a/scripts/coccicheck
-+++ b/scripts/coccicheck
-@@ -257,6 +257,10 @@ if [ "$COCCI" = "" ] ; then
-     for f in `find $srctree/scripts/coccinelle/ -name '*.cocci' -type f | sort`; do
- 	coccinelle $f
-     done
-+elif [ -d "$COCCI" ] ; then
-+    for f in `find $COCCI/ -name '*.cocci' -type f | sort`; do
-+       coccinelle $f
-+    done
- else
-     coccinelle $COCCI
- fi
--- 
-2.9.5
+Thanks,
+Shaokun
+
+> 
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Mike Rapoport <rppt@linux.ibm.com>
+>> Cc: Paul Burton <paul.burton@mips.com>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+>> Signed-off-by: yuqi jin <jinyuqi@huawei.com>
+>> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+>> ---
+>> Changes from RFC:
+>>      Address Michal Hocko's comment: Use GFP_ATOMIC instead of GFP_KERNEL
+>>
+>>  lib/cpumask.c | 76 ++++++++++++++++++++++++++++++++++++++++++++++++++---------
+>>  1 file changed, 65 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/lib/cpumask.c b/lib/cpumask.c
+>> index 0cb672eb107c..c92177b0e095 100644
+>> --- a/lib/cpumask.c
+>> +++ b/lib/cpumask.c
+>> @@ -192,6 +192,33 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
+>>  }
+>>  #endif
+>>  
+>> +static void calc_node_distance(int *node_dist, int node)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = 0; i < nr_node_ids; i++)
+>> +		node_dist[i] = node_distance(node, i);
+>> +}
+>> +
+>> +static int find_nearest_node(int *node_dist, bool *used_flag)
+>> +{
+>> +	int i, min_dist = node_dist[0], node_id = -1;
+>> +
+>> +	for (i = 0; i < nr_node_ids; i++)
+>> +		if (used_flag[i] == 0) {
+>> +			min_dist = node_dist[i];
+>> +			node_id = i;
+>> +			break;
+>> +		}
+>> +	for (i = 0; i < nr_node_ids; i++)
+>> +		if (node_dist[i] < min_dist && used_flag[i] == 0) {
+>> +			min_dist = node_dist[i];
+>> +			node_id = i;
+>> +		}
+>> +
+>> +	return node_id;
+>> +}
+>> +
+>>  /**
+>>   * cpumask_local_spread - select the i'th cpu with local numa cpu's first
+>>   * @i: index number
+>> @@ -205,7 +232,8 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
+>>   */
+>>  unsigned int cpumask_local_spread(unsigned int i, int node)
+>>  {
+>> -	int cpu;
+>> +	int cpu, j, id, *node_dist;
+>> +	bool *used_flag;
+>>  
+>>  	/* Wrap: we always want a cpu. */
+>>  	i %= num_online_cpus();
+>> @@ -215,19 +243,45 @@ unsigned int cpumask_local_spread(unsigned int i, int node)
+>>  			if (i-- == 0)
+>>  				return cpu;
+>>  	} else {
+>> -		/* NUMA first. */
+>> -		for_each_cpu_and(cpu, cpumask_of_node(node), cpu_online_mask)
+>> -			if (i-- == 0)
+>> -				return cpu;
+>> +		node_dist = kmalloc_array(nr_node_ids, sizeof(int), GFP_ATOMIC);
+>> +		if (!node_dist)
+>> +			for_each_cpu(cpu, cpu_online_mask)
+>> +				if (i-- == 0)
+>> +					return cpu;
+>>  
+>> -		for_each_cpu(cpu, cpu_online_mask) {
+>> -			/* Skip NUMA nodes, done above. */
+>> -			if (cpumask_test_cpu(cpu, cpumask_of_node(node)))
+>> -				continue;
+>> +		used_flag = kmalloc_array(nr_node_ids, sizeof(bool), GFP_ATOMIC);
+>> +		if (!used_flag)
+>> +			for_each_cpu(cpu, cpu_online_mask)
+>> +				if (i-- == 0) {
+>> +					kfree(node_dist);
+>> +					return cpu;
+>> +				}
+>> +		memset(used_flag, 0, nr_node_ids * sizeof(bool));
+>>  
+>> -			if (i-- == 0)
+>> -				return cpu;
+>> +		calc_node_distance(node_dist, node);
+>> +		for (j = 0; j < nr_node_ids; j++) {
+>> +			id = find_nearest_node(node_dist, used_flag);
+>> +			if (id < 0)
+>> +				break;
+>> +			for_each_cpu_and(cpu,
+>> +				cpumask_of_node(id), cpu_online_mask)
+>> +				if (i-- == 0) {
+>> +					kfree(node_dist);
+>> +					kfree(used_flag);
+>> +					return cpu;
+>> +				}
+>> +			used_flag[id] = 1;
+>>  		}
+>> +
+>> +		for_each_cpu(cpu, cpu_online_mask)
+>> +			if (i-- == 0) {
+>> +				kfree(node_dist);
+>> +				kfree(used_flag);
+>> +				return cpu;
+>> +			}
+>> +
+>> +		kfree(node_dist);
+>> +		kfree(used_flag);
+>>  	}
+>>  	BUG();
+>>  }
+>> -- 
+>> 2.7.4
+> 
 
