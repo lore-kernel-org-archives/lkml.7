@@ -2,159 +2,98 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30458CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A4FCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0208420842
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:25:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iPXWE51K"
+	by mail.kernel.org (Postfix) with ESMTP id D1C6820842
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:25:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbfKDPZd (ORCPT
+        id S1729330AbfKDPZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:25:33 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37200 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728188AbfKDPZc (ORCPT
+        Mon, 4 Nov 2019 10:25:49 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:59733 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727861AbfKDPZt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:25:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572881131;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YNUjPtCpzm+8vYW330N9vvutohsdZnTurKhkqwxw6r0=;
-        b=iPXWE51KALGFymP16xOvrPVa1aqRsv8ToLNkFI+Uu+9PkrRbj0FQl9jG9EE9kDNUWaezM/
-        dvHSMGTu4gDzQqBFtjFf4X128+wFkraH5mLNfn+L72uMmYGYS82/GpjBKTb1ToofA2Zy6n
-        JyDUXJsHHCi+4VamQxUZaxEdJN7qWNU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-56-u7TOeLLDNXGARytbqgEOlA-1; Mon, 04 Nov 2019 10:25:28 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 62D9E800C73;
-        Mon,  4 Nov 2019 15:25:27 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C472B19C4F;
-        Mon,  4 Nov 2019 15:25:26 +0000 (UTC)
-Date:   Mon, 4 Nov 2019 10:25:25 -0500
-From:   Brian Foster <bfoster@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/28] mm: directed shrinker work deferral
-Message-ID: <20191104152525.GA10665@bfoster>
-References: <20191031234618.15403-1-david@fromorbit.com>
- <20191031234618.15403-10-david@fromorbit.com>
+        Mon, 4 Nov 2019 10:25:49 -0500
+Received: from mail-qk1-f173.google.com ([209.85.222.173]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M1qfu-1iTr9w0XV2-002DXs for <linux-kernel@vger.kernel.org>; Mon, 04 Nov
+ 2019 16:25:48 +0100
+Received: by mail-qk1-f173.google.com with SMTP id m4so17944808qke.9
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 07:25:47 -0800 (PST)
+X-Gm-Message-State: APjAAAUF6AcLSY5esuNIODOC9Fkqv/bgY/zqjCjb9QKFlXOUmssVeVcU
+        ZzteYR80a/vtwcv7TtRKLhChA8MNyRaEOW99bl0=
+X-Google-Smtp-Source: APXvYqzFZt8fB9folG/dB9+o4OKV18odAQAK5Xk5C+z1pe04hR7xC3ih594ii6t+6rsPIHnw1KOyYjwhv3nQwrhHlNQ=
+X-Received: by 2002:a37:4f0a:: with SMTP id d10mr17070233qkb.286.1572881146989;
+ Mon, 04 Nov 2019 07:25:46 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191031234618.15403-10-david@fromorbit.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: u7TOeLLDNXGARytbqgEOlA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <20191018163047.1284736-1-arnd@arndb.de> <20191104151310.GA1872@bogus>
+In-Reply-To: <20191104151310.GA1872@bogus>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 4 Nov 2019 16:25:13 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1B5v_3p0XhddoeWu7wChr6BndfqVVjPUvWYC6=aRfLXg@mail.gmail.com>
+Message-ID: <CAK8P3a1B5v_3p0XhddoeWu7wChr6BndfqVVjPUvWYC6=aRfLXg@mail.gmail.com>
+Subject: Re: [PATCH 1/6] ARM: versatile: move integrator/realview/vexpress to versatile
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Russell King <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:rkGric0hkDlNNPHR8C+OVaVO7FBtbwOuIebMPNdvoK29ptSlyRt
+ SNb6o4nfsrzxoB53NxTYJ2M110YhGhiWR1w4n2uSupEV6RYgqRkTc12LQKokuXAA9LKMsHx
+ s8kzlzvYb5RGRgyv3SYbvOt6cbeLcLRirMQL/lKPWHN+ktyywiBaDIZWcXl0EbUsjxs2I7w
+ I7GBsM3Xr7w7ejJ3CQk6Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:J4FXPkG1CMg=:Z/Aez3k4lpKcPaPmNkMm0r
+ 7RAAj32kMoUe0Bxv3fv9U0X/0skIT1uZ9vSnrX8VIjgy+HWA5aw5Lo49/n4XJIwOihjfSonMS
+ BcsmnXEDUlHGfwSTTDTHALOUSIn56NqsjcBNqUJqosijNduKGjyKJYezei9++mvn0/9Q73hS8
+ sd0eQbddY24m0fETQsvqWHpQsulzAPfoELl7V0Q7DoFuj5llSIPHCmPoRhfgO2MjFQrqFb69s
+ Mmya9fc8M9Xk3HtffSUXcUcre3qIUH20AhfLe1zMamwX7b0eACeneDngr5zJcOO0TuzsfbwnK
+ bOsXxnq5xHXAS4iMY6yoHhIk3GGsq5luCtyoFwqEJ/p63bNi7uT/+buQ3KYZqIYMXm1KYENQ3
+ vA2j7ZIAEOa1BTispeoYL6I4GQqH+q15O/wVcQbC+5QCbEOj+RGoW7sthv6gLxOzOK0wt9mXm
+ UK9aFdH+vBUYgupU0W6YRMzUpijDaETZURZOfRnGC+kup+j4/S904GbBuCXg+pmVv3FbCtpnQ
+ scGV1vDiQaJHiD2Iwu9Fi633H7jMraxVZFkOrAyaDHZ2AAZuI64e7+qtTHqZ0fi065/sfdAG9
+ 4VOQIRb4HNBZL0MhG6lcd3PebHQmTCzhzFTq+2n0DzWVvfSyvl3LZ8u+lBuJMsWFXAn0miCZ4
+ u9Yq7OisGToOPohy5sVkiSztgwG9jCCRepRjQdxLSD4jYAl1WDhSsq7CCKxpEZvjRJeceV9TA
+ Sdakz1iJScehvmuyJ/9alTtptqa5wv/w0xfaHXBmGTNGt7TX9Q9EdvnJWUBeOfK+92CePoCBb
+ aEL1EelDLA+ZXGzba1RgIf4raODudmiKJ98Kk4+18gbJAc7ZAKh1kR9QQywh5tz/SBowMxcI1
+ 0HpfDfC+LOQzpBlWQVEg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 10:45:59AM +1100, Dave Chinner wrote:
-> From: Dave Chinner <dchinner@redhat.com>
->=20
-> Introduce a mechanism for ->count_objects() to indicate to the
-> shrinker infrastructure that the reclaim context will not allow
-> scanning work to be done and so the work it decides is necessary
-> needs to be deferred.
->=20
-> This simplifies the code by separating out the accounting of
-> deferred work from the actual doing of the work, and allows better
-> decisions to be made by the shrinekr control logic on what action it
-> can take.
->=20
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> ---
+On Mon, Nov 4, 2019 at 4:13 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> On Fri, Oct 18, 2019 at 06:29:14PM +0200, Arnd Bergmann wrote:
+> > These are all fairly small platforms by now, and they are
+> > closely related. Just move them all into a single directory.
+> >
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Liviu Dudau <liviu.dudau@arm.com>
+> > Cc: Sudeep Holla <sudeep.holla@arm.com>
+>
+> Looks good to me, so for vexpress part:
+> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+>
+> As Linus W requested, if you share a branch, I can give it a go on
+> Vexpress TC2.
 
-My understanding from the previous discussion(s) is that this is not
-tied directly to the gfp mask because that is not the only intended use.
-While it is currently a boolean tied to the the entire shrinker call,
-the longer term objective is per-object granularity.
+You are of course both right, I should have split this out into a separate
+branch, rather than sticking it on the end of the completely unrelated
+pxa-multiplatform branch.
 
-I find the argument reasonable enough, but if the above is true, why do
-we move these checks from ->scan_objects() to ->count_objects() (in the
-next patch) when per-object decisions will ultimately need to be made by
-the former? That seems like unnecessary churn and inconsistent with the
-argument against just temporarily doing something like what Christoph
-suggested in the previous version, particularly since IIRC the only use
-in this series was for gfp mask purposes.
+For testing the changes, this should be fine in the meantime:
 
->  include/linux/shrinker.h | 7 +++++++
->  mm/vmscan.c              | 8 ++++++++
->  2 files changed, 15 insertions(+)
->=20
-> diff --git a/include/linux/shrinker.h b/include/linux/shrinker.h
-> index 0f80123650e2..3405c39ab92c 100644
-> --- a/include/linux/shrinker.h
-> +++ b/include/linux/shrinker.h
-> @@ -31,6 +31,13 @@ struct shrink_control {
-> =20
->  =09/* current memcg being shrunk (for memcg aware shrinkers) */
->  =09struct mem_cgroup *memcg;
-> +
-> +=09/*
-> +=09 * set by ->count_objects if reclaim context prevents reclaim from
-> +=09 * occurring. This allows the shrinker to immediately defer all the
-> +=09 * work and not even attempt to scan the cache.
-> +=09 */
-> +=09bool defer_work;
->  };
-> =20
->  #define SHRINK_STOP (~0UL)
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index ee4eecc7e1c2..a215d71d9d4b 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -536,6 +536,13 @@ static unsigned long do_shrink_slab(struct shrink_co=
-ntrol *shrinkctl,
->  =09trace_mm_shrink_slab_start(shrinker, shrinkctl, nr,
->  =09=09=09=09   freeable, delta, total_scan, priority);
-> =20
-> +=09/*
-> +=09 * If the shrinker can't run (e.g. due to gfp_mask constraints), then
-> +=09 * defer the work to a context that can scan the cache.
-> +=09 */
-> +=09if (shrinkctl->defer_work)
-> +=09=09goto done;
-> +
+https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?h=pxa-multiplatform
 
-I still find the fact that this per-shrinker invocation field is never
-reset unnecessarily fragile, and I don't see any good reason not to
-reset it prior to the shrinker callback that potentially sets it.
 
-Brian
 
->  =09/*
->  =09 * Normally, we should not scan less than batch_size objects in one
->  =09 * pass to avoid too frequent shrinker calls, but if the slab has les=
-s
-> @@ -570,6 +577,7 @@ static unsigned long do_shrink_slab(struct shrink_con=
-trol *shrinkctl,
->  =09=09cond_resched();
->  =09}
-> =20
-> +done:
->  =09if (next_deferred >=3D scanned)
->  =09=09next_deferred -=3D scanned;
->  =09else
-> --=20
-> 2.24.0.rc0
->=20
-
+     Arnd
