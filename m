@@ -2,235 +2,165 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35321CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 701CECA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D220206BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47D3D206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:38:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="p57l6ke0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729565AbfKDUih convert rfc822-to-8bit (ORCPT
+        id S1729584AbfKDUi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 15:38:37 -0500
-Received: from mailoutvs62.siol.net ([185.57.226.253]:47541 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728377AbfKDUig (ORCPT
+        Mon, 4 Nov 2019 15:38:58 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50848 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728377AbfKDUi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 15:38:36 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 99859524703;
-        Mon,  4 Nov 2019 21:38:32 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Xas64fhSD14G; Mon,  4 Nov 2019 21:38:32 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id F320B5250A1;
-        Mon,  4 Nov 2019 21:38:31 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-86-58-102-7.static.triera.net [86.58.102.7])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 72C21524703;
-        Mon,  4 Nov 2019 21:38:31 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     =?ISO-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH v2 3/7] pwm: sun4i: Add an optional probe for bus clock
-Date:   Mon, 04 Nov 2019 21:38:31 +0100
-Message-ID: <2257359.GL6loUrO9r@jernej-laptop>
-In-Reply-To: <CAJiuCcfCo2QiKEvaRphcBkdTtFui3ympU9aikJTmXDa4OoiXZQ@mail.gmail.com>
-References: <20191103203334.10539-1-peron.clem@gmail.com> <524459750.Kvg9uK5Sr7@jernej-laptop> <CAJiuCcfCo2QiKEvaRphcBkdTtFui3ympU9aikJTmXDa4OoiXZQ@mail.gmail.com>
+        Mon, 4 Nov 2019 15:38:57 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4KcoLV127054;
+        Mon, 4 Nov 2019 14:38:50 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572899930;
+        bh=j6v6hUic5BjjXk1q+Fi505llsyamQoKSP5LAlTy2Psc=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=p57l6ke03OfzJ1AE4ulgp3FiB8sR8rXNNusR+IdIrz0rQcri65lQ/loKq4GcVXOzY
+         2XHFXggRhNz8h/X3eU/lkFZ8uVCB9yE6cTk3eCMvCVy1P7v90Hg32NS7c5ZcthfABf
+         iL8fnGQXr4Z3LNxXO3R9u9evHg9feMq2JVM4kI3I=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA4KcoIe105000
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 4 Nov 2019 14:38:50 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 4 Nov
+ 2019 14:38:35 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 4 Nov 2019 14:38:35 -0600
+Received: from ula0869644.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4Kcl4m020670;
+        Mon, 4 Nov 2019 14:38:49 -0600
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-media@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v2 1/5] dt-bindings: media: ti-vpe: Document VPE driver
+Date:   Mon, 4 Nov 2019 14:38:37 -0600
+Message-ID: <20191104203841.3628-2-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191104203841.3628-1-bparrot@ti.com>
+References: <20191104203841.3628-1-bparrot@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne ponedeljek, 04. november 2019 ob 21:27:04 CET je Clément Péron napisal(a):
-> Hi,
-> 
-> On Mon, 4 Nov 2019 at 21:19, Jernej Škrabec <jernej.skrabec@siol.net> wrote:
-> > Dne ponedeljek, 04. november 2019 ob 21:10:52 CET je Uwe Kleine-König
-> > 
-> > napisal(a):
-> > > Hello Clément,
-> > > 
-> > > On Mon, Nov 04, 2019 at 07:07:00PM +0100, Clément Péron wrote:
-> > > > On Mon, 4 Nov 2019 at 09:24, Uwe Kleine-König
-> > > > 
-> > > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > > On Sun, Nov 03, 2019 at 09:33:30PM +0100, Clément Péron wrote:
-> > > > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > > > 
-> > > > > > H6 PWM core needs bus clock to be enabled in order to work.
-> > > > > > 
-> > > > > > Add an optional probe for it and a fallback for previous
-> > > > > > bindings without name on module clock.
-> > > > > > 
-> > > > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > > > > > ---
-> > > > > > 
-> > > > > >  drivers/pwm/pwm-sun4i.c | 36 ++++++++++++++++++++++++++++++++++++
-> > > > > >  1 file changed, 36 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > > > > > index d194b8ebdb00..b5e7ac364f59 100644
-> > > > > > --- a/drivers/pwm/pwm-sun4i.c
-> > > > > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > > > > @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
-> > > > > > 
-> > > > > >  struct sun4i_pwm_chip {
-> > > > > >  
-> > > > > >       struct pwm_chip chip;
-> > > > > > 
-> > > > > > +     struct clk *bus_clk;
-> > > > > > 
-> > > > > >       struct clk *clk;
-> > > > > >       struct reset_control *rst;
-> > > > > >       void __iomem *base;
-> > > > > > 
-> > > > > > @@ -367,6 +368,31 @@ static int sun4i_pwm_probe(struct
-> > > > > > platform_device
-> > > > > > *pdev)> >
-> > > > > 
-> > > > > Adding more context here:
-> > > > > |       pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> > > > > |       
-> > > > > >       if (IS_ERR(pwm->clk))
-> > > > > >       
-> > > > > >               return PTR_ERR(pwm->clk);
-> > > > > > 
-> > > > > > +     /* Get all clocks and reset line */
-> > > > > > +     pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
-> > > > > > +     if (IS_ERR(pwm->clk)) {
-> > > > > > +             dev_err(&pdev->dev, "get clock failed %ld\n",
-> > > > > > +                     PTR_ERR(pwm->clk));
-> > > > > > +             return PTR_ERR(pwm->clk);
-> > > > > > +     }
-> > > > > 
-> > > > > I guess you want to drop the first assignment to pwm->clk.
-> > > > 
-> > > > devm_clk_get_optional will return NULL if there is no entry, I don't
-> > > > get where I need to drop it assignment.
-> > > 
-> > > With your patch the code looks as follows:
-> > >       pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> > >       if (IS_ERR(pwm->clk))
-> > >       
-> > >               return PTR_ERR(pwm->clk);
-> > >       
-> > >       /* Get all clocks and reset line */
-> > >       pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
-> > 
-> > Actually, it's the other way around, e.g. "mod" clock is checked first.
-> 
-> The first devm_clk_get is indeed wrong, I will remove it!
+Device Tree bindings for the Video Processing Engine (VPE).
 
-Sorry, I missed that too. Yeah, it should be removed.
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+---
+ .../devicetree/bindings/media/ti,vpe.yaml     | 64 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 65 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/ti,vpe.yaml
 
-Best regards,
-Jernej
-
-> 
-> > >       ...
-> > > 
-> > > The assignment to pwm->clk above the comment is the one I suggested to
-> > > drop.
-> > 
-> > Neither can be dropped. DT files for other SoCs don't have clock-names
-> > property, so search for "mod" clock will fail and then fallback option
-> > without name is used.
-> > 
-> > Best regards,
-> > Jernej
-> > 
-> > > > > > +     /* Fallback for old dtbs with a single clock and no name */
-> > > > > > +     if (!pwm->clk) {
-> > > > > > +             pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> > > > > > +             if (IS_ERR(pwm->clk)) {
-> > > > > > +                     dev_err(&pdev->dev, "get clock failed
-> > > > > > %ld\n",
-> > > > > > +                             PTR_ERR(pwm->clk));
-> > > > > > +                     return PTR_ERR(pwm->clk);
-> > > > > > +             }
-> > > > > > +     }
-> > > > > 
-> > > > > There is a slight change of behaviour if I'm not mistaken. If you
-> > > > > have
-> > > > > 
-> > > > > this:
-> > > > >         clocks = <&clk1>;
-> > > > >         clock-names = "mod";
-> > > > >         
-> > > > >         pwm {
-> > > > >         
-> > > > >                 compatible = "allwinner,sun4i-a10-pwm"
-> > > > >                 clocks = <&clk2>;
-> > > > >         
-> > > > >         }
-> > > > > 
-> > > > > you now use clk1 instead of clk2 before.
-> > > > > 
-> > > > > Assuming this is only a theoretical problem, at least pointing this
-> > > > > out
-> > > > > in the commit log would be good I think.
-> > > > 
-> > > > Yes it's correct and as you said the driver don't check for a correct
-> > > > device tree, that why it's now optional probe.
-> > > > Let's assume that's the device-tree is correct, I will add a comment
-> > > > in the commit log.
-> > > 
-> > > If the mod clock was shared by all peripherals on the bus this would be
-> > > IMHO quite elegant. Probably it depends on what you mean by saying
-> > > "incorrect" if this snippet is incorrect. (It can be part of a valid dtb
-> > > that even complies to the binding documentation. However that's not how
-> > > any existing allwinner hardware looks like.) But let's stop arguing as
-> > > we agree it's a corner case and if you mention it in the commit log
-> > > we're both happy.
-> > > 
-> > > > > What is that clock used for? Is it required to access the hardware
-> > > > > registers? Or is it only required while the PWM is enabled? If so
-> > > > > you
-> > > > > could enable the clock more finegrainded.
-> > > > 
-> > > > Regarding the datasheet it's required to access the hardware.
-> > > > page 261 :
-> > > > https://linux-sunxi.org/File:Allwinner_H6_V200_User_Manual_V1.1.pdf
-> > > 
-> > > So enabling the bus clock is called "open APB1 Bus gating" in that
-> > > manual? If I understand that correctly the bus clock then only need to
-> > > be on while accessing the registers and could be disabled once the
-> > > hardware is programmed and running.
-> > > 
-> > > Can you please describe that in a comment. Something like:
-> > >       /*
-> > >       
-> > >        * We're keeping the bus clock on for the sake of simplicity.
-> > >        * Actually it only needs to be on for hardware register
-> > >        * accesses.
-> > >        */
-> > > 
-> > > should be fine. This way it's at least obvious that the handling could
-> > > be improved.
-> > > 
-> > > Best regards
-> > > Uwe
-
-
-
+diff --git a/Documentation/devicetree/bindings/media/ti,vpe.yaml b/Documentation/devicetree/bindings/media/ti,vpe.yaml
+new file mode 100644
+index 000000000000..eb9f3e1b7f5f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/ti,vpe.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: (GPL-2.0)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/ti,vpe.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Texas Instruments DRA7x Video Processing Engine (VPE) Device Tree Bindings
++
++maintainers:
++  - Benoit Parrot <bparrot@ti.com>
++
++description: |-
++  The Video Processing Engine (VPE) is a key component for image post
++  processing applications. VPE consist of a single memory to memory
++  path which can perform chroma up/down sampling, deinterlacing,
++  scaling and color space conversion.
++
++properties:
++  compatible:
++      const: ti,dra7-vpe
++
++  reg:
++    items:
++      - description: The VPE main register region
++      - description: Scaler (SC) register region
++      - description: Color Space Conversion (CSC) register region
++      - description: Video Port Direct Memory Access (VPDMA) register region
++
++  reg-names:
++    items:
++      - const: vpe_top
++      - const: sc
++      - const: csc
++      - const: vpdma
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    vpe: vpe@489d0000 {
++        compatible = "ti,dra7-vpe";
++        reg = <0x489d0000 0x120>,
++              <0x489d0700 0x80>,
++              <0x489d5700 0x18>,
++              <0x489dd000 0x400>;
++        reg-names = "vpe_top",
++                    "sc",
++                    "csc",
++                    "vpdma";
++        interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
++    };
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d360df48f9f2..baf3aac1ab7c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16316,6 +16316,7 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
+ S:	Maintained
+ F:	drivers/media/platform/ti-vpe/
+ F:	Documentation/devicetree/bindings/media/ti,cal.yaml
++F:	Documentation/devicetree/bindings/media/ti,vpe.yaml
+ 
+ TI WILINK WIRELESS DRIVERS
+ L:	linux-wireless@vger.kernel.org
+-- 
+2.17.1
 
