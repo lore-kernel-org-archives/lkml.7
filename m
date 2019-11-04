@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C33CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2781CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6512190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A554621D71
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904372;
-	bh=tDrUm+qwbUyXKsPEjhJF9Vdx2TT6I+dx62GC67rx3Gs=;
+	s=default; t=1572904378;
+	bh=XYF7y0BM07GfP9nY7zrjKzNbEKYrD2mjyfQAzvcSNZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gphkvaUQzdjPxX3emglX2Z9/uyc711DVc66rliE/1rqS2DIbNoeFR2kfgO6yzGbZ6
-	 WRNNB8JJkjysITbbZ/w/buUmv4P0AN7ik1WfYYrLwApNTgikLmCpxinhWLMJBv01zj
-	 wL+mg6QwCgSyFpmNhWAb7rHqpDIS9RyoWjZ936Nc=
+	b=f67lYdY7VwccsPNq0qtYptNzTO0nsmHKVGfksOvNCJhsJ2xK7f/94ryiauGE6Lecp
+	 NvyIi2UX3hJRlk8FhecpWXRqWsJ89FMTnn99+3yoC7TFI6PlJymypiU39sQcC7pii+
+	 3B7MYWwAgWc5fQ+V08Kep2iN2VUAqmfoR1A4FuO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387446AbfKDVwv (ORCPT
+        id S1730864AbfKDVw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:52:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46440 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:52:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730830AbfKDVws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:52:48 -0500
+        id S2387393AbfKDVwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:52:50 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52A5F2184C;
-        Mon,  4 Nov 2019 21:52:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B4D2217F5;
+        Mon,  4 Nov 2019 21:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904366;
-        bh=tDrUm+qwbUyXKsPEjhJF9Vdx2TT6I+dx62GC67rx3Gs=;
+        s=default; t=1572904369;
+        bh=XYF7y0BM07GfP9nY7zrjKzNbEKYrD2mjyfQAzvcSNZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Ozy4BHEwWRmmne+ApxTMFOZghHAY8H5fjT3XmQym0tXoousN7IjGjXA9wB7ty7gV
-         QYIxmb0HyIYa4bHQBmuE9S347dt5kVi6cMlWg0nlkUmAnq6PU9S8ExSqBIo7GICs2/
-         r+zTDk+zk0lDrmHw4+7y3H0VVIOW34O06OcJfc90=
+        b=D61BvcjGQ1S/GXjgVsAh7gHBMrb2X5x2PlKdq86vnVPb7ikprTF8b//Kr4zIeBAGE
+         tMOGC2Cyw8zRygeZIOyZ8kj4xOCkKh6nwPmCzFDk7lCWHfpIp2agL8ZW0lDsZMsRGh
+         uY/XJdxeXVSdbOlnh7wztT3BELP7PLnKkJ62a4Mc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 05/95] dm: Use kzalloc for all structs with embedded biosets/mempools
-Date:   Mon,  4 Nov 2019 22:44:03 +0100
-Message-Id: <20191104212040.275218135@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Kurz <akurz@blala.de>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 23/95] power: supply: max14656: fix potential use-after-free
+Date:   Mon,  4 Nov 2019 22:44:21 +0100
+Message-Id: <20191104212052.742083318@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -60,121 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kent Overstreet <kent.overstreet@gmail.com>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-[ Upstream commit d377535405686f735b90a8ad4ba269484cd7c96e ]
+[ Upstream commit 252fbeb86ceffa549af9842cefca2412d53a7653 ]
 
-mempool_init()/bioset_init() require that the mempools/biosets be zeroed
-first; they probably should not _require_ this, but not allocating those
-structs with kzalloc is a fairly nonsensical thing to do (calling
-mempool_exit()/bioset_exit() on an uninitialized mempool/bioset is legal
-and safe, but only works if said memory was zeroed.)
+Explicitly cancel/sync the irq_work delayed work, otherwise
+there's a chance that it will run after the device is removed,
+which would result in a use-after-free.
 
-Acked-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Note that cancel/sync should happen:
+- after irq's have been disabled, as the isr re-schedules the work
+- before the power supply is unregistered, because the work func
+    uses the power supply handle.
+
+Cc: Alexander Kurz <akurz@blala.de>
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-bio-prison-v1.c | 2 +-
- drivers/md/dm-bio-prison-v2.c | 2 +-
- drivers/md/dm-io.c            | 2 +-
- drivers/md/dm-kcopyd.c        | 2 +-
- drivers/md/dm-region-hash.c   | 2 +-
- drivers/md/dm-snap.c          | 2 +-
- drivers/md/dm-thin.c          | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
+ .../power/supply/max14656_charger_detector.c    | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/dm-bio-prison-v1.c b/drivers/md/dm-bio-prison-v1.c
-index 874841f0fc837..10532a76688ea 100644
---- a/drivers/md/dm-bio-prison-v1.c
-+++ b/drivers/md/dm-bio-prison-v1.c
-@@ -33,7 +33,7 @@ static struct kmem_cache *_cell_cache;
-  */
- struct dm_bio_prison *dm_bio_prison_create(void)
+diff --git a/drivers/power/supply/max14656_charger_detector.c b/drivers/power/supply/max14656_charger_detector.c
+index d19307f791c68..9e6472834e373 100644
+--- a/drivers/power/supply/max14656_charger_detector.c
++++ b/drivers/power/supply/max14656_charger_detector.c
+@@ -240,6 +240,14 @@ static enum power_supply_property max14656_battery_props[] = {
+ 	POWER_SUPPLY_PROP_MANUFACTURER,
+ };
+ 
++static void stop_irq_work(void *data)
++{
++	struct max14656_chip *chip = data;
++
++	cancel_delayed_work_sync(&chip->irq_work);
++}
++
++
+ static int max14656_probe(struct i2c_client *client,
+ 			  const struct i2c_device_id *id)
  {
--	struct dm_bio_prison *prison = kmalloc(sizeof(*prison), GFP_KERNEL);
-+	struct dm_bio_prison *prison = kzalloc(sizeof(*prison), GFP_KERNEL);
+@@ -278,8 +286,6 @@ static int max14656_probe(struct i2c_client *client,
+ 	if (ret)
+ 		return -ENODEV;
  
- 	if (!prison)
- 		return NULL;
-diff --git a/drivers/md/dm-bio-prison-v2.c b/drivers/md/dm-bio-prison-v2.c
-index 8ce3a1a588cfd..c34ec615420f2 100644
---- a/drivers/md/dm-bio-prison-v2.c
-+++ b/drivers/md/dm-bio-prison-v2.c
-@@ -35,7 +35,7 @@ static struct kmem_cache *_cell_cache;
-  */
- struct dm_bio_prison_v2 *dm_bio_prison_create_v2(struct workqueue_struct *wq)
- {
--	struct dm_bio_prison_v2 *prison = kmalloc(sizeof(*prison), GFP_KERNEL);
-+	struct dm_bio_prison_v2 *prison = kzalloc(sizeof(*prison), GFP_KERNEL);
- 
- 	if (!prison)
- 		return NULL;
-diff --git a/drivers/md/dm-io.c b/drivers/md/dm-io.c
-index b4357ed4d5416..56e2c0e079d78 100644
---- a/drivers/md/dm-io.c
-+++ b/drivers/md/dm-io.c
-@@ -50,7 +50,7 @@ struct dm_io_client *dm_io_client_create(void)
- 	struct dm_io_client *client;
- 	unsigned min_ios = dm_get_reserved_bio_based_ios();
- 
--	client = kmalloc(sizeof(*client), GFP_KERNEL);
-+	client = kzalloc(sizeof(*client), GFP_KERNEL);
- 	if (!client)
- 		return ERR_PTR(-ENOMEM);
- 
-diff --git a/drivers/md/dm-kcopyd.c b/drivers/md/dm-kcopyd.c
-index bd9a45b94b552..7ca2b1aaa79d4 100644
---- a/drivers/md/dm-kcopyd.c
-+++ b/drivers/md/dm-kcopyd.c
-@@ -892,7 +892,7 @@ struct dm_kcopyd_client *dm_kcopyd_client_create(struct dm_kcopyd_throttle *thro
- 	int r = -ENOMEM;
- 	struct dm_kcopyd_client *kc;
- 
--	kc = kmalloc(sizeof(*kc), GFP_KERNEL);
-+	kc = kzalloc(sizeof(*kc), GFP_KERNEL);
- 	if (!kc)
- 		return ERR_PTR(-ENOMEM);
- 
-diff --git a/drivers/md/dm-region-hash.c b/drivers/md/dm-region-hash.c
-index 85c32b22a420a..91c6f6d72eeec 100644
---- a/drivers/md/dm-region-hash.c
-+++ b/drivers/md/dm-region-hash.c
-@@ -179,7 +179,7 @@ struct dm_region_hash *dm_region_hash_create(
- 		;
- 	nr_buckets >>= 1;
- 
--	rh = kmalloc(sizeof(*rh), GFP_KERNEL);
-+	rh = kzalloc(sizeof(*rh), GFP_KERNEL);
- 	if (!rh) {
- 		DMERR("unable to allocate region hash memory");
- 		return ERR_PTR(-ENOMEM);
-diff --git a/drivers/md/dm-snap.c b/drivers/md/dm-snap.c
-index 95c564b60d79a..2170f6c118b89 100644
---- a/drivers/md/dm-snap.c
-+++ b/drivers/md/dm-snap.c
-@@ -1136,7 +1136,7 @@ static int snapshot_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 		origin_mode = FMODE_WRITE;
+-	INIT_DELAYED_WORK(&chip->irq_work, max14656_irq_worker);
+-
+ 	chip->detect_psy = devm_power_supply_register(dev,
+ 		       &chip->psy_desc, &psy_cfg);
+ 	if (IS_ERR(chip->detect_psy)) {
+@@ -287,6 +293,13 @@ static int max14656_probe(struct i2c_client *client,
+ 		return -EINVAL;
  	}
  
--	s = kmalloc(sizeof(*s), GFP_KERNEL);
-+	s = kzalloc(sizeof(*s), GFP_KERNEL);
- 	if (!s) {
- 		ti->error = "Cannot allocate private snapshot structure";
- 		r = -ENOMEM;
-diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
-index aa77959909894..0ee5eae716909 100644
---- a/drivers/md/dm-thin.c
-+++ b/drivers/md/dm-thin.c
-@@ -2962,7 +2962,7 @@ static struct pool *pool_create(struct mapped_device *pool_md,
- 		return (struct pool *)pmd;
- 	}
- 
--	pool = kmalloc(sizeof(*pool), GFP_KERNEL);
-+	pool = kzalloc(sizeof(*pool), GFP_KERNEL);
- 	if (!pool) {
- 		*error = "Error allocating memory for pool";
- 		err_p = ERR_PTR(-ENOMEM);
++	INIT_DELAYED_WORK(&chip->irq_work, max14656_irq_worker);
++	ret = devm_add_action(dev, stop_irq_work, chip);
++	if (ret) {
++		dev_err(dev, "devm_add_action %d failed\n", ret);
++		return ret;
++	}
++
+ 	ret = devm_request_irq(dev, chip->irq, max14656_irq,
+ 			       IRQF_TRIGGER_FALLING,
+ 			       MAX14656_NAME, chip);
 -- 
 2.20.1
 
