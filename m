@@ -2,57 +2,53 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69446CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18738CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BA8C205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E144C214E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905367;
-	bh=HsjLLNLxmIouDxnqA72L8QoEOFGWsul04f9vi88c2XQ=;
+	s=default; t=1572905371;
+	bh=pfsObuW+C2EvHwuzLuq6BbLA7QNXiNdMae4pEfSAyCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JJswD6HQcElnyexjKzW793Ccf7pcSv5ySkGdN4Ho05V9wq9Q/TSoZstH7l77zVy/1
-	 TKIThZMIxtvwbEtih8AusTD1uwv19St6WyjPhcwIipQnlT4pJkr/wSwJgodnIWpwwK
-	 VdCXkZ83DdNSr8TI3+7KUINC9/3OHLNgsxXJo3ks=
+	b=Wpla/0D/j7ZsJKNmsZMfPnI5hiY//hdxfZPOsF4Q7EVWmeXx7erraxqsVMf3SuMho
+	 C69qsIEQd1vbZN5IdtHdzyZZSFl+ZUedO8+SCfoNQhD6xiiBNVt34F8vOgTcWBV2X1
+	 YrNOcOmelKz2rbEDCCF62Wkr2cyrtjCRQYxHom3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389093AbfKDWJZ (ORCPT
+        id S2390414AbfKDWJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:09:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42470 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:09:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390397AbfKDWJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:09:23 -0500
+        id S2389648AbfKDWJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:09:26 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77456214E0;
-        Mon,  4 Nov 2019 22:09:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 732AC20650;
+        Mon,  4 Nov 2019 22:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905363;
-        bh=HsjLLNLxmIouDxnqA72L8QoEOFGWsul04f9vi88c2XQ=;
+        s=default; t=1572905366;
+        bh=pfsObuW+C2EvHwuzLuq6BbLA7QNXiNdMae4pEfSAyCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KplFXULk2n0JhAAmKZkIs4rbLpF54lwcfuec6WrtuPpDkfqGZTR7T4yV5OlANRlmn
-         V7cck/a43vpfHJkGkISo4AfZWWyrNlB6JLlTn7BQF8udyf5scekDoDPMHMif3E+Je6
-         KnsT5rqgz+eozTBGlw5O1WpD6GqZ/HBvb6Vk8q84=
+        b=VBfbdr4YxDnPRj8SRrjprInKBut0E5bWg7gxgHND/cJmeEk2UJ9Na/Tsn1jH1uSo9
+         EK1F8o8hOVbFIWFTGVGAJCthaGMwPda4PO0yr+bCQ1MR0QLFfddOOz8IIc9/K8HpKV
+         Ze4y7nhX4DnPda8tUebedDJpERUHhRueEvmfC9Sk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
-        Austin Palmer <austinp@valvesoftware.com>,
-        linux-input@vger.kernel.org
-Subject: [PATCH 5.3 120/163] HID: logitech-hidpp: do all FF cleanup in hidpp_ff_destroy()
-Date:   Mon,  4 Nov 2019 22:45:10 +0100
-Message-Id: <20191104212148.906389283@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Peng <benquike@gmail.com>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 094/163] ath6kl: fix a NULL-ptr-deref bug in ath6kl_usb_alloc_urb_from_pipe()
+Date:   Mon,  4 Nov 2019 22:44:44 +0100
+Message-Id: <20191104212146.960880995@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -65,88 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Hui Peng <benquike@gmail.com>
 
-commit 08c453f6d073f069cf8e30e03cd3c16262c9b953 upstream.
+[ Upstream commit 39d170b3cb62ba98567f5c4f40c27b5864b304e5 ]
 
-All of the FF-related resources belong to corresponding FF device, so
-they should be freed as a part of hidpp_ff_destroy() to avoid
-potential race condidions.
+The `ar_usb` field of `ath6kl_usb_pipe_usb_pipe` objects
+are initialized to point to the containing `ath6kl_usb` object
+according to endpoint descriptors read from the device side, as shown
+below in `ath6kl_usb_setup_pipe_resources`:
 
-Fixes: ff21a635dd1a ("HID: logitech-hidpp: Force feedback support for the Logitech G920")
-Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Henrik Rydberg <rydberg@bitmath.org>
-Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-Cc: Austin Palmer <austinp@valvesoftware.com>
-Cc: linux-input@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org # 5.2+
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
+	endpoint = &iface_desc->endpoint[i].desc;
 
+	// get the address from endpoint descriptor
+	pipe_num = ath6kl_usb_get_logical_pipe_num(ar_usb,
+						endpoint->bEndpointAddress,
+						&urbcount);
+	......
+	// select the pipe object
+	pipe = &ar_usb->pipes[pipe_num];
+
+	// initialize the ar_usb field
+	pipe->ar_usb = ar_usb;
+}
+
+The driver assumes that the addresses reported in endpoint
+descriptors from device side  to be complete. If a device is
+malicious and does not report complete addresses, it may trigger
+NULL-ptr-deref `ath6kl_usb_alloc_urb_from_pipe` and
+`ath6kl_usb_free_urb_to_pipe`.
+
+This patch fixes the bug by preventing potential NULL-ptr-deref
+(CVE-2019-15098).
+
+Signed-off-by: Hui Peng <benquike@gmail.com>
+Reported-by: Hui Peng <benquike@gmail.com>
+Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-logitech-hidpp.c |   33 +++++----------------------------
- 1 file changed, 5 insertions(+), 28 deletions(-)
+ drivers/net/wireless/ath/ath6kl/usb.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -2078,7 +2078,12 @@ static DEVICE_ATTR(range, S_IRUSR | S_IW
- static void hidpp_ff_destroy(struct ff_device *ff)
- {
- 	struct hidpp_ff_private_data *data = ff->private;
-+	struct hid_device *hid = data->hidpp->hid_dev;
+diff --git a/drivers/net/wireless/ath/ath6kl/usb.c b/drivers/net/wireless/ath/ath6kl/usb.c
+index 4defb7a0330f4..53b66e9434c99 100644
+--- a/drivers/net/wireless/ath/ath6kl/usb.c
++++ b/drivers/net/wireless/ath/ath6kl/usb.c
+@@ -132,6 +132,10 @@ ath6kl_usb_alloc_urb_from_pipe(struct ath6kl_usb_pipe *pipe)
+ 	struct ath6kl_urb_context *urb_context = NULL;
+ 	unsigned long flags;
  
-+	hid_info(hid, "Unloading HID++ force feedback.\n");
++	/* bail if this pipe is not initialized */
++	if (!pipe->ar_usb)
++		return NULL;
 +
-+	device_remove_file(&hid->dev, &dev_attr_range);
-+	destroy_workqueue(data->wq);
- 	kfree(data->effect_ids);
- }
+ 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
+ 	if (!list_empty(&pipe->urb_list_head)) {
+ 		urb_context =
+@@ -150,6 +154,10 @@ static void ath6kl_usb_free_urb_to_pipe(struct ath6kl_usb_pipe *pipe,
+ {
+ 	unsigned long flags;
  
-@@ -2170,31 +2175,6 @@ static int hidpp_ff_init(struct hidpp_de
- 	return 0;
- }
++	/* bail if this pipe is not initialized */
++	if (!pipe->ar_usb)
++		return;
++
+ 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
+ 	pipe->urb_cnt++;
  
--static int hidpp_ff_deinit(struct hid_device *hid)
--{
--	struct hid_input *hidinput = list_entry(hid->inputs.next, struct hid_input, list);
--	struct input_dev *dev = hidinput->input;
--	struct hidpp_ff_private_data *data;
--
--	if (!dev) {
--		hid_err(hid, "Struct input_dev not found!\n");
--		return -EINVAL;
--	}
--
--	hid_info(hid, "Unloading HID++ force feedback.\n");
--	data = dev->ff->private;
--	if (!data) {
--		hid_err(hid, "Private data not found!\n");
--		return -EINVAL;
--	}
--
--	destroy_workqueue(data->wq);
--	device_remove_file(&hid->dev, &dev_attr_range);
--
--	return 0;
--}
--
--
- /* ************************************************************************** */
- /*                                                                            */
- /* Device Support                                                             */
-@@ -3713,9 +3693,6 @@ static void hidpp_remove(struct hid_devi
- 
- 	sysfs_remove_group(&hdev->dev.kobj, &ps_attribute_group);
- 
--	if (hidpp->quirks & HIDPP_QUIRK_CLASS_G920)
--		hidpp_ff_deinit(hdev);
--
- 	hid_hw_stop(hdev);
- 	cancel_work_sync(&hidpp->work);
- 	mutex_destroy(&hidpp->send_mutex);
+-- 
+2.20.1
+
 
 
