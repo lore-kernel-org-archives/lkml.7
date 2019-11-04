@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3BCCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19921CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF19205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D658020650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905499;
-	bh=82Iwy/4pR8jTM/KNiRL/8URn/tQlaOBlPsmrF1+kfTo=;
+	s=default; t=1572905505;
+	bh=T+LjWKOQ8tdarN2nS0pC/yJIt6hkP6gQJLvHeZuI8gw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W2F+m8jmvFjXElMFNwNfCJv0kpr0V/gmtm1vmSFgUoHwhFx1mIae8T2/mtqq2o0Qc
-	 xRBpEWC8JtnE3U49BYTrV4s99QUtEGC2d4u54uzjlVTZZJPeEh8Lv2cFtQIVzjaMZQ
-	 COvTNuA1uEK0nZkNPpZsU9XZQn0bvdzwkSxfNZpQ=
+	b=PGdpPvFF3jlcjdY3fOFZz2TJSjOsjhYcbVIWm9RACLn8b6DfLPbYBQqqs7Zson/W+
+	 Ko6bVZKw4KetwQMg0SW7r0WC1Cj3/Dci6epnSafIQOwHOkurQ8dXGJLJ/xGWLp1U1N
+	 N7FzamSeOCL4SD8uBgelPnweaJk3sRNwT4xp0hgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390708AbfKDWLi (ORCPT
+        id S2390428AbfKDWLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:11:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44986 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:11:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390697AbfKDWLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:11:35 -0500
+        id S2389690AbfKDWLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:11:38 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F1BC205C9;
-        Mon,  4 Nov 2019 22:11:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D524C214D8;
+        Mon,  4 Nov 2019 22:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905494;
-        bh=82Iwy/4pR8jTM/KNiRL/8URn/tQlaOBlPsmrF1+kfTo=;
+        s=default; t=1572905497;
+        bh=T+LjWKOQ8tdarN2nS0pC/yJIt6hkP6gQJLvHeZuI8gw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WBwB63waYH3nr25XWx/eSS/fttDaTpRv9TAJnzuj4NCWVl3cbTfs+foEGzNj85vQz
-         z5EcerIp5/85psBBydQHrWhzJQyLuVFDJ4/Vhlwcf3shbEzS08ZwQ1IlGZpAPBqlWw
-         SmtwN+TJd9DuW3uVjPL0aYxtPfDWUVNWT9wl8Jlc=
+        b=cfiiVU+rulsvydgdKpGt945IaeV2QFi0GJiglZz/sXAgeLy1IBJ5fVxQriCCcpbin
+         bwV217xmqQmMARxvTvc6OG+l3UC0fxwVTXUaYLU3fUwvrQwCHortMhhHbgdI37CoC9
+         6B1e0YEpTHsqhZgK1g8EgtXuOFUWkFHm4bCd8br0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, chen gong <curry.gong@amd.com>,
-        Aaron Liu <aaron.liu@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.3 141/163] drm/amdgpu: Fix SDMA hang when performing VKexample test
-Date:   Mon,  4 Nov 2019 22:45:31 +0100
-Message-Id: <20191104212150.546790069@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.3 142/163] NFS: Fix an RCU lock leak in nfs4_refresh_delegation_stateid()
+Date:   Mon,  4 Nov 2019 22:45:32 +0100
+Message-Id: <20191104212150.614033643@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -60,32 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chen gong <curry.gong@amd.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-commit e5574f61e9d8274c49e9a5d943abde8e938d57e1 upstream.
+commit 79cc55422ce99be5964bde208ba8557174720893 upstream.
 
-VKexample test hang during Occlusion/SDMA/Varia runs.
-Clear XNACK_WATERMK in reg SDMA0_UTCL1_WATERMK to fix this issue.
+A typo in nfs4_refresh_delegation_stateid() means we're leaking an
+RCU lock, and always returning a value of 'false'. As the function
+description states, we were always supposed to return 'true' if a
+matching delegation was found.
 
-Signed-off-by: chen gong <curry.gong@amd.com>
-Reviewed-by: Aaron Liu <aaron.liu@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Fixes: 12f275cdd163 ("NFSv4: Retry CLOSE and DELEGRETURN on NFS4ERR_OLD_STATEID.")
+Cc: stable@vger.kernel.org # v4.15+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/nfs/delegation.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
-@@ -159,6 +159,7 @@ static const struct soc15_reg_golden gol
- 	SOC15_REG_GOLDEN_VALUE(SDMA0, 0, mmSDMA0_RLC7_RB_RPTR_ADDR_LO, 0xfffffffd, 0x00000001),
- 	SOC15_REG_GOLDEN_VALUE(SDMA0, 0, mmSDMA0_RLC7_RB_WPTR_POLL_CNTL, 0xfffffff7, 0x00403000),
- 	SOC15_REG_GOLDEN_VALUE(SDMA0, 0, mmSDMA0_UTCL1_PAGE, 0x000003ff, 0x000003c0),
-+	SOC15_REG_GOLDEN_VALUE(SDMA0, 0, mmSDMA0_UTCL1_WATERMK, 0xfc000000, 0x00000000)
- };
- 
- static const struct soc15_reg_golden golden_settings_sdma1_4_2[] = {
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -1181,7 +1181,7 @@ bool nfs4_refresh_delegation_stateid(nfs
+ 	if (delegation != NULL &&
+ 	    nfs4_stateid_match_other(dst, &delegation->stateid)) {
+ 		dst->seqid = delegation->stateid.seqid;
+-		return ret;
++		ret = true;
+ 	}
+ 	rcu_read_unlock();
+ out:
 
 
