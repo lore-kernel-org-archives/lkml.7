@@ -3,99 +3,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3627ACA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7EFCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11BD221D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFAEE21D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:11:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbfKDNK3 (ORCPT
+        id S1728907AbfKDNLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:10:29 -0500
-Received: from mga17.intel.com ([192.55.52.151]:13556 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728600AbfKDNK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:10:28 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 05:10:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,267,1569308400"; 
-   d="scan'208";a="212312059"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 04 Nov 2019 05:10:25 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 04 Nov 2019 15:10:24 +0200
-Date:   Mon, 4 Nov 2019 15:10:24 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Christian Kellner <ck@xatom.net>,
-        intel-gfx@lists.freedesktop.org, Takashi Iwai <tiwai@suse.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mario Limonciello <mario.limonciello@dell.com>
-Subject: Re: snd_hda_intel 0000:00:1f.3: No response from codec, resetting
- bus: last cmd=
-Message-ID: <20191104131024.GB2552@lahna.fi.intel.com>
-References: <b31b8649-cb2d-890b-2d4d-881e47895ee6@molgen.mpg.de>
+        Mon, 4 Nov 2019 08:11:45 -0500
+Received: from smtprelay0235.hostedemail.com ([216.40.44.235]:49452 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727236AbfKDNLp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 08:11:45 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id AA5684DBD;
+        Mon,  4 Nov 2019 13:11:43 +0000 (UTC)
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-HE-Tag: bat51_e8cae9c64d2a
+X-Filterd-Recvd-Size: 1974
+Received: from grimm.local.home (unknown [146.247.46.6])
+        (Authenticated sender: rostedt@goodmis.org)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  4 Nov 2019 13:11:39 +0000 (UTC)
+Date:   Mon, 4 Nov 2019 08:11:36 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Amit Daniel Kachhap <amit.kachhap@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, deller@gmx.de, duwe@suse.de,
+        James.Bottomley@HansenPartnership.com, james.morse@arm.com,
+        jeyu@kernel.org, jpoimboe@redhat.com, jthierry@redhat.com,
+        linux-parisc@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, svens@stackframe.org,
+        takahiro.akashi@linaro.org, will@kernel.org
+Subject: Re: [PATCHv2 1/8] ftrace: add ftrace_init_nop()
+Message-ID: <20191104081136.645e9b1a@grimm.local.home>
+In-Reply-To: <daad0785-a33f-3cfb-cf0f-657b6c677257@arm.com>
+References: <20191029165832.33606-1-mark.rutland@arm.com>
+        <20191029165832.33606-2-mark.rutland@arm.com>
+        <daad0785-a33f-3cfb-cf0f-657b6c677257@arm.com>
+X-Mailer: Claws Mail 3.17.4git49 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b31b8649-cb2d-890b-2d4d-881e47895ee6@molgen.mpg.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, 2 Nov 2019 17:49:00 +0530
+Amit Daniel Kachhap <amit.kachhap@arm.com> wrote:
 
-On Mon, Nov 04, 2019 at 01:57:54PM +0100, Paul Menzel wrote:
-> Dear Linux folks,
-> 
-> 
-> On the Dell XPS 13 9380 with Debian Sid/unstable with Linux 5.3.7
-> resuming0with Dell’s Thunderbolt TB16 dock connected, Linux spews
-> the errors below.
+> Now that ftrace_init_nop is also an arch implemented function so it may 
+> be added in Documentation/trace/ftrace-design.rst along with 
+> ftrace_make_nop.
+> In general also, adding some description about patchable-function-entry
+> in kernel Documentation will be useful.
 
-I have this machine here so can try to reproduce it as well.
+I think this part is outside the scope of this patch set. Honestly, I
+need to chisel out some time to rewrite the ftrace-design document, as
+that's been long needed. But that can come at a later time. I'm
+currently rewriting some of it now, so it will be best to not waste
+effort to update a document that will soon become stale. ;-)
 
-> ```
-> [    0.000000] Linux version 5.3.0-1-amd64 (debian-kernel@lists.debian.org) (gcc version 9.2.1 20191008 (Debian 9.2.1-9)) #1 SMP Debian 5.3.7-1 (2019-10-19)
-> […]
-> [    1.596619] pci 0000:00:1f.3: Adding to iommu group 12
-> [   14.536274] snd_hda_intel 0000:00:1f.3: enabling device (0000 -> 0002)
-> [   14.544100] snd_hda_intel 0000:00:1f.3: bound 0000:00:02.0 (ops i915_audio_component_bind_ops [i915])
-> [   14.760751] input: HDA Intel PCH Headphone Mic as /devices/pci0000:00/0000:00:1f.3/sound/card0/input16
-> [   14.760790] input: HDA Intel PCH HDMI as /devices/pci0000:00/0000:00:1f.3/sound/card0/input17
-> [  156.614284] snd_hda_intel 0000:00:1f.3: No response from codec, disabling MSI: last cmd=0x20270503
-> [  157.622232] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20270503
-> [  158.626371] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20370503
-> [  159.634102] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x201f0500
-> [  161.678121] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20270503
-> [  162.682272] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20370503
-> [  163.694234] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x201f0500
-> [  165.730142] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20270503
-> […]
-> ```
-> 
-> In the bug report *[Intel Ice Lake, snd-hda-intel, HDMI] "No
-> response from codec" (after display hotplug?)* [1], note it’s a
-> different model, Takashi comments that this is a Thunderbolt or
-> i915 issue.
-
-0000:00:1f.3 is on PCH so not sure how it could be related to
-Thunderbolt, well or i915 for that matter.
-
-> Please tell me, how to debug this further.
-
-Unfortunately I don't know much about the HDA driver so can't really
-suggest anything.
+-- Steve
