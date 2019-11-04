@@ -2,87 +2,93 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC61CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1690CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52353204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE13204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572906290;
+	bh=pmfg6LHYW/5retXYbGcvyYYHCQHShynOoxt3PYSYyg8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ePZxCyDkQFb4H3FXnKavAWF8Xp8EEGEgP8+EJzPxbUoNjgtmMrd0u2SJm71ZVDmGb
+	 oNQF5C21Fhz9FpaiU1FS4sS7J/a7WFZX1i53HQMfCdZAiJOcYsLctZaGFam9y7FgdY
+	 ncMly6VsifQJT3uq27hG7QA2ferxrHBwNdfDBdfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388451AbfKDWYn (ORCPT
+        id S2388527AbfKDWYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:24:43 -0500
-Received: from smtprelay0032.hostedemail.com ([216.40.44.32]:48872 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729795AbfKDWYg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:24:36 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id E4CF6182CF668;
-        Mon,  4 Nov 2019 22:24:34 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: end02_27dc66145ce01
-X-Filterd-Recvd-Size: 2071
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  4 Nov 2019 22:24:33 +0000 (UTC)
-Message-ID: <46615f063c973eee649e3fdb8261978102c89108.camel@perches.com>
-Subject: Re: spdxcheck.py complains about the second OR?
-From:   Joe Perches <joe@perches.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
+        Mon, 4 Nov 2019 17:24:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730727AbfKDVw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:52:26 -0500
+Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8963A218BA;
+        Mon,  4 Nov 2019 21:52:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572904346;
+        bh=pmfg6LHYW/5retXYbGcvyYYHCQHShynOoxt3PYSYyg8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Wqdsb7fFlEUefPTDZln27eI8Z1tiCmxQT5eF5ZufymvOKoPHHdqpk+rb14qkj+bcg
+         Wv4a8QG+UhFWD57MzjFS1UZriHVIzTLCEPhMHY0UOOoHQ+ozwXVC1MVqROT1s12OyN
+         +3B5xpbR7xT2fTBA+Ir7cJqi1zp25dlKMJo+RAfc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-spdx@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Mon, 04 Nov 2019 14:24:23 -0800
-In-Reply-To: <alpine.DEB.2.21.1911042310040.17054@nanos.tec.linutronix.de>
-References: <CAK7LNASwF9y+MkhkvCRATu0qXSJkxx8fZ-DUjQTfWOi9+1YrfQ@mail.gmail.com>
-         <alpine.DEB.2.21.1911042310040.17054@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        stable@vger.kernel.org, NOGUCHI Hiroshi <drvlabo@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 15/95] HID: Add ASUS T100CHI keyboard dock battery quirks
+Date:   Mon,  4 Nov 2019 22:44:13 +0100
+Message-Id: <20191104212045.008895309@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
+References: <20191104212038.056365853@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-11-04 at 23:11 +0100, Thomas Gleixner wrote:
-> On Fri, 1 Nov 2019, Masahiro Yamada wrote:
-> > scripts/spdxcheck.py warns the following two files.
-> > 
-> > $ ./scripts/spdxcheck.py
-> > drivers/net/ethernet/pensando/ionic/ionic_if.h: 1:52 Syntax error: OR
-> > drivers/net/ethernet/pensando/ionic/ionic_regs.h: 1:52 Syntax error: OR
-> > 
-> > I do not understand what is wrong with them.
-> > 
-> > I think "A OR B OR C" is sane.
-> 
-> Yes it is, but obviously we did not expect files with 3 possible
-> alternative licenses.
+From: NOGUCHI Hiroshi <drvlabo@gmail.com>
 
-Perhaps just this, but the generic logic
-obviously isn't complete.
+[ Upstream commit a767ffea05d2737f6542cd78458a84a157fa216d ]
+
+Add ASUS Transbook T100CHI/T90CHI keyboard dock into battery quirk list, in
+order to add specific implementation in hid-asus.
+
+Signed-off-by: NOGUCHI Hiroshi <drvlabo@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/spdxcheck.py | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/hid/hid-input.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/scripts/spdxcheck.py b/scripts/spdxcheck.py
-index 6374e0..00be34 100755
---- a/scripts/spdxcheck.py
-+++ b/scripts/spdxcheck.py
-@@ -150,6 +150,7 @@ class id_parser(object):
-                 | ID WITH EXC
-                 | expr AND expr
-                 | expr OR expr
-+                | expr OR expr OR expr
-                 | LPAR expr RPAR'''
-         pass
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index d723185de3ba2..9d24fb0715ba3 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -328,6 +328,9 @@ static const struct hid_device_id hid_battery_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYMBOL,
+ 		USB_DEVICE_ID_SYMBOL_SCANNER_3),
+ 	  HID_BATTERY_QUIRK_IGNORE },
++	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_ASUSTEK,
++		USB_DEVICE_ID_ASUSTEK_T100CHI_KEYBOARD),
++	  HID_BATTERY_QUIRK_IGNORE },
+ 	{}
+ };
  
+-- 
+2.20.1
+
 
 
