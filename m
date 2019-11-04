@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FD9CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDEACA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D196D214E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 505E8214E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905384;
-	bh=+hrQ8CO5V7hymOZF9ycnpXtaRIUVruIS3X+KEKu2Znw=;
+	s=default; t=1572905388;
+	bh=4BXDrXI9xj1Zj4UQmnaTufcVaddUamXeSea8JUCcXZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fyg47maYfJsKHerwfHF85o5KXcwCqsNoOCrZGbsbAPLqk0H64ZG1YxcRV+//I0q3p
-	 2NqY8cOtTKXyaMFjNInaeNpJr08BJQeikCeqmXrZK5cmlbkglWEWQnXKQaCsYD1FcA
-	 ZOFKUq7LcSA9a6uXx+ze+gIIkTLQxxrIyPS2vrCU=
+	b=qKksvdvHdKA3pLK+ZqLX+v4DEB1WzZ/hw/yLKxRpCuaeHIyXK+sUdJj8C473FqMdU
+	 Zot0KBpix5IzNtFBvn7UZKKQI4VoWvJCum3dWUjGxjXjQWSPjgVyuP+If6Tg7VlDSW
+	 uEKWyScXq0JPoJHaxNfORYHdmmKq6gqtXftn45hU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390453AbfKDWJn (ORCPT
+        id S2390466AbfKDWJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:09:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42826 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:09:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390055AbfKDWJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:09:41 -0500
+        id S2390005AbfKDWJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:09:44 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C565205C9;
-        Mon,  4 Nov 2019 22:09:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 146E8205C9;
+        Mon,  4 Nov 2019 22:09:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905380;
-        bh=+hrQ8CO5V7hymOZF9ycnpXtaRIUVruIS3X+KEKu2Znw=;
+        s=default; t=1572905383;
+        bh=4BXDrXI9xj1Zj4UQmnaTufcVaddUamXeSea8JUCcXZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DgdabKVQcdKZntvmmgr1kTiBbTgK72mVATDfKjCnR1seu4OWsFDVMdJ9xp7d9HTHV
-         hMDWiRuL27weGqVAjPNyy6vKmGMTdR9+H9KOYo51G+VRsCsmaMZnI0/arYQux1IWMD
-         7x56mNcvPd2LI18N77qzD7YTc06O1aQypUtFxvHA=
+        b=kahwR6lpVURSAd3f4MGOoKSkHjtVxlIhJ14xCt3jp9nrWQnOBpuOdxajXQ06tTekS
+         uCumUAyZy5ANzlmzMz60rTSVPRH4vUlQlr2bU5qfisO8O1tymA7wVobsYuLJrH6yeI
+         mNkHwr7G1wm+7OWKIi1IQ3mifhBLkMd8+DBxFMD8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Brodkin <abrodkin@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>
-Subject: [PATCH 5.3 125/163] ARC: perf: Accommodate big-endian CPU
-Date:   Mon,  4 Nov 2019 22:45:15 +0100
-Message-Id: <20191104212149.283501179@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>
+Subject: [PATCH 5.3 126/163] IB/hfi1: Avoid excessive retry for TID RDMA READ request
+Date:   Mon,  4 Nov 2019 22:45:16 +0100
+Message-Id: <20191104212149.372726382@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -59,78 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+From: Kaike Wan <kaike.wan@intel.com>
 
-commit 5effc09c4907901f0e71e68e5f2e14211d9a203f upstream.
+commit 9ed5bd7d22241ad232fd3a5be404e83eb6cadc04 upstream.
 
-8-letter strings representing ARC perf events are stores in two
-32-bit registers as ASCII characters like that: "IJMP", "IALL", "IJMPTAK" etc.
+A TID RDMA READ request could be retried under one of the following
+conditions:
+- The RC retry timer expires;
+- A later TID RDMA READ RESP packet is received before the next
+  expected one.
+For the latter, under normal conditions, the PSN in IB space is used
+for comparison. More specifically, the IB PSN in the incoming TID RDMA
+READ RESP packet is compared with the last IB PSN of a given TID RDMA
+READ request to determine if the request should be retried. This is
+similar to the retry logic for noraml RDMA READ request.
 
-And the same order of bytes in the word is used regardless CPU endianness.
+However, if a TID RDMA READ RESP packet is lost due to congestion,
+header suppresion will be disabled and each incoming packet will raise
+an interrupt until the hardware flow is reloaded. Under this condition,
+each packet KDETH PSN will be checked by software against r_next_psn
+and a retry will be requested if the packet KDETH PSN is later than
+r_next_psn. Since each TID RDMA READ segment could have up to 64
+packets and each TID RDMA READ request could have many segments, we
+could make far more retries under such conditions, and thus leading to
+RETRY_EXC_ERR status.
 
-Which means in case of big-endian CPU core we need to swap bytes to get
-the same order as if it was on little-endian CPU.
+This patch fixes the issue by removing the retry when the incoming
+packet KDETH PSN is later than r_next_psn. Instead, it resorts to
+RC timer and normal IB PSN comparison for any request retry.
 
-Otherwise we're seeing the following error message on boot:
-------------------------->8----------------------
-ARC perf        : 8 counters (32 bits), 40 conditions, [overflow IRQ support]
-sysfs: cannot create duplicate filename '/devices/arc_pct/events/pmji'
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.18 #3
-Stack Trace:
-  arc_unwind_core+0xd4/0xfc
-  dump_stack+0x64/0x80
-  sysfs_warn_dup+0x46/0x58
-  sysfs_add_file_mode_ns+0xb2/0x168
-  create_files+0x70/0x2a0
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1 at kernel/events/core.c:12144 perf_event_sysfs_init+0x70/0xa0
-Failed to register pmu: arc_pct, reason -17
-Modules linked in:
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.18 #3
-Stack Trace:
-  arc_unwind_core+0xd4/0xfc
-  dump_stack+0x64/0x80
-  __warn+0x9c/0xd4
-  warn_slowpath_fmt+0x22/0x2c
-  perf_event_sysfs_init+0x70/0xa0
----[ end trace a75fb9a9837bd1ec ]---
-------------------------->8----------------------
-
-What happens here we're trying to register more than one raw perf event
-with the same name "PMJI". Why? Because ARC perf events are 4 to 8 letters
-and encoded into two 32-bit words. In this particular case we deal with 2
-events:
- * "IJMP____" which counts all jump & branch instructions
- * "IJMPC___" which counts only conditional jumps & branches
-
-Those strings are split in two 32-bit words this way "IJMP" + "____" &
-"IJMP" + "C___" correspondingly. Now if we read them swapped due to CPU core
-being big-endian then we read "PMJI" + "____" & "PMJI" + "___C".
-
-And since we interpret read array of ASCII letters as a null-terminated string
-on big-endian CPU we end up with 2 events of the same name "PMJI".
-
-Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Fixes: 9905bf06e890 ("IB/hfi1: Add functions to receive TID RDMA READ response")
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Link: https://lore.kernel.org/r/20191004204035.26542.41684.stgit@awfm-01.aw.intel.com
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arc/kernel/perf_event.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/hfi1/tid_rdma.c |    5 -----
+ 1 file changed, 5 deletions(-)
 
---- a/arch/arc/kernel/perf_event.c
-+++ b/arch/arc/kernel/perf_event.c
-@@ -614,8 +614,8 @@ static int arc_pmu_device_probe(struct p
- 	/* loop thru all available h/w condition indexes */
- 	for (i = 0; i < cc_bcr.c; i++) {
- 		write_aux_reg(ARC_REG_CC_INDEX, i);
--		cc_name.indiv.word0 = read_aux_reg(ARC_REG_CC_NAME0);
--		cc_name.indiv.word1 = read_aux_reg(ARC_REG_CC_NAME1);
-+		cc_name.indiv.word0 = le32_to_cpu(read_aux_reg(ARC_REG_CC_NAME0));
-+		cc_name.indiv.word1 = le32_to_cpu(read_aux_reg(ARC_REG_CC_NAME1));
- 
- 		arc_pmu_map_hw_event(i, cc_name.str);
- 		arc_pmu_add_raw_event_attr(i, cc_name.str);
+--- a/drivers/infiniband/hw/hfi1/tid_rdma.c
++++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
+@@ -2728,11 +2728,6 @@ static bool handle_read_kdeth_eflags(str
+ 				diff = cmp_psn(psn,
+ 					       flow->flow_state.r_next_psn);
+ 				if (diff > 0) {
+-					if (!(qp->r_flags & RVT_R_RDMAR_SEQ))
+-						restart_tid_rdma_read_req(rcd,
+-									  qp,
+-									  wqe);
+-
+ 					/* Drop the packet.*/
+ 					goto s_unlock;
+ 				} else if (diff < 0) {
 
 
