@@ -5,51 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B890ECA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65ED5CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F02321744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC7D214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904781;
-	bh=rckOy+noUaIRbbw85JVOz4Xrjqu1JqPoLzR+uruJCPg=;
+	s=default; t=1572904789;
+	bh=uTy1kjyuPAGz2wZWF8FBRTZHEkVSNj5vNXv4AoaQbpI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E9cpFDpnz5sat6p577+GiHOS4tXSd9HE2r7VhTqxzRZJKmEyNUEOiYE1j83S+QIWK
-	 +yDoUontHTKeCq1MjJ9Kn+hxYREo+5HmM2AkLVU1W2uIMR8fKIBMIoWci4lx+LFjq1
-	 Xkeuwg7ACyzjrM8yfvNqVK6M9HcaMqpYg+B8RWGI=
+	b=RL22URp8EMGb1z5w8dTdVUmjo/6eStlcjWcw8WWeUNAz7S9rqmRZy2s6zvNIKU6fj
+	 phCmYff7jG75Md1kMPPb6DdkbkPxnZO1Mxah/gVEJKHXmZNjQH6AOxDjyKU6XqO/3L
+	 o/PcyLJVowLrEtNAGITmJNNcHAlwllE8CyCHYBSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388715AbfKDV7k (ORCPT
+        id S2388744AbfKDV7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:59:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:59:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388236AbfKDV7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:59:33 -0500
+        id S2388724AbfKDV7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:59:44 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A9E520650;
-        Mon,  4 Nov 2019 21:59:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16F6920650;
+        Mon,  4 Nov 2019 21:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904772;
-        bh=rckOy+noUaIRbbw85JVOz4Xrjqu1JqPoLzR+uruJCPg=;
+        s=default; t=1572904783;
+        bh=uTy1kjyuPAGz2wZWF8FBRTZHEkVSNj5vNXv4AoaQbpI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l39nW4QIDMrlc3duINPmWWEBceS21hKq3E3mu5Kqz9JMSFlXGRWYrADvGLGSnkk0e
-         JBlPDXhP/NmlHTgIrMOlTDfAVF0hzDUyZ7fEKINdoNNtmBsny33cGDQBrnWOpiUDAK
-         lPMVOnsdZ7CO1ydiKDrGp195G6++oEeg0TfOHNnA=
+        b=yifhCfnD13fAGrZjbCqJwDqi3GKhvIcWjDx05upvXf2mTjrtHqvdzFbwzTSRJ2P9s
+         Lyy1lzhVt+HcdzjG3d50KbbXuFx+PzwGbUKW8DVKsqThyx+Zcu2nBWtmTa4v9Zm++Z
+         1GIj3Ruxu8xYw9ohdeiwc8EDVJUTPAzNPDuwX4wI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        stable@vger.kernel.org,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Will Deacon <will@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 065/149] perf tools: Propagate get_cpuid() error
-Date:   Mon,  4 Nov 2019 22:44:18 +0100
-Message-Id: <20191104212141.295860501@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 4.19 068/149] perf annotate: Propagate the symbol__annotate() error return
+Date:   Mon,  4 Nov 2019 22:44:21 +0100
+Message-Id: <20191104212141.496337614@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -64,134 +69,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit f67001a4a08eb124197ed4376941e1da9cf94b42 ]
+[ Upstream commit 211f493b611eef012841f795166c38ec7528738d ]
 
-For consistency, propagate the exact cause for get_cpuid() to have
-failed.
+We were just returning -1 in symbol__annotate() when symbol__annotate()
+failed, propagate its error as it is used later to pass to
+symbol__strerror_disassemble() to present a error message to the user,
+that in some cases were getting:
 
+  "Invalid -1 error code"
+
+Fix it to propagate the error.
+
+Reported-by: Russell King - ARM Linux admin <linux@armlinux.org.uk>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-9ig269f7ktnhh99g4l15vpu2@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+Cc: Will Deacon <will@kernel.org>
+Link: https://lkml.kernel.org/n/tip-0tj89rs9g7nbcyd5skadlvuu@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/arch/powerpc/util/header.c | 3 ++-
- tools/perf/arch/s390/util/header.c    | 9 +++++----
- tools/perf/arch/x86/util/header.c     | 3 ++-
- tools/perf/builtin-kvm.c              | 7 ++++---
- 4 files changed, 13 insertions(+), 9 deletions(-)
+ tools/perf/util/annotate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
-index 0b242664f5ea7..e46be9ef5a688 100644
---- a/tools/perf/arch/powerpc/util/header.c
-+++ b/tools/perf/arch/powerpc/util/header.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <sys/types.h>
-+#include <errno.h>
- #include <unistd.h>
- #include <stdio.h>
- #include <stdlib.h>
-@@ -31,7 +32,7 @@ get_cpuid(char *buffer, size_t sz)
- 		buffer[nb-1] = '\0';
- 		return 0;
- 	}
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index b4946ef48b621..83a3ad4256c5b 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2757,7 +2757,7 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *ev
+ 
+ out_free_offsets:
+ 	zfree(&notes->offsets);
 -	return -1;
-+	return ENOBUFS;
++	return err;
  }
  
- char *
-diff --git a/tools/perf/arch/s390/util/header.c b/tools/perf/arch/s390/util/header.c
-index 163b92f339980..cc72554c362a1 100644
---- a/tools/perf/arch/s390/util/header.c
-+++ b/tools/perf/arch/s390/util/header.c
-@@ -11,6 +11,7 @@
-  */
- 
- #include <sys/types.h>
-+#include <errno.h>
- #include <unistd.h>
- #include <stdio.h>
- #include <string.h>
-@@ -56,7 +57,7 @@ int get_cpuid(char *buffer, size_t sz)
- 
- 	sysinfo = fopen(SYSINFO, "r");
- 	if (sysinfo == NULL)
--		return -1;
-+		return errno;
- 
- 	while ((read = getline(&line, &line_sz, sysinfo)) != -1) {
- 		if (!strncmp(line, SYSINFO_MANU, strlen(SYSINFO_MANU))) {
-@@ -91,7 +92,7 @@ int get_cpuid(char *buffer, size_t sz)
- 
- 	/* Missing manufacturer, type or model information should not happen */
- 	if (!manufacturer[0] || !type[0] || !model[0])
--		return -1;
-+		return EINVAL;
- 
- 	/*
- 	 * Scan /proc/service_levels and return the CPU-MF counter facility
-@@ -135,14 +136,14 @@ skip_sysinfo:
- 	else
- 		nbytes = snprintf(buffer, sz, "%s,%s,%s", manufacturer, type,
- 				  model);
--	return (nbytes >= sz) ? -1 : 0;
-+	return (nbytes >= sz) ? ENOBUFS : 0;
- }
- 
- char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
- {
- 	char *buf = malloc(128);
- 
--	if (buf && get_cpuid(buf, 128) < 0)
-+	if (buf && get_cpuid(buf, 128))
- 		zfree(&buf);
- 	return buf;
- }
-diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/util/header.c
-index fb0d71afee8bb..2a5daec6fb8b0 100644
---- a/tools/perf/arch/x86/util/header.c
-+++ b/tools/perf/arch/x86/util/header.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <sys/types.h>
-+#include <errno.h>
- #include <unistd.h>
- #include <stdio.h>
- #include <stdlib.h>
-@@ -56,7 +57,7 @@ __get_cpuid(char *buffer, size_t sz, const char *fmt)
- 		buffer[nb-1] = '\0';
- 		return 0;
- 	}
--	return -1;
-+	return ENOBUFS;
- }
- 
- int
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 2b1ef704169f2..952e2228f6c60 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -699,14 +699,15 @@ static int process_sample_event(struct perf_tool *tool,
- 
- static int cpu_isa_config(struct perf_kvm_stat *kvm)
- {
--	char buf[64], *cpuid;
-+	char buf[128], *cpuid;
- 	int err;
- 
- 	if (kvm->live) {
- 		err = get_cpuid(buf, sizeof(buf));
- 		if (err != 0) {
--			pr_err("Failed to look up CPU type\n");
--			return err;
-+			pr_err("Failed to look up CPU type: %s\n",
-+			       str_error_r(err, buf, sizeof(buf)));
-+			return -err;
- 		}
- 		cpuid = buf;
- 	} else
+ #define ANNOTATION__CFG(n) \
 -- 
 2.20.1
 
