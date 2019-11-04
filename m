@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E809BCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E3ECA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF4F222C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73DCC217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905217;
-	bh=NynUHA4qevW95zKm+h3K9YX279or91FM4C/MRJ+5jkI=;
+	s=default; t=1572905221;
+	bh=chGnoAshHGqqo+wladlxJN3tEO3v9wGjv9U7ySwG4kM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IRCBlNSVn8qSA8Mwvmp8kZAERpxTemKljENfhbJZ69LmLFWtp/DTEak3Z/pxWegRe
-	 iAtCWI+2Z6S34IaSbTtzGeNCDXKVuLkRi3FoXZaBV9rodkjdCm5a5jypEni9wqBNY/
-	 Ioiwd9o5AShvGhRYtQD2Efyx7dq3jxtmOBCwOisg=
+	b=DoQvKHupggcxAcrkcBwD/WTJJ1KI5mSaDfBSyo2u4pNPBENhwngYcrm77JrMKSCX7
+	 8Oq/uUrTd+rxTSXFDP+UV5vT5N+QBbJzc//gdufuwiImGE/vVHDtgNswoSdFqAjclU
+	 AODxcV+VQSB7Kjl6x92MNbLXpoPeN9TMeL4wyqx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390017AbfKDWG4 (ORCPT
+        id S2389614AbfKDWHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:06:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38960 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:07:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389069AbfKDWGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:06:50 -0500
+        id S2390004AbfKDWGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:06:52 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2E3D21D71;
-        Mon,  4 Nov 2019 22:06:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EAA2214D8;
+        Mon,  4 Nov 2019 22:06:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905209;
-        bh=NynUHA4qevW95zKm+h3K9YX279or91FM4C/MRJ+5jkI=;
+        s=default; t=1572905212;
+        bh=chGnoAshHGqqo+wladlxJN3tEO3v9wGjv9U7ySwG4kM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zuz8B4qJhICFmXIc51xB7+GtOlnxMVTwlS06rLk+msKIB5LmV7R3YSkj2wUdEZzJk
-         atFGiINUQRBQP7sEnCxpIMT6KgjPkPxb9WOR04hPSnEvyiX53eAngUarwjo84+8TwH
-         vdEPcG/FElaWQrczpKFdmAIbg9fe21APu4zZQKVw=
+        b=klTUdEesm5qQqKfQMuZxY9tjFAIZMDpJsJsle+Or/bPQzpIqWeuG8ae2TYzj3IXlZ
+         NvafV1V1D65MOy05kxip8yULl+O0Z9Oz+DgHG1tN68QdAqvKiTs3OMzzWpTOLU17Tw
+         VAuyaFvXAKwFcG3mDAJZJy13Zsn4UEAOFAh8GhSE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
+        stable@vger.kernel.org, Hechao Li <hechaol@fb.com>,
+        Song Liu <songliubraving@fb.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        kernel-team@fb.com, Jie Meng <jmeng@fb.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Rik van Riel <riel@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Wanpeng Li <wanpengli@tencent.com>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 066/163] sched/vtime: Fix guest/system mis-accounting on task switch
-Date:   Mon,  4 Nov 2019 22:44:16 +0100
-Message-Id: <20191104212144.767062618@linuxfoundation.org>
+Subject: [PATCH 5.3 067/163] perf/core: Rework memory accounting in perf_mmap()
+Date:   Mon,  4 Nov 2019 22:44:17 +0100
+Message-Id: <20191104212144.819859713@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -64,77 +64,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Weisbecker <frederic@kernel.org>
+From: Song Liu <songliubraving@fb.com>
 
-[ Upstream commit 68e7a4d66b0ce04bf18ff2ffded5596ab3618585 ]
+[ Upstream commit d44248a41337731a111374822d7d4451b64e73e4 ]
 
-vtime_account_system() assumes that the target task to account cputime
-to is always the current task. This is most often true indeed except on
-task switch where we call:
+perf_mmap() always increases user->locked_vm. As a result, "extra" could
+grow bigger than "user_extra", which doesn't make sense. Here is an
+example case:
 
-	vtime_common_task_switch(prev)
-		vtime_account_system(prev)
+(Note: Assume "user_lock_limit" is very small.)
 
-Here prev is the scheduling-out task where we account the cputime to. It
-doesn't match current that is already the scheduling-in task at this
-stage of the context switch.
+  | # of perf_mmap calls |vma->vm_mm->pinned_vm|user->locked_vm|
+  | 0                    | 0                   | 0             |
+  | 1                    | user_extra          | user_extra    |
+  | 2                    | 3 * user_extra      | 2 * user_extra|
+  | 3                    | 6 * user_extra      | 3 * user_extra|
+  | 4                    | 10 * user_extra     | 4 * user_extra|
 
-So we end up checking the wrong task flags to determine if we are
-accounting guest or system time to the previous task.
+Fix this by maintaining proper user_extra and extra.
 
-As a result the wrong task is used to check if the target is running in
-guest mode. We may then spuriously account or leak either system or
-guest time on task switch.
-
-Fix this assumption and also turn vtime_guest_enter/exit() to use the
-task passed in parameter as well to avoid future similar issues.
-
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Reviewed-By: Hechao Li <hechaol@fb.com>
+Reported-by: Hechao Li <hechaol@fb.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: <kernel-team@fb.com>
+Cc: Jie Meng <jmeng@fb.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@redhat.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Fixes: 2a42eb9594a1 ("sched/cputime: Accumulate vtime on top of nsec clocksource")
-Link: https://lkml.kernel.org/r/20190925214242.21873-1-frederic@kernel.org
+Link: https://lkml.kernel.org/r/20190904214618.3795672-1-songliubraving@fb.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/cputime.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/events/core.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index 2305ce89a26cf..46ed4e1383e21 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -740,7 +740,7 @@ void vtime_account_system(struct task_struct *tsk)
- 
- 	write_seqcount_begin(&vtime->seqcount);
- 	/* We might have scheduled out from guest path */
--	if (current->flags & PF_VCPU)
-+	if (tsk->flags & PF_VCPU)
- 		vtime_account_guest(tsk, vtime);
- 	else
- 		__vtime_account_system(tsk, vtime);
-@@ -783,7 +783,7 @@ void vtime_guest_enter(struct task_struct *tsk)
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index a2a50b668ef32..c0a6a50e01af6 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5585,7 +5585,8 @@ again:
+ 	 * undo the VM accounting.
  	 */
- 	write_seqcount_begin(&vtime->seqcount);
- 	__vtime_account_system(tsk, vtime);
--	current->flags |= PF_VCPU;
-+	tsk->flags |= PF_VCPU;
- 	write_seqcount_end(&vtime->seqcount);
- }
- EXPORT_SYMBOL_GPL(vtime_guest_enter);
-@@ -794,7 +794,7 @@ void vtime_guest_exit(struct task_struct *tsk)
  
- 	write_seqcount_begin(&vtime->seqcount);
- 	vtime_account_guest(tsk, vtime);
--	current->flags &= ~PF_VCPU;
-+	tsk->flags &= ~PF_VCPU;
- 	write_seqcount_end(&vtime->seqcount);
- }
- EXPORT_SYMBOL_GPL(vtime_guest_exit);
+-	atomic_long_sub((size >> PAGE_SHIFT) + 1, &mmap_user->locked_vm);
++	atomic_long_sub((size >> PAGE_SHIFT) + 1 - mmap_locked,
++			&mmap_user->locked_vm);
+ 	atomic64_sub(mmap_locked, &vma->vm_mm->pinned_vm);
+ 	free_uid(mmap_user);
+ 
+@@ -5729,8 +5730,20 @@ accounting:
+ 
+ 	user_locked = atomic_long_read(&user->locked_vm) + user_extra;
+ 
+-	if (user_locked > user_lock_limit)
++	if (user_locked <= user_lock_limit) {
++		/* charge all to locked_vm */
++	} else if (atomic_long_read(&user->locked_vm) >= user_lock_limit) {
++		/* charge all to pinned_vm */
++		extra = user_extra;
++		user_extra = 0;
++	} else {
++		/*
++		 * charge locked_vm until it hits user_lock_limit;
++		 * charge the rest from pinned_vm
++		 */
+ 		extra = user_locked - user_lock_limit;
++		user_extra -= extra;
++	}
+ 
+ 	lock_limit = rlimit(RLIMIT_MEMLOCK);
+ 	lock_limit >>= PAGE_SHIFT;
 -- 
 2.20.1
 
