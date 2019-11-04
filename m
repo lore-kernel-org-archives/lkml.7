@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52521CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F88CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27DD0214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C720214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905017;
-	bh=xXS8p/EblncHJQHEhAPsiIeE9RiB5ZxpflNfzXPTfaQ=;
+	s=default; t=1572905018;
+	bh=w10z4BnNFxIKOoHBSU/um72KEKRxvbcdUrJHuT2gbBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LDFj7E6rBqo2LGG2zGtEqUxnIdIDKZX0NSZhOGur0uFX+qoZQQ0Fsp7A2JQ9SRN5D
-	 483w0TE0iJb1hskqwShBlc8HQOsXEFvB5bq//QN15U/O9ZWYqztmEqsQ+rkGLIdL9U
-	 R7EzQIHz4nlGCsBYcJ2Bgqf+k5sMzubIDl/KWDN4=
+	b=f4bRJR6n6QuwuOB6y1sB50KqS+YGeFHQBylivLKhFr8yLROtznyxWguVJU0HLZX6u
+	 56eTv0+kFWtPcEG+x+XMOxjY6XujBa6ujwhelgWOCcwE2igdTpDKTDHOJXURcLy3I7
+	 RTXO8Jmg2e4mSj7HxUSL26OiC4eGiUchB9JeVQwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389074AbfKDWBg (ORCPT
+        id S2389536AbfKDWDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:01:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59190 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:03:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388970AbfKDWBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:09 -0500
+        id S2389511AbfKDWDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:03:33 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B10721E6F;
-        Mon,  4 Nov 2019 22:01:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD7B4205C9;
+        Mon,  4 Nov 2019 22:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904868;
-        bh=xXS8p/EblncHJQHEhAPsiIeE9RiB5ZxpflNfzXPTfaQ=;
+        s=default; t=1572905012;
+        bh=w10z4BnNFxIKOoHBSU/um72KEKRxvbcdUrJHuT2gbBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YhQlsayf6IGYgZS6odCac4z41YUjKJ2N4VuTxNfh9AX2uU/QfCZC9qXowRXoVw/Vu
-         TkSfWyt93JIlrFdJ+DWbPE4LD5lKvCwesbIKTTW7Xik8mCiNQDMWa+6p/G1DHd/vFf
-         Iz6z5DLrp1K7ZFvs+dzoF34soL7g9WYnvHnpeU2M=
+        b=jGMSI4wxYxvK6nQ7ao/yDbuu1g4sm93w3BsFn52QMg0CLe8tWX/eenTXqK6xg2S6t
+         QYbSU5qY8H+dLRrj+tPXcWsioYLKPJodPAfDAwK15u31pGMb2ZrzVBjGURrrJKJt/Y
+         fMDwFTKn29hvqmcbF46Z9XEcgXMwi2mulPBwVJl4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 100/149] s390/uaccess: avoid (false positive) compiler warnings
-Date:   Mon,  4 Nov 2019 22:44:53 +0100
-Message-Id: <20191104212143.510652272@linuxfoundation.org>
+        stable@vger.kernel.org, Jussi Laako <jussi@sonarnerd.net>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 148/149] ALSA: usb-audio: Update DSD support quirks for Oppo and Rotel
+Date:   Mon,  4 Nov 2019 22:45:41 +0100
+Message-Id: <20191104212147.055177578@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -61,55 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Jussi Laako <jussi@sonarnerd.net>
 
-[ Upstream commit 062795fcdcb2d22822fb42644b1d76a8ad8439b3 ]
+[ Upstream commit 0067e154b11e236d62a7a8205f321b097c21a35b ]
 
-Depending on inlining decisions by the compiler, __get/put_user_fn
-might become out of line. Then the compiler is no longer able to tell
-that size can only be 1,2,4 or 8 due to the check in __get/put_user
-resulting in false positives like
+Oppo has issued firmware updates that change alt setting used for DSD
+support. However, these devices seem to support auto-detection, so
+support is moved from explicit whitelisting to auto-detection.
 
-./arch/s390/include/asm/uaccess.h: In function ‘__put_user_fn’:
-./arch/s390/include/asm/uaccess.h:113:9: warning: ‘rc’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-  113 |  return rc;
-      |         ^~
-./arch/s390/include/asm/uaccess.h: In function ‘__get_user_fn’:
-./arch/s390/include/asm/uaccess.h:143:9: warning: ‘rc’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-  143 |  return rc;
-      |         ^~
+Also Rotel devices have USB interfaces that support DSD with
+auto-detection.
 
-These functions are supposed to be always inlined. Mark it as such.
-
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Jussi Laako <jussi@sonarnerd.net>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/uaccess.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/usb/quirks.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
-index 5332f628c1edc..40194f8c772a0 100644
---- a/arch/s390/include/asm/uaccess.h
-+++ b/arch/s390/include/asm/uaccess.h
-@@ -84,7 +84,7 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n);
- 	__rc;							\
- })
- 
--static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
-+static __always_inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
- {
- 	unsigned long spec = 0x010000UL;
- 	int rc;
-@@ -114,7 +114,7 @@ static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
- 	return rc;
- }
- 
--static inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
-+static __always_inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
- {
- 	unsigned long spec = 0x01UL;
- 	int rc;
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index 0a8a0978a2dba..28035c59cb37c 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1361,9 +1361,6 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
+ 	/* XMOS based USB DACs */
+ 	switch (chip->usb_id) {
+ 	case USB_ID(0x1511, 0x0037): /* AURALiC VEGA */
+-	case USB_ID(0x22d9, 0x0416): /* OPPO HA-1 */
+-	case USB_ID(0x22d9, 0x0436): /* OPPO Sonica */
+-	case USB_ID(0x22d9, 0x0461): /* OPPO UDP-205 */
+ 	case USB_ID(0x2522, 0x0012): /* LH Labs VI DAC Infinity */
+ 	case USB_ID(0x2772, 0x0230): /* Pro-Ject Pre Box S2 Digital */
+ 		if (fp->altsetting == 2)
+@@ -1377,7 +1374,6 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
+ 	case USB_ID(0x16d0, 0x0733): /* Furutech ADL Stratos */
+ 	case USB_ID(0x16d0, 0x09db): /* NuPrime Audio DAC-9 */
+ 	case USB_ID(0x1db5, 0x0003): /* Bryston BDA3 */
+-	case USB_ID(0x22d9, 0x0426): /* OPPO HA-2 */
+ 	case USB_ID(0x22e1, 0xca01): /* HDTA Serenade DSD */
+ 	case USB_ID(0x249c, 0x9326): /* M2Tech Young MkIII */
+ 	case USB_ID(0x2616, 0x0106): /* PS Audio NuWave DAC */
+@@ -1434,8 +1430,10 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
+ 	switch (USB_ID_VENDOR(chip->usb_id)) {
+ 	case 0x152a:  /* Thesycon devices */
+ 	case 0x20b1:  /* XMOS based devices */
++	case 0x22d9:  /* Oppo */
+ 	case 0x23ba:  /* Playback Designs */
+ 	case 0x25ce:  /* Mytek devices */
++	case 0x278b:  /* Rotel? */
+ 	case 0x2ab6:  /* T+A devices */
+ 	case 0x3842:  /* EVGA */
+ 	case 0xc502:  /* HiBy devices */
 -- 
 2.20.1
 
