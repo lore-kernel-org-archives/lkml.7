@@ -2,115 +2,79 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10E6CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C003CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E4E217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D3DD217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:53:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="MDi01Usa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OyAJ8njz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbfKDKv1 (ORCPT
+        id S1728684AbfKDKxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:51:27 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:7980 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726364AbfKDKv1 (ORCPT
+        Mon, 4 Nov 2019 05:53:05 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34624 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbfKDKxF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 05:51:27 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA4AonqB008086;
-        Mon, 4 Nov 2019 11:51:05 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=Qaurhduesnw25w0jh3pIp/yKxoZ09ZwN/xuDw+l7BNo=;
- b=MDi01UsaPAO8xz8ft6zNnwdNE5PplDfS44Pz4LtEZhurX/UMtGwpBALwoTVtceYbxtZB
- fuJWU5XfdN5fn0JvoZTdL5hipFgSWtcXh3Hn8ZsldHmNZ8Ebhlbs2kVJ9R89oVSjkJy6
- oNF5gppFiaNOieDmc4Lwo2OPoBWBgab5lNiWeL4qL9W5lVtKY0vJMKF5JQkjgUMvd1sQ
- i/3ie0JVmeygrKmHufnYpqE530wbY/p5nMIcID4yiCIH/pA/MKUnC5DE0HEZmbaK8BQ0
- b2LDp4twHDFT0C4FZHEMFlaAxE5w10/IhV5PXsy3Ylm8S2Mr9imz/VFbE+rius8Werdv Ew== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2w0ytchmh6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 Nov 2019 11:51:05 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B21BC100034;
-        Mon,  4 Nov 2019 11:51:04 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 954D62BDA87;
-        Mon,  4 Nov 2019 11:51:04 +0100 (CET)
-Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019
- 11:51:04 +0100
-Received: from localhost (10.201.22.222) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019 11:51:03
- +0100
-From:   Christophe Roullier <christophe.roullier@st.com>
-To:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
-        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <peppe.cavallaro@st.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        <christophe.roullier@st.com>, <andrew@lunn.ch>
-Subject: [PATCH V2 1/1] net: ethernet: stmmac: drop unused variable in stm32mp1_set_mode()
-Date:   Mon, 4 Nov 2019 11:51:00 +0100
-Message-ID: <20191104105100.4288-1-christophe.roullier@st.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 4 Nov 2019 05:53:05 -0500
+Received: by mail-qt1-f196.google.com with SMTP id h2so9968889qto.1;
+        Mon, 04 Nov 2019 02:53:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=wBiUmcDstWLkNGFI112Kv0VvZlPGkJFQqYWydYG4yjs=;
+        b=OyAJ8njzmcrjHgQAGYTuuBXB1hoLuN/6Z6aDFiiaRTX/xJ8g6Mt7m1qJOjy6BTN/c+
+         XHoB+20oIlo1Ce6V7JqqxGBZEZbLyzsqj5ColWQqfBi7Wu5lnq8DAzDabndJYuCnV9g6
+         T81lB6NP0+rcEzsCRRMHHOZdfTy2WRH0gY8a2ry9dLyYlqXgGIQO9GSaYLC+MIZVIEjH
+         oVMyN/P4x5SxlP4ehwUlmpe6NESNcCB3kk2b81jCrVb8L9kK493Kb7hmLmVQPsMnC3mg
+         DBVto5peDkrj4fY3kzn582xpYalTGTxVNQQitpDTRQ674NbCPJn7RKqXBVx4xtGr8QxJ
+         mo6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=wBiUmcDstWLkNGFI112Kv0VvZlPGkJFQqYWydYG4yjs=;
+        b=dWPv66U/OtUVScG+FWrc2Pw9lQKgqYSXNxxzlQL7GVSFVC/+EmyT2da9F8RPloxGmd
+         Y/FUVZkOidmAAtYsBgCql0/RqIvbT6xKO0lX0OwVcwy+N5DDXTG501Y2LdJ2NAgRoxy2
+         w3d6yxBy1ot6mJzti5EeK1ziyv33RciXeJcwMJfMOusIyeIo/AZgnRmfoz+NP7Ep2EjD
+         P0ls23Cr/gVzRYmb7+Gfm4j2g8/e/ldGuOBD2Sch7XO18YG+wzxvlI54tUty4tP28oZc
+         /t5So3lzR85ryr9e/SQd/tKVWZG/bvtrL+VTZAB3eeVNcfa7aFCnc4FFUnsFQQTCY48R
+         3vxg==
+X-Gm-Message-State: APjAAAVwafrS4ipYqXg30DfhI6N/s3xWW3VZ5s0DVG24+SN8D3gNGByB
+        1lqLHCm1VcVnRLozUkiI4DIanzsXdqfQ3qCmbEVWhT8RTew=
+X-Google-Smtp-Source: APXvYqziMCwP+xvqtt37T+x49RTUx+d+DF4WMdxTYIbcMUY5Gi8/fJG5C5nyP3s7kOH9HJ/Lcvd2r7d+QwtMZCmQvxI=
+X-Received: by 2002:a05:6214:2b:: with SMTP id b11mr21827281qvr.194.1572864784244;
+ Mon, 04 Nov 2019 02:53:04 -0800 (PST)
 MIME-Version: 1.0
+From:   Leon Maxx <leonmaxx@gmail.com>
+Date:   Mon, 4 Nov 2019 12:52:53 +0200
+Message-ID: <CAPW-Pu0KuxqbKSQ2JQaxh5AHbdZdNQZJfOgxoe_XZSxow+9e3A@mail.gmail.com>
+Subject: [RFC PATCH 0/3] asus_wmi: Support of ASUS TUF laptops on Ryzen CPUs
+To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net, andy@infradead.org,
+        dvhart@infradead.org, corentin.chary@gmail.com, drake@endlessm.com,
+        yurii.pavlovskyi@gmail.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.201.22.222]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-11-04_07:2019-11-04,2019-11-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building with W=1 (cf.scripts/Makefile.extrawarn) outputs:
-warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
+Hi,
 
-Drop the unused 'ret' variable.
+this patch series adds support of ASUS TUF laptops on Ryzen CPUs to existing
+asus_wmi platform driver and also fixes minor bug.
 
-Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+Leonid Maksimchuk (3):
+  platform/x86: asus_wmi: Fix return value of fan_boost_mode_store
+  platform/x86: asus_wmi: Support fan boost mode on FX505DY/FX705DY
+  platform/x86: asus_wmi: Set default fan boost mode to normal
 
----
-V2: update commit message with Marc Gonzalez recommendation
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-index 4ef041bdf6a1..595af2ec89fb 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-@@ -175,7 +175,7 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
- {
- 	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
- 	u32 reg = dwmac->mode_reg;
--	int val, ret;
-+	int val;
- 
- 	switch (plat_dat->interface) {
- 	case PHY_INTERFACE_MODE_MII:
-@@ -211,8 +211,8 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
- 	}
- 
- 	/* Need to update PMCCLRR (clear register) */
--	ret = regmap_write(dwmac->regmap, reg + SYSCFG_PMCCLRR_OFFSET,
--			   dwmac->ops->syscfg_eth_mask);
-+	regmap_write(dwmac->regmap, reg + SYSCFG_PMCCLRR_OFFSET,
-+		     dwmac->ops->syscfg_eth_mask);
- 
- 	/* Update PMCSETR (set register) */
- 	return regmap_update_bits(dwmac->regmap, reg,
--- 
-2.17.1
-
+ drivers/platform/x86/asus-wmi.c            | 57 +++++++++++++++++++++--------
+ include/linux/platform_data/x86/asus-wmi.h |  1 +
+ 2 files changed, 43 insertions(+), 15 deletions(-)
