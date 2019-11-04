@@ -2,230 +2,152 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDA1CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6243C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBDAC21D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9360F21D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:54:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729077AbfKDLxi (ORCPT
+        id S1729087AbfKDLx7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:53:38 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:17023 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727138AbfKDLxF (ORCPT
+        Mon, 4 Nov 2019 06:53:59 -0500
+Received: from skedge03.snt-world.com ([91.208.41.68]:47196 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfKDLx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 06:53:05 -0500
-X-UUID: a0f676bd011b459e9c6217a60ea321a1-20191104
-X-UUID: a0f676bd011b459e9c6217a60ea321a1-20191104
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <chao.hao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1196001826; Mon, 04 Nov 2019 19:53:00 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 4 Nov 2019 19:52:58 +0800
-Received: from localhost.localdomain (10.15.20.246) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 4 Nov 2019 19:52:55 +0800
-From:   Chao Hao <chao.hao@mediatek.com>
-To:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
+        Mon, 4 Nov 2019 06:53:59 -0500
+Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge03.snt-world.com (Postfix) with ESMTPS id 2E24160CAF3;
+        Mon,  4 Nov 2019 12:53:57 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
+ (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 4 Nov 2019
+ 12:53:56 +0100
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Mon, 4 Nov 2019 12:53:56 +0100
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+CC:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Jun Yan <jun.yan@mediatek.com>,
-        Cui Zhang <cui.zhang@mediatek.com>,
-        Guangming Cao <guangming.cao@mediatek.com>,
-        Yong Wu <yong.wu@mediatek.com>,
-        Anan Sun <anan.sun@mediatek.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        Chao Hao <chao.hao@mediatek.com>
-Subject: [RESEND,PATCH 07/13] iommu/mediatek: Add smi_larb info about device
-Date:   Mon, 4 Nov 2019 19:52:32 +0800
-Message-ID: <20191104115238.2394-8-chao.hao@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20191104115238.2394-1-chao.hao@mediatek.com>
-References: <20191104115238.2394-1-chao.hao@mediatek.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 0/9] Add support for more Kontron i.MX6UL/ULL SoMs and
+ boards
+Thread-Topic: [PATCH v4 0/9] Add support for more Kontron i.MX6UL/ULL SoMs and
+ boards
+Thread-Index: AQHVkwaJH746zF7YVkilpRPjJDiF5w==
+Date:   Mon, 4 Nov 2019 11:53:56 +0000
+Message-ID: <20191104115352.8728-1-frieder.schrempf@kontron.de>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 2E24160CAF3.A0C35
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: devicetree@vger.kernel.org, festevam@gmail.com,
+        kernel@pengutronix.de, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All the devices which used iommu are connected to SMI_larb port,
-so when different devices driver execute initialization, iommu
-can check larb_id and port_id to distinguish them and then make
-them match to iommu_group accordingly. We also add dom_cnt variable
-to describe the number of mtk_iommu_domain.
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-Larb_id and port_id define can refer to "mtxxxx-larb-port.h(ex:
-mt6779-larb-port.h)" file
+In order to support more of the i.MX6UL/ULL-based SoMs and boards by
+Kontron Electronics GmbH, we restructure the devicetrees to share common
+parts and add new devicetrees for the missing boards.
 
-Signed-off-by: Chao Hao <chao.hao@mediatek.com>
+Currently there are the following SoM flavors:
+  * N6310: SoM with i.MX6UL-2, 256MB RAM, 256MB SPI NAND
+  * N6311: SoM with i.MX6UL-2, 512MB RAM, 512MB SPI NAND (new)
+  * N6411: SoM with i.MX6ULL, 512MB RAM, 512MB SPI NAND (new)
+
+Each of the SoMs also features 1MB SPI NOR and an Ethernet PHY. The carrier
+board for the evalkit is the same for all SoMs.
+
+This series also includes some small enhancements and fixes for the shared
+parts of the devicetrees.
 ---
- drivers/iommu/mtk_iommu.c | 50 ++++++++++++++++++++++++++++++++-------
- drivers/iommu/mtk_iommu.h |  1 +
- 2 files changed, 43 insertions(+), 8 deletions(-)
+Changes for v4:
+===============
+* Move the patch that removes the snvs-poweroff node before the file is moved
+* Drop patch to specify bus-width as this is already set in imx6ul.dtsi
+* Drop patch to add an entry for the dts files in MAINTAINERS
+* Remove Fixes tags for patches that are not actually fixes
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 27995b2b29a6..0eacbc473374 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -126,6 +126,7 @@ struct mtk_iommu_domain {
- struct mtk_iommu_pgtable {
- 	struct io_pgtable_cfg	cfg;
- 	struct io_pgtable_ops	*iop;
-+	struct device		*init_dev;
- 	struct list_head	m4u_dom_v2;
- };
- 
-@@ -177,22 +178,35 @@ static struct mtk_iommu_data *mtk_iommu_get_m4u_data(void)
- 	return NULL;
- }
- 
--static u32 get_domain_id(void)
-+static u32 get_domain_id(struct mtk_iommu_data *data, u32 portid)
- {
--	/* only support one mtk_iommu_domain currently */
--	return 0;
-+	u32 dom_id = 0;
-+	int i;
-+
-+	/* only support one mtk_iommu_domain currently(dom_cnt = 1) */
-+	for (i = 0; i < data->plat_data->dom_cnt; i++)
-+		return i;
-+
-+	return dom_id;
- }
- 
--static u32 mtk_iommu_get_domain_id(void)
-+static u32 mtk_iommu_get_domain_id(struct device *dev)
- {
--	return get_domain_id();
-+	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
-+	struct mtk_iommu_data *data = dev->iommu_fwspec->iommu_priv;
-+	u32 portid = fwspec->ids[0];
-+
-+	return get_domain_id(data, portid);
- }
- 
- static struct mtk_iommu_domain *get_mtk_domain(struct device *dev)
- {
- 	struct mtk_iommu_data *data = dev->iommu_fwspec->iommu_priv;
- 	struct mtk_iommu_domain *dom;
--	u32 domain_id = mtk_iommu_get_domain_id();
-+	u32 domain_id = mtk_iommu_get_domain_id(dev);
-+
-+	if (domain_id >= data->plat_data->dom_cnt)
-+		return NULL;
- 
- 	list_for_each_entry(dom, &data->pgtable->m4u_dom_v2, list) {
- 		if (dom->id == domain_id)
-@@ -431,11 +445,18 @@ static struct iommu_domain *mtk_iommu_domain_alloc(unsigned type)
- 	struct mtk_iommu_pgtable *pgtable = mtk_iommu_get_pgtable();
- 	struct mtk_iommu_data *data = mtk_iommu_get_m4u_data();
- 	struct mtk_iommu_domain *dom;
-+	struct device *dev;
- 
- 	if (type != IOMMU_DOMAIN_DMA)
- 		return NULL;
- 
--	if (!pgtable) {
-+	if (pgtable) {
-+		dev = pgtable->init_dev;
-+		if (!data->m4u_group) {
-+			pr_err("%s, find m4u_group failed\n", __func__);
-+			return NULL;
-+		}
-+	} else {
- 		pr_err("%s, pgtable is not ready\n", __func__);
- 		return NULL;
- 	}
-@@ -447,8 +468,11 @@ static struct iommu_domain *mtk_iommu_domain_alloc(unsigned type)
- 	if (iommu_get_dma_cookie(&dom->domain))
- 		goto  free_dom;
- 
-+	dom->id = mtk_iommu_get_domain_id(dev);
-+	if (dom->id >= data->plat_data->dom_cnt)
-+		goto  put_dma_cookie;
-+
- 	dom->group = data->m4u_group;
--	dom->id = mtk_iommu_get_domain_id();
- 	/* Update our support page sizes bitmap */
- 	dom->domain.pgsize_bitmap = pgtable->cfg.pgsize_bitmap;
- 
-@@ -459,6 +483,8 @@ static struct iommu_domain *mtk_iommu_domain_alloc(unsigned type)
- 
- 	return &dom->domain;
- 
-+put_dma_cookie:
-+	iommu_put_dma_cookie(&dom->domain);
- free_dom:
- 	kfree(dom);
- 	return NULL;
-@@ -619,6 +645,10 @@ static struct iommu_group *mtk_iommu_device_group(struct device *dev)
- 	} else {
- 		iommu_group_ref_get(data->m4u_group);
- 	}
-+
-+	/* save the latest init device */
-+	pgtable->init_dev = dev;
-+
- 	return data->m4u_group;
- }
- 
-@@ -927,12 +957,14 @@ static const struct mtk_iommu_plat_data mt2712_data = {
- 	.has_4gb_mode = true,
- 	.has_bclk     = true,
- 	.has_vld_pa_rng   = true,
-+	.dom_cnt = 1,
- 	.larbid_remap[0] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
- 	.inv_sel_reg = REG_MMU_INV_SEL,
- };
- 
- static const struct mtk_iommu_plat_data mt6779_data = {
- 	.m4u_plat = M4U_MT6779,
-+	.dom_cnt = 1,
- 	.larbid_remap[0] = {0, 1, 2, 3, 5, 7, 10, 9},
- 	/* vp6a, vp6b, mdla/core2, mdla/edmc*/
- 	.larbid_remap[1] = {2, 0, 3, 1},
-@@ -948,6 +980,7 @@ static const struct mtk_iommu_plat_data mt8173_data = {
- 	.has_4gb_mode = true,
- 	.has_bclk     = true,
- 	.reset_axi    = true,
-+	.dom_cnt = 1,
- 	.larbid_remap[0] = {0, 1, 2, 3, 4, 5}, /* Linear mapping. */
- 	.inv_sel_reg = REG_MMU_INV_SEL,
- };
-@@ -955,6 +988,7 @@ static const struct mtk_iommu_plat_data mt8173_data = {
- static const struct mtk_iommu_plat_data mt8183_data = {
- 	.m4u_plat     = M4U_MT8183,
- 	.reset_axi    = true,
-+	.dom_cnt = 1,
- 	.larbid_remap[0] = {0, 4, 5, 6, 7, 2, 3, 1},
- 	.inv_sel_reg = REG_MMU_INV_SEL,
- };
-diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-index dd5f19f78b62..6801f8496fcc 100644
---- a/drivers/iommu/mtk_iommu.h
-+++ b/drivers/iommu/mtk_iommu.h
-@@ -49,6 +49,7 @@ struct mtk_iommu_plat_data {
- 	bool                has_misc_ctrl[2];
- 	u32                 inv_sel_reg;
- 	u32                 m4u1_mask;
-+	u32		    dom_cnt;
- 	unsigned char       larbid_remap[2][MTK_LARB_NR_MAX];
- };
- 
+Changes for v3:
+===============
+* Add a patch that removes the snvs-poweroff node as it is not used
+* Drop patch to add missing includes for gpio.h and irq.h as it is not needed
+* Add Fixes tags to those patches that fix an issue in the existing devicetrees
+* Add Reviewed-by tags from Krzysztof
+* Minor improvements to commit messages and cover letter
+
+Changes for v2:
+===============
+* Patch 1: Move the spi-flash node instead of duplicating it
+* Patch 3: Add a missing include for dt-bindings/gpio/gpio.h
+* Patch 11: Add patch to add missing includes for gpio.h and irq.h
+* Add Reviewed-by tags from Krzysztof and Rob
+---
+Frieder Schrempf (9):
+  ARM: dts: imx6ul-kontron-n6310: Move common SoM nodes to a separate
+    file
+  ARM: dts: Add support for two more Kontron SoMs N6311 and N6411
+  ARM: dts: imx6ul-kontron-n6310-s: Disable the snvs-poweroff driver
+  ARM: dts: imx6ul-kontron-n6310-s: Move common nodes to a separate file
+  ARM: dts: Add support for two more Kontron evalkit boards 'N6311 S'
+    and 'N6411 S'
+  ARM: dts: imx6ul-kontron-n6x1x: Add 'chosen' node with 'stdout-path'
+  ARM: dts: imx6ul-kontron-n6x1x-s: Add vbus-supply and overcurrent
+    polarity to usb nodes
+  ARM: dts: imx6ul-kontron-n6x1x-s: Remove an obsolete comment and fix
+    indentation
+  dt-bindings: arm: fsl: Add more Kontron i.MX6UL/ULL compatibles
+
+ .../devicetree/bindings/arm/fsl.yaml          |  14 +
+ arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts  | 405 +----------------
+ .../boot/dts/imx6ul-kontron-n6310-som.dtsi    |  95 +---
+ arch/arm/boot/dts/imx6ul-kontron-n6311-s.dts  |  16 +
+ .../boot/dts/imx6ul-kontron-n6311-som.dtsi    |  40 ++
+ arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi | 418 ++++++++++++++++++
+ .../dts/imx6ul-kontron-n6x1x-som-common.dtsi  | 109 +++++
+ arch/arm/boot/dts/imx6ull-kontron-n6411-s.dts |  16 +
+ .../boot/dts/imx6ull-kontron-n6411-som.dtsi   |  40 ++
+ 9 files changed, 655 insertions(+), 498 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6311-s.dts
+ create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6ull-kontron-n6411-s.dts
+ create mode 100644 arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi
+
 -- 
-2.18.0
-
+2.17.1
