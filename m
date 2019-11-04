@@ -2,125 +2,108 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FD1CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C0ACA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8540214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxiuORP6"
+	by mail.kernel.org (Postfix) with ESMTP id DAD96204FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572905961;
+	bh=9bqpOQ/HTpFfl9Zq2N2vZhaiabTgyqLrkdRiLClf/oc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MQAtpCJfMtBXp4qActdbfRdpgmg4moXPeuy+sGibQHvMFQdIqoXNC8w+twRj9BXSm
+	 mvPs0wHJExvm6Tx1JvaVLwpzkY/puV4mqA5Hez3PBI/9NmKoMP0jemgjYgC0FXUFP1
+	 aRpVl8iw1STdywg4uQTNZlgpaF0pQsO3xcEvqltw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390309AbfKDWTM (ORCPT
+        id S2389439AbfKDWTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:19:12 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41491 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388974AbfKDWBM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:19:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388981AbfKDWBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 Nov 2019 17:01:12 -0500
-Received: by mail-lf1-f65.google.com with SMTP id j14so13448551lfb.8;
-        Mon, 04 Nov 2019 14:01:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DjmXiphEj07PA2UBQ1Hu0F6jo40/2DwonMVrwbYxHC4=;
-        b=hxiuORP6XfkMPL7hYETvI1R7UGZJg1RRsvu6RE+K+jruMTpnzXRtQGBL3yz97KYT/7
-         vxDqVcdchqidjMkOMoL8IST46v2Y+LrfLbYWP3jL0FpynbbG9Uz1vD54M6l1mBF6rwdQ
-         /xg02E/v+yYy0nKSqLBgLxz9IDsikOVwgcxTdNdKTZxr/VPXRmZga0T/AW68AlGK42c1
-         VcmQJLL3S7YIU7bXLdQpHm+2r4plW7ARxwoASQZRTDOz31Uz6yyQtyq4OpLPMjX03ZDK
-         hRhmel73Btv/f19/6e58WzD+J2hfiCuu8yWAG4OJNJpV9dyA7Iqfs+uCPtqTdM7Y0Ge8
-         zaoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DjmXiphEj07PA2UBQ1Hu0F6jo40/2DwonMVrwbYxHC4=;
-        b=FdWQFdx7WqvuSn5zMrHFBWm88VrD+H7Lv8d+hAtALcjxVnA7100jXmRNwrZHfSCzJW
-         z9G+aidz7ZnxprtUTq7silh3RRo54Uttt9ctkv8JwJydFJZ8HPhQphH0uEArqD0d++yG
-         x9uv3r2qodCtUkHPYDDWeJeWZ3LV65FjKVqt+xt9sR34ZB/FYxBfqSqJ7w7/Q+LLZgkG
-         HkZouSMcYLIUmLUw0tCzlYZYA3EFJGKOsvNjBPy0iA7+4u8PhXneISVyvTyeCYoPUTLH
-         UuPnBBfpIA5YdNhqEtzII+ayqHf2/TRBlbBhRzoEV0mK6yYhuw/3eex8RULJhP+RWH34
-         B0Rg==
-X-Gm-Message-State: APjAAAVnL7oZ2uTnvlnbUewzQa1W7jUGN753tQeYEQXoLktqZp3pexLH
-        NKqqzUTiGbhXLem4gpBeF6w=
-X-Google-Smtp-Source: APXvYqwPUNwk60VBN+9D8hxM0iRLNxIuCjMxQD2kbfuS7YKAm4CWDBCRFT0IVamMwv0K0yvJXu/Sjg==
-X-Received: by 2002:ac2:5b42:: with SMTP id i2mr18356665lfp.164.1572904870097;
-        Mon, 04 Nov 2019 14:01:10 -0800 (PST)
-Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id g3sm7454669ljj.59.2019.11.04.14.01.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 14:01:09 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v9 11/19] PM / devfreq: tegra30: Constify structs
-Date:   Tue,  5 Nov 2019 00:56:09 +0300
-Message-Id: <20191104215617.25544-12-digetx@gmail.com>
+Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0517520650;
+        Mon,  4 Nov 2019 22:01:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572904871;
+        bh=9bqpOQ/HTpFfl9Zq2N2vZhaiabTgyqLrkdRiLClf/oc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WiU2jPtHFryGb3TFTpWck2z+wG9SxUM4faQ7AG30G3p52emMeIVaUI8iRnN2SpCXw
+         MV47sep0PUggRgXfcq2Qe3maAD4y6y9o+/HwbuDJy5kBDR0EFy61dKpwH7HrjhYUib
+         LT4SGDApReGTr4DF0YLj6WboeSKIpsEjc23LYfL0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 083/149] MIPS: include: Mark __cmpxchg as __always_inline
+Date:   Mon,  4 Nov 2019 22:44:36 +0100
+Message-Id: <20191104212142.397201328@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104215617.25544-1-digetx@gmail.com>
-References: <20191104215617.25544-1-digetx@gmail.com>
+In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
+References: <20191104212126.090054740@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Constify unmodifiable structs, for consistency.
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Tested-by: Peter Geis <pgwipeout@gmail.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+[ Upstream commit 88356d09904bc606182c625575237269aeece22e ]
+
+Commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
+forcibly") allows compiler to uninline functions marked as 'inline'.
+In cace of cmpxchg this would cause to reference function
+__cmpxchg_called_with_bad_pointer, which is a error case
+for catching bugs and will not happen for correct code, if
+__cmpxchg is inlined.
+
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+[paul.burton@mips.com: s/__cmpxchd/__cmpxchg in subject]
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/tegra30-devfreq.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/mips/include/asm/cmpxchg.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index bc46af155b99..9bd4dd982927 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -108,7 +108,7 @@ enum tegra_actmon_device {
- 	MCCPU,
- };
+diff --git a/arch/mips/include/asm/cmpxchg.h b/arch/mips/include/asm/cmpxchg.h
+index 89e9fb7976fe6..895f91b9e89c3 100644
+--- a/arch/mips/include/asm/cmpxchg.h
++++ b/arch/mips/include/asm/cmpxchg.h
+@@ -146,8 +146,9 @@ static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
+ extern unsigned long __cmpxchg_small(volatile void *ptr, unsigned long old,
+ 				     unsigned long new, unsigned int size);
  
--static struct tegra_devfreq_device_config actmon_device_configs[] = {
-+static const struct tegra_devfreq_device_config actmon_device_configs[] = {
- 	{
- 		/* MCALL: All memory accesses (including from the CPUs) */
- 		.offset = 0x1c0,
-@@ -177,7 +177,7 @@ struct tegra_actmon_emc_ratio {
- 	unsigned long emc_freq;
- };
- 
--static struct tegra_actmon_emc_ratio actmon_emc_ratios[] = {
-+static const struct tegra_actmon_emc_ratio actmon_emc_ratios[] = {
- 	{ 1400000,    KHZ_MAX },
- 	{ 1200000,    750000 },
- 	{ 1100000,    600000 },
-@@ -295,7 +295,7 @@ static unsigned long actmon_cpu_to_emc_rate(struct tegra_devfreq *tegra,
- 					    unsigned long cpu_freq)
+-static inline unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
+-				      unsigned long new, unsigned int size)
++static __always_inline
++unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
++			unsigned long new, unsigned int size)
  {
- 	unsigned int i;
--	struct tegra_actmon_emc_ratio *ratio = actmon_emc_ratios;
-+	const struct tegra_actmon_emc_ratio *ratio = actmon_emc_ratios;
- 
- 	for (i = 0; i < ARRAY_SIZE(actmon_emc_ratios); i++, ratio++) {
- 		if (cpu_freq >= ratio->cpu_freq) {
+ 	switch (size) {
+ 	case 1:
 -- 
-2.23.0
+2.20.1
+
+
 
