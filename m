@@ -5,50 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FA4CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F49CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13FA217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B36C20659
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904755;
-	bh=S+UP34fBgco5qEy2lVaj8NvPWE1I+JMG2cDvjgizkSY=;
+	s=default; t=1572904758;
+	bh=tpAVAnK71TJcLRF8HNao0iOpJMcL5f3JdlcazgJy7vs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kVuU9UAoXg8zypgeUB5yjDV/xUD54/5MzPEw0AnhMa7aFOJFVroiHCTB8Mn2IU+PZ
-	 oHskit0ef17LDv2PP0J0KE3ZOvQUP1pdKZBkr6oCbglBGufpOq9jtsC3GVGoHtspwm
-	 zJDP9PWnlENZYgvTHY0vRBz2GoXYTeso+gm7uTQg=
+	b=gqMwItHY7JlUW0+nPvBYzwxLxDvmib0FZGNImHPVuiuFBP++AsPvwFWPzmozu7TzD
+	 p089jewCjPlbssgPdaKK14qBwxBDn7ZUseCUiP50F7fyL6G6+Xz8BVUDFRxAN1DZOX
+	 7gPjxuiQmc35F9llccal9s6a5CJvOnM1kBSwq8Z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731065AbfKDV7N (ORCPT
+        id S1731076AbfKDV7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:59:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56154 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:59:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730912AbfKDV7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:59:01 -0500
+        id S1730952AbfKDV7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:59:04 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 943FC20650;
-        Mon,  4 Nov 2019 21:59:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6EDB20659;
+        Mon,  4 Nov 2019 21:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904741;
-        bh=S+UP34fBgco5qEy2lVaj8NvPWE1I+JMG2cDvjgizkSY=;
+        s=default; t=1572904743;
+        bh=tpAVAnK71TJcLRF8HNao0iOpJMcL5f3JdlcazgJy7vs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YBFq4uj4CHJAWB4oiJFrzo7wBpcA5xGBS/hx1G8EG/eO4poIsQlRz4xPj6cVWwip1
-         BXTGkG4R2RYBBOOlbGOxEIlMyoYxretsiD/Az3OU4jpSK/kw+SJauNflZIsICABux8
-         Zl9LxXSIHc3un36hb1Cl1wQt9BmgnF6WeHbYMWps=
+        b=VKmiEGxvwREU6FC6T299COOIabkeo4CFtWQY9bK2Bfy5uTT72OFhzdD3xe7pCd/Bd
+         hIAWZjYVdJsOFScvMD0ANjxOwISxoCWrlO0Pi82VnnvGpoBlXwqCv/ARsBGaqc8ZdU
+         nbK98b9NPgFNWRu2pX9LKJ3m5XNxH6sr8RE1X3vk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 054/149] net: dsa: mv88e6xxx: Release lock while requesting IRQ
-Date:   Mon,  4 Nov 2019 22:44:07 +0100
-Message-Id: <20191104212140.069744322@linuxfoundation.org>
+Subject: [PATCH 4.19 055/149] PCI/PME: Fix possible use-after-free on remove
+Date:   Mon,  4 Nov 2019 22:44:08 +0100
+Message-Id: <20191104212140.134967027@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -61,38 +65,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-[ Upstream commit 342a0ee70acbee97fdeb91349420f8744eb291fb ]
+[ Upstream commit 7cf58b79b3072029af127ae865ffc6f00f34b1f8 ]
 
-There is no need to hold the register lock while requesting the GPIO
-interrupt. By not holding it we can also avoid a false positive
-lockdep splat.
+In remove(), ensure that the PME work cannot run after kfree() is called.
+Otherwise, this could result in a use-after-free.
 
-Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This issue was detected with the help of Coccinelle.
+
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Sinan Kaya <okaya@kernel.org>
+Cc: Frederick Lawler <fred@fredlawl.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/pcie/pme.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index 703e6bdaf0e1f..d075f0f7a3de8 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -456,10 +456,12 @@ static int mv88e6xxx_g1_irq_setup(struct mv88e6xxx_chip *chip)
- 	 */
- 	irq_set_lockdep_class(chip->irq, &lock_key, &request_key);
+diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
+index e85c5a8206c43..6ac17f0c40775 100644
+--- a/drivers/pci/pcie/pme.c
++++ b/drivers/pci/pcie/pme.c
+@@ -437,6 +437,7 @@ static void pcie_pme_remove(struct pcie_device *srv)
  
-+	mutex_unlock(&chip->reg_lock);
- 	err = request_threaded_irq(chip->irq, NULL,
- 				   mv88e6xxx_g1_irq_thread_fn,
- 				   IRQF_ONESHOT,
- 				   dev_name(chip->dev), chip);
-+	mutex_lock(&chip->reg_lock);
- 	if (err)
- 		mv88e6xxx_g1_irq_free_common(chip);
+ 	pcie_pme_disable_interrupt(srv->port, data);
+ 	free_irq(srv->irq, srv);
++	cancel_work_sync(&data->work);
+ 	kfree(data);
+ }
  
 -- 
 2.20.1
