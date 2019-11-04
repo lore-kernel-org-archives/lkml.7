@@ -2,191 +2,98 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 283BECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88968CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 048B121D81
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FEA021E6F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572863358;
+	bh=Ip+fTs+MxXZ5PyybE5alIpEci4Feha8x1S5OQp3j/48=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rBqMYDdrcH4/5kZWrjRHZM2qhei4B7iqAH9FCO3eiK1QOmiKI5m6rpslMh4gjoF0X
+	 w5EGkP1tk4kbtNTvR4DoO5cq1Gj91xlTyyV1JyEH3sKNuRps64/OeyRv8at5nPoQ7H
+	 CAJk4HFFu5pIbHZduDShT2Tj08tzyX7wi1gjv/es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbfKDK1Y (ORCPT
+        id S1728428AbfKDK3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:27:24 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42120 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727499AbfKDK1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 05:27:23 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8E75C6DF7F8F51AADF68;
-        Mon,  4 Nov 2019 18:27:21 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 4 Nov 2019 18:27:14 +0800
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     yuqi jin <jinyuqi@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>
-Subject: [PATCH v2] lib: optimize cpumask_local_spread()
-Date:   Mon, 4 Nov 2019 18:27:48 +0800
-Message-ID: <1572863268-28585-1-git-send-email-zhangshaokun@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 4 Nov 2019 05:29:17 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40149 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbfKDK3R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 05:29:17 -0500
+Received: by mail-oi1-f194.google.com with SMTP id r27so13610195oij.7;
+        Mon, 04 Nov 2019 02:29:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SMaIK5rI7m/XaGA7nbAfirt41zqNOSaQ5u4JanEnkug=;
+        b=BYetKR2HRiOchQmzTF7hw1EeVCQSvJaafGLuWrzhQjiRXSyU5E8ZTEfOHJSpSzrgVa
+         WHv3i4hEPNa7TN2Bt0HHBc1SYCaSbsu8yfmg3paUGLGNPBtn39QHDiA448eHK7Z6VJEM
+         dDdUT82I5itLJJC4J1qnzyWD6OGAuviyRjnBiiJ5MXboWORNYkFQc02cW7qvbTjk97jR
+         zhBAwhHH4tvfLh6KholtORK7KDI8cK4Z2riRB5cbaGTaO1evhz3FgelExIoHG1adAYnq
+         SQNFxr0DYJSW25NvuWztfXc0jtoU/+ArVmXTlxHixKKL6bliQVX6fEOm5bHq6NSbtaT+
+         azvw==
+X-Gm-Message-State: APjAAAXUKoQMynYHi1mxBVzxxbZhDmmZMwjWLd8uG0eFVUy8168lNe+j
+        STcZl8iPGeh4YkcHzgW0WsqjCyiVwBYV9wBotfm90Q==
+X-Google-Smtp-Source: APXvYqxQUk0WYQBzPpqoGAwgt5HqYDWNnE/GxSDuAM84IjirBT0shkbB8HKRCkoo58R/wbA9vlSePjd7Oefh6i5mh4g=
+X-Received: by 2002:aca:fdd8:: with SMTP id b207mr8222796oii.57.1572863354723;
+ Mon, 04 Nov 2019 02:29:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+References: <20191101204558.210235-1-helgaas@kernel.org> <20191101204558.210235-2-helgaas@kernel.org>
+In-Reply-To: <20191101204558.210235-2-helgaas@kernel.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 4 Nov 2019 11:29:03 +0100
+Message-ID: <CAJZ5v0ihZTc_e7ORcAWFOYvLdc9keO2evRYxr9qz-w8WkQtEhQ@mail.gmail.com>
+Subject: Re: [PATCH 1/6] PCI/PM: Apply D2 delay as milliseconds, not microseconds
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yuqi jin <jinyuqi@huawei.com>
+On Fri, Nov 1, 2019 at 9:46 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> PCI_PM_D2_DELAY is defined as 200, which is milliseconds, but previously we
+> used udelay(), which only waited for 200 microseconds.  Use msleep()
+> instead so we wait the correct amount of time.  See PCIe r5.0, sec 5.9.
+>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-In the multi-processor and NUMA system, I/O device may have many numa
-nodes belonging to multiple cpus. When we get a local numa, it is
-better to find the node closest to the local numa node, instead
-of choosing any online cpu immediately.
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-For the current code, it only considers the local NUMA node and it
-doesn't compute the distances between different NUMA nodes for the
-non-local NUMA nodes. Let's optimize it and find the nearest node
-through NUMA distance. The performance will be better if it return
-the nearest node than the random node.
-
-When Parameter Server workload is tested using NIC device on Huawei
-Kunpeng 920 SoC:
-Without the patch, the performance is 22W QPS;
-Added this patch, the performance become better and it is 26W QPS.
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: yuqi jin <jinyuqi@huawei.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
----
- lib/cpumask.c | 93 +++++++++++++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 81 insertions(+), 12 deletions(-)
-
-diff --git a/lib/cpumask.c b/lib/cpumask.c
-index 0cb672eb107c..15d8940f32a8 100644
---- a/lib/cpumask.c
-+++ b/lib/cpumask.c
-@@ -192,18 +192,39 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
- }
- #endif
- 
--/**
-- * cpumask_local_spread - select the i'th cpu with local numa cpu's first
-- * @i: index number
-- * @node: local numa_node
-- *
-- * This function selects an online CPU according to a numa aware policy;
-- * local cpus are returned first, followed by non-local ones, then it
-- * wraps around.
-- *
-- * It's not very efficient, but useful for setup.
-- */
--unsigned int cpumask_local_spread(unsigned int i, int node)
-+static void calc_node_distance(int *node_dist, int node)
-+{
-+	int i;
-+
-+	for (i = 0; i < nr_node_ids; i++)
-+		node_dist[i] = node_distance(node, i);
-+}
-+
-+static int find_nearest_node(int *node_dist, bool *used)
-+{
-+	int i, min_dist = node_dist[0], node_id = -1;
-+
-+	/* Choose the first unused node to compare */
-+	for (i = 0; i < nr_node_ids; i++) {
-+		if (used[i] == 0) {
-+			min_dist = node_dist[i];
-+			node_id = i;
-+			break;
-+		}
-+	}
-+
-+	/* Compare and return the nearest node */
-+	for (i = 0; i < nr_node_ids; i++) {
-+		if (node_dist[i] < min_dist && used[i] == 0) {
-+			min_dist = node_dist[i];
-+			node_id = i;
-+		}
-+	}
-+
-+	return node_id;
-+}
-+
-+static unsigned int __cpumask_local_spread(unsigned int i, int node)
- {
- 	int cpu;
- 
-@@ -231,4 +252,52 @@ unsigned int cpumask_local_spread(unsigned int i, int node)
- 	}
- 	BUG();
- }
-+
-+/**
-+ * cpumask_local_spread - select the i'th cpu with local numa cpu's first
-+ * @i: index number
-+ * @node: local numa_node
-+ *
-+ * This function selects an online CPU according to a numa aware policy;
-+ * local cpus are returned first, followed by the nearest non-local ones,
-+ * then it wraps around.
-+ *
-+ * It's not very efficient, but useful for setup.
-+ */
-+unsigned int cpumask_local_spread(unsigned int i, int node)
-+{
-+	int node_dist[MAX_NUMNODES] = {0};
-+	bool used[MAX_NUMNODES] = {0};
-+	int cpu, j, id;
-+
-+	/* Wrap: we always want a cpu. */
-+	i %= num_online_cpus();
-+
-+	if (node == NUMA_NO_NODE) {
-+		for_each_cpu(cpu, cpu_online_mask)
-+			if (i-- == 0)
-+				return cpu;
-+	} else {
-+		if (nr_node_ids > MAX_NUMNODES)
-+			return __cpumask_local_spread(i, node);
-+
-+		calc_node_distance(node_dist, node);
-+		for (j = 0; j < nr_node_ids; j++) {
-+			id = find_nearest_node(node_dist, used);
-+			if (id < 0)
-+				break;
-+
-+			for_each_cpu_and(cpu, cpumask_of_node(id),
-+					 cpu_online_mask)
-+				if (i-- == 0)
-+					return cpu;
-+			used[id] = 1;
-+		}
-+
-+		for_each_cpu(cpu, cpu_online_mask)
-+			if (i-- == 0)
-+				return cpu;
-+	}
-+	BUG();
-+}
- EXPORT_SYMBOL(cpumask_local_spread);
--- 
-2.7.4
-
+> ---
+>  drivers/pci/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e7982af9a5d8..cd96874ae76d 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -886,7 +886,7 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+>         if (state == PCI_D3hot || dev->current_state == PCI_D3hot)
+>                 pci_dev_d3_sleep(dev);
+>         else if (state == PCI_D2 || dev->current_state == PCI_D2)
+> -               udelay(PCI_PM_D2_DELAY);
+> +               msleep(PCI_PM_D2_DELAY);
+>
+>         pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+>         dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
+> --
+> 2.24.0.rc1.363.gb1bccd3e3d-goog
+>
