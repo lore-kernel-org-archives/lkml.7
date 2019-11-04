@@ -2,62 +2,55 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C05AECA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3844BCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96C2721D81
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0710B21D81
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904622;
-	bh=0XaNi99y3doEYG2GicGwzZb0mPdixaYTtVNcuoy/0kQ=;
+	s=default; t=1572904626;
+	bh=+M+LtQ7619JfQt8bc0AZRjq6lrXojmBffMf8SjsXDK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lGL3wvTf5ipNHs1p6FkOswvAqDnKmypkEkHCu/tguoSMsWXG0Ff1oYyn1lVUPzhBf
-	 cjS2xzauIZHVerMXnKmbx4bCs6WlbIgX1xFcQsEtkqeiJCpY58Ma2KksJUOSuqsItK
-	 abmXZEbOIa4xDxzIhiUr4mFaSC3qlaGmI8VbvWfE=
+	b=R59tE7jjqXzW4SLngmElRNJH3MfUdRyCu2mWOBeIoi5R+/lJepKEOREj2TKuhCJ8W
+	 qri705OH8uyzSiJ5LcEpUhwJgFPJdk8CxAooABZFeSIf2laFJDkmI/Vzq8qK+TNEcf
+	 JQ1sGAmZQK0wmzvGpvi3PNFYwZygT+N4S5Ozsfv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388510AbfKDV5B (ORCPT
+        id S2388520AbfKDV5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:57:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52646 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:57:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388477AbfKDV4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:56:52 -0500
+        id S2388497AbfKDV47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:56:59 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF74C20650;
-        Mon,  4 Nov 2019 21:56:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3798320650;
+        Mon,  4 Nov 2019 21:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904611;
-        bh=0XaNi99y3doEYG2GicGwzZb0mPdixaYTtVNcuoy/0kQ=;
+        s=default; t=1572904617;
+        bh=+M+LtQ7619JfQt8bc0AZRjq6lrXojmBffMf8SjsXDK0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LA95n5hVLFfkuKISbb5iAdozVM+qa0zBtMLoI8nHjdcsOP/p0hM5y0gwcGeRayV4O
-         7X0n43JwpkXCNbqSkkpQHskwjwgWmZtU5aPJesQT3NMeCxvkj0vhKKJIORXJ8r9Tsz
-         8xCJ4aDS46u4S98Sd/zOR4zPXqbkp6BAUlGhynqY=
+        b=eCvfhjhOX4cQR0sFAWa5bHtKxsQrJhqPbjfiFCd4x5quPbe5sVyiavkGef4PVFxlP
+         8LoAY/F8srDYAPCE/Zbq5M+XkRbh3YZfxi3JrfwjttTQTPU72uvf6dcRsZOFtr0QES
+         v3dedGvskmsxrlZqt/KZHYgpwCjCdi4fLGE4KYP0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chenwandun <chenwandun@huawei.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 001/149] zram: fix race between backing_dev_show and backing_dev_store
-Date:   Mon,  4 Nov 2019 22:43:14 +0100
-Message-Id: <20191104212126.523252383@linuxfoundation.org>
+Subject: [PATCH 4.19 011/149] sc16is7xx: Fix for "Unexpected interrupt: 8"
+Date:   Mon,  4 Nov 2019 22:43:24 +0100
+Message-Id: <20191104212132.141238950@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -66,66 +59,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f7daefe4231e57381d92c2e2ad905a899c28e402 ]
+From: Phil Elwell <phil@raspberrypi.org>
 
-CPU0:				       CPU1:
-backing_dev_show		       backing_dev_store
-    ......				   ......
-    file = zram->backing_dev;
-    down_read(&zram->init_lock);	   down_read(&zram->init_init_lock)
-    file_path(file, ...);		   zram->backing_dev = backing_dev;
-    up_read(&zram->init_lock);		   up_read(&zram->init_lock);
+[ Upstream commit 30ec514d440cf2c472c8e4b0079af2c731f71a3e ]
 
-gets the value of zram->backing_dev too early in backing_dev_show, which
-resultin the value being NULL at the beginning, and not NULL later.
+The SC16IS752 has an Enhanced Feature Register which is aliased at the
+same address as the Interrupt Identification Register; accessing it
+requires that a magic value is written to the Line Configuration
+Register. If an interrupt is raised while the EFR is mapped in then
+the ISR won't be able to access the IIR, leading to the "Unexpected
+interrupt" error messages.
 
-backtrace:
-  d_path+0xcc/0x174
-  file_path+0x10/0x18
-  backing_dev_show+0x40/0xb4
-  dev_attr_show+0x20/0x54
-  sysfs_kf_seq_show+0x9c/0x10c
-  kernfs_seq_show+0x28/0x30
-  seq_read+0x184/0x488
-  kernfs_fop_read+0x5c/0x1a4
-  __vfs_read+0x44/0x128
-  vfs_read+0xa0/0x138
-  SyS_read+0x54/0xb4
+Avoid the problem by claiming a mutex around accesses to the EFR
+register, also claiming the mutex in the interrupt handler work
+item (this is equivalent to disabling interrupts to interlock against
+a non-threaded interrupt handler).
 
-Link: http://lkml.kernel.org/r/1571046839-16814-1-git-send-email-chenwandun@huawei.com
-Signed-off-by: Chenwandun <chenwandun@huawei.com>
-Acked-by: Minchan Kim <minchan@kernel.org>
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: <stable@vger.kernel.org>	[4.14+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+See: https://github.com/raspberrypi/linux/issues/2529
+
+Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/zram/zram_drv.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/tty/serial/sc16is7xx.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 70cbd0ee1b076..76abe40bfa83b 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -312,13 +312,14 @@ static void reset_bdev(struct zram *zram)
- static ssize_t backing_dev_show(struct device *dev,
- 		struct device_attribute *attr, char *buf)
- {
-+	struct file *file;
- 	struct zram *zram = dev_to_zram(dev);
--	struct file *file = zram->backing_dev;
- 	char *p;
- 	ssize_t ret;
+diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+index 372cc7ff228fc..ebea4a9d8e694 100644
+--- a/drivers/tty/serial/sc16is7xx.c
++++ b/drivers/tty/serial/sc16is7xx.c
+@@ -328,6 +328,7 @@ struct sc16is7xx_port {
+ 	struct kthread_worker		kworker;
+ 	struct task_struct		*kworker_task;
+ 	struct kthread_work		irq_work;
++	struct mutex			efr_lock;
+ 	struct sc16is7xx_one		p[0];
+ };
  
- 	down_read(&zram->init_lock);
--	if (!zram_wb_enabled(zram)) {
-+	file = zram->backing_dev;
-+	if (!file) {
- 		memcpy(buf, "none\n", 5);
- 		up_read(&zram->init_lock);
- 		return 5;
+@@ -499,6 +500,21 @@ static int sc16is7xx_set_baud(struct uart_port *port, int baud)
+ 		div /= 4;
+ 	}
+ 
++	/* In an amazing feat of design, the Enhanced Features Register shares
++	 * the address of the Interrupt Identification Register, and is
++	 * switched in by writing a magic value (0xbf) to the Line Control
++	 * Register. Any interrupt firing during this time will see the EFR
++	 * where it expects the IIR to be, leading to "Unexpected interrupt"
++	 * messages.
++	 *
++	 * Prevent this possibility by claiming a mutex while accessing the
++	 * EFR, and claiming the same mutex from within the interrupt handler.
++	 * This is similar to disabling the interrupt, but that doesn't work
++	 * because the bulk of the interrupt processing is run as a workqueue
++	 * job in thread context.
++	 */
++	mutex_lock(&s->efr_lock);
++
+ 	lcr = sc16is7xx_port_read(port, SC16IS7XX_LCR_REG);
+ 
+ 	/* Open the LCR divisors for configuration */
+@@ -514,6 +530,8 @@ static int sc16is7xx_set_baud(struct uart_port *port, int baud)
+ 	/* Put LCR back to the normal mode */
+ 	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, lcr);
+ 
++	mutex_unlock(&s->efr_lock);
++
+ 	sc16is7xx_port_update(port, SC16IS7XX_MCR_REG,
+ 			      SC16IS7XX_MCR_CLKSEL_BIT,
+ 			      prescaler);
+@@ -696,6 +714,8 @@ static void sc16is7xx_ist(struct kthread_work *ws)
+ {
+ 	struct sc16is7xx_port *s = to_sc16is7xx_port(ws, irq_work);
+ 
++	mutex_lock(&s->efr_lock);
++
+ 	while (1) {
+ 		bool keep_polling = false;
+ 		int i;
+@@ -705,6 +725,8 @@ static void sc16is7xx_ist(struct kthread_work *ws)
+ 		if (!keep_polling)
+ 			break;
+ 	}
++
++	mutex_unlock(&s->efr_lock);
+ }
+ 
+ static irqreturn_t sc16is7xx_irq(int irq, void *dev_id)
+@@ -899,6 +921,9 @@ static void sc16is7xx_set_termios(struct uart_port *port,
+ 	if (!(termios->c_cflag & CREAD))
+ 		port->ignore_status_mask |= SC16IS7XX_LSR_BRK_ERROR_MASK;
+ 
++	/* As above, claim the mutex while accessing the EFR. */
++	mutex_lock(&s->efr_lock);
++
+ 	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG,
+ 			     SC16IS7XX_LCR_CONF_MODE_B);
+ 
+@@ -920,6 +945,8 @@ static void sc16is7xx_set_termios(struct uart_port *port,
+ 	/* Update LCR register */
+ 	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, lcr);
+ 
++	mutex_unlock(&s->efr_lock);
++
+ 	/* Get baud rate generator configuration */
+ 	baud = uart_get_baud_rate(port, termios, old,
+ 				  port->uartclk / 16 / 4 / 0xffff,
+@@ -1185,6 +1212,7 @@ static int sc16is7xx_probe(struct device *dev,
+ 	s->regmap = regmap;
+ 	s->devtype = devtype;
+ 	dev_set_drvdata(dev, s);
++	mutex_init(&s->efr_lock);
+ 
+ 	kthread_init_worker(&s->kworker);
+ 	kthread_init_work(&s->irq_work, sc16is7xx_ist);
 -- 
 2.20.1
 
