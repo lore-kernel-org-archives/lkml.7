@@ -2,112 +2,124 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2FECA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65775CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAF3B218BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A7DF222CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbfKDMMz (ORCPT
+        id S1728885AbfKDMQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 07:12:55 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:47048 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728188AbfKDMMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 07:12:54 -0500
-Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iRbDx-0000l0-SX; Mon, 04 Nov 2019 13:12:45 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Markus Reichl <m.reichl@fivetechno.de>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: rockchip: Split rk3399-roc-pc for with and without mezzanine board.
-Date:   Mon, 04 Nov 2019 13:12:45 +0100
-Message-ID: <2226540.xovL9aYQn6@diego>
-In-Reply-To: <075b3fa6-dab7-5fec-df68-b53f32bf061b@fivetechno.de>
-References: <075b3fa6-dab7-5fec-df68-b53f32bf061b@fivetechno.de>
+        Mon, 4 Nov 2019 07:16:07 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2068 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728504AbfKDMQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 07:16:07 -0500
+Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 49350A5C4F3C939F79D7;
+        Mon,  4 Nov 2019 12:16:06 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml705-cah.china.huawei.com (10.201.108.46) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 4 Nov 2019 12:16:05 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Mon, 4 Nov 2019
+ 12:16:05 +0000
+Subject: Re: [PATCH 0/7] iommu: Permit modular builds of ARM SMMU[v3] drivers
+To:     Saravana Kannan <saravanak@google.com>
+CC:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "Will Deacon" <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191030145112.19738-1-will@kernel.org>
+ <6e457227-ca06-2998-4ffa-a58ab171ce32@arm.com>
+ <20191030155444.GC19096@willie-the-truck>
+ <CAGETcx9ogWQC1ZtnS_4xC3ShqBpuRSKudWEEWC22UZUEhdEU4A@mail.gmail.com>
+ <20191031193758.GA2607492@lophozonia>
+ <CAGETcx-MuMVvj0O-MFdfmLADEq=cQY_=x+irvhgwHhG4VeeSdg@mail.gmail.com>
+ <6994ae35-2b89-2feb-2bcb-cffc5a01963c@huawei.com>
+ <CAGETcx-9M8vvHA2Lykcv0hHWoC2OAw5kfBrjcNJN2CYCwR4eWQ@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <47418554-e7a7-f9f3-8852-60cecef3d5c7@huawei.com>
+Date:   Mon, 4 Nov 2019 12:16:03 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <CAGETcx-9M8vvHA2Lykcv0hHWoC2OAw5kfBrjcNJN2CYCwR4eWQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
-
-Am Freitag, 1. November 2019, 17:54:23 CET schrieb Markus Reichl:
-> For rk3399-roc-pc is a mezzanine board available that carries M.2 and
-> POE interfaces. Use it with a separate dts.
+On 01/11/2019 21:13, Saravana Kannan wrote:
+> On Fri, Nov 1, 2019 at 3:28 AM John Garry <john.garry@huawei.com> wrote:
+>>
+>> On 31/10/2019 23:34, Saravana Kannan via iommu wrote:
+>>> I looked into the iommu-map property and it shouldn't be too hard to
+>>> add support for it. Looks like we can simply hold off on probing the
+>>> root bridge device till all the iommus in its iommu-map are probed and
+>>> we should be fine.
+>>>
+>>>> I'm also unsure about distro vendors agreeing to a mandatory kernel
+>>>> parameter (of_devlink). Do you plan to eventually enable it by default?
+>>>>
+>>>>> static const struct supplier_bindings of_supplier_bindings[] = {
+>>>>>           { .parse_prop = parse_clocks, },
+>>>>>           { .parse_prop = parse_interconnects, },
+>>>>>           { .parse_prop = parse_regulators, },
+>>>>> +        { .parse_prop = parse_iommus, },
+>>>>>           {},
+>>>>> };
+>>>>>
+>>>>> I plan to upstream this pretty soon, but I have other patches in
+>>>>> flight that touch the same file and I'm waiting for those to get
+>>>>> accepted. I also want to clean up the code a bit to reduce some
+>>>>> repetition before I add support for more bindings.
+>>>> I'm also wondering about ACPI support.
+>>> I'd love to add ACPI support too, but I have zero knowledge of ACPI.
+>>> I'd be happy to help anyone who wants to add ACPI support that allows
+>>> ACPI to add device links.
+>>
+>> If possible to add, that may be useful for remedying this:
+>>
+>> https://lore.kernel.org/linux-iommu/9625faf4-48ef-2dd3-d82f-931d9cf26976@huawei.com/
 > 
-> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
-> ---
->  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
->  .../boot/dts/rockchip/rk3399-roc-pc-mezz.dts  |  52 ++
->  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 757 +----------------
->  .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 767 ++++++++++++++++++
->  4 files changed, 821 insertions(+), 756 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-> index a959434ad46e..80ee9f1fc5f5 100644
-> --- a/arch/arm64/boot/dts/rockchip/Makefile
-> +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> @@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-neo4.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-orangepi.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc-mezz.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
-> new file mode 100644
-> index 000000000000..ee77677d2cf2
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
-> @@ -0,0 +1,52 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2017 T-Chip Intelligent Technology Co., Ltd
-> + * Copyright (c) 2019 Markus Reichl <m.reichl@fivetechno.de>
-> + */
-> +
-> +/dts-v1/;
-> +#include "rk3399-roc-pc.dtsi"
-> +
-> +/ {
-> +	model = "Firefly ROC-RK3399-PC Mezzanine Board";
-> +	compatible = "firefly,roc-rk3399-pc", "rockchip,rk3399";
+> I'm happy that this change might fix that problem, but isn't the
+> problem reported in that thread more to do with child devices getting
+> added before the parent probes successfully? That doesn't make sense
+> to me. 
 
-different board with same compatible isn't possible, so
-you'll need a new compatible for it and add a new line to
-the roc-pc entry in
-	Documentation/devicetree/bindings/arm/rockchip.yaml
+So the pcieport device and then the child device are added in the PCI 
+scan, but only some time later do the device drivers probe for these 
+devices; so it's not that the that pcieport driver creates the child device.
 
-Either you see it as
-- a board + hat, using dt overlay and same compatible
-- a completely separate board, which needs a separate
-  compatible as well
+The problem then occurs in that the ordering the of device driver probe 
+is such that we have this: pcieport probe + defer (as no IOMMU group 
+registered), SMMU probe (registers the IOMMU group), child device probe, 
+pcieport really probe.
 
-And as discussed in the previous thread
-http://lists.infradead.org/pipermail/linux-rockchip/2019-November/027592.html
-but also in Jagan's response that really is somehow a grey area
-for something relatively static as the M.2 extension.
+Can't the piceport driver not add its child devices before it
+> probes successfully? Or more specifically, who adds the child devices
+> of the pcieport before the pcieport itself probes?
 
+The devices are actually added in order pcieport, child device, but not 
+really probed in that same order, as above.
 
-Heiko
+I'll add you to that thread if you want to discuss further.
 
+Thanks,
+John
 
