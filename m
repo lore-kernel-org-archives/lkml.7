@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4169CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1083ECA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3492084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D49214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905659;
-	bh=aegePsCGy2VO/H5hhQQ8jO5KqxsWMEzetylC96FYYSU=;
+	s=default; t=1572905665;
+	bh=WxP3MXimq4rwkzxK7L/W8jdLFWRdIQia7W7zQqRo8ig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ndZ6I1jGeuqdQqlOOavU5mX9hsgscsnFa8DzoAKUngnO9blQRMeC40B6Juz2dgW24
-	 RyCznQMnF3NrAFPfDM7jpxP6VRtjVkq8rEgt2W4n4HZoqjSZfKWagdhLRQlSOwU6Od
-	 PiuIkkccGhBi9BO8C8gBC7H/yDUFpO2rDrRiPv9o=
+	b=UNl/V8csfKq8KksEdQFqQFd7L7nn87ueGNPiGfgMC9uv9v/O78FJrFGxmA6SL5Y5r
+	 W5MUohQuVDEo3M4wl9mdFP1ikl+OrZj8KeMhLJXNhG60LJDdMk96tf0UR4KmmfYzpm
+	 za3J8Cpa5xX7vyBiI251u2xzIl3hRDjsyfFkh4RA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389988AbfKDWOS (ORCPT
+        id S2390198AbfKDWOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:14:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41010 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:14:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387430AbfKDWIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:08:13 -0500
+        id S2390043AbfKDWH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:07:58 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6CD520650;
-        Mon,  4 Nov 2019 22:08:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2960B205C9;
+        Mon,  4 Nov 2019 22:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905292;
-        bh=aegePsCGy2VO/H5hhQQ8jO5KqxsWMEzetylC96FYYSU=;
+        s=default; t=1572905277;
+        bh=WxP3MXimq4rwkzxK7L/W8jdLFWRdIQia7W7zQqRo8ig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ArQrpdp9HJN0IeDHmYXYiz3Oue0g+tdyGrlvqqNJDWUrGsx2o7wfjGrlhTrmcJVNb
-         r/GjYWo371R5egQP8E6gxlyD23Us9EMvd3u3NIiXjour5NdqH/w0nFt8e0kIdskkeR
-         CViUveDHZ7whO7hj67XZ5mbCp80DgBpnKwGfWNRU=
+        b=fGmyaQZraPgKTtsPnkw5EM2zvAHeT8Y3LMPA5wkiQ9r6UV2RjDvVRTPOygbRAz0SE
+         KUg/T02Sss6SVilViouwBLJTohqCsPF4MM1KjTFvC1sR5IBeTcy1xdD/HRU/aJmoFW
+         xefMOFyWgIDu/6Xp7PZOs6UbrnuDWjaW0mQ6k1QA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 053/163] MIPS: include: Mark __cmpxchg as __always_inline
-Date:   Mon,  4 Nov 2019 22:44:03 +0100
-Message-Id: <20191104212144.000469754@linuxfoundation.org>
+Subject: [PATCH 5.3 088/163] arm64: dts: qcom: Add HP Envy x2
+Date:   Mon,  4 Nov 2019 22:44:38 +0100
+Message-Id: <20191104212146.592486274@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -63,45 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit 88356d09904bc606182c625575237269aeece22e ]
+[ Upstream commit 3f527d311932791fde67ffec32536d22d5dd3030 ]
 
-Commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
-forcibly") allows compiler to uninline functions marked as 'inline'.
-In cace of cmpxchg this would cause to reference function
-__cmpxchg_called_with_bad_pointer, which is a error case
-for catching bugs and will not happen for correct code, if
-__cmpxchg is inlined.
+This adds the initial DT for the HP Envy x2 laptop.  Supported
+functionality includes USB (host), microSD-card, keyboard, and trackpad.
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-[paul.burton@mips.com: s/__cmpxchd/__cmpxchg in subject]
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/cmpxchg.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/Makefile             |  1 +
+ .../boot/dts/qcom/msm8998-hp-envy-x2.dts      | 30 +++++++++++++++++++
+ 2 files changed, 31 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dts
 
-diff --git a/arch/mips/include/asm/cmpxchg.h b/arch/mips/include/asm/cmpxchg.h
-index c8a47d18f6288..319522fa3a45e 100644
---- a/arch/mips/include/asm/cmpxchg.h
-+++ b/arch/mips/include/asm/cmpxchg.h
-@@ -153,8 +153,9 @@ static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
- extern unsigned long __cmpxchg_small(volatile void *ptr, unsigned long old,
- 				     unsigned long new, unsigned int size);
- 
--static inline unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
--				      unsigned long new, unsigned int size)
-+static __always_inline
-+unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
-+			unsigned long new, unsigned int size)
- {
- 	switch (size) {
- 	case 1:
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index c38ca859f2e02..28695e7c0cc3d 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-hp-envy-x2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r1.dtb
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dts b/arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dts
+new file mode 100644
+index 0000000000000..24073127091f6
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dts
+@@ -0,0 +1,30 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
++
++/dts-v1/;
++
++#include "msm8998-clamshell.dtsi"
++
++/ {
++	model = "HP Envy x2";
++	compatible = "hp,envy-x2", "qcom,msm8998";
++};
++
++&blsp1_i2c6 {
++	status = "okay";
++
++	keyboard@3a {
++		compatible = "hid-over-i2c";
++		interrupt-parent = <&tlmm>;
++		interrupts = <0x79 IRQ_TYPE_LEVEL_LOW>;
++		reg = <0x3a>;
++		hid-descr-addr = <0x0001>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&touchpad>;
++	};
++};
++
++&sdhc2 {
++	cd-gpios = <&tlmm 95 GPIO_ACTIVE_LOW>;
++};
 -- 
 2.20.1
 
