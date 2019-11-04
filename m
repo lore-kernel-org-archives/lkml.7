@@ -2,186 +2,153 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A227CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B04CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CCDB20869
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1370C214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:42:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KqpQJptN"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jvjHe6OR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbfKDRmN (ORCPT
+        id S1729542AbfKDRmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:42:13 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20676 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728287AbfKDRmM (ORCPT
+        Mon, 4 Nov 2019 12:42:24 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38639 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729487AbfKDRmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:42:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572889331;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Jx5P8upI6dI7oz+S3BNibk79bUjpeE+hNekAqjPP73c=;
-        b=KqpQJptNv8+VCoCYgSVg0VArGRw30uivWKEdlAc1WfHpnkSr4S7ggMDNM9ukMYCvkhJlsQ
-        ZaqOsJ64uTmKJ7Wq5bKk9yk9jF6PmgSudCEugow/TiOBO77aETV94QMJ+nqz/fbKTC0Dc4
-        DlfHSB9DgXEwL3FrHFDqcAjal752VmY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-256-XL6FPTikNZSBZoFGdWe7Ow-1; Mon, 04 Nov 2019 12:42:07 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 77158107ACC2;
-        Mon,  4 Nov 2019 17:42:03 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6427A5D6C8;
-        Mon,  4 Nov 2019 17:41:57 +0000 (UTC)
-Date:   Mon, 4 Nov 2019 12:41:55 -0500
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
+        Mon, 4 Nov 2019 12:42:23 -0500
+Received: by mail-wr1-f67.google.com with SMTP id v9so18142240wrq.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 09:42:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5ogVv9yu3iXpW756OAqxBZcAaxMrrDVeZyf4/i652TM=;
+        b=jvjHe6OReDuWCuVv2+9UAh0oNSew20Cf90E08ulRCvHLHeXfSPKJ1HoefQFlUG7hM8
+         cvxTxB0gdhOTdqmAYguK071cnJKBuGonRdGwubEbmvi30uVk49BVOBFvBbnXyV6fgY1B
+         /GBBc6/JCDu4mXohl8A5LHq8adjS1+871lhRU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=5ogVv9yu3iXpW756OAqxBZcAaxMrrDVeZyf4/i652TM=;
+        b=lLkqgQSsJibJwS8H2ErqM52vCb89JUyb/FyWiG6UO2XSPFQgw0AePT24OeuyhXd0PM
+         MnVtEue2AVpt6H1lDIbivTLmEYs2PftnKCpb2JDHuJbqPPlox+g6ZNBsoAPqwVnDFjfW
+         2I1VqM2gPVW+1FsfQoBp4Lv8c+Vh3oDQaa8GQi47blKdSgCmDQ7inO+JEx0yiw346omB
+         4bi60nYh6HmeQTycxXYgVdjgkra2J4tPAzlOcz4cNHa3CKNSEkVsyVLSpqON0CK9teen
+         Z0m1hVecHuyCKbBx3f7pzbvvEbpmtffX4dRJRY5yzE9Bv8/JoyWPXvisGYnZsZrMYuvo
+         hAWg==
+X-Gm-Message-State: APjAAAWartlgEUfWLcrCa8WLebyYVQcN9S5FCqPizhNayHTj0jvtKHGp
+        FT0aYO80VDRqhbCAxlAsw++VTw==
+X-Google-Smtp-Source: APXvYqyo30Cx3N9aLHROc1bhJ+WNVO3huy0tpFL+gtfZWVC0nSZZlSOaRK2D60u0zqloh6U7cb3wBA==
+X-Received: by 2002:adf:e889:: with SMTP id d9mr26191161wrm.266.1572889341116;
+        Mon, 04 Nov 2019 09:42:21 -0800 (PST)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id f13sm17424754wrq.96.2019.11.04.09.42.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 09:42:20 -0800 (PST)
+Date:   Mon, 4 Nov 2019 18:42:18 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-sunxi@googlegroups.com, Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 08/18] mm/process_vm_access: set FOLL_PIN via
- pin_user_pages_remote()
-Message-ID: <20191104174155.GE5134@redhat.com>
-References: <20191103211813.213227-1-jhubbard@nvidia.com>
- <20191103211813.213227-9-jhubbard@nvidia.com>
+        "open list:DRM DRIVERS FOR ALLWINNER A10" 
+        <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] drm: sun4i: Add support for suspending the display
+ driver
+Message-ID: <20191104174218.GL10326@phenom.ffwll.local>
+Mail-Followup-To: Ondrej Jirman <megous@megous.com>,
+        linux-sunxi@googlegroups.com, Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVERS FOR ALLWINNER A10" <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191029112846.3604925-1-megous@megous.com>
 MIME-Version: 1.0
-In-Reply-To: <20191103211813.213227-9-jhubbard@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: XL6FPTikNZSBZoFGdWe7Ow-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191029112846.3604925-1-megous@megous.com>
+X-Operating-System: Linux phenom 5.2.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 03, 2019 at 01:18:03PM -0800, John Hubbard wrote:
-> Convert process_vm_access to use the new pin_user_pages_remote()
-> call, which sets FOLL_PIN. Setting FOLL_PIN is now required for
-> code that requires tracking of pinned pages.
->=20
-> Also, release the pages via put_user_page*().
->=20
-> Also, rename "pages" to "pinned_pages", as this makes for
-> easier reading of process_vm_rw_single_vec().
->=20
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-
-Reviewed-by: J=E9r=F4me Glisse <jglisse@redhat.com>
-
+On Tue, Oct 29, 2019 at 12:28:46PM +0100, Ondrej Jirman wrote:
+> Shut down the display engine during suspend.
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 > ---
->  mm/process_vm_access.c | 28 +++++++++++++++-------------
->  1 file changed, 15 insertions(+), 13 deletions(-)
->=20
-> diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
-> index 357aa7bef6c0..fd20ab675b85 100644
-> --- a/mm/process_vm_access.c
-> +++ b/mm/process_vm_access.c
-> @@ -42,12 +42,11 @@ static int process_vm_rw_pages(struct page **pages,
->  =09=09if (copy > len)
->  =09=09=09copy =3D len;
-> =20
-> -=09=09if (vm_write) {
-> +=09=09if (vm_write)
->  =09=09=09copied =3D copy_page_from_iter(page, offset, copy, iter);
-> -=09=09=09set_page_dirty_lock(page);
-> -=09=09} else {
-> +=09=09else
->  =09=09=09copied =3D copy_page_to_iter(page, offset, copy, iter);
-> -=09=09}
+> Changes in v2:
+> - spaces -> tabs
+> 
+>  drivers/gpu/drm/sun4i/sun4i_drv.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+> index a5757b11b730..c519d7cfcf43 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+> @@ -346,6 +346,27 @@ static int sun4i_drv_add_endpoints(struct device *dev,
+>  	return count;
+>  }
+>  
+> +#ifdef CONFIG_PM_SLEEP
+> +static int sun4i_drv_drm_sys_suspend(struct device *dev)
+> +{
+> +	struct drm_device *drm = dev_get_drvdata(dev);
 > +
->  =09=09len -=3D copied;
->  =09=09if (copied < copy && iov_iter_count(iter))
->  =09=09=09return -EFAULT;
-> @@ -96,7 +95,7 @@ static int process_vm_rw_single_vec(unsigned long addr,
->  =09=09flags |=3D FOLL_WRITE;
-> =20
->  =09while (!rc && nr_pages && iov_iter_count(iter)) {
-> -=09=09int pages =3D min(nr_pages, max_pages_per_loop);
-> +=09=09int pinned_pages =3D min(nr_pages, max_pages_per_loop);
->  =09=09int locked =3D 1;
->  =09=09size_t bytes;
-> =20
-> @@ -106,14 +105,15 @@ static int process_vm_rw_single_vec(unsigned long a=
-ddr,
->  =09=09 * current/current->mm
->  =09=09 */
->  =09=09down_read(&mm->mmap_sem);
-> -=09=09pages =3D get_user_pages_remote(task, mm, pa, pages, flags,
-> -=09=09=09=09=09      process_pages, NULL, &locked);
-> +=09=09pinned_pages =3D pin_user_pages_remote(task, mm, pa, pinned_pages,
-> +=09=09=09=09=09=09     flags, process_pages,
-> +=09=09=09=09=09=09     NULL, &locked);
->  =09=09if (locked)
->  =09=09=09up_read(&mm->mmap_sem);
-> -=09=09if (pages <=3D 0)
-> +=09=09if (pinned_pages <=3D 0)
->  =09=09=09return -EFAULT;
-> =20
-> -=09=09bytes =3D pages * PAGE_SIZE - start_offset;
-> +=09=09bytes =3D pinned_pages * PAGE_SIZE - start_offset;
->  =09=09if (bytes > len)
->  =09=09=09bytes =3D len;
-> =20
-> @@ -122,10 +122,12 @@ static int process_vm_rw_single_vec(unsigned long a=
-ddr,
->  =09=09=09=09=09 vm_write);
->  =09=09len -=3D bytes;
->  =09=09start_offset =3D 0;
-> -=09=09nr_pages -=3D pages;
-> -=09=09pa +=3D pages * PAGE_SIZE;
-> -=09=09while (pages)
-> -=09=09=09put_page(process_pages[--pages]);
-> +=09=09nr_pages -=3D pinned_pages;
-> +=09=09pa +=3D pinned_pages * PAGE_SIZE;
+> +	return drm_mode_config_helper_suspend(drm);
+> +}
 > +
-> +=09=09/* If vm_write is set, the pages need to be made dirty: */
-> +=09=09put_user_pages_dirty_lock(process_pages, pinned_pages,
-> +=09=09=09=09=09  vm_write);
->  =09}
-> =20
->  =09return rc;
-> --=20
-> 2.23.0
->=20
+> +static int sun4i_drv_drm_sys_resume(struct device *dev)
+> +{
+> +	struct drm_device *drm = dev_get_drvdata(dev);
+> +
+> +	return drm_mode_config_helper_resume(drm);
+> +}
+> +#endif
+> +
+> +static const struct dev_pm_ops sun4i_drv_drm_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(sun4i_drv_drm_sys_suspend,
+> +				sun4i_drv_drm_sys_resume)
+> +};
 
+I wonder whether we should have these as default helpers somewhere,
+there's probably a few drivers that could use them? It's just a handful of
+lines we're saving here, but we have enough kms drivers to justify this
+kind of stuff nowadays ...
+-Daniel
+
+> +
+>  static int sun4i_drv_probe(struct platform_device *pdev)
+>  {
+>  	struct component_match *match = NULL;
+> @@ -418,6 +439,7 @@ static struct platform_driver sun4i_drv_platform_driver = {
+>  	.driver		= {
+>  		.name		= "sun4i-drm",
+>  		.of_match_table	= sun4i_drv_of_table,
+> +		.pm = &sun4i_drv_drm_pm_ops,
+>  	},
+>  };
+>  module_platform_driver(sun4i_drv_platform_driver);
+> -- 
+> 2.23.0
+> 
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
