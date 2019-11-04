@@ -7,57 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4CCCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 698E3CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D75321928
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C5D8217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904134;
-	bh=WjvZDnRLShYKiiRSM0euLyfqBON8RcUSVSgPwVQF2xM=;
+	s=default; t=1572904139;
+	bh=gm02P0hdLtAPE3ZcCkhPqB2TsKDDYjKvo/7pGrzTdRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=amG30N8tvl8U+f1sVJOpgf3HVRthDdeLU0dFz1PwvMWkch4/lL3FimUk9p1bkAETj
-	 AvKFuqn5Ruc2i8JcieSm/n4jEsNsxfNsa6tzJ0rHIzs2Sc1s2VPk1XTEFK9PtwubAI
-	 s8w2qWdZvpnpoK3/zjhDHg2jVMX2VP7VzLV0vejM=
+	b=mR1uaAA5CKrldKykGZnbRUZq0qKHL5v4XAcOKJpQghw+uJDNLyoJ399Rn4Jv8Efem
+	 eQvlBI7ZlsbExgMTUWupC9CTxAx/3dNO9qkbtqqWyag/WGQ3DLBk4LMKIWxQfonQCU
+	 1yvNeF+dX3eX5opGbqLYLG0ja0PwcONgguhx2uzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730167AbfKDVsx (ORCPT
+        id S1730209AbfKDVs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:48:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39526 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:48:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730141AbfKDVss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:48:48 -0500
+        id S1730158AbfKDVsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:48:53 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D7BA21655;
-        Mon,  4 Nov 2019 21:48:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 195AF2184C;
+        Mon,  4 Nov 2019 21:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904127;
-        bh=WjvZDnRLShYKiiRSM0euLyfqBON8RcUSVSgPwVQF2xM=;
+        s=default; t=1572904132;
+        bh=gm02P0hdLtAPE3ZcCkhPqB2TsKDDYjKvo/7pGrzTdRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bTvCnQIKH5ILR05kam8LUEmFqjqIIh287ELFxED7F2SESD0k3tB9juejDwUn59l0X
-         nCFz8UKT/HF4iMqOFhsKYvxSTU7VeRyLBgyKbWzq0YnZkU76bmBN6KJZ5YccIOnod5
-         AE97OEkFM6j3p/FZTWD9q91RFwVun505ZkO2W4fM=
+        b=Dxo3UScfMIlABBNaR6Cl13KeacVcU1DJcIWtNQIl/1ygwp3tx3gJ+Mm3qCKXerYkj
+         aYDImtbVbMDn0qxfxdfEHURFstvuiXW8J6gSDQD6cSz0jrqeFy4JAD3xlsML6wT9IA
+         7/gV7JnEucL4omzVm5sg4Wci4ZlDcpjyzw8+Nzho=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Aristeu Rozanski <aris@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Megha Dey <megha.dey@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        stable@vger.kernel.org, Jan-Marek Glogowski <glogow@fbihome.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 06/46] x86/cpu: Add Atom Tremont (Jacobsville)
-Date:   Mon,  4 Nov 2019 22:44:37 +0100
-Message-Id: <20191104211837.155072104@linuxfoundation.org>
+Subject: [PATCH 4.4 08/46] usb: handle warm-reset port requests on hub resume
+Date:   Mon,  4 Nov 2019 22:44:39 +0100
+Message-Id: <20191104211839.545438587@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211830.912265604@linuxfoundation.org>
 References: <20191104211830.912265604@linuxfoundation.org>
@@ -70,58 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Jan-Marek Glogowski <glogow@fbihome.de>
 
-[ Upstream commit 00ae831dfe4474ef6029558f5eb3ef0332d80043 ]
+[ Upstream commit 4fdc1790e6a9ef22399c6bc6e63b80f4609f3b7e ]
 
-Add the Atom Tremont model number to the Intel family list.
+On plug-in of my USB-C device, its USB_SS_PORT_LS_SS_INACTIVE
+link state bit is set. Greping all the kernel for this bit shows
+that the port status requests a warm-reset this way.
 
-[ Tony: Also update comment at head of file to say "_X" suffix is
-  also used for microserver parts. ]
+This just happens, if its the only device on the root hub, the hub
+therefore resumes and the HCDs status_urb isn't yet available.
+If a warm-reset request is detected, this sets the hubs event_bits,
+which will prevent any auto-suspend and allows the hubs workqueue
+to warm-reset the port later in port_event.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Aristeu Rozanski <aris@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Cc: Megha Dey <megha.dey@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190125195902.17109-4-tony.luck@intel.com
+Signed-off-by: Jan-Marek Glogowski <glogow@fbihome.de>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/intel-family.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/core/hub.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 6801f958e2542..aaa0bd820cf4d 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -5,7 +5,7 @@
-  * "Big Core" Processors (Branded as Core, Xeon, etc...)
-  *
-  * The "_X" parts are generally the EP and EX Xeons, or the
-- * "Extreme" ones, like Broadwell-E.
-+ * "Extreme" ones, like Broadwell-E, or Atom microserver.
-  *
-  * Things ending in "2" are usually because we have no better
-  * name for them.  There's no processor called "WESTMERE2".
-@@ -67,6 +67,7 @@
- #define INTEL_FAM6_ATOM_GOLDMONT	0x5C /* Apollo Lake */
- #define INTEL_FAM6_ATOM_GOLDMONT_X	0x5F /* Denverton */
- #define INTEL_FAM6_ATOM_GOLDMONT_PLUS	0x7A /* Gemini Lake */
-+#define INTEL_FAM6_ATOM_TREMONT_X	0x86 /* Jacobsville */
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 5c274c5440da4..11881c5a1fb0c 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -102,6 +102,8 @@ EXPORT_SYMBOL_GPL(ehci_cf_port_reset_rwsem);
+ static void hub_release(struct kref *kref);
+ static int usb_reset_and_verify_device(struct usb_device *udev);
+ static int hub_port_disable(struct usb_hub *hub, int port1, int set_state);
++static bool hub_port_warm_reset_required(struct usb_hub *hub, int port1,
++		u16 portstatus);
  
- /* Xeon Phi */
+ static inline char *portspeed(struct usb_hub *hub, int portstatus)
+ {
+@@ -1092,6 +1094,11 @@ static void hub_activate(struct usb_hub *hub, enum hub_activation_type type)
+ 						   USB_PORT_FEAT_ENABLE);
+ 		}
  
++		/* Make sure a warm-reset request is handled by port_event */
++		if (type == HUB_RESUME &&
++		    hub_port_warm_reset_required(hub, port1, portstatus))
++			set_bit(port1, hub->event_bits);
++
+ 		/*
+ 		 * Add debounce if USB3 link is in polling/link training state.
+ 		 * Link will automatically transition to Enabled state after
 -- 
 2.20.1
 
