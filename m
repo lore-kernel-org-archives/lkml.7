@@ -2,85 +2,100 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAAECA9ED2
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 01:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8401CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 01:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12672222D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 01:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572829896;
-	bh=9Oa/sZWPuyk4aTCFfeZkZBXLeIf0WxdXMrii3wBcuv8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HkrtG1VYUiClpCGxf0emoG5ByertAP3GmmEh8JEJEUiy55QIW4ylkmy7LlzJxMtN7
-	 DBfzZ7Me2SAMgEdkfdLVhp59M3oxlDSWJa0LR5euqfPo0wjTWMTrTzBMr6Qp+NeOc3
-	 MzF1iALdV7c7e47lGtnGl2qfdb3MCowkFFTrqloo=
+	by mail.kernel.org (Postfix) with ESMTP id A2F4B2190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 01:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbfKDBLe (ORCPT
+        id S1728429AbfKDBRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 20:11:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbfKDBLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 20:11:34 -0500
-Received: from dragon (li1038-30.members.linode.com [45.33.96.30])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D51B4222D1;
-        Mon,  4 Nov 2019 01:11:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572829894;
-        bh=9Oa/sZWPuyk4aTCFfeZkZBXLeIf0WxdXMrii3wBcuv8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g7ux+1p7dJ82AZDTQVQlwRtgWpqrw6zDT2JfOLcqVufbOeo7EcafI7G1Yd2N651e2
-         R6fNuCO8+xM69qoefI+G8iWvOdQ4wsml+wVh3rmyqeuGq0HPqI5QLldccnDyzUY5xZ
-         Os8xd3Ps+7tAydS7p90yPjgiK1k2yQKf39cD+R4M=
-Date:   Mon, 4 Nov 2019 09:11:07 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Sun, 3 Nov 2019 20:17:17 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5253 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728102AbfKDBRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 20:17:16 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id AEC5BAC7CFCEE8B8AB48;
+        Mon,  4 Nov 2019 09:17:12 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 4 Nov 2019
+ 09:17:11 +0800
+Subject: Re: [PATCH -next 01/30] pinctrl: pxa25x: use
+ devm_platform_ioremap_resource() to simplify code
+To:     Linus Walleij <linus.walleij@linaro.org>
+References: <20191017122640.22976-1-yuehaibing@huawei.com>
+ <20191017122640.22976-2-yuehaibing@huawei.com>
+ <CACRpkdb8D_zxHfzY=+ramnNjXVsN9MMO8Q-3=iZFLS2A_ZDQuw@mail.gmail.com>
+CC:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Lars Persson <lars.persson@axis.com>,
+        "Ludovic Desroches" <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH V2] clk: imx: imx8mq: fix sys3_pll_out_sels
-Message-ID: <20191104011106.GD24620@dragon>
-References: <1572231902-30230-1-git-send-email-peng.fan@nxp.com>
+        <linux-arm-kernel@axis.com>, <linux-oxnas@groups.io>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, "Vladimir Zapolskiy" <vz@mleia.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Andy Gross <agross@kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <c8b14d9b-253b-47a1-641f-e89d2cc79686@huawei.com>
+Date:   Mon, 4 Nov 2019 09:17:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572231902-30230-1-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CACRpkdb8D_zxHfzY=+ramnNjXVsN9MMO8Q-3=iZFLS2A_ZDQuw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 03:08:34AM +0000, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On 2019/11/4 8:18, Linus Walleij wrote:
+> On Thu, Oct 17, 2019 at 2:48 PM YueHaibing <yuehaibing@huawei.com> wrote:
 > 
-> It is not correct that sys3_pll_out use sys2_pll1_ref_sel as parent.
+>> Use devm_platform_ioremap_resource() to simplify the code a bit.
+>> This is detected by coccinelle.
+>>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > 
-> According to the current imx_clk_sccg_pll design, it uses both
-> bypass1/2, however set bypass2 as 1 is not correct, because it will
-> make sys[x]_pll_out use wrong parent and might access wrong registers.
+> These are too many patches changing too little.
+> One patch should be one technical step.
 > 
-> So correct bypass2 to 0 and fix sys3_pll_out_sels.
+> I'd say squash them all into one big patch and resend.
 > 
-> Fixes: e9dda4af685f ("clk: imx: Refactor entire sccg pll clk")
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> You can collect the ACKs you received, but don't put
+> too many people on CC, they will be annoyed.
 
-Applied, thanks.
+Ok, will do that, thanks!
+
+> 
+> Yours,
+> Linus Walleij
+> 
+> .
+> 
+
