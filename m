@@ -2,310 +2,198 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9390CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D18E5CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB88B222C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A738721D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:51:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbfKDLra (ORCPT
+        id S1727771AbfKDLvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:47:30 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:27110 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728647AbfKDLr1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 06:47:27 -0500
-Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Mon, 4 Nov 2019
- 19:47:37 +0800
-From:   Jianxin Pan <jianxin.pan@amlogic.com>
-To:     Kevin Hilman <khilman@baylibre.com>,
-        <linux-amlogic@lists.infradead.org>
-CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: [PATCH v4 3/4] soc: amlogic: Add support for Secure power domains controller
-Date:   Mon, 4 Nov 2019 19:47:07 +0800
-Message-ID: <1572868028-73076-4-git-send-email-jianxin.pan@amlogic.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572868028-73076-1-git-send-email-jianxin.pan@amlogic.com>
-References: <1572868028-73076-1-git-send-email-jianxin.pan@amlogic.com>
+        Mon, 4 Nov 2019 06:51:44 -0500
+Received: from foss.arm.com ([217.140.110.172]:40822 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726633AbfKDLvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 06:51:44 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6535A1FB;
+        Mon,  4 Nov 2019 03:51:43 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 29D123F6C4;
+        Mon,  4 Nov 2019 03:51:41 -0800 (PST)
+Date:   Mon, 4 Nov 2019 11:51:39 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 03/17] arm64: kvm: stop treating register x18 as
+ caller save
+Message-ID: <20191104115138.GB45140@lakrids.cambridge.arm.com>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191101221150.116536-1-samitolvanen@google.com>
+ <20191101221150.116536-4-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [116.236.93.172]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191101221150.116536-4-samitolvanen@google.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the Amlogic Secure Power controller. In A1/C1 series, power
-control registers are in secure domain, and should be accessed by smc.
+On Fri, Nov 01, 2019 at 03:11:36PM -0700, Sami Tolvanen wrote:
+> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> 
+> In preparation of reserving x18, stop treating it as caller save in
+> the KVM guest entry/exit code. Currently, the code assumes there is
+> no need to preserve it for the host, given that it would have been
+> assumed clobbered anyway by the function call to __guest_enter().
+> Instead, preserve its value and restore it upon return.
+> 
+> Link: https://patchwork.kernel.org/patch/9836891/
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> [Sami: updated commit message, switched from x18 to x29 for the guest context]
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/arm64/kvm/hyp/entry.S | 41 +++++++++++++++++++-------------------
+>  1 file changed, 20 insertions(+), 21 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/hyp/entry.S b/arch/arm64/kvm/hyp/entry.S
+> index e5cc8d66bf53..c3c2d842c609 100644
+> --- a/arch/arm64/kvm/hyp/entry.S
+> +++ b/arch/arm64/kvm/hyp/entry.S
+> @@ -23,6 +23,7 @@
+>  	.pushsection	.hyp.text, "ax"
+>  
 
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
----
- drivers/soc/amlogic/Kconfig             |  13 ++
- drivers/soc/amlogic/Makefile            |   1 +
- drivers/soc/amlogic/meson-secure-pwrc.c | 204 ++++++++++++++++++++++++++++++++
- 3 files changed, 218 insertions(+)
- create mode 100644 drivers/soc/amlogic/meson-secure-pwrc.c
+Could we please add a note here, e.g.
 
-diff --git a/drivers/soc/amlogic/Kconfig b/drivers/soc/amlogic/Kconfig
-index bc2c912..6cb06e7 100644
---- a/drivers/soc/amlogic/Kconfig
-+++ b/drivers/soc/amlogic/Kconfig
-@@ -48,6 +48,19 @@ config MESON_EE_PM_DOMAINS
- 	  Say yes to expose Amlogic Meson Everything-Else Power Domains as
- 	  Generic Power Domains.
- 
-+config MESON_SECURE_PM_DOMAINS
-+	bool "Amlogic Meson Secure Power Domains driver"
-+	depends on ARCH_MESON || COMPILE_TEST
-+	depends on PM && OF
-+	depends on HAVE_ARM_SMCCC
-+	default ARCH_MESON
-+	select PM_GENERIC_DOMAINS
-+	select PM_GENERIC_DOMAINS_OF
-+	help
-+	  Support for the power controller on Amlogic A1/C1 series.
-+	  Say yes to expose Amlogic Meson Secure Power Domains as Generic
-+	  Power Domains.
-+
- config MESON_MX_SOCINFO
- 	bool "Amlogic Meson MX SoC Information driver"
- 	depends on ARCH_MESON || COMPILE_TEST
-diff --git a/drivers/soc/amlogic/Makefile b/drivers/soc/amlogic/Makefile
-index de79d044..7b8c5d3 100644
---- a/drivers/soc/amlogic/Makefile
-+++ b/drivers/soc/amlogic/Makefile
-@@ -5,3 +5,4 @@ obj-$(CONFIG_MESON_GX_SOCINFO) += meson-gx-socinfo.o
- obj-$(CONFIG_MESON_GX_PM_DOMAINS) += meson-gx-pwrc-vpu.o
- obj-$(CONFIG_MESON_MX_SOCINFO) += meson-mx-socinfo.o
- obj-$(CONFIG_MESON_EE_PM_DOMAINS) += meson-ee-pwrc.o
-+obj-$(CONFIG_MESON_SECURE_PM_DOMAINS) += meson-secure-pwrc.o
-diff --git a/drivers/soc/amlogic/meson-secure-pwrc.c b/drivers/soc/amlogic/meson-secure-pwrc.c
-new file mode 100644
-index 00000000..7894990
---- /dev/null
-+++ b/drivers/soc/amlogic/meson-secure-pwrc.c
-@@ -0,0 +1,204 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Amlogic, Inc.
-+ * Author: Jianxin Pan <jianxin.pan@amlogic.com>
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/io.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_domain.h>
-+#include <dt-bindings/power/meson-a1-power.h>
-+#include <linux/arm-smccc.h>
-+#include <linux/firmware/meson/meson_sm.h>
-+
-+#define PWRC_ON		1
-+#define PWRC_OFF	0
-+
-+struct meson_secure_pwrc_domain {
-+	struct generic_pm_domain base;
-+	unsigned int index;
-+	struct meson_secure_pwrc *pwrc;
-+};
-+
-+struct meson_secure_pwrc {
-+	struct meson_secure_pwrc_domain *domains;
-+	struct genpd_onecell_data xlate;
-+	struct meson_sm_firmware *fw;
-+};
-+
-+struct meson_secure_pwrc_domain_desc {
-+	unsigned int index;
-+	unsigned int flags;
-+	char *name;
-+	bool (*is_off)(struct meson_secure_pwrc_domain *pwrc_domain);
-+};
-+
-+struct meson_secure_pwrc_domain_data {
-+	unsigned int count;
-+	struct meson_secure_pwrc_domain_desc *domains;
-+};
-+
-+static bool pwrc_secure_is_off(struct meson_secure_pwrc_domain *pwrc_domain)
-+{
-+	int sts = 1;
-+
-+	if (meson_sm_call(pwrc_domain->pwrc->fw, SM_PWRC_GET, &sts,
-+			  pwrc_domain->index, 0, 0, 0, 0) < 0)
-+		pr_err("failed to get power domain status\n");
-+
-+	return !!sts;
-+}
-+
-+static int meson_secure_pwrc_off(struct generic_pm_domain *domain)
-+{
-+	int sts = 0;
-+	struct meson_secure_pwrc_domain *pwrc_domain =
-+		container_of(domain, struct meson_secure_pwrc_domain, base);
-+
-+	if (meson_sm_call(pwrc_domain->pwrc->fw, SM_PWRC_SET, NULL,
-+			  pwrc_domain->index, PWRC_OFF, 0, 0, 0) < 0) {
-+		pr_err("failed to set power domain off\n");
-+		sts = -EINVAL;
-+	}
-+
-+	return sts;
-+}
-+
-+static int meson_secure_pwrc_on(struct generic_pm_domain *domain)
-+{
-+	int sts = 0;
-+	struct meson_secure_pwrc_domain *pwrc_domain =
-+		container_of(domain, struct meson_secure_pwrc_domain, base);
-+
-+	if (meson_sm_call(pwrc_domain->pwrc->fw, SM_PWRC_SET, NULL,
-+			  pwrc_domain->index, PWRC_ON, 0, 0, 0) < 0) {
-+		pr_err("failed to set power domain on\n");
-+		sts = -EINVAL;
-+	}
-+
-+	return sts;
-+}
-+
-+#define SEC_PD(__name, __flag)			\
-+[PWRC_##__name##_ID] =				\
-+{						\
-+	.name = #__name,			\
-+	.index = PWRC_##__name##_ID,		\
-+	.is_off = pwrc_secure_is_off,	\
-+	.flags = __flag,			\
-+}
-+
-+static struct meson_secure_pwrc_domain_desc a1_pwrc_domains[] = {
-+	SEC_PD(DSPA,	0),
-+	SEC_PD(DSPB,	0),
-+	/* UART should keep working in ATF after suspend and before resume */
-+	SEC_PD(UART,	GENPD_FLAG_ALWAYS_ON),
-+	/* DMC is for DDR PHY ana/dig and DMC, and should be always on */
-+	SEC_PD(DMC,	GENPD_FLAG_ALWAYS_ON),
-+	SEC_PD(I2C,	0),
-+	SEC_PD(PSRAM,	0),
-+	SEC_PD(ACODEC,	0),
-+	SEC_PD(AUDIO,	0),
-+	SEC_PD(OTP,	0),
-+	SEC_PD(DMA,	0),
-+	SEC_PD(SD_EMMC,	0),
-+	SEC_PD(RAMA,	0),
-+	/* SRAMB is used as AFT runtime memory, and should be always on */
-+	SEC_PD(RAMB,	GENPD_FLAG_ALWAYS_ON),
-+	SEC_PD(IR,	0),
-+	SEC_PD(SPICC,	0),
-+	SEC_PD(SPIFC,	0),
-+	SEC_PD(USB,	0),
-+	/* NIC is for NIC400, and should be always on */
-+	SEC_PD(NIC,	GENPD_FLAG_ALWAYS_ON),
-+	SEC_PD(PDMIN,	0),
-+	SEC_PD(RSA,	0),
-+};
-+
-+static int meson_secure_pwrc_probe(struct platform_device *pdev)
-+{
-+	int i;
-+	struct device_node *sm_np;
-+	struct meson_secure_pwrc *pwrc;
-+	const struct meson_secure_pwrc_domain_data *match;
-+
-+	match = of_device_get_match_data(&pdev->dev);
-+	if (!match) {
-+		dev_err(&pdev->dev, "failed to get match data\n");
-+		return -ENODEV;
-+	}
-+
-+	sm_np = of_find_compatible_node(NULL, NULL, "amlogic,meson-gxbb-sm");
-+	if (!sm_np) {
-+		dev_err(&pdev->dev, "no secure-monitor node\n");
-+		return -ENODEV;
-+	}
-+
-+	pwrc = devm_kzalloc(&pdev->dev, sizeof(*pwrc), GFP_KERNEL);
-+	if (!pwrc)
-+		return -ENOMEM;
-+
-+	pwrc->fw = meson_sm_get(sm_np);
-+	of_node_put(sm_np);
-+	if (!pwrc->fw)
-+		return -EPROBE_DEFER;
-+
-+	pwrc->xlate.domains = devm_kcalloc(&pdev->dev, match->count,
-+					   sizeof(*pwrc->xlate.domains),
-+					   GFP_KERNEL);
-+	if (!pwrc->xlate.domains)
-+		return -ENOMEM;
-+
-+	pwrc->domains = devm_kcalloc(&pdev->dev, match->count,
-+				     sizeof(*pwrc->domains), GFP_KERNEL);
-+	if (!pwrc->domains)
-+		return -ENOMEM;
-+
-+	pwrc->xlate.num_domains = match->count;
-+	platform_set_drvdata(pdev, pwrc);
-+
-+	for (i = 0 ; i < match->count ; ++i) {
-+		struct meson_secure_pwrc_domain *dom = &pwrc->domains[i];
-+
-+		if (!match->domains[i].index)
-+			continue;
-+
-+		dom->pwrc = pwrc;
-+		dom->index = match->domains[i].index;
-+		dom->base.name = match->domains[i].name;
-+		dom->base.flags = match->domains[i].flags;
-+		dom->base.power_on = meson_secure_pwrc_on;
-+		dom->base.power_off = meson_secure_pwrc_off;
-+
-+		pm_genpd_init(&dom->base, NULL, match->domains[i].is_off(dom));
-+
-+		pwrc->xlate.domains[i] = &dom->base;
-+	}
-+
-+	return of_genpd_add_provider_onecell(pdev->dev.of_node, &pwrc->xlate);
-+}
-+
-+static struct meson_secure_pwrc_domain_data meson_secure_a1_pwrc_data = {
-+	.domains = a1_pwrc_domains,
-+	.count = ARRAY_SIZE(a1_pwrc_domains),
-+};
-+
-+static const struct of_device_id meson_secure_pwrc_match_table[] = {
-+	{
-+		.compatible = "amlogic,meson-a1-pwrc",
-+		.data = &meson_secure_a1_pwrc_data,
-+	},
-+	{ /* sentinel */ }
-+};
-+
-+static struct platform_driver meson_secure_pwrc_driver = {
-+	.probe = meson_secure_pwrc_probe,
-+	.driver = {
-+		.name		= "meson_secure_pwrc",
-+		.of_match_table	= meson_secure_pwrc_match_table,
-+	},
-+};
-+builtin_platform_driver(meson_secure_pwrc_driver);
--- 
-2.7.4
+/*
+ * We treat x18 as callee-saved as the host may use it as a platform
+ * register (e.g. for shadow call stack).
+ */
 
+... as that will avoid anyone trying to optimize this away in future
+after reading the AAPCS.
+
+>  .macro save_callee_saved_regs ctxt
+> +	str	x18,      [\ctxt, #CPU_XREG_OFFSET(18)]
+>  	stp	x19, x20, [\ctxt, #CPU_XREG_OFFSET(19)]
+>  	stp	x21, x22, [\ctxt, #CPU_XREG_OFFSET(21)]
+>  	stp	x23, x24, [\ctxt, #CPU_XREG_OFFSET(23)]
+> @@ -32,6 +33,8 @@
+>  .endm
+>  
+>  .macro restore_callee_saved_regs ctxt
+> +	// We assume \ctxt is not x18-x28
+
+Probably worth s/assume/require/ here.
+
+Otherwise, this looks godo to me:
+
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+> +	ldr	x18,      [\ctxt, #CPU_XREG_OFFSET(18)]
+>  	ldp	x19, x20, [\ctxt, #CPU_XREG_OFFSET(19)]
+>  	ldp	x21, x22, [\ctxt, #CPU_XREG_OFFSET(21)]
+>  	ldp	x23, x24, [\ctxt, #CPU_XREG_OFFSET(23)]
+> @@ -48,7 +51,7 @@ ENTRY(__guest_enter)
+>  	// x0: vcpu
+>  	// x1: host context
+>  	// x2-x17: clobbered by macros
+> -	// x18: guest context
+> +	// x29: guest context
+>  
+>  	// Store the host regs
+>  	save_callee_saved_regs x1
+> @@ -67,31 +70,28 @@ alternative_else_nop_endif
+>  	ret
+>  
+>  1:
+> -	add	x18, x0, #VCPU_CONTEXT
+> +	add	x29, x0, #VCPU_CONTEXT
+>  
+>  	// Macro ptrauth_switch_to_guest format:
+>  	// 	ptrauth_switch_to_guest(guest cxt, tmp1, tmp2, tmp3)
+>  	// The below macro to restore guest keys is not implemented in C code
+>  	// as it may cause Pointer Authentication key signing mismatch errors
+>  	// when this feature is enabled for kernel code.
+> -	ptrauth_switch_to_guest x18, x0, x1, x2
+> +	ptrauth_switch_to_guest x29, x0, x1, x2
+>  
+>  	// Restore guest regs x0-x17
+> -	ldp	x0, x1,   [x18, #CPU_XREG_OFFSET(0)]
+> -	ldp	x2, x3,   [x18, #CPU_XREG_OFFSET(2)]
+> -	ldp	x4, x5,   [x18, #CPU_XREG_OFFSET(4)]
+> -	ldp	x6, x7,   [x18, #CPU_XREG_OFFSET(6)]
+> -	ldp	x8, x9,   [x18, #CPU_XREG_OFFSET(8)]
+> -	ldp	x10, x11, [x18, #CPU_XREG_OFFSET(10)]
+> -	ldp	x12, x13, [x18, #CPU_XREG_OFFSET(12)]
+> -	ldp	x14, x15, [x18, #CPU_XREG_OFFSET(14)]
+> -	ldp	x16, x17, [x18, #CPU_XREG_OFFSET(16)]
+> -
+> -	// Restore guest regs x19-x29, lr
+> -	restore_callee_saved_regs x18
+> -
+> -	// Restore guest reg x18
+> -	ldr	x18,      [x18, #CPU_XREG_OFFSET(18)]
+> +	ldp	x0, x1,   [x29, #CPU_XREG_OFFSET(0)]
+> +	ldp	x2, x3,   [x29, #CPU_XREG_OFFSET(2)]
+> +	ldp	x4, x5,   [x29, #CPU_XREG_OFFSET(4)]
+> +	ldp	x6, x7,   [x29, #CPU_XREG_OFFSET(6)]
+> +	ldp	x8, x9,   [x29, #CPU_XREG_OFFSET(8)]
+> +	ldp	x10, x11, [x29, #CPU_XREG_OFFSET(10)]
+> +	ldp	x12, x13, [x29, #CPU_XREG_OFFSET(12)]
+> +	ldp	x14, x15, [x29, #CPU_XREG_OFFSET(14)]
+> +	ldp	x16, x17, [x29, #CPU_XREG_OFFSET(16)]
+> +
+> +	// Restore guest regs x18-x29, lr
+> +	restore_callee_saved_regs x29
+>  
+>  	// Do not touch any register after this!
+>  	eret
+> @@ -114,7 +114,7 @@ ENTRY(__guest_exit)
+>  	// Retrieve the guest regs x0-x1 from the stack
+>  	ldp	x2, x3, [sp], #16	// x0, x1
+>  
+> -	// Store the guest regs x0-x1 and x4-x18
+> +	// Store the guest regs x0-x1 and x4-x17
+>  	stp	x2, x3,   [x1, #CPU_XREG_OFFSET(0)]
+>  	stp	x4, x5,   [x1, #CPU_XREG_OFFSET(4)]
+>  	stp	x6, x7,   [x1, #CPU_XREG_OFFSET(6)]
+> @@ -123,9 +123,8 @@ ENTRY(__guest_exit)
+>  	stp	x12, x13, [x1, #CPU_XREG_OFFSET(12)]
+>  	stp	x14, x15, [x1, #CPU_XREG_OFFSET(14)]
+>  	stp	x16, x17, [x1, #CPU_XREG_OFFSET(16)]
+> -	str	x18,      [x1, #CPU_XREG_OFFSET(18)]
+>  
+> -	// Store the guest regs x19-x29, lr
+> +	// Store the guest regs x18-x29, lr
+>  	save_callee_saved_regs x1
+>  
+>  	get_host_ctxt	x2, x3
+> -- 
+> 2.24.0.rc1.363.gb1bccd3e3d-goog
+> 
