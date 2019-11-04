@@ -2,116 +2,73 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DD7CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2293ACA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7244218BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:49:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EeRWCft8"
+	by mail.kernel.org (Postfix) with ESMTP id F3796218BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbfKDOtQ (ORCPT
+        id S1728834AbfKDOtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 09:49:16 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37233 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbfKDOtP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 09:49:15 -0500
-Received: by mail-qk1-f194.google.com with SMTP id e187so5105355qkf.4;
-        Mon, 04 Nov 2019 06:49:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Yg35CIgMCDjht+ZPU7pxGiVxYKNbmDF87GWEVQqBk4g=;
-        b=EeRWCft8TXJWTU/w0UoFt0p+unRSYZR/wh8VxMzC4je4nmw3swP8V2nZuWpcQ4CF6q
-         RYxxjGsIzl+JI7qoTeneH3FYzSpbe0/uRRyrS43MkSOhZ6Th4O9QXGMKKh31MCfGDcxq
-         fkxVIdbclEoDHtEhIUhCO/xoG46dXebq6u12F/0fUEbQRVHd944YP/rp47HkvFOAQ2ei
-         za1uXKE74aK6Fi98SE0CgFuJBncNRnttzAhEMmQ6PA5GVWZLkyQk65M8+44GcT1ND3Yl
-         ctOLE3aKV8FGgeai9E3a+3qFYhKq9Q42ddAuqY+JIA8MA1Hu34pcbbb9ik2XrgEYCrZo
-         R2FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Yg35CIgMCDjht+ZPU7pxGiVxYKNbmDF87GWEVQqBk4g=;
-        b=ZTm3lLrZG8Pj1E7Sl+KRCQWOYxCxufR/DcthmxJAntyagC8NAQDArB5Bh2PDwKh+mZ
-         Bfo9slr7S4o49AvqeEDzeQzzHAg3AKW0dGugj6XoFAVvwhAo1yfv9+MCIxus/aUkt+wB
-         4/bQMK1EIdbJqVRdPfYjY3WlvX/brXR/I9fFXwS0N9mzz3/UntKlAIAtmgLeopXlv8zG
-         TDG02WjBirZSRWFop8sW5gyzfDAdCODSMC8YJh7sakDnqtonVvcAzPfXtXvXhay4rxsK
-         A0v8/Cun1ME79VoeUqkUqJVolji66dDBrQFQGaTNAYWRVDTGDX8VvZKyiKQOOU3/rPoC
-         OvwA==
-X-Gm-Message-State: APjAAAVICNOHOb7uxy2oG1ctObUe85YyoC1HoutsvDAcpIAjMLmYYAXg
-        1PI+dIh0gs7qHgg9U1hWoRBPYtreCkDDtQ==
-X-Google-Smtp-Source: APXvYqyIN2+D81NcwxppEZcFi3I9pVfC97qSGyKleagUeGT9LV4bx6w2VWrHO+YvU8qi5LJAI0J7CA==
-X-Received: by 2002:ae9:e851:: with SMTP id a78mr17447837qkg.312.1572878953090;
-        Mon, 04 Nov 2019 06:49:13 -0800 (PST)
-Received: from localhost.localdomain ([168.181.48.201])
-        by smtp.gmail.com with ESMTPSA id l50sm4114604qtc.7.2019.11.04.06.49.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 06:49:12 -0800 (PST)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id BC2ECC16E7; Mon,  4 Nov 2019 11:49:09 -0300 (-03)
-Date:   Mon, 4 Nov 2019 11:49:09 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Wei Zhao <wallyzhao@gmail.com>
-Cc:     kernel test robot <rong.a.chen@intel.com>, vyasevich@gmail.com,
-        nhorman@tuxdriver.com, davem@davemloft.net,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wally.zhao@nokia-sbell.com,
-        lkp@lists.01.org
-Subject: Re: [sctp] 327fecdaf3: BUG:kernel_NULL_pointer_dereference,address
-Message-ID: <20191104144909.GA15842@localhost.localdomain>
-References: <1572451637-14085-1-git-send-email-wallyzhao@gmail.com>
- <20191104084635.GM29418@shao2-debian>
- <20191104132508.GA53856@localhost.localdomain>
- <CAFRmqq6vNg5sBYp7voT4SoVR+i+L8fDqUUZOF68cRdcKkQcZmw@mail.gmail.com>
+        Mon, 4 Nov 2019 09:49:51 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45516 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727838AbfKDOtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 09:49:51 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D3A30EF446FB53AE27A1;
+        Mon,  4 Nov 2019 22:49:43 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 4 Nov 2019 22:49:35 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <heikki.krogerus@linux.intel.com>,
+        <maowenan@huawei.com>
+CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] usb: roles: Hide option USB_ROLE_SWITCH
+Date:   Mon, 4 Nov 2019 22:48:50 +0800
+Message-ID: <20191104144850.91305-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191104135312.GD996639@ulmo>
+References: <20191104135312.GD996639@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFRmqq6vNg5sBYp7voT4SoVR+i+L8fDqUUZOF68cRdcKkQcZmw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 10:14:00PM +0800, Wei Zhao wrote:
-> On 11/4/19, Marcelo Ricardo Leitner <marcelo.leitner@gmail.com> wrote:
-> > On Mon, Nov 04, 2019 at 04:46:35PM +0800, kernel test robot wrote:
-> >> [   35.312661] BUG: kernel NULL pointer dereference, address:
-> >> 00000000000005d8
-> >> [   35.316225] #PF: supervisor read access in kernel mode
-> >> [   35.319178] #PF: error_code(0x0000) - not-present page
-> >> [   35.322078] PGD 800000021b569067 P4D 800000021b569067 PUD 21b688067 PMD
-> >> 0
-> >> [   35.325629] Oops: 0000 [#1] SMP PTI
-> >> [   35.327965] CPU: 0 PID: 3148 Comm: trinity-c5 Not tainted
-> >> 5.4.0-rc3-01107-g327fecdaf39ab #12
-> >> [   35.332863] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> >> 1.10.2-1 04/01/2014
-> >> [   35.337932] RIP: 0010:sctp_packet_transmit+0x767/0x822
-> >
-> > Right, as asoc can be NULL by then. (per the check on it a few lines
-> > before the change here).
-> 
-> Yes, apologize for missing the NULL check (Actually I realized some
-> further check is need to correctly identify the first in flight
-> packet, as outstanding_bytes has already been increased by this first
-> in flight packet itself before getting into sctp_packet_transmit).
-> 
-> Anyway, I think I do not need further action, as the patch is anyway
-> not going to be merged, the 0day robot picks up the patch from the
-> mail list directly instead of git repo, right?
+The USB role switch class is, after all,
+not useful by itself. Hiding USB_ROLE_SWITCH
+so we can avoid any of the pitfalls associated
+with user-visible symbols and "select".
 
-That's my understanding as well. I double checked and the patch wasn't
-applied by Dave, so we're good.
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ drivers/usb/roles/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Marcelo
+diff --git a/drivers/usb/roles/Kconfig b/drivers/usb/roles/Kconfig
+index f8b31aa..1da58d4 100644
+--- a/drivers/usb/roles/Kconfig
++++ b/drivers/usb/roles/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ config USB_ROLE_SWITCH
+-	tristate "USB Role Switch Support"
++	tristate
+ 	help
+ 	  USB Role Switch is a device that can select the USB role - host or
+ 	  device - for a USB port (connector). In most cases dual-role capable
+-- 
+2.7.4
+
