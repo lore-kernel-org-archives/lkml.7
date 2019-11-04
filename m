@@ -2,179 +2,138 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65C5CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9E6CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 849C720869
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA9E420663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:52:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dTS0UD3v"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aLtOeSff"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729487AbfKDRvK (ORCPT
+        id S1729362AbfKDRwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:51:10 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37688 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728287AbfKDRvK (ORCPT
+        Mon, 4 Nov 2019 12:52:12 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38584 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfKDRwM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:51:10 -0500
-Received: by mail-ed1-f67.google.com with SMTP id k14so4988502eds.4;
-        Mon, 04 Nov 2019 09:51:08 -0800 (PST)
+        Mon, 4 Nov 2019 12:52:12 -0500
+Received: by mail-pl1-f194.google.com with SMTP id w8so7913944plq.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 09:52:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7X92T24Khq9ihZ0Qse1hBHnCpjCe+WJk/mrp0qXUnwA=;
-        b=dTS0UD3v6l//OzgI2C1+RnZNGcM+Ho5rTwBco+1S7N1I7wweeh/Mfzs+RKzhtzEhR/
-         p36N7rtNe0LqTrfJr3/S3MDHbFi47zJi6c0h9/HOPPQdz9CrxxltRyFdQgya7FGtlFLV
-         T1sFHnh2NrtH1JoVHjjB4L15rFGG305dNlzDkTRX9QoLEomwKqZxN/wPDrFp2zXI3nK7
-         CtvaWdpJ6xObb6r7busXiFxQ4mNZGW3u0zD4BB590lxTyV86qUmLe0QvnLTnl0iqbNrF
-         M/I4VhUR5vzM40W+XpIxdtwnvzsnCmnfR4doj8S63rrPzljxv8fadNQrXOlSloCnxMHM
-         p53g==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:from:subject:to:user-agent:date;
+        bh=3CHrSHD37ZopVTCrhzgKR9E8ooKOmK/8OxMVDS6vwuI=;
+        b=aLtOeSffc2ESdeStgh0gvZWVGC4SVaxngt6L3IAywqqZTvFkn+X676dv17c4L6eGba
+         SnLWjpu0qWDl8sFS8//6SiqVNR9FxZ1NRQCXVSYm1+GH1eGC3imZpqxJJVpp1zDsB/n0
+         qT2qm86muT+AU+DwWe6nV0XwIj9ZbPbZlOtyI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=7X92T24Khq9ihZ0Qse1hBHnCpjCe+WJk/mrp0qXUnwA=;
-        b=rH8vmCuDcJynOZf7jpNPkv3aeQnFL9Wk09KEPvyQSYi/C0kH8UD8zWarxmm/JAjUd1
-         Hv9ESJBIP/dH0Jgh2yIhoVPQYjPhdZXLBJOoaAN6upUcpzu0VKwotfJbHKYR+7Oyfafd
-         XgjcsmFQhVgZtcwMFn+Icx7qu6IujnALGQ/i2H0sgN7zvF87JBkAht9EwJ0C4vpY83vi
-         7zF3SbaFwnURaq2OrNYCd0+QMyJ9OOqBctp6MFe80SvcBGQsaMQOYaeUfTNfjyHZlo18
-         CiOfsq0Pcm6+trK/Z0wMED8ElMM5ru0bOJesUlI8p/RVsvGN59Y8eWNI/uSQmacUiX/l
-         mYWw==
-X-Gm-Message-State: APjAAAXvDBKjbp8FRJeSkq/TanS1/3Q9VH4RLx/6jbgy/jQa1aK8o9PC
-        M5Ou6QUyDXGVBKB4cCE4bkDiKeee
-X-Google-Smtp-Source: APXvYqz5dlxM2jEOYq/9fmbk5O3uh20+Ys82gKEDgbwcfyEiWvrRYPaLBeI5mrlC5XY/dgg4rJtW4A==
-X-Received: by 2002:a17:906:ecf5:: with SMTP id qt21mr24824902ejb.295.1572889867363;
-        Mon, 04 Nov 2019 09:51:07 -0800 (PST)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id a9sm996680edu.43.2019.11.04.09.51.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Nov 2019 09:51:06 -0800 (PST)
-Subject: Re: [PATCH 1/2] ARM: dts: bcm2711: force CMA into first GB of memory
-To:     Stefan Wahren <wahrenst@gmx.net>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        catalin.marinas@arm.com, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>
-Cc:     linux-kernel@vger.kernel.org
-References: <20191104135412.32118-1-nsaenzjulienne@suse.de>
- <20191104135412.32118-2-nsaenzjulienne@suse.de>
- <588d05b4-e66c-4aa0-436e-12d244a6efd8@gmx.net>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <05f00d57-6151-45df-67ee-b49a18a611c7@gmail.com>
-Date:   Mon, 4 Nov 2019 09:51:02 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:from:subject:to
+         :user-agent:date;
+        bh=3CHrSHD37ZopVTCrhzgKR9E8ooKOmK/8OxMVDS6vwuI=;
+        b=jp5BmogbOD0H7O1Hq+doPPypxNhW6hOeMmJ0eACzHeM9tqDNZQFgmBAX7puHUeaTZa
+         K2RfQTzn04bUif83PPoOCmdv8NEkGKa8Kta8k6GtkOcjb0q3az3OSoP+cZGVWuBYFs+W
+         5Min/3+h9vUUYDbfZDi+HGEPwu1uK8VwcXhy26I1kUja9T7+d7w/xX21aI1gf7npxR1T
+         vZCRbC4AGj1xPxX7S/kAwkIZoheCTYnt2k1OP2ySo+yP6yPsQYcUXNRJHuIh+R33AaXF
+         CNZ3Pwhf730Tms7RKQK9dttQ6qVcF8rw2TteepcwKGD4FfPmEg+9tmGqZMwWYMcTjJH9
+         3Q4g==
+X-Gm-Message-State: APjAAAWUaTEcpEaYbfSkGYGdXyefgBcajkjlJD/4VJLAjbBFoMf5bEpA
+        39fNOKVCePSMHZ+TjUkh7XaqBA==
+X-Google-Smtp-Source: APXvYqxrYy0bhV9BstiDpY6WoRWDrnAIP8w3jFR5/bWWHdykonSQNVFdZDTiO5WNLjo1Bbf3S55xnw==
+X-Received: by 2002:a17:902:16b:: with SMTP id 98mr28484214plb.154.1572889931654;
+        Mon, 04 Nov 2019 09:52:11 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id f2sm14089155pfg.48.2019.11.04.09.52.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 09:52:11 -0800 (PST)
+Message-ID: <5dc0654b.1c69fb81.5f215.8c24@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <588d05b4-e66c-4aa0-436e-12d244a6efd8@gmx.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1572591543-15501-1-git-send-email-kgunda@codeaurora.org>
+References: <1572591543-15501-1-git-send-email-kgunda@codeaurora.org>
+Cc:     Kiran Gunda <kgunda@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH V1] mfd: qcom-spmi-pmic: Add support for pm6150 and pm6150l
+To:     Andy Gross <agross@kernel.org>,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rnayak@codeaurora.org
+User-Agent: alot/0.8.1
+Date:   Mon, 04 Nov 2019 09:52:10 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/4/19 9:09 AM, Stefan Wahren wrote:
+Quoting Kiran Gunda (2019-10-31 23:59:03)
+> Add the compatibles and PMIC ids for pm6150 and pm6150l PMICs
+> found on SC7180 based platforms.
+>=20
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt | 2 ++
+>  drivers/mfd/qcom-spmi-pmic.c                             | 4 ++++
+>  2 files changed, 6 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/D=
+ocumentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> index 1437062..b5fc64e 100644
+> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> @@ -32,6 +32,8 @@ Required properties:
+>                     "qcom,pm8998",
+>                     "qcom,pmi8998",
+>                     "qcom,pm8005",
+> +                  "qcom,pm6150",
+> +                  "qcom,pm6150l",
 
-[snip]
+Please sort on compatible string
 
->> +	reserved-memory {
->> +		#address-cells = <2>;
->> +		#size-cells = <1>;
->> +		ranges;
->> +
->> +		/*
->> +		 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
->> +		 * that's not good enough for the Raspberry Pi 4 as some
->> +		 * devices can only address the lower 1G of memory (ZONE_DMA).
->> +		 */
->> +		linux,cma {
->> +			compatible = "shared-dma-pool";
->> +			size = <0x2000000>; /* 32MB */
->> +			alloc-ranges = <0x0 0x00000000 0x40000000>;
->> +			reusable;
->> +			linux,cma-default;
->> +		};
->> +	};
->> +
-> 
-> i think this is a SoC-specific issue not a board specifc one. Please
-> move this to bcm2711.dtsi
+>                     or generalized "qcom,spmi-pmic".
+>  - reg:             Specifies the SPMI USID slave address for this device.
+>                     For more information see:
+> diff --git a/drivers/mfd/qcom-spmi-pmic.c b/drivers/mfd/qcom-spmi-pmic.c
+> index e8fe705..d916aa8 100644
+> --- a/drivers/mfd/qcom-spmi-pmic.c
+> +++ b/drivers/mfd/qcom-spmi-pmic.c
+> @@ -34,6 +34,8 @@
+>  #define PM8998_SUBTYPE         0x14
+>  #define PMI8998_SUBTYPE                0x15
+>  #define PM8005_SUBTYPE         0x18
+> +#define PM6150L_SUBTYPE                0x27
+> +#define PM6150_SUBTYPE         0x28
 
-This sounds like a possibly fragile solution if someone changes
-CONFIG_CMA_SIZE_MBYTES to a value greater than 32MB no?
+And on macro name here.
 
-I know we don't want machine descriptors for ARM64 kernels, but since
-there is already a specific 2711 machine compatible string check, maybe
-you could use that as well for determining whether arm64_dma_phys_limit
-or arm64_dma32_phys_limit should be chosen?
--- 
-Florian
+> =20
+>  static const struct of_device_id pmic_spmi_id_table[] =3D {
+>         { .compatible =3D "qcom,spmi-pmic", .data =3D (void *)COMMON_SUBT=
+YPE },
+> @@ -53,6 +55,8 @@
+>         { .compatible =3D "qcom,pm8998",    .data =3D (void *)PM8998_SUBT=
+YPE },
+>         { .compatible =3D "qcom,pmi8998",   .data =3D (void *)PMI8998_SUB=
+TYPE },
+>         { .compatible =3D "qcom,pm8005",    .data =3D (void *)PM8005_SUBT=
+YPE },
+> +       { .compatible =3D "qcom,pm6150l",   .data =3D (void *)PM6150L_SUB=
+TYPE },
+> +       { .compatible =3D "qcom,pm6150",    .data =3D (void *)PM6150_SUBT=
+YPE },
+
+And compatible here.
+
+>         { }
