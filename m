@@ -2,173 +2,163 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 798D0CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88336CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4621720663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6000720659
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:16:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="V8Fupi4c"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UIv0vT+e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbfKDPQc (ORCPT
+        id S1729273AbfKDPQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:16:32 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:33842 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbfKDPQc (ORCPT
+        Mon, 4 Nov 2019 10:16:46 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52557 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727796AbfKDPQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:16:32 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4FCOqk018209;
-        Mon, 4 Nov 2019 15:14:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=4g6rIyW2HVYzag3aHGnsRCeX4Q0Rd09J0Dv6UEG9yS0=;
- b=V8Fupi4cyW56hfzBq+dFWXkR+05lvuQ6x9/a0+g9I8ubebW3pKJiavAWlsTXq2G/WN6W
- G6zey1A7vmiy9mi5M8t7DkxY5WwtOh8o3aP/6ahza+L6xn3VoYZ2xYeyvvGI1FuyrN4s
- PxQtjeTGkmVIgwgKEq3wauXdPDRKGQI862DU7GUfH+fba6/Owlh9eaGfS86+PeCvepDC
- BzqNHLQUJOYClCOUo4lIeMdL4DXaGKyCORwi3exKcuud5Pe0ju/EJ7nvUNUD7LG7HnPp
- Br8e6igUmYwf16GVU3AQI2N/3J3H1rXTGKIOPO1ytj0iXWFyexP5UQ87uPpvRueY+md1 4Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2w12eqyv4g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 15:14:30 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4FB3o2136319;
-        Mon, 4 Nov 2019 15:14:30 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2w1k8uxuu1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 15:14:30 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA4FEPcQ014465;
-        Mon, 4 Nov 2019 15:14:26 GMT
-Received: from tomti.i.net-space.pl (/10.175.168.29)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 Nov 2019 07:14:25 -0800
-From:   Daniel Kiper <daniel.kiper@oracle.com>
-To:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, xen-devel@lists.xenproject.org
-Cc:     ard.biesheuvel@linaro.org, boris.ostrovsky@oracle.com,
-        bp@alien8.de, corbet@lwn.net, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, eric.snowberg@oracle.com,
-        hpa@zytor.com, jgross@suse.com, kanth.ghatraju@oracle.com,
-        konrad.wilk@oracle.com, mingo@redhat.com, rdunlap@infradead.org,
-        ross.philipson@oracle.com, tglx@linutronix.de
-Subject: [PATCH v5 2/3] x86/boot: Introduce the kernel_info.setup_type_max
-Date:   Mon,  4 Nov 2019 16:13:53 +0100
-Message-Id: <20191104151354.28145-3-daniel.kiper@oracle.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191104151354.28145-1-daniel.kiper@oracle.com>
-References: <20191104151354.28145-1-daniel.kiper@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911040151
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911040151
+        Mon, 4 Nov 2019 10:16:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572880604;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=94jUXg8YSFsR6CfFNt9OsbURbL8UvhaFzbBwaFpwKq0=;
+        b=UIv0vT+eKktLq/2L5LBoHgSoR2lPUNoQryACjDC6cl3ucd8ZzxD72SznekXyRGwzWb6CUv
+        NJf144CLqpwtjB/t1oHl6B8xcs1iz9qnsjh8cQ/LR4YtiaY6DzVyZ/ayNa4Dy8gIEWlt8F
+        7RIZz9bOxSg9cMIpqdpDXEy4k2DVk1w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-268-JLq42j5JNbqeO_nbIuntlA-1; Mon, 04 Nov 2019 10:16:40 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ABB63800C73;
+        Mon,  4 Nov 2019 15:16:39 +0000 (UTC)
+Received: from amt.cnet (ovpn-112-10.gru2.redhat.com [10.97.112.10])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B3A7026FA8;
+        Mon,  4 Nov 2019 15:16:36 +0000 (UTC)
+Received: from amt.cnet (localhost [127.0.0.1])
+        by amt.cnet (Postfix) with ESMTP id 5E810105157;
+        Mon,  4 Nov 2019 13:01:15 -0200 (BRST)
+Received: (from marcelo@localhost)
+        by amt.cnet (8.14.7/8.14.7/Submit) id xA4F1AkN016482;
+        Mon, 4 Nov 2019 13:01:10 -0200
+Date:   Mon, 4 Nov 2019 13:01:06 -0200
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        joao.m.martins@oracle.com, rafael.j.wysocki@intel.com,
+        rkrcmar@redhat.com, pbonzini@redhat.com
+Subject: Re: [PATCH 5/5] cpuidle-haltpoll: fix up the branch check
+Message-ID: <20191104150103.GA14887@amt.cnet>
+References: <1572060239-17401-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1572060239-17401-6-git-send-email-zhenzhong.duan@oracle.com>
+ <20191101212613.GB20672@amt.cnet>
+ <bafc1688-02ea-77a4-fb1c-2fe6afa8a7cc@oracle.com>
+MIME-Version: 1.0
+In-Reply-To: <bafc1688-02ea-77a4-fb1c-2fe6afa8a7cc@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: JLq42j5JNbqeO_nbIuntlA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This field contains maximal allowed type for setup_data.
+On Mon, Nov 04, 2019 at 11:10:25AM +0800, Zhenzhong Duan wrote:
+>=20
+> On 2019/11/2 5:26, Marcelo Tosatti wrote:
+> >On Sat, Oct 26, 2019 at 11:23:59AM +0800, Zhenzhong Duan wrote:
+> >>Ensure pool time is longer than block_ns, so there is a margin to
+> >>avoid vCPU get into block state unnecessorily.
+> >>
+> >>Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> >>---
+> >>  drivers/cpuidle/governors/haltpoll.c | 6 +++---
+> >>  1 file changed, 3 insertions(+), 3 deletions(-)
+> >>
+> >>diff --git a/drivers/cpuidle/governors/haltpoll.c b/drivers/cpuidle/gov=
+ernors/haltpoll.c
+> >>index 4b00d7a..59eadaf 100644
+> >>--- a/drivers/cpuidle/governors/haltpoll.c
+> >>+++ b/drivers/cpuidle/governors/haltpoll.c
+> >>@@ -81,9 +81,9 @@ static void adjust_poll_limit(struct cpuidle_device *=
+dev, unsigned int block_us)
+> >>  =09u64 block_ns =3D block_us*NSEC_PER_USEC;
+> >>  =09/* Grow cpu_halt_poll_us if
+> >>-=09 * cpu_halt_poll_us < block_ns < guest_halt_poll_us
+> >>+=09 * cpu_halt_poll_us <=3D block_ns < guest_halt_poll_us
+> >>  =09 */
+> >>-=09if (block_ns > dev->poll_limit_ns && block_ns <=3D guest_halt_poll_=
+ns) {
+> >>+=09if (block_ns >=3D dev->poll_limit_ns && block_ns < guest_halt_poll_=
+ns) {
+> >=09=09=09=09=09      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> >
+> >If block_ns =3D=3D guest_halt_poll_ns, you won't allow dev->poll_limit_n=
+s to
+> >grow. Why is that?
+>=20
+> Maybe I'm too strict here. My understanding is: if block_ns =3D guest_hal=
+t_poll_ns,
+> dev->poll_limit_ns will grow to guest_halt_poll_ns,=20
 
-This patch does not bump setup_header version in arch/x86/boot/header.S
-because it will be followed by additional changes coming into the
-Linux/x86 boot protocol.
+OK.
 
-Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Reviewed-by: Ross Philipson <ross.philipson@oracle.com>
-Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
----
-v5 - suggestions/fixes:
-   - move incorrect references to the setup_indirect to the
-     patch introducing it,
-   - do not bump setup_header version in arch/x86/boot/header.S
-     (suggested by H. Peter Anvin).
----
- Documentation/x86/boot.rst             | 9 ++++++++-
- arch/x86/boot/compressed/kernel_info.S | 5 +++++
- arch/x86/include/uapi/asm/bootparam.h  | 3 +++
- 3 files changed, 16 insertions(+), 1 deletion(-)
+> then block_ns =3D dev->poll_limit_ns,
 
-diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
-index c60fafda9427..1dad6eee8a5c 100644
---- a/Documentation/x86/boot.rst
-+++ b/Documentation/x86/boot.rst
-@@ -73,7 +73,7 @@ Protocol 2.14:	BURNT BY INCORRECT COMMIT ae7e1238e68f2a472a125673ab506d49158c188
- 		(x86/boot: Add ACPI RSDP address to setup_header)
- 		DO NOT USE!!! ASSUME SAME AS 2.13.
- 
--Protocol 2.15:	(Kernel 5.5) Added the kernel_info.
-+Protocol 2.15:	(Kernel 5.5) Added the kernel_info and kernel_info.setup_type_max.
- =============	============================================================
- 
- .. note::
-@@ -981,6 +981,13 @@ Offset/size:	0x0008/4
-   This field contains the size of the kernel_info including kernel_info.header
-   and kernel_info.kernel_info_var_len_data.
- 
-+============	==============
-+Field name:	setup_type_max
-+Offset/size:	0x0008/4
-+============	==============
-+
-+  This field contains maximal allowed type for setup_data.
-+
- 
- The Image Checksum
- ==================
-diff --git a/arch/x86/boot/compressed/kernel_info.S b/arch/x86/boot/compressed/kernel_info.S
-index 8ea6f6e3feef..018dacbd753e 100644
---- a/arch/x86/boot/compressed/kernel_info.S
-+++ b/arch/x86/boot/compressed/kernel_info.S
-@@ -1,5 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- 
-+#include <asm/bootparam.h>
-+
- 	.section ".rodata.kernel_info", "a"
- 
- 	.global kernel_info
-@@ -12,6 +14,9 @@ kernel_info:
- 	/* Size total. */
- 	.long	kernel_info_end - kernel_info
- 
-+	/* Maximal allowed type for setup_data. */
-+	.long	SETUP_TYPE_MAX
-+
- kernel_info_var_len_data:
- 	/* Empty for time being... */
- kernel_info_end:
-diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
-index a1ebcd7a991c..dbb41128e5a0 100644
---- a/arch/x86/include/uapi/asm/bootparam.h
-+++ b/arch/x86/include/uapi/asm/bootparam.h
-@@ -11,6 +11,9 @@
- #define SETUP_APPLE_PROPERTIES		5
- #define SETUP_JAILHOUSE			6
- 
-+/* max(SETUP_*) */
-+#define SETUP_TYPE_MAX			SETUP_JAILHOUSE
-+
- /* ram_size flags */
- #define RAMDISK_IMAGE_START_MASK	0x07FF
- #define RAMDISK_PROMPT_FLAG		0x8000
--- 
-2.11.0
+block_ns =3D dev->poll_limit_ns =3D guest_halt_poll_ns. OK.
+
+> there is not a margin to ensure poll time is enough to cover the equal bl=
+ock time.
+> In this case, shrinking may be a better choice?
+
+Ok, so you are considering _on the next_ halt instance, if block_ns =3D
+guest_halt_poll_ns again?
+
+Then without the suggested modification: we don't shrink, poll for
+guest_halt_poll_ns again.
+
+With your modification: we shrink, because block_ns =3D=3D
+guest_halt_poll_ns.
+
+IMO what really clarifies things here is either the real sleep pattern=20
+or a synthetic sleep pattern similar to the real thing.
+
+Do you have a scenario where the current algorithm is maintaining
+a low dev->poll_limit_ns and performance is hurt?
+
+If you could come up with examples, such as the client/server pair at
+https://lore.kernel.org/lkml/20190514135022.GD4392@amt.cnet/T/
+
+or just a sequence of delays:=20
+block_ns, block_ns, block_ns-1,...
+
+It would be easier to visualize this.
+
+> >>@@ -101,7 +101,7 @@ static void adjust_poll_limit(struct cpuidle_device=
+ *dev, unsigned int block_us)
+> >>  =09=09=09val =3D guest_halt_poll_ns;
+> >>  =09=09dev->poll_limit_ns =3D val;
+> >>-=09} else if (block_ns > guest_halt_poll_ns &&
+> >>+=09} else if (block_ns >=3D guest_halt_poll_ns &&
+> >>  =09=09   guest_halt_poll_allow_shrink) {
+> >>  =09=09unsigned int shrink =3D guest_halt_poll_shrink;
+> >And here you shrink if block_ns =3D=3D guest_halt_poll_ns. Not sure
+> >why that makes sense either.
+>=20
+> See above explanation.
+>=20
+> Zhenzhong
 
