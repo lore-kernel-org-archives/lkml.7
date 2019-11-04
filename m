@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79823CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8927CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B190214D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F27214D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905349;
-	bh=U+Zx5FXqnEKDqG9cbcGZr0ucvhiaP2b+eeL9ag+Gn0w=;
+	s=default; t=1572905355;
+	bh=d11sopKfzpOkYe5kN+ObEO6qxaUWsS4eeR8/fg6kiik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=crPwKCK4eXeXhu7t4JmyiD8UsTQD9yo/Z/OBOyN8ZD5MCnmAZwHk76do3u4r2JA0P
-	 S4B94l8/dDTFWSsWfWk5VM66HhcjX0W5kHmsBTjRDWvFNsOLOqBLSa2K91Nu3IpmSd
-	 NtmHmC0JRV+UmMuwYDf9g7G5YYKLmbTVDeuTyFk0=
+	b=FSphfgnZc99IGxX4eJiLiIynnCDHjUKxjZg820Vad5oTn0iDdhTEB7zeQSlQT2gX/
+	 I6Smf0Gki+3qump2Pj8OTNpKZBcS7LNKygGpgVmJq6WoF6xykdPyHR7MSvr5AkV4Ye
+	 c1ib0VRZF9BhJKelT7vLgrkKo6Q2PtIziN/uljBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389549AbfKDWJH (ORCPT
+        id S2390359AbfKDWJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:09:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42092 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:09:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390341AbfKDWJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:09:05 -0500
+        id S2389912AbfKDWJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:09:10 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10D652084D;
-        Mon,  4 Nov 2019 22:09:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DAAD214D9;
+        Mon,  4 Nov 2019 22:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905344;
-        bh=U+Zx5FXqnEKDqG9cbcGZr0ucvhiaP2b+eeL9ag+Gn0w=;
+        s=default; t=1572905350;
+        bh=d11sopKfzpOkYe5kN+ObEO6qxaUWsS4eeR8/fg6kiik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WDJcA6j+TASaN3ZjXN6CworFpborFs5k8GJxlWhaO5IbUeo2n5DzVgKul0+2ovLQq
-         zGyXLVHJMABibxlZ0QBBXjc8iKSkxtvDnLalmVV1RzWGh1dC26EjJEd+WIGRXA0cgU
-         RR7/tMmkhKUFKOmgLLSXgJksX7BnV8yueJsUNqRw=
+        b=ReD0Hz5tyGPBJUVQ4BLnZ5D5T0aRj0HU187YpPLPdNZk6sDiHblUwXEmFEQFjF97R
+         cAWK0za6f3e8ogiQMjKRZQVwfuMdLV0SMWe4v46nkKfG9a+WJYAFNTO2eWWByK1Uxr
+         vPNi0ZhFmSBozf/9D4NPJk87ndBpG6SHo7+9+glo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Girish Basrur <gbasrur@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.3 113/163] scsi: qla2xxx: Fix partial flash write of MBI
-Date:   Mon,  4 Nov 2019 22:45:03 +0100
-Message-Id: <20191104212148.426992883@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH 5.3 115/163] HID: i2c-hid: add Trekstor Primebook C11B to descriptor override
+Date:   Mon,  4 Nov 2019 22:45:05 +0100
+Message-Id: <20191104212148.565050393@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -61,50 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 8d8b83f5be2a3bdac3695a94e6cb5e50bd114869 upstream.
+commit 09f3dbe474735df13dd8a66d3d1231048d9b373f upstream.
 
-For new adapters with multiple flash regions to write to, current code
-allows FW & Boot regions to be written, while other regions are blocked via
-sysfs. The fix is to block all flash read/write through sysfs interface.
+The Primebook C11B uses the SIPODEV SP1064 touchpad. There are 2 versions
+of this 2-in-1 and the touchpad in the older version does not supply
+descriptors, so it has to be added to the override list.
 
-Fixes: e81d1bcbde06 ("scsi: qla2xxx: Further limit FLASH region write access from SysFS")
-Cc: stable@vger.kernel.org # 5.2
-Link: https://lore.kernel.org/r/20191022193643.7076-3-hmadhani@marvell.com
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Girish Basrur <gbasrur@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_attr.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -441,9 +441,6 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
- 		valid = 0;
- 		if (ha->optrom_size == OPTROM_SIZE_2300 && start == 0)
- 			valid = 1;
--		else if (start == (ha->flt_region_boot * 4) ||
--		    start == (ha->flt_region_fw * 4))
--			valid = 1;
- 		else if (IS_QLA24XX_TYPE(ha) || IS_QLA25XX(ha))
- 			valid = 1;
- 		if (!valid) {
-@@ -491,8 +488,10 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
- 		    "Writing flash region -- 0x%x/0x%x.\n",
- 		    ha->optrom_region_start, ha->optrom_region_size);
- 
--		ha->isp_ops->write_optrom(vha, ha->optrom_buffer,
-+		rval = ha->isp_ops->write_optrom(vha, ha->optrom_buffer,
- 		    ha->optrom_region_start, ha->optrom_region_size);
-+		if (rval)
-+			rval = -EIO;
- 		break;
- 	default:
- 		rval = -EINVAL;
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -323,6 +323,25 @@ static const struct dmi_system_id i2c_hi
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
+ 	{
++		/*
++		 * There are at least 2 Primebook C11B versions, the older
++		 * version has a product-name of "Primebook C11B", and a
++		 * bios version / release / firmware revision of:
++		 * V2.1.2 / 05/03/2018 / 18.2
++		 * The new version has "PRIMEBOOK C11B" as product-name and a
++		 * bios version / release / firmware revision of:
++		 * CFALKSW05_BIOS_V1.1.2 / 11/19/2018 / 19.2
++		 * Only the older version needs this quirk, note the newer
++		 * version will not match as it has a different product-name.
++		 */
++		.ident = "Trekstor Primebook C11B",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Primebook C11B"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
++	{
+ 		.ident = "Direkt-Tek DTLAPY116-2",
+ 		.matches = {
+ 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Direkt-Tek"),
 
 
