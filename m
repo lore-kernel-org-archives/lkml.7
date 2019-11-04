@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3B3CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65A8CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88D9A218BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1AFD21850
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904277;
-	bh=6P69T/tr1L3nB3B6P/sVvhHKyOCkar3dllEjYuKZNv4=;
+	s=default; t=1572904287;
+	bh=x6vR3NQ+bGrQ/ymKfMGPZ1eXkd7tZ1So3e3ueerPjaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2wcT3+5cRjVHaMtX9PHD4OCZ1AJidTXmKVbK7iywYVtFT75b3FsmlOBo1W/Q7YMdF
-	 25by8BZR+/5qJVeEZPHptW97X2K650QtG9Sde97GTcj1uw3zDtgCIZspmjJuqhbx0Q
-	 nEaefnZqxoZTEvRAZyZ6nJwjCS2S0vUyHjCxTVMQ=
+	b=oEP/z7BpA0+bg9VGNCZfmz2F42a6uj6hggjUyOiiIxBFatcCKn7a2KqzxRL5+XeAj
+	 p1TdP4FhvsPYirYqa+3j2IW5lnAU5bnivMGq6SvUGxAWd162XdOLWYg9nNJn5/pXKa
+	 DrXGFXf59KwsLdHrmR4nLUbNZaOHFpGpd4O58SaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730460AbfKDVvO (ORCPT
+        id S1730514AbfKDVv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:51:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43980 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:51:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730411AbfKDVvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:51:10 -0500
+        id S1730057AbfKDVvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:51:20 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C60E2184C;
-        Mon,  4 Nov 2019 21:51:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA01B21929;
+        Mon,  4 Nov 2019 21:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904269;
-        bh=6P69T/tr1L3nB3B6P/sVvhHKyOCkar3dllEjYuKZNv4=;
+        s=default; t=1572904279;
+        bh=x6vR3NQ+bGrQ/ymKfMGPZ1eXkd7tZ1So3e3ueerPjaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2vUTqJGcSvbGbYTwGtkSc27L8Q+iok8XubxS/sGLofr0SsebsBb7KXtqgoe+TlhXI
-         ZZrFqPOG8E8ge5pu2CX5i2sAnJzOKyTmy64dInDwM71nsrjyoClVWXs2m96uy4Pa/f
-         3VCiTudfMFBjnoVIyrd6E/ES7CdxNg1PlCIT+5hk=
+        b=ELsVVh0c9XxX/1r8nNhq8UnNgzeMQ2aDRxoX4rnZF8hi68nR1zxl3M3PY/Ar5+R8H
+         NnExMALBGo3vCz9X37N+G3NlsjbcHmzr/93ziKkQ2I2UDXaxRxgWlPcAFOjMqFlzbl
+         SRUPSR5TjGGVAElz9wr5RtMgO8wF3MdF2JqeCj9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        syzbot+403741a091bf41d4ae79@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 45/62] HID: Fix assumption that devices have inputs
-Date:   Mon,  4 Nov 2019 22:45:07 +0100
-Message-Id: <20191104211948.129261642@linuxfoundation.org>
+        stable@vger.kernel.org, Yihui Zeng <yzeng56@asu.edu>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.9 48/62] s390/cmm: fix information leak in cmm_timeout_handler()
+Date:   Mon,  4 Nov 2019 22:45:10 +0100
+Message-Id: <20191104211951.474918795@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -60,360 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Yihui ZENG <yzeng56@asu.edu>
 
-commit d9d4b1e46d9543a82c23f6df03f4ad697dab361b upstream.
+commit b8e51a6a9db94bc1fb18ae831b3dab106b5a4b5f upstream.
 
-The syzbot fuzzer found a slab-out-of-bounds write bug in the hid-gaff
-driver.  The problem is caused by the driver's assumption that the
-device must have an input report.  While this will be true for all
-normal HID input devices, a suitably malicious device can violate the
-assumption.
+The problem is that we were putting the NUL terminator too far:
 
-The same assumption is present in over a dozen other HID drivers.
-This patch fixes them by checking that the list of hid_inputs for the
-hid_device is nonempty before allowing it to be used.
+	buf[sizeof(buf) - 1] = '\0';
 
-Reported-and-tested-by: syzbot+403741a091bf41d4ae79@syzkaller.appspotmail.com
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+If the user input isn't NUL terminated and they haven't initialized the
+whole buffer then it leads to an info leak.  The NUL terminator should
+be:
+
+	buf[len - 1] = '\0';
+
+Signed-off-by: Yihui Zeng <yzeng56@asu.edu>
+Cc: stable@vger.kernel.org
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+[heiko.carstens@de.ibm.com: keep semantics of how *lenp and *ppos are handled]
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-axff.c           |   11 +++++++++--
- drivers/hid/hid-dr.c             |   12 +++++++++---
- drivers/hid/hid-emsff.c          |   12 +++++++++---
- drivers/hid/hid-gaff.c           |   12 +++++++++---
- drivers/hid/hid-holtekff.c       |   12 +++++++++---
- drivers/hid/hid-lg2ff.c          |   12 +++++++++---
- drivers/hid/hid-lg3ff.c          |   11 +++++++++--
- drivers/hid/hid-lg4ff.c          |   11 +++++++++--
- drivers/hid/hid-lgff.c           |   11 +++++++++--
- drivers/hid/hid-logitech-hidpp.c |   11 +++++++++--
- drivers/hid/hid-sony.c           |   12 +++++++++---
- drivers/hid/hid-tmff.c           |   12 +++++++++---
- drivers/hid/hid-zpff.c           |   12 +++++++++---
- 13 files changed, 117 insertions(+), 34 deletions(-)
+ arch/s390/mm/cmm.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/drivers/hid/hid-axff.c
-+++ b/drivers/hid/hid-axff.c
-@@ -75,13 +75,20 @@ static int axff_init(struct hid_device *
- {
- 	struct axff_device *axff;
- 	struct hid_report *report;
--	struct hid_input *hidinput = list_first_entry(&hid->inputs, struct hid_input, list);
-+	struct hid_input *hidinput;
- 	struct list_head *report_list =&hid->report_enum[HID_OUTPUT_REPORT].report_list;
--	struct input_dev *dev = hidinput->input;
-+	struct input_dev *dev;
- 	int field_count = 0;
- 	int i, j;
- 	int error;
+--- a/arch/s390/mm/cmm.c
++++ b/arch/s390/mm/cmm.c
+@@ -306,16 +306,16 @@ static int cmm_timeout_handler(struct ct
+ 	}
  
-+	if (list_empty(&hid->inputs)) {
-+		hid_err(hid, "no inputs found\n");
-+		return -ENODEV;
-+	}
-+	hidinput = list_first_entry(&hid->inputs, struct hid_input, list);
-+	dev = hidinput->input;
-+
- 	if (list_empty(report_list)) {
- 		hid_err(hid, "no output reports found\n");
- 		return -ENODEV;
---- a/drivers/hid/hid-dr.c
-+++ b/drivers/hid/hid-dr.c
-@@ -87,13 +87,19 @@ static int drff_init(struct hid_device *
- {
- 	struct drff_device *drff;
- 	struct hid_report *report;
--	struct hid_input *hidinput = list_first_entry(&hid->inputs,
--						struct hid_input, list);
-+	struct hid_input *hidinput;
- 	struct list_head *report_list =
- 			&hid->report_enum[HID_OUTPUT_REPORT].report_list;
--	struct input_dev *dev = hidinput->input;
-+	struct input_dev *dev;
- 	int error;
+ 	if (write) {
+-		len = *lenp;
+-		if (copy_from_user(buf, buffer,
+-				   len > sizeof(buf) ? sizeof(buf) : len))
++		len = min(*lenp, sizeof(buf));
++		if (copy_from_user(buf, buffer, len))
+ 			return -EFAULT;
+-		buf[sizeof(buf) - 1] = '\0';
++		buf[len - 1] = '\0';
+ 		cmm_skip_blanks(buf, &p);
+ 		nr = simple_strtoul(p, &p, 0);
+ 		cmm_skip_blanks(p, &p);
+ 		seconds = simple_strtoul(p, &p, 0);
+ 		cmm_set_timeout(nr, seconds);
++		*ppos += *lenp;
+ 	} else {
+ 		len = sprintf(buf, "%ld %ld\n",
+ 			      cmm_timeout_pages, cmm_timeout_seconds);
+@@ -323,9 +323,9 @@ static int cmm_timeout_handler(struct ct
+ 			len = *lenp;
+ 		if (copy_to_user(buffer, buf, len))
+ 			return -EFAULT;
++		*lenp = len;
++		*ppos += len;
+ 	}
+-	*lenp = len;
+-	*ppos += len;
+ 	return 0;
+ }
  
-+	if (list_empty(&hid->inputs)) {
-+		hid_err(hid, "no inputs found\n");
-+		return -ENODEV;
-+	}
-+	hidinput = list_first_entry(&hid->inputs, struct hid_input, list);
-+	dev = hidinput->input;
-+
- 	if (list_empty(report_list)) {
- 		hid_err(hid, "no output reports found\n");
- 		return -ENODEV;
---- a/drivers/hid/hid-emsff.c
-+++ b/drivers/hid/hid-emsff.c
-@@ -59,13 +59,19 @@ static int emsff_init(struct hid_device
- {
- 	struct emsff_device *emsff;
- 	struct hid_report *report;
--	struct hid_input *hidinput = list_first_entry(&hid->inputs,
--						struct hid_input, list);
-+	struct hid_input *hidinput;
- 	struct list_head *report_list =
- 			&hid->report_enum[HID_OUTPUT_REPORT].report_list;
--	struct input_dev *dev = hidinput->input;
-+	struct input_dev *dev;
- 	int error;
- 
-+	if (list_empty(&hid->inputs)) {
-+		hid_err(hid, "no inputs found\n");
-+		return -ENODEV;
-+	}
-+	hidinput = list_first_entry(&hid->inputs, struct hid_input, list);
-+	dev = hidinput->input;
-+
- 	if (list_empty(report_list)) {
- 		hid_err(hid, "no output reports found\n");
- 		return -ENODEV;
---- a/drivers/hid/hid-gaff.c
-+++ b/drivers/hid/hid-gaff.c
-@@ -77,14 +77,20 @@ static int gaff_init(struct hid_device *
- {
- 	struct gaff_device *gaff;
- 	struct hid_report *report;
--	struct hid_input *hidinput = list_entry(hid->inputs.next,
--						struct hid_input, list);
-+	struct hid_input *hidinput;
- 	struct list_head *report_list =
- 			&hid->report_enum[HID_OUTPUT_REPORT].report_list;
- 	struct list_head *report_ptr = report_list;
--	struct input_dev *dev = hidinput->input;
-+	struct input_dev *dev;
- 	int error;
- 
-+	if (list_empty(&hid->inputs)) {
-+		hid_err(hid, "no inputs found\n");
-+		return -ENODEV;
-+	}
-+	hidinput = list_entry(hid->inputs.next, struct hid_input, list);
-+	dev = hidinput->input;
-+
- 	if (list_empty(report_list)) {
- 		hid_err(hid, "no output reports found\n");
- 		return -ENODEV;
---- a/drivers/hid/hid-holtekff.c
-+++ b/drivers/hid/hid-holtekff.c
-@@ -140,13 +140,19 @@ static int holtekff_init(struct hid_devi
- {
- 	struct holtekff_device *holtekff;
- 	struct hid_report *report;
--	struct hid_input *hidinput = list_entry(hid->inputs.next,
--						struct hid_input, list);
-+	struct hid_input *hidinput;
- 	struct list_head *report_list =
- 			&hid->report_enum[HID_OUTPUT_REPORT].report_list;
--	struct input_dev *dev = hidinput->input;
-+	struct input_dev *dev;
- 	int error;
- 
-+	if (list_empty(&hid->inputs)) {
-+		hid_err(hid, "no inputs found\n");
-+		return -ENODEV;
-+	}
-+	hidinput = list_entry(hid->inputs.next, struct hid_input, list);
-+	dev = hidinput->input;
-+
- 	if (list_empty(report_list)) {
- 		hid_err(hid, "no output report found\n");
- 		return -ENODEV;
---- a/drivers/hid/hid-lg2ff.c
-+++ b/drivers/hid/hid-lg2ff.c
-@@ -62,11 +62,17 @@ int lg2ff_init(struct hid_device *hid)
- {
- 	struct lg2ff_device *lg2ff;
- 	struct hid_report *report;
--	struct hid_input *hidinput = list_entry(hid->inputs.next,
--						struct hid_input, list);
--	struct input_dev *dev = hidinput->input;
-+	struct hid_input *hidinput;
-+	struct input_dev *dev;
- 	int error;
- 
-+	if (list_empty(&hid->inputs)) {
-+		hid_err(hid, "no inputs found\n");
-+		return -ENODEV;
-+	}
-+	hidinput = list_entry(hid->inputs.next, struct hid_input, list);
-+	dev = hidinput->input;
-+
- 	/* Check that the report looks ok */
- 	report = hid_validate_values(hid, HID_OUTPUT_REPORT, 0, 0, 7);
- 	if (!report)
---- a/drivers/hid/hid-lg3ff.c
-+++ b/drivers/hid/hid-lg3ff.c
-@@ -129,12 +129,19 @@ static const signed short ff3_joystick_a
- 
- int lg3ff_init(struct hid_device *hid)
- {
--	struct hid_input *hidinput = list_entry(hid->inputs.next, struct hid_input, list);
--	struct input_dev *dev = hidinput->input;
-+	struct hid_input *hidinput;
-+	struct input_dev *dev;
- 	const signed short *ff_bits = ff3_joystick_ac;
- 	int error;
- 	int i;
- 
-+	if (list_empty(&hid->inputs)) {
-+		hid_err(hid, "no inputs found\n");
-+		return -ENODEV;
-+	}
-+	hidinput = list_entry(hid->inputs.next, struct hid_input, list);
-+	dev = hidinput->input;
-+
- 	/* Check that the report looks ok */
- 	if (!hid_validate_values(hid, HID_OUTPUT_REPORT, 0, 0, 35))
- 		return -ENODEV;
---- a/drivers/hid/hid-lg4ff.c
-+++ b/drivers/hid/hid-lg4ff.c
-@@ -1261,8 +1261,8 @@ static int lg4ff_handle_multimode_wheel(
- 
- int lg4ff_init(struct hid_device *hid)
- {
--	struct hid_input *hidinput = list_entry(hid->inputs.next, struct hid_input, list);
--	struct input_dev *dev = hidinput->input;
-+	struct hid_input *hidinput;
-+	struct input_dev *dev;
- 	struct list_head *report_list = &hid->report_enum[HID_OUTPUT_REPORT].report_list;
- 	struct hid_report *report = list_entry(report_list->next, struct hid_report, list);
- 	const struct usb_device_descriptor *udesc = &(hid_to_usb_dev(hid)->descriptor);
-@@ -1274,6 +1274,13 @@ int lg4ff_init(struct hid_device *hid)
- 	int mmode_ret, mmode_idx = -1;
- 	u16 real_product_id;
- 
-+	if (list_empty(&hid->inputs)) {
-+		hid_err(hid, "no inputs found\n");
-+		return -ENODEV;
-+	}
-+	hidinput = list_entry(hid->inputs.next, struct hid_input, list);
-+	dev = hidinput->input;
-+
- 	/* Check that the report looks ok */
- 	if (!hid_validate_values(hid, HID_OUTPUT_REPORT, 0, 0, 7))
- 		return -1;
---- a/drivers/hid/hid-lgff.c
-+++ b/drivers/hid/hid-lgff.c
-@@ -127,12 +127,19 @@ static void hid_lgff_set_autocenter(stru
- 
- int lgff_init(struct hid_device* hid)
- {
--	struct hid_input *hidinput = list_entry(hid->inputs.next, struct hid_input, list);
--	struct input_dev *dev = hidinput->input;
-+	struct hid_input *hidinput;
-+	struct input_dev *dev;
- 	const signed short *ff_bits = ff_joystick;
- 	int error;
- 	int i;
- 
-+	if (list_empty(&hid->inputs)) {
-+		hid_err(hid, "no inputs found\n");
-+		return -ENODEV;
-+	}
-+	hidinput = list_entry(hid->inputs.next, struct hid_input, list);
-+	dev = hidinput->input;
-+
- 	/* Check that the report looks ok */
- 	if (!hid_validate_values(hid, HID_OUTPUT_REPORT, 0, 0, 7))
- 		return -ENODEV;
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -1238,8 +1238,8 @@ static void hidpp_ff_destroy(struct ff_d
- static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
- {
- 	struct hid_device *hid = hidpp->hid_dev;
--	struct hid_input *hidinput = list_entry(hid->inputs.next, struct hid_input, list);
--	struct input_dev *dev = hidinput->input;
-+	struct hid_input *hidinput;
-+	struct input_dev *dev;
- 	const struct usb_device_descriptor *udesc = &(hid_to_usb_dev(hid)->descriptor);
- 	const u16 bcdDevice = le16_to_cpu(udesc->bcdDevice);
- 	struct ff_device *ff;
-@@ -1248,6 +1248,13 @@ static int hidpp_ff_init(struct hidpp_de
- 	int error, j, num_slots;
- 	u8 version;
- 
-+	if (list_empty(&hid->inputs)) {
-+		hid_err(hid, "no inputs found\n");
-+		return -ENODEV;
-+	}
-+	hidinput = list_entry(hid->inputs.next, struct hid_input, list);
-+	dev = hidinput->input;
-+
- 	if (!dev) {
- 		hid_err(hid, "Struct input_dev not set!\n");
- 		return -EINVAL;
---- a/drivers/hid/hid-sony.c
-+++ b/drivers/hid/hid-sony.c
-@@ -2008,9 +2008,15 @@ static int sony_play_effect(struct input
- 
- static int sony_init_ff(struct sony_sc *sc)
- {
--	struct hid_input *hidinput = list_entry(sc->hdev->inputs.next,
--						struct hid_input, list);
--	struct input_dev *input_dev = hidinput->input;
-+	struct hid_input *hidinput;
-+	struct input_dev *input_dev;
-+
-+	if (list_empty(&sc->hdev->inputs)) {
-+		hid_err(sc->hdev, "no inputs found\n");
-+		return -ENODEV;
-+	}
-+	hidinput = list_entry(sc->hdev->inputs.next, struct hid_input, list);
-+	input_dev = hidinput->input;
- 
- 	input_set_capability(input_dev, EV_FF, FF_RUMBLE);
- 	return input_ff_create_memless(input_dev, NULL, sony_play_effect);
---- a/drivers/hid/hid-tmff.c
-+++ b/drivers/hid/hid-tmff.c
-@@ -136,12 +136,18 @@ static int tmff_init(struct hid_device *
- 	struct tmff_device *tmff;
- 	struct hid_report *report;
- 	struct list_head *report_list;
--	struct hid_input *hidinput = list_entry(hid->inputs.next,
--							struct hid_input, list);
--	struct input_dev *input_dev = hidinput->input;
-+	struct hid_input *hidinput;
-+	struct input_dev *input_dev;
- 	int error;
- 	int i;
- 
-+	if (list_empty(&hid->inputs)) {
-+		hid_err(hid, "no inputs found\n");
-+		return -ENODEV;
-+	}
-+	hidinput = list_entry(hid->inputs.next, struct hid_input, list);
-+	input_dev = hidinput->input;
-+
- 	tmff = kzalloc(sizeof(struct tmff_device), GFP_KERNEL);
- 	if (!tmff)
- 		return -ENOMEM;
---- a/drivers/hid/hid-zpff.c
-+++ b/drivers/hid/hid-zpff.c
-@@ -66,11 +66,17 @@ static int zpff_init(struct hid_device *
- {
- 	struct zpff_device *zpff;
- 	struct hid_report *report;
--	struct hid_input *hidinput = list_entry(hid->inputs.next,
--						struct hid_input, list);
--	struct input_dev *dev = hidinput->input;
-+	struct hid_input *hidinput;
-+	struct input_dev *dev;
- 	int i, error;
- 
-+	if (list_empty(&hid->inputs)) {
-+		hid_err(hid, "no inputs found\n");
-+		return -ENODEV;
-+	}
-+	hidinput = list_entry(hid->inputs.next, struct hid_input, list);
-+	dev = hidinput->input;
-+
- 	for (i = 0; i < 4; i++) {
- 		report = hid_validate_values(hid, HID_OUTPUT_REPORT, 0, i, 1);
- 		if (!report)
 
 
