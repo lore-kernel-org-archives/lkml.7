@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB212CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55256CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C17AE21929
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2838821850
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904402;
-	bh=+WwV0E1ym9y6aqcP9TKtSk5RdtH6hq+0LURBV+jXbNw=;
+	s=default; t=1572904406;
+	bh=g+wi91HW9+cZs9M5/NkuPzE5YUQtA1qquDKeM0/R1KA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LGDajHqovtrq8gZXA2k20KavmoyZwjHfVwxmEwpGB38hQvL69jWQZ3IF9gcPpCAes
-	 qB2BXzF3D2tno0OcYr3EkE2GtmSTR1xXp88Z3h0U3hxFwxALl3rXXt5XtPwa5OEM6G
-	 OFIxbMfipV7pyiwGYxY7IOlxczbxJqYouWoN9Z48=
+	b=VNhcoSsScTCGhHRo7GNmiHJcdPtugnrCeKOQ1jFUfCHO+l79hTalR1+l4fZJsdTCB
+	 CpoQuvwCNCtBVwwHnFCSAYfI4w97iAbLdq/yk2LKGZapP7yu2pGeVFt/luC6+lTqQ0
+	 6Wse9wpXzOBo5oN/aGOQV4M0IAvCDz0qVC6GZhVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730300AbfKDVxV (ORCPT
+        id S1730970AbfKDVxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:53:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47212 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:53:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730317AbfKDVxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:53:18 -0500
+        id S1730951AbfKDVxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:53:20 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF3A921D7F;
-        Mon,  4 Nov 2019 21:53:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06E0A2053B;
+        Mon,  4 Nov 2019 21:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904396;
-        bh=+WwV0E1ym9y6aqcP9TKtSk5RdtH6hq+0LURBV+jXbNw=;
+        s=default; t=1572904399;
+        bh=g+wi91HW9+cZs9M5/NkuPzE5YUQtA1qquDKeM0/R1KA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TOR9U3/akDZ5luc5F6unfyKzuuyRMrCT58Bk83PLTPKAEj0YqddSFs7vQOJTvBRWK
-         d0ufZ9VRF6qR+MXtMr6qRNitVZEdy59oMs2Y/Zw/ikbFeqdb3+x0MYd+BuaaW6YnB2
-         farGlqOR3A6nIk1e1dTC0JG4S0OwV9fpt0A0p0Mg=
+        b=kyJCpkgtACcte+yUHHQSWJkI7giNr5GvNGiDU7ErAYzNUA9LQdNnLFqP4zWO8C4gP
+         6q8YjpKkSLw3uHxbjOcfRX14ofx8bRd6xFF0YGR/W7N6jNDDzduhtDCcksL5TM1IBh
+         01IZUox1GKuKZzvzA75LIN/ZR982mOsUXN6ojgw0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 32/95] RDMA/iwcm: Fix a lock inversion issue
-Date:   Mon,  4 Nov 2019 22:44:30 +0100
-Message-Id: <20191104212058.389472103@linuxfoundation.org>
+Subject: [PATCH 4.14 06/95] f2fs: flush quota blocks after turnning it off
+Date:   Mon,  4 Nov 2019 22:44:04 +0100
+Message-Id: <20191104212040.828524358@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -60,85 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit b66f31efbdad95ec274345721d99d1d835e6de01 ]
+[ Upstream commit 0e0667b625cf64243df83171bff61f9d350b9ca5 ]
 
-This patch fixes the lock inversion complaint:
+After quota_off, we'll get some dirty blocks. If put_super don't have a chance
+to flush them by checkpoint, it causes NULL pointer exception in end_io after
+iput(node_inode). (e.g., by checkpoint=disable)
 
-============================================
-WARNING: possible recursive locking detected
-5.3.0-rc7-dbg+ #1 Not tainted
---------------------------------------------
-kworker/u16:6/171 is trying to acquire lock:
-00000000035c6e6c (&id_priv->handler_mutex){+.+.}, at: rdma_destroy_id+0x78/0x4a0 [rdma_cm]
-
-but task is already holding lock:
-00000000bc7c307d (&id_priv->handler_mutex){+.+.}, at: iw_conn_req_handler+0x151/0x680 [rdma_cm]
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(&id_priv->handler_mutex);
-  lock(&id_priv->handler_mutex);
-
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-3 locks held by kworker/u16:6/171:
- #0: 00000000e2eaa773 ((wq_completion)iw_cm_wq){+.+.}, at: process_one_work+0x472/0xac0
- #1: 000000001efd357b ((work_completion)(&work->work)#3){+.+.}, at: process_one_work+0x476/0xac0
- #2: 00000000bc7c307d (&id_priv->handler_mutex){+.+.}, at: iw_conn_req_handler+0x151/0x680 [rdma_cm]
-
-stack backtrace:
-CPU: 3 PID: 171 Comm: kworker/u16:6 Not tainted 5.3.0-rc7-dbg+ #1
-Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
-Workqueue: iw_cm_wq cm_work_handler [iw_cm]
-Call Trace:
- dump_stack+0x8a/0xd6
- __lock_acquire.cold+0xe1/0x24d
- lock_acquire+0x106/0x240
- __mutex_lock+0x12e/0xcb0
- mutex_lock_nested+0x1f/0x30
- rdma_destroy_id+0x78/0x4a0 [rdma_cm]
- iw_conn_req_handler+0x5c9/0x680 [rdma_cm]
- cm_work_handler+0xe62/0x1100 [iw_cm]
- process_one_work+0x56d/0xac0
- worker_thread+0x7a/0x5d0
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
-
-This is not a bug as there are actually two lock classes here.
-
-Link: https://lore.kernel.org/r/20190930231707.48259-3-bvanassche@acm.org
-Fixes: de910bd92137 ("RDMA/cma: Simplify locking needed for serialization of callbacks")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/f2fs/super.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 7c5eca312aa88..f698c6a28c142 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -2212,9 +2212,10 @@ static int iw_conn_req_handler(struct iw_cm_id *cm_id,
- 		conn_id->cm_id.iw = NULL;
- 		cma_exch(conn_id, RDMA_CM_DESTROYING);
- 		mutex_unlock(&conn_id->handler_mutex);
-+		mutex_unlock(&listen_id->handler_mutex);
- 		cma_deref_id(conn_id);
- 		rdma_destroy_id(&conn_id->id);
--		goto out;
-+		return ret;
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index e70975ca723b7..0f3209b23c940 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1523,6 +1523,12 @@ void f2fs_quota_off_umount(struct super_block *sb)
+ 			set_sbi_flag(F2FS_SB(sb), SBI_NEED_FSCK);
+ 		}
  	}
++	/*
++	 * In case of checkpoint=disable, we must flush quota blocks.
++	 * This can cause NULL exception for node_inode in end_io, since
++	 * put_super already dropped it.
++	 */
++	sync_filesystem(sb);
+ }
  
- 	mutex_unlock(&conn_id->handler_mutex);
+ int f2fs_get_projid(struct inode *inode, kprojid_t *projid)
 -- 
 2.20.1
 
