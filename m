@@ -2,291 +2,154 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2FFCA9EBB
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F2DCA9EBB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3932218BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:23:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vjNU2zYm"
+	by mail.kernel.org (Postfix) with ESMTP id 598DD217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbfKDCXz (ORCPT
+        id S1728792AbfKDCeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 21:23:55 -0500
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:34450 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728227AbfKDCXz (ORCPT
+        Sun, 3 Nov 2019 21:34:08 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6938 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728227AbfKDCeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 21:23:55 -0500
-Received: by mail-yb1-f195.google.com with SMTP id f6so2512028ybp.1
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 18:23:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RtbVhPlDBk9zWC9oucfvuM6GNX7O3UKyaoyCJiF2cHU=;
-        b=vjNU2zYmDhUfZYAJoCNd6Hc0br/AUDTLTdxVw98Nk7Sc8wO9pkpff/M8tVNGxmQAON
-         4OWeNYkC3jKuEX1tZYh69kXALtpWdz2lPAi+eziVMEFIqu+zeCOvMD39e3mLELahMVqY
-         8j/YD0Q4qgSiMeb0TO0cyv0M/tRzHkqoH4JI8vQ6PyOdgR5VxnskJoqdQL/UK1OcHogD
-         K1MKJ2GyTGcsqJrGG0btAk7JhHY1lmO3SQzyKOjCIm+Vhsrg2ts/GOiRIVuhB/Vq7kqw
-         mBaRxO/ZQ5RtrC4YL2m9PjJF/81+6uSPz+urqg/6+v7/9Oh55trVug/irMwleJH9IWK3
-         dsJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RtbVhPlDBk9zWC9oucfvuM6GNX7O3UKyaoyCJiF2cHU=;
-        b=nfUkKhLkwEQWCjrTf/XF2SWPgAj1EE9NYmhXEq0Fd4gWlb9arzTCdzD/SPMzP3+54C
-         0JrAJW6moqZUJELoLoewjCc98Nz63Fm3M4Adyag+Kgnwm2dFy5f8bD1NovGX/wutYspc
-         QXAE/Ci7+tqx9Oe55WffuTxz8BHSB6GwvW+/qKEEaychbqoqYS2aH6DcdkWmPoCvGVyK
-         uq8MQZmUUgUzLKvjXaXvHriZPfzJ+ILdGUotTEJNpOfSqhlA4y7uvP0Va9iFVxn9LIVK
-         la95gCmy0dCQCVNjnRtHkvr1or4DZ84xA2Z57PFIlMWW0SpawOzh9UwVelqQHxv/6ds4
-         upZg==
-X-Gm-Message-State: APjAAAW8zmtS4DBD/PiQCYWlCMN1M5YQwoNrpaQ7lW0WY1gLUaSFMcC6
-        S0+dXcD58RROOhFmDk6wl3fn3Q==
-X-Google-Smtp-Source: APXvYqwd5JTQ30JFnEckJVJjrSyrFBhQKJhynvz0JQJzuMNnVChDfp12BtdvAi4zL0cE4jnUkeAKnQ==
-X-Received: by 2002:a25:a326:: with SMTP id d35mr21671710ybi.224.1572834234115;
-        Sun, 03 Nov 2019 18:23:54 -0800 (PST)
-Received: from leoy-ThinkPad-X240s (li1038-30.members.linode.com. [45.33.96.30])
-        by smtp.gmail.com with ESMTPSA id f8sm17835550ywb.47.2019.11.03.18.23.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 03 Nov 2019 18:23:53 -0800 (PST)
-Date:   Mon, 4 Nov 2019 10:23:46 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 1/6] perf/x86: Add perf text poke event
-Message-ID: <20191104022346.GC26019@leoy-ThinkPad-X240s>
-References: <20191025130000.13032-1-adrian.hunter@intel.com>
- <20191025130000.13032-2-adrian.hunter@intel.com>
- <20191030104747.GA21153@leoy-ThinkPad-X240s>
- <20191030124659.GQ4114@hirez.programming.kicks-ass.net>
- <20191030141950.GB21153@leoy-ThinkPad-X240s>
- <20191030162325.GT4114@hirez.programming.kicks-ass.net>
- <20191031073136.GC21153@leoy-ThinkPad-X240s>
- <20191101100440.GU4131@hirez.programming.kicks-ass.net>
+        Sun, 3 Nov 2019 21:34:07 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA42WRNX099500
+        for <linux-kernel@vger.kernel.org>; Sun, 3 Nov 2019 21:34:06 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w27mb5kw7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 21:34:06 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Mon, 4 Nov 2019 02:34:03 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 4 Nov 2019 02:33:59 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA42XwVO42664148
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 4 Nov 2019 02:33:59 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D5BB3A405C;
+        Mon,  4 Nov 2019 02:33:58 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7E6A8A405B;
+        Mon,  4 Nov 2019 02:33:58 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  4 Nov 2019 02:33:58 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 19FF0A01D6;
+        Mon,  4 Nov 2019 13:33:54 +1100 (AEDT)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Qian Cai <cai@lca.pw>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/6] powerpc: convert cache asm to C
+Date:   Mon,  4 Nov 2019 13:32:52 +1100
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191101100440.GU4131@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19110402-0028-0000-0000-000003B2590B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110402-0029-0000-0000-00002474AAAF
+Message-Id: <20191104023305.9581-1-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-04_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1911040026
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+From: Alastair D'Silva <alastair@d-silva.org>
 
-On Fri, Nov 01, 2019 at 11:04:40AM +0100, Peter Zijlstra wrote:
-> On Thu, Oct 31, 2019 at 03:31:36PM +0800, Leo Yan wrote:
-> 
-> > Before move farward, I'd like to step back to describe clearly what's
-> > current problem on Arm64 and check one question for jump label:
-> > 
-> > I checked the kernel code, both kprobe and ftrace both uses
-> > stop_machine() to alter instructions,
-> 
-> That's not currect for Aargh64, see aarch64_insn_patch_text_nosync(),
-> which is used in both ftrace and jump_label.
+This series addresses a few issues discovered in how we flush caches:
+1. Flushes were truncated at 4GB, so larger flushes were incorrect.
+2. Flushing the dcache in arch_add_memory was unnecessary
 
-Thanks for pointing out this.
+This series also converts much of the cache assembler to C, with the
+aim of making it easier to maintain.
 
-Agree, for ftrace, it's complex and there have multiple pathes to use
-aarch64_insn_patch_text_nosync().
+Changelog:
+ V5:
+    - in "Chunk Calls to flush_dcache_range ...":
+        - Honour the 'chunk' parameter
+    - Rebase to latest master
+ V4:
+     - Split out VDSO patch
+     - Pass/cast the correct types in 'powerpc: Convert
+       flush_icache_range & friends to C'
+ V3:
+     - factor out chunking loop
+     - Replace __asm__ __volatile__ with asm volatile
+     - Replace flush_coherent_icache_or_return macro with
+       flush_coherent_icache function
+     - factor our invalidate_icache_range
+     - Replace code duplicating clean_dcache_range() in
+       __flush_dcache_icache() with a call to clean_dcache_range()
+     - Remove redundant #ifdef CONFIG_44x
+     - Fix preprocessor logic:
+         #if !defined(CONFIG_PPC_8xx) & !defined(CONFIG_PPC64)
+     - Added loop(1|2) to earlyclobbers in flush_dcache_icache_phys
+     - Drop "Remove extern" patch
+     - Replace 32 bit shifts in 64 bit VDSO with 64 bit ones
+ V2:
+     - Replace C implementation of flush_dcache_icache_phys() with
+       inline assembler authored by Christophe Leroy
+     - Add memory clobbers for iccci implementation
+     - Give __flush_dcache_icache a real implementation, it can't
+       just be a wrapper around flush_icache_range()
+     - Remove PPC64_CACHES from misc_64.S
+     - Replace code duplicating clean_dcache_range() in
+       flush_icache_range() with a call to clean_dcache_range()
+     - Replace #ifdef CONFIG_44x with IS_ENABLED(...) in
+       flush_icache_cange()
+     - Use 1GB chunks instead of 16GB in arch_*_memory
 
-Below flow uses stop_machine() in ftrace:
+Alastair D'Silva (6):
+  powerpc: Allow flush_icache_range to work across ranges >4GB
+  powerpc: Allow 64bit VDSO __kernel_sync_dicache to work across ranges
+    >4GB
+  powerpc: define helpers to get L1 icache sizes
+  powerpc: Convert flush_icache_range & friends to C
+  powerpc: Chunk calls to flush_dcache_range in arch_*_memory
+  powerpc: Don't flush caches when adding memory
 
-  ftrace_run_stop_machine()
-   stop_machine(__ftrace_modify_code, &command, NULL);
-     __ftrace_modify_code()
-       ftrace_modify_all_code()
-         ftrace_update_ftrace_func()
-           ftrace_modify_code()
-             aarch64_insn_patch_text_nosync()
+ arch/powerpc/include/asm/cache.h        |  55 +++++---
+ arch/powerpc/include/asm/cacheflush.h   |  36 +++--
+ arch/powerpc/kernel/misc_32.S           | 120 ----------------
+ arch/powerpc/kernel/misc_64.S           | 102 --------------
+ arch/powerpc/kernel/vdso64/cacheflush.S |   4 +-
+ arch/powerpc/mm/mem.c                   | 176 +++++++++++++++++++++++-
+ 6 files changed, 228 insertions(+), 265 deletions(-)
 
-Below flow doesn't use stop_machine() in ftrace:
+-- 
+2.21.0
 
-  prepare_coming_module()
-    ftrace_module_enable()
-      process_cached_mods()
-        process_mod_list()
-          ftrace_hash_move_and_update_ops()
-            ftrace_ops_update_code()
-              ftrace_ops_update_code()
-                ftrace_run_modify_code()
-                  ftrace_run_update_code()
-                    arch_ftrace_update_code()
-                      ftrace_modify_all_code()
-                        ftrace_update_ftrace_func()
-                          ftrace_modify_code()
-                            aarch64_insn_patch_text_nosync()
-
-Actually, there have other flows also will call into
-aarch64_insn_patch_text_nosync(), so at least we cannot say all ftrace
-flow uses stop_machine() to alter instructions.
-
-> > since all CPUs run into stop
-> > machine's synchronization, there have no race condition between
-> > instructions transition and CPUs execte the altered instruction; thus
-> > it's safe for kprobe and ftrace to use perf event PERF_TEXT_POKE_UPDATE
-> > to notify instruction transition and can allow us to read out 'correct'
-> > instruction for decoder.
-> 
-> Agreed, IFF patching happens using stop_machine(), things are easy. ARM
-> is (so far) exclusively using stop_machine() based text_poking, although
-> the last time I spoke to Will about this, he said the _nosync stuff is
-> possible on 32bit too, just nobody has bothered implementing it.
-> 
-> > But for jump label, it doesn't use the stop_machine() and perf event
-> > PERF_TEXT_POKE_UPDATE will introduce race condition as below (Let's see
-> > the example for transition from nop to branch):
-> > 
-> >               CPU0                                      CPU1
-> >   NOP instruction
-> >    `-> static_key_enable()
-> >         `-> aarch64_insn_patch_text_nosync()
-> >              `-> perf event PERF_TEXT_POKE_UPDATE
-> >                                                      -> Execute nop
-> >                                                         instruction
-> >              `-> aarch64_insn_write()
-> >              `-> __flush_icache_range()
-> > 
-> > Since x86 platform have INT3 as a mediate state, it can avoid the
-> > race condition between CPU0 (who is do transition) and other CPUs (who
-> > is possible to execute nop/branch).
-> 
-> Ah, you found the _nosync thing in jump_label, here's the one in ftrace:
-> 
-> arch/arm64/kernel/ftrace.c:     if (aarch64_insn_patch_text_nosync((void *)pc, new))
-> 
-> And yes, this is racy.
-> 
-> > > The thing is, as I argued, the instruction state between PRE and POST is
-> > > ambiguous. This makes it impossible to decode the branch decision
-> > > stream.
-> > > 
-> > > Suppose CPU0 emits the PRE event at T1 and the POST event at T5, but we
-> > > have CPU1 covering the instruction at T3.
-> > > 
-> > > How do you decide where CPU1 goes and what the next conditional branch
-> > > is?
-> > 
-> > Sorry for my not well thought.
-> > 
-> > I agree that T3 is an uncertain state with below flow:
-> > 
-> >       CPU0                                             CPU1
-> >   perf event PERF_TEXT_POKE_UPDATE_PRE   -> T1
-> > 
-> >     Int3 / NOP                                       -> T3
-> > 
-> >     Int3 / branch                                    -> T3'
-> > 
-> >   perf event PERF_TEXT_POKE_UPDATE_POST  -> T5
-> > 
-> > Except if the trace has extra info and can use old/new instructions
-> > combination for analysis, otherwise PRE/POST pair events aren't helpful
-> > for resolve this issue (if trace decoder can do this, then the change in
-> > kernel will be much simpler).
-> > 
-> > Below are two potential options we can use on Arm64 platform:
-> > 
-> > - Change to use stop_machine() for jump label; this might introduce
-> >   performance issue if jump label is altered frequently.
-> > 
-> >   To mitigate the impaction, we can only use stop_machine() when
-> >   detect the perf events are enabled, otherwise will rollback to use
-> >   the old code path.
-> > 
-> > - We can use breakpoint to emulate the similiar flow with x86's int3,
-> >   thus we can dismiss the race condition between one CPU alters
-> >   instruction and other CPUs run into the alternative instruction.
-> > 
-> > @Will, @Mark, could you help review this?  Appreciate any comments
-> > and suggestions.  And please let me know if you want to consolidate
-> > related works with your side (or as you know if there have ongoing
-> > discussion or someone works on this).
-> 
-> Given people are building larger Aargh64 machines (I've heard about 100+
-> CPUs already), I'm thinking the 3rd option is the most performant.
-> 
-> But yes, as you mention earlier, we can make this optional on the
-> TEXT_POKE_UPDATE event being in use.
-> 
-> I'm thinking something along the lines of:
-> 
-> static uintptr_t nosync_addr;
-> static u32 nosync_insn;
-> 
-> int __kprobes aarch64_insn_patch_text_nosync(void *addr, u32 insn)
-> {
-> 	const u32 break = // some_breakpoint_insn;
-> 	uintptr_t tp = (uintptr_t)addr;
-> 	int ret;
-> 
-> 	lockdep_assert_held(&text_mutex);
-> 
-> 	/* A64 instructions must be word aligned */
-> 	if (tp & 0x3)
-> 		return -EINVAL;
-> 
-> 	if (perf_text_poke_update_enabled()) {
-> 
-> 		nosync_insn = insn;
-> 		smp_store_release(&nosync_addr, tp);
-> 
-> 		ret = aarch64_insn_write(addr, break);
-> 		if (ret == 0)
-> 			__flush_icache_range(tp, tp + AARCH64_INSN_SIZE);
-> 
-> 		perf_event_text_poke(....);
-> 	}
-> 
-> 	ret = aarch64_insn_write(addr, insn);
-> 	if (ret == 0)
-> 		__flush_icache_range(tp, tp + AARCH64_INSN_SIZE);
-> 
-> 	return ret;
-> }
-> 
-> And have the 'break' handler do:
-> 
-> aarch64_insn_break_handler(struct pt_regs *regs)
-> {
-> 	unsigned long addr = smp_load_acquire(&nosync_addr);
-> 	u32 insn = nosync_insn;
-> 
-> 	if (regs->ip != addr)
-> 		return;
-> 
-> 	// emulate @insn
-> }
-> 
-> I understood from Will the whole nosync scheme only works for a limited
-> set of instructions, but you only have to implement emulation for the
-> actual instructions used of course.
-> 
-> (which is what we do on x86)
-> 
-> Does this sound workable?
-
-Very appreciate for the posted code (and another minor fixing in your
-next replying), the logic is quite clear.
-
-Will do prototype for this, at the meantime, I'd like to give a bit more
-time for Will (or other Arm maintainers) to review this.
-
-Thanks,
-Leo Yan
