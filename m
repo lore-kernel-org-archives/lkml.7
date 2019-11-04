@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5BBCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6885CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B4B214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFBAE217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904678;
-	bh=C75VLfqpVWlTQjWho7nVElo2KOBDwPzs8aywPc+W+pQ=;
+	s=default; t=1572904682;
+	bh=ISOCXHXFnxYp+D1ay8dVBO+AxI8M8jHi7r4PrG4+nMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xXDWpYOXPadO5hL+N1paYjAB0ZiHbDPaH4BySK/u0cENuE91t1QsQhOtmfImqmags
-	 iYIwcdy47edxCRpxF8VSOTrU6Qfy+gH9IM8Z/1ZGi/t9Hui/SxDMLz6LvnjKxnv3+G
-	 +qYFD9xehr28boKWoKxCVf4t/3Yw28gxMHrtLbOA=
+	b=zz8E1P0M43zz8p7A7+vNdYF4mkQkfgzWINdjopEOfuRva/hr0d2SoZPGgXHdFrVjp
+	 KydNifk5EHn76KK+DtWfm/J90fdl6RcQQOm31gNitsdgMtNWEU+aw1BsLqvxd3KvE9
+	 TMMZpXxi80P+f/lSCtCOOkrxzzmWnOBRbFjIG/Vo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388694AbfKDV55 (ORCPT
+        id S2388706AbfKDV6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:57:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54436 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:58:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388662AbfKDV5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:57:52 -0500
+        id S2387506AbfKDV55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:57:57 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28AB6214D8;
-        Mon,  4 Nov 2019 21:57:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03C0F214D8;
+        Mon,  4 Nov 2019 21:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904670;
-        bh=C75VLfqpVWlTQjWho7nVElo2KOBDwPzs8aywPc+W+pQ=;
+        s=default; t=1572904676;
+        bh=ISOCXHXFnxYp+D1ay8dVBO+AxI8M8jHi7r4PrG4+nMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VaWFmCiNYZQIGrroWROvfkCvqT90TahuC4xY7Q+x6Dxv6vCaP0epItih265ckrXYN
-         MrUQ5cBf0zrLv5S94Y3vCmDBjGoCyHlJcWt4gQSj8fQqV8s1MPtVYWn0VSxqkuayvi
-         QtM5dGhJCVntOGDRxuEVs9gyeoXCVNnnvBb0gZTs=
+        b=B58PqKnsT2SW9NY3p7u510NojGhBAvFmgW0A1B0q3QD1NLTQAh8UdkNNko118diRu
+         dWKyAXH2dtHPMUMhfrKX7k+Ee79SuGtCN1kYsXRDw3JwuIgdlo+jqvQsa5g01IxZ9B
+         0XLE2hc0zLsD4kpyGeseA/HVp4UxAqPhOV0JAzaA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Alan Cox <alan@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 028/149] platform/x86: Fix config space access for intel_atomisp2_pm
-Date:   Mon,  4 Nov 2019 22:43:41 +0100
-Message-Id: <20191104212137.759598580@linuxfoundation.org>
+        stable@vger.kernel.org, Guruswamy Basavaiah <guru2018@gmail.com>,
+        Nikos Tsironis <ntsironis@arrikto.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 003/149] dm snapshot: rework COW throttling to fix deadlock
+Date:   Mon,  4 Nov 2019 22:43:16 +0100
+Message-Id: <20191104212127.409465102@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -63,154 +62,242 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-[ Upstream commit 6a31061833a52a79c99221b6251db08cf377470e ]
+[ Upstream commit b21555786f18cd77f2311ad89074533109ae3ffa ]
 
-We lose even config space access when we power gate the ISP
-via the PUNIT. That makes lspci & co. produce gibberish.
+Commit 721b1d98fb517a ("dm snapshot: Fix excessive memory usage and
+workqueue stalls") introduced a semaphore to limit the maximum number of
+in-flight kcopyd (COW) jobs.
 
-To fix that let's try to implement actual runtime pm hooks
-and inform the pci core that the device always goes to
-D3cold. That will cause the pci core to resume the device
-before attempting config space access.
+The implementation of this throttling mechanism is prone to a deadlock:
 
-This introduces another annoyance though. We get the
-following error every time we try to resume the device:
-intel_atomisp2_pm 0000:00:03.0: Refused to change power state, currently in D3
+1. One or more threads write to the origin device causing COW, which is
+   performed by kcopyd.
 
-The reason being that the pci core tries to put the device
-back into D0 via the standard PCI PM mechanism before
-calling the driver resume hook. To fix this properly
-we'd need to infiltrate the platform pm hooks (could
-turn ugly real fast), or use pm domains (which don't
-seem to exist on x86), or some extra early resume
-hook for the driver (which doesn't exist either).
-So maybe we just choose to live with the error?
+2. At some point some of these threads might reach the s->cow_count
+   semaphore limit and block in down(&s->cow_count), holding a read lock
+   on _origins_lock.
 
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Alan Cox <alan@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Darren Hart <dvhart@infradead.org>
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+3. Someone tries to acquire a write lock on _origins_lock, e.g.,
+   snapshot_ctr(), which blocks because the threads at step (2) already
+   hold a read lock on it.
+
+4. A COW operation completes and kcopyd runs dm-snapshot's completion
+   callback, which ends up calling pending_complete().
+   pending_complete() tries to resubmit any deferred origin bios. This
+   requires acquiring a read lock on _origins_lock, which blocks.
+
+   This happens because the read-write semaphore implementation gives
+   priority to writers, meaning that as soon as a writer tries to enter
+   the critical section, no readers will be allowed in, until all
+   writers have completed their work.
+
+   So, pending_complete() waits for the writer at step (3) to acquire
+   and release the lock. This writer waits for the readers at step (2)
+   to release the read lock and those readers wait for
+   pending_complete() (the kcopyd thread) to signal the s->cow_count
+   semaphore: DEADLOCK.
+
+The above was thoroughly analyzed and documented by Nikos Tsironis as
+part of his initial proposal for fixing this deadlock, see:
+https://www.redhat.com/archives/dm-devel/2019-October/msg00001.html
+
+Fix this deadlock by reworking COW throttling so that it waits without
+holding any locks. Add a variable 'in_progress' that counts how many
+kcopyd jobs are running. A function wait_for_in_progress() will sleep if
+'in_progress' is over the limit. It drops _origins_lock in order to
+avoid the deadlock.
+
+Reported-by: Guruswamy Basavaiah <guru2018@gmail.com>
+Reported-by: Nikos Tsironis <ntsironis@arrikto.com>
+Reviewed-by: Nikos Tsironis <ntsironis@arrikto.com>
+Tested-by: Nikos Tsironis <ntsironis@arrikto.com>
+Fixes: 721b1d98fb51 ("dm snapshot: Fix excessive memory usage and workqueue stalls")
+Cc: stable@vger.kernel.org # v5.0+
+Depends-on: 4a3f111a73a8c ("dm snapshot: introduce account_start_copy() and account_end_copy()")
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel_atomisp2_pm.c | 68 +++++++++++++++++-------
- 1 file changed, 48 insertions(+), 20 deletions(-)
+ drivers/md/dm-snap.c | 78 ++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 64 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_atomisp2_pm.c b/drivers/platform/x86/intel_atomisp2_pm.c
-index 4a2ec5eeb6d8a..b0f421fea2a58 100644
---- a/drivers/platform/x86/intel_atomisp2_pm.c
-+++ b/drivers/platform/x86/intel_atomisp2_pm.c
-@@ -33,46 +33,45 @@
- #define ISPSSPM0_IUNIT_POWER_ON		0x0
- #define ISPSSPM0_IUNIT_POWER_OFF	0x3
+diff --git a/drivers/md/dm-snap.c b/drivers/md/dm-snap.c
+index d9216afbd490f..d3f28a9e3fd95 100644
+--- a/drivers/md/dm-snap.c
++++ b/drivers/md/dm-snap.c
+@@ -19,7 +19,6 @@
+ #include <linux/vmalloc.h>
+ #include <linux/log2.h>
+ #include <linux/dm-kcopyd.h>
+-#include <linux/semaphore.h>
  
--static int isp_probe(struct pci_dev *dev, const struct pci_device_id *id)
-+static int isp_set_power(struct pci_dev *dev, bool enable)
- {
- 	unsigned long timeout;
--	u32 val;
--
--	pci_write_config_dword(dev, PCI_INTERRUPT_CTRL, 0);
--
--	/*
--	 * MRFLD IUNIT DPHY is located in an always-power-on island
--	 * MRFLD HW design need all CSI ports are disabled before
--	 * powering down the IUNIT.
--	 */
--	pci_read_config_dword(dev, PCI_CSI_CONTROL, &val);
--	val |= PCI_CSI_CONTROL_PORTS_OFF_MASK;
--	pci_write_config_dword(dev, PCI_CSI_CONTROL, val);
-+	u32 val = enable ? ISPSSPM0_IUNIT_POWER_ON :
-+		ISPSSPM0_IUNIT_POWER_OFF;
+ #include "dm.h"
  
--	/* Write 0x3 to ISPSSPM0 bit[1:0] to power off the IUNIT */
-+	/* Write to ISPSSPM0 bit[1:0] to power on/off the IUNIT */
- 	iosf_mbi_modify(BT_MBI_UNIT_PMC, MBI_REG_READ, ISPSSPM0,
--			ISPSSPM0_IUNIT_POWER_OFF, ISPSSPM0_ISPSSC_MASK);
-+			val, ISPSSPM0_ISPSSC_MASK);
+@@ -106,8 +105,8 @@ struct dm_snapshot {
+ 	/* The on disk metadata handler */
+ 	struct dm_exception_store *store;
  
- 	/*
- 	 * There should be no IUNIT access while power-down is
- 	 * in progress HW sighting: 4567865
- 	 * Wait up to 50 ms for the IUNIT to shut down.
-+	 * And we do the same for power on.
- 	 */
- 	timeout = jiffies + msecs_to_jiffies(50);
- 	while (1) {
--		/* Wait until ISPSSPM0 bit[25:24] shows 0x3 */
--		iosf_mbi_read(BT_MBI_UNIT_PMC, MBI_REG_READ, ISPSSPM0, &val);
--		val = (val & ISPSSPM0_ISPSSS_MASK) >> ISPSSPM0_ISPSSS_OFFSET;
--		if (val == ISPSSPM0_IUNIT_POWER_OFF)
-+		u32 tmp;
-+
-+		/* Wait until ISPSSPM0 bit[25:24] shows the right value */
-+		iosf_mbi_read(BT_MBI_UNIT_PMC, MBI_REG_READ, ISPSSPM0, &tmp);
-+		tmp = (tmp & ISPSSPM0_ISPSSS_MASK) >> ISPSSPM0_ISPSSS_OFFSET;
-+		if (tmp == val)
- 			break;
+-	/* Maximum number of in-flight COW jobs. */
+-	struct semaphore cow_count;
++	unsigned in_progress;
++	struct wait_queue_head in_progress_wait;
  
- 		if (time_after(jiffies, timeout)) {
--			dev_err(&dev->dev, "IUNIT power-off timeout.\n");
-+			dev_err(&dev->dev, "IUNIT power-%s timeout.\n",
-+				enable ? "on" : "off");
- 			return -EBUSY;
- 		}
- 		usleep_range(1000, 2000);
+ 	struct dm_kcopyd_client *kcopyd_client;
+ 
+@@ -158,8 +157,8 @@ struct dm_snapshot {
+  */
+ #define DEFAULT_COW_THRESHOLD 2048
+ 
+-static int cow_threshold = DEFAULT_COW_THRESHOLD;
+-module_param_named(snapshot_cow_threshold, cow_threshold, int, 0644);
++static unsigned cow_threshold = DEFAULT_COW_THRESHOLD;
++module_param_named(snapshot_cow_threshold, cow_threshold, uint, 0644);
+ MODULE_PARM_DESC(snapshot_cow_threshold, "Maximum number of chunks being copied on write");
+ 
+ DECLARE_DM_KCOPYD_THROTTLE_WITH_MODULE_PARM(snapshot_copy_throttle,
+@@ -1207,7 +1206,7 @@ static int snapshot_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+ 		goto bad_hash_tables;
  	}
  
-+	return 0;
+-	sema_init(&s->cow_count, (cow_threshold > 0) ? cow_threshold : INT_MAX);
++	init_waitqueue_head(&s->in_progress_wait);
+ 
+ 	s->kcopyd_client = dm_kcopyd_client_create(&dm_kcopyd_throttle);
+ 	if (IS_ERR(s->kcopyd_client)) {
+@@ -1396,17 +1395,54 @@ static void snapshot_dtr(struct dm_target *ti)
+ 
+ 	dm_put_device(ti, s->origin);
+ 
++	WARN_ON(s->in_progress);
++
+ 	kfree(s);
+ }
+ 
+ static void account_start_copy(struct dm_snapshot *s)
+ {
+-	down(&s->cow_count);
++	spin_lock(&s->in_progress_wait.lock);
++	s->in_progress++;
++	spin_unlock(&s->in_progress_wait.lock);
+ }
+ 
+ static void account_end_copy(struct dm_snapshot *s)
+ {
+-	up(&s->cow_count);
++	spin_lock(&s->in_progress_wait.lock);
++	BUG_ON(!s->in_progress);
++	s->in_progress--;
++	if (likely(s->in_progress <= cow_threshold) &&
++	    unlikely(waitqueue_active(&s->in_progress_wait)))
++		wake_up_locked(&s->in_progress_wait);
++	spin_unlock(&s->in_progress_wait.lock);
 +}
 +
-+static int isp_probe(struct pci_dev *dev, const struct pci_device_id *id)
++static bool wait_for_in_progress(struct dm_snapshot *s, bool unlock_origins)
 +{
- 	pm_runtime_allow(&dev->dev);
- 	pm_runtime_put_sync_suspend(&dev->dev);
- 
-@@ -87,11 +86,40 @@ static void isp_remove(struct pci_dev *dev)
- 
- static int isp_pci_suspend(struct device *dev)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	u32 val;
-+
-+	pci_write_config_dword(pdev, PCI_INTERRUPT_CTRL, 0);
-+
-+	/*
-+	 * MRFLD IUNIT DPHY is located in an always-power-on island
-+	 * MRFLD HW design need all CSI ports are disabled before
-+	 * powering down the IUNIT.
-+	 */
-+	pci_read_config_dword(pdev, PCI_CSI_CONTROL, &val);
-+	val |= PCI_CSI_CONTROL_PORTS_OFF_MASK;
-+	pci_write_config_dword(pdev, PCI_CSI_CONTROL, val);
-+
-+	/*
-+	 * We lose config space access when punit power gates
-+	 * the ISP. Can't use pci_set_power_state() because
-+	 * pmcsr won't actually change when we write to it.
-+	 */
-+	pci_save_state(pdev);
-+	pdev->current_state = PCI_D3cold;
-+	isp_set_power(pdev, false);
-+
- 	return 0;
++	if (unlikely(s->in_progress > cow_threshold)) {
++		spin_lock(&s->in_progress_wait.lock);
++		if (likely(s->in_progress > cow_threshold)) {
++			/*
++			 * NOTE: this throttle doesn't account for whether
++			 * the caller is servicing an IO that will trigger a COW
++			 * so excess throttling may result for chunks not required
++			 * to be COW'd.  But if cow_threshold was reached, extra
++			 * throttling is unlikely to negatively impact performance.
++			 */
++			DECLARE_WAITQUEUE(wait, current);
++			__add_wait_queue(&s->in_progress_wait, &wait);
++			__set_current_state(TASK_UNINTERRUPTIBLE);
++			spin_unlock(&s->in_progress_wait.lock);
++			if (unlock_origins)
++				up_read(&_origins_lock);
++			io_schedule();
++			remove_wait_queue(&s->in_progress_wait, &wait);
++			return false;
++		}
++		spin_unlock(&s->in_progress_wait.lock);
++	}
++	return true;
  }
  
- static int isp_pci_resume(struct device *dev)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	isp_set_power(pdev, true);
-+	pdev->current_state = PCI_D0;
-+	pci_restore_state(pdev);
-+
- 	return 0;
+ /*
+@@ -1424,7 +1460,7 @@ static void flush_bios(struct bio *bio)
+ 	}
  }
  
+-static int do_origin(struct dm_dev *origin, struct bio *bio);
++static int do_origin(struct dm_dev *origin, struct bio *bio, bool limit);
+ 
+ /*
+  * Flush a list of buffers.
+@@ -1437,7 +1473,7 @@ static void retry_origin_bios(struct dm_snapshot *s, struct bio *bio)
+ 	while (bio) {
+ 		n = bio->bi_next;
+ 		bio->bi_next = NULL;
+-		r = do_origin(s->origin, bio);
++		r = do_origin(s->origin, bio, false);
+ 		if (r == DM_MAPIO_REMAPPED)
+ 			generic_make_request(bio);
+ 		bio = n;
+@@ -1739,6 +1775,11 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
+ 	if (!s->valid)
+ 		return DM_MAPIO_KILL;
+ 
++	if (bio_data_dir(bio) == WRITE) {
++		while (unlikely(!wait_for_in_progress(s, false)))
++			; /* wait_for_in_progress() has slept */
++	}
++
+ 	mutex_lock(&s->lock);
+ 
+ 	if (!s->valid || (unlikely(s->snapshot_overflowed) &&
+@@ -1887,7 +1928,7 @@ redirect_to_origin:
+ 
+ 	if (bio_data_dir(bio) == WRITE) {
+ 		mutex_unlock(&s->lock);
+-		return do_origin(s->origin, bio);
++		return do_origin(s->origin, bio, false);
+ 	}
+ 
+ out_unlock:
+@@ -2224,15 +2265,24 @@ next_snapshot:
+ /*
+  * Called on a write from the origin driver.
+  */
+-static int do_origin(struct dm_dev *origin, struct bio *bio)
++static int do_origin(struct dm_dev *origin, struct bio *bio, bool limit)
+ {
+ 	struct origin *o;
+ 	int r = DM_MAPIO_REMAPPED;
+ 
++again:
+ 	down_read(&_origins_lock);
+ 	o = __lookup_origin(origin->bdev);
+-	if (o)
++	if (o) {
++		if (limit) {
++			struct dm_snapshot *s;
++			list_for_each_entry(s, &o->snapshots, list)
++				if (unlikely(!wait_for_in_progress(s, true)))
++					goto again;
++		}
++
+ 		r = __origin_write(&o->snapshots, bio->bi_iter.bi_sector, bio);
++	}
+ 	up_read(&_origins_lock);
+ 
+ 	return r;
+@@ -2345,7 +2395,7 @@ static int origin_map(struct dm_target *ti, struct bio *bio)
+ 		dm_accept_partial_bio(bio, available_sectors);
+ 
+ 	/* Only tell snapshots if this is a write */
+-	return do_origin(o->dev, bio);
++	return do_origin(o->dev, bio, true);
+ }
+ 
+ static long origin_dax_direct_access(struct dm_target *ti, pgoff_t pgoff,
 -- 
 2.20.1
 
