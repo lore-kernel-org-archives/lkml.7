@@ -2,93 +2,98 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263E6CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F86ECA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E630B204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3488420869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:02:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CtPfjDXn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iJe75S+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730027AbfKDXAM (ORCPT
+        id S1730395AbfKDXCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 18:00:12 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30185 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729877AbfKDXAL (ORCPT
+        Mon, 4 Nov 2019 18:02:23 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35561 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729850AbfKDXCW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 18:00:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572908410;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=klZ1JFI1Q4aKLy/d85vcSQeQR1jyESDD5tgAOAEg+nk=;
-        b=CtPfjDXnMstSbUPn260N1AEwt48UcWU0+IBlUVVeQK2Wg6R+MnjSkn4q7AV+sAEt12nM4T
-        FJI1FMslRzNHQg8qED3lL57Adz96h+EQx+glyyk1gjFGTNJ9RzgjI+n4An/USQ2WLEplRv
-        q9uAJZozzGYqWUjuHS4rsKYzln6qppQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-4-I1We5Z-7MSO-xcxC5jZicg-1; Mon, 04 Nov 2019 18:00:06 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41F7D8017DD;
-        Mon,  4 Nov 2019 23:00:05 +0000 (UTC)
-Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CED3760BF3;
-        Mon,  4 Nov 2019 23:00:02 +0000 (UTC)
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 04/13] KVM: monolithic: x86: handle the request_immediate_exit variation
-Date:   Mon,  4 Nov 2019 17:59:52 -0500
-Message-Id: <20191104230001.27774-5-aarcange@redhat.com>
-In-Reply-To: <20191104230001.27774-1-aarcange@redhat.com>
-References: <20191104230001.27774-1-aarcange@redhat.com>
+        Mon, 4 Nov 2019 18:02:22 -0500
+Received: by mail-pl1-f193.google.com with SMTP id x6so8389722pln.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 15:02:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X1UnPHKL+R2cZ8Kw6+/720/J4o7/qh5ZTT6nGad7uFc=;
+        b=iJe75S+XWatVO63vpa8OCbttobDDRXQDHpSA5POIQeMX6fxWDxN1H+2wJfuKHyYmTS
+         RIhDArF/B/r+170+sXr+ID3efg8y8ySEksy6z5I+vysegvbqELJ3APp8lJ7qTjd7c09v
+         gI2LjD4oCRQyGn3+tUh3VdjHZa1wbmYqWP0fEdWZPioPeEg7cVGZwdj95xbbEvViTGgH
+         cfBOEnX/XnPno7W/cVSyA06kwTAWDkQ2koWsYydlRwAKweAeLlYjT2lr5Rf3FD+QtgWi
+         SJrC3G3LxdjHS4q/3DtzL9g1Fosjk8dT97hozl42iabPuetbLeRleKLkQmFajWs7waIi
+         /iEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X1UnPHKL+R2cZ8Kw6+/720/J4o7/qh5ZTT6nGad7uFc=;
+        b=nCAw7uyutWt4KPZ5wYbH6dOzxkbdbY4497DB3qyCmHgQZCTvTvTis2YzXyZy3dTV4k
+         +Agy2pZYa0s+QvmODPDAStLdNDQnO/MoeNiGB1TdDeTsejnHgYxHUYKxoHztaLG1F7rk
+         3JXPu8L9ow05m4GgbVClpJl1CAd/SbeWXEvnfn07zD1QTHK0mipuE7xIox6mLh0CcJ8D
+         PKQrTz84NNNyFyBDwik3nR4ODSWdSijvuLZZT3e+1pyCunOo+fQGdgJ7y9UeDTB3WKy1
+         qcHvURP2R8UVAJzRn9D3PZ1PQsFivuKf1MCwB4kuZ5o7cQNqCw9j0Ildu4bfhYXWaBk/
+         TAaw==
+X-Gm-Message-State: APjAAAUdmQSYLtc5VBr4BB7sLzGjFIO/0dlUkDt1RYfYF8vYXhMjfKtg
+        Z6jX4ZzSKkKtGpMYvxVIi65Ptg==
+X-Google-Smtp-Source: APXvYqzJHtTwMH1ADOHC49u97iZoDWvrf1I4qV/BP7/Ne+/CYjKqqJfdSXB04ZCFwKG8gk7W+BrYNA==
+X-Received: by 2002:a17:902:9a92:: with SMTP id w18mr29336869plp.186.1572908541755;
+        Mon, 04 Nov 2019 15:02:21 -0800 (PST)
+Received: from tuxbook-pro (pat_11.qualcomm.com. [192.35.156.11])
+        by smtp.gmail.com with ESMTPSA id q184sm18357035pfc.111.2019.11.04.15.02.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 15:02:21 -0800 (PST)
+Date:   Mon, 4 Nov 2019 15:02:19 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     agross@kernel.org, ohad@wizery.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Support for MSM8998 mss
+Message-ID: <20191104230219.GA5505@tuxbook-pro>
+References: <20191101024301.21919-1-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: I1We5Z-7MSO-xcxC5jZicg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191101024301.21919-1-jeffrey.l.hugo@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-request_immediate_exit is one of those few cases where the pointer to
-function of the method isn't fixed at build time and it requires
-special handling because hardware_setup() may override it at runtime.
+On Thu 31 Oct 19:43 PDT 2019, Jeffrey Hugo wrote:
 
-Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
----
- arch/x86/kvm/vmx/vmx.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+> Booting mss on MSM8998 is a critical step to getting wifi functional - a
+> rather useful feature for the MSM8998 based laptops.
+> 
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 1a58ae38c8f2..9c5f0c67b899 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7103,7 +7103,10 @@ void kvm_x86_set_supported_cpuid(u32 func, struct kv=
-m_cpuid_entry2 *entry)
-=20
- void kvm_x86_request_immediate_exit(struct kvm_vcpu *vcpu)
- {
--=09to_vmx(vcpu)->req_immediate_exit =3D true;
-+=09if (likely(enable_preemption_timer))
-+=09=09to_vmx(vcpu)->req_immediate_exit =3D true;
-+=09else
-+=09=09__kvm_request_immediate_exit(vcpu);
- }
-=20
- int kvm_x86_check_intercept(struct kvm_vcpu *vcpu,
+Thanks, and thanks for the review Rob!
 
+Applied,
+Bjorn
+
+> Jeffrey Hugo (2):
+>   dt-bindings: remoteproc: qcom: Add Q6v5 Modem PIL binding for MSM8998
+>   remoteproc: qcom_q6v5_mss: Add support for MSM8998
+> 
+>  .../bindings/remoteproc/qcom,q6v5.txt         |  6 +++
+>  drivers/remoteproc/qcom_q6v5_mss.c            | 52 ++++++++++++++++---
+>  2 files changed, 52 insertions(+), 6 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
