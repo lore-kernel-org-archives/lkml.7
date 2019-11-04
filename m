@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D65A8CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DC3CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1AFD21850
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1254218BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904287;
-	bh=x6vR3NQ+bGrQ/ymKfMGPZ1eXkd7tZ1So3e3ueerPjaU=;
+	s=default; t=1572904298;
+	bh=AEX36XsO5lXsy2UodCcGI6ADsqU81+EXoRM9bAA0rL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oEP/z7BpA0+bg9VGNCZfmz2F42a6uj6hggjUyOiiIxBFatcCKn7a2KqzxRL5+XeAj
-	 p1TdP4FhvsPYirYqa+3j2IW5lnAU5bnivMGq6SvUGxAWd162XdOLWYg9nNJn5/pXKa
-	 DrXGFXf59KwsLdHrmR4nLUbNZaOHFpGpd4O58SaA=
+	b=z6wKjvbHJ3NTR1vFVg9vvHYpUK0WSdeUfdGR92+XCI9CQ5/TIgk2rC8N9XJVRU7R9
+	 sGUOWMUJZqtNxkYXb+g5TIYz4nWv1iiDLM1G5p1O4OaIVJjZFLHWWfaDyKfubhtpWC
+	 0BvC1qBFI2znFU614QnuVhAfNcNX45e7aNNvCZWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730514AbfKDVv0 (ORCPT
+        id S1730534AbfKDVvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:51:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44296 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:51:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730057AbfKDVvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:51:20 -0500
+        id S1730560AbfKDVve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:51:34 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA01B21929;
-        Mon,  4 Nov 2019 21:51:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5073621850;
+        Mon,  4 Nov 2019 21:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904279;
-        bh=x6vR3NQ+bGrQ/ymKfMGPZ1eXkd7tZ1So3e3ueerPjaU=;
+        s=default; t=1572904293;
+        bh=AEX36XsO5lXsy2UodCcGI6ADsqU81+EXoRM9bAA0rL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ELsVVh0c9XxX/1r8nNhq8UnNgzeMQ2aDRxoX4rnZF8hi68nR1zxl3M3PY/Ar5+R8H
-         NnExMALBGo3vCz9X37N+G3NlsjbcHmzr/93ziKkQ2I2UDXaxRxgWlPcAFOjMqFlzbl
-         SRUPSR5TjGGVAElz9wr5RtMgO8wF3MdF2JqeCj9w=
+        b=atrVfdblVx18+RIXCecZXaedGN6k/FCObjDK64HeS59IjrPuS+kpJuDNFE1l20uN8
+         YHd2//7Fmyu2Lw/NFiNFoEvVCViV+Pgr9WY7Rz/r+QOtufNEHLMGdmP9xygzJcqQXP
+         N3I1/Ktr4EkvfNUMnnYLVC1b66X1Y+rkaXNrnwdU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yihui Zeng <yzeng56@asu.edu>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 4.9 48/62] s390/cmm: fix information leak in cmm_timeout_handler()
-Date:   Mon,  4 Nov 2019 22:45:10 +0100
-Message-Id: <20191104211951.474918795@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com,
+        Valentin Vidic <vvidic@valentin-vidic.from.hr>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 54/62] net: usb: sr9800: fix uninitialized local variable
+Date:   Mon,  4 Nov 2019 22:45:16 +0100
+Message-Id: <20191104211955.323387139@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -61,66 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yihui ZENG <yzeng56@asu.edu>
+From: Valentin Vidic <vvidic@valentin-vidic.from.hr>
 
-commit b8e51a6a9db94bc1fb18ae831b3dab106b5a4b5f upstream.
+commit 77b6d09f4ae66d42cd63b121af67780ae3d1a5e9 upstream.
 
-The problem is that we were putting the NUL terminator too far:
+Make sure res does not contain random value if the call to
+sr_read_cmd fails for some reason.
 
-	buf[sizeof(buf) - 1] = '\0';
-
-If the user input isn't NUL terminated and they haven't initialized the
-whole buffer then it leads to an info leak.  The NUL terminator should
-be:
-
-	buf[len - 1] = '\0';
-
-Signed-off-by: Yihui Zeng <yzeng56@asu.edu>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-[heiko.carstens@de.ibm.com: keep semantics of how *lenp and *ppos are handled]
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Reported-by: syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com
+Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/mm/cmm.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/usb/sr9800.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/s390/mm/cmm.c
-+++ b/arch/s390/mm/cmm.c
-@@ -306,16 +306,16 @@ static int cmm_timeout_handler(struct ct
- 	}
+--- a/drivers/net/usb/sr9800.c
++++ b/drivers/net/usb/sr9800.c
+@@ -336,7 +336,7 @@ static void sr_set_multicast(struct net_
+ static int sr_mdio_read(struct net_device *net, int phy_id, int loc)
+ {
+ 	struct usbnet *dev = netdev_priv(net);
+-	__le16 res;
++	__le16 res = 0;
  
- 	if (write) {
--		len = *lenp;
--		if (copy_from_user(buf, buffer,
--				   len > sizeof(buf) ? sizeof(buf) : len))
-+		len = min(*lenp, sizeof(buf));
-+		if (copy_from_user(buf, buffer, len))
- 			return -EFAULT;
--		buf[sizeof(buf) - 1] = '\0';
-+		buf[len - 1] = '\0';
- 		cmm_skip_blanks(buf, &p);
- 		nr = simple_strtoul(p, &p, 0);
- 		cmm_skip_blanks(p, &p);
- 		seconds = simple_strtoul(p, &p, 0);
- 		cmm_set_timeout(nr, seconds);
-+		*ppos += *lenp;
- 	} else {
- 		len = sprintf(buf, "%ld %ld\n",
- 			      cmm_timeout_pages, cmm_timeout_seconds);
-@@ -323,9 +323,9 @@ static int cmm_timeout_handler(struct ct
- 			len = *lenp;
- 		if (copy_to_user(buffer, buf, len))
- 			return -EFAULT;
-+		*lenp = len;
-+		*ppos += len;
- 	}
--	*lenp = len;
--	*ppos += len;
- 	return 0;
- }
- 
+ 	mutex_lock(&dev->phy_mutex);
+ 	sr_set_sw_mii(dev);
 
 
