@@ -2,207 +2,131 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC86CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E21CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C20020663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:23:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="uIJripke"
+	by mail.kernel.org (Postfix) with ESMTP id 9F0C620663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:23:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572881015;
+	bh=xyu7zj1DRcpATjwDO3Xwwxna0eNzybOKXEowE0HTldI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=NHc/HLwp8Sx+SVwpQUigWou3kCJEw7tO+wRWOc/Nr8O80CpDP/WpORR9KHhQCrzAq
+	 t0tPtmczJ+el623aXzXVYTlUfWwL62QrfvBw32inAIrBrCILMHT/7qCKk/00mTbIjs
+	 Qla/lU/s7RspIsEkpR46/wqSYRgeL0I0LOix2CZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbfKDPXS (ORCPT
+        id S1729147AbfKDPXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:23:18 -0500
-Received: from mail-eopbgr790043.outbound.protection.outlook.com ([40.107.79.43]:36740
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727796AbfKDPXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:23:17 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QNsEKiLMK6hqrtIM12g9jojUGOgfXBEWQdl1t1SmNqO2xJHObIco0pxB8By52PKa1YSrRVHI9kB4sh2JZ6YTA76lhZ9zO+wOCBXIMR2TctSEmTqDBaAMi3ZPl1vlMNVKvLKsq0SyeMasS/6qoBXlicFPZMZiTDZSepoVBbrQd5SlvW+HoOt2tTiitH5ck+CT/5b/AqAFPHjMye8jk27SXW9fFfARA27y4yXUptjWg2CRks3NnP91shzvtetjhvt0EALq1hVVeoipBjnBUvIVtU6h2rNbU7Zk6SNU/6XFWNRrBq1ynwj1C1jIwT923BTQP/I68CCBOYCrdOwU7PogCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Iy661gAnXARqpJAwUlaUZr3ygNwwjVCYkPwTjKvvBxM=;
- b=NZKbh0jT5KFJox7PufRR2c2kCcDRYEHjSUrHnAsbi71/+9A/OJ3qsVPP5FoVkbRRYgOVwMacnJzNJzNYUAFGdC0pYO/dO5rdVJXthxLVc4lwfeNCpHUhDhn2+XoF8K70j++H6SsjkM6yNlbOTLcO9cIGnF+EXsvsaP2riY61MZSzJrP++FJoIDQYfp09g8NV/B6bAzByyXcIfhfFKFzj/iFXr3qbP8F9Gj9qOnWU4+dTIRUKTCPVs8j/oZbLEW8om4t/slZrgl7SD8A7fIeGRggYRBg+4MBKQm6Vi8MqyW4cg2EcPImC9eWZpuyctQM/zhV3vBSCup1rUxqrTdcqgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Iy661gAnXARqpJAwUlaUZr3ygNwwjVCYkPwTjKvvBxM=;
- b=uIJripke2VQZAshlojIjJlRZnqvib6shpLTK6fScc5oSD0UP0xpc8enqDZm8eLutknuhepSuDQwb27MRF9K9NDLJr4fsmUH2ndc+dnAJOSTnfTR4XpRggXAjO6H6r5Nx33TQAj48oBbjWTxiqKvI+2SJ31AOvwNvMCs3bT9ZIws=
-Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
- CY4PR1201MB2469.namprd12.prod.outlook.com (10.172.118.148) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Mon, 4 Nov 2019 15:23:09 +0000
-Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
- ([fe80::449d:52a8:2761:9195]) by CY4PR1201MB0230.namprd12.prod.outlook.com
- ([fe80::449d:52a8:2761:9195%5]) with mapi id 15.20.2408.024; Mon, 4 Nov 2019
- 15:23:09 +0000
-From:   Harry Wentland <hwentlan@amd.com>
-To:     Daniel Vetter <daniel@ffwll.ch>,
-        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>
-CC:     Colin Ian King <colin.king@canonical.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: drm/amd/display: Add HDCP module - static analysis bug report
-Thread-Topic: drm/amd/display: Add HDCP module - static analysis bug report
-Thread-Index: AQHVejcKu6zIikeYPUy9tenpH2XnMKdSieGAgAAe+QCAAAW8AIAAIk+AgAADVYCAKDNugIAAS26A
-Date:   Mon, 4 Nov 2019 15:23:09 +0000
-Message-ID: <53bf910b-5f9c-946b-17ee-602c24c0fa96@amd.com>
-References: <951eb7dc-bebe-5049-4998-f199e18b0bf3@canonical.com>
- <20191009163235.GT16989@phenom.ffwll.local>
- <a0d5f3a3-a2b3-5367-42f9-bde514571e25@amd.com>
- <CAKMK7uEtJRDhibWDv2TB2WrFzFooMWPSbveDD2N-rudAwvzVFA@mail.gmail.com>
- <c8f96b46-e81e-1e41-aafc-5f6ec236d66f@amd.com>
- <CAKMK7uHr3aeJRqJAscDDfsuBBnVXCeN9SS36-1UGuK84NyOD5Q@mail.gmail.com>
- <CAKMK7uH6EoY9MkzjSjU+Fe=E-XB4Tf9d2VsW=Tr=tFy1J-dJgg@mail.gmail.com>
-In-Reply-To: <CAKMK7uH6EoY9MkzjSjU+Fe=E-XB4Tf9d2VsW=Tr=tFy1J-dJgg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [165.204.55.251]
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
-x-clientproxiedby: YTBPR01CA0007.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:14::20) To CY4PR1201MB0230.namprd12.prod.outlook.com
- (2603:10b6:910:1e::7)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Harry.Wentland@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ad978148-3700-4330-15ce-08d7613ae636
-x-ms-traffictypediagnostic: CY4PR1201MB2469:
-x-ms-exchange-purlcount: 2
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR1201MB24692BD21D6B2F8C4803F4B08C7F0@CY4PR1201MB2469.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0211965D06
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(366004)(396003)(346002)(189003)(199004)(26005)(66066001)(2906002)(186003)(25786009)(229853002)(53546011)(6506007)(386003)(102836004)(54906003)(7736002)(256004)(14444005)(305945005)(587094005)(486006)(4326008)(8676002)(3846002)(6116002)(5660300002)(11346002)(476003)(65956001)(31696002)(65806001)(81156014)(36756003)(71200400001)(14454004)(2616005)(71190400001)(446003)(58126008)(6246003)(110136005)(966005)(99286004)(31686004)(6512007)(6436002)(6636002)(81166006)(6306002)(66946007)(316002)(66446008)(66556008)(478600001)(76176011)(52116002)(64756008)(66476007)(8936002)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB2469;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EUwHdkPfVJ+N3ssbMRrM8PLXGAaA8b/AOwSpuYIGoUoCa30HcptZXSDRr1UoQ8Gv6JZhUh3XUs1mrlOyHqO+jDxN9Ul5EjckZXVw9BCmYIcW9oixXFrIIsJxV/OpZqEliNPA2WJ3qduwdbK6RNmUIpsDeEvFR82xB9BQ1BFXcLDGZJ1Ft+WfZ3AWWRc+n15C+KsaJX07RXMZeGOWx2TbOqPI0hT1I13br/lWVY1vDO7Lat7/xwOjSGTxSzV/KJvsO2kWvuLe9ebpRgmYzPP3X+mCOQcZVLqCht86HPPmluaxdLCGUZ6whfc0lnnl5B3opvaoOh1x+mWYBw8grhmwtPiMOiL84nDec8RyP7gsq2vYx2Sq/lna+0FzX+ow2SzezfjMTtcdhZxrabSEiYBHKBHAl/tLd4nOjIPi0im44dNQ3Io+x+xVark+z0SPWf6waLdyDMxVQrXtbhoDHFmjm6gdiTAtH+kLyc7m8KAHo2o=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <60042CDD2E3E434184EEF216C700AFF1@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 4 Nov 2019 10:23:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727796AbfKDPXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 10:23:34 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4D8C20663;
+        Mon,  4 Nov 2019 15:23:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572881013;
+        bh=xyu7zj1DRcpATjwDO3Xwwxna0eNzybOKXEowE0HTldI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=b3pxHHsmoH0dZXU8+a+w49+bpwI4hOLZ8/6YUPKNf6aSzNbN/7HhCaMGUsi++gThR
+         2GM25Uiec0YXdz0hX7vvjKE4IxqDlLgW66ct7s3xbG/5lebD5CtObtKhEJvGZZNzIJ
+         +YCxbzUvYjA59ZNONPng4DnBUxgSo1fJzvhp/IQc=
+Date:   Mon, 4 Nov 2019 09:23:30 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        KarimAllah Ahmed <karahmed@amazon.de>
+Subject: Re: [PATCH 4/6] xen-platform: Convert to generic power management
+Message-ID: <20191104152330.GA104689@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad978148-3700-4330-15ce-08d7613ae636
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Nov 2019 15:23:09.6975
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TgVUfqNbY1vEf9v+XSRgM/RQlTHDWb7krI9OGPkLB6VHGqRtnoYBfX25iyMkW77u1qmO5NRyLfncJ08QuJM6aw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2469
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191101204558.210235-5-helgaas@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMS0wNCA1OjUzIGEubS4sIERhbmllbCBWZXR0ZXIgd3JvdGU6DQo+IE9uIFdlZCwg
-T2N0IDksIDIwMTkgYXQgMTA6NTggUE0gRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPiB3
-cm90ZToNCj4+IE9uIFdlZCwgT2N0IDksIDIwMTkgYXQgMTA6NDYgUE0gTGFraGEsIEJoYXdhbnBy
-ZWV0DQo+PiA8Qmhhd2FucHJlZXQuTGFraGFAYW1kLmNvbT4gd3JvdGU6DQo+Pj4NCj4+PiBJIG1p
-c3VuZGVyc3Rvb2QgYW5kIHdhcyB0YWxraW5nIGFib3V0IHRoZSBrc3YgdmFsaWRhdGlvbiBzcGVj
-aWZpY2FsbHkNCj4+PiAodXNhZ2Ugb2YgZHJtX2hkY3BfY2hlY2tfa3N2c19yZXZva2VkKCkpLg0K
-Pj4NCj4+IEhtIGZvciB0aGF0IHNwZWNpZmljYWxseSBJIHRoaW5rIHlvdSB3YW50IHRvIGRvIGJv
-dGgsIGkuZS4gYm90aA0KPj4gY29uc3VsdCB5b3VyIHBzcCwgYnV0IGFsc28gY2hlY2sgZm9yIHJl
-dm9rZWQga3N2cyB3aXRoIHRoZSBjb3JlDQo+PiBoZWxwZXIuIEF0IGxlYXN0IG9uIHNvbWUgcGxh
-dGZvcm1zIG9ubHkgdGhlIGNvcmUgaGVscGVyIG1pZ2h0IGhhdmUgdGhlDQo+PiB1cGRhdGVkIHJl
-dm9rZSBsaXN0Lg0KPj4NCg0KSSB0aGluayBpdCdzIGFuIGVpdGhlci9vci4gRWl0aGVyIHdlIHVz
-ZSBhbiBIRENQIGltcGxlbWVudGF0aW9uIHRoYXQncw0KZnVsbHkgcnVubmluZyBpbiB4ODYga2Vy
-bmVsIHNwYWNlIChzdGlsbCBub3Qgc3VyZSBob3cgdGhhdCdzIGNvbXBsaWFudCkNCm9yIHdlIGZ1
-bGx5IHJlbHkgb24gb3VyIFBTUCBGVyB0byBkbyB3aGF0IGl0J3MgZGVzaWduZWQgdG8gZG8uIEkg
-ZG9uJ3QNCnRoaW5rIGl0IG1ha2VzIHNlbnNlIHRvIG1peCBhbmQgbWF0Y2ggaGVyZS4NCg0KPj4+
-IEZvciB0aGUgZGVmaW5lcyBJIHdpbGwgY3JlYXRlIHBhdGNoZXMgdG8gdXNlIGRybV9oZGNwIHdo
-ZXJlIGl0IGlzIHVzYWJsZS4NCj4+DQo+PiBUaGFua3MgYSBsb3QuIEltZSBvbmNlIHdlIGhhdmUg
-c2hhcmVkIGRlZmluaXRpb25zIGl0J3MgbXVjaCBlYXNpZXIgdG8NCj4+IGFsc28gc2hhcmUgc29t
-ZSBoZWxwZXJzLCB3aGVyZSBpdCBtYWtlcyBzZW5zZS4NCj4+DQo+PiBBc2lkZSBJIHRoaW5rIHRo
-ZSBoZGNwIGNvZGUgY291bGQgYWxzbyB1c2UgYSBiaXQgb2YgZGVtaWRsYXllcmluZy4gQXQNCj4+
-IGxlYXN0IEknbSBub3QgdW5kZXJzdGFuZGluZyB3aHkgeW91IGFkZCBhIDJuZCBhYnN0cmFjdGlv
-biBsYXllciBmb3INCj4+IGkyYy9kcGNkLCBkbV9oZWxwZXIgYWxyZWFkeSBoYXMgdGhhdC4gVGhh
-dCBzZWVtcyBsaWtlIG9uZSBhYnN0cmFjdGlvbg0KPj4gbGF5ZXIgdG9vIG11Y2guDQo+IA0KPiBJ
-IGhhdmVuJ3Qgc2VlbiBhbnl0aGluZyBmbHkgYnkgb3IgaW4gdGhlIGxhdGVzdCBwdWxsIHJlcXVl
-c3QgLi4uIHlvdQ0KPiBmb2xrcyBzdGlsbCB3b3JraW5nIG9uIHRoaXMgb3IgbW9yZSBwdXQgb24g
-dGhlICJtYXliZSwgcHJvYmFibHkgbmV2ZXIiDQo+IHBpbGU/DQo+IA0KDQpGb2xsb3dpbmcgdXAg
-d2l0aCBCaGF3YW4uDQoNCkhhcnJ5DQoNCj4gLURhbmllbA0KPiANCj4gDQo+PiAtRGFuaWVsDQo+
-Pg0KPj4+DQo+Pj4NCj4+PiBCaGF3YW4NCj4+Pg0KPj4+IE9uIDIwMTktMTAtMDkgMjo0MyBwLm0u
-LCBEYW5pZWwgVmV0dGVyIHdyb3RlOg0KPj4+PiBPbiBXZWQsIE9jdCA5LCAyMDE5IGF0IDg6MjMg
-UE0gTGFraGEsIEJoYXdhbnByZWV0DQo+Pj4+IDxCaGF3YW5wcmVldC5MYWtoYUBhbWQuY29tPiB3
-cm90ZToNCj4+Pj4+IEhpLA0KPj4+Pj4NCj4+Pj4+IFRoZSByZWFzb24gd2UgZG9uJ3QgdXNlIGRy
-bV9oZGNwIGlzIGJlY2F1c2Ugb3VyIHBvbGljeSBpcyB0byBkbyBoZGNwDQo+Pj4+PiB2ZXJpZmlj
-YXRpb24gdXNpbmcgUFNQL0hXIChvbmJvYXJkIHNlY3VyZSBwcm9jZXNzb3IpLg0KPj4+PiBpOTE1
-IGFsc28gdXNlcyBodyB0byBhdXRoLCB3ZSBzdGlsbCB1c2UgdGhlIHBhcnRzIGZyb20gZHJtX2hk
-Y3AgLi4uDQo+Pj4+IERpZCB5b3UgYWN0dWFsbHkgbG9vayBhdCB3aGF0J3MgaW4gdGhlcmU/IEl0
-J3MgZXNzZW50aWFsbHkganVzdCBzaGFyZWQNCj4+Pj4gZGVmaW5lcyBhbmQgZGF0YSBzdHJ1Y3R1
-cmVzIGZyb20gdGhlIHN0YW5kYXJkLCBwbHVzIGEgZmV3IG1pbmltYWwNCj4+Pj4gaGVscGVycyB0
-byBlbi9kZWNvZGUgc29tZSBiaXRzLiBKdXN0IGZyb20gYSBxdWljayByZWFkIHRoZSBlbnRpcmUN
-Cj4+Pj4gcGF0Y2ggdmVyeSBtdWNoIGxvb2tzIGxpa2UgbWlkbGF5ZXIgZXZlcnl3aGVyZSBkZXNp
-Z24gdGhhdCB3ZQ0KPj4+PiBkaXNjdXNzZWQgYmFjayB3aGVuIERDIGxhbmRlZCAuLi4NCj4+Pj4g
-LURhbmllbA0KPj4+Pg0KPj4+Pj4gQmhhd2FuDQo+Pj4+Pg0KPj4+Pj4gT24gMjAxOS0xMC0wOSAx
-MjozMiBwLm0uLCBEYW5pZWwgVmV0dGVyIHdyb3RlOg0KPj4+Pj4+IE9uIFRodSwgT2N0IDAzLCAy
-MDE5IGF0IDExOjA4OjAzUE0gKzAxMDAsIENvbGluIElhbiBLaW5nIHdyb3RlOg0KPj4+Pj4+PiBI
-aSwNCj4+Pj4+Pj4NCj4+Pj4+Pj4gU3RhdGljIGFuYWx5c2lzIHdpdGggQ292ZXJpdHkgaGFzIGRl
-dGVjdGVkIGEgcG90ZW50aWFsIGlzc3VlIHdpdGgNCj4+Pj4+Pj4gZnVuY3Rpb24gdmFsaWRhdGVf
-YmtzdiBpbg0KPj4+Pj4+PiBkcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvbW9kdWxlcy9oZGNw
-L2hkY3AxX2V4ZWN1dGlvbi5jIHdpdGggcmVjZW50DQo+Pj4+Pj4+IGNvbW1pdDoNCj4+Pj4+Pj4N
-Cj4+Pj4+Pj4gY29tbWl0IGVkOWQ4ZTJiY2IwMDNlYzk0NjU4Y2FmZTliMWJiMzk2MGUyMTM5ZWMN
-Cj4+Pj4+Pj4gQXV0aG9yOiBCaGF3YW5wcmVldCBMYWtoYSA8Qmhhd2FucHJlZXQuTGFraGFAYW1k
-LmNvbT4NCj4+Pj4+Pj4gRGF0ZTogICBUdWUgQXVnIDYgMTc6NTI6MDEgMjAxOSAtMDQwMA0KPj4+
-Pj4+Pg0KPj4+Pj4+PiAgICAgICBkcm0vYW1kL2Rpc3BsYXk6IEFkZCBIRENQIG1vZHVsZQ0KPj4+
-Pj4+IEkgdGhpbmsgdGhlIHJlYWwgcXVlc3Rpb24gaGVyZSBpcyAuLi4gd2h5IGlzIHRoaXMgbm90
-IHVzaW5nIGRybV9oZGNwPw0KPj4+Pj4+IC1EYW5pZWwNCj4+Pj4+Pg0KPj4+Pj4+PiBUaGUgYW5h
-bHlzaXMgaXMgYXMgZm9sbG93czoNCj4+Pj4+Pj4NCj4+Pj4+Pj4gICAgMjggc3RhdGljIGlubGlu
-ZSBlbnVtIG1vZF9oZGNwX3N0YXR1cyB2YWxpZGF0ZV9ia3N2KHN0cnVjdCBtb2RfaGRjcCAqaGRj
-cCkNCj4+Pj4+Pj4gICAgMjkgew0KPj4+Pj4+Pg0KPj4+Pj4+PiBDSUQgODk4NTIgKCMxIG9mIDEp
-OiBPdXQtb2YtYm91bmRzIHJlYWQgKE9WRVJSVU4pDQo+Pj4+Pj4+DQo+Pj4+Pj4+IDEuIG92ZXJy
-dW4tbG9jYWw6DQo+Pj4+Pj4+IE92ZXJydW5uaW5nIGFycmF5IG9mIDUgYnl0ZXMgYXQgYnl0ZSBv
-ZmZzZXQgNyBieSBkZXJlZmVyZW5jaW5nIHBvaW50ZXINCj4+Pj4+Pj4gKHVpbnQ2NF90ICopaGRj
-cC0+YXV0aC5tc2cuaGRjcDEuYmtzdi4NCj4+Pj4+Pj4NCj4+Pj4+Pj4gICAgMzAgICAgICAgIHVp
-bnQ2NF90IG4gPSAqKHVpbnQ2NF90ICopaGRjcC0+YXV0aC5tc2cuaGRjcDEuYmtzdjsNCj4+Pj4+
-Pj4gICAgMzEgICAgICAgIHVpbnQ4X3QgY291bnQgPSAwOw0KPj4+Pj4+PiAgICAzMg0KPj4+Pj4+
-PiAgICAzMyAgICAgICAgd2hpbGUgKG4pIHsNCj4+Pj4+Pj4gICAgMzQgICAgICAgICAgICAgICAg
-Y291bnQrKzsNCj4+Pj4+Pj4gICAgMzUgICAgICAgICAgICAgICAgbiAmPSAobiAtIDEpOw0KPj4+
-Pj4+PiAgICAzNiAgICAgICAgfQ0KPj4+Pj4+Pg0KPj4+Pj4+PiBoZGNwLT5hdXRoLm1zZy5oZGNw
-MS5ia3N2IGlzIGFuIGFycmF5IG9mIDUgdWludDhfdCBhcyBkZWZpbmVkIGluDQo+Pj4+Pj4+IGRy
-aXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9tb2R1bGVzL2hkY3AvaGRjcC5oIGFzIGZvbGxvd3M6
-DQo+Pj4+Pj4+DQo+Pj4+Pj4+IHN0cnVjdCBtb2RfaGRjcF9tZXNzYWdlX2hkY3AxIHsNCj4+Pj4+
-Pj4gICAgICAgICAgIHVpbnQ4X3QgICAgICAgICBhbls4XTsNCj4+Pj4+Pj4gICAgICAgICAgIHVp
-bnQ4X3QgICAgICAgICBha3N2WzVdOw0KPj4+Pj4+PiAgICAgICAgICAgdWludDhfdCAgICAgICAg
-IGFpbmZvOw0KPj4+Pj4+PiAgICAgICAgICAgdWludDhfdCAgICAgICAgIGJrc3ZbNV07DQo+Pj4+
-Pj4+ICAgICAgICAgICB1aW50MTZfdCAgICAgICAgcjBwOw0KPj4+Pj4+PiAgICAgICAgICAgdWlu
-dDhfdCAgICAgICAgIGJjYXBzOw0KPj4+Pj4+PiAgICAgICAgICAgdWludDE2X3QgICAgICAgIGJz
-dGF0dXM7DQo+Pj4+Pj4+ICAgICAgICAgICB1aW50OF90ICAgICAgICAga3N2bGlzdFs2MzVdOw0K
-Pj4+Pj4+PiAgICAgICAgICAgdWludDE2X3QgICAgICAgIGtzdmxpc3Rfc2l6ZTsNCj4+Pj4+Pj4g
-ICAgICAgICAgIHVpbnQ4X3QgICAgICAgICB2cFsyMF07DQo+Pj4+Pj4+DQo+Pj4+Pj4+ICAgICAg
-ICAgICB1aW50MTZfdCAgICAgICAgYmluZm9fZHA7DQo+Pj4+Pj4+IH07DQo+Pj4+Pj4+DQo+Pj4+
-Pj4+IHZhcmlhYmxlIG4gaXMgZ29pbmcgdG8gY29udGFpbiB0aGUgY29udGFpbnMgb2YgcjBwIGFu
-ZCBiY2Fwcy4gSSdtIG5vdA0KPj4+Pj4+PiBzdXJlIGlmIHRoYXQgaXMgaW50ZW50aW9uYWwuIElm
-IG5vdCwgdGhlbiB0aGUgY291bnQgaXMgZ29pbmcgdG8gYmUNCj4+Pj4+Pj4gaW5jb3JyZWN0IGlm
-IHRoZXNlIGFyZSBub24temVyby4NCj4+Pj4+Pj4NCj4+Pj4+Pj4gQ29saW4NCj4+Pj4+IF9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+Pj4+PiBkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0DQo+Pj4+PiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnDQo+
-Pj4+PiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbA0KPj4+Pg0KPj4+Pg0KPj4NCj4+DQo+Pg0KPj4gLS0NCj4+IERhbmllbCBWZXR0ZXINCj4+
-IFNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbg0KPj4gKzQxICgwKSA3OSAzNjUg
-NTcgNDggLSBodHRwOi8vYmxvZy5mZndsbC5jaA0KPiANCj4gDQo+IA0KPiAtLQ0KPiBEYW5pZWwg
-VmV0dGVyDQo+IFNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbg0KPiArNDEgKDAp
-IDc5IDM2NSA1NyA0OCAtIGh0dHA6Ly9ibG9nLmZmd2xsLmNoDQo+IA0K
+On Fri, Nov 01, 2019 at 03:45:56PM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Convert xen-platform from the legacy PCI power management callbacks to the
+> generic operations.  This is one step towards removing support for the
+> legacy PCI callbacks.
+> 
+> The generic .resume_noirq() operation is called by pci_pm_resume_noirq() at
+> the same point the legacy PCI .resume_early() callback was, so this patch
+> should not change the xen-platform behavior.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+I made the tweak below to fix the compile error.  I could swear I
+built this, but I must have been mistaken.
+
+> Cc: Stefano Stabellini <sstabellini@kernel.org>
+> Cc: KarimAllah Ahmed <karahmed@amazon.de>
+> ---
+>  drivers/xen/platform-pci.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/xen/platform-pci.c b/drivers/xen/platform-pci.c
+> index 5e30602fdbad..e06e8769eb84 100644
+> --- a/drivers/xen/platform-pci.c
+> +++ b/drivers/xen/platform-pci.c
+> @@ -168,13 +168,17 @@ static const struct pci_device_id platform_pci_tbl[] = {
+>  	{0,}
+>  };
+>  
+> +static struct dev_pm_ops platform_pm_ops = {
+> +	.resume_noirq =   platform_pci_resume,
+> +};
+> +
+>  static struct pci_driver platform_driver = {
+>  	.name =           DRV_NAME,
+>  	.probe =          platform_pci_probe,
+>  	.id_table =       platform_pci_tbl,
+> -#ifdef CONFIG_PM
+> -	.resume_early =   platform_pci_resume,
+> -#endif
+> +	.driver = {
+> +		.pm =     &platform_pm_ops,
+> +	},
+>  };
+>  
+>  builtin_pci_driver(platform_driver);
+> -- 
+> 2.24.0.rc1.363.gb1bccd3e3d-goog
+
+diff --git a/drivers/xen/platform-pci.c b/drivers/xen/platform-pci.c
+index e06e8769eb84..59e85e408c23 100644
+--- a/drivers/xen/platform-pci.c
++++ b/drivers/xen/platform-pci.c
+@@ -74,7 +74,7 @@ static int xen_allocate_irq(struct pci_dev *pdev)
+ 			"xen-platform-pci", pdev);
+ }
+ 
+-static int platform_pci_resume(struct pci_dev *pdev)
++static int platform_pci_resume(struct device *dev)
+ {
+ 	int err;
+ 
+@@ -83,7 +83,7 @@ static int platform_pci_resume(struct pci_dev *pdev)
+ 
+ 	err = xen_set_callback_via(callback_via);
+ 	if (err) {
+-		dev_err(&pdev->dev, "platform_pci_resume failure!\n");
++		dev_err(dev, "platform_pci_resume failure!\n");
+ 		return err;
+ 	}
+ 	return 0;
