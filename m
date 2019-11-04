@@ -2,137 +2,99 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1827CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0C4CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8287421D71
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA0F214D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:42:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oGPkCL7M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730016AbfKDXl4 (ORCPT
+        id S1730045AbfKDXmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 18:41:56 -0500
-Received: from out01.mta.xmission.com ([166.70.13.231]:58128 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729817AbfKDXl4 (ORCPT
+        Mon, 4 Nov 2019 18:42:23 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:41278 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729693AbfKDXmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 18:41:56 -0500
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iRlys-0003Z2-Cb; Mon, 04 Nov 2019 16:41:54 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iRlyr-0000zR-Ha; Mon, 04 Nov 2019 16:41:54 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Topi Miettinen <toiwoton@gmail.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list\:FILESYSTEMS \(VFS and infrastructure\)" 
-        <linux-fsdevel@vger.kernel.org>
-References: <74a91362-247c-c749-5200-7bdce704ed9e@gmail.com>
-        <87d0e8g5f4.fsf@x220.int.ebiederm.org>
-        <f272bdd3-526d-6737-c906-143d5e5fc478@gmail.com>
-        <87h83jejei.fsf@x220.int.ebiederm.org>
-        <eb2da7e4-23ff-597a-08e1-e0555d490f6f@gmail.com>
-Date:   Mon, 04 Nov 2019 17:41:40 -0600
-In-Reply-To: <eb2da7e4-23ff-597a-08e1-e0555d490f6f@gmail.com> (Topi
-        Miettinen's message of "Mon, 4 Nov 2019 19:58:55 +0200")
-Message-ID: <87tv7jciq3.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 4 Nov 2019 18:42:23 -0500
+Received: by mail-ua1-f66.google.com with SMTP id o9so3804127uat.8
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 15:42:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r7KXOloQM0IlfDWd2ZmUfquqt9+rdW/LWeVsYzZS5Yo=;
+        b=oGPkCL7MQlhqPwAizXy81wfFgmEWqswSVaJ070q7QSMUHV4rPFEYIVwwPUoI9JzQsV
+         tjGNPbiNdqm3wtOwdKjIJhkvEjEXR8IE1Pm1iGuTui1lsJ+zyZeDnmwaGc2e6IpIiC7j
+         9DxB+dahbSm/W3s0bm4fZ+Ya8dVCfIpGNF7eIHGT9X8eK1ysYtT0Awoo+UNrLzgXT1M8
+         6lCULIQcB4PBf/VReN8veBI+zOWkOCacAf5D4mMyNLo05/F1kRUX0ZUZHRqR65q2ltF0
+         9f1oEkjctFu+UunQvKHg6uh6X+4dlnVuWcEQ+Q7Gr/HjdzHoxvC8WHhHXsbWPLqqmzQT
+         XpXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r7KXOloQM0IlfDWd2ZmUfquqt9+rdW/LWeVsYzZS5Yo=;
+        b=YIJMl3kWWD2lzt0/9Twp933TQ8eUvBGKG6mko2WjTweATl1x5YLHWNxlvQZbEXEMpb
+         vEJ4TyYv8pQF3MQhtzwYYrVnSRXC6JzlJM6A0wFLH6gQMwz7VHTErGsNSQCv3qPj4NzR
+         a62OYKiZShYEQGd7cFnId60qkYlknRkAiUST8rnLNnqgyGIZ7pmBFHLDH6vGh8BJTzu6
+         frA64NoRFk3/W1LMsuP6ousMbHv/sWxK4u2mnRza/VFqUr+lGg6nPi8sddBlXhA9YYVE
+         IFifG7qvps1z2tUGbSgcU2sWLE1Ho39zBG8NWxd8Rq3iWHqPvfSobPrjrhZ3xqIWavXy
+         4MXA==
+X-Gm-Message-State: APjAAAW1S74UHO7fK5Vfk1LRF6VVxW0tEwtNjY2Q4eFuKC1mHOZw5dDK
+        3//yIBDV+kU35Lzs0K6SdDtiM9VahvyA5DIApYw/Lg==
+X-Google-Smtp-Source: APXvYqz8I4cRB5IWTivRJgxux0uUc15gQK8/fyRxTXKNu37vOixhqfpx8UpDAvilaBEvuvDWvryENhED0MHmtPoojeg=
+X-Received: by 2002:ab0:1451:: with SMTP id c17mr4197520uae.110.1572910941690;
+ Mon, 04 Nov 2019 15:42:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1iRlyr-0000zR-Ha;;;mid=<87tv7jciq3.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18AaWiq4pZEpAPJi78BflGOh+DMoEBcnOg=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] Allow restricting permissions in /proc/sys
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191101221150.116536-1-samitolvanen@google.com> <20191101221150.116536-11-samitolvanen@google.com>
+ <20191104170454.GA2024@lakrids.cambridge.arm.com>
+In-Reply-To: <20191104170454.GA2024@lakrids.cambridge.arm.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Mon, 4 Nov 2019 15:42:09 -0800
+Message-ID: <CABCJKue=yZqe23DYg3_WyiSKhxXS+GXe+3skhvYon4ytkfH+XA@mail.gmail.com>
+Subject: Re: [PATCH v4 10/17] arm64: disable kretprobes with SCS
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Topi Miettinen <toiwoton@gmail.com> writes:
-
-> On 4.11.2019 17.44, Eric W. Biederman wrote:
->> Topi Miettinen <toiwoton@gmail.com> writes:
->>
->>> On 3.11.2019 20.50, Eric W. Biederman wrote:
->>>> Topi Miettinen <toiwoton@gmail.com> writes:
->>>>
->>>>> Several items in /proc/sys need not be accessible to unprivileged
->>>>> tasks. Let the system administrator change the permissions, but only
->>>>> to more restrictive modes than what the sysctl tables allow.
->>>>
->>>> This looks quite buggy.  You neither update table->mode nor
->>>> do you ever read from table->mode to initialize the inode.
->>>> I am missing something in my quick reading of your patch?
->>>
->>> inode->i_mode gets initialized in proc_sys_make_inode().
->>>
->>> I didn't want to touch the table, so that the original permissions can
->>> be used to restrict the changes made. In case the restrictions are
->>> removed as suggested by Theodore Ts'o, table->mode could be
->>> changed. Otherwise I'd rather add a new field to store the current
->>> mode and the mode field can remain for reference. As the original
->>> author of the code from 2007, would you let the administrator to
->>> chmod/chown the items in /proc/sys without restrictions (e.g. 0400 ->
->>> 0777)?
->>
->> At an architectural level I think we need to do this carefully and have
->> a compelling reason.  The code has survived nearly the entire life of
->> linux without this capability.
+On Mon, Nov 4, 2019 at 9:05 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> I'm a bit confused as to why that's the case -- could you please
+> elaborate on how this is incompatible?
 >
-> I'd be happy with only allowing restrictions to access for
-> now. Perhaps later with more analysis, also relaxing changes and maybe
-> UID/GID changes can be allowed.
+> IIUC kretrobes works by patching the function entry point with a BRK, so
+> that it can modify the LR _before_ it is saved to the stack. I don't see
+> how SCS affects that.
 
-Let's find the use case where someone cares before we think about that.
+You're correct. While this may not be optimal for reducing attack
+surface, I just tested this to confirm that there's no functional
+conflict. I'll drop this and related patches from v5.
 
->> I think right now the common solution is to mount another file over the
->> file you are trying to hide/limit.  Changing the permissions might be
->> better but that is not at all clear.
->>
->> Do you have specific examples of the cases where you would like to
->> change the permissions?
->
-> Unprivileged applications typically do not need to access most items
-> in /proc/sys, so I'd like to gradually find out which are needed. So
-> far I've seen no problems with 0500 mode for directories abi, crypto,
-> debug, dev, fs, user or vm.
-
-But if there is no problem in letting everyone access the information
-why reduce the permissions?
-
-> I'm also using systemd's InaccessiblePaths to limit access (which
-> mounts an inaccessible directory over the path), but that's a bit too
-> big hammer. For example there are over 100 files in /proc/sys/kernel,
-> perhaps there will be issues when creating a mount for each, and that
-> multiplied by a number of services.
-
-My sense is that if there is any kind of compelling reason to make
-world-readable values not world-readable, and it doesn't break anything
-(except malicious applications) than a kernel patch is probably the way
-to go.
-
-Policy knobs like this on proc tend to break in normal maintenance
-because they are not used enough so I am not a big fan of adding policy
-knobs just because we can.
-
-> I see no problems by using Firejail (which uses PID namespacing) with
-> v2, the permissions in /proc/sys are the same as outside the
-> namespace.
-
-Thank you for testing.
-
-Eric
+Sami
