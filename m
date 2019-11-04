@@ -2,228 +2,107 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD19CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7CACA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF0220869
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D38D320869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:34:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHz/KuqT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbfKDQd4 (ORCPT
+        id S1729090AbfKDQeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 11:33:56 -0500
-Received: from mailoutvs4.siol.net ([185.57.226.195]:51750 "EHLO mail.siol.net"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727838AbfKDQd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 11:33:56 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 94E61525106;
-        Mon,  4 Nov 2019 17:33:51 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id cL8U28b3yVhv; Mon,  4 Nov 2019 17:33:51 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id E8F185250EB;
-        Mon,  4 Nov 2019 17:33:50 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-86-58-102-7.static.triera.net [86.58.102.7])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id EA0315251A3;
-        Mon,  4 Nov 2019 17:33:46 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     mripard@kernel.org, mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 1/3] media: cedrus: Properly signal size in mode register
-Date:   Mon, 04 Nov 2019 17:33:46 +0100
-Message-ID: <7309638.L6IRxaGt1L@jernej-laptop>
-In-Reply-To: <20191104100228.GD502900@aptenodytes>
-References: <20191026074959.1073512-1-jernej.skrabec@siol.net> <20191026074959.1073512-2-jernej.skrabec@siol.net> <20191104100228.GD502900@aptenodytes>
+        Mon, 4 Nov 2019 11:34:25 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:32782 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727838AbfKDQeY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 11:34:24 -0500
+Received: by mail-wr1-f68.google.com with SMTP id s1so17895527wro.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 08:34:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JFkDbKsSeI6+K0jBeMW0GZTEnXuZ3ZSW0WVBKac1tL0=;
+        b=fHz/KuqTSjH1izmh/ecYcpUWqeTHp/VgGOXvyKCgSKmsswFECT92U4eKMGjaGAy+OT
+         /tc9SGYjnxdtRNm2HJWQRlncZ1OC6fiIgewfXPUui7RtjX7JdHFlyAD49OXwpUZpHQOk
+         oKzQl6uS7XOdjODe5L1F5F9IHfev2jx7af3Vk2RLk9GwAz8NpLOBOvT5cU/FFdGPDXRX
+         JXxx1+3IFgsEbv0SddcXvfxU9PQVT1dNWZvjPUXMZ4c79QFCTVmYA8Zj13B0EZHSgDd9
+         i+TUaElLH7kHRSALqMTdd8huDBv6X6bZvajsUFWdxsdpD+qhETk3e8xofis9JSLksRoG
+         bQsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JFkDbKsSeI6+K0jBeMW0GZTEnXuZ3ZSW0WVBKac1tL0=;
+        b=eODpNaDvCw2og6OHzeASpDUzBQpIq3EaTyZFAy+PG1nwUyWkFEk1x9H2SZbA1olAWN
+         5Zwe/aBkAXfIhLJ7VrEb/o+A34jS4MDdgSpIMR7hEnPMJuUstAOTwH1CpL/oKNjioHTF
+         NyTfkGaT8yboc22BZg6BTGgh/zIUG6BZJzK0ET69MVNp+vnbXREOeDsnZA55MIDpEFDc
+         Z01+gm4kt7XmqHNJQPspIlbNZa7Gj1c55LCTVFUWuAmf/rtmAFjD8U3O+7fXMbexKjnd
+         3RMLBLQTEG/E0aFP+r/JouHNr+W4gkBVr7IkeCJensiCTx5GhYmcN6J2XfyU7GLzOdJU
+         xl3Q==
+X-Gm-Message-State: APjAAAUFU+pZPP6Gz+Ul+MSYvzCR4KXcIDmMsqDgmXBEq+a50DRbX+87
+        PUMKRZzAju8cyOTIvHNQX/kW1ZSVmOSng7A=
+X-Google-Smtp-Source: APXvYqwER7eASKzqK/tmsjOMIJJXcnS/K0BnACQLnfZ/F7fsD/zr+ZXQ8+brh4pdwMcZEMoVpzdIBQ==
+X-Received: by 2002:adf:f4c9:: with SMTP id h9mr19343427wrp.354.1572885262526;
+        Mon, 04 Nov 2019 08:34:22 -0800 (PST)
+Received: from ninjahub.lan (79-73-36-243.dynamic.dsl.as9105.com. [79.73.36.243])
+        by smtp.googlemail.com with ESMTPSA id h124sm18573509wmf.30.2019.11.04.08.34.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 08:34:22 -0800 (PST)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     outreachy-kernel@googlegroups.com
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, hsweeten@visionengravers.com,
+        abbotti@mev.co.uk, Jules Irenge <jbi.octave@gmail.com>
+Subject: [PATCH v2] staging: comedi: rewrite macro function with GNU extension typeof
+Date:   Mon,  4 Nov 2019 16:33:31 +0000
+Message-Id: <20191104163331.68173-1-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne ponedeljek, 04. november 2019 ob 11:02:28 CET je Paul Kocialkowski 
-napisal(a):
-> Hi Jernej,
-> 
-> On Sat 26 Oct 19, 09:49, Jernej Skrabec wrote:
-> > Mode register also holds information if video width is bigger than 2048
-> > and if it is equal to 4096.
-> > 
-> > Rework cedrus_engine_enable() to properly signal this properties.
-> 
-> Thanks for the patch, looks good to me!
-> 
-> Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> 
-> One minor thing: maybe we should have a way to set the maximum dimensions
-> depending on the generation of the engine in use and the actual maximum
-> supported by the hardware.
-> 
-> Maybe either as dedicated new fields in struct cedrus_variant or as
-> capability flags.
+Rewrite macro function with the GNU extension typeof
+to remove a possible side-effects of MACRO argument reuse "x".
+ - Problem could rise if arguments have different types
+and different use though.
 
-I was thinking about first solution, but after going trough manuals, it was 
-unclear what are real limitations. For example, H3 manual states that it is 
-capable of decoding H264 1080p@60Hz. However, I know for a fact that it is 
-also capable of decoding 4k videos, but probably not at 60 Hz. I don't own 
-anything older that A83T, so I don't know what are capabilities of those SoCs. 
-Anyway, being slow is still ok for some tasks, like transcoding, so we can't 
-limit decoding to 1080p just because it's slow. It is probably still faster 
-than doing it in SW. Not to mention that it's still ok for some videos, a lot 
-of them uses 24 fps.
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+---
+v1 - had no full commit log message, with changes not intended to be in the patch 
+v2 - remove some changes not intended to be in this driver
+     include note of a potential problem
+ drivers/staging/comedi/comedi.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Best regards,
-Jernej
-
-> 
-> Anyway that can be done later since we were already hardcoding this.
-> 
-> Cheers,
-> 
-> Paul
-> 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > ---
-> > 
-> >  drivers/staging/media/sunxi/cedrus/cedrus_h264.c  | 2 +-
-> >  drivers/staging/media/sunxi/cedrus/cedrus_h265.c  | 2 +-
-> >  drivers/staging/media/sunxi/cedrus/cedrus_hw.c    | 9 +++++++--
-> >  drivers/staging/media/sunxi/cedrus/cedrus_hw.h    | 2 +-
-> >  drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c | 2 +-
-> >  drivers/staging/media/sunxi/cedrus/cedrus_regs.h  | 2 ++
-> >  6 files changed, 13 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c index
-> > 7487f6ab7576..d2c854ecdf15 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > @@ -485,7 +485,7 @@ static void cedrus_h264_setup(struct cedrus_ctx *ctx,
-> > 
-> >  {
-> >  
-> >  	struct cedrus_dev *dev = ctx->dev;
-> > 
-> > -	cedrus_engine_enable(dev, CEDRUS_CODEC_H264);
-> > +	cedrus_engine_enable(ctx, CEDRUS_CODEC_H264);
-> > 
-> >  	cedrus_write(dev, VE_H264_SDROT_CTRL, 0);
-> >  	cedrus_write(dev, VE_H264_EXTRA_BUFFER1,
-> > 
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-> > b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c index
-> > 9bc921866f70..6945dc74e1d7 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-> > @@ -276,7 +276,7 @@ static void cedrus_h265_setup(struct cedrus_ctx *ctx,
-> > 
-> >  	}
-> >  	
-> >  	/* Activate H265 engine. */
-> > 
-> > -	cedrus_engine_enable(dev, CEDRUS_CODEC_H265);
-> > +	cedrus_engine_enable(ctx, CEDRUS_CODEC_H265);
-> > 
-> >  	/* Source offset and length in bits. */
-> > 
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> > b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c index
-> > 570a9165dd5d..3acfa21bc124 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> > @@ -30,7 +30,7 @@
-> > 
-> >  #include "cedrus_hw.h"
-> >  #include "cedrus_regs.h"
-> > 
-> > -int cedrus_engine_enable(struct cedrus_dev *dev, enum cedrus_codec codec)
-> > +int cedrus_engine_enable(struct cedrus_ctx *ctx, enum cedrus_codec codec)
-> > 
-> >  {
-> >  
-> >  	u32 reg = 0;
-> > 
-> > @@ -58,7 +58,12 @@ int cedrus_engine_enable(struct cedrus_dev *dev, enum
-> > cedrus_codec codec)> 
-> >  		return -EINVAL;
-> >  	
-> >  	}
-> > 
-> > -	cedrus_write(dev, VE_MODE, reg);
-> > +	if (ctx->src_fmt.width == 4096)
-> > +		reg |= VE_MODE_PIC_WIDTH_IS_4096;
-> > +	if (ctx->src_fmt.width > 2048)
-> > +		reg |= VE_MODE_PIC_WIDTH_MORE_2048;
-> > +
-> > +	cedrus_write(ctx->dev, VE_MODE, reg);
-> > 
-> >  	return 0;
-> >  
-> >  }
-> > 
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-> > b/drivers/staging/media/sunxi/cedrus/cedrus_hw.h index
-> > 27d0882397aa..604ff932fbf5 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-> > @@ -16,7 +16,7 @@
-> > 
-> >  #ifndef _CEDRUS_HW_H_
-> >  #define _CEDRUS_HW_H_
-> > 
-> > -int cedrus_engine_enable(struct cedrus_dev *dev, enum cedrus_codec
-> > codec);
-> > +int cedrus_engine_enable(struct cedrus_ctx *ctx, enum cedrus_codec
-> > codec);
-> > 
-> >  void cedrus_engine_disable(struct cedrus_dev *dev);
-> >  
-> >  void cedrus_dst_format_set(struct cedrus_dev *dev,
-> > 
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c
-> > b/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c index
-> > 13c34927bad5..8bcd6b8f9e2d 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c
-> > @@ -96,7 +96,7 @@ static void cedrus_mpeg2_setup(struct cedrus_ctx *ctx,
-> > struct cedrus_run *run)> 
-> >  	quantization = run->mpeg2.quantization;
-> >  	
-> >  	/* Activate MPEG engine. */
-> > 
-> > -	cedrus_engine_enable(dev, CEDRUS_CODEC_MPEG2);
-> > +	cedrus_engine_enable(ctx, CEDRUS_CODEC_MPEG2);
-> > 
-> >  	/* Set intra quantization matrix. */
-> > 
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> > b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h index
-> > 4275a307d282..ace3d49fcd82 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> > @@ -35,6 +35,8 @@
-> > 
-> >  #define VE_MODE					0x00
-> > 
-> > +#define VE_MODE_PIC_WIDTH_IS_4096		BIT(22)
-> > +#define VE_MODE_PIC_WIDTH_MORE_2048		BIT(21)
-> > 
-> >  #define VE_MODE_REC_WR_MODE_2MB			(0x01 << 20)
-> >  #define VE_MODE_REC_WR_MODE_1MB			(0x00 << 20)
-> >  #define VE_MODE_DDR_MODE_BW_128			(0x03 << 16)
-
-
-
+diff --git a/drivers/staging/comedi/comedi.h b/drivers/staging/comedi/comedi.h
+index 09a940066c0e..a57691a2e8d8 100644
+--- a/drivers/staging/comedi/comedi.h
++++ b/drivers/staging/comedi/comedi.h
+@@ -1103,8 +1103,10 @@ enum ni_common_signal_names {
+ 
+ /* *** END GLOBALLY-NAMED NI TERMINALS/SIGNALS *** */
+ 
+-#define NI_USUAL_PFI_SELECT(x)	(((x) < 10) ? (0x1 + (x)) : (0xb + (x)))
+-#define NI_USUAL_RTSI_SELECT(x)	(((x) < 7) ? (0xb + (x)) : 0x1b)
++#define NI_USUAL_PFI_SELECT(x)\
++	({typeof(x) x_ = (x); (x_ < 10) ? (0x1 + x_) : (0xb + x_); })
++#define NI_USUAL_RTSI_SELECT(x)\
++	({typeof(x) x_ = (x); (x_ < 7) ? (0xb + x_) : 0x1b; })
+ 
+ /*
+  * mode bits for NI general-purpose counters, set with
+-- 
+2.23.0
 
