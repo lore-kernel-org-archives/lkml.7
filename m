@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABBECA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE049CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5D62184C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79B072190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904423;
-	bh=5IFpmLN3JhJf8ksQjkcKwGvyr/g/pPEKDHGq8xP3mCU=;
+	s=default; t=1572904428;
+	bh=7Hz5cFinExP0sQs8VQ/Osxg5CIeMdGKkH2cwpUXVmLU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dYzXWWRs4hhnAV9Lbn+GtYzsnm1IhB5NapxoXktdT9Fvo6VTsjeRCDrCAqA9dQrz6
-	 E/tMDf0RtirqT5SRHD/ij5TrRMEUStDm7qlC6UeBP6zGUSMvXTMgXNMMc1JFDduUsd
-	 4V0qWuqCsEJymwdEq9buN0iNC7ZxwYlab/C9mQyc=
+	b=HIpWdYaJJjWdwLKJz5VNchQlYmYgCrXXJje0WPYGbXTIHiiwrZxv6gWJcXf0/QJk0
+	 Avg7rZoyzm5avdjbuc5DowcRBIWw7CDWYjMVUIQDfgZoqI8404JR2qHRWtUk/hch8q
+	 eedQcgxUBxdNsSX2I7GwCSPK72nMZxYYvSPSDn6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731042AbfKDVxm (ORCPT
+        id S2387545AbfKDVxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:53:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47686 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:53:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731028AbfKDVxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:53:38 -0500
+        id S1731046AbfKDVxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:53:44 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FDAA21D81;
-        Mon,  4 Nov 2019 21:53:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29E9B217F5;
+        Mon,  4 Nov 2019 21:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904417;
-        bh=5IFpmLN3JhJf8ksQjkcKwGvyr/g/pPEKDHGq8xP3mCU=;
+        s=default; t=1572904423;
+        bh=7Hz5cFinExP0sQs8VQ/Osxg5CIeMdGKkH2cwpUXVmLU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QAJBYdLD+iShQd/eXmdPglYtQJ9z5gVv/MuGlRdlEpO41phdDo8Q7VVE1PFTKXm1c
-         b8/jeSOdRIkwKq2xaPHVBM6YY/vozyIG6oUzNjFoIrcVWHllVZo3Q4Dp6HqRpwoSdx
-         SXa7XTr6QsFvqDp0w3vm6D9AeSgzn9uef3McsJBU=
+        b=ZCULffi1IewXUEQ6DHcLA272IrA6E1RNsuqTPHe4ag5LfnvUuTUdi9SSLOkl3N4sr
+         S79FQAxNi0JNNTPlIQa19nZD6L0kOIdjnCfQdYMlVY3chcJl2xRXjBAV7YpWsAIyWX
+         P+bGRA29RgeCYf/+iz+wDDd6mRnTGnY4ulXqu9x0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 38/95] gpio: max77620: Use correct unit for debounce times
-Date:   Mon,  4 Nov 2019 22:44:36 +0100
-Message-Id: <20191104212101.370243461@linuxfoundation.org>
+Subject: [PATCH 4.14 40/95] serial: mctrl_gpio: Check for NULL pointer
+Date:   Mon,  4 Nov 2019 22:44:38 +0100
+Message-Id: <20191104212101.712737282@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -60,43 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Adam Ford <aford173@gmail.com>
 
-[ Upstream commit fffa6af94894126994a7600c6f6f09b892e89fa9 ]
+[ Upstream commit 37e3ab00e4734acc15d96b2926aab55c894f4d9c ]
 
-The gpiod_set_debounce() function takes the debounce time in
-microseconds. Adjust the switch/case values in the MAX77620 GPIO to use
-the correct unit.
+When using mctrl_gpio_to_gpiod, it dereferences gpios into a single
+requested GPIO.  This dereferencing can break if gpios is NULL,
+so this patch adds a NULL check before dereferencing it.  If
+gpios is NULL, this function will also return NULL.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://lore.kernel.org/r/20191002122825.3948322-1-thierry.reding@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Yegor Yefremov <yegorslists@googlemail.com>
+Link: https://lore.kernel.org/r/20191006163314.23191-1-aford173@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-max77620.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/serial/serial_mctrl_gpio.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
-index 538bce4b5b427..ac6c1c0548b69 100644
---- a/drivers/gpio/gpio-max77620.c
-+++ b/drivers/gpio/gpio-max77620.c
-@@ -163,13 +163,13 @@ static int max77620_gpio_set_debounce(struct max77620_gpio *mgpio,
- 	case 0:
- 		val = MAX77620_CNFG_GPIO_DBNC_None;
- 		break;
--	case 1 ... 8:
-+	case 1000 ... 8000:
- 		val = MAX77620_CNFG_GPIO_DBNC_8ms;
- 		break;
--	case 9 ... 16:
-+	case 9000 ... 16000:
- 		val = MAX77620_CNFG_GPIO_DBNC_16ms;
- 		break;
--	case 17 ... 32:
-+	case 17000 ... 32000:
- 		val = MAX77620_CNFG_GPIO_DBNC_32ms;
- 		break;
- 	default:
+diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+index 42e42e3e7a6e6..388f710468490 100644
+--- a/drivers/tty/serial/serial_mctrl_gpio.c
++++ b/drivers/tty/serial/serial_mctrl_gpio.c
+@@ -69,6 +69,9 @@ EXPORT_SYMBOL_GPL(mctrl_gpio_set);
+ struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
+ 				      enum mctrl_gpio_idx gidx)
+ {
++	if (gpios == NULL)
++		return NULL;
++
+ 	return gpios->gpio[gidx];
+ }
+ EXPORT_SYMBOL_GPL(mctrl_gpio_to_gpiod);
 -- 
 2.20.1
 
