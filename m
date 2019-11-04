@@ -2,63 +2,126 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCA7CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 030D6CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D06021929
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8EF821929
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:11:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="0IRR4RPw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbfKDDLd (ORCPT
+        id S1729223AbfKDDLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 22:11:33 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:41090 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728781AbfKDDLd (ORCPT
+        Sun, 3 Nov 2019 22:11:54 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:65049 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728781AbfKDDLy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 22:11:33 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4BADB1503943D;
-        Sun,  3 Nov 2019 19:11:32 -0800 (PST)
-Date:   Sun, 03 Nov 2019 19:11:31 -0800 (PST)
-Message-Id: <20191103.191131.1356892695062232524.davem@davemloft.net>
-To:     grygorii.strashko@ti.com
-Cc:     netdev@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, nsekhar@ti.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: net: davinci-mdio: convert bindings to
- json-schema
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191101164502.19089-1-grygorii.strashko@ti.com>
-References: <20191101164502.19089-1-grygorii.strashko@ti.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 03 Nov 2019 19:11:32 -0800 (PST)
+        Sun, 3 Nov 2019 22:11:54 -0500
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id xA43BhWn032610;
+        Mon, 4 Nov 2019 12:11:43 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com xA43BhWn032610
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1572837104;
+        bh=vMxuYwRHws4tNFRGpfPUy5dZwjFqOGxlu03uplhO42I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0IRR4RPwZy4jcyYgVusaI75xZRM4AJnRPCkB2lfNEfnvBFx0h8CrgePHX1j8rBGEF
+         Fa8BkImtgeKPFA6Ij87E8I/00N4wBt7zgbmK6VSshNPrf5qn8jNjmm3rJD6GdB/Q/H
+         DrSHQscW8AEJ4g4sSNCyHUNYC6XGn3NQ7hcgX3Q3oVj+6RsqF6egBaFfwWoodocZCD
+         KoFXwzmjI+dvpTWPzxgwrvOlanfU8DqrNdwcblpnADUBoBp8p6aybg+7MHIzX3uhoM
+         1lQbbwC3yF0ojU36UDnRI4R0oL7vw7/0eVio3u9MdJuhiBlqVxsXBU57JxRAVdOIz5
+         ZHcrS7LDvbZQw==
+X-Nifty-SrcIP: [209.85.222.46]
+Received: by mail-ua1-f46.google.com with SMTP id s25so136094uap.1;
+        Sun, 03 Nov 2019 19:11:43 -0800 (PST)
+X-Gm-Message-State: APjAAAUOKds9oet/Zg81aBPsAhE0SvgGK22fxLv6sSEJnVN8dKvqPysm
+        ZnmMPIYgZtAcw0579Sm+6ccLDySqBMF+el3vV3M=
+X-Google-Smtp-Source: APXvYqyE0nGV98neToXAe5hLXzbDObfhFlg/QKkxKcBsziWl3jP01hIXqHPwXSYx8xzJ5vABi98f/kqIE5zvSf0Ea7U=
+X-Received: by 2002:ab0:3395:: with SMTP id y21mr3558264uap.25.1572837102044;
+ Sun, 03 Nov 2019 19:11:42 -0800 (PST)
+MIME-Version: 1.0
+References: <20191003102915.28301-1-yamada.masahiro@socionext.com>
+ <20191003102915.28301-4-yamada.masahiro@socionext.com> <x497e4kluxq.fsf@segfault.boston.devel.redhat.com>
+ <CAK7LNASmpO6Dn2M1DtoCDs=RM+jwW7_tRhq7nqDU1YZWdRafuw@mail.gmail.com> <x494kznctuc.fsf@segfault.boston.devel.redhat.com>
+In-Reply-To: <x494kznctuc.fsf@segfault.boston.devel.redhat.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 4 Nov 2019 12:11:06 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQnaBCkRCsRPjK9m6wLaDvTsgkiFgMEiObnfuncxOHZOg@mail.gmail.com>
+Message-ID: <CAK7LNAQnaBCkRCsRPjK9m6wLaDvTsgkiFgMEiObnfuncxOHZOg@mail.gmail.com>
+Subject: Re: [PATCH 4/4] modpost: do not set ->preloaded for symbols from Module.symvers
+To:     Jeff Moyer <jmoyer@redhat.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Date: Fri, 1 Nov 2019 18:45:02 +0200
+On Sat, Nov 2, 2019 at 3:52 AM Jeff Moyer <jmoyer@redhat.com> wrote:
+>
+> Masahiro Yamada <yamada.masahiro@socionext.com> writes:
+>
+> > On Fri, Nov 1, 2019 at 1:51 AM Jeff Moyer <jmoyer@redhat.com> wrote:
+> >>
+> >> Masahiro Yamada <yamada.masahiro@socionext.com> writes:
+> >>
+> >> > Now that there is no overwrap between symbols from ELF files and
+> >> > ones from Module.symvers.
+> >> >
+> >> > So, the 'exported twice' warning should be reported irrespective
+> >> > of where the symbol in question came from. Only the exceptional case
+> >> > is when __crc_<sym> symbol appears before __ksymtab_<sym>. This
+> >> > typically occurs for EXPORT_SYMBOL in .S files.
+> >>
+> >> Hi, Masahiro,
+> >>
+> >> After apply this patch, I get the following modpost warnings when doing:
+> >>
+> >> $ make M=tools/tesing/nvdimm
+> >> ...
+> >>   Building modules, stage 2.
+> >>   MODPOST 12 modules
+> >> WARNING: tools/testing/nvdimm/libnvdimm: 'nvdimm_bus_lock' exported
+> >> twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+> >> WARNING: tools/testing/nvdimm/libnvdimm: 'nvdimm_bus_unlock'
+> >> exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+> >> WARNING: tools/testing/nvdimm/libnvdimm: 'is_nvdimm_bus_locked'
+> >> exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+> >> WARNING: tools/testing/nvdimm/libnvdimm: 'devm_nvdimm_memremap'
+> >> exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+> >> WARNING: tools/testing/nvdimm/libnvdimm: 'nd_fletcher64' exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+> >> WARNING: tools/testing/nvdimm/libnvdimm: 'to_nd_desc' exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+> >> WARNING: tools/testing/nvdimm/libnvdimm: 'to_nvdimm_bus_dev'
+> >> exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+> >> ...
+> >>
+> >> There are a lot of these warnings.  :)
+> >
+> > These warnings are correct since
+> > drivers/nvdimm/Makefile and
+> > tools/testing/nvdimm/Kbuild
+> > compile the same files.
+>
+> Yeah, but that's by design.  Is there a way to silence these warnings?
+>
+> -Jeff
+>
 
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for the TI SoC Davinci/OMAP/Keystone2 MDIO Controllerr over to a
-> YAML schemas.
-> 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
-> changes since rfc:
->  - removed old bindings
->  - bus_freq defined as "required" for davinci_mdio
-> rfc: https://lkml.org/lkml/2019/10/24/300
+"rm -f Module.symvers; make M=tools/testing/nvdimm" ?
 
-I am assume the devicetree folks will pick this up.
+I'd like the _design_ fixed though.
+
+
+-- 
+Best Regards
+Masahiro Yamada
