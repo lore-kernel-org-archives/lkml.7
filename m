@@ -2,402 +2,263 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4745CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5A8CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8D32080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD4D20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:55:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="aXylMG+y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbfKDQzB (ORCPT
+        id S1729419AbfKDQzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 11:55:01 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45766 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728144AbfKDQy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 11:54:56 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 28C19A6F828CBCBEDCB9;
-        Tue,  5 Nov 2019 00:54:52 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 5 Nov 2019 00:54:42 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <broonie@kernel.org>, <marek.vasut@gmail.com>,
-        <tudor.ambarus@microchip.com>
-CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-        <xuejiancheng@hisilicon.com>, <fengsheng5@huawei.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller driver
-Date:   Tue, 5 Nov 2019 00:51:36 +0800
-Message-ID: <1572886297-45400-3-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1572886297-45400-1-git-send-email-john.garry@huawei.com>
-References: <1572886297-45400-1-git-send-email-john.garry@huawei.com>
+        Mon, 4 Nov 2019 11:55:04 -0500
+Received: from mail-wm1-f45.google.com ([209.85.128.45]:32925 "EHLO
+        mail-wm1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729397AbfKDQzC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 11:55:02 -0500
+Received: by mail-wm1-f45.google.com with SMTP id 6so14502489wmf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 08:55:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qbydSBqseaw/lQj0nQ/gQN6CVr9wzBelvAaWVLCPwUc=;
+        b=aXylMG+y/bVQLTKpkPecMubi5xk8neo1TPugA58jbdUqDzUO5t+mCleDMf6m0aiXcc
+         bd1rkbzogwK7Ja/TtVsHcU1F9zp1DzrDSw3c7t4IWSNcfO5XJJH8higwdCL15KW8ubpZ
+         iDdcFEO7G4ECVLB2pdN8FjG2wQwn/hv1P+0Eg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=qbydSBqseaw/lQj0nQ/gQN6CVr9wzBelvAaWVLCPwUc=;
+        b=iRsgiTe6BI8iotgCBwFPr0TD7LxW9hbPQqORm1nQuK5ScMMp4W5toXZDK0VzqMUD6x
+         VMXK2w2L3/G9DYNlYmAnJPoWI2QvzVDLwmX2sA2TD3kBgJnWtg4vsiLK9Fgqa7FLn9Qg
+         dBobWXl+AunpdgVWVfBh5SANfWW9Dvqz5KcPPVzB47Lea2n5lsIrycVWxpI2jyH+sLmd
+         h4da1OWvyj+HGOq2ZjcdbPmP8FWloOnM5/c1/uXmwEGp9X+XbimIOoLX7uxiZcP3LyPN
+         8IWdOwsAc07A+O31dUUhhQnRpVaZRtLCqssKqPGSXehFD+oa1g2bsWeOzhB6FxreJf3W
+         RxkQ==
+X-Gm-Message-State: APjAAAVfvK/M6dfPog+zLNQGy8pqRpMBt5Cepb8whb1Md8PlvBUmIKx6
+        JqFtlpTDmgHlRQeZ7PyQ5p1cUA==
+X-Google-Smtp-Source: APXvYqz94I0pfBllsuYuxRIRg5mazNojaJ6pU1GUBJRxZPr5hP+NbTslnm9nyaVAmkAjo/sjHk6k8A==
+X-Received: by 2002:a1c:f011:: with SMTP id a17mr86381wmb.18.1572886500036;
+        Mon, 04 Nov 2019 08:55:00 -0800 (PST)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id r19sm20025253wrr.47.2019.11.04.08.54.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 08:54:59 -0800 (PST)
+Date:   Mon, 4 Nov 2019 17:54:57 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Harry Wentland <hwentlan@amd.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: drm/amd/display: Add HDCP module - static analysis bug report
+Message-ID: <20191104165457.GH10326@phenom.ffwll.local>
+Mail-Followup-To: Harry Wentland <hwentlan@amd.com>,
+        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <951eb7dc-bebe-5049-4998-f199e18b0bf3@canonical.com>
+ <20191009163235.GT16989@phenom.ffwll.local>
+ <a0d5f3a3-a2b3-5367-42f9-bde514571e25@amd.com>
+ <CAKMK7uEtJRDhibWDv2TB2WrFzFooMWPSbveDD2N-rudAwvzVFA@mail.gmail.com>
+ <c8f96b46-e81e-1e41-aafc-5f6ec236d66f@amd.com>
+ <CAKMK7uHr3aeJRqJAscDDfsuBBnVXCeN9SS36-1UGuK84NyOD5Q@mail.gmail.com>
+ <CAKMK7uH6EoY9MkzjSjU+Fe=E-XB4Tf9d2VsW=Tr=tFy1J-dJgg@mail.gmail.com>
+ <53bf910b-5f9c-946b-17ee-602c24c0fa96@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <53bf910b-5f9c-946b-17ee-602c24c0fa96@amd.com>
+X-Operating-System: Linux phenom 5.2.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the driver for the HiSilicon v3xx SPI NOR flash controller, commonly
-found in hi16xx chipsets.
+On Mon, Nov 04, 2019 at 03:23:09PM +0000, Harry Wentland wrote:
+> On 2019-11-04 5:53 a.m., Daniel Vetter wrote:
+> > On Wed, Oct 9, 2019 at 10:58 PM Daniel Vetter <daniel@ffwll.ch> wrote:
+> >> On Wed, Oct 9, 2019 at 10:46 PM Lakha, Bhawanpreet
+> >> <Bhawanpreet.Lakha@amd.com> wrote:
+> >>>
+> >>> I misunderstood and was talking about the ksv validation specifically
+> >>> (usage of drm_hdcp_check_ksvs_revoked()).
+> >>
+> >> Hm for that specifically I think you want to do both, i.e. both
+> >> consult your psp, but also check for revoked ksvs with the core
+> >> helper. At least on some platforms only the core helper might have the
+> >> updated revoke list.
+> >>
+> 
+> I think it's an either/or. Either we use an HDCP implementation that's
+> fully running in x86 kernel space (still not sure how that's compliant)
+> or we fully rely on our PSP FW to do what it's designed to do. I don't
+> think it makes sense to mix and match here.
 
-This is a different controller than that in drivers/mtd/spi-nor/hisi-sfc.c;
-indeed, the naming for that driver is poor, since it is really known as
-FMC, and can support other memory technologies.
+Then you need to somehow tie the revoke list that's in the psp to the
+revoke list update logic we have. That's what we've done for hdcp2 (which
+is similarly to yours implemented in hw). The point is that on linux we
+now have a standard way to get these revoke lists updated/handled.
 
-The driver module name is "hisi-sfc-v3xx", as recommended by HW designer,
-being an attempt to provide a distinct name - v3xx being the unique
-controller versioning.
+I guess it wasn't clear how exactly I think you're supposed to combine
+them?
+-Daniel
 
-Only ACPI firmware is supported.
 
-DMA is not supported, and we just use polling mode for operation
-completion notification.
+> 
+> >>> For the defines I will create patches to use drm_hdcp where it is usable.
+> >>
+> >> Thanks a lot. Ime once we have shared definitions it's much easier to
+> >> also share some helpers, where it makes sense.
+> >>
+> >> Aside I think the hdcp code could also use a bit of demidlayering. At
+> >> least I'm not understanding why you add a 2nd abstraction layer for
+> >> i2c/dpcd, dm_helper already has that. That seems like one abstraction
+> >> layer too much.
+> > 
+> > I haven't seen anything fly by or in the latest pull request ... you
+> > folks still working on this or more put on the "maybe, probably never"
+> > pile?
+> > 
+> 
+> Following up with Bhawan.
+> 
+> Harry
+> 
+> > -Daniel
+> > 
+> > 
+> >> -Daniel
+> >>
+> >>>
+> >>>
+> >>> Bhawan
+> >>>
+> >>> On 2019-10-09 2:43 p.m., Daniel Vetter wrote:
+> >>>> On Wed, Oct 9, 2019 at 8:23 PM Lakha, Bhawanpreet
+> >>>> <Bhawanpreet.Lakha@amd.com> wrote:
+> >>>>> Hi,
+> >>>>>
+> >>>>> The reason we don't use drm_hdcp is because our policy is to do hdcp
+> >>>>> verification using PSP/HW (onboard secure processor).
+> >>>> i915 also uses hw to auth, we still use the parts from drm_hdcp ...
+> >>>> Did you actually look at what's in there? It's essentially just shared
+> >>>> defines and data structures from the standard, plus a few minimal
+> >>>> helpers to en/decode some bits. Just from a quick read the entire
+> >>>> patch very much looks like midlayer everywhere design that we
+> >>>> discussed back when DC landed ...
+> >>>> -Daniel
+> >>>>
+> >>>>> Bhawan
+> >>>>>
+> >>>>> On 2019-10-09 12:32 p.m., Daniel Vetter wrote:
+> >>>>>> On Thu, Oct 03, 2019 at 11:08:03PM +0100, Colin Ian King wrote:
+> >>>>>>> Hi,
+> >>>>>>>
+> >>>>>>> Static analysis with Coverity has detected a potential issue with
+> >>>>>>> function validate_bksv in
+> >>>>>>> drivers/gpu/drm/amd/display/modules/hdcp/hdcp1_execution.c with recent
+> >>>>>>> commit:
+> >>>>>>>
+> >>>>>>> commit ed9d8e2bcb003ec94658cafe9b1bb3960e2139ec
+> >>>>>>> Author: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+> >>>>>>> Date:   Tue Aug 6 17:52:01 2019 -0400
+> >>>>>>>
+> >>>>>>>       drm/amd/display: Add HDCP module
+> >>>>>> I think the real question here is ... why is this not using drm_hdcp?
+> >>>>>> -Daniel
+> >>>>>>
+> >>>>>>> The analysis is as follows:
+> >>>>>>>
+> >>>>>>>    28 static inline enum mod_hdcp_status validate_bksv(struct mod_hdcp *hdcp)
+> >>>>>>>    29 {
+> >>>>>>>
+> >>>>>>> CID 89852 (#1 of 1): Out-of-bounds read (OVERRUN)
+> >>>>>>>
+> >>>>>>> 1. overrun-local:
+> >>>>>>> Overrunning array of 5 bytes at byte offset 7 by dereferencing pointer
+> >>>>>>> (uint64_t *)hdcp->auth.msg.hdcp1.bksv.
+> >>>>>>>
+> >>>>>>>    30        uint64_t n = *(uint64_t *)hdcp->auth.msg.hdcp1.bksv;
+> >>>>>>>    31        uint8_t count = 0;
+> >>>>>>>    32
+> >>>>>>>    33        while (n) {
+> >>>>>>>    34                count++;
+> >>>>>>>    35                n &= (n - 1);
+> >>>>>>>    36        }
+> >>>>>>>
+> >>>>>>> hdcp->auth.msg.hdcp1.bksv is an array of 5 uint8_t as defined in
+> >>>>>>> drivers/gpu/drm/amd/display/modules/hdcp/hdcp.h as follows:
+> >>>>>>>
+> >>>>>>> struct mod_hdcp_message_hdcp1 {
+> >>>>>>>           uint8_t         an[8];
+> >>>>>>>           uint8_t         aksv[5];
+> >>>>>>>           uint8_t         ainfo;
+> >>>>>>>           uint8_t         bksv[5];
+> >>>>>>>           uint16_t        r0p;
+> >>>>>>>           uint8_t         bcaps;
+> >>>>>>>           uint16_t        bstatus;
+> >>>>>>>           uint8_t         ksvlist[635];
+> >>>>>>>           uint16_t        ksvlist_size;
+> >>>>>>>           uint8_t         vp[20];
+> >>>>>>>
+> >>>>>>>           uint16_t        binfo_dp;
+> >>>>>>> };
+> >>>>>>>
+> >>>>>>> variable n is going to contain the contains of r0p and bcaps. I'm not
+> >>>>>>> sure if that is intentional. If not, then the count is going to be
+> >>>>>>> incorrect if these are non-zero.
+> >>>>>>>
+> >>>>>>> Colin
+> >>>>> _______________________________________________
+> >>>>> dri-devel mailing list
+> >>>>> dri-devel@lists.freedesktop.org
+> >>>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> >>>>
+> >>>>
+> >>
+> >>
+> >>
+> >> --
+> >> Daniel Vetter
+> >> Software Engineer, Intel Corporation
+> >> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+> > 
+> > 
+> > 
+> > --
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+> > 
 
-The driver uses the SPI MEM OPs.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/spi/Kconfig             |   9 +
- drivers/spi/Makefile            |   1 +
- drivers/spi/spi-hisi-sfc-v3xx.c | 287 ++++++++++++++++++++++++++++++++
- 3 files changed, 297 insertions(+)
- create mode 100644 drivers/spi/spi-hisi-sfc-v3xx.c
-
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 6f7fdcbb9151..2df653b06685 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -280,6 +280,15 @@ config SPI_FSL_QUADSPI
- 	  This controller does not support generic SPI messages. It only
- 	  supports the high-level SPI memory interface.
- 
-+config SPI_HISI_SFC_V3XX
-+	tristate "HiSilicon SPI-NOR Flash Controller for Hi16XX chipsets"
-+	depends on ARM64 || COMPILE_TEST
-+	depends on HAS_IOMEM
-+	select CONFIG_MTD_SPI_NOR
-+	help
-+	  This enables support for HiSilicon v3xx SPI-NOR flash controller
-+	  found in hi16xx chipsets.
-+
- config SPI_NXP_FLEXSPI
- 	tristate "NXP Flex SPI controller"
- 	depends on ARCH_LAYERSCAPE || HAS_IOMEM
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index bb49c9e6d0a0..9b65ec5afc5e 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -48,6 +48,7 @@ obj-$(CONFIG_SPI_FSL_LPSPI)		+= spi-fsl-lpspi.o
- obj-$(CONFIG_SPI_FSL_QUADSPI)		+= spi-fsl-qspi.o
- obj-$(CONFIG_SPI_FSL_SPI)		+= spi-fsl-spi.o
- obj-$(CONFIG_SPI_GPIO)			+= spi-gpio.o
-+obj-$(CONFIG_SPI_HISI_SFC_V3XX)		+= spi-hisi-sfc-v3xx.o
- obj-$(CONFIG_SPI_IMG_SPFI)		+= spi-img-spfi.o
- obj-$(CONFIG_SPI_IMX)			+= spi-imx.o
- obj-$(CONFIG_SPI_LANTIQ_SSC)		+= spi-lantiq-ssc.o
-diff --git a/drivers/spi/spi-hisi-sfc-v3xx.c b/drivers/spi/spi-hisi-sfc-v3xx.c
-new file mode 100644
-index 000000000000..68f06f52950c
---- /dev/null
-+++ b/drivers/spi/spi-hisi-sfc-v3xx.c
-@@ -0,0 +1,287 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * HiSilicon SPI NOR V3XX Flash Controller Driver for hi16xx chipsets
-+ *
-+ * Copyright (c) 2019 HiSilicon Technologies Co., Ltd.
-+ * Author: John Garry <john.garry@huawei.com>
-+ */
-+//#define DEBUG 1
-+
-+#include <linux/acpi.h>
-+#include <linux/bitops.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/mtd/spi-nor.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/spi/spi.h>
-+#include <linux/spi/spi-mem.h>
-+
-+#define GLOBAL_CFG (0x100)
-+
-+#define BUS_CFG1 (0x200)
-+#define BUS_CFG2 (0x204)
-+#define BUS_FLASH_SIZE (0x210)
-+
-+#define VERSION (0x1f8)
-+
-+#define CMD_CONFIG (0x300)
-+#define CMD_CONFIG_DATA_CNT_OFF 9
-+#define CMD_CONFIG_DATA_CNT_MSK (0xff << CMD_CONFIG_DATA_CNT_OFF)
-+#define CMD_CONFIG_CMD_RW_OFF 8
-+#define CMD_CONFIG_CMD_RW_MSK BIT(CMD_CONFIG_CMD_RW_OFF)
-+#define CMD_CONFIG_CMD_DATA_EN_OFF 7
-+#define CMD_CONFIG_CMD_DATA_EN_MSK BIT(CMD_CONFIG_CMD_DATA_EN_OFF)
-+#define CMD_CONFIG_CMD_DUMMY_CNT_OFF 4
-+#define CMD_CONFIG_CMD_DUMMY_CNT_MSK (0x7 << CMD_CONFIG_CMD_DUMMY_CNT_OFF)
-+#define CMD_CONFIG_CMD_ADDR_EN_OFF 3
-+#define CMD_CONFIG_CMD_ADDR_EN_MSK BIT(CMD_CONFIG_CMD_ADDR_EN_OFF)
-+#define CMD_CONFIG_CMD_CS_SEL_OFF 1
-+#define CMD_CONFIG_CMD_CS_SEL_MSK BIT(CMD_CONFIG_CMD_CS_SEL_OFF)
-+#define CMD_CONFIG_CMD_START_OFF 0
-+#define CMD_CONFIG_CMD_START_MSK BIT(CMD_CONFIG_CMD_START_OFF)
-+#define CMD_INS (0x308)
-+#define CMD_ADDR (0x30c)
-+#define CMD_DATABUF(x) (0x400 + ((x) * 4))
-+
-+struct hisi_sfc_v3xx_host {
-+	struct device *dev;
-+	void __iomem *regbase;
-+	int max_cmd_dword;
-+};
-+
-+#define HISI_SFC_V3XX_WAIT_TIMEOUT_US		1000000
-+#define HISI_SFC_V3XX_WAIT_POLL_INTERVAL_US	10
-+
-+static int hisi_sfc_v3xx_wait_cmd_idle(struct hisi_sfc_v3xx_host *host)
-+{
-+	u32 reg;
-+
-+	return readl_poll_timeout(host->regbase + CMD_CONFIG, reg,
-+				  !(reg & CMD_CONFIG_CMD_START_MSK),
-+				  HISI_SFC_V3XX_WAIT_POLL_INTERVAL_US,
-+				  HISI_SFC_V3XX_WAIT_TIMEOUT_US);
-+}
-+
-+/*
-+ * memcpy_{to,from}io doesn't gurantee 32b accesses, which we require for the
-+ * DATABUF registers, so use __io{read,write}32_copy when possible. For
-+ * trailing bytes, copy them byte-by-byte from the DATABUF register, as we
-+ * can't clobber outside the source/dest buffer.
-+ */
-+static void hisi_sfc_v3xx_read_databuf(struct hisi_sfc_v3xx_host *host,
-+				       u8 *to, unsigned int len)
-+{
-+	int i;
-+
-+	if (IS_ALIGNED((uintptr_t)to, 4)) {
-+		int words = len / 4;
-+
-+		__ioread32_copy(to, host->regbase + CMD_DATABUF(0), words);
-+
-+		len -= words * 4;
-+		if (len) {
-+			u32 val;
-+
-+			val = __raw_readl(host->regbase + CMD_DATABUF(words));
-+
-+			to += words * 4;
-+			for (i = 0; i < len; i++, val >>= 8, to++)
-+				*to = (u8)val;
-+		}
-+	} else {
-+		for (i = 0; i < DIV_ROUND_UP(len, 4); i++) {
-+			u32 val = __raw_readl(host->regbase + CMD_DATABUF(i));
-+			int j;
-+
-+			for (j = 0; j < 4 && (j + (i * 4) < len);
-+			     to++, val >>= 8, j++)
-+				*to = (u8)val;
-+		}
-+	}
-+}
-+
-+static void hisi_sfc_v3xx_write_databuf(struct hisi_sfc_v3xx_host *host,
-+					const u8 *from, unsigned int len,
-+					u64 addr, u8 dummybytes)
-+{
-+	int i;
-+
-+	if (IS_ALIGNED((uintptr_t)from, 4)) {
-+		int words = len / 4;
-+
-+		__iowrite32_copy(host->regbase + CMD_DATABUF(0), from, words);
-+
-+		len -= words * 4;
-+		if (len) {
-+			u32 val = 0;
-+
-+			from += words * 4;
-+			for (i = 0; i < len; i++, from++)
-+				val |= *from << i * 8;
-+
-+			__raw_writel(val, host->regbase + CMD_DATABUF(words));
-+		}
-+
-+	} else {
-+		for (i = 0; i < DIV_ROUND_UP(len, 4); i++) {
-+			u32 val = 0;
-+			int j;
-+
-+			for (j = 0; j < 4 && (j + (i * 4) < len); from++, j++)
-+				val |= *from << j * 8;
-+			__raw_writel(val, host->regbase + CMD_DATABUF(i));
-+		}
-+	}
-+}
-+
-+static int hisi_sfc_v3xx_adjust_op_size(struct spi_mem *mem,
-+					struct spi_mem_op *op)
-+{
-+	struct spi_device *spi = mem->spi;
-+	struct hisi_sfc_v3xx_host *host;
-+	int max_byte_count;
-+
-+	host = spi_controller_get_devdata(spi->master);
-+
-+	max_byte_count = host->max_cmd_dword * 4;
-+
-+	if (op->data.nbytes > max_byte_count)
-+		op->data.nbytes = max_byte_count;
-+
-+	return 0;
-+}
-+
-+static int hisi_sfc_v3xx_generic_exec_op(struct hisi_sfc_v3xx_host *host,
-+					 const struct spi_mem_op *op,
-+					 u8 chip_select)
-+{
-+	int ret, len = op->data.nbytes;
-+	u32 config = 0;
-+
-+	if (op->data.dir != SPI_MEM_NO_DATA) {
-+		config |= (op->data.nbytes - 1) << CMD_CONFIG_DATA_CNT_OFF;
-+		config |= CMD_CONFIG_CMD_DATA_EN_MSK;
-+	}
-+
-+	if (op->addr.nbytes)
-+		config |= CMD_CONFIG_CMD_ADDR_EN_MSK;
-+
-+	config |= op->dummy.nbytes << CMD_CONFIG_CMD_DUMMY_CNT_OFF |
-+			chip_select << CMD_CONFIG_CMD_CS_SEL_OFF |
-+			CMD_CONFIG_CMD_START_MSK;
-+
-+	if (op->data.dir == SPI_MEM_DATA_OUT)
-+		hisi_sfc_v3xx_write_databuf(host, op->data.buf.out, len,
-+					    op->addr.val, op->dummy.nbytes);
-+	else if (op->data.dir == SPI_MEM_DATA_IN)
-+		config |= CMD_CONFIG_CMD_RW_MSK;
-+
-+	writel(op->addr.val, host->regbase + CMD_ADDR);
-+	writel(op->cmd.opcode, host->regbase + CMD_INS);
-+
-+	writel(config, host->regbase + CMD_CONFIG);
-+
-+	ret = hisi_sfc_v3xx_wait_cmd_idle(host);
-+	if (ret)
-+		return ret;
-+
-+	if (op->data.dir == SPI_MEM_DATA_IN)
-+		hisi_sfc_v3xx_read_databuf(host, op->data.buf.in, len);
-+
-+	return 0;
-+}
-+
-+static int hisi_sfc_v3xx_exec_op(struct spi_mem *mem,
-+				 const struct spi_mem_op *op)
-+{
-+	struct hisi_sfc_v3xx_host *host;
-+	struct spi_device *spi = mem->spi;
-+	u8 chip_select = spi->chip_select;
-+
-+	host = spi_controller_get_devdata(spi->master);
-+
-+	return hisi_sfc_v3xx_generic_exec_op(host, op, chip_select);
-+}
-+
-+static const struct spi_controller_mem_ops hisi_sfc_v3xx_mem_ops = {
-+	.adjust_op_size = hisi_sfc_v3xx_adjust_op_size,
-+	.exec_op = hisi_sfc_v3xx_exec_op,
-+};
-+
-+static int hisi_sfc_v3xx_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct hisi_sfc_v3xx_host *host;
-+	struct spi_controller *ctlr;
-+	u32 version;
-+	int ret;
-+
-+	ctlr = spi_alloc_master(&pdev->dev, sizeof(*host));
-+	if (!ctlr)
-+		return -ENOMEM;
-+
-+	ctlr->mode_bits = SPI_RX_DUAL | SPI_RX_QUAD |
-+			  SPI_TX_DUAL | SPI_TX_QUAD;
-+
-+	host = spi_controller_get_devdata(ctlr);
-+	host->dev = dev;
-+
-+	platform_set_drvdata(pdev, host);
-+
-+	host->regbase = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(host->regbase)) {
-+		ret = PTR_ERR(host->regbase);
-+		goto err_put_master;
-+	}
-+
-+	ctlr->bus_num = -1;
-+	ctlr->num_chipselect = 1;
-+	ctlr->mem_ops = &hisi_sfc_v3xx_mem_ops;
-+
-+	version = readl(host->regbase + VERSION);
-+
-+	switch (version) {
-+	case 0x351:
-+		host->max_cmd_dword = 64;
-+		break;
-+	default:
-+		host->max_cmd_dword = 16;
-+		break;
-+	}
-+
-+	ret = devm_spi_register_controller(dev, ctlr);
-+	if (ret)
-+		goto err_put_master;
-+
-+	dev_info(&pdev->dev, "hw version 0x%x\n", version);
-+
-+	return 0;
-+
-+err_put_master:
-+	spi_master_put(ctlr);
-+	return ret;
-+}
-+
-+#if IS_ENABLED(CONFIG_ACPI)
-+static const struct acpi_device_id hisi_sfc_v3xx_acpi_ids[] = {
-+	{"HISI0341", 0},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, hisi_sfc_v3xx_acpi_ids);
-+#endif
-+
-+static struct platform_driver hisi_sfc_v3xx_spi_driver = {
-+	.driver = {
-+		.name	= "hisi-sfc-v3xx",
-+		.acpi_match_table = ACPI_PTR(hisi_sfc_v3xx_acpi_ids),
-+	},
-+	.probe	= hisi_sfc_v3xx_probe,
-+};
-+
-+module_platform_driver(hisi_sfc_v3xx_spi_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("John Garry <john.garry@huawei.com>");
-+MODULE_DESCRIPTION("HiSilicon SPI NOR V3XX Flash Controller Driver for hi16xx chipsets");
 -- 
-2.17.1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
