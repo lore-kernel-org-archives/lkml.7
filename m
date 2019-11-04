@@ -5,57 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B569CCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5D2CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87876204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF2020650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906307;
-	bh=ChdGGD+txzjN2zotCun5b3jNdy1Ga0tyEkZHwi0rZMY=;
+	s=default; t=1572906313;
+	bh=nk4O2gxrkdy69/8sNMd0ZPESLXqQN5sMW0ezN6AV+RQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SOcfsn4IpOK62HIIfXSqCajDYBeBBF4Gk9rjBIcA+ZTH6em1xnsc6LRfKD7reP87B
-	 4CDgCx8v9xR6Xo4F2/4iV7t9vXz7UPAchqi75DMgyik65JLhLK4fhuH/Wb8mfULO9Y
-	 8qioAvz8H6yZewEw6MKS3GnKP1uH/t1wuIjyD/Jk=
+	b=A3Fw1TC2RBBBQDkAhgDK7bUlhb5fJxRcZ5x6DVnOokqN3b37aU1f/szcFR/RAY1bt
+	 QWUzpaV7QRXz4xtwWATe388hWGvEM2bU6mdycnfK9Ic7bZt4QSjjpw2DM1QZMEerls
+	 pTEMp3ii0XL6RAklYB91W5TWxMGRNMq6es90dCvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388169AbfKDWZF (ORCPT
+        id S2388136AbfKDWZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:25:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45236 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:25:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730661AbfKDVwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:52:03 -0500
+        id S1730624AbfKDVv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:51:56 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0410C2184C;
-        Mon,  4 Nov 2019 21:52:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A8A82053B;
+        Mon,  4 Nov 2019 21:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904322;
-        bh=ChdGGD+txzjN2zotCun5b3jNdy1Ga0tyEkZHwi0rZMY=;
+        s=default; t=1572904315;
+        bh=nk4O2gxrkdy69/8sNMd0ZPESLXqQN5sMW0ezN6AV+RQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y/rSIT/Ui8+KDqaXRZHy/ZlHD9x+nqnhD4TNtEtn1Bkg52sOB+8Ln9yFCKZE0zBEh
-         bEprtWsqUzIp5v0hw1b3sOthjiK/rqWEba/9KJTLS56a5bU93ODO+7nsWLsSE3rsdB
-         BKEmTtLH08dWPHDUj1Onc+RBbnHtgK8J6JNs1EHk=
+        b=WCu6LgkYmQTIJlAJDy0sASikxb5YKr33No+tZ9Lz6UThcnp9kgeW8af7S+D9OvZZc
+         o5qe4WAXPbhCGumoYM5GHDjKKZ+ATCWRUKwpmcZbgGqgniqTyYLuHeBhawjQ5cMZYi
+         09nhhUFpZvpikatrDkbhU6JOB+eAjy56O+c3nVH8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 24/62] fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()
-Date:   Mon,  4 Nov 2019 22:44:46 +0100
-Message-Id: <20191104211923.803443309@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH 4.9 62/62] ALSA: timer: Fix mutex deadlock at releasing card
+Date:   Mon,  4 Nov 2019 22:45:24 +0100
+Message-Id: <20191104212001.419204692@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -68,128 +60,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 56e94ea132bb5c2c1d0b60a6aeb34dcb7d71a53d ]
+[ Upstream commit a39331867335d4a94b6165e306265c9e24aca073 ]
 
-In ocfs2_xa_prepare_entry(), there is an if statement on line 2136 to
-check whether loc->xl_entry is NULL:
+When a card is disconnected while in use, the system waits until all
+opened files are closed then releases the card.  This is done via
+put_device() of the card device in each device release code.
 
-    if (loc->xl_entry)
+The recently reported mutex deadlock bug happens in this code path;
+snd_timer_close() for the timer device deals with the global
+register_mutex and it calls put_device() there.  When this timer
+device is the last one, the card gets freed and it eventually calls
+snd_timer_free(), which has again the protection with the global
+register_mutex -- boom.
 
-When loc->xl_entry is NULL, it is used on line 2158:
+Basically put_device() call itself is race-free, so a relative simple
+workaround is to move this put_device() call out of the mutex.  For
+achieving that, in this patch, snd_timer_close_locked() got a new
+argument to store the card device pointer in return, and each caller
+invokes put_device() with the returned object after the mutex unlock.
 
-    ocfs2_xa_add_entry(loc, name_hash);
-        loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
-        loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
-
-and line 2164:
-
-    ocfs2_xa_add_namevalue(loc, xi);
-        loc->xl_entry->xe_value_size = cpu_to_le64(xi->xi_value_len);
-        loc->xl_entry->xe_name_len = xi->xi_name_len;
-
-Thus, possible null-pointer dereferences may occur.
-
-To fix these bugs, if loc-xl_entry is NULL, ocfs2_xa_prepare_entry()
-abnormally returns with -EINVAL.
-
-These bugs are found by a static analysis tool STCheck written by us.
-
-[akpm@linux-foundation.org: remove now-unused ocfs2_xa_add_entry()]
-Link: http://lkml.kernel.org/r/20190726101447.9153-1-baijiaju1990@gmail.com
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-and-tested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/xattr.c | 56 ++++++++++++++++++++----------------------------
- 1 file changed, 23 insertions(+), 33 deletions(-)
+ sound/core/timer.c | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
-index e108c945ac1f8..c387467d574cb 100644
---- a/fs/ocfs2/xattr.c
-+++ b/fs/ocfs2/xattr.c
-@@ -1497,18 +1497,6 @@ static int ocfs2_xa_check_space(struct ocfs2_xa_loc *loc,
- 	return loc->xl_ops->xlo_check_space(loc, xi);
+diff --git a/sound/core/timer.c b/sound/core/timer.c
+index 6eb4e97662d9c..19d90aa082184 100644
+--- a/sound/core/timer.c
++++ b/sound/core/timer.c
+@@ -239,7 +239,8 @@ static int snd_timer_check_master(struct snd_timer_instance *master)
+ 	return 0;
  }
  
--static void ocfs2_xa_add_entry(struct ocfs2_xa_loc *loc, u32 name_hash)
--{
--	loc->xl_ops->xlo_add_entry(loc, name_hash);
--	loc->xl_entry->xe_name_hash = cpu_to_le32(name_hash);
--	/*
--	 * We can't leave the new entry's xe_name_offset at zero or
--	 * add_namevalue() will go nuts.  We set it to the size of our
--	 * storage so that it can never be less than any other entry.
--	 */
--	loc->xl_entry->xe_name_offset = cpu_to_le16(loc->xl_size);
--}
--
- static void ocfs2_xa_add_namevalue(struct ocfs2_xa_loc *loc,
- 				   struct ocfs2_xattr_info *xi)
+-static int snd_timer_close_locked(struct snd_timer_instance *timeri);
++static int snd_timer_close_locked(struct snd_timer_instance *timeri,
++				  struct device **card_devp_to_put);
+ 
+ /*
+  * open a timer instance
+@@ -251,6 +252,7 @@ int snd_timer_open(struct snd_timer_instance **ti,
  {
-@@ -2140,29 +2128,31 @@ static int ocfs2_xa_prepare_entry(struct ocfs2_xa_loc *loc,
- 	if (rc)
- 		goto out;
+ 	struct snd_timer *timer;
+ 	struct snd_timer_instance *timeri = NULL;
++	struct device *card_dev_to_put = NULL;
+ 	int err;
  
--	if (loc->xl_entry) {
--		if (ocfs2_xa_can_reuse_entry(loc, xi)) {
--			orig_value_size = loc->xl_entry->xe_value_size;
--			rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
--			if (rc)
--				goto out;
--			goto alloc_value;
--		}
-+	if (!loc->xl_entry) {
-+		rc = -EINVAL;
-+		goto out;
-+	}
- 
--		if (!ocfs2_xattr_is_local(loc->xl_entry)) {
--			orig_clusters = ocfs2_xa_value_clusters(loc);
--			rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
--			if (rc) {
--				mlog_errno(rc);
--				ocfs2_xa_cleanup_value_truncate(loc,
--								"overwriting",
--								orig_clusters);
--				goto out;
--			}
-+	if (ocfs2_xa_can_reuse_entry(loc, xi)) {
-+		orig_value_size = loc->xl_entry->xe_value_size;
-+		rc = ocfs2_xa_reuse_entry(loc, xi, ctxt);
-+		if (rc)
-+			goto out;
-+		goto alloc_value;
-+	}
-+
-+	if (!ocfs2_xattr_is_local(loc->xl_entry)) {
-+		orig_clusters = ocfs2_xa_value_clusters(loc);
-+		rc = ocfs2_xa_value_truncate(loc, 0, ctxt);
-+		if (rc) {
-+			mlog_errno(rc);
-+			ocfs2_xa_cleanup_value_truncate(loc,
-+							"overwriting",
-+							orig_clusters);
-+			goto out;
+ 	mutex_lock(&register_mutex);
+@@ -274,7 +276,7 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 		list_add_tail(&timeri->open_list, &snd_timer_slave_list);
+ 		err = snd_timer_check_slave(timeri);
+ 		if (err < 0) {
+-			snd_timer_close_locked(timeri);
++			snd_timer_close_locked(timeri, &card_dev_to_put);
+ 			timeri = NULL;
  		}
--		ocfs2_xa_wipe_namevalue(loc);
--	} else
--		ocfs2_xa_add_entry(loc, name_hash);
-+	}
-+	ocfs2_xa_wipe_namevalue(loc);
+ 		goto unlock;
+@@ -326,7 +328,7 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 			timeri = NULL;
  
- 	/*
- 	 * If we get here, we have a blank entry.  Fill it.  We grow our
+ 			if (timer->card)
+-				put_device(&timer->card->card_dev);
++				card_dev_to_put = &timer->card->card_dev;
+ 			module_put(timer->module);
+ 			goto unlock;
+ 		}
+@@ -336,12 +338,15 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 	timer->num_instances++;
+ 	err = snd_timer_check_master(timeri);
+ 	if (err < 0) {
+-		snd_timer_close_locked(timeri);
++		snd_timer_close_locked(timeri, &card_dev_to_put);
+ 		timeri = NULL;
+ 	}
+ 
+  unlock:
+ 	mutex_unlock(&register_mutex);
++	/* put_device() is called after unlock for avoiding deadlock */
++	if (card_dev_to_put)
++		put_device(card_dev_to_put);
+ 	*ti = timeri;
+ 	return err;
+ }
+@@ -351,7 +356,8 @@ EXPORT_SYMBOL(snd_timer_open);
+  * close a timer instance
+  * call this with register_mutex down.
+  */
+-static int snd_timer_close_locked(struct snd_timer_instance *timeri)
++static int snd_timer_close_locked(struct snd_timer_instance *timeri,
++				  struct device **card_devp_to_put)
+ {
+ 	struct snd_timer *timer = NULL;
+ 	struct snd_timer_instance *slave, *tmp;
+@@ -403,7 +409,7 @@ static int snd_timer_close_locked(struct snd_timer_instance *timeri)
+ 			timer->hw.close(timer);
+ 		/* release a card refcount for safe disconnection */
+ 		if (timer->card)
+-			put_device(&timer->card->card_dev);
++			*card_devp_to_put = &timer->card->card_dev;
+ 		module_put(timer->module);
+ 	}
+ 
+@@ -415,14 +421,18 @@ static int snd_timer_close_locked(struct snd_timer_instance *timeri)
+  */
+ int snd_timer_close(struct snd_timer_instance *timeri)
+ {
++	struct device *card_dev_to_put = NULL;
+ 	int err;
+ 
+ 	if (snd_BUG_ON(!timeri))
+ 		return -ENXIO;
+ 
+ 	mutex_lock(&register_mutex);
+-	err = snd_timer_close_locked(timeri);
++	err = snd_timer_close_locked(timeri, &card_dev_to_put);
+ 	mutex_unlock(&register_mutex);
++	/* put_device() is called after unlock for avoiding deadlock */
++	if (card_dev_to_put)
++		put_device(card_dev_to_put);
+ 	return err;
+ }
+ EXPORT_SYMBOL(snd_timer_close);
 -- 
 2.20.1
 
