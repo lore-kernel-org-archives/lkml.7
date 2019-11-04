@@ -2,145 +2,107 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED9DCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 991B7CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C67E2080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:55:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="NflsDGMn"
+	by mail.kernel.org (Postfix) with ESMTP id 6EC012080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:57:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbfKDSzk (ORCPT
+        id S1729422AbfKDS5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 13:55:40 -0500
-Received: from mail-eopbgr720062.outbound.protection.outlook.com ([40.107.72.62]:4141
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        Mon, 4 Nov 2019 13:57:47 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35630 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728268AbfKDSzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 13:55:40 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cf4aze0GAJ3lRQm+QUV98wt5NKbO5elslYSsnUsMOmvx+rJkpWE0WbInbhCh5DMU/aTMSq1H6eHywswmqUAKQ/1E+IrYQojw/1JGckqAk+2GMptgv/lpbfZmvCbATW/3XzF/w/TMklP/VWxOYFfbH6YUMvYfYnCT/xIa4uPpP+t1eXAVt8s3GY/SV8buenIZ8nZXp7T5/c8dM6ard0++QB0kAdhF8818rdWA+VX8U+FehhfrXNVTLyv1/2+7kUa1WraIZOEYJQznm+vv85wKz/KVwt+SOlUbLaAvxg9Rxq2DujAnZalylzO7VZ5CJUAjoXU7d4FvWEr9i1oDaidTMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DkCrKEFENQ5NkLIhAmkV5Rrdz/wQ2JVQsCmVuU40x1Y=;
- b=FhfB+pwUA4tT59VX4QShuA2IIQTNDfc5mUkLDPPdDov6jiak2zD/nGyz8jIkDmjTQ9MjN2Coe3gmkpjqcT5PEBc+qCbs4AF/euKS0UhIwcVkBYlPFcZJBtYIizUVkxEanEdNMKNe62DZkrNdGnF0imGCHlzj24X7yeSKL7L+/AzmQxLDabMPSmVqU0Z3JaeSCV29yBk18CuNmw5lwa1e86Ds8fCHuip5KnNFqrU24CQ0TDzifCsBd0iiDDMyEvDcUH++8Zq/3ksoGstwyXuwx26hABVyhpb03AZoVpFj43549eHVGXyARqcCdHa5JgJr2f8gZxSHQ4+QW/ftq5cr0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DkCrKEFENQ5NkLIhAmkV5Rrdz/wQ2JVQsCmVuU40x1Y=;
- b=NflsDGMn48S9zhToNDlMWBce2djn6UGiqbdrJ/UxbhX70AsvJWWssQTJVIuRfa1dy7QMi8X7m0MyhuQlAYJlLrB7o5BgNjQ8rAv4lTeyMDW5GkPp1w823B3YxzaZCdpFDuFI8rD/nGhtwJdTENuVLajtLLUERvd5CqOWYHJvmgw=
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com (10.255.173.210) by
- DM6PR12MB3916.namprd12.prod.outlook.com (10.255.174.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Mon, 4 Nov 2019 18:54:58 +0000
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::4898:93e0:3c0c:d862]) by DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::4898:93e0:3c0c:d862%6]) with mapi id 15.20.2408.024; Mon, 4 Nov 2019
- 18:54:57 +0000
-From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-CC:     "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "rkagan@virtuozzo.com" <rkagan@virtuozzo.com>,
-        "graf@amazon.com" <graf@amazon.com>,
-        "jschoenh@amazon.de" <jschoenh@amazon.de>,
-        "karahmed@amazon.de" <karahmed@amazon.de>,
-        "rimasluk@amazon.com" <rimasluk@amazon.com>,
-        "Grimm, Jon" <Jon.Grimm@amd.com>
-Subject: Re: [PATCH v4 13/17] kvm: i8254: Deactivate APICv when using
- in-kernel PIT re-injection mode.
-Thread-Topic: [PATCH v4 13/17] kvm: i8254: Deactivate APICv when using
- in-kernel PIT re-injection mode.
-Thread-Index: AQHVkQWFwL1+c1CZPkWuTq14KdLXDad3peqAgAO6uQA=
-Date:   Mon, 4 Nov 2019 18:54:57 +0000
-Message-ID: <b4e61499-7247-d39e-cd46-c53388ba347a@amd.com>
-References: <1572648072-84536-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1572648072-84536-14-git-send-email-suravee.suthikulpanit@amd.com>
- <70fb2b49-2198-bde4-a38b-f37bc8bc9847@redhat.com>
-In-Reply-To: <70fb2b49-2198-bde4-a38b-f37bc8bc9847@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.2.0
-x-originating-ip: [165.204.25.250]
-x-clientproxiedby: BN6PR12CA0042.namprd12.prod.outlook.com
- (2603:10b6:405:70::28) To DM6PR12MB3865.namprd12.prod.outlook.com
- (2603:10b6:5:1c8::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6988c91a-be43-47e0-8d21-08d761587cc3
-x-ms-traffictypediagnostic: DM6PR12MB3916:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB39162904F7B331C6E5467D5DF37F0@DM6PR12MB3916.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0211965D06
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(136003)(376002)(39860400002)(189003)(199004)(2201001)(99286004)(25786009)(71200400001)(65806001)(229853002)(66066001)(14444005)(256004)(31686004)(81166006)(2906002)(8936002)(8676002)(71190400001)(81156014)(6512007)(6436002)(305945005)(478600001)(7736002)(486006)(476003)(4326008)(6486002)(66446008)(2616005)(14454004)(6246003)(65956001)(5660300002)(11346002)(446003)(64756008)(36756003)(386003)(6506007)(53546011)(2501003)(3846002)(102836004)(52116002)(76176011)(6116002)(26005)(54906003)(186003)(7416002)(86362001)(31696002)(316002)(110136005)(58126008)(66946007)(66476007)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3916;H:DM6PR12MB3865.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jixSI+jtlyLvpNb5yIECnOi4yU5LzRseEWYBsoPBIC/LzN7KCf0MWwsjeJpNHNtDOk7a44c+79DojVvV3fd/dSuAZOhIGvszA7T3TAryhFpZ+Xzpr7Lhvdge5nzOFeRcqd4WfXaLIHQEaMIpWrzE5PbYSSgEp6MIRkXTS8wFkUJJfnAxiRM44wqj3hDJfxKWclZcAcJv840IHGeh0GcCtJSFxScsGXcumW4foSpNMI47g6xcIOX0lRJLUzZYhL0nLR3YwlJ5jaeDehDjlo0+VzrjPGAbRC4Lrq5owsZuVetIqHV0clY3TFvWL57EjJn1fEhda27oo38qgcu2o8B37bT0ee34uuTZUAVJYLoXjBh9YPwK1kponK+D1ZxyrVi0W1+Zqxl5n7GLzP4U5vTMwWdV5B+nxGExQ7U+levP6tteII9IJ9ADeq2SxL+TdM7E
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BA05608FF90A9B448651DE7A951AF675@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1728510AbfKDS5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 13:57:47 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 22F82ACB6;
+        Mon,  4 Nov 2019 18:57:45 +0000 (UTC)
+Date:   Mon, 4 Nov 2019 19:57:42 +0100
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Juri Lelli <juri.lelli@redhat.com>, mathieu.poirier@linaro.org
+Cc:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
+        tj@kernel.org, linux-kernel@vger.kernel.org,
+        luca.abeni@santannapisa.it, claudio@evidence.eu.com,
+        tommaso.cucinotta@santannapisa.it, bristot@redhat.com,
+        lizefan@huawei.com, longman@redhat.com, dietmar.eggemann@arm.com,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH v9 3/8] cpuset: Rebuild root domain deadline accounting
+ information
+Message-ID: <20191104185742.GC7827@blackbody.suse.cz>
+References: <20190719140000.31694-1-juri.lelli@redhat.com>
+ <20190719140000.31694-4-juri.lelli@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6988c91a-be43-47e0-8d21-08d761587cc3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Nov 2019 18:54:57.6290
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4YBmfc1gPGP1DmBotnbgdYhlApHmhOY27x2cu9xJ/0WaACOlhqOyOa1tX5TAg56QyJgd9WbL8VyFz37boORMWw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3916
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ncSAzJYg3Aa9+CRW"
+Content-Disposition: inline
+In-Reply-To: <20190719140000.31694-4-juri.lelli@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UGFvbG8sDQoNClRoYW5rcyBmb3IgcXVpY2sgcmVzcG9uc2UuDQoNCk9uIDExLzIvMTkgNDo1NyBB
-TSwgUGFvbG8gQm9uemluaSB3cm90ZToNCj4gT24gMDEvMTEvMTkgMjM6NDEsIFN1dGhpa3VscGFu
-aXQsIFN1cmF2ZWUgd3JvdGU6DQo+PiArCS8qDQo+PiArCSAqIEFNRCBTVk0gQVZJQyBhY2NlbGVy
-YXRlcyBFT0kgd3JpdGUgYW5kIGRvZXMgbm90IHRyYXAuDQo+PiArCSAqIFRoaXMgY2F1c2UgaW4t
-a2VybmVsIFBJVCByZS1pbmplY3QgbW9kZSB0byBmYWlsDQo+PiArCSAqIHNpbmNlIGl0IGNoZWNr
-cyBwcy0+aXJxX2FjayBiZWZvcmUga3ZtX3NldF9pcnEoKQ0KPj4gKwkgKiBhbmQgcmVsaWVzIG9u
-IHRoZSBhY2sgbm90aWZpZXIgdG8gdGltZWx5IHF1ZXVlDQo+PiArCSAqIHRoZSBwdC0+d29ya2Vy
-IHdvcmsgaXRlcm0gYW5kIHJlaW5qZWN0IHRoZSBtaXNzZWQgdGljay4NCj4+ICsJICogU28sIGRl
-YWN0aXZhdGUgQVBJQ3Ygd2hlbiBQSVQgaXMgaW4gcmVpbmplY3QgbW9kZS4NCj4+ICsJICovDQo+
-PiAgIAlpZiAocmVpbmplY3QpIHsNCj4+ICsJCWt2bV9yZXF1ZXN0X2FwaWN2X3VwZGF0ZShrdm0s
-IGZhbHNlLCBBUElDVl9ERUFDVF9CSVRfUElUX1JFSU5KKTsNCj4+ICAgCQkvKiBUaGUgaW5pdGlh
-bCBzdGF0ZSBpcyBwcmVzZXJ2ZWQgd2hpbGUgcHMtPnJlaW5qZWN0ID09IDAuICovDQo+PiAgIAkJ
-a3ZtX3BpdF9yZXNldF9yZWluamVjdChwaXQpOw0KPj4gICAJCWt2bV9yZWdpc3Rlcl9pcnFfYWNr
-X25vdGlmaWVyKGt2bSwgJnBzLT5pcnFfYWNrX25vdGlmaWVyKTsNCj4+ICAgCQlrdm1fcmVnaXN0
-ZXJfaXJxX21hc2tfbm90aWZpZXIoa3ZtLCAwLCAmcGl0LT5tYXNrX25vdGlmaWVyKTsNCj4+ICAg
-CX0gZWxzZSB7DQo+PiArCQlrdm1fcmVxdWVzdF9hcGljdl91cGRhdGUoa3ZtLCB0cnVlLCBBUElD
-Vl9ERUFDVF9CSVRfUElUX1JFSU5KKTsNCj4+ICAgCQlrdm1fdW5yZWdpc3Rlcl9pcnFfYWNrX25v
-dGlmaWVyKGt2bSwgJnBzLT5pcnFfYWNrX25vdGlmaWVyKTsNCj4+ICAgCQlrdm1fdW5yZWdpc3Rl
-cl9pcnFfbWFza19ub3RpZmllcihrdm0sIDAsICZwaXQtPm1hc2tfbm90aWZpZXIpOw0KPiANCj4g
-VGhpcyBpcyBub3QgdG9vIG5pY2UgZm9yIEludGVsIHdoaWNoIGRvZXMgc3VwcG9ydCAodGhyb3Vn
-aCB0aGUgRU9JIGV4aXQNCj4gbWFzaykgQVBJQ3YgZXZlbiBpZiBQSVQgcmVpbmplY3Rpb24gYWN0
-aXZlLg0KDQpJIHNlZSB5b3UgcG9pbnQuDQoNCj4gV2UgY2FuIHdvcmsgYXJvdW5kIGl0IGJ5IGFk
-ZGluZyBhIGdsb2JhbCBtYXNrIG9mIGluaGliaXQgcmVhc29ucyB0aGF0DQo+IGFwcGx5IHRvIHRo
-ZSB2ZW5kb3IsIGFuZCBpbml0aWFsaXppbmcgaXQgYXMgc29vbiBhcyBwb3NzaWJsZSBpbiB2bXgu
-Yy9zdm0uYy4NCj4gDQo+IFRoZW4ga3ZtX3JlcXVlc3RfYXBpY3ZfdXBkYXRlIGNhbiBpZ25vcmUg
-cmVhc29ucyB0aGF0IHRoZSB2ZW5kb3IgZG9lc24ndA0KPiBjYXJlIGFib3V0Lg0KPiANCj4gUGFv
-bG8NCj4gDQoNCldoYXQgYWJvdXQgd2UgZW5oYW5jZSB0aGUgcHJlX3VwZGF0ZV9hcGl2Y19leGVj
-X2N0cmwoKSB0byBhbHNvIHJldHVybiANCnN1Y2Nlc3MvZmFpbC4gSW4gaGVyZSwgdGhlIHZlbmRv
-ciBzcGVjaWZpYyBjb2RlIGNhbiBkZWNpZGUgdG8gdXBkYXRlIA0KQVBJQ3Ygc3RhdGUgb3Igbm90
-Lg0KDQpUaGFua3MsDQpTdXJhdmVlDQo=
+
+--ncSAzJYg3Aa9+CRW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hello.
+
+I came across a cgroup_enable_task_cg_lists() call from the cpuset
+controller...
+
+On Fri, Jul 19, 2019 at 03:59:55PM +0200, Juri Lelli <juri.lelli@redhat.com> wrote:
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> [...]
+> +static void rebuild_root_domains(void)
+> +{
+> +	struct cpuset *cs = NULL;
+> +	struct cgroup_subsys_state *pos_css;
+> +
+> +	lockdep_assert_held(&cpuset_mutex);
+> +	lockdep_assert_cpus_held();
+> +	lockdep_assert_held(&sched_domains_mutex);
+> +
+> +	cgroup_enable_task_cg_lists();
+...and I wonder why is it necessary to call at this place?
+
+(IIUC, before cpuset hierarchy is anywhere mounted it's mere top_cpuset,
+i.e. processing the top_cpuset alone is enough. And if anyone wants to
+create any non-root cpusets, they have to mount the hierachy first, i.e.
+no need to call cgroup_enable_task_cg_lists() manually. Also if I'm not
+overlooking anything, the race between hotplug and mount (more precisely
+new cpuset creation) should be synchronized by cpuset_mutex.)
+
+Thanks,
+Michal
+
+--ncSAzJYg3Aa9+CRW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl3AdJ8ACgkQia1+riC5
+qSi+RA//fudY8YZhWshSdEbKhCAhyiKaBx3noxOAIsbI07smX9H3cCKqt/VuURNY
+jHy+43M9FQ1q3JnygVu5ldGgHUqXtuLugTA7oFSPVtATtHH37TLfpbUrspZBIUBp
+OTAJ3OHK2M1GlSCY++gA4KJ2XEI5cJQEc3UWK/pC2UGVlQ29V8UFa55ZQVnrO+pO
+EYoVOxlm9p6NoHjtgQ+xNXKjWfqGhrzl9L2VbxlGcBjP4Zkhdm7OE3VHZ6hwozH8
+2aTuKte+DuU9GvMqMkmqKJfWHDB/mPNVZOb6IwQx4OOtKfrE3PZKgklBAMp9bolZ
+nwmODQbvZDoUKplmYum/RwlIlKFfw5gVa8W/T6oVBytbNqgk+yrUCKZlOIEOwm1e
+SJ/AeA5TfKXk7KL/8giEUpRQJCl+egl+ZQFXRZjkzrEDQm9HlOaCJohL7CifK70w
+qjk9hkg4Gj9g01brD6qlcbi2ewALZqKjprsPcVOORG6FlF9CN25qypc0P2r+KfuP
+IfceIaEO3YolOxrJGY61eDKorEI3L+i2TTAhf4z3HEpf8lnaZl8C0TglGjlZy8F4
+k7l4hRJObilzKyjuxyC4pGRHKEKPsqnfP7g+AClPBKlpa77edYuswdOV+TPxmJWl
+KVhOnhZgRd8Iyq67vnHMN0aw6xFtSjWQC+Sxu5OuzLTfAOjUTEo=
+=VQRg
+-----END PGP SIGNATURE-----
+
+--ncSAzJYg3Aa9+CRW--
