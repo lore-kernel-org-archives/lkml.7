@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36464CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE48ACA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07FDE217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99BCB217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904544;
-	bh=nG6VPbCohQi6fBlcsnH+qIJ+5t18M1eyrl6miwMHJpk=;
+	s=default; t=1572904546;
+	bh=WUYtsEowu6tUKxR++J7FijFndFCjk6G0o2q2sXvWxvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UKXBnuFLmyG9BahSkiHRL67giY+pzrJDfrV+4yGN+lzmhBB4dl5o0JzDEClrcFEqs
-	 /oCEfbVy/K0Dyr9dtlL+6YfOQg11+tkvYh6i8mFG3N2JgUxY5eMl5wYTTAIL7dXLSz
-	 7X1xXBaxvsR1CdzucNapGPpkRrx++/S27PhbFKjc=
+	b=AVRel+22dVgRtrdYdBpgyAOSitAZ1TfLc6XldwGsvoqp6Vi7qSiDE/226XVxJN0IQ
+	 jqEKcSTmScioVikeYqyD6Tgc8cThwep0qwk6RCpipEnmvDGFFdd8F8zcGkD77pSS9n
+	 juy1Fn7XkDRt47R74n1Gba2I5NQj7ckVZE1ZTn6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388185AbfKDVzf (ORCPT
+        id S2388214AbfKDVzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:55:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50806 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:55:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387652AbfKDVzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:55:31 -0500
+        id S2388202AbfKDVzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:55:40 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 132CB217F4;
-        Mon,  4 Nov 2019 21:55:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D0F9217F5;
+        Mon,  4 Nov 2019 21:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904530;
-        bh=nG6VPbCohQi6fBlcsnH+qIJ+5t18M1eyrl6miwMHJpk=;
+        s=default; t=1572904539;
+        bh=WUYtsEowu6tUKxR++J7FijFndFCjk6G0o2q2sXvWxvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eyYACyB1QMFWX8Sy+5AfcLOwZcwuMoV1uqRgeUnv6WXdUcPsH5DeuRaaM4WRTBjew
-         q96Zvh1hBWJqTFepP7aHlt6iecv7Ub9bhhshwThjxW1i6dQm7vuHNz0TKjGcdtQ66w
-         +Uchc/G0Q5K7gpyfrHwcajdOxHVbQHqa6VrMa1hw=
+        b=Sst/v2ziAGZEcvAgJlqqHangmNkAj+pkz/w1odtcFcMgoCEB2TK6Nnop3OrRXEzD7
+         Gb3yvhEUbyZ1Gi/OweObmVVz2hvv1n7qFOJKnn6StTCwWwUJcRnL1p8LaOaPh8p0jE
+         qwdNLtccM8OM6HNvaSv2PRtSEa/QaL8T3/8GtcCo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.14 77/95] HID: fix error message in hid_open_report()
-Date:   Mon,  4 Nov 2019 22:45:15 +0100
-Message-Id: <20191104212118.836009009@linuxfoundation.org>
+        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.14 80/95] s390/idle: fix cpu idle time calculation
+Date:   Mon,  4 Nov 2019 22:45:18 +0100
+Message-Id: <20191104212120.984670840@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -60,57 +59,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-commit b3a81c777dcb093020680490ab970d85e2f6f04f upstream.
+commit 3d7efa4edd07be5c5c3ffa95ba63e97e070e1f3f upstream.
 
-On HID report descriptor parsing error the code displays bogus
-pointer instead of error offset (subtracts start=NULL from end).
-Make the message more useful by displaying correct error offset
-and include total buffer size for reference.
+The idle time reported in /proc/stat sometimes incorrectly contains
+huge values on s390. This is caused by a bug in arch_cpu_idle_time().
 
-This was carried over from ancient times - "Fixed" commit just
-promoted the message from DEBUG to ERROR.
+The kernel tries to figure out when a different cpu entered idle by
+accessing its per-cpu data structure. There is an ordering problem: if
+the remote cpu has an idle_enter value which is not zero, and an
+idle_exit value which is zero, it is assumed it is idle since
+"now". The "now" timestamp however is taken before the idle_enter
+value is read.
 
-Cc: stable@vger.kernel.org
-Fixes: 8c3d52fc393b ("HID: make parser more verbose about parsing errors by default")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Which in turn means that "now" can be smaller than idle_enter of the
+remote cpu. Unconditionally subtracting idle_enter from "now" can thus
+lead to a negative value (aka large unsigned value).
+
+Fix this by moving the get_tod_clock() invocation out of the
+loop. While at it also make the code a bit more readable.
+
+A similar bug also exists for show_idle_time(). Fix this is as well.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-core.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/s390/kernel/idle.c |   29 ++++++++++++++++++++++-------
+ 1 file changed, 22 insertions(+), 7 deletions(-)
 
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -979,6 +979,7 @@ int hid_open_report(struct hid_device *d
- 	__u8 *start;
- 	__u8 *buf;
- 	__u8 *end;
-+	__u8 *next;
- 	int ret;
- 	static int (*dispatch_type[])(struct hid_parser *parser,
- 				      struct hid_item *item) = {
-@@ -1032,7 +1033,8 @@ int hid_open_report(struct hid_device *d
- 	device->collection_size = HID_DEFAULT_NUM_COLLECTIONS;
+--- a/arch/s390/kernel/idle.c
++++ b/arch/s390/kernel/idle.c
+@@ -69,18 +69,26 @@ DEVICE_ATTR(idle_count, 0444, show_idle_
+ static ssize_t show_idle_time(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+ {
++	unsigned long long now, idle_time, idle_enter, idle_exit, in_idle;
+ 	struct s390_idle_data *idle = &per_cpu(s390_idle, dev->id);
+-	unsigned long long now, idle_time, idle_enter, idle_exit;
+ 	unsigned int seq;
  
- 	ret = -EINVAL;
--	while ((start = fetch_item(start, end, &item)) != NULL) {
-+	while ((next = fetch_item(start, end, &item)) != NULL) {
-+		start = next;
+ 	do {
+-		now = get_tod_clock();
+ 		seq = read_seqcount_begin(&idle->seqcount);
+ 		idle_time = READ_ONCE(idle->idle_time);
+ 		idle_enter = READ_ONCE(idle->clock_idle_enter);
+ 		idle_exit = READ_ONCE(idle->clock_idle_exit);
+ 	} while (read_seqcount_retry(&idle->seqcount, seq));
+-	idle_time += idle_enter ? ((idle_exit ? : now) - idle_enter) : 0;
++	in_idle = 0;
++	now = get_tod_clock();
++	if (idle_enter) {
++		if (idle_exit) {
++			in_idle = idle_exit - idle_enter;
++		} else if (now > idle_enter) {
++			in_idle = now - idle_enter;
++		}
++	}
++	idle_time += in_idle;
+ 	return sprintf(buf, "%llu\n", idle_time >> 12);
+ }
+ DEVICE_ATTR(idle_time_us, 0444, show_idle_time, NULL);
+@@ -88,17 +96,24 @@ DEVICE_ATTR(idle_time_us, 0444, show_idl
+ u64 arch_cpu_idle_time(int cpu)
+ {
+ 	struct s390_idle_data *idle = &per_cpu(s390_idle, cpu);
+-	unsigned long long now, idle_enter, idle_exit;
++	unsigned long long now, idle_enter, idle_exit, in_idle;
+ 	unsigned int seq;
  
- 		if (item.format != HID_ITEM_FORMAT_SHORT) {
- 			hid_err(device, "unexpected long global item\n");
-@@ -1061,7 +1063,8 @@ int hid_open_report(struct hid_device *d
- 		}
- 	}
+ 	do {
+-		now = get_tod_clock();
+ 		seq = read_seqcount_begin(&idle->seqcount);
+ 		idle_enter = READ_ONCE(idle->clock_idle_enter);
+ 		idle_exit = READ_ONCE(idle->clock_idle_exit);
+ 	} while (read_seqcount_retry(&idle->seqcount, seq));
+-
+-	return cputime_to_nsecs(idle_enter ? ((idle_exit ?: now) - idle_enter) : 0);
++	in_idle = 0;
++	now = get_tod_clock();
++	if (idle_enter) {
++		if (idle_exit) {
++			in_idle = idle_exit - idle_enter;
++		} else if (now > idle_enter) {
++			in_idle = now - idle_enter;
++		}
++	}
++	return cputime_to_nsecs(in_idle);
+ }
  
--	hid_err(device, "item fetching failed at offset %d\n", (int)(end - start));
-+	hid_err(device, "item fetching failed at offset %u/%u\n",
-+		size - (unsigned int)(end - start), size);
- err:
- 	vfree(parser);
- 	hid_close_report(device);
+ void arch_cpu_idle_enter(void)
 
 
