@@ -2,152 +2,101 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB57CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0317CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54F1321D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:44:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hQx3J7ww"
+	by mail.kernel.org (Postfix) with ESMTP id A321A21D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:44:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572871491;
+	bh=oZNDN41JbDQoGUIdu2NFut0arDvRMNXgBKl9waADRqI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ToMQ6YfH27TEvi07ee0fRUP0RDFypSEKWOJTn87FqZnZ4TkzLX9YLHXXX3StKARCn
+	 2HTWrYs31tAzSeG1Pc5f++ReZNHyJMB79QE3iNOdnf1gv6/f9f0MEVarwdlpOjsOYV
+	 /cE9nvU+3BgRx/uqweaZ0+D+YWA1cAuv5JHAydiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbfKDMoE (ORCPT
+        id S1729068AbfKDMou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 07:44:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23463 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727236AbfKDMoE (ORCPT
+        Mon, 4 Nov 2019 07:44:50 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42566 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727891AbfKDMou (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 07:44:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572871443;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kyIvhY3BXMqZ4TEtR3KTmpEF86AeFHO8xa0fKWzJeAE=;
-        b=hQx3J7wwzZYathJFMs1CPLKp1dRrrstUaIudRdC+DnrIXwucqXpAi+Y6Ek/jH2RPqDeUfZ
-        MyEzihIjzH5I+gTCnwjoEJ9QwLuGsdfkaf31ajfnv8mj1LB9IbV4ab+9Ph6vsKIRKzx/+z
-        WaSzWT6q+c4a31yuuV61/pZvoJfketk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-28-vRISspVuMJ6kcJukeiQ94w-1; Mon, 04 Nov 2019 07:43:57 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 738DC1005500;
-        Mon,  4 Nov 2019 12:43:53 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-65.pek2.redhat.com [10.72.12.65])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2DDB060CD0;
-        Mon,  4 Nov 2019 12:43:00 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V7 2/6] modpost: add support for mdev class id
-Date:   Mon,  4 Nov 2019 20:39:48 +0800
-Message-Id: <20191104123952.17276-3-jasowang@redhat.com>
-In-Reply-To: <20191104123952.17276-1-jasowang@redhat.com>
-References: <20191104123952.17276-1-jasowang@redhat.com>
+        Mon, 4 Nov 2019 07:44:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GCF2W9GoIMji6P38lZAtJnQ1QMJqaRDISSiKFCZJSos=; b=aHYYCN5FMrrDV3IW2Wm1dOk7Y
+        qHXnr8PE3zYbFMQzzk57EgX0MVsQyY+5rdu8OnJvm308QAMb/jTTmkq0hrGqaFscVpC1EchB3As00
+        TcbaP+kotvQewwUk0lrV7gUeBU4hz8j8lYglMoMP2qzmWNg7PqbH8aV8fe7bFKLvZqU7Q=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iRbiv-0002YG-OD; Mon, 04 Nov 2019 12:44:45 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id AB2D3274301E; Mon,  4 Nov 2019 12:44:44 +0000 (GMT)
+Date:   Mon, 4 Nov 2019 12:44:44 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: spi-mem and gpio chipselects
+Message-ID: <20191104124444.GB5238@sirena.co.uk>
+References: <cbe69f5457c4dd1c2cc96a247c6c6fca61c0d43c.camel@alliedtelesis.co.nz>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: vRISspVuMJ6kcJukeiQ94w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Fba/0zbH8Xs+Fj9o"
+Content-Disposition: inline
+In-Reply-To: <cbe69f5457c4dd1c2cc96a247c6c6fca61c0d43c.camel@alliedtelesis.co.nz>
+X-Cookie: This page intentionally left blank.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to parse mdev class id table.
 
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/vfio/mdev/vfio_mdev.c     |  2 ++
- scripts/mod/devicetable-offsets.c |  3 +++
- scripts/mod/file2alias.c          | 11 +++++++++++
- 3 files changed, 16 insertions(+)
+--Fba/0zbH8Xs+Fj9o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
-index 38431e9ef7f5..a6641cd8b5a3 100644
---- a/drivers/vfio/mdev/vfio_mdev.c
-+++ b/drivers/vfio/mdev/vfio_mdev.c
-@@ -125,6 +125,8 @@ static const struct mdev_class_id vfio_id_table[] =3D {
- =09{ 0 },
- };
-=20
-+MODULE_DEVICE_TABLE(mdev, vfio_id_table);
-+
- static struct mdev_driver vfio_mdev_driver =3D {
- =09.name=09=3D "vfio_mdev",
- =09.probe=09=3D vfio_mdev_probe,
-diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-of=
-fsets.c
-index 054405b90ba4..6cbb1062488a 100644
---- a/scripts/mod/devicetable-offsets.c
-+++ b/scripts/mod/devicetable-offsets.c
-@@ -231,5 +231,8 @@ int main(void)
- =09DEVID(wmi_device_id);
- =09DEVID_FIELD(wmi_device_id, guid_string);
-=20
-+=09DEVID(mdev_class_id);
-+=09DEVID_FIELD(mdev_class_id, id);
-+
- =09return 0;
- }
-diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-index c91eba751804..45f1c22f49be 100644
---- a/scripts/mod/file2alias.c
-+++ b/scripts/mod/file2alias.c
-@@ -1335,6 +1335,16 @@ static int do_wmi_entry(const char *filename, void *=
-symval, char *alias)
- =09return 1;
- }
-=20
-+/* looks like: "mdev:cN" */
-+static int do_mdev_entry(const char *filename, void *symval, char *alias)
-+{
-+=09DEF_FIELD(symval, mdev_class_id, id);
-+
-+=09sprintf(alias, "mdev:c%02X", id);
-+=09add_wildcard(alias);
-+=09return 1;
-+}
-+
- /* Does namelen bytes of name exactly match the symbol? */
- static bool sym_is(const char *name, unsigned namelen, const char *symbol)
- {
-@@ -1407,6 +1417,7 @@ static const struct devtable devtable[] =3D {
- =09{"typec", SIZE_typec_device_id, do_typec_entry},
- =09{"tee", SIZE_tee_client_device_id, do_tee_entry},
- =09{"wmi", SIZE_wmi_device_id, do_wmi_entry},
-+=09{"mdev", SIZE_mdev_class_id, do_mdev_entry},
- };
-=20
- /* Create MODULE_ALIAS() statements.
---=20
-2.19.1
+On Mon, Nov 04, 2019 at 12:35:24AM +0000, Chris Packham wrote:
 
+> I'm working on a platform that has a slightly complicated scheme for
+> SPI chip-selects using gpios[1]. The spi controller driver in this case
+> supports the spi-mem operations which appear to bypass the generic
+> spi_set_cs().
+
+> Would there be any harm in adding calls to spi_set_cs() to spi-mem.c?
+> Naively spi_mem_access_start() and spi_mem_access_end() seem like
+> convenient places to start.
+
+That's only going to work in cases where the controller translates
+things into a single SPI operation on the flash which I'm not sure is
+always going to be the case.  We'd need a way to guarantee that the
+controller is going to do that in order to avoid data corruption issues.
+
+--Fba/0zbH8Xs+Fj9o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3AHTsACgkQJNaLcl1U
+h9CKcgf/a3Rsv/nEWYK652244fSFdDjB0Ae/GjNHxD+cHFj3PApNAkCG1mA1XAux
+nu2t/yNhOlkeXysq1o7zHbsttZpVI9MPh9seGhrvyk1vMVnRv3DghWjgVNAZKv1h
+pmWU3zN6MAU0K05C46j5B6QgF4euavsIS61ynsokTvdOdGfRLZQe2eBuRokPut5B
+2scTuUx7HB6ybEWU+vjeXN53v3UYDfCoKYI0A3XiX9F4n3m7WTW+5xPu2etP8a1C
+C0OFvD/mkVWCoQDeFWCIOTQ7thQc9HiAK2xgtTPeSggqQi7cj/bb14bE0FtGnCrM
+5m6A7jwYbpby8OEZPG9MJphRUVclhw==
+=E4bF
+-----END PGP SIGNATURE-----
+
+--Fba/0zbH8Xs+Fj9o--
