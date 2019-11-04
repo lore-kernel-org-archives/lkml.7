@@ -2,109 +2,78 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B839CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3744CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E83321A4A
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:59:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="c6HRIjK9"
+	by mail.kernel.org (Postfix) with ESMTP id 8243821D71
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbfKDC7C (ORCPT
+        id S1729018AbfKDDAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 21:59:02 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:36362 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728643AbfKDC7C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 21:59:02 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA42wgtK051862;
-        Mon, 4 Nov 2019 02:58:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=rXYd9T5xcZlsJtJKgMbmBfCyv/t8roaEHfDXUqifZr8=;
- b=c6HRIjK9RWPYu6kDZAqSih+48aVDf44jeIQBwUSJpBOa3vQyTJ9yeJ69+6axMwAzibdd
- indoHEbNFeC6Dw90cobujEEO/gSlEo1+EntznGdJXe8fAyd+lvYvz5mKbcx4Toa5T82I
- QWQtQIKF3/8H21UlNlrt6QjTlqEmW27vbRM5/tkZsMk0XUHZRI1uzStiT8+paVqAqLim
- eU2P1/7vd46W/HLCEJ/W+mPUvH88p46ws/W7OAvdfoeDsYoi8KPL7rEzvxlx49I+0EDB
- 1JeJ4EJJ2vrRKZUB3nx9mJ39UOsVT8p8PLCIPuSSS1H5nol3TpPU+iT4MnyZ6pbeBrl6 WQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2w117tmjqh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 02:58:42 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA42sTRe047440;
-        Mon, 4 Nov 2019 02:56:41 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2w1ka94s6n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 02:56:41 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA42udoX011586;
-        Mon, 4 Nov 2019 02:56:39 GMT
-Received: from [192.168.0.4] (/111.206.84.95)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 03 Nov 2019 18:56:38 -0800
-Subject: Re: [PATCH 4/5] cpuidle-haltpoll: add a check to ensure grow start
- value is nonzero
-To:     Marcelo Tosatti <mtosatti@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        joao.m.martins@oracle.com, rafael.j.wysocki@intel.com,
-        rkrcmar@redhat.com, pbonzini@redhat.com
-References: <1572060239-17401-1-git-send-email-zhenzhong.duan@oracle.com>
- <1572060239-17401-5-git-send-email-zhenzhong.duan@oracle.com>
- <20191101211908.GA20672@amt.cnet>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <7245089f-788e-03d6-9833-6ce4d313f4ce@oracle.com>
-Date:   Mon, 4 Nov 2019 10:56:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 3 Nov 2019 22:00:41 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5254 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728643AbfKDDAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 22:00:41 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 58D02C6956E1853EB260;
+        Mon,  4 Nov 2019 11:00:39 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 4 Nov 2019 11:00:29 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>,
+        <treding@nvidia.com>, <nkristam@nvidia.com>, <arnd@arndb.de>,
+        <johan@kernel.org>, <krzk@kernel.org>
+CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>
+Subject: [PATCH -next] usb: gadget: Add dependency for USB_TEGRA_XUDC
+Date:   Mon, 4 Nov 2019 10:59:45 +0800
+Message-ID: <20191104025945.172620-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191101211908.GA20672@amt.cnet>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911040029
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911040030
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+If CONFIG_USB_TEGRA_XUDC=y and CONFIG_USB_ROLE_SWITCH=m,
+below erros can be seen:
+drivers/usb/gadget/udc/tegra-xudc.o: In function `tegra_xudc_remove':
+tegra-xudc.c:(.text+0x6b0): undefined reference to `usb_role_switch_unregister'
+drivers/usb/gadget/udc/tegra-xudc.o: In function `tegra_xudc_probe':
+tegra-xudc.c:(.text+0x1b88): undefined reference to `usb_role_switch_register'
+drivers/usb/gadget/udc/tegra-xudc.o: In function `tegra_xudc_usb_role_sw_work':
+tegra-xudc.c:(.text+0x5ecc): undefined reference to `usb_role_switch_get_role'
 
-On 2019/11/2 5:19, Marcelo Tosatti wrote:
-> On Sat, Oct 26, 2019 at 11:23:58AM +0800, Zhenzhong Duan wrote:
->> dev->poll_limit_ns could be zeroed in certain cases (e.g. by
->> guest_halt_poll_shrink). If guest_halt_poll_grow_start is zero,
->> dev->poll_limit_ns will never be larger than zero.
->>
->> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
->> ---
->>   drivers/cpuidle/governors/haltpoll.c | 15 ++++++++++++---
->>   1 file changed, 12 insertions(+), 3 deletions(-)
-> I would rather disallow setting grow_start to zero rather
-> than silently setting it to one on the back of the user.
+This patch add dependency USB_ROLE_SWITCH for UDC driver.
 
-Ok, will do.
+Fixes: 49db427232fe ("usb: gadget: Add UDC driver for tegra XUSB device mode controller")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ drivers/usb/gadget/udc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks
-
-Zhenzhong
+diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kconfig
+index acaec3a..d103154 100644
+--- a/drivers/usb/gadget/udc/Kconfig
++++ b/drivers/usb/gadget/udc/Kconfig
+@@ -445,6 +445,7 @@ config USB_TEGRA_XUDC
+ 	tristate "NVIDIA Tegra Superspeed USB 3.0 Device Controller"
+ 	depends on ARCH_TEGRA || COMPILE_TEST
+ 	depends on PHY_TEGRA_XUSB
++	depends on USB_ROLE_SWITCH
+ 	help
+ 	 Enables NVIDIA Tegra USB 3.0 device mode controller driver.
+ 
+-- 
+2.7.4
 
