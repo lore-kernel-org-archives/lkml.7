@@ -4,73 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF2BCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5E9CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD9E206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFDFE2190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572912001;
-	bh=bKkqHkRPhRqMu2LNR+OjNbWJgONnlD8gcbTFjh6PkpY=;
+	s=default; t=1572912006;
+	bh=goJTL1oAhTSmCMeaugTqf6uALH9HVVvFhc2p8lbgd10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y/69mxc12+w9fl+yEmSQ9EGTnLLZti1C0aYY1Vdmw/TRRkEyeK0crmEce1/e3d3Gi
-	 wNW2M1sAj4bQqpQfwIqO8+RgkmgeyuEL1pq59Bs7AqsBRvWHVHrLjoeauPHKOhaZAI
-	 HTJkKbZY20nEtmsuVOrv8V2TBwcbi24e1GSyCuas=
+	b=flGpGk6qRRGpslmPI4qYDVahdLB5nVlRz2DkV+JEhSkgRsloNLC/edBcMeqqKRkAk
+	 MusCleF+YlAiG80pQKHfWoI/TQwMoSQzzu5xB6g6b3EjCAZ8zX7kQhxyyM9Bc2/DiX
+	 jHBoYXzdNrm6mS/J3iScAc4BtdhxdmPVcwpxTJyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730206AbfKEAAA (ORCPT
+        id S1730269AbfKEAAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 19:00:00 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41322 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730113AbfKDX75 (ORCPT
+        Mon, 4 Nov 2019 19:00:05 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42211 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730189AbfKEAAA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 18:59:57 -0500
-Received: by mail-qt1-f196.google.com with SMTP id o3so26754809qtj.8;
-        Mon, 04 Nov 2019 15:59:55 -0800 (PST)
+        Mon, 4 Nov 2019 19:00:00 -0500
+Received: by mail-qt1-f193.google.com with SMTP id t20so11110961qtn.9;
+        Mon, 04 Nov 2019 15:59:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=SQgKhoULLgpN26sBK1npG8blVNvYYPuT5k6zRrCfbuc=;
-        b=E9gf9aVvFMkz1lD8vFX9/CcbHC1OyTNXGazo/M1XsS1m3bhgmD+UvjrqrlJ65k5wI7
-         qQ66oJXI10YCmqviDik0+MwQabB1EEcF5rQoqQ4QsxryfL9RDHvL0xStAkQv4/Qd+We3
-         FWz08V0STScpMZC8fAGN9NGH0imGFgjf2+kynhuHZHNgC9hYcItUeaz3/EHOXGeGxFk2
-         np8T8yuyjfUW31mmSwIEhstNfNFc1buNpHsw2DB5UyTOG9TYJG2BDxiVbUCeAdkw/jbY
-         dMkbbXBTjGrLh16j+LcsSxsF5ZDveaz8/17s0ioH+umtvFGVazB6Lea+WoVTgL8XbKZ6
-         WG6w==
+        bh=3SAFhWytWRsOw7arfqXaOD5T2u5Zhg2vpO9SXodrC/A=;
+        b=CTCLfdhkpDgX8suXA2/gh1Z6TjiX6DhZVUPJ8sPRgTSylvD0AFGxKvnJdEBi6n6wn3
+         fMBhWroP9nhCGOI0To5j/dkt0C9nee87OfCaxB1e+kzhhr4yQQyFf0tZIlX0R3c2BmCQ
+         TexU+JfD94MQ47ekObZWXLdusQHVTMvc64k+UYTbTCgg7Er1g3YPsarS+YNmvdYwFAXz
+         CpDO8dFf17J8Uhh0ZluJk5Rk5D132YQC9/rUkwNZ1ynTyTq/CeG6NhLshpxg0Kc2iM+a
+         emAjEZ1SiujyMWC+UN1zJMkgPkYAeLQ+QT1EkGgAlFLx6Z2XDXfJ5wGp1p/kCLmOJbp2
+         BM7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=SQgKhoULLgpN26sBK1npG8blVNvYYPuT5k6zRrCfbuc=;
-        b=rcGYoxEP8doGQ/2TA25+mHiMVZI+gjvvoslDNB6FugvG14hEzlZ/2OPBBCn0C8lc4z
-         iNczqeshNuf5GAX+WtE5kQ2Po+to/eZYQyhEAvVaA8zvfIZhHpm/pPd1WDNA2AVy11/V
-         IbOtnlm+jPPK6vN8+zVKOxtK19uE26JAGK136hDoOwOVOBzjMWgmIynCEurbymelcF/+
-         rGQ2ONsLuTWIgSdFkWe9tpdEvq6Nxzj4pOkJctOUnK9ZBTi6YgafmZTSBwjXcKfFirZJ
-         mkBOCp3lipIU4nAVkbbnZLcuIQ2tqB6nlGlmystbOkLnnf57C5y8KAEAH+DS5DKPl554
-         zYfQ==
-X-Gm-Message-State: APjAAAUoKEGe6pURGSmQOVyuaex9aXcLWpjQLLNr+95sYn+I/kVGnt1J
-        h3CT3vjBQ5ZqLIg1px1y4m+xdI0W
-X-Google-Smtp-Source: APXvYqwPMzn6Ks77SqF5/H7qSzj6/LDaU4AvNaOILEU4jpc1+gZZlK+l2HH9j/qNTnifsbTRqvQHUQ==
-X-Received: by 2002:ac8:5317:: with SMTP id t23mr15318686qtn.228.1572911995153;
-        Mon, 04 Nov 2019 15:59:55 -0800 (PST)
+        bh=3SAFhWytWRsOw7arfqXaOD5T2u5Zhg2vpO9SXodrC/A=;
+        b=ga6RqtRSQr5sjlwZSpt/5T4yEwuR7NyXYrnjcuZxuAWhqu4ao1ROiWRD+C6mmPTLVt
+         306K4Q9rvfsdiSysbzs/+8eDHGMIDHEF6WGiFEYenMV2Ka0IECMowxTnNqFs3fIhwsR3
+         zNk/DgquojUQ1BJyO3thGPbVCbr7ae6pIGMKWqEs0AtkM9XirN6Fp4cYIFA5/ex9N2Uh
+         bWUflADnI4/EEGacfvGemgpVlWIudqAt+gFSlLRZBh++FDiTmGIJGaIByIgXuCxPS7Df
+         /TKRL/8xrH5nCNnbAfDJblnRvSf0Z5Am+ssdhtCPXc7bzJJYmhEMz9cfA2jzkrqXTCJI
+         o6Sw==
+X-Gm-Message-State: APjAAAWhNR77ejMHrb/bdFcJz6U/KsEUgsJ7rWmSnNhH6JbVTpeDcEPA
+        LS7AzZOAy1hKR5OAf+icAqs=
+X-Google-Smtp-Source: APXvYqyOlVhf+C9gENRHHF3UIxuKTD0HhnnGzVSi1PQS+gS8eGio0sHeuOr5C/PKlqJQSL314jZsXw==
+X-Received: by 2002:a0c:bf4d:: with SMTP id b13mr415128qvj.115.1572911999034;
+        Mon, 04 Nov 2019 15:59:59 -0800 (PST)
 Received: from localhost ([2620:10d:c091:500::3:51f8])
-        by smtp.gmail.com with ESMTPSA id r126sm9448800qke.98.2019.11.04.15.59.54
+        by smtp.gmail.com with ESMTPSA id f24sm6499126qkh.81.2019.11.04.15.59.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Nov 2019 15:59:54 -0800 (PST)
+        Mon, 04 Nov 2019 15:59:58 -0800 (PST)
 From:   Tejun Heo <tj@kernel.org>
 To:     gregkh@linuxfoundation.org
 Cc:     kernel-team@fb.com, linux-kernel@vger.kernel.org,
         cgroups@vger.kernel.org, lizefan@huawei.com, hannes@cmpxchg.org,
         namhyung@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        Tejun Heo <tj@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Neil Horman <nhorman@tuxdriver.com>
-Subject: [PATCH 03/10] netprio: use css ID instead of cgroup ID
-Date:   Mon,  4 Nov 2019 15:59:37 -0800
-Message-Id: <20191104235944.3470866-4-tj@kernel.org>
+        Tejun Heo <tj@kernel.org>
+Subject: [PATCH 05/10] kernfs: kernfs_find_and_get_node_by_ino() should only look up activated nodes
+Date:   Mon,  4 Nov 2019 15:59:39 -0800
+Message-Id: <20191104235944.3470866-6-tj@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191104235944.3470866-1-tj@kernel.org>
 References: <20191104235944.3470866-1-tj@kernel.org>
@@ -79,82 +77,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-netprio uses cgroup ID to index the priority mapping table.  This is
-currently okay as cgroup IDs are allocated using idr and packed.
-However, cgroup IDs will be changed to use full 64bit range and won't
-be packed making this impractical.  netprio doesn't care what type of
-IDs it uses as long as they can identify the controller instances and
-are packed.  Let's switch to css IDs instead of cgroup IDs.
+kernfs node can be created in two separate steps - allocation and
+activation.  This is used to make kernfs nodes visible only after the
+internal states attached to the node are fully initialized.
+kernfs_find_and_get_node_by_id() currently allows lookups of nodes
+which aren't activated yet and thus can expose nodes are which are
+still being prepped by kernfs users.
+
+Fix it by disallowing lookups of nodes which aren't activated yet.
+
+kernfs_find_and_get_node_by_ino()
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Neil Horman <nhorman@tuxdriver.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 ---
-Hello,
+ fs/kernfs/dir.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-This is to prepare for kernfs 64bit ino support.  It'd be best to
-route this with the rest of kernfs patchset.
-
-Thanks.
-
- include/net/netprio_cgroup.h | 2 +-
- net/core/netprio_cgroup.c    | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/include/net/netprio_cgroup.h b/include/net/netprio_cgroup.h
-index cfc9441ef074..dec7522b6ce1 100644
---- a/include/net/netprio_cgroup.h
-+++ b/include/net/netprio_cgroup.h
-@@ -26,7 +26,7 @@ static inline u32 task_netprioidx(struct task_struct *p)
+diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
+index 798f0f03b62b..beabb585a7d8 100644
+--- a/fs/kernfs/dir.c
++++ b/fs/kernfs/dir.c
+@@ -714,7 +714,13 @@ struct kernfs_node *kernfs_find_and_get_node_by_ino(struct kernfs_root *root,
+ 	if (!kn)
+ 		goto err_unlock;
  
- 	rcu_read_lock();
- 	css = task_css(p, net_prio_cgrp_id);
--	idx = css->cgroup->id;
-+	idx = css->id;
- 	rcu_read_unlock();
- 	return idx;
- }
-diff --git a/net/core/netprio_cgroup.c b/net/core/netprio_cgroup.c
-index 256b7954b720..8881dd943dd0 100644
---- a/net/core/netprio_cgroup.c
-+++ b/net/core/netprio_cgroup.c
-@@ -93,7 +93,7 @@ static int extend_netdev_table(struct net_device *dev, u32 target_idx)
- static u32 netprio_prio(struct cgroup_subsys_state *css, struct net_device *dev)
- {
- 	struct netprio_map *map = rcu_dereference_rtnl(dev->priomap);
--	int id = css->cgroup->id;
-+	int id = css->id;
+-	if (unlikely(!atomic_inc_not_zero(&kn->count)))
++	/*
++	 * ACTIVATED is protected with kernfs_mutex but it was clear when
++	 * @kn was added to idr and we just wanna see it set.  No need to
++	 * grab kernfs_mutex.
++	 */
++	if (unlikely(!(kn->flags & KERNFS_ACTIVATED) ||
++		     !atomic_inc_not_zero(&kn->count)))
+ 		goto err_unlock;
  
- 	if (map && id < map->priomap_len)
- 		return map->priomap[id];
-@@ -113,7 +113,7 @@ static int netprio_set_prio(struct cgroup_subsys_state *css,
- 			    struct net_device *dev, u32 prio)
- {
- 	struct netprio_map *map;
--	int id = css->cgroup->id;
-+	int id = css->id;
- 	int ret;
- 
- 	/* avoid extending priomap for zero writes */
-@@ -177,7 +177,7 @@ static void cgrp_css_free(struct cgroup_subsys_state *css)
- 
- static u64 read_prioidx(struct cgroup_subsys_state *css, struct cftype *cft)
- {
--	return css->cgroup->id;
-+	return css->id;
- }
- 
- static int read_priomap(struct seq_file *sf, void *v)
-@@ -237,7 +237,7 @@ static void net_prio_attach(struct cgroup_taskset *tset)
- 	struct cgroup_subsys_state *css;
- 
- 	cgroup_taskset_for_each(p, css, tset) {
--		void *v = (void *)(unsigned long)css->cgroup->id;
-+		void *v = (void *)(unsigned long)css->id;
- 
- 		task_lock(p);
- 		iterate_fd(p->files, 0, update_netprio, v);
+ 	spin_unlock(&kernfs_idr_lock);
 -- 
 2.17.1
 
