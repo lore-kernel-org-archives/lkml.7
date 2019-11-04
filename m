@@ -2,103 +2,227 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC5ACA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29EDCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69AD5214D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:36:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572885394;
-	bh=Z7/la63rJagkV/aifP7b6pUj/4TgVah2xBl/alg5d5U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Dr9LCJGX4df+O8k/fLX+7vZmnnCTML1oIb2jDOanix9Z3DwDt4ue2ARKtaBIRiah+
-	 E0A5mw4eNIN5/W/Qdi7avf2jxnxF06NDlwh/rZ90bqYojnBbk1sRGKNUW3NhqhY6FI
-	 lWbjkdRvJNsKF5YKP8KywH2Xqj1AwekENYMi+Dcs=
+	by mail.kernel.org (Postfix) with ESMTP id 7C2212089C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:39:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EISj5KjZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbfKDQgd (ORCPT
+        id S1729260AbfKDQji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 11:36:33 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38015 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbfKDQgd (ORCPT
+        Mon, 4 Nov 2019 11:39:38 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30851 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728336AbfKDQjh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 11:36:33 -0500
-Received: by mail-lj1-f193.google.com with SMTP id v8so2713507ljh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 08:36:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=T1bx/DaPDC6OwApDRf773PArCGhjTMdLqdzsWIpne4I=;
-        b=hw0cwtZSChsco/dnelTqXZkBYy9t+LpaBwMCFbA3T4BmkjZqilTc7yu2BUVbyQzzA0
-         s0VDDnWEE2tJKTVymARFE7zvEpnfg/OS9q8XDCnHC5XwZ0Bn5lZ8yNquKmdnlZSEJHO9
-         eRxkx303BHSMCSVPG1Qs7jB7XYNENiibOPLwI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=T1bx/DaPDC6OwApDRf773PArCGhjTMdLqdzsWIpne4I=;
-        b=GSCyUCv+BvqHjPpxg+ASXmiRniwuF+zNTpOrm3Rt/Km1DTblGgg+QBX31xKibQy+Jg
-         uVB07v5FXRULKbaV8B4VjbjtlIMh8x2sZqqP9e4pOZXGadREO9/niyBC6WHC9kyHUINT
-         sgiEOwNlJ6nGFk47ZdpG5BqORRPMfNCpx+vAXxYeWT4bpgBB5ZXURZQS2NNfCHQpe+sS
-         Rg6myspQa1Os5nWoypZ7HQtSyMwR4w3OzUNl0pz1TAcOwtalr/qPayJTBGtgPzp8zbjA
-         2bp2eydesJ4XHWBEatVeJYg558wrGYQzA5XfRprIvFpS8nagJLUfVQ5I+5y5+/8SS9Ec
-         ZNyg==
-X-Gm-Message-State: APjAAAWWGHD79IgS95nGqr1D3OFNWe+f9XlAV27HgGvbHGYX+4cOR9pL
-        tVzOi49lyGPtalPGA6y47lNczOKXW7Y=
-X-Google-Smtp-Source: APXvYqx7uiKGuz0f6JDgvWFTK+5VFxyl60u0AguOO3WbhNHm8exn0uFaTriudD6HnEoni3qFEXWPBA==
-X-Received: by 2002:a2e:88c9:: with SMTP id a9mr7633730ljk.30.1572885388955;
-        Mon, 04 Nov 2019 08:36:28 -0800 (PST)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id 81sm8005869lje.70.2019.11.04.08.36.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Nov 2019 08:36:27 -0800 (PST)
-Received: by mail-lj1-f176.google.com with SMTP id q2so11806367ljg.7
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 08:36:27 -0800 (PST)
-X-Received: by 2002:a05:651c:331:: with SMTP id b17mr19511439ljp.133.1572885387047;
- Mon, 04 Nov 2019 08:36:27 -0800 (PST)
-MIME-Version: 1.0
-References: <20191014132204.7721-1-thomas_os@shipmail.org> <a31f0d40-d8a5-faca-016b-0066f5ac31a2@shipmail.org>
-In-Reply-To: <a31f0d40-d8a5-faca-016b-0066f5ac31a2@shipmail.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 4 Nov 2019 08:36:11 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjPo0s+8NC+NKeYWeWbszVXHW+Dh3k9NG1DV0-cHoP0OA@mail.gmail.com>
-Message-ID: <CAHk-=wjPo0s+8NC+NKeYWeWbszVXHW+Dh3k9NG1DV0-cHoP0OA@mail.gmail.com>
-Subject: Re: -mm maintainer? WAS Re: [PATCH v6 0/8] Emulated coherent graphics
- memory take 2
-To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan@kernel.org>,
+        Mon, 4 Nov 2019 11:39:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572885575;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZKRtyHtWqxotoMRVCD2L231GIf5CzzOu6K7yMpGCV1E=;
+        b=EISj5KjZrUl3kZNHgeVxg9gzAbcLy4Tpe15p04ZJX+1X/PP0zhFi/jqdDWYjMDEhoU+i0C
+        JuU/cWz6scDZOZMQlwE2N2QuxICFFYXRzNVTjImH796mEQWD/wjXHkzq8BvJ4gOxbXcJlq
+        N9g+v2tQVhedXU+Lsqq3rbwA789furQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-368-XcpsC-lSP4a7ehsn9d2sxg-1; Mon, 04 Nov 2019 11:39:31 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D6C88017DD;
+        Mon,  4 Nov 2019 16:39:27 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F0A6F5C240;
+        Mon,  4 Nov 2019 16:39:20 +0000 (UTC)
+Date:   Mon, 4 Nov 2019 11:39:19 -0500
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Michal Hocko <mhocko@suse.com>,
-        Huang Ying <ying.huang@intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v2 01/18] mm/gup: pass flags arg to __gup_device_*
+ functions
+Message-ID: <20191104163919.GA5134@redhat.com>
+References: <20191103211813.213227-1-jhubbard@nvidia.com>
+ <20191103211813.213227-2-jhubbard@nvidia.com>
+MIME-Version: 1.0
+In-Reply-To: <20191103211813.213227-2-jhubbard@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: XcpsC-lSP4a7ehsn9d2sxg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 1:21 AM Thomas Hellstr=C3=B6m (VMware)
-<thomas_os@shipmail.org> wrote:
->
-> I'm a bit confused as how to get this merged? Is there an -mm maintainer
-> or who is supposed to ack -mm patches and get them into the kernel?
+On Sun, Nov 03, 2019 at 01:17:56PM -0800, John Hubbard wrote:
+> A subsequent patch requires access to gup flags, so
+> pass the flags argument through to the __gup_device_*
+> functions.
+>=20
+> Also placate checkpatch.pl by shortening a nearby line.
+>=20
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-I was assuming they'd go through Andrew Morton.. Andrew?
+Reviewed-by: J=E9r=F4me Glisse <jglisse@redhat.com>
 
-            Linus
+> ---
+>  mm/gup.c | 28 ++++++++++++++++++----------
+>  1 file changed, 18 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 8f236a335ae9..85caf76b3012 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -1890,7 +1890,8 @@ static int gup_pte_range(pmd_t pmd, unsigned long a=
+ddr, unsigned long end,
+> =20
+>  #if defined(CONFIG_ARCH_HAS_PTE_DEVMAP) && defined(CONFIG_TRANSPARENT_HU=
+GEPAGE)
+>  static int __gup_device_huge(unsigned long pfn, unsigned long addr,
+> -=09=09unsigned long end, struct page **pages, int *nr)
+> +=09=09=09     unsigned long end, unsigned int flags,
+> +=09=09=09     struct page **pages, int *nr)
+>  {
+>  =09int nr_start =3D *nr;
+>  =09struct dev_pagemap *pgmap =3D NULL;
+> @@ -1916,13 +1917,14 @@ static int __gup_device_huge(unsigned long pfn, u=
+nsigned long addr,
+>  }
+> =20
+>  static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long =
+addr,
+> -=09=09unsigned long end, struct page **pages, int *nr)
+> +=09=09=09=09 unsigned long end, unsigned int flags,
+> +=09=09=09=09 struct page **pages, int *nr)
+>  {
+>  =09unsigned long fault_pfn;
+>  =09int nr_start =3D *nr;
+> =20
+>  =09fault_pfn =3D pmd_pfn(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+> -=09if (!__gup_device_huge(fault_pfn, addr, end, pages, nr))
+> +=09if (!__gup_device_huge(fault_pfn, addr, end, flags, pages, nr))
+>  =09=09return 0;
+> =20
+>  =09if (unlikely(pmd_val(orig) !=3D pmd_val(*pmdp))) {
+> @@ -1933,13 +1935,14 @@ static int __gup_device_huge_pmd(pmd_t orig, pmd_=
+t *pmdp, unsigned long addr,
+>  }
+> =20
+>  static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long =
+addr,
+> -=09=09unsigned long end, struct page **pages, int *nr)
+> +=09=09=09=09 unsigned long end, unsigned int flags,
+> +=09=09=09=09 struct page **pages, int *nr)
+>  {
+>  =09unsigned long fault_pfn;
+>  =09int nr_start =3D *nr;
+> =20
+>  =09fault_pfn =3D pud_pfn(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+> -=09if (!__gup_device_huge(fault_pfn, addr, end, pages, nr))
+> +=09if (!__gup_device_huge(fault_pfn, addr, end, flags, pages, nr))
+>  =09=09return 0;
+> =20
+>  =09if (unlikely(pud_val(orig) !=3D pud_val(*pudp))) {
+> @@ -1950,14 +1953,16 @@ static int __gup_device_huge_pud(pud_t orig, pud_=
+t *pudp, unsigned long addr,
+>  }
+>  #else
+>  static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long =
+addr,
+> -=09=09unsigned long end, struct page **pages, int *nr)
+> +=09=09=09=09 unsigned long end, unsigned int flags,
+> +=09=09=09=09 struct page **pages, int *nr)
+>  {
+>  =09BUILD_BUG();
+>  =09return 0;
+>  }
+> =20
+>  static int __gup_device_huge_pud(pud_t pud, pud_t *pudp, unsigned long a=
+ddr,
+> -=09=09unsigned long end, struct page **pages, int *nr)
+> +=09=09=09=09 unsigned long end, unsigned int flags,
+> +=09=09=09=09 struct page **pages, int *nr)
+>  {
+>  =09BUILD_BUG();
+>  =09return 0;
+> @@ -2062,7 +2067,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, un=
+signed long addr,
+>  =09if (pmd_devmap(orig)) {
+>  =09=09if (unlikely(flags & FOLL_LONGTERM))
+>  =09=09=09return 0;
+> -=09=09return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr);
+> +=09=09return __gup_device_huge_pmd(orig, pmdp, addr, end, flags,
+> +=09=09=09=09=09     pages, nr);
+>  =09}
+> =20
+>  =09refs =3D 0;
+> @@ -2092,7 +2098,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, un=
+signed long addr,
+>  }
+> =20
+>  static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+> -=09=09unsigned long end, unsigned int flags, struct page **pages, int *n=
+r)
+> +=09=09=09unsigned long end, unsigned int flags,
+> +=09=09=09struct page **pages, int *nr)
+>  {
+>  =09struct page *head, *page;
+>  =09int refs;
+> @@ -2103,7 +2110,8 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, un=
+signed long addr,
+>  =09if (pud_devmap(orig)) {
+>  =09=09if (unlikely(flags & FOLL_LONGTERM))
+>  =09=09=09return 0;
+> -=09=09return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr);
+> +=09=09return __gup_device_huge_pud(orig, pudp, addr, end, flags,
+> +=09=09=09=09=09     pages, nr);
+>  =09}
+> =20
+>  =09refs =3D 0;
+> --=20
+> 2.23.0
+>=20
+
