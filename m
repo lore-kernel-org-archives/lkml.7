@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A750CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE32CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24CAB20650
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67B5420659
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904702;
-	bh=Bhw/+WAYoQTlSfdM2u4GYBpFik703kg0DI9T2+Skmrs=;
+	s=default; t=1572904706;
+	bh=zQZIQnj61YyQEo6hExALBbSTZEqZHlblJlUFbs4BBxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TsCtX55MP5/AJNhZ4pCNxlWFROsjb8DltpIW/rAtV11/NAZiQr0mP73MO+wO1D7VP
-	 U7qMjEZaLF4JgEbFXdrjOAqGQBmaVoQ21gQ7h9+ewErXlx5kBa6Pvrhs/XH2hDFNSa
-	 vwWp3ZjHw0iMPopTN0VetMDXq3WN/yl4Oog/O0H4=
+	b=E5zbGFO2tF+dc2joGIXGY1vn8/+A2d47+nuesAMHUbMT661Drbx+Cl9qR4fJ/JiXO
+	 9k4RhU5RDsha85wM4VVTEM+Hyj/1FIb5aTpUxAoPu+/C6IrjeoYf+S8UscJpSoDTAR
+	 8swURqPponWL4EzIef2NXrp5ajZoXBaQmURUnxhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730535AbfKDV6U (ORCPT
+        id S1730575AbfKDV6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:58:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55102 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:58:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730400AbfKDV6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:58:18 -0500
+        id S1730400AbfKDV6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:58:21 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D6C1222C1;
-        Mon,  4 Nov 2019 21:58:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EB1220659;
+        Mon,  4 Nov 2019 21:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904697;
-        bh=Bhw/+WAYoQTlSfdM2u4GYBpFik703kg0DI9T2+Skmrs=;
+        s=default; t=1572904700;
+        bh=zQZIQnj61YyQEo6hExALBbSTZEqZHlblJlUFbs4BBxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aiayafKlLopkOEV9reIW9duyjvsWD/uhUsF7tUVAo0ck0Y1FboQAgbqJtwgPeKyQX
-         X2SlHwnUai5tAD3J6Rk6BS+b5jWI8Yx1q7Aa7gmeo1sebrLS+RfEUbwVtDovSs8HUy
-         QMPJFpPvqPLli6Gh3CDtLXe+QakJQ1rxsIEjv/D8=
+        b=rWFOJWNH/9C40PY8BqusrinnB/3cNemeIG0j2bFiSOx5Nd1d8rQlNa3+UQmS4UDud
+         ujUWPI/KV3y9aYz2hgLhWYREPtLmJGp8sUqNzlc3l6eUcwb3QpHHNHl/myofTe4wNz
+         cwGzj80O+xiMGMYjWHwgSHBHv2Af4aMEg0ha1f0U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 004/149] Btrfs: fix inode cache block reserve leak on failure to allocate data space
-Date:   Mon,  4 Nov 2019 22:43:17 +0100
-Message-Id: <20191104212128.504168524@linuxfoundation.org>
+Subject: [PATCH 4.19 005/149] Btrfs: fix memory leak due to concurrent append writes with fiemap
+Date:   Mon,  4 Nov 2019 22:43:18 +0100
+Message-Id: <20191104212128.604497481@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -62,232 +63,150 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 29d47d00e0ae61668ee0c5d90bef2893c8abbafa ]
+[ Upstream commit c67d970f0ea8dcc423e112137d34334fa0abb8ec ]
 
-If we failed to allocate the data extent(s) for the inode space cache, we
-were bailing out without releasing the previously reserved metadata. This
-was triggering the following warnings when unmounting a filesystem:
+When we have a buffered write that starts at an offset greater than or
+equals to the file's size happening concurrently with a full ranged
+fiemap, we can end up leaking an extent state structure.
 
-  $ cat -n fs/btrfs/inode.c
-  (...)
-  9268  void btrfs_destroy_inode(struct inode *inode)
-  9269  {
-  (...)
-  9276          WARN_ON(BTRFS_I(inode)->block_rsv.reserved);
-  9277          WARN_ON(BTRFS_I(inode)->block_rsv.size);
-  (...)
-  9281          WARN_ON(BTRFS_I(inode)->csum_bytes);
-  9282          WARN_ON(BTRFS_I(inode)->defrag_bytes);
-  (...)
+Suppose we have a file with a size of 1Mb, and before the buffered write
+and fiemap are performed, it has a single extent state in its io tree
+representing the range from 0 to 1Mb, with the EXTENT_DELALLOC bit set.
 
-Several fstests test cases triggered this often, such as generic/083,
-generic/102, generic/172, generic/269 and generic/300 at least, producing
-stack traces like the following in dmesg/syslog:
+The following sequence diagram shows how the memory leak happens if a
+fiemap a buffered write, starting at offset 1Mb and with a length of
+4Kb, are performed concurrently.
 
-  [82039.079546] WARNING: CPU: 2 PID: 13167 at fs/btrfs/inode.c:9276 btrfs_destroy_inode+0x203/0x270 [btrfs]
-  (...)
-  [82039.081543] CPU: 2 PID: 13167 Comm: umount Tainted: G        W         5.2.0-rc4-btrfs-next-50 #1
-  [82039.081912] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
-  [82039.082673] RIP: 0010:btrfs_destroy_inode+0x203/0x270 [btrfs]
-  (...)
-  [82039.083913] RSP: 0018:ffffac0b426a7d30 EFLAGS: 00010206
-  [82039.084320] RAX: ffff8ddf77691158 RBX: ffff8dde29b34660 RCX: 0000000000000002
-  [82039.084736] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8dde29b34660
-  [82039.085156] RBP: ffff8ddf5fbec000 R08: 0000000000000000 R09: 0000000000000000
-  [82039.085578] R10: ffffac0b426a7c90 R11: ffffffffb9aad768 R12: ffffac0b426a7db0
-  [82039.086000] R13: ffff8ddf5fbec0a0 R14: dead000000000100 R15: 0000000000000000
-  [82039.086416] FS:  00007f8db96d12c0(0000) GS:ffff8de036b00000(0000) knlGS:0000000000000000
-  [82039.086837] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  [82039.087253] CR2: 0000000001416108 CR3: 00000002315cc001 CR4: 00000000003606e0
-  [82039.087672] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  [82039.088089] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  [82039.088504] Call Trace:
-  [82039.088918]  destroy_inode+0x3b/0x70
-  [82039.089340]  btrfs_free_fs_root+0x16/0xa0 [btrfs]
-  [82039.089768]  btrfs_free_fs_roots+0xd8/0x160 [btrfs]
-  [82039.090183]  ? wait_for_completion+0x65/0x1a0
-  [82039.090607]  close_ctree+0x172/0x370 [btrfs]
-  [82039.091021]  generic_shutdown_super+0x6c/0x110
-  [82039.091427]  kill_anon_super+0xe/0x30
-  [82039.091832]  btrfs_kill_super+0x12/0xa0 [btrfs]
-  [82039.092233]  deactivate_locked_super+0x3a/0x70
-  [82039.092636]  cleanup_mnt+0x3b/0x80
-  [82039.093039]  task_work_run+0x93/0xc0
-  [82039.093457]  exit_to_usermode_loop+0xfa/0x100
-  [82039.093856]  do_syscall_64+0x162/0x1d0
-  [82039.094244]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  [82039.094634] RIP: 0033:0x7f8db8fbab37
-  (...)
-  [82039.095876] RSP: 002b:00007ffdce35b468 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-  [82039.096290] RAX: 0000000000000000 RBX: 0000560d20b00060 RCX: 00007f8db8fbab37
-  [82039.096700] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000560d20b00240
-  [82039.097110] RBP: 0000560d20b00240 R08: 0000560d20b00270 R09: 0000000000000015
-  [82039.097522] R10: 00000000000006b4 R11: 0000000000000246 R12: 00007f8db94bce64
-  [82039.097937] R13: 0000000000000000 R14: 0000000000000000 R15: 00007ffdce35b6f0
-  [82039.098350] irq event stamp: 0
-  [82039.098750] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-  [82039.099150] hardirqs last disabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
-  [82039.099545] softirqs last  enabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
-  [82039.099925] softirqs last disabled at (0): [<0000000000000000>] 0x0
-  [82039.100292] ---[ end trace f2521afa616ddccc ]---
-  [82039.100707] WARNING: CPU: 2 PID: 13167 at fs/btrfs/inode.c:9277 btrfs_destroy_inode+0x1ac/0x270 [btrfs]
-  (...)
-  [82039.103050] CPU: 2 PID: 13167 Comm: umount Tainted: G        W         5.2.0-rc4-btrfs-next-50 #1
-  [82039.103428] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
-  [82039.104203] RIP: 0010:btrfs_destroy_inode+0x1ac/0x270 [btrfs]
-  (...)
-  [82039.105461] RSP: 0018:ffffac0b426a7d30 EFLAGS: 00010206
-  [82039.105866] RAX: ffff8ddf77691158 RBX: ffff8dde29b34660 RCX: 0000000000000002
-  [82039.106270] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8dde29b34660
-  [82039.106673] RBP: ffff8ddf5fbec000 R08: 0000000000000000 R09: 0000000000000000
-  [82039.107078] R10: ffffac0b426a7c90 R11: ffffffffb9aad768 R12: ffffac0b426a7db0
-  [82039.107487] R13: ffff8ddf5fbec0a0 R14: dead000000000100 R15: 0000000000000000
-  [82039.107894] FS:  00007f8db96d12c0(0000) GS:ffff8de036b00000(0000) knlGS:0000000000000000
-  [82039.108309] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  [82039.108723] CR2: 0000000001416108 CR3: 00000002315cc001 CR4: 00000000003606e0
-  [82039.109146] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  [82039.109567] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  [82039.109989] Call Trace:
-  [82039.110405]  destroy_inode+0x3b/0x70
-  [82039.110830]  btrfs_free_fs_root+0x16/0xa0 [btrfs]
-  [82039.111257]  btrfs_free_fs_roots+0xd8/0x160 [btrfs]
-  [82039.111675]  ? wait_for_completion+0x65/0x1a0
-  [82039.112101]  close_ctree+0x172/0x370 [btrfs]
-  [82039.112519]  generic_shutdown_super+0x6c/0x110
-  [82039.112988]  kill_anon_super+0xe/0x30
-  [82039.113439]  btrfs_kill_super+0x12/0xa0 [btrfs]
-  [82039.113861]  deactivate_locked_super+0x3a/0x70
-  [82039.114278]  cleanup_mnt+0x3b/0x80
-  [82039.114685]  task_work_run+0x93/0xc0
-  [82039.115083]  exit_to_usermode_loop+0xfa/0x100
-  [82039.115476]  do_syscall_64+0x162/0x1d0
-  [82039.115863]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  [82039.116254] RIP: 0033:0x7f8db8fbab37
-  (...)
-  [82039.117463] RSP: 002b:00007ffdce35b468 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-  [82039.117882] RAX: 0000000000000000 RBX: 0000560d20b00060 RCX: 00007f8db8fbab37
-  [82039.118330] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000560d20b00240
-  [82039.118743] RBP: 0000560d20b00240 R08: 0000560d20b00270 R09: 0000000000000015
-  [82039.119159] R10: 00000000000006b4 R11: 0000000000000246 R12: 00007f8db94bce64
-  [82039.119574] R13: 0000000000000000 R14: 0000000000000000 R15: 00007ffdce35b6f0
-  [82039.119987] irq event stamp: 0
-  [82039.120387] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-  [82039.120787] hardirqs last disabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
-  [82039.121182] softirqs last  enabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
-  [82039.121563] softirqs last disabled at (0): [<0000000000000000>] 0x0
-  [82039.121933] ---[ end trace f2521afa616ddccd ]---
-  [82039.122353] WARNING: CPU: 2 PID: 13167 at fs/btrfs/inode.c:9278 btrfs_destroy_inode+0x1bc/0x270 [btrfs]
-  (...)
-  [82039.124606] CPU: 2 PID: 13167 Comm: umount Tainted: G        W         5.2.0-rc4-btrfs-next-50 #1
-  [82039.125008] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
-  [82039.125801] RIP: 0010:btrfs_destroy_inode+0x1bc/0x270 [btrfs]
-  (...)
-  [82039.126998] RSP: 0018:ffffac0b426a7d30 EFLAGS: 00010202
-  [82039.127399] RAX: ffff8ddf77691158 RBX: ffff8dde29b34660 RCX: 0000000000000002
-  [82039.127803] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffff8dde29b34660
-  [82039.128206] RBP: ffff8ddf5fbec000 R08: 0000000000000000 R09: 0000000000000000
-  [82039.128611] R10: ffffac0b426a7c90 R11: ffffffffb9aad768 R12: ffffac0b426a7db0
-  [82039.129020] R13: ffff8ddf5fbec0a0 R14: dead000000000100 R15: 0000000000000000
-  [82039.129428] FS:  00007f8db96d12c0(0000) GS:ffff8de036b00000(0000) knlGS:0000000000000000
-  [82039.129846] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  [82039.130261] CR2: 0000000001416108 CR3: 00000002315cc001 CR4: 00000000003606e0
-  [82039.130684] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  [82039.131142] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  [82039.131561] Call Trace:
-  [82039.131990]  destroy_inode+0x3b/0x70
-  [82039.132417]  btrfs_free_fs_root+0x16/0xa0 [btrfs]
-  [82039.132844]  btrfs_free_fs_roots+0xd8/0x160 [btrfs]
-  [82039.133262]  ? wait_for_completion+0x65/0x1a0
-  [82039.133688]  close_ctree+0x172/0x370 [btrfs]
-  [82039.134157]  generic_shutdown_super+0x6c/0x110
-  [82039.134575]  kill_anon_super+0xe/0x30
-  [82039.134997]  btrfs_kill_super+0x12/0xa0 [btrfs]
-  [82039.135415]  deactivate_locked_super+0x3a/0x70
-  [82039.135832]  cleanup_mnt+0x3b/0x80
-  [82039.136239]  task_work_run+0x93/0xc0
-  [82039.136637]  exit_to_usermode_loop+0xfa/0x100
-  [82039.137029]  do_syscall_64+0x162/0x1d0
-  [82039.137418]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  [82039.137812] RIP: 0033:0x7f8db8fbab37
-  (...)
-  [82039.139059] RSP: 002b:00007ffdce35b468 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-  [82039.139475] RAX: 0000000000000000 RBX: 0000560d20b00060 RCX: 00007f8db8fbab37
-  [82039.139890] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000560d20b00240
-  [82039.140302] RBP: 0000560d20b00240 R08: 0000560d20b00270 R09: 0000000000000015
-  [82039.140719] R10: 00000000000006b4 R11: 0000000000000246 R12: 00007f8db94bce64
-  [82039.141138] R13: 0000000000000000 R14: 0000000000000000 R15: 00007ffdce35b6f0
-  [82039.141597] irq event stamp: 0
-  [82039.142043] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-  [82039.142443] hardirqs last disabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
-  [82039.142839] softirqs last  enabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
-  [82039.143220] softirqs last disabled at (0): [<0000000000000000>] 0x0
-  [82039.143588] ---[ end trace f2521afa616ddcce ]---
-  [82039.167472] WARNING: CPU: 3 PID: 13167 at fs/btrfs/extent-tree.c:10120 btrfs_free_block_groups+0x30d/0x460 [btrfs]
-  (...)
-  [82039.173800] CPU: 3 PID: 13167 Comm: umount Tainted: G        W         5.2.0-rc4-btrfs-next-50 #1
-  [82039.174847] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
-  [82039.177031] RIP: 0010:btrfs_free_block_groups+0x30d/0x460 [btrfs]
-  (...)
-  [82039.180397] RSP: 0018:ffffac0b426a7dd8 EFLAGS: 00010206
-  [82039.181574] RAX: ffff8de010a1db40 RBX: ffff8de010a1db40 RCX: 0000000000170014
-  [82039.182711] RDX: ffff8ddff4380040 RSI: ffff8de010a1da58 RDI: 0000000000000246
-  [82039.183817] RBP: ffff8ddf5fbec000 R08: 0000000000000000 R09: 0000000000000000
-  [82039.184925] R10: ffff8de036404380 R11: ffffffffb8a5ea00 R12: ffff8de010a1b2b8
-  [82039.186090] R13: ffff8de010a1b2b8 R14: 0000000000000000 R15: dead000000000100
-  [82039.187208] FS:  00007f8db96d12c0(0000) GS:ffff8de036b80000(0000) knlGS:0000000000000000
-  [82039.188345] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  [82039.189481] CR2: 00007fb044005170 CR3: 00000002315cc006 CR4: 00000000003606e0
-  [82039.190674] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  [82039.191829] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  [82039.192978] Call Trace:
-  [82039.194160]  close_ctree+0x19a/0x370 [btrfs]
-  [82039.195315]  generic_shutdown_super+0x6c/0x110
-  [82039.196486]  kill_anon_super+0xe/0x30
-  [82039.197645]  btrfs_kill_super+0x12/0xa0 [btrfs]
-  [82039.198696]  deactivate_locked_super+0x3a/0x70
-  [82039.199619]  cleanup_mnt+0x3b/0x80
-  [82039.200559]  task_work_run+0x93/0xc0
-  [82039.201505]  exit_to_usermode_loop+0xfa/0x100
-  [82039.202436]  do_syscall_64+0x162/0x1d0
-  [82039.203339]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  [82039.204091] RIP: 0033:0x7f8db8fbab37
-  (...)
-  [82039.206360] RSP: 002b:00007ffdce35b468 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-  [82039.207132] RAX: 0000000000000000 RBX: 0000560d20b00060 RCX: 00007f8db8fbab37
-  [82039.207906] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000560d20b00240
-  [82039.208621] RBP: 0000560d20b00240 R08: 0000560d20b00270 R09: 0000000000000015
-  [82039.209285] R10: 00000000000006b4 R11: 0000000000000246 R12: 00007f8db94bce64
-  [82039.209984] R13: 0000000000000000 R14: 0000000000000000 R15: 00007ffdce35b6f0
-  [82039.210642] irq event stamp: 0
-  [82039.211306] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-  [82039.211971] hardirqs last disabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
-  [82039.212643] softirqs last  enabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
-  [82039.213304] softirqs last disabled at (0): [<0000000000000000>] 0x0
-  [82039.213875] ---[ end trace f2521afa616ddccf ]---
+          CPU 1                                                  CPU 2
 
-Fix this by releasing the reserved metadata on failure to allocate data
-extent(s) for the inode cache.
+  extent_fiemap()
+    --> it's a full ranged fiemap
+        range from 0 to LLONG_MAX - 1
+        (9223372036854775807)
 
-Fixes: 69fe2d75dd91d0 ("btrfs: make the delalloc block rsv per inode")
+    --> locks range in the inode's
+        io tree
+      --> after this we have 2 extent
+          states in the io tree:
+          --> 1 for range [0, 1Mb[ with
+              the bits EXTENT_LOCKED and
+              EXTENT_DELALLOC_BITS set
+          --> 1 for the range
+              [1Mb, LLONG_MAX[ with
+              the EXTENT_LOCKED bit set
+
+                                                  --> start buffered write at offset
+                                                      1Mb with a length of 4Kb
+
+                                                  btrfs_file_write_iter()
+
+                                                    btrfs_buffered_write()
+                                                      --> cached_state is NULL
+
+                                                      lock_and_cleanup_extent_if_need()
+                                                        --> returns 0 and does not lock
+                                                            range because it starts
+                                                            at current i_size / eof
+
+                                                      --> cached_state remains NULL
+
+                                                      btrfs_dirty_pages()
+                                                        btrfs_set_extent_delalloc()
+                                                          (...)
+                                                          __set_extent_bit()
+
+                                                            --> splits extent state for range
+                                                                [1Mb, LLONG_MAX[ and now we
+                                                                have 2 extent states:
+
+                                                                --> one for the range
+                                                                    [1Mb, 1Mb + 4Kb[ with
+                                                                    EXTENT_LOCKED set
+                                                                --> another one for the range
+                                                                    [1Mb + 4Kb, LLONG_MAX[ with
+                                                                    EXTENT_LOCKED set as well
+
+                                                            --> sets EXTENT_DELALLOC on the
+                                                                extent state for the range
+                                                                [1Mb, 1Mb + 4Kb[
+                                                            --> caches extent state
+                                                                [1Mb, 1Mb + 4Kb[ into
+                                                                @cached_state because it has
+                                                                the bit EXTENT_LOCKED set
+
+                                                    --> btrfs_buffered_write() ends up
+                                                        with a non-NULL cached_state and
+                                                        never calls anything to release its
+                                                        reference on it, resulting in a
+                                                        memory leak
+
+Fix this by calling free_extent_state() on cached_state if the range was
+not locked by lock_and_cleanup_extent_if_need().
+
+The same issue can happen if anything else other than fiemap locks a range
+that covers eof and beyond.
+
+This could be triggered, sporadically, by test case generic/561 from the
+fstests suite, which makes duperemove run concurrently with fsstress, and
+duperemove does plenty of calls to fiemap. When CONFIG_BTRFS_DEBUG is set
+the leak is reported in dmesg/syslog when removing the btrfs module with
+a message like the following:
+
+  [77100.039461] BTRFS: state leak: start 6574080 end 6582271 state 16402 in tree 0 refs 1
+
+Otherwise (CONFIG_BTRFS_DEBUG not set) detectable with kmemleak.
+
+CC: stable@vger.kernel.org # 4.16+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode-map.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/btrfs/file.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/inode-map.c b/fs/btrfs/inode-map.c
-index ffca2abf13d0c..0141fc08d317e 100644
---- a/fs/btrfs/inode-map.c
-+++ b/fs/btrfs/inode-map.c
-@@ -484,6 +484,7 @@ again:
- 					      prealloc, prealloc, &alloc_hint);
- 	if (ret) {
- 		btrfs_delalloc_release_extents(BTRFS_I(inode), prealloc, true);
-+		btrfs_delalloc_release_metadata(BTRFS_I(inode), prealloc, true);
- 		goto out_put;
- 	}
+diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+index 4870440d6424a..5d036b794e4af 100644
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -1591,7 +1591,6 @@ static noinline ssize_t btrfs_buffered_write(struct kiocb *iocb,
+ 	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+ 	struct btrfs_root *root = BTRFS_I(inode)->root;
+ 	struct page **pages = NULL;
+-	struct extent_state *cached_state = NULL;
+ 	struct extent_changeset *data_reserved = NULL;
+ 	u64 release_bytes = 0;
+ 	u64 lockstart;
+@@ -1612,6 +1611,7 @@ static noinline ssize_t btrfs_buffered_write(struct kiocb *iocb,
  
+ 	while (iov_iter_count(i) > 0) {
+ 		size_t offset = pos & (PAGE_SIZE - 1);
++		struct extent_state *cached_state = NULL;
+ 		size_t sector_offset;
+ 		size_t write_bytes = min(iov_iter_count(i),
+ 					 nrptrs * (size_t)PAGE_SIZE -
+@@ -1758,9 +1758,20 @@ again:
+ 		if (copied > 0)
+ 			ret = btrfs_dirty_pages(inode, pages, dirty_pages,
+ 						pos, copied, &cached_state);
++
++		/*
++		 * If we have not locked the extent range, because the range's
++		 * start offset is >= i_size, we might still have a non-NULL
++		 * cached extent state, acquired while marking the extent range
++		 * as delalloc through btrfs_dirty_pages(). Therefore free any
++		 * possible cached extent state to avoid a memory leak.
++		 */
+ 		if (extents_locked)
+ 			unlock_extent_cached(&BTRFS_I(inode)->io_tree,
+ 					     lockstart, lockend, &cached_state);
++		else
++			free_extent_state(cached_state);
++
+ 		btrfs_delalloc_release_extents(BTRFS_I(inode), reserve_bytes,
+ 					       true);
+ 		if (ret) {
 -- 
 2.20.1
 
