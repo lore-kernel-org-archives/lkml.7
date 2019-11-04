@@ -2,111 +2,108 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87186C47E49
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E27E6CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 596F121D81
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:31:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572863513;
-	bh=7PXnvPqNFuUqFnhCdda/cJZH9Fec9rlGCPM7eXfgw7I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TN4la9zmoteVqKB+2ZjfUNjqJ0vVCDBu60IQv4ZGm2EFll3h+KcRZLl2LqnD+P/vL
-	 OqUXIEY/M4G7wVZl/+hNIyHJFODPqt+Lv+zOIBC9FL/7jkfa7pGk434iG/O+TeqpKE
-	 iOMwmmoStsqnbDMCt5l05HaqQfaUPKAQ3CgrX6Wo=
+	by mail.kernel.org (Postfix) with ESMTP id B9058222C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:32:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ttg4n6OD";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ttg4n6OD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728168AbfKDKbw (ORCPT
+        id S1728454AbfKDKcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:31:52 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44278 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbfKDKbw (ORCPT
+        Mon, 4 Nov 2019 05:32:18 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:53746 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbfKDKcS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 05:31:52 -0500
-Received: by mail-oi1-f195.google.com with SMTP id s71so13612273oih.11;
-        Mon, 04 Nov 2019 02:31:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0z80bMxV2KEcGvJQN9GJhV4fRO/ESVM96BjdoNCBKqQ=;
-        b=FN72IOOwTl69GuAwrzC7AujNFUaGaE32NN/0Sd/kgkFZJK3NsOvlSzgWOz9th5uD4x
-         QqMdGqjDiDYMkJYIX5md4DmJxrkj66ITCsnDI8DKnTbrPosylacbppMhgmGsC4XCbhYX
-         EUAnPZNh/Wlmek2uCxAAaXiTD1sXa3Gb/0S37dr1/AwbZ5FpJnWj+nldn6fzeZMi88Yg
-         XnamvCkVxSrLnf1ikfX4ZtM917BzEz6mhLQHe3clz0KsCZgO46iar/QNCR/VoCVNC8hZ
-         hfM9OMMgkuESlUb3v+ZyCjX3rxvS1/UvoabBMPCaG22r4Eue6xZ3Xh6qynMomlGSpIMS
-         ng0A==
-X-Gm-Message-State: APjAAAVHjh4ozYRKpD3+hF3wTrku/PMDOftyt86SecZcFiiUTUeVyYCb
-        kyYw73n+DqSo3KzAgBrB/X+alW2/4UHInx52J+U=
-X-Google-Smtp-Source: APXvYqyjg3trtwliYoqmHqKU+L2v5XHXEPtaPnf0sii6ZTpQ2GbZrIMdyLmKfLIZDUyZNnYcstrFezEABIXFHsbe6qo=
-X-Received: by 2002:a05:6808:913:: with SMTP id w19mr328014oih.110.1572863511238;
- Mon, 04 Nov 2019 02:31:51 -0800 (PST)
+        Mon, 4 Nov 2019 05:32:18 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 8EC2A60BE6; Mon,  4 Nov 2019 10:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572863537;
+        bh=XEMORj6CAxshiDtzXTqMIOoW7d5P5+yV2qS8l6858TM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Ttg4n6ODEEHEjhxaYVCBdGZx1P1/oLQVW9Be0x0LvsoNV76mnkbDGjJfp5pZQHtzp
+         NtVuJP96IuLDYgYJ/Pup4lFFB80iVPScdxpcQU9gxvurpgphyubhzX18XwpKXvjYsY
+         kIZV8q521JtJfPQco47Fsjz9h5RP6XbOfSVAZa6A=
+Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0E4D960B72;
+        Mon,  4 Nov 2019 10:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572863537;
+        bh=XEMORj6CAxshiDtzXTqMIOoW7d5P5+yV2qS8l6858TM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Ttg4n6ODEEHEjhxaYVCBdGZx1P1/oLQVW9Be0x0LvsoNV76mnkbDGjJfp5pZQHtzp
+         NtVuJP96IuLDYgYJ/Pup4lFFB80iVPScdxpcQU9gxvurpgphyubhzX18XwpKXvjYsY
+         kIZV8q521JtJfPQco47Fsjz9h5RP6XbOfSVAZa6A=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0E4D960B72
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 1/1] arm64: dts: sc7180: Add qupv3_0 and qupv3_1
+To:     Roja Rani Yarubandi <rojay@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     mgautam@codeaurora.org, akashast@codeaurora.org,
+        msavaliy@codeaurora.org, sanm@codeaurora.org,
+        skakit@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191031074500.28523-1-rojay@codeaurora.org>
+ <20191031074500.28523-2-rojay@codeaurora.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <9a52fee5-7e80-639f-248a-8a563113c470@codeaurora.org>
+Date:   Mon, 4 Nov 2019 16:02:09 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191101204558.210235-1-helgaas@kernel.org> <20191101204558.210235-4-helgaas@kernel.org>
-In-Reply-To: <20191101204558.210235-4-helgaas@kernel.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 4 Nov 2019 11:31:40 +0100
-Message-ID: <CAJZ5v0jWBcUUDxNTLmYP071noSXB4q0UP0CD46sk_uS4HNgeqA@mail.gmail.com>
-Subject: Re: [PATCH 3/6] PCI/PM: Simplify pci_set_power_state()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191031074500.28523-2-rojay@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 9:46 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> Check for the PCI_DEV_FLAGS_NO_D3 quirk early, before calling
-> __pci_start_power_transition().  This way all the cases where we don't need
-> to do anything at all are checked up front.
->
-> This doesn't fix anything because if the caller requested D3hot or D3cold,
-> __pci_start_power_transition() is a no-op.  But calling it is pointless and
-> makes the code harder to analyze.
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
+On 10/31/2019 1:15 PM, Roja Rani Yarubandi wrote:
+> Add QUP SE instances configuration for sc7180.
+> 
+> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
 > ---
->  drivers/pci/pci.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index a9d3653ef960..281bc8fc51b3 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1130,8 +1130,6 @@ int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
->         if (dev->current_state == state)
->                 return 0;
->
-> -       __pci_start_power_transition(dev, state);
-> -
->         /*
->          * This device is quirked not to be put into D3, so don't put it in
->          * D3
-> @@ -1139,6 +1137,8 @@ int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
->         if (state >= PCI_D3hot && (dev->dev_flags & PCI_DEV_FLAGS_NO_D3))
->                 return 0;
->
-> +       __pci_start_power_transition(dev, state);
-> +
->         /*
->          * To put device in D3cold, we put device into D3hot in native
->          * way, then put device into D3cold with platform ops
-> --
-> 2.24.0.rc1.363.gb1bccd3e3d-goog
->
+>   arch/arm64/boot/dts/qcom/sc7180-idp.dts | 152 +++++-
+>   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 683 +++++++++++++++++++++++-
+>   2 files changed, 828 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index e0724ef3317d..189254f5ae95 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -17,7 +17,8 @@
+>   	compatible = "qcom,sc7180-idp";
+>   
+>   	aliases {
+> -		serial0 = &uart10;
+
+I will fix this up in the patch that added this when I respin.
+I seemed to have overlooked the fact that each QUP instance on sc7180
+has only 6 SEs (and not 8)
+
+> +		hsuart0 = &uart3;
+> +		serial0 = &uart8;
+
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
