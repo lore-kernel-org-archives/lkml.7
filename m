@@ -6,32 +6,35 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42172CA9ED2
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 01:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9258CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 01:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205D8222C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 01:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C91B1222C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 01:40:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbfKDBkc (ORCPT
+        id S1728916AbfKDBkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 20:40:32 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55830 "EHLO mx1.suse.de"
+        Sun, 3 Nov 2019 20:40:33 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55834 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728288AbfKDBk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728753AbfKDBk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 3 Nov 2019 20:40:29 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 56B4BB22E;
-        Mon,  4 Nov 2019 01:40:27 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 399ACB456;
+        Mon,  4 Nov 2019 01:40:28 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [RFC 5/7] ARM: dts: rtd1195: Add Mali node
-Date:   Mon,  4 Nov 2019 02:39:30 +0100
-Message-Id: <20191104013932.22505-6-afaerber@suse.de>
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Subject: [PATCH 7/7] dt-bindings: gpu: arm-bifrost: Add Realtek RTD1619
+Date:   Mon,  4 Nov 2019 02:39:32 +0100
+Message-Id: <20191104013932.22505-8-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191104013932.22505-1-afaerber@suse.de>
 References: <20191104013932.22505-1-afaerber@suse.de>
@@ -43,43 +46,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a DT node for the Mali GPU.
+Define a compatible string for Realtek RTD1619 SoC family.
 
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- arch/arm/boot/dts/rtd1195.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/rtd1195.dtsi b/arch/arm/boot/dts/rtd1195.dtsi
-index 774f95d544a3..ae8843782cfa 100644
---- a/arch/arm/boot/dts/rtd1195.dtsi
-+++ b/arch/arm/boot/dts/rtd1195.dtsi
-@@ -292,6 +292,25 @@
- 			status = "disabled";
- 		};
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+index e50a0cc78fff..0c426e371e71 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+@@ -17,6 +17,7 @@ properties:
+     items:
+       - enum:
+           - amlogic,meson-g12a-mali
++          - realtek,rtd1619-mali
+       - const: arm,mali-bifrost # Mali Bifrost GPU model/revision is fully discoverable
  
-+		/* TODO 0x18030000 0x10000 or 0x18003000 0x1000? */
-+		mali: gpu@18030000 {
-+			compatible = "realtek,rtd1195-mali", "arm,mali-400";
-+			reg = <0x18030000 0x10000>;
-+			/* TODO which bus clk to pass? */
-+			clocks = <&clkc RTD1195_CLK_EN_GPU>, <&osc27M>;
-+			clock-names = "core", "bus";
-+			resets = <&reset1 RTD1195_RSTN_GPU>;
-+			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "gp",  "gpmmu",
-+					  "pp0", "ppmmu0",
-+					  "pp1", "ppmmu1";
-+		};
-+
- 		gic: interrupt-controller@ff011000 {
- 			compatible = "arm,cortex-a7-gic";
- 			reg = <0xff011000 0x1000>,
+   reg:
 -- 
 2.16.4
 
