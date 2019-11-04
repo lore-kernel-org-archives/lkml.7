@@ -2,68 +2,54 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BD0CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6F3CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB196204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE03204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905722;
-	bh=qvZy1e6ZELCo1IUUHbk2bgjAD4hfRU/4u/aLXq5lOzM=;
+	s=default; t=1572905729;
+	bh=7duB7oODTX8w4GpIVinanna0tcK5zRXrUUR8iZN821M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zNWq4U3oUdY1PFIy7qz9JFPyTrIRG6oEq5l1+VIidyBRr3/Fmk2THqxisiqNN61Yo
-	 bTmEl/6Q4dtLmUD3MdSACGaHbUwJK1ofbqE/bSy7NBvGwstPbsgx05VovkH2iDvIlk
-	 E91K7fr/mdG0wFKYaMQxQTqARfnLdETXHI8h4XBQ=
+	b=IIU+YhDd0npGNiMmg7+z+TnjSGxaZ2o4i5ss17K11Y32rhsAJ/XXZAcTxqFHJCHPV
+	 bB9KpVOKUL/Npo9329KHrrS110Rrsm8Cn10s4FBuvKEX3r1dYn84y1f7T0hA+rsmIh
+	 SP6axKa1Gq96kC2v0h0q//MOzZZkfoRYbMpAb2yI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389910AbfKDWGI (ORCPT
+        id S2390433AbfKDWP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:06:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37544 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:15:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389888AbfKDWF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:05:58 -0500
+        id S2388396AbfKDWGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:06:07 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A20C2084D;
-        Mon,  4 Nov 2019 22:05:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3099820650;
+        Mon,  4 Nov 2019 22:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905157;
-        bh=qvZy1e6ZELCo1IUUHbk2bgjAD4hfRU/4u/aLXq5lOzM=;
+        s=default; t=1572905166;
+        bh=7duB7oODTX8w4GpIVinanna0tcK5zRXrUUR8iZN821M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0aDuTa01wy/2abMtm6M1H9AhvfbYUVOyUkRq3iLUz69GHaJOP7vteW25RXaHkf4es
-         fgqi9/CWGPMSTSJCaADV2z/n8waEDCE5gOLlZEFJa9cTNhO52b5rtAUhWhu/kycyD5
-         jppKtw1hMtifm0R/crjAmUtWGMvM3CraPodXoaE0=
+        b=XEbY/M5t/z1tj4z+nT4P4ocUydE7z+GxkroZZaw2vk+dsufXcu84I2+sxrqrKcJ8O
+         14D7CeOZt/jHneKozxQN0fyG7uio65+IzQN/eGBuN9Lp80MMO0vhAKt2gUXuxSZa3z
+         XbXc1rOBmvtAbb5p3yiAn7Q6W27twXrDz11xObBc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Steve MacLean <Steve.MacLean@Microsoft.com>,
-        Brian Robbins <brianrob@microsoft.com>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        John Keeping <john@metanate.com>,
-        John Salem <josalem@microsoft.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Tom McDonald <thomas.mcdonald@microsoft.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 010/163] perf map: Fix overlapped map handling
-Date:   Mon,  4 Nov 2019 22:43:20 +0100
-Message-Id: <20191104212141.249329773@linuxfoundation.org>
+Subject: [PATCH 5.3 013/163] perf tools: Propagate get_cpuid() error
+Date:   Mon,  4 Nov 2019 22:43:23 +0100
+Message-Id: <20191104212141.418276447@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -76,118 +62,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve MacLean <Steve.MacLean@microsoft.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit ee212d6ea20887c0ef352be8563ca13dbf965906 ]
+[ Upstream commit f67001a4a08eb124197ed4376941e1da9cf94b42 ]
 
-Whenever an mmap/mmap2 event occurs, the map tree must be updated to add a new
-entry. If a new map overlaps a previous map, the overlapped section of the
-previous map is effectively unmapped, but the non-overlapping sections are
-still valid.
+For consistency, propagate the exact cause for get_cpuid() to have
+failed.
 
-maps__fixup_overlappings() is responsible for creating any new map entries from
-the previously overlapped map. It optionally creates a before and an after map.
-
-When creating the after map the existing code failed to adjust the map.pgoff.
-This meant the new after map would incorrectly calculate the file offset
-for the ip. This results in incorrect symbol name resolution for any ip in the
-after region.
-
-Make maps__fixup_overlappings() correctly populate map.pgoff.
-
-Add an assert that new mapping matches old mapping at the beginning of
-the after map.
-
-Committer-testing:
-
-Validated correct parsing of libcoreclr.so symbols from .NET Core 3.0 preview9
-(which didn't strip symbols).
-
-Preparation:
-
-  ~/dotnet3.0-preview9/dotnet new webapi -o perfSymbol
-  cd perfSymbol
-  ~/dotnet3.0-preview9/dotnet publish
-  perf record ~/dotnet3.0-preview9/dotnet \
-      bin/Debug/netcoreapp3.0/publish/perfSymbol.dll
-  ^C
-
-Before:
-
-  perf script --show-mmap-events 2>&1 | grep -e MMAP -e unknown |\
-     grep libcoreclr.so | head -n 4
-        dotnet  1907 373352.698780: PERF_RECORD_MMAP2 1907/1907: \
-            [0x7fe615726000(0x768000) @ 0 08:02 5510620 765057155]: \
-            r-xp .../3.0.0-preview9-19423-09/libcoreclr.so
-        dotnet  1907 373352.701091: PERF_RECORD_MMAP2 1907/1907: \
-            [0x7fe615974000(0x1000) @ 0x24e000 08:02 5510620 765057155]: \
-            rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
-        dotnet  1907 373352.701241: PERF_RECORD_MMAP2 1907/1907: \
-            [0x7fe615c42000(0x1000) @ 0x51c000 08:02 5510620 765057155]: \
-            rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
-        dotnet  1907 373352.705249:     250000 cpu-clock: \
-             7fe6159a1f99 [unknown] \
-             (.../3.0.0-preview9-19423-09/libcoreclr.so)
-
-After:
-
-  perf script --show-mmap-events 2>&1 | grep -e MMAP -e unknown |\
-     grep libcoreclr.so | head -n 4
-        dotnet  1907 373352.698780: PERF_RECORD_MMAP2 1907/1907: \
-            [0x7fe615726000(0x768000) @ 0 08:02 5510620 765057155]: \
-            r-xp .../3.0.0-preview9-19423-09/libcoreclr.so
-        dotnet  1907 373352.701091: PERF_RECORD_MMAP2 1907/1907: \
-            [0x7fe615974000(0x1000) @ 0x24e000 08:02 5510620 765057155]: \
-            rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
-        dotnet  1907 373352.701241: PERF_RECORD_MMAP2 1907/1907: \
-            [0x7fe615c42000(0x1000) @ 0x51c000 08:02 5510620 765057155]: \
-            rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
-
-All the [unknown] symbols were resolved.
-
-Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
-Tested-by: Brian Robbins <brianrob@microsoft.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
-Cc: John Keeping <john@metanate.com>
-Cc: John Salem <josalem@microsoft.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Tom McDonald <thomas.mcdonald@microsoft.com>
-Link: http://lore.kernel.org/lkml/BN8PR21MB136270949F22A6A02335C238F7800@BN8PR21MB1362.namprd21.prod.outlook.com
+Link: https://lkml.kernel.org/n/tip-9ig269f7ktnhh99g4l15vpu2@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/map.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/arch/powerpc/util/header.c | 3 ++-
+ tools/perf/arch/s390/util/header.c    | 9 +++++----
+ tools/perf/arch/x86/util/header.c     | 3 ++-
+ tools/perf/builtin-kvm.c              | 7 ++++---
+ 4 files changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 7666206d06fa7..f18113581cf03 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
+diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
+index 0b242664f5ea7..e46be9ef5a688 100644
+--- a/tools/perf/arch/powerpc/util/header.c
++++ b/tools/perf/arch/powerpc/util/header.c
 @@ -1,5 +1,6 @@
  // SPDX-License-Identifier: GPL-2.0
- #include "symbol.h"
-+#include <assert.h>
- #include <errno.h>
- #include <inttypes.h>
- #include <limits.h>
-@@ -847,6 +848,8 @@ static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp
- 			}
+ #include <sys/types.h>
++#include <errno.h>
+ #include <unistd.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -31,7 +32,7 @@ get_cpuid(char *buffer, size_t sz)
+ 		buffer[nb-1] = '\0';
+ 		return 0;
+ 	}
+-	return -1;
++	return ENOBUFS;
+ }
  
- 			after->start = map->end;
-+			after->pgoff += map->end - pos->start;
-+			assert(pos->map_ip(pos, map->end) == after->map_ip(after, map->end));
- 			__map_groups__insert(pos->groups, after);
- 			if (verbose >= 2 && !use_browser)
- 				map__fprintf(after, fp);
+ char *
+diff --git a/tools/perf/arch/s390/util/header.c b/tools/perf/arch/s390/util/header.c
+index 8b0b018d896ab..7933f6871c818 100644
+--- a/tools/perf/arch/s390/util/header.c
++++ b/tools/perf/arch/s390/util/header.c
+@@ -8,6 +8,7 @@
+  */
+ 
+ #include <sys/types.h>
++#include <errno.h>
+ #include <unistd.h>
+ #include <stdio.h>
+ #include <string.h>
+@@ -54,7 +55,7 @@ int get_cpuid(char *buffer, size_t sz)
+ 
+ 	sysinfo = fopen(SYSINFO, "r");
+ 	if (sysinfo == NULL)
+-		return -1;
++		return errno;
+ 
+ 	while ((read = getline(&line, &line_sz, sysinfo)) != -1) {
+ 		if (!strncmp(line, SYSINFO_MANU, strlen(SYSINFO_MANU))) {
+@@ -89,7 +90,7 @@ int get_cpuid(char *buffer, size_t sz)
+ 
+ 	/* Missing manufacturer, type or model information should not happen */
+ 	if (!manufacturer[0] || !type[0] || !model[0])
+-		return -1;
++		return EINVAL;
+ 
+ 	/*
+ 	 * Scan /proc/service_levels and return the CPU-MF counter facility
+@@ -133,14 +134,14 @@ skip_sysinfo:
+ 	else
+ 		nbytes = snprintf(buffer, sz, "%s,%s,%s", manufacturer, type,
+ 				  model);
+-	return (nbytes >= sz) ? -1 : 0;
++	return (nbytes >= sz) ? ENOBUFS : 0;
+ }
+ 
+ char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+ {
+ 	char *buf = malloc(128);
+ 
+-	if (buf && get_cpuid(buf, 128) < 0)
++	if (buf && get_cpuid(buf, 128))
+ 		zfree(&buf);
+ 	return buf;
+ }
+diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/util/header.c
+index af9a9f2600be4..a089af60906a0 100644
+--- a/tools/perf/arch/x86/util/header.c
++++ b/tools/perf/arch/x86/util/header.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <sys/types.h>
++#include <errno.h>
+ #include <unistd.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -57,7 +58,7 @@ __get_cpuid(char *buffer, size_t sz, const char *fmt)
+ 		buffer[nb-1] = '\0';
+ 		return 0;
+ 	}
+-	return -1;
++	return ENOBUFS;
+ }
+ 
+ int
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index b33c834891208..44ff3ea1da23f 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -699,14 +699,15 @@ static int process_sample_event(struct perf_tool *tool,
+ 
+ static int cpu_isa_config(struct perf_kvm_stat *kvm)
+ {
+-	char buf[64], *cpuid;
++	char buf[128], *cpuid;
+ 	int err;
+ 
+ 	if (kvm->live) {
+ 		err = get_cpuid(buf, sizeof(buf));
+ 		if (err != 0) {
+-			pr_err("Failed to look up CPU type\n");
+-			return err;
++			pr_err("Failed to look up CPU type: %s\n",
++			       str_error_r(err, buf, sizeof(buf)));
++			return -err;
+ 		}
+ 		cpuid = buf;
+ 	} else
 -- 
 2.20.1
 
