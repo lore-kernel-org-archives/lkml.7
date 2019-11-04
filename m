@@ -2,575 +2,125 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C5BCA9EBB
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 00:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E8ACA9EBB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 00:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 868A62067D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 00:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87791222CF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 00:59:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aC5BlMVT";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DK0BjRtq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbfKDA40 (ORCPT
+        id S1728668AbfKDA7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 19:56:26 -0500
-Received: from forward500o.mail.yandex.net ([37.140.190.195]:43575 "EHLO
-        forward500o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726362AbfKDA40 (ORCPT
+        Sun, 3 Nov 2019 19:59:14 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:56710 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfKDA7N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 19:56:26 -0500
-X-Greylist: delayed 315 seconds by postgrey-1.27 at vger.kernel.org; Sun, 03 Nov 2019 19:56:20 EST
-Received: from mxback21o.mail.yandex.net (mxback21o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::72])
-        by forward500o.mail.yandex.net (Yandex) with ESMTP id A9ED96025A;
-        Mon,  4 Nov 2019 03:51:03 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback21o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id lMGSdc01pP-p1luJ7u6;
-        Mon, 04 Nov 2019 03:51:02 +0300
-Received: by iva4-35f072fa8e4e.qloud-c.yandex.net with HTTP;
-        Mon, 04 Nov 2019 03:51:01 +0300
-From:   Shawn Landden <shawn@git.icu>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "libc-alpha@sourceware.org" <libc-alpha@sourceware.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Keith Packard <keithp@keithp.com>
-In-Reply-To: <20191104002909.25783-1-shawn@git.icu>
-References: <20191104002909.25783-1-shawn@git.icu>
-Subject: Re: [RFC v2 PATCH] futex: extend set_robust_list to allow 2 locking ABIs at the same time.
+        Sun, 3 Nov 2019 19:59:13 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 8B13A60DA5; Mon,  4 Nov 2019 00:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572829152;
+        bh=3OZKugvU5r90IVw10fKacd+KlmfjYAe93AmL/gppu84=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aC5BlMVTLRtQNv4OM+sWSF+w1oYc7TNHtKU7LhR2Bum8Osm+7Hd0yynRyqEDR2Mrx
+         gbLqmfXPlq3nxL9Mmy5tlymPD+Tp5usnrEuxashkql0b2WtLqTwvWvPn/ozw09zwXc
+         FVsnnpqqLb/8SICk6UoOTlefY8nRpGVOHb7xJuWc=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 7671560DA5;
+        Mon,  4 Nov 2019 00:59:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572829151;
+        bh=3OZKugvU5r90IVw10fKacd+KlmfjYAe93AmL/gppu84=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DK0BjRtqjPexLP0drlJkQb0K9BEt2CQll6sS5Nva6u/FSXCUG1MeORtEQHX1tXtbS
+         De724GQOgf/zEhj40OzfgwQ082wr3BWkBu90sWd7WQz8fEh99qck5rFzrrRZ8ScyYL
+         Nk99h5f7W73ese4G8wVr8yAmFlIPFxluWJmgzGZw=
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Sun, 03 Nov 2019 19:51:01 -0500
-Message-Id: <59708281572828661@iva4-35f072fa8e4e.qloud-c.yandex.net>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 04 Nov 2019 08:59:11 +0800
+From:   cang@codeaurora.org
+To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] [PATCH v1 1/6] scsi: ufs: Add device reset in link recovery
+ path
+In-Reply-To: <BN7PR08MB56845B4A5F206A319CAFD3B1DB7C0@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <1572671016-883-1-git-send-email-cang@codeaurora.org>
+ <1572671016-883-2-git-send-email-cang@codeaurora.org>
+ <BN7PR08MB56845B4A5F206A319CAFD3B1DB7C0@BN7PR08MB5684.namprd08.prod.outlook.com>
+Message-ID: <d46aa74f8623cc0b61b94bd4fcc25ce4@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I am sorry, I will fix this and resubmit.
+On 2019-11-04 05:48, Bean Huo (beanhuo) wrote:
+> Hi, Can Guo
+> 
+>> In order to recover from hibern8 exit failure, perform a reset in link 
+>> recovery
+>> path before issuing link start-up.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> ---
+>>  drivers/scsi/ufs/ufshcd.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>> 
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c 
+>> index
+>> c28c144..525f8e6 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -3859,6 +3859,9 @@ static int ufshcd_link_recovery(struct ufs_hba 
+>> *hba)
+>>  	ufshcd_set_eh_in_progress(hba);
+>>  	spin_unlock_irqrestore(hba->host->host_lock, flags);
+>> 
+>> +	/* Reset the attached device */
+>> +	ufshcd_vops_device_reset(hba);
+>> +
+>>  	ret = ufshcd_host_reset_and_restore(hba);
+>> 
+> There is time consumption in reset,  It is true that reset can
+> hide/solve some issues.
+> I don't know if you experienced issue resulting from an absent reset
+> in this case mentioned in
+> Patch commit comment.
+> 
 
-03.11.2019, 19:29, "Shawn Landden" <shawn@git.icu>:
-> The robust futexes ABI was designed to be flexible to changing ABIs in
-> glibc, however it did not take into consideration that this ABI is
-> particularly sticky, and suffers from lock-step problems, due to the
-> fact that the ABI is shared between processes. This introduces a new
-> size in set_robust_list that takes an additional futex_offset2 value
-> so that two locking ABIs can be used at the same time.
->
-> If this new ABI is used, then bit 1 of the *next pointer of the
-> user-space robust_list indicates that the futex_offset2 value should
-> be used in place of the existing futex_offset.
->
-> The use case for this is sharing locks between 32-bit and 64-bit
-> processes, which Linux supports, but glibc does not, and is difficult
-> to implement with the current Linux support because of mix-matched
-> ABIs. Keith Packard has complained about this:
-> https://keithp.com/blogs/Shared_Memory_Fences/
->
-> This can also be used to add a new ABI that uses smaller structs,
-> as the existing ABI on x86_64 is a minimum of 32 bytes, and 20 bytes
-> would suffice.
->
-> v2: fix size of compat_extended_robust_list_head
->     fix some issues with number literals being implicitly ints
-> ---
->  include/linux/compat.h | 5 +
->  include/linux/sched.h | 6 ++
->  include/uapi/linux/futex.h | 31 +++++++
->  kernel/futex.c | 182 ++++++++++++++++++++++++-------------
->  4 files changed, 160 insertions(+), 64 deletions(-)
->
-> diff --git a/include/linux/compat.h b/include/linux/compat.h
-> index 16dafd9f4b86..00a0741bf658 100644
-> --- a/include/linux/compat.h
-> +++ b/include/linux/compat.h
-> @@ -379,10 +379,15 @@ struct compat_robust_list_head {
->          struct compat_robust_list list;
->          compat_long_t futex_offset;
->          compat_uptr_t list_op_pending;
->  };
->
-> +struct compat_extended_robust_list_head {
-> + struct compat_robust_list_head list_head;
-> + compat_long_t futex_offset2;
-> +};
-> +
->  #ifdef CONFIG_COMPAT_OLD_SIGACTION
->  struct compat_old_sigaction {
->          compat_uptr_t sa_handler;
->          compat_old_sigset_t sa_mask;
->          compat_ulong_t sa_flags;
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 9f51932bd543..894258fd44ac 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1057,10 +1057,16 @@ struct task_struct {
->  #ifdef CONFIG_X86_CPU_RESCTRL
->          u32 closid;
->          u32 rmid;
->  #endif
->  #ifdef CONFIG_FUTEX
-> + /*
-> + * bottom two bits are masked
-> + * 0: struct extended_robust_list_head
-> + * 1: struct robust_list_head
-> + * same for compat_robust_list
-> + */
->          struct robust_list_head __user *robust_list;
->  #ifdef CONFIG_COMPAT
->          struct compat_robust_list_head __user *compat_robust_list;
->  #endif
->          struct list_head pi_state_list;
-> diff --git a/include/uapi/linux/futex.h b/include/uapi/linux/futex.h
-> index a89eb0accd5e..30c08e07f26b 100644
-> --- a/include/uapi/linux/futex.h
-> +++ b/include/uapi/linux/futex.h
-> @@ -92,10 +92,41 @@ struct robust_list_head {
->           * so only truly owned locks will be handled.
->           */
->          struct robust_list __user *list_op_pending;
->  };
->
-> +/*
-> + * Extensible per-thread list head:
-> + *
-> + * As locks are shared between processes, the futex_offset field
-> + * has ABI lock-stepping issues, which the original robust_list_head
-> + * structure did not anticipate. (And which prevents 32-bit/64-bit
-> + * interoperability, as well as shrinking of mutex structures).
-> + * This new extensible_robust_list_head allows multiple
-> + * concurrent futex_offset values, chosen using the bottom 2 bits of the
-> + * robust_list *next pointer, which are now masked in BOTH the old and
-> + * new ABI.
-> + *
-> + * Note: this structure is part of the syscall ABI like
-> + * robust_list_head above, and must have a different size than
-> + * robust_list_head.
-> + *
-> + */
-> +struct extended_robust_list_head {
-> + struct robust_list_head list_head;
-> +
-> + /*
-> + * These relative offsets are set by user-space. They give the kernel
-> + * the relative position of the futex field to examine, based on the
-> + * bit 1 *next pointer.
-> + * The original version was insufficiently flexible. Locks are held
-> + * in shared memory between processes, and a process might want to hold
-> + * locks of two ABIs at the same time.
-> + */
-> + long futex_offset2;
-> +};
-> +
->  /*
->   * Are there any waiters for this robust futex:
->   */
->  #define FUTEX_WAITERS 0x80000000
->
-> diff --git a/kernel/futex.c b/kernel/futex.c
-> index 6d50728ef2e7..3a17d2d63178 100644
-> --- a/kernel/futex.c
-> +++ b/kernel/futex.c
-> @@ -3396,17 +3396,20 @@ static int futex_wait_requeue_pi(u32 __user *uaddr, unsigned int flags,
->  SYSCALL_DEFINE2(set_robust_list, struct robust_list_head __user *, head,
->                  size_t, len)
->  {
->          if (!futex_cmpxchg_enabled)
->                  return -ENOSYS;
-> - /*
-> - * The kernel knows only one size for now:
-> - */
-> - if (unlikely(len != sizeof(*head)))
-> +
-> + if (unlikely(len != sizeof(struct robust_list_head) &&
-> + len != sizeof(struct extensible_robust_list_head)))
->                  return -EINVAL;
->
-> - current->robust_list = head;
-> + current->robust_list = head & 0b11UL;
-> + BUILD_BUG_ON(sizeof(struct robust_list_head) ==
-> + sizeof(struct extended_robust_list_head));
-> + if (len == sizeof(struct robust_list_head))
-> + current->robust_list |= 1;
->
->          return 0;
->  }
->
->  /**
-> @@ -3419,10 +3422,11 @@ SYSCALL_DEFINE3(get_robust_list, int, pid,
->                  struct robust_list_head __user * __user *, head_ptr,
->                  size_t __user *, len_ptr)
->  {
->          struct robust_list_head __user *head;
->          unsigned long ret;
-> + size_t len;
->          struct task_struct *p;
->
->          if (!futex_cmpxchg_enabled)
->                  return -ENOSYS;
->
-> @@ -3439,14 +3443,18 @@ SYSCALL_DEFINE3(get_robust_list, int, pid,
->
->          ret = -EPERM;
->          if (!ptrace_may_access(p, PTRACE_MODE_READ_REALCREDS))
->                  goto err_unlock;
->
-> - head = p->robust_list;
-> + head = p->robust_list & ~0b11UL;
-> + if (p->robust_list & 0b11 == 0b1)
-> + len = sizeof(struct robust_list_head);
-> + else
-> + len = sizeof(struct extended_robust_list_head);
->          rcu_read_unlock();
->
-> - if (put_user(sizeof(*head), len_ptr))
-> + if (put_user(len, len_ptr))
->                  return -EFAULT;
->          return put_user(head, head_ptr);
->
->  err_unlock:
->          rcu_read_unlock();
-> @@ -3524,23 +3532,26 @@ static int handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int p
->
->          return 0;
->  }
->
->  /*
-> - * Fetch a robust-list pointer. Bit 0 signals PI futexes:
-> + * Fetch a robust-list pointer. Bit 0 signals PI futexes. Bit 1 choses which
-> + * futex_offset to use:
->   */
->  static inline int fetch_robust_entry(struct robust_list __user **entry,
->                                       struct robust_list __user * __user *head,
-> - unsigned int *pi)
-> + unsigned int *pi,
-> + *unsigned int *second_abi)
->  {
->          unsigned long uentry;
->
->          if (get_user(uentry, (unsigned long __user *)head))
->                  return -EFAULT;
->
-> - *entry = (void __user *)(uentry & ~1UL);
-> + *entry = (void __user *)(uentry & ~0b11UL);
->          *pi = uentry & 1;
-> + *second_abi = uentry & 0b10;
->
->          return 0;
->  }
->
->  /*
-> @@ -3549,69 +3560,84 @@ static inline int fetch_robust_entry(struct robust_list __user **entry,
->   *
->   * We silently return on any sign of list-walking problem.
->   */
->  void exit_robust_list(struct task_struct *curr)
->  {
-> - struct robust_list_head __user *head = curr->robust_list;
-> - struct robust_list __user *entry, *next_entry, *pending;
-> - unsigned int limit = ROBUST_LIST_LIMIT, pi, pip;
-> - unsigned int uninitialized_var(next_pi);
-> - unsigned long futex_offset;
-> + struct robust_list_head __user *head_ptr = curr->robust_list & ~1UL;
-> + unsigned int is_extended_list = curr->robust_list & 1 == 0;
-> + struct extended_robust_list_head head;
-> + struct robust_list __user *entry = &head->list_head.list.next,
-> + *next_entry, *pending;
-> + unsigned int limit = ROBUST_LIST_LIMIT, pi, pip, second_abi,
-> + second_abip;
-> + unsigned int uninitialized_var(next_pi),
-> + uninitialized_var(next_second_abi);
->          int rc;
->
->          if (!futex_cmpxchg_enabled)
->                  return;
->
->          /*
-> - * Fetch the list head (which was registered earlier, via
-> - * sys_set_robust_list()):
-> + * fetch_robust_entry code is duplicated here to avoid excessive calls
-> + * to get_user()
->           */
-> - if (fetch_robust_entry(&entry, &head->list.next, &pi))
-> - return;
-> - /*
-> - * Fetch the relative futex offset:
-> - */
-> - if (get_user(futex_offset, &head->futex_offset))
-> - return;
-> - /*
-> - * Fetch any possibly pending lock-add first, and handle it
-> - * if it exists:
-> - */
-> - if (fetch_robust_entry(&pending, &head->list_op_pending, &pip))
-> - return;
-> + if (is_extended_list) {
-> + if (get_user(head, (struct extended_robust_list_head *)
-> + head_ptr))
-> + return;
-> + } else {
-> + if (get_user(head.list_head, head_ptr))
-> + return;
-> + }
-> +
-> + pi = head.list_head.list.next & 1;
-> + second_abi = head.list_head.list.next & 0b10;
-> + head.list_head.list.next &= ~0b11UL;
-> + pip = head.list_head.list_op_pending & 1;
-> + second_abip = head.list_head.list_op_pending & 0b10;
-> + head.list_head.list_op_pending &= ~0b11UL;
->
->          next_entry = NULL; /* avoid warning with gcc */
-> - while (entry != &head->list) {
-> + while (entry != &head->list_head.list) {
->                  /*
->                   * Fetch the next entry in the list before calling
->                   * handle_futex_death:
->                   */
-> - rc = fetch_robust_entry(&next_entry, &entry->next, &next_pi);
-> + rc = fetch_robust_entry(&next_entry, &entry->next, &next_pi,
-> + &next_second_abi);
->                  /*
->                   * A pending lock might already be on the list, so
->                   * don't process it twice:
->                   */
-> - if (entry != pending)
-> + if (entry != pending) {
-> + long futex_offset = second_abi ?
-> + head.futex_offset2 :
-> + head.list_head.futex_offset;
->                          if (handle_futex_death((void __user *)entry + futex_offset,
->                                                  curr, pi))
->                                  return;
-> + }
->                  if (rc)
->                          return;
->                  entry = next_entry;
->                  pi = next_pi;
-> + second_abi = next_second_abi;
->                  /*
->                   * Avoid excessively long or circular lists:
->                   */
->                  if (!--limit)
->                          break;
->
->                  cond_resched();
->          }
->
-> - if (pending)
-> + if (pending) {
-> + long futex_offset = second_abip ? head.futex_offset2 :
-> + head.list_head.futex_offset;
->                  handle_futex_death((void __user *)pending + futex_offset,
->                                     curr, pip);
-> + }
->  }
->
->  long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
->                  u32 __user *uaddr2, u32 val2, u32 val3)
->  {
-> @@ -3707,21 +3733,25 @@ SYSCALL_DEFINE6(futex, u32 __user *, uaddr, int, op, u32, val,
->          return do_futex(uaddr, op, val, tp, uaddr2, val2, val3);
->  }
->
->  #ifdef CONFIG_COMPAT
->  /*
-> - * Fetch a robust-list pointer. Bit 0 signals PI futexes:
-> + * Fetch a robust-list pointer. Bit 0 signals PI futexes.
-> + * Bit 1 choses which futex_offset to use:
->   */
->  static inline int
-> -compat_fetch_robust_entry(compat_uptr_t *uentry, struct robust_list __user **entry,
-> - compat_uptr_t __user *head, unsigned int *pi)
-> +compat_fetch_robust_entry(compat_uptr_t *uentry,
-> + struct robust_list __user **entry,
-> + compat_uptr_t __user *head, unsigned int *pi,
-> + unsigned int *second_abi)
->  {
->          if (get_user(*uentry, head))
->                  return -EFAULT;
->
-> - *entry = compat_ptr((*uentry) & ~1);
-> + *entry = compat_ptr((*uentry) & ~0b11);
->          *pi = (unsigned int)(*uentry) & 1;
-> + *second_abi = (unsigned int)(*uentry) & 0b10;
->
->          return 0;
->  }
->
->  static void __user *futex_uaddr(struct robust_list __user *entry,
-> @@ -3739,72 +3769,86 @@ static void __user *futex_uaddr(struct robust_list __user *entry,
->   *
->   * We silently return on any sign of list-walking problem.
->   */
->  void compat_exit_robust_list(struct task_struct *curr)
->  {
-> - struct compat_robust_list_head __user *head = curr->compat_robust_list;
-> - struct robust_list __user *entry, *next_entry, *pending;
-> - unsigned int limit = ROBUST_LIST_LIMIT, pi, pip;
-> - unsigned int uninitialized_var(next_pi);
-> + struct compat_robust_list_head __user *head = curr->compat_robust_list &
-> + ~1UL;
-> + unsigned int is_extended_list = curr->compat_robust_list & 1 == 0;
-> + struct compat_extended_robust_list_head head;
-> + struct robust_list __user *entry = &head->list_head.list.next,
-> + *next_entry, *pending;
-> + unsigned int limit = ROBUST_LIST_LIMIT, pi, pip, second_abi,
-> + second_abip;
-> + unsigned int uninitialized_var(next_pi),
-> + uninitialized_var(next_second_abi);
->          compat_uptr_t uentry, next_uentry, upending;
-> - compat_long_t futex_offset;
->          int rc;
->
->          if (!futex_cmpxchg_enabled)
->                  return;
->
->          /*
-> - * Fetch the list head (which was registered earlier, via
-> - * sys_set_robust_list()):
-> - */
-> - if (compat_fetch_robust_entry(&uentry, &entry, &head->list.next, &pi))
-> - return;
-> - /*
-> - * Fetch the relative futex offset:
-> - */
-> - if (get_user(futex_offset, &head->futex_offset))
-> - return;
-> - /*
-> - * Fetch any possibly pending lock-add first, and handle it
-> - * if it exists:
-> + * compat_fetch_robust_entry code is duplicated here to avoid excessive
-> + * calls to get_user()
->           */
-> - if (compat_fetch_robust_entry(&upending, &pending,
-> - &head->list_op_pending, &pip))
-> - return;
-> + if (is_extended_list) {
-> + if (get_user(head, (struct compat_extended_robust_list_head *)
-> + head_ptr))
-> + return;
-> + } else {
-> + if (get_user(head.list_head, head_ptr))
-> + return;
-> + }
-> +
-> + pi = head.list_head.list.next & 1;
-> + second_abi = head.list_head.list.next & 0b10;
-> + head.list_head.list.next &= ~0b11UL;
-> + pip = head.list_head.list_op_pending & 1;
-> + second_abip = head.list_head.list_op_pending & 0b10;
-> + head.list_head.list_op_pending &= ~0b11UL;
->
->          next_entry = NULL; /* avoid warning with gcc */
->          while (entry != (struct robust_list __user *) &head->list) {
->                  /*
->                   * Fetch the next entry in the list before calling
->                   * handle_futex_death:
->                   */
->                  rc = compat_fetch_robust_entry(&next_uentry, &next_entry,
-> - (compat_uptr_t __user *)&entry->next, &next_pi);
-> + (compat_uptr_t __user *)&entry->next, &next_pi,
-> + &next_second_abi);
->                  /*
->                   * A pending lock might already be on the list, so
->                   * dont process it twice:
->                   */
->                  if (entry != pending) {
-> + compat_long_t futex_offset = second_abi ?
-> + head.futex_offset2 :
-> + head.list_head.futex_offset;
->                          void __user *uaddr = futex_uaddr(entry, futex_offset);
->
->                          if (handle_futex_death(uaddr, curr, pi))
->                                  return;
->                  }
->                  if (rc)
->                          return;
->                  uentry = next_uentry;
->                  entry = next_entry;
->                  pi = next_pi;
-> + second_abi = next_second_abi;
->                  /*
->                   * Avoid excessively long or circular lists:
->                   */
->                  if (!--limit)
->                          break;
->
->                  cond_resched();
->          }
->          if (pending) {
-> + compat_long_t futex_offset = second_abip ?
-> + head.futex_offset2 :
-> + head.list_head.futex_offset;
->                  void __user *uaddr = futex_uaddr(pending, futex_offset);
->
->                  handle_futex_death(uaddr, curr, pip);
->          }
->  }
-> @@ -3814,23 +3858,29 @@ COMPAT_SYSCALL_DEFINE2(set_robust_list,
->                  compat_size_t, len)
->  {
->          if (!futex_cmpxchg_enabled)
->                  return -ENOSYS;
->
-> - if (unlikely(len != sizeof(*head)))
-> + if (unlikely(len != sizeof(struct compat_robust_list_head) &&
-> + len != sizeof(struct compat_extended_robust_list_head)))
->                  return -EINVAL;
->
-> - current->compat_robust_list = head;
-> + current->compat_robust_list = head & ~0b11;
-> + BUILD_BUG_ON(sizeof(compat_robust_list_head) ==
-> + sizeof(compat_extended_robust_list_head));
-> + if (len == sizeof(compat_robust_list_head))
-> + current->compat_robust_list |= 0b1;
->
->          return 0;
->  }
->
->  COMPAT_SYSCALL_DEFINE3(get_robust_list, int, pid,
->                          compat_uptr_t __user *, head_ptr,
->                          compat_size_t __user *, len_ptr)
->  {
->          struct compat_robust_list_head __user *head;
-> + size_t len;
->          unsigned long ret;
->          struct task_struct *p;
->
->          if (!futex_cmpxchg_enabled)
->                  return -ENOSYS;
-> @@ -3848,14 +3898,18 @@ COMPAT_SYSCALL_DEFINE3(get_robust_list, int, pid,
->
->          ret = -EPERM;
->          if (!ptrace_may_access(p, PTRACE_MODE_READ_REALCREDS))
->                  goto err_unlock;
->
-> - head = p->compat_robust_list;
-> + head = p->compat_robust_list & ~0b11;
-> + if (p->compat_robust_list & 0b11 == 0b1)
-> + len = sizeof(struct compat_robust_list_head);
-> + else
-> + len = sizeof(struct compat_extended_robust_list_head);
->          rcu_read_unlock();
->
-> - if (put_user(sizeof(*head), len_ptr))
-> + if (put_user(len, len_ptr))
->                  return -EFAULT;
->          return put_user(ptr_to_compat(head), head_ptr);
->
->  err_unlock:
->          rcu_read_unlock();
-> --
-> 2.20.1
+Hi Bean,
 
--- 
-Shawn Landden
+Yes, we did see some issues without this device reset here. For example,
+link start-up failure and/or NOP-IN timeout during probe stage.
 
+Best regards,
+Can Guo.
+
+>>  	spin_lock_irqsave(hba->host->host_lock, flags);
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
