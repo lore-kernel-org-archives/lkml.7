@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA00CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AFACA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 284AF21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D879D217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904874;
-	bh=IEy/Uf64WWx5r28Ky/7zeFyYJNzL1e4yhFukKOfLYi8=;
+	s=default; t=1572904882;
+	bh=7anIju3GzbRm18JdCkJS7Bg+9lKUk0OQ3BDxqqY5L24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F6VSbHiAjRUdujIvFBb7inVAPleWowzFsPBu7Q+RDPVEQnzjZ6Kyg6KcgzASvSlhb
-	 YcHjEcs8pD5NMzvpqJVLwbYIbZqYt0r23QnadOJXCAHDjT7py4Iqx4MHwImCUojS2C
-	 jzblV6s3lJFZXIxcQpOmFtdWc9lUD8Q6462cvZ8M=
+	b=P03+dts5/sXhmDatfSMVYoBl9zTDWWW5raC99OBK+yyflh5b8H9kFgepSLRo1AOuG
+	 ccl2cEAk1Rx3mYEi/+uNthGm4IPdAHoRyPx4lcwmpb0fld1FNDmazeoF0JYjfKXHUD
+	 WuA3St6pVoTnsVrG2bKzu9KT3IjTXFDFt2+bIX3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388223AbfKDWBN (ORCPT
+        id S2389027AbfKDWBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:01:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58898 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:01:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388351AbfKDWA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:00:57 -0500
+        id S2388945AbfKDWBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:01:03 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 835E620650;
-        Mon,  4 Nov 2019 22:00:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14E842084D;
+        Mon,  4 Nov 2019 22:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904857;
-        bh=IEy/Uf64WWx5r28Ky/7zeFyYJNzL1e4yhFukKOfLYi8=;
+        s=default; t=1572904862;
+        bh=7anIju3GzbRm18JdCkJS7Bg+9lKUk0OQ3BDxqqY5L24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fPs2o/tUl4zp14y/su95q2/S1SjxxOhFOu/JvUE2QP8mID89UZVPwcTr3kDu0M8CL
-         Ko7McncsF6ffNpk68cafyjV3Bt8gkesbU+mHPr9OlwgZv7cfcbaCXbwPVheqhH5sLT
-         7kCcUb1ZzqXy85VD0IuGXxIxzHSNevPOzA2aBmFs=
+        b=EbQ4UplmGcWkxOrUxIKcG3VbIhZTLXvZBM153ge+s6uzLjJqb3PxhE0f3KXi/C+cf
+         80Jw9gm7Ia8F4VaVVfTBe7br6qvzROySSAZCrb3Sl1XLDdnwerGJNQhOYkLusUUdNB
+         6K0Avc/Rziv3hPY/4+eTmXxnPMirKdQOq1pOW9ic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        stable@vger.kernel.org, Mike Christie <mchristi@redhat.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Xiubo Li <xiubli@redhat.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 096/149] MIPS: fw: sni: Fix out of bounds init of o32 stack
-Date:   Mon,  4 Nov 2019 22:44:49 +0100
-Message-Id: <20191104212143.263763593@linuxfoundation.org>
+Subject: [PATCH 4.19 098/149] nbd: fix possible sysfs duplicate warning
+Date:   Mon,  4 Nov 2019 22:44:51 +0100
+Message-Id: <20191104212143.389494354@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -63,36 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+From: Xiubo Li <xiubli@redhat.com>
 
-[ Upstream commit efcb529694c3b707dc0471b312944337ba16e4dd ]
+[ Upstream commit 862488105b84ca744b3d8ff131e0fcfe10644be1 ]
 
-Use ARRAY_SIZE to caluculate the top of the o32 stack.
+1. nbd_put takes the mutex and drops nbd->ref to 0. It then does
+idr_remove and drops the mutex.
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+2. nbd_genl_connect takes the mutex. idr_find/idr_for_each fails
+to find an existing device, so it does nbd_dev_add.
+
+3. just before the nbd_put could call nbd_dev_remove or not finished
+totally, but if nbd_dev_add try to add_disk, we can hit:
+
+debugfs: Directory 'nbd1' with parent 'block' already present!
+
+This patch will make sure all the disk add/remove stuff are done
+by holding the nbd_index_mutex lock.
+
+Reported-by: Mike Christie <mchristi@redhat.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/fw/sni/sniprom.c | 2 +-
+ drivers/block/nbd.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/fw/sni/sniprom.c b/arch/mips/fw/sni/sniprom.c
-index 8772617b64cef..80112f2298b68 100644
---- a/arch/mips/fw/sni/sniprom.c
-+++ b/arch/mips/fw/sni/sniprom.c
-@@ -43,7 +43,7 @@
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index bc2fa4e85f0ca..d445195945618 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -228,8 +228,8 @@ static void nbd_put(struct nbd_device *nbd)
+ 	if (refcount_dec_and_mutex_lock(&nbd->refs,
+ 					&nbd_index_mutex)) {
+ 		idr_remove(&nbd_index_idr, nbd->index);
+-		mutex_unlock(&nbd_index_mutex);
+ 		nbd_dev_remove(nbd);
++		mutex_unlock(&nbd_index_mutex);
+ 	}
+ }
  
- /* O32 stack has to be 8-byte aligned. */
- static u64 o32_stk[4096];
--#define O32_STK	  &o32_stk[sizeof(o32_stk)]
-+#define O32_STK	  (&o32_stk[ARRAY_SIZE(o32_stk)])
- 
- #define __PROM_O32(fun, arg) fun arg __asm__(#fun); \
- 				     __asm__(#fun " = call_o32")
 -- 
 2.20.1
 
