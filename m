@@ -2,74 +2,108 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF65ECA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA8CCA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6CE0214D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92CFE20717
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:44:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="o05vGWKJ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eRCQEVHm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730068AbfKDXni (ORCPT
+        id S2387437AbfKDXoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 18:43:38 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39143 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729693AbfKDXni (ORCPT
+        Mon, 4 Nov 2019 18:44:18 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:57754 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387400AbfKDXoS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 18:43:38 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iRm0Q-0001CA-Ex; Tue, 05 Nov 2019 00:43:30 +0100
-Date:   Tue, 5 Nov 2019 00:43:29 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Scott Wood <swood@redhat.com>
-cc:     Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] timers/nohz: Update nohz load even if tick already
- stopped
-In-Reply-To: <alpine.DEB.2.21.1911042315390.17054@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1911050042250.17054@nanos.tec.linutronix.de>
-References: <20191028150716.22890-1-frederic@kernel.org>  <20191029100506.GJ4114@hirez.programming.kicks-ass.net>  <52d963553deda810113accd8d69b6dffdb37144f.camel@redhat.com>  <20191030133130.GY4097@hirez.programming.kicks-ass.net>
- <813ed21938aa47b15f35f8834ffd98ad4dd27771.camel@redhat.com> <alpine.DEB.2.21.1911042315390.17054@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 4 Nov 2019 18:44:18 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id B5EA860E07; Mon,  4 Nov 2019 23:44:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572911056;
+        bh=EYW8abyE8lJm8s9y7qGJ4MoU1MjvPiVlESI93EIvGVM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=o05vGWKJ4TCep6Hn7jc9yhOW3zkUofrWiCjvTUcUexx/SXDmpfODQbGvliSV3Cglr
+         m096Ah5thZPeSnkvvGAIXhlmDS+G53owwjwHrysxhWf+yRzvXbccMPoY9vNDtB913f
+         5GaxfigMEEOUTFIzvB+4Kitc4nw38w5FS1wfFTxc=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 3080C60D7C;
+        Mon,  4 Nov 2019 23:44:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572911055;
+        bh=EYW8abyE8lJm8s9y7qGJ4MoU1MjvPiVlESI93EIvGVM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=eRCQEVHm6BTWoZ77VL8qmiH4MrC7Jd/x1nU1V9JFv8tF6nQINUNK6ClHVFLatr+W2
+         MCTqRoSF9h7iTmfEKaZr5vHPrnybElrH88gHsqU9iAkWh8R9s7wYJx/EnL5mWGcZ7A
+         0i/elXwCqxjPfRh5fHzHCqIWP45auqrZEIFKCdu8=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 05 Nov 2019 07:44:13 +0800
+From:   cang@codeaurora.org
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/2] scsi: ufs: Introduce a vops for resetting host
+ controller
+In-Reply-To: <MN2PR04MB69911784473463D0926AE3B5FC7F0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1571804009-29787-1-git-send-email-cang@codeaurora.org>
+ <1571804009-29787-2-git-send-email-cang@codeaurora.org>
+ <MN2PR04MB69911784473463D0926AE3B5FC7F0@MN2PR04MB6991.namprd04.prod.outlook.com>
+Message-ID: <1ab0a928184dd11540726d6456056e02@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 Nov 2019, Thomas Gleixner wrote:
-> On Fri, 1 Nov 2019, Scott Wood wrote:
-> > On Wed, 2019-10-30 at 14:31 +0100, Peter Zijlstra wrote:
-> > > Oh argh! that's a bit radical of the remote tick. The normal tick runs
-> > > just fine on idle CPUs, so lets mirror that.
-> > > 
-> > > How's this then?
+On 2019-11-04 22:28, Avri Altman wrote:
+> Hi,
+>> 
+>> Some UFS host controllers need their specific implementations of 
+>> resetting to
+>> get them into a good state. Provide a new vops to allow the platform 
+>> driver to
+>> implement this own reset operation.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+> Did you withdraw from this patches and insert them to one of your fix 
+> bundle?
+> I couldn't tell.
+> As this is a vop, in what way its functionality can't be included in
+> the device reset that was recently added?
 > 
-> ....
->  
-> > 
-> > Needs to be tick_nohz_tick_stopped_cpu(cpu)
-> > 
-> > After fixing that, I get:
-> > 
-> > [    7.439068] WARNING: CPU: 20 PID: 7 at /home/root/linux/kernel/sched/core.c:3681 sched_tick_remote+0x132/0x150
-> 
-> So I'm going to apply Scotts patch if nobody comes up with a better idea
-> until tomorrow.
+> Thanks,
+> Avri
 
-As Peter pointed out to me privately we should rather go and analyze the
-real thing instead of just applying duct tape.
+Hi Avri,
 
-/me drops the patch again.
+Sorry for making you confused.
+Yes, I dropped this series because it cannot fulfil its purpose anymore. 
+I come up with a way which puts the reset in the right place in UFS QCOM 
+platfrom driver without an extra vops, so I inserted the two changes in 
+fix bundle 3.
+
+Thanks,
+Can Guo.
+
