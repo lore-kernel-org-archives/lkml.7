@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35023CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C33CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 072E721850
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE6512190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904370;
-	bh=eB8OcREBndT+A5hyfQrTyGkWl3QxuRF+jZflQikaaIU=;
+	s=default; t=1572904372;
+	bh=tDrUm+qwbUyXKsPEjhJF9Vdx2TT6I+dx62GC67rx3Gs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KxBtgUvcBHBO1YRdRO5GLpq9QilB/LUhtcY9KYtpAz/FmzmjCPZy3SsMXIw2Wn4Eq
-	 pLkUrjsdStWQuAJp/qk7P7LAVim23rECOsQS/jKNKR7vehXHC7joBN+mCfwr1h2I5f
-	 Y0AKIjxFYeFagdXoWJBKehEkKBuVNSeLBilYHNP0=
+	b=gphkvaUQzdjPxX3emglX2Z9/uyc711DVc66rliE/1rqS2DIbNoeFR2kfgO6yzGbZ6
+	 WRNNB8JJkjysITbbZ/w/buUmv4P0AN7ik1WfYYrLwApNTgikLmCpxinhWLMJBv01zj
+	 wL+mg6QwCgSyFpmNhWAb7rHqpDIS9RyoWjZ936Nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730837AbfKDVws (ORCPT
+        id S2387446AbfKDVwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:52:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46376 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:52:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730796AbfKDVwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:52:44 -0500
+        id S1730830AbfKDVws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:52:48 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7350B217F5;
-        Mon,  4 Nov 2019 21:52:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52A5F2184C;
+        Mon,  4 Nov 2019 21:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904364;
-        bh=eB8OcREBndT+A5hyfQrTyGkWl3QxuRF+jZflQikaaIU=;
+        s=default; t=1572904366;
+        bh=tDrUm+qwbUyXKsPEjhJF9Vdx2TT6I+dx62GC67rx3Gs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v1QRgc2XDSMATgUVC/XwdHbHwMuX1O5BuGUuLA6v0oOhoLYXit7AIZpZCqhccYYWq
-         we6mZaR4GOOAWkLBdXnIz0WGQobQW3ysO83wz69V5igXgLJ9c50lRI1RmurdUIjmuY
-         VZ8EYJa34c46zZf3Bbg5YqIy/PR6TUdLW/BDtFQE=
+        b=0Ozy4BHEwWRmmne+ApxTMFOZghHAY8H5fjT3XmQym0tXoousN7IjGjXA9wB7ty7gV
+         QYIxmb0HyIYa4bHQBmuE9S347dt5kVi6cMlWg0nlkUmAnq6PU9S8ExSqBIo7GICs2/
+         r+zTDk+zk0lDrmHw4+7y3H0VVIOW34O06OcJfc90=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Frederick Lawler <fred@fredlawl.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 22/95] PCI/PME: Fix possible use-after-free on remove
-Date:   Mon,  4 Nov 2019 22:44:20 +0100
-Message-Id: <20191104212052.393906364@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 05/95] dm: Use kzalloc for all structs with embedded biosets/mempools
+Date:   Mon,  4 Nov 2019 22:44:03 +0100
+Message-Id: <20191104212040.275218135@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -65,39 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: Kent Overstreet <kent.overstreet@gmail.com>
 
-[ Upstream commit 7cf58b79b3072029af127ae865ffc6f00f34b1f8 ]
+[ Upstream commit d377535405686f735b90a8ad4ba269484cd7c96e ]
 
-In remove(), ensure that the PME work cannot run after kfree() is called.
-Otherwise, this could result in a use-after-free.
+mempool_init()/bioset_init() require that the mempools/biosets be zeroed
+first; they probably should not _require_ this, but not allocating those
+structs with kzalloc is a fairly nonsensical thing to do (calling
+mempool_exit()/bioset_exit() on an uninitialized mempool/bioset is legal
+and safe, but only works if said memory was zeroed.)
 
-This issue was detected with the help of Coccinelle.
-
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Sinan Kaya <okaya@kernel.org>
-Cc: Frederick Lawler <fred@fredlawl.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/pme.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/md/dm-bio-prison-v1.c | 2 +-
+ drivers/md/dm-bio-prison-v2.c | 2 +-
+ drivers/md/dm-io.c            | 2 +-
+ drivers/md/dm-kcopyd.c        | 2 +-
+ drivers/md/dm-region-hash.c   | 2 +-
+ drivers/md/dm-snap.c          | 2 +-
+ drivers/md/dm-thin.c          | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-index c2e6e3d1073f8..5500660bbb104 100644
---- a/drivers/pci/pcie/pme.c
-+++ b/drivers/pci/pcie/pme.c
-@@ -441,6 +441,7 @@ static void pcie_pme_remove(struct pcie_device *srv)
+diff --git a/drivers/md/dm-bio-prison-v1.c b/drivers/md/dm-bio-prison-v1.c
+index 874841f0fc837..10532a76688ea 100644
+--- a/drivers/md/dm-bio-prison-v1.c
++++ b/drivers/md/dm-bio-prison-v1.c
+@@ -33,7 +33,7 @@ static struct kmem_cache *_cell_cache;
+  */
+ struct dm_bio_prison *dm_bio_prison_create(void)
+ {
+-	struct dm_bio_prison *prison = kmalloc(sizeof(*prison), GFP_KERNEL);
++	struct dm_bio_prison *prison = kzalloc(sizeof(*prison), GFP_KERNEL);
  
- 	pcie_pme_disable_interrupt(srv->port, data);
- 	free_irq(srv->irq, srv);
-+	cancel_work_sync(&data->work);
- 	kfree(data);
- }
+ 	if (!prison)
+ 		return NULL;
+diff --git a/drivers/md/dm-bio-prison-v2.c b/drivers/md/dm-bio-prison-v2.c
+index 8ce3a1a588cfd..c34ec615420f2 100644
+--- a/drivers/md/dm-bio-prison-v2.c
++++ b/drivers/md/dm-bio-prison-v2.c
+@@ -35,7 +35,7 @@ static struct kmem_cache *_cell_cache;
+  */
+ struct dm_bio_prison_v2 *dm_bio_prison_create_v2(struct workqueue_struct *wq)
+ {
+-	struct dm_bio_prison_v2 *prison = kmalloc(sizeof(*prison), GFP_KERNEL);
++	struct dm_bio_prison_v2 *prison = kzalloc(sizeof(*prison), GFP_KERNEL);
  
+ 	if (!prison)
+ 		return NULL;
+diff --git a/drivers/md/dm-io.c b/drivers/md/dm-io.c
+index b4357ed4d5416..56e2c0e079d78 100644
+--- a/drivers/md/dm-io.c
++++ b/drivers/md/dm-io.c
+@@ -50,7 +50,7 @@ struct dm_io_client *dm_io_client_create(void)
+ 	struct dm_io_client *client;
+ 	unsigned min_ios = dm_get_reserved_bio_based_ios();
+ 
+-	client = kmalloc(sizeof(*client), GFP_KERNEL);
++	client = kzalloc(sizeof(*client), GFP_KERNEL);
+ 	if (!client)
+ 		return ERR_PTR(-ENOMEM);
+ 
+diff --git a/drivers/md/dm-kcopyd.c b/drivers/md/dm-kcopyd.c
+index bd9a45b94b552..7ca2b1aaa79d4 100644
+--- a/drivers/md/dm-kcopyd.c
++++ b/drivers/md/dm-kcopyd.c
+@@ -892,7 +892,7 @@ struct dm_kcopyd_client *dm_kcopyd_client_create(struct dm_kcopyd_throttle *thro
+ 	int r = -ENOMEM;
+ 	struct dm_kcopyd_client *kc;
+ 
+-	kc = kmalloc(sizeof(*kc), GFP_KERNEL);
++	kc = kzalloc(sizeof(*kc), GFP_KERNEL);
+ 	if (!kc)
+ 		return ERR_PTR(-ENOMEM);
+ 
+diff --git a/drivers/md/dm-region-hash.c b/drivers/md/dm-region-hash.c
+index 85c32b22a420a..91c6f6d72eeec 100644
+--- a/drivers/md/dm-region-hash.c
++++ b/drivers/md/dm-region-hash.c
+@@ -179,7 +179,7 @@ struct dm_region_hash *dm_region_hash_create(
+ 		;
+ 	nr_buckets >>= 1;
+ 
+-	rh = kmalloc(sizeof(*rh), GFP_KERNEL);
++	rh = kzalloc(sizeof(*rh), GFP_KERNEL);
+ 	if (!rh) {
+ 		DMERR("unable to allocate region hash memory");
+ 		return ERR_PTR(-ENOMEM);
+diff --git a/drivers/md/dm-snap.c b/drivers/md/dm-snap.c
+index 95c564b60d79a..2170f6c118b89 100644
+--- a/drivers/md/dm-snap.c
++++ b/drivers/md/dm-snap.c
+@@ -1136,7 +1136,7 @@ static int snapshot_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+ 		origin_mode = FMODE_WRITE;
+ 	}
+ 
+-	s = kmalloc(sizeof(*s), GFP_KERNEL);
++	s = kzalloc(sizeof(*s), GFP_KERNEL);
+ 	if (!s) {
+ 		ti->error = "Cannot allocate private snapshot structure";
+ 		r = -ENOMEM;
+diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
+index aa77959909894..0ee5eae716909 100644
+--- a/drivers/md/dm-thin.c
++++ b/drivers/md/dm-thin.c
+@@ -2962,7 +2962,7 @@ static struct pool *pool_create(struct mapped_device *pool_md,
+ 		return (struct pool *)pmd;
+ 	}
+ 
+-	pool = kmalloc(sizeof(*pool), GFP_KERNEL);
++	pool = kzalloc(sizeof(*pool), GFP_KERNEL);
+ 	if (!pool) {
+ 		*error = "Error allocating memory for pool";
+ 		err_p = ERR_PTR(-ENOMEM);
 -- 
 2.20.1
 
