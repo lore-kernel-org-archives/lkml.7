@@ -2,112 +2,80 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD28DCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764A2CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B439F20663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:17:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ILq4JoZ9"
+	by mail.kernel.org (Postfix) with ESMTP id 41F2220869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:17:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572880658;
+	bh=vLv3UOi/SngTRvl7gzNmmsDbqRgqMxbFhwwLSk46fTU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x7/7vmPhWXDkNhoCjf/+inWj40I+fqueJh242ldDS6w8WYrqDXC7XcxoYa9OfaLm4
+	 th0Y44Hk/slFyBFtDxOjvB6AOW+bJp+2F0G8Ma58tS9Hgv9h+h5wozm2xOBPoGqeqO
+	 NH/Xv5dtB3kHsWUY8xKsriXgl5H8Cx9U176HfxW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbfKDPRG (ORCPT
+        id S1729187AbfKDPRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:17:06 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:55964 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbfKDPRG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:17:06 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4FCH2q032157;
-        Mon, 4 Nov 2019 15:14:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2019-08-05;
- bh=+83lcVguJyvnyafDeVP9ncl+WMvkJ+8ZOi3EzqtPjgg=;
- b=ILq4JoZ91xi0X3BXYbFx3Jh8Aov5v6iXEjEc8SDZw/oOBGdKSX//iFs7g5bXLcofHE+j
- 0vEJXr3MXBR+RsxU1IHBhSehGzuhhZhGkQ05jap4OVRaCocR7O96nIop/p4fI11n0+Nb
- QKysaIwRZnn58e6Fh/GR4foux9BMiMMqHGZTXLiNqmAI4SgNZUxyWNkgxahaHDs+1x21
- iJjsxkaWE7GsYTMp7/OStbWM8FMZCyBk68WXMEZxPH173hsbVjnuRG2fyEXlseydpbu6
- Tos8URXi3eSie9mw/WGIlY7CEWPRyqcwu3/3OMb1ngMxtu52S/NbipUYBE4zleispc7n LQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2w11rpr139-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 15:14:31 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4FB2JA136281;
-        Mon, 4 Nov 2019 15:14:30 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2w1k8uxutt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 15:14:30 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA4FEKf4002177;
-        Mon, 4 Nov 2019 15:14:25 GMT
-Received: from tomti.i.net-space.pl (/10.175.168.29)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 Nov 2019 07:14:16 -0800
-From:   Daniel Kiper <daniel.kiper@oracle.com>
-To:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, xen-devel@lists.xenproject.org
-Cc:     ard.biesheuvel@linaro.org, boris.ostrovsky@oracle.com,
-        bp@alien8.de, corbet@lwn.net, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, eric.snowberg@oracle.com,
-        hpa@zytor.com, jgross@suse.com, kanth.ghatraju@oracle.com,
-        konrad.wilk@oracle.com, mingo@redhat.com, rdunlap@infradead.org,
-        ross.philipson@oracle.com, tglx@linutronix.de
-Subject: [PATCH v5 0/3] x86/boot: Introduce the kernel_info et consortes
-Date:   Mon,  4 Nov 2019 16:13:51 +0100
-Message-Id: <20191104151354.28145-1-daniel.kiper@oracle.com>
-X-Mailer: git-send-email 2.11.0
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=663
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911040151
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=742 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911040151
+        Mon, 4 Nov 2019 10:17:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36220 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727796AbfKDPRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 10:17:36 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7229820663;
+        Mon,  4 Nov 2019 15:17:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572880656;
+        bh=vLv3UOi/SngTRvl7gzNmmsDbqRgqMxbFhwwLSk46fTU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rE9XrtOVyOmKggacqYMCqtsNCUE0Pwxwo6+vx8ZGSnO8VEupIseNrIUZNyWpvmw7j
+         zsi8M3QqZ4Mm6aEjAcZyotc8OaZGzgLQi+HCJMVuf8PGZo+nP7CGpzcvSGuRGOHZj3
+         c/zekPiSwe9eRGFgFOdBsF2B/8UKQP+m5GV0+BFY=
+Date:   Mon, 4 Nov 2019 15:17:30 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Yong Wu <yong.wu@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Evan Green <evgreen@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tomasz Figa <tfiga@google.com>,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
+        Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com,
+        cui.zhang@mediatek.com, chao.hao@mediatek.com,
+        edison.hsieh@mediatek.com
+Subject: Re: [PATCH v5 0/7] Improve tlb range flush
+Message-ID: <20191104151729.GC24909@willie-the-truck>
+References: <1572850868-22315-1-git-send-email-yong.wu@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572850868-22315-1-git-send-email-yong.wu@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Nov 04, 2019 at 03:01:01PM +0800, Yong Wu wrote:
+> This patchset mainly fixes a tlb flush timeout issue and use the new
+> iommu_gather to re-implement the tlb flush flow. and several clean up
+> patches about the tlb_flush.
+> 
+> change note:
+> 
+> v5: No code change. Only update the commit message of the last patch[7/7]
+>     suggested from Tomasz in the internal review.
 
-Due to very limited space in the setup_header this patch series introduces new
-kernel_info struct which will be used to convey information from the kernel to
-the bootloader. This way the boot protocol can be extended regardless of the
-setup_header limitations. Additionally, the patch series introduces some
-convenience features like the setup_indirect struct and the
-kernel_info.setup_type_max field.
+I'm assuming Joerg will pick this up for 5.5.
 
-Daniel
-
- Documentation/x86/boot.rst             | 174 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- arch/x86/boot/Makefile                 |   2 +-
- arch/x86/boot/compressed/Makefile      |   4 +-
- arch/x86/boot/compressed/kaslr.c       |  12 ++++++
- arch/x86/boot/compressed/kernel_info.S |  22 ++++++++++
- arch/x86/boot/header.S                 |   3 +-
- arch/x86/boot/tools/build.c            |   5 +++
- arch/x86/include/uapi/asm/bootparam.h  |  16 +++++++-
- arch/x86/kernel/e820.c                 |  11 +++++
- arch/x86/kernel/kdebugfs.c             |  20 +++++++--
- arch/x86/kernel/ksysfs.c               |  30 ++++++++++----
- arch/x86/kernel/setup.c                |   4 ++
- arch/x86/mm/ioremap.c                  |  11 +++++
- 13 files changed, 298 insertions(+), 16 deletions(-)
-
-Daniel Kiper (3):
-      x86/boot: Introduce the kernel_info
-      x86/boot: Introduce the kernel_info.setup_type_max
-      x86/boot: Introduce the setup_indirect
-
+Will
