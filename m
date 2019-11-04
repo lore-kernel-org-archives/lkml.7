@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4B7CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B90D1CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2CFE204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89AA2204FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905851;
-	bh=VpY9TPzHPsgc37lXRkFkKkbz5dCj63yRA/u6grZFGc4=;
+	s=default; t=1572905854;
+	bh=ttgyaWFVfVEATStYum205XZzeJBoj5PLrWqQbiPEsVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=inFv8+O4Hiz7557B6SkKoa4zibViQYuQdjwFZqr912om3hW6cAFYxR9OaT4lCYVf5
-	 ea3R6gV252dxEL6QvGqoIe2BeYB4GxoJkc4jgmvF6ZLm7oCuNreGuwxK4qv+69N7TZ
-	 wF6I5DJ1+MbyJ8ZmWFcrBJI1lX03fLHkrTTK9B5Y=
+	b=E/vfAkeWlBHD6s5tGXlgxjszS71Sa4qVy+9EyERhLbWLFRTBtQfu65QKydA4TCtTH
+	 9IzeVdaomAyjKjq3riPsJznd9OBbCXyzDuVgCcuUdb7LCh1OQusPieiJFz++71ZhlT
+	 JyxmzIT2cvNu2kKFlQCwQNBQra9YiU0oc5KPzAf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389341AbfKDWCe (ORCPT
+        id S2389889AbfKDWRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:02:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60618 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:17:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389263AbfKDWCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:02:20 -0500
+        id S2389338AbfKDWCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:02:34 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED9BF217F4;
-        Mon,  4 Nov 2019 22:02:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CC1E205C9;
+        Mon,  4 Nov 2019 22:02:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904939;
-        bh=VpY9TPzHPsgc37lXRkFkKkbz5dCj63yRA/u6grZFGc4=;
+        s=default; t=1572904953;
+        bh=ttgyaWFVfVEATStYum205XZzeJBoj5PLrWqQbiPEsVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gSKyeCsJtrFOYbcp55uhUKi2wPX+oPVMzemFrA8Vexi/1zE9x/75a08vuYg/44E5f
-         dzSLzR/btQxl3GnctUbAkZI+49DAOmTytf7o1QSgletPOrP9/2RWFaYRyw3TtDjzvo
-         yeCoXsDPtnhS5C7kuYtZvWjG85QVXxivTj+07FeY=
+        b=dKpt1DtnOyb+tasEnxEZA2iOJXEVIS+efY1LDidjiERfJU0Bj4vHURcpsUWdoedtv
+         1ZbjYqsksbdj7uiAoK7h06FILfQGhG7lCKgxH/E0hGDbnsohx1Eaq6KbRvpiAQbLlx
+         GVf33Gxu10SLQdua0/9GkSQwb4P8omU9kRn5vznY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 121/149] USB: serial: whiteheat: fix line-speed endianness
-Date:   Mon,  4 Nov 2019 22:45:14 +0100
-Message-Id: <20191104212144.793751831@linuxfoundation.org>
+        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.19 126/149] nl80211: fix validation of mesh path nexthop
+Date:   Mon,  4 Nov 2019 22:45:19 +0100
+Message-Id: <20191104212145.069370108@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -58,63 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Markus Theil <markus.theil@tu-ilmenau.de>
 
-commit 84968291d7924261c6a0624b9a72f952398e258b upstream.
+commit 1fab1b89e2e8f01204a9c05a39fd0b6411a48593 upstream.
 
-Add missing endianness conversion when setting the line speed so that
-this driver might work also on big-endian machines.
+Mesh path nexthop should be a ethernet address, but current validation
+checks against 4 byte integers.
 
-Also use an unsigned format specifier in the corresponding debug
-message.
-
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191029102354.2733-3-johan@kernel.org
+Cc: stable@vger.kernel.org
+Fixes: 2ec600d672e74 ("nl80211/cfg80211: support for mesh, sta dumping")
+Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
+Link: https://lore.kernel.org/r/20191029093003.10355-1-markus.theil@tu-ilmenau.de
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/whiteheat.c |    9 ++++++---
- drivers/usb/serial/whiteheat.h |    2 +-
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ net/wireless/nl80211.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/whiteheat.c
-+++ b/drivers/usb/serial/whiteheat.c
-@@ -648,6 +648,7 @@ static void firm_setup_port(struct tty_s
- 	struct device *dev = &port->dev;
- 	struct whiteheat_port_settings port_settings;
- 	unsigned int cflag = tty->termios.c_cflag;
-+	speed_t baud;
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -284,7 +284,8 @@ static const struct nla_policy nl80211_p
+ 	[NL80211_ATTR_MNTR_FLAGS] = { /* NLA_NESTED can't be empty */ },
+ 	[NL80211_ATTR_MESH_ID] = { .type = NLA_BINARY,
+ 				   .len = IEEE80211_MAX_MESH_ID_LEN },
+-	[NL80211_ATTR_MPATH_NEXT_HOP] = { .type = NLA_U32 },
++	[NL80211_ATTR_MPATH_NEXT_HOP] = { .type = NLA_BINARY,
++					  .len = ETH_ALEN },
  
- 	port_settings.port = port->port_number + 1;
- 
-@@ -708,11 +709,13 @@ static void firm_setup_port(struct tty_s
- 	dev_dbg(dev, "%s - XON = %2x, XOFF = %2x\n", __func__, port_settings.xon, port_settings.xoff);
- 
- 	/* get the baud rate wanted */
--	port_settings.baud = tty_get_baud_rate(tty);
--	dev_dbg(dev, "%s - baud rate = %d\n", __func__, port_settings.baud);
-+	baud = tty_get_baud_rate(tty);
-+	port_settings.baud = cpu_to_le32(baud);
-+	dev_dbg(dev, "%s - baud rate = %u\n", __func__, baud);
- 
- 	/* fixme: should set validated settings */
--	tty_encode_baud_rate(tty, port_settings.baud, port_settings.baud);
-+	tty_encode_baud_rate(tty, baud, baud);
-+
- 	/* handle any settings that aren't specified in the tty structure */
- 	port_settings.lloop = 0;
- 
---- a/drivers/usb/serial/whiteheat.h
-+++ b/drivers/usb/serial/whiteheat.h
-@@ -87,7 +87,7 @@ struct whiteheat_simple {
- 
- struct whiteheat_port_settings {
- 	__u8	port;		/* port number (1 to N) */
--	__u32	baud;		/* any value 7 - 460800, firmware calculates
-+	__le32	baud;		/* any value 7 - 460800, firmware calculates
- 				   best fit; arrives little endian */
- 	__u8	bits;		/* 5, 6, 7, or 8 */
- 	__u8	stop;		/* 1 or 2, default 1 (2 = 1.5 if bits = 5) */
+ 	[NL80211_ATTR_REG_ALPHA2] = { .type = NLA_STRING, .len = 2 },
+ 	[NL80211_ATTR_REG_RULES] = { .type = NLA_NESTED },
 
 
