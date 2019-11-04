@@ -6,88 +6,71 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F9ACA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBBBCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDA8E21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E879A20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:52:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbfKDNvR (ORCPT
+        id S1729100AbfKDNwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:51:17 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:46229 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727663AbfKDNvR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:51:17 -0500
-Received: from callcc.thunk.org (ip-12-2-52-196.nyc.us.northamericancoax.com [196.52.2.12])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xA4DpDoC017133
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 4 Nov 2019 08:51:14 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 6E649420311; Mon,  4 Nov 2019 08:51:11 -0500 (EST)
-Date:   Mon, 4 Nov 2019 08:51:11 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Tom Cook <tom.k.cook@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: Power management - HP 15-ds0502na
-Message-ID: <20191104135111.GF28764@mit.edu>
-References: <CAFSh4UxSx7SYT=Ja6TbwFwCJm_yn6VtMapXGv3B=+g2rQcALSA@mail.gmail.com>
+        Mon, 4 Nov 2019 08:52:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:43414 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727663AbfKDNwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 08:52:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5F171FB;
+        Mon,  4 Nov 2019 05:52:00 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 739A93F6C4;
+        Mon,  4 Nov 2019 05:51:58 -0800 (PST)
+Date:   Mon, 4 Nov 2019 13:51:56 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Amit Daniel Kachhap <amit.kachhap@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, deller@gmx.de, duwe@suse.de,
+        James.Bottomley@HansenPartnership.com, james.morse@arm.com,
+        jeyu@kernel.org, jpoimboe@redhat.com, jthierry@redhat.com,
+        linux-parisc@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, rostedt@goodmis.org, svens@stackframe.org,
+        takahiro.akashi@linaro.org, will@kernel.org,
+        Torsten Duwe <duwe@lst.de>
+Subject: Re: [PATCHv2 7/8] arm64: implement ftrace with regs
+Message-ID: <20191104135155.GG45140@lakrids.cambridge.arm.com>
+References: <20191029165832.33606-1-mark.rutland@arm.com>
+ <20191029165832.33606-8-mark.rutland@arm.com>
+ <8132dc13-9fbd-24e2-8a5e-28b005043c3e@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFSh4UxSx7SYT=Ja6TbwFwCJm_yn6VtMapXGv3B=+g2rQcALSA@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <8132dc13-9fbd-24e2-8a5e-28b005043c3e@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 11:21:24AM +0000, Tom Cook wrote:
-> * Power management doesn't work very well.  The most obvious symptom
-> of this is that /sys/power/mem_sleep contains only "[s2idle]" and so
-> there is no suspend-to-RAM available.  Setting
-> "mem_sleep_default=deep" on the command line doesn't change this.
+On Sat, Nov 02, 2019 at 05:51:46PM +0530, Amit Daniel Kachhap wrote:
+> On 10/29/19 10:28 PM, Mark Rutland wrote:
+> > +/*
+> > + * Due to -fpatchable-function-entry=2, the compiler has placed two NOPs before
+> > + * the regular function prologue. For an enabled callsite, ftrace_init_nop() and
+> > + * ftrace_make_call() have patched those NOPs to:
+> > + *
+> > + * 	MOV	X9, LR
+> > + * 	BL	<entry>
+> > + *
+> > + * ... where <entry> is either ftrace_caller or ftrace_regs_caller.
+> > + *
+> > + * Each instrumented function follows the AAPCS, so here x0-x8 and x19-x30 are
+> > + * live, and x9-x18 are safe to clobber.
+> > + *
+> > + * We save the callsite's context into a pt_regs before invoking and ftrace
 
-This is actually the laptop's ACPI and/or EC not supporting
-suspend-to-ram at all.  Suspend to idle is the new hotness, because it
-gives the OS much more control (but also gives the OS much more
-opportunity to screw up).  The Dell XPS 13 (models 9370 and 9380)
-supports both s2idle and s2ram, but s2idle doesn't work well at all on
-Linux.  (Well, at least not the upstream kernels; the official Dell
-Ubuntu kernel and userspace apparently has enough tweaks that it works
-well.)
+> s/invoking and ftrace callbacks/invoking the ftrace callbacks
 
-I tried for a bit to see if I could get s2idle working well on the
-upstream Dell XPS 13, but bits of hardware would randomly fail to come
-back from a s2idle resume --- or in some cases, the laptop wouldn't
-come back at all, that I decided, "life's too short", and gave up on
-it.  Hopefully Dell or other folks will get s2idle working well on the
-XPS 13... at least before suspend2ram gets dropped entirely.  :-/
+Whoops, that was meant to be 'any'. I've fixed that up locally.
 
-
-> * There are a few devices that appear to be on I2C buses and declared
-> in the ACPI tables (eg the fingerprint sensor) which don't show up
-> under Linux.  They did under Windows, until I blew the Windows
-> installation away to install Linux, and I'm assuming that Windows
-> found them through the ACPI DSDT.  Now thinking it may have been handy
-> to keep Windows around for debugging, but that's regrets for you.
-
-Even if they showed up, it's unclear the device driver would exist for
-Linux.  Most fingerprint readers have proprietary interfaces and
-aren't well supported by Linux in general.
-
-> Is this the right place to raise this?  If there's some other place
-> that Linux ACPI issues are dealt with, please point me there as I've
-> not had any luck googling.
-
-There is the linux-acpi@vger.kernel.org mailing list and the
-linux-pm@vger.kernel.org (pm --> "power management") where you might
-try asking about the s2idle.  A lot of the issues with s2idle appear
-to be very device driver specific, and not about the power management
-core, so it's unclear folks on those lists will be able to help.  But
-it's worth a try...
-
-					- Ted
+Thanks,
+Mark.
