@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B5FCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF45BCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87764217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 841E3217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904521;
-	bh=StqaMSxdh6xeqT2gB1aXpUZsi+7s35JBbpkh66VjhEc=;
+	s=default; t=1572904525;
+	bh=c/23/zO5M8qYOwM1lKec8fGLum3bc5+xWnSsny0sJZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x+JWxFJ90mro4MiftlSoszKxuW6nTY6St9wtiFPcm3DpAsmEjXdUJD8JFLO05FNX6
-	 RHpTLCmA8Twc2plQbMHlfJiIaLJxKi/HgJRJMc6vc3R0ue/zJo5Ozoia56gjx6zddA
-	 bkI6BpnNPzxaec8rvuHmrXmWzYNZYkpxNkHTezF8=
+	b=NVVBocMUbGsdH7WEXLH0mw59pEEFlK+C0KPmymlAjm+R8n79QNrk4Vl+YcHfyiCC5
+	 IPi11F5tZQdck2J9Ik9xEr8x/+D99z9c4+8SKqEkuK4AW5Fp9ypohZ6MTxjw+k1OCL
+	 dQvtMQBI0V9rKUx4mykpsApxMni1T2P7wU1t2Pho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388152AbfKDVzU (ORCPT
+        id S1729828AbfKDVzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:55:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50444 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:55:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387652AbfKDVzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:55:14 -0500
+        id S2388141AbfKDVzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:55:20 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E89DA217F4;
-        Mon,  4 Nov 2019 21:55:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E31052053B;
+        Mon,  4 Nov 2019 21:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904514;
-        bh=StqaMSxdh6xeqT2gB1aXpUZsi+7s35JBbpkh66VjhEc=;
+        s=default; t=1572904519;
+        bh=c/23/zO5M8qYOwM1lKec8fGLum3bc5+xWnSsny0sJZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JjBB4B+SrmtLaSLEKLk7g5ubMqSYQCkCBUiwtOAVxInvvjDkwApKLWH4LDtsgalfr
-         4rnPXw6qLuWk7QPNJMq6AJBND5ZBCvhwgISoPOtjCbRTJRWrK+nTS8Q5MV7umuyUPE
-         WtNfm6UoXDguziukXraBW+W/ZOu3IbvE81ddDako=
+        b=HEc1Ygz25k33wiTAnlDMsEAJ6u+2Bmvzscd7feQ0Y27ef+89paWLWOSZF0LwFIG3N
+         rnDX38Vk7uShTa9/ROycuB/9tHmLQOrBQt+G33JWFZtnXFVpGnaf8KE15Lz0ivPaey
+         lQbmew/KDS3eBuLfZqCYEEjg2r6iVqFDSAH0siPg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 72/95] USB: serial: whiteheat: fix potential slab corruption
-Date:   Mon,  4 Nov 2019 22:45:10 +0100
-Message-Id: <20191104212115.478466063@linuxfoundation.org>
+        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
+        Nicholas Bellinger <nab@linux-iscsi.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 74/95] scsi: target: cxgbit: Fix cxgbit_fw4_ack()
+Date:   Mon,  4 Nov 2019 22:45:12 +0100
+Message-Id: <20191104212116.495220657@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -58,35 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit 1251dab9e0a2c4d0d2d48370ba5baa095a5e8774 upstream.
+commit fc5b220b2dcf8b512d9bd46fd17f82257e49bf89 upstream.
 
-Fix a user-controlled slab buffer overflow due to a missing sanity check
-on the bulk-out transfer buffer used for control requests.
+Use the pointer 'p' after having tested that pointer instead of before.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191029102354.2733-2-johan@kernel.org
+Fixes: 5cadafb236df ("target/cxgbit: Fix endianness annotations")
+Cc: Varun Prakash <varun@chelsio.com>
+Cc: Nicholas Bellinger <nab@linux-iscsi.org>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191023202150.22173-1-bvanassche@acm.org
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/whiteheat.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/target/iscsi/cxgbit/cxgbit_cm.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/whiteheat.c
-+++ b/drivers/usb/serial/whiteheat.c
-@@ -575,6 +575,10 @@ static int firm_send_command(struct usb_
+--- a/drivers/target/iscsi/cxgbit/cxgbit_cm.c
++++ b/drivers/target/iscsi/cxgbit/cxgbit_cm.c
+@@ -1767,7 +1767,7 @@ static void cxgbit_fw4_ack(struct cxgbit
  
- 	command_port = port->serial->port[COMMAND_PORT];
- 	command_info = usb_get_serial_port_data(command_port);
-+
-+	if (command_port->bulk_out_size < datasize + 1)
-+		return -EIO;
-+
- 	mutex_lock(&command_info->mutex);
- 	command_info->command_finished = false;
+ 	while (credits) {
+ 		struct sk_buff *p = cxgbit_sock_peek_wr(csk);
+-		const u32 csum = (__force u32)p->csum;
++		u32 csum;
  
+ 		if (unlikely(!p)) {
+ 			pr_err("csk 0x%p,%u, cr %u,%u+%u, empty.\n",
+@@ -1776,6 +1776,7 @@ static void cxgbit_fw4_ack(struct cxgbit
+ 			break;
+ 		}
+ 
++		csum = (__force u32)p->csum;
+ 		if (unlikely(credits < csum)) {
+ 			pr_warn("csk 0x%p,%u, cr %u,%u+%u, < %u.\n",
+ 				csk,  csk->tid,
 
 
