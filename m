@@ -2,102 +2,113 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4671CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 383B5CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7552520848
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:23:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="fIkrS1D3"
+	by mail.kernel.org (Postfix) with ESMTP id 0F7C120848
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbfKDUX3 (ORCPT
+        id S1729436AbfKDUYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 15:23:29 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:44480 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728510AbfKDUX3 (ORCPT
+        Mon, 4 Nov 2019 15:24:12 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38848 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728510AbfKDUYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 15:23:29 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 907CE8365A;
-        Tue,  5 Nov 2019 09:23:24 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1572899004;
-        bh=LbFnKvc7CLUlS0furVCad1JHIwSt1C8lJgyb2pYnGXQ=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=fIkrS1D3gFfOdM4LUfxkrIp4KHIPaGBIf1on2HkaAzddlN7BmnYjU5MWgtCyr6mhT
-         y0w6pM/jHN210FbIZb2BlhSOoqC9s85ToxQbVbo1NAtlGhkDe9zVqdvXiEm5o1s+tR
-         6YhJBXbPRZThsLjr9jtFDh+Jny7oH/8SXopiJXZbpdTVBX2WTnAJ1XvWrv7Sqgl6No
-         7wdgdJoFXBt7mVklG8681BM78AxBpmw/zSwfKf4Jk+ykHw2ThrHkDEKz2oJqsZJlUP
-         TnEJ5Wq8vGIhZYxY4Mzaq2EvW0zKcVkWiA860EDYZ1Y8M8iC/imNGf3Aa/pXGK5mav
-         N06SVAXzNLo6A==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5dc088b90000>; Tue, 05 Nov 2019 09:23:25 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Tue, 5 Nov 2019 09:23:20 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Tue, 5 Nov 2019 09:23:20 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: spi-mem and gpio chipselects
-Thread-Topic: spi-mem and gpio chipselects
-Thread-Index: AQHVkqe/99KPV78Qa0mRy221SIO+EKd6HAYAgAB7fACAAASmAA==
-Date:   Mon, 4 Nov 2019 20:23:20 +0000
-Message-ID: <52aaa7364a0b40caf5f74817932de9e32d148772.camel@alliedtelesis.co.nz>
-References: <cbe69f5457c4dd1c2cc96a247c6c6fca61c0d43c.camel@alliedtelesis.co.nz>
-         <20191104124444.GB5238@sirena.co.uk>
-         <039edb7cdd9114ad7a14e27f869db6c85d756418.camel@alliedtelesis.co.nz>
-In-Reply-To: <039edb7cdd9114ad7a14e27f869db6c85d756418.camel@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:d0c9:dea8:da1e:f79e]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9A84ED40793E494085BDB02FBCBEA280@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Mon, 4 Nov 2019 15:24:11 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iRitR-0004xa-4U; Mon, 04 Nov 2019 21:24:05 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 791611C0017;
+        Mon,  4 Nov 2019 21:24:04 +0100 (CET)
+Date:   Mon, 04 Nov 2019 20:24:04 -0000
+From:   "tip-bot2 for Jiri Slaby" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/urgent] stacktrace: Don't skip first entry on noncurrent tasks
+Cc:     Jiri Slaby <jslaby@suse.cz>, Thomas Gleixner <tglx@linutronix.de>,
+        Michal Suchanek <msuchanek@suse.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191030072545.19462-1-jslaby@suse.cz>
+References: <20191030072545.19462-1-jslaby@suse.cz>
 MIME-Version: 1.0
+Message-ID: <157289904416.29376.6390821004707816453.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTExLTA1IGF0IDA5OjA2ICsxMzAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0K
-PiBPbiBNb24sIDIwMTktMTEtMDQgYXQgMTI6NDQgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
-ID4gT24gTW9uLCBOb3YgMDQsIDIwMTkgYXQgMTI6MzU6MjRBTSArMDAwMCwgQ2hyaXMgUGFja2hh
-bSB3cm90ZToNCj4gPiANCj4gPiA+IEknbSB3b3JraW5nIG9uIGEgcGxhdGZvcm0gdGhhdCBoYXMg
-YSBzbGlnaHRseSBjb21wbGljYXRlZCBzY2hlbWUgZm9yDQo+ID4gPiBTUEkgY2hpcC1zZWxlY3Rz
-IHVzaW5nIGdwaW9zWzFdLiBUaGUgc3BpIGNvbnRyb2xsZXIgZHJpdmVyIGluIHRoaXMgY2FzZQ0K
-PiA+ID4gc3VwcG9ydHMgdGhlIHNwaS1tZW0gb3BlcmF0aW9ucyB3aGljaCBhcHBlYXIgdG8gYnlw
-YXNzIHRoZSBnZW5lcmljDQo+ID4gPiBzcGlfc2V0X2NzKCkuDQo+ID4gPiBXb3VsZCB0aGVyZSBi
-ZSBhbnkgaGFybSBpbiBhZGRpbmcgY2FsbHMgdG8gc3BpX3NldF9jcygpIHRvIHNwaS1tZW0uYz8N
-Cj4gPiA+IE5haXZlbHkgc3BpX21lbV9hY2Nlc3Nfc3RhcnQoKSBhbmQgc3BpX21lbV9hY2Nlc3Nf
-ZW5kKCkgc2VlbSBsaWtlDQo+ID4gPiBjb252ZW5pZW50IHBsYWNlcyB0byBzdGFydC4NCj4gPiAN
-Cj4gPiBUaGF0J3Mgb25seSBnb2luZyB0byB3b3JrIGluIGNhc2VzIHdoZXJlIHRoZSBjb250cm9s
-bGVyIHRyYW5zbGF0ZXMNCj4gPiB0aGluZ3MgaW50byBhIHNpbmdsZSBTUEkgb3BlcmF0aW9uIG9u
-IHRoZSBmbGFzaCB3aGljaCBJJ20gbm90IHN1cmUgaXMNCj4gPiBhbHdheXMgZ29pbmcgdG8gYmUg
-dGhlIGNhc2UuICBXZSdkIG5lZWQgYSB3YXkgdG8gZ3VhcmFudGVlIHRoYXQgdGhlDQo+ID4gY29u
-dHJvbGxlciBpcyBnb2luZyB0byBkbyB0aGF0IGluIG9yZGVyIHRvIGF2b2lkIGRhdGEgY29ycnVw
-dGlvbiBpc3N1ZXMuDQo+IA0KPiBJbiBteSBwYXJ0aWN1bGFyIGNhc2UgKHNwaS1iY20tcXNwaS5j
-KSBiY21fcXNwaV9ic3BpX2V4ZWNfbWVtX29wKCkgZG9lcw0KPiBzZWVtIHRvIGFzc2VydCB0aGUg
-bmF0aXZlIGNoaXAtc2VsZWN0IHRoZW4gZG8gaXQncyBvcGVyYXRpb24uIEFzIEkNCj4gdW5kZXJz
-dGFuZCB0aGUgd2FpdF9mb3JfY29tcGxldGlvbl90aW1lb3V0KCkgd2lsbCBzY2hlZHVsZSBzbyBv
-dGhlcg0KPiB0YXNrcyBtYXkgcnVuIGJ1dCBzcGlfbWVtX2FjY2Vzc19zdGFydCgpIGhhcyB0YWtl
-biBhbiBpb19tdXRleCBzbw0KPiBhbnl0aGluZyB0aGF0IGFjY2Vzc2VzIHRoYXQgc3BpIGJ1cyB3
-aWxsIGJsb2NrLg0KDQpJZiB3ZSBkbyBkZWNpZGUgdGhhdCBzcGktbWVtIG9wcyBhbmQgY3NfZ3Bp
-b3MgYXJlIGluY29tcGF0aWJsZSB3ZSBjb3VsZA0KcHJvYmFibHkgZG8gc29tZXRoaW5nIHRoYXQg
-ZGlzYWJsZXMgdGhlIG9wcyBzbyB0aGF0IHRoZSBzcGkgY29kZSBmYWxscw0KYmFjayB0byB1c2lu
-ZyBzcGlfdHJhbnNmZXIuDQo=
+The following commit has been merged into the core/urgent branch of tip:
+
+Commit-ID:     b0c51f158455e31d5024100cf3580fcd88214b0e
+Gitweb:        https://git.kernel.org/tip/b0c51f158455e31d5024100cf3580fcd88214b0e
+Author:        Jiri Slaby <jslaby@suse.cz>
+AuthorDate:    Wed, 30 Oct 2019 08:25:45 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 04 Nov 2019 21:19:25 +01:00
+
+stacktrace: Don't skip first entry on noncurrent tasks
+
+When doing cat /proc/<PID>/stack, the output is missing the first entry.
+When the current code walks the stack starting in stack_trace_save_tsk,
+it skips all scheduler functions (that's OK) plus one more function. But
+this one function should be skipped only for the 'current' task as it is
+stack_trace_save_tsk proper.
+
+The original code (before the common infrastructure) skipped one
+function only for the 'current' task -- see save_stack_trace_tsk before
+3599fe12a125. So do so also in the new infrastructure now.
+
+Fixes: 214d8ca6ee85 ("stacktrace: Provide common infrastructure")
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Michal Suchanek <msuchanek@suse.de>
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://lkml.kernel.org/r/20191030072545.19462-1-jslaby@suse.cz
+
+---
+ kernel/stacktrace.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+index 6d1f68b..c9ea7eb 100644
+--- a/kernel/stacktrace.c
++++ b/kernel/stacktrace.c
+@@ -141,7 +141,8 @@ unsigned int stack_trace_save_tsk(struct task_struct *tsk, unsigned long *store,
+ 	struct stacktrace_cookie c = {
+ 		.store	= store,
+ 		.size	= size,
+-		.skip	= skipnr + 1,
++		/* skip this function if they are tracing us */
++		.skip	= skipnr + !!(current == tsk),
+ 	};
+ 
+ 	if (!try_get_task_stack(tsk))
+@@ -298,7 +299,8 @@ unsigned int stack_trace_save_tsk(struct task_struct *task,
+ 	struct stack_trace trace = {
+ 		.entries	= store,
+ 		.max_entries	= size,
+-		.skip		= skipnr + 1,
++		/* skip this function if they are tracing us */
++		.skip	= skipnr + !!(current == task),
+ 	};
+ 
+ 	save_stack_trace_tsk(task, &trace);
