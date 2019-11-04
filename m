@@ -5,62 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E12CCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C17CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63626217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858A6217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904311;
-	bh=7SOk7tiTVGhBb6vH7JX2MPjaoKS77atUxG4Pvnesje8=;
+	s=default; t=1572904316;
+	bh=3jd1QXiIJq7pwdxdFPxZxL35hTozreZSrHTnwM13H/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JPl0ZH+Squ7ExchbpBKwOFgNEXD8KnMdkW7z5jqsHQiIOIWwhj4vz546v+cPmJC7T
-	 ESr5228y4B/96PwWXqUWD09ZaAHpWi5R9hIoyfHe8nA5YrQQYYw8eJBAi3A8NxLcNp
-	 RaR0pMVQ7QvDTUCX6n4s6aUupkF1F6iTpylmr5vA=
+	b=OHvLNuHw3BQZcAp8i4EZKXrqdUTQiY7kN0D0/rMRYrwASIPbLXE/5cqxw+gTLfLLQ
+	 bgxzUrIHJxuWX6J5F3QA4Sj16q5g47gxPUvBFaeV0dOiCGheRdTqDfqt41Rz9koDuH
+	 6LVq/owQ2nHwfMVPzhScAtuC3HnUEGlNMee7BdXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730621AbfKDVvu (ORCPT
+        id S1730634AbfKDVvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:51:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44700 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:51:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730586AbfKDVvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:51:42 -0500
+        id S1730616AbfKDVvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:51:49 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83966217F4;
-        Mon,  4 Nov 2019 21:51:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6166217F5;
+        Mon,  4 Nov 2019 21:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904301;
-        bh=7SOk7tiTVGhBb6vH7JX2MPjaoKS77atUxG4Pvnesje8=;
+        s=default; t=1572904308;
+        bh=3jd1QXiIJq7pwdxdFPxZxL35hTozreZSrHTnwM13H/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yhsn17oKveR0alrrhaEivNSxqTyjDgd7CkVZs5Q8i2rAT0oKv2LOveBPgel/oGBpU
-         8+nWgG79agc0GhZPFJj34cp6syBol9eX5Vz+gjqlGYXDTrICDBuxcNE1DsceZ6qZSj
-         8lrljci4C2IAvd1OVnoaTaMFJ3JSxte6gaFUePrk=
+        b=pjtlbtxU9YfMjUoYoq4d91Xn5oByg13R4vssd7cmbYehFSbfauwWJ39DTAHXSLu8K
+         RziDHMsKHFxtyzDXxE1dWkaFyOEMU4eQAZpyJD0U86hZ0xKEeBYDyrmdcUGQ5tnTTM
+         shC7YWU5jtFHAh6DYjEfeCdPcrHVNp/DIns85GSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Dave Young <dyoung@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Octavian Purdila <octavian.purdila@intel.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Scott Talbert <swt@techie.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 21/62] efi/cper: Fix endianness of PCIe class code
-Date:   Mon,  4 Nov 2019 22:44:43 +0100
-Message-Id: <20191104211921.182137135@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 59/62] ALSA: timer: Follow standard EXPORT_SYMBOL() declarations
+Date:   Mon,  4 Nov 2019 22:45:21 +0100
+Message-Id: <20191104211959.358824279@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -73,59 +59,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 6fb9367a15d1a126d222d738b2702c7958594a5f ]
+[ Upstream commit 988563929d5b65c021439880ac6bd1b207722f26 ]
 
-The CPER parser assumes that the class code is big endian, but at least
-on this edk2-derived Intel Purley platform it's little endian:
+Just a tidy up to follow the standard EXPORT_SYMBOL*() declarations
+in order to improve grep-ability.
 
-    efi: EFI v2.50 by EDK II BIOS ID:PLYDCRB1.86B.0119.R05.1701181843
-    DMI: Intel Corporation PURLEY/PURLEY, BIOS PLYDCRB1.86B.0119.R05.1701181843 01/18/2017
+- Move EXPORT_SYMBOL*() to the position right after its definition
 
-    {1}[Hardware Error]:   device_id: 0000:5d:00.0
-    {1}[Hardware Error]:   slot: 0
-    {1}[Hardware Error]:   secondary_bus: 0x5e
-    {1}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x2030
-    {1}[Hardware Error]:   class_code: 000406
-                                       ^^^^^^ (should be 060400)
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Matthew Garrett <mjg59@google.com>
-Cc: Octavian Purdila <octavian.purdila@intel.com>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Scott Talbert <swt@techie.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191002165904.8819-2-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/cper.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/timer.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-index f40f7df4b7344..c0e54396f2502 100644
---- a/drivers/firmware/efi/cper.c
-+++ b/drivers/firmware/efi/cper.c
-@@ -375,7 +375,7 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
- 		printk("%s""vendor_id: 0x%04x, device_id: 0x%04x\n", pfx,
- 		       pcie->device_id.vendor_id, pcie->device_id.device_id);
- 		p = pcie->device_id.class_code;
--		printk("%s""class_code: %02x%02x%02x\n", pfx, p[0], p[1], p[2]);
-+		printk("%s""class_code: %02x%02x%02x\n", pfx, p[2], p[1], p[0]);
+diff --git a/sound/core/timer.c b/sound/core/timer.c
+index 152254193c697..cfcc6718aafce 100644
+--- a/sound/core/timer.c
++++ b/sound/core/timer.c
+@@ -318,6 +318,7 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 	*ti = timeri;
+ 	return 0;
+ }
++EXPORT_SYMBOL(snd_timer_open);
+ 
+ /*
+  * close a timer instance
+@@ -383,6 +384,7 @@ int snd_timer_close(struct snd_timer_instance *timeri)
+ 	mutex_unlock(&register_mutex);
+ 	return 0;
+ }
++EXPORT_SYMBOL(snd_timer_close);
+ 
+ unsigned long snd_timer_resolution(struct snd_timer_instance *timeri)
+ {
+@@ -397,6 +399,7 @@ unsigned long snd_timer_resolution(struct snd_timer_instance *timeri)
  	}
- 	if (pcie->validation_bits & CPER_PCIE_VALID_SERIAL_NUMBER)
- 		printk("%s""serial number: 0x%04x, 0x%04x\n", pfx,
+ 	return 0;
+ }
++EXPORT_SYMBOL(snd_timer_resolution);
+ 
+ static void snd_timer_notify1(struct snd_timer_instance *ti, int event)
+ {
+@@ -588,6 +591,7 @@ int snd_timer_start(struct snd_timer_instance *timeri, unsigned int ticks)
+ 	else
+ 		return snd_timer_start1(timeri, true, ticks);
+ }
++EXPORT_SYMBOL(snd_timer_start);
+ 
+ /*
+  * stop the timer instance.
+@@ -601,6 +605,7 @@ int snd_timer_stop(struct snd_timer_instance *timeri)
+ 	else
+ 		return snd_timer_stop1(timeri, true);
+ }
++EXPORT_SYMBOL(snd_timer_stop);
+ 
+ /*
+  * start again..  the tick is kept.
+@@ -616,6 +621,7 @@ int snd_timer_continue(struct snd_timer_instance *timeri)
+ 	else
+ 		return snd_timer_start1(timeri, false, 0);
+ }
++EXPORT_SYMBOL(snd_timer_continue);
+ 
+ /*
+  * pause.. remember the ticks left
+@@ -627,6 +633,7 @@ int snd_timer_pause(struct snd_timer_instance * timeri)
+ 	else
+ 		return snd_timer_stop1(timeri, false);
+ }
++EXPORT_SYMBOL(snd_timer_pause);
+ 
+ /*
+  * reschedule the timer
+@@ -808,6 +815,7 @@ void snd_timer_interrupt(struct snd_timer * timer, unsigned long ticks_left)
+ 	if (use_tasklet)
+ 		tasklet_schedule(&timer->task_queue);
+ }
++EXPORT_SYMBOL(snd_timer_interrupt);
+ 
+ /*
+ 
+@@ -858,6 +866,7 @@ int snd_timer_new(struct snd_card *card, char *id, struct snd_timer_id *tid,
+ 		*rtimer = timer;
+ 	return 0;
+ }
++EXPORT_SYMBOL(snd_timer_new);
+ 
+ static int snd_timer_free(struct snd_timer *timer)
+ {
+@@ -977,6 +986,7 @@ void snd_timer_notify(struct snd_timer *timer, int event, struct timespec *tstam
+ 	}
+ 	spin_unlock_irqrestore(&timer->lock, flags);
+ }
++EXPORT_SYMBOL(snd_timer_notify);
+ 
+ /*
+  * exported functions for global timers
+@@ -992,11 +1002,13 @@ int snd_timer_global_new(char *id, int device, struct snd_timer **rtimer)
+ 	tid.subdevice = 0;
+ 	return snd_timer_new(NULL, id, &tid, rtimer);
+ }
++EXPORT_SYMBOL(snd_timer_global_new);
+ 
+ int snd_timer_global_free(struct snd_timer *timer)
+ {
+ 	return snd_timer_free(timer);
+ }
++EXPORT_SYMBOL(snd_timer_global_free);
+ 
+ int snd_timer_global_register(struct snd_timer *timer)
+ {
+@@ -1006,6 +1018,7 @@ int snd_timer_global_register(struct snd_timer *timer)
+ 	dev.device_data = timer;
+ 	return snd_timer_dev_register(&dev);
+ }
++EXPORT_SYMBOL(snd_timer_global_register);
+ 
+ /*
+  *  System timer
+@@ -2121,17 +2134,3 @@ static void __exit alsa_timer_exit(void)
+ 
+ module_init(alsa_timer_init)
+ module_exit(alsa_timer_exit)
+-
+-EXPORT_SYMBOL(snd_timer_open);
+-EXPORT_SYMBOL(snd_timer_close);
+-EXPORT_SYMBOL(snd_timer_resolution);
+-EXPORT_SYMBOL(snd_timer_start);
+-EXPORT_SYMBOL(snd_timer_stop);
+-EXPORT_SYMBOL(snd_timer_continue);
+-EXPORT_SYMBOL(snd_timer_pause);
+-EXPORT_SYMBOL(snd_timer_new);
+-EXPORT_SYMBOL(snd_timer_notify);
+-EXPORT_SYMBOL(snd_timer_global_new);
+-EXPORT_SYMBOL(snd_timer_global_free);
+-EXPORT_SYMBOL(snd_timer_global_register);
+-EXPORT_SYMBOL(snd_timer_interrupt);
 -- 
 2.20.1
 
