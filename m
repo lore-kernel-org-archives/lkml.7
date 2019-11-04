@@ -2,151 +2,153 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE60CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7ECCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A3A2080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:51:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572886313;
-	bh=ZmHGadF8VrETaBFi+B+Z6MDGAsQZ0t9Gj/4iezFDasU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0FWpgM9RY0DSY6nj8l7xv8twSHqWxTGyV/0FSUG2qzHf0XRFuVnQx5bUutc3Bum3X
-	 cGn+U1Uogk1FfVArIokyWujKjzGUzdxyLNgbNFowYdgd1TrtR3VBsesULBUp7KUHVM
-	 TS3YudsT5ApSr19ZjBonLgkYUVg5NvSteIGg5OK4=
+	by mail.kernel.org (Postfix) with ESMTP id 5CB1A20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:52:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WSLa2wKr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbfKDQvw (ORCPT
+        id S1729275AbfKDQwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 11:51:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728482AbfKDQvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 11:51:51 -0500
-Received: from localhost (host6-102.lan-isdn.imaginet.fr [195.68.6.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 4 Nov 2019 11:52:37 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52277 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728827AbfKDQwg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 11:52:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572886356;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6ta56jBRT26o2oAigonInJcC04rruT/2d6fabGOKHyw=;
+        b=WSLa2wKrL8g5aDyoDf02O4k+crqcoTXsQ2EKqq2n6FzaTjqceXHOvCayOCIR1bb5K9cevY
+        4X65fFvcBOCVsRohJoclItex595rU3tYdNhZDQ5rVUFYp7EKSwdA9oE4gxRYhiG3A8fEqR
+        fFQB7XsZgwY/SgZNM9uNmH3+34EtSUE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-285-9yNyzIkfPeqtWSV5Ovvavg-1; Mon, 04 Nov 2019 11:52:32 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61A772080F;
-        Mon,  4 Nov 2019 16:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572886311;
-        bh=ZmHGadF8VrETaBFi+B+Z6MDGAsQZ0t9Gj/4iezFDasU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qVUFC0x9QvBB6c7Za3K5mBIEw+ZH7xtUz3kovv0i72+I9G4zU3GDixfLyhghR7VJQ
-         wQYkEojIK2stVJQFPjsEd5u6xAzGlGRwlUI3tVpbK0SpOcXjDEPsSHHCYY9QmCTNid
-         Wi5VJnwkLplkT55ISaydRIrptKkjA0RgWMVbTvwA=
-Date:   Mon, 4 Nov 2019 17:51:48 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rts5208: rewrite macro with GNU extension
- __auto_type
-Message-ID: <20191104165148.GA2293059@kroah.com>
-References: <20191104164400.9935-1-jbi.octave@gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8FC0C800C73;
+        Mon,  4 Nov 2019 16:52:28 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3A10B5C1B2;
+        Mon,  4 Nov 2019 16:52:23 +0000 (UTC)
+Date:   Mon, 4 Nov 2019 11:52:21 -0500
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 03/18] goldish_pipe: rename local pin_user_pages()
+ routine
+Message-ID: <20191104165221.GC5134@redhat.com>
+References: <20191103211813.213227-1-jhubbard@nvidia.com>
+ <20191103211813.213227-4-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20191103211813.213227-4-jhubbard@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: 9yNyzIkfPeqtWSV5Ovvavg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191104164400.9935-1-jbi.octave@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 04:44:00PM +0000, Jules Irenge wrote:
-> Rewrite macro function with GNU extension __auto_type
-> to remove issue detected by checkpatch tool.
-> CHECK: MACRO argument reuse - possible side-effects?
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+On Sun, Nov 03, 2019 at 01:17:58PM -0800, John Hubbard wrote:
+> 1. Avoid naming conflicts: rename local static function from
+> "pin_user_pages()" to "pin_goldfish_pages()".
+>=20
+> An upcoming patch will introduce a global pin_user_pages()
+> function.
+>=20
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+
+Reviewed-by: J=E9r=F4me Glisse <jglisse@redhat.com>
+
 > ---
->  drivers/staging/rts5208/rtsx_chip.h | 92 +++++++++++++++++------------
->  1 file changed, 55 insertions(+), 37 deletions(-)
-> 
-> diff --git a/drivers/staging/rts5208/rtsx_chip.h b/drivers/staging/rts5208/rtsx_chip.h
-> index bac65784d4a1..4b986d5c68da 100644
-> --- a/drivers/staging/rts5208/rtsx_chip.h
-> +++ b/drivers/staging/rts5208/rtsx_chip.h
-> @@ -386,23 +386,31 @@ struct zone_entry {
->  
->  /* SD card */
->  #define CHK_SD(sd_card)			(((sd_card)->sd_type & 0xFF) == TYPE_SD)
-> -#define CHK_SD_HS(sd_card)		(CHK_SD(sd_card) && \
-> -					 ((sd_card)->sd_type & SD_HS))
-> -#define CHK_SD_SDR50(sd_card)		(CHK_SD(sd_card) && \
-> -					 ((sd_card)->sd_type & SD_SDR50))
-> -#define CHK_SD_DDR50(sd_card)		(CHK_SD(sd_card) && \
-> -					 ((sd_card)->sd_type & SD_DDR50))
-> -#define CHK_SD_SDR104(sd_card)		(CHK_SD(sd_card) && \
-> -					 ((sd_card)->sd_type & SD_SDR104))
-> -#define CHK_SD_HCXC(sd_card)		(CHK_SD(sd_card) && \
-> -					 ((sd_card)->sd_type & SD_HCXC))
-> -#define CHK_SD_HC(sd_card)		(CHK_SD_HCXC(sd_card) && \
-> -					 ((sd_card)->capacity <= 0x4000000))
-> -#define CHK_SD_XC(sd_card)		(CHK_SD_HCXC(sd_card) && \
-> -					 ((sd_card)->capacity > 0x4000000))
-> -#define CHK_SD30_SPEED(sd_card)		(CHK_SD_SDR50(sd_card) || \
-> -					 CHK_SD_DDR50(sd_card) || \
-> -					 CHK_SD_SDR104(sd_card))
-> +#define CHK_SD_HS(sd_card)\
-> +	({__auto_type _sd = sd_card; CHK_SD(_sd) && \
-> +					 (_sd->sd_type & SD_HS); })
-> +#define CHK_SD_SDR50(sd_card)\
-> +	({__auto_type _sd = sd_card; CHK_SD(_sd) && \
-> +					 (_sd->sd_type & SD_SDR50); })
-> +#define CHK_SD_DDR50(sd_card)\
-> +	({__auto_type _sd = sd_card; CHK_SD(_sd) && \
-> +					 (_sd->sd_type & SD_DDR50); })
-> +#define CHK_SD_SDR104(sd_card)\
-> +	({__auto_type _sd = sd_card; CHK_SD(_sd) && \
-> +					 (_sd->sd_type & SD_SDR104); })
-> +#define CHK_SD_HCXC(sd_card)\
-> +	({__auto_type _sd = sd_card; CHK_SD(_sd) && \
-> +					 (_sd->sd_type & SD_HCXC); })
-> +#define CHK_SD_HC(sd_card)\
-> +	({__auto_type _sd = sd_card; CHK_SD_HCXC(_sd) && \
-> +					(_sd->capacity <= 0x4000000); })
-> +#define CHK_SD_XC(sd_card)\
-> +	({__auto_type _sd = sd_card; CHK_SD_HCXC(_sd) && \
-> +					 (_sd->capacity > 0x4000000); })
-> +#define CHK_SD30_SPEED(sd_card)\
-> +	({__auto_type _sd = sd_card; CHK_SD_SDR50(_sd) || \
-> +					CHK_SD_DDR50(_sd) || \
-> +					CHK_SD_SDR104(_sd); })
->  
->  #define SET_SD(sd_card)			((sd_card)->sd_type = TYPE_SD)
->  #define SET_SD_HS(sd_card)		((sd_card)->sd_type |= SD_HS)
-> @@ -420,18 +428,24 @@ struct zone_entry {
->  /* MMC card */
->  #define CHK_MMC(sd_card)		(((sd_card)->sd_type & 0xFF) == \
->  					 TYPE_MMC)
-> -#define CHK_MMC_26M(sd_card)		(CHK_MMC(sd_card) && \
-> -					 ((sd_card)->sd_type & MMC_26M))
-> -#define CHK_MMC_52M(sd_card)		(CHK_MMC(sd_card) && \
-> -					 ((sd_card)->sd_type & MMC_52M))
-> -#define CHK_MMC_4BIT(sd_card)		(CHK_MMC(sd_card) && \
-> -					 ((sd_card)->sd_type & MMC_4BIT))
-> -#define CHK_MMC_8BIT(sd_card)		(CHK_MMC(sd_card) && \
-> -					 ((sd_card)->sd_type & MMC_8BIT))
-> -#define CHK_MMC_SECTOR_MODE(sd_card)	(CHK_MMC(sd_card) && \
-> -					 ((sd_card)->sd_type & MMC_SECTOR_MODE))
-> -#define CHK_MMC_DDR52(sd_card)		(CHK_MMC(sd_card) && \
-> -					 ((sd_card)->sd_type & MMC_DDR52))
-> +#define CHK_MMC_26M(sd_card)\
-> +	({__auto_type _sd = sd_card; CHK_MMC(_sd) && \
-> +					 (_sd->sd_type & MMC_26M); })
+>  drivers/platform/goldfish/goldfish_pipe.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/drivers/platform/goldfish/goldfish_pipe.c b/drivers/platform=
+/goldfish/goldfish_pipe.c
+> index cef0133aa47a..7ed2a21a0bac 100644
+> --- a/drivers/platform/goldfish/goldfish_pipe.c
+> +++ b/drivers/platform/goldfish/goldfish_pipe.c
+> @@ -257,12 +257,12 @@ static int goldfish_pipe_error_convert(int status)
+>  =09}
+>  }
+> =20
+> -static int pin_user_pages(unsigned long first_page,
+> -=09=09=09  unsigned long last_page,
+> -=09=09=09  unsigned int last_page_size,
+> -=09=09=09  int is_write,
+> -=09=09=09  struct page *pages[MAX_BUFFERS_PER_COMMAND],
+> -=09=09=09  unsigned int *iter_last_page_size)
+> +static int pin_goldfish_pages(unsigned long first_page,
+> +=09=09=09      unsigned long last_page,
+> +=09=09=09      unsigned int last_page_size,
+> +=09=09=09      int is_write,
+> +=09=09=09      struct page *pages[MAX_BUFFERS_PER_COMMAND],
+> +=09=09=09      unsigned int *iter_last_page_size)
+>  {
+>  =09int ret;
+>  =09int requested_pages =3D ((last_page - first_page) >> PAGE_SHIFT) + 1;
+> @@ -354,9 +354,9 @@ static int transfer_max_buffers(struct goldfish_pipe =
+*pipe,
+>  =09if (mutex_lock_interruptible(&pipe->lock))
+>  =09=09return -ERESTARTSYS;
+> =20
+> -=09pages_count =3D pin_user_pages(first_page, last_page,
+> -=09=09=09=09     last_page_size, is_write,
+> -=09=09=09=09     pipe->pages, &iter_last_page_size);
+> +=09pages_count =3D pin_goldfish_pages(first_page, last_page,
+> +=09=09=09=09=09 last_page_size, is_write,
+> +=09=09=09=09=09 pipe->pages, &iter_last_page_size);
+>  =09if (pages_count < 0) {
+>  =09=09mutex_unlock(&pipe->lock);
+>  =09=09return pages_count;
+> --=20
+> 2.23.0
+>=20
 
-Ick, no.  These are obviously pointers, which can not be "evaluated
-twice" so this whole thing is just fine.
-
-checkpatch is just a "hint" that you might want to look at the code.
-This stuff is just fine, look at how it is being used for proof of that.
-
-thanks,
-
-greg k-h
