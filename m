@@ -2,115 +2,191 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E57CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283BECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B8D21D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:25:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="dwedyjHK"
+	by mail.kernel.org (Postfix) with ESMTP id 048B121D81
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:27:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbfKDKZK (ORCPT
+        id S1728368AbfKDK1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:25:10 -0500
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:24612 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726364AbfKDKZJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 05:25:09 -0500
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA4ALRb2015346;
-        Mon, 4 Nov 2019 04:24:09 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=tvEWxqudKUEtH3GCNHkkswnAVX+cybOK1dy7cUIDNZ4=;
- b=dwedyjHKJjs1sQ4mraF9ntTeJ/ZRG2skmM3Cpt/aucD8c/CC7KobLL2YLIOFAeZFEXd/
- tx4BRbzTc7tpyFEVYLw4Sve7xLhVQI43R4XLz1MIARJkJQuMm5YFY8aRiZ5SkaDnTsCq
- 9ejJ8HDuVTzg6eNuvGNZQj5u5Oq9IN6ygbFilueEnx6XwA90S4v9lDxanFqvbhCZnNjt
- 7mWEl2RoYukNGIqL4I9D9YXPbZnsGDF3K8l8bCDx/OZBy7gUl9ILVUvNX/WaI4fbbNTj
- f6R4ivjBeLtEoPWZSXRq+1z3Tifij31OG0IeykgzAqrQS08auRHfJD9yQ1mak5a4C2ws Vw== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2w1772t23t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 04 Nov 2019 04:24:09 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 4 Nov
- 2019 10:24:07 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Mon, 4 Nov 2019 10:24:07 +0000
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 100392C3;
-        Mon,  4 Nov 2019 10:24:07 +0000 (UTC)
-Date:   Mon, 4 Nov 2019 10:24:07 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     "S.j. Wang" <shengjiu.wang@nxp.com>
-CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "info@metux.net" <info@metux.net>,
-        "patches@opensource.cirrus.com" <patches@opensource.cirrus.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ASoC: wm8524: Add support S32_LE
-Message-ID: <20191104102407.GH31391@ediswmail.ad.cirrus.com>
-References: <20191101063349.32222-1-shengjiu.wang@nxp.com>
+        Mon, 4 Nov 2019 05:27:24 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42120 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727499AbfKDK1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 05:27:23 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8E75C6DF7F8F51AADF68;
+        Mon,  4 Nov 2019 18:27:21 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 4 Nov 2019 18:27:14 +0800
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     yuqi jin <jinyuqi@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>
+Subject: [PATCH v2] lib: optimize cpumask_local_spread()
+Date:   Mon, 4 Nov 2019 18:27:48 +0800
+Message-ID: <1572863268-28585-1-git-send-email-zhangshaokun@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191101063349.32222-1-shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 impostorscore=0
- lowpriorityscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0
- spamscore=0 clxscore=1011 bulkscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
- definitions=main-1911040103
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 06:34:54AM +0000, S.j. Wang wrote:
-> Allow 32bit sample with this codec.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
->  sound/soc/codecs/wm8524.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/sound/soc/codecs/wm8524.c b/sound/soc/codecs/wm8524.c
-> index 91e3d1570c45..4e9ab542f648 100644
-> --- a/sound/soc/codecs/wm8524.c
-> +++ b/sound/soc/codecs/wm8524.c
-> @@ -159,7 +159,9 @@ static int wm8524_mute_stream(struct snd_soc_dai *dai, int mute, int stream)
->  
->  #define WM8524_RATES SNDRV_PCM_RATE_8000_192000
->  
-> -#define WM8524_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE)
-> +#define WM8524_FORMATS (SNDRV_PCM_FMTBIT_S16_LE |\
-> +			SNDRV_PCM_FMTBIT_S24_LE |\
-> +			SNDRV_PCM_FMTBIT_S32_LE)
->  
+From: yuqi jin <jinyuqi@huawei.com>
 
-The device doesn't actually support 32bit though, I guess it will
-ignore the extra LSBs so it should work. But is that really
-supporting 32 bit?
+In the multi-processor and NUMA system, I/O device may have many numa
+nodes belonging to multiple cpus. When we get a local numa, it is
+better to find the node closest to the local numa node, instead
+of choosing any online cpu immediately.
 
-Thanks,
-Charles
+For the current code, it only considers the local NUMA node and it
+doesn't compute the distances between different NUMA nodes for the
+non-local NUMA nodes. Let's optimize it and find the nearest node
+through NUMA distance. The performance will be better if it return
+the nearest node than the random node.
+
+When Parameter Server workload is tested using NIC device on Huawei
+Kunpeng 920 SoC:
+Without the patch, the performance is 22W QPS;
+Added this patch, the performance become better and it is 26W QPS.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: yuqi jin <jinyuqi@huawei.com>
+Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+---
+ lib/cpumask.c | 93 +++++++++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 81 insertions(+), 12 deletions(-)
+
+diff --git a/lib/cpumask.c b/lib/cpumask.c
+index 0cb672eb107c..15d8940f32a8 100644
+--- a/lib/cpumask.c
++++ b/lib/cpumask.c
+@@ -192,18 +192,39 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
+ }
+ #endif
+ 
+-/**
+- * cpumask_local_spread - select the i'th cpu with local numa cpu's first
+- * @i: index number
+- * @node: local numa_node
+- *
+- * This function selects an online CPU according to a numa aware policy;
+- * local cpus are returned first, followed by non-local ones, then it
+- * wraps around.
+- *
+- * It's not very efficient, but useful for setup.
+- */
+-unsigned int cpumask_local_spread(unsigned int i, int node)
++static void calc_node_distance(int *node_dist, int node)
++{
++	int i;
++
++	for (i = 0; i < nr_node_ids; i++)
++		node_dist[i] = node_distance(node, i);
++}
++
++static int find_nearest_node(int *node_dist, bool *used)
++{
++	int i, min_dist = node_dist[0], node_id = -1;
++
++	/* Choose the first unused node to compare */
++	for (i = 0; i < nr_node_ids; i++) {
++		if (used[i] == 0) {
++			min_dist = node_dist[i];
++			node_id = i;
++			break;
++		}
++	}
++
++	/* Compare and return the nearest node */
++	for (i = 0; i < nr_node_ids; i++) {
++		if (node_dist[i] < min_dist && used[i] == 0) {
++			min_dist = node_dist[i];
++			node_id = i;
++		}
++	}
++
++	return node_id;
++}
++
++static unsigned int __cpumask_local_spread(unsigned int i, int node)
+ {
+ 	int cpu;
+ 
+@@ -231,4 +252,52 @@ unsigned int cpumask_local_spread(unsigned int i, int node)
+ 	}
+ 	BUG();
+ }
++
++/**
++ * cpumask_local_spread - select the i'th cpu with local numa cpu's first
++ * @i: index number
++ * @node: local numa_node
++ *
++ * This function selects an online CPU according to a numa aware policy;
++ * local cpus are returned first, followed by the nearest non-local ones,
++ * then it wraps around.
++ *
++ * It's not very efficient, but useful for setup.
++ */
++unsigned int cpumask_local_spread(unsigned int i, int node)
++{
++	int node_dist[MAX_NUMNODES] = {0};
++	bool used[MAX_NUMNODES] = {0};
++	int cpu, j, id;
++
++	/* Wrap: we always want a cpu. */
++	i %= num_online_cpus();
++
++	if (node == NUMA_NO_NODE) {
++		for_each_cpu(cpu, cpu_online_mask)
++			if (i-- == 0)
++				return cpu;
++	} else {
++		if (nr_node_ids > MAX_NUMNODES)
++			return __cpumask_local_spread(i, node);
++
++		calc_node_distance(node_dist, node);
++		for (j = 0; j < nr_node_ids; j++) {
++			id = find_nearest_node(node_dist, used);
++			if (id < 0)
++				break;
++
++			for_each_cpu_and(cpu, cpumask_of_node(id),
++					 cpu_online_mask)
++				if (i-- == 0)
++					return cpu;
++			used[id] = 1;
++		}
++
++		for_each_cpu(cpu, cpu_online_mask)
++			if (i-- == 0)
++				return cpu;
++	}
++	BUG();
++}
+ EXPORT_SYMBOL(cpumask_local_spread);
+-- 
+2.7.4
+
