@@ -4,33 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 465D9CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D01B7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA9621D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2EE120578
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:45:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728603AbfKDKpf (ORCPT
+        id S1728631AbfKDKpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:45:35 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45102 "EHLO mx1.suse.de"
+        Mon, 4 Nov 2019 05:45:46 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45088 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727663AbfKDKpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727607AbfKDKpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 Nov 2019 05:45:24 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E6E61B1D8;
+        by mx1.suse.de (Postfix) with ESMTP id C3D4BB1D5;
         Mon,  4 Nov 2019 10:45:22 +0000 (UTC)
 From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
 To:     Ralf Baechle <ralf@linux-mips.org>,
         "David S. Miller" <davem@davemloft.net>,
         linux-mips@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [net v3 5/5] net: sgi: ioc3-eth: ensure tx ring is 16k aligned.
-Date:   Mon,  4 Nov 2019 11:45:15 +0100
-Message-Id: <20191104104515.7066-5-tbogendoerfer@suse.de>
+Cc:     Christoph Hellwig <hch@lst.de>
+Subject: [net v3 4/5] net: sgi: ioc3-eth: fix setting NETIF_F_HIGHDMA
+Date:   Mon,  4 Nov 2019 11:45:14 +0100
+Message-Id: <20191104104515.7066-4-tbogendoerfer@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191104104515.7066-1-tbogendoerfer@suse.de>
 References: <20191104104515.7066-1-tbogendoerfer@suse.de>
@@ -39,65 +41,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IOC3 hardware needs a 16k aligned TX ring.
+From: Christoph Hellwig <hch@lst.de>
 
+Set NETIF_F_HIGHDMA together with the NETIF_F_IP_CSUM flag instead of
+letting the second assignment overwrite it.  Probably doesn't matter
+in practice as none of the systems an IOC3 is usually found in has
+highmem to start with.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 ---
- drivers/net/ethernet/sgi/ioc3-eth.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/sgi/ioc3-eth.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
-index 1af68826810a..d242906ae233 100644
+index dc2e22652b55..1af68826810a 100644
 --- a/drivers/net/ethernet/sgi/ioc3-eth.c
 +++ b/drivers/net/ethernet/sgi/ioc3-eth.c
-@@ -89,6 +89,7 @@ struct ioc3_private {
- 	struct device *dma_dev;
- 	u32 *ssram;
- 	unsigned long *rxr;		/* pointer to receiver ring */
-+	void *tx_ring;
- 	struct ioc3_etxd *txr;
- 	dma_addr_t rxr_dma;
- 	dma_addr_t txr_dma;
-@@ -1236,13 +1237,16 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+@@ -1192,8 +1192,6 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		goto out_disable;
  	}
  
- 	/* Allocate tx rings.  16kb = 128 bufs, must be 16kb aligned  */
--	ip->txr = dma_alloc_coherent(ip->dma_dev, TX_RING_SIZE, &ip->txr_dma,
--				     GFP_KERNEL);
--	if (!ip->txr) {
-+	ip->tx_ring = dma_alloc_coherent(ip->dma_dev, TX_RING_SIZE + SZ_16K - 1,
-+					 &ip->txr_dma, GFP_KERNEL);
-+	if (!ip->tx_ring) {
- 		pr_err("ioc3-eth: tx ring allocation failed\n");
- 		err = -ENOMEM;
- 		goto out_stop;
- 	}
-+	/* Align TX ring */
-+	ip->txr = PTR_ALIGN(ip->tx_ring, SZ_16K);
-+	ip->txr_dma = ALIGN(ip->txr_dma, SZ_16K);
+-	dev->features |= NETIF_F_HIGHDMA;
+-
+ 	err = pci_request_regions(pdev, "ioc3");
+ 	if (err)
+ 		goto out_free;
+@@ -1274,7 +1272,7 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	dev->netdev_ops		= &ioc3_netdev_ops;
+ 	dev->ethtool_ops	= &ioc3_ethtool_ops;
+ 	dev->hw_features	= NETIF_F_IP_CSUM | NETIF_F_RXCSUM;
+-	dev->features		= NETIF_F_IP_CSUM;
++	dev->features		= NETIF_F_IP_CSUM | NETIF_F_HIGHDMA;
  
- 	ioc3_init(dev);
- 
-@@ -1299,8 +1303,8 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (ip->rxr)
- 		dma_free_coherent(ip->dma_dev, RX_RING_SIZE, ip->rxr,
- 				  ip->rxr_dma);
--	if (ip->txr)
--		dma_free_coherent(ip->dma_dev, TX_RING_SIZE, ip->txr,
-+	if (ip->tx_ring)
-+		dma_free_coherent(ip->dma_dev, TX_RING_SIZE, ip->tx_ring,
- 				  ip->txr_dma);
- out_res:
- 	pci_release_regions(pdev);
-@@ -1320,7 +1324,7 @@ static void ioc3_remove_one(struct pci_dev *pdev)
- 	struct ioc3_private *ip = netdev_priv(dev);
- 
- 	dma_free_coherent(ip->dma_dev, RX_RING_SIZE, ip->rxr, ip->rxr_dma);
--	dma_free_coherent(ip->dma_dev, TX_RING_SIZE, ip->txr, ip->txr_dma);
-+	dma_free_coherent(ip->dma_dev, TX_RING_SIZE, ip->tx_ring, ip->txr_dma);
- 
- 	unregister_netdev(dev);
- 	del_timer_sync(&ip->ioc3_timer);
+ 	sw_physid1 = ioc3_mdio_read(dev, ip->mii.phy_id, MII_PHYSID1);
+ 	sw_physid2 = ioc3_mdio_read(dev, ip->mii.phy_id, MII_PHYSID2);
 -- 
 2.16.4
 
