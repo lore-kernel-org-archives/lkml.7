@@ -2,138 +2,126 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E035CCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477C4CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3E542080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D39E2080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:25:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XVxuk3+V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpBo834o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730182AbfKDXVS (ORCPT
+        id S1729638AbfKDXZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 18:21:18 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:46588 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729428AbfKDXVR (ORCPT
+        Mon, 4 Nov 2019 18:25:38 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:46362 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728810AbfKDXZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 18:21:17 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4NJYTA045505;
-        Mon, 4 Nov 2019 23:21:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=cMrpcm51otgeL8Re+g3qAXBEuLWi0XsR5qH01HB4h+U=;
- b=XVxuk3+VkgptV3dSxv2tl03MO7LxC14L6bl/oJDyrVamwZjGvtogHsnOVfHw0FbHieqg
- JAB1nttbJCoh7zAF90B4zlj6MpADbK2JevENtY0Ad+JsnQLWGDv+SMGGMaflEBOYe5S3
- chzygh9kvnrEth7oTt5sDYGFJsJLd/YckOB8OnD3UV1FV7kLQSJhL0jxJkLHTkwg6GJR
- tpIgNTakvi6HnWH88pka1TjZ4gxvDfflEDqKqrWMZmm5H8vY6JMDyLw+yk0QJi6SScoe
- +z6NSS+eiu8+nzIXkT/PmJJogzqtCP/1TLcz+DM55UkxFGgjs8fvSJTzPM+hmriGfD5X fQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2w12er2fsr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 23:21:13 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4NJVC0102226;
-        Mon, 4 Nov 2019 23:21:12 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2w1kxn7qv2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 23:21:12 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA4NLCTF020486;
-        Mon, 4 Nov 2019 23:21:12 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 Nov 2019 15:21:11 -0800
-Date:   Mon, 4 Nov 2019 15:21:10 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/28] xfs: Improve metadata buffer reclaim accountability
-Message-ID: <20191104232110.GS4153244@magnolia>
-References: <20191031234618.15403-1-david@fromorbit.com>
- <20191031234618.15403-5-david@fromorbit.com>
+        Mon, 4 Nov 2019 18:25:38 -0500
+Received: by mail-il1-f194.google.com with SMTP id m16so16419898iln.13;
+        Mon, 04 Nov 2019 15:25:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DKKd/VVOtZuRXftSRlB1c/gps6yTMEe9I9zF6w00nQk=;
+        b=MpBo834oVRGxQDcEBSGplBlQ8zHMrwASct+FAlsJU7KSb8wB86sCY/q35fjS3462Ah
+         4Pxtkm6zYdX43kOvDdx31ivzG38fLzH2PfkULwBiYwzf/4bXLsMCA/GGWRR1FYVKq/pu
+         OIBxqklvmHI/CSIeDFCKOmSBBDbSvVyGYW6MneBkSf84JDtxEiMPZX9GZeqDWbxHFXnX
+         +5QV/HHDnV0u/Ow+9sp6YBTZ8GqCtG9nGjJF01cO9iKwo8HFSqu39l6JeE/Y9n7+Nq89
+         8vAmjXyyCmebedWGnlwje+8NKMSweldNHQsdZGxGjRHS4hQblMUsKepRJpd3ck85TYdy
+         vwbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DKKd/VVOtZuRXftSRlB1c/gps6yTMEe9I9zF6w00nQk=;
+        b=nK4xYuxwbzr4ogmbAWCvCvh3uYnBrvMJO2NLhO1C7mXAtxHPOA49Ar4tT6Ct/cpkpC
+         W+dmg/BcXOqBdD5FbA8829O2KJ63Msf8eT/oB1lC4OaGalFqsbPWrfYgIu9Lh7Pt7oTt
+         B/ap4EKFogqCIuz57fOU4oQmte5jY8BAzj+xqAP4Pu+FnycTFLV0pp2mjOURZkZamj0X
+         fXj50lP0kbE8Ve/VkjepRe6wM+h1aEu3UrO+CcGKypM70S93KU4ewHCz3kVRWDiWKjwZ
+         Ujsm+5LyVg+FIXWeUYtTBlzRnS3m+7tXrCOuKUX7FNTm6NCagGJSOkkJ5/2bRL7lnxzf
+         yidQ==
+X-Gm-Message-State: APjAAAWdka6ZIN/2y+ZyPwfSkZrGpoclpcB3omyeOWrv/nSs3ySvg6M9
+        JhB1jjpuMUhgihh+GhfBfSNQ3gLCksgbkFDKr8o=
+X-Google-Smtp-Source: APXvYqxfZ9QYVP30ka78WJXyiRcwbJElqvNzVLyv7+vyUnZuZv4v03SE/c1PmYMQ8EvYD117rtrv+SrCyg64kLeaCY0=
+X-Received: by 2002:a92:cb84:: with SMTP id z4mr32745648ilo.78.1572909935500;
+ Mon, 04 Nov 2019 15:25:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031234618.15403-5-david@fromorbit.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=836
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911040221
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=921 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911040222
+References: <20191104070116.GM57214@dtor-ws> <20191104183702.8894-1-TheSven73@gmail.com>
+ <CAHCN7xJc6DeyQV27OVjD14a8hZT+_Fo9qo-iHgLO414t3y6hVQ@mail.gmail.com> <CAGngYiXp52g7X=KLVqxTAhK0AJ9mpgGyaptbkYvhwWfRkQCaXQ@mail.gmail.com>
+In-Reply-To: <CAGngYiXp52g7X=KLVqxTAhK0AJ9mpgGyaptbkYvhwWfRkQCaXQ@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 4 Nov 2019 17:25:23 -0600
+Message-ID: <CAHCN7xLhqHzcHro7HYUdNAi8K3ToeruOtLw=0SZNAgNqUpxvHQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] Input: ili210x - add ILI2117 support
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Marek Vasut <marex@denx.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 10:45:54AM +1100, Dave Chinner wrote:
-> From: Dave Chinner <dchinner@redhat.com>
-> 
-> The buffer cache shrinker frees more than just the xfs_buf slab
-> objects - it also frees the pages attached to the buffers. Make sure
-> the memory reclaim code accounts for this memory being freed
-> correctly, similar to how the inode shrinker accounts for pages
-> freed from the page cache due to mapping invalidation.
-> 
-> We also need to make sure that the mm subsystem knows these are
-> reclaimable objects. We provide the memory reclaim subsystem with a
-> a shrinker to reclaim xfs_bufs, so we should really mark the slab
-> that way.
-> 
-> We also have a lot of xfs_bufs in a busy system, spread them around
-> like we do inodes.
-> 
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> ---
->  fs/xfs/xfs_buf.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-> index 1e63dd3d1257..d34e5d2edacd 100644
-> --- a/fs/xfs/xfs_buf.c
-> +++ b/fs/xfs/xfs_buf.c
-> @@ -324,6 +324,9 @@ xfs_buf_free(
->  
->  			__free_page(page);
->  		}
-> +		if (current->reclaim_state)
-> +			current->reclaim_state->reclaimed_slab +=
-> +							bp->b_page_count;
->  	} else if (bp->b_flags & _XBF_KMEM)
->  		kmem_free(bp->b_addr);
->  	_xfs_buf_free_pages(bp);
-> @@ -2061,7 +2064,8 @@ int __init
->  xfs_buf_init(void)
->  {
->  	xfs_buf_zone = kmem_zone_init_flags(sizeof(xfs_buf_t), "xfs_buf",
-> -						KM_ZONE_HWALIGN, NULL);
-> +			KM_ZONE_HWALIGN | KM_ZONE_SPREAD | KM_ZONE_RECLAIM,
+On Mon, Nov 4, 2019 at 3:43 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
+>
+> Hi Adam,
+>
+> On Mon, Nov 4, 2019 at 4:28 PM Adam Ford <aford173@gmail.com> wrote:
+> >
+> > I am using IRQ_TYPE_EDGE_RISING for the 2117A.  Is that correct?  For
+> > my touchscreen, the IRQ line is low until a touch is detected, so I
+> > assume we want to capure on the rising edge.
+>
+> That is correct for the 2117A, as far as I know. I am using the same
+> setting.
+>
+> >
+> > Regarding Dmitry's patch,
+> > Is it a good idea to use msleep in an IRQ?  It seems like using the
+> > schedule_delayed_work() call seems like it will get in and get out of
+> > the ISR faster.
+> >
+> > If we use msleep and scan again, isn't it possible to starve other processes?
+>
+> I believe using msleep() is ok because this is not a "real" interrupt handler,
+> but a threaded one. It runs in a regular kernel thread, with its interrupt
+> turned off (but all other interrupts remain enabled). Its interrupt is
+> re-enabled automatically after the threaded handler returns.
+>
+> See
+> https://elixir.bootlin.com/linux/latest/source/include/linux/interrupt.h#L50
+>
+> > > @@ -268,7 +278,7 @@ static irqreturn_t ili210x_irq(int irq, void *irq_data)
+> > >                 }
+> > >
+> > >                 touch = ili210x_report_events(priv, touchdata);
+> > > -               keep_polling = touch || chip->continue_polling(touchdata);
+> > > +               keep_polling = chip->continue_polling(touchdata, touch);
+> > >                 if (keep_polling)
+> >
+> > Why not just check the value of touch instead of invoking the function
+> > pointer which takes the value of touch in as a parameter?
+> >
+>
+> The value of touch must be checked inside the callback, because
+> some variants use it to decide if they should poll again, and
+> some do not, such as the ili211x.
 
-As discussed on the previous iteration of this series, I'd like to
-capture the reasons for adding KM_ZONE_SPREAD as a separate patch.
+That makes sense.
+>
+> If I have misinterpreted your suggestion, could you perhaps
+> express it in C, so I can understand better?
 
---D
+You explained it.
+I'm good.
 
-> +			NULL);
->  	if (!xfs_buf_zone)
->  		goto out;
->  
-> -- 
-> 2.24.0.rc0
-> 
+adam
