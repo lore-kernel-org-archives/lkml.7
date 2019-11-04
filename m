@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D403ECA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AAECA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CCF1214E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3CB921D71
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905312;
-	bh=o9zWjotG85ira+gny4NLKdvv6viLLW0sHqAeRx+kY0o=;
+	s=default; t=1572905320;
+	bh=vWTVDALXfSb8OlxqgO4QbpSm+6M4srS+UggdwZfZEgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vLSJNRmqhZZtdBTtSsotGFuLKocdwjmbFdENlUqQo6ju3CM34SOAEZmF0gqKI2OKW
-	 6jVYd2c+YXyHZAshEr+o5Tgmwq1u/w1yzLSiBzG7b8uaO7Zsl6494PyfwU2B3yOzkT
-	 ZAx40Adu1HGbpJBE+mZ51YkbubfQEDJ0wF+k+gH4=
+	b=oI/zHxRgxOhB2sPyw7zHce8y4KpAEaRH39KZTK+Nkl2+vcs8jsNTAKjtT8hdQw4K5
+	 EIdboB7a89PZHxwsNEB/oYq9TB5BBmTWtkMAE6CHeNL5caBQIcCPFNY1S6Rs0WJqzi
+	 fqPLTBiOCSS6mOHQPMOy5rQWkm+l17qfmIr7zER8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390235AbfKDWIb (ORCPT
+        id S2389397AbfKDWIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:08:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41360 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:08:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390219AbfKDWI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:08:28 -0500
+        id S2390244AbfKDWIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:08:35 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45BC220650;
-        Mon,  4 Nov 2019 22:08:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97CE2214D8;
+        Mon,  4 Nov 2019 22:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905306;
-        bh=o9zWjotG85ira+gny4NLKdvv6viLLW0sHqAeRx+kY0o=;
+        s=default; t=1572905315;
+        bh=vWTVDALXfSb8OlxqgO4QbpSm+6M4srS+UggdwZfZEgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kym6v6IDUaDOaRlfuH/tPxE/M8Xe/HJr42DKNs1xKzXjpjzl9rX8DIw65Xszgw/aC
-         KeVu1Ea9h8X6Y2s8ZxEhBchdh4tVDVCeVN3132Eo9yah87ZNuFfumvXICR0AEpG0CM
-         I0zfesOthd8KERins5rzbftPLY8jkRJIy/YFxdVo=
+        b=Qr9pUkFh25B2TrnYxWhSd/YMTkhk/h50vX36iUVWHGyQaGgzJluZ2jQ05fUsz8Ksl
+         RTe/SbMnhu/8AoMtKCeGyfzKlc76ts9jA2Yx0/7OSjxOQ9XfM03kME9Vmxk290fe3P
+         sii7/jI/AabyP6Vjo2tTe2Su3EFMdoWA+cmXkPIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.3 101/163] ath10k: fix latency issue for QCA988x
-Date:   Mon,  4 Nov 2019 22:44:51 +0100
-Message-Id: <20191104212147.383576170@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Felipe Balbi <balbi@kernel.org>,
+        syzbot+8ab8bf161038a8768553@syzkaller.appspotmail.com
+Subject: [PATCH 5.3 104/163] USB: gadget: Reject endpoints with 0 maxpacket value
+Date:   Mon,  4 Nov 2019 22:44:54 +0100
+Message-Id: <20191104212147.614146677@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -59,54 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaoqing Pan <miaoqing@codeaurora.org>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit d79749f7716d9dc32fa2d5075f6ec29aac63c76d upstream.
+commit 54f83b8c8ea9b22082a496deadf90447a326954e upstream.
 
-(kvalo: cherry picked from commit 1340cc631bd00431e2f174525c971f119df9efa1 in
-wireless-drivers-next to wireless-drivers as this a frequently reported
-regression)
+Endpoints with a maxpacket length of 0 are probably useless.  They
+can't transfer any data, and it's not at all unlikely that a UDC will
+crash or hang when trying to handle a non-zero-length usb_request for
+such an endpoint.  Indeed, dummy-hcd gets a divide error when trying
+to calculate the remainder of a transfer length by the maxpacket
+value, as discovered by the syzbot fuzzer.
 
-Bad latency is found on QCA988x, the issue was introduced by
-commit 4504f0e5b571 ("ath10k: sdio: workaround firmware UART
-pin configuration bug"). If uart_pin_workaround is false, this
-change will set uart pin even if uart_print is false.
+Currently the gadget core does not check for endpoints having a
+maxpacket value of 0.  This patch adds a check to usb_ep_enable(),
+preventing such endpoints from being used.
 
-Tested HW: QCA9880
-Tested FW: 10.2.4-1.0-00037
+As far as I know, none of the gadget drivers in the kernel tries to
+create an endpoint with maxpacket = 0, but until now there has been
+nothing to prevent userspace programs under gadgetfs or configfs from
+doing it.
 
-Fixes: 4504f0e5b571 ("ath10k: sdio: workaround firmware UART pin configuration bug")
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: syzbot+8ab8bf161038a8768553@syzkaller.appspotmail.com
+CC: <stable@vger.kernel.org>
+Acked-by: Felipe Balbi <balbi@kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910281052370.1485-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath10k/core.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/usb/gadget/udc/core.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/drivers/net/wireless/ath/ath10k/core.c
-+++ b/drivers/net/wireless/ath/ath10k/core.c
-@@ -2118,12 +2118,15 @@ static int ath10k_init_uart(struct ath10
- 		return ret;
- 	}
+--- a/drivers/usb/gadget/udc/core.c
++++ b/drivers/usb/gadget/udc/core.c
+@@ -98,6 +98,17 @@ int usb_ep_enable(struct usb_ep *ep)
+ 	if (ep->enabled)
+ 		goto out;
  
--	if (!uart_print && ar->hw_params.uart_pin_workaround) {
--		ret = ath10k_bmi_write32(ar, hi_dbg_uart_txpin,
--					 ar->hw_params.uart_pin);
--		if (ret) {
--			ath10k_warn(ar, "failed to set UART TX pin: %d", ret);
--			return ret;
-+	if (!uart_print) {
-+		if (ar->hw_params.uart_pin_workaround) {
-+			ret = ath10k_bmi_write32(ar, hi_dbg_uart_txpin,
-+						 ar->hw_params.uart_pin);
-+			if (ret) {
-+				ath10k_warn(ar, "failed to set UART TX pin: %d",
-+					    ret);
-+				return ret;
-+			}
- 		}
- 
- 		return 0;
++	/* UDC drivers can't handle endpoints with maxpacket size 0 */
++	if (usb_endpoint_maxp(ep->desc) == 0) {
++		/*
++		 * We should log an error message here, but we can't call
++		 * dev_err() because there's no way to find the gadget
++		 * given only ep.
++		 */
++		ret = -EINVAL;
++		goto out;
++	}
++
+ 	ret = ep->ops->enable(ep, ep->desc);
+ 	if (ret)
+ 		goto out;
 
 
