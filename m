@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8EACA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AD5CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A537E217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2029B217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904816;
-	bh=b/ZixkpuVhOueuW0CeDByS/LFt+SqUvWTGbS8dfFALk=;
+	s=default; t=1572904823;
+	bh=PJ5hXRwrgYrYHaEEGmsGB+1AUSpUsi2UyKzb8WBrn5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S9e2/TblISz3OA1z9pYHGAOR3SJnsg9qnOzcjw8FSOg/LR4XiIYJ6pll7iwuzBCdA
-	 pg0Gw1EFvSedrBA5bU+DRYKtzkCcujtNQtkH5MoKoT9uaNtjFhiuShfKLZ3pq5EjEz
-	 /LzWYdmOG6fOGj5vhd8PSPBiH7fLUKNIKe8pxgzo=
+	b=rb2eeB2xiuZF8oqqi/8MCD+TXHe5tabEDTWGzxug+N/mTbiiO9dtcuhGH96m/x9Ab
+	 +7r+X8AlUdAjJoOgSPon11HsqyamXeIT9TwnOTfChI/DIEUUiZLo8ZXwI4XI9yIT0l
+	 DC2b8dKZT/t22GQc5xJW7fxALQdwS/WCPTZh5sIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388822AbfKDWAP (ORCPT
+        id S2388845AbfKDWAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:00:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57794 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:00:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388794AbfKDWAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:00:13 -0500
+        id S2388834AbfKDWAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:00:21 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5C82217F4;
-        Mon,  4 Nov 2019 22:00:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 210F221744;
+        Mon,  4 Nov 2019 22:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904812;
-        bh=b/ZixkpuVhOueuW0CeDByS/LFt+SqUvWTGbS8dfFALk=;
+        s=default; t=1572904820;
+        bh=PJ5hXRwrgYrYHaEEGmsGB+1AUSpUsi2UyKzb8WBrn5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TWR7wRFsoey3E/P4KMuge1MzHMQji2rD/aLjx76on7ahY0wrfig2mHdvQ1KDWc2cG
-         UwUYxpfqeaMeqT3QUwNgalWYgo7WirEZwyrvRZHOGIdcP6xHPKpwo2wMWyxdb/m5DI
-         TW3B/TvRJQ+RLcpj43YkUdG7K0WucmU388Wyzg1Q=
+        b=MK5Dr4Vx+DGkx6o8GjC1aHt/8JFnMqDcijLZL/e0C3qAQwYm5Q1c6KGzLjGVbj567
+         kaGVyDW1Y1rVlJdkVaeFlqHhKMCO82bGWjCwIOV7RWlYLpFOHHhvUz0te+V5Rg0o/o
+         4XZHyITCWMmh7dW0EnvVdX7WDaGtMgfbXsq0I3Ak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 077/149] tty: n_hdlc: fix build on SPARC
-Date:   Mon,  4 Nov 2019 22:44:30 +0100
-Message-Id: <20191104212142.026305860@linuxfoundation.org>
+Subject: [PATCH 4.19 080/149] serial: mctrl_gpio: Check for NULL pointer
+Date:   Mon,  4 Nov 2019 22:44:33 +0100
+Message-Id: <20191104212142.216438050@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -63,50 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Adam Ford <aford173@gmail.com>
 
-[ Upstream commit 47a7e5e97d4edd7b14974d34f0e5a5560fad2915 ]
+[ Upstream commit 37e3ab00e4734acc15d96b2926aab55c894f4d9c ]
 
-Fix tty driver build on SPARC by not using __exitdata.
-It appears that SPARC does not support section .exit.data.
+When using mctrl_gpio_to_gpiod, it dereferences gpios into a single
+requested GPIO.  This dereferencing can break if gpios is NULL,
+so this patch adds a NULL check before dereferencing it.  If
+gpios is NULL, this function will also return NULL.
 
-Fixes these build errors:
-
-`.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
-`.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
-`.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
-`.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Fixes: 063246641d4a ("format-security: move static strings to const")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Link: https://lore.kernel.org/r/675e7bd9-955b-3ff3-1101-a973b58b5b75@infradead.org
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Yegor Yefremov <yegorslists@googlemail.com>
+Link: https://lore.kernel.org/r/20191006163314.23191-1-aford173@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/n_hdlc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/tty/serial/serial_mctrl_gpio.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
-index bb63519db7ae4..c943716c019e4 100644
---- a/drivers/tty/n_hdlc.c
-+++ b/drivers/tty/n_hdlc.c
-@@ -968,6 +968,11 @@ static int __init n_hdlc_init(void)
- 	
- }	/* end of init_module() */
- 
-+#ifdef CONFIG_SPARC
-+#undef __exitdata
-+#define __exitdata
-+#endif
+diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+index 07f318603e740..af0412a784d27 100644
+--- a/drivers/tty/serial/serial_mctrl_gpio.c
++++ b/drivers/tty/serial/serial_mctrl_gpio.c
+@@ -60,6 +60,9 @@ EXPORT_SYMBOL_GPL(mctrl_gpio_set);
+ struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
+ 				      enum mctrl_gpio_idx gidx)
+ {
++	if (gpios == NULL)
++		return NULL;
 +
- static const char hdlc_unregister_ok[] __exitdata =
- 	KERN_INFO "N_HDLC: line discipline unregistered\n";
- static const char hdlc_unregister_fail[] __exitdata =
+ 	return gpios->gpio[gidx];
+ }
+ EXPORT_SYMBOL_GPL(mctrl_gpio_to_gpiod);
 -- 
 2.20.1
 
