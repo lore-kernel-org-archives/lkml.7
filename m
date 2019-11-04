@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5D2CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3645CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF2020650
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF12214D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906313;
-	bh=nk4O2gxrkdy69/8sNMd0ZPESLXqQN5sMW0ezN6AV+RQ=;
+	s=default; t=1572906316;
+	bh=9O/v+1/bywBKN63pqCoNkkXzmZ9XNOTcftS8wLfD++I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A3Fw1TC2RBBBQDkAhgDK7bUlhb5fJxRcZ5x6DVnOokqN3b37aU1f/szcFR/RAY1bt
-	 QWUzpaV7QRXz4xtwWATe388hWGvEM2bU6mdycnfK9Ic7bZt4QSjjpw2DM1QZMEerls
-	 pTEMp3ii0XL6RAklYB91W5TWxMGRNMq6es90dCvw=
+	b=DobZA5XnMGRmq/PPGuglesuO7DqCUWmkCb5ju7a+x3gIQJ7S1e2+ucQ4pbLVC3rym
+	 hE0Tb/9L1k9XIKT+Lw/vwjIaYlPYqe3kJ86/Yk1jHGfhjW6ecGTCJfUmwBNA0bNpxI
+	 rObt6Ms+puS/pSVtHxllbv/zmLoYsRJJ/snKsmis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388136AbfKDWZM (ORCPT
+        id S2388788AbfKDWZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:25:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45052 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:25:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730624AbfKDVv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:51:56 -0500
+        id S1730627AbfKDVvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:51:52 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A8A82053B;
-        Mon,  4 Nov 2019 21:51:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C6832053B;
+        Mon,  4 Nov 2019 21:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904315;
-        bh=nk4O2gxrkdy69/8sNMd0ZPESLXqQN5sMW0ezN6AV+RQ=;
+        s=default; t=1572904310;
+        bh=9O/v+1/bywBKN63pqCoNkkXzmZ9XNOTcftS8wLfD++I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WCu6LgkYmQTIJlAJDy0sASikxb5YKr33No+tZ9Lz6UThcnp9kgeW8af7S+D9OvZZc
-         o5qe4WAXPbhCGumoYM5GHDjKKZ+ATCWRUKwpmcZbgGqgniqTyYLuHeBhawjQ5cMZYi
-         09nhhUFpZvpikatrDkbhU6JOB+eAjy56O+c3nVH8=
+        b=WmG1uNYGQdxUkDQAhWvjTIg1Kvl6e/Uoknw/2ZqCyba8l/Ijlh6rRI1IPl66IbhPQ
+         TyV4NOjsDYqIUDQi4ZK3hc21q4/9CNKPcam+l2cgkD7PXPSeRy2YNCFQDNbr08nSXX
+         aJKQ8ODMWCVKj6EtmeZp4Xo1cweRz0FQyYeNI27g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH 4.9 62/62] ALSA: timer: Fix mutex deadlock at releasing card
-Date:   Mon,  4 Nov 2019 22:45:24 +0100
-Message-Id: <20191104212001.419204692@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 60/62] ALSA: timer: Limit max instances per timer
+Date:   Mon,  4 Nov 2019 22:45:22 +0100
+Message-Id: <20191104212000.057001996@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -62,129 +62,246 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit a39331867335d4a94b6165e306265c9e24aca073 ]
+[ Upstream commit 9b7d869ee5a77ed4a462372bb89af622e705bfb8 ]
 
-When a card is disconnected while in use, the system waits until all
-opened files are closed then releases the card.  This is done via
-put_device() of the card device in each device release code.
+Currently we allow unlimited number of timer instances, and it may
+bring the system hogging way too much CPU when too many timer
+instances are opened and processed concurrently.  This may end up with
+a soft-lockup report as triggered by syzkaller, especially when
+hrtimer backend is deployed.
 
-The recently reported mutex deadlock bug happens in this code path;
-snd_timer_close() for the timer device deals with the global
-register_mutex and it calls put_device() there.  When this timer
-device is the last one, the card gets freed and it eventually calls
-snd_timer_free(), which has again the protection with the global
-register_mutex -- boom.
+Since such insane number of instances aren't demanded by the normal
+use case of ALSA sequencer and it merely  opens a risk only for abuse,
+this patch introduces the upper limit for the number of instances per
+timer backend.  As default, it's set to 1000, but for the fine-grained
+timer like hrtimer, it's set to 100.
 
-Basically put_device() call itself is race-free, so a relative simple
-workaround is to move this put_device() call out of the mutex.  For
-achieving that, in this patch, snd_timer_close_locked() got a new
-argument to store the card device pointer in return, and each caller
-invokes put_device() with the returned object after the mutex unlock.
-
-Reported-and-tested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reported-by: syzbot
+Tested-by: Jérôme Glisse <jglisse@redhat.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/timer.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ include/sound/timer.h |  2 ++
+ sound/core/hrtimer.c  |  1 +
+ sound/core/timer.c    | 67 ++++++++++++++++++++++++++++++++++---------
+ 3 files changed, 57 insertions(+), 13 deletions(-)
 
+diff --git a/include/sound/timer.h b/include/sound/timer.h
+index c4d76ff056c6e..7ae226ab69908 100644
+--- a/include/sound/timer.h
++++ b/include/sound/timer.h
+@@ -90,6 +90,8 @@ struct snd_timer {
+ 	struct list_head ack_list_head;
+ 	struct list_head sack_list_head; /* slow ack list head */
+ 	struct tasklet_struct task_queue;
++	int max_instances;	/* upper limit of timer instances */
++	int num_instances;	/* current number of timer instances */
+ };
+ 
+ struct snd_timer_instance {
+diff --git a/sound/core/hrtimer.c b/sound/core/hrtimer.c
+index e2f27022b363c..d7dddb75e7bb8 100644
+--- a/sound/core/hrtimer.c
++++ b/sound/core/hrtimer.c
+@@ -159,6 +159,7 @@ static int __init snd_hrtimer_init(void)
+ 	timer->hw = hrtimer_hw;
+ 	timer->hw.resolution = resolution;
+ 	timer->hw.ticks = NANO_SEC / resolution;
++	timer->max_instances = 100; /* lower the limit */
+ 
+ 	err = snd_timer_global_register(timer);
+ 	if (err < 0) {
 diff --git a/sound/core/timer.c b/sound/core/timer.c
-index 6eb4e97662d9c..19d90aa082184 100644
+index cfcc6718aafce..95c5838747754 100644
 --- a/sound/core/timer.c
 +++ b/sound/core/timer.c
-@@ -239,7 +239,8 @@ static int snd_timer_check_master(struct snd_timer_instance *master)
- 	return 0;
+@@ -179,7 +179,7 @@ static void snd_timer_request(struct snd_timer_id *tid)
+  *
+  * call this with register_mutex down.
+  */
+-static void snd_timer_check_slave(struct snd_timer_instance *slave)
++static int snd_timer_check_slave(struct snd_timer_instance *slave)
+ {
+ 	struct snd_timer *timer;
+ 	struct snd_timer_instance *master;
+@@ -189,16 +189,21 @@ static void snd_timer_check_slave(struct snd_timer_instance *slave)
+ 		list_for_each_entry(master, &timer->open_list_head, open_list) {
+ 			if (slave->slave_class == master->slave_class &&
+ 			    slave->slave_id == master->slave_id) {
++				if (master->timer->num_instances >=
++				    master->timer->max_instances)
++					return -EBUSY;
+ 				list_move_tail(&slave->open_list,
+ 					       &master->slave_list_head);
++				master->timer->num_instances++;
+ 				spin_lock_irq(&slave_active_lock);
+ 				slave->master = master;
+ 				slave->timer = master->timer;
+ 				spin_unlock_irq(&slave_active_lock);
+-				return;
++				return 0;
+ 			}
+ 		}
+ 	}
++	return 0;
  }
  
--static int snd_timer_close_locked(struct snd_timer_instance *timeri);
-+static int snd_timer_close_locked(struct snd_timer_instance *timeri,
-+				  struct device **card_devp_to_put);
+ /*
+@@ -207,7 +212,7 @@ static void snd_timer_check_slave(struct snd_timer_instance *slave)
+  *
+  * call this with register_mutex down.
+  */
+-static void snd_timer_check_master(struct snd_timer_instance *master)
++static int snd_timer_check_master(struct snd_timer_instance *master)
+ {
+ 	struct snd_timer_instance *slave, *tmp;
  
+@@ -215,7 +220,11 @@ static void snd_timer_check_master(struct snd_timer_instance *master)
+ 	list_for_each_entry_safe(slave, tmp, &snd_timer_slave_list, open_list) {
+ 		if (slave->slave_class == master->slave_class &&
+ 		    slave->slave_id == master->slave_id) {
++			if (master->timer->num_instances >=
++			    master->timer->max_instances)
++				return -EBUSY;
+ 			list_move_tail(&slave->open_list, &master->slave_list_head);
++			master->timer->num_instances++;
+ 			spin_lock_irq(&slave_active_lock);
+ 			spin_lock(&master->timer->lock);
+ 			slave->master = master;
+@@ -227,8 +236,11 @@ static void snd_timer_check_master(struct snd_timer_instance *master)
+ 			spin_unlock_irq(&slave_active_lock);
+ 		}
+ 	}
++	return 0;
+ }
+ 
++static int snd_timer_close_locked(struct snd_timer_instance *timeri);
++
  /*
   * open a timer instance
-@@ -251,6 +252,7 @@ int snd_timer_open(struct snd_timer_instance **ti,
+  * when opening a master, the slave id must be here given.
+@@ -239,6 +251,7 @@ int snd_timer_open(struct snd_timer_instance **ti,
  {
  	struct snd_timer *timer;
  	struct snd_timer_instance *timeri = NULL;
-+	struct device *card_dev_to_put = NULL;
- 	int err;
++	int err;
  
- 	mutex_lock(&register_mutex);
-@@ -274,7 +276,7 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 	if (tid->dev_class == SNDRV_TIMER_CLASS_SLAVE) {
+ 		/* open a slave instance */
+@@ -258,10 +271,14 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 		timeri->slave_id = tid->device;
+ 		timeri->flags |= SNDRV_TIMER_IFLG_SLAVE;
  		list_add_tail(&timeri->open_list, &snd_timer_slave_list);
- 		err = snd_timer_check_slave(timeri);
- 		if (err < 0) {
--			snd_timer_close_locked(timeri);
-+			snd_timer_close_locked(timeri, &card_dev_to_put);
- 			timeri = NULL;
- 		}
- 		goto unlock;
-@@ -326,7 +328,7 @@ int snd_timer_open(struct snd_timer_instance **ti,
- 			timeri = NULL;
- 
- 			if (timer->card)
--				put_device(&timer->card->card_dev);
-+				card_dev_to_put = &timer->card->card_dev;
- 			module_put(timer->module);
- 			goto unlock;
- 		}
-@@ -336,12 +338,15 @@ int snd_timer_open(struct snd_timer_instance **ti,
- 	timer->num_instances++;
- 	err = snd_timer_check_master(timeri);
- 	if (err < 0) {
--		snd_timer_close_locked(timeri);
-+		snd_timer_close_locked(timeri, &card_dev_to_put);
- 		timeri = NULL;
+-		snd_timer_check_slave(timeri);
++		err = snd_timer_check_slave(timeri);
++		if (err < 0) {
++			snd_timer_close_locked(timeri);
++			timeri = NULL;
++		}
+ 		mutex_unlock(&register_mutex);
+ 		*ti = timeri;
+-		return 0;
++		return err;
  	}
  
-  unlock:
+ 	/* open a master instance */
+@@ -287,6 +304,10 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 			return -EBUSY;
+ 		}
+ 	}
++	if (timer->num_instances >= timer->max_instances) {
++		mutex_unlock(&register_mutex);
++		return -EBUSY;
++	}
+ 	timeri = snd_timer_instance_new(owner, timer);
+ 	if (!timeri) {
+ 		mutex_unlock(&register_mutex);
+@@ -313,25 +334,27 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 	}
+ 
+ 	list_add_tail(&timeri->open_list, &timer->open_list_head);
+-	snd_timer_check_master(timeri);
++	timer->num_instances++;
++	err = snd_timer_check_master(timeri);
++	if (err < 0) {
++		snd_timer_close_locked(timeri);
++		timeri = NULL;
++	}
  	mutex_unlock(&register_mutex);
-+	/* put_device() is called after unlock for avoiding deadlock */
-+	if (card_dev_to_put)
-+		put_device(card_dev_to_put);
  	*ti = timeri;
- 	return err;
+-	return 0;
++	return err;
  }
-@@ -351,7 +356,8 @@ EXPORT_SYMBOL(snd_timer_open);
+ EXPORT_SYMBOL(snd_timer_open);
+ 
+ /*
   * close a timer instance
-  * call this with register_mutex down.
++ * call this with register_mutex down.
   */
--static int snd_timer_close_locked(struct snd_timer_instance *timeri)
-+static int snd_timer_close_locked(struct snd_timer_instance *timeri,
-+				  struct device **card_devp_to_put)
+-int snd_timer_close(struct snd_timer_instance *timeri)
++static int snd_timer_close_locked(struct snd_timer_instance *timeri)
  {
  	struct snd_timer *timer = NULL;
  	struct snd_timer_instance *slave, *tmp;
-@@ -403,7 +409,7 @@ static int snd_timer_close_locked(struct snd_timer_instance *timeri)
- 			timer->hw.close(timer);
- 		/* release a card refcount for safe disconnection */
- 		if (timer->card)
--			put_device(&timer->card->card_dev);
-+			*card_devp_to_put = &timer->card->card_dev;
+ 
+-	if (snd_BUG_ON(!timeri))
+-		return -ENXIO;
+-
+-	mutex_lock(&register_mutex);
+ 	list_del(&timeri->open_list);
+ 
+ 	/* force to stop the timer */
+@@ -339,6 +362,7 @@ int snd_timer_close(struct snd_timer_instance *timeri)
+ 
+ 	timer = timeri->timer;
+ 	if (timer) {
++		timer->num_instances--;
+ 		/* wait, until the active callback is finished */
+ 		spin_lock_irq(&timer->lock);
+ 		while (timeri->flags & SNDRV_TIMER_IFLG_CALLBACK) {
+@@ -354,6 +378,7 @@ int snd_timer_close(struct snd_timer_instance *timeri)
+ 		list_for_each_entry_safe(slave, tmp, &timeri->slave_list_head,
+ 					 open_list) {
+ 			list_move_tail(&slave->open_list, &snd_timer_slave_list);
++			timer->num_instances--;
+ 			slave->master = NULL;
+ 			slave->timer = NULL;
+ 			list_del_init(&slave->ack_list);
+@@ -381,9 +406,24 @@ int snd_timer_close(struct snd_timer_instance *timeri)
  		module_put(timer->module);
  	}
  
-@@ -415,14 +421,18 @@ static int snd_timer_close_locked(struct snd_timer_instance *timeri)
-  */
- int snd_timer_close(struct snd_timer_instance *timeri)
- {
-+	struct device *card_dev_to_put = NULL;
- 	int err;
- 
- 	if (snd_BUG_ON(!timeri))
- 		return -ENXIO;
- 
- 	mutex_lock(&register_mutex);
--	err = snd_timer_close_locked(timeri);
-+	err = snd_timer_close_locked(timeri, &card_dev_to_put);
- 	mutex_unlock(&register_mutex);
-+	/* put_device() is called after unlock for avoiding deadlock */
-+	if (card_dev_to_put)
-+		put_device(card_dev_to_put);
- 	return err;
+-	mutex_unlock(&register_mutex);
+ 	return 0;
  }
++
++/*
++ * close a timer instance
++ */
++int snd_timer_close(struct snd_timer_instance *timeri)
++{
++	int err;
++
++	if (snd_BUG_ON(!timeri))
++		return -ENXIO;
++
++	mutex_lock(&register_mutex);
++	err = snd_timer_close_locked(timeri);
++	mutex_unlock(&register_mutex);
++	return err;
++}
  EXPORT_SYMBOL(snd_timer_close);
+ 
+ unsigned long snd_timer_resolution(struct snd_timer_instance *timeri)
+@@ -854,6 +894,7 @@ int snd_timer_new(struct snd_card *card, char *id, struct snd_timer_id *tid,
+ 	spin_lock_init(&timer->lock);
+ 	tasklet_init(&timer->task_queue, snd_timer_tasklet,
+ 		     (unsigned long)timer);
++	timer->max_instances = 1000; /* default limit per timer */
+ 	if (card != NULL) {
+ 		timer->module = card->module;
+ 		err = snd_device_new(card, SNDRV_DEV_TIMER, timer, &ops);
 -- 
 2.20.1
 
