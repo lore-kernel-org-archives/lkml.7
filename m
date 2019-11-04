@@ -5,58 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10170CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E9ECA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA12B21D7D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E6862184C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572874046;
-	bh=x90pO9sDZKGVYVtFYlfDsBpi+uRFBDhylDDNB8dLWSk=;
+	s=default; t=1572874050;
+	bh=20SnpaG1EgbvORmKhBqTBCb/FuFlveobTD8Nf06CCOc=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=x2Hm7wlC4C086B3AhBRje8kp69Auh3sEUdoGJQ60UrdH/JC4sGp2C/YF3w00YKb3k
-	 y6nqkWsUZ7wLABYNtJpPSC9QcelnWDNbA+hctwEivFCCvCtReYh/zavlcA7uuUin9C
-	 +rk2H8uume0sv4SxYbuxNyiwsXA7EHUbY5OXoapo=
+	b=qbnmXyylYpQuKyHkjiZd5SVY4jPjzrVq0eYjyk+K523BH1Sqipu3816E7Y94AnNdC
+	 tCg8QOmUCSdcTZ+tBQGBP/ICnmKDZICiKEr476zpz3TmPycfJtoaGD0glE1rvhZ5xD
+	 9CDdL0T3W7s7Ita3OfrjfH2Applhad1JI4ajV77M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbfKDN10 (ORCPT
+        id S1729375AbfKDN12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:27:26 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58064 "EHLO
+        Mon, 4 Nov 2019 08:27:28 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58156 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727236AbfKDN1Z (ORCPT
+        with ESMTP id S1727236AbfKDN11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:27:25 -0500
+        Mon, 4 Nov 2019 08:27:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=qRAzUev+rMHvML7RdvPeQ9Nk4I6D/EvxELQHAmiFmI0=; b=t6QsbpYGmCRe
-        LXO45YwBKtOg9YypR8KqnxjFnpRA6VQ1yZZLwujiyc2I9B7rb8qmwqYn1lm/mtqr8fuQSvfOQzTXk
-        WnwhKiW2+4lUJXlZcJao0yOsY4hbqPJcphbp3mGjsxnaOIM88DpcTRdhuFkq1W9OqmSFTHCRNqa4j
-        zMQ5g=;
+        List-Archive; bh=KjOFqC3LpLokCguUrWPascEa+8RC7whRG2pGwXHTHq8=; b=QPIbZUhyhI8A
+        hrhMyqH9Y8uKjJ/GSa9AjVML7+vOEkULPQx7aokJ7+nONV3KEgTvrqgm0Dw3Yp/Q3aGZ74oBcHZzJ
+        Y74BuMWwYT6zDR8a/HcI8vRV4Tb9pSWPgP7woVOkON65WkPn554k0tbYVltxUtr7OQBptg4KZdVE8
+        +P1i8=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iRcO8-0002g1-94; Mon, 04 Nov 2019 13:27:20 +0000
+        id 1iRcO2-0002f4-Vb; Mon, 04 Nov 2019 13:27:15 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id C2681274301E; Mon,  4 Nov 2019 13:27:19 +0000 (GMT)
+        id 64AE3274301E; Mon,  4 Nov 2019 13:27:14 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     "Cc:"@sirena.co.uk, "Cc:"@sirena.co.uk,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Applied "spi: sifive: disable clk when probe fails and remove" to the spi tree
-In-Reply-To: <20191101121745.13413-1-hslester96@gmail.com>
+To:     zhong jiang <zhongjiang@huawei.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz,
+        tiwai@suse.com, zhongjiang@huawei.com
+Subject: Applied "ASoC: ux500: Remove redundant variable "status"" to the asoc tree
+In-Reply-To: <1572528855-25990-1-git-send-email-zhongjiang@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191104132719.C2681274301E@ypsilon.sirena.org.uk>
-Date:   Mon,  4 Nov 2019 13:27:19 +0000 (GMT)
+Message-Id: <20191104132714.64AE3274301E@ypsilon.sirena.org.uk>
+Date:   Mon,  4 Nov 2019 13:27:14 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,11 +63,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: sifive: disable clk when probe fails and remove
+   ASoC: ux500: Remove redundant variable "status"
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,76 +88,42 @@ to this mail.
 Thanks,
 Mark
 
-From a725272bda77e61c1b4de85c7b0c875b2ea639b6 Mon Sep 17 00:00:00 2001
-From: Chuhong Yuan <hslester96@gmail.com>
-Date: Fri, 1 Nov 2019 20:17:45 +0800
-Subject: [PATCH] spi: sifive: disable clk when probe fails and remove
+From e0859710516c98b189879966b48ea1c77e0cd979 Mon Sep 17 00:00:00 2001
+From: zhong jiang <zhongjiang@huawei.com>
+Date: Thu, 31 Oct 2019 21:34:15 +0800
+Subject: [PATCH] ASoC: ux500: Remove redundant variable "status"
 
-The driver forgets to disable and unprepare clk when probe fails and
-remove.
-Add the calls to fix the problem.
+local variable "status" is not used. hence it is safe to remove and
+just return 0.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Palmer Dabbelt <palmer@dabbelt.com>
-Link: https://lore.kernel.org/r/20191101121745.13413-1-hslester96@gmail.com
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+Link: https://lore.kernel.org/r/1572528855-25990-1-git-send-email-zhongjiang@huawei.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-sifive.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ sound/soc/ux500/ux500_msp_i2s.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-sifive.c b/drivers/spi/spi-sifive.c
-index 35254bdc42c4..f7c1e20432e0 100644
---- a/drivers/spi/spi-sifive.c
-+++ b/drivers/spi/spi-sifive.c
-@@ -357,14 +357,14 @@ static int sifive_spi_probe(struct platform_device *pdev)
- 	if (!cs_bits) {
- 		dev_err(&pdev->dev, "Could not auto probe CS lines\n");
- 		ret = -EINVAL;
--		goto put_master;
-+		goto disable_clk;
- 	}
+diff --git a/sound/soc/ux500/ux500_msp_i2s.c b/sound/soc/ux500/ux500_msp_i2s.c
+index a90e0d7f0b73..394d8b2a4a16 100644
+--- a/sound/soc/ux500/ux500_msp_i2s.c
++++ b/sound/soc/ux500/ux500_msp_i2s.c
+@@ -533,7 +533,6 @@ static void disable_msp_tx(struct ux500_msp *msp)
+ static int disable_msp(struct ux500_msp *msp, unsigned int dir)
+ {
+ 	u32 reg_val_GCR;
+-	int status = 0;
+ 	unsigned int disable_tx, disable_rx;
  
- 	num_cs = ilog2(cs_bits) + 1;
- 	if (num_cs > SIFIVE_SPI_MAX_CS) {
- 		dev_err(&pdev->dev, "Invalid number of spi slaves\n");
- 		ret = -EINVAL;
--		goto put_master;
-+		goto disable_clk;
- 	}
+ 	reg_val_GCR = readl(msp->registers + MSP_GCR);
+@@ -566,7 +565,7 @@ static int disable_msp(struct ux500_msp *msp, unsigned int dir)
+ 	else if (disable_rx)
+ 		disable_msp_rx(msp);
  
- 	/* Define our master */
-@@ -393,7 +393,7 @@ static int sifive_spi_probe(struct platform_device *pdev)
- 			       dev_name(&pdev->dev), spi);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Unable to bind to interrupt\n");
--		goto put_master;
-+		goto disable_clk;
- 	}
- 
- 	dev_info(&pdev->dev, "mapped; irq=%d, cs=%d\n",
-@@ -402,11 +402,13 @@ static int sifive_spi_probe(struct platform_device *pdev)
- 	ret = devm_spi_register_master(&pdev->dev, master);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "spi_register_master failed\n");
--		goto put_master;
-+		goto disable_clk;
- 	}
- 
- 	return 0;
- 
-+disable_clk:
-+	clk_disable_unprepare(spi->clk);
- put_master:
- 	spi_master_put(master);
- 
-@@ -420,6 +422,7 @@ static int sifive_spi_remove(struct platform_device *pdev)
- 
- 	/* Disable all the interrupts just in case */
- 	sifive_spi_write(spi, SIFIVE_SPI_REG_IE, 0);
-+	clk_disable_unprepare(spi->clk);
- 
- 	return 0;
+-	return status;
++	return 0;
  }
+ 
+ int ux500_msp_i2s_trigger(struct ux500_msp *msp, int cmd, int direction)
 -- 
 2.20.1
 
