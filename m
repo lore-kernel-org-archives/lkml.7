@@ -2,52 +2,59 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC01FCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3597CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81BD8217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A491D2084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904961;
-	bh=7CsHA9B5hURGTItzScFRdEZtOT/srucqQJMFJXGiboQ=;
+	s=default; t=1572904963;
+	bh=w406F0HmU4jhcRSyeci8vZ/7K4lSmXJWWg2uxt+sgdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zuu82M3KHacDDQ2UxpvPvGWjznKrPIcQwvBhdwAr0pD593Jli1/vhKdrDUYO5rQgJ
-	 i/FcPLLJNeoOuRVwZEFCY/5rZZEhQnpIeC+FkryijCmM1Sa+dlJEwU91jxY5N2xvra
-	 H6EwT+JoxVQ6A2vHR68mykRvnv4idbGb/6ei4on4=
+	b=nVhIX05sXVHSlYE8ws7qg3WO4Ki5UzqnuJEHAy0IwysUrG6oW5zJ4uBgUBaBsL676
+	 S0b07fkam8MJcluYbaddmgPdMW1OcvRPIIK81kwM7uRvWIdI1W+EbYrnzMx7v5mqPv
+	 CKp9OuZ8YU/KA6CpBVwgyp9CGE/uD3yegS8wvU8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389370AbfKDWCj (ORCPT
+        id S2389381AbfKDWCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:02:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60880 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:02:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388532AbfKDWCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:02:31 -0500
+        id S2388532AbfKDWCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:02:39 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AD8B217F4;
-        Mon,  4 Nov 2019 22:02:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3486205C9;
+        Mon,  4 Nov 2019 22:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904950;
-        bh=7CsHA9B5hURGTItzScFRdEZtOT/srucqQJMFJXGiboQ=;
+        s=default; t=1572904959;
+        bh=w406F0HmU4jhcRSyeci8vZ/7K4lSmXJWWg2uxt+sgdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qFVHyA7dPa/8BXfxEw+ZK+4c2ybntsM0Qd3o3CP0vrr4axvYT9OgllRt4z875gXxv
-         kJddE88mO4xq+i4N6pmiTb3W2ioGTXBtR/l4KA8qMXYgqdgdDlLlinIqqmH81+OauG
-         jkAQpb9UaYobzIfZ/0IPsaZnTx9IEEG6AvEMa04c=
+        b=O4k9U5cVQp3hWs9bsvRth7ONsyYVpuQfQvGKW/brs6Il7Tc6v2eL2+kDTCyJGPNdW
+         WPWHP3CFyG3lqoYx1UUkZOCrg/mkCPPVnJFptbTXcMsJzIJVEiHtXYlzMnM3GfKdLZ
+         h8ky9RtZiBQoYdemRnZHQ6Pyb7Jttp9q7WUzwW+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.19 125/149] HID: fix error message in hid_open_report()
-Date:   Mon,  4 Nov 2019 22:45:18 +0100
-Message-Id: <20191104212145.016448337@linuxfoundation.org>
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 087/149] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_write_end_nolock()
+Date:   Mon,  4 Nov 2019 22:44:40 +0100
+Message-Id: <20191104212142.628260397@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -60,57 +67,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-commit b3a81c777dcb093020680490ab970d85e2f6f04f upstream.
+[ Upstream commit 583fee3e12df0e6f1f66f063b989d8e7fed0e65a ]
 
-On HID report descriptor parsing error the code displays bogus
-pointer instead of error offset (subtracts start=NULL from end).
-Make the message more useful by displaying correct error offset
-and include total buffer size for reference.
+In ocfs2_write_end_nolock(), there are an if statement on lines 1976,
+2047 and 2058, to check whether handle is NULL:
 
-This was carried over from ancient times - "Fixed" commit just
-promoted the message from DEBUG to ERROR.
+    if (handle)
 
-Cc: stable@vger.kernel.org
-Fixes: 8c3d52fc393b ("HID: make parser more verbose about parsing errors by default")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+When handle is NULL, it is used on line 2045:
 
+	ocfs2_update_inode_fsync_trans(handle, inode, 1);
+        oi->i_sync_tid = handle->h_transaction->t_tid;
+
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, handle is checked before calling
+ocfs2_update_inode_fsync_trans().
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Link: http://lkml.kernel.org/r/20190726033705.32307-1-baijiaju1990@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-core.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ fs/ocfs2/aops.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -975,6 +975,7 @@ int hid_open_report(struct hid_device *d
- 	__u8 *start;
- 	__u8 *buf;
- 	__u8 *end;
-+	__u8 *next;
- 	int ret;
- 	static int (*dispatch_type[])(struct hid_parser *parser,
- 				      struct hid_item *item) = {
-@@ -1028,7 +1029,8 @@ int hid_open_report(struct hid_device *d
- 	device->collection_size = HID_DEFAULT_NUM_COLLECTIONS;
- 
- 	ret = -EINVAL;
--	while ((start = fetch_item(start, end, &item)) != NULL) {
-+	while ((next = fetch_item(start, end, &item)) != NULL) {
-+		start = next;
- 
- 		if (item.format != HID_ITEM_FORMAT_SHORT) {
- 			hid_err(device, "unexpected long global item\n");
-@@ -1058,7 +1060,8 @@ int hid_open_report(struct hid_device *d
- 		}
+diff --git a/fs/ocfs2/aops.c b/fs/ocfs2/aops.c
+index dc773e163132c..543efa3e5655f 100644
+--- a/fs/ocfs2/aops.c
++++ b/fs/ocfs2/aops.c
+@@ -2056,7 +2056,8 @@ out_write_size:
+ 		inode->i_mtime = inode->i_ctime = current_time(inode);
+ 		di->i_mtime = di->i_ctime = cpu_to_le64(inode->i_mtime.tv_sec);
+ 		di->i_mtime_nsec = di->i_ctime_nsec = cpu_to_le32(inode->i_mtime.tv_nsec);
+-		ocfs2_update_inode_fsync_trans(handle, inode, 1);
++		if (handle)
++			ocfs2_update_inode_fsync_trans(handle, inode, 1);
  	}
- 
--	hid_err(device, "item fetching failed at offset %d\n", (int)(end - start));
-+	hid_err(device, "item fetching failed at offset %u/%u\n",
-+		size - (unsigned int)(end - start), size);
- err:
- 	kfree(parser->collection_stack);
- alloc_err:
+ 	if (handle)
+ 		ocfs2_journal_dirty(handle, wc->w_di_bh);
+-- 
+2.20.1
+
 
 
