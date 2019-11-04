@@ -2,57 +2,64 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD03CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4854ACA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66DE421929
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AD5B21850
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904226;
-	bh=/tDzpcVlYPUykGvZzZFMA0ytYIsAYipqOHOn2ds+2O4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MXg7cqT6XUb2o76J3xGoiEAONYYLCbtgm8hYA8FYnOv/6V+BFrtecGqYVP3sy+4mP
-	 naAkZ0XwF1oSqJZxI2k5vtO9nodKAJU+7hCKtarf5tIe0ehDzur6ULoY0xoKfWyVaf
-	 F1Wvn3MzcKdavFGofl2MXjlCd+9bB4QQzhdRmRos=
+	s=default; t=1572904230;
+	bh=bDMbPI+TF/BBeyhCFQW66zMJ9kE9WoYr1tZ9qBsQlf8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=PO9ZFAUa7bftr5nsnHzY5FXPFNszjSJ6wacYLlgKsv6OUFSCOKwYLWQB1jmB4jIi/
+	 0H7Gy1t+Xcxw8Zxhw7LBEHrd8/vNTH4Clz0nLMUWVDVr8pXMd9Mx0SZV8qVDeQgiKL
+	 br+gYcynBLVEjMRKTcwAaO+Y8WigmyG0vh/tMVdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387698AbfKDVuZ (ORCPT
+        id S2387710AbfKDVu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:50:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42446 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:50:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387659AbfKDVuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:50:21 -0500
+        id S2387670AbfKDVuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:50:20 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D80972190F;
-        Mon,  4 Nov 2019 21:50:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75E40214D9;
+        Mon,  4 Nov 2019 21:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904221;
-        bh=/tDzpcVlYPUykGvZzZFMA0ytYIsAYipqOHOn2ds+2O4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NmChmMhgeqBivVG0un8lHn2aRH7csQKxx27HBWLGX/nN1RZAH9UezREHwn3ZbKLo2
-         /0+9/RUkd8V/fNAFv7kKCWZFISR1TJjjzdeU6+u8yvLz5qwv71xNHIbsGhRG93TPXE
-         CWOS8efdnGPlcC15slpDSAbuKyWgdA4AWqxN/FL0=
+        s=default; t=1572904218;
+        bh=bDMbPI+TF/BBeyhCFQW66zMJ9kE9WoYr1tZ9qBsQlf8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KZuv5B5bw+wUSXl8C3T33L+ENHEsUVjSSOi22nF0tNqepQlrFlbHndHvV3UaubMb8
+         zzRKEv+l5Oi8NWmkJvY3hiccOGvd3GXG6T9Sge2i9+0oD3lKqsh8rbgMeEW7veUtOZ
+         XFtPCUvbXpmCuaFH56f3XpqPYA94gTaEDCN44UI0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 18/62] gpio: max77620: Use correct unit for debounce times
-Date:   Mon,  4 Nov 2019 22:44:40 +0100
-Message-Id: <20191104211918.560035886@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.9 00/62] 4.9.199-stable review
+Date:   Mon,  4 Nov 2019 22:44:22 +0100
+Message-Id: <20191104211901.387893698@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
-References: <20191104211901.387893698@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.199-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.199-rc1
+X-KernelTest-Deadline: 2019-11-06T21:20+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,45 +67,299 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+This is the start of the stable review cycle for the 4.9.199 release.
+There are 62 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit fffa6af94894126994a7600c6f6f09b892e89fa9 ]
+Responses should be made by Wed 06 Nov 2019 09:14:04 PM UTC.
+Anything received after that time might be too late.
 
-The gpiod_set_debounce() function takes the debounce time in
-microseconds. Adjust the switch/case values in the MAX77620 GPIO to use
-the correct unit.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.199-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+and the diffstat can be found below.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://lore.kernel.org/r/20191002122825.3948322-1-thierry.reding@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpio/gpio-max77620.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+thanks,
 
-diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
-index b46b436cb97fe..4fe0be5aa2945 100644
---- a/drivers/gpio/gpio-max77620.c
-+++ b/drivers/gpio/gpio-max77620.c
-@@ -167,13 +167,13 @@ static int max77620_gpio_set_debounce(struct gpio_chip *gc,
- 	case 0:
- 		val = MAX77620_CNFG_GPIO_DBNC_None;
- 		break;
--	case 1 ... 8:
-+	case 1000 ... 8000:
- 		val = MAX77620_CNFG_GPIO_DBNC_8ms;
- 		break;
--	case 9 ... 16:
-+	case 9000 ... 16000:
- 		val = MAX77620_CNFG_GPIO_DBNC_16ms;
- 		break;
--	case 17 ... 32:
-+	case 17000 ... 32000:
- 		val = MAX77620_CNFG_GPIO_DBNC_32ms;
- 		break;
- 	default:
--- 
-2.20.1
+greg k-h
 
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.9.199-rc1
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: timer: Fix mutex deadlock at releasing card
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: timer: Simplify error path in snd_timer_open()
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: timer: Limit max instances per timer
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: timer: Follow standard EXPORT_SYMBOL() declarations
+
+Vratislav Bendel <vbendel@redhat.com>
+    xfs: Correctly invert xfs_buftarg LRU isolation logic
+
+Xin Long <lucien.xin@gmail.com>
+    sctp: not bind the socket in sctp_connect
+
+Xin Long <lucien.xin@gmail.com>
+    sctp: fix the issue that flags are ignored when using kernel_connect
+
+Eric Dumazet <edumazet@google.com>
+    sch_netem: fix rcu splat in netem_enqueue()
+
+Valentin Vidic <vvidic@valentin-vidic.from.hr>
+    net: usb: sr9800: fix uninitialized local variable
+
+Eric Dumazet <edumazet@google.com>
+    bonding: fix potential NULL deref in bond_update_slave_arr
+
+Eric Biggers <ebiggers@google.com>
+    llc: fix sk_buff leak in llc_conn_service()
+
+Eric Biggers <ebiggers@google.com>
+    llc: fix sk_buff leak in llc_sap_state_process()
+
+Tony Lindgren <tony@atomide.com>
+    dmaengine: cppi41: Fix cppi41_dma_prep_slave_sg() when idle
+
+Laura Abbott <labbott@redhat.com>
+    rtlwifi: Fix potential overflow on P2P code
+
+Yihui ZENG <yzeng56@asu.edu>
+    s390/cmm: fix information leak in cmm_timeout_handler()
+
+Markus Theil <markus.theil@tu-ilmenau.de>
+    nl80211: fix validation of mesh path nexthop
+
+Michał Mirosław <mirq-linux@rere.qmqm.pl>
+    HID: fix error message in hid_open_report()
+
+Alan Stern <stern@rowland.harvard.edu>
+    HID: Fix assumption that devices have inputs
+
+Hans de Goede <hdegoede@redhat.com>
+    HID: i2c-hid: add Trekstor Primebook C11B to descriptor override
+
+Johan Hovold <johan@kernel.org>
+    USB: serial: whiteheat: fix line-speed endianness
+
+Johan Hovold <johan@kernel.org>
+    USB: serial: whiteheat: fix potential slab corruption
+
+Johan Hovold <johan@kernel.org>
+    USB: ldusb: fix control-message timeout
+
+Johan Hovold <johan@kernel.org>
+    USB: ldusb: fix ring-buffer locking
+
+Alan Stern <stern@rowland.harvard.edu>
+    usb-storage: Revert commit 747668dbc061 ("usb-storage: Set virt_boundary_mask to avoid SG overflows")
+
+Alan Stern <stern@rowland.harvard.edu>
+    USB: gadget: Reject endpoints with 0 maxpacket value
+
+Alan Stern <stern@rowland.harvard.edu>
+    UAS: Revert commit 3ae62a42090f ("UAS: fix alignment of scatter/gather segments")
+
+Takashi Sakamoto <o-takashi@sakamocchi.jp>
+    ALSA: bebob: Fix prototype of helper function to return negative value
+
+Miklos Szeredi <mszeredi@redhat.com>
+    fuse: truncate pending writes on O_TRUNC
+
+Miklos Szeredi <mszeredi@redhat.com>
+    fuse: flush dirty data/metadata before non-truncate setattr
+
+Hui Peng <benquike@gmail.com>
+    ath6kl: fix a NULL-ptr-deref bug in ath6kl_usb_alloc_urb_from_pipe()
+
+Mika Westerberg <mika.westerberg@linux.intel.com>
+    thunderbolt: Use 32-bit writes when writing ring producer/consumer
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    USB: legousbtower: fix a signedness bug in tower_probe()
+
+Petr Mladek <pmladek@suse.com>
+    tracing: Initialize iter->seq after zeroing in tracing_read_pipe()
+
+Christian Borntraeger <borntraeger@de.ibm.com>
+    s390/uaccess: avoid (false positive) compiler warnings
+
+Chuck Lever <chuck.lever@oracle.com>
+    NFSv4: Fix leak of clp->cl_acceptor string
+
+Thomas Bogendoerfer <tbogendoerfer@suse.de>
+    MIPS: fw: sni: Fix out of bounds init of o32 stack
+
+Jia-Ju Bai <baijiaju1990@gmail.com>
+    fs: ocfs2: fix a possible null-pointer dereference in ocfs2_info_scan_inode_alloc()
+
+Jia-Ju Bai <baijiaju1990@gmail.com>
+    fs: ocfs2: fix a possible null-pointer dereference in ocfs2_write_end_nolock()
+
+Jia-Ju Bai <baijiaju1990@gmail.com>
+    fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()
+
+Jia Guo <guojia12@huawei.com>
+    ocfs2: clear zero in unaligned direct IO
+
+Dave Young <dyoung@redhat.com>
+    efi/x86: Do not clean dummy variable in kexec path
+
+Lukas Wunner <lukas@wunner.de>
+    efi/cper: Fix endianness of PCIe class code
+
+Adam Ford <aford173@gmail.com>
+    serial: mctrl_gpio: Check for NULL pointer
+
+Austin Kim <austindh.kim@gmail.com>
+    fs: cifs: mute -Wunused-const-variable message
+
+Thierry Reding <treding@nvidia.com>
+    gpio: max77620: Use correct unit for debounce times
+
+Bart Van Assche <bvanassche@acm.org>
+    RDMA/iwcm: Fix a lock inversion issue
+
+Connor Kuehl <connor.kuehl@canonical.com>
+    staging: rtl8188eu: fix null dereference when kzalloc fails
+
+Andi Kleen <ak@linux.intel.com>
+    perf jevents: Fix period for Intel fixed counters
+
+Steve MacLean <Steve.MacLean@microsoft.com>
+    perf map: Fix overlapped map handling
+
+Pascal Bouwmann <bouwmann@tau-tec.de>
+    iio: fix center temperature of bmc150-accel-core
+
+Kees Cook <keescook@chromium.org>
+    exec: load_script: Do not exec truncated interpreter path
+
+Sam Ravnborg <sam@ravnborg.org>
+    rtc: pcf8523: set xtal load capacitance from DT
+
+Jan-Marek Glogowski <glogow@fbihome.de>
+    usb: handle warm-reset port requests on hub resume
+
+Brian Norris <briannorris@chromium.org>
+    scripts/setlocalversion: Improve -dirty check with git-status --no-optional-locks
+
+Hans de Goede <hdegoede@redhat.com>
+    HID: i2c-hid: Add Odys Winbook 13 to descriptor override
+
+Kan Liang <kan.liang@linux.intel.com>
+    x86/cpu: Add Atom Tremont (Jacobsville)
+
+Julian Sax <jsbc@gmx.de>
+    HID: i2c-hid: add Direkt-Tek DTLAPY133-1 to descriptor override
+
+Phil Elwell <phil@raspberrypi.org>
+    sc16is7xx: Fix for "Unexpected interrupt: 8"
+
+Kent Overstreet <kent.overstreet@gmail.com>
+    dm: Use kzalloc for all structs with embedded biosets/mempools
+
+Mikulas Patocka <mpatocka@redhat.com>
+    dm snapshot: rework COW throttling to fix deadlock
+
+Mikulas Patocka <mpatocka@redhat.com>
+    dm snapshot: introduce account_start_copy() and account_end_copy()
+
+Mikulas Patocka <mpatocka@redhat.com>
+    dm snapshot: use mutex instead of rw_semaphore
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                    |   4 +-
+ arch/mips/fw/sni/sniprom.c                  |   2 +-
+ arch/s390/include/asm/uaccess.h             |   4 +-
+ arch/s390/mm/cmm.c                          |  12 +-
+ arch/x86/include/asm/intel-family.h         |   3 +-
+ arch/x86/platform/efi/efi.c                 |   3 -
+ drivers/dma/cppi41.c                        |  21 +++-
+ drivers/firmware/efi/cper.c                 |   2 +-
+ drivers/gpio/gpio-max77620.c                |   6 +-
+ drivers/hid/hid-axff.c                      |  11 +-
+ drivers/hid/hid-core.c                      |   7 +-
+ drivers/hid/hid-dr.c                        |  12 +-
+ drivers/hid/hid-emsff.c                     |  12 +-
+ drivers/hid/hid-gaff.c                      |  12 +-
+ drivers/hid/hid-holtekff.c                  |  12 +-
+ drivers/hid/hid-lg2ff.c                     |  12 +-
+ drivers/hid/hid-lg3ff.c                     |  11 +-
+ drivers/hid/hid-lg4ff.c                     |  11 +-
+ drivers/hid/hid-lgff.c                      |  11 +-
+ drivers/hid/hid-logitech-hidpp.c            |  11 +-
+ drivers/hid/hid-sony.c                      |  12 +-
+ drivers/hid/hid-tmff.c                      |  12 +-
+ drivers/hid/hid-zpff.c                      |  12 +-
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c    |  35 ++++++
+ drivers/iio/accel/bmc150-accel-core.c       |   2 +-
+ drivers/infiniband/core/cma.c               |   3 +-
+ drivers/md/dm-bio-prison.c                  |   2 +-
+ drivers/md/dm-io.c                          |   2 +-
+ drivers/md/dm-kcopyd.c                      |   2 +-
+ drivers/md/dm-region-hash.c                 |   2 +-
+ drivers/md/dm-snap.c                        | 178 +++++++++++++++++++---------
+ drivers/md/dm-thin.c                        |   2 +-
+ drivers/net/bonding/bond_main.c             |   2 +-
+ drivers/net/usb/sr9800.c                    |   2 +-
+ drivers/net/wireless/ath/ath6kl/usb.c       |   8 ++
+ drivers/net/wireless/realtek/rtlwifi/ps.c   |   6 +
+ drivers/rtc/rtc-pcf8523.c                   |  28 +++--
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c |   6 +-
+ drivers/thunderbolt/nhi.c                   |  22 +++-
+ drivers/tty/serial/sc16is7xx.c              |  28 +++++
+ drivers/tty/serial/serial_mctrl_gpio.c      |   3 +
+ drivers/usb/core/hub.c                      |   7 ++
+ drivers/usb/gadget/udc/core.c               |  11 ++
+ drivers/usb/misc/ldusb.c                    |   6 +-
+ drivers/usb/misc/legousbtower.c             |   2 +-
+ drivers/usb/serial/whiteheat.c              |  13 +-
+ drivers/usb/serial/whiteheat.h              |   2 +-
+ drivers/usb/storage/scsiglue.c              |  10 --
+ drivers/usb/storage/uas.c                   |  20 ----
+ fs/binfmt_script.c                          |  57 +++++++--
+ fs/cifs/netmisc.c                           |   4 -
+ fs/fuse/dir.c                               |  13 ++
+ fs/fuse/file.c                              |  10 +-
+ fs/nfs/nfs4proc.c                           |   1 +
+ fs/ocfs2/aops.c                             |  25 +++-
+ fs/ocfs2/ioctl.c                            |   2 +-
+ fs/ocfs2/xattr.c                            |  56 ++++-----
+ fs/xfs/xfs_buf.c                            |   2 +-
+ include/net/llc_conn.h                      |   2 +-
+ include/net/sch_generic.h                   |   5 +
+ include/net/sctp/sctp.h                     |   2 +
+ include/sound/timer.h                       |   2 +
+ kernel/trace/trace.c                        |   1 +
+ net/llc/llc_c_ac.c                          |   8 +-
+ net/llc/llc_conn.c                          |  32 ++---
+ net/llc/llc_s_ac.c                          |  12 +-
+ net/llc/llc_sap.c                           |  23 ++--
+ net/sched/sch_netem.c                       |   2 +-
+ net/sctp/ipv6.c                             |   2 +-
+ net/sctp/protocol.c                         |   2 +-
+ net/sctp/socket.c                           |  55 +++++----
+ net/wireless/nl80211.c                      |   3 +-
+ scripts/setlocalversion                     |  12 +-
+ sound/core/hrtimer.c                        |   1 +
+ sound/core/timer.c                          | 141 +++++++++++++++-------
+ sound/firewire/bebob/bebob_stream.c         |   3 +-
+ tools/perf/pmu-events/jevents.c             |  12 +-
+ tools/perf/util/map.c                       |   3 +
+ 78 files changed, 754 insertions(+), 358 deletions(-)
 
 
