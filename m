@@ -2,99 +2,128 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D98CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC864CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB85C21E6F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA822184C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:17:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="CdhAcD1T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FPu6E5dG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbfKDMQv (ORCPT
+        id S1729000AbfKDMRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 07:16:51 -0500
-Received: from vps.xff.cz ([195.181.215.36]:52184 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728947AbfKDMQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 07:16:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1572869808; bh=KCFoy8DEuYBh4BpeRyFcEMigPcCpT5yYzcAzcagUIs4=;
-        h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
-        b=CdhAcD1TaKtfCfj2iNbv9h3SK1MnjM7OKVHMIgbtizM66lAc3IplaQ5wtrkdQubkr
-         is7SXs0ZAS9+oS/nX7oNBsCjZzCLasEctUuyrM8zllMtksBfLkSVRcoCmvYmfYuLIP
-         zLpVg+HzvGshd1RWscfjtZUttHDzlJJHB4F89kb8=
-Date:   Mon, 4 Nov 2019 13:16:48 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     linux-sunxi@googlegroups.com,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 4/4] arm64: dts: allwinner: orange-pi-3: Enable USB 3.0
- host support
-Message-ID: <20191104121648.jxgs2eoj6loh2as2@core.my.home>
-Mail-Followup-To: Maxime Ripard <mripard@kernel.org>,
-        linux-sunxi@googlegroups.com,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <20191020134229.1216351-1-megous@megous.com>
- <20191020134229.1216351-5-megous@megous.com>
- <20191021110946.gxmib3to7n7v2vof@gilmour>
+        Mon, 4 Nov 2019 07:17:06 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46333 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728481AbfKDMRG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 07:17:06 -0500
+Received: by mail-ot1-f65.google.com with SMTP id n23so3928511otr.13;
+        Mon, 04 Nov 2019 04:17:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=47JQeuFealI4jSM8NIAlNeCFyhat+1KtTcPGYTc+/B8=;
+        b=FPu6E5dGuSRTF6T/chyqu3HS3QEMsl5rfwZPsGs0ptx4/DFVAWuoxW4eupR2kW6pLB
+         YzkXisGoHccl2mdW/jxtTSupOn6Xz+LQask4MV4S3TD3xNI27X2Hq1UEatMuGosoPXE8
+         rHgxMMVgoP96+VFrD3+hA6OKb2042UKfJtHTcJ3re5M3lPEmsZ12f7RKIPCmqdQ8h4mw
+         QDvRZgP5bRoAg0DfUyjxAljiCDCMN0zJWS/Mj3xNjCNHp+c2d6xcfOLFJPuhN5U5RN2D
+         0AJMjvEZdCFcuNzb6YjqqqssJUTokMhoHpdp+Svm9U5mWxOcEdC4PqFDnTqky2UrKLSS
+         C/6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=47JQeuFealI4jSM8NIAlNeCFyhat+1KtTcPGYTc+/B8=;
+        b=e6ni6SIsngQd3O4btfQmt0S4W8O2cOIlDbieYzCcfU8yALSUU4UL+oc/zBiV8Tx3Uz
+         x0IepCY5APOjzbkBo9Deqetn0Un8JSA2ZgXkzmadEsOr06gUzjWg2yDmeJxBqEUFhcLm
+         JCZZWx2a6jG6lvyEUePbN3QYIxSC3dZGF3mpTQ8jfkfX6DID0oOY+TDWoo0C1IGfc+rJ
+         Nj7k/s+Adwe6jK5uaGp0Dqa9s18aiFV/KhhUIJdU9n2YHSJwUaOxG3x4F0u+JWesoVKd
+         PWxB4yEgW3wZ55t/7zXlVCT+ADLCvkdyLeymMYQAtM7GUW0n6XhKdre4Y72FjLwdrGMf
+         MuAw==
+X-Gm-Message-State: APjAAAV/96etiBSWJ/BER2AdiIJ9wjnj5pgiMJu9rKc4CkfH1RPTma37
+        6dHWN3TkfXExfF52mn3EumjTlPC2AI5eirDTJKI=
+X-Google-Smtp-Source: APXvYqy9eyChpvYwt1pJ3TRds008moU69SaOBiaC6RH8bQb1NPio/GjYEzuL+cmwtrnLMDcu8iGwlKWXjA/XvAmUyuY=
+X-Received: by 2002:a9d:7b43:: with SMTP id f3mr17403056oto.254.1572869825122;
+ Mon, 04 Nov 2019 04:17:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021110946.gxmib3to7n7v2vof@gilmour>
+References: <1572848879-21011-1-git-send-email-wanpengli@tencent.com>
+ <1572848879-21011-2-git-send-email-wanpengli@tencent.com> <c32d632b-8fb0-f7c6-4937-07c30769b924@redhat.com>
+In-Reply-To: <c32d632b-8fb0-f7c6-4937-07c30769b924@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 4 Nov 2019 20:16:58 +0800
+Message-ID: <CANRm+CzkbrbE2C2yFKL1=mQCBCZMfVH8Tue3eXXqTL5Z1VUB5w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] KVM: Fix rcu splat if vm creation fails
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Maxime,
-
-On Mon, Oct 21, 2019 at 01:09:46PM +0200, Maxime Ripard wrote:
-> On Sun, Oct 20, 2019 at 03:42:29PM +0200, megous@megous.com wrote:
-> > From: Ondrej Jirman <megous@megous.com>
+On Mon, 4 Nov 2019 at 19:18, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 04/11/19 07:27, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
 > >
-> > Enable Allwinner's USB 3.0 phy and the host controller. Orange Pi 3
-> > board has GL3510 USB 3.0 4-port hub connected to the SoC's USB 3.0
-> > port. All four ports are exposed via USB3-A connectors. VBUS is
-> > always on, since it's powered directly from DCIN (VCC-5V) and
-> > not switchable.
+> > Reported by syzkaller:
 > >
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> 
-> Those last two patches are fine with me, I'll merge them once the phy
-> driver will be merged.
+> >    =============================
+> >    WARNING: suspicious RCU usage
+> >    -----------------------------
+> >    ./include/linux/kvm_host.h:536 suspicious rcu_dereference_check() usage!
+> >
+> >    other info that might help us debug this:
+> >
+> >    rcu_scheduler_active = 2, debug_locks = 1
+> >    no locks held by repro_11/12688.
+> >
+> >    stack backtrace:
+> >    Call Trace:
+> >     dump_stack+0x7d/0xc5
+> >     lockdep_rcu_suspicious+0x123/0x170
+> >     kvm_dev_ioctl+0x9a9/0x1260 [kvm]
+> >     do_vfs_ioctl+0x1a1/0xfb0
+> >     ksys_ioctl+0x6d/0x80
+> >     __x64_sys_ioctl+0x73/0xb0
+> >     do_syscall_64+0x108/0xaa0
+> >     entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >
+> > Commit a97b0e773e4 (kvm: call kvm_arch_destroy_vm if vm creation fails)
+> > sets users_count to 1 before kvm_arch_init_vm(), however, if kvm_arch_init_vm()
+> > fails, we need to dec this count. Or, we can move the sets refcount after
+> > kvm_arch_init_vm().
+>
+> I don't understand this one, hasn't
+>
+>         WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
+>
+> decreased the conut already?  With your patch the refcount would then
+> underflow.
 
-PHY driver has been merged. You can now pull these patches too, when
-you like.
+r = kvm_arch_init_vm(kvm, type);
+if (r)
+    goto out_err_no_arch_destroy_vm;
 
-See here: https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/log/?h=next
+out_err_no_disable:
+    kvm_arch_destroy_vm(kvm);
+    WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
+out_err_no_arch_destroy_vm:
 
-Thank you,
-	o.
+So, if kvm_arch_init_vm() fails, we will not execute
+WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
 
-> Maxime
-
-
+    Wanpeng
