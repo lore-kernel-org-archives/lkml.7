@@ -4,62 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD4CCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514AECA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FFF62084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BCAB205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905305;
-	bh=mlquCAeuub9DQjmH5s7QG9Jv8sxTcMDhb1VpuNgMqWg=;
+	s=default; t=1572905302;
+	bh=d/6zc+tZJQ0l59lFjH5IKUXNkBz2OQ9GKqznhzOEnoA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2nw1Wn26WTHoEEWY9+KOejQrzatJ2uvYYjkd+m9NlKcBm9GzBpHUI2JtC9WnTIlXX
-	 B4BuPHo0itbxPLhqcOInPifSHsPLiJIIOQTf2BsAzend9iumuuKBxnQeFyIbTerkkJ
-	 zNj3OjY3796UXg1sQMQQjFqI0NjwIlNb2D8iH3Ac=
+	b=epmuIH9rbeZb1PoVeJrI+vJb8ye/omUzIy+m5TxjUXF4X2tl32t/XuZo1JQNlhomc
+	 faLxPWKoiz9o5ytIVGxnZXruEBtZr2h5ItM6esHilWg50yxLB+z3qyfjTbJSemEBri
+	 4UFeNjChADBJwsIej46/t7HJAiiXV0HeaXRd+QJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389821AbfKDWIT (ORCPT
+        id S2390218AbfKDWIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:08:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40926 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:08:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388378AbfKDWIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:08:10 -0500
+        id S2389799AbfKDWIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:08:15 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBC2D21744;
-        Mon,  4 Nov 2019 22:08:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C03C2084D;
+        Mon,  4 Nov 2019 22:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905289;
-        bh=mlquCAeuub9DQjmH5s7QG9Jv8sxTcMDhb1VpuNgMqWg=;
+        s=default; t=1572905295;
+        bh=d/6zc+tZJQ0l59lFjH5IKUXNkBz2OQ9GKqznhzOEnoA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XdWHNLYbCPavn5BT5vjL7PnVIViFQWD5ovfqc7c4aTTWThhjlcIMxcHcPEAThvQm2
-         iITfI0FtOdt1SVMxEKD6JlnQKHrgIqF9nU9oymB7Bjy5Ylzn/Xygy/WDRHSuTqbC28
-         r874eFfTE1BRZdjVhIjL/Jg2BAUCblsZ0/PyMCvs=
+        b=IQKQH2l+S5EDi9t+QnEQh4khUtUuLH8aPn6yUqEZRPP1VOPefiq4NIZKgmYh4hFqb
+         MCvCsUQSIc7Kf68JNQhIVZFIApEyajy0nyNq4T+R59SFZFygDY0ILHyyDshmsYjgii
+         L9AEkZ7L0QQuPMntDO0VUVwxvRMh1aZ58oudHzcI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Young <dyoung@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lukas Wunner <lukas@wunner.de>, Lyude Paul <lyude@redhat.com>,
-        Octavian Purdila <octavian.purdila@intel.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Scott Talbert <swt@techie.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 052/163] efi/x86: Do not clean dummy variable in kexec path
-Date:   Mon,  4 Nov 2019 22:44:02 +0100
-Message-Id: <20191104212143.934226398@linuxfoundation.org>
+        stable@vger.kernel.org, Vincent Chen <vincent.chen@sifive.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 054/163] riscv: avoid kernel hangs when trapped in BUG()
+Date:   Mon,  4 Nov 2019 22:44:04 +0100
+Message-Id: <20191104212144.063503330@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -72,57 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Young <dyoung@redhat.com>
+From: Vincent Chen <vincent.chen@sifive.com>
 
-[ Upstream commit 2ecb7402cfc7f22764e7bbc80790e66eadb20560 ]
+[ Upstream commit 8b04825ed205da38754f86f4c07ea8600d8c2a65 ]
 
-kexec reboot fails randomly in UEFI based KVM guest.  The firmware
-just resets while calling efi_delete_dummy_variable();  Unfortunately
-I don't know how to debug the firmware, it is also possible a potential
-problem on real hardware as well although nobody reproduced it.
+When the CONFIG_GENERIC_BUG is disabled by disabling CONFIG_BUG, if a
+kernel thread is trapped by BUG(), the whole system will be in the
+loop that infinitely handles the ebreak exception instead of entering the
+die function. To fix this problem, the do_trap_break() will always call
+the die() to deal with the break exception as the type of break is
+BUG_TRAP_TYPE_BUG.
 
-The intention of the efi_delete_dummy_variable is to trigger garbage collection
-when entering virtual mode.  But SetVirtualAddressMap can only run once
-for each physical reboot, thus kexec_enter_virtual_mode() is not necessarily
-a good place to clean a dummy object.
-
-Drop the efi_delete_dummy_variable so that kexec reboot can work.
-
-Signed-off-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Acked-by: Matthew Garrett <mjg59@google.com>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Octavian Purdila <octavian.purdila@intel.com>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Scott Talbert <swt@techie.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191002165904.8819-8-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/platform/efi/efi.c | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/riscv/kernel/traps.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index a7189a3b4d70f..3304f61538a26 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -894,9 +894,6 @@ static void __init kexec_enter_virtual_mode(void)
+diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+index 424eb72d56b10..055a937aca70a 100644
+--- a/arch/riscv/kernel/traps.c
++++ b/arch/riscv/kernel/traps.c
+@@ -124,23 +124,23 @@ static inline unsigned long get_break_insn_length(unsigned long pc)
  
- 	if (efi_enabled(EFI_OLD_MEMMAP) && (__supported_pte_mask & _PAGE_NX))
- 		runtime_code_page_mkexec();
+ asmlinkage void do_trap_break(struct pt_regs *regs)
+ {
+-#ifdef CONFIG_GENERIC_BUG
+ 	if (!user_mode(regs)) {
+ 		enum bug_trap_type type;
+ 
+ 		type = report_bug(regs->sepc, regs);
+ 		switch (type) {
++#ifdef CONFIG_GENERIC_BUG
+ 		case BUG_TRAP_TYPE_NONE:
+ 			break;
+ 		case BUG_TRAP_TYPE_WARN:
+ 			regs->sepc += get_break_insn_length(regs->sepc);
+ 			break;
+ 		case BUG_TRAP_TYPE_BUG:
++#endif /* CONFIG_GENERIC_BUG */
++		default:
+ 			die(regs, "Kernel BUG");
+ 		}
+ 	}
+-#endif /* CONFIG_GENERIC_BUG */
 -
--	/* clean DUMMY object */
--	efi_delete_dummy_variable();
- #endif
+ 	force_sig_fault(SIGTRAP, TRAP_BRKPT, (void __user *)(regs->sepc));
  }
  
 -- 
