@@ -3,138 +3,148 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBAFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16A6CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB1D02184C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77502184C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbfKDLla (ORCPT
+        id S1728506AbfKDLnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:41:30 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:56996 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726441AbfKDLla (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 06:41:30 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R401e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0ThBi2ca_1572867681;
-Received: from C02XQCBJJG5H.local(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0ThBi2ca_1572867681)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 04 Nov 2019 19:41:22 +0800
-Subject: Re: [PATCH V2 7/7] x86,rcu: use percpu rcu_preempt_depth
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Babu Moger <Babu.Moger@amd.com>,
-        Rik van Riel <riel@surriel.com>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Jann Horn <jannh@google.com>,
-        David Windsor <dwindsor@gmail.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Yuyang Du <duyuyang@gmail.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Dmitry V. Levin" <ldv@altlinux.org>, rcu@vger.kernel.org
-References: <20191102124559.1135-1-laijs@linux.alibaba.com>
- <20191102124559.1135-8-laijs@linux.alibaba.com>
- <20191104092519.nukaz5qmgiskzafi@linutronix.de>
-From:   Lai Jiangshan <laijs@linux.alibaba.com>
-Message-ID: <4878ccfd-7a4e-4f84-9bc3-1d477e077587@linux.alibaba.com>
-Date:   Mon, 4 Nov 2019 19:41:20 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Mon, 4 Nov 2019 06:43:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:40634 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726441AbfKDLnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 06:43:31 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C685D1FB;
+        Mon,  4 Nov 2019 03:43:29 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF4C03F71A;
+        Mon,  4 Nov 2019 03:43:28 -0800 (PST)
+Date:   Mon, 4 Nov 2019 11:43:19 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 0/7] iommu: Permit modular builds of ARM SMMU[v3] drivers
+Message-ID: <20191104114312.GA15105@e121166-lin.cambridge.arm.com>
+References: <20191030145112.19738-1-will@kernel.org>
+ <6e457227-ca06-2998-4ffa-a58ab171ce32@arm.com>
+ <20191030155444.GC19096@willie-the-truck>
+ <CAGETcx9ogWQC1ZtnS_4xC3ShqBpuRSKudWEEWC22UZUEhdEU4A@mail.gmail.com>
+ <20191031193758.GA2607492@lophozonia>
+ <CAGETcx-MuMVvj0O-MFdfmLADEq=cQY_=x+irvhgwHhG4VeeSdg@mail.gmail.com>
+ <20191101114148.GA2694906@lophozonia>
+ <20191101122825.GA318@e121166-lin.cambridge.arm.com>
+ <CAGETcx_U1huHHT=_xo6ArTWpmKMkr=rAy4ceoVUQv6XZGEDA_w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191104092519.nukaz5qmgiskzafi@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGETcx_U1huHHT=_xo6ArTWpmKMkr=rAy4ceoVUQv6XZGEDA_w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/11/4 5:25 下午, Sebastian Andrzej Siewior wrote:
-> On 2019-11-02 12:45:59 [+0000], Lai Jiangshan wrote:
->> Convert x86 to use a per-cpu rcu_preempt_depth. The reason for doing so
->> is that accessing per-cpu variables is a lot cheaper than accessing
->> task_struct or thread_info variables.
+On Fri, Nov 01, 2019 at 02:26:05PM -0700, Saravana Kannan wrote:
+> On Fri, Nov 1, 2019 at 5:28 AM Lorenzo Pieralisi
+> <lorenzo.pieralisi@arm.com> wrote:
+> >
+> > On Fri, Nov 01, 2019 at 12:41:48PM +0100, Jean-Philippe Brucker wrote:
+> >
+> > [...]
+> >
+> > > > > I'm also wondering about ACPI support.
+> > > >
+> > > > I'd love to add ACPI support too, but I have zero knowledge of ACPI.
+> > > > I'd be happy to help anyone who wants to add ACPI support that allows
+> > > > ACPI to add device links.
+> > >
+> > > It's not as generic as device-tree, each vendor has their own table to
+> > > describe the IOMMU topology. I don't see a nice way to transpose the
+> > > add_links() callback there. Links need to be created either in a common
+> > > path (iommu_probe_device()) or in the APCI IORT driver.
+> >
+> > We can create a generic stub that calls into respective firmware
+> > handling paths (eg iort_dma_setup() in acpi_dma_configure()).
+> >
+> > There are three arches booting with ACPI so stubbing it out in
+> > specific firmware handlers is not such a big deal, less generic
+> > sure, but not catastrophically bad.
 > 
-> Is there a benchmark saying how much we gain from this?
-
-Hello
-
-Maybe I can write a tight loop for testing, but I don't
-think anyone will be interesting in it.
-
-I'm also trying to find some good real tests. I need
-some suggestions here.
-
+> Ok, good to know.
 > 
->> We need to save/restore the actual rcu_preempt_depth when switch.
->> We also place the per-cpu rcu_preempt_depth close to __preempt_count
->> and current_task variable.
->>
->> Using the idea of per-cpu __preempt_count.
->>
->> No function call when using rcu_read_[un]lock().
->> Single instruction for rcu_read_lock().
->> 2 instructions for fast path of rcu_read_unlock().
+> > Obviously this works for IOMMU masters links
 > 
-> I think these were not inlined due to the header requirements.
-
-objdump -D -S kernel/workqueue.o shows (selected fractions):
-
-
-         raw_cpu_add_4(__rcu_preempt_depth, 1);
-      d8f:       65 ff 05 00 00 00 00    incl   %gs:0x0(%rip)        # 
-d96 <work_busy+0x16>
-
-......
-
-
-         return GEN_UNARY_RMWcc("decl", __rcu_preempt_depth, e, 
-__percpu_arg([var]));
-      dd8:       65 ff 0d 00 00 00 00    decl   %gs:0x0(%rip)        # 
-ddf <work_busy+0x5f>
-         if (unlikely(rcu_preempt_depth_dec_and_test()))
-      ddf:       74 26                   je     e07 <work_busy+0x87>
-
-......
-
-                 rcu_read_unlock_special();
-      e07:       e8 00 00 00 00          callq  e0c <work_busy+0x8c>
-
+> It's unclear to me what you are referring to here and it's throwing me
+> off on the rest of the email.
 > 
-> Boris pointed one thing, there is also DEFINE_PERCPU_RCU_PREEMP_DEPTH.
+> Did you mean to say "IOMMU master's links"? As in the bus masters
+> whose accesses go through IOMMUs? And "links" as in device links?
 > 
+> OR
+> 
+> Do you mean device links from bus master devices to IOMMUs here?
 
-Thanks for pointing out.
+I meant associating endpoints devices to the IOMMU they are connected
+to.
 
-Best regards
-Lai
+In DT you do it through "iommus", "iommu-map" properties, in ACPI
+it is arch specific, doable nonetheless through ACPI (IORT on ARM)
+static tables data.
 
+> > - for resources
+> > dependencies (eg power domains) it deserves some thought, keeping in
+> > mind that IOMMUs are static table entries in ACPI and not device objects
+> > so they are not even capable of expressing eg power resources and
+> > suchlike.
+> 
+> If you can reword this sentence for me with more context or split it
+> into separate sentences, I'd appreciate that very much. I'd help me
+> understand this better and allow me to try to help out.
+
+In ACPI (at least on ARM but on x86 I suspect that's the same story with
+the DMAR table) an SMMU is presented in FW as an entry in a static
+table (eg IORT on ARM). I noticed that your patch series takes into
+account for instance eg clock dependencies in DT; this way the OS knows
+the clock(s) the SMMU depends on to be activated.
+
+In ACPI there is not a notion of "clock" (hopefully - unless someone
+sneaked that in using _DSD properties) but rather every device in the
+ACPI namespace (which is part of tables containing code that needs the
+ACPI interpreter to be used such as SSDT/DSDT - it is AML code) has ACPI
+objects describing power resources (ie ACPI specification 6.3, 7.2).
+
+The SMMU, since it is not itself an ACPI object in the ACPI namespace
+but rather an entry in a static ACPI table (IORT on ARM), can't have
+PowerResource object in it which means that at the moment there is no
+way you can detect a dependency on other power resources to be ON to
+build the device links you require to sort out the probe dependencies,
+which I *assume* that's the reason why you require to detect
+clock dependencies in DT.
+
+Maybe it is not even needed at all but in case it is I was giving
+a heads-up to say that clocks (or rather an all encompassing "power
+resource" dependency) dependencies in ACPI to build an SMMU as
+a module are not straightforward and most certainly will require
+firmware specifications updates.
+
+*Hopefully* in the short term all you need to detect is how endpoint
+devices are connected to an IOMMU and build device links to describe
+that probe dependency, if we need to throw power management into
+the picture there is more work to be done.
+
+I hope that's clearer, if it is not please let me know and I will
+try to be more precise.
+
+Thanks,
+Lorenzo
