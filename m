@@ -2,59 +2,138 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A231ECA9ED0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA6BCA9ED0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E59E21929
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EBEB21929
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:11:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e6Jh1cSM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbfKDDKp (ORCPT
+        id S1729185AbfKDDLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 22:10:45 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:41058 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728781AbfKDDKp (ORCPT
+        Sun, 3 Nov 2019 22:11:13 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:43078 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728781AbfKDDLN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 22:10:45 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3F7821503943A;
-        Sun,  3 Nov 2019 19:10:44 -0800 (PST)
-Date:   Sun, 03 Nov 2019 19:10:43 -0800 (PST)
-Message-Id: <20191103.191043.59980452666663836.davem@davemloft.net>
-To:     yuehaibing@huawei.com
-Cc:     isdn@linux-pingi.de, swinslow@gmail.com, tglx@linutronix.de,
-        sergey.senozhatsky@gmail.com, wangkefeng.wang@huawei.com,
-        elfring@users.sourceforge.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] mISDN: remove unused variable 'faxmodulation_s'
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191101134447.30280-1-yuehaibing@huawei.com>
-References: <20191101134447.30280-1-yuehaibing@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Sun, 3 Nov 2019 22:11:13 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA439JE4046155;
+        Mon, 4 Nov 2019 03:10:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=PrR52E2oEk9F8UQ17/zP4kO3lqfsQqHG/6TYakme+WU=;
+ b=e6Jh1cSM3/hkO7xcFRrkVH9WWqsbyUg8bsB3G+BGqJnsc7xNnBL+dsQIM0hMp3H5ynut
+ Ikh1A/id0QXZOhfyqB9TspeUiRXZIXXEHodzRqsM+e5HvEy3a4LWjc19rMYC5iWTQW4f
+ G8JkB3VbpFneRMNKEUgegyPp+8Q3NaeXyxPfvGFshVvcG3Q6pn135BNX/fTuYI7JTjt2
+ yUoPqQdxaxPT3URmfY8jG3joQMr2WQhMnBN5Fs3C4NzrGWP1QXJ7Yppl4k+IjiZI7zdS
+ bg/7g23FeO0aOC1XZHX8bUSS3HZfP56Js3oJjJRT838Ny6oYEBkO0Txa9HHDeh0KU0F0 iA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2w11rpmhx5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Nov 2019 03:10:53 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4343Cr017272;
+        Mon, 4 Nov 2019 03:10:53 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2w1kxkjwn1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Nov 2019 03:10:53 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA43ApKq017345;
+        Mon, 4 Nov 2019 03:10:51 GMT
+Received: from [192.168.0.4] (/111.206.84.95)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 Nov 2019 03:10:50 +0000
+Subject: Re: [PATCH 5/5] cpuidle-haltpoll: fix up the branch check
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        joao.m.martins@oracle.com, rafael.j.wysocki@intel.com,
+        rkrcmar@redhat.com, pbonzini@redhat.com
+References: <1572060239-17401-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1572060239-17401-6-git-send-email-zhenzhong.duan@oracle.com>
+ <20191101212613.GB20672@amt.cnet>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <bafc1688-02ea-77a4-fb1c-2fe6afa8a7cc@oracle.com>
+Date:   Mon, 4 Nov 2019 11:10:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191101212613.GB20672@amt.cnet>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 03 Nov 2019 19:10:44 -0800 (PST)
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1911040031
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1911040032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Fri, 1 Nov 2019 21:44:47 +0800
 
-> drivers/isdn/hardware/mISDN/mISDNisar.c:30:17:
->  warning: faxmodulation_s defined but not used [-Wunused-const-variable=]
-> 
-> It is never used, so can be removed.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On 2019/11/2 5:26, Marcelo Tosatti wrote:
+> On Sat, Oct 26, 2019 at 11:23:59AM +0800, Zhenzhong Duan wrote:
+>> Ensure pool time is longer than block_ns, so there is a margin to
+>> avoid vCPU get into block state unnecessorily.
+>>
+>> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+>> ---
+>>   drivers/cpuidle/governors/haltpoll.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/cpuidle/governors/haltpoll.c b/drivers/cpuidle/governors/haltpoll.c
+>> index 4b00d7a..59eadaf 100644
+>> --- a/drivers/cpuidle/governors/haltpoll.c
+>> +++ b/drivers/cpuidle/governors/haltpoll.c
+>> @@ -81,9 +81,9 @@ static void adjust_poll_limit(struct cpuidle_device *dev, unsigned int block_us)
+>>   	u64 block_ns = block_us*NSEC_PER_USEC;
+>>   
+>>   	/* Grow cpu_halt_poll_us if
+>> -	 * cpu_halt_poll_us < block_ns < guest_halt_poll_us
+>> +	 * cpu_halt_poll_us <= block_ns < guest_halt_poll_us
+>>   	 */
+>> -	if (block_ns > dev->poll_limit_ns && block_ns <= guest_halt_poll_ns) {
+>> +	if (block_ns >= dev->poll_limit_ns && block_ns < guest_halt_poll_ns) {
+> 					      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>
+> If block_ns == guest_halt_poll_ns, you won't allow dev->poll_limit_ns to
+> grow. Why is that?
 
-Applied.
+Maybe I'm too strict here. My understanding is: if block_ns = guest_halt_poll_ns,
+dev->poll_limit_ns will grow to guest_halt_poll_ns, then block_ns = dev->poll_limit_ns,
+there is not a margin to ensure poll time is enough to cover the equal block time.
+In this case, shrinking may be a better choice?
+
+>
+>> @@ -101,7 +101,7 @@ static void adjust_poll_limit(struct cpuidle_device *dev, unsigned int block_us)
+>>   			val = guest_halt_poll_ns;
+>>   
+>>   		dev->poll_limit_ns = val;
+>> -	} else if (block_ns > guest_halt_poll_ns &&
+>> +	} else if (block_ns >= guest_halt_poll_ns &&
+>>   		   guest_halt_poll_allow_shrink) {
+>>   		unsigned int shrink = guest_halt_poll_shrink;
+> And here you shrink if block_ns == guest_halt_poll_ns. Not sure
+> why that makes sense either.
+
+See above explanation.
+
+Zhenzhong
+
