@@ -2,147 +2,187 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF90CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFC1CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B503C2080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E4C02080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:49:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="jMQA21nk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D4G/Zggo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbfKDSro (ORCPT
+        id S1729441AbfKDStH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 13:47:44 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39845 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728800AbfKDSro (ORCPT
+        Mon, 4 Nov 2019 13:49:07 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45439 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727998AbfKDStG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 13:47:44 -0500
-Received: by mail-ot1-f66.google.com with SMTP id e17so6795813otk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 10:47:43 -0800 (PST)
+        Mon, 4 Nov 2019 13:49:06 -0500
+Received: by mail-ed1-f66.google.com with SMTP id b5so3159605eds.12;
+        Mon, 04 Nov 2019 10:49:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MAScZrMfcRjQQzWjos/ItVtsj2/Z80jqafi9Q8Gdat4=;
-        b=jMQA21nktp7RKopIBS9wqFi6i1U/MgPY5om64JS4h+GGqMA1oI7IlIGbqbfdfrqdIA
-         saCXi155JGBspLMG3er88AVUNsSmcsmIrx3Rav1KuF7BAVQDk1/UtICpwtaJeNyn9lpN
-         zv7tUe2iDUpaiQ/lqfsdmsnlFBr2CFbMzBl+xVYpZUv4idw/1LM1jFM8OFJEqOKzAJHY
-         LQ0Td6Y4IYI6qCqDnpk/+1znuoijhf3k3Umd2uq7wjPCm6RcGCgZXjVOYnmE7u/3h7WO
-         bI1st2WpH0q9W/DyZwwx/RNqbWoMWwui8IsU8NhzYfZxOmVl9QynvfalKGl80BKpI4Vj
-         x6yQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IPQis5SC3dCTHc4GNUG+t4827Fcc7d7luBNpt763ahY=;
+        b=D4G/ZggoyS6TSds2Lor/Cf+Um8HPBNJ7+Y06vU8VsJm5nD8L3huYdvLxGf3nP5VTqS
+         nAIb7yNLVF/bzMSHrZEzT027WL5izroGe7CVD9cf1viLfXooibgKiIn5HuepeP6lTkyP
+         Y3KUNopU2D357FH5AKOp+E0qGBbFocYoeSruFCYpkd+YRVABQqiqeOGmfB8O2fQc6Uot
+         3ohArJyJqAG8GQ9JVVKX++HunLf4hHMvWO+8fR9lsRZJJq2wPU5mAJGnCQVbBJ7kvwHi
+         6hrNxV8zsO2iQVT4DNzOSFNS3i2bRes0YD/nDqki91/9sPvpyM91Focw2q9G/wqKZhzN
+         QZFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MAScZrMfcRjQQzWjos/ItVtsj2/Z80jqafi9Q8Gdat4=;
-        b=iCJe7I/WX8VKgC/qFAIBz3922wROD1fgN+O3WBx+JoGbx8xzrxfg0hTXQSBGcmTjHq
-         g2wuesDxQ6qRLSZpvoEiZFIZKW8NSk74QVcGJ1TbMb7Q+myFgGWZirNOSf2HqzAJDZWP
-         Dm+NH+IMQgu8UWMGynWLfsm4XiTRwA761Jf7LsDUoeMfvkoakb7V8w8GC6b9HpW8ABlz
-         CH1p+x/8ZECW0Z0Ca6aTAUCuHXrWFMFMWc/SKU4Ol/dHmKm9NFzZJgbRoIaGJesCgVp5
-         hMd1zdHbvyV1ocV9yg2ubE6TUIegvBJGFLQ73xXEMq1Wf4mwQVc0QMCJmow30SepKPgu
-         q4iw==
-X-Gm-Message-State: APjAAAWVY1bUt1ZdYjTpsXdGPMu77mknRWN7GOTyvGRKQpI7Po5+9C08
-        INTOqdTHEmo94dd4lyDUd9mHIPKrzBovwxmGu/7iUg==
-X-Google-Smtp-Source: APXvYqxMRWfUR8/8l4v/V1zDDPZJXYUW0sZlQfmt7b99qT10zFVdxsT5JqBY5W/7oDGnO9lc4SylLnvGzYiFdEHrW8M=
-X-Received: by 2002:a05:6830:1e5a:: with SMTP id e26mr3118340otj.71.1572893263132;
- Mon, 04 Nov 2019 10:47:43 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=IPQis5SC3dCTHc4GNUG+t4827Fcc7d7luBNpt763ahY=;
+        b=h8hKp3yh9JXfmHfVGtmX7GRc25g5ebG3mJSNgvpMnf7R5sTbx/vyQw749OzdcePro2
+         FB/ICuJvbxyaKxHyLW8Ik9j3sfFAvwGUs4BSuw/gRnnFlrZMRFzFR6lf8vNuOxfxYfWl
+         bPfdhulHETM2y98aJQK+SlXkE+nTBOS/NR0VEaRcD5ArKtKvv8Fd6i5/aKUfHty/mSVB
+         LEMcTpx0W8J/Og8LjVsN900foOpHdR0Y52YXJp/0bsaH9JaTPg7YWNspoOqs5sIIGTYJ
+         QjxJXtu0fVwmECmxfXfEv4QwAHvQ7QafXQzUp4J2K5ji3ewfHjGCz6zURFn65ZTEmFKe
+         kBtA==
+X-Gm-Message-State: APjAAAWETzBhtLhmbOh7LQHSMQNyltvyL64pxx8ejqZzKB8R1QaR7/z7
+        p6KZpDA7a/7yFxQuy8QNrh1aXxrC
+X-Google-Smtp-Source: APXvYqw9Ou1tLAVjZJDgAqAYlPB9g/w73IXvpusIrcwK+XJaXSxT5g5TgAD9DwcRBw7Z9tPmjUaBTQ==
+X-Received: by 2002:aa7:d7d7:: with SMTP id e23mr14872572eds.236.1572893344062;
+        Mon, 04 Nov 2019 10:49:04 -0800 (PST)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id p12sm907573edw.81.2019.11.04.10.48.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Nov 2019 10:49:03 -0800 (PST)
+Subject: Re: [PATCH 1/2] ARM: dts: bcm2711: force CMA into first GB of memory
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        catalin.marinas@arm.com, devicetree@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eric Anholt <eric@anholt.net>
+Cc:     linux-kernel@vger.kernel.org
+References: <20191104135412.32118-1-nsaenzjulienne@suse.de>
+ <20191104135412.32118-2-nsaenzjulienne@suse.de>
+ <588d05b4-e66c-4aa0-436e-12d244a6efd8@gmx.net>
+ <05f00d57-6151-45df-67ee-b49a18a611c7@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <9b53f901-09d1-a307-b88e-f1da13eedaaf@gmail.com>
+Date:   Mon, 4 Nov 2019 10:48:57 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191003102915.28301-1-yamada.masahiro@socionext.com>
- <20191003102915.28301-4-yamada.masahiro@socionext.com> <x497e4kluxq.fsf@segfault.boston.devel.redhat.com>
- <CAK7LNASmpO6Dn2M1DtoCDs=RM+jwW7_tRhq7nqDU1YZWdRafuw@mail.gmail.com>
- <x494kznctuc.fsf@segfault.boston.devel.redhat.com> <CAK7LNAQnaBCkRCsRPjK9m6wLaDvTsgkiFgMEiObnfuncxOHZOg@mail.gmail.com>
- <CAPcyv4gFO=4EmObucuYyPNCS91y1H7d-M=0LebBK72YuD=ekNQ@mail.gmail.com>
-In-Reply-To: <CAPcyv4gFO=4EmObucuYyPNCS91y1H7d-M=0LebBK72YuD=ekNQ@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 4 Nov 2019 10:47:30 -0800
-Message-ID: <CAPcyv4iWifdYsrrcs0TQ0Fd0Eoa5uXwe3CP-VzGCWAL6yKT3WA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] modpost: do not set ->preloaded for symbols from Module.symvers
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Jeff Moyer <jmoyer@redhat.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <05f00d57-6151-45df-67ee-b49a18a611c7@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 3, 2019 at 10:43 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Sun, Nov 3, 2019 at 7:12 PM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > On Sat, Nov 2, 2019 at 3:52 AM Jeff Moyer <jmoyer@redhat.com> wrote:
-> > >
-> > > Masahiro Yamada <yamada.masahiro@socionext.com> writes:
-> > >
-> > > > On Fri, Nov 1, 2019 at 1:51 AM Jeff Moyer <jmoyer@redhat.com> wrote:
-> > > >>
-> > > >> Masahiro Yamada <yamada.masahiro@socionext.com> writes:
-> > > >>
-> > > >> > Now that there is no overwrap between symbols from ELF files and
-> > > >> > ones from Module.symvers.
-> > > >> >
-> > > >> > So, the 'exported twice' warning should be reported irrespective
-> > > >> > of where the symbol in question came from. Only the exceptional case
-> > > >> > is when __crc_<sym> symbol appears before __ksymtab_<sym>. This
-> > > >> > typically occurs for EXPORT_SYMBOL in .S files.
-> > > >>
-> > > >> Hi, Masahiro,
-> > > >>
-> > > >> After apply this patch, I get the following modpost warnings when doing:
-> > > >>
-> > > >> $ make M=tools/tesing/nvdimm
-> > > >> ...
-> > > >>   Building modules, stage 2.
-> > > >>   MODPOST 12 modules
-> > > >> WARNING: tools/testing/nvdimm/libnvdimm: 'nvdimm_bus_lock' exported
-> > > >> twice. Previous export was in drivers/nvdimm/libnvdimm.ko
-> > > >> WARNING: tools/testing/nvdimm/libnvdimm: 'nvdimm_bus_unlock'
-> > > >> exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
-> > > >> WARNING: tools/testing/nvdimm/libnvdimm: 'is_nvdimm_bus_locked'
-> > > >> exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
-> > > >> WARNING: tools/testing/nvdimm/libnvdimm: 'devm_nvdimm_memremap'
-> > > >> exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
-> > > >> WARNING: tools/testing/nvdimm/libnvdimm: 'nd_fletcher64' exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
-> > > >> WARNING: tools/testing/nvdimm/libnvdimm: 'to_nd_desc' exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
-> > > >> WARNING: tools/testing/nvdimm/libnvdimm: 'to_nvdimm_bus_dev'
-> > > >> exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
-> > > >> ...
-> > > >>
-> > > >> There are a lot of these warnings.  :)
-> > > >
-> > > > These warnings are correct since
-> > > > drivers/nvdimm/Makefile and
-> > > > tools/testing/nvdimm/Kbuild
-> > > > compile the same files.
-> > >
-> > > Yeah, but that's by design.  Is there a way to silence these warnings?
-> > >
-> > > -Jeff
-> > >
-> >
-> > "rm -f Module.symvers; make M=tools/testing/nvdimm" ?
-> >
-> > I'd like the _design_ fixed though.
->
-> This design is deliberate. The goal is to re-build the typical nvdimm
-> modules, but link them against mocked version of core kernel symbols.
-> This enables the nvdimm unit tests which have been there for years and
-> pre-date Kunit. That said, deleting Module.symvers seems a simple
-> enough workaround.
+On 11/4/19 9:51 AM, Florian Fainelli wrote:
+> On 11/4/19 9:09 AM, Stefan Wahren wrote:
+> 
+> [snip]
+> 
+>>> +	reserved-memory {
+>>> +		#address-cells = <2>;
+>>> +		#size-cells = <1>;
+>>> +		ranges;
+>>> +
+>>> +		/*
+>>> +		 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
+>>> +		 * that's not good enough for the Raspberry Pi 4 as some
+>>> +		 * devices can only address the lower 1G of memory (ZONE_DMA).
+>>> +		 */
+>>> +		linux,cma {
+>>> +			compatible = "shared-dma-pool";
+>>> +			size = <0x2000000>; /* 32MB */
+>>> +			alloc-ranges = <0x0 0x00000000 0x40000000>;
+>>> +			reusable;
+>>> +			linux,cma-default;
+>>> +		};
+>>> +	};
+>>> +
+>>
+>> i think this is a SoC-specific issue not a board specifc one. Please
+>> move this to bcm2711.dtsi
+> 
+> This sounds like a possibly fragile solution if someone changes
+> CONFIG_CMA_SIZE_MBYTES to a value greater than 32MB no?
+> 
+> I know we don't want machine descriptors for ARM64 kernels, but since
+> there is already a specific 2711 machine compatible string check, maybe
+> you could use that as well for determining whether arm64_dma_phys_limit
+> or arm64_dma32_phys_limit should be chosen?
 
-This workaround triggers:
-
-  WARNING: Symbol version dump ./Module.symvers
-           is missing; modules will have no dependencies and modversions.
-
-Which is a regression from the previous working state.
+This last sentence was referring to an earlier version of another patch
+series, this is not being done right now, although ARCH_BCM2835 does
+forcibly select ZONE_DMA. Nevermind then, I do not see a cleaner
+solution right now either.
+-- 
+Florian
