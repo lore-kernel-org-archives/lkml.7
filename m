@@ -2,105 +2,139 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911FDCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BA0CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6266920848
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 537AD20848
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:37:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IySF53AO"
+	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="nsp4z2A0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbfKDVh1 (ORCPT
+        id S1729604AbfKDVhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:37:27 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44862 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728377AbfKDVh0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:37:26 -0500
-Received: by mail-lj1-f196.google.com with SMTP id g3so13216087ljl.11;
-        Mon, 04 Nov 2019 13:37:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=aM/NqY9X7bejgM2hiDB5HuQIJW6HNTiHKqYAR0ieXv4=;
-        b=IySF53AOlpYLdgqECSOvm/SqmP6X9mL7yed/9oMaXDkjR5s33TJdJ+MSp92G4ScdCR
-         GgX+6U7AdpDEsLnF2cSwNbOlPDEah4BMhrDKRgj//oFLqKI5pA5P+lKuIsweFet7JDw3
-         1XnESNP4COm7X6smhD/1yMzWSpDRoAfwkMld0ENd9iGSA0Kh/Cy+gcrldtA6msmcGVTh
-         KUOPR0pI5wVmoiG5wIodkQHSm7FJjRx5JnkzUe8sCIPK6cXxCQstLPT6mmDjvdYGWKg3
-         IMLLoJNcGudGgpMzULjwA9iEiEIz5MTPsSyZSUBpZdE3MMvV624O3bXyhY48D+y4ulcs
-         hUiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=aM/NqY9X7bejgM2hiDB5HuQIJW6HNTiHKqYAR0ieXv4=;
-        b=PE+cL9oodzyCJL25xqvLik6AL9XtZ0S00KaHTPF7NMd/YhM4xXXeO0MRhSgkJKR3Zk
-         CDTLvNMdaoeUpAVUECGJg0vkVPBcpXfuomtLb2M3q7V/Iky9ryyMYVKRDfa+OHK1rlXw
-         RlkLJ79NKhmwfKfidVtZ+slIOZ4LkflZAUt0Bk7A8vrirbE5EoNx6Q4dcS6sOEalHW5Y
-         vMRI1BmLUOIn3SABJv9pDIrPlLCNDAKPW56WuMGhujkPUqueh2EBxHou6TEjYru+stIv
-         lIuw9/o62BuO275TMtgKTKrySREHEU1Zcp+p7Ruu0n6SGiDf2NOmTDZFL7bk9IkGIm8q
-         NC5Q==
-X-Gm-Message-State: APjAAAV4L31ltpq/lTvZUTAn9f17ZHM9xiTW/xAP4J4S/ZkBnDo+bZDm
-        6amtb9S6DL+Px2zcO0Xw/GXQQAYWQVs=
-X-Google-Smtp-Source: APXvYqweBtEACZoySgQRDylgmupur12Ksn/LyXpt5c/NUN1boQKhzk0ZLsWyYraI07kiv4MxojGhLw==
-X-Received: by 2002:a2e:9417:: with SMTP id i23mr8216022ljh.152.1572903444210;
-        Mon, 04 Nov 2019 13:37:24 -0800 (PST)
-Received: from localhost.localdomain ([91.237.107.85])
-        by smtp.googlemail.com with ESMTPSA id i18sm9162243lfc.82.2019.11.04.13.37.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 13:37:23 -0800 (PST)
-From:   Leonid Maksymchuk <leonmaxx@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, chiu@endlessm.com,
-        yurii.pavlovskyi@gmail.com, kristian@klausen.dk,
-        andy@infradead.org, dvhart@infradead.org, corentin.chary@gmail.com,
-        Leonid Maksymchuk <leonmaxx@gmail.com>
-Subject: [PATCH v2 1/3] platform/x86: asus_wmi: Fix return value of fan_boost_mode_store
-Date:   Mon,  4 Nov 2019 23:37:07 +0200
-Message-Id: <20191104213707.18170-1-leonmaxx@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104213417.18036-1-leonmaxx@gmail.com>
-References: <20191104213417.18036-1-leonmaxx@gmail.com>
+        Mon, 4 Nov 2019 16:37:34 -0500
+Received: from canardo.mork.no ([148.122.252.1]:48009 "EHLO canardo.mork.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728377AbfKDVhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:37:33 -0500
+X-Greylist: delayed 887 seconds by postgrey-1.27 at vger.kernel.org; Mon, 04 Nov 2019 16:37:33 EST
+Received: from miraculix.mork.no (miraculix.mork.no [IPv6:2001:4641:0:2:7627:374e:db74:e353])
+        (authenticated bits=0)
+        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id xA4LMV2u006902
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 4 Nov 2019 22:22:34 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
+        t=1572902556; bh=48oj23vht5x5+7JKYCCyMc5bdK+KmMf3l3mvdQ60FJQ=;
+        h=From:To:Cc:Subject:References:Date:Message-ID:From;
+        b=nsp4z2A0Ol0ZPMNtpvgXHP/QHASiVnZT0tLNU9H0xfszOUbrCOyeBClHdJHWz1/im
+         cy+MsmDRoekwPAsBW7OmzgqJ5K3fR6gi8KlZdBmLOf+ECqQ4CcehiszZpfY7TXfyQC
+         6umMwZjJVfImOgRcPXXfNRL2AoBoKQHDnJ8+5heQ=
+Received: from bjorn by miraculix.mork.no with local (Exim 4.92)
+        (envelope-from <bjorn@mork.no>)
+        id 1iRjnx-0003Uh-Se; Mon, 04 Nov 2019 22:22:29 +0100
+From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+To:     syzbot <syzbot+0631d878823ce2411636@syzkaller.appspotmail.com>
+Cc:     davem@davemloft.net, glider@google.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, oliver@neukum.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: KMSAN: uninit-value in cdc_ncm_set_dgram_size
+Organization: m
+References: <00000000000013c4c1059625a655@google.com>
+Date:   Mon, 04 Nov 2019 22:22:29 +0100
+In-Reply-To: <00000000000013c4c1059625a655@google.com> (syzbot's message of
+        "Wed, 30 Oct 2019 12:22:07 -0700")
+Message-ID: <87ftj32v6y.fsf@miraculix.mork.no>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.101.4 at canardo
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function fan_boost_mode_store should return number of bytes written
-but instead it returns return value of kstrtou8 which is 0 if
-conversion is succefull. This leads to infinite loop after any
-write to it's SysFS entry.
+syzbot <syzbot+0631d878823ce2411636@syzkaller.appspotmail.com> writes:
 
-Fixes: b096f626a682 ("platform/x86: asus-wmi: Switch fan boost mode")
-Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> syzbot found the following crash on:
+>
+> HEAD commit:    96c6c319 net: kasan: kmsan: support CONFIG_GENERIC_CSUM o=
+n..
+> git tree:       https://github.com/google/kmsan.git master
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D11f103bce00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D9e324dfe9c7b0=
+360
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D0631d878823ce24=
+11636
+> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D10dd9774e00=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D13651a24e00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+0631d878823ce2411636@syzkaller.appspotmail.com
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> BUG: KMSAN: uninit-value in cdc_ncm_set_dgram_size+0x6ba/0xbc0
+> drivers/net/usb/cdc_ncm.c:587
+> CPU: 0 PID: 11865 Comm: kworker/0:3 Not tainted 5.4.0-rc5+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine,
+> BIOS Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+>  kmsan_report+0x128/0x220 mm/kmsan/kmsan_report.c:108
+>  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:245
+>  cdc_ncm_set_dgram_size+0x6ba/0xbc0 drivers/net/usb/cdc_ncm.c:587
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 821b08e..723aa4d 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1718,7 +1718,7 @@ static ssize_t fan_boost_mode_store(struct device *dev,
- 	asus->fan_boost_mode = new_mode;
- 	fan_boost_mode_write(asus);
- 
--	return result;
-+	return count;
- }
- 
- // Fan boost mode: 0 - normal, 1 - overboost, 2 - silent
--- 
-1.8.3.1
+..
+> Variable was created at:
+>  cdc_ncm_set_dgram_size+0xf5/0xbc0 drivers/net/usb/cdc_ncm.c:564
+>  cdc_ncm_set_dgram_size+0xf5/0xbc0 drivers/net/usb/cdc_ncm.c:564
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
 
+This looks like a false positive to me. max_datagram_size is two bytes
+declared as
+
+	__le16 max_datagram_size;
+
+and the code leading up to the access on drivers/net/usb/cdc_ncm.c:587
+is:
+
+	/* read current mtu value from device */
+	err =3D usbnet_read_cmd(dev, USB_CDC_GET_MAX_DATAGRAM_SIZE,
+			      USB_TYPE_CLASS | USB_DIR_IN | USB_RECIP_INTERFACE,
+			      0, iface_no, &max_datagram_size, 2);
+	if (err < 0) {
+		dev_dbg(&dev->intf->dev, "GET_MAX_DATAGRAM_SIZE failed\n");
+		goto out;
+	}
+
+	if (le16_to_cpu(max_datagram_size) =3D=3D ctx->max_datagram_size)
+
+
+
+AFAICS, there is no way max_datagram_size can be uninitialized here.
+usbnet_read_cmd() either read 2 bytes into it or returned an error,
+causing the access to be skipped.  Or am I missing something?
+
+I tried to read the syzbot manual to figure out how to tell this to the
+bot, but couldn't find that either.  Not my day today it seems ;-)
+
+Please let me know what to do about this.
+
+
+Bj=C3=B8rn
