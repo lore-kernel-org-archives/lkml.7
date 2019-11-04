@@ -2,50 +2,53 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA76CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C571CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27CF8204FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2270A204FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905874;
-	bh=6AvvrlPXSuBoPMjBsq1vSdqTw7HJ6pi4GC+M7L2rNXE=;
+	s=default; t=1572905877;
+	bh=pfsObuW+C2EvHwuzLuq6BbLA7QNXiNdMae4pEfSAyCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SLKTFfrxSC0aPwQR6Rf3uXdVyieao9LzTh/Y5qY3xlWPzjeG5YppD5+2bLtVVoofu
-	 c5GZmlbyBqtMQl9z2KX7CZoz2Y4nFY+X8+Len3I5AkFqdb8M4CRm0xVgy7j9rsB4r3
-	 QhjVr0BjCH75bcOrzKOf5rYsoR9RnKdR9cYL3ZXo=
+	b=a2QUr44CaHat93hqlQurgYyyphPuv7V8sS2icMa0mfSGwJ3t7/mGhfmH+qQZYpNEw
+	 u54yON5YVwqlzfbF/nXQav5NL99Jr8xNw0wAbVTYcXebovmcsf/y/E2ykCvozTohpI
+	 yrQ94YCQHGFyHPk3IhaSCznQ8TDzQsAL+OU2YyEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389258AbfKDWCT (ORCPT
+        id S2389247AbfKDWCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:02:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59820 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:02:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389161AbfKDWBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:41 -0500
+        id S2389068AbfKDWBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:01:35 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27BFA20650;
-        Mon,  4 Nov 2019 22:01:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 365E420659;
+        Mon,  4 Nov 2019 22:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904900;
-        bh=6AvvrlPXSuBoPMjBsq1vSdqTw7HJ6pi4GC+M7L2rNXE=;
+        s=default; t=1572904894;
+        bh=pfsObuW+C2EvHwuzLuq6BbLA7QNXiNdMae4pEfSAyCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qio3BPt6I/rAdV5tXdzE0JVXE+0AzfiT7RruVIFVwQ/o/Ef3uNQI/deaYQeFYf0Ws
-         KIRZklutLWt6om6wRNoWzvi3Ky43eSambI3arRH6BPSeH5CbFkAjtUykmXEeXb0/O1
-         Pe/xdhSn3ziDXnXlph6e55I5i6aci9jrjKwaU6iw=
+        b=oB8Q0uPsx/OwB/1Ln6W8n5tHmzvCieF53RIPwLlty8IXDpjTsl+vrhhJgIVGfgn8J
+         63RssOxpvep0Em2eVSUA0awmQ6bFjog3eCs5X6u/D3AzXiarzZPkkrJZqxMxf0ZF6q
+         gby9qY5dsO11W81LDV2YZYqa6QVcXvH7nU48h2jk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.19 110/149] fuse: truncate pending writes on O_TRUNC
-Date:   Mon,  4 Nov 2019 22:45:03 +0100
-Message-Id: <20191104212144.114811627@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Peng <benquike@gmail.com>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 108/149] ath6kl: fix a NULL-ptr-deref bug in ath6kl_usb_alloc_urb_from_pipe()
+Date:   Mon,  4 Nov 2019 22:45:01 +0100
+Message-Id: <20191104212143.994173331@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -58,55 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Hui Peng <benquike@gmail.com>
 
-commit e4648309b85a78f8c787457832269a8712a8673e upstream.
+[ Upstream commit 39d170b3cb62ba98567f5c4f40c27b5864b304e5 ]
 
-Make sure cached writes are not reordered around open(..., O_TRUNC), with
-the obvious wrong results.
+The `ar_usb` field of `ath6kl_usb_pipe_usb_pipe` objects
+are initialized to point to the containing `ath6kl_usb` object
+according to endpoint descriptors read from the device side, as shown
+below in `ath6kl_usb_setup_pipe_resources`:
 
-Fixes: 4d99ff8f12eb ("fuse: Turn writeback cache on")
-Cc: <stable@vger.kernel.org> # v3.15+
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
+	endpoint = &iface_desc->endpoint[i].desc;
 
+	// get the address from endpoint descriptor
+	pipe_num = ath6kl_usb_get_logical_pipe_num(ar_usb,
+						endpoint->bEndpointAddress,
+						&urbcount);
+	......
+	// select the pipe object
+	pipe = &ar_usb->pipes[pipe_num];
+
+	// initialize the ar_usb field
+	pipe->ar_usb = ar_usb;
+}
+
+The driver assumes that the addresses reported in endpoint
+descriptors from device side  to be complete. If a device is
+malicious and does not report complete addresses, it may trigger
+NULL-ptr-deref `ath6kl_usb_alloc_urb_from_pipe` and
+`ath6kl_usb_free_urb_to_pipe`.
+
+This patch fixes the bug by preventing potential NULL-ptr-deref
+(CVE-2019-15098).
+
+Signed-off-by: Hui Peng <benquike@gmail.com>
+Reported-by: Hui Peng <benquike@gmail.com>
+Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/file.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/ath6kl/usb.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -202,7 +202,7 @@ int fuse_open_common(struct inode *inode
+diff --git a/drivers/net/wireless/ath/ath6kl/usb.c b/drivers/net/wireless/ath/ath6kl/usb.c
+index 4defb7a0330f4..53b66e9434c99 100644
+--- a/drivers/net/wireless/ath/ath6kl/usb.c
++++ b/drivers/net/wireless/ath/ath6kl/usb.c
+@@ -132,6 +132,10 @@ ath6kl_usb_alloc_urb_from_pipe(struct ath6kl_usb_pipe *pipe)
+ 	struct ath6kl_urb_context *urb_context = NULL;
+ 	unsigned long flags;
+ 
++	/* bail if this pipe is not initialized */
++	if (!pipe->ar_usb)
++		return NULL;
++
+ 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
+ 	if (!list_empty(&pipe->urb_list_head)) {
+ 		urb_context =
+@@ -150,6 +154,10 @@ static void ath6kl_usb_free_urb_to_pipe(struct ath6kl_usb_pipe *pipe,
  {
- 	struct fuse_conn *fc = get_fuse_conn(inode);
- 	int err;
--	bool lock_inode = (file->f_flags & O_TRUNC) &&
-+	bool is_wb_truncate = (file->f_flags & O_TRUNC) &&
- 			  fc->atomic_o_trunc &&
- 			  fc->writeback_cache;
+ 	unsigned long flags;
  
-@@ -210,16 +210,20 @@ int fuse_open_common(struct inode *inode
- 	if (err)
- 		return err;
++	/* bail if this pipe is not initialized */
++	if (!pipe->ar_usb)
++		return;
++
+ 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
+ 	pipe->urb_cnt++;
  
--	if (lock_inode)
-+	if (is_wb_truncate) {
- 		inode_lock(inode);
-+		fuse_set_nowrite(inode);
-+	}
- 
- 	err = fuse_do_open(fc, get_node_id(inode), file, isdir);
- 
- 	if (!err)
- 		fuse_finish_open(inode, file);
- 
--	if (lock_inode)
-+	if (is_wb_truncate) {
-+		fuse_release_nowrite(inode);
- 		inode_unlock(inode);
-+	}
- 
- 	return err;
- }
+-- 
+2.20.1
+
 
 
