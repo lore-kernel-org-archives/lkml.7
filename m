@@ -2,187 +2,553 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFC1CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E799FCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4C02080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACCD12080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:53:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D4G/Zggo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AwPUH1Gw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbfKDStH (ORCPT
+        id S1729332AbfKDSxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 13:49:07 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45439 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727998AbfKDStG (ORCPT
+        Mon, 4 Nov 2019 13:53:02 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60192 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728392AbfKDSw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 13:49:06 -0500
-Received: by mail-ed1-f66.google.com with SMTP id b5so3159605eds.12;
-        Mon, 04 Nov 2019 10:49:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IPQis5SC3dCTHc4GNUG+t4827Fcc7d7luBNpt763ahY=;
-        b=D4G/ZggoyS6TSds2Lor/Cf+Um8HPBNJ7+Y06vU8VsJm5nD8L3huYdvLxGf3nP5VTqS
-         nAIb7yNLVF/bzMSHrZEzT027WL5izroGe7CVD9cf1viLfXooibgKiIn5HuepeP6lTkyP
-         Y3KUNopU2D357FH5AKOp+E0qGBbFocYoeSruFCYpkd+YRVABQqiqeOGmfB8O2fQc6Uot
-         3ohArJyJqAG8GQ9JVVKX++HunLf4hHMvWO+8fR9lsRZJJq2wPU5mAJGnCQVbBJ7kvwHi
-         6hrNxV8zsO2iQVT4DNzOSFNS3i2bRes0YD/nDqki91/9sPvpyM91Focw2q9G/wqKZhzN
-         QZFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=IPQis5SC3dCTHc4GNUG+t4827Fcc7d7luBNpt763ahY=;
-        b=h8hKp3yh9JXfmHfVGtmX7GRc25g5ebG3mJSNgvpMnf7R5sTbx/vyQw749OzdcePro2
-         FB/ICuJvbxyaKxHyLW8Ik9j3sfFAvwGUs4BSuw/gRnnFlrZMRFzFR6lf8vNuOxfxYfWl
-         bPfdhulHETM2y98aJQK+SlXkE+nTBOS/NR0VEaRcD5ArKtKvv8Fd6i5/aKUfHty/mSVB
-         LEMcTpx0W8J/Og8LjVsN900foOpHdR0Y52YXJp/0bsaH9JaTPg7YWNspoOqs5sIIGTYJ
-         QjxJXtu0fVwmECmxfXfEv4QwAHvQ7QafXQzUp4J2K5ji3ewfHjGCz6zURFn65ZTEmFKe
-         kBtA==
-X-Gm-Message-State: APjAAAWETzBhtLhmbOh7LQHSMQNyltvyL64pxx8ejqZzKB8R1QaR7/z7
-        p6KZpDA7a/7yFxQuy8QNrh1aXxrC
-X-Google-Smtp-Source: APXvYqw9Ou1tLAVjZJDgAqAYlPB9g/w73IXvpusIrcwK+XJaXSxT5g5TgAD9DwcRBw7Z9tPmjUaBTQ==
-X-Received: by 2002:aa7:d7d7:: with SMTP id e23mr14872572eds.236.1572893344062;
-        Mon, 04 Nov 2019 10:49:04 -0800 (PST)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id p12sm907573edw.81.2019.11.04.10.48.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Nov 2019 10:49:03 -0800 (PST)
-Subject: Re: [PATCH 1/2] ARM: dts: bcm2711: force CMA into first GB of memory
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        catalin.marinas@arm.com, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>
-Cc:     linux-kernel@vger.kernel.org
-References: <20191104135412.32118-1-nsaenzjulienne@suse.de>
- <20191104135412.32118-2-nsaenzjulienne@suse.de>
- <588d05b4-e66c-4aa0-436e-12d244a6efd8@gmx.net>
- <05f00d57-6151-45df-67ee-b49a18a611c7@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <9b53f901-09d1-a307-b88e-f1da13eedaaf@gmail.com>
-Date:   Mon, 4 Nov 2019 10:48:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 4 Nov 2019 13:52:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572893575;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vhvFv/gKEXA1cmin4yO0xx1/Gf0U1DoUV0cjNAwwQns=;
+        b=AwPUH1Gw9pb2VEuimGsZm+pjX1CrtX1/7Ed6HwMaKy/ZPUFZ0zSVYAO0Z54UIpDwl8H69t
+        gWhD+1ZLensUPVPHSFxB9TOGSe88J7eC6ZI4L0LyPYTrr9ONpXlB7K7kmlv9RccXfesO2B
+        tzG2CoqH/FEbnYvo+xskH7FTRFMnj4E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-106-BYegrK4JPIWXqhL6bCqv8A-1; Mon, 04 Nov 2019 13:52:51 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F2011800D53;
+        Mon,  4 Nov 2019 18:52:47 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1977960878;
+        Mon,  4 Nov 2019 18:52:40 +0000 (UTC)
+Date:   Mon, 4 Nov 2019 13:52:38 -0500
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 12/18] mm/gup: track FOLL_PIN pages
+Message-ID: <20191104185238.GG5134@redhat.com>
+References: <20191103211813.213227-1-jhubbard@nvidia.com>
+ <20191103211813.213227-13-jhubbard@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <05f00d57-6151-45df-67ee-b49a18a611c7@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191103211813.213227-13-jhubbard@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: BYegrK4JPIWXqhL6bCqv8A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/4/19 9:51 AM, Florian Fainelli wrote:
-> On 11/4/19 9:09 AM, Stefan Wahren wrote:
-> 
-> [snip]
-> 
->>> +	reserved-memory {
->>> +		#address-cells = <2>;
->>> +		#size-cells = <1>;
->>> +		ranges;
->>> +
->>> +		/*
->>> +		 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
->>> +		 * that's not good enough for the Raspberry Pi 4 as some
->>> +		 * devices can only address the lower 1G of memory (ZONE_DMA).
->>> +		 */
->>> +		linux,cma {
->>> +			compatible = "shared-dma-pool";
->>> +			size = <0x2000000>; /* 32MB */
->>> +			alloc-ranges = <0x0 0x00000000 0x40000000>;
->>> +			reusable;
->>> +			linux,cma-default;
->>> +		};
->>> +	};
->>> +
->>
->> i think this is a SoC-specific issue not a board specifc one. Please
->> move this to bcm2711.dtsi
-> 
-> This sounds like a possibly fragile solution if someone changes
-> CONFIG_CMA_SIZE_MBYTES to a value greater than 32MB no?
-> 
-> I know we don't want machine descriptors for ARM64 kernels, but since
-> there is already a specific 2711 machine compatible string check, maybe
-> you could use that as well for determining whether arm64_dma_phys_limit
-> or arm64_dma32_phys_limit should be chosen?
+On Sun, Nov 03, 2019 at 01:18:07PM -0800, John Hubbard wrote:
+> Add tracking of pages that were pinned via FOLL_PIN.
+>=20
+> As mentioned in the FOLL_PIN documentation, callers who effectively set
+> FOLL_PIN are required to ultimately free such pages via put_user_page().
+> The effect is similar to FOLL_GET, and may be thought of as "FOLL_GET
+> for DIO and/or RDMA use".
+>=20
+> Pages that have been pinned via FOLL_PIN are identifiable via a
+> new function call:
+>=20
+>    bool page_dma_pinned(struct page *page);
+>=20
+> What to do in response to encountering such a page, is left to later
+> patchsets. There is discussion about this in [1].
+>=20
+> This also changes a BUG_ON(), to a WARN_ON(), in follow_page_mask().
+>=20
+> This also has a couple of trivial, non-functional change fixes to
+> try_get_compound_head(). That function got moved to the top of the
+> file.
 
-This last sentence was referring to an earlier version of another patch
-series, this is not being done right now, although ARCH_BCM2835 does
-forcibly select ZONE_DMA. Nevermind then, I do not see a cleaner
-solution right now either.
--- 
-Florian
+Maybe split that as a separate trivial patch.
+
+>=20
+> This includes the following fix from Ira Weiny:
+>=20
+> DAX requires detection of a page crossing to a ref count of 1.  Fix this
+> for GUP pages by introducing put_devmap_managed_user_page() which
+> accounts for GUP_PIN_COUNTING_BIAS now used by GUP.
+
+Please do the put_devmap_managed_page() changes in a separate
+patch, it would be a lot easier to follow, also on that front
+see comments below.
+
+>=20
+> [1] https://lwn.net/Articles/784574/ "Some slow progress on
+> get_user_pages()"
+>=20
+> Suggested-by: Jan Kara <jack@suse.cz>
+> Suggested-by: J=E9r=F4me Glisse <jglisse@redhat.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  include/linux/mm.h       |  80 +++++++++++----
+>  include/linux/mmzone.h   |   2 +
+>  include/linux/page_ref.h |  10 ++
+>  mm/gup.c                 | 213 +++++++++++++++++++++++++++++++--------
+>  mm/huge_memory.c         |  32 +++++-
+>  mm/hugetlb.c             |  28 ++++-
+>  mm/memremap.c            |   4 +-
+>  mm/vmstat.c              |   2 +
+>  8 files changed, 300 insertions(+), 71 deletions(-)
+>=20
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index cdfb6fedb271..03b3600843b7 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -972,9 +972,10 @@ static inline bool is_zone_device_page(const struct =
+page *page)
+>  #endif
+> =20
+>  #ifdef CONFIG_DEV_PAGEMAP_OPS
+> -void __put_devmap_managed_page(struct page *page);
+> +void __put_devmap_managed_page(struct page *page, int count);
+>  DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
+> -static inline bool put_devmap_managed_page(struct page *page)
+> +
+> +static inline bool page_is_devmap_managed(struct page *page)
+>  {
+>  =09if (!static_branch_unlikely(&devmap_managed_key))
+>  =09=09return false;
+> @@ -983,7 +984,6 @@ static inline bool put_devmap_managed_page(struct pag=
+e *page)
+>  =09switch (page->pgmap->type) {
+>  =09case MEMORY_DEVICE_PRIVATE:
+>  =09case MEMORY_DEVICE_FS_DAX:
+> -=09=09__put_devmap_managed_page(page);
+>  =09=09return true;
+>  =09default:
+>  =09=09break;
+> @@ -991,6 +991,19 @@ static inline bool put_devmap_managed_page(struct pa=
+ge *page)
+>  =09return false;
+>  }
+> =20
+> +static inline bool put_devmap_managed_page(struct page *page)
+> +{
+> +=09bool is_devmap =3D page_is_devmap_managed(page);
+> +
+> +=09if (is_devmap) {
+> +=09=09int count =3D page_ref_dec_return(page);
+> +
+> +=09=09__put_devmap_managed_page(page, count);
+> +=09}
+> +
+> +=09return is_devmap;
+> +}
+
+I think the __put_devmap_managed_page() should be rename
+to free_devmap_managed_page() and that the count !=3D 1
+case move to this inline function ie:
+
+static inline bool put_devmap_managed_page(struct page *page)
+{
+=09bool is_devmap =3D page_is_devmap_managed(page);
+
+=09if (is_devmap) {
+=09=09int count =3D page_ref_dec_return(page);
+
+=09=09/*
+=09=09 * If refcount is 1 then page is freed and refcount is stable as nobo=
+dy
+=09=09 * holds a reference on the page.
+=09=09 */
+=09=09if (count =3D=3D 1)
+=09=09=09free_devmap_managed_page(page, count);
+=09=09else if (!count)
+=09=09=09__put_page(page);
+=09}
+
+=09return is_devmap;
+}
+
+
+> +
+>  #else /* CONFIG_DEV_PAGEMAP_OPS */
+>  static inline bool put_devmap_managed_page(struct page *page)
+>  {
+> @@ -1038,6 +1051,8 @@ static inline __must_check bool try_get_page(struct=
+ page *page)
+>  =09return true;
+>  }
+> =20
+> +__must_check bool user_page_ref_inc(struct page *page);
+> +
+
+What about having it as an inline here as it is pretty small.
+
+
+>  static inline void put_page(struct page *page)
+>  {
+>  =09page =3D compound_head(page);
+> @@ -1055,31 +1070,56 @@ static inline void put_page(struct page *page)
+>  =09=09__put_page(page);
+>  }
+> =20
+> -/**
+> - * put_user_page() - release a gup-pinned page
+> - * @page:            pointer to page to be released
+> +/*
+> + * GUP_PIN_COUNTING_BIAS, and the associated functions that use it, over=
+load
+> + * the page's refcount so that two separate items are tracked: the origi=
+nal page
+> + * reference count, and also a new count of how many get_user_pages() ca=
+lls were
+> + * made against the page. ("gup-pinned" is another term for the latter).
+> + *
+> + * With this scheme, get_user_pages() becomes special: such pages are ma=
+rked
+> + * as distinct from normal pages. As such, the new put_user_page() call =
+(and
+> + * its variants) must be used in order to release gup-pinned pages.
+> + *
+> + * Choice of value:
+>   *
+> - * Pages that were pinned via get_user_pages*() must be released via
+> - * either put_user_page(), or one of the put_user_pages*() routines
+> - * below. This is so that eventually, pages that are pinned via
+> - * get_user_pages*() can be separately tracked and uniquely handled. In
+> - * particular, interactions with RDMA and filesystems need special
+> - * handling.
+> + * By making GUP_PIN_COUNTING_BIAS a power of two, debugging of page ref=
+erence
+> + * counts with respect to get_user_pages() and put_user_page() becomes s=
+impler,
+> + * due to the fact that adding an even power of two to the page refcount=
+ has
+> + * the effect of using only the upper N bits, for the code that counts u=
+p using
+> + * the bias value. This means that the lower bits are left for the exclu=
+sive
+> + * use of the original code that increments and decrements by one (or at=
+ least,
+> + * by much smaller values than the bias value).
+>   *
+> - * put_user_page() and put_page() are not interchangeable, despite this =
+early
+> - * implementation that makes them look the same. put_user_page() calls m=
+ust
+> - * be perfectly matched up with get_user_page() calls.
+> + * Of course, once the lower bits overflow into the upper bits (and this=
+ is
+> + * OK, because subtraction recovers the original values), then visual in=
+spection
+> + * no longer suffices to directly view the separate counts. However, for=
+ normal
+> + * applications that don't have huge page reference counts, this won't b=
+e an
+> + * issue.
+> + *
+> + * Locking: the lockless algorithm described in page_cache_get_speculati=
+ve()
+> + * and page_cache_gup_pin_speculative() provides safe operation for
+> + * get_user_pages and page_mkclean and other calls that race to set up p=
+age
+> + * table entries.
+>   */
+> -static inline void put_user_page(struct page *page)
+> -{
+> -=09put_page(page);
+> -}
+> +#define GUP_PIN_COUNTING_BIAS (1UL << 10)
+> =20
+> +void put_user_page(struct page *page);
+>  void put_user_pages_dirty_lock(struct page **pages, unsigned long npages=
+,
+>  =09=09=09       bool make_dirty);
+> -
+>  void put_user_pages(struct page **pages, unsigned long npages);
+> =20
+> +/**
+> + * page_dma_pinned() - report if a page is pinned by a call to pin_user_=
+pages*()
+> + * or pin_longterm_pages*()
+> + * @page:=09pointer to page to be queried.
+> + * @Return:=09True, if it is likely that the page has been "dma-pinned".
+> + *=09=09False, if the page is definitely not dma-pinned.
+> + */
+
+Maybe add a small comment about wrap around :)
+
+> +static inline bool page_dma_pinned(struct page *page)
+> +{
+> +=09return (page_ref_count(compound_head(page))) >=3D GUP_PIN_COUNTING_BI=
+AS;
+> +}
+> +
+>  #if defined(CONFIG_SPARSEMEM) && !defined(CONFIG_SPARSEMEM_VMEMMAP)
+>  #define SECTION_IN_PAGE_FLAGS
+>  #endif
+
+[...]
+
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 1aea48427879..c9727e65fad3 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+
+[...]
+
+> @@ -1930,12 +2028,20 @@ static int __gup_device_huge(unsigned long pfn, u=
+nsigned long addr,
+> =20
+>  =09=09pgmap =3D get_dev_pagemap(pfn, pgmap);
+>  =09=09if (unlikely(!pgmap)) {
+> -=09=09=09undo_dev_pagemap(nr, nr_start, pages);
+> +=09=09=09undo_dev_pagemap(nr, nr_start, flags, pages);
+>  =09=09=09return 0;
+>  =09=09}
+>  =09=09SetPageReferenced(page);
+>  =09=09pages[*nr] =3D page;
+> -=09=09get_page(page);
+> +
+> +=09=09if (flags & FOLL_PIN) {
+> +=09=09=09if (unlikely(!user_page_ref_inc(page))) {
+> +=09=09=09=09undo_dev_pagemap(nr, nr_start, flags, pages);
+> +=09=09=09=09return 0;
+> +=09=09=09}
+
+Maybe add a comment about a case that should never happens ie
+user_page_ref_inc() fails after the second iteration of the
+loop as it would be broken and a bug to call undo_dev_pagemap()
+after the first iteration of that loop.
+
+Also i believe that this should never happens as if first
+iteration succeed than __page_cache_add_speculative() will
+succeed for all the iterations.
+
+Note that the pgmap case above follows that too ie the call to
+get_dev_pagemap() can only fail on first iteration of the loop,
+well i assume you can never have a huge device page that span
+different pgmap ie different devices (which is a reasonable
+assumption). So maybe this code needs fixing ie :
+
+=09=09pgmap =3D get_dev_pagemap(pfn, pgmap);
+=09=09if (unlikely(!pgmap))
+=09=09=09return 0;
+
+
+> +=09=09} else
+> +=09=09=09get_page(page);
+> +
+>  =09=09(*nr)++;
+>  =09=09pfn++;
+>  =09} while (addr +=3D PAGE_SIZE, addr !=3D end);
+
+[...]
+
+> @@ -2409,7 +2540,7 @@ static int internal_get_user_pages_fast(unsigned lo=
+ng start, int nr_pages,
+>  =09unsigned long addr, len, end;
+>  =09int nr =3D 0, ret =3D 0;
+> =20
+> -=09if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM)))
+> +=09if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM | FOLL_PIN)=
+))
+
+Maybe add a comments to explain, something like:
+
+/*
+ * The only flags allowed here are: FOLL_WRITE, FOLL_LONGTERM, FOLL_PIN
+ *
+ * Note that get_user_pages_fast() imply FOLL_GET flag by default but
+ * callers can over-ride this default to pin case by setting FOLL_PIN.
+ */
+
+>  =09=09return -EINVAL;
+> =20
+>  =09start =3D untagged_addr(start) & PAGE_MASK;
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 13cc93785006..66bf4c8b88f1 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+
+[...]
+
+> @@ -968,7 +973,12 @@ struct page *follow_devmap_pmd(struct vm_area_struct=
+ *vma, unsigned long addr,
+>  =09if (!*pgmap)
+>  =09=09return ERR_PTR(-EFAULT);
+>  =09page =3D pfn_to_page(pfn);
+> -=09get_page(page);
+> +
+> +=09if (flags & FOLL_GET)
+> +=09=09get_page(page);
+> +=09else if (flags & FOLL_PIN)
+> +=09=09if (unlikely(!user_page_ref_inc(page)))
+> +=09=09=09page =3D ERR_PTR(-ENOMEM);
+
+While i agree that user_page_ref_inc() (ie page_cache_add_speculative())
+should never fails here as we are holding the pmd lock and thus no one
+can unmap the pmd and free the page it points to. I believe you should
+return -EFAULT like for the pgmap and not -ENOMEM as the pgmap should
+not fail either for the same reason. Thus it would be better to have
+consistent error. Maybe also add a comments explaining that it should
+not fail here.
+
+> =20
+>  =09return page;
+>  }
+
+[...]
+
+> @@ -1100,7 +1115,7 @@ struct page *follow_devmap_pud(struct vm_area_struc=
+t *vma, unsigned long addr,
+>  =09 * device mapped pages can only be returned if the
+>  =09 * caller will manage the page reference count.
+>  =09 */
+> -=09if (!(flags & FOLL_GET))
+> +=09if (!(flags & (FOLL_GET | FOLL_PIN)))
+>  =09=09return ERR_PTR(-EEXIST);
+
+Maybe add a comment that FOLL_GET or FOLL_PIN must be set.
+
+>  =09pfn +=3D (addr & ~PUD_MASK) >> PAGE_SHIFT;
+> @@ -1108,7 +1123,12 @@ struct page *follow_devmap_pud(struct vm_area_stru=
+ct *vma, unsigned long addr,
+>  =09if (!*pgmap)
+>  =09=09return ERR_PTR(-EFAULT);
+>  =09page =3D pfn_to_page(pfn);
+> -=09get_page(page);
+> +
+> +=09if (flags & FOLL_GET)
+> +=09=09get_page(page);
+> +=09else if (flags & FOLL_PIN)
+> +=09=09if (unlikely(!user_page_ref_inc(page)))
+> +=09=09=09page =3D ERR_PTR(-ENOMEM);
+
+Same as for follow_devmap_pmd() see above.
+
+> =20
+>  =09return page;
+>  }
+> @@ -1522,8 +1542,12 @@ struct page *follow_trans_huge_pmd(struct vm_area_=
+struct *vma,
+>  skip_mlock:
+>  =09page +=3D (addr & ~HPAGE_PMD_MASK) >> PAGE_SHIFT;
+>  =09VM_BUG_ON_PAGE(!PageCompound(page) && !is_zone_device_page(page), pag=
+e);
+> +
+>  =09if (flags & FOLL_GET)
+>  =09=09get_page(page);
+> +=09else if (flags & FOLL_PIN)
+> +=09=09if (unlikely(!user_page_ref_inc(page)))
+> +=09=09=09page =3D NULL;
+
+This should not fail either as we are holding the pmd lock maybe add
+a comment. Dunno if we want a WARN() or something to catch this
+degenerate case, or dump the page.
+
+> =20
+>  out:
+>  =09return page;
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index b45a95363a84..da335b1cd798 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -4462,7 +4462,17 @@ long follow_hugetlb_page(struct mm_struct *mm, str=
+uct vm_area_struct *vma,
+>  same_page:
+>  =09=09if (pages) {
+>  =09=09=09pages[i] =3D mem_map_offset(page, pfn_offset);
+> -=09=09=09get_page(pages[i]);
+> +
+> +=09=09=09if (flags & FOLL_GET)
+> +=09=09=09=09get_page(pages[i]);
+> +=09=09=09else if (flags & FOLL_PIN)
+> +=09=09=09=09if (unlikely(!user_page_ref_inc(pages[i]))) {
+> +=09=09=09=09=09spin_unlock(ptl);
+> +=09=09=09=09=09remainder =3D 0;
+> +=09=09=09=09=09err =3D -ENOMEM;
+> +=09=09=09=09=09WARN_ON_ONCE(1);
+> +=09=09=09=09=09break;
+> +=09=09=09=09}
+>  =09=09}
+
+user_page_ref_inc() should not fail here either because we hold the
+ptl, so the WAR_ON_ONCE() is right but maybe add a comment.
+
+> =20
+>  =09=09if (vmas)
+
+[...]
+
+> @@ -5034,8 +5050,14 @@ follow_huge_pmd(struct mm_struct *mm, unsigned lon=
+g address,
+>  =09pte =3D huge_ptep_get((pte_t *)pmd);
+>  =09if (pte_present(pte)) {
+>  =09=09page =3D pmd_page(*pmd) + ((address & ~PMD_MASK) >> PAGE_SHIFT);
+> +
+>  =09=09if (flags & FOLL_GET)
+>  =09=09=09get_page(page);
+> +=09=09else if (flags & FOLL_PIN)
+> +=09=09=09if (unlikely(!user_page_ref_inc(page))) {
+> +=09=09=09=09page =3D NULL;
+> +=09=09=09=09goto out;
+> +=09=09=09}
+
+This should not fail either (again holding pmd lock), dunno if we want
+a warn or something to catch this degenerate case.
+
+>  =09} else {
+>  =09=09if (is_hugetlb_entry_migration(pte)) {
+>  =09=09=09spin_unlock(ptl);
+
+[...]
+
