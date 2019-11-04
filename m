@@ -2,82 +2,149 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEB8CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2BDCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA7421D81
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4E021D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:04:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728801AbfKDLDh (ORCPT
+        id S1728842AbfKDLEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:03:37 -0500
-Received: from mga04.intel.com ([192.55.52.120]:13209 "EHLO mga04.intel.com"
+        Mon, 4 Nov 2019 06:04:05 -0500
+Received: from verein.lst.de ([213.95.11.211]:38165 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728310AbfKDLDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 06:03:09 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 03:03:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,267,1569308400"; 
-   d="scan'208";a="232021219"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
-  by fmsmga002.fm.intel.com with ESMTP; 04 Nov 2019 03:03:08 -0800
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     andriy.shevchenko@intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        prarit@redhat.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 03/10] tools/power/x86/intel-speed-select: Correct CLX-N frequency units
-Date:   Mon,  4 Nov 2019 03:02:39 -0800
-Message-Id: <20191104110246.70465-4-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20191104110246.70465-1-srinivas.pandruvada@linux.intel.com>
-References: <20191104110246.70465-1-srinivas.pandruvada@linux.intel.com>
+        id S1727663AbfKDLEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 06:04:05 -0500
+Received: by verein.lst.de (Postfix, from userid 2005)
+        id F319F68BE1; Mon,  4 Nov 2019 12:04:00 +0100 (CET)
+From:   Torsten Duwe <duwe@lst.de>
+Date:   Mon, 4 Nov 2019 11:34:23 +0100
+Subject: [PATCH v5 0/7] Add anx6345 DP/eDP bridge for Olimex Teres-I
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Harald Geyer <harald@ccbib.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Message-Id: <20191104110400.F319F68BE1@verein.lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In CLX_N base_frequency is read from cpufreq sysfs, where units are in
-KHz. The internal units in the code matches the real ratios which are
-in 100MHz scale. So when storing units for CLX-N frequencies, convert
-to 100MHz scale.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- tools/power/x86/intel-speed-select/isst-config.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ANX6345 LVTTL->eDP video bridge, driver with device tree bindings.
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 1c20048b42e7..bfa42fc6c4d2 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -840,8 +840,8 @@ static int clx_n_config(int cpu)
- 	}
- 
- 	/* convert frequencies back to ratios */
--	pbf_info->p1_high = pbf_info->p1_high / DISP_FREQ_MULTIPLIER;
--	pbf_info->p1_low = pbf_info->p1_low / DISP_FREQ_MULTIPLIER;
-+	pbf_info->p1_high = pbf_info->p1_high / 100000;
-+	pbf_info->p1_low = pbf_info->p1_low / 100000;
- 
- 	/* create high priority cpu mask */
- 	pbf_info->core_cpumask_size = alloc_cpu_set(&pbf_info->core_cpumask);
-@@ -856,7 +856,7 @@ static int clx_n_config(int cpu)
- 		cpu_bf = parse_int_file(1,
- 			"/sys/devices/system/cpu/cpu%d/cpufreq/base_frequency",
- 					i);
--		cpu_bf = cpu_bf / DISP_FREQ_MULTIPLIER;
-+		cpu_bf = cpu_bf / 100000;
- 		if (cpu_bf == pbf_info->p1_high)
- 			CPU_SET_S(i, pbf_info->core_cpumask_size,
- 				  pbf_info->core_cpumask);
+Changes since v4:
+
+* enforce DT ports to be nodes and forbid additionalProperties.
+
+Changes since v3:
+
+* converted binding schema file to json-schema ("YAML")
+  It now validates (itself and the dts) like a charm ;-)
+  Input port0 is mandatory, output port1 is optional.
+
+* Enric Balletbo i Serra waived analogix-anx6345 module ownership to icenowy
+  <CAFqH_50s0J_NEevV9b5o-wq-bw+xGaUZ3WyhVDRZKyM2Yn-iVg@mail.gmail.com>
+  Since they both agree, I won't interfere.
+
+Changes from v2:
+
+* use SPDX-IDs throughout
+
+* removed the panel output again, as it was not what Maxime had in mind.
+  At least the Teres-I does very well without.
+
+* binding clarifications and cosmetic changes as suggested by Andrzej
+
+Changes from v1:
+
+* fixed up copyright information. Most code changes are only moves and thus
+  retain copyright and module ownership. Even the new analogix-anx6345.c originates
+  from the old 1495-line analogix-anx78xx.c, with 306 insertions and 987 deletions
+  (ignoring the trivial anx78xx -> anx6345 replacements) 306 new vs. 508 old...
+
+* fixed all minor formatting issues brought up
+
+* merged previously separate new analogix_dp_i2c module into existing analogix_dp
+
+* split additional defines into a preparatory patch
+
+* renamed the factored-out common functions anx_aux_* -> anx_dp_aux_*, because
+  anx_...aux_transfer was exported globally. Besides, it is now GPL-only exported.
+
+* moved chip ID read into a separate function.
+
+* keep the chip powered after a successful probe.
+  (There's a good chance that this is the only display during boot!)
+
+* updated the binding document: LVTTL input is now required, only the output side
+  description is optional.
+
+ Laurent: I have also looked into the drm_panel_bridge infrastructure,
+ but it's not that trivial to convert these drivers to it.
+
+Changes from the respective previous versions:
+
+* the reset polarity is corrected in DT and the driver;
+  things should be clearer now.
+
+* as requested, add a panel (the known innolux,n116bge) and connect
+  the ports.
+
+* renamed dvdd?? to *-supply to match the established scheme
+
+* trivial update to the #include list, to make it compile in 5.2
+
+Icenowy Zheng (4):
+  drm/bridge: move ANA78xx driver to analogix subdirectory
+  drm/bridge: split some definitions of ANX78xx to dedicated headers
+  drm/bridge: extract some Analogix I2C DP common code
+  drm/bridge: Add Analogix anx6345 support
+
+Torsten Duwe (3):
+  drm/bridge: Prepare Analogix anx6345 support
+  dt-bindings: Add ANX6345 DP/eDP transmitter binding
+  arm64: dts: allwinner: a64: enable ANX6345 bridge on Teres-I
+
+ .../bindings/display/bridge/anx6345.yaml           |  92 +++
+ .../boot/dts/allwinner/sun50i-a64-teres-i.dts      |  45 +-
+ drivers/gpu/drm/bridge/Kconfig                     |  10 -
+ drivers/gpu/drm/bridge/Makefile                    |   4 +-
+ drivers/gpu/drm/bridge/analogix-anx78xx.h          | 710 ------------------
+ drivers/gpu/drm/bridge/analogix/Kconfig            |  22 +
+ drivers/gpu/drm/bridge/analogix/Makefile           |   4 +-
+ drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 793 +++++++++++++++++++++
+ .../drm/bridge/{ => analogix}/analogix-anx78xx.c   | 146 +---
+ drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h | 255 +++++++
+ .../gpu/drm/bridge/analogix/analogix-i2c-dptx.c    | 165 +++++
+ .../gpu/drm/bridge/analogix/analogix-i2c-dptx.h    | 258 +++++++
+ .../drm/bridge/analogix/analogix-i2c-txcommon.h    | 236 ++++++
+ 13 files changed, 1868 insertions(+), 872 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.yaml
+ delete mode 100644 drivers/gpu/drm/bridge/analogix-anx78xx.h
+ create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+ rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c (90%)
+ create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+ create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.c
+ create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-dptx.h
+ create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-i2c-txcommon.h
+
 -- 
-2.17.2
+2.16.4
 
