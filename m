@@ -2,182 +2,128 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CECBFCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 375E4CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9C0C204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0952520650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:13:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572905604;
+	bh=t7y6P3F5S8nW9kMkb5xHD0feIjGmoha8Y/ZPZRUhyC8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LMh2O9imRK3Iq46rhHPLr11DHC0Qa9c6L7HVQcCl4xNmeY4ot1cQr4PtZa5KG6E2y
+	 Z/6XAfA+fV7QuTXVkH1CPkrN5Qm5SElwiN+LKxUHyRTteKuWxhwzGVC+CHVk9twZJX
+	 CKdsCL619rLMcMCGYReU/Yx+kSXICmY+j+vf3Muw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390295AbfKDWNQ (ORCPT
+        id S2390365AbfKDWNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:13:16 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:58376 "EHLO mx1.redhat.com"
+        Mon, 4 Nov 2019 17:13:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390511AbfKDWKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:10:13 -0500
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2390488AbfKDWKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:10:05 -0500
+Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1947259455
-        for <linux-kernel@vger.kernel.org>; Mon,  4 Nov 2019 22:10:13 +0000 (UTC)
-Received: by mail-qt1-f200.google.com with SMTP id l5so20283051qtj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 14:10:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B6nIaarjvtOgizveiVSrnR0SvuKBMT/SgTR8AIczCsU=;
-        b=kkUM5sqCH3PTgYHcgVYg59rvaoLA3aprI8w2w72du9DSDLkRAEi17nad1c1rVr8Ndp
-         1v2WGBSzkiu/c8/LsHPhI/bvDBHD8+TwJSPYgknsSAGkJVTgM1FEycFg+aZn97kJ76u+
-         cyN0v2pG0JWe1b1x7v/Kv2XkLmu/cKhoLJn5zZlbrJMiQMoS/R04vWxvoC07Sf7kqnD8
-         5j2ekMAszDy7Flau6NKa7jlUjNy9N/4HWt2J7Xy2Le4em1awKSoMa/cTiPyEWkm5xgh1
-         w9BodFoE0AJai4naYDSY7MtrO7470ZICPiratn9NeUbqeKUhxtx5wqMGriPjzPldAjOm
-         aSVg==
-X-Gm-Message-State: APjAAAVAPR7IzSHC9lHQUkUoNyAxd1nsFWPKq5ia2Gd7lPnLjm7UycgM
-        yl3Od95567kxnv7728c56sos4gaWQ7aVYryCAUX1ZRtaW7Hyn0p+YmmLaHaG5yogw3+B7F0xAFS
-        8UXTqteB2JA5/aMWKB6LqGWdG
-X-Received: by 2002:a37:4f10:: with SMTP id d16mr19833154qkb.80.1572905412193;
-        Mon, 04 Nov 2019 14:10:12 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx2/yf6495ow5aAiQ4fJlPu54g1fe9DmX7lTS+IITtJiDpMCYvE96mpYrRND4y/rQVGloThlw==
-X-Received: by 2002:a37:4f10:: with SMTP id d16mr19833120qkb.80.1572905411873;
-        Mon, 04 Nov 2019 14:10:11 -0800 (PST)
-Received: from labbott-redhat.redhat.com (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
-        by smtp.gmail.com with ESMTPSA id o3sm9774304qkf.97.2019.11.04.14.10.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 14:10:11 -0800 (PST)
-From:   Laura Abbott <labbott@redhat.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Laura Abbott <labbott@redhat.com>, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jcline@redhat.com,
-        dzickus@redhat.com, Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCHv2] kconfig: Add option to get the full help text with listnewconfig
-Date:   Mon,  4 Nov 2019 17:10:08 -0500
-Message-Id: <20191104221008.30078-1-labbott@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        by mail.kernel.org (Postfix) with ESMTPSA id DA97F2084D;
+        Mon,  4 Nov 2019 22:10:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572905404;
+        bh=t7y6P3F5S8nW9kMkb5xHD0feIjGmoha8Y/ZPZRUhyC8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yUhM6y9mZ7lGMuFdgLLVEckQyt9x1VomcYRHof4FpX8s2m2SVs/3pNruoqumy75KX
+         5f5RiLOM28Moae9T6k0+BePO/Yf7uOZgGkI8GEVxE5z/pr9c/MGGhZLjhVqeLNcFwU
+         CLA/dKIZx2XhvRTtDGSMOx/p7gmjkXMUp7ZenPEA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.3 132/163] KVM: vmx, svm: always run with EFER.NXE=1 when shadow paging is active
+Date:   Mon,  4 Nov 2019 22:45:22 +0100
+Message-Id: <20191104212149.898027313@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
+References: <20191104212140.046021995@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-make listnewconfig will list the individual options that need to be set.
-This is useful but there's no easy way to get the help text associated
-with the options at the same time. Introduce a new targe
-'make helpnewconfig' which lists the full help text of all the
-new options as well. This makes it easier to automatically generate
-changes that are easy for humans to review. This command also adds
-markers between each option for easier parsing.
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-Signed-off-by: Laura Abbott <labbott@redhat.com>
----
-v2: Dropped rfc tag, renamed extendedlistnewconfig -> helpnewconfig.
-Added another missing help text.
----
- scripts/kconfig/Makefile |  5 ++++-
- scripts/kconfig/conf.c   | 13 ++++++++++++-
- 2 files changed, 16 insertions(+), 2 deletions(-)
+commit 9167ab79936206118cc60e47dcb926c3489f3bd5 upstream.
 
-diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-index ef2f2336c469..71a956cec64a 100644
---- a/scripts/kconfig/Makefile
-+++ b/scripts/kconfig/Makefile
-@@ -66,7 +66,9 @@ localyesconfig localmodconfig: $(obj)/conf
- #  syncconfig has become an internal implementation detail and is now
- #  deprecated for external use
- simple-targets := oldconfig allnoconfig allyesconfig allmodconfig \
--	alldefconfig randconfig listnewconfig olddefconfig syncconfig
-+	alldefconfig randconfig listnewconfig olddefconfig syncconfig \
-+	helpnewconfig
+VMX already does so if the host has SMEP, in order to support the combination of
+CR0.WP=1 and CR4.SMEP=1.  However, it is perfectly safe to always do so, and in
+fact VMX already ends up running with EFER.NXE=1 on old processors that lack the
+"load EFER" controls, because it may help avoiding a slow MSR write.  Removing
+all the conditionals simplifies the code.
+
+SVM does not have similar code, but it should since recent AMD processors do
+support SMEP.  So this patch also makes the code for the two vendors more similar
+while fixing NPT=0, CR0.WP=1 and CR4.SMEP=1 on AMD processors.
+
+Cc: stable@vger.kernel.org
+Cc: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/kvm/svm.c     |   10 ++++++++--
+ arch/x86/kvm/vmx/vmx.c |   14 +++-----------
+ 2 files changed, 11 insertions(+), 13 deletions(-)
+
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -736,8 +736,14 @@ static int get_npt_level(struct kvm_vcpu
+ static void svm_set_efer(struct kvm_vcpu *vcpu, u64 efer)
+ {
+ 	vcpu->arch.efer = efer;
+-	if (!npt_enabled && !(efer & EFER_LMA))
+-		efer &= ~EFER_LME;
 +
- PHONY += $(simple-targets)
++	if (!npt_enabled) {
++		/* Shadow paging assumes NX to be available.  */
++		efer |= EFER_NX;
++
++		if (!(efer & EFER_LMA))
++			efer &= ~EFER_LME;
++	}
  
- $(simple-targets): $(obj)/conf
-@@ -134,6 +136,7 @@ help:
- 	@echo  '  alldefconfig    - New config with all symbols set to default'
- 	@echo  '  randconfig	  - New config with random answer to all options'
- 	@echo  '  listnewconfig   - List new options'
-+	@echo  '  helpnewconfig   - List new options and help text'
- 	@echo  '  olddefconfig	  - Same as oldconfig but sets new symbols to their'
- 	@echo  '                    default value without prompting'
- 	@echo  '  kvmconfig	  - Enable additional options for kvm guest kernel support'
-diff --git a/scripts/kconfig/conf.c b/scripts/kconfig/conf.c
-index 40e16e871ae2..1f89bf1558ce 100644
---- a/scripts/kconfig/conf.c
-+++ b/scripts/kconfig/conf.c
-@@ -32,6 +32,7 @@ enum input_mode {
- 	defconfig,
- 	savedefconfig,
- 	listnewconfig,
-+	helpnewconfig,
- 	olddefconfig,
- };
- static enum input_mode input_mode = oldaskconfig;
-@@ -434,6 +435,11 @@ static void check_conf(struct menu *menu)
- 						printf("%s%s=%s\n", CONFIG_, sym->name, str);
- 					}
- 				}
-+			} else if (input_mode == helpnewconfig) {
-+				printf("-----\n");
-+				print_help(menu);
-+				printf("-----\n");
-+
- 			} else {
- 				if (!conf_cnt++)
- 					printf("*\n* Restart config...\n*\n");
-@@ -459,6 +465,7 @@ static struct option long_opts[] = {
- 	{"alldefconfig",    no_argument,       NULL, alldefconfig},
- 	{"randconfig",      no_argument,       NULL, randconfig},
- 	{"listnewconfig",   no_argument,       NULL, listnewconfig},
-+	{"helpnewconfig",   no_argument,       NULL, helpnewconfig},
- 	{"olddefconfig",    no_argument,       NULL, olddefconfig},
- 	{NULL, 0, NULL, 0}
- };
-@@ -469,6 +476,7 @@ static void conf_usage(const char *progname)
- 	printf("Usage: %s [-s] [option] <kconfig-file>\n", progname);
- 	printf("[option] is _one_ of the following:\n");
- 	printf("  --listnewconfig         List new options\n");
-+	printf("  --helpnewconfig         List new options and help text\n");
- 	printf("  --oldaskconfig          Start a new configuration using a line-oriented program\n");
- 	printf("  --oldconfig             Update a configuration using a provided .config as base\n");
- 	printf("  --syncconfig            Similar to oldconfig but generates configuration in\n"
-@@ -543,6 +551,7 @@ int main(int ac, char **av)
- 		case allmodconfig:
- 		case alldefconfig:
- 		case listnewconfig:
-+		case helpnewconfig:
- 		case olddefconfig:
- 			break;
- 		case '?':
-@@ -576,6 +585,7 @@ int main(int ac, char **av)
- 	case oldaskconfig:
- 	case oldconfig:
- 	case listnewconfig:
-+	case helpnewconfig:
- 	case olddefconfig:
- 		conf_read(NULL);
- 		break;
-@@ -657,6 +667,7 @@ int main(int ac, char **av)
- 		/* fall through */
- 	case oldconfig:
- 	case listnewconfig:
-+	case helpnewconfig:
- 	case syncconfig:
- 		/* Update until a loop caused no more changes */
- 		do {
-@@ -675,7 +686,7 @@ int main(int ac, char **av)
- 				defconfig_file);
- 			return 1;
- 		}
--	} else if (input_mode != listnewconfig) {
-+	} else if (input_mode != listnewconfig && input_mode != helpnewconfig) {
- 		if (!no_conf_write && conf_write(NULL)) {
- 			fprintf(stderr, "\n*** Error during writing of the configuration.\n\n");
- 			exit(1);
--- 
-2.21.0
+ 	to_svm(vcpu)->vmcb->save.efer = efer | EFER_SVME;
+ 	mark_dirty(to_svm(vcpu)->vmcb, VMCB_CR);
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -897,17 +897,9 @@ static bool update_transition_efer(struc
+ 	u64 guest_efer = vmx->vcpu.arch.efer;
+ 	u64 ignore_bits = 0;
+ 
+-	if (!enable_ept) {
+-		/*
+-		 * NX is needed to handle CR0.WP=1, CR4.SMEP=1.  Testing
+-		 * host CPUID is more efficient than testing guest CPUID
+-		 * or CR4.  Host SMEP is anyway a requirement for guest SMEP.
+-		 */
+-		if (boot_cpu_has(X86_FEATURE_SMEP))
+-			guest_efer |= EFER_NX;
+-		else if (!(guest_efer & EFER_NX))
+-			ignore_bits |= EFER_NX;
+-	}
++	/* Shadow paging assumes NX to be available.  */
++	if (!enable_ept)
++		guest_efer |= EFER_NX;
+ 
+ 	/*
+ 	 * LMA and LME handled by hardware; SCE meaningless outside long mode.
+
 
