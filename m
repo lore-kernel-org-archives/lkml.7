@@ -2,300 +2,123 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C2CCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E130CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5FF20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EAA221744
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:48:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I+2ukIwN"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="NTlZ49IH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbfKDNq0 (ORCPT
+        id S1729024AbfKDNsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:46:26 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44456 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbfKDNq0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:46:26 -0500
-Received: by mail-lf1-f68.google.com with SMTP id v4so12280872lfd.11
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 05:46:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=G/42w8BC1CKlTirE0iFyAOpHQU7VI05VqMsTRfAKs2I=;
-        b=I+2ukIwN1cr77ud6MYgcwJTCx1tkbUNmIVXHOR35airm6e38dUWMNIrO1LdULsulrR
-         4BlTvEfgjMlztqREGHM3U//g5Kkp9JwGl55sC92sFLvBGVLjcb7dwB5Ue6PMGts8xu+Z
-         /OQ9xBs6PBxjBpoZVglO3PJgKVTmKDWPTCTVVtPTW/K/mVgB7MnAPOJAGms8WyE92lZt
-         ahE9GUGlFcrPjoQ3JeMEdG7JIyPUM9tWzln9jTX3bR+zfjRniEG39lpd0uJ0/gku+VPK
-         soywL+D7uWiHQy9wYho8/+NRNqaNRmcCxtwIoRASjkPTZimBYoG71fX0Tuyf2rjdnWX1
-         FnCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=G/42w8BC1CKlTirE0iFyAOpHQU7VI05VqMsTRfAKs2I=;
-        b=Y7b6gqzGjX4QlLEtyNGAspk7GiNuHuEHU5Q3ly2ceiiju5+w+ADv23zTESPWexz8OQ
-         /mEWKgiv03RpsgE3V1t2SJSfhLka2lbjjvrdHbIUgVvYb7w2BZxCoxHgwRC8Gg1anl5A
-         w3xUYONANS94N1o5qAMXfuuaMnXk0PAsdVUp4WnZQNv5C4NapHZUjL2Y1RotI+jG9OBU
-         Kb14Ha5nuR3xVawDk2G2MevAVdvJHHHsi8YfbPM+vRQPumYOgAG+ktT/4IVkyS2F27vf
-         ZfVQtSxlV1W5WDwSRBqzgUy45SWINUd5zw/xG/DwyvU5oEg7EYyRDvcWfj+upisVJkXc
-         QkZQ==
-X-Gm-Message-State: APjAAAUh+vyNfhcaIQbFlsYfB0SWtPcHt+qiRguSS68IHh03SmJ+NhVf
-        RwqaqEtqixpKZCFtp+uCpHwjCiOBJiTdXNgZYvVphA==
-X-Google-Smtp-Source: APXvYqxBkPjal82I4aAjinMPGSTsAa6bX63riJyDyu5WrMK/SseZHlnGaRP9iYvUEkLbXYHTRnsaGCk0kd3Wsg5mWmU=
-X-Received: by 2002:ac2:48b5:: with SMTP id u21mr17158943lfg.75.1572875182511;
- Mon, 04 Nov 2019 05:46:22 -0800 (PST)
-MIME-Version: 1.0
-References: <cki.462EE8B116.HM2586PHBR@redhat.com>
-In-Reply-To: <cki.462EE8B116.HM2586PHBR@redhat.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 4 Nov 2019 19:16:10 +0530
-Message-ID: <CA+G9fYvJAcM1zWtR=3sb6KDf1x8Z5=SOdZqRYwWfNZ1d_Tr=_g@mail.gmail.com>
-Subject: =?UTF-8?Q?Re=3A_=E2=9D=8C_FAIL=3A_Test_report_for_kernel_5=2E3=2E9=2Drc1=2Dff21a?=
-        =?UTF-8?Q?f2=2Ecki_=28stable=29?=
-To:     CKI Project <cki-project@redhat.com>
-Cc:     Linux Stable maillist <stable@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
+        Mon, 4 Nov 2019 08:48:20 -0500
+Received: from mail-eopbgr690080.outbound.protection.outlook.com ([40.107.69.80]:21221
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728812AbfKDNsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 08:48:19 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ial3vLjUnfYNNClrBp0pCoPqvKaARpB4SknzqLW5rojOIG09WtPhUmWSo8kmhbJXK9RtR8RCOgGrCml+BB1ap+ZnL09Fh3lQM/c9Mk3qlmpkmdc/co1f/fh/hoajNM4u9wHqOfWFAzJRA+7BMYgq0oaucUOu1hyV+akDs1eewVnh4gitBGYTPFEomWBLVjfXh9c7zlcFFfcc97UHO+qN1gR2Jj3qLhrtDw2UuaZVwXzObExOocofuPi4mRcfym3+WcEUnFOHTZkcdw8VdfFBMl19FpBs7ftgv95IdhfDpqDe93J5fUq4hM9CkQhuJxNb4jsw5LTxxawtzW6BqnMvlQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=505ZYH2ku9xhNU4gYo/jWaOZHYh+KUDaNrjHcUJoloE=;
+ b=eKOMxAR3B/SeXlkXEstCbJ/m2HQua0LX3XaCkvlxG+sY/jhnigS8l2vI0MwxcSJ4k1z2yOWBswSHUYKdpxt0fH9yNJDPx6CTqHThxVX56KAzQclMU75HN7aqJRY/ux7QFcq4UxMvTsd07heMt+Jd/YLm6CVduQwq3oGFXZqEQBjNLnXRVSs94/qOkk//RUrAiZHCfepv7kJ4HcWME9hb+tonaJurZ7/wcQFApnI+MUbXA46VqVL8w0IydzbexGbgMQQ3h8o+qtcnMASaXawmQEGf6b1/18N3DBeU5iYA/H2N52/JDheSGZwlI5Ugy6olFtWGf11LOzrZRP5dOun6lw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=505ZYH2ku9xhNU4gYo/jWaOZHYh+KUDaNrjHcUJoloE=;
+ b=NTlZ49IHijw2Q6XIJeCt2ILA52Vxhw01tnfNhiBu0HO/eXsHCsUC+uZYOAd4ZwSXz8cp3qkW9cagcHTxH7J5MBNEmlD/lU1pqAsWIYPr8o8OJkYe6xMVEFwGl5uLJVhLikRQguXLqe9TNu8vMtwRSp+lPBQ32Xg5W2LgV81gzvU=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
+ BN7PR08MB5092.namprd08.prod.outlook.com (20.176.26.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Mon, 4 Nov 2019 13:48:16 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::a91a:c2f5:c557:4285]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::a91a:c2f5:c557:4285%6]) with mapi id 15.20.2408.024; Mon, 4 Nov 2019
+ 13:48:16 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Can Guo <cang@codeaurora.org>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "saravanak@google.com" <saravanak@google.com>,
+        "salyzyn@google.com" <salyzyn@google.com>
+CC:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
         open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: RE: [EXT] [PATCH v2 4/7] scsi: ufs: Fix register dump caused sleep in
+ atomic context
+Thread-Topic: [EXT] [PATCH v2 4/7] scsi: ufs: Fix register dump caused sleep
+ in atomic context
+Thread-Index: AQHVkrBIJDIFLMJZaUmaGRl7oqgEY6d7B2NQ
+Date:   Mon, 4 Nov 2019 13:48:16 +0000
+Message-ID: <BN7PR08MB5684D1EF6FD8176E09151716DB7F0@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <1572831362-22779-1-git-send-email-cang@codeaurora.org>
+ <1572831362-22779-5-git-send-email-cang@codeaurora.org>
+In-Reply-To: <1572831362-22779-5-git-send-email-cang@codeaurora.org>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLWJlODExMjA2LWZmMDktMTFlOS04Yjg1LWRjNzE5NjFmOWRkM1xhbWUtdGVzdFxiZTgxMTIwOC1mZjA5LTExZTktOGI4NS1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjQyNyIgdD0iMTMyMTczNDg4OTM3Njc5MDg4IiBoPSJ5c2hhTFlxbzAzdHM2YUdpT0U4ODlIS2tPZUE9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: true
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [165.225.81.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: eeb51a8d-fe67-4591-0925-08d7612da4eb
+x-ms-traffictypediagnostic: BN7PR08MB5092:|BN7PR08MB5092:|BN7PR08MB5092:
+x-microsoft-antispam-prvs: <BN7PR08MB5092B21CADC7C21904BBBCDCDB7F0@BN7PR08MB5092.namprd08.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-forefront-prvs: 0211965D06
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(346002)(39860400002)(136003)(366004)(199004)(189003)(52536014)(2906002)(71200400001)(76116006)(66946007)(11346002)(66066001)(7736002)(6436002)(25786009)(229853002)(5660300002)(476003)(71190400001)(256004)(7416002)(8676002)(66476007)(8936002)(81156014)(64756008)(66556008)(66446008)(33656002)(305945005)(2201001)(55016002)(81166006)(6116002)(3846002)(446003)(2501003)(4326008)(86362001)(7696005)(55236004)(76176011)(6246003)(486006)(110136005)(99286004)(14454004)(478600001)(54906003)(186003)(74316002)(316002)(102836004)(6506007)(558084003)(26005)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB5092;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TBIKXk/Lfb0tv5qxEusT6uTzBiyW/U13xxatl4ZsW10VvhQnWVq5geRKLX0mGRzB7qU7Bd7sMqHksSWMZHrtPKoMVdx2FfQo15On+YspQV/wMMrqsc88isYgyL8ZWDCuJiPIlDGwwUrY1LqbU3QkTvsOKkPOPdG1phnlV3beY6k64hjAfJoLiYu+yaJPOgbkq/bDLtMDI65u51StGX6cswmePChWXcM8/U8igTbBr+VxWBjQlykcizIFzE/QF2Q0735Irvbd51ZUK2uqSoVGbvNMc2Kpv3/ISlYjtFuy7XPSxGczShoyJQfmWEeYZ/5jrLlrCtPN6o/K4laEAzt0AhkUV6jN4RhT9M4Fk4EnHiLJBPgkjpBBRj94G20z+ofhYqYan6kVaRhDI6Lbn0TLzbMy1GYmd5zIKfd8/E8VZ7a3MUj4LR21d8OoCqikNFK9
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eeb51a8d-fe67-4591-0925-08d7612da4eb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Nov 2019 13:48:16.2584
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TkXY3olm2aRNLZzHF1ANBCKCGxmlkIP5OvlG0HJoARgA2122jTQd6EITFYdpMM7hgRpyZK40OhlDFoIv4omBAQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB5092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 Nov 2019 at 18:14, CKI Project <cki-project@redhat.com> wrote:
->
->
-> Hello,
->
-> We ran automated tests on a recent commit from this kernel tree:
->
->        Kernel repo: git://git.kernel.org/pub/scm/linux/kernel/git/stable/=
-linux-stable-rc.git
->             Commit: ff21af282725 - Linux 5.3.9-rc1
->
-> The results of these automated tests are provided below.
->
->     Overall result: FAILED (see details below)
->              Merge: OK
->            Compile: OK
->              Tests: FAILED
-
-While going through the boot failure logs kernel warning and kernel
-panics have been noticed.
-
-   aarch64:
-   ppc64le:
-   x86_64:
-     =E2=9D=8C Boot test
-
-
-arm64 host 2 failure log,
-
-Linux version 5.3.9-rc1-ff21af2.cki
-....
-
-[   48.230795] systemd-journald[1707]: Received SIGTERM from PID 1 (systemd=
-).
-[   48.277531] printk: systemd: 17 output lines suppressed due to ratelimit=
-ing
-[   48.956717] SELinux:  policy capability network_peer_controls=3D1
-[   48.962639] SELinux:  policy capability open_perms=3D1
-[   48.967590] SELinux:  policy capability extended_socket_class=3D1
-[   48.973501] SELinux:  policy capability always_check_network=3D0
-[   48.979319] SELinux:  policy capability cgroup_seclabel=3D1
-[   48.984707] SELinux:  policy capability nnp_nosuid_transition=3D1
-[   49.111194] Unable to handle kernel paging request at virtual
-address fffe00002225e9f8
-[   49.119099] Mem abort info:
-[   49.121885]   ESR =3D 0x96000044
-[   49.124926]   Exception class =3D DABT (current EL), IL =3D 32 bits
-[   49.130832]   SET =3D 0, FnV =3D 0
-[   49.133877]   EA =3D 0, S1PTW =3D 0
-[   49.137004] Data abort info:
-[   49.139871]   ISV =3D 0, ISS =3D 0x00000044
-[   49.143696]   CM =3D 0, WnR =3D 1
-[   49.146650] [fffe00002225e9f8] address between user and kernel address r=
-anges
-[   49.153779] Internal error: Oops: 96000044 [#1] SMP
-[   49.158645] Modules linked in: xfs libcrc32c ast i2c_algo_bit
-drm_vram_helper uas ttm drm_kms_helper syscopyarea sysfillrect
-sysimgblt fb_sys_fops usb_storage drm gpio_xlp i2c_xlp9xx
-[   49.174897] CPU: 27 PID: 1 Comm: systemd Tainted: G        W
- 5.3.9-rc1-ff21af2.cki #1
-[   49.183406] Hardware name: HPE Apollo 70             /C01_APACHE_MB
-        , BIOS L50_5.13_1.11 06/18/2019
-[   49.193132] pstate: 00400009 (nzcv daif +PAN -UAO)
-[   49.197916] pc : queued_spin_lock_slowpath+0x240/0x2d8
-[   49.203044] lr : __fib6_clean_all+0xc8/0x100
-[   49.207300] sp : ffff0000120dbbe0
-[   49.210601] x29: ffff0000120dbbe0 x28: ffff800f4e18801c
-[   49.215900] x27: 0000000000000000 x26: 0000000000000000
-[   49.221198] x25: 0000000000000000 x24: 0000000000000002
-[   49.226495] x23: 0000000000000000 x22: ffff000010b20838
-[   49.231793] x21: ffff0000118cb5c0 x20: 00000000ffff800f
-[   49.237090] x19: ffff800f4e18801c x18: 0000000000000000
-[   49.242388] x17: 000000000b8f1ad6 x16: 00000000e2893b39
-[   49.247686] x15: ffffffffffffffff x14: ffffffffffffff00
-[   49.252983] x13: ffffffffffffffff x12: 0000000000000001
-[   49.258281] x11: ffff000010f3f670 x10: 00000000000019b0
-[   49.263578] x9 : ffff0000120db9a0 x8 : ffff000010f4c988
-[   49.268876] x7 : 0000000000000000 x6 : ffff800f5c21e040
-[   49.274173] x5 : 0000000000700000 x4 : ffff800f5c21e040
-[   49.279471] x3 : ffff000011312040 x2 : ffff000011312070
-[   49.284768] x1 : ffff000011312070 x0 : ffff800f5c21e048
-[   49.290066] Call trace:
-[   49.292501]  queued_spin_lock_slowpath+0x240/0x2d8
-[   49.297279]  __fib6_clean_all+0xc8/0x100
-[   49.301188]  fib6_flush_trees+0x38/0x48
-[   49.305013]  security_load_policy+0x29c/0x5e8
-[   49.309358]  sel_write_load+0x10c/0x200
-[   49.313183]  __vfs_write+0x48/0x90
-[   49.316572]  vfs_write+0xac/0x1b8
-[   49.319873]  ksys_write+0x64/0xe0
-[   49.323175]  __arm64_sys_write+0x24/0x30
-[   49.327088]  el0_svc_common.constprop.0+0x74/0x168
-[   49.331865]  el0_svc_handler+0x34/0x90
-[   49.335602]  el0_svc+0x8/0xc
-[   49.338474] Code: 910020c0 8b020062 f861d908 aa0203e1 (f8286826)
-[   49.344619] ---[ end trace 4f9e552a506205dd ]---
-[   49.349223] Kernel panic - not syncing: Fatal exception in interrupt
-[   49.355584] SMP: stopping secondary CPUs
-[   49.359538] Kernel Offset: disabled
-[   49.363014] CPU features: 0x6002,22000c38
-[   49.367010] Memory Limit: none
-[   49.370074] ---[ end Kernel panic - not syncing: Fatal exception in
-interrupt ]---
-
-
-arm64 host 1 failure log,
---------------------------------
-[    8.825895] systemd-journald[306]: Received SIGTERM from PID 1 (systemd)=
-.
-[    8.965523] printk: systemd: 16 output lines suppressed due to ratelimit=
-ing
-[   10.472247] SELinux:  policy capability network_peer_controls=3D1
-[   10.478149] SELinux:  policy capability open_perms=3D1
-[   10.483106] SELinux:  policy capability extended_socket_class=3D1
-[   10.488996] SELinux:  policy capability always_check_network=3D0
-[   10.494813] SELinux:  policy capability cgroup_seclabel=3D1
-[   10.500184] SELinux:  policy capability nnp_nosuid_transition=3D1
-[   10.580715] WARNING: CPU: 5 PID: 1 at net/ipv6/ip6_fib.c:1957
-fib6_walk_continue+0x1a4/0x1d8
-[   10.589118] Modules linked in: xfs libcrc32c sdhci_of_arasan
-i2c_xgene_slimpro sdhci_pltfm sdhci gpio_dwapb cqhci xhci_plat_hcd
-gpio_xgene_sb gpio_keys
-[   10.602625] CPU: 5 PID: 1 Comm: systemd Tainted: G        W
-5.3.9-rc1-ff21af2.cki #1
-[   10.611022] Hardware name: AppliedMicro X-Gene Mustang Board/X-Gene
-Mustang Board, BIOS 3.06.25 Oct 17 2016
-[   10.620715] pstate: 00400005 (nzcv daif +PAN -UAO)
-[   10.625482] pc : fib6_walk_continue+0x1a4/0x1d8
-[   10.629989] lr : fib6_walk+0x40/0x80
-[   10.633544] sp : ffff00001006baf0
-[   10.636841] x29: ffff00001006baf0 x28: ffff8001efe82814
-[   10.642126] x27: 0000000000000000 x26: 0000000000000000
-[   10.647411] x25: 0000000000000000 x24: 0000000000000000
-[   10.652696] x23: ffff8001efe82818 x22: 0000000000000000
-[   10.657981] x21: ffff0000118cb5c0 x20: 0000000000000000
-[   10.663265] x19: ffff00001006bba0 x18: 0000000000000000
-[   10.668550] x17: 0000000000000000 x16: 0000000000000000
-[   10.673834] x15: ffffffffffffffff x14: ffffffffffffff00
-[   10.679119] x13: ffffffffffffffff x12: 0000000000000001
-[   10.684404] x11: ffff000010f3f670 x10: 00000000000019b0
-[   10.689688] x9 : ffff00001006b9a0 x8 : ffff8001ee8c1814
-[   10.694973] x7 : 0000000000000000 x6 : 0000000000000366
-[   10.700258] x5 : 0000000000000000 x4 : ffff0000118cbd20
-[   10.705542] x3 : ffff0000118cbe00 x2 : ffff8001fd9d5a00
-[   10.710827] x1 : ffff8001fd9d5a00 x0 : 0000000000000000
-[   10.716112] Call trace:
-[   10.718546]  fib6_walk_continue+0x1a4/0x1d8
-[   10.722708]  fib6_walk+0x40/0x80
-[   10.725919]  fib6_clean_tree+0x64/0x78
-[   10.729649]  __fib6_clean_all+0x78/0x100
-[   10.733551]  fib6_flush_trees+0x38/0x48
-[   10.737369]  security_load_policy+0x29c/0x5e8
-[   10.741704]  sel_write_load+0x10c/0x200
-[   10.745521]  __vfs_write+0x48/0x90
-[   10.748905]  vfs_write+0xac/0x1b8
-[   10.752202]  ksys_write+0x64/0xe0
-[   10.755499]  __arm64_sys_write+0x24/0x30
-[   10.759402]  el0_svc_common.constprop.0+0x74/0x168
-[   10.764169]  el0_svc_handler+0x34/0x90
-[   10.767899]  el0_svc+0x8/0xc
-[   10.770764] ---[ end trace 908987db50058d8b ]---
-[   36.370645] watchdog: BUG: soft lockup - CPU#5 stuck for 22s! [systemd:1=
-]
-[   36.377402] Modules linked in: xfs libcrc32c sdhci_of_arasan
-i2c_xgene_slimpro sdhci_pltfm sdhci gpio_dwapb cqhci xhci_plat_hcd
-gpio_xgene_sb gpio_keys
-[   36.390904] CPU: 5 PID: 1 Comm: systemd Tainted: G        W
-5.3.9-rc1-ff21af2.cki #1
-[   36.399300] Hardware name: AppliedMicro X-Gene Mustang Board/X-Gene
-Mustang Board, BIOS 3.06.25 Oct 17 2016
-[   36.408992] pstate: 00400005 (nzcv daif +PAN -UAO)
-[   36.413761] pc : fib6_walk_continue+0x1a8/0x1d8
-[   36.418268] lr : fib6_walk+0x40/0x80
-[   36.421823] sp : ffff00001006baf0
-[   36.425119] x29: ffff00001006baf0 x28: ffff8001efe82814
-[   36.430404] x27: 0000000000000000 x26: 0000000000000000
-[   36.435689] x25: 0000000000000000 x24: 0000000000000000
-[   36.440974] x23: ffff8001efe82818 x22: 0000000000000000
-[   36.446258] x21: ffff0000118cb5c0 x20: 0000000000000000
-[   36.451543] x19: ffff00001006bba0 x18: 0000000000000000
-[   36.456828] x17: 0000000000000000 x16: 0000000000000000
-[   36.462113] x15: ffffffffffffffff x14:
- ffffffffffffff00
-[   36.467397] x13: ffffffffffffffff x12: 0000000000000001
-[   36.472682] x11: ffff000010f3f670 x10: 0000000000000001
-[   36.477966] x9 : 0000000000000000 x8 : ffff8001feef14a8
-[   36.483251] x7 : 0000000000000000 x6 : 000000015e261b39
-[   36.488536] x5 : 0000000000000000 x4 : ffff0000118cbd20
-[   36.493820] x3 : ffff0000118cbe00 x2 : ffff8001fd9d5a00
-[   36.499105] x1 : ffff8001fd9d5a00 x0 : 0000000000000000
-[   36.504389] Call trace:
-[   36.506823]  fib6_walk_continue+0x1a8/0x1d8
-[   36.510984]  fib6_walk+0x40/0x80
-[   36.514195]  fib6_clean_tree+0x64/0x78
-[   36.517925]  __fib6_clean_all+0x78/0x100
-[   36.521827]  fib6_flush_trees+0x38/0x48
-[   36.525643]  security_load_policy+0x29c/0x5e8
-[   36.529978]  sel_write_load+0x10c/0x200
-[   36.533794]  __vfs_write+0x48/0x90
-[   36.537178]  vfs_write+0xac/0x1b8
-[   36.540475]  ksys_write+0x64/0xe0
-[   36.543772]  __arm64_sys_write+0x24/0x30
-[   36.547675]  el0_svc_common.constprop.0+0x74/0x168
-[   36.552441]  el0_svc_handler+0x34/0x90
-[   36.556171]  el0_svc+0x8/0xc
-[   64.370649] watchdog: BUG: soft lockup - CPU#5 stuck for 22s! [systemd:1=
-]
-...
-[ 1500.504373] Call trace:
-[ 1500.506806]  fib6_walk_continue+0x1a8/0x1d8
-[ 1500.510968]  fib6_walk+0x40/0x80
-[ 1500.514180]  fib6_clean_tree+0x64/0x78
-[ 1500.517909]  __fib6_clean_all+0x78/0x100
-[ 1500.521812]  fib6_flush_trees+0x38/0x48
-[ 1500.525628]  security_load_policy+0x29c/0x5e8
-[ 1500.529962]  sel_write_load+0x10c/0x200
-[ 1500.533778]  __vfs_write+0x48/0x90
-[ 1500.537161]  vfs_write+0xac/0x1b8
-[ 1500.540458]  ksys_write+0x64/0xe0
-[ 1500.543756]  __arm64_sys_write+0x24/0x30
-[ 1500.547658]  el0_svc_common.constprop.0+0x74/0x168
-[ 1500.552425]  el0_svc_handler+0x34/0x90
-[ 1500.556154]  el0_svc+0x8/0xc
-
-Kernel config,
-https://artifacts.cki-project.org/pipelines/263738/kernel-stable-aarch64-ff=
-21af282725ae2ebc3ac4298513816f760c929e.config
+>=20
+> ufshcd_print_host_regs() can be called by interrupt handler, but it may s=
+leep due
+> to ufshcd_dump_regs() allocates the dump buffer memory with flag
+> GFP_KERNEL. Fix it by changing GFP_KERNEL to GFP_ATMOIC.
+>=20
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
