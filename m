@@ -2,141 +2,102 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9425ECA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A29CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1832080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:09:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="U0XZKqti"
+	by mail.kernel.org (Postfix) with ESMTP id 922DE2080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:11:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbfKDRJ6 (ORCPT
+        id S1728781AbfKDRLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:09:58 -0500
-Received: from mout.gmx.net ([212.227.17.21]:34997 "EHLO mout.gmx.net"
+        Mon, 4 Nov 2019 12:11:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:47602 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728216AbfKDRJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:09:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1572887381;
-        bh=Xw/Eqili2ZJJLIqrlq0Jd7xa4tm2K2gAhNFHp6fip9o=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=U0XZKqtiv7v+Mu6yV1DFfP8K+sJwt97ZUnA75Z0pAGlhMvtZsMCsr2P+DVRoNPvZ2
-         oYFF6ja1kFdc/Tb1oonTDYMSIecjtUTAP8u5RkijXjmp4bvczuyl0lU8rfk1SPPkN+
-         K9Jg6YB27YiX7qGCkVTMuKJVc24JG4MgSwLPkRN4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.164] ([37.4.249.112]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mf078-1hzjh90FMA-00gaTN; Mon, 04
- Nov 2019 18:09:41 +0100
-Subject: Re: [PATCH 1/2] ARM: dts: bcm2711: force CMA into first GB of memory
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        catalin.marinas@arm.com, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>
-Cc:     linux-kernel@vger.kernel.org
-References: <20191104135412.32118-1-nsaenzjulienne@suse.de>
- <20191104135412.32118-2-nsaenzjulienne@suse.de>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <588d05b4-e66c-4aa0-436e-12d244a6efd8@gmx.net>
-Date:   Mon, 4 Nov 2019 18:09:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1727998AbfKDRLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 12:11:39 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D601A1F1;
+        Mon,  4 Nov 2019 09:11:37 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94DE93F71A;
+        Mon,  4 Nov 2019 09:11:35 -0800 (PST)
+Date:   Mon, 4 Nov 2019 17:11:33 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 11/17] arm64: disable function graph tracing with SCS
+Message-ID: <20191104171132.GB2024@lakrids.cambridge.arm.com>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191101221150.116536-1-samitolvanen@google.com>
+ <20191101221150.116536-12-samitolvanen@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191104135412.32118-2-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:HUCChti8pYqeZ0jxOW5Kmz2kyPjLn97dBAj9Og47A75h/r17rVL
- 8noEfKIPcCLhbr31Pmgru/D9r/FfgQCKP/n1auxhCJflW1WIxlD2QAlVtZtKiYmkjo9HOHD
- 38nltXoEvu3flP9mlV6tJ6b0+9rKvOl9Q/8qNexhVxpQ6zsbgsswa7S+grNJhGul4BJBBBt
- MBdo/U9qUFlTxY5pjuAiw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MmF7hCF6RgI=:fAH0j5PwkaBViB+yDfOEgb
- Pbz0an8tBAk/Hy4e+T665KOJ3bAeqCXqjWXG+VMtk9Dc8GzWVbE8tATq4d5hRDXae9cpb0WbO
- mBbmXCLHNNHXCx3OMYRTNpQi0cg8bQYPFvqidDAK0zTKdt0aucpFk4Pd9MF4VU9jiixVDpg0o
- 0Sz6EQhPHuwBkYcpNqXd4MrfcqVz4EYgo5lyOv1TQ5o5tZmk3ldKGjnCwWqgt0Sv2ZIdMj7D0
- UX8BILlLWWY5H/uls06cWUDlh40TYguxHYc9ty6L0bASy5IldBi3q1354ccUZwYdmFelpIz01
- gOj/AFED7/QESBTpXghGelhw/EyymwsABQlOaL0wp3H8xfdJNhcfArDn6RJ+91fP4hwz4pCCs
- vO6qDnl87UKjiz8GyPjCv9ee0BMCe5SCaXVsnkC6XnQgIJf/dNTMswbwG0LYCKOUGfjLIUVn+
- 1k0RvWM4K44ZxBa+Ws32c5GNAPVWUm1cfZjJ+WdyvbJ9Fga8WcJa6L0ITiN4BolPdUL7zocD2
- Y3qs3uYtukOme77dp4/OcUz6mDMLnobO2MaNEWza6Au4q0KMurHOAyM0cj7PKdCYWlVf8OHMs
- P7wo5iVbyZbdwuHX/b1Zix+VmkuLtoyoXabctzkuYyaGBAn3iHJnerbOejgCHYBQoR8fbc1v5
- 0qSKEEeFBo0k/mhGGyy2W4jEK+BVAAomZDFX5xYJLatkrBQkCmoCValghsfc5cMm6hqzldSnB
- rns7MkIOazdWp71sYZ9YhKguP3MJzSpkgYBFxVzQPzUpuG32PcNiPX3BdEMgLe7RPxh0am4Fb
- B7imTVyMlb83T//YJIIrgMHcq5u1uCRvyWCABNgYGj9Jxpuhg9VncLKY9WchaARtrgI2G20Q9
- WTqvTQ5mJgBc9iG/FAJgo//nr5oFvpbJClrLWg+i0AT3/rp/M+a7msExDLcZrT9HGozXx0zcK
- 5MG09uUIOAi2Gg8o8W/DOsq+a97IPESgdwhqQciCh/S/Ym23xhBcBUebOs/uAelc4p5X9Cu1m
- h8oJ8XBacBf9rv9ECaflaQs3MgdnWIsWYfqu3undBBxQsq7jiXqYq4Af9RnFE6EDvgXFWe9fg
- xQ+C6lDOUbzzCihQDjx/10Z5WzI9D9t9a3eAGDrF08zeeZBgfKn1Zoip6uCNOaiT9ADZZzT+r
- SaKsAkQctI0nqxwGkWmt8aXbCyCA1xRFqO/orwCOQ6eqJpmmOQ21Z7ZFnlVSVQb7NU4YFxofP
- 2eQlLTQRBk5eDLGwsXsasGE28LV6q6YhHkyykJKABa5v5mAr84tmTefERtCU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191101221150.116536-12-samitolvanen@google.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
+On Fri, Nov 01, 2019 at 03:11:44PM -0700, Sami Tolvanen wrote:
+> With CONFIG_FUNCTION_GRAPH_TRACER, function return addresses are
+> modified in ftrace_graph_caller and prepare_ftrace_return to redirect
+> control flow to ftrace_return_to_handler. This is incompatible with
+> SCS.
 
-Am 04.11.19 um 14:54 schrieb Nicolas Saenz Julienne:
-> arm64 places the CMA in ZONE_DMA32, which is not good enough for the
-> Raspberry Pi 4 since it contains peripherals that can only address the
-> first GB of memory. Explicitly place the CMA into that area.
->
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Can you please elaborate on _how_ this is incompatible in the commit
+message?
 
-do you want this in Linux 5.5 via devicetree/fixes? In this case please
-add an fixes tag.
+For example, it's not clear to me if you mean that's functionally
+incompatible, or if you're trying to remove return-altering gadgets.
 
-Otherwise this will be queued for Linux 5.6.
+If there's a functional incompatibility, please spell that out a bit
+more clearly. Likewise if this is about minimizing the set of places
+that can mess with control-flow outside of usual function conventions.
 
+Thanks,
+Mark.
+
+> 
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 > ---
->  arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/b=
-cm2711-rpi-4-b.dts
-> index cccc1ccd19be..3c7833e9005a 100644
-> --- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> +++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> @@ -19,6 +19,25 @@
->  		reg =3D <0 0 0>;
->  	};
->
-> +	reserved-memory {
-> +		#address-cells =3D <2>;
-> +		#size-cells =3D <1>;
-> +		ranges;
-> +
-> +		/*
-> +		 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
-> +		 * that's not good enough for the Raspberry Pi 4 as some
-> +		 * devices can only address the lower 1G of memory (ZONE_DMA).
-> +		 */
-> +		linux,cma {
-> +			compatible =3D "shared-dma-pool";
-> +			size =3D <0x2000000>; /* 32MB */
-> +			alloc-ranges =3D <0x0 0x00000000 0x40000000>;
-> +			reusable;
-> +			linux,cma-default;
-> +		};
-> +	};
-> +
-
-i think this is a SoC-specific issue not a board specifc one. Please
-move this to bcm2711.dtsi
-
-Thanks
-Stefan
-
->  	leds {
->  		act {
->  			gpios =3D <&gpio 42 GPIO_ACTIVE_HIGH>;
+>  arch/arm64/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index e7b57a8a5531..42867174920f 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -148,7 +148,7 @@ config ARM64
+>  	select HAVE_FTRACE_MCOUNT_RECORD
+>  	select HAVE_FUNCTION_TRACER
+>  	select HAVE_FUNCTION_ERROR_INJECTION
+> -	select HAVE_FUNCTION_GRAPH_TRACER
+> +	select HAVE_FUNCTION_GRAPH_TRACER if !SHADOW_CALL_STACK
+>  	select HAVE_GCC_PLUGINS
+>  	select HAVE_HW_BREAKPOINT if PERF_EVENTS
+>  	select HAVE_IRQ_TIME_ACCOUNTING
+> -- 
+> 2.24.0.rc1.363.gb1bccd3e3d-goog
+> 
