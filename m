@@ -2,136 +2,92 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62956CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DD3CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BB502089C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:33:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="g+IMLC5Y"
+	by mail.kernel.org (Postfix) with ESMTP id A8A862080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbfKDTb4 (ORCPT
+        id S1729852AbfKDTdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:31:56 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:46516 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729565AbfKDTby (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 14:31:54 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4JVq5t028674;
-        Mon, 4 Nov 2019 13:31:52 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572895912;
-        bh=TsBneoZKzB5CGJwt7jeP9UzozJx7lt2k4GHROFzZFr4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=g+IMLC5YP26rIdZ0L9AejkYqsu/iaBDakIDWnmfObQ7Ezp/QU+UhFLmYE7xfKgHlu
-         Pzijd5fgTcnvi/Q8NnZVxY7KwQ8znIIwiHCw5fsLihEramDOJ/xeYJl6y8AkhmkJhQ
-         Mvr5eOLjc9VprLVPhBfuDgRyyu2Rxa9xYnjf4BvY=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA4JVqCs020892
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Nov 2019 13:31:52 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 4 Nov
- 2019 13:31:52 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 4 Nov 2019 13:31:37 -0600
-Received: from ula0869644.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4JVmd1096934;
-        Mon, 4 Nov 2019 13:31:51 -0600
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-CC:     <linux-media@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 02/20] dt-bindings: media: cal: update binding example
-Date:   Mon, 4 Nov 2019 13:31:22 -0600
-Message-ID: <20191104193140.31145-3-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191104193140.31145-1-bparrot@ti.com>
-References: <20191104193140.31145-1-bparrot@ti.com>
+        Mon, 4 Nov 2019 14:33:19 -0500
+Received: from mga14.intel.com ([192.55.52.115]:54081 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728322AbfKDTdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 14:33:17 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 11:33:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,268,1569308400"; 
+   d="scan'208";a="376436010"
+Received: from jleigh1-mobl.ger.corp.intel.com (HELO [10.251.83.74]) ([10.251.83.74])
+  by orsmga005.jf.intel.com with ESMTP; 04 Nov 2019 11:33:10 -0800
+Subject: Re: [PATCH 06/14] soundwire: add support for sdw_slave_type
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
+        gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20191023212823.608-1-pierre-louis.bossart@linux.intel.com>
+ <20191023212823.608-7-pierre-louis.bossart@linux.intel.com>
+From:   Cezary Rojewski <cezary.rojewski@intel.com>
+Message-ID: <71b50d6d-0000-340a-eb5d-6a63564dd2d6@intel.com>
+Date:   Mon, 4 Nov 2019 20:33:08 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191023212823.608-7-pierre-louis.bossart@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update binding example to show proper endpoint properties and linkage.
+On 2019-10-23 23:28, Pierre-Louis Bossart wrote:
+> diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
+> index 9a0fd3ee1014..5df095f4e12f 100644
+> --- a/drivers/soundwire/bus_type.c
+> +++ b/drivers/soundwire/bus_type.c
+> @@ -49,9 +49,16 @@ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size)
+>   
+>   static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
+>   {
+> -	struct sdw_slave *slave = to_sdw_slave_device(dev);
+> +	struct sdw_slave *slave;
+>   	char modalias[32];
+>   
+> +	if (is_sdw_slave(dev)) {
+> +		slave = to_sdw_slave_device(dev);
+> +	} else {
+> +		dev_warn(dev, "uevent for unknown Soundwire type\n");
+> +		return -EINVAL;
+> +	}
+> +
+>   	sdw_slave_modalias(slave, modalias, sizeof(modalias));
+>   
+>   	if (add_uevent_var(env, "MODALIAS=%s", modalias))
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
----
- .../devicetree/bindings/media/ti-cal.txt      | 31 ++++++++++---------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+Positive evaluation of is_sdw_slave() check is required for function to 
+continue, thus you might as well do:
 
-diff --git a/Documentation/devicetree/bindings/media/ti-cal.txt b/Documentation/devicetree/bindings/media/ti-cal.txt
-index 93096d924786..7e960cf26e23 100644
---- a/Documentation/devicetree/bindings/media/ti-cal.txt
-+++ b/Documentation/devicetree/bindings/media/ti-cal.txt
-@@ -27,7 +27,6 @@ Documentation/devicetree/bindings/media/video-interfaces.txt.
- Example:
- 	cal: cal@4845b000 {
- 		compatible = "ti,dra72-cal";
--		ti,hwmods = "cal";
- 		reg = <0x4845B000 0x400>,
- 		      <0x4845B800 0x40>,
- 		      <0x4845B900 0x40>;
-@@ -45,9 +44,10 @@ Example:
- 
- 			csi2_0: port@0 {
- 				reg = <0>;
--				endpoint {
--					slave-mode;
--					remote-endpoint = <&ar0330_1>;
-+				csi2_phy0: endpoint {
-+					remote-endpoint = <&csi2_cam0>;
-+					clock-lanes = <0>;
-+					data-lanes = <1 2>;
- 				};
- 			};
- 			csi2_1: port@1 {
-@@ -57,19 +57,20 @@ Example:
- 	};
- 
- 	i2c5: i2c@4807c000 {
--		ar0330@10 {
--			compatible = "ti,ar0330";
--			reg = <0x10>;
-+		clock-frequency = <400000>;
- 
--			port {
--				#address-cells = <1>;
--				#size-cells = <0>;
-+		camera-sensor@3c {
-+			compatible = "ovti,ov5640";
-+			reg = <0x3c>;
-+
-+			clocks = <&clk_fixed>;
-+			clock-names = "xclk";
- 
--				ar0330_1: endpoint {
--					reg = <0>;
--					clock-lanes = <1>;
--					data-lanes = <0 2 3 4>;
--					remote-endpoint = <&csi2_0>;
-+			port {
-+				csi2_cam0: endpoint {
-+					remote-endpoint = <&csi2_phy0>;
-+					clock-lanes = <0>;
-+					data-lanes = <1 2>;
- 				};
- 			};
- 		};
--- 
-2.17.1
+if (!is_sdw_slave(dev)) {
+	dev_warn();
+	return -EINVAL;
+}
 
+slave = to_sdw_slave_device(dev);
+(...)
+
+Czarek
