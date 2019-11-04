@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CC9CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 890CECA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1952321850
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D96221850
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904098;
-	bh=77sS3w03X92A9bu2jxWTB2qmu2JAV6Xtx2HzEp2RtYE=;
+	s=default; t=1572904101;
+	bh=AW8JRg+49P+wsK0+18mdLzxYSUk1aFhVRS5tmh8A+Fw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oyoTywuRA/SJZddJBA63ArEDFAuRhIvTuIi20JIUpXrZb2vAP7liTcxaPwJ3UO+Gc
-	 zG/L8uERgpRtBox0QdWbCe37/1dbCDuRBmnoPtS2D2zksMTNHrIpQdcFcm7PSFA6aH
-	 f/cwYNnieu0zKYbGBfIV/sf9oeDpHz71WSX8QSo8=
+	b=TZeYviXsthXNd/BKBbZf7N+WTC40PiwnjCosBun7vjIv0B72V2se4pZIvlMkF+3yU
+	 w3HesVyXNeAZL1i0Guu/xdovgWj2PrFo3Fb7mXqGfLq201WNNdP42/R44hPr6HeYPg
+	 wmKvIZZgn+yclNAw2a0ff9AhaO233cYSyhI0bRTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729972AbfKDVsR (ORCPT
+        id S1729990AbfKDVsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:48:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38378 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:48:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729954AbfKDVsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:48:14 -0500
+        id S1729968AbfKDVsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:48:16 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89E28222CF;
-        Mon,  4 Nov 2019 21:48:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2BC121D81;
+        Mon,  4 Nov 2019 21:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904094;
-        bh=77sS3w03X92A9bu2jxWTB2qmu2JAV6Xtx2HzEp2RtYE=;
+        s=default; t=1572904096;
+        bh=AW8JRg+49P+wsK0+18mdLzxYSUk1aFhVRS5tmh8A+Fw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G9FhLtyRMUdi/a7uE1UiLNSYML9R6EG0P5lMB5hgP0gIjcistYT2lCcUNWyoW/kfb
-         pjlrTbx2oA3sE9F7AQKJTAU1oczOlotWT4SbJGZNh2yKVWLNu958cbJdjPLwGsB/PK
-         1JrHXDfRDSshTkuRrcqkST1Ck3Nx+sbRkSQG/Y/E=
+        b=atsjtR3JU5vElkB03GF0qkbS2FNCO6qZZS0hgDbTRoEu2KfrM4EyFhO2lMRFkiKKI
+         1Vh83QAy/MpG2XKl/XR47ozzZUjQ7ggKM33DOkLgW6vlvl9vOoDYm7Jg9s0vul3FBh
+         hYle5UiSViAhzbgyhPmMshxE3T+JTr4Khz0DyUVw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Nikos Tsironis <ntsironis@arrikto.com>,
-        Mike Snitzer <snitzer@redhat.com>,
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 02/46] dm snapshot: introduce account_start_copy() and account_end_copy()
-Date:   Mon,  4 Nov 2019 22:44:33 +0100
-Message-Id: <20191104211833.227226439@linuxfoundation.org>
+Subject: [PATCH 4.4 20/46] NFSv4: Fix leak of clp->cl_acceptor string
+Date:   Mon,  4 Nov 2019 22:44:51 +0100
+Message-Id: <20191104211850.806653505@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211830.912265604@linuxfoundation.org>
 References: <20191104211830.912265604@linuxfoundation.org>
@@ -61,71 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit a2f83e8b0c82c9500421a26c49eb198b25fcdea3 ]
+[ Upstream commit 1047ec868332034d1fbcb2fae19fe6d4cb869ff2 ]
 
-This simple refactoring moves code for modifying the semaphore cow_count
-into separate functions to prepare for changes that will extend these
-methods to provide for a more sophisticated mechanism for COW
-throttling.
+Our client can issue multiple SETCLIENTID operations to the same
+server in some circumstances. Ensure that calls to
+nfs4_proc_setclientid() after the first one do not overwrite the
+previously allocated cl_acceptor string.
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Reviewed-by: Nikos Tsironis <ntsironis@arrikto.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+unreferenced object 0xffff888461031800 (size 32):
+  comm "mount.nfs", pid 2227, jiffies 4294822467 (age 1407.749s)
+  hex dump (first 32 bytes):
+    6e 66 73 40 6b 6c 69 6d 74 2e 69 62 2e 31 30 31  nfs@klimt.ib.101
+    35 67 72 61 6e 67 65 72 2e 6e 65 74 00 00 00 00  5granger.net....
+  backtrace:
+    [<00000000ab820188>] __kmalloc+0x128/0x176
+    [<00000000eeaf4ec8>] gss_stringify_acceptor+0xbd/0x1a7 [auth_rpcgss]
+    [<00000000e85e3382>] nfs4_proc_setclientid+0x34e/0x46c [nfsv4]
+    [<000000003d9cf1fa>] nfs40_discover_server_trunking+0x7a/0xed [nfsv4]
+    [<00000000b81c3787>] nfs4_discover_server_trunking+0x81/0x244 [nfsv4]
+    [<000000000801b55f>] nfs4_init_client+0x1b0/0x238 [nfsv4]
+    [<00000000977daf7f>] nfs4_set_client+0xfe/0x14d [nfsv4]
+    [<0000000053a68a2a>] nfs4_create_server+0x107/0x1db [nfsv4]
+    [<0000000088262019>] nfs4_remote_mount+0x2c/0x59 [nfsv4]
+    [<00000000e84a2fd0>] legacy_get_tree+0x2d/0x4c
+    [<00000000797e947c>] vfs_get_tree+0x20/0xc7
+    [<00000000ecabaaa8>] fc_mount+0xe/0x36
+    [<00000000f15fafc2>] vfs_kern_mount+0x74/0x8d
+    [<00000000a3ff4e26>] nfs_do_root_mount+0x8a/0xa3 [nfsv4]
+    [<00000000d1c2b337>] nfs4_try_mount+0x58/0xad [nfsv4]
+    [<000000004c9bddee>] nfs_fs_mount+0x820/0x869 [nfs]
+
+Fixes: f11b2a1cfbf5 ("nfs4: copy acceptor name from context ... ")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-snap.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ fs/nfs/nfs4proc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/md/dm-snap.c b/drivers/md/dm-snap.c
-index 7c8b5fdf4d4e5..2437ca7e43687 100644
---- a/drivers/md/dm-snap.c
-+++ b/drivers/md/dm-snap.c
-@@ -1400,6 +1400,16 @@ static void snapshot_dtr(struct dm_target *ti)
- 	kfree(s);
- }
- 
-+static void account_start_copy(struct dm_snapshot *s)
-+{
-+	down(&s->cow_count);
-+}
-+
-+static void account_end_copy(struct dm_snapshot *s)
-+{
-+	up(&s->cow_count);
-+}
-+
- /*
-  * Flush a list of buffers.
-  */
-@@ -1584,7 +1594,7 @@ static void copy_callback(int read_err, unsigned long write_err, void *context)
- 		}
- 		list_add(&pe->out_of_order_entry, lh);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index d1816ee0c11be..900a62a9ad4e5 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5255,6 +5255,7 @@ int nfs4_proc_setclientid(struct nfs_client *clp, u32 program,
  	}
--	up(&s->cow_count);
-+	account_end_copy(s);
- }
- 
- /*
-@@ -1608,7 +1618,7 @@ static void start_copy(struct dm_snap_pending_exception *pe)
- 	dest.count = src.count;
- 
- 	/* Hand over to kcopyd */
--	down(&s->cow_count);
-+	account_start_copy(s);
- 	dm_kcopyd_copy(s->kcopyd_client, &src, 1, &dest, 0, copy_callback, pe);
- }
- 
-@@ -1629,7 +1639,7 @@ static void start_full_bio(struct dm_snap_pending_exception *pe,
- 	pe->full_bio_end_io = bio->bi_end_io;
- 	pe->full_bio_private = bio->bi_private;
- 
--	down(&s->cow_count);
-+	account_start_copy(s);
- 	callback_data = dm_kcopyd_prepare_callback(s->kcopyd_client,
- 						   copy_callback, pe);
- 
+ 	status = task->tk_status;
+ 	if (setclientid.sc_cred) {
++		kfree(clp->cl_acceptor);
+ 		clp->cl_acceptor = rpcauth_stringify_acceptor(setclientid.sc_cred);
+ 		put_rpccred(setclientid.sc_cred);
+ 	}
 -- 
 2.20.1
 
