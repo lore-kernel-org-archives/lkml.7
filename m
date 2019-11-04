@@ -2,124 +2,180 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BD0CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA36FCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25617214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8558020869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:41:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="gdP/u/Z2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CUu1FmB3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbfKDRkO (ORCPT
+        id S1729416AbfKDRlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:40:14 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35043 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728778AbfKDRkN (ORCPT
+        Mon, 4 Nov 2019 12:41:36 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35225 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728392AbfKDRlg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:40:13 -0500
-Received: by mail-wr1-f65.google.com with SMTP id l10so18119339wrb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 09:40:12 -0800 (PST)
+        Mon, 4 Nov 2019 12:41:36 -0500
+Received: by mail-pg1-f194.google.com with SMTP id q22so4171770pgk.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 09:41:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qFzvOj2kIekmlBTNitL0550GXXjfDa5dHZ2hXfb84nE=;
-        b=gdP/u/Z2502qMOMIX5Abj0e+tGILbSh4sD07/PoMKUAftazcuxy2XTGaZjYj+8Y19c
-         jl5h1aJYvLfqDcB8eqkoKVzhyat5T/4msDgTalhzxCq2SVhe9oHqkxd/+PjOAxGwl3Ed
-         qpZOsqJ65cSsHMYFmVqVPi64e8qn3nq44jM5o=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lPIDgQKTrSezXBvWSPccLapRG8yo6gcHIljKbjtAJu0=;
+        b=CUu1FmB3LjsCLSEP705SvIqj35uHr2X5ys8TEcTirMe4Xm0h+XWqfzbWLbA/hhtDBw
+         eBlTxyj2xuSt7s0M3YUzkirkkX9V7uBiKPkWbfNsrubIH3WrdU/9DABtq8wDPUrFQXkG
+         7ibo3Z1mBB3nyR9Q4tDPS0IrWjhg5zGf+d0yp+PbZyYuez8PqSX81RKDIMG4OY6FkQ0/
+         ml3xQhwX4iBRmcnHBGtOrWcysVepLJo7C8TxzAl3LFclFOH9MxW3uoDksButKbroYTKP
+         DO6Mo6b1c/qIjgpNcBQx7oTHpiAiZXJf6ppiFLI8Bm25SiQMVIEKLEQE+58JBZg+pY2/
+         YEjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=qFzvOj2kIekmlBTNitL0550GXXjfDa5dHZ2hXfb84nE=;
-        b=PWEvrCYh+Dmr4IE6/fCuzykJY9HYdkKQ1bgWnDZrh+tLID6atawnZ7rA5Lrjut02qT
-         AKWIMdHO/CsiFJG7cEwvd5cO5oWXXRVbdwBptWzinaPPy6bC/F+jWMZvYoQzOsK5I4/B
-         mSCwTN14ajeUF9cJxf7wSsYVtxdxq73aYg4HEciAwrQcobg1UhRGf9ba2vO0+jWBf/rM
-         TquMh0yjzTK3Jf1Wuw2/hqLFDrlHcJS8LkdAfCOrKdbh0JVAB0zkydP40UffyyJxvHRQ
-         9AqHTboFF1ZAmpk1ZM228hySqw0nj0TOgRSbdgsKy9wv2QQHbr2/0a5/2G0Fo+tAGL30
-         /9Dg==
-X-Gm-Message-State: APjAAAXDkHyRqLnllJhjhxrimUtsF/PW5nWUdbY608hX3nJuKqYydRyS
-        INT96OPeAlFOhjKK8Ay04hajhQ==
-X-Google-Smtp-Source: APXvYqw29YqfrGgjpwh0uFd5WKrqiAbjecSm6tcDlvpk+V7LLi/5MabZh6lMzWqoH8T6/X2qsoJ4jQ==
-X-Received: by 2002:adf:e747:: with SMTP id c7mr24315449wrn.384.1572889211910;
-        Mon, 04 Nov 2019 09:40:11 -0800 (PST)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id b17sm8647949wru.36.2019.11.04.09.40.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lPIDgQKTrSezXBvWSPccLapRG8yo6gcHIljKbjtAJu0=;
+        b=X8iIM+0e7Qm5opTNNA8ooCe3fnIB1DRQy8d7N2S6GFhTlnYgI7S73c4t0ZYHaNVHCz
+         GsdAXMizVKNS23eAP04ANWGVpqqu+JsR1HEQYkM0fKZftDo1/k4wiaOm1V0OIuVUAXVO
+         aMVlE5Juzh2ZD59+EtQUFVbfpziBHc4gQGrq3Uk8ef4/XBAW2cZa6+qEg/DrYmfV2Cis
+         3Ip8qgWNWGhirBZ3lU9owft37HXloTrrxiLW4J9HtVnSndqIdXfNuHN5Ga7qOnFY0q1a
+         3XFY7ZXYRq0VB16pseegTnnbtQdNcYLnB6taBiLGyeotcKrFGK7ziKhNaCV6ftt6jEtD
+         0r+A==
+X-Gm-Message-State: APjAAAVOTJwhvzA6c9450W5/t2xoIuYkGJaPR/S8pe27Xot/lBdLS3Rq
+        VdSABRP6b9l61kDDFoDyCXmK4w==
+X-Google-Smtp-Source: APXvYqzzZ+dkZOr3JoygRmb96xE/xUJESRhqGzvY+WG7dsAngzbq/NLr5tF1PTBC6l38feevSQDYnQ==
+X-Received: by 2002:a63:b62:: with SMTP id a34mr11473288pgl.123.1572889293842;
+        Mon, 04 Nov 2019 09:41:33 -0800 (PST)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v14sm11345300pfm.51.2019.11.04.09.41.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 09:40:10 -0800 (PST)
-Date:   Mon, 4 Nov 2019 18:40:08 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
-Cc:     outreachy-kernel@googlegroups.com, manasi.d.navare@intel.com,
-        rodrigosiqueiramelo@gmail.com, hamohammed.sa@gmail.com,
-        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-Subject: Re: [PATCH] drm/vkms: Update VKMS documentation
-Message-ID: <20191104174008.GK10326@phenom.ffwll.local>
-Mail-Followup-To: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        outreachy-kernel@googlegroups.com, manasi.d.navare@intel.com,
-        rodrigosiqueiramelo@gmail.com, hamohammed.sa@gmail.com,
-        airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-References: <20191101223735.2425-1-gabrielabittencourt00@gmail.com>
+        Mon, 04 Nov 2019 09:41:33 -0800 (PST)
+Date:   Mon, 4 Nov 2019 09:41:30 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCHv7 0/3] QCOM smmu-500 wait-for-safe handling for sdm845
+Message-ID: <20191104174130.GA586@tuxbook-pro>
+References: <cover.1568966170.git.saiprakash.ranjan@codeaurora.org>
+ <20191101163136.GC3603@willie-the-truck>
+ <af7e9a14ae7512665f0cae32e08c8b06@codeaurora.org>
+ <20191101172508.GB3983@willie-the-truck>
+ <119d4bcf5989d1aa0686fd674c6a3370@codeaurora.org>
+ <20191104051925.GC5299@hector.lan>
+ <20191104151506.GB24909@willie-the-truck>
+ <20191104162339.GD24909@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191101223735.2425-1-gabrielabittencourt00@gmail.com>
-X-Operating-System: Linux phenom 5.2.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191104162339.GD24909@willie-the-truck>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 07:37:35PM -0300, Gabriela Bittencourt wrote:
-> Small changes in the driver documentation, clarifing the description.
-> 
-> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+On Mon 04 Nov 08:23 PST 2019, Will Deacon wrote:
 
-lgtm, applied.
--Daniel
+> On Mon, Nov 04, 2019 at 03:15:06PM +0000, Will Deacon wrote:
+> > On Sun, Nov 03, 2019 at 11:19:25PM -0600, Andy Gross wrote:
+> > > On Fri, Nov 01, 2019 at 11:01:59PM +0530, Sai Prakash Ranjan wrote:
+> > > > >>> What's the plan for getting this merged? I'm not happy taking the
+> > > > >>> firmware
+> > > > >>> bits without Andy's ack, but I also think the SMMU changes should go via
+> > > > >>> the IOMMU tree to avoid conflicts.
+> > > > >>>
+> > > > >>> Andy?
+> > > > >>>
+> > > > >>
+> > > > >>Bjorn maintains QCOM stuff now if I am not wrong and he has already
+> > > > >>reviewed
+> > > > >>the firmware bits. So I'm hoping you could take all these through IOMMU
+> > > > >>tree.
+> > > > >
+> > > > >Oh, I didn't realise that. Is there a MAINTAINERS update someplace? If I
+> > > > >run:
+> > > > >
+> > > > >$ ./scripts/get_maintainer.pl -f drivers/firmware/qcom_scm-64.c
+> > > > >
+> > > > >in linux-next, I get:
+> > > > >
+> > > > >Andy Gross <agross@kernel.org> (maintainer:ARM/QUALCOMM SUPPORT)
+> > > > >linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT)
+> > > > >linux-kernel@vger.kernel.org (open list)
+> > > > >
+> > > > 
+> > > > It hasn't been updated yet then. I will leave it to Bjorn or Andy to comment
+> > > > on this.
+> > > 
+> > > The rumors of my demise have been greatly exaggerated.  All kidding aside, I
+> > > ack'ed both.  Bjorn will indeed be coming on as a co-maintener at some point.
+> > > He has already done a lot of yeomans work in helping me out the past 3 months.
+> > 
+> > Cheers Andy, and I'm pleased to hear that you're still with us! I've queued
+> > this lot for 5.5 and I'll send to Joerg this week.
+> 
+> Bah, in doing so I spotted that the existing code doesn't handle error codes
+> properly because 'a0' is unsigned. I'll queue the patch below at the start
+> of the series.
+> 
 
+Thanks, I've hit this a few times but missed this and assumed it was a
+firmware issue...
+
+In case you haven't published your branch:
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> Will
 > 
+> --->8
+> 
+> From a9a1047f08de0eff249fb65e2d5d6f6f8b2a87f0 Mon Sep 17 00:00:00 2001
+> From: Will Deacon <will@kernel.org>
+> Date: Mon, 4 Nov 2019 15:58:15 +0000
+> Subject: [PATCH] firmware: qcom: scm: Ensure 'a0' status code is treated as
+>  signed
+> 
+> The 'a0' member of 'struct arm_smccc_res' is declared as 'unsigned long',
+> however the Qualcomm SCM firmware interface driver expects to receive
+> negative error codes via this field, so ensure that it's cast to 'long'
+> before comparing to see if it is less than 0.
+> 
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Will Deacon <will@kernel.org>
 > ---
+>  drivers/firmware/qcom_scm-64.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Tested using: make htmldocs
-> ---
->  drivers/gpu/drm/vkms/vkms_drv.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-> index 80524a22412a..52e761bd6c2d 100644
-> --- a/drivers/gpu/drm/vkms/vkms_drv.c
-> +++ b/drivers/gpu/drm/vkms/vkms_drv.c
-> @@ -3,10 +3,10 @@
->  /**
->   * DOC: vkms (Virtual Kernel Modesetting)
->   *
-> - * vkms is a software-only model of a kms driver that is useful for testing,
-> - * or for running X (or similar) on headless machines and be able to still
-> - * use the GPU. vkms aims to enable a virtual display without the need for
-> - * a hardware display capability.
-> + * VKMS is a software-only model of a KMS driver that is useful for testing
-> + * and for running X (or similar) on headless machines. VKMS aims to enable
-> + * a virtual display with no need of a hardware display capability, releasing
-> + * the GPU in DRM API tests.
->   */
+> diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
+> index 91d5ad7cf58b..25e0f60c759a 100644
+> --- a/drivers/firmware/qcom_scm-64.c
+> +++ b/drivers/firmware/qcom_scm-64.c
+> @@ -150,7 +150,7 @@ static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
+>  		kfree(args_virt);
+>  	}
 >  
->  #include <linux/module.h>
+> -	if (res->a0 < 0)
+> +	if ((long)res->a0 < 0)
+>  		return qcom_scm_remap_error(res->a0);
+>  
+>  	return 0;
 > -- 
-> 2.20.1
+> 2.24.0.rc1.363.gb1bccd3e3d-goog
 > 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
