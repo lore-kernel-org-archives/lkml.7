@@ -2,108 +2,202 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488E5CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CABCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A9B214B2
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71F6C20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:51:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbfKDPv3 (ORCPT
+        id S1729439AbfKDPvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:51:29 -0500
-Received: from smtp2.axis.com ([195.60.68.18]:8140 "EHLO smtp2.axis.com"
+        Mon, 4 Nov 2019 10:51:41 -0500
+Received: from foss.arm.com ([217.140.110.172]:45972 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727998AbfKDPv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:51:28 -0500
-IronPort-SDR: 566HpXW0y6wrJ25x7MYzR1+E92meAWNnbTsoCpgsUOxKg+TuSW+mSzM2Xjn77KHKF7xiVOo++Z
- +S+zi++/iRIMMTCV1vQ2zfMaIDQD8iK6bZ0pjDBaLLweiX12yJlz9nXiDTh7+/FiL473pr/RLp
- Qif/TVsXFV6TS4wCxtk5onZQh4umD4YwhFgKS1jb7O/BCkTc5aALOM7ihas0v8mAfh0ACcpL5E
- bOpBhkA389mvFyV0qemwA/0xkgTBBXvTn2N4lEpy4CWbveiMFXV79FAx/FPMQCNy4UZ0dKVCPa
- X4E=
-X-IronPort-AV: E=Sophos;i="5.68,267,1569276000"; 
-   d="scan'208";a="2060488"
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Date:   Mon, 4 Nov 2019 16:51:26 +0100
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "osalvador@suse.de" <osalvador@suse.de>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm/sparse: Consistently do not zero memmap
-Message-ID: <20191104155126.y2fcjwrx5mhdoqi7@axis.com>
-References: <20191030131122.8256-1-vincent.whitchurch@axis.com>
- <20191030132958.GD31513@dhcp22.suse.cz>
- <20191030140216.i26n22asgafckfxy@axis.com>
- <20191030141259.GE31513@dhcp22.suse.cz>
- <CA+CK2bDObV=N1Y+LhDX=tYsTX3HZ+mbB=8aXT=fPX254hKEUBQ@mail.gmail.com>
- <20191030153150.GI31513@dhcp22.suse.cz>
- <CA+CK2bA3gM4pMSj-wDWgAPNoPtcjwd59_6VivKA2Uf2GriASsw@mail.gmail.com>
- <20191030173123.GK31513@dhcp22.suse.cz>
- <20191031072555.GA13102@dhcp22.suse.cz>
+        id S1727998AbfKDPvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 10:51:41 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15BE41FB;
+        Mon,  4 Nov 2019 07:51:40 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA20A3F71A;
+        Mon,  4 Nov 2019 07:51:37 -0800 (PST)
+Date:   Mon, 4 Nov 2019 15:51:33 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, Jessica Yu <jeyu@kernel.org>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc:     linux-kernel@vger.kernel.org, amit.kachhap@arm.com,
+        catalin.marinas@arm.com, duwe@suse.de, james.morse@arm.com,
+        jpoimboe@redhat.com, jthierry@redhat.com,
+        linux-parisc@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, rostedt@goodmis.org, svens@stackframe.org,
+        takahiro.akashi@linaro.org, will@kernel.org
+Subject: Re: [PATCHv2 2/8] module/ftrace: handle patchable-function-entry
+Message-ID: <20191104155132.GA1643@lakrids.cambridge.arm.com>
+References: <20191029165832.33606-1-mark.rutland@arm.com>
+ <20191029165832.33606-3-mark.rutland@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191031072555.GA13102@dhcp22.suse.cz>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191029165832.33606-3-mark.rutland@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 08:25:55AM +0100, Michal Hocko wrote:
-> On Wed 30-10-19 18:31:23, Michal Hocko wrote:
-> [...]
-> > What about this? It still aligns to the size but that should be
-> > correctly done to the section size level.
-> > 
-> > diff --git a/mm/sparse.c b/mm/sparse.c
-> > index 72f010d9bff5..ab1e6175ac9a 100644
-> > --- a/mm/sparse.c
-> > +++ b/mm/sparse.c
-> > @@ -456,8 +456,7 @@ struct page __init *__populate_section_memmap(unsigned long pfn,
-> >  	if (map)
-> >  		return map;
-> >  
-> > -	map = memblock_alloc_try_nid(size,
-> > -					  PAGE_SIZE, addr,
-> > +	map = memblock_alloc_try_nid(size, size, addr,
-> >  					  MEMBLOCK_ALLOC_ACCESSIBLE, nid);
-> >  	if (!map)
-> >  		panic("%s: Failed to allocate %lu bytes align=0x%lx nid=%d from=%pa\n",
-> > @@ -474,8 +473,13 @@ static void __init sparse_buffer_init(unsigned long size, int nid)
-> >  {
-> >  	phys_addr_t addr = __pa(MAX_DMA_ADDRESS);
-> >  	WARN_ON(sparsemap_buf);	/* forgot to call sparse_buffer_fini()? */
-> > +	/*
-> > +	 * Pre-allocated buffer is mainly used by __populate_section_memmap
-> > +	 * and we want it to be properly aligned to the section size - this is
-> > +	 * especially the case for VMEMMAP which maps memmap to PMDs
-> > +	 */
-> >  	sparsemap_buf =
-> > -		memblock_alloc_try_nid_raw(size, PAGE_SIZE,
-> > +		memblock_alloc_try_nid_raw(size, section_map_size(),
-> >  						addr,
-> >  						MEMBLOCK_ALLOC_ACCESSIBLE, nid);
-> >  	sparsemap_buf_end = sparsemap_buf + size;
->
-> Vincent, could you give this a try please? It would be even better if
-> you could add some debugging to measure the overhead. Let me know if you
-> need any help with a debugging patch.
+Hi Jessica, Helge,
 
-I've tested this patch and it works on my platform:  The allocations
-from sparse_buffer_alloc() now succeed and the fallback path is not
-taken.
+Are you ok with the module and parisc changes, repectively?
 
-I'm not sure what kind of overhead you're interested in.  The memory
-overhead of the initial allocations (as measured via the "Memory: XX/YY
-available" prints and MemTotal), is identical with and without this
-patch.  I don't see any difference in the time taken for the
-initializations either.
+The kbuild test robot is happy building this for multiple architectures,
+Sven has tested that this works correctly on parisc, and others have
+tested other architectures.
+
+I'd like to queue this in the arm64 tree soon if possible.
+
+Thanks,
+Mark.
+
+On Tue, Oct 29, 2019 at 04:58:26PM +0000, Mark Rutland wrote:
+> When using patchable-function-entry, the compiler will record the
+> callsites into a section named "__patchable_function_entries" rather
+> than "__mcount_loc". Let's abstract this difference behind a new
+> FTRACE_CALLSITE_SECTION, so that architectures don't have to handle this
+> explicitly (e.g. with custom module linker scripts).
+> 
+> As parisc currently handles this explicitly, it is fixed up accordingly,
+> with its custom linker script removed. Since FTRACE_CALLSITE_SECTION is
+> only defined when DYNAMIC_FTRACE is selected, the parisc module loading
+> code is updated to only use the definition in that case. When
+> DYNAMIC_FTRACE is not selected, modules shouldn't have this section, so
+> this removes some redundant work in that case.
+> 
+> I built parisc generic-{32,64}bit_defconfig with DYNAMIC_FTRACE enabled,
+> and verified that the section made it into the .ko files for modules.
+> 
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: Helge Deller <deller@gmx.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
+> Cc: Jessica Yu <jeyu@kernel.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Sven Schnelle <svens@stackframe.org>
+> Cc: linux-parisc@vger.kernel.org
+> ---
+>  arch/parisc/Makefile          |  1 -
+>  arch/parisc/kernel/module.c   | 10 +++++++---
+>  arch/parisc/kernel/module.lds |  7 -------
+>  include/linux/ftrace.h        |  5 +++++
+>  kernel/module.c               |  2 +-
+>  5 files changed, 13 insertions(+), 12 deletions(-)
+>  delete mode 100644 arch/parisc/kernel/module.lds
+> 
+> diff --git a/arch/parisc/Makefile b/arch/parisc/Makefile
+> index 36b834f1c933..dca8f2de8cf5 100644
+> --- a/arch/parisc/Makefile
+> +++ b/arch/parisc/Makefile
+> @@ -60,7 +60,6 @@ KBUILD_CFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY=1 \
+>  		 -DFTRACE_PATCHABLE_FUNCTION_SIZE=$(NOP_COUNT)
+>  
+>  CC_FLAGS_FTRACE := -fpatchable-function-entry=$(NOP_COUNT),$(shell echo $$(($(NOP_COUNT)-1)))
+> -KBUILD_LDS_MODULE += $(srctree)/arch/parisc/kernel/module.lds
+>  endif
+>  
+>  OBJCOPY_FLAGS =-O binary -R .note -R .comment -S
+> diff --git a/arch/parisc/kernel/module.c b/arch/parisc/kernel/module.c
+> index ac5f34993b53..1c50093e2ebe 100644
+> --- a/arch/parisc/kernel/module.c
+> +++ b/arch/parisc/kernel/module.c
+> @@ -43,6 +43,7 @@
+>  #include <linux/elf.h>
+>  #include <linux/vmalloc.h>
+>  #include <linux/fs.h>
+> +#include <linux/ftrace.h>
+>  #include <linux/string.h>
+>  #include <linux/kernel.h>
+>  #include <linux/bug.h>
+> @@ -862,7 +863,7 @@ int module_finalize(const Elf_Ehdr *hdr,
+>  	const char *strtab = NULL;
+>  	const Elf_Shdr *s;
+>  	char *secstrings;
+> -	int err, symindex = -1;
+> +	int symindex = -1;
+>  	Elf_Sym *newptr, *oldptr;
+>  	Elf_Shdr *symhdr = NULL;
+>  #ifdef DEBUG
+> @@ -946,11 +947,13 @@ int module_finalize(const Elf_Ehdr *hdr,
+>  			/* patch .altinstructions */
+>  			apply_alternatives(aseg, aseg + s->sh_size, me->name);
+>  
+> +#ifdef CONFIG_DYNAMIC_FTRACE
+>  		/* For 32 bit kernels we're compiling modules with
+>  		 * -ffunction-sections so we must relocate the addresses in the
+> -		 *__mcount_loc section.
+> +		 *  ftrace callsite section.
+>  		 */
+> -		if (symindex != -1 && !strcmp(secname, "__mcount_loc")) {
+> +		if (symindex != -1 && !strcmp(secname, FTRACE_CALLSITE_SECTION)) {
+> +			int err;
+>  			if (s->sh_type == SHT_REL)
+>  				err = apply_relocate((Elf_Shdr *)sechdrs,
+>  							strtab, symindex,
+> @@ -962,6 +965,7 @@ int module_finalize(const Elf_Ehdr *hdr,
+>  			if (err)
+>  				return err;
+>  		}
+> +#endif
+>  	}
+>  	return 0;
+>  }
+> diff --git a/arch/parisc/kernel/module.lds b/arch/parisc/kernel/module.lds
+> deleted file mode 100644
+> index 1a9a92aca5c8..000000000000
+> --- a/arch/parisc/kernel/module.lds
+> +++ /dev/null
+> @@ -1,7 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -
+> -SECTIONS {
+> -	__mcount_loc : {
+> -		*(__patchable_function_entries)
+> -	}
+> -}
+> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> index 9867d90d635e..9141f2263286 100644
+> --- a/include/linux/ftrace.h
+> +++ b/include/linux/ftrace.h
+> @@ -738,6 +738,11 @@ static inline unsigned long get_lock_parent_ip(void)
+>  
+>  #ifdef CONFIG_FTRACE_MCOUNT_RECORD
+>  extern void ftrace_init(void);
+> +#ifdef CC_USING_PATCHABLE_FUNCTION_ENTRY
+> +#define FTRACE_CALLSITE_SECTION	"__patchable_function_entries"
+> +#else
+> +#define FTRACE_CALLSITE_SECTION	"__mcount_loc"
+> +#endif
+>  #else
+>  static inline void ftrace_init(void) { }
+>  #endif
+> diff --git a/kernel/module.c b/kernel/module.c
+> index ff2d7359a418..acf7962936c4 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -3222,7 +3222,7 @@ static int find_module_sections(struct module *mod, struct load_info *info)
+>  #endif
+>  #ifdef CONFIG_FTRACE_MCOUNT_RECORD
+>  	/* sechdrs[0].sh_size is always zero */
+> -	mod->ftrace_callsites = section_objs(info, "__mcount_loc",
+> +	mod->ftrace_callsites = section_objs(info, FTRACE_CALLSITE_SECTION,
+>  					     sizeof(*mod->ftrace_callsites),
+>  					     &mod->num_ftrace_callsites);
+>  #endif
+> -- 
+> 2.11.0
+> 
