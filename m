@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43990CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA76CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EFE8204FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27CF8204FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905868;
-	bh=QziZ4j+8RK8f2BmIJU3EU/bYyEBqCTLtXBLdOT5SdDc=;
+	s=default; t=1572905874;
+	bh=6AvvrlPXSuBoPMjBsq1vSdqTw7HJ6pi4GC+M7L2rNXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u4x+5o2A34YTYqK11CBE6/k1PzWafi/DO5Syu/m/HdmPY1QMKQoNvWPZJnIW42wNk
-	 p1S4YaxpabSFQlcc+ckXUO/wIYwyw+Hgdc5tVifu3+WPvBOT9qi+Kz9y8qfXU97RVc
-	 Arx+Pk0DX6+SJLVNRbbLLhMy+renA0B4bckVOt48=
+	b=SLKTFfrxSC0aPwQR6Rf3uXdVyieao9LzTh/Y5qY3xlWPzjeG5YppD5+2bLtVVoofu
+	 c5GZmlbyBqtMQl9z2KX7CZoz2Y4nFY+X8+Len3I5AkFqdb8M4CRm0xVgy7j9rsB4r3
+	 QhjVr0BjCH75bcOrzKOf5rYsoR9RnKdR9cYL3ZXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389939AbfKDWRq (ORCPT
+        id S2389258AbfKDWCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:17:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60676 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:02:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389281AbfKDWCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:02:23 -0500
+        id S2389161AbfKDWBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:01:41 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1076217F4;
-        Mon,  4 Nov 2019 22:02:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27BFA20650;
+        Mon,  4 Nov 2019 22:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904942;
-        bh=QziZ4j+8RK8f2BmIJU3EU/bYyEBqCTLtXBLdOT5SdDc=;
+        s=default; t=1572904900;
+        bh=6AvvrlPXSuBoPMjBsq1vSdqTw7HJ6pi4GC+M7L2rNXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eyUkSZhqiQaLWSmLJgYU+HZnl0yz/G9JFou+uKQXx1c5oU2pfsIWOrVwQ7Xd0vn3T
-         lK3ZrYxD3mzEKaEOd1PgxR8kiaQ93TcRNIvh21ZSmOfZ2aeGoFZBqMd8UW5uxikVXk
-         2TI2aHGIt6hz2Uc/YZoJFvrdC0xzE6XUthv171As=
+        b=qio3BPt6I/rAdV5tXdzE0JVXE+0AzfiT7RruVIFVwQ/o/Ef3uNQI/deaYQeFYf0Ws
+         KIRZklutLWt6om6wRNoWzvi3Ky43eSambI3arRH6BPSeH5CbFkAjtUykmXEeXb0/O1
+         Pe/xdhSn3ziDXnXlph6e55I5i6aci9jrjKwaU6iw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
-        Nicholas Bellinger <nab@linux-iscsi.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 122/149] scsi: target: cxgbit: Fix cxgbit_fw4_ack()
-Date:   Mon,  4 Nov 2019 22:45:15 +0100
-Message-Id: <20191104212144.845622925@linuxfoundation.org>
+        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.19 110/149] fuse: truncate pending writes on O_TRUNC
+Date:   Mon,  4 Nov 2019 22:45:03 +0100
+Message-Id: <20191104212144.114811627@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -62,44 +58,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit fc5b220b2dcf8b512d9bd46fd17f82257e49bf89 upstream.
+commit e4648309b85a78f8c787457832269a8712a8673e upstream.
 
-Use the pointer 'p' after having tested that pointer instead of before.
+Make sure cached writes are not reordered around open(..., O_TRUNC), with
+the obvious wrong results.
 
-Fixes: 5cadafb236df ("target/cxgbit: Fix endianness annotations")
-Cc: Varun Prakash <varun@chelsio.com>
-Cc: Nicholas Bellinger <nab@linux-iscsi.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191023202150.22173-1-bvanassche@acm.org
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 4d99ff8f12eb ("fuse: Turn writeback cache on")
+Cc: <stable@vger.kernel.org> # v3.15+
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/target/iscsi/cxgbit/cxgbit_cm.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/fuse/file.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/target/iscsi/cxgbit/cxgbit_cm.c
-+++ b/drivers/target/iscsi/cxgbit/cxgbit_cm.c
-@@ -1832,7 +1832,7 @@ static void cxgbit_fw4_ack(struct cxgbit
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -202,7 +202,7 @@ int fuse_open_common(struct inode *inode
+ {
+ 	struct fuse_conn *fc = get_fuse_conn(inode);
+ 	int err;
+-	bool lock_inode = (file->f_flags & O_TRUNC) &&
++	bool is_wb_truncate = (file->f_flags & O_TRUNC) &&
+ 			  fc->atomic_o_trunc &&
+ 			  fc->writeback_cache;
  
- 	while (credits) {
- 		struct sk_buff *p = cxgbit_sock_peek_wr(csk);
--		const u32 csum = (__force u32)p->csum;
-+		u32 csum;
+@@ -210,16 +210,20 @@ int fuse_open_common(struct inode *inode
+ 	if (err)
+ 		return err;
  
- 		if (unlikely(!p)) {
- 			pr_err("csk 0x%p,%u, cr %u,%u+%u, empty.\n",
-@@ -1841,6 +1841,7 @@ static void cxgbit_fw4_ack(struct cxgbit
- 			break;
- 		}
+-	if (lock_inode)
++	if (is_wb_truncate) {
+ 		inode_lock(inode);
++		fuse_set_nowrite(inode);
++	}
  
-+		csum = (__force u32)p->csum;
- 		if (unlikely(credits < csum)) {
- 			pr_warn("csk 0x%p,%u, cr %u,%u+%u, < %u.\n",
- 				csk,  csk->tid,
+ 	err = fuse_do_open(fc, get_node_id(inode), file, isdir);
+ 
+ 	if (!err)
+ 		fuse_finish_open(inode, file);
+ 
+-	if (lock_inode)
++	if (is_wb_truncate) {
++		fuse_release_nowrite(inode);
+ 		inode_unlock(inode);
++	}
+ 
+ 	return err;
+ }
 
 
