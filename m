@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6A0CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E211ACA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93812205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1FC9217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904945;
-	bh=Yfuc9zmR5UHiuZid6NBVEbbUTxnhxljsHJBvKXfvKNg=;
+	s=default; t=1572904947;
+	bh=jMAEKlxyC3ermhSxITfVSGgBVe4mb/AT5OiGWW7wYCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kY2oTBuQoSeKe5gMhz7juu7ERgGikDjps6QmH0Ubm4Hd7UxhKkLjjYUNNdVh7idJ3
-	 HvTqViiBH3BwKFzsciapsg2HUTxf3vIv7THF29ewtmMovGp3eV7bvZRjmVLE2EnwcC
-	 CUZ5U651+Hjk5Q1MCtovyKeMBmXuSx0XoqS8T6bQ=
+	b=IYpUwAd00nM+asQ7+foYeiQW9kNaVsoqpLFdNHNfFN/KHzXRgl4kUCvc07tRu1Qbb
+	 /Nmc/UUQyIzwI9dDskEYq2XWZIYov8HqxefhoVyjaCKzToA3XmZnBFOwErkCgYiiOa
+	 gJXtgbnbE4nggcGrxjv36TDkIza6NucpmHUXb2UM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389289AbfKDWCY (ORCPT
+        id S2389301AbfKDWC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:02:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60102 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:02:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389190AbfKDWBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:53 -0500
+        id S2389120AbfKDWB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:01:56 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E45492084D;
-        Mon,  4 Nov 2019 22:01:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C469F20650;
+        Mon,  4 Nov 2019 22:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904912;
-        bh=Yfuc9zmR5UHiuZid6NBVEbbUTxnhxljsHJBvKXfvKNg=;
+        s=default; t=1572904915;
+        bh=jMAEKlxyC3ermhSxITfVSGgBVe4mb/AT5OiGWW7wYCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VhjL1X4tA8tw5OCZod9PFxlpTUHNuyawFXleTaeAmQSRx5gasW7RIofIX+71AzlQu
-         rUJ1gksu1pTfzMVqCXIQmgKniwCsht3AO0dzw0hMMmHi0zvAfwGOxjtCdaBb8EXyeB
-         wJIr3147BIvKXqC+eQ5N8dialzfBvvrobXpOTMNY=
+        b=GTcSu2B324WH+JOpYT12V8xoKwjBIVkT9z+5syfn0FaJkfaKy+K+l7lRh2zxUY3dS
+         rOPHKnjqXMY0mL6shLfpL/xTLdCwwTyFVmnHDgT6FxUJY86mwcyDn/p4eWjK7fcO1i
+         pllWitW/jmRmkZMteJ6Dk8VVpeFkUR6ICh3IygAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 113/149] ALSA: hda/realtek - Add support for ALC623
-Date:   Mon,  4 Nov 2019 22:45:06 +0100
-Message-Id: <20191104212144.286401061@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 4.19 114/149] UAS: Revert commit 3ae62a42090f ("UAS: fix alignment of scatter/gather segments")
+Date:   Mon,  4 Nov 2019 22:45:07 +0100
+Message-Id: <20191104212144.343422897@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -59,67 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit f0778871a13889b86a65d4ad34bef8340af9d082 upstream.
+commit 1186f86a71130a7635a20843e355bb880c7349b2 upstream.
 
-Support new codec ALC623.
+Commit 3ae62a42090f ("UAS: fix alignment of scatter/gather segments"),
+copying a similar commit for usb-storage, attempted to solve a problem
+involving scatter-gather I/O and USB/IP by setting the
+virt_boundary_mask for mass-storage devices.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/ed97b6a8bd9445ecb48bc763d9aaba7a@realtek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+However, it now turns out that the analogous change in usb-storage
+interacted badly with commit 09324d32d2a0 ("block: force an unlimited
+segment size on queues with a virt boundary"), which was added later.
+A typical error message is:
+
+	ehci-pci 0000:00:13.2: swiotlb buffer is full (sz: 327680 bytes),
+	total 32768 (slots), used 97 (slots)
+
+There is no longer any reason to keep the virt_boundary_mask setting
+in the uas driver.  It was needed in the first place only for
+handling devices with a block size smaller than the maxpacket size and
+where the host controller was not capable of fully general
+scatter-gather operation (that is, able to merge two SG segments into
+a single USB packet).  But:
+
+	High-speed or slower connections never use a bulk maxpacket
+	value larger than 512;
+
+	The SCSI layer does not handle block devices with a block size
+	smaller than 512 bytes;
+
+	All the host controllers capable of SuperSpeed operation can
+	handle fully general SG;
+
+	Since commit ea44d190764b ("usbip: Implement SG support to
+	vhci-hcd and stub driver") was merged, the USB/IP driver can
+	also handle SG.
+
+Therefore all supported device/controller combinations should be okay
+with no need for any special virt_boundary_mask.  So in order to head
+off potential problems similar to those affecting usb-storage, this
+patch reverts commit 3ae62a42090f.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: Oliver Neukum <oneukum@suse.com>
+CC: <stable@vger.kernel.org>
+Acked-by: Christoph Hellwig <hch@lst.de>
+Fixes: 3ae62a42090f ("UAS: fix alignment of scatter/gather segments")
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910231132470.1878-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/usb/storage/uas.c |   20 --------------------
+ 1 file changed, 20 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -421,6 +421,9 @@ static void alc_fill_eapd_coef(struct hd
- 	case 0x10ec0672:
- 		alc_update_coef_idx(codec, 0xd, 0, 1<<14); /* EAPD Ctrl */
- 		break;
-+	case 0x10ec0623:
-+		alc_update_coef_idx(codec, 0x19, 1<<13, 0);
-+		break;
- 	case 0x10ec0668:
- 		alc_update_coef_idx(codec, 0x7, 3<<13, 0);
- 		break;
-@@ -2908,6 +2911,7 @@ enum {
- 	ALC269_TYPE_ALC225,
- 	ALC269_TYPE_ALC294,
- 	ALC269_TYPE_ALC300,
-+	ALC269_TYPE_ALC623,
- 	ALC269_TYPE_ALC700,
- };
+--- a/drivers/usb/storage/uas.c
++++ b/drivers/usb/storage/uas.c
+@@ -796,30 +796,10 @@ static int uas_slave_alloc(struct scsi_d
+ {
+ 	struct uas_dev_info *devinfo =
+ 		(struct uas_dev_info *)sdev->host->hostdata;
+-	int maxp;
  
-@@ -2943,6 +2947,7 @@ static int alc269_parse_auto_config(stru
- 	case ALC269_TYPE_ALC225:
- 	case ALC269_TYPE_ALC294:
- 	case ALC269_TYPE_ALC300:
-+	case ALC269_TYPE_ALC623:
- 	case ALC269_TYPE_ALC700:
- 		ssids = alc269_ssids;
- 		break;
-@@ -7783,6 +7788,9 @@ static int patch_alc269(struct hda_codec
- 		spec->codec_variant = ALC269_TYPE_ALC300;
- 		spec->gen.mixer_nid = 0; /* no loopback on ALC300 */
- 		break;
-+	case 0x10ec0623:
-+		spec->codec_variant = ALC269_TYPE_ALC623;
-+		break;
- 	case 0x10ec0700:
- 	case 0x10ec0701:
- 	case 0x10ec0703:
-@@ -8901,6 +8909,7 @@ static const struct hda_device_id snd_hd
- 	HDA_CODEC_ENTRY(0x10ec0298, "ALC298", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0299, "ALC299", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0300, "ALC300", patch_alc269),
-+	HDA_CODEC_ENTRY(0x10ec0623, "ALC623", patch_alc269),
- 	HDA_CODEC_REV_ENTRY(0x10ec0861, 0x100340, "ALC660", patch_alc861),
- 	HDA_CODEC_ENTRY(0x10ec0660, "ALC660-VD", patch_alc861vd),
- 	HDA_CODEC_ENTRY(0x10ec0861, "ALC861", patch_alc861),
+ 	sdev->hostdata = devinfo;
+ 
+ 	/*
+-	 * We have two requirements here. We must satisfy the requirements
+-	 * of the physical HC and the demands of the protocol, as we
+-	 * definitely want no additional memory allocation in this path
+-	 * ruling out using bounce buffers.
+-	 *
+-	 * For a transmission on USB to continue we must never send
+-	 * a package that is smaller than maxpacket. Hence the length of each
+-         * scatterlist element except the last must be divisible by the
+-         * Bulk maxpacket value.
+-	 * If the HC does not ensure that through SG,
+-	 * the upper layer must do that. We must assume nothing
+-	 * about the capabilities off the HC, so we use the most
+-	 * pessimistic requirement.
+-	 */
+-
+-	maxp = usb_maxpacket(devinfo->udev, devinfo->data_in_pipe, 0);
+-	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
+-
+-	/*
+ 	 * The protocol has no requirements on alignment in the strict sense.
+ 	 * Controllers may or may not have alignment restrictions.
+ 	 * As this is not exported, we use an extremely conservative guess.
 
 
