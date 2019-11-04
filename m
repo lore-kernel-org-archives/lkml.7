@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D80CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3828ACA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A246720650
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079CB20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906430;
-	bh=QTCPxfOHcDMqsT3sNLrtpzZwxWq4ArbqZGS79lePllI=;
+	s=default; t=1572906436;
+	bh=SXcSjgXnzq2qZEbZ8jHOMYmVNKMe1iY72MSH9XLcWpQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VQRKC4I0uviIh4yC7HyakFM9yuIeagn+onzXRWrX1hrnkxslQID8eFxTamC189hD9
-	 OeEZ1YYK7/hkj8Ezpg/YqooeVXf4pj/1HogoamxbotG+lbmJwt11SsGYMrRsHPYzWJ
-	 nLJlFfuVYTupXn6kAw19IYe+0v6dUs55TrAcYNJM=
+	b=To3YPQedo3MuvS0PIyO9sHqjeDtC5oCcVG3Y1SC3pMNJv0++7U/O+kPcXCWP1BEZ+
+	 Xa9D+mp23RQikpVhiSngeSsSOPrHsMdfR800Q6R4SvnDKk3m6/O5eq6Fl9gfye418J
+	 yNKIIxEOjcUDi3hDBpyZiGfxUbreZh2qAuZQv1qY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387948AbfKDW1J (ORCPT
+        id S2388170AbfKDW1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:27:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43002 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:27:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387755AbfKDVuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:50:39 -0500
+        id S2387747AbfKDVug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:50:36 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3E7721744;
-        Mon,  4 Nov 2019 21:50:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D33F21744;
+        Mon,  4 Nov 2019 21:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904238;
-        bh=QTCPxfOHcDMqsT3sNLrtpzZwxWq4ArbqZGS79lePllI=;
+        s=default; t=1572904235;
+        bh=SXcSjgXnzq2qZEbZ8jHOMYmVNKMe1iY72MSH9XLcWpQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=imnYyeUthywFw1iPOXp2euVQIkP6xuUAEuLlPF36/H+k7zxjkM7ccMJYHC8Uw1Q9V
-         pdwryFVCsMs5EBESPhJu6elyZhKOkd17ijpaCZu5ejkrhNPJbr9Qjo1sw82+93yRSI
-         4XUvP1xHh7yWT2N9mfxfcU8XKMlR4RJ9qE5tgPFs=
+        b=NIfHfRUx/Yl20OEZd+/NYonGHBw+cJ0+JNAOMTRv21/W88SjkP8LhPfHovYF84V4a
+         A1rc72XqB04Ca8WWicWVK06zR7A1tN2k8abS5D+/bvBy4++fWw8ji5hWSv3HiCk79e
+         duyCCn2rRalqYMv3l3lFskNwuP3x5XSqtmBCodSY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Peng <benquike@gmail.com>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 33/62] ath6kl: fix a NULL-ptr-deref bug in ath6kl_usb_alloc_urb_from_pipe()
-Date:   Mon,  4 Nov 2019 22:44:55 +0100
-Message-Id: <20191104211933.014977706@linuxfoundation.org>
+Subject: [PATCH 4.9 32/62] thunderbolt: Use 32-bit writes when writing ring producer/consumer
+Date:   Mon,  4 Nov 2019 22:44:54 +0100
+Message-Id: <20191104211931.746648300@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -61,75 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Peng <benquike@gmail.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit 39d170b3cb62ba98567f5c4f40c27b5864b304e5 ]
+[ Upstream commit 943795219d3cb9f8ce6ce51cad3ffe1f61e95c6b ]
 
-The `ar_usb` field of `ath6kl_usb_pipe_usb_pipe` objects
-are initialized to point to the containing `ath6kl_usb` object
-according to endpoint descriptors read from the device side, as shown
-below in `ath6kl_usb_setup_pipe_resources`:
+The register access should be using 32-bit reads/writes according to the
+datasheet. With the previous generation hardware 16-bit writes have been
+working but starting with ICL this is not the case anymore so fix
+producer/consumer register update to use correct width register address.
 
-for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
-	endpoint = &iface_desc->endpoint[i].desc;
-
-	// get the address from endpoint descriptor
-	pipe_num = ath6kl_usb_get_logical_pipe_num(ar_usb,
-						endpoint->bEndpointAddress,
-						&urbcount);
-	......
-	// select the pipe object
-	pipe = &ar_usb->pipes[pipe_num];
-
-	// initialize the ar_usb field
-	pipe->ar_usb = ar_usb;
-}
-
-The driver assumes that the addresses reported in endpoint
-descriptors from device side  to be complete. If a device is
-malicious and does not report complete addresses, it may trigger
-NULL-ptr-deref `ath6kl_usb_alloc_urb_from_pipe` and
-`ath6kl_usb_free_urb_to_pipe`.
-
-This patch fixes the bug by preventing potential NULL-ptr-deref
-(CVE-2019-15098).
-
-Signed-off-by: Hui Peng <benquike@gmail.com>
-Reported-by: Hui Peng <benquike@gmail.com>
-Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Yehezkel Bernat <YehezkelShB@gmail.com>
+Tested-by: Mario Limonciello <mario.limonciello@dell.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath6kl/usb.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/thunderbolt/nhi.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath6kl/usb.c b/drivers/net/wireless/ath/ath6kl/usb.c
-index 9da3594fd010d..fc22c5f479276 100644
---- a/drivers/net/wireless/ath/ath6kl/usb.c
-+++ b/drivers/net/wireless/ath/ath6kl/usb.c
-@@ -132,6 +132,10 @@ ath6kl_usb_alloc_urb_from_pipe(struct ath6kl_usb_pipe *pipe)
- 	struct ath6kl_urb_context *urb_context = NULL;
- 	unsigned long flags;
+diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
+index cba6bc6ab9ed7..c963593eedbe7 100644
+--- a/drivers/thunderbolt/nhi.c
++++ b/drivers/thunderbolt/nhi.c
+@@ -95,9 +95,20 @@ static void __iomem *ring_options_base(struct tb_ring *ring)
+ 	return io;
+ }
  
-+	/* bail if this pipe is not initialized */
-+	if (!pipe->ar_usb)
-+		return NULL;
-+
- 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
- 	if (!list_empty(&pipe->urb_list_head)) {
- 		urb_context =
-@@ -150,6 +154,10 @@ static void ath6kl_usb_free_urb_to_pipe(struct ath6kl_usb_pipe *pipe,
+-static void ring_iowrite16desc(struct tb_ring *ring, u32 value, u32 offset)
++static void ring_iowrite_cons(struct tb_ring *ring, u16 cons)
  {
- 	unsigned long flags;
- 
-+	/* bail if this pipe is not initialized */
-+	if (!pipe->ar_usb)
-+		return;
+-	iowrite16(value, ring_desc_base(ring) + offset);
++	/*
++	 * The other 16-bits in the register is read-only and writes to it
++	 * are ignored by the hardware so we can save one ioread32() by
++	 * filling the read-only bits with zeroes.
++	 */
++	iowrite32(cons, ring_desc_base(ring) + 8);
++}
 +
- 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
- 	pipe->urb_cnt++;
++static void ring_iowrite_prod(struct tb_ring *ring, u16 prod)
++{
++	/* See ring_iowrite_cons() above for explanation */
++	iowrite32(prod << 16, ring_desc_base(ring) + 8);
+ }
  
+ static void ring_iowrite32desc(struct tb_ring *ring, u32 value, u32 offset)
+@@ -149,7 +160,10 @@ static void ring_write_descriptors(struct tb_ring *ring)
+ 			descriptor->sof = frame->sof;
+ 		}
+ 		ring->head = (ring->head + 1) % ring->size;
+-		ring_iowrite16desc(ring, ring->head, ring->is_tx ? 10 : 8);
++		if (ring->is_tx)
++			ring_iowrite_prod(ring, ring->head);
++		else
++			ring_iowrite_cons(ring, ring->head);
+ 	}
+ }
+ 
+@@ -369,7 +383,7 @@ void ring_stop(struct tb_ring *ring)
+ 
+ 	ring_iowrite32options(ring, 0, 0);
+ 	ring_iowrite64desc(ring, 0, 0);
+-	ring_iowrite16desc(ring, 0, ring->is_tx ? 10 : 8);
++	ring_iowrite32desc(ring, 0, 8);
+ 	ring_iowrite32desc(ring, 0, 12);
+ 	ring->head = 0;
+ 	ring->tail = 0;
 -- 
 2.20.1
 
