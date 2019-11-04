@@ -2,109 +2,107 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCB2CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1691BCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C370D21D71
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:32:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="d62Wn1Tn"
+	by mail.kernel.org (Postfix) with ESMTP id DD4E221D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572877940;
+	bh=0ENEPJRxHYImUF1CtW2GanU1wL7Gpw0hrwnmI/y9upI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MWJnEA4vc9zT0h3P4Z++qur0IUMFOZBTlpAPd1/z7tzx3bNGyhS/ELg9Zwin/YBSB
+	 c6+TI16RcN2z30BeFhNVhYzb+OSotGldrOUfvka9ftPssveYv87mRi0pFWE9QOAnF0
+	 4KfMD3LF4EpXL3jRpeXDp85t+OX4QrBPXiPE2XKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbfKDOcK (ORCPT
+        id S1728806AbfKDOcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 09:32:10 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:63246 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727838AbfKDOcK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 09:32:10 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA4ER8QN006158;
-        Mon, 4 Nov 2019 15:31:51 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=CMrndWG+ZiADLifRh/ny34DDuov8Fnz6puAWI7fXAts=;
- b=d62Wn1Tn8/n1Q+HCfMMOW1vPAEGj8o1xlvb4fjMyFue9RYFMh4zaBqkSSHgCOvih+rXS
- FN3sIzNOZVUjSDkTC5NFCiXPx5tm4FmBsuVMG6KIqXb0H5Wm+OZ0Mshalnjb+oTRj5WI
- x5l6Tq8GpnK/rkUlAuY7Q2x5Pq96SqzJhvfx5KIwGazhzn59g0qDv2iAhBJa1+gq7r3a
- BkuC6k/hB5v9IYxRD2kwWaDkg63LLeV551lPij11CSE0uvGeUG126bUJMIodwdEj7GQq
- D0tBCrZ7BuYZNg4t2TamaEHCbUDx8sf+HQHD1sqh1votSZzfkl+/W70YHtp3MuY1XFLQ Ng== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2w1054hx1p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 Nov 2019 15:31:51 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7161E100034;
-        Mon,  4 Nov 2019 15:31:50 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 603772D3776;
-        Mon,  4 Nov 2019 15:31:50 +0100 (CET)
-Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019
- 15:31:50 +0100
-Received: from localhost (10.201.22.222) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019 15:31:49
- +0100
-From:   Christophe Roullier <christophe.roullier@st.com>
-To:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
-        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <peppe.cavallaro@st.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        <christophe.roullier@st.com>, <andrew@lunn.ch>
-Subject: [PATCH  1/1] ARM: dts: stm32: Fix CAN RAM mapping on stm32mp157c
-Date:   Mon, 4 Nov 2019 15:31:45 +0100
-Message-ID: <20191104143145.7053-1-christophe.roullier@st.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 4 Nov 2019 09:32:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728683AbfKDOcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 09:32:19 -0500
+Received: from localhost (unknown [62.119.166.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 815AF21D71;
+        Mon,  4 Nov 2019 14:32:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572877938;
+        bh=0ENEPJRxHYImUF1CtW2GanU1wL7Gpw0hrwnmI/y9upI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XrhXtgtPN6QSS4XSLXhTP/e6sx9fYrzdi1MQibtX50Gp3mPs+Yb6LEPHOdxq1EoP/
+         0RKqxjOFb1Fe7+d/8Scmv81ag/NVkxe0EPfhQVss5Szi+crnaI7EPlHOTKURoMTvxc
+         O96jjyN0VAL2fImgfeRMAJw+42/MpcTqmeCXp5Jk=
+Date:   Mon, 4 Nov 2019 15:31:57 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-usb@vger.kernel.org,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mario.Limonciello@dell.com,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/25] thunderbolt: Add support for USB4
+Message-ID: <20191104143157.GA2183186@kroah.com>
+References: <20191023112154.64235-1-mika.westerberg@linux.intel.com>
+ <20191101114318.GO2593@lahna.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.22.222]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-11-04_08:2019-11-04,2019-11-04 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191101114318.GO2593@lahna.fi.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split the 10Kbytes CAN message RAM to be able to use simultaneously
-FDCAN1 and FDCAN2 instances.
-First 5Kbytes are allocated to FDCAN1 and last 5Kbytes are used for
-FDCAN2. To do so, set the offset to 0x1400 in mram-cfg for FDCAN2.
+On Fri, Nov 01, 2019 at 01:43:18PM +0200, Mika Westerberg wrote:
+> On Wed, Oct 23, 2019 at 02:21:29PM +0300, Mika Westerberg wrote:
+> > Mika Westerberg (22):
+> >   thunderbolt: Introduce tb_switch_is_icm()
+> >   thunderbolt: Log switch route string on config read/write timeout
+> >   thunderbolt: Log error if adding switch fails
+> >   thunderbolt: Convert basic adapter register names to follow the USB4 spec
+> >   thunderbolt: Convert PCIe adapter register names to follow the USB4 spec
+> >   thunderbolt: Convert DP adapter register names to follow the USB4 spec
+> >   thunderbolt: Make tb_sw_write() take const parameter
+> >   thunderbolt: Add helper macro to iterate over switch ports
+> >   thunderbolt: Refactor add_switch() into two functions
+> >   thunderbolt: Add support for lane bonding
+> >   thunderbolt: Add default linking between lane adapters if not provided by DROM
+> >   thunderbolt: Expand controller name in tb_switch_is_xy()
+> >   thunderbolt: Add downstream PCIe port mappings for Alpine and Titan Ridge
+> >   thunderbolt: Add Display Port CM handshake for Titan Ridge devices
+> >   thunderbolt: Add Display Port adapter pairing and resource management
+> >   thunderbolt: Add bandwidth management for Display Port tunnels
+> >   thunderbolt: Do not start firmware unless asked by the user
+> >   thunderbolt: Make tb_find_port() available to other files
+> >   thunderbolt: Call tb_eeprom_get_drom_offset() from tb_eeprom_read_n()
+> >   thunderbolt: Add initial support for USB4
+> >   thunderbolt: Update Kconfig entry to USB4
+> >   thunderbolt: Update documentation with the USB4 information
+> > 
+> > Rajmohan Mani (3):
+> >   thunderbolt: Make tb_switch_find_cap() available to other files
+> >   thunderbolt: Add support for Time Management Unit
+> >   thunderbolt: Add support for USB 3.x tunnels
+> > 
+> 
+> I queued patches 1-17 for v5.5. I'll leave the rest of USB4 patches to
+> cook for a while and hopefully we can get them in for v5.6.
 
-Fixes: d44d6e021301 ("ARM: dts: stm32: change CAN RAM mapping on stm32mp157c")
-Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+No objection from me, nice work!
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 9b11654a0a39..f98e0370c0bc 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -932,7 +932,7 @@
- 			interrupt-names = "int0", "int1";
- 			clocks = <&rcc CK_HSE>, <&rcc FDCAN_K>;
- 			clock-names = "hclk", "cclk";
--			bosch,mram-cfg = <0x1400 0 0 32 0 0 2 2>;
-+			bosch,mram-cfg = <0x0 0 0 32 0 0 2 2>;
- 			status = "disabled";
- 		};
- 
-@@ -945,7 +945,7 @@
- 			interrupt-names = "int0", "int1";
- 			clocks = <&rcc CK_HSE>, <&rcc FDCAN_K>;
- 			clock-names = "hclk", "cclk";
--			bosch,mram-cfg = <0x0 0 0 32 0 0 2 2>;
-+			bosch,mram-cfg = <0x1400 0 0 32 0 0 2 2>;
- 			status = "disabled";
- 		};
- 
--- 
-2.17.1
-
+greg k-h
