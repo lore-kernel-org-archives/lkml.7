@@ -2,54 +2,50 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1691ECA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF59CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6DF204FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 429CF204FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905881;
-	bh=+Y9I/xKZF4NhCZQjieOGVWzHKoWzM6aburW0P4Ayg5A=;
+	s=default; t=1572905884;
+	bh=iOwJt4PH0vF7tQobDg6MlteMOkoS0OlM2wN4cLQY6wE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y75/+EhKjdjrcnLTdSOw7cdtwp9EGXap2Z3zZCaB91U26dTdHJ+seXJyXk9zBe//o
-	 EbSFLRYduCyl9mu7hMylA7CqFhXZZEJYB4fcGejSyltT5aFcbWDIyb8NYOOUFgP6vX
-	 zzWaegAeCBxwbYOxT6S8VEa+6tW5/7XVSCV9RCHY=
+	b=KRavGxl6gXg7wfDm0c1SUJmUD1JPenDpVVC9cXECBcedb33jrNaH6uczVKX/qlnO5
+	 YeNmLvpUu2Xr50WrxWuAcXhjNJb+AHz51jBhA2xz9wc2s47bwwgpVvE7wOX+3yNyyW
+	 m/j3t1Hm1QX00FUyZhfw4a8jNhNhYei/MnyWza4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389226AbfKDWCO (ORCPT
+        id S2389844AbfKDWSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:02:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59554 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:18:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389048AbfKDWB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:26 -0500
+        id S2389224AbfKDWCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:02:14 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91B00217F4;
-        Mon,  4 Nov 2019 22:01:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 391092089C;
+        Mon,  4 Nov 2019 22:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904886;
-        bh=+Y9I/xKZF4NhCZQjieOGVWzHKoWzM6aburW0P4Ayg5A=;
+        s=default; t=1572904933;
+        bh=iOwJt4PH0vF7tQobDg6MlteMOkoS0OlM2wN4cLQY6wE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Spvo7//yEzyToWPk5MtmxWUlL/NAjbHXLRLOdh3/cKoGV5WWIK+9Srtr0DProjNTn
-         0lHteHZOXblaXIQsZYQO9EJIv7jxllbPRRlDt/czcit6Y8PeEzzXPehAMNC5mGLEZg
-         UJGQEGDGVQ4PUGwZ8SntgjArihuwF9NMX8KBaBE4=
+        b=Mzofvc2Tw965kMI4iB12AHdReN3n0VsvsV8Mwy63fpcZjl83sjzpd+J11fGZR2fgh
+         +D7nvPeQ2wZiCELktB4dbivKQQDppw9F4ALvsqwlQUQ1NOj2OO/ik+QQwXjSl11PE7
+         qczvTeP7+bT/dZ4wam7jS1aE6Na3pWYT7vS7GllA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com,
-        "Richard W.M. Jones" <rjones@redhat.com>,
-        Mike Christie <mchristi@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 105/149] nbd: verify socket is supported during setup
-Date:   Mon,  4 Nov 2019 22:44:58 +0100
-Message-Id: <20191104212143.819122372@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 120/149] USB: serial: whiteheat: fix potential slab corruption
+Date:   Mon,  4 Nov 2019 22:45:13 +0100
+Message-Id: <20191104212144.726422498@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -62,78 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Christie <mchristi@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit cf1b2326b734896734c6e167e41766f9cee7686a ]
+commit 1251dab9e0a2c4d0d2d48370ba5baa095a5e8774 upstream.
 
-nbd requires socket families to support the shutdown method so the nbd
-recv workqueue can be woken up from its sock_recvmsg call. If the socket
-does not support the callout we will leave recv works running or get hangs
-later when the device or module is removed.
+Fix a user-controlled slab buffer overflow due to a missing sanity check
+on the bulk-out transfer buffer used for control requests.
 
-This adds a check during socket connection/reconnection to make sure the
-socket being passed in supports the needed callout.
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191029102354.2733-2-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Reported-by: syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com
-Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
-Tested-by: Richard W.M. Jones <rjones@redhat.com>
-Signed-off-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+ drivers/usb/serial/whiteheat.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index d445195945618..bd9aafe86c2fc 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -924,6 +924,25 @@ static blk_status_t nbd_queue_rq(struct blk_mq_hw_ctx *hctx,
- 	return ret;
- }
+--- a/drivers/usb/serial/whiteheat.c
++++ b/drivers/usb/serial/whiteheat.c
+@@ -571,6 +571,10 @@ static int firm_send_command(struct usb_
  
-+static struct socket *nbd_get_socket(struct nbd_device *nbd, unsigned long fd,
-+				     int *err)
-+{
-+	struct socket *sock;
+ 	command_port = port->serial->port[COMMAND_PORT];
+ 	command_info = usb_get_serial_port_data(command_port);
 +
-+	*err = 0;
-+	sock = sockfd_lookup(fd, err);
-+	if (!sock)
-+		return NULL;
++	if (command_port->bulk_out_size < datasize + 1)
++		return -EIO;
 +
-+	if (sock->ops->shutdown == sock_no_shutdown) {
-+		dev_err(disk_to_dev(nbd->disk), "Unsupported socket: shutdown callout must be supported.\n");
-+		*err = -EINVAL;
-+		return NULL;
-+	}
-+
-+	return sock;
-+}
-+
- static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
- 			  bool netlink)
- {
-@@ -933,7 +952,7 @@ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
- 	struct nbd_sock *nsock;
- 	int err;
+ 	mutex_lock(&command_info->mutex);
+ 	command_info->command_finished = false;
  
--	sock = sockfd_lookup(arg, &err);
-+	sock = nbd_get_socket(nbd, arg, &err);
- 	if (!sock)
- 		return err;
- 
-@@ -985,7 +1004,7 @@ static int nbd_reconnect_socket(struct nbd_device *nbd, unsigned long arg)
- 	int i;
- 	int err;
- 
--	sock = sockfd_lookup(arg, &err);
-+	sock = nbd_get_socket(nbd, arg, &err);
- 	if (!sock)
- 		return err;
- 
--- 
-2.20.1
-
 
 
