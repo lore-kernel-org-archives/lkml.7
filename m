@@ -2,79 +2,98 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 630C7CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 00:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C69CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 00:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F84F20848
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 00:46:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kkqMZ5+o"
+	by mail.kernel.org (Postfix) with ESMTP id 58024222CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 00:47:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbfKDAqC (ORCPT
+        id S1728615AbfKDArz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 19:46:02 -0500
-Received: from mail-yb1-f170.google.com ([209.85.219.170]:46014 "EHLO
-        mail-yb1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728332AbfKDAqB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 19:46:01 -0500
-Received: by mail-yb1-f170.google.com with SMTP id x14so1954015ybq.12;
-        Sun, 03 Nov 2019 16:46:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=JUF6cCkeyUxrnFSTs3kKJzANX8OPwaEJlVexVZRYuvw=;
-        b=kkqMZ5+oXZUxttD6WuJtQ87JBNIpcxdctMwDMtaQZLAWLdVnEj0bqwPeg3pGl0KRwy
-         SWGHFXUsMgbisoWo9KmU6fM/Ew6s3YNWd6IGN0vvE0GUN+bP4+lxEDDvFK5FYQ3VvPC1
-         0Ke7sGV5msnW9WMmoh7pN4uVqe4lyNVox+shnyJ4Bli7iR9kSZBzf9cJap4JZF3HVASk
-         Ah7dY3dfj4rWPa6Frho/Rmw4Ell17LHOnML6/N/1ZpzqQqK2NAuwx5ldrEwgnuQHCf76
-         s7fgDfbdqBT1qlYdWTX/p8RR599rVjr6UaqK/dnAXz8e2ze8GyQNbOYQ+GBL8eGmlnUK
-         GnPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=JUF6cCkeyUxrnFSTs3kKJzANX8OPwaEJlVexVZRYuvw=;
-        b=hHwXcJKXfXpNJeEOJNMcjh1LVAtslLA288HYkoH2B24AiMLhxOeDpff6eOb5XAiuX+
-         /K7FBDHotC3ZsuIONOahsuJndOR2cFoAKqc5NgSbUkxvYYQTWuxeEL07zONEWc3uVzuX
-         qn3Xzam8zPl/6yWYO5bSW9+ITIxUvPdI8VCDsmpX/Gxi1pPLWJX5SS5tF2FgGj7K1zQT
-         kPNgq7jROnfxEZnOx1nl/67/6qOEoFjlkRI5UNWIv2a10P2FibsuvgzbcUP7damQEbJU
-         bVSeVp9qyNXGWUfFE982/Y4f14VkeEzcbNB8KNdNiUEJnSHzdrIhvvUBUdOgThOoWMUV
-         Fqxg==
-X-Gm-Message-State: APjAAAUb/8fI2m7Jdbng+hf6cag5cMXEwhGNmkHokQC95Q+aSwnuPkwm
-        p2C4b2Ze64Frr71pLcawY718vE/gxuocyWsT+OoeAA==
-X-Google-Smtp-Source: APXvYqxV81QeGtjshTf7RlqlI8Bll05pDUjXQ34sdoWj1hIikHDMZ/A/0YSkCOjWGBOySvnsr6Wg/lP6ZzX5yhS/hXQ=
-X-Received: by 2002:a25:be84:: with SMTP id i4mr21317590ybk.213.1572828360590;
- Sun, 03 Nov 2019 16:46:00 -0800 (PST)
+        Sun, 3 Nov 2019 19:47:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:33508 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728277AbfKDAry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 19:47:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1C1A1FB;
+        Sun,  3 Nov 2019 16:47:53 -0800 (PST)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C4BA3F67D;
+        Sun,  3 Nov 2019 16:47:52 -0800 (PST)
+Subject: Re: [PATCH v2] sched/topology, cpuset: Account for housekeeping CPUs
+ to avoid empty cpumasks
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
+Cc:     lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
+        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        Dietmar.Eggemann@arm.com, morten.rasmussen@arm.com,
+        qperret@google.com,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
+References: <20191104003906.31476-1-valentin.schneider@arm.com>
+Message-ID: <fbb03d7c-5599-a2ac-b3ac-30f91d440e18@arm.com>
+Date:   Mon, 4 Nov 2019 00:47:50 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191103103433.26826-1-tbogendoerfer@suse.de> <20191104003452.GA2585@lst.de>
-In-Reply-To: <20191104003452.GA2585@lst.de>
-From:   Carlo Pisani <carlojpisani@gmail.com>
-Date:   Mon, 4 Nov 2019 01:45:45 +0100
-Message-ID: <CA+QBN9A=s-DRA6Zbi-eJ7WXnP6sOZtnX5AeeROL=4ax52sWb3A@mail.gmail.com>
-Subject: (metabare) net: sgi: ioc3-eth
-To:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191104003906.31476-1-valentin.schneider@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi
-I am currently writing code to support a PowerPC's bootloader
-(PPC405GP), hence I wonder if I can reuse part of the code to also
-write a bootloader for IP30
 
-kind of u-boot for Octane
 
-but I wonder how difficult it will go about the network card. I don't
-need high performance, and if there is a bit of doc not in form of ...
-kernel code. I mean some document, like a datasheet.
+On 04/11/2019 00:39, Valentin Schneider wrote:
+> Michal noted that a cpuset's effective_cpus can be a non-empy mask, but
+> because of the masking done with housekeeping_cpumask(HK_FLAG_DOMAIN)
+> further down the line, we can still end up with an empty cpumask being
+> passed down to partition_sched_domains_locked().
+> 
+> Do the proper thing and don't just check the mask is non-empty - check
+> that its intersection with housekeeping_cpumask(HK_FLAG_DOMAIN) is
+> non-empty.
+> 
+> Fixes: cd1cb3350561 ("sched/topology: Don't try to build empty sched domains")
+> Reported-by: Michal Koutný <mkoutny@suse.com>
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> ---
 
-The netcard needs to be only used for TFTPBOOT, hence for udp/ip.
+Sigh, this is missing:
+
+v2 changes:
+    - Fix broken diff
+
+At least it *does* apply this time around.
+
+>  kernel/cgroup/cpuset.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index c87ee6412b36..e4c10785dc7c 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -798,8 +798,14 @@ static int generate_sched_domains(cpumask_var_t **domains,
+>  		    cpumask_subset(cp->cpus_allowed, top_cpuset.effective_cpus))
+>  			continue;
+>  
+> +		/*
+> +		 * Skip cpusets that would lead to an empty sched domain.
+> +		 * That could be because effective_cpus is empty, or because
+> +		 * it's only spanning CPUs outside the housekeeping mask.
+> +		 */
+>  		if (is_sched_load_balance(cp) &&
+> -		    !cpumask_empty(cp->effective_cpus))
+> +		    cpumask_intersects(cp->effective_cpus,
+> +				       housekeeping_cpumask(HK_FLAG_DOMAIN)))
+>  			csa[csn++] = cp;
+>  
+>  		/* skip @cp's subtree if not a partition root */
+> 
