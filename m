@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F5DCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D40CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB14206BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D29520B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:39:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j509z0Ja"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v24A6Nns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbfKDUjI (ORCPT
+        id S1729624AbfKDUjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 15:39:08 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57096 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729194AbfKDUjH (ORCPT
+        Mon, 4 Nov 2019 15:39:00 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50856 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729587AbfKDUi7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 15:39:07 -0500
+        Mon, 4 Nov 2019 15:38:59 -0500
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4Kd2du126451;
-        Mon, 4 Nov 2019 14:39:02 -0600
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4KcsTG127085;
+        Mon, 4 Nov 2019 14:38:54 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572899942;
-        bh=VoYslfXJH/dRezZ9Hx7G8CLZwxc7DT3fLk41RUrcppA=;
+        s=ti-com-17Q1; t=1572899934;
+        bh=Bb+RT8SQh95qU51XROkC4ETq9FqCfyxaupssY38UWcs=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=j509z0JaMgFt2l13wTLQcI7IzImIWYLAlpAx5zt+/a6fUyqK2hOkzJdcFgzud6nAd
-         Hg9+wA0DjfcNwbqRRmWOsvbxgAmmAix7YPajhIvppxedgrcMLcJvytcyHvUp2IWjG1
-         RtSba+RsaR3a6b2C6CupVzw9ev12Zi1gTT3QM0Rs=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA4Kd1DL025299
+        b=v24A6NnsrV1BQJMGgKuqEeORKYUv5kEqYeTO1oggEu6e7WDWAUgqTgT7PkzWjIk/N
+         0A8XiSj8GSFoy47wAurv9VeM04aLhkIaHEShsiJEkAmpBMjwF0lNFwq1kzOyUqnfe6
+         e3KC/DFZmFAL6lGKna6sJkyrhdu3gnVwRezB6PAk=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA4KcsrW025147
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Nov 2019 14:39:02 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 4 Nov 2019 14:38:54 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 4 Nov
- 2019 14:38:46 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 14:38:39 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 4 Nov 2019 14:39:00 -0600
+ Frontend Transport; Mon, 4 Nov 2019 14:38:39 -0600
 Received: from ula0869644.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4Kcl4q020670;
-        Mon, 4 Nov 2019 14:39:00 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4Kcl4o020670;
+        Mon, 4 Nov 2019 14:38:53 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
@@ -56,9 +56,9 @@ CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
         <linux-media@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 5/5] media: ti-vpe: vpe: fix compatible to match bindings
-Date:   Mon, 4 Nov 2019 14:38:41 -0600
-Message-ID: <20191104203841.3628-6-bparrot@ti.com>
+Subject: [Patch v2 3/5] ARM: dts: dra7: add vpe clkctrl node
+Date:   Mon, 4 Nov 2019 14:38:39 -0600
+Message-ID: <20191104203841.3628-4-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191104203841.3628-1-bparrot@ti.com>
 References: <20191104203841.3628-1-bparrot@ti.com>
@@ -70,26 +70,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the compatible string to match the updated bindings.
+Add clkctrl nodes for VPE module.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/dra7xx-clocks.dtsi | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index b54f637633a7..65c2c048b018 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -2644,7 +2644,7 @@ static int vpe_remove(struct platform_device *pdev)
- #if defined(CONFIG_OF)
- static const struct of_device_id vpe_of_match[] = {
- 	{
--		.compatible = "ti,vpe",
-+		.compatible = "ti,dra7-vpe",
- 	},
- 	{},
+diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+index 93e1eb83bed9..d1c2406ec71c 100644
+--- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
++++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+@@ -1591,10 +1591,10 @@
+ 
+ 	rtc_cm: rtc-cm@700 {
+ 		compatible = "ti,omap4-cm";
+-		reg = <0x700 0x100>;
++		reg = <0x700 0x60>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		ranges = <0 0x700 0x100>;
++		ranges = <0 0x700 0x60>;
+ 
+ 		rtc_clkctrl: rtc-clkctrl@20 {
+ 			compatible = "ti,clkctrl";
+@@ -1603,6 +1603,20 @@
+ 		};
+ 	};
+ 
++	vpe_cm: vpe-cm@760 {
++		compatible = "ti,omap4-cm";
++		reg = <0x760 0xc>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x760 0xc>;
++
++		vpe_clkctrl: vpe-clkctrl@0 {
++			compatible = "ti,clkctrl";
++			reg = <0x0 0xc>;
++			#clock-cells = <2>;
++		};
++	};
++
  };
+ 
+ &cm_core {
 -- 
 2.17.1
 
