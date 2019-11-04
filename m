@@ -2,194 +2,211 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6687DCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAE0CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 353AF20650
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904839;
-	bh=b3xdM3roLtUKI9V1E4GtHK+Asz06JOQbR6cG2m2Koxg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bBo2prTBj73RkbI5wkWxkbiWQvVNa9lofbIrbf8FTW2gkez/hAaacUYUCiwJOQGI3
-	 /8sn4aCep/X8aXcu/PwuKqLRvTDqjHD55N0B6XwkJ967FRZ2vJd9w8eiYJqyzAA96F
-	 vaV0058axmSyZEv6KLoWEUGUbSJxqx9nJhs5Z79w=
+	by mail.kernel.org (Postfix) with ESMTP id D81B6214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="L3k5oPOc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388893AbfKDWAh (ORCPT
+        id S2388903AbfKDWAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:00:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58258 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388547AbfKDWAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:00:35 -0500
-Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25F26217F5;
-        Mon,  4 Nov 2019 22:00:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904834;
-        bh=b3xdM3roLtUKI9V1E4GtHK+Asz06JOQbR6cG2m2Koxg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ztK6u/LYvYjo9rfG3m/xoQNfu3LI0qwDCK7s4SszR6W1DHDDJ03tN0vEARNchBSSe
-         6aeTJWgKjzhFnU5BIIoSVkSSM6OajZ2yh8iUiKMfzVffIabFJsYaPj09m3Vl+UyPhY
-         Zr4nrFvXAe16ABVPc9Ksm+yz6cbn1Z8LQXzhezDw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nir Dotan <nird@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 045/149] mlxsw: spectrum: Set LAG port collector only when active
-Date:   Mon,  4 Nov 2019 22:43:58 +0100
-Message-Id: <20191104212139.233070758@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
-References: <20191104212126.090054740@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 4 Nov 2019 17:00:40 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:34678 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388870AbfKDWAg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:00:36 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3D50E2D1;
+        Mon,  4 Nov 2019 23:00:34 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1572904834;
+        bh=U7dc9nsQPKj1QZiCGWXXVJuwGqsni7BqpYcYhcA6cnw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=L3k5oPOcoS11AhVjBWhfs8etQATrw9dPiF6/5nWFBKt3H7eCsMUsTArKLZOXRrtwZ
+         VSOv/+m32oxlN/GXdp6h3c+rKhSzXcqMBbH9CGZwRyBqF9jV0e/PUVZQou9lsvEoBk
+         DhptT89wPTL1FqF4XOpyUlJe6x48Jn/gQR02g8YU=
+Date:   Tue, 5 Nov 2019 00:00:26 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
+ binding
+Message-ID: <20191104220026.GG4913@pendragon.ideasonboard.com>
+References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
+ <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
+ <20191031131538.GA9170@pendragon.ideasonboard.com>
+ <20191031134512.GB24273@mani>
+ <20191031141141.GD5018@pendragon.ideasonboard.com>
+ <20191031142817.GK6253@valkosipuli.retiisi.org.uk>
+ <20191031165444.GE5018@pendragon.ideasonboard.com>
+ <20191031170837.GN6253@valkosipuli.retiisi.org.uk>
+ <20191104190201.GF4913@pendragon.ideasonboard.com>
+ <20191104213032.GT6253@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191104213032.GT6253@valkosipuli.retiisi.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nir Dotan <nird@mellanox.com>
+Hi Sakari,
 
-[ Upstream commit 48ebab31d424fbdb8ede8914923bec671a933246 ]
+On Mon, Nov 04, 2019 at 11:30:32PM +0200, Sakari Ailus wrote:
+> On Mon, Nov 04, 2019 at 09:02:01PM +0200, Laurent Pinchart wrote:
+> > On Thu, Oct 31, 2019 at 07:08:37PM +0200, Sakari Ailus wrote:
+> >> On Thu, Oct 31, 2019 at 06:54:44PM +0200, Laurent Pinchart wrote:
+> >>> On Thu, Oct 31, 2019 at 04:28:17PM +0200, Sakari Ailus wrote:
+> >>>> On Thu, Oct 31, 2019 at 04:11:41PM +0200, Laurent Pinchart wrote:
+> >>>>> On Thu, Oct 31, 2019 at 07:15:12PM +0530, Manivannan Sadhasivam wrote:
+> >>>>>> On Thu, Oct 31, 2019 at 03:15:38PM +0200, Laurent Pinchart wrote:
+> >>>>>>> On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
+> >>>>>>>> Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
+> >>>>>>>> add MAINTAINERS entry for the binding and driver.
+> >>>>>>>> 
+> >>>>>>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >>>>>>>> ---
+> >>>>>>>>  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
+> >>>>>>>>  MAINTAINERS                                   |  8 ++
+> >>>>>>>>  2 files changed, 102 insertions(+)
+> >>>>>>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >>>>>>>> 
+> >>>>>>>> diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >>>>>>>> new file mode 100644
+> >>>>>>>> index 000000000000..c04ec2203268
+> >>>>>>>> --- /dev/null
+> >>>>>>>> +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >>>>>>>> @@ -0,0 +1,94 @@
+> >>>>>>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> >>>>>>>> +%YAML 1.2
+> >>>>>>>> +---
+> >>>>>>>> +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
+> >>>>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>>>>>>> +
+> >>>>>>>> +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
+> >>>>>>>> +
+> >>>>>>>> +maintainers:
+> >>>>>>>> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >>>>>>>> +
+> >>>>>>>> +description: |-
+> >>>>>>>> +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
+> >>>>>>>> +  sensor with square pixel array and 1.58 M effective pixels. This chip
+> >>>>>>>> +  features a global shutter with variable charge-integration time. It is
+> >>>>>>>> +  programmable through I2C and 4-wire interfaces. The sensor output is
+> >>>>>>>> +  available via CSI-2 serial data output (1 Lane).
+> >>>>>>>> +
+> >>>>>>>> +properties:
+> >>>>>>>> +  compatible:
+> >>>>>>>> +    const: sony,imx296
+> >>>>>>>> +
+> >>>>>>>> +  reg:
+> >>>>>>>> +    maxItems: 1
+> >>>>>>>> +
+> >>>>>>>> +  clocks:
+> >>>>>>>> +    maxItems: 1
+> >>>>>>>> +
+> >>>>>>>> +  clock-names:
+> >>>>>>>> +    description:
+> >>>>>>>> +      Input clock for the sensor.
+> >>>>>>>> +    items:
+> >>>>>>>> +      - const: mclk
+> >>>>>>> 
+> >>>>>>> The pin is named INCK, let's name the clock accordingly.
+> >>>>>> 
+> >>>>>> Okay, I thought generic names are preferred here!
+> >>>>>>  
+> >>>>>>>> +  clock-frequency:
+> >>>>>>>> +    description:
+> >>>>>>>> +      Frequency of the mclk clock in Hertz.
+> >>>>>>> 
+> >>>>>>> This shouldn't be needed, you can retrieve the clock frequency at
+> >>>>>>> runtime from the clock source.
+> >>>>>> 
+> >>>>>> Unless the clock source is a fixed one! What if the clock source comes from
+> >>>>>> SoC? We need to set the rate, right?
+> >>>>> 
+> >>>>> In that case, if you want to hardcode the clock in DT, the preferred way
+> >>>>> is to use the assigned-clock-rates property. Otherwise, if the driver
+> >>>>> requires a specific clock frequency, it's better to hardcode it in the
+> >>>>> driver itself. In this specific case, I think assigned-clock-rates is
+> >>>>> best as the device can support three different clock frequencies.
+> >>>> 
+> >>>> Just note that if ACPI support is added to the sensor driver, you'll need
+> >>>> the clock-frequency property again, for that's the only way how the driver
+> >>>> will get the clock frequency.
+> >>> 
+> >>> Why is so ? Why can't we implement of assigned-clock-rates for ACPI ?
+> >> 
+> >> ACPI doesn't deal with clocks as such. So there's also no ACPI defined way
+> >> to access clocks specifically, including the frequency --- instead the
+> >> clock is controlled by an AML methods which implement power on and off
+> >> sequences for the device.
+> > 
+> > It's a shortcoming of ACPI, which should be addressed at the ACPI level.
+> > We shouldn't polute the DT bindings with a clock-frequency property for
+> > this reason.
+> 
+> It's really not a shortcoming but a design decision: what belongs to the
+> scope of the firmware? And in this case system and device power management
+> implementation is included. I do not believe this will be revisited in any
+> foreseeable future, i.e. there will be no clock control interface for ACPI.
 
-The LAG port collecting (receive) function was mistakenly set when the
-port was registered as a LAG member, while it should be set only when
-the port collection state is set to true. Set LAG port to collecting
-when it is set to distributing, as described in the IEEE link
-aggregation standard coupled control mux machine state diagram.
+I'm not saying there's a need to control clocks, but if the driver of
+the camera sensor needs to know the frequency of an externally supplied
+clock, the firmware should give a way for the operating system to
+retrieve the clock frequency. Doing so with a clock-frequency in the
+sensor node is a hack to work around a limitation of ACPI, as the Linux
+model to retrieve clock frequencies it to interogate the clock provider.
 
-Signed-off-by: Nir Dotan <nird@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../net/ethernet/mellanox/mlxsw/spectrum.c    | 62 ++++++++++++++-----
- 1 file changed, 45 insertions(+), 17 deletions(-)
+> Explicitly stating the frequency also has an added benefit: the driver
+> can be certain that the given frequency is intended to be used on the
+> board. Otherwise the frequency could have been changed by e.g. another
+> driver. This does matter, as the frequency determines which link
+> frequencies can be achieved, and as the two effectively have to be
+> compliant, an unintended external clock frequency also means there will be
+> no match between possible link frequencies and configured link frequencies.
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index ee126bcf7c350..ccd9aca281b37 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -4410,9 +4410,6 @@ static int mlxsw_sp_port_lag_join(struct mlxsw_sp_port *mlxsw_sp_port,
- 	err = mlxsw_sp_lag_col_port_add(mlxsw_sp_port, lag_id, port_index);
- 	if (err)
- 		goto err_col_port_add;
--	err = mlxsw_sp_lag_col_port_enable(mlxsw_sp_port, lag_id);
--	if (err)
--		goto err_col_port_enable;
- 
- 	mlxsw_core_lag_mapping_set(mlxsw_sp->core, lag_id, port_index,
- 				   mlxsw_sp_port->local_port);
-@@ -4427,8 +4424,6 @@ static int mlxsw_sp_port_lag_join(struct mlxsw_sp_port *mlxsw_sp_port,
- 
- 	return 0;
- 
--err_col_port_enable:
--	mlxsw_sp_lag_col_port_remove(mlxsw_sp_port, lag_id);
- err_col_port_add:
- 	if (!lag->ref_count)
- 		mlxsw_sp_lag_destroy(mlxsw_sp, lag_id);
-@@ -4447,7 +4442,6 @@ static void mlxsw_sp_port_lag_leave(struct mlxsw_sp_port *mlxsw_sp_port,
- 	lag = mlxsw_sp_lag_get(mlxsw_sp, lag_id);
- 	WARN_ON(lag->ref_count == 0);
- 
--	mlxsw_sp_lag_col_port_disable(mlxsw_sp_port, lag_id);
- 	mlxsw_sp_lag_col_port_remove(mlxsw_sp_port, lag_id);
- 
- 	/* Any VLANs configured on the port are no longer valid */
-@@ -4492,21 +4486,56 @@ static int mlxsw_sp_lag_dist_port_remove(struct mlxsw_sp_port *mlxsw_sp_port,
- 	return mlxsw_reg_write(mlxsw_sp->core, MLXSW_REG(sldr), sldr_pl);
- }
- 
--static int mlxsw_sp_port_lag_tx_en_set(struct mlxsw_sp_port *mlxsw_sp_port,
--				       bool lag_tx_enabled)
-+static int
-+mlxsw_sp_port_lag_col_dist_enable(struct mlxsw_sp_port *mlxsw_sp_port)
- {
--	if (lag_tx_enabled)
--		return mlxsw_sp_lag_dist_port_add(mlxsw_sp_port,
--						  mlxsw_sp_port->lag_id);
--	else
--		return mlxsw_sp_lag_dist_port_remove(mlxsw_sp_port,
--						     mlxsw_sp_port->lag_id);
-+	int err;
-+
-+	err = mlxsw_sp_lag_col_port_enable(mlxsw_sp_port,
-+					   mlxsw_sp_port->lag_id);
-+	if (err)
-+		return err;
-+
-+	err = mlxsw_sp_lag_dist_port_add(mlxsw_sp_port, mlxsw_sp_port->lag_id);
-+	if (err)
-+		goto err_dist_port_add;
-+
-+	return 0;
-+
-+err_dist_port_add:
-+	mlxsw_sp_lag_col_port_disable(mlxsw_sp_port, mlxsw_sp_port->lag_id);
-+	return err;
-+}
-+
-+static int
-+mlxsw_sp_port_lag_col_dist_disable(struct mlxsw_sp_port *mlxsw_sp_port)
-+{
-+	int err;
-+
-+	err = mlxsw_sp_lag_dist_port_remove(mlxsw_sp_port,
-+					    mlxsw_sp_port->lag_id);
-+	if (err)
-+		return err;
-+
-+	err = mlxsw_sp_lag_col_port_disable(mlxsw_sp_port,
-+					    mlxsw_sp_port->lag_id);
-+	if (err)
-+		goto err_col_port_disable;
-+
-+	return 0;
-+
-+err_col_port_disable:
-+	mlxsw_sp_lag_dist_port_add(mlxsw_sp_port, mlxsw_sp_port->lag_id);
-+	return err;
- }
- 
- static int mlxsw_sp_port_lag_changed(struct mlxsw_sp_port *mlxsw_sp_port,
- 				     struct netdev_lag_lower_state_info *info)
- {
--	return mlxsw_sp_port_lag_tx_en_set(mlxsw_sp_port, info->tx_enabled);
-+	if (info->tx_enabled)
-+		return mlxsw_sp_port_lag_col_dist_enable(mlxsw_sp_port);
-+	else
-+		return mlxsw_sp_port_lag_col_dist_disable(mlxsw_sp_port);
- }
- 
- static int mlxsw_sp_port_stp_set(struct mlxsw_sp_port *mlxsw_sp_port,
-@@ -4668,8 +4697,7 @@ static int mlxsw_sp_netdevice_port_upper_event(struct net_device *lower_dev,
- 				err = mlxsw_sp_port_lag_join(mlxsw_sp_port,
- 							     upper_dev);
- 			} else {
--				mlxsw_sp_port_lag_tx_en_set(mlxsw_sp_port,
--							    false);
-+				mlxsw_sp_port_lag_col_dist_disable(mlxsw_sp_port);
- 				mlxsw_sp_port_lag_leave(mlxsw_sp_port,
- 							upper_dev);
- 			}
+This doesn't solve anything, quite the contrary. With
+assigned-clock-rates the frequency is set once in the firmware, the
+operating system configures the clock provider to set the frequency, and
+the sensor driver then queries the provider. There's a single source of
+clock frequency information. With clock-frequency, you have two sources
+of information, the value of the property and the value set when
+programming the clock provider in the firmware (either in the BIOS/UEFI,
+or in the ACPI DSDT AML). That's a chance to get it wrong, and we both
+know how reliable firmware is.
+
+Furthermore, the clock-frequency property requires drivers to be
+informed of firmware details. On DT-based systems they should use
+clk_get_rate(), while on ACPI-based systems they should read the
+clock-frequency property. If you want to support ACPI, this should be
+hidden by the firmware, with retrieval of clock frequency from the
+firmware handled in core code.
+
+One option would be to create fixed clocks automatically for ACPI
+devices that report clock frequency through an ACPI-specific (as in
+defined outside of the ACPI standard, through DSD for instance) mean.
+Drivers would then be able to call clk_get() and clk_get_rate().
+
+> I.e. no images to capture either.
+> 
+> That said, I don't know if this has been a practical issue in the past.
+
 -- 
-2.20.1
+Regards,
 
-
-
+Laurent Pinchart
