@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF56CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A535BCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFBEC217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 794D7214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905330;
-	bh=RF2KtCpXRQbrdWVBcadjdD4hBHy/4SVnpEHOGBeKPEw=;
+	s=default; t=1572905334;
+	bh=o/Ex+1vv7SaDW4yyZ1WvsYR1s5YLNJ0IQxV7tuCOcYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i26iqUhLNZtyWDRpXmRLbneifiyJno70yFLrHrCnt3FR/SRxkWVS0rXmelgBe4B2t
-	 FX83GibxonT0iGO8rWFOucjAS5EFiDq6ZrwBDw0zwxDHgQMciUhxa9wBKQiBpkFOvh
-	 B4F8KhjR5Bt9UhYvmoKY9Ffx14edh5RH+ECbzRKg=
+	b=W422QjKSaQj5Jtj+VnqrJTVaaw73Qug6UgXWJ3uJuMkBdjHexKxNNZfABDtte+eWv
+	 x6GyWqaIe5rXsP73YiYRIdbA9zxCSSe92Lfk+/UXLswluVE+j6+mLsTPu13sMBoMF7
+	 pTbVf9uE/mf3izI7C+2bXIwpllNtYY0B7z7EdfJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390300AbfKDWIt (ORCPT
+        id S2390315AbfKDWIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:08:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41718 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:08:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388158AbfKDWIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:08:47 -0500
+        id S2388158AbfKDWIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:08:51 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 561ED214E0;
-        Mon,  4 Nov 2019 22:08:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 859C6214D8;
+        Mon,  4 Nov 2019 22:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905326;
-        bh=RF2KtCpXRQbrdWVBcadjdD4hBHy/4SVnpEHOGBeKPEw=;
+        s=default; t=1572905330;
+        bh=o/Ex+1vv7SaDW4yyZ1WvsYR1s5YLNJ0IQxV7tuCOcYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IN8Pq889BrSRKl+a6IhNf2QGZdRL/NmxpmAdpAnK2RfgSA336LUk65QBP7NO5c2XW
-         tSFYT33m+9MBCB3QZvNAX3n3X27+CfW5rEyGntzZhQqQ0R44nBD6vND/mPpWbJJTQj
-         eTPl79+TKIRYqUaC1LPelnBpweXPWYaKg0DiRcwk=
+        b=dOL8jtqOXh3fbS0aUJX/6997+RzEVbdwZCSlCCedwizYQbqLLpExIHi9oDM9hrX5+
+         4pp7jFaOR0EieAdUc/WKESKePKi5fAIG3OuMX1KWdffw3Olb/IJpvT0XJ+v1qhOD37
+         j/TpjRuq5XFhSNN+iRP1oFMfI1gxPceOx59UaSGk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
+        stable@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>,
         Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.3 108/163] usb: xhci: fix Immediate Data Transfer endianness
-Date:   Mon,  4 Nov 2019 22:44:58 +0100
-Message-Id: <20191104212147.993138919@linuxfoundation.org>
+Subject: [PATCH 5.3 109/163] usb: xhci: fix __le32/__le64 accessors in debugfs code
+Date:   Mon,  4 Nov 2019 22:44:59 +0100
+Message-Id: <20191104212148.146334499@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -59,49 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samuel Holland <samuel@sholland.org>
+From: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
 
-commit bfa3dbb343f664573292afb9e44f9abeb81a19de upstream.
+commit d5501d5c29a2e684640507cfee428178d6fd82ca upstream.
 
-The arguments to queue_trb are always byteswapped to LE for placement in
-the ring, but this should not happen in the case of immediate data; the
-bytes copied out of transfer_buffer are already in the correct order.
-Add a complementary byteswap so the bytes end up in the ring correctly.
+It looks like some of the xhci debug code is passing u32 to functions
+directly from __le32/__le64 fields.
+Fix this by using le{32,64}_to_cpu() on these to fix the following
+sparse warnings;
 
-This was observed on BE ppc64 with a "Texas Instruments TUSB73x0
-SuperSpeed USB 3.0 xHCI Host Controller [104c:8241]" as a ch341
-usb-serial adapter ("1a86:7523 QinHeng Electronics HL-340 USB-Serial
-adapter") always transmitting the same character (generally NUL) over
-the serial link regardless of the key pressed.
+xhci-debugfs.c:205:62: warning: incorrect type in argument 1 (different base types)
+xhci-debugfs.c:205:62:    expected unsigned int [usertype] field0
+xhci-debugfs.c:205:62:    got restricted __le32
+xhci-debugfs.c:206:62: warning: incorrect type in argument 2 (different base types)
+xhci-debugfs.c:206:62:    expected unsigned int [usertype] field1
+xhci-debugfs.c:206:62:    got restricted __le32
+...
 
-Cc: <stable@vger.kernel.org> # 5.2+
-Fixes: 33e39350ebd2 ("usb: xhci: add Immediate Data Transfer support")
-Signed-off-by: Samuel Holland <samuel@sholland.org>
+[Trim down commit message, sparse warnings were similar -Mathias]
+Cc: <stable@vger.kernel.org> # 4.15+
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/1572013829-14044-3-git-send-email-mathias.nyman@linux.intel.com
+Link: https://lore.kernel.org/r/1572013829-14044-4-git-send-email-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-ring.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/host/xhci-debugfs.c |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -3330,6 +3330,7 @@ int xhci_queue_bulk_tx(struct xhci_hcd *
- 			if (xhci_urb_suitable_for_idt(urb)) {
- 				memcpy(&send_addr, urb->transfer_buffer,
- 				       trb_buff_len);
-+				le64_to_cpus(&send_addr);
- 				field |= TRB_IDT;
- 			}
- 		}
-@@ -3475,6 +3476,7 @@ int xhci_queue_ctrl_tx(struct xhci_hcd *
- 		if (xhci_urb_suitable_for_idt(urb)) {
- 			memcpy(&addr, urb->transfer_buffer,
- 			       urb->transfer_buffer_length);
-+			le64_to_cpus(&addr);
- 			field |= TRB_IDT;
- 		} else {
- 			addr = (u64) urb->transfer_dma;
+--- a/drivers/usb/host/xhci-debugfs.c
++++ b/drivers/usb/host/xhci-debugfs.c
+@@ -202,10 +202,10 @@ static void xhci_ring_dump_segment(struc
+ 		trb = &seg->trbs[i];
+ 		dma = seg->dma + i * sizeof(*trb);
+ 		seq_printf(s, "%pad: %s\n", &dma,
+-			   xhci_decode_trb(trb->generic.field[0],
+-					   trb->generic.field[1],
+-					   trb->generic.field[2],
+-					   trb->generic.field[3]));
++			   xhci_decode_trb(le32_to_cpu(trb->generic.field[0]),
++					   le32_to_cpu(trb->generic.field[1]),
++					   le32_to_cpu(trb->generic.field[2]),
++					   le32_to_cpu(trb->generic.field[3])));
+ 	}
+ }
+ 
+@@ -263,10 +263,10 @@ static int xhci_slot_context_show(struct
+ 	xhci = hcd_to_xhci(bus_to_hcd(dev->udev->bus));
+ 	slot_ctx = xhci_get_slot_ctx(xhci, dev->out_ctx);
+ 	seq_printf(s, "%pad: %s\n", &dev->out_ctx->dma,
+-		   xhci_decode_slot_context(slot_ctx->dev_info,
+-					    slot_ctx->dev_info2,
+-					    slot_ctx->tt_info,
+-					    slot_ctx->dev_state));
++		   xhci_decode_slot_context(le32_to_cpu(slot_ctx->dev_info),
++					    le32_to_cpu(slot_ctx->dev_info2),
++					    le32_to_cpu(slot_ctx->tt_info),
++					    le32_to_cpu(slot_ctx->dev_state)));
+ 
+ 	return 0;
+ }
+@@ -286,10 +286,10 @@ static int xhci_endpoint_context_show(st
+ 		ep_ctx = xhci_get_ep_ctx(xhci, dev->out_ctx, dci);
+ 		dma = dev->out_ctx->dma + dci * CTX_SIZE(xhci->hcc_params);
+ 		seq_printf(s, "%pad: %s\n", &dma,
+-			   xhci_decode_ep_context(ep_ctx->ep_info,
+-						  ep_ctx->ep_info2,
+-						  ep_ctx->deq,
+-						  ep_ctx->tx_info));
++			   xhci_decode_ep_context(le32_to_cpu(ep_ctx->ep_info),
++						  le32_to_cpu(ep_ctx->ep_info2),
++						  le64_to_cpu(ep_ctx->deq),
++						  le32_to_cpu(ep_ctx->tx_info)));
+ 	}
+ 
+ 	return 0;
 
 
