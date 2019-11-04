@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECCBCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FD1CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22564214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8540214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AdCjSD8T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxiuORP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390265AbfKDWTH (ORCPT
+        id S2390309AbfKDWTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:19:07 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33804 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388427AbfKDWBO (ORCPT
+        Mon, 4 Nov 2019 17:19:12 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41491 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388974AbfKDWBM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:14 -0500
-Received: by mail-lj1-f196.google.com with SMTP id 139so19447487ljf.1;
-        Mon, 04 Nov 2019 14:01:12 -0800 (PST)
+        Mon, 4 Nov 2019 17:01:12 -0500
+Received: by mail-lf1-f65.google.com with SMTP id j14so13448551lfb.8;
+        Mon, 04 Nov 2019 14:01:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1R8aUcZkIlTPITklCBswnMHd9GSu3KTIu0/oTyANNB4=;
-        b=AdCjSD8TnsTPwI4dFdR0KQGG86VvivC4CHxoQEHZFgXtYxIe04LMlVEyzMMVo+k35I
-         r5xzm06wZt/7uwOCNPpnvyeYCxEX8xU6mq3qB3emhUUfD3rll39D2PXzd5CRYNRdYDuG
-         q99yY6GWGcIlUeCGAizEeyjhpFLGfFifdVRFwPtZdpY27kIRbPxWGMg1my64B4HBre8u
-         jMCVZM17pJLLlWrmxD1hOMVQwvziKJDVqoiBU14PoeM+nhdasvkwzTNuBPjqEv6KQ/c7
-         q8CpVCuhoOmzQ6tf/MyPQt2DbZ49L+PWc6gRvbE1/MWrexx1rPUT5d8kRLh15Esz0mbD
-         cIYw==
+        bh=DjmXiphEj07PA2UBQ1Hu0F6jo40/2DwonMVrwbYxHC4=;
+        b=hxiuORP6XfkMPL7hYETvI1R7UGZJg1RRsvu6RE+K+jruMTpnzXRtQGBL3yz97KYT/7
+         vxDqVcdchqidjMkOMoL8IST46v2Y+LrfLbYWP3jL0FpynbbG9Uz1vD54M6l1mBF6rwdQ
+         /xg02E/v+yYy0nKSqLBgLxz9IDsikOVwgcxTdNdKTZxr/VPXRmZga0T/AW68AlGK42c1
+         VcmQJLL3S7YIU7bXLdQpHm+2r4plW7ARxwoASQZRTDOz31Uz6yyQtyq4OpLPMjX03ZDK
+         hRhmel73Btv/f19/6e58WzD+J2hfiCuu8yWAG4OJNJpV9dyA7Iqfs+uCPtqTdM7Y0Ge8
+         zaoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1R8aUcZkIlTPITklCBswnMHd9GSu3KTIu0/oTyANNB4=;
-        b=V95CFftRt0Pu84xDAEpgGqzUwbnzqcVRihqIMH8XFH0txANl166q3e80o2JgAjupdc
-         D13OjoJoSxnaffE/KwnapsHviFjpKSVsSqQH2o9MWhwe4sQhU6LpFM5UaCc8+20p2zf2
-         F7D5u1XesIu1JbcKMaTO0WneHi6lp4UMPKVHmUYKFelzxmCNGafiTM8emICMJIDFwbD+
-         +DQtQZNpcbZInrvheYsj5JA55Ry+8JkY3cmpxCqrSLlmeF926O5fLi3EsqejUwDLemde
-         VJd4YrLvSkQfKn6T15uRcQRax2xUuErQw4CsQR9EORwbINwEKp8wDmdkPjCv4A1BkgRq
-         QLvA==
-X-Gm-Message-State: APjAAAU4N0KkpYRNF5EhDqih77CzWG1P1sOoCNsjPVfC4yFGXolnIl7H
-        sOZ6BOOTq1qLuRTeb1m7TLM=
-X-Google-Smtp-Source: APXvYqwoC5tiuhzzXdz5nXIupEbKytBtgYU2M8i1VDswQwmIJLCpT4jGS7xdYXsy77a+5/0pthzofg==
-X-Received: by 2002:a2e:b5c4:: with SMTP id g4mr20568516ljn.169.1572904872002;
-        Mon, 04 Nov 2019 14:01:12 -0800 (PST)
+        bh=DjmXiphEj07PA2UBQ1Hu0F6jo40/2DwonMVrwbYxHC4=;
+        b=FdWQFdx7WqvuSn5zMrHFBWm88VrD+H7Lv8d+hAtALcjxVnA7100jXmRNwrZHfSCzJW
+         z9G+aidz7ZnxprtUTq7silh3RRo54Uttt9ctkv8JwJydFJZ8HPhQphH0uEArqD0d++yG
+         x9uv3r2qodCtUkHPYDDWeJeWZ3LV65FjKVqt+xt9sR34ZB/FYxBfqSqJ7w7/Q+LLZgkG
+         HkZouSMcYLIUmLUw0tCzlYZYA3EFJGKOsvNjBPy0iA7+4u8PhXneISVyvTyeCYoPUTLH
+         UuPnBBfpIA5YdNhqEtzII+ayqHf2/TRBlbBhRzoEV0mK6yYhuw/3eex8RULJhP+RWH34
+         B0Rg==
+X-Gm-Message-State: APjAAAVnL7oZ2uTnvlnbUewzQa1W7jUGN753tQeYEQXoLktqZp3pexLH
+        NKqqzUTiGbhXLem4gpBeF6w=
+X-Google-Smtp-Source: APXvYqwPUNwk60VBN+9D8hxM0iRLNxIuCjMxQD2kbfuS7YKAm4CWDBCRFT0IVamMwv0K0yvJXu/Sjg==
+X-Received: by 2002:ac2:5b42:: with SMTP id i2mr18356665lfp.164.1572904870097;
+        Mon, 04 Nov 2019 14:01:10 -0800 (PST)
 Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id g3sm7454669ljj.59.2019.11.04.14.01.11
+        by smtp.gmail.com with ESMTPSA id g3sm7454669ljj.59.2019.11.04.14.01.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 14:01:11 -0800 (PST)
+        Mon, 04 Nov 2019 14:01:09 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
@@ -68,9 +68,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v9 13/19] PM / devfreq: tegra30: Don't enable already enabled consecutive interrupts
-Date:   Tue,  5 Nov 2019 00:56:11 +0300
-Message-Id: <20191104215617.25544-14-digetx@gmail.com>
+Subject: [PATCH v9 11/19] PM / devfreq: tegra30: Constify structs
+Date:   Tue,  5 Nov 2019 00:56:09 +0300
+Message-Id: <20191104215617.25544-12-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104215617.25544-1-digetx@gmail.com>
 References: <20191104215617.25544-1-digetx@gmail.com>
@@ -81,38 +81,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Consecutive up/down interrupt-bit is set in the interrupt status register
-only if that interrupt was previously enabled. Thus enabling the already
-enabled interrupt doesn't do much for us.
+Constify unmodifiable structs, for consistency.
 
 Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Tested-by: Peter Geis <pgwipeout@gmail.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra30-devfreq.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/devfreq/tegra30-devfreq.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 7c8126e74750..4a5d513904a2 100644
+index bc46af155b99..9bd4dd982927 100644
 --- a/drivers/devfreq/tegra30-devfreq.c
 +++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -261,8 +261,6 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
+@@ -108,7 +108,7 @@ enum tegra_actmon_device {
+ 	MCCPU,
+ };
  
- 		if (dev->boost_freq >= tegra->max_freq)
- 			dev->boost_freq = tegra->max_freq;
--		else
--			dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
- 	} else if (intr_status & ACTMON_DEV_INTR_CONSECUTIVE_LOWER) {
- 		/*
- 		 * new_boost = old_boost * down_coef
-@@ -275,8 +273,6 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
+-static struct tegra_devfreq_device_config actmon_device_configs[] = {
++static const struct tegra_devfreq_device_config actmon_device_configs[] = {
+ 	{
+ 		/* MCALL: All memory accesses (including from the CPUs) */
+ 		.offset = 0x1c0,
+@@ -177,7 +177,7 @@ struct tegra_actmon_emc_ratio {
+ 	unsigned long emc_freq;
+ };
  
- 		if (dev->boost_freq < (ACTMON_BOOST_FREQ_STEP >> 1))
- 			dev->boost_freq = 0;
--		else
--			dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
- 	}
+-static struct tegra_actmon_emc_ratio actmon_emc_ratios[] = {
++static const struct tegra_actmon_emc_ratio actmon_emc_ratios[] = {
+ 	{ 1400000,    KHZ_MAX },
+ 	{ 1200000,    750000 },
+ 	{ 1100000,    600000 },
+@@ -295,7 +295,7 @@ static unsigned long actmon_cpu_to_emc_rate(struct tegra_devfreq *tegra,
+ 					    unsigned long cpu_freq)
+ {
+ 	unsigned int i;
+-	struct tegra_actmon_emc_ratio *ratio = actmon_emc_ratios;
++	const struct tegra_actmon_emc_ratio *ratio = actmon_emc_ratios;
  
- 	if (dev->config->avg_dependency_threshold) {
+ 	for (i = 0; i < ARRAY_SIZE(actmon_emc_ratios); i++, ratio++) {
+ 		if (cpu_freq >= ratio->cpu_freq) {
 -- 
 2.23.0
 
