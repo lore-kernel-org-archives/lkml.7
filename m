@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E98CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5ACCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0FB204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 096FB204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905895;
-	bh=DCUP1rMU0M3Y1yX9lQVOzFNO32AQS16GN6flBTYc580=;
+	s=default; t=1572905902;
+	bh=dbfnmF4MTitvESuoiUp5eiYv2w4XZsqdp7uk+45n8Lk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qtmigyITdCpJ/y3JhpP+fyi1KwERRwc+dXOSXUds3lWl6lD/OoJEB6+BNcwUouNj2
-	 TPTm8GsRHosgvlzK+zUoZPuusVZzF88N9qnO4oLq+VwSHfXXE64mIwCEpSOH1y4iE5
-	 oMepgf4q8bYe2kkHS8bHq2cfJL/Y5EBEM3BvKiUg=
+	b=LEKhPP11YvI49c649uzv0rDMm7dsJXnQkaxLhcn6r9lK5PiaK3G21VgUFHjIJAERb
+	 lwWaAOYj8xIg2meBXP1Z1joz6+BFYzMrUIcI3DEXET/UH+0m3NC0GM+g70vcHztE/0
+	 CBm7kLMvqESq5/NTVDFYYc447h633lzpt0geSLeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390072AbfKDWSO (ORCPT
+        id S2388749AbfKDWSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:18:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60366 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:18:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389197AbfKDWCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:02:04 -0500
+        id S2388613AbfKDWCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:02:01 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68A1E20659;
-        Mon,  4 Nov 2019 22:02:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E5C620650;
+        Mon,  4 Nov 2019 22:02:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904923;
-        bh=DCUP1rMU0M3Y1yX9lQVOzFNO32AQS16GN6flBTYc580=;
+        s=default; t=1572904920;
+        bh=dbfnmF4MTitvESuoiUp5eiYv2w4XZsqdp7uk+45n8Lk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jze5VVGXcmhEvW2vXZX6nTZ5beiw+UzRyMhIHmNE3TS0fO51TM3nx4w0gj5Txq6ab
-         26eq35/ey/IROJMC3gW4Zkf+cV2SbH/IBOetuAeo0SSYZrrGTeKio9Oh3Ng6kFfplU
-         BWBpV4QNxt5OL1I4auXKe/SlWjY+1+puSnUeobjA=
+        b=n2bs2C6tL5g5Z2tdCRHTSaMSEgD2MsIsVTmPnRZXL6q8RHFg0wsAnzvyoxtVo8WR4
+         egnAbKJsQe2/edfluTH1Y8SqdRiPAWhGvWqYVHjN0tBD4YcIpIz2MK6O+G/XSuIT6N
+         a/U0ZZ5Ir4FqEqKSBDGlvc4WRUElKAaVz7u3WR/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 117/149] USB: ldusb: fix ring-buffer locking
-Date:   Mon,  4 Nov 2019 22:45:10 +0100
-Message-Id: <20191104212144.528426176@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Seth Bollinger <Seth.Bollinger@digi.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
+Subject: [PATCH 4.19 116/149] usb-storage: Revert commit 747668dbc061 ("usb-storage: Set virt_boundary_mask to avoid SG overflows")
+Date:   Mon,  4 Nov 2019 22:45:09 +0100
+Message-Id: <20191104212144.459583669@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -58,48 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit d98ee2a19c3334e9343df3ce254b496f1fc428eb upstream.
+commit 9a976949613132977098fc49510b46fa8678d864 upstream.
 
-The custom ring-buffer implementation was merged without any locking or
-explicit memory barriers, but a spinlock was later added by commit
-9d33efd9a791 ("USB: ldusb bugfix").
+Commit 747668dbc061 ("usb-storage: Set virt_boundary_mask to avoid SG
+overflows") attempted to solve a problem involving scatter-gather I/O
+and USB/IP by setting the virt_boundary_mask for mass-storage devices.
 
-The lock did not cover the update of the tail index once the entry had
-been processed, something which could lead to memory corruption on
-weakly ordered architectures or due to compiler optimisations.
+However, it now turns out that this interacts badly with commit
+09324d32d2a0 ("block: force an unlimited segment size on queues with a
+virt boundary"), which was added later.  A typical error message is:
 
-Specifically, a completion handler running on another CPU might observe
-the incremented tail index and update the entry before ld_usb_read() is
-done with it.
+	ehci-pci 0000:00:13.2: swiotlb buffer is full (sz: 327680 bytes),
+	total 32768 (slots), used 97 (slots)
 
-Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
-Fixes: 9d33efd9a791 ("USB: ldusb bugfix")
-Cc: stable <stable@vger.kernel.org>     # 2.6.13
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191022143203.5260-2-johan@kernel.org
+There is no longer any reason to keep the virt_boundary_mask setting
+for usb-storage.  It was needed in the first place only for handling
+devices with a block size smaller than the maxpacket size and where
+the host controller was not capable of fully general scatter-gather
+operation (that is, able to merge two SG segments into a single USB
+packet).  But:
+
+	High-speed or slower connections never use a bulk maxpacket
+	value larger than 512;
+
+	The SCSI layer does not handle block devices with a block size
+	smaller than 512 bytes;
+
+	All the host controllers capable of SuperSpeed operation can
+	handle fully general SG;
+
+	Since commit ea44d190764b ("usbip: Implement SG support to
+	vhci-hcd and stub driver") was merged, the USB/IP driver can
+	also handle SG.
+
+Therefore all supported device/controller combinations should be okay
+with no need for any special virt_boundary_mask.  So in order to fix
+the swiotlb problem, this patch reverts commit 747668dbc061.
+
+Reported-and-tested-by: Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
+Link: https://marc.info/?l=linux-usb&m=157134199501202&w=2
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: Seth Bollinger <Seth.Bollinger@digi.com>
+CC: <stable@vger.kernel.org>
+Fixes: 747668dbc061 ("usb-storage: Set virt_boundary_mask to avoid SG overflows")
+Acked-by: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910211145520.1673-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/ldusb.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/storage/scsiglue.c |   10 ----------
+ 1 file changed, 10 deletions(-)
 
---- a/drivers/usb/misc/ldusb.c
-+++ b/drivers/usb/misc/ldusb.c
-@@ -495,11 +495,11 @@ static ssize_t ld_usb_read(struct file *
- 		retval = -EFAULT;
- 		goto unlock_exit;
- 	}
--	dev->ring_tail = (dev->ring_tail+1) % ring_buffer_size;
--
- 	retval = bytes_to_read;
+--- a/drivers/usb/storage/scsiglue.c
++++ b/drivers/usb/storage/scsiglue.c
+@@ -65,7 +65,6 @@ static const char* host_info(struct Scsi
+ static int slave_alloc (struct scsi_device *sdev)
+ {
+ 	struct us_data *us = host_to_us(sdev->host);
+-	int maxp;
  
- 	spin_lock_irq(&dev->rbsl);
-+	dev->ring_tail = (dev->ring_tail + 1) % ring_buffer_size;
-+
- 	if (dev->buffer_overflow) {
- 		dev->buffer_overflow = 0;
- 		spin_unlock_irq(&dev->rbsl);
+ 	/*
+ 	 * Set the INQUIRY transfer length to 36.  We don't use any of
+@@ -75,15 +74,6 @@ static int slave_alloc (struct scsi_devi
+ 	sdev->inquiry_len = 36;
+ 
+ 	/*
+-	 * USB has unusual scatter-gather requirements: the length of each
+-	 * scatterlist element except the last must be divisible by the
+-	 * Bulk maxpacket value.  Fortunately this value is always a
+-	 * power of 2.  Inform the block layer about this requirement.
+-	 */
+-	maxp = usb_maxpacket(us->pusb_dev, us->recv_bulk_pipe, 0);
+-	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
+-
+-	/*
+ 	 * Some host controllers may have alignment requirements.
+ 	 * We'll play it safe by requiring 512-byte alignment always.
+ 	 */
 
 
