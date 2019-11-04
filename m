@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E81CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FD7CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6C021744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25DB3218BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:49:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904189;
-	bh=Z4Vr1KaooQILrkTf+O1jZFGQD7EZq+zGisiVEVxIL2I=;
+	s=default; t=1572904195;
+	bh=fvJzHdU9Qd6JEQUwzHjNZOEkm8bYYmPhJVkgfQ1kHjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QC+sGb2XFE2GESjvXlwqY9TkV+7gWGMbuEMVkOXxksGZUfioJN7ko+XEahrM3OtJg
-	 Q2ufdX3Eq1n2w9jp1ENk7hQ/vFaKng0RyYO2NP5xImuRE405Fx8kNB0E1uw+UfAGiN
-	 kPXf0Q9GxZfdmBUxXcP/JJL248BUIqsdAvP7eu5o=
+	b=X15VRkXFfrp+yhkd0+vUxc7WUXTZ1LdNXAfF62RTDIFD4JMip2OBKPCXnTHJu6AF6
+	 5kaCH1ySJLzpgfr44QAWZWyIKrK3a62XugD2LFSeN08t8HiSSFlGbGLwaMERnUqTdy
+	 Ehel9VnEhKBahHr9X5+b9vsB/METSuOHkvUBK/Ow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387512AbfKDVts (ORCPT
+        id S2387540AbfKDVtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:49:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41304 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:49:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387501AbfKDVtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:49:46 -0500
+        id S2387516AbfKDVtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:49:50 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1396620B7C;
-        Mon,  4 Nov 2019 21:49:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9B8D21744;
+        Mon,  4 Nov 2019 21:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904185;
-        bh=Z4Vr1KaooQILrkTf+O1jZFGQD7EZq+zGisiVEVxIL2I=;
+        s=default; t=1572904190;
+        bh=fvJzHdU9Qd6JEQUwzHjNZOEkm8bYYmPhJVkgfQ1kHjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M2nIpggo6lE0vj0bGiiIoN2KJJGdGIRe0pnqfYxAj9N86x1zMyfI1ZTAbhD2X7Tdt
-         12TAmE73DzMFyAEVxKI1V/5SK99aHyOUeYO7bw0chX5BekMIw7njhm+KWUdwwmcbD8
-         VLAwDXR1+O1aeEHY3dUA7QAXHVilYIsdmT6nC69s=
+        b=QHYw+od4dtZJoe7Lt3Xy6ODZUBLjYAuPvchEHbhKrHB238fwM04HMdvyqvgkzuY4r
+         awFONzjT5HHofLPIHGngZZeby9YUtmj/FCvHxwghaReXPOQMuOwNJddzMrBWI3yCYc
+         ehPCbnQWwqptX7ZdVaieGUjciU1KozVfWirVxbMM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Pascal Bouwmann <bouwmann@tau-tec.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 11/62] rtc: pcf8523: set xtal load capacitance from DT
-Date:   Mon,  4 Nov 2019 22:44:33 +0100
-Message-Id: <20191104211913.192314204@linuxfoundation.org>
+Subject: [PATCH 4.9 13/62] iio: fix center temperature of bmc150-accel-core
+Date:   Mon,  4 Nov 2019 22:44:35 +0100
+Message-Id: <20191104211914.525856654@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -61,88 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Ravnborg <sam@ravnborg.org>
+From: Pascal Bouwmann <bouwmann@tau-tec.de>
 
-[ Upstream commit 189927e719e36ceefbb8037f23d3849e47833aef ]
+[ Upstream commit 6c59a962e081df6d8fe43325bbfabec57e0d4751 ]
 
-Add support for specifying the xtal load capacitance in the DT node.
-The pcf8523 supports xtal load capacitance of 7pF or 12.5pF.
-If the rtc has the wrong configuration the time will
-drift several hours/week.
+The center temperature of the supported devices stored in the constant
+BMC150_ACCEL_TEMP_CENTER_VAL is not 24 degrees but 23 degrees.
 
-The driver use the default value 12.5pF.
+It seems that some datasheets were inconsistent on this value leading
+to the error.  For most usecases will only make minor difference so
+not queued for stable.
 
-The DT may specify either 7000fF or 12500fF.
-(The DT uses femto Farad to avoid decimal numbers).
-Other values are warned and the driver uses the default value.
-
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Pascal Bouwmann <bouwmann@tau-tec.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-pcf8523.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+ drivers/iio/accel/bmc150-accel-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-pcf8523.c b/drivers/rtc/rtc-pcf8523.c
-index 3c8c6f942e67f..a06792966ea90 100644
---- a/drivers/rtc/rtc-pcf8523.c
-+++ b/drivers/rtc/rtc-pcf8523.c
-@@ -94,8 +94,9 @@ static int pcf8523_voltage_low(struct i2c_client *client)
- 	return !!(value & REG_CONTROL3_BLF);
- }
+diff --git a/drivers/iio/accel/bmc150-accel-core.c b/drivers/iio/accel/bmc150-accel-core.c
+index c3888822add1a..b6254ce9ab3b3 100644
+--- a/drivers/iio/accel/bmc150-accel-core.c
++++ b/drivers/iio/accel/bmc150-accel-core.c
+@@ -125,7 +125,7 @@
+ #define BMC150_ACCEL_SLEEP_1_SEC		0x0F
  
--static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
-+static int pcf8523_load_capacitance(struct i2c_client *client)
- {
-+	u32 load;
- 	u8 value;
- 	int err;
+ #define BMC150_ACCEL_REG_TEMP			0x08
+-#define BMC150_ACCEL_TEMP_CENTER_VAL		24
++#define BMC150_ACCEL_TEMP_CENTER_VAL		23
  
-@@ -103,14 +104,24 @@ static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
- 	if (err < 0)
- 		return err;
- 
--	if (!high)
--		value &= ~REG_CONTROL1_CAP_SEL;
--	else
-+	load = 12500;
-+	of_property_read_u32(client->dev.of_node, "quartz-load-femtofarads",
-+			     &load);
-+
-+	switch (load) {
-+	default:
-+		dev_warn(&client->dev, "Unknown quartz-load-femtofarads value: %d. Assuming 12500",
-+			 load);
-+		/* fall through */
-+	case 12500:
- 		value |= REG_CONTROL1_CAP_SEL;
-+		break;
-+	case 7000:
-+		value &= ~REG_CONTROL1_CAP_SEL;
-+		break;
-+	}
- 
- 	err = pcf8523_write(client, REG_CONTROL1, value);
--	if (err < 0)
--		return err;
- 
- 	return err;
- }
-@@ -307,9 +318,10 @@ static int pcf8523_probe(struct i2c_client *client,
- 	if (!pcf)
- 		return -ENOMEM;
- 
--	err = pcf8523_select_capacitance(client, true);
-+	err = pcf8523_load_capacitance(client);
- 	if (err < 0)
--		return err;
-+		dev_warn(&client->dev, "failed to set xtal load capacitance: %d",
-+			 err);
- 
- 	err = pcf8523_set_pm(client, 0);
- 	if (err < 0)
+ #define BMC150_ACCEL_AXIS_TO_REG(axis)	(BMC150_ACCEL_REG_XOUT_L + (axis * 2))
+ #define BMC150_AUTO_SUSPEND_DELAY_MS		2000
 -- 
 2.20.1
 
