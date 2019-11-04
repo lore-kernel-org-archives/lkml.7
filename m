@@ -2,119 +2,110 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58ADFCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08CDCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3860221655
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A8021655
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:15:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WUeVPs72"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbfKDJMM (ORCPT
+        id S1727826AbfKDJPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 04:12:12 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:55143 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfKDJMM (ORCPT
+        Mon, 4 Nov 2019 04:15:03 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:48888 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfKDJPD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 04:12:12 -0500
-Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M3lgJ-1iQj3i3Iv5-000sp1; Mon, 04 Nov 2019 10:12:10 +0100
-Received: by mail-qk1-f176.google.com with SMTP id m16so16558841qki.11;
-        Mon, 04 Nov 2019 01:12:09 -0800 (PST)
-X-Gm-Message-State: APjAAAXmZY2oZXu1SK+A1vfM3JX/V8z2QkzgxiP5wbArRRO6us1+iRNV
-        pnVhilIsSqtQxkd4P5FbcNyhK6QXDsUT9S9j9Ak=
-X-Google-Smtp-Source: APXvYqxFWfC/pRRphyl2sEqUGu4g2hW8Ws8h+GoExMAObfzyIMrknTzY4xbMka/8WJkNHFwlq+X2sKNUp3jxigxtutU=
-X-Received: by 2002:a37:4f13:: with SMTP id d19mr1192533qkb.138.1572858728295;
- Mon, 04 Nov 2019 01:12:08 -0800 (PST)
+        Mon, 4 Nov 2019 04:15:03 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA49EF8h131247;
+        Mon, 4 Nov 2019 09:14:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=hE/jxSBVe+1FqR4NlJp5P3S1KuZxeNyQgypPmuBvD4o=;
+ b=WUeVPs72wtXFQ1HcHu3qy0rYFoCPaezVIe7bcgpuMZ0sDh+c9otoOCrZO22gd6vJ3KqC
+ U7X6+lt8vRG24o0nexMr46cxs7WBHYuqvkp+sX8AreJwg2oEdgLnmrQtJuqDvIMYawpY
+ DJrNqDW02f2f8qMSUbe48as1bKRRvtRlScfhzvmjoP5IqOTUa9YavScq9fPlFDZBAvmF
+ roEoZPDH20kh4JKBpx5NkWOoTDdczNoFXdDlklv7tWECytFtfNYi+F4+hn6s2oui9vLX
+ iMtIxqBlcYvZMdaA5FittRwSR5OR/Rkm04U7MeF0G9vMArgj4lZNT+nwniASI/ugOEv8 rw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2w117tnwxf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Nov 2019 09:14:27 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA49EGTK147171;
+        Mon, 4 Nov 2019 09:14:26 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2w1kxm1895-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Nov 2019 09:14:26 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA49CxRu010162;
+        Mon, 4 Nov 2019 09:13:07 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 Nov 2019 01:12:58 -0800
+Date:   Mon, 4 Nov 2019 12:12:52 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] locking/lockdep: update the comment for __lock_release()
+Message-ID: <20191104091252.GA31509@mwanda>
 MIME-Version: 1.0
-References: <1572850587-20314-1-git-send-email-rppt@kernel.org> <1572850587-20314-14-git-send-email-rppt@kernel.org>
-In-Reply-To: <1572850587-20314-14-git-send-email-rppt@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 4 Nov 2019 10:11:51 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3e7oG5NMPbhgQOoKvB0Z5ui0iAHHFqyAxy87Nd903Vmw@mail.gmail.com>
-Message-ID: <CAK8P3a3e7oG5NMPbhgQOoKvB0Z5ui0iAHHFqyAxy87Nd903Vmw@mail.gmail.com>
-Subject: Re: [PATCH v3 13/13] mm: remove __ARCH_HAS_4LEVEL_HACK and include/asm-generic/4level-fixup.h
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Helge Deller <deller@gmx.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Salter <msalter@redhat.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
-        Richard Weinberger <richard@nod.at>,
-        Rolf Eike Beer <eike-kernel@sf-tec.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        alpha <linux-alpha@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-c6x-dev@linux-c6x.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-um@lists.infradead.org,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:xypYB7MfMvOgznrhvKhllgOOWUTROK6RFsV7jczDvJ/v9Wnj6Ze
- eecmYacDgpkTxZk7bq5TERRyr9ud4iKtPbKYBzMkNfiConTZpDY0+V03MuhiiH2U7gSATOL
- ++7O2hcWPFZG7p+FKEN4l5tSd8BXqQSIILXTdi2NZiXc5eh/BfnYKWmF4zXY0nRyRFICTDK
- DkHnSvUmLFzXphiN3f1Lg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:i8sE3XxhxL0=:3BsHhMGb+73Ml+/9ZdBkgh
- goiI0C/RDeSocWGT2AlOTjuOumMzR3qTp7IKDA/BUBwRXEh+BdWkya4Vm9OgkB2ZtEQIV5rto
- IwPs8rXFxLWKFGXBTcDkdndveGBdhEb53xfoWW89db44yXOUMTI8L/gmB2EeU4Hm2P9pmupTR
- zMTTnpqPJKDmOJygjdvCYrKbGWHLqsWJzLTNeWe75Pd91pGZDTX5uUb45b8iWUhDU3P4HbLsb
- oqiciI1bjtDW4nvgb3xJpNFpInHp3LyVZVHt1SjAJMGbMxd6u8RMG+1YIsqPEn6KiP/SUIkm5
- YiC/XKF3ax9pNpHUzeFIGbAHSkPhAPlAZYoT7pFBRqndD/VJF1orwpJ72XxO0DMoJSoTe0GE0
- jSNvmRSMrb1NK+0JT8BvslkByzNNh80QJRQo6pSgbTDB5ePgzrQWfKFsG6bp96kS1t6e+m6H2
- 3uuESm3cqYJdZrR9+Mc0QBPcW+YIPrAmCYMjiB0n+POo3TcBfibWHxqdQoR88uSpVU+20x/6/
- HaQzTWdmn/0P2qMX9qliruHN1TIoaZERWt5FBNVnMZhVQe/JLB736Gvo94TNkNs3UcsWMhdfZ
- 4HJH+CV5momj+MMXorJLKA1qi+w6iTzvkEvYfFQHg3Dal0jx/vLfEOXiMaN6CfdD8Y5Wez84b
- JD9K34KMMVtUeSbWnF/cgvBlhCi5hjALbGNcvkTwoJJRCGQdXnTHlrTdcY/viEkuSbfmTLKN3
- NIs2DT63WteMZt5q5Gjh3GeumRksgmC9dHXODzgDe+skbSHqiKy9rfo2m4lW2qxJQ/xcPNsf+
- wu00QLv2mlKq9v58ARQUaLUdIU6QTfUfQR7btTyVi0CPMl3D2DTy8ED+kOwHayFDPEUouqrJQ
- JYDLi/5o/KQwbyulnq9w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1911040092
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1911040092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 7:58 AM Mike Rapoport <rppt@kernel.org> wrote:
->
-> From: Mike Rapoport <rppt@linux.ibm.com>
->
-> There are no architectures that use include/asm-generic/4level-fixup.h
-> therefore it can be removed along with __ARCH_HAS_4LEVEL_HACK define.
->
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+This changes "to the list" to "from the list" and also deletes the
+obsolete comment about the "@nested" argument.  The "nested" argument
+was removed in commit 5facae4f3549 ("locking/lockdep: Remove unused
+@nested argument from lock_release()").
 
-For asm-generic:
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ kernel/locking/lockdep.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 8123518f9045..32282e7112d3 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -4208,11 +4208,9 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
+ }
+ 
+ /*
+- * Remove the lock to the list of currently held locks - this gets
++ * Remove the lock from the list of currently held locks - this gets
+  * called on mutex_unlock()/spin_unlock*() (or on a failed
+  * mutex_lock_interruptible()).
+- *
+- * @nested is an hysterical artifact, needs a tree wide cleanup.
+  */
+ static int
+ __lock_release(struct lockdep_map *lock, unsigned long ip)
+-- 
+2.20.1
 
-Have you discussed how the series should get merged? I assume an initial
-set of patches can just go through architecture maintainer trees, but
-whatever patches don't get picked up that way would go through either
-Andrew's -mm tree (for memory management) or my asm-generic tree
-(for cross-architecture cleanups).
-
-Since there is still at least one regression, I expect not to do anything
-for now. Please let me know when/if you expect me to merge the
-remaining patches.
-
-      Arnd
