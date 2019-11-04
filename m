@@ -2,53 +2,59 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38279CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A704C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 093FC21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB3BC218BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905172;
-	bh=ZZLlPeXBR+EVEvw0FmNfaS2VKB63dks1AB/dmDQjob4=;
+	s=default; t=1572905176;
+	bh=/bed9kQ9wctSWQIEVWMoM3vLii4+hyghZGfFJWUIRk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zwN/z8ZZl5hay9790gp/TAgnJQsIFA6DmpnNUCrFvd1LnruHQp5Skc3SGSJ8ANAK6
-	 GDws9xpx2uiCc4larEFdA6rE+kJWw1ZMwea6NOMhMYkvlhl1bM+l2CDe/WoEAtx7e+
-	 tywzfVxk5pryS5Hs3pwBeSYfO5jpUyM/UIjVwLSY=
+	b=BRoGos5NEhcXAqbvz2B3taKpbx2piSSOEkOBZEYSTpHgr4dUV+RiEq/hbyOnTecKm
+	 3hqPfq7dA/z/KplTBI9tqJciTN6INkFdp5v5bauzUMB13WXT14QLxbwEczAYxbToCu
+	 CrT070NIs9KxPkqU7jSFZOQyVctGosn5o4niGXRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388915AbfKDWGK (ORCPT
+        id S2389206AbfKDWGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:06:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37662 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:06:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388887AbfKDWGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:06:01 -0500
+        id S2389917AbfKDWGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:06:10 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 750432190F;
-        Mon,  4 Nov 2019 22:06:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB2DC20650;
+        Mon,  4 Nov 2019 22:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905161;
-        bh=ZZLlPeXBR+EVEvw0FmNfaS2VKB63dks1AB/dmDQjob4=;
+        s=default; t=1572905169;
+        bh=/bed9kQ9wctSWQIEVWMoM3vLii4+hyghZGfFJWUIRk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ss3kOJ/hNphNygQwxgFGL6vVlhUw+0xgmd/TdHESim840liKFzSY6A+9Oopxksw+W
-         N7ehAqq8WzWulWxdTJUNEDwn/nF8Jb2yUSMmUeUhCwWJQ9cTWOvKKRDcdWSP4UxM0W
-         QhfWIBB//DpgPdzJ2xoW/Iw7qTGnfaYvXpRrtUkU=
+        b=LbDKDqgVJKlSuwoxRkatk3weSk7B01giHoyIuu22sQYM3BIJbikKHlDcEoer7X5VV
+         YF/wcenRUpVG6i3hS75fXveTFKezzgdPrOqt9vSQEJWSI2fJ1qVn/933QAkIiV8YZO
+         bkAMKhsWCum0883zZi+EQgWb1xNLgZVmFh1Q+lsk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        stable@vger.kernel.org,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Will Deacon <will@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 011/163] perf script brstackinsn: Fix recovery from LBR/binary mismatch
-Date:   Mon,  4 Nov 2019 22:43:21 +0100
-Message-Id: <20191104212141.304255192@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 5.3 014/163] perf annotate: Propagate perf_env__arch() error
+Date:   Mon,  4 Nov 2019 22:43:24 +0100
+Message-Id: <20191104212141.482686941@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -61,75 +67,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit e98df280bc2a499fd41d7f9e2d6733884de69902 ]
+[ Upstream commit a66fa0619a0ae3585ef09e9c33ecfb5c7c6cb72b ]
 
-When the LBR data and the instructions in a binary do not match the loop
-printing instructions could get confused and print a long stream of
-bogus <bad> instructions.
+The callers of symbol__annotate2() use symbol__strerror_disassemble() to
+convert its failure returns into a human readable string, so
+propagate error values from functions it calls, starting with
+perf_env__arch() that when fails the right thing to do is to look at
+'errno' to see why its possible call to uname() failed.
 
-The problem was that if the instruction decoder cannot decode an
-instruction it ilen wasn't initialized, so the loop going through the
-basic block would continue with the previous value.
-
-Harden the code to avoid such problems:
-
-- Make sure ilen is always freshly initialized and is 0 for bad
-  instructions.
-
-- Do not overrun the code buffer while printing instructions
-
-- Print a warning message if the final jump is not on an instruction
-  boundary.
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Reported-by: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20190927233546.11533-1-andi@firstfloor.org
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+Cc: Will Deacon <will@kernel.org>
+Link: https://lkml.kernel.org/n/tip-it5d83kyusfhb1q1b0l4pxzs@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-script.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/perf/util/annotate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 0140ddb8dd0bd..c14a1cdad80c0 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1054,7 +1054,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 			continue;
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 163536720149b..6d9642c082e52 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2065,7 +2065,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
+ 	int err;
  
- 		insn = 0;
--		for (off = 0;; off += ilen) {
-+		for (off = 0; off < (unsigned)len; off += ilen) {
- 			uint64_t ip = start + off;
+ 	if (!arch_name)
+-		return -1;
++		return errno;
  
- 			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
-@@ -1065,6 +1065,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 					printed += print_srccode(thread, x.cpumode, ip);
- 				break;
- 			} else {
-+				ilen = 0;
- 				printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", ip,
- 						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
- 				if (ilen == 0)
-@@ -1074,6 +1075,8 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 				insn++;
- 			}
- 		}
-+		if (off != (unsigned)len)
-+			printed += fprintf(fp, "\tmismatch of LBR data and executable\n");
- 	}
- 
- 	/*
-@@ -1114,6 +1117,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 		goto out;
- 	}
- 	for (off = 0; off <= end - start; off += ilen) {
-+		ilen = 0;
- 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", start + off,
- 				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
- 		if (ilen == 0)
+ 	args.arch = arch = arch__find(arch_name);
+ 	if (arch == NULL)
 -- 
 2.20.1
 
