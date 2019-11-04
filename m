@@ -2,127 +2,98 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063E2CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73881CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD31720650
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ACE420650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:32:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="imFyFb/C"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="njWpSQ8w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbfKDPa4 (ORCPT
+        id S1728824AbfKDPcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:30:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29890 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727838AbfKDPa4 (ORCPT
+        Mon, 4 Nov 2019 10:32:13 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40777 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727998AbfKDPcM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:30:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572881455;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Mbwo60yuhf9zn/no1y4eRlxn1KfPxIVdxOh+1RcQBXI=;
-        b=imFyFb/Cn7rrHUwy/7VxmDqLZYXoXd4e0FA4Jl4SbniSU+lMWC0HEbr4iHadSOp9EDqJcu
-        PxBamGTAUOZcu1sjYwxmTumERModM3HAIcn6PQU/CzedY89jKfC96CmSl6PJvA1KeT+002
-        ncTrMRK5l2rjMNfk5hbf5a1hrSTUEj4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-293-V26_gtMDPGyIgQsEcz9NSg-1; Mon, 04 Nov 2019 10:30:53 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D800107ACC2;
-        Mon,  4 Nov 2019 15:30:52 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B00265D6C5;
-        Mon,  4 Nov 2019 15:30:51 +0000 (UTC)
-Date:   Mon, 4 Nov 2019 10:30:49 -0500
-From:   Brian Foster <bfoster@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/28] shrinker: clean up variable types and tracepoints
-Message-ID: <20191104153049.GD10665@bfoster>
-References: <20191031234618.15403-1-david@fromorbit.com>
- <20191031234618.15403-14-david@fromorbit.com>
+        Mon, 4 Nov 2019 10:32:12 -0500
+Received: by mail-lf1-f68.google.com with SMTP id f4so12565520lfk.7
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 07:32:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mr/Uxcplv3NXuIJk8Ti1kfrQNEUtvUFgTdHmY4Gpbzk=;
+        b=njWpSQ8wDNfkaVeUU2fNdyl/gHikLxNHX+GZiK4dn0gkcKvE2mFYSrOLzmK2F+9yI2
+         yDo7PYJAV0oFUMmlVjZkfIPH4OJYceMAFu0zAAst9LYxuOk3A6wMgldPfh8qYnbwtEiS
+         iuZ67Ot57VBDn7SomMOrrcp2180LktPjNdmsEbuPvcbfOj344XahHiSBnukd+u7OAY6q
+         COjC6T+tZYOp5/Kf4yz9UkVsB/4xPlqch4aZmdpLncF2G5Oo1HApFzkg1F/tMZ8izNTI
+         /0OB+EkTifoz0cTCW4/1xKTo0f4iMZ3uFpVbdVlwTl6aZP+xmcRscxWfxcC7ikuH0pyS
+         bHlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mr/Uxcplv3NXuIJk8Ti1kfrQNEUtvUFgTdHmY4Gpbzk=;
+        b=rl8BGfbJlE8GFaBr+cx2TmIAlEutsGak0JPr/fk9E08klUkiAtLPOO1e+eZowIs3hj
+         L9nImyCiuAXztYKM7msnqD5vbyJfYfswFNSuS3BMBojo0Du4aeVrCkpZKMdt4gyTh2HM
+         UORz6+8fownH9nLQZbR80B++DR+s0XaUs59OFqd/XcfBhLhQkPl4+WSYMi6Mqtkt3fOr
+         C26rvUXz3vpP8vTUHwOrSmM8pkUQpu4GWBUhhmJ2w9l++XaLRwf3C0c/Tt7LiISItxkk
+         /aScuAq9x5eRBcJZ6W06rnML5b2TC2dsNuiETrxMZ/8sNf8pthCmuzSzQT7kcDSshXES
+         4NeA==
+X-Gm-Message-State: APjAAAU9D/N5owGSaTWn880i2nwMdWH5yzNMJmloUX2T4JJNQllne53l
+        i/ys+OPRHpSPsba2fVdQKTgYrS6CgIijeUNEqOC57Q==
+X-Google-Smtp-Source: APXvYqxK6Pwq1Qm86hnw4EI2i8gx2+V2iuKJsfnwP8M8v6pQOu8BH+b+jtXWQgx2oKQZuZQAKVxi6hoscfSl4OQ33fo=
+X-Received: by 2002:ac2:4a8f:: with SMTP id l15mr16987288lfp.5.1572881529546;
+ Mon, 04 Nov 2019 07:32:09 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191031234618.15403-14-david@fromorbit.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: V26_gtMDPGyIgQsEcz9NSg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <1572004167-24150-1-git-send-email-qianggui.song@amlogic.com> <1572004167-24150-2-git-send-email-qianggui.song@amlogic.com>
+In-Reply-To: <1572004167-24150-2-git-send-email-qianggui.song@amlogic.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 4 Nov 2019 16:31:57 +0100
+Message-ID: <CACRpkdZZpc0yrewfseG3PUXgvV3H9XED25Ej21VeMYn8cUxasg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] pinctrl: add compatible for Amlogic Meson A1 pin controller
+To:     Qianggui Song <qianggui.song@amlogic.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Carlo Caione <carlo@caione.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 10:46:03AM +1100, Dave Chinner wrote:
-> From: Dave Chinner <dchinner@redhat.com>
->=20
-> The tracepoint information in the shrinker code don't make a lot of
+On Fri, Oct 25, 2019 at 1:49 PM Qianggui Song <qianggui.song@amlogic.com> wrote:
 
-Nit:=09=09=09=09=09=09  doesn't
+> Add new compatible name for Amlogic's Meson-A1 pin controller
+> add a dt-binding header file which document the detail pin names.
+> Note that A1 doesn't need DS bank reg any more, use gpio reg as
+> base.
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
 
-> sense anymore and contain redundant information as a result of the
-> changes in the patchset. Refine the information passed to the
-> tracepoints so they expose the operation of the shrinkers more
-> precisely and clean up the remaining code and varibles in the
+Patch applied.
 
-Nit:=09=09=09=09=09=09variables
-
-> shrinker code so it all makes sense.
->=20
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> ---
->  include/trace/events/vmscan.h | 69 ++++++++++++++++-------------------
->  mm/vmscan.c                   | 24 +++++-------
->  2 files changed, 41 insertions(+), 52 deletions(-)
->=20
-...
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index c0e2bf656e3f..7a8256322150 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-...
-> @@ -624,23 +622,21 @@ static unsigned long do_shrink_slab(struct shrink_c=
-ontrol *shrinkctl,
->  =09=09cond_resched();
->  =09}
->  done:
-...
->  =09if (next_deferred > 0)
-> -=09=09new_nr =3D atomic64_add_return(next_deferred,
-> -=09=09=09=09=09=09&shrinker->nr_deferred[nid]);
-> -=09else
-> -=09=09new_nr =3D atomic64_read(&shrinker->nr_deferred[nid]);
-> +=09=09atomic64_add(next_deferred, &shrinker->nr_deferred[nid]);
-> =20
-> -=09trace_mm_shrink_slab_end(shrinker, nid, freed, deferred_count, new_nr=
-,
-> -=09=09=09=09=09scan_count);
-> +=09trace_mm_shrink_slab_end(shrinker, nid, freed, scanned_objects,
-> +=09=09=09=09 next_deferred);
-
-I guess this invalidates my comment on the previous patch around new_nr.
-Looks Ok to me:
-
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-
->  =09return freed;
->  }
-> =20
-> --=20
-> 2.24.0.rc0
->=20
-
+Yours,
+Linus Walleij
