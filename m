@@ -2,213 +2,122 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB96C47E49
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73373CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB75620717
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D2B20659
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:13:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F59FOw5E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sJvsUeQS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729354AbfKDVMA (ORCPT
+        id S1729482AbfKDVNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:12:00 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39709 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728377AbfKDVMA (ORCPT
+        Mon, 4 Nov 2019 16:13:33 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:36848 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728377AbfKDVNc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:12:00 -0500
-Received: by mail-ed1-f68.google.com with SMTP id l25so14330682edt.6
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 13:11:58 -0800 (PST)
+        Mon, 4 Nov 2019 16:13:32 -0500
+Received: by mail-il1-f193.google.com with SMTP id s75so16199093ilc.3;
+        Mon, 04 Nov 2019 13:13:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=QJX38fPH4Wmm+NgS8n4DnoBmgQALP+GtwdgAD3lH8MI=;
-        b=F59FOw5EM0G/b4mEvS1yY4BDvYP7j8S7tBalF1rIUni4dl8Q8CQqso54n3xO9DKZ30
-         +PXvdbSv4VqiRSSbgq5bCFRCbX2+4N77CSpCXhhYJpOn1EeURCz7yKZAU9mzXGbI9QiF
-         USTGaD89RJTIW0TPqEdFyCErU+7KG1VWqF6IqNktxqloX1o0qb8VH5vD/7B9xxt+MF1t
-         ninKOgHxYsGFQYLAx+Fmh3kPes2u1JJ2JV4UJbOGGYgGLeP6ba8qABe28QZI6IP1nrH+
-         x7k33ZTE3LM2z2XaIkakFGud8Xlhw8andNAKKJx/by6TSVPwAb14DHrfhhEHDhBy4l+y
-         uIIw==
+         :cc;
+        bh=tsgaFe6O3F9HZDPQl+cHUtlR8dE5IjLELRwmms185QM=;
+        b=sJvsUeQSNbKXO2BdG+AasMotpuAjdH+K0vnJm7za0BoPxlQSXSV6p51lUrAxCWNwr+
+         ZDt0U8T7WAWTyQ75IWzSWjwktYTqrE+w3YbZHFBhY8Brl5f2z9wCYo71bwrecMUl8sGE
+         7gE5UaR5tjpZoSEV6lEi5Hryc+V8Xzn/c60U20PSFFrpaM2F8w8glwnILvqBz7pubiyC
+         lSz/NF7s8tRW3/GtVospozxFQaWr2k5VnMHC5x5WtMujW7+s/0bNyKISX6m327vi9qzh
+         daErzwIh66FTCq8+bNmbIVRDyYJCGhCr8uH1KLruTSbN8Kgh2d+re1ubnUY2HSJHQyCT
+         RWUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QJX38fPH4Wmm+NgS8n4DnoBmgQALP+GtwdgAD3lH8MI=;
-        b=Kf3szDr0uLqzXJulmyOC1B2qGlEzcAqjxwCFXDNvfAwqqwVnpRm7FTVA41ah/NorLc
-         GqL1wrzHT78oMvL0jae8Zx6dLhhjQU/J5X0fezOKa/rkD/E6GZufvuy5QM/fOduWLI5l
-         UTT/Y57HDm9I01SOcIuyvVnhHE9m3k8o/eiX7eEcO+lMR1A0mpGnsFhpft8A+1xZvZfE
-         4Fwt+o7UyDFUI4qQQLKUPdcVhFF2XFf9gkqQdndO4HUjCxKxX7uq71nhOdhMScLlBy91
-         B4F2TgU/4rQ1m6uHZo1pbk/WnY5dhUGQ228JmcjKTSqIJUS5/HvZNj/y+L8cO4mfE0oK
-         gmYQ==
-X-Gm-Message-State: APjAAAUEVQw13vC1it94p+Tput2xf4yEAhA3wCZ99ML82u1iQ0inOl02
-        x74QQwSfw6nX9naZf9gpLt8RBYfMDevsqL8PJKw=
-X-Google-Smtp-Source: APXvYqzMhHOg1RYQzZ/UzBp7P2MnDnTf91ciO2W51U6TAE5TVPjWc4em2tPR3TlDTBamoKwdGEWwxI7L6tDNph/D7eg=
-X-Received: by 2002:a17:906:a44:: with SMTP id x4mr25620544ejf.64.1572901917757;
- Mon, 04 Nov 2019 13:11:57 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=tsgaFe6O3F9HZDPQl+cHUtlR8dE5IjLELRwmms185QM=;
+        b=jtMpFKQNshYVC+o6xVt8XLn5MNUGchMG22b0UfUudBX398czZFNFoRt9W1z3L2y5Vc
+         dKXLx8JmGKHhtL8808pwYHDYEWvI9TLa5N20qNVacmOiMPLLzv3LL1Ohb7flDmaWCjBP
+         MdLqoauYzU61KgLiGl8TJWISi9sWuH+ImdP6JkmO3JB0mPRwX1BuwNFLTTgF26sAszkX
+         U88LNuTq6uYiRT7nQbCEJc8GJzkYjsmlLA1oU0+aBEMh+Nh/FFPJnKIQTeCyxgPnaf9N
+         IP0kz09l5//2k/TpkWoTq1tT9p8gfNpc/Gx1EdEOK2JDrcJvz15d/5mnFbffHQpfgSek
+         HgPw==
+X-Gm-Message-State: APjAAAXFXHl1jAQg/C1deq/ihDDDqobcsRzC+exj7vXtgF16Tp48tGe5
+        Bl7gt/2hatrPlEFYbbX/nubDxgLLJAT0+V6pI5E=
+X-Google-Smtp-Source: APXvYqwGkV2mIbeBE4+055q/zXhV2WkW7DMbnYN02BINozIY0Gl77rnOoBvxpA0zMFJgHX4oHsPo57TZri8QguJk2TM=
+X-Received: by 2002:a05:6e02:c91:: with SMTP id b17mr8393893ile.33.1572902010136;
+ Mon, 04 Nov 2019 13:13:30 -0800 (PST)
 MIME-Version: 1.0
-References: <20191101180713.5470-1-robdclark@gmail.com> <20191101180713.5470-2-robdclark@gmail.com>
- <20191101192458.GI1208@intel.com> <CAJs_Fx7u6VNDarYqUuUSMSsWK0jpS5ybse0h1X4AmtXO9Mia_w@mail.gmail.com>
- <20191101214431.GJ1208@intel.com> <CAF6AEGsHQ-V9aVvxLE6VeV2Ld+1_QOh7LS6GBsd6Lsr4qPZNMw@mail.gmail.com>
- <20191104184156.GL1208@intel.com> <CAF6AEGuQ6WwwVYJvHSg=4NB3aafF6CEcUo2T4T+Cinz3X=DPFg@mail.gmail.com>
- <20191104205010.GM1208@intel.com>
-In-Reply-To: <20191104205010.GM1208@intel.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 4 Nov 2019 13:11:46 -0800
-Message-ID: <CAF6AEGv5k_kLkHezpemV-=md_YZbxFq3ENkaN88JSFzVeEnxuQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/atomic: clear new_state pointers at hw_done
-To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc:     Rob Clark <robdclark@chromium.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>, Sean Paul <sean@poorly.run>
+References: <20191021154616.25457-1-jeffrey.l.hugo@gmail.com>
+ <20191027055528.GJ5514@hector.lan> <CAOCk7Nptm=Cz17FFKKvsgVxXRgJ-m9zK4RKysqhjb4cwPweSXg@mail.gmail.com>
+ <20191104164123.GA2256087@kroah.com>
+In-Reply-To: <20191104164123.GA2256087@kroah.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 4 Nov 2019 14:13:18 -0700
+Message-ID: <CAOCk7NpwTdj2qkeBYChhiq7YJ+Yz2g9-GMAx=zxgqeA=w6S9jw@mail.gmail.com>
+Subject: Re: [PATCH v2] tty: serial: msm_serial: Fix flow control
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>, jslaby@suse.com,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-serial@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 12:50 PM Ville Syrj=C3=A4l=C3=A4
-<ville.syrjala@linux.intel.com> wrote:
+On Mon, Nov 4, 2019 at 9:41 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Mon, Nov 04, 2019 at 11:13:59AM -0800, Rob Clark wrote:
-> > On Mon, Nov 4, 2019 at 10:42 AM Ville Syrj=C3=A4l=C3=A4
-> > <ville.syrjala@linux.intel.com> wrote:
+> On Sun, Nov 03, 2019 at 02:51:17PM -0700, Jeffrey Hugo wrote:
+> > On Sat, Oct 26, 2019 at 11:55 PM Andy Gross <agross@kernel.org> wrote:
 > > >
-> > > On Fri, Nov 01, 2019 at 03:14:09PM -0700, Rob Clark wrote:
-> > > > On Fri, Nov 1, 2019 at 2:44 PM Ville Syrj=C3=A4l=C3=A4
-> > > > <ville.syrjala@linux.intel.com> wrote:
-> > > > >
-> > > > > On Fri, Nov 01, 2019 at 12:49:02PM -0700, Rob Clark wrote:
-> > > > > > On Fri, Nov 1, 2019 at 12:25 PM Ville Syrj=C3=A4l=C3=A4
-> > > > > > <ville.syrjala@linux.intel.com> wrote:
-> > > > > > >
-> > > > > > > On Fri, Nov 01, 2019 at 11:07:13AM -0700, Rob Clark wrote:
-> > > > > > > > From: Rob Clark <robdclark@chromium.org>
-> > > > > > > >
-> > > > > > > > The new state should not be accessed after this point.  Cle=
-ar the
-> > > > > > > > pointers to make that explicit.
-> > > > > > > >
-> > > > > > > > This makes the error corrected in the previous patch more o=
-bvious.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > > > > > > > ---
-> > > > > > > >  drivers/gpu/drm/drm_atomic_helper.c | 29 +++++++++++++++++=
-++++++++++++
-> > > > > > > >  1 file changed, 29 insertions(+)
-> > > > > > > >
-> > > > > > > > diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/=
-gpu/drm/drm_atomic_helper.c
-> > > > > > > > index 732bd0ce9241..176831df8163 100644
-> > > > > > > > --- a/drivers/gpu/drm/drm_atomic_helper.c
-> > > > > > > > +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> > > > > > > > @@ -2234,13 +2234,42 @@ EXPORT_SYMBOL(drm_atomic_helper_fak=
-e_vblank);
-> > > > > > > >   */
-> > > > > > > >  void drm_atomic_helper_commit_hw_done(struct drm_atomic_st=
-ate *old_state)
-> > > > > > > >  {
-> > > > > > > > +     struct drm_connector *connector;
-> > > > > > > > +     struct drm_connector_state *old_conn_state, *new_conn=
-_state;
-> > > > > > > >       struct drm_crtc *crtc;
-> > > > > > > >       struct drm_crtc_state *old_crtc_state, *new_crtc_stat=
-e;
-> > > > > > > > +     struct drm_plane *plane;
-> > > > > > > > +     struct drm_plane_state *old_plane_state, *new_plane_s=
-tate;
-> > > > > > > >       struct drm_crtc_commit *commit;
-> > > > > > > > +     struct drm_private_obj *obj;
-> > > > > > > > +     struct drm_private_state *old_obj_state, *new_obj_sta=
-te;
-> > > > > > > >       int i;
-> > > > > > > >
-> > > > > > > > +     /*
-> > > > > > > > +      * After this point, drivers should not access the pe=
-rmanent modeset
-> > > > > > > > +      * state, so we also clear the new_state pointers to =
-make this
-> > > > > > > > +      * restriction explicit.
-> > > > > > > > +      *
-> > > > > > > > +      * For the CRTC state, we do this in the same loop wh=
-ere we signal
-> > > > > > > > +      * hw_done, since we still need to new_crtc_state to =
-fish out the
-> > > > > > > > +      * commit.
-> > > > > > > > +      */
-> > > > > > > > +
-> > > > > > > > +     for_each_oldnew_connector_in_state(old_state, connect=
-or, old_conn_state, new_conn_state, i) {
-> > > > > > > > +             old_state->connectors[i].new_state =3D NULL;
-> > > > > > > > +     }
-> > > > > > > > +
-> > > > > > > > +     for_each_oldnew_plane_in_state(old_state, plane, old_=
-plane_state, new_plane_state, i) {
-> > > > > > > > +             old_state->planes[i].new_state =3D NULL;
-> > > > > > > > +     }
-> > > > > > > > +
-> > > > > > > > +     for_each_oldnew_private_obj_in_state(old_state, obj, =
-old_obj_state, new_obj_state, i) {
-> > > > > > > > +             old_state->private_objs[i].new_state =3D NULL=
-;
-> > > > > > > > +     }
-> > > > > > > > +
-> > > > > > > >       for_each_oldnew_crtc_in_state(old_state, crtc, old_cr=
-tc_state, new_crtc_state, i) {
-> > > > > > > >               old_state->crtcs[i].new_self_refresh_active =
-=3D new_crtc_state->self_refresh_active;
-> > > > > > > > +             old_state->crtcs[i].new_state =3D NULL;
-> > > > > > >
-> > > > > > > That's going to be a real PITA when doing programming after t=
-he fact from
-> > > > > > > a vblank worker. It's already a pain that the new_crtc_state-=
->state is
-> > > > > > > getting NULLed somewhere.
-> > > > > > >
-> > > > > >
-> > > > > > I think you already have that problem, this just makes it expli=
-cit.
-> > > > >
-> > > > > I don't yet. Except on a branch where I have my vblank workers.
-> > > > > And I think the only problem is having the helpers/core clobber
-> > > > > the pointers when it should not. I don't see why it can't just
-> > > > > leave them be and let me use them.
-> > > > >
+> > > On Mon, Oct 21, 2019 at 08:46:16AM -0700, Jeffrey Hugo wrote:
+> > > > hci_qca interfaces to the wcn3990 via a uart_dm on the msm8998 mtp and
+> > > > Lenovo Miix 630 laptop.  As part of initializing the wcn3990, hci_qca
+> > > > disables flow, configures the uart baudrate, and then reenables flow - at
+> > > > which point an event is expected to be received over the uart from the
+> > > > wcn3990.  It is observed that this event comes after the baudrate change
+> > > > but before hci_qca re-enables flow. This is unexpected, and is a result of
+> > > > msm_reset() being broken.
 > > > >
-> > > > I guess it comes down to what assumptions you can make in driver
-> > > > backend.  But if you can, for example, move planes between crtcs, I
-> > > > think you can't make assumptions about the order in which things
-> > > > complete even if you don't have commits overtaking each other on a
-> > > > single crtc..
+> > > > According to the uart_dm hardware documentation, it is recommended that
+> > > > automatic hardware flow control be enabled by setting RX_RDY_CTL.  Auto
+> > > > hw flow control will manage RFR based on the configured watermark.  When
+> > > > there is space to receive data, the hw will assert RFR.  When the watermark
+> > > > is hit, the hw will de-assert RFR.
+> > > >
+> > > > The hardware documentation indicates that RFR can me manually managed via
+> > > > CR when RX_RDY_CTL is not set.  SET_RFR asserts RFR, and RESET_RFR
+> > > > de-asserts RFR.
+> > > >
+> > > > msm_reset() is broken because after resetting the hardware, it
+> > > > unconditionally asserts RFR via SET_RFR.  This enables flow regardless of
+> > > > the current configuration, and would undo a previous flow disable
+> > > > operation.  It should instead de-assert RFR via RESET_RFR to block flow
+> > > > until the hardware is reconfigured.  msm_serial should rely on the client
+> > > > to specify that flow should be enabled, either via mctrl() or the termios
+> > > > structure, and only assert RFR in response to those triggers.
+> > > >
+> > > > Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
+> > > > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > > > ---
 > > >
-> > > IMO this whole notion of accessing new_crtc_state & co. being unsafe
-> > > for some reason is wrong. I think as long as I have the drm_atomic_st=
-ate
-> > > I should be able to look at the new/old states within.
+> > > Reviewed-by: Andy Gross <agross@kernel.org>
 > > >
+> > > Greg, can you pick this one up?
+> > >
+> > > Thanks,
+> > > Andy
 > >
-> > accessing new state only works if you can guarantee the order in which
-> > commits complete, which I don't think you can do in the general sense.
+> > Greg, will this be queued for 5.5?
 >
-> Doesn't feel like it should take a lot of rocket science to guarantee
-> the states get freed in the right order.
->
+> Yes, catching up now...
 
-I agree, reference counting is not rocket science.  But that isn't the
-way drm core handles per-object state currently.  Refcnt'ing is
-probably the approach that I'd recommend if someone wanted to lift
-this restriction about accessing new-state later.
-
-BR,
--R
+Excellent, thank you very much.
