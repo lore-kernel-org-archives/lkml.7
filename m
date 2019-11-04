@@ -2,52 +2,58 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C89BCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E9BCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F1602084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4722021744
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905122;
-	bh=Paqb7OqL+I6rrIchpLW5US/fo31+mNb4aU/UsTEfsTQ=;
+	s=default; t=1572905124;
+	bh=zR7PEpWo1SHxfPoogzU2Cy0kOuipPdgvp9JuFhSZZqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sGdjWK9nvvNV2GLVyGwDXo4M4fDYTKV54tdRp+bacpvB760puR+qKuvnBhme7errc
-	 7qqJpxI2hTEwYnQCyGSKzZ4BNcy94AXiQAES9SXmch+4Nbj8gQ80JkvzT7ZeDyvjV/
-	 Ft/FLmItkOttfI1pd71V+RLATjRNiT/GQbDrCEZg=
+	b=F6XFC2S93eWjyvgAMI6Ah4cU1QxBindk3TaK7Pj04IWeoIaClcUCUt9NG2BV7cDBa
+	 GNncMikaubNO7tWhihCuY45klIgj4kbI6K7getkC6VTefix7JZO+p0j77bT4AUnwTm
+	 eG0r8ZRJrIh2xv7jkScLrTsYg5xxRw6IjPT+7xa8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389826AbfKDWFT (ORCPT
+        id S2389833AbfKDWFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:05:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36548 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:05:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389819AbfKDWFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:05:17 -0500
+        id S2389256AbfKDWFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:05:20 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD971217F5;
-        Mon,  4 Nov 2019 22:05:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B821217F4;
+        Mon,  4 Nov 2019 22:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905117;
-        bh=Paqb7OqL+I6rrIchpLW5US/fo31+mNb4aU/UsTEfsTQ=;
+        s=default; t=1572905120;
+        bh=zR7PEpWo1SHxfPoogzU2Cy0kOuipPdgvp9JuFhSZZqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IUgrf0lRl+9AGrhg4VEtC8WrPF+cjE2/yBrvFM2X6VbeXHnr8BYvpCFV7GA+xQj/F
-         l+kWjUad5TMqpaKFXJw1KVLliIFrKiEjSMTqHWvqVyU9Cd3lsf+l7Yeua5G/Kaimf6
-         NPkbMjJGEBfIceMsdYqiaISKHZr6OjYUSJCClcyc=
+        b=O0Y4FLpAC/j2vPgF0dWi4NFegPMfVhoL+Cek/SUzrGBoJyNqQ5UYXw5YG2zYdZqWq
+         0gbIsPI64pMlvMOO6jjtQVOR1mckfzY7pQbehmuEg8MmjKLRWSibAsrj0Os5+JrTgq
+         4WZ0j7HO8xg7RRqkn1DTNuZtWkzddFEufVhdfPco=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+        stable@vger.kernel.org, Ian Rogers <irogers@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 034/163] serial/sifive: select SERIAL_EARLYCON
-Date:   Mon,  4 Nov 2019 22:43:44 +0100
-Message-Id: <20191104212142.716077799@linuxfoundation.org>
+Subject: [PATCH 5.3 008/163] libsubcmd: Make _FORTIFY_SOURCE defines dependent on the feature
+Date:   Mon,  4 Nov 2019 22:43:18 +0100
+Message-Id: <20191104212141.113908107@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -60,35 +66,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit 7e2a165de5a52003d10a611ee3884cdb5c44e8cd ]
+[ Upstream commit 4b0b2b096da9d296e0e5668cdfba8613bd6f5bc8 ]
 
-The sifive serial driver implements earlycon support, but unless
-another driver is built in that supports earlycon support it won't
-be usable.  Explicitly select SERIAL_EARLYCON instead.
+Unconditionally defining _FORTIFY_SOURCE can break tools that don't work
+with it, such as memory sanitizers:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
-Link: https://lore.kernel.org/r/20190910055923.28384-1-hch@lst.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  https://github.com/google/sanitizers/wiki/AddressSanitizer#faq
+
+Fixes: 4b6ab94eabe4 ("perf subcmd: Create subcmd library")
+Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lore.kernel.org/lkml/20190925195924.152834-1-irogers@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ tools/lib/subcmd/Makefile | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 3083dbae35f7e..3b436ccd29dad 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1075,6 +1075,7 @@ config SERIAL_SIFIVE_CONSOLE
- 	bool "Console on SiFive UART"
- 	depends on SERIAL_SIFIVE=y
- 	select SERIAL_CORE_CONSOLE
-+	select SERIAL_EARLYCON
- 	help
- 	  Select this option if you would like to use a SiFive UART as the
- 	  system console.
+diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+index ed61fb3a46c08..5b2cd5e58df09 100644
+--- a/tools/lib/subcmd/Makefile
++++ b/tools/lib/subcmd/Makefile
+@@ -20,7 +20,13 @@ MAKEFLAGS += --no-print-directory
+ LIBFILE = $(OUTPUT)libsubcmd.a
+ 
+ CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
+-CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -fPIC
++CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
++
++ifeq ($(DEBUG),0)
++  ifeq ($(feature-fortify-source), 1)
++    CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
++  endif
++endif
+ 
+ ifeq ($(CC_NO_CLANG), 0)
+   CFLAGS += -O3
 -- 
 2.20.1
 
