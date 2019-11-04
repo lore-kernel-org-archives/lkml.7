@@ -2,96 +2,161 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5197DCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22712CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D492080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2CA120848
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:02:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CkMQKmnO"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="tBXMnl5G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbfKDTAW (ORCPT
+        id S1728849AbfKDTCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:00:22 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43152 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727998AbfKDTAV (ORCPT
+        Mon, 4 Nov 2019 14:02:12 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57980 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727998AbfKDTCL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 14:00:21 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l20so3032796oie.10
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 11:00:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ksr/h9CCVfqZZQjRKQaKSNEP4lA439YVqkZQJ3uCxu4=;
-        b=CkMQKmnOy6i1xFV6dMi8Bspp2+SiqjFCPxIRLAHuZecPhMXOwhJ0ejY623f5E2L3n8
-         BjP9BeUUlCqWt2o6uBCqmUg2OQ38lNyqN7+o7tRZbrWJDjzFnfedi5+KAsRIakiIYnxS
-         MFP+ZnbOqfvvJhOCHS8mHURidBYca+h47mZLk0d/OQVIGJk9dPEc8ryZ6XWdeVXza8bw
-         W/gF61xyTqrCzN4Nnr6/QQDt2PqWxlGtnCImJjErygRstjnpOeT0/y8S1KCkvMYKejoP
-         ErUpYl/s8Fwd7vKYzpdkexc+TxgX1fMlNd2vs7wICk2khqMalQuMN7qYcNgsYQZzfH4s
-         sSoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ksr/h9CCVfqZZQjRKQaKSNEP4lA439YVqkZQJ3uCxu4=;
-        b=cR+KZorzjSshjvEfem5VfSqczd4/grdMHRHQ1FOu/r3PZOLHFpQ2eJGIYyrHO+qrv9
-         w4jFD0Wkp4Bd1y6AeqwWJ2kzhz/Av0nHzeojWcfm3lGfanLeGqelVn8wLmpDlmuV1YsX
-         yVp1fL268ifS3jM9XYW81yHjld0TS7g2nbSgy78HpzhaMqH8L1/mXk5zXXGzb6d2cFlS
-         aEwdk6Dbxmua0F/OxSJfnxAbTBraEtyDKzw+0uD7yOXKBnknaXcuzWOiK5Kf/qEjf55+
-         O4WnAtdZwR8hHMOiUX3LK8XkdQK/WWaQfqN2ddSro+HUnUon7hLIEACyRfsWKPxKgKqr
-         vxEA==
-X-Gm-Message-State: APjAAAUG3YPyq6WpvN+tttwERfDnUIltLKvMGVbZ34WmbaZglI2ouLZ+
-        NSlAXaK0bMZkPE8mXB+DcDw6xhykAulbL/YPQoHVzWav
-X-Google-Smtp-Source: APXvYqx9RH4q18tPgDzGIegAC/ekwamy9juTr/AzqXzj083HVVgnfDpFlteVk7Iw0sWNnT/Cj5W81rCPE1MlbyKHkRE=
-X-Received: by 2002:aca:1210:: with SMTP id 16mr489352ois.128.1572894020603;
- Mon, 04 Nov 2019 11:00:20 -0800 (PST)
+        Mon, 4 Nov 2019 14:02:11 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2257752C;
+        Mon,  4 Nov 2019 20:02:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1572894129;
+        bh=kvR1ciF/jrbAVq1q5F7pP9qO8GkfA6eHj67avqWv0NA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tBXMnl5Gr+CbG5Gux5GYBO40MA0CKG6md1kU/uj7NCZB9A8mD5/3WF2OQDT1e5RKB
+         I2/ea+yCwoMy/5l6CO9/Qu5HWEYAPtbikz3JnWq9Jahru6r/zuc8gc9qWVozpr9Jq6
+         ThFIZuX3jjf7Ut32TdgwLts4//hgObWR1BDwvYhs=
+Date:   Mon, 4 Nov 2019 21:02:01 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor
+ binding
+Message-ID: <20191104190201.GF4913@pendragon.ideasonboard.com>
+References: <20191030094902.32582-1-manivannan.sadhasivam@linaro.org>
+ <20191030094902.32582-2-manivannan.sadhasivam@linaro.org>
+ <20191031131538.GA9170@pendragon.ideasonboard.com>
+ <20191031134512.GB24273@mani>
+ <20191031141141.GD5018@pendragon.ideasonboard.com>
+ <20191031142817.GK6253@valkosipuli.retiisi.org.uk>
+ <20191031165444.GE5018@pendragon.ideasonboard.com>
+ <20191031170837.GN6253@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-References: <20191025234834.28214-1-john.stultz@linaro.org>
- <20191025234834.28214-3-john.stultz@linaro.org> <20191104102445.GE10326@phenom.ffwll.local>
-In-Reply-To: <20191104102445.GE10326@phenom.ffwll.local>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Mon, 4 Nov 2019 11:00:08 -0800
-Message-ID: <CALAqxLXq=4dw=WfJZhXh=Ft3SHK1QUJZRt+rwy4ZuKTbjZUEpQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 2/2] dma-buf: heaps: Allow system & cma heaps to be
- configured as a modules
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Sandeep Patil <sspatil@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Liam Mark <lmark@codeaurora.org>, Yue Hu <huyue2@yulong.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pratik Patel <pratikp@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191031170837.GN6253@valkosipuli.retiisi.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 2:24 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> On Fri, Oct 25, 2019 at 11:48:34PM +0000, John Stultz wrote:
-> > Allow loading system and cma heap as a module instead of just as
-> > a statically built in heap.
-> >
-> > Since there isn't a good mechanism for dmabuf lifetime tracking
-> > it isn't safe to allow the heap drivers to be unloaded, so these
-> > drivers do not implement any module unloading functionality and
-> > will show up in lsmod as "[permanent]".
->
-> dma-buf itself has all the try_module_get we'll need ... why is this not
-> possible?
+Hi Sakari,
 
-Let me look into that.  Thanks for the pointer.
+On Thu, Oct 31, 2019 at 07:08:37PM +0200, Sakari Ailus wrote:
+> On Thu, Oct 31, 2019 at 06:54:44PM +0200, Laurent Pinchart wrote:
+> > On Thu, Oct 31, 2019 at 04:28:17PM +0200, Sakari Ailus wrote:
+> >> On Thu, Oct 31, 2019 at 04:11:41PM +0200, Laurent Pinchart wrote:
+> >>> On Thu, Oct 31, 2019 at 07:15:12PM +0530, Manivannan Sadhasivam wrote:
+> >>>> On Thu, Oct 31, 2019 at 03:15:38PM +0200, Laurent Pinchart wrote:
+> >>>>> On Wed, Oct 30, 2019 at 03:19:01PM +0530, Manivannan Sadhasivam wrote:
+> >>>>>> Add YAML devicetree binding for IMX296 CMOS image sensor. Let's also
+> >>>>>> add MAINTAINERS entry for the binding and driver.
+> >>>>>> 
+> >>>>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >>>>>> ---
+> >>>>>>  .../devicetree/bindings/media/i2c/imx296.yaml | 94 +++++++++++++++++++
+> >>>>>>  MAINTAINERS                                   |  8 ++
+> >>>>>>  2 files changed, 102 insertions(+)
+> >>>>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >>>>>> 
+> >>>>>> diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >>>>>> new file mode 100644
+> >>>>>> index 000000000000..c04ec2203268
+> >>>>>> --- /dev/null
+> >>>>>> +++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+> >>>>>> @@ -0,0 +1,94 @@
+> >>>>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> >>>>>> +%YAML 1.2
+> >>>>>> +---
+> >>>>>> +$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
+> >>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>>>>> +
+> >>>>>> +title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
+> >>>>>> +
+> >>>>>> +maintainers:
+> >>>>>> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >>>>>> +
+> >>>>>> +description: |-
+> >>>>>> +  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
+> >>>>>> +  sensor with square pixel array and 1.58 M effective pixels. This chip
+> >>>>>> +  features a global shutter with variable charge-integration time. It is
+> >>>>>> +  programmable through I2C and 4-wire interfaces. The sensor output is
+> >>>>>> +  available via CSI-2 serial data output (1 Lane).
+> >>>>>> +
+> >>>>>> +properties:
+> >>>>>> +  compatible:
+> >>>>>> +    const: sony,imx296
+> >>>>>> +
+> >>>>>> +  reg:
+> >>>>>> +    maxItems: 1
+> >>>>>> +
+> >>>>>> +  clocks:
+> >>>>>> +    maxItems: 1
+> >>>>>> +
+> >>>>>> +  clock-names:
+> >>>>>> +    description:
+> >>>>>> +      Input clock for the sensor.
+> >>>>>> +    items:
+> >>>>>> +      - const: mclk
+> >>>>> 
+> >>>>> The pin is named INCK, let's name the clock accordingly.
+> >>>> 
+> >>>> Okay, I thought generic names are preferred here!
+> >>>>  
+> >>>>>> +  clock-frequency:
+> >>>>>> +    description:
+> >>>>>> +      Frequency of the mclk clock in Hertz.
+> >>>>> 
+> >>>>> This shouldn't be needed, you can retrieve the clock frequency at
+> >>>>> runtime from the clock source.
+> >>>> 
+> >>>> Unless the clock source is a fixed one! What if the clock source comes from
+> >>>> SoC? We need to set the rate, right?
+> >>> 
+> >>> In that case, if you want to hardcode the clock in DT, the preferred way
+> >>> is to use the assigned-clock-rates property. Otherwise, if the driver
+> >>> requires a specific clock frequency, it's better to hardcode it in the
+> >>> driver itself. In this specific case, I think assigned-clock-rates is
+> >>> best as the device can support three different clock frequencies.
+> >> 
+> >> Just note that if ACPI support is added to the sensor driver, you'll need
+> >> the clock-frequency property again, for that's the only way how the driver
+> >> will get the clock frequency.
+> > 
+> > Why is so ? Why can't we implement of assigned-clock-rates for ACPI ?
+> 
+> ACPI doesn't deal with clocks as such. So there's also no ACPI defined way
+> to access clocks specifically, including the frequency --- instead the
+> clock is controlled by an AML methods which implement power on and off
+> sequences for the device.
 
-thanks
--john
+It's a shortcoming of ACPI, which should be addressed at the ACPI level.
+We shouldn't polute the DT bindings with a clock-frequency property for
+this reason.
+
+-- 
+Regards,
+
+Laurent Pinchart
