@@ -2,96 +2,157 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8571BCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1333CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59BD42084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:06:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="hvDu86LF"
+	by mail.kernel.org (Postfix) with ESMTP id 7E2D02084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbfKDUGs (ORCPT
+        id S1729272AbfKDUIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 15:06:48 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:44459 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728377AbfKDUGs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 15:06:48 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 9209B8365A;
-        Tue,  5 Nov 2019 09:06:43 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1572898003;
-        bh=QjHD60cXYGA5rwMrtKgTa0FglpM0ZLFA0lhaMxRCaA0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=hvDu86LFPoy8xj/nPMCjWh3hLLJi9h8IsOfWCaoDVTzeB9pO2ok01VlECOdYIn/Om
-         RB6BTNTNDbN5GkVnGwKl+C2V0ox0bRsQKEeH1k8pgNtsuwbsq9Z2S/XpYWpZ2sfN37
-         YvlIuWoCC4Om3Em9L6FpDVNC4scfUdKg1LKMKZFoo7PvdeQHdeZ21AIanJCmDOsQvF
-         4Wjlk/MEkkirsKgXzIy/QBWg41XsEUzNoFMxNpjIIK69loPzXr3cFouQViLT9R7bv/
-         OsMqjNysZSArxrvctcb7pQJ1gwcAtRJ0IMXcsuZ0min32EckNqM6MEFzOeOR/SYDH6
-         rUJ3GeGJAqBQg==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5dc084d40000>; Tue, 05 Nov 2019 09:06:44 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Tue, 5 Nov 2019 09:06:43 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Tue, 5 Nov 2019 09:06:43 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: spi-mem and gpio chipselects
-Thread-Topic: spi-mem and gpio chipselects
-Thread-Index: AQHVkqe/99KPV78Qa0mRy221SIO+EKd6HAYAgAB7fAA=
-Date:   Mon, 4 Nov 2019 20:06:42 +0000
-Message-ID: <039edb7cdd9114ad7a14e27f869db6c85d756418.camel@alliedtelesis.co.nz>
-References: <cbe69f5457c4dd1c2cc96a247c6c6fca61c0d43c.camel@alliedtelesis.co.nz>
-         <20191104124444.GB5238@sirena.co.uk>
-In-Reply-To: <20191104124444.GB5238@sirena.co.uk>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:d0c9:dea8:da1e:f79e]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CBD24C53A2CF2E449E990610426137AD@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Mon, 4 Nov 2019 15:08:55 -0500
+Received: from mga07.intel.com ([134.134.136.100]:12893 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728332AbfKDUIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 15:08:55 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 12:08:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,268,1569308400"; 
+   d="scan'208";a="376445080"
+Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.251.83.74]) ([10.251.83.74])
+  by orsmga005.jf.intel.com with ESMTP; 04 Nov 2019 12:08:47 -0800
+Subject: Re: [PATCH 13/14] soundwire: intel: free all resources on hw_free()
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
+        gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20191023212823.608-1-pierre-louis.bossart@linux.intel.com>
+ <20191023212823.608-14-pierre-louis.bossart@linux.intel.com>
+From:   Cezary Rojewski <cezary.rojewski@intel.com>
+Message-ID: <42403ea0-e337-81b6-f11a-2a32c1473750@intel.com>
+Date:   Mon, 4 Nov 2019 21:08:45 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191023212823.608-14-pierre-louis.bossart@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTExLTA0IGF0IDEyOjQ0ICswMDAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiBP
-biBNb24sIE5vdiAwNCwgMjAxOSBhdCAxMjozNToyNEFNICswMDAwLCBDaHJpcyBQYWNraGFtIHdy
-b3RlOg0KPiANCj4gPiBJJ20gd29ya2luZyBvbiBhIHBsYXRmb3JtIHRoYXQgaGFzIGEgc2xpZ2h0
-bHkgY29tcGxpY2F0ZWQgc2NoZW1lIGZvcg0KPiA+IFNQSSBjaGlwLXNlbGVjdHMgdXNpbmcgZ3Bp
-b3NbMV0uIFRoZSBzcGkgY29udHJvbGxlciBkcml2ZXIgaW4gdGhpcyBjYXNlDQo+ID4gc3VwcG9y
-dHMgdGhlIHNwaS1tZW0gb3BlcmF0aW9ucyB3aGljaCBhcHBlYXIgdG8gYnlwYXNzIHRoZSBnZW5l
-cmljDQo+ID4gc3BpX3NldF9jcygpLg0KPiA+IFdvdWxkIHRoZXJlIGJlIGFueSBoYXJtIGluIGFk
-ZGluZyBjYWxscyB0byBzcGlfc2V0X2NzKCkgdG8gc3BpLW1lbS5jPw0KPiA+IE5haXZlbHkgc3Bp
-X21lbV9hY2Nlc3Nfc3RhcnQoKSBhbmQgc3BpX21lbV9hY2Nlc3NfZW5kKCkgc2VlbSBsaWtlDQo+
-ID4gY29udmVuaWVudCBwbGFjZXMgdG8gc3RhcnQuDQo+IA0KPiBUaGF0J3Mgb25seSBnb2luZyB0
-byB3b3JrIGluIGNhc2VzIHdoZXJlIHRoZSBjb250cm9sbGVyIHRyYW5zbGF0ZXMNCj4gdGhpbmdz
-IGludG8gYSBzaW5nbGUgU1BJIG9wZXJhdGlvbiBvbiB0aGUgZmxhc2ggd2hpY2ggSSdtIG5vdCBz
-dXJlIGlzDQo+IGFsd2F5cyBnb2luZyB0byBiZSB0aGUgY2FzZS4gIFdlJ2QgbmVlZCBhIHdheSB0
-byBndWFyYW50ZWUgdGhhdCB0aGUNCj4gY29udHJvbGxlciBpcyBnb2luZyB0byBkbyB0aGF0IGlu
-IG9yZGVyIHRvIGF2b2lkIGRhdGEgY29ycnVwdGlvbiBpc3N1ZXMuDQoNCkluIG15IHBhcnRpY3Vs
-YXIgY2FzZSAoc3BpLWJjbS1xc3BpLmMpIGJjbV9xc3BpX2JzcGlfZXhlY19tZW1fb3AoKSBkb2Vz
-DQpzZWVtIHRvIGFzc2VydCB0aGUgbmF0aXZlIGNoaXAtc2VsZWN0IHRoZW4gZG8gaXQncyBvcGVy
-YXRpb24uIEFzIEkNCnVuZGVyc3RhbmQgdGhlIHdhaXRfZm9yX2NvbXBsZXRpb25fdGltZW91dCgp
-IHdpbGwgc2NoZWR1bGUgc28gb3RoZXINCnRhc2tzIG1heSBydW4gYnV0IHNwaV9tZW1fYWNjZXNz
-X3N0YXJ0KCkgaGFzIHRha2VuIGFuIGlvX211dGV4IHNvDQphbnl0aGluZyB0aGF0IGFjY2Vzc2Vz
-IHRoYXQgc3BpIGJ1cyB3aWxsIGJsb2NrLg0K
+On 2019-10-23 23:28, Pierre-Louis Bossart wrote:
+> Make sure all calls to the SoundWire stream API are done and involve
+> callback
+> 
+> Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>   drivers/soundwire/intel.c | 40 +++++++++++++++++++++++++++++++++++++--
+>   1 file changed, 38 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+> index af24fa048add..cad1c0b64ee3 100644
+> --- a/drivers/soundwire/intel.c
+> +++ b/drivers/soundwire/intel.c
+> @@ -548,6 +548,25 @@ static int intel_params_stream(struct sdw_intel *sdw,
+>   	return -EIO;
+>   }
+>   
+> +static int intel_free_stream(struct sdw_intel *sdw,
+> +			     struct snd_pcm_substream *substream,
+> +			     struct snd_soc_dai *dai,
+> +			     int link_id)
+> +{
+> +	struct sdw_intel_link_res *res = sdw->link_res;
+> +	struct sdw_intel_stream_free_data free_data;
+> +
+> +	free_data.substream = substream;
+> +	free_data.dai = dai;
+> +	free_data.link_id = link_id;
+> +
+> +	if (res->ops && res->ops->free_stream && res->dev)
+
+Can res->dev even be null?
+
+> +		return res->ops->free_stream(res->dev,
+> +					     &free_data);
+> +
+> +	return 0;
+> +}
+> +
+>   /*
+>    * bank switch routines
+>    */
+> @@ -816,6 +835,7 @@ static int
+>   intel_hw_free(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
+>   {
+>   	struct sdw_cdns *cdns = snd_soc_dai_get_drvdata(dai);
+> +	struct sdw_intel *sdw = cdns_to_intel(cdns);
+>   	struct sdw_cdns_dma_data *dma;
+>   	int ret;
+>   
+> @@ -823,12 +843,28 @@ intel_hw_free(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
+>   	if (!dma)
+>   		return -EIO;
+>   
+> +	ret = sdw_deprepare_stream(dma->stream);
+> +	if (ret) {
+> +		dev_err(dai->dev, "sdw_deprepare_stream: failed %d", ret);
+> +		return ret;
+> +	}
+> +
+
+I understand that you want to be transparent to caller with failure 
+reasons via dev_err/_warn. However, sdw_deprepare_stream already dumps 
+all the logs we need. The same applies for most of the other calls (and 
+not just in this patch..).
+
+Do we really need to be that verbose? Maybe just agree on caller -or- 
+subject being the source for the messaging, align existing usages and 
+thus preventing further duplication?
+
+Not forcing anything, just asking for your opinion on this.
+
+>   	ret = sdw_stream_remove_master(&cdns->bus, dma->stream);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+>   		dev_err(dai->dev, "remove master from stream %s failed: %d\n",
+>   			dma->stream->name, ret);
+> +		return ret;
+> +	}
+>   
+> -	return ret;
+> +	ret = intel_free_stream(sdw, substream, dai, sdw->instance);
+> +	if (ret < 0) {
+> +		dev_err(dai->dev, "intel_free_stream: failed %d", ret);
+> +		return ret;
+> +	}
+> +
+> +	sdw_release_stream(dma->stream);
+> +
+> +	return 0;
+>   }
+
+Given the structure of this function, shouldn't the generic flow be 
+handled by upper layer i.e. part of sdw core?. Apart from 
+intel_free_stream, the rest looks pretty generic to me and this sole 
+call could easily be extracted into ops.
+
+>   
+>   static void intel_shutdown(struct snd_pcm_substream *substream,
+> 
