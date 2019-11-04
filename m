@@ -2,120 +2,111 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E41CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F50ECA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6B932089C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B4CE2089C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:44:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FO4ChYOq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y6LeMHRh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729630AbfKDSnV (ORCPT
+        id S1729540AbfKDSo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 13:43:21 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36298 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728377AbfKDSnV (ORCPT
+        Mon, 4 Nov 2019 13:44:28 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39138 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728377AbfKDSo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 13:43:21 -0500
-Received: by mail-pf1-f196.google.com with SMTP id v19so12936376pfm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 10:43:21 -0800 (PST)
+        Mon, 4 Nov 2019 13:44:27 -0500
+Received: by mail-oi1-f193.google.com with SMTP id v138so15057626oif.6
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 10:44:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cyveooZxsbFfSYt42gpZZRf9Ppul5ahlN5Luw1xLEm4=;
-        b=FO4ChYOqG1oNRDV8SFJM1O6g1rKgs4mD1S0mwnjOEy5e6gznsdmb5Jbzut8qZl6Npe
-         nqbw1ZRdW9fKLWI5Fl5LwloHqCuMW7rAUEVfq0trD5a+642EDknbaeqZIRAT5A62TOuR
-         nIucVLMqEbDF1rT+VQ24c/BaY4GgmhPZAGiq+fG8zGyDtzg2xmJu/a8ZacMBFkjSqeEd
-         rqbgql8j3pybZYsun81OVSIhtsL3ptEH0Zd2G0xjPuoDh0Cx1vRULjqZYELe6VPVwPlG
-         Yd7sLRbWek0Zz+j+/3c8/eyRXvV9+bz1a+94RsFKowibI+XSM/pcD6UMqaoe5Z4qqPnh
-         LYsA==
+        bh=fIHHPzEIZlxZwO4uYb9AqkuWkKRYCxaoO1dAlVnypSo=;
+        b=y6LeMHRh2X/z21iqd/OGrTPukcGzBWE5r4FxdYdWoVA8CFVwZOIxhdvmEZSURcMzmx
+         uc+M4VSP8ZS0sELWbzJA6eNK4donfuHDPCvgAA78pstFLaYRmvvjyzGW9J2MW5IThNXo
+         bxjVViJM2JQT5/fW8dITPwhn3i0NmulLhCQM6/gIO52gi+35pkZZHIlYUwJTDkgxV7a7
+         1YImDoOZXyRtPbgD0w5dTr9rdG4O3zVVfXBy5mzD0fmN28prQtOHIqx3tjus+0INvDao
+         Lr020YlGcq7+M8B5ABg1Ob3hmMVVbItFKeFMhA/R6RaXqaucReeme2bYh34FtPUgiDE/
+         WI+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cyveooZxsbFfSYt42gpZZRf9Ppul5ahlN5Luw1xLEm4=;
-        b=tSLD50PlZzQe51ye3wpF3efOFJRBdXOOFZ/nEDClhic/FCTFkGV1XHtNrvOj+RVoSo
-         HvOXEMg0UdztTUa2i4ZzrRWFjHxWlTOkJ1fT+PhqucSKDmmXNS2efnGNcrUIiMZeAvlq
-         QSB073dEQ/xE7maoSqdKDXLRAHqcsw7rEPpnqIZkN2XlqaQqN2eUT8vTicmSJFxN7NcG
-         hp5DTcCrniqLmwpq1ithhN1em8a5AC8ijsjQ+hfG6P1h3Zj+jbH20HySZzIylaM4EVz6
-         iJ1K5XJAiC0LLh1+6Lgd/KS52itMLIG4ZEzaQEnO31YwDF81uoWK/wOrsx180GORWTAz
-         WEHw==
-X-Gm-Message-State: APjAAAWtXOoPNGaI+5ZWHcAuKb7DozqsQ/j80LoK5czucR/LTCAULC4o
-        NHpzkkqiBz1D67zRLtudeOBwUWUKtrz409IIuOZr1w==
-X-Google-Smtp-Source: APXvYqzuga0pKYHVfkPxXV2Lqd6Ui/1l1fMs3gogk5Nnz/GzfH+hGl3UgXjsw4DiCvAlC8VU05yqiG01ckGdVV3QW3g=
-X-Received: by 2002:a63:d70e:: with SMTP id d14mr31076676pgg.10.1572893000068;
- Mon, 04 Nov 2019 10:43:20 -0800 (PST)
+        bh=fIHHPzEIZlxZwO4uYb9AqkuWkKRYCxaoO1dAlVnypSo=;
+        b=tP1tMsKuMwSdYfeAy//UjUlYPYjZSgw0YdIVPta3bGG1xU3NqwK4/O9EQYoZR5mUj2
+         it7Xdz5Kaokg/G6lv58P9+HBmCk+Q3NF1dJSSZR673GQ+q8b8isLFKtc/aGQ6M9rSA7y
+         xsg4w1DtRRChb3BUmdlkQGL+3BLF718IHEtBzcjrBH2yPETfSrUJVgoe/s10B2YxOTsE
+         gmfOt3NRb1XBlvhtxYL0703/67fqx9JUsFf8TNrnOgUAd49vitlIWOJOtPNXs2Cg5QE7
+         AIKF5YITiKwzrQEt3gIfcesmdhwq3j30hQ5KjASWW3keoZaH3HQ6M1SAR+8p/Aj9QOk6
+         eOZA==
+X-Gm-Message-State: APjAAAUTyBzTZP3Wcb/ZebOWGrqerFOrjXuDnT6C+cQuKj4BrLz5D49h
+        A6IjCghgUaZ8PQ+Mosa68Sh/ksBdXFUWA+OBMnEI8A==
+X-Google-Smtp-Source: APXvYqwudkIT7BfyYubS2+BnLFVqC9kiJ2G6htJbTxypq0RyTqfsZr+adntbCigCob0HtC2BcOgG9Tp04w3kdvzLYpI=
+X-Received: by 2002:aca:c64c:: with SMTP id w73mr398080oif.161.1572893066616;
+ Mon, 04 Nov 2019 10:44:26 -0800 (PST)
 MIME-Version: 1.0
-References: <20191030174429.248697-1-ndesaulniers@google.com> <fa4e28a9a16c54319916be005159e250@agner.ch>
-In-Reply-To: <fa4e28a9a16c54319916be005159e250@agner.ch>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 4 Nov 2019 10:43:08 -0800
-Message-ID: <CAKwvOd==f801+AfJWwrO3tbSRoizCa2HV7pViOqedJbipN9nOw@mail.gmail.com>
-Subject: Re: [PATCH] arm: replace Sun/Solaris style flag on section directive
-To:     Stefan Agner <stefan@agner.ch>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Fangrui Song <maskray@google.com>,
-        Jian Cai <jiancai@google.com>,
-        Peter Smith <peter.smith@linaro.org>,
-        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Roy Franz <rfranz@marvell.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Allison Randal <allison@lohutok.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Sonny Rao <sonnyrao@chromium.org>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20191101214238.78015-1-john.stultz@linaro.org>
+ <20191101214238.78015-2-john.stultz@linaro.org> <20191104102410.66wlyoln5ahlgkem@DESKTOP-E1NTVVP.localdomain>
+In-Reply-To: <20191104102410.66wlyoln5ahlgkem@DESKTOP-E1NTVVP.localdomain>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 4 Nov 2019 10:44:15 -0800
+Message-ID: <CALAqxLV7sB+gN1FNhhaiE9FXmaFv1TNsmKxD1Xctab6fTERA4w@mail.gmail.com>
+Subject: Re: [PATCH v14 1/5] dma-buf: Add dma-buf heaps framework
+To:     Brian Starkey <Brian.Starkey@arm.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        "Andrew F. Davis" <afd@ti.com>, Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Dave Airlie <airlied@gmail.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        nd <nd@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 2:05 PM Stefan Agner <stefan@agner.ch> wrote:
->
-> Hi Nick,
->
-> On 2019-10-30 18:44, Nick Desaulniers wrote:
-> > It looks like a section directive was using "Solaris style" to declare
-> > the section flags. Replace this with the GNU style so that Clang's
-> > integrated assembler can assemble this directive.
+On Mon, Nov 4, 2019 at 2:24 AM Brian Starkey <Brian.Starkey@arm.com> wrote:
+> On Fri, Nov 01, 2019 at 09:42:34PM +0000, John Stultz wrote:
+> > From: "Andrew F. Davis" <afd@ti.com>
 > >
-> > The modified instances were identified via:
-> > $ ag \\.section | grep \#
-
-Submitted: https://www.armlinux.org.uk/developer/patches/viewpatch.php?id=8933/1
-
+> > Additionally should the interface grow in the future, we have a
+> > DMA_HEAP_IOC_GET_FEATURES ioctl which can return future feature
+> > flags.
 >
-> I actually have the *very same* patch on my tree, just did not cleanup
-> the commit message and submit :-(
+> The userspace patch doesn't use this - and there's no indication of
+> what it's intended to allow in the future. I missed the discussion
+> about it, do you have a link?
 
-Send in those patches!
+Yea. Sorry, It was feedback I got via IRC. If your curious the irc log
+can be found here:
+  https://people.freedesktop.org/~cbrill/dri-log/?channel=dri-devel&highlight_names=&date=2019-10-30&show_html=true
 
->
-> Anyways, this looks good to me:
->
-> Reviewed-by: Stefan Agner <stefan@agner.ch>
+> The new zeroing stuff all looks good to me - so wrt. that you can add
+> back my r-b; would still like to get some clarification on the
+> get_features, though.
 
+From Daniel's feedback it sounds like I'll drop the empty get_features
+ioctl then.
 
-Thanks all for those reviews.
--- 
-Thanks,
-~Nick Desaulniers
+> Couple of typos below.
+
+Apologies for my bad spelling! Thanks for the continued attention and review!
+-john
