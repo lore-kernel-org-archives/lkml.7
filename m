@@ -2,52 +2,65 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49625CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E12CCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6DF218BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63626217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904304;
-	bh=a9psc21UF2hLKX5untKHDutoPlCamDd27XADWrv/udc=;
+	s=default; t=1572904311;
+	bh=7SOk7tiTVGhBb6vH7JX2MPjaoKS77atUxG4Pvnesje8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WEtl9Dm3OvhVnQPJqonaBaGly6d/WFdAkI30LozkP7f3WI4nrYGz6bStLVuoaBnBC
-	 yXuDGfTHzDesZS0muXitaDUusYTdtUrgci171S2UUbyf5NTKKMLaNPiqwdo+740yuC
-	 Tg+xHAUx7FfEVFuo3mXI/qT+V9FjvshMsSMSRnhg=
+	b=JPl0ZH+Squ7ExchbpBKwOFgNEXD8KnMdkW7z5jqsHQiIOIWwhj4vz546v+cPmJC7T
+	 ESr5228y4B/96PwWXqUWD09ZaAHpWi5R9hIoyfHe8nA5YrQQYYw8eJBAi3A8NxLcNp
+	 RaR0pMVQ7QvDTUCX6n4s6aUupkF1F6iTpylmr5vA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730588AbfKDVvm (ORCPT
+        id S1730621AbfKDVvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:51:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44606 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:51:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730580AbfKDVvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:51:37 -0500
+        id S1730586AbfKDVvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:51:42 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDCA6217F4;
-        Mon,  4 Nov 2019 21:51:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83966217F4;
+        Mon,  4 Nov 2019 21:51:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904296;
-        bh=a9psc21UF2hLKX5untKHDutoPlCamDd27XADWrv/udc=;
+        s=default; t=1572904301;
+        bh=7SOk7tiTVGhBb6vH7JX2MPjaoKS77atUxG4Pvnesje8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bHQogHPhj7FxmdJw9ByTmCu60RZ43Um8ZHzE1ofK3CKjA8z4lRMvSIMb7CW3TEvZO
-         x50QALEsvxvmJ7ZnTf8Bmjgd8r4GF1Lh2bvAxNWx09NMplQhj9T6WYHEm5hUM8gsgv
-         0CbTk3bNlv3J9UTTYLqhN5scqAhDMN0lvlia+HBc=
+        b=Yhsn17oKveR0alrrhaEivNSxqTyjDgd7CkVZs5Q8i2rAT0oKv2LOveBPgel/oGBpU
+         8+nWgG79agc0GhZPFJj34cp6syBol9eX5Vz+gjqlGYXDTrICDBuxcNE1DsceZ6qZSj
+         8lrljci4C2IAvd1OVnoaTaMFJ3JSxte6gaFUePrk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 55/62] sch_netem: fix rcu splat in netem_enqueue()
-Date:   Mon,  4 Nov 2019 22:45:17 +0100
-Message-Id: <20191104211956.516768563@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Dave Young <dyoung@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lyude Paul <lyude@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Octavian Purdila <octavian.purdila@intel.com>,
+        Peter Jones <pjones@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Scott Talbert <swt@techie.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 21/62] efi/cper: Fix endianness of PCIe class code
+Date:   Mon,  4 Nov 2019 22:44:43 +0100
+Message-Id: <20191104211921.182137135@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -60,102 +73,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit 159d2c7d8106177bd9a986fd005a311fe0d11285 upstream.
+[ Upstream commit 6fb9367a15d1a126d222d738b2702c7958594a5f ]
 
-qdisc_root() use from netem_enqueue() triggers a lockdep warning.
+The CPER parser assumes that the class code is big endian, but at least
+on this edk2-derived Intel Purley platform it's little endian:
 
-__dev_queue_xmit() uses rcu_read_lock_bh() which is
-not equivalent to rcu_read_lock() + local_bh_disable_bh as far
-as lockdep is concerned.
+    efi: EFI v2.50 by EDK II BIOS ID:PLYDCRB1.86B.0119.R05.1701181843
+    DMI: Intel Corporation PURLEY/PURLEY, BIOS PLYDCRB1.86B.0119.R05.1701181843 01/18/2017
 
-WARNING: suspicious RCU usage
-5.3.0-rc7+ #0 Not tainted
------------------------------
-include/net/sch_generic.h:492 suspicious rcu_dereference_check() usage!
+    {1}[Hardware Error]:   device_id: 0000:5d:00.0
+    {1}[Hardware Error]:   slot: 0
+    {1}[Hardware Error]:   secondary_bus: 0x5e
+    {1}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x2030
+    {1}[Hardware Error]:   class_code: 000406
+                                       ^^^^^^ (should be 060400)
 
-other info that might help us debug this:
-
-rcu_scheduler_active = 2, debug_locks = 1
-3 locks held by syz-executor427/8855:
- #0: 00000000b5525c01 (rcu_read_lock_bh){....}, at: lwtunnel_xmit_redirect include/net/lwtunnel.h:92 [inline]
- #0: 00000000b5525c01 (rcu_read_lock_bh){....}, at: ip_finish_output2+0x2dc/0x2570 net/ipv4/ip_output.c:214
- #1: 00000000b5525c01 (rcu_read_lock_bh){....}, at: __dev_queue_xmit+0x20a/0x3650 net/core/dev.c:3804
- #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
- #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: __dev_xmit_skb net/core/dev.c:3502 [inline]
- #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: __dev_queue_xmit+0x14b8/0x3650 net/core/dev.c:3838
-
-stack backtrace:
-CPU: 0 PID: 8855 Comm: syz-executor427 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- lockdep_rcu_suspicious+0x153/0x15d kernel/locking/lockdep.c:5357
- qdisc_root include/net/sch_generic.h:492 [inline]
- netem_enqueue+0x1cfb/0x2d80 net/sched/sch_netem.c:479
- __dev_xmit_skb net/core/dev.c:3527 [inline]
- __dev_queue_xmit+0x15d2/0x3650 net/core/dev.c:3838
- dev_queue_xmit+0x18/0x20 net/core/dev.c:3902
- neigh_hh_output include/net/neighbour.h:500 [inline]
- neigh_output include/net/neighbour.h:509 [inline]
- ip_finish_output2+0x1726/0x2570 net/ipv4/ip_output.c:228
- __ip_finish_output net/ipv4/ip_output.c:308 [inline]
- __ip_finish_output+0x5fc/0xb90 net/ipv4/ip_output.c:290
- ip_finish_output+0x38/0x1f0 net/ipv4/ip_output.c:318
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip_mc_output+0x292/0xf40 net/ipv4/ip_output.c:417
- dst_output include/net/dst.h:436 [inline]
- ip_local_out+0xbb/0x190 net/ipv4/ip_output.c:125
- ip_send_skb+0x42/0xf0 net/ipv4/ip_output.c:1555
- udp_send_skb.isra.0+0x6b2/0x1160 net/ipv4/udp.c:887
- udp_sendmsg+0x1e96/0x2820 net/ipv4/udp.c:1174
- inet_sendmsg+0x9e/0xe0 net/ipv4/af_inet.c:807
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:657
- ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
- __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
- __do_sys_sendmmsg net/socket.c:2442 [inline]
- __se_sys_sendmmsg net/socket.c:2439 [inline]
- __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2439
- do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Jerry Snitselaar <jsnitsel@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: Octavian Purdila <octavian.purdila@intel.com>
+Cc: Peter Jones <pjones@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Scott Talbert <swt@techie.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Cc: linux-integrity@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191002165904.8819-2-ard.biesheuvel@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/sch_generic.h |    5 +++++
- net/sched/sch_netem.c     |    2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/firmware/efi/cper.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/sch_generic.h
-+++ b/include/net/sch_generic.h
-@@ -276,6 +276,11 @@ static inline struct Qdisc *qdisc_root(c
- 	return q;
- }
- 
-+static inline struct Qdisc *qdisc_root_bh(const struct Qdisc *qdisc)
-+{
-+	return rcu_dereference_bh(qdisc->dev_queue->qdisc);
-+}
-+
- static inline struct Qdisc *qdisc_root_sleeping(const struct Qdisc *qdisc)
- {
- 	return qdisc->dev_queue->qdisc_sleeping;
---- a/net/sched/sch_netem.c
-+++ b/net/sched/sch_netem.c
-@@ -475,7 +475,7 @@ static int netem_enqueue(struct sk_buff
- 	 * skb will be queued.
- 	 */
- 	if (count > 1 && (skb2 = skb_clone(skb, GFP_ATOMIC)) != NULL) {
--		struct Qdisc *rootq = qdisc_root(sch);
-+		struct Qdisc *rootq = qdisc_root_bh(sch);
- 		u32 dupsave = q->duplicate; /* prevent duplicating a dup... */
- 
- 		q->duplicate = 0;
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index f40f7df4b7344..c0e54396f2502 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -375,7 +375,7 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
+ 		printk("%s""vendor_id: 0x%04x, device_id: 0x%04x\n", pfx,
+ 		       pcie->device_id.vendor_id, pcie->device_id.device_id);
+ 		p = pcie->device_id.class_code;
+-		printk("%s""class_code: %02x%02x%02x\n", pfx, p[0], p[1], p[2]);
++		printk("%s""class_code: %02x%02x%02x\n", pfx, p[2], p[1], p[0]);
+ 	}
+ 	if (pcie->validation_bits & CPER_PCIE_VALID_SERIAL_NUMBER)
+ 		printk("%s""serial number: 0x%04x, 0x%04x\n", pfx,
+-- 
+2.20.1
+
 
 
