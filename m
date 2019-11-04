@@ -2,138 +2,95 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9E6CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA3BCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA9E420663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:52:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aLtOeSff"
+	by mail.kernel.org (Postfix) with ESMTP id 68E5A20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729362AbfKDRwM (ORCPT
+        id S1729456AbfKDRyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:52:12 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38584 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbfKDRwM (ORCPT
+        Mon, 4 Nov 2019 12:54:20 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38028 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728346AbfKDRyT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:52:12 -0500
-Received: by mail-pl1-f194.google.com with SMTP id w8so7913944plq.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 09:52:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:from:subject:to:user-agent:date;
-        bh=3CHrSHD37ZopVTCrhzgKR9E8ooKOmK/8OxMVDS6vwuI=;
-        b=aLtOeSffc2ESdeStgh0gvZWVGC4SVaxngt6L3IAywqqZTvFkn+X676dv17c4L6eGba
-         SnLWjpu0qWDl8sFS8//6SiqVNR9FxZ1NRQCXVSYm1+GH1eGC3imZpqxJJVpp1zDsB/n0
-         qT2qm86muT+AU+DwWe6nV0XwIj9ZbPbZlOtyI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:from:subject:to
-         :user-agent:date;
-        bh=3CHrSHD37ZopVTCrhzgKR9E8ooKOmK/8OxMVDS6vwuI=;
-        b=jp5BmogbOD0H7O1Hq+doPPypxNhW6hOeMmJ0eACzHeM9tqDNZQFgmBAX7puHUeaTZa
-         K2RfQTzn04bUif83PPoOCmdv8NEkGKa8Kta8k6GtkOcjb0q3az3OSoP+cZGVWuBYFs+W
-         5Min/3+h9vUUYDbfZDi+HGEPwu1uK8VwcXhy26I1kUja9T7+d7w/xX21aI1gf7npxR1T
-         vZCRbC4AGj1xPxX7S/kAwkIZoheCTYnt2k1OP2ySo+yP6yPsQYcUXNRJHuIh+R33AaXF
-         CNZ3Pwhf730Tms7RKQK9dttQ6qVcF8rw2TteepcwKGD4FfPmEg+9tmGqZMwWYMcTjJH9
-         3Q4g==
-X-Gm-Message-State: APjAAAWUaTEcpEaYbfSkGYGdXyefgBcajkjlJD/4VJLAjbBFoMf5bEpA
-        39fNOKVCePSMHZ+TjUkh7XaqBA==
-X-Google-Smtp-Source: APXvYqxrYy0bhV9BstiDpY6WoRWDrnAIP8w3jFR5/bWWHdykonSQNVFdZDTiO5WNLjo1Bbf3S55xnw==
-X-Received: by 2002:a17:902:16b:: with SMTP id 98mr28484214plb.154.1572889931654;
-        Mon, 04 Nov 2019 09:52:11 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id f2sm14089155pfg.48.2019.11.04.09.52.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 09:52:11 -0800 (PST)
-Message-ID: <5dc0654b.1c69fb81.5f215.8c24@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 4 Nov 2019 12:54:19 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iRgYR-0002aA-Tt; Mon, 04 Nov 2019 18:54:15 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 974501C0017;
+        Mon,  4 Nov 2019 18:54:15 +0100 (CET)
+Date:   Mon, 04 Nov 2019 17:54:15 -0000
+From:   "tip-bot2 for Geert Uytterhoeven" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] clocksource/drivers/timer-of: Convert last
+ full_name to %pOF
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191016144747.29538-2-geert+renesas@glider.be>
+References: <20191016144747.29538-2-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1572591543-15501-1-git-send-email-kgunda@codeaurora.org>
-References: <1572591543-15501-1-git-send-email-kgunda@codeaurora.org>
-Cc:     Kiran Gunda <kgunda@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH V1] mfd: qcom-spmi-pmic: Add support for pm6150 and pm6150l
-To:     Andy Gross <agross@kernel.org>,
-        Kiran Gunda <kgunda@codeaurora.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rnayak@codeaurora.org
-User-Agent: alot/0.8.1
-Date:   Mon, 04 Nov 2019 09:52:10 -0800
+Message-ID: <157289005530.29376.16415534797520052620.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Kiran Gunda (2019-10-31 23:59:03)
-> Add the compatibles and PMIC ids for pm6150 and pm6150l PMICs
-> found on SC7180 based platforms.
->=20
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt | 2 ++
->  drivers/mfd/qcom-spmi-pmic.c                             | 4 ++++
->  2 files changed, 6 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/D=
-ocumentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> index 1437062..b5fc64e 100644
-> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> @@ -32,6 +32,8 @@ Required properties:
->                     "qcom,pm8998",
->                     "qcom,pmi8998",
->                     "qcom,pm8005",
-> +                  "qcom,pm6150",
-> +                  "qcom,pm6150l",
+The following commit has been merged into the timers/core branch of tip:
 
-Please sort on compatible string
+Commit-ID:     ccb80012481fd8d16c7557c00bb54c42103eef9d
+Gitweb:        https://git.kernel.org/tip/ccb80012481fd8d16c7557c00bb54c42103eef9d
+Author:        Geert Uytterhoeven <geert+renesas@glider.be>
+AuthorDate:    Wed, 16 Oct 2019 16:47:44 +02:00
+Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
+CommitterDate: Mon, 04 Nov 2019 10:38:46 +01:00
 
->                     or generalized "qcom,spmi-pmic".
->  - reg:             Specifies the SPMI USID slave address for this device.
->                     For more information see:
-> diff --git a/drivers/mfd/qcom-spmi-pmic.c b/drivers/mfd/qcom-spmi-pmic.c
-> index e8fe705..d916aa8 100644
-> --- a/drivers/mfd/qcom-spmi-pmic.c
-> +++ b/drivers/mfd/qcom-spmi-pmic.c
-> @@ -34,6 +34,8 @@
->  #define PM8998_SUBTYPE         0x14
->  #define PMI8998_SUBTYPE                0x15
->  #define PM8005_SUBTYPE         0x18
-> +#define PM6150L_SUBTYPE                0x27
-> +#define PM6150_SUBTYPE         0x28
+clocksource/drivers/timer-of: Convert last full_name to %pOF
 
-And on macro name here.
+Commit 469869d18a886e04 ("clocksource: Convert to using %pOF instead of
+full_name") converted all but the one just added before by commit
+32f2fea6e77e64cd ("clocksource/drivers/timer-of: Handle
+of_irq_get_byname() result correctly").
 
-> =20
->  static const struct of_device_id pmic_spmi_id_table[] =3D {
->         { .compatible =3D "qcom,spmi-pmic", .data =3D (void *)COMMON_SUBT=
-YPE },
-> @@ -53,6 +55,8 @@
->         { .compatible =3D "qcom,pm8998",    .data =3D (void *)PM8998_SUBT=
-YPE },
->         { .compatible =3D "qcom,pmi8998",   .data =3D (void *)PMI8998_SUB=
-TYPE },
->         { .compatible =3D "qcom,pm8005",    .data =3D (void *)PM8005_SUBT=
-YPE },
-> +       { .compatible =3D "qcom,pm6150l",   .data =3D (void *)PM6150L_SUB=
-TYPE },
-> +       { .compatible =3D "qcom,pm6150",    .data =3D (void *)PM6150_SUBT=
-YPE },
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20191016144747.29538-2-geert+renesas@glider.be
+---
+ drivers/clocksource/timer-of.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-And compatible here.
-
->         { }
+diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
+index d8c2bd4..3843942 100644
+--- a/drivers/clocksource/timer-of.c
++++ b/drivers/clocksource/timer-of.c
+@@ -55,8 +55,8 @@ static __init int timer_of_irq_init(struct device_node *np,
+ 	if (of_irq->name) {
+ 		of_irq->irq = ret = of_irq_get_byname(np, of_irq->name);
+ 		if (ret < 0) {
+-			pr_err("Failed to get interrupt %s for %s\n",
+-			       of_irq->name, np->full_name);
++			pr_err("Failed to get interrupt %s for %pOF\n",
++			       of_irq->name, np);
+ 			return ret;
+ 		}
+ 	} else	{
