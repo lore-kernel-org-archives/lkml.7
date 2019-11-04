@@ -2,78 +2,128 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4648CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 734D3CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78FAE206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:53:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tEW4v9A/"
+	by mail.kernel.org (Postfix) with ESMTP id 51971206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:56:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730051AbfKDXxn (ORCPT
+        id S1730026AbfKDX4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 18:53:43 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34950 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729714AbfKDXxn (ORCPT
+        Mon, 4 Nov 2019 18:56:24 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:39263 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729862AbfKDX4X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 18:53:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hKQIOkvsEVy33JAGixmFXbJUTJzULvc42wk0hYwJ+hI=; b=tEW4v9A/ErwCu+FB/NjUEr8VU
-        Qea9oQmy5T7hF2x7dZiQkO1vmZjaLTBfE2dhrF7txTiinFDZ/ZyfVp2Gp9iUbuZRYYfogTmVg/cK/
-        5kc3UlQ4qPKI9VCRgiPu9WUghW6yao3Ex3Ybw49A2OZzB6Lq/PpWc9rrsQs4cBnnADF5MKtbAOPZN
-        PbaAWqAFj0iDYudecR62IvYI3RqkvHYgTSXnsSj0Qxaq4CImGzBmlDNmiM/Z99Gkym+cWcbwyJnoG
-        FuLryGYuGlBiQeoAGLYL76OZYy2vYYJ4/1CBWC8fFSJTRXRCeDFdGRdyIRntGAQvJlD7LQu8Ks0Uh
-        Kuzkwvo6Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iRmAG-0003id-5y; Mon, 04 Nov 2019 23:53:40 +0000
-Date:   Mon, 4 Nov 2019 15:53:40 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-spdx@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: spdxcheck.py complains about the second OR?
-Message-ID: <20191104235340.GA13961@infradead.org>
-References: <CAK7LNASwF9y+MkhkvCRATu0qXSJkxx8fZ-DUjQTfWOi9+1YrfQ@mail.gmail.com>
- <alpine.DEB.2.21.1911042310040.17054@nanos.tec.linutronix.de>
+        Mon, 4 Nov 2019 18:56:23 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iRmCk-0001NK-1x; Tue, 05 Nov 2019 00:56:14 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A2A191C0105;
+        Tue,  5 Nov 2019 00:56:13 +0100 (CET)
+Date:   Mon, 04 Nov 2019 23:56:13 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/dumpstack/64: Don't evaluate exception stacks
+ before setup
+Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, stable@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <alpine.DEB.2.21.1910231950590.1852@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1910231950590.1852@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1911042310040.17054@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Message-ID: <157291177324.29376.14563915167890708264.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 11:11:53PM +0100, Thomas Gleixner wrote:
-> On Fri, 1 Nov 2019, Masahiro Yamada wrote:
-> > scripts/spdxcheck.py warns the following two files.
-> > 
-> > $ ./scripts/spdxcheck.py
-> > drivers/net/ethernet/pensando/ionic/ionic_if.h: 1:52 Syntax error: OR
-> > drivers/net/ethernet/pensando/ionic/ionic_regs.h: 1:52 Syntax error: OR
-> > 
-> > I do not understand what is wrong with them.
-> > 
-> > I think "A OR B OR C" is sane.
-> 
-> Yes it is, but obviously we did not expect files with 3 possible
-> alternative licenses.
+The following commit has been merged into the x86/urgent branch of tip:
 
-And I'm kinda happy about this warning because people are overdoing it.
-There is no point for the Linux-OpenIB license in this case, as it
-is just a BSD license with copy and paste errors.  I think the right
-fix is to ask the authors to just drop it.
+Commit-ID:     e361362b08cab1098b64b0e5fd8c879f086b3f46
+Gitweb:        https://git.kernel.org/tip/e361362b08cab1098b64b0e5fd8c879f086b3f46
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Wed, 23 Oct 2019 20:05:49 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 05 Nov 2019 00:51:35 +01:00
+
+x86/dumpstack/64: Don't evaluate exception stacks before setup
+
+Cyrill reported the following crash:
+
+  BUG: unable to handle page fault for address: 0000000000001ff0
+  #PF: supervisor read access in kernel mode
+  RIP: 0010:get_stack_info+0xb3/0x148
+
+It turns out that if the stack tracer is invoked before the exception stack
+mappings are initialized in_exception_stack() can erroneously classify an
+invalid address as an address inside of an exception stack:
+
+    begin = this_cpu_read(cea_exception_stacks);  <- 0
+    end = begin + sizeof(exception stacks);
+
+i.e. any address between 0 and end will be considered as exception stack
+address and the subsequent code will then try to derefence the resulting
+stack frame at a non mapped address.
+
+ end = begin + (unsigned long)ep->size;
+     ==> end = 0x2000
+
+ regs = (struct pt_regs *)end - 1;
+     ==> regs = 0x2000 - sizeof(struct pt_regs *) = 0x1ff0
+
+ info->next_sp   = (unsigned long *)regs->sp;
+     ==> Crashes due to accessing 0x1ff0
+
+Prevent this by checking the validity of the cea_exception_stack base
+address and bailing out if it is zero.
+
+Fixes: afcd21dad88b ("x86/dumpstack/64: Use cpu_entry_area instead of orig_ist")
+Reported-by: Cyrill Gorcunov <gorcunov@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Cyrill Gorcunov <gorcunov@gmail.com>
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1910231950590.1852@nanos.tec.linutronix.de
+
+---
+ arch/x86/kernel/dumpstack_64.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
+index 753b8cf..87b9789 100644
+--- a/arch/x86/kernel/dumpstack_64.c
++++ b/arch/x86/kernel/dumpstack_64.c
+@@ -94,6 +94,13 @@ static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
+ 	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
+ 
+ 	begin = (unsigned long)__this_cpu_read(cea_exception_stacks);
++	/*
++	 * Handle the case where stack trace is collected _before_
++	 * cea_exception_stacks had been initialized.
++	 */
++	if (!begin)
++		return false;
++
+ 	end = begin + sizeof(struct cea_exception_stacks);
+ 	/* Bail if @stack is outside the exception stack area. */
+ 	if (stk < begin || stk >= end)
