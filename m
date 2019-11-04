@@ -2,221 +2,135 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CD4CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2B1CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01DD921D7D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B163D20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:50:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l00JYOym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729202AbfKDDhf (ORCPT
+        id S1727476AbfKDDuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 22:37:35 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5696 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728414AbfKDDhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 22:37:34 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CCD336EF61E6B9F7A9E4;
-        Mon,  4 Nov 2019 11:37:30 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Mon, 4 Nov 2019
- 11:37:20 +0800
-Subject: Re: [PATCH] lib: optimize cpumask_local_spread()
-To:     Michal Hocko <mhocko@kernel.org>
-References: <1572501813-2125-1-git-send-email-zhangshaokun@hisilicon.com>
- <20191031073905.GD13102@dhcp22.suse.cz>
-CC:     <linux-kernel@vger.kernel.org>, yuqi jin <jinyuqi@huawei.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Paul Burton" <paul.burton@mips.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <97943c12-5704-e8a2-3736-4d0c23e2ff80@hisilicon.com>
-Date:   Mon, 4 Nov 2019 11:37:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+        Sun, 3 Nov 2019 22:50:06 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:50444 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfKDDuG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 22:50:06 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA43dALC065594;
+        Mon, 4 Nov 2019 03:49:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=u/WWylMqnru69Kx+UbRelHGNozBuMEoTTsvhB55jFes=;
+ b=l00JYOymmHOq2jVkSyc6w/vGcmRLS3li6KjWd8J3+GzsQGOTXmyPJhYu3QpMxy1+SaFR
+ DycWeDN15RsiP9++pBicFCviBPVxu4+dZ0bd39x8PMzL1GfjA8kD5Sn891tjp9Z2GRZC
+ mFXdpbk9kztg/MVl+VWd+/68NaO/oP8epIhG+2sy8CyjACsrCbp0ysGxTHD3nVBBH0Us
+ amQykCybgQzF7aXQ1rcN4l/hHyDpKiD7Nult+KlRsT+TTooYzr6fk1tFhUXBSUq52uqy
+ 3XAWmswva8uf4jV+rqBRywd7x4H7hqrefHPzLx5TcAsO5bIoAd1TRaL2xfZYFzqHPXm5 hQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2w11rpmnk9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Nov 2019 03:49:41 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA43blSi070038;
+        Mon, 4 Nov 2019 03:49:40 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2w1kxkm8j3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Nov 2019 03:49:40 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA43neED027567;
+        Mon, 4 Nov 2019 03:49:40 GMT
+Received: from [10.159.157.81] (/10.159.157.81)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 03 Nov 2019 19:49:39 -0800
+Subject: Re: [PATCH 1/5] KVM: simplify branch check in host poll code
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        joao.m.martins@oracle.com, rafael.j.wysocki@intel.com,
+        rkrcmar@redhat.com, pbonzini@redhat.com
+References: <1572060239-17401-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1572060239-17401-2-git-send-email-zhenzhong.duan@oracle.com>
+ <20191101210331.GA20061@amt.cnet>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <c6a23208-4432-6fc4-a3f8-56a6aff07fd8@oracle.com>
+Date:   Mon, 4 Nov 2019 11:49:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191031073905.GD13102@dhcp22.suse.cz>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <20191101210331.GA20061@amt.cnet>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1911040035
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1911040035
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal,
 
-On 2019/10/31 15:39, Michal Hocko wrote:
-> On Thu 31-10-19 14:03:33, Shaokun Zhang wrote:
->> From: yuqi jin <jinyuqi@huawei.com>
+On 2019/11/2 5:03, Marcelo Tosatti wrote:
+> On Sat, Oct 26, 2019 at 11:23:55AM +0800, Zhenzhong Duan wrote:
+>> Remove redundant check.
 >>
->> In the multi-processor and NUMA system, A device may have many numa
->> nodes belonging to multiple cpus. When we get a local numa, it is better
->> to find the node closest to the local numa node to return instead of
->> going to the online cpu immediately.
->>
->> For example, In Huawei Kunpeng 920 system, there are 4 NUMA node(0 -3)
->> in the 2-socket system(0 - 1). If the I/O device is in socket1
->> and the local NUMA node is 2, we shall choose the non-local node3 in
->> the same socket when cpu core in NUMA node2 is less that I/O requirements.
->> If we directly pick one cpu core from all online ones, it may be in
->> the another socket and it is not friendly for performance.
-> 
-> My previous review feedback included a request for a much better
-> description of the actual problem and how much of a performance gain we
-> are talking about along with a workoload description.
-> 
-
-Ok, I will update both in next version.
-
-> Besides that I do not think that the implementation is great either.
-
-Ok, Agree, so I sent it as RFC firstly and wanted to discuss this issue,
-I will fix it more reasonable.
-
-> Relying on GFP_ATOMIC is very dubious. Is there any specific reason why
-> the data structure cannot pre reallocated? The comment for
-
-Ok, will do it.
-
-> cpumask_local_spread says that this is not the most efficient function
-> so users should better be prepared to not call it from hot paths AFAIU.
-> That would imply that an internal locking should be acceptable as well
-> so a preallocated data structure could be used.
-
-Ok.
-
-Thanks,
-Shaokun
-
-> 
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Mike Rapoport <rppt@linux.ibm.com>
->> Cc: Paul Burton <paul.burton@mips.com>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
->> Signed-off-by: yuqi jin <jinyuqi@huawei.com>
->> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+>> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 >> ---
->> Changes from RFC:
->>      Address Michal Hocko's comment: Use GFP_ATOMIC instead of GFP_KERNEL
+>>   virt/kvm/kvm_main.c | 9 ++++-----
+>>   1 file changed, 4 insertions(+), 5 deletions(-)
 >>
->>  lib/cpumask.c | 76 ++++++++++++++++++++++++++++++++++++++++++++++++++---------
->>  1 file changed, 65 insertions(+), 11 deletions(-)
->>
->> diff --git a/lib/cpumask.c b/lib/cpumask.c
->> index 0cb672eb107c..c92177b0e095 100644
->> --- a/lib/cpumask.c
->> +++ b/lib/cpumask.c
->> @@ -192,6 +192,33 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
->>  }
->>  #endif
->>  
->> +static void calc_node_distance(int *node_dist, int node)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < nr_node_ids; i++)
->> +		node_dist[i] = node_distance(node, i);
->> +}
->> +
->> +static int find_nearest_node(int *node_dist, bool *used_flag)
->> +{
->> +	int i, min_dist = node_dist[0], node_id = -1;
->> +
->> +	for (i = 0; i < nr_node_ids; i++)
->> +		if (used_flag[i] == 0) {
->> +			min_dist = node_dist[i];
->> +			node_id = i;
->> +			break;
->> +		}
->> +	for (i = 0; i < nr_node_ids; i++)
->> +		if (node_dist[i] < min_dist && used_flag[i] == 0) {
->> +			min_dist = node_dist[i];
->> +			node_id = i;
->> +		}
->> +
->> +	return node_id;
->> +}
->> +
->>  /**
->>   * cpumask_local_spread - select the i'th cpu with local numa cpu's first
->>   * @i: index number
->> @@ -205,7 +232,8 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
->>   */
->>  unsigned int cpumask_local_spread(unsigned int i, int node)
->>  {
->> -	int cpu;
->> +	int cpu, j, id, *node_dist;
->> +	bool *used_flag;
->>  
->>  	/* Wrap: we always want a cpu. */
->>  	i %= num_online_cpus();
->> @@ -215,19 +243,45 @@ unsigned int cpumask_local_spread(unsigned int i, int node)
->>  			if (i-- == 0)
->>  				return cpu;
->>  	} else {
->> -		/* NUMA first. */
->> -		for_each_cpu_and(cpu, cpumask_of_node(node), cpu_online_mask)
->> -			if (i-- == 0)
->> -				return cpu;
->> +		node_dist = kmalloc_array(nr_node_ids, sizeof(int), GFP_ATOMIC);
->> +		if (!node_dist)
->> +			for_each_cpu(cpu, cpu_online_mask)
->> +				if (i-- == 0)
->> +					return cpu;
->>  
->> -		for_each_cpu(cpu, cpu_online_mask) {
->> -			/* Skip NUMA nodes, done above. */
->> -			if (cpumask_test_cpu(cpu, cpumask_of_node(node)))
->> -				continue;
->> +		used_flag = kmalloc_array(nr_node_ids, sizeof(bool), GFP_ATOMIC);
->> +		if (!used_flag)
->> +			for_each_cpu(cpu, cpu_online_mask)
->> +				if (i-- == 0) {
->> +					kfree(node_dist);
->> +					return cpu;
->> +				}
->> +		memset(used_flag, 0, nr_node_ids * sizeof(bool));
->>  
->> -			if (i-- == 0)
->> -				return cpu;
->> +		calc_node_distance(node_dist, node);
->> +		for (j = 0; j < nr_node_ids; j++) {
->> +			id = find_nearest_node(node_dist, used_flag);
->> +			if (id < 0)
->> +				break;
->> +			for_each_cpu_and(cpu,
->> +				cpumask_of_node(id), cpu_online_mask)
->> +				if (i-- == 0) {
->> +					kfree(node_dist);
->> +					kfree(used_flag);
->> +					return cpu;
->> +				}
->> +			used_flag[id] = 1;
->>  		}
->> +
->> +		for_each_cpu(cpu, cpu_online_mask)
->> +			if (i-- == 0) {
->> +				kfree(node_dist);
->> +				kfree(used_flag);
->> +				return cpu;
->> +			}
->> +
->> +		kfree(node_dist);
->> +		kfree(used_flag);
->>  	}
->>  	BUG();
->>  }
->> -- 
->> 2.7.4
-> 
+>> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+>> index 67ef3f2..2ca2979 100644
+>> --- a/virt/kvm/kvm_main.c
+>> +++ b/virt/kvm/kvm_main.c
+>> @@ -2366,13 +2366,12 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
+>>   		} else if (halt_poll_ns) {
+>>   			if (block_ns <= vcpu->halt_poll_ns)
+>>   				;
+>> -			/* we had a long block, shrink polling */
+>> -			else if (vcpu->halt_poll_ns && block_ns > halt_poll_ns)
+>> -				shrink_halt_poll_ns(vcpu);
+>>   			/* we had a short halt and our poll time is too small */
+>> -			else if (vcpu->halt_poll_ns < halt_poll_ns &&
+> This is not a redundant check: it avoids from calling
+> into grow_halt_poll_ns, which will do:
+>
+> 	1) Multiplication
+> 	2) Cap that back to halt_poll_ns
+> 	3) Invoke the trace_kvm_halt_poll_ns_grow tracepoint
+> 	   (when in fact vcpu->halt_poll_ns did not grow).
+
+In this branch, vcpu->halt_poll_ns < block_ns is true, and if block_ns < 
+halt_poll_ns,
+
+then vcpu->halt_poll_ns < halt_poll_ns is always true, isn't it?
+
+
+I realized I ignored the situation that halt_poll_ns and 
+halt_poll_ns_grow could be
+
+updated at runtime, so pls ignore this patch, I'll fix it by following 
+the guest haltpoll code.
+
+Thanks
+
+Zhenzhong
 
