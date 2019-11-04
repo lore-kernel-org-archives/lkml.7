@@ -2,381 +2,149 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D02BCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1D1CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 114A222469
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572850714;
-	bh=j7sZZWpF/SasTsVFuAJ/3RwalDXEvLIHFbm/No8tVW8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qEueqaqzstV6/Q/mUodF2PEyBSIy/IeimXYkLsGzygyD/8qJH3rgfujFIMgXzZD2B
-	 gspEfmIerX00rM8knqs+4vu2YDcyb+gW9EwgsmpqeUc0GQdDCfr3u/ysFGaQnh9gdW
-	 jD1llqqV8wvJHqW6KkEFx6lnavLFBSs/B5W7U6mo=
+	by mail.kernel.org (Postfix) with ESMTP id 969992246D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:58:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="o3U7QakB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728685AbfKDG6d (ORCPT
+        id S1728704AbfKDG6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 01:58:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726633AbfKDG6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 01:58:32 -0500
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A73B2245C;
-        Mon,  4 Nov 2019 06:58:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572850710;
-        bh=j7sZZWpF/SasTsVFuAJ/3RwalDXEvLIHFbm/No8tVW8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RZ5d3Algd2vrnZb6VJ/EBA7hQUoBrQKDhKIFUKwiievktQS0KkxxceEOGtpN4RTFB
-         iA5WmN0wKsw3VBXkxUWl3CBjUmLJ3zIlVd0KM0UpwBX+v85L//QTXNj+ReKqP2rKB7
-         5tYVNM3izbRiUFBMRgebKxWufL1RXNwvrDXBrphc=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Helge Deller <deller@gmx.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Salter <msalter@redhat.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
-        Richard Weinberger <richard@nod.at>,
-        Rolf Eike Beer <eike-kernel@sf-tec.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Mike Rapoport <rppt@kernel.org>, linux-alpha@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org,
-        linux-um@lists.infradead.org, sparclinux@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH v3 12/13] um: add support for folded p4d page tables
-Date:   Mon,  4 Nov 2019 08:56:26 +0200
-Message-Id: <1572850587-20314-13-git-send-email-rppt@kernel.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572850587-20314-1-git-send-email-rppt@kernel.org>
-References: <1572850587-20314-1-git-send-email-rppt@kernel.org>
+        Mon, 4 Nov 2019 01:58:36 -0500
+Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:26739 "EHLO
+        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbfKDG6e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 01:58:34 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id DF62E48712;
+        Mon,  4 Nov 2019 07:58:32 +0100 (CET)
+Authentication-Results: ste-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=o3U7QakB;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Ur9y7ujEeHB9; Mon,  4 Nov 2019 07:58:32 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 5A4BA4870E;
+        Mon,  4 Nov 2019 07:58:30 +0100 (CET)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id A2E1C36018B;
+        Mon,  4 Nov 2019 07:58:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1572850710; bh=Knia7PL3WYPr8ZFxy9LDalAxNnA936rV5YZvB91TRQo=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=o3U7QakB7SnaTNZLhj32YXWDdyiAQrW5mQ+Vke2pH+u5Kx7tmzd+ClR+HZxBHigk0
+         KzZck+2B+9O24SYJdg6//5anvdyy0ehyi7vG+PIKNU74S9mgb457/Yv8NvLjHqHVYS
+         d2Os6HyzZvKT0AG6qptUgbD0kG5kFjP5f/x8l2WU=
+Subject: Re: dma coherent memory user-space maps
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <b811f66d-2353-23c6-c9fa-e279cdb0f832@shipmail.org>
+ <20191031215415.GA9809@infradead.org>
+ <7d5f8ec3-41a2-2ceb-aaa1-0bf3aa03d9a1@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <f7e76770-e716-6bcb-6b33-8f156e51ee2e@shipmail.org>
+Date:   Mon, 4 Nov 2019 07:58:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <7d5f8ec3-41a2-2ceb-aaa1-0bf3aa03d9a1@shipmail.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+On 11/4/19 7:38 AM, Thomas Hellström (VMware) wrote:
+> Hi, Crhistoph,
+>
+> On 10/31/19 10:54 PM, Christoph Hellwig wrote:
+>> Hi Thomas,
+>>
+>> sorry for the delay.  I've been travelling way to much laterly and had
+>> a hard time keeping up.
+>>
+>> On Tue, Oct 08, 2019 at 02:34:17PM +0200, Thomas Hellström (VMware) 
+>> wrote:
+>>> /* Obtain struct dma_pfn pointers from a dma coherent allocation */
+>>> int dma_get_dpfns(struct device *dev, void *cpu_addr, dma_addr_t 
+>>> dma_addr,
+>>>            pgoff_t offset, pgoff_t num, dma_pfn_t dpfns[]);
+>>>
+>>> I figure, for most if not all architectures we could use an ordinary 
+>>> pfn as
+>>> dma_pfn_t, but the dma layer would still have control over how those 
+>>> pfns
+>>> are obtained and how they are used in the kernel's mapping APIs.
+>>>
+>>> If so, I could start looking at this, time permitting,  for the 
+>>> cases where
+>>> the pfn can be obtained from the kernel address or from
+>>> arch_dma_coherent_to_pfn(), and also the needed work to have a tailored
+>>> vmap_pfn().
+>> I'm not sure that infrastructure is all that helpful unfortunately, even
+>> if it ended up working.  The problem with the 'coherent' DMA mappings
+>> is that we they have a few different backends.  For architectures that
+>> are DMA coherent everything is easy and we use the normal page
+>> allocator, and your above is trivially doable as wrappers around the
+>> existing functionality.  Other remap ptes to be uncached, either
+>> in-place or using vmap, and the remaining ones use weird special
+>> allocators for which almost everything we can mormally do in the VM
+>> will fail.
+>
+> Hmm, yes I was hoping one could hide that behind the dma_pfn_t and the 
+> interface, so that non-trivial backends would be able to define the 
+> dma_pfn_t as needed and also if needed have their own special 
+> implementation of the interface functions. The interface was spec'ed 
+> from the user's (TTM) point of view assuming that with a page-prot and 
+> an opaque dma_pfn_t we'd be able to support most non-trivial backends, 
+> but that's perhaps not the case?
+>
+>>
+>> I promised Christian an uncached DMA allocator a while ago, and still
+>> haven't finished that either unfortunately.  But based on looking at
+>> the x86 pageattr code I'm now firmly down the road of using the
+>> set_memory_* helpers that change the pte attributes in place, as
+>> everything else can't actually work on x86 which doesn't allow
+>> aliasing of PTEs with different caching attributes.  The arm64 folks
+>> also would prefer in-place remapping even if they don't support it
+>> yet, and that is something the i915 code already does in a somewhat
+>> hacky way, and something the msm drm driver wants.  So I decided to
+>> come up with an API that gives back 'coherent' pages on the
+>> architectures that support it and otherwise just fail.
+>>
+>> Do you care about architectures other than x86 and arm64?  If not I'll
+>> hopefully have something for you soon.
+>
+> For VMware we only care about x86 and arm64, but i think Christian 
+> needs to fill in here.
 
-The UML port uses 4 and 5 level fixups to support higher level page table
-directories in the generic VM code.
+And also for VMware the most important missing functionality is vmap() 
+of a combined set of coherent memory allocations, as TTM buffer objects 
+are, when using coherent memory, built by coalescing coherent memory 
+allocations from a pool.
 
-Implement primitives necessary for the 4th level folding, add walks of
-p4d level where appropriate and drop usage of __ARCH_USE_5LEVEL_HACK.
+Thanks,
+/Thomas
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- arch/um/include/asm/pgtable-2level.h |  1 -
- arch/um/include/asm/pgtable-3level.h |  1 -
- arch/um/include/asm/pgtable.h        |  3 ++
- arch/um/kernel/mem.c                 |  8 ++++--
- arch/um/kernel/skas/mmu.c            | 12 ++++++--
- arch/um/kernel/skas/uaccess.c        |  7 ++++-
- arch/um/kernel/tlb.c                 | 56 ++++++++++++++++++++++++++++++++----
- arch/um/kernel/trap.c                |  4 ++-
- 8 files changed, 78 insertions(+), 14 deletions(-)
 
-diff --git a/arch/um/include/asm/pgtable-2level.h b/arch/um/include/asm/pgtable-2level.h
-index 32b3d26..32106d3 100644
---- a/arch/um/include/asm/pgtable-2level.h
-+++ b/arch/um/include/asm/pgtable-2level.h
-@@ -8,7 +8,6 @@
- #ifndef __UM_PGTABLE_2LEVEL_H
- #define __UM_PGTABLE_2LEVEL_H
- 
--#define __ARCH_USE_5LEVEL_HACK
- #include <asm-generic/pgtable-nopmd.h>
- 
- /* PGDIR_SHIFT determines what a third-level page table entry can map */
-diff --git a/arch/um/include/asm/pgtable-3level.h b/arch/um/include/asm/pgtable-3level.h
-index 9812269..8a3b689 100644
---- a/arch/um/include/asm/pgtable-3level.h
-+++ b/arch/um/include/asm/pgtable-3level.h
-@@ -7,7 +7,6 @@
- #ifndef __UM_PGTABLE_3LEVEL_H
- #define __UM_PGTABLE_3LEVEL_H
- 
--#define __ARCH_USE_5LEVEL_HACK
- #include <asm-generic/pgtable-nopud.h>
- 
- /* PGDIR_SHIFT determines what a third-level page table entry can map */
-diff --git a/arch/um/include/asm/pgtable.h b/arch/um/include/asm/pgtable.h
-index 36a44d5..2daa58d 100644
---- a/arch/um/include/asm/pgtable.h
-+++ b/arch/um/include/asm/pgtable.h
-@@ -106,6 +106,9 @@ extern unsigned long end_iomem;
- #define pud_newpage(x)  (pud_val(x) & _PAGE_NEWPAGE)
- #define pud_mkuptodate(x) (pud_val(x) &= ~_PAGE_NEWPAGE)
- 
-+#define p4d_newpage(x)  (p4d_val(x) & _PAGE_NEWPAGE)
-+#define p4d_mkuptodate(x) (p4d_val(x) &= ~_PAGE_NEWPAGE)
-+
- #define pmd_page(pmd) phys_to_page(pmd_val(pmd) & PAGE_MASK)
- 
- #define pte_page(x) pfn_to_page(pte_pfn(x))
-diff --git a/arch/um/kernel/mem.c b/arch/um/kernel/mem.c
-index 417ff64..30885d0 100644
---- a/arch/um/kernel/mem.c
-+++ b/arch/um/kernel/mem.c
-@@ -96,6 +96,7 @@ static void __init fixrange_init(unsigned long start, unsigned long end,
- 				 pgd_t *pgd_base)
- {
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	int i, j;
-@@ -107,7 +108,8 @@ static void __init fixrange_init(unsigned long start, unsigned long end,
- 	pgd = pgd_base + i;
- 
- 	for ( ; (i < PTRS_PER_PGD) && (vaddr < end); pgd++, i++) {
--		pud = pud_offset(pgd, vaddr);
-+		p4d = p4d_offset(pgd, vaddr);
-+		pud = pud_offset(p4d, vaddr);
- 		if (pud_none(*pud))
- 			one_md_table_init(pud);
- 		pmd = pmd_offset(pud, vaddr);
-@@ -124,6 +126,7 @@ static void __init fixaddr_user_init( void)
- #ifdef CONFIG_ARCH_REUSE_HOST_VSYSCALL_AREA
- 	long size = FIXADDR_USER_END - FIXADDR_USER_START;
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte;
-@@ -144,7 +147,8 @@ static void __init fixaddr_user_init( void)
- 	for ( ; size > 0; size -= PAGE_SIZE, vaddr += PAGE_SIZE,
- 		      p += PAGE_SIZE) {
- 		pgd = swapper_pg_dir + pgd_index(vaddr);
--		pud = pud_offset(pgd, vaddr);
-+		p4d = p4d_offset(pgd, vaddr);
-+		pud = pud_offset(p4d, vaddr);
- 		pmd = pmd_offset(pud, vaddr);
- 		pte = pte_offset_kernel(pmd, vaddr);
- 		pte_set_val(*pte, p, PAGE_READONLY);
-diff --git a/arch/um/kernel/skas/mmu.c b/arch/um/kernel/skas/mmu.c
-index b5e3d91..3f0d9a5 100644
---- a/arch/um/kernel/skas/mmu.c
-+++ b/arch/um/kernel/skas/mmu.c
-@@ -19,15 +19,21 @@ static int init_stub_pte(struct mm_struct *mm, unsigned long proc,
- 			 unsigned long kernel)
- {
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte;
- 
- 	pgd = pgd_offset(mm, proc);
--	pud = pud_alloc(mm, pgd, proc);
--	if (!pud)
-+
-+	p4d = p4d_alloc(mm, pgd, proc);
-+	if (!p4d)
- 		goto out;
- 
-+	pud = pud_alloc(mm, p4d, proc);
-+	if (!pud)
-+		goto out_pud;
-+
- 	pmd = pmd_alloc(mm, pud, proc);
- 	if (!pmd)
- 		goto out_pmd;
-@@ -44,6 +50,8 @@ static int init_stub_pte(struct mm_struct *mm, unsigned long proc,
- 	pmd_free(mm, pmd);
-  out_pmd:
- 	pud_free(mm, pud);
-+ out_pud:
-+	p4d_free(mm, p4d);
-  out:
- 	return -ENOMEM;
- }
-diff --git a/arch/um/kernel/skas/uaccess.c b/arch/um/kernel/skas/uaccess.c
-index 3236052..d617f8d 100644
---- a/arch/um/kernel/skas/uaccess.c
-+++ b/arch/um/kernel/skas/uaccess.c
-@@ -17,6 +17,7 @@
- pte_t *virt_to_pte(struct mm_struct *mm, unsigned long addr)
- {
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 
-@@ -27,7 +28,11 @@ pte_t *virt_to_pte(struct mm_struct *mm, unsigned long addr)
- 	if (!pgd_present(*pgd))
- 		return NULL;
- 
--	pud = pud_offset(pgd, addr);
-+	p4d = p4d_offset(pgd, addr);
-+	if (!p4d_present(*p4d))
-+		return NULL;
-+
-+	pud = pud_offset(p4d, addr);
- 	if (!pud_present(*pud))
- 		return NULL;
- 
-diff --git a/arch/um/kernel/tlb.c b/arch/um/kernel/tlb.c
-index 8425a22..80a358c 100644
---- a/arch/um/kernel/tlb.c
-+++ b/arch/um/kernel/tlb.c
-@@ -277,7 +277,7 @@ static inline int update_pmd_range(pud_t *pud, unsigned long addr,
- 	return ret;
- }
- 
--static inline int update_pud_range(pgd_t *pgd, unsigned long addr,
-+static inline int update_pud_range(p4d_t *p4d, unsigned long addr,
- 				   unsigned long end,
- 				   struct host_vm_change *hvc)
- {
-@@ -285,7 +285,7 @@ static inline int update_pud_range(pgd_t *pgd, unsigned long addr,
- 	unsigned long next;
- 	int ret = 0;
- 
--	pud = pud_offset(pgd, addr);
-+	pud = pud_offset(p4d, addr);
- 	do {
- 		next = pud_addr_end(addr, end);
- 		if (!pud_present(*pud)) {
-@@ -299,6 +299,28 @@ static inline int update_pud_range(pgd_t *pgd, unsigned long addr,
- 	return ret;
- }
- 
-+static inline int update_p4d_range(pgd_t *pgd, unsigned long addr,
-+				   unsigned long end,
-+				   struct host_vm_change *hvc)
-+{
-+	p4d_t *p4d;
-+	unsigned long next;
-+	int ret = 0;
-+
-+	p4d = p4d_offset(pgd, addr);
-+	do {
-+		next = p4d_addr_end(addr, end);
-+		if (!p4d_present(*p4d)) {
-+			if (hvc->force || p4d_newpage(*p4d)) {
-+				ret = add_munmap(addr, next - addr, hvc);
-+				p4d_mkuptodate(*p4d);
-+			}
-+		} else
-+			ret = update_pud_range(p4d, addr, next, hvc);
-+	} while (p4d++, addr = next, ((addr < end) && !ret));
-+	return ret;
-+}
-+
- void fix_range_common(struct mm_struct *mm, unsigned long start_addr,
- 		      unsigned long end_addr, int force)
- {
-@@ -316,8 +338,8 @@ void fix_range_common(struct mm_struct *mm, unsigned long start_addr,
- 				ret = add_munmap(addr, next - addr, &hvc);
- 				pgd_mkuptodate(*pgd);
- 			}
--		}
--		else ret = update_pud_range(pgd, addr, next, &hvc);
-+		} else
-+			ret = update_p4d_range(pgd, addr, next, &hvc);
- 	} while (pgd++, addr = next, ((addr < end_addr) && !ret));
- 
- 	if (!ret)
-@@ -338,6 +360,7 @@ static int flush_tlb_kernel_range_common(unsigned long start, unsigned long end)
- {
- 	struct mm_struct *mm;
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte;
-@@ -364,7 +387,23 @@ static int flush_tlb_kernel_range_common(unsigned long start, unsigned long end)
- 			continue;
- 		}
- 
--		pud = pud_offset(pgd, addr);
-+		p4d = p4d_offset(pgd, addr);
-+		if (!p4d_present(*p4d)) {
-+			last = ADD_ROUND(addr, P4D_SIZE);
-+			if (last > end)
-+				last = end;
-+			if (p4d_newpage(*p4d)) {
-+				updated = 1;
-+				err = add_munmap(addr, last - addr, &hvc);
-+				if (err < 0)
-+					panic("munmap failed, errno = %d\n",
-+					      -err);
-+			}
-+			addr = last;
-+			continue;
-+		}
-+
-+		pud = pud_offset(p4d, addr);
- 		if (!pud_present(*pud)) {
- 			last = ADD_ROUND(addr, PUD_SIZE);
- 			if (last > end)
-@@ -424,6 +463,7 @@ static int flush_tlb_kernel_range_common(unsigned long start, unsigned long end)
- void flush_tlb_page(struct vm_area_struct *vma, unsigned long address)
- {
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte;
-@@ -437,7 +477,11 @@ void flush_tlb_page(struct vm_area_struct *vma, unsigned long address)
- 	if (!pgd_present(*pgd))
- 		goto kill;
- 
--	pud = pud_offset(pgd, address);
-+	p4d = p4d_offset(pgd, address);
-+	if (!p4d_present(*p4d))
-+		goto kill;
-+
-+	pud = pud_offset(p4d, address);
- 	if (!pud_present(*pud))
- 		goto kill;
- 
-diff --git a/arch/um/kernel/trap.c b/arch/um/kernel/trap.c
-index e62296c..8185530 100644
---- a/arch/um/kernel/trap.c
-+++ b/arch/um/kernel/trap.c
-@@ -28,6 +28,7 @@ int handle_page_fault(unsigned long address, unsigned long ip,
- 	struct mm_struct *mm = current->mm;
- 	struct vm_area_struct *vma;
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte;
-@@ -104,7 +105,8 @@ int handle_page_fault(unsigned long address, unsigned long ip,
- 		}
- 
- 		pgd = pgd_offset(mm, address);
--		pud = pud_offset(pgd, address);
-+		p4d = p4d_offset(pgd, address);
-+		pud = pud_offset(p4d, address);
- 		pmd = pmd_offset(pud, address);
- 		pte = pte_offset_kernel(pmd, address);
- 	} while (!pte_present(*pte));
--- 
-2.7.4
+>
+> Thanks,
+>
+> Thomas
+>
 
