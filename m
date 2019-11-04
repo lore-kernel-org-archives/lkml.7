@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C834ACA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8C1CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F0520650
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D52204FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905918;
-	bh=LcmmwqOfby9yq1vOo2ElJ9bV8e0u3vySwHKazDJYZaE=;
+	s=default; t=1572905923;
+	bh=+RXZgY1pNTGvQ+1526ck6j6FRsdHz9lJ0dRvajUZKyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cEy/omTGwfuyzgRxNPP5z/IFehjoXGNcqmBdVyG5uusRsWWtEd+EN1ZIC+Ts/2KJc
-	 RRfv3ymz0S78hpmnkfVIk8olMkCZRc5kOJjqbmMtHRfZwac/LHbhnOplWv8NgE2oDA
-	 WgIWge6vmAuhchDSn0j7gY3sLAE+U+ELgcsZyn20=
+	b=vX3SWEIUrCILgoik7j4nvquAIHKbObmBODWRDERUAOlNFQgsv6X17vewgyD2URmK/
+	 wMuc74tr/WTRIe7eemQkzRXJw3iMHeB7f818vvwdFn4RZ8trgQPbS0PnExCwas0wiW
+	 gCqps/8xNXhIG3GgR0JK2KorE3Vdx96geFUkx4jc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389913AbfKDWSi (ORCPT
+        id S2390090AbfKDWSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:18:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59874 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:18:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388702AbfKDWBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:44 -0500
+        id S2389040AbfKDWBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:01:24 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0659D20659;
-        Mon,  4 Nov 2019 22:01:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B779E20650;
+        Mon,  4 Nov 2019 22:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904903;
-        bh=LcmmwqOfby9yq1vOo2ElJ9bV8e0u3vySwHKazDJYZaE=;
+        s=default; t=1572904883;
+        bh=+RXZgY1pNTGvQ+1526ck6j6FRsdHz9lJ0dRvajUZKyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MiFSTxdetVBC2dS1szYPLBkHExeZy5tG6DmYXT8o7yll5lbkOnPEBqAVNtAd/ZIIb
-         dBcE3jenGcEA17Y+S8iFofCtVe2ZTWdFUnSQsff3apXQvYPYmqKnBW/Al/ZMEhEjOC
-         V7cMPv/bNsmbI4bd4i6zS8+/KVIv8f4L1jCPsvvM=
+        b=1JGx/ZJh2uRWpTWn8xoRchMQ1jJnQ7l40mhwUCRgtjMyk7In55fTGBYzadBk9hsLe
+         fUrz0rYVTci9RlrDYzaN0YQ1W1odfKoQ7j35PY5WIEzTGxMHJX+vqKWjlXetZXCr2L
+         3VXPvQOp3mU3CoDnDUNMGCnKKjH7rLEYkvCH17DQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Dingwall <james@dingwall.me.uk>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
+        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 084/149] x86/xen: Return from panic notifier
-Date:   Mon,  4 Nov 2019 22:44:37 +0100
-Message-Id: <20191104212142.465088911@linuxfoundation.org>
+Subject: [PATCH 4.19 104/149] iwlwifi: exclude GEO SAR support for 3168
+Date:   Mon,  4 Nov 2019 22:44:57 +0100
+Message-Id: <20191104212143.753643439@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -61,100 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+From: Luca Coelho <luciano.coelho@intel.com>
 
-[ Upstream commit c6875f3aacf2a5a913205accddabf0bfb75cac76 ]
+[ Upstream commit 12e36d98d3e5acf5fc57774e0a15906d55f30cb9 ]
 
-Currently execution of panic() continues until Xen's panic notifier
-(xen_panic_event()) is called at which point we make a hypercall that
-never returns.
+We currently support two NICs in FW version 29, namely 7265D and 3168.
+Out of these, only 7265D supports GEO SAR, so adjust the function that
+checks for it accordingly.
 
-This means that any notifier that is supposed to be called later as
-well as significant part of panic() code (such as pstore writes from
-kmsg_dump()) is never executed.
-
-There is no reason for xen_panic_event() to be this last point in
-execution since panic()'s emergency_restart() will call into
-xen_emergency_restart() from where we can perform our hypercall.
-
-Nevertheless, we will provide xen_legacy_crash boot option that will
-preserve original behavior during crash. This option could be used,
-for example, if running kernel dumper (which happens after panic
-notifiers) is undesirable.
-
-Reported-by: James Dingwall <james@dingwall.me.uk>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Fixes: f5a47fae6aa3 ("iwlwifi: mvm: fix version check for GEO_TX_POWER_LIMIT support")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../admin-guide/kernel-parameters.txt         |  4 +++
- arch/x86/xen/enlighten.c                      | 28 +++++++++++++++++--
- 2 files changed, 29 insertions(+), 3 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 16607b178b474..a855f83defa6c 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5117,6 +5117,10 @@
- 				the unplug protocol
- 			never -- do not unplug even if version check succeeds
- 
-+	xen_legacy_crash	[X86,XEN]
-+			Crash from Xen panic notifier, without executing late
-+			panic() code such as dumping handler.
-+
- 	xen_nopvspin	[X86,XEN]
- 			Disables the ticketlock slowpath using Xen PV
- 			optimizations.
-diff --git a/arch/x86/xen/enlighten.c b/arch/x86/xen/enlighten.c
-index c6c7c9b7b5c19..2483ff345bbcd 100644
---- a/arch/x86/xen/enlighten.c
-+++ b/arch/x86/xen/enlighten.c
-@@ -266,19 +266,41 @@ void xen_reboot(int reason)
- 		BUG();
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+index 9cb9f0544c9b1..2eba6d6f367f8 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -843,15 +843,17 @@ static bool iwl_mvm_sar_geo_support(struct iwl_mvm *mvm)
+ 	 * firmware versions.  Unfortunately, we don't have a TLV API
+ 	 * flag to rely on, so rely on the major version which is in
+ 	 * the first byte of ucode_ver.  This was implemented
+-	 * initially on version 38 and then backported to29 and 17.
+-	 * The intention was to have it in 36 as well, but not all
+-	 * 8000 family got this feature enabled.  The 8000 family is
+-	 * the only one using version 36, so skip this version
+-	 * entirely.
++	 * initially on version 38 and then backported to 17.  It was
++	 * also backported to 29, but only for 7265D devices.  The
++	 * intention was to have it in 36 as well, but not all 8000
++	 * family got this feature enabled.  The 8000 family is the
++	 * only one using version 36, so skip this version entirely.
+ 	 */
+ 	return IWL_UCODE_SERIAL(mvm->fw->ucode_ver) >= 38 ||
+-	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 ||
+-	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17;
++	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17 ||
++	       (IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 &&
++		((mvm->trans->hw_rev & CSR_HW_REV_TYPE_MSK) ==
++		 CSR_HW_REV_TYPE_7265D));
  }
  
-+static int reboot_reason = SHUTDOWN_reboot;
-+static bool xen_legacy_crash;
- void xen_emergency_restart(void)
- {
--	xen_reboot(SHUTDOWN_reboot);
-+	xen_reboot(reboot_reason);
- }
- 
- static int
- xen_panic_event(struct notifier_block *this, unsigned long event, void *ptr)
- {
--	if (!kexec_crash_loaded())
--		xen_reboot(SHUTDOWN_crash);
-+	if (!kexec_crash_loaded()) {
-+		if (xen_legacy_crash)
-+			xen_reboot(SHUTDOWN_crash);
-+
-+		reboot_reason = SHUTDOWN_crash;
-+
-+		/*
-+		 * If panic_timeout==0 then we are supposed to wait forever.
-+		 * However, to preserve original dom0 behavior we have to drop
-+		 * into hypervisor. (domU behavior is controlled by its
-+		 * config file)
-+		 */
-+		if (panic_timeout == 0)
-+			panic_timeout = -1;
-+	}
- 	return NOTIFY_DONE;
- }
- 
-+static int __init parse_xen_legacy_crash(char *arg)
-+{
-+	xen_legacy_crash = true;
-+	return 0;
-+}
-+early_param("xen_legacy_crash", parse_xen_legacy_crash);
-+
- static struct notifier_block xen_panic_block = {
- 	.notifier_call = xen_panic_event,
- 	.priority = INT_MIN
+ int iwl_mvm_get_sar_geo_profile(struct iwl_mvm *mvm)
 -- 
 2.20.1
 
