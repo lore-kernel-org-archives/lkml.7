@@ -2,108 +2,138 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56367CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7980BCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FDFC204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905942;
-	bh=OxJUN0GrULCx4YrxlFaDCHBM54iQLptJdAzFRmA69q8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ltuc4bSj3TOf25Id2zlZqldyzNdZskIig+Ws+E95nghuBG027lAC/WNcZviX4yEUF
-	 VH9ueVIUsVhDWI15MrviiyPT0qlt05Sd9pP2tLC9+Agyq2reDKetfDqWuvWIWWPRBZ
-	 EEv+1G1+iLD3b7ZT/zwYW+UDiIVKKzx7R1vm761k=
+	by mail.kernel.org (Postfix) with ESMTP id 4A401217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YDYzQa8F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389001AbfKDWBQ (ORCPT
+        id S2390033AbfKDWTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:01:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388932AbfKDWBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:00 -0500
-Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 632DE2084D;
-        Mon,  4 Nov 2019 22:00:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904859;
-        bh=OxJUN0GrULCx4YrxlFaDCHBM54iQLptJdAzFRmA69q8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n5luihu3BtKeibnOp7ZUVuc+SgE+nvLIymsZ0rZH088P2jQVqELoLgsLQrzqcUM+8
-         JQGiuqdIT9UocDC8AKvBLHC/RMtbQlPWrmtWvbGQgLb//VjJkqH6egXkLW4v3Y9HPg
-         /acyUV00lvGztvyttVHc/C5v/yUG1H92NpTn27I8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 097/149] virt: vbox: fix memory leak in hgcm_call_preprocess_linaddr
-Date:   Mon,  4 Nov 2019 22:44:50 +0100
-Message-Id: <20191104212143.328568824@linuxfoundation.org>
+        Mon, 4 Nov 2019 17:19:03 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35906 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388992AbfKDWBP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:01:15 -0500
+Received: by mail-lf1-f66.google.com with SMTP id a6so10055788lfo.3;
+        Mon, 04 Nov 2019 14:01:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=vussPT96FtSPVjSwb6+813KWc5582WBbmxbN3o4f6zQ=;
+        b=YDYzQa8Fq+Cprh60WDBen1OPYtQavoJAh2WTKty0HKuU+Ya/dVRr1LhNdALp/lNEtp
+         IvnLJvDnFeUYwEteM2JNxtogCvz8YfbW6I1oys7heTjlvG2SBcnC0ndVH3uF1B2bXw6s
+         VZk5qpWkTTHzSKMdU4ONGbK/s+OxOh0JaUvnDtcutpmpABKeJQlg/6ybYeRWsdEiLxxJ
+         C3iQLrq4cBZBqxm54Q/D7NltmXQITGUSSp550MSjTdqwfwdf59j7jRIWiqkCNjVJVakK
+         +YaJpae6QZ6FzDBcH2DlvyCvtMwIv4ulHCVCKF3bWcl3/VFmvcJ64741t0cWKi9nFE+r
+         hxvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=vussPT96FtSPVjSwb6+813KWc5582WBbmxbN3o4f6zQ=;
+        b=ADXW5UBgLArlXPVmjsUKXcUdX3i+c+zIIOMppJ625z4fQcrPlghm3RvgMHvoha4awQ
+         53ep+XzIa6YiWQRPl0VDUAe5i7aBekEg6ua45H2+DH787f87dr9CcW6H2xm03Zle2iQQ
+         5fpiW3UnyZvTVl46vyzbmiOR7aMdfB67cCcfhig3baGzZzYbFajAh5Ul67HXvHHEp0kI
+         oNSSxgxdtrvh8JSV9NUQ/F7xSq7GdCyPfne+7PIqLrVQxMJjFAXmqxXvE1BKHGG0ZBmu
+         ydN/ZEwaNdBuosrg89tJ5Z8b2mLiEP0luRaUto86B0JnVpEDtx3/Rh6FUpD1Bm4nRnR1
+         1whg==
+X-Gm-Message-State: APjAAAWr4AGNUtFXlrMItXQj/ixWKHhxmg3dSYveVlNdZlBHmZHuEVHi
+        Z1ddNQxrYgBJm3Hq1+975tE=
+X-Google-Smtp-Source: APXvYqzszaal34wn8DMXeS1z/UAh6z+OO3f2A2KgXGOoTN1Lezkr4LrIPvW4BdwQzPzUoLshT4Qurw==
+X-Received: by 2002:ac2:4357:: with SMTP id o23mr5831872lfl.51.1572904872931;
+        Mon, 04 Nov 2019 14:01:12 -0800 (PST)
+Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.gmail.com with ESMTPSA id g3sm7454669ljj.59.2019.11.04.14.01.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 14:01:12 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v9 14/19] PM / devfreq: tegra30: Disable consecutive interrupts when appropriate
+Date:   Tue,  5 Nov 2019 00:56:12 +0300
+Message-Id: <20191104215617.25544-15-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
-References: <20191104212126.090054740@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20191104215617.25544-1-digetx@gmail.com>
+References: <20191104215617.25544-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+Consecutive interrupts should be disabled when boosting is completed.
 
-[ Upstream commit e0b0cb9388642c104838fac100a4af32745621e2 ]
+Currently the disabling of "lower" interrupt happens only for MCCPU
+monitor that uses dependency threshold, but even in a case of MCCPU the
+interrupt isn't getting disabled if CPU's activity is above the threshold.
+This results in a lot of dummy interrupt requests. The boosting feature is
+used by both MCCPU and MCALL, boosting should be stopped once it reaches 0
+for both of the monitors and regardless of the activity level.
 
-In hgcm_call_preprocess_linaddr memory is allocated for bounce_buf but
-is not released if copy_form_user fails. In order to prevent memory leak
-in case of failure, the assignment to bounce_buf_ret is moved before the
-error check. This way the allocated bounce_buf will be released by the
-caller.
+The boosting stops to grow once the maximum limit is hit and thus the
+"upper" interrupt needs to be disabled when the limit is reached.
 
-Fixes: 579db9d45cb4 ("virt: Add vboxguest VMMDEV communication code")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20190930204223.3660-1-navid.emamdoost@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/virt/vboxguest/vboxguest_utils.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/devfreq/tegra30-devfreq.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/virt/vboxguest/vboxguest_utils.c b/drivers/virt/vboxguest/vboxguest_utils.c
-index bf4474214b4d3..92091006589a9 100644
---- a/drivers/virt/vboxguest/vboxguest_utils.c
-+++ b/drivers/virt/vboxguest/vboxguest_utils.c
-@@ -217,6 +217,8 @@ static int hgcm_call_preprocess_linaddr(
- 	if (!bounce_buf)
- 		return -ENOMEM;
+diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+index 4a5d513904a2..852bde6249c7 100644
+--- a/drivers/devfreq/tegra30-devfreq.c
++++ b/drivers/devfreq/tegra30-devfreq.c
+@@ -259,8 +259,10 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
  
-+	*bounce_buf_ret = bounce_buf;
-+
- 	if (copy_in) {
- 		ret = copy_from_user(bounce_buf, (void __user *)buf, len);
- 		if (ret)
-@@ -225,7 +227,6 @@ static int hgcm_call_preprocess_linaddr(
- 		memset(bounce_buf, 0, len);
+ 		dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
+ 
+-		if (dev->boost_freq >= tegra->max_freq)
++		if (dev->boost_freq >= tegra->max_freq) {
++			dev_ctrl &= ~ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
+ 			dev->boost_freq = tegra->max_freq;
++		}
+ 	} else if (intr_status & ACTMON_DEV_INTR_CONSECUTIVE_LOWER) {
+ 		/*
+ 		 * new_boost = old_boost * down_coef
+@@ -271,15 +273,10 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
+ 
+ 		dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
+ 
+-		if (dev->boost_freq < (ACTMON_BOOST_FREQ_STEP >> 1))
+-			dev->boost_freq = 0;
+-	}
+-
+-	if (dev->config->avg_dependency_threshold) {
+-		if (dev->avg_count >= dev->config->avg_dependency_threshold)
+-			dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
+-		else if (dev->boost_freq == 0)
++		if (dev->boost_freq < (ACTMON_BOOST_FREQ_STEP >> 1)) {
+ 			dev_ctrl &= ~ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
++			dev->boost_freq = 0;
++		}
  	}
  
--	*bounce_buf_ret = bounce_buf;
- 	hgcm_call_add_pagelist_size(bounce_buf, len, extra);
- 	return 0;
- }
+ 	device_writel(dev, dev_ctrl, ACTMON_DEV_CTRL);
 -- 
-2.20.1
-
-
+2.23.0
 
