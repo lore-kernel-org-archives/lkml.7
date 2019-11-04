@@ -2,126 +2,95 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 477C4CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DD4CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D39E2080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:25:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpBo834o"
+	by mail.kernel.org (Postfix) with ESMTP id 0EDEC214D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:27:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572910041;
+	bh=Bq02NFOowlyXEb5/Vr6Q7zJNZjGr/rn76Tth4c+bMwo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=LR0wCo+eCOGAd7H1LUU0iZhs/abe60INzXMbdeb7LH/kXDr0Ql5IjxCakCB2qJOwk
+	 0YToXZItT67bynjVKKTVVN6EddNqIFDsr817l901ErgqVq+dAEFtleDVv8oQCdFm10
+	 V6F+I1ezLHR5NTywh/mdvIaUnYm+QVU8UjGMY4cg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729638AbfKDXZi (ORCPT
+        id S1729759AbfKDX1U convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 18:25:38 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:46362 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728810AbfKDXZi (ORCPT
+        Mon, 4 Nov 2019 18:27:20 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27169 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728810AbfKDX1T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 18:25:38 -0500
-Received: by mail-il1-f194.google.com with SMTP id m16so16419898iln.13;
-        Mon, 04 Nov 2019 15:25:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DKKd/VVOtZuRXftSRlB1c/gps6yTMEe9I9zF6w00nQk=;
-        b=MpBo834oVRGxQDcEBSGplBlQ8zHMrwASct+FAlsJU7KSb8wB86sCY/q35fjS3462Ah
-         4Pxtkm6zYdX43kOvDdx31ivzG38fLzH2PfkULwBiYwzf/4bXLsMCA/GGWRR1FYVKq/pu
-         OIBxqklvmHI/CSIeDFCKOmSBBDbSvVyGYW6MneBkSf84JDtxEiMPZX9GZeqDWbxHFXnX
-         +5QV/HHDnV0u/Ow+9sp6YBTZ8GqCtG9nGjJF01cO9iKwo8HFSqu39l6JeE/Y9n7+Nq89
-         8vAmjXyyCmebedWGnlwje+8NKMSweldNHQsdZGxGjRHS4hQblMUsKepRJpd3ck85TYdy
-         vwbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DKKd/VVOtZuRXftSRlB1c/gps6yTMEe9I9zF6w00nQk=;
-        b=nK4xYuxwbzr4ogmbAWCvCvh3uYnBrvMJO2NLhO1C7mXAtxHPOA49Ar4tT6Ct/cpkpC
-         W+dmg/BcXOqBdD5FbA8829O2KJ63Msf8eT/oB1lC4OaGalFqsbPWrfYgIu9Lh7Pt7oTt
-         B/ap4EKFogqCIuz57fOU4oQmte5jY8BAzj+xqAP4Pu+FnycTFLV0pp2mjOURZkZamj0X
-         fXj50lP0kbE8Ve/VkjepRe6wM+h1aEu3UrO+CcGKypM70S93KU4ewHCz3kVRWDiWKjwZ
-         Ujsm+5LyVg+FIXWeUYtTBlzRnS3m+7tXrCOuKUX7FNTm6NCagGJSOkkJ5/2bRL7lnxzf
-         yidQ==
-X-Gm-Message-State: APjAAAWdka6ZIN/2y+ZyPwfSkZrGpoclpcB3omyeOWrv/nSs3ySvg6M9
-        JhB1jjpuMUhgihh+GhfBfSNQ3gLCksgbkFDKr8o=
-X-Google-Smtp-Source: APXvYqxfZ9QYVP30ka78WJXyiRcwbJElqvNzVLyv7+vyUnZuZv4v03SE/c1PmYMQ8EvYD117rtrv+SrCyg64kLeaCY0=
-X-Received: by 2002:a92:cb84:: with SMTP id z4mr32745648ilo.78.1572909935500;
- Mon, 04 Nov 2019 15:25:35 -0800 (PST)
+        Mon, 4 Nov 2019 18:27:19 -0500
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-337-f_r9c5y6OXCN-NgBxiEUDg-1; Mon, 04 Nov 2019 18:27:16 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7654C800C73;
+        Mon,  4 Nov 2019 23:27:14 +0000 (UTC)
+Received: from krava.redhat.com (ovpn-204-100.brq.redhat.com [10.40.204.100])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6E4F219C58;
+        Mon,  4 Nov 2019 23:27:12 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: [PATCH] perf tools: Fix time sorting
+Date:   Tue,  5 Nov 2019 00:27:11 +0100
+Message-Id: <20191104232711.16055-1-jolsa@kernel.org>
 MIME-Version: 1.0
-References: <20191104070116.GM57214@dtor-ws> <20191104183702.8894-1-TheSven73@gmail.com>
- <CAHCN7xJc6DeyQV27OVjD14a8hZT+_Fo9qo-iHgLO414t3y6hVQ@mail.gmail.com> <CAGngYiXp52g7X=KLVqxTAhK0AJ9mpgGyaptbkYvhwWfRkQCaXQ@mail.gmail.com>
-In-Reply-To: <CAGngYiXp52g7X=KLVqxTAhK0AJ9mpgGyaptbkYvhwWfRkQCaXQ@mail.gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 4 Nov 2019 17:25:23 -0600
-Message-ID: <CAHCN7xLhqHzcHro7HYUdNAi8K3ToeruOtLw=0SZNAgNqUpxvHQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] Input: ili210x - add ILI2117 support
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Marek Vasut <marex@denx.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: f_r9c5y6OXCN-NgBxiEUDg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 3:43 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
->
-> Hi Adam,
->
-> On Mon, Nov 4, 2019 at 4:28 PM Adam Ford <aford173@gmail.com> wrote:
-> >
-> > I am using IRQ_TYPE_EDGE_RISING for the 2117A.  Is that correct?  For
-> > my touchscreen, the IRQ line is low until a touch is detected, so I
-> > assume we want to capure on the rising edge.
->
-> That is correct for the 2117A, as far as I know. I am using the same
-> setting.
->
-> >
-> > Regarding Dmitry's patch,
-> > Is it a good idea to use msleep in an IRQ?  It seems like using the
-> > schedule_delayed_work() call seems like it will get in and get out of
-> > the ISR faster.
-> >
-> > If we use msleep and scan again, isn't it possible to starve other processes?
->
-> I believe using msleep() is ok because this is not a "real" interrupt handler,
-> but a threaded one. It runs in a regular kernel thread, with its interrupt
-> turned off (but all other interrupts remain enabled). Its interrupt is
-> re-enabled automatically after the threaded handler returns.
->
-> See
-> https://elixir.bootlin.com/linux/latest/source/include/linux/interrupt.h#L50
->
-> > > @@ -268,7 +278,7 @@ static irqreturn_t ili210x_irq(int irq, void *irq_data)
-> > >                 }
-> > >
-> > >                 touch = ili210x_report_events(priv, touchdata);
-> > > -               keep_polling = touch || chip->continue_polling(touchdata);
-> > > +               keep_polling = chip->continue_polling(touchdata, touch);
-> > >                 if (keep_polling)
-> >
-> > Why not just check the value of touch instead of invoking the function
-> > pointer which takes the value of touch in as a parameter?
-> >
->
-> The value of touch must be checked inside the callback, because
-> some variants use it to decide if they should poll again, and
-> some do not, such as the ili211x.
+The final sort might get confused when the comparison
+is done over bigger numbers than int like for -s time.
 
-That makes sense.
->
-> If I have misinterpreted your suggestion, could you perhaps
-> express it in C, so I can understand better?
+Check following report for longer workloads:
+  $ perf report -s time -F time,overhead --stdio
 
-You explained it.
-I'm good.
+Fixing hist_entry__sort to properly return int64_t and
+not possible cut int.
 
-adam
+Cc: Andi Kleen <ak@linux.intel.com>
+Link: http://lkml.kernel.org/n/tip-uetl5z1eszpubzqykvdftaq6@git.kernel.org
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/util/hist.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 679a1d75090c..7b6eaf5e0bda 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -1625,7 +1625,7 @@ int hists__collapse_resort(struct hists *hists, struct ui_progress *prog)
+ 	return 0;
+ }
+ 
+-static int hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
++static int64_t hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
+ {
+ 	struct hists *hists = a->hists;
+ 	struct perf_hpp_fmt *fmt;
+-- 
+2.21.0
+
