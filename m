@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE75ECA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28E2CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1ACF2080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 812052080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:25:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbfKDRZg (ORCPT
+        id S1729427AbfKDRZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:25:36 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6144 "EHLO huawei.com"
+        Mon, 4 Nov 2019 12:25:39 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6147 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728709AbfKDRZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:25:34 -0500
+        id S1728965AbfKDRZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 12:25:36 -0500
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7C74F61AA012ECC36D09;
+        by Forcepoint Email with ESMTP id 875FAF13A01864A1C39C;
         Tue,  5 Nov 2019 01:25:31 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
@@ -30,9 +30,9 @@ To:     <xuwei5@huawei.com>
 CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
         <olof@lixom.net>, <bhelgaas@google.com>, <arnd@arndb.de>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH v3 4/5] bus: hisi_lpc: Expand build test coverage
-Date:   Tue, 5 Nov 2019 01:22:18 +0800
-Message-ID: <1572888139-47298-5-git-send-email-john.garry@huawei.com>
+Subject: [PATCH v3 1/5] lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration
+Date:   Tue, 5 Nov 2019 01:22:15 +0800
+Message-ID: <1572888139-47298-2-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1572888139-47298-1-git-send-email-john.garry@huawei.com>
 References: <1572888139-47298-1-git-send-email-john.garry@huawei.com>
@@ -45,36 +45,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the driver will only ever be built for ARM64 because it selects
-CONFIG_INDIRECT_PIO, which itself depends on ARM64.
+Since the only LOGIC_PIO_INDIRECT host (hisi-lpc) now sets the ops prior
+to registration, enforce this check for accessors ops at registration
+instead of in the IO port accessors to simplify and marginally optimise
+the code.
 
-Expand build test coverage for the driver to other architectures by only
-selecting CONFIG_INDIRECT_PIO for ARM64, when we really want it.
+A slight misalignment is also tidied.
 
-We don't include ALPHA, C6X, HEXAGON, and PARISC architectures as they
-don't define {read, write}sb.
+Also add myself as an author.
 
+Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- drivers/bus/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ lib/logic_pio.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 6b331061d34b..70886abe008e 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -41,8 +41,9 @@ config MOXTET
+diff --git a/lib/logic_pio.c b/lib/logic_pio.c
+index 905027574e5d..f511a99bb389 100644
+--- a/lib/logic_pio.c
++++ b/lib/logic_pio.c
+@@ -3,6 +3,7 @@
+  * Copyright (C) 2017 HiSilicon Limited, All Rights Reserved.
+  * Author: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+  * Author: Zhichang Yuan <yuanzhichang@hisilicon.com>
++ * Author: John Garry <john.garry@huawei.com>
+  */
  
- config HISILICON_LPC
- 	bool "Support for ISA I/O space on HiSilicon Hip06/7"
--	depends on ARM64 && (ARCH_HISI || COMPILE_TEST)
--	select INDIRECT_PIO
-+	depends on (ARM64 && ARCH_HISI) || (COMPILE_TEST && !ALPHA && !HEXAGON && !PARISC && !C6X)
-+	depends on HAS_IOMEM
-+	select INDIRECT_PIO if ARM64
- 	help
- 	  Driver to enable I/O access to devices attached to the Low Pin
- 	  Count bus on the HiSilicon Hip06/7 SoC.
+ #define pr_fmt(fmt)	"LOGIC PIO: " fmt
+@@ -39,7 +40,8 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+ 	resource_size_t iio_sz = MMIO_UPPER_LIMIT;
+ 	int ret = 0;
+ 
+-	if (!new_range || !new_range->fwnode || !new_range->size)
++	if (!new_range || !new_range->fwnode || !new_range->size ||
++	    (new_range->flags == LOGIC_PIO_INDIRECT && !new_range->ops))
+ 		return -EINVAL;
+ 
+ 	start = new_range->hw_start;
+@@ -237,7 +239,7 @@ type logic_in##bw(unsigned long addr)					\
+ 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) { \
+ 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+ 									\
+-		if (entry && entry->ops)				\
++		if (entry)						\
+ 			ret = entry->ops->in(entry->hostdata,		\
+ 					addr, sizeof(type));		\
+ 		else							\
+@@ -253,7 +255,7 @@ void logic_out##bw(type value, unsigned long addr)			\
+ 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
+ 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+ 									\
+-		if (entry && entry->ops)				\
++		if (entry)						\
+ 			entry->ops->out(entry->hostdata,		\
+ 					addr, value, sizeof(type));	\
+ 		else							\
+@@ -261,7 +263,7 @@ void logic_out##bw(type value, unsigned long addr)			\
+ 	}								\
+ }									\
+ 									\
+-void logic_ins##bw(unsigned long addr, void *buffer,		\
++void logic_ins##bw(unsigned long addr, void *buffer,			\
+ 		   unsigned int count)					\
+ {									\
+ 	if (addr < MMIO_UPPER_LIMIT) {					\
+@@ -269,7 +271,7 @@ void logic_ins##bw(unsigned long addr, void *buffer,		\
+ 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
+ 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+ 									\
+-		if (entry && entry->ops)				\
++		if (entry)						\
+ 			entry->ops->ins(entry->hostdata,		\
+ 				addr, buffer, sizeof(type), count);	\
+ 		else							\
+@@ -286,7 +288,7 @@ void logic_outs##bw(unsigned long addr, const void *buffer,		\
+ 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
+ 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+ 									\
+-		if (entry && entry->ops)				\
++		if (entry)						\
+ 			entry->ops->outs(entry->hostdata,		\
+ 				addr, buffer, sizeof(type), count);	\
+ 		else							\
 -- 
 2.17.1
 
