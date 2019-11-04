@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4071CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F168CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 789CF214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A03B204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906037;
-	bh=VxPe53bJmI0+m8+ilMm7PTOAeAZoj1mvrbS4fD+q3hc=;
+	s=default; t=1572906044;
+	bh=1+u1DkWnQPvDJmZtTN8GhHQZL6ffowQ+Ec2hlERuOeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MwfTWbb4vid7HQlmr/9Z0azrPWwRJPJbdRT8H5OR0Y1LUcD5Cf5jqn3qFLQhuc2JR
-	 2romVGs7AxUy4I0hfUmK46sJsS1J+W23fM9/jeUc0cCvkqDPLvSSvaqufRfrvVpv3Y
-	 9kaMg70tbh8CfCmqvqXBOn/dlxA6XVot7rxosESM=
+	b=FBtkE0b5W2FStdUmUyLA5L5D1kqTaykSGRP9XBcA+H8EramrBleozzcLfsFMIbVaW
+	 S3TCOPC6CyHakL41c701s7QqQhWAT5K3lmiKoJE2yfsTCFnbsDY375iDs8pdVxRfMv
+	 EH2gtHPYdye0jEXWz4H54cK5MC/Nu6lI8iSqo3AA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389281AbfKDWUg (ORCPT
+        id S1731091AbfKDV7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:20:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56648 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:59:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388155AbfKDV71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:59:27 -0500
+        id S1731012AbfKDV7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:59:07 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92FE920650;
-        Mon,  4 Nov 2019 21:59:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF2B5214E0;
+        Mon,  4 Nov 2019 21:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904767;
-        bh=VxPe53bJmI0+m8+ilMm7PTOAeAZoj1mvrbS4fD+q3hc=;
+        s=default; t=1572904746;
+        bh=1+u1DkWnQPvDJmZtTN8GhHQZL6ffowQ+Ec2hlERuOeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uFfIyn3NkH/rQGrzmhxX+pB1hGAPrXXCmZhjhTvZY3lM41yYfW7iW712i7kOlmAPW
-         BTTPeTA6AeJVqv/pzzkqea2kRmnTjfj+4I/w68ijcgbziV01+mP8jwBrV3A53IpywQ
-         hMT+v4TsQFnob2rUZyQMwj6tQ8nfDqvZ1jfBvvzg=
+        b=Npxs0+x8K0CdnJVgiM5+MBgRQUVdRxjboJ7dcSRwjB3Z+pRzP4hYbKPbP2Sb376Z3
+         CVQ02Go3G98HqOA6W6j6+3mHumed7afF7Ivuvs/EKMRghqLwfbT7QUefcRYx/m/nto
+         h4eBCXgwOskQWUIsV5jTU/BlXRx+nqSGa8ddQcqk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 063/149] perf script brstackinsn: Fix recovery from LBR/binary mismatch
-Date:   Mon,  4 Nov 2019 22:44:16 +0100
-Message-Id: <20191104212141.179859359@linuxfoundation.org>
+Subject: [PATCH 4.19 038/149] usb: dwc3: gadget: early giveback if End Transfer already completed
+Date:   Mon,  4 Nov 2019 22:43:51 +0100
+Message-Id: <20191104212138.439588864@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -61,75 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
 
-[ Upstream commit e98df280bc2a499fd41d7f9e2d6733884de69902 ]
+[ Upstream commit 9f45581f5eec6786c6eded2b3c85345d82a910c9 ]
 
-When the LBR data and the instructions in a binary do not match the loop
-printing instructions could get confused and print a long stream of
-bogus <bad> instructions.
+There is a rare race condition that may happen during a Disconnect
+Interrupt if we have a started request that happens to be
+dequeued *after* completion of End Transfer command. If that happens,
+that request will be left waiting for completion of an End Transfer
+command that will never happen.
 
-The problem was that if the instruction decoder cannot decode an
-instruction it ilen wasn't initialized, so the loop going through the
-basic block would continue with the previous value.
+If End Transfer command has already completed before, we are safe to
+giveback the request straight away.
 
-Harden the code to avoid such problems:
-
-- Make sure ilen is always freshly initialized and is 0 for bad
-  instructions.
-
-- Do not overrun the code buffer while printing instructions
-
-- Print a warning message if the final jump is not on an instruction
-  boundary.
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20190927233546.11533-1-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-script.c | 6 +++++-
+ drivers/usb/dwc3/gadget.c | 6 +++++-
  1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 53c11fc0855ee..d20f851796c52 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1021,7 +1021,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 			continue;
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index e7461c995116a..7b0957c530485 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1410,7 +1410,10 @@ static int dwc3_gadget_ep_dequeue(struct usb_ep *ep,
+ 				goto out0;
  
- 		insn = 0;
--		for (off = 0;; off += ilen) {
-+		for (off = 0; off < (unsigned)len; off += ilen) {
- 			uint64_t ip = start + off;
- 
- 			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
-@@ -1029,6 +1029,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 				printed += ip__fprintf_jump(ip, &br->entries[i], &x, buffer + off, len - off, insn, fp);
- 				break;
- 			} else {
-+				ilen = 0;
- 				printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", ip,
- 						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
- 				if (ilen == 0)
-@@ -1036,6 +1037,8 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 				insn++;
- 			}
+ 			dwc3_gadget_move_cancelled_request(req);
+-			goto out0;
++			if (dep->flags & DWC3_EP_TRANSFER_STARTED)
++				goto out0;
++			else
++				goto out1;
  		}
-+		if (off != (unsigned)len)
-+			printed += fprintf(fp, "\tmismatch of LBR data and executable\n");
+ 		dev_err(dwc->dev, "request %pK was not queued to %s\n",
+ 				request, ep->name);
+@@ -1418,6 +1421,7 @@ static int dwc3_gadget_ep_dequeue(struct usb_ep *ep,
+ 		goto out0;
  	}
  
- 	/*
-@@ -1066,6 +1069,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 		goto out;
- 	}
- 	for (off = 0; off <= end - start; off += ilen) {
-+		ilen = 0;
- 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", start + off,
- 				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
- 		if (ilen == 0)
++out1:
+ 	dwc3_gadget_giveback(dep, req, -ECONNRESET);
+ 
+ out0:
 -- 
 2.20.1
 
