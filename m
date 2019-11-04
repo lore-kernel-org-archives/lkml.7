@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF033CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6687DCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA65121744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 353AF20650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904836;
-	bh=bhnUTGAyaAASV4EfOnbQFrdIhxipFt4vC9r7havsXp8=;
+	s=default; t=1572904839;
+	bh=b3xdM3roLtUKI9V1E4GtHK+Asz06JOQbR6cG2m2Koxg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l/VXGR/8eQSZvWseDWllgBD7I9Hc/8Pw/KG03GJOBLR7JAroIgbyKM0xkLqjYvrHR
-	 /uyWzxdWI4YJ2AkiQVE24iwLNYuwOqh+4bDd0QZddOvt4L+JLlDOesyDbdKAhqnSt1
-	 A///YJ11ejmIgbXGn7fz0dujZAMBdg8poGtLAinw=
+	b=bBo2prTBj73RkbI5wkWxkbiWQvVNa9lofbIrbf8FTW2gkez/hAaacUYUCiwJOQGI3
+	 /8sn4aCep/X8aXcu/PwuKqLRvTDqjHD55N0B6XwkJ967FRZ2vJd9w8eiYJqyzAA96F
+	 vaV0058axmSyZEv6KLoWEUGUbSJxqx9nJhs5Z79w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388111AbfKDWAf (ORCPT
+        id S2388893AbfKDWAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:00:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58184 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:00:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388870AbfKDWAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:00:32 -0500
+        id S2388547AbfKDWAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:00:35 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38223214D8;
-        Mon,  4 Nov 2019 22:00:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25F26217F5;
+        Mon,  4 Nov 2019 22:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904831;
-        bh=bhnUTGAyaAASV4EfOnbQFrdIhxipFt4vC9r7havsXp8=;
+        s=default; t=1572904834;
+        bh=b3xdM3roLtUKI9V1E4GtHK+Asz06JOQbR6cG2m2Koxg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ECzfxEJL+bhSizwVlBxoXdT5KHgnLOAw9VycAfcRp3FE+GmesHt2Ewfluv1HWcJ2J
-         o1WV5zifoRImfGyAZXcT94WNRCNErg830UptsOEyBnR5gKIGjrTCM8/utm9RdKumyc
-         sHlpT4euEiXe5AUPKdNAP3nVeygAOl+Q6I5nVAWQ=
+        b=ztK6u/LYvYjo9rfG3m/xoQNfu3LI0qwDCK7s4SszR6W1DHDDJ03tN0vEARNchBSSe
+         6aeTJWgKjzhFnU5BIIoSVkSSM6OajZ2yh8iUiKMfzVffIabFJsYaPj09m3Vl+UyPhY
+         Zr4nrFvXAe16ABVPc9Ksm+yz6cbn1Z8LQXzhezDw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hanjun Guo <hanjun.guo@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, Nir Dotan <nird@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 044/149] arm64: kpti: Whitelist HiSilicon Taishan v110 CPUs
-Date:   Mon,  4 Nov 2019 22:43:57 +0100
-Message-Id: <20191104212139.138086779@linuxfoundation.org>
+Subject: [PATCH 4.19 045/149] mlxsw: spectrum: Set LAG port collector only when active
+Date:   Mon,  4 Nov 2019 22:43:58 +0100
+Message-Id: <20191104212139.233070758@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -62,35 +62,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hanjun Guo <hanjun.guo@linaro.org>
+From: Nir Dotan <nird@mellanox.com>
 
-[ Upstream commit 0ecc471a2cb7d4d386089445a727f47b59dc9b6e ]
+[ Upstream commit 48ebab31d424fbdb8ede8914923bec671a933246 ]
 
-HiSilicon Taishan v110 CPUs didn't implement CSV3 field of the
-ID_AA64PFR0_EL1 and are not susceptible to Meltdown, so whitelist
-the MIDR in kpti_safe_list[] table.
+The LAG port collecting (receive) function was mistakenly set when the
+port was registered as a LAG member, while it should be set only when
+the port collection state is set to true. Set LAG port to collecting
+when it is set to distributing, as described in the IEEE link
+aggregation standard coupled control mux machine state diagram.
 
-Signed-off-by: Hanjun Guo <hanjun.guo@linaro.org>
-Reviewed-by: John Garry <john.garry@huawei.com>
-Reviewed-by: Zhangshaokun <zhangshaokun@hisilicon.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Nir Dotan <nird@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/cpufeature.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../net/ethernet/mellanox/mlxsw/spectrum.c    | 62 ++++++++++++++-----
+ 1 file changed, 45 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index ff5beb59b3dc3..220ebfa0ece6e 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -906,6 +906,7 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
- 		MIDR_ALL_VERSIONS(MIDR_CORTEX_A57),
- 		MIDR_ALL_VERSIONS(MIDR_CORTEX_A72),
- 		MIDR_ALL_VERSIONS(MIDR_CORTEX_A73),
-+		MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
- 		{ /* sentinel */ }
- 	};
- 	char const *str = "kpti command line option";
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+index ee126bcf7c350..ccd9aca281b37 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -4410,9 +4410,6 @@ static int mlxsw_sp_port_lag_join(struct mlxsw_sp_port *mlxsw_sp_port,
+ 	err = mlxsw_sp_lag_col_port_add(mlxsw_sp_port, lag_id, port_index);
+ 	if (err)
+ 		goto err_col_port_add;
+-	err = mlxsw_sp_lag_col_port_enable(mlxsw_sp_port, lag_id);
+-	if (err)
+-		goto err_col_port_enable;
+ 
+ 	mlxsw_core_lag_mapping_set(mlxsw_sp->core, lag_id, port_index,
+ 				   mlxsw_sp_port->local_port);
+@@ -4427,8 +4424,6 @@ static int mlxsw_sp_port_lag_join(struct mlxsw_sp_port *mlxsw_sp_port,
+ 
+ 	return 0;
+ 
+-err_col_port_enable:
+-	mlxsw_sp_lag_col_port_remove(mlxsw_sp_port, lag_id);
+ err_col_port_add:
+ 	if (!lag->ref_count)
+ 		mlxsw_sp_lag_destroy(mlxsw_sp, lag_id);
+@@ -4447,7 +4442,6 @@ static void mlxsw_sp_port_lag_leave(struct mlxsw_sp_port *mlxsw_sp_port,
+ 	lag = mlxsw_sp_lag_get(mlxsw_sp, lag_id);
+ 	WARN_ON(lag->ref_count == 0);
+ 
+-	mlxsw_sp_lag_col_port_disable(mlxsw_sp_port, lag_id);
+ 	mlxsw_sp_lag_col_port_remove(mlxsw_sp_port, lag_id);
+ 
+ 	/* Any VLANs configured on the port are no longer valid */
+@@ -4492,21 +4486,56 @@ static int mlxsw_sp_lag_dist_port_remove(struct mlxsw_sp_port *mlxsw_sp_port,
+ 	return mlxsw_reg_write(mlxsw_sp->core, MLXSW_REG(sldr), sldr_pl);
+ }
+ 
+-static int mlxsw_sp_port_lag_tx_en_set(struct mlxsw_sp_port *mlxsw_sp_port,
+-				       bool lag_tx_enabled)
++static int
++mlxsw_sp_port_lag_col_dist_enable(struct mlxsw_sp_port *mlxsw_sp_port)
+ {
+-	if (lag_tx_enabled)
+-		return mlxsw_sp_lag_dist_port_add(mlxsw_sp_port,
+-						  mlxsw_sp_port->lag_id);
+-	else
+-		return mlxsw_sp_lag_dist_port_remove(mlxsw_sp_port,
+-						     mlxsw_sp_port->lag_id);
++	int err;
++
++	err = mlxsw_sp_lag_col_port_enable(mlxsw_sp_port,
++					   mlxsw_sp_port->lag_id);
++	if (err)
++		return err;
++
++	err = mlxsw_sp_lag_dist_port_add(mlxsw_sp_port, mlxsw_sp_port->lag_id);
++	if (err)
++		goto err_dist_port_add;
++
++	return 0;
++
++err_dist_port_add:
++	mlxsw_sp_lag_col_port_disable(mlxsw_sp_port, mlxsw_sp_port->lag_id);
++	return err;
++}
++
++static int
++mlxsw_sp_port_lag_col_dist_disable(struct mlxsw_sp_port *mlxsw_sp_port)
++{
++	int err;
++
++	err = mlxsw_sp_lag_dist_port_remove(mlxsw_sp_port,
++					    mlxsw_sp_port->lag_id);
++	if (err)
++		return err;
++
++	err = mlxsw_sp_lag_col_port_disable(mlxsw_sp_port,
++					    mlxsw_sp_port->lag_id);
++	if (err)
++		goto err_col_port_disable;
++
++	return 0;
++
++err_col_port_disable:
++	mlxsw_sp_lag_dist_port_add(mlxsw_sp_port, mlxsw_sp_port->lag_id);
++	return err;
+ }
+ 
+ static int mlxsw_sp_port_lag_changed(struct mlxsw_sp_port *mlxsw_sp_port,
+ 				     struct netdev_lag_lower_state_info *info)
+ {
+-	return mlxsw_sp_port_lag_tx_en_set(mlxsw_sp_port, info->tx_enabled);
++	if (info->tx_enabled)
++		return mlxsw_sp_port_lag_col_dist_enable(mlxsw_sp_port);
++	else
++		return mlxsw_sp_port_lag_col_dist_disable(mlxsw_sp_port);
+ }
+ 
+ static int mlxsw_sp_port_stp_set(struct mlxsw_sp_port *mlxsw_sp_port,
+@@ -4668,8 +4697,7 @@ static int mlxsw_sp_netdevice_port_upper_event(struct net_device *lower_dev,
+ 				err = mlxsw_sp_port_lag_join(mlxsw_sp_port,
+ 							     upper_dev);
+ 			} else {
+-				mlxsw_sp_port_lag_tx_en_set(mlxsw_sp_port,
+-							    false);
++				mlxsw_sp_port_lag_col_dist_disable(mlxsw_sp_port);
+ 				mlxsw_sp_port_lag_leave(mlxsw_sp_port,
+ 							upper_dev);
+ 			}
 -- 
 2.20.1
 
