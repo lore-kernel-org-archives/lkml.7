@@ -2,52 +2,65 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE049CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07976CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B072190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D07FF2190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904428;
-	bh=7Hz5cFinExP0sQs8VQ/Osxg5CIeMdGKkH2cwpUXVmLU=;
+	s=default; t=1572904431;
+	bh=BtPthEbFZO7N9aUGHPdmlHuHW+pZd5gl9U2hNUPHWCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HIpWdYaJJjWdwLKJz5VNchQlYmYgCrXXJje0WPYGbXTIHiiwrZxv6gWJcXf0/QJk0
-	 Avg7rZoyzm5avdjbuc5DowcRBIWw7CDWYjMVUIQDfgZoqI8404JR2qHRWtUk/hch8q
-	 eedQcgxUBxdNsSX2I7GwCSPK72nMZxYYvSPSDn6A=
+	b=W8IcIh+e/ZYrAoso6e7zFo/dJPGDXgHaKu3o2A8bRu7+3lhTCgjWfxAXAFqKAkR1d
+	 2VnR/xdbMOjoxXsOpYk27n03CcobHoSCOVaRjipkfQGBKVVBy66Uv2b85ro0fzf7vU
+	 bxeuFAx+iCyzMuXmNjqyo6PI583CyGT0EG82kaCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387545AbfKDVxr (ORCPT
+        id S2387649AbfKDVxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:53:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47822 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:53:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731046AbfKDVxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:53:44 -0500
+        id S2387470AbfKDVxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:53:47 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29E9B217F5;
-        Mon,  4 Nov 2019 21:53:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF5AF217F5;
+        Mon,  4 Nov 2019 21:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904423;
-        bh=7Hz5cFinExP0sQs8VQ/Osxg5CIeMdGKkH2cwpUXVmLU=;
+        s=default; t=1572904426;
+        bh=BtPthEbFZO7N9aUGHPdmlHuHW+pZd5gl9U2hNUPHWCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZCULffi1IewXUEQ6DHcLA272IrA6E1RNsuqTPHe4ag5LfnvUuTUdi9SSLOkl3N4sr
-         S79FQAxNi0JNNTPlIQa19nZD6L0kOIdjnCfQdYMlVY3chcJl2xRXjBAV7YpWsAIyWX
-         P+bGRA29RgeCYf/+iz+wDDd6mRnTGnY4ulXqu9x0=
+        b=ex4QI4BK7kesPk92M80pMbtd52PofpUvRHBQoDZmQFzYfRMPi9bm6cXBzICm3OGT3
+         FRUk09O0JjWsdly/km2WihF3l+b2b2Jvgi13npfbpVpZmJqQ4/OL0IDBygBXm7E7Ya
+         v8WTQHiFenLdUWkefR1um96dI9tC2gOEud8Q7BFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Yegor Yefremov <yegorslists@googlemail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 40/95] serial: mctrl_gpio: Check for NULL pointer
-Date:   Mon,  4 Nov 2019 22:44:38 +0100
-Message-Id: <20191104212101.712737282@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Dave Young <dyoung@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lyude Paul <lyude@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Octavian Purdila <octavian.purdila@intel.com>,
+        Peter Jones <pjones@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Scott Talbert <swt@techie.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 41/95] efi/cper: Fix endianness of PCIe class code
+Date:   Mon,  4 Nov 2019 22:44:39 +0100
+Message-Id: <20191104212101.807789721@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -60,38 +73,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit 37e3ab00e4734acc15d96b2926aab55c894f4d9c ]
+[ Upstream commit 6fb9367a15d1a126d222d738b2702c7958594a5f ]
 
-When using mctrl_gpio_to_gpiod, it dereferences gpios into a single
-requested GPIO.  This dereferencing can break if gpios is NULL,
-so this patch adds a NULL check before dereferencing it.  If
-gpios is NULL, this function will also return NULL.
+The CPER parser assumes that the class code is big endian, but at least
+on this edk2-derived Intel Purley platform it's little endian:
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Reviewed-by: Yegor Yefremov <yegorslists@googlemail.com>
-Link: https://lore.kernel.org/r/20191006163314.23191-1-aford173@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    efi: EFI v2.50 by EDK II BIOS ID:PLYDCRB1.86B.0119.R05.1701181843
+    DMI: Intel Corporation PURLEY/PURLEY, BIOS PLYDCRB1.86B.0119.R05.1701181843 01/18/2017
+
+    {1}[Hardware Error]:   device_id: 0000:5d:00.0
+    {1}[Hardware Error]:   slot: 0
+    {1}[Hardware Error]:   secondary_bus: 0x5e
+    {1}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x2030
+    {1}[Hardware Error]:   class_code: 000406
+                                       ^^^^^^ (should be 060400)
+
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Jerry Snitselaar <jsnitsel@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: Octavian Purdila <octavian.purdila@intel.com>
+Cc: Peter Jones <pjones@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Scott Talbert <swt@techie.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Cc: linux-integrity@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191002165904.8819-2-ard.biesheuvel@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/serial_mctrl_gpio.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/firmware/efi/cper.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
-index 42e42e3e7a6e6..388f710468490 100644
---- a/drivers/tty/serial/serial_mctrl_gpio.c
-+++ b/drivers/tty/serial/serial_mctrl_gpio.c
-@@ -69,6 +69,9 @@ EXPORT_SYMBOL_GPL(mctrl_gpio_set);
- struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
- 				      enum mctrl_gpio_idx gidx)
- {
-+	if (gpios == NULL)
-+		return NULL;
-+
- 	return gpios->gpio[gidx];
- }
- EXPORT_SYMBOL_GPL(mctrl_gpio_to_gpiod);
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index db404aab82b2a..209dc5aefc310 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -498,7 +498,7 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
+ 		printk("%s""vendor_id: 0x%04x, device_id: 0x%04x\n", pfx,
+ 		       pcie->device_id.vendor_id, pcie->device_id.device_id);
+ 		p = pcie->device_id.class_code;
+-		printk("%s""class_code: %02x%02x%02x\n", pfx, p[0], p[1], p[2]);
++		printk("%s""class_code: %02x%02x%02x\n", pfx, p[2], p[1], p[0]);
+ 	}
+ 	if (pcie->validation_bits & CPER_PCIE_VALID_SERIAL_NUMBER)
+ 		printk("%s""serial number: 0x%04x, 0x%04x\n", pfx,
 -- 
 2.20.1
 
