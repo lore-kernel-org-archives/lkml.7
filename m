@@ -4,215 +4,178 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 941A1CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D621CA9ED2
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 704082190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E05B222C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:24:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbfKDIXL (ORCPT
+        id S1727938AbfKDIYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 03:23:11 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:18485 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726100AbfKDIXL (ORCPT
+        Mon, 4 Nov 2019 03:24:20 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46841 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfKDIYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 03:23:11 -0500
-X-UUID: f3d48e21f24944e59500e27b0f8bf455-20191104
-X-UUID: f3d48e21f24944e59500e27b0f8bf455-20191104
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <argus.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1602932616; Mon, 04 Nov 2019 16:23:06 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 4 Nov 2019 16:23:02 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 4 Nov 2019 16:23:02 +0800
-Message-ID: <1572855784.4243.4.camel@mtkswgap22>
-Subject: Re: [PATCH 3/3] soc: mediatek: pwrap: add support for MT6359 PMIC
-From:   Argus Lin <argus.lin@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
+        Mon, 4 Nov 2019 03:24:19 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iRXel-0000b5-8H; Mon, 04 Nov 2019 09:24:11 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iRXek-00081I-88; Mon, 04 Nov 2019 09:24:10 +0100
+Date:   Mon, 4 Nov 2019 09:24:10 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Chenglin Xu <chenglin.xu@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <wsd_upstream@mediatek.com>, <henryc.chen@mediatek.com>,
-        <flora.fu@mediatek.com>, Chen Zhong <chen.zhong@mediatek.com>,
-        Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Mon, 4 Nov 2019 16:23:04 +0800
-In-Reply-To: <1571030264.19600.2.camel@mtkswgap22>
-References: <1570088901-23211-1-git-send-email-argus.lin@mediatek.com>
-         <1570088901-23211-4-git-send-email-argus.lin@mediatek.com>
-         <5ec86287-2a90-ca07-c9a6-262420a68fd3@gmail.com>
-         <1571030264.19600.2.camel@mtkswgap22>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>, kernel@pengutronix.de
+Subject: Re: [PATCH v2 3/7] pwm: sun4i: Add an optional probe for bus clock
+Message-ID: <20191104082410.qdgcnphkamlzaipf@pengutronix.de>
+References: <20191103203334.10539-1-peron.clem@gmail.com>
+ <20191103203334.10539-4-peron.clem@gmail.com>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191103203334.10539-4-peron.clem@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dear matthias:
-sorry to disturb you.
+Hello,
 
-Based on your opinion, I had updated my comment.
-
-If you have any concern, please let me know.
-thanks.
-
-B.R.
-Argus
-
-On Mon, 2019-10-14 at 13:17 +0800, Argus Lin wrote:
-> On Fri, 2019-10-04 at 01:27 +0200, Matthias Brugger wrote:
-> > 
-> > On 03/10/2019 09:48, Argus Lin wrote:
-> > > MT6359 is a new power management IC and it is used for
-> > > MT6779 SoCs. To define mt6359_regs for pmic register mapping
-> > > and pmic_mt6359 for accessing register.
-> > > 
-> > > Signed-off-by: Argus Lin <argus.lin@mediatek.com>
-> > > ---
-> > >  drivers/soc/mediatek/mtk-pmic-wrap.c | 72 ++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 72 insertions(+)
-> > > 
-> > > diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> > > index fa8daf2..dd04318 100644
-> > > --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
-> > > +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> > > @@ -111,6 +111,29 @@ enum dew_regs {
-> > >  	PWRAP_RG_SPI_CON13,
-> > >  	PWRAP_SPISLV_KEY,
-> > > 
-> > > +	/* MT6359 only regs */
-> > > +	PWRAP_DEW_CRC_SWRST,
-> > > +	PWRAP_DEW_RG_EN_RECORD,
-> > > +	PWRAP_DEW_RECORD_CMD0,
-> > > +	PWRAP_DEW_RECORD_CMD1,
-> > > +	PWRAP_DEW_RECORD_CMD2,
-> > > +	PWRAP_DEW_RECORD_CMD3,
-> > > +	PWRAP_DEW_RECORD_CMD4,
-> > > +	PWRAP_DEW_RECORD_CMD5,
-> > > +	PWRAP_DEW_RECORD_WDATA0,
-> > > +	PWRAP_DEW_RECORD_WDATA1,
-> > > +	PWRAP_DEW_RECORD_WDATA2,
-> > > +	PWRAP_DEW_RECORD_WDATA3,
-> > > +	PWRAP_DEW_RECORD_WDATA4,
-> > > +	PWRAP_DEW_RECORD_WDATA5,
-> > > +	PWRAP_DEW_RG_ADDR_TARGET,
-> > > +	PWRAP_DEW_RG_ADDR_MASK,
-> > > +	PWRAP_DEW_RG_WDATA_TARGET,
-> > > +	PWRAP_DEW_RG_WDATA_MASK,
-> > > +	PWRAP_DEW_RG_SPI_RECORD_CLR,
-> > > +	PWRAP_DEW_RG_CMD_ALERT_CLR,
-> > > +	PWRAP_DEW_SPISLV_KEY,
-> > 
-> > That looks like PWRAP_SPISLV_KEY from MT6358.
-> > 
-> > Regards,
-> > Matthias
-> > 
-> Yes, I think I can reuse the PWRAP_SPISLV_KEY of MT6358.
+On Sun, Nov 03, 2019 at 09:33:30PM +0100, Clément Péron wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
 > 
-> B.R.
-> Argus
-> > > +
-> > >  	/* MT6397 only regs */
-> > >  	PWRAP_DEW_EVENT_OUT_EN,
-> > >  	PWRAP_DEW_EVENT_SRC_EN,
-> > > @@ -197,6 +220,42 @@ enum dew_regs {
-> > >  	[PWRAP_SPISLV_KEY] =		0x044a,
-> > >  };
-> > > 
-> > > +static const u32 mt6359_regs[] = {
-> > > +	[PWRAP_DEW_RG_EN_RECORD] =	0x040a,
-> > > +	[PWRAP_DEW_DIO_EN] =		0x040c,
-> > > +	[PWRAP_DEW_READ_TEST] =		0x040e,
-> > > +	[PWRAP_DEW_WRITE_TEST] =	0x0410,
-> > > +	[PWRAP_DEW_CRC_SWRST] =		0x0412,
-> > > +	[PWRAP_DEW_CRC_EN] =		0x0414,
-> > > +	[PWRAP_DEW_CRC_VAL] =		0x0416,
-> > > +	[PWRAP_DEW_CIPHER_KEY_SEL] =	0x0418,
-> > > +	[PWRAP_DEW_CIPHER_IV_SEL] =	0x041a,
-> > > +	[PWRAP_DEW_CIPHER_EN] =		0x041c,
-> > > +	[PWRAP_DEW_CIPHER_RDY] =	0x041e,
-> > > +	[PWRAP_DEW_CIPHER_MODE] =	0x0420,
-> > > +	[PWRAP_DEW_CIPHER_SWRST] =	0x0422,
-> > > +	[PWRAP_DEW_RDDMY_NO] =		0x0424,
-> > > +	[PWRAP_DEW_RECORD_CMD0] =	0x0428,
-> > > +	[PWRAP_DEW_RECORD_CMD1] =	0x042a,
-> > > +	[PWRAP_DEW_RECORD_CMD2] =	0x042c,
-> > > +	[PWRAP_DEW_RECORD_CMD3] =	0x042e,
-> > > +	[PWRAP_DEW_RECORD_CMD4] =	0x0430,
-> > > +	[PWRAP_DEW_RECORD_CMD5] =	0x0432,
-> > > +	[PWRAP_DEW_RECORD_WDATA0] =	0x0434,
-> > > +	[PWRAP_DEW_RECORD_WDATA1] =	0x0436,
-> > > +	[PWRAP_DEW_RECORD_WDATA2] =	0x0438,
-> > > +	[PWRAP_DEW_RECORD_WDATA3] =	0x043a,
-> > > +	[PWRAP_DEW_RECORD_WDATA4] =	0x043c,
-> > > +	[PWRAP_DEW_RECORD_WDATA5] =	0x043e,
-> > > +	[PWRAP_DEW_RG_ADDR_TARGET] =	0x0440,
-> > > +	[PWRAP_DEW_RG_ADDR_MASK] =	0x0442,
-> > > +	[PWRAP_DEW_RG_WDATA_TARGET] =	0x0444,
-> > > +	[PWRAP_DEW_RG_WDATA_MASK] =	0x0446,
-> > > +	[PWRAP_DEW_RG_SPI_RECORD_CLR] =	0x0448,
-> > > +	[PWRAP_DEW_RG_CMD_ALERT_CLR] =	0x0448,
-> > > +	[PWRAP_DEW_SPISLV_KEY] =	0x044a,
-> > > +};
-> > > +
-> > >  static const u32 mt6397_regs[] = {
-> > >  	[PWRAP_DEW_BASE] =		0xbc00,
-> > >  	[PWRAP_DEW_EVENT_OUT_EN] =	0xbc00,
-> > > @@ -977,6 +1036,7 @@ enum pmic_type {
-> > >  	PMIC_MT6351,
-> > >  	PMIC_MT6357,
-> > >  	PMIC_MT6358,
-> > > +	PMIC_MT6359,
-> > >  	PMIC_MT6380,
-> > >  	PMIC_MT6397,
-> > >  };
-> > > @@ -1757,6 +1817,15 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
-> > >  	.pwrap_write = pwrap_write16,
-> > >  };
-> > > 
-> > > +static const struct pwrap_slv_type pmic_mt6359 = {
-> > > +	.dew_regs = mt6359_regs,
-> > > +	.type = PMIC_MT6359,
-> > > +	.regmap = &pwrap_regmap_config16,
-> > > +	.caps = PWRAP_SLV_CAP_DUALIO,
-> > > +	.pwrap_read = pwrap_read16,
-> > > +	.pwrap_write = pwrap_write16,
-> > > +};
-> > > +
-> > >  static const struct pwrap_slv_type pmic_mt6380 = {
-> > >  	.dew_regs = NULL,
-> > >  	.type = PMIC_MT6380,
-> > > @@ -1790,6 +1859,9 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
-> > >  		.compatible = "mediatek,mt6358",
-> > >  		.data = &pmic_mt6358,
-> > >  	}, {
-> > > +		.compatible = "mediatek,mt6359",
-> > > +		.data = &pmic_mt6359,
-> > > +	}, {
-> > >  		/* The MT6380 PMIC only implements a regulator, so we bind it
-> > >  		 * directly instead of using a MFD.
-> > >  		 */
-> > > --
-> > > 1.8.1.1.dirty
-> > > 
+> H6 PWM core needs bus clock to be enabled in order to work.
 > 
+> Add an optional probe for it and a fallback for previous
+> bindings without name on module clock.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> ---
+>  drivers/pwm/pwm-sun4i.c | 36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> index d194b8ebdb00..b5e7ac364f59 100644
+> --- a/drivers/pwm/pwm-sun4i.c
+> +++ b/drivers/pwm/pwm-sun4i.c
+> @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
+>  
+>  struct sun4i_pwm_chip {
+>  	struct pwm_chip chip;
+> +	struct clk *bus_clk;
+>  	struct clk *clk;
+>  	struct reset_control *rst;
+>  	void __iomem *base;
+> @@ -367,6 +368,31 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
 
+Adding more context here:
 
+|       pwm->clk = devm_clk_get(&pdev->dev, NULL);
+>  	if (IS_ERR(pwm->clk))
+>  		return PTR_ERR(pwm->clk);
+>  
+> +	/* Get all clocks and reset line */
+> +	pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
+> +	if (IS_ERR(pwm->clk)) {
+> +		dev_err(&pdev->dev, "get clock failed %ld\n",
+> +			PTR_ERR(pwm->clk));
+> +		return PTR_ERR(pwm->clk);
+> +	}
+
+I guess you want to drop the first assignment to pwm->clk.
+
+> +	/* Fallback for old dtbs with a single clock and no name */
+> +	if (!pwm->clk) {
+> +		pwm->clk = devm_clk_get(&pdev->dev, NULL);
+> +		if (IS_ERR(pwm->clk)) {
+> +			dev_err(&pdev->dev, "get clock failed %ld\n",
+> +				PTR_ERR(pwm->clk));
+> +			return PTR_ERR(pwm->clk);
+> +		}
+> +	}
+
+There is a slight change of behaviour if I'm not mistaken. If you have
+this:
+
+	clocks = <&clk1>;
+	clock-names = "mod";
+
+	pwm {
+		compatible = "allwinner,sun4i-a10-pwm"
+		clocks = <&clk2>;
+	}
+
+you now use clk1 instead of clk2 before.
+
+Assuming this is only a theoretical problem, at least pointing this out
+in the commit log would be good I think.
+
+> +	pwm->bus_clk = devm_clk_get_optional(&pdev->dev, "bus");
+> +	if (IS_ERR(pwm->bus_clk)) {
+> +		dev_err(&pdev->dev, "get bus_clock failed %ld\n",
+> +			PTR_ERR(pwm->bus_clk));
+> +		return PTR_ERR(pwm->bus_clk);
+> +	}
+> +
+>  	pwm->rst = devm_reset_control_get_optional(&pdev->dev, NULL);
+>  	if (IS_ERR(pwm->rst)) {
+>  		if (PTR_ERR(pwm->rst) == -EPROBE_DEFER)
+> @@ -381,6 +407,13 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	/* Enable bus clock */
+> +	ret = clk_prepare_enable(pwm->bus_clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Cannot prepare_enable bus_clk\n");
+
+I'd do s/prepare_enable/prepare and enable/ here.
+
+> +		goto err_bus;
+> +	}
+> +
+>  	pwm->chip.dev = &pdev->dev;
+>  	pwm->chip.ops = &sun4i_pwm_ops;
+>  	pwm->chip.base = -1;
+> @@ -401,6 +434,8 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+>  	return 0;
+>  
+>  err_pwm_add:
+> +	clk_disable_unprepare(pwm->bus_clk);
+> +err_bus:
+>  	reset_control_assert(pwm->rst);
+>  
+>  	return ret;
+
+What is that clock used for? Is it required to access the hardware
+registers? Or is it only required while the PWM is enabled? If so you
+could enable the clock more finegrainded.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
