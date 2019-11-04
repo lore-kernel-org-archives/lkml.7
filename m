@@ -7,47 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B93E4CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 769E2CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F29621D81
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF2A214E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905267;
-	bh=TTB8UBu/Kwrk49Iibpo1M3U4PWEFdAC5mkCs13JqpWQ=;
+	s=default; t=1572905271;
+	bh=WK6Fj6UW/5yX61mTt1acXVagRpVt5foeko/k9T+Dt9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vbzUH58exsbbD7edJ9geNkGgpi41EaLCzZxo9++qRH+pv6zH0R5SAXpfYMXD5Obt9
-	 A6/s5rbc0kHgpNsHrCkfe4qNAtiwnAgTNtgp48GsVo3UPnRPhJoJYT7/s5POueAFKd
-	 CibDIGQ8iT1JA3xgFgnxToICI9Tcczsesbx4NKN8=
+	b=Yv7Egb8Pj8bvkHiQUbRjkujtG+M29+FYP15OU9unaeY3vRYw4QRInjRqTUbvKC2WD
+	 sGOQNRG/2S0Nn0RL7iGX2rGcoj4qNtrv4gjhVPEVHoOl/2ZFiGrw2dhzr6mRfkKOik
+	 +JHDHErq5cYq1T3QsdLPt4F5G0Qray95u1rSfQ7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389344AbfKDWHq (ORCPT
+        id S2388481AbfKDWHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:07:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40230 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:07:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390156AbfKDWHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:07:39 -0500
+        id S2390159AbfKDWHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:07:44 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7B56205C9;
-        Mon,  4 Nov 2019 22:07:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D691214D8;
+        Mon,  4 Nov 2019 22:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905258;
-        bh=TTB8UBu/Kwrk49Iibpo1M3U4PWEFdAC5mkCs13JqpWQ=;
+        s=default; t=1572905263;
+        bh=WK6Fj6UW/5yX61mTt1acXVagRpVt5foeko/k9T+Dt9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lTKalqJbWqQKYlxOzgpi6dB3FBBH6aKJ1XMpsnxxPAxmM2CwYcAg4GQ2PSVtDCZ0Z
-         0pEA0w70Cel9Xet79NCaJJe5ZQiCRkQ2NE56PurQG4UnGxDewOY5mwtBc4Reu8I+xh
-         XdoDRzZ92js68iDS6ZhDKeOAbLJ2CjA/SMKZdF+E=
+        b=NSyWhu5WF8UR9VdVwFJ8GoEBHj/7+0zVN3Mz72gMVQ+7qQz98wNBTrYKpWLO50poe
+         Sa0Teo5Zomns8KLOtiDPh9oaIGYWqCAJ880LV2jyAk5+Y4gDj6DFG1Gphs4lVH0gp8
+         NzqCnH/OjutZacEOcF7f3MfYTAXT7JyT0yPnl6u4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 082/163] tracing: Initialize iter->seq after zeroing in tracing_read_pipe()
-Date:   Mon,  4 Nov 2019 22:44:32 +0100
-Message-Id: <20191104212146.231843058@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, acme@kernel.org,
+        gor@linux.ibm.com, hechaol@fb.com, heiko.carstens@de.ibm.com,
+        linux-perf-users@vger.kernel.org, songliubraving@fb.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 084/163] perf/aux: Fix tracking of auxiliary trace buffer allocation
+Date:   Mon,  4 Nov 2019 22:44:34 +0100
+Message-Id: <20191104212146.358961827@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -60,80 +70,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Mladek <pmladek@suse.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit d303de1fcf344ff7c15ed64c3f48a991c9958775 ]
+[ Upstream commit 5e6c3c7b1ec217c1c4c95d9148182302b9969b97 ]
 
-A customer reported the following softlockup:
+The following commit from the v5.4 merge window:
 
-[899688.160002] NMI watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [test.sh:16464]
-[899688.160002] CPU: 0 PID: 16464 Comm: test.sh Not tainted 4.12.14-6.23-azure #1 SLE12-SP4
-[899688.160002] RIP: 0010:up_write+0x1a/0x30
-[899688.160002] Kernel panic - not syncing: softlockup: hung tasks
-[899688.160002] RIP: 0010:up_write+0x1a/0x30
-[899688.160002] RSP: 0018:ffffa86784d4fde8 EFLAGS: 00000257 ORIG_RAX: ffffffffffffff12
-[899688.160002] RAX: ffffffff970fea00 RBX: 0000000000000001 RCX: 0000000000000000
-[899688.160002] RDX: ffffffff00000001 RSI: 0000000000000080 RDI: ffffffff970fea00
-[899688.160002] RBP: ffffffffffffffff R08: ffffffffffffffff R09: 0000000000000000
-[899688.160002] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8b59014720d8
-[899688.160002] R13: ffff8b59014720c0 R14: ffff8b5901471090 R15: ffff8b5901470000
-[899688.160002]  tracing_read_pipe+0x336/0x3c0
-[899688.160002]  __vfs_read+0x26/0x140
-[899688.160002]  vfs_read+0x87/0x130
-[899688.160002]  SyS_read+0x42/0x90
-[899688.160002]  do_syscall_64+0x74/0x160
+  d44248a41337 ("perf/core: Rework memory accounting in perf_mmap()")
 
-It caught the process in the middle of trace_access_unlock(). There is
-no loop. So, it must be looping in the caller tracing_read_pipe()
-via the "waitagain" label.
+... breaks auxiliary trace buffer tracking.
 
-Crashdump analyze uncovered that iter->seq was completely zeroed
-at this point, including iter->seq.seq.size. It means that
-print_trace_line() was never able to print anything and
-there was no forward progress.
+If I run command 'perf record -e rbd000' to record samples and saving
+them in the **auxiliary** trace buffer then the value of 'locked_vm' becomes
+negative after all trace buffers have been allocated and released:
 
-The culprit seems to be in the code:
+During allocation the values increase:
 
-	/* reset all but tr, trace, and overruns */
-	memset(&iter->seq, 0,
-	       sizeof(struct trace_iterator) -
-	       offsetof(struct trace_iterator, seq));
+  [52.250027] perf_mmap user->locked_vm:0x87 pinned_vm:0x0 ret:0
+  [52.250115] perf_mmap user->locked_vm:0x107 pinned_vm:0x0 ret:0
+  [52.250251] perf_mmap user->locked_vm:0x188 pinned_vm:0x0 ret:0
+  [52.250326] perf_mmap user->locked_vm:0x208 pinned_vm:0x0 ret:0
+  [52.250441] perf_mmap user->locked_vm:0x289 pinned_vm:0x0 ret:0
+  [52.250498] perf_mmap user->locked_vm:0x309 pinned_vm:0x0 ret:0
+  [52.250613] perf_mmap user->locked_vm:0x38a pinned_vm:0x0 ret:0
+  [52.250715] perf_mmap user->locked_vm:0x408 pinned_vm:0x2 ret:0
+  [52.250834] perf_mmap user->locked_vm:0x408 pinned_vm:0x83 ret:0
+  [52.250915] perf_mmap user->locked_vm:0x408 pinned_vm:0x103 ret:0
+  [52.251061] perf_mmap user->locked_vm:0x408 pinned_vm:0x184 ret:0
+  [52.251146] perf_mmap user->locked_vm:0x408 pinned_vm:0x204 ret:0
+  [52.251299] perf_mmap user->locked_vm:0x408 pinned_vm:0x285 ret:0
+  [52.251383] perf_mmap user->locked_vm:0x408 pinned_vm:0x305 ret:0
+  [52.251544] perf_mmap user->locked_vm:0x408 pinned_vm:0x386 ret:0
+  [52.251634] perf_mmap user->locked_vm:0x408 pinned_vm:0x406 ret:0
+  [52.253018] perf_mmap user->locked_vm:0x408 pinned_vm:0x487 ret:0
+  [52.253197] perf_mmap user->locked_vm:0x408 pinned_vm:0x508 ret:0
+  [52.253374] perf_mmap user->locked_vm:0x408 pinned_vm:0x589 ret:0
+  [52.253550] perf_mmap user->locked_vm:0x408 pinned_vm:0x60a ret:0
+  [52.253726] perf_mmap user->locked_vm:0x408 pinned_vm:0x68b ret:0
+  [52.253903] perf_mmap user->locked_vm:0x408 pinned_vm:0x70c ret:0
+  [52.254084] perf_mmap user->locked_vm:0x408 pinned_vm:0x78d ret:0
+  [52.254263] perf_mmap user->locked_vm:0x408 pinned_vm:0x80e ret:0
 
-It was added by the commit 53d0aa773053ab182877 ("ftrace:
-add logic to record overruns"). It was v2.6.27-rc1.
-It was the time when iter->seq looked like:
+The value of user->locked_vm increases to a limit then the memory
+is tracked by pinned_vm.
 
-     struct trace_seq {
-	unsigned char		buffer[PAGE_SIZE];
-	unsigned int		len;
-     };
+During deallocation the size is subtracted from pinned_vm until
+it hits a limit. Then a larger value is subtracted from locked_vm
+leading to a large number (because of type unsigned):
 
-There was no "size" variable and zeroing was perfectly fine.
+  [64.267797] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x78d
+  [64.267826] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x70c
+  [64.267848] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x68b
+  [64.267869] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x60a
+  [64.267891] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x589
+  [64.267911] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x508
+  [64.267933] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x487
+  [64.267952] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x406
+  [64.268883] perf_mmap_close mmap_user->locked_vm:0x307 pinned_vm:0x406
+  [64.269117] perf_mmap_close mmap_user->locked_vm:0x206 pinned_vm:0x406
+  [64.269433] perf_mmap_close mmap_user->locked_vm:0x105 pinned_vm:0x406
+  [64.269536] perf_mmap_close mmap_user->locked_vm:0x4 pinned_vm:0x404
+  [64.269797] perf_mmap_close mmap_user->locked_vm:0xffffffffffffff84 pinned_vm:0x303
+  [64.270105] perf_mmap_close mmap_user->locked_vm:0xffffffffffffff04 pinned_vm:0x202
+  [64.270374] perf_mmap_close mmap_user->locked_vm:0xfffffffffffffe84 pinned_vm:0x101
+  [64.270628] perf_mmap_close mmap_user->locked_vm:0xfffffffffffffe04 pinned_vm:0x0
 
-The solution is to reinitialize the structure after or without
-zeroing.
+This value sticks for the user until system is rebooted, causing
+follow-on system calls using locked_vm resource limit to fail.
 
-Link: http://lkml.kernel.org/r/20191011142134.11997-1-pmladek@suse.com
+Note: There is no issue using the normal trace buffer.
 
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+In fact the issue is in perf_mmap_close(). During allocation auxiliary
+trace buffer memory is either traced as 'extra' and added to 'pinned_vm'
+or trace as 'user_extra' and added to 'locked_vm'. This applies for
+normal trace buffers and auxiliary trace buffer.
+
+However in function perf_mmap_close() all auxiliary trace buffer is
+subtraced from 'locked_vm' and never from 'pinned_vm'. This breaks the
+ballance.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: acme@kernel.org
+Cc: gor@linux.ibm.com
+Cc: hechaol@fb.com
+Cc: heiko.carstens@de.ibm.com
+Cc: linux-perf-users@vger.kernel.org
+Cc: songliubraving@fb.com
+Fixes: d44248a41337 ("perf/core: Rework memory accounting in perf_mmap()")
+Link: https://lkml.kernel.org/r/20191021083354.67868-1-tmricht@linux.ibm.com
+[ Minor readability edits. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/events/core.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 04458ed44a557..a5e27f1c35a1f 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6012,6 +6012,7 @@ waitagain:
- 	       sizeof(struct trace_iterator) -
- 	       offsetof(struct trace_iterator, seq));
- 	cpumask_clear(iter->started);
-+	trace_seq_init(&iter->seq);
- 	iter->pos = -1;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2ff44d7308dd7..53173883513c1 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5524,8 +5524,10 @@ static void perf_mmap_close(struct vm_area_struct *vma)
+ 		perf_pmu_output_stop(event);
  
- 	trace_event_read_lock();
+ 		/* now it's safe to free the pages */
+-		atomic_long_sub(rb->aux_nr_pages, &mmap_user->locked_vm);
+-		atomic64_sub(rb->aux_mmap_locked, &vma->vm_mm->pinned_vm);
++		if (!rb->aux_mmap_locked)
++			atomic_long_sub(rb->aux_nr_pages, &mmap_user->locked_vm);
++		else
++			atomic64_sub(rb->aux_mmap_locked, &vma->vm_mm->pinned_vm);
+ 
+ 		/* this has to be the last one */
+ 		rb_free_aux(rb);
 -- 
 2.20.1
 
