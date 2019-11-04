@@ -4,50 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E8BCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F21CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F388C21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA4E20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904074;
-	bh=NbW4pyrujrDlr8pQUBXCEo4GhfvTIkKR090Vqwr3XBc=;
+	s=default; t=1572904077;
+	bh=6HA6kxOM8uxi2jemmx2NhYFeO5rBxVVxAwLhfd3AO/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v5ioDax0nURzbfmLVpgyluYdQ+2tSx1TXvUUed3G/hVoZjJC+jAjaJs3zaP2+O++m
-	 nCcW+84QhX9xmaX1OBO5+GBmTDc5RytJsUdpbZy2TyYSosUh28fBtaV/FjjVv2qbCF
-	 z7z4S1YmrWryjva68FLVCO6Y4d38EAYD+p1QNlQA=
+	b=NMctV5kc/u0u6ppBJB7yZ35JOcfVvWR8ZZYDqM2EyLVaqumgSmxj8PGfRbBX21ca6
+	 oxb8ZTp1kXNmwHGUcxPCrGUzAJByvVduyy13Awz9TWCZPZToBM1A2pOxUVhVsDdnWD
+	 vxv6x+OpCulLyzpS2jkGu83ZccE6Fnhx2oS+FQw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbfKDVrw (ORCPT
+        id S1729835AbfKDVr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:47:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37470 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:47:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729775AbfKDVrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:47:51 -0500
+        id S1729775AbfKDVry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:47:54 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A8CB20869;
-        Mon,  4 Nov 2019 21:47:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 742CC214D8;
+        Mon,  4 Nov 2019 21:47:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904070;
-        bh=NbW4pyrujrDlr8pQUBXCEo4GhfvTIkKR090Vqwr3XBc=;
+        s=default; t=1572904072;
+        bh=6HA6kxOM8uxi2jemmx2NhYFeO5rBxVVxAwLhfd3AO/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mv6Sh8p27K5xfvGCtpXK0WHWWHIQMIUnpae6eVvtg1IwAy65gKWL8zKWlqTO2WwcF
-         WbrU2cE7j1b+I1nEwVASBif1jtpo2U5YYcNAeEhds/oZn35kyozyUXCgdpdZIq0s4s
-         28PHTvne7NZH5r5Scmv9auzFfZn1rMHFPKvZOeaw=
+        b=KjkUMT+BCvlhPOF7uYn4B09hKyMvtLJiVfvHpTDe9vEnKbikJtM6khsTIf817PmwM
+         nJdvj+fxGh3RclNRYyUFNjn4EsCOmLZwSRu+10PgQGqwCoU6lmSPlGYkUEGEkd5Flu
+         pMOTcKPe5W488uUTc2YchtyppdluOLa7rlm8lsC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pascal Bouwmann <bouwmann@tau-tec.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org,
+        Steve MacLean <Steve.MacLean@Microsoft.com>,
+        Brian Robbins <brianrob@microsoft.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        John Keeping <john@metanate.com>,
+        John Salem <josalem@microsoft.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Tom McDonald <thomas.mcdonald@microsoft.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 10/46] iio: fix center temperature of bmc150-accel-core
-Date:   Mon,  4 Nov 2019 22:44:41 +0100
-Message-Id: <20191104211840.937685272@linuxfoundation.org>
+Subject: [PATCH 4.4 11/46] perf map: Fix overlapped map handling
+Date:   Mon,  4 Nov 2019 22:44:42 +0100
+Message-Id: <20191104211841.419459921@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211830.912265604@linuxfoundation.org>
 References: <20191104211830.912265604@linuxfoundation.org>
@@ -60,37 +76,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pascal Bouwmann <bouwmann@tau-tec.de>
+From: Steve MacLean <Steve.MacLean@microsoft.com>
 
-[ Upstream commit 6c59a962e081df6d8fe43325bbfabec57e0d4751 ]
+[ Upstream commit ee212d6ea20887c0ef352be8563ca13dbf965906 ]
 
-The center temperature of the supported devices stored in the constant
-BMC150_ACCEL_TEMP_CENTER_VAL is not 24 degrees but 23 degrees.
+Whenever an mmap/mmap2 event occurs, the map tree must be updated to add a new
+entry. If a new map overlaps a previous map, the overlapped section of the
+previous map is effectively unmapped, but the non-overlapping sections are
+still valid.
 
-It seems that some datasheets were inconsistent on this value leading
-to the error.  For most usecases will only make minor difference so
-not queued for stable.
+maps__fixup_overlappings() is responsible for creating any new map entries from
+the previously overlapped map. It optionally creates a before and an after map.
 
-Signed-off-by: Pascal Bouwmann <bouwmann@tau-tec.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+When creating the after map the existing code failed to adjust the map.pgoff.
+This meant the new after map would incorrectly calculate the file offset
+for the ip. This results in incorrect symbol name resolution for any ip in the
+after region.
+
+Make maps__fixup_overlappings() correctly populate map.pgoff.
+
+Add an assert that new mapping matches old mapping at the beginning of
+the after map.
+
+Committer-testing:
+
+Validated correct parsing of libcoreclr.so symbols from .NET Core 3.0 preview9
+(which didn't strip symbols).
+
+Preparation:
+
+  ~/dotnet3.0-preview9/dotnet new webapi -o perfSymbol
+  cd perfSymbol
+  ~/dotnet3.0-preview9/dotnet publish
+  perf record ~/dotnet3.0-preview9/dotnet \
+      bin/Debug/netcoreapp3.0/publish/perfSymbol.dll
+  ^C
+
+Before:
+
+  perf script --show-mmap-events 2>&1 | grep -e MMAP -e unknown |\
+     grep libcoreclr.so | head -n 4
+        dotnet  1907 373352.698780: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615726000(0x768000) @ 0 08:02 5510620 765057155]: \
+            r-xp .../3.0.0-preview9-19423-09/libcoreclr.so
+        dotnet  1907 373352.701091: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615974000(0x1000) @ 0x24e000 08:02 5510620 765057155]: \
+            rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
+        dotnet  1907 373352.701241: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615c42000(0x1000) @ 0x51c000 08:02 5510620 765057155]: \
+            rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
+        dotnet  1907 373352.705249:     250000 cpu-clock: \
+             7fe6159a1f99 [unknown] \
+             (.../3.0.0-preview9-19423-09/libcoreclr.so)
+
+After:
+
+  perf script --show-mmap-events 2>&1 | grep -e MMAP -e unknown |\
+     grep libcoreclr.so | head -n 4
+        dotnet  1907 373352.698780: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615726000(0x768000) @ 0 08:02 5510620 765057155]: \
+            r-xp .../3.0.0-preview9-19423-09/libcoreclr.so
+        dotnet  1907 373352.701091: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615974000(0x1000) @ 0x24e000 08:02 5510620 765057155]: \
+            rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
+        dotnet  1907 373352.701241: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615c42000(0x1000) @ 0x51c000 08:02 5510620 765057155]: \
+            rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
+
+All the [unknown] symbols were resolved.
+
+Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
+Tested-by: Brian Robbins <brianrob@microsoft.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
+Cc: John Keeping <john@metanate.com>
+Cc: John Salem <josalem@microsoft.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Tom McDonald <thomas.mcdonald@microsoft.com>
+Link: http://lore.kernel.org/lkml/BN8PR21MB136270949F22A6A02335C238F7800@BN8PR21MB1362.namprd21.prod.outlook.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/accel/bmc150-accel-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/map.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/iio/accel/bmc150-accel-core.c b/drivers/iio/accel/bmc150-accel-core.c
-index c7122919a8c0e..ec7ddf8673497 100644
---- a/drivers/iio/accel/bmc150-accel-core.c
-+++ b/drivers/iio/accel/bmc150-accel-core.c
-@@ -126,7 +126,7 @@
- #define BMC150_ACCEL_SLEEP_1_SEC		0x0F
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index afc6b56cf749b..97c0684588d99 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -1,4 +1,5 @@
+ #include "symbol.h"
++#include <assert.h>
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <limits.h>
+@@ -702,6 +703,8 @@ static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp
+ 			}
  
- #define BMC150_ACCEL_REG_TEMP			0x08
--#define BMC150_ACCEL_TEMP_CENTER_VAL		24
-+#define BMC150_ACCEL_TEMP_CENTER_VAL		23
- 
- #define BMC150_ACCEL_AXIS_TO_REG(axis)	(BMC150_ACCEL_REG_XOUT_L + (axis * 2))
- #define BMC150_AUTO_SUSPEND_DELAY_MS		2000
+ 			after->start = map->end;
++			after->pgoff += map->end - pos->start;
++			assert(pos->map_ip(pos, map->end) == after->map_ip(after, map->end));
+ 			__map_groups__insert(pos->groups, after);
+ 			if (verbose >= 2)
+ 				map__fprintf(after, fp);
 -- 
 2.20.1
 
