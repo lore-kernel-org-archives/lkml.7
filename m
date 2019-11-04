@@ -2,135 +2,134 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BD6CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2642DCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A62E206BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C64206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:40:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="w7lZvUbD"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NHQ1Q0ia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbfKDUjU (ORCPT
+        id S1729729AbfKDUkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 15:39:20 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50858 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729589AbfKDUi7 (ORCPT
+        Mon, 4 Nov 2019 15:40:52 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:2725 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728519AbfKDUku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 15:38:59 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4KcqlJ127064;
-        Mon, 4 Nov 2019 14:38:52 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572899932;
-        bh=1Bhj4EOWi0ydAwvul89PG3T7dhu8tO1R32BihtUQ0BY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=w7lZvUbD3U9X7tEz9z7eCbBzH3AniE48WamoMb8jljber4za1D350uDVez5nzAohZ
-         DOs/fTX8WQtPVED69FgQSkGws3H02PYoASKuwDxZaUR7NmhSILCt9ebB3oLJKkAyVk
-         j1edDDuVP7+Kk2FCNpLLz8Wqz11ggfpUzzpm2A7U=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA4KcqUP116502
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Nov 2019 14:38:52 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 4 Nov
- 2019 14:38:37 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 4 Nov 2019 14:38:37 -0600
-Received: from ula0869644.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4Kcl4n020670;
-        Mon, 4 Nov 2019 14:38:51 -0600
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-media@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 2/5] clk: ti: dra7: add vpe clkctrl data
-Date:   Mon, 4 Nov 2019 14:38:38 -0600
-Message-ID: <20191104203841.3628-3-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191104203841.3628-1-bparrot@ti.com>
-References: <20191104203841.3628-1-bparrot@ti.com>
+        Mon, 4 Nov 2019 15:40:50 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dc08cd80000>; Mon, 04 Nov 2019 12:40:56 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 04 Nov 2019 12:40:49 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 04 Nov 2019 12:40:49 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 Nov
+ 2019 20:40:48 +0000
+Subject: Re: [PATCH v2 05/18] mm/gup: introduce pin_user_pages*() and FOLL_PIN
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20191103211813.213227-1-jhubbard@nvidia.com>
+ <20191103211813.213227-6-jhubbard@nvidia.com>
+ <20191104173325.GD5134@redhat.com>
+ <be9de35c-57e9-75c3-2e86-eae50904bbdf@nvidia.com>
+ <20191104191811.GI5134@redhat.com>
+ <e9656d47-b4a1-da8a-e8cc-ebcfb8cc06d6@nvidia.com>
+ <20191104195248.GA7731@redhat.com>
+ <25ec4bc0-caaa-2a01-2ae7-2d79663a40e1@nvidia.com>
+ <20191104203117.GE30938@ziepe.ca>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <1c428985-6ede-ef75-62bd-26ccf99f6d38@nvidia.com>
+Date:   Mon, 4 Nov 2019 12:40:48 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191104203117.GE30938@ziepe.ca>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572900056; bh=DgUGakiDqU+H/jvLHI+F9dgZlEqXtDj8YZcQ5jdUUnc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=NHQ1Q0iautz1x5eS1rpVt2XzAK+GdsKg4fHxuWzyx4M7tJpV+1UB6d5ZpY+LJM8ME
+         TR31xYhwAxi1K+5UUf+wF2rdwAdcBiJd7g9PZ9zQdxs0smNT0eXx/EK23GNTVWWsim
+         vmxoebMT8yRD8emjw4hl+mywMz6dGLzA9qU4y5rdocqaRh8e0dGYAC8/oxGzxQkYvT
+         MWkQm/cvgwbgyxMEdYQt09KoKCaZDdAw2q8ktAtZsrow9mFYWcec570DR/POlaG1aB
+         FjnA7v+FO5AVWFmkxPStSbC6bck0U4AV8Oy7tJVJh18dLUfTlW6x2kgIg6rLYkBdDJ
+         g//zR0Vfe3smA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add clkctrl data for VPE.
+On 11/4/19 12:31 PM, Jason Gunthorpe wrote:
+> On Mon, Nov 04, 2019 at 12:09:05PM -0800, John Hubbard wrote:
+> 
+>> Note for Jason: the (a) or (b) items are talking about the vfio case, which is
+>> one of the two call sites that now use pin_longterm_pages_remote(), and the
+>> other one is infiniband:
+>>
+>> drivers/infiniband/core/umem_odp.c:646:         npages = pin_longterm_pages_remote(owning_process, owning_mm,
+> 
+> This is a mistake, it is not a longterm pin and does not need FOLL_PIN
+> semantics
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
----
- drivers/clk/ti/clk-7xx.c         |  6 ++++++
- include/dt-bindings/clock/dra7.h | 10 ++++++++++
- 2 files changed, 16 insertions(+)
+OK! So it really just wants to be get_user_pages_remote() / put_page()? I'll
+change it back to that.
 
-diff --git a/drivers/clk/ti/clk-7xx.c b/drivers/clk/ti/clk-7xx.c
-index b57fe09b428b..5dd9cad07542 100644
---- a/drivers/clk/ti/clk-7xx.c
-+++ b/drivers/clk/ti/clk-7xx.c
-@@ -146,6 +146,11 @@ static const struct omap_clkctrl_reg_data dra7_rtc_clkctrl_regs[] __initconst =
- 	{ 0 },
- };
- 
-+static const struct omap_clkctrl_reg_data dra7_vpe_clkctrl_regs[] __initconst = {
-+	{ DRA7_VPE_VPE_CLKCTRL, NULL, CLKF_HW_SUP, "dpll_core_h23x2_ck" },
-+	{ 0 },
-+};
-+
- static const struct omap_clkctrl_reg_data dra7_coreaon_clkctrl_regs[] __initconst = {
- 	{ DRA7_COREAON_SMARTREFLEX_MPU_CLKCTRL, NULL, CLKF_SW_SUP, "wkupaon_iclk_mux" },
- 	{ DRA7_COREAON_SMARTREFLEX_CORE_CLKCTRL, NULL, CLKF_SW_SUP, "wkupaon_iclk_mux" },
-@@ -769,6 +774,7 @@ const struct omap_clkctrl_data dra7_clkctrl_data[] __initconst = {
- 	{ 0x4a005550, dra7_ipu_clkctrl_regs },
- 	{ 0x4a005620, dra7_dsp2_clkctrl_regs },
- 	{ 0x4a005720, dra7_rtc_clkctrl_regs },
-+	{ 0x4a005760, dra7_vpe_clkctrl_regs },
- 	{ 0x4a008620, dra7_coreaon_clkctrl_regs },
- 	{ 0x4a008720, dra7_l3main1_clkctrl_regs },
- 	{ 0x4a008920, dra7_ipu2_clkctrl_regs },
-diff --git a/include/dt-bindings/clock/dra7.h b/include/dt-bindings/clock/dra7.h
-index 72f2e8411523..2b765e579b2a 100644
---- a/include/dt-bindings/clock/dra7.h
-+++ b/include/dt-bindings/clock/dra7.h
-@@ -29,6 +29,11 @@
- #define DRA7_RTC_CLKCTRL_INDEX(offset)	((offset) - DRA7_RTC_CLKCTRL_OFFSET)
- #define DRA7_RTCSS_CLKCTRL	DRA7_RTC_CLKCTRL_INDEX(0x44)
- 
-+/* vpe clocks */
-+#define DRA7_VPE_CLKCTRL_OFFSET	0x60
-+#define DRA7_VPE_CLKCTRL_INDEX(offset)	((offset) - DRA7_VPE_CLKCTRL_OFFSET)
-+#define DRA7_VPE_CLKCTRL	DRA7_VPE_CLKCTRL_INDEX(0x64)
-+
- /* coreaon clocks */
- #define DRA7_SMARTREFLEX_MPU_CLKCTRL	DRA7_CLKCTRL_INDEX(0x28)
- #define DRA7_SMARTREFLEX_CORE_CLKCTRL	DRA7_CLKCTRL_INDEX(0x38)
-@@ -192,6 +197,11 @@
- /* rtc clocks */
- #define DRA7_RTC_RTCSS_CLKCTRL	DRA7_CLKCTRL_INDEX(0x44)
- 
-+/* vpe clocks */
-+#define DRA7_VPE_CLKCTRL_OFFSET	0x60
-+#define DRA7_VPE_CLKCTRL_INDEX(offset)	((offset) - DRA7_VPE_CLKCTRL_OFFSET)
-+#define DRA7_VPE_VPE_CLKCTRL	DRA7_VPE_CLKCTRL_INDEX(0x64)
-+
- /* coreaon clocks */
- #define DRA7_COREAON_SMARTREFLEX_MPU_CLKCTRL	DRA7_CLKCTRL_INDEX(0x28)
- #define DRA7_COREAON_SMARTREFLEX_CORE_CLKCTRL	DRA7_CLKCTRL_INDEX(0x38)
--- 
-2.17.1
+> 
+>> Jason should weigh in on how he wants this to go, with respect to branching
+>> and merging, since it sounds like that will conflict with the hmm branch 
+> 
+> I think since you don't need to change this site things should be
+> fine?
+> 
 
+Right. 
+
+
+thanks,
+
+John Hubbard
+NVIDIA
