@@ -2,91 +2,62 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7377CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9861CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7546821D71
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:34:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="CWih9Sww"
+	by mail.kernel.org (Postfix) with ESMTP id 9574121D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:35:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbfKDOen (ORCPT
+        id S1728938AbfKDOfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 09:34:43 -0500
-Received: from zimbra2.kalray.eu ([92.103.151.219]:60728 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727861AbfKDOen (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 09:34:43 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 432D327E03F9;
-        Mon,  4 Nov 2019 15:34:41 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id iCtUtBHQ30vp; Mon,  4 Nov 2019 15:34:40 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id D6B3727E08CF;
-        Mon,  4 Nov 2019 15:34:40 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu D6B3727E08CF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1572878080;
-        bh=pD0MUKyotGulN1CLftCO1i1SN0De2+Xqp9tO+mZ1yzE=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=CWih9SwwV6LHORRDXXXP6pPflux0yx0cLlJxR+BLo4soFLw85sob1AqWHQru3BrNE
-         PIKXbCb7MvKlSYyzWdZ72nZUOQ3SDPgc32sOiru96j0hrO8m2a4bwiAN4rQZ6dn8JI
-         rXKUoLRWDuqUsx+/Vbc2+VKHjuIwLBUGgSmW/cTQ=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id DU5pN41YXiic; Mon,  4 Nov 2019 15:34:40 +0100 (CET)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id A0FD827E0868;
-        Mon,  4 Nov 2019 15:34:40 +0100 (CET)
-Date:   Mon, 4 Nov 2019 15:34:40 +0100 (CET)
-From:   Marta Rybczynska <mrybczyn@kalray.eu>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Charles Machalow <csm10495@gmail.com>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        kbusch <kbusch@kernel.org>, axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <1977598237.90293761.1572878080625.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <20191031133921.GA4763@lst.de>
-References: <20191031050338.12700-1-csm10495@gmail.com> <20191031133921.GA4763@lst.de>
-Subject: Re: [PATCH] nvme: change nvme_passthru_cmd64's result field.
+        Mon, 4 Nov 2019 09:35:06 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51992 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728416AbfKDOfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 09:35:06 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8DE98AD17;
+        Mon,  4 Nov 2019 14:35:04 +0000 (UTC)
+Subject: Re: [Xen-devel] [PATCH] xen/events: remove event handling recursion
+ detection
+To:     Juergen Gross <jgross@suse.com>
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+References: <20191104135812.2314-1-jgross@suse.com>
+From:   Jan Beulich <jbeulich@suse.com>
+Message-ID: <40cba9d9-24b0-3141-4ba8-02e03049f1bf@suse.com>
+Date:   Mon, 4 Nov 2019 15:35:09 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191104135812.2314-1-jgross@suse.com>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF57 (Linux)/8.8.12_GA_3794)
-Thread-Topic: nvme: change nvme_passthru_cmd64's result field.
-Thread-Index: a1J64yF1pUDUpDcN+i9ToaOYAPxGqg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
------ On 31 Oct, 2019, at 14:39, Christoph Hellwig hch@lst.de wrote:
-
-> On Wed, Oct 30, 2019 at 10:03:38PM -0700, Charles Machalow wrote:
->> Changing nvme_passthru_cmd64's result field to be backwards compatible
->> with the nvme_passthru_cmd/nvme_admin_cmd struct in terms of the result
->> field. With this change the first 32 bits of result in either case
->> point to CQE DW0. This allows userspace tools to use the new structure
->> when using the old ADMIN/IO_CMD ioctls or new ADMIN/IO_CMD64 ioctls.
+On 04.11.2019 14:58, Juergen Gross wrote:
+> __xen_evtchn_do_upcall() contains guards against being called
+> recursively. This mechanism was introduced in the early pvops times
+> (kernel 2.6.26) when there were still Xen versions around not honoring
+> disabled interrupts for sending events to pv guests.
 > 
-> All that casting is a pretty bad idea.  please just add an explicit
-> reserved field before the result, and check that it always is zero
-> in the ioctl handler.
+> This was changed in Xen 3.0, which is much older than any Xen version
+> supported by the kernel, so the recursion detection can be removed.
 
-That would change the size of a structure in UAPI, won't it? 
-I wanted to avoid it when adding the *64 ioctls and that's why
-I added separate ones instead of extending the ones that exist.
+Would you mind pointing out which exact change(s) this was(were)?
+It had always been my understanding that the recursion detection
+was mainly to guard against drivers re-enabling interrupts
+transiently in their handlers (which in turn may no longer be an
+issue in modern Linux kernels).
 
-Marta
+Jan
