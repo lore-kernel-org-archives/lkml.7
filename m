@@ -2,110 +2,97 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6743BCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3410CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3974920659
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E4F20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:47:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="aUeePDR4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gakghABf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729731AbfKDVq3 (ORCPT
+        id S1729631AbfKDVrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:46:29 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33544 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729692AbfKDVq2 (ORCPT
+        Mon, 4 Nov 2019 16:47:04 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40563 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728778AbfKDVrE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:46:28 -0500
-Received: by mail-pg1-f196.google.com with SMTP id u23so12404048pgo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 13:46:26 -0800 (PST)
+        Mon, 4 Nov 2019 16:47:04 -0500
+Received: by mail-pf1-f193.google.com with SMTP id r4so13405292pfl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 13:47:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=RKxr/z5Z+XCc3j/WLz6LF458INM7dnLvQiGuRgdea6I=;
-        b=aUeePDR4M3K0hR7Q/iY4hBk2QT31NbRREwi99q6z/u/H7pYqS80kMgv8cfnvtshvAv
-         VkJMotphwEiRP9kA7IZ4WieHSR5kijvuyO7V0Wq4QIfiPjshpuOvK8o2ZrydNAwfQdfE
-         OinYsra052NUoIMic9pUp++YgcScLmujdziWX1C+Al6yNoWfEZ4SKAmpuwGIyP95/E2O
-         vsMq9BacQ3oZyG9cCe2xyk2VvnpF/cqSuIZydpVueZTsqCkDC0jVqWq/MNxmHWgtxQ1x
-         oXk0ys7HrLlD+ZF3R3qe3p7Bsdyvw+gNuuzAEUdV+2SGbShHAqHGkM/vkCF6XzCa+mlL
-         Ndkg==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:subject:from:to:user-agent:date;
+        bh=7jJQ1NcKveBtKcGJsD99Mt4fr4vw7vgm5QVERgCCc+c=;
+        b=gakghABf83nmBd5F1TCaDE+0Bjc80TbJMSz2bp93N5g5x2zSpsgpZVNXSoV20PykSY
+         rT8mFpFNgxFS8eMOBoBhp1oC4PK4JauOvaWKfCsT0TeNa8+Uy61MRkDHl9lgUT40Imys
+         2t/my0Tw/9hzxlBn8mziKSliVWFTKoBozUoNM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=RKxr/z5Z+XCc3j/WLz6LF458INM7dnLvQiGuRgdea6I=;
-        b=G1bASubdytdtHuOdjuc4ifw0c3uOZbZ6yQU7Cum0dfmInYU7tNaFXqCa6lY5h7lno3
-         YY3NKHJ6+O+0LFJLqhD1507++CifGhZu43zOwSSsuzSG1id8kZ4/RSzZU4eWXdCk9Au9
-         M732gmuo00R6mN81G/UIe+7GZb2aceala755o2UPoa/xL61S7NM4GfHzSnXS3KdbPKhY
-         tasNzVD8AK04vbm2am/Rfmy+k0Emo0yT1DTAF96vUaCTtcnG9F2WelHQ2XEGq0ztguYC
-         ZIi3yq3n2QZgG7Biq50RascJd0w+EIuHVbaduvij7HwRQRu4ABXvCX69wHKWG3pB97x7
-         Z+0g==
-X-Gm-Message-State: APjAAAU10XUC8oQdRs9yXdF1KCT72/TXvI5XBR5TQlUCm9Wd5trpuyxA
-        GV/+AJ5HXaELLbYwPbzpPIDLwV6boCwEpQ==
-X-Google-Smtp-Source: APXvYqwuRMT5lNvuPuITVIvesrzmLt7bbeQv2zTddIBYVppkD8brZ4Ux1AopMTxEtLhaeVJ3FtMRQQ==
-X-Received: by 2002:aa7:980c:: with SMTP id e12mr33717564pfl.165.1572903985750;
-        Mon, 04 Nov 2019 13:46:25 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id i126sm18547901pfc.29.2019.11.04.13.46.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Nov 2019 13:46:25 -0800 (PST)
-To:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Cc:     io-uring@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH] MAINTAINERS: update io_uring entry
-Message-ID: <efa17e7d-b33a-c032-1a90-c150d1632ab8@kernel.dk>
-Date:   Mon, 4 Nov 2019 14:46:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:subject:from:to
+         :user-agent:date;
+        bh=7jJQ1NcKveBtKcGJsD99Mt4fr4vw7vgm5QVERgCCc+c=;
+        b=FMKeez37/yrx+UV92caBCeq8ofoiguiHMZrHEBkvmFkTwlYBpGJPTcvzSMvBn63t/X
+         fgXWUSktLzVhoNNgTcxQUbSiN3o4FjyX4qxV2dLy0r8MPoz1fhkoi7j2cfWiCAeNlPbK
+         v+BFZjh53nAa+xXqEIcPiwHUU8qoHHcc4nyfAJk18SuPh3r20yqsQKlul0TWEJKK10z7
+         ZiaIySZqayZB7HP3Uy57Oq3vrzCZRhTkf2Z/PgQX+P6rCJ9SOkRIWSXexZtnVZVFVic6
+         25w7Hx1GPyN7ltguH3BmbgvGRJva2soDeRmSvp5NcJds1v48si2MYWTXAfvCAjl42szw
+         dKwg==
+X-Gm-Message-State: APjAAAUR6TQ3yrIk8IrtAmg4q17R4WSJpPEY1DOr4xd49iNWozl3BONi
+        n6e5CRMfAJxh6ZMwsp4oVOyYq7Th7cNR7w==
+X-Google-Smtp-Source: APXvYqzMgIlIOYaSeTWk9M5N2B38HWf8Mps81hZBv9twl3u8F3n9PNF6iVEqNVar8mMp7FeTgxDSSQ==
+X-Received: by 2002:a63:4c2:: with SMTP id 185mr32077554pge.233.1572904021801;
+        Mon, 04 Nov 2019 13:47:01 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 6sm19410658pfy.43.2019.11.04.13.47.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 13:47:01 -0800 (PST)
+Message-ID: <5dc09c55.1c69fb81.f5014.840a@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1572408318-28681-2-git-send-email-mkshah@codeaurora.org>
+References: <1572408318-28681-1-git-send-email-mkshah@codeaurora.org> <1572408318-28681-2-git-send-email-mkshah@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
+        mka@chromium.org, evgreen@chromium.org, dianders@chromium.org,
+        Maulik Shah <mkshah@codeaurora.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add cpuidle low power states
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Maulik Shah <mkshah@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+User-Agent: alot/0.8.1
+Date:   Mon, 04 Nov 2019 13:47:00 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We now have a list that's appropriate for both kernel and userspace
-discussions on io_uring usage and development, add that to the
-MAINTAINERS entry.
+Quoting Maulik Shah (2019-10-29 21:05:18)
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/q=
+com/sc7180.dtsi
+> index fceac50..69d5e2c 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -157,12 +178,69 @@
+[...]
+> +                       CLUSTER_SLEEP_0: cluster-sleep-0 {
+> +                               compatible =3D "arm,idle-state";
+> +                               idle-state-name =3D "cluster-power-down";
+> +                               arm,psci-suspend-param =3D <0x400000F4>;
 
-Also add the io-wq files.
+Nitpick: Lowercase hex please.
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-
----
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c6c34d04ce95..7afb25707098 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8562,12 +8562,13 @@ F:	include/linux/iova.h
- 
- IO_URING
- M:	Jens Axboe <axboe@kernel.dk>
--L:	linux-block@vger.kernel.org
--L:	linux-fsdevel@vger.kernel.org
-+L:	io-uring@vger.kernel.org
- T:	git git://git.kernel.dk/linux-block
- T:	git git://git.kernel.dk/liburing
- S:	Maintained
- F:	fs/io_uring.c
-+F:	fs/io-wq.c
-+F:	fs/io-wq.h
- F:	include/uapi/linux/io_uring.h
- 
- IPMI SUBSYSTEM
-
--- 
-Jens Axboe
-
+> +                               entry-latency-us =3D <3263>;
+> +                               exit-latency-us =3D <6562>;
+> +                               min-residency-us =3D <9987>;
+> +                               local-timer-stop;
+> +                       };
+> +               };
