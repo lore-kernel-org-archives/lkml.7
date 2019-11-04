@@ -2,52 +2,52 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 262ECCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC66CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1662184C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E2F21928
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904253;
-	bh=uhc6qrmgYf8tNuiZPGZcsbbrTbtSfMBBHflqUUXRHqw=;
+	s=default; t=1572904256;
+	bh=0RUSc03uHfSvyypp3INuX99FfiD3jlpxtsAtyT7UMR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a4jWiNRzVpAbM50AcU9sWpYoQyo9SjYgPi6Whua+Tc2yXFBtdINnNbMBJjqj63sN1
-	 pP3wUTxCekyNGB8L8vx93BTmlydWsWlKriXxEPHB/JmOnig23cQqPhPwH4LbYNSA6c
-	 hLi3VtMVVyScy8MiWXvemCukb8oeYJ5VrjKKE5AQ=
+	b=f6MJgpSSpc8Kl0khxyJ6Ya/ghsCVVyzqllddgLfKZBwxZdH0Dtz8Oyv6EBM1B8Ggc
+	 Jm/U/VOsfBQAWQqxAo3SngB2gBnUVfKxhB/lXZHYq8Sf/KkvM3uJJbBobqwyYqQoYM
+	 3O72grGOQ1L7SoAHT+aQjU/FaJlMfdeIuwaq+Ezc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729853AbfKDVuv (ORCPT
+        id S1729927AbfKDVuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:50:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43330 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:50:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729672AbfKDVus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:50:48 -0500
+        id S1729672AbfKDVux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:50:53 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D0C8214D9;
-        Mon,  4 Nov 2019 21:50:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2531D21D71;
+        Mon,  4 Nov 2019 21:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904247;
-        bh=uhc6qrmgYf8tNuiZPGZcsbbrTbtSfMBBHflqUUXRHqw=;
+        s=default; t=1572904252;
+        bh=0RUSc03uHfSvyypp3INuX99FfiD3jlpxtsAtyT7UMR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ivotsvRO09tlRs7Kk7hOEM5LIotbQFFYfNl3rXxxV4IJqRg8jJoT9azCVhPIXXgPW
-         KCCVQqAoXJC7nCQidocJlxWQL/Ugh/RnOyuGn5vCnC/tAUtYSKra5EZVP020yn78aZ
-         vZuha/uZwagthCvnf5z9k/uafg+OoDqTSvSRKg8c=
+        b=ETdyiv6Mr6D66n/nvah0oSvPzi4R5KGmlrLkWi48K0KTl9MNno9G4CfZpLN6cjbLl
+         96osaK6I9SWAugFqSo19mZP4QhjqQTjIHgVQVuz495De7gwBFSxEwedk5TiKAHKFT9
+         nLwdCkdZifOBDDaeltsvkWm0HcSksWMK5Hw6VqZ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Austin Kim <austindh.kim@gmail.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 19/62] fs: cifs: mute -Wunused-const-variable message
-Date:   Mon,  4 Nov 2019 22:44:41 +0100
-Message-Id: <20191104211919.896053353@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Felipe Balbi <balbi@kernel.org>,
+        syzbot+8ab8bf161038a8768553@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 38/62] USB: gadget: Reject endpoints with 0 maxpacket value
+Date:   Mon,  4 Nov 2019 22:45:00 +0100
+Message-Id: <20191104211941.314059122@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -60,43 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Austin Kim <austindh.kim@gmail.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit dd19c106a36690b47bb1acc68372f2b472b495b8 ]
+commit 54f83b8c8ea9b22082a496deadf90447a326954e upstream.
 
-After 'Initial git repository build' commit,
-'mapping_table_ERRHRD' variable has not been used.
+Endpoints with a maxpacket length of 0 are probably useless.  They
+can't transfer any data, and it's not at all unlikely that a UDC will
+crash or hang when trying to handle a non-zero-length usb_request for
+such an endpoint.  Indeed, dummy-hcd gets a divide error when trying
+to calculate the remainder of a transfer length by the maxpacket
+value, as discovered by the syzbot fuzzer.
 
-So 'mapping_table_ERRHRD' const variable could be removed
-to mute below warning message:
+Currently the gadget core does not check for endpoints having a
+maxpacket value of 0.  This patch adds a check to usb_ep_enable(),
+preventing such endpoints from being used.
 
-   fs/cifs/netmisc.c:120:40: warning: unused variable 'mapping_table_ERRHRD' [-Wunused-const-variable]
-   static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
-                                           ^
-Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+As far as I know, none of the gadget drivers in the kernel tries to
+create an endpoint with maxpacket = 0, but until now there has been
+nothing to prevent userspace programs under gadgetfs or configfs from
+doing it.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: syzbot+8ab8bf161038a8768553@syzkaller.appspotmail.com
+CC: <stable@vger.kernel.org>
+Acked-by: Felipe Balbi <balbi@kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910281052370.1485-100000@iolanthe.rowland.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/cifs/netmisc.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/usb/gadget/udc/core.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/fs/cifs/netmisc.c b/fs/cifs/netmisc.c
-index cc88f4f0325ef..bed9733302279 100644
---- a/fs/cifs/netmisc.c
-+++ b/fs/cifs/netmisc.c
-@@ -130,10 +130,6 @@ static const struct smb_to_posix_error mapping_table_ERRSRV[] = {
- 	{0, 0}
- };
+--- a/drivers/usb/gadget/udc/core.c
++++ b/drivers/usb/gadget/udc/core.c
+@@ -106,6 +106,17 @@ int usb_ep_enable(struct usb_ep *ep)
+ 	if (ep->enabled)
+ 		goto out;
  
--static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
--	{0, 0}
--};
--
- /*
-  * Convert a string containing text IPv4 or IPv6 address to binary form.
-  *
--- 
-2.20.1
-
++	/* UDC drivers can't handle endpoints with maxpacket size 0 */
++	if (usb_endpoint_maxp(ep->desc) == 0) {
++		/*
++		 * We should log an error message here, but we can't call
++		 * dev_err() because there's no way to find the gadget
++		 * given only ep.
++		 */
++		ret = -EINVAL;
++		goto out;
++	}
++
+ 	ret = ep->ops->enable(ep, ep->desc);
+ 	if (ret)
+ 		goto out;
 
 
