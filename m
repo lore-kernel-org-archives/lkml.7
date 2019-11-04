@@ -2,177 +2,107 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B74CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EECCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7FA20650
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:26:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="Pp8aTcTc"
+	by mail.kernel.org (Postfix) with ESMTP id 3E8BF20650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572906382;
+	bh=d11sopKfzpOkYe5kN+ObEO6qxaUWsS4eeR8/fg6kiik=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rznUMSanYk1wXjnZZnbszT5WEM3JeX0a44/WTJb04V6i2qRMPN7ueOaE11UoYe1AV
+	 klkxUSdMlnqEdHSwvlRQmE+WcCY/a5vqSiqvk0sx4c0t992QquwwcuaAry6QlX8WPS
+	 0r2SO4T45Q/h51j9ZoemUglAMFaLicxq9xErEK8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730187AbfKDW0P (ORCPT
+        id S1730473AbfKDVvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:26:15 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46255 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730491AbfKDVvX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:51:23 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 193so12120770pfc.13
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 13:51:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=bHzFpby5nBvLQoa1A3N45Iv5pE3sE4p/UO4W7iuituU=;
-        b=Pp8aTcTc4J8HQHJfK7XYOvTKX+0OBvRsnX5l3y4u4g4MM3j86RHYT5E3CyfwGjTx4M
-         OY4am3V6P04tfgMJdWaiBA4U4MVXNNXBLNBBKKsjLvm6Py+danTKFeA58zni2EwrZJ4a
-         LNM/Y81H3MGNqRtK9pfeV0H03aM+7nND2Zei+zqEbD1s4PqBPprHUisrBeteBubsbwSy
-         TVQ544cT0wpbyLgolGEW1xWW2VpX+SzNMXEAx14Fcr5iUkFTIem+fgkabRMzppRp0uwa
-         f1TaCzq6xMl1AGXBK5nQcB2Aq9iUTjOhumPtO956o84HKT+keZUKHTeZ+X7Z6JqxV9xJ
-         DqlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=bHzFpby5nBvLQoa1A3N45Iv5pE3sE4p/UO4W7iuituU=;
-        b=RWBEM7GGNZq0+/JC63bv3zIVeUxhWLsjDo4k76/AB5pKnNbhNSd0O0AqvJRkQTTkRZ
-         +vRkM4nfbXSwAm6rG7aHIrlFK8ReRYUiUW8PgIrwWGathiDOysfSv7uCLYqZD/Br7NMl
-         IYvOE5KGxSy9084CVn9he1gG7v6wklBs7sxvcPVn4z+sI5e2UN6wqs3iRU/ssou80UxC
-         FGPAYlKy2nmh8owFWZnrOl1yULxXPiFpv02W9eARtbyk2n1enWQRpmzVilA6cnJBoWf4
-         AuywtWT+FXtHrn7RGAsP/jjOAyOXxI8MkU9uH6dtW2QGXEij9+pV4H6B003XYKRlNa8H
-         7F9Q==
-X-Gm-Message-State: APjAAAW9NtDmLhajVXEurMneApr3EjbSfw0Nh6+o0Wtim3e/wQm3UuG/
-        rDJdJVxXsNJqGS03TqU2elzAZw==
-X-Google-Smtp-Source: APXvYqy8cbQrcNS2YZCm15LNXj84RCWobmcY3Yi0AKiVBFlHOjV+tLdHj1XjjIBLQcnlWN3fV+awgw==
-X-Received: by 2002:a63:dc45:: with SMTP id f5mr32464004pgj.250.1572904282035;
-        Mon, 04 Nov 2019 13:51:22 -0800 (PST)
-Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
-        by smtp.googlemail.com with ESMTPSA id z7sm10567610pgk.10.2019.11.04.13.51.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Nov 2019 13:51:21 -0800 (PST)
-Subject: Re: [PATCH v14 1/5] Add flags option to get xattr method paired to
- __vfs_getxattr
-To:     Amir Goldstein <amir73il@gmail.com>,
-        Andreas Dilger <adilger@dilger.ca>
+        Mon, 4 Nov 2019 16:51:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729997AbfKDVvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:51:08 -0500
+Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3BD5217F5;
+        Mon,  4 Nov 2019 21:51:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572904267;
+        bh=d11sopKfzpOkYe5kN+ObEO6qxaUWsS4eeR8/fg6kiik=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=b8gG50WTLcz4sIySVj9D6blRnhNH8uYzD07LvmYeVurz4qLycpoiWcAaS+rMAE/0b
+         v7AzfS0z9Q0s3jy9gVKQtllu8H4b2u4HL+oW3KifpDes+NrIXcaQWUdhj4q1wjMG3N
+         6DNSsJLSb9hfyXGp7u8pQXNwksQJSP2bW6l1DY5g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-doc@vger.kernel.org, CIFS <linux-cifs@vger.kernel.org>,
-        kernel-team@android.com, selinux@vger.kernel.org,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        ecryptfs@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>
-References: <20191022204453.97058-1-salyzyn@android.com>
- <20191022204453.97058-2-salyzyn@android.com>
- <8CE5B6E8-DCB7-4F0B-91C1-48030947F585@dilger.ca>
- <CAOQ4uxis-oQSjKrtBDi-8BQ2M3ve3w8o-YVGRwWLnq+5JLUttA@mail.gmail.com>
-From:   Mark Salyzyn <salyzyn@android.com>
-Message-ID: <7b5f2964-10ce-021b-01f7-6b662bf0c09a@android.com>
-Date:   Mon, 4 Nov 2019 13:51:20 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH 4.9 44/62] HID: i2c-hid: add Trekstor Primebook C11B to descriptor override
+Date:   Mon,  4 Nov 2019 22:45:06 +0100
+Message-Id: <20191104211947.498163681@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
+References: <20191104211901.387893698@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CAOQ4uxis-oQSjKrtBDi-8BQ2M3ve3w8o-YVGRwWLnq+5JLUttA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/23/19 9:57 PM, Amir Goldstein wrote:
-> [excessive CC list reduced]
->
-> On Wed, Oct 23, 2019 at 11:07 AM Andreas Dilger via samba-technical
-> <samba-technical@lists.samba.org> wrote:
->>
->> On Oct 22, 2019, at 2:44 PM, Mark Salyzyn <salyzyn@android.com> wrote:
->>> Replace arguments for get and set xattr methods, and __vfs_getxattr
->>> and __vfs_setaxtr functions with a reference to the following now
->>> common argument structure:
->>>
->>> struct xattr_gs_args {
->>>        struct dentry *dentry;
->>>        struct inode *inode;
->>>        const char *name;
->>>        union {
->>>                void *buffer;
->>>                const void *value;
->>>        };
->>>        size_t size;
->>>        int flags;
->>> };
->>> Mark,
->>>
->>> I do not see the first patch on fsdevel
->>> and I am confused from all the suggested APIs
->>> I recall Christoph's comment on v8 for not using xattr_gs_args
->>> and just adding flags to existing get() method.
->>> I agree to that comment.
->> As already responded, third (?) patch version was like that,
-> The problem is that because of the waaay too long CC list, most revisions
-> of the patch and discussion were bounced from fsdevel, most emails
-> I did not get and cannot find in archives, so the discussion around
-> them is not productive.
->
-> Please resend patch to fsdevel discarding the auto added CC list
-> of all fs maintainers.
+From: Hans de Goede <hdegoede@redhat.com>
 
-git send-email is not my friend :-(
+commit 09f3dbe474735df13dd8a66d3d1231048d9b373f upstream.
 
->> gregkh@
->> said it passed the limit for number of arguments, is looking a bit silly
-> Well, you just matched get() to set() args list, so this is not a strong
-> argument IMO.
->
->> (my paraphrase), and that it should be passed as a structure. Two others
->> agreed. We gained because both set and get use the same structure after
->> this change (this allows a simplified read-modify-write cycle).
-> That sounds like a nice benefit if this was user API, but are there any
-> kernel users that intend to make use of that read-modify-write cycle?
-> I don't think so.
-(one user)
->
->> We will need a quorum on this, 3 (structure) to 2 (flag) now (but really
->> basically between Greg and Christoph?). Coding style issue: Add a flag,
->> or switch to a common xattr argument  structure?
->>
-> IIRC, Christoph was asking why the silly struct and not simply add flags
-> (as did I). He probably did not see Greg's comments due to the list bounce
-> issue. If I read your second hand description of Greg's reaction correctly,
-> it doesn't sound so strong opinionated as well.
-> Me, I can live with flags or struct - I don't care, but...
->
-> Be prepared that if you are going ahead with struct you are going to
-> suffer from bike shedding, which has already started and you will be
-> instructed (just now) to also fix all the relevant and missing Documentation.
-> If, on the other hand, you can get Greg and the rest to concede to adding
-> flags arg and match get() arg list to set() arg list, you will have a much
-> easier job and the patch line count, especially in fs code will be *much*
-> smaller - just saying.
+The Primebook C11B uses the SIPODEV SP1064 touchpad. There are 2 versions
+of this 2-in-1 and the touchpad in the older version does not supply
+descriptors, so it has to be added to the override list.
 
-Respining back to the v4 version of the series incorporating some of the 
-fixes on the way.
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Automated testing in kernel not yet handled and will be noted in the 
-respin.
+---
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-> Thanks,
-> Amir.
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -323,6 +323,25 @@ static const struct dmi_system_id i2c_hi
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
+ 	{
++		/*
++		 * There are at least 2 Primebook C11B versions, the older
++		 * version has a product-name of "Primebook C11B", and a
++		 * bios version / release / firmware revision of:
++		 * V2.1.2 / 05/03/2018 / 18.2
++		 * The new version has "PRIMEBOOK C11B" as product-name and a
++		 * bios version / release / firmware revision of:
++		 * CFALKSW05_BIOS_V1.1.2 / 11/19/2018 / 19.2
++		 * Only the older version needs this quirk, note the newer
++		 * version will not match as it has a different product-name.
++		 */
++		.ident = "Trekstor Primebook C11B",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Primebook C11B"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
++	{
+ 		.ident = "Direkt-Tek DTLAPY116-2",
+ 		.matches = {
+ 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Direkt-Tek"),
 
-Mark
 
