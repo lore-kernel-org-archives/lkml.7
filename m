@@ -2,114 +2,87 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5830FCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C401DCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D80221D7D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:31:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="G+0uRnUZ"
+	by mail.kernel.org (Postfix) with ESMTP id 91C4221D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:33:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572874386;
+	bh=/TUvH7WxdRqK1Hx+G/N8sjyhZKgnOcbOcjnSABQLZ48=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IM40TqThDams/U9aTf5+33vH3KRFZkBpqJ5sYN/86czfCCWa98hretgDV03RWIWQh
+	 4Tpac6bhHTxPHXV1sGkzVFNpYSkPsE/s8R7XeE8NziPDh46YeeBY+0MHsrpVmwo4go
+	 YiCGRtgtWGacxu1N2+HxSwA0iIMYneXSaf5r7yzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbfKDNbD (ORCPT
+        id S1728954AbfKDNdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:31:03 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:27212 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728783AbfKDNax (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:30:53 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA4DHO6w008716;
-        Mon, 4 Nov 2019 14:30:27 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=HvQIh1/ibvktD1tZoDncL55wuWS1ZeX9ziVeLdmOO2Q=;
- b=G+0uRnUZXqEzuJC6YvVUy9xMCU77kKVy9DPCscoEZJ/uTQAp8Nuy4oE9GIieVN3PZ4x+
- tanqLkuqMwWFnva/v87XrD9QQ8PZo/UEWFKvrz65wRNpWb8d5PyeOsExwyRov/tuRQRQ
- Bq5cevaFHYrEZqTKObUd18OHCSKaRQlMZxWkJF/NKN+Amo34BFE/V3yG1HhVCbJ1svfl
- W1K6+DhlFiWbfDuNaOtuTAivIrAWv7ewfdRUeDsXaKtGkfQBE+G6n+XqWVlEuL/y3vJm
- YH6FPR+LB/ULMVDPio66uIktYsK97+ToLTytZQRH/KnYbdxE5VGd4wqZ7mEWKebxRy4F FA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2w1054hnty-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 Nov 2019 14:30:27 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9044010003E;
-        Mon,  4 Nov 2019 14:30:26 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8221D2D379E;
-        Mon,  4 Nov 2019 14:30:26 +0100 (CET)
-Received: from localhost (10.75.127.51) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 4 Nov 2019 14:30:25
- +0100
-From:   Pascal Paillet <p.paillet@st.com>
-To:     <rui.zhang@intel.com>, <edubezval@gmail.com>,
-        <daniel.lezcano@linaro.org>, <amit.kucheria@verdurent.com>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <p.paillet@st.com>, <david.hernandezsanchez@st.com>,
-        <horms+renesas@verge.net.au>, <wsa+renesas@sang-engineering.com>,
-        <linux-pm@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 5/5] thermal: stm32: fix low threshold interrupt flood
-Date:   Mon, 4 Nov 2019 14:30:20 +0100
-Message-ID: <20191104133020.8820-6-p.paillet@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191104133020.8820-1-p.paillet@st.com>
-References: <20191104133020.8820-1-p.paillet@st.com>
+        Mon, 4 Nov 2019 08:33:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727663AbfKDNdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 08:33:04 -0500
+Received: from localhost (unknown [62.119.166.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB3D620B7C;
+        Mon,  4 Nov 2019 13:33:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572874383;
+        bh=/TUvH7WxdRqK1Hx+G/N8sjyhZKgnOcbOcjnSABQLZ48=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nNL4JsMh3/13d1kVojFuK8PITKHicXPSZepCYJIov3yDNR0t6/l89VDK6LDc83vlE
+         Bq70otCffMI3EYgo/PHMfNm0eZMYz/IHlRdDKQ+IYBdqyYCOqyTGy+xtkwn5B2OAhY
+         iKMuiqQ3PM4Kxna5rsGyxji4xCzGLZY5KCI/jDS4=
+Date:   Mon, 4 Nov 2019 14:32:58 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        linux- stable <stable@vger.kernel.org>, kuznet@ms2.inr.ac.ru,
+        yoshfuji@linux-ipv6.org, lkft-triage@lists.linaro.org,
+        "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Subject: Re: stable-rc 4.14 : net/ipv6/addrconf.c:6593:22: error:
+ 'blackhole_netdev' undeclared
+Message-ID: <20191104133258.GA2130866@kroah.com>
+References: <CA+G9fYsnRVisD=ZvuoM2FViRkXDcm_n0hZ1cceUSM=XtqJRHgQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-11-04_08:2019-11-04,2019-11-04 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYsnRVisD=ZvuoM2FViRkXDcm_n0hZ1cceUSM=XtqJRHgQ@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the STM32 thermal peripheral, it is not possible to dump the
-temperature that has caused the interrupt.
-When the temperature reaches the low threshold, we generally read
-a temperature that is a little bit higher than the low threshold.
-This maybe due to sampling precision, and also because the CPU becomes
-hotter when it quits WFI mode.
-In that case, the framework does not change the trip points. This leads
-to a lot of low threshold interrupts.
+On Mon, Nov 04, 2019 at 06:44:39PM +0530, Naresh Kamboju wrote:
+> stable-rc 4.14 for architectures arm64, arm, x86_64 and i386 builds
+> failed due to below error,
+> 
+> net/ipv6/addrconf.c: In function 'addrconf_init':
+> net/ipv6/addrconf.c:6593:22: error: 'blackhole_netdev' undeclared
+> (first use in this function); did you mean 'alloc_netdev'?
+>   bdev = ipv6_add_dev(blackhole_netdev);
+>                       ^~~~~~~~~~~~~~~~
+>                       alloc_netdev
+> net/ipv6/addrconf.c:6593:22: note: each undeclared identifier is
+> reported only once for each function it appears in
+> net/ipv6/addrconf.c: In function 'addrconf_cleanup':
+> net/ipv6/addrconf.c:6667:18: error: 'blackhole_netdev' undeclared
+> (first use in this function); did you mean 'alloc_netdev'?
+>   addrconf_ifdown(blackhole_netdev, 2);
+>                   ^~~~~~~~~~~~~~~~
+>                   alloc_netdev
+> 
+> Build link,
+> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.14/DISTRO=lkft,MACHINE=intel-corei7-64,label=docker-lkft/632/consoleText
+> 
 
-The fix is to set the low threshold value 0.5 degrees Celsius
-below the actual request.
-
-The problem is not so frequent with the high threshold and it would
-no be a good idea to set the threshold value higher than the request.
-
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
----
- drivers/thermal/st/stm_thermal.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/thermal/st/stm_thermal.c b/drivers/thermal/st/stm_thermal.c
-index 9986716b17c1..f7168762fbde 100644
---- a/drivers/thermal/st/stm_thermal.c
-+++ b/drivers/thermal/st/stm_thermal.c
-@@ -324,7 +324,8 @@ static int stm_thermal_set_trips(void *data, int low, int high)
- 
- 	if (low > -INT_MAX) {
- 		sensor->low_temp_enabled = 1;
--		ret = stm_thermal_calculate_threshold(sensor, low, &th);
-+		/* add 0.5 of hysteresis due to measurement error */
-+		ret = stm_thermal_calculate_threshold(sensor, low - 500, &th);
- 		if (ret)
- 			return ret;
- 
--- 
-2.17.1
-
+Ick, my fault, will go fix this, sorry about that.
