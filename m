@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD52CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4A8CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35BBF2190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE73C218BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904345;
-	bh=gso8+t2/J+1TvWc5rFLF7yg78lFYsJuMksMUKnmtXUg=;
+	s=default; t=1572904349;
+	bh=lcRJMau4MilgjA1G5AsVvBldze0ky+F5z1BAy1+tpLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BrHjkeQlGPyWMd+kiY6ybSX7ovJbP5ptbWuahKuxiNkKEjveSp0eeJo21ijQEeSlM
-	 x2HPFMGLTq/yrhv/X+j/6+4rJvnIY1pDuPKBywuTgo+Zbcvet23wgDd3w2EAPITQTx
-	 r7UCMvVp/lE0r/Rx2DUySH1YayPYCMXBJ/t7TYgw=
+	b=Tpk/CTqfaQMf4SG+xg1bKdCqyQt8cxBPD1xAKI45rXhjCjOVrVwMEk9IXnRDYXGLW
+	 3wDVW1hgBq1Zs9tmSCSU1SUlpFfYnODJfAqz5VEM2RoScQ5NuDaulHhm2LfPHQayUl
+	 jMGUXYyfZkjHI4mBeBGPfUGmIg3IzIw2FdflGSFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730746AbfKDVwY (ORCPT
+        id S1730760AbfKDVw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:52:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45732 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:52:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730727AbfKDVwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:52:20 -0500
+        id S1730741AbfKDVwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:52:24 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5693621D71;
-        Mon,  4 Nov 2019 21:52:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 244BD217F5;
+        Mon,  4 Nov 2019 21:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904338;
-        bh=gso8+t2/J+1TvWc5rFLF7yg78lFYsJuMksMUKnmtXUg=;
+        s=default; t=1572904343;
+        bh=lcRJMau4MilgjA1G5AsVvBldze0ky+F5z1BAy1+tpLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NbLzgVToc/AfQCBG4qaf4A7cdTM58VoAcJUQrlhMLtzD6pCMHCRakp7Bi4z9pVAxQ
-         rIS6MD/A9RZHLvJc0ALLFN+nfH9Vk1lAMCn5uIjGYuWA2Vrjkh9pivAbuTC6QEHSzN
-         gBX42mbh/nPja1A0w2Hb44B4rUOfZw11WS0ibRqg=
+        b=NkhzSQ+v+RfONMThdAEVYoDwd8l2aOKBnVrE9MjyhAfT/jkIeoDm59AQpo+7XkDEA
+         mkDEx+BFtGR9iTUBQgcxk6ri7aCvwxguEKMl57geibACJ5eAlMeWWQzwr7bKGLraiF
+         djG2JiVdx0UekD0EkKjbDY1296OTVKTsMbLg59p4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guruswamy Basavaiah <guru2018@gmail.com>,
-        Nikos Tsironis <ntsironis@arrikto.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
+        stable@vger.kernel.org, Christian Kujau <lists@nerdbynature.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Genki Sky <sky@genki.is>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 04/95] dm snapshot: rework COW throttling to fix deadlock
-Date:   Mon,  4 Nov 2019 22:44:02 +0100
-Message-Id: <20191104212039.597233259@linuxfoundation.org>
+Subject: [PATCH 4.14 14/95] scripts/setlocalversion: Improve -dirty check with git-status --no-optional-locks
+Date:   Mon,  4 Nov 2019 22:44:12 +0100
+Message-Id: <20191104212044.523480055@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -62,244 +64,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit b21555786f18cd77f2311ad89074533109ae3ffa ]
+[ Upstream commit ff64dd4857303dd5550faed9fd598ac90f0f2238 ]
 
-Commit 721b1d98fb517a ("dm snapshot: Fix excessive memory usage and
-workqueue stalls") introduced a semaphore to limit the maximum number of
-in-flight kcopyd (COW) jobs.
+git-diff-index does not refresh the index for you, so using it for a
+"-dirty" check can give misleading results. Commit 6147b1cf19651
+("scripts/setlocalversion: git: Make -dirty check more robust") tried to
+fix this by switching to git-status, but it overlooked the fact that
+git-status also writes to the .git directory of the source tree, which
+is definitely not kosher for an out-of-tree (O=) build. That is getting
+reverted.
 
-The implementation of this throttling mechanism is prone to a deadlock:
+Fortunately, git-status now supports avoiding writing to the index via
+the --no-optional-locks flag, as of git 2.14. It still calculates an
+up-to-date index, but it avoids writing it out to the .git directory.
 
-1. One or more threads write to the origin device causing COW, which is
-   performed by kcopyd.
+So, let's retry the solution from commit 6147b1cf19651 using this new
+flag first, and if it fails, we assume this is an older version of git
+and just use the old git-diff-index method.
 
-2. At some point some of these threads might reach the s->cow_count
-   semaphore limit and block in down(&s->cow_count), holding a read lock
-   on _origins_lock.
+It's hairy to get the 'grep -vq' (inverted matching) correct by stashing
+the output of git-status (you have to be careful about the difference
+betwen "empty stdin" and "blank line on stdin"), so just pipe the output
+directly to grep and use a regex that's good enough for both the
+git-status and git-diff-index version.
 
-3. Someone tries to acquire a write lock on _origins_lock, e.g.,
-   snapshot_ctr(), which blocks because the threads at step (2) already
-   hold a read lock on it.
-
-4. A COW operation completes and kcopyd runs dm-snapshot's completion
-   callback, which ends up calling pending_complete().
-   pending_complete() tries to resubmit any deferred origin bios. This
-   requires acquiring a read lock on _origins_lock, which blocks.
-
-   This happens because the read-write semaphore implementation gives
-   priority to writers, meaning that as soon as a writer tries to enter
-   the critical section, no readers will be allowed in, until all
-   writers have completed their work.
-
-   So, pending_complete() waits for the writer at step (3) to acquire
-   and release the lock. This writer waits for the readers at step (2)
-   to release the read lock and those readers wait for
-   pending_complete() (the kcopyd thread) to signal the s->cow_count
-   semaphore: DEADLOCK.
-
-The above was thoroughly analyzed and documented by Nikos Tsironis as
-part of his initial proposal for fixing this deadlock, see:
-https://www.redhat.com/archives/dm-devel/2019-October/msg00001.html
-
-Fix this deadlock by reworking COW throttling so that it waits without
-holding any locks. Add a variable 'in_progress' that counts how many
-kcopyd jobs are running. A function wait_for_in_progress() will sleep if
-'in_progress' is over the limit. It drops _origins_lock in order to
-avoid the deadlock.
-
-Reported-by: Guruswamy Basavaiah <guru2018@gmail.com>
-Reported-by: Nikos Tsironis <ntsironis@arrikto.com>
-Reviewed-by: Nikos Tsironis <ntsironis@arrikto.com>
-Tested-by: Nikos Tsironis <ntsironis@arrikto.com>
-Fixes: 721b1d98fb51 ("dm snapshot: Fix excessive memory usage and workqueue stalls")
-Cc: stable@vger.kernel.org # v5.0+
-Depends-on: 4a3f111a73a8c ("dm snapshot: introduce account_start_copy() and account_end_copy()")
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Cc: Christian Kujau <lists@nerdbynature.de>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Suggested-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Tested-by: Genki Sky <sky@genki.is>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-snap.c | 80 +++++++++++++++++++++++++++++++++++---------
- 1 file changed, 64 insertions(+), 16 deletions(-)
+ scripts/setlocalversion | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/dm-snap.c b/drivers/md/dm-snap.c
-index a9575122a0c6e..95c564b60d79a 100644
---- a/drivers/md/dm-snap.c
-+++ b/drivers/md/dm-snap.c
-@@ -19,7 +19,6 @@
- #include <linux/vmalloc.h>
- #include <linux/log2.h>
- #include <linux/dm-kcopyd.h>
--#include <linux/semaphore.h>
+diff --git a/scripts/setlocalversion b/scripts/setlocalversion
+index 71f39410691b6..365b3c2b8f431 100755
+--- a/scripts/setlocalversion
++++ b/scripts/setlocalversion
+@@ -73,8 +73,16 @@ scm_version()
+ 			printf -- '-svn%s' "`git svn find-rev $head`"
+ 		fi
  
- #include "dm.h"
+-		# Check for uncommitted changes
+-		if git diff-index --name-only HEAD | grep -qv "^scripts/package"; then
++		# Check for uncommitted changes.
++		# First, with git-status, but --no-optional-locks is only
++		# supported in git >= 2.14, so fall back to git-diff-index if
++		# it fails. Note that git-diff-index does not refresh the
++		# index, so it may give misleading results. See
++		# git-update-index(1), git-diff-index(1), and git-status(1).
++		if {
++			git --no-optional-locks status -uno --porcelain 2>/dev/null ||
++			git diff-index --name-only HEAD
++		} | grep -qvE '^(.. )?scripts/package'; then
+ 			printf '%s' -dirty
+ 		fi
  
-@@ -106,8 +105,8 @@ struct dm_snapshot {
- 	/* The on disk metadata handler */
- 	struct dm_exception_store *store;
- 
--	/* Maximum number of in-flight COW jobs. */
--	struct semaphore cow_count;
-+	unsigned in_progress;
-+	struct wait_queue_head in_progress_wait;
- 
- 	struct dm_kcopyd_client *kcopyd_client;
- 
-@@ -158,8 +157,8 @@ struct dm_snapshot {
-  */
- #define DEFAULT_COW_THRESHOLD 2048
- 
--static int cow_threshold = DEFAULT_COW_THRESHOLD;
--module_param_named(snapshot_cow_threshold, cow_threshold, int, 0644);
-+static unsigned cow_threshold = DEFAULT_COW_THRESHOLD;
-+module_param_named(snapshot_cow_threshold, cow_threshold, uint, 0644);
- MODULE_PARM_DESC(snapshot_cow_threshold, "Maximum number of chunks being copied on write");
- 
- DECLARE_DM_KCOPYD_THROTTLE_WITH_MODULE_PARM(snapshot_copy_throttle,
-@@ -1206,7 +1205,7 @@ static int snapshot_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 		goto bad_hash_tables;
- 	}
- 
--	sema_init(&s->cow_count, (cow_threshold > 0) ? cow_threshold : INT_MAX);
-+	init_waitqueue_head(&s->in_progress_wait);
- 
- 	s->kcopyd_client = dm_kcopyd_client_create(&dm_kcopyd_throttle);
- 	if (IS_ERR(s->kcopyd_client)) {
-@@ -1396,17 +1395,54 @@ static void snapshot_dtr(struct dm_target *ti)
- 
- 	dm_put_device(ti, s->origin);
- 
-+	WARN_ON(s->in_progress);
-+
- 	kfree(s);
- }
- 
- static void account_start_copy(struct dm_snapshot *s)
- {
--	down(&s->cow_count);
-+	spin_lock(&s->in_progress_wait.lock);
-+	s->in_progress++;
-+	spin_unlock(&s->in_progress_wait.lock);
- }
- 
- static void account_end_copy(struct dm_snapshot *s)
- {
--	up(&s->cow_count);
-+	spin_lock(&s->in_progress_wait.lock);
-+	BUG_ON(!s->in_progress);
-+	s->in_progress--;
-+	if (likely(s->in_progress <= cow_threshold) &&
-+	    unlikely(waitqueue_active(&s->in_progress_wait)))
-+		wake_up_locked(&s->in_progress_wait);
-+	spin_unlock(&s->in_progress_wait.lock);
-+}
-+
-+static bool wait_for_in_progress(struct dm_snapshot *s, bool unlock_origins)
-+{
-+	if (unlikely(s->in_progress > cow_threshold)) {
-+		spin_lock(&s->in_progress_wait.lock);
-+		if (likely(s->in_progress > cow_threshold)) {
-+			/*
-+			 * NOTE: this throttle doesn't account for whether
-+			 * the caller is servicing an IO that will trigger a COW
-+			 * so excess throttling may result for chunks not required
-+			 * to be COW'd.  But if cow_threshold was reached, extra
-+			 * throttling is unlikely to negatively impact performance.
-+			 */
-+			DECLARE_WAITQUEUE(wait, current);
-+			__add_wait_queue(&s->in_progress_wait, &wait);
-+			__set_current_state(TASK_UNINTERRUPTIBLE);
-+			spin_unlock(&s->in_progress_wait.lock);
-+			if (unlock_origins)
-+				up_read(&_origins_lock);
-+			io_schedule();
-+			remove_wait_queue(&s->in_progress_wait, &wait);
-+			return false;
-+		}
-+		spin_unlock(&s->in_progress_wait.lock);
-+	}
-+	return true;
- }
- 
- /*
-@@ -1424,7 +1460,7 @@ static void flush_bios(struct bio *bio)
- 	}
- }
- 
--static int do_origin(struct dm_dev *origin, struct bio *bio);
-+static int do_origin(struct dm_dev *origin, struct bio *bio, bool limit);
- 
- /*
-  * Flush a list of buffers.
-@@ -1437,7 +1473,7 @@ static void retry_origin_bios(struct dm_snapshot *s, struct bio *bio)
- 	while (bio) {
- 		n = bio->bi_next;
- 		bio->bi_next = NULL;
--		r = do_origin(s->origin, bio);
-+		r = do_origin(s->origin, bio, false);
- 		if (r == DM_MAPIO_REMAPPED)
- 			generic_make_request(bio);
- 		bio = n;
-@@ -1726,8 +1762,11 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
- 	if (!s->valid)
- 		return DM_MAPIO_KILL;
- 
--	/* FIXME: should only take write lock if we need
--	 * to copy an exception */
-+	if (bio_data_dir(bio) == WRITE) {
-+		while (unlikely(!wait_for_in_progress(s, false)))
-+			; /* wait_for_in_progress() has slept */
-+	}
-+
- 	mutex_lock(&s->lock);
- 
- 	if (!s->valid || (unlikely(s->snapshot_overflowed) &&
-@@ -1876,7 +1915,7 @@ redirect_to_origin:
- 
- 	if (bio_data_dir(bio) == WRITE) {
- 		mutex_unlock(&s->lock);
--		return do_origin(s->origin, bio);
-+		return do_origin(s->origin, bio, false);
- 	}
- 
- out_unlock:
-@@ -2213,15 +2252,24 @@ next_snapshot:
- /*
-  * Called on a write from the origin driver.
-  */
--static int do_origin(struct dm_dev *origin, struct bio *bio)
-+static int do_origin(struct dm_dev *origin, struct bio *bio, bool limit)
- {
- 	struct origin *o;
- 	int r = DM_MAPIO_REMAPPED;
- 
-+again:
- 	down_read(&_origins_lock);
- 	o = __lookup_origin(origin->bdev);
--	if (o)
-+	if (o) {
-+		if (limit) {
-+			struct dm_snapshot *s;
-+			list_for_each_entry(s, &o->snapshots, list)
-+				if (unlikely(!wait_for_in_progress(s, true)))
-+					goto again;
-+		}
-+
- 		r = __origin_write(&o->snapshots, bio->bi_iter.bi_sector, bio);
-+	}
- 	up_read(&_origins_lock);
- 
- 	return r;
-@@ -2334,7 +2382,7 @@ static int origin_map(struct dm_target *ti, struct bio *bio)
- 		dm_accept_partial_bio(bio, available_sectors);
- 
- 	/* Only tell snapshots if this is a write */
--	return do_origin(o->dev, bio);
-+	return do_origin(o->dev, bio, true);
- }
- 
- static long origin_dax_direct_access(struct dm_target *ti, pgoff_t pgoff,
 -- 
 2.20.1
 
