@@ -2,56 +2,65 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B203ECA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE580CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6392190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEE4B2084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904973;
-	bh=2MwhBruz8QdI3sEGgqpLqqGmZkYq661yl/ZJ1kyxMhE=;
+	s=default; t=1572904976;
+	bh=bhZyzt5jNJv5rZYKFKakbsYlNulrMGxOM/5JzLduPEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wWjnhmD/1GVJAQGEEJqPcKRRFMuUDvgX/KRAkI23DJlB9TNM/orgDZKk2C6tInIZR
-	 rRvAipcqtgRrMlEA/dG0tcL0uuzo/A8T0r3Ebz0TkrtMhFkfTFe7fePYOYuqL58LQS
-	 1+ob2sWhjIebwmzZ9paPkOvb6JOxhCuUtfx5upmw=
+	b=uVo/zzFSIFUgFTUrAlm9q7yW7Og92yJCRKxw7bHqdyPpF7My04nq6Ctuzz6KDim8G
+	 h1uHaNO9eVA6WH5TfMSUiEsE0ZuBq9Hj72wYY/iJiMPEoiwyIY0d+svxU2WisqRJ7/
+	 dNWEn0nKWyJAfIXMzRhhkfp4XBBZ2gf53T60IhGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389407AbfKDWCv (ORCPT
+        id S2388680AbfKDWCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:02:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33008 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:02:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389389AbfKDWCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:02:48 -0500
+        id S2389403AbfKDWCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:02:52 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 522D4214D8;
-        Mon,  4 Nov 2019 22:02:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3143120650;
+        Mon,  4 Nov 2019 22:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904967;
-        bh=2MwhBruz8QdI3sEGgqpLqqGmZkYq661yl/ZJ1kyxMhE=;
+        s=default; t=1572904971;
+        bh=bhZyzt5jNJv5rZYKFKakbsYlNulrMGxOM/5JzLduPEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ywzjpTn6R+R1YV+PWyP1+ZmlaS7XikTfawHgk/hNxn4LkuK6c6hSvyszVAIln8Cfy
-         38f23fWN0K388/PWMVrew9SZYxKtth7tqjrFLlJ+B2Ny85k0WZ6ytWEUjYfUZadavu
-         6hrwUy8grFBNZl5pG8Ai+Ul6Z9MR3U6+uQ1tqs/I=
+        b=wlKpWtXUHbFCqVjWTPfF3fyGMkd9jnkHIaNsiR2GCTUeC/xPU60Wy+jsCAsZ51KQm
+         55ip79Dcpt21JqqV7Z+ydfXSwhjyU97G+Jby3pBvkU+agHkZJhK/ZP54VqaYwiB12Y
+         c6sb6LmqEvXY2Aqnn1xvouOsEsTzPM0SnxGfgfE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        ak@linux.intel.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Dave Young <dyoung@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lyude Paul <lyude@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Octavian Purdila <octavian.purdila@intel.com>,
+        Peter Jones <pjones@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 090/149] x86/cpu: Add Comet Lake to the Intel CPU models header
-Date:   Mon,  4 Nov 2019 22:44:43 +0100
-Message-Id: <20191104212142.789041111@linuxfoundation.org>
+        Scott Talbert <swt@techie.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 081/149] efi/cper: Fix endianness of PCIe class code
+Date:   Mon,  4 Nov 2019 22:44:34 +0100
+Message-Id: <20191104212142.274068642@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -64,47 +73,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit 8d7c6ac3b2371eb1cbc9925a88f4d10efff374de ]
+[ Upstream commit 6fb9367a15d1a126d222d738b2702c7958594a5f ]
 
-Comet Lake is the new 10th Gen Intel processor. Add two new CPU model
-numbers to the Intel family list.
+The CPER parser assumes that the class code is big endian, but at least
+on this edk2-derived Intel Purley platform it's little endian:
 
-The CPU model numbers are not published in the SDM yet but they come
-from an authoritative internal source.
+    efi: EFI v2.50 by EDK II BIOS ID:PLYDCRB1.86B.0119.R05.1701181843
+    DMI: Intel Corporation PURLEY/PURLEY, BIOS PLYDCRB1.86B.0119.R05.1701181843 01/18/2017
 
- [ bp: Touch up commit message. ]
+    {1}[Hardware Error]:   device_id: 0000:5d:00.0
+    {1}[Hardware Error]:   slot: 0
+    {1}[Hardware Error]:   secondary_bus: 0x5e
+    {1}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x2030
+    {1}[Hardware Error]:   class_code: 000406
+                                       ^^^^^^ (should be 060400)
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Cc: ak@linux.intel.com
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Jerry Snitselaar <jsnitsel@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: Octavian Purdila <octavian.purdila@intel.com>
+Cc: Peter Jones <pjones@redhat.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Scott Talbert <swt@techie.net>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/1570549810-25049-2-git-send-email-kan.liang@linux.intel.com
+Cc: linux-efi@vger.kernel.org
+Cc: linux-integrity@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191002165904.8819-2-ard.biesheuvel@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/intel-family.h | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/firmware/efi/cper.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 82a57d344b9bc..2a8e5f78e23c4 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -61,6 +61,9 @@
- #define INTEL_FAM6_TIGERLAKE_L		0x8C
- #define INTEL_FAM6_TIGERLAKE		0x8D
- 
-+#define INTEL_FAM6_COMETLAKE		0xA5
-+#define INTEL_FAM6_COMETLAKE_L		0xA6
-+
- /* "Small Core" Processors (Atom) */
- 
- #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index 4045098ddb860..116989cf3d457 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -393,7 +393,7 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
+ 		printk("%s""vendor_id: 0x%04x, device_id: 0x%04x\n", pfx,
+ 		       pcie->device_id.vendor_id, pcie->device_id.device_id);
+ 		p = pcie->device_id.class_code;
+-		printk("%s""class_code: %02x%02x%02x\n", pfx, p[0], p[1], p[2]);
++		printk("%s""class_code: %02x%02x%02x\n", pfx, p[2], p[1], p[0]);
+ 	}
+ 	if (pcie->validation_bits & CPER_PCIE_VALID_SERIAL_NUMBER)
+ 		printk("%s""serial number: 0x%04x, 0x%04x\n", pfx,
 -- 
 2.20.1
 
