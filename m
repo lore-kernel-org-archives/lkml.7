@@ -2,375 +2,105 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAC0CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3FACA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2F5021D81
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:19:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sv1OUIAr"
+	by mail.kernel.org (Postfix) with ESMTP id EC8CC21D81
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:19:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbfKDNTJ (ORCPT
+        id S1728928AbfKDNTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:19:09 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54608 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727236AbfKDNTJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:19:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572873546;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=xL1c5yWHlmNgn8UfJhR2tbzkAdQMb4IMQtfsSSpu4zw=;
-        b=Sv1OUIAr5Zunkg5YEzAd6kAUXO0B+WrlzUIcRWTHTP+oPPJoL5rFr1DoBExU2/1EN+yRv8
-        uyHdZdZvHSXsP0flMdQJiAAtwPEjdiKCLVf8JJen0eX0XKqLv3aHbHk29QCZXbcszNnly9
-        cbFR9A8dwSAEwz2xfxeabit86Hoehoc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-68-GE9xVdCHMGaT-MW0gM8SxQ-1; Mon, 04 Nov 2019 08:19:02 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70D1B107ACC2;
-        Mon,  4 Nov 2019 13:19:01 +0000 (UTC)
-Received: from dcbz.redhat.com (ovpn-116-108.ams2.redhat.com [10.36.116.108])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 855B05C553;
-        Mon,  4 Nov 2019 13:18:57 +0000 (UTC)
-From:   Adrian Reber <areber@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        linux-kselftest@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Adrian Reber <areber@redhat.com>
-Subject: [PATCH v2] selftests: add tests for clone3()
-Date:   Mon,  4 Nov 2019 14:18:46 +0100
-Message-Id: <20191104131846.1076814-1-areber@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: GE9xVdCHMGaT-MW0gM8SxQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        Mon, 4 Nov 2019 08:19:25 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49158 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727236AbfKDNTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 08:19:24 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 49907ABE9;
+        Mon,  4 Nov 2019 13:19:22 +0000 (UTC)
+Date:   Mon, 04 Nov 2019 14:19:21 +0100
+Message-ID: <s5heeynwzhi.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Christian Kellner <ck@xatom.net>,
+        intel-gfx@lists.freedesktop.org, Takashi Iwai <tiwai@suse.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mario Limonciello <mario.limonciello@dell.com>
+Subject: Re: snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=
+In-Reply-To: <20191104131024.GB2552@lahna.fi.intel.com>
+References: <b31b8649-cb2d-890b-2d4d-881e47895ee6@molgen.mpg.de>
+        <20191104131024.GB2552@lahna.fi.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds tests for clone3() with different values and sizes
-of struct clone_args.
+On Mon, 04 Nov 2019 14:10:24 +0100,
+Mika Westerberg wrote:
+> 
+> Hi,
+> 
+> On Mon, Nov 04, 2019 at 01:57:54PM +0100, Paul Menzel wrote:
+> > Dear Linux folks,
+> > 
+> > 
+> > On the Dell XPS 13 9380 with Debian Sid/unstable with Linux 5.3.7
+> > resuming0with Dell’s Thunderbolt TB16 dock connected, Linux spews
+> > the errors below.
+> 
+> I have this machine here so can try to reproduce it as well.
+> 
+> > ```
+> > [    0.000000] Linux version 5.3.0-1-amd64 (debian-kernel@lists.debian.org) (gcc version 9.2.1 20191008 (Debian 9.2.1-9)) #1 SMP Debian 5.3.7-1 (2019-10-19)
+> > […]
+> > [    1.596619] pci 0000:00:1f.3: Adding to iommu group 12
+> > [   14.536274] snd_hda_intel 0000:00:1f.3: enabling device (0000 -> 0002)
+> > [   14.544100] snd_hda_intel 0000:00:1f.3: bound 0000:00:02.0 (ops i915_audio_component_bind_ops [i915])
+> > [   14.760751] input: HDA Intel PCH Headphone Mic as /devices/pci0000:00/0000:00:1f.3/sound/card0/input16
+> > [   14.760790] input: HDA Intel PCH HDMI as /devices/pci0000:00/0000:00:1f.3/sound/card0/input17
+> > [  156.614284] snd_hda_intel 0000:00:1f.3: No response from codec, disabling MSI: last cmd=0x20270503
+> > [  157.622232] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20270503
+> > [  158.626371] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20370503
+> > [  159.634102] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x201f0500
+> > [  161.678121] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20270503
+> > [  162.682272] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20370503
+> > [  163.694234] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x201f0500
+> > [  165.730142] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20270503
+> > […]
+> > ```
+> > 
+> > In the bug report *[Intel Ice Lake, snd-hda-intel, HDMI] "No
+> > response from codec" (after display hotplug?)* [1], note it’s a
+> > different model, Takashi comments that this is a Thunderbolt or
+> > i915 issue.
+> 
+> 0000:00:1f.3 is on PCH so not sure how it could be related to
+> Thunderbolt, well or i915 for that matter.
 
-This selftest was initially part of of the clone3() with PID selftest.
-After that patch was almost merged Eugene sent out a couple of patches
-to fix problems with these test.
+It's the HD-audio controller PCI device and both HDMI and onboard
+codecs are on that bus.  HDMI codec a shadow device of GPU, so it has
+a strong dependency on i915 GPU driver.  The power of HD-audio bus and
+codec is controlled over DRM audio component ops, so the power-on must
+have been notified to GPU side, but still something seems missing.
+ANd, with the dock, the other parties come to play into the game, so
+it becomes more complex...
 
-This commit now only contains the clone3() selftest after the LPC
-decision to rework clone3() with PID to allow setting the PID in
-multiple PID namespaces including all of Eugene's patches.
 
-Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
-Signed-off-by: Adrian Reber <areber@redhat.com>
----
-v2:
- - Applied Christian's suggestions
- - Skip root-only tests when running as non-root
----
- MAINTAINERS                               |   1 +
- tools/testing/selftests/Makefile          |   1 +
- tools/testing/selftests/clone3/.gitignore |   1 +
- tools/testing/selftests/clone3/Makefile   |   7 +
- tools/testing/selftests/clone3/clone3.c   | 225 ++++++++++++++++++++++
- 5 files changed, 235 insertions(+)
- create mode 100644 tools/testing/selftests/clone3/.gitignore
- create mode 100644 tools/testing/selftests/clone3/Makefile
- create mode 100644 tools/testing/selftests/clone3/clone3.c
+thanks,
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cba1095547fd..0040b7a6410b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12829,6 +12829,7 @@ S:=09Maintained
- T:=09git git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git
- F:=09samples/pidfd/
- F:=09tools/testing/selftests/pidfd/
-+F:=09tools/testing/selftests/clone3/
- K:=09(?i)pidfd
- K:=09(?i)clone3
- K:=09\b(clone_args|kernel_clone_args)\b
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Mak=
-efile
-index 4cdbae6f4e61..ad442364218a 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -4,6 +4,7 @@ TARGETS +=3D bpf
- TARGETS +=3D breakpoints
- TARGETS +=3D capabilities
- TARGETS +=3D cgroup
-+TARGETS +=3D clone3
- TARGETS +=3D cpufreq
- TARGETS +=3D cpu-hotplug
- TARGETS +=3D drivers/dma-buf
-diff --git a/tools/testing/selftests/clone3/.gitignore b/tools/testing/self=
-tests/clone3/.gitignore
-new file mode 100644
-index 000000000000..85d9d3ba2524
---- /dev/null
-+++ b/tools/testing/selftests/clone3/.gitignore
-@@ -0,0 +1 @@
-+clone3
-diff --git a/tools/testing/selftests/clone3/Makefile b/tools/testing/selfte=
-sts/clone3/Makefile
-new file mode 100644
-index 000000000000..ea922c014ae4
---- /dev/null
-+++ b/tools/testing/selftests/clone3/Makefile
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+CFLAGS +=3D -I../../../../usr/include/
-+
-+TEST_GEN_PROGS :=3D clone3
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/clone3/clone3.c b/tools/testing/selfte=
-sts/clone3/clone3.c
-new file mode 100644
-index 000000000000..a982d95189bf
---- /dev/null
-+++ b/tools/testing/selftests/clone3/clone3.c
-@@ -0,0 +1,225 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/* Based on Christian Brauner's clone3() example */
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <inttypes.h>
-+#include <linux/types.h>
-+#include <linux/sched.h>
-+#include <stdint.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <sys/syscall.h>
-+#include <sys/types.h>
-+#include <sys/un.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
-+#include <sched.h>
-+
-+#include "../kselftest.h"
-+
-+/*
-+ * Different sizes of struct clone_args
-+ */
-+#ifndef CLONE3_ARGS_SIZE_V0
-+#define CLONE3_ARGS_SIZE_V0 64
-+#endif
-+
-+enum test_mode {
-+=09CLONE3_ARGS_NO_TEST,
-+=09CLONE3_ARGS_ALL_0,
-+=09CLONE3_ARGS_ALL_1,
-+=09CLONE3_ARGS_INVAL_EXIT_SIGNAL_BIG,
-+=09CLONE3_ARGS_INVAL_EXIT_SIGNAL_NEG,
-+=09CLONE3_ARGS_INVAL_EXIT_SIGNAL_CSIG,
-+=09CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG,
-+};
-+
-+static pid_t raw_clone(struct clone_args *args, size_t size)
-+{
-+=09return syscall(__NR_clone3, args, size);
-+}
-+
-+static int call_clone3(uint64_t flags, size_t size, enum test_mode test_mo=
-de)
-+{
-+=09struct clone_args args =3D {
-+=09=09.flags =3D flags,
-+=09=09.exit_signal =3D SIGCHLD,
-+=09};
-+
-+=09struct clone_args_extended {
-+=09=09struct clone_args args;
-+=09=09__aligned_u64 excess_space[2];
-+=09} args_ext;
-+
-+=09pid_t pid =3D -1;
-+=09int status;
-+
-+=09memset(&args_ext, 0, sizeof(args_ext));
-+=09if (size > sizeof(struct clone_args))
-+=09=09args_ext.excess_space[1] =3D 1;
-+
-+=09if (size =3D=3D 0)
-+=09=09size =3D sizeof(struct clone_args);
-+
-+=09switch (test_mode) {
-+=09case CLONE3_ARGS_ALL_0:
-+=09=09args.flags =3D 0;
-+=09=09args.exit_signal =3D 0;
-+=09=09break;
-+=09case CLONE3_ARGS_ALL_1:
-+=09=09args.flags =3D 1;
-+=09=09args.pidfd =3D 1;
-+=09=09args.child_tid =3D 1;
-+=09=09args.parent_tid =3D 1;
-+=09=09args.exit_signal =3D 1;
-+=09=09args.stack =3D 1;
-+=09=09args. stack_size =3D 1;
-+=09=09args.tls =3D 1;
-+=09=09break;
-+=09case CLONE3_ARGS_INVAL_EXIT_SIGNAL_BIG:
-+=09=09args.exit_signal =3D 0xbadc0ded00000000ULL;
-+=09=09break;
-+=09case CLONE3_ARGS_INVAL_EXIT_SIGNAL_NEG:
-+=09=09args.exit_signal =3D 0x0000000080000000ULL;
-+=09=09break;
-+=09case CLONE3_ARGS_INVAL_EXIT_SIGNAL_CSIG:
-+=09=09args.exit_signal =3D 0x0000000000000100ULL;
-+=09=09break;
-+=09case CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG:
-+=09=09args.exit_signal =3D 0x00000000000000f0ULL;
-+=09=09break;
-+=09}
-+
-+=09memcpy(&args_ext.args, &args, sizeof(struct clone_args));
-+
-+=09pid =3D raw_clone((struct clone_args *)&args_ext, size);
-+=09if (pid < 0) {
-+=09=09ksft_print_msg("%s - Failed to create new process\n",
-+=09=09=09=09strerror(errno));
-+=09=09return -errno;
-+=09}
-+
-+=09if (pid =3D=3D 0) {
-+=09=09ksft_print_msg("I am the child, my PID is %d\n", getpid());
-+=09=09_exit(EXIT_SUCCESS);
-+=09}
-+
-+=09ksft_print_msg("I am the parent (%d). My child's pid is %d\n",
-+=09=09=09getpid(), pid);
-+
-+=09if (wait(&status) < 0) {
-+=09=09ksft_print_msg("Child returned %s\n", strerror(errno));
-+=09=09return -errno;
-+=09}
-+=09if (WEXITSTATUS(status))
-+=09=09return WEXITSTATUS(status);
-+
-+=09return 0;
-+}
-+
-+static void test_clone3(uint64_t flags, size_t size, int expected,
-+=09=09       enum test_mode test_mode)
-+{
-+=09int ret;
-+
-+=09ksft_print_msg(
-+=09=09"[%d] Trying clone3() with flags %#" PRIx64 " (size %zu)\n",
-+=09=09getpid(), flags, size);
-+=09ret =3D call_clone3(flags, size, test_mode);
-+=09ksft_print_msg("[%d] clone3() with flags says: %d expected %d\n",
-+=09=09=09getpid(), ret, expected);
-+=09if (ret !=3D expected)
-+=09=09ksft_test_result_fail(
-+=09=09=09"[%d] Result (%d) is different than expected (%d)\n",
-+=09=09=09getpid(), ret, expected);
-+=09else
-+=09=09ksft_test_result_pass(
-+=09=09=09"[%d] Result (%d) matches expectation (%d)\n",
-+=09=09=09getpid(), ret, expected);
-+}
-+int main(int argc, char *argv[])
-+{
-+=09pid_t pid;
-+
-+=09uid_t uid =3D getuid();
-+
-+=09ksft_print_header();
-+=09ksft_set_plan(17);
-+
-+=09/* Just a simple clone3() should return 0.*/
-+=09test_clone3(0, 0, 0, CLONE3_ARGS_NO_TEST);
-+
-+=09/* Do a clone3() in a new PID NS.*/
-+=09if (uid =3D=3D 0)
-+=09=09test_clone3(CLONE_NEWPID, 0, 0, CLONE3_ARGS_NO_TEST);
-+=09else
-+=09=09ksft_test_result_skip("Skipping clone3() with CLONE_NEWPID\n");
-+
-+=09/* Do a clone3() with CLONE3_ARGS_SIZE_V0. */
-+=09test_clone3(0, CLONE3_ARGS_SIZE_V0, 0, CLONE3_ARGS_NO_TEST);
-+
-+=09/* Do a clone3() with CLONE3_ARGS_SIZE_V0 - 8 */
-+=09test_clone3(0, CLONE3_ARGS_SIZE_V0 - 8, -EINVAL, CLONE3_ARGS_NO_TEST);
-+
-+=09/* Do a clone3() with sizeof(struct clone_args) + 8 */
-+=09test_clone3(0, sizeof(struct clone_args) + 8, 0, CLONE3_ARGS_NO_TEST);
-+
-+=09/* Do a clone3() with all members set to 1 */
-+=09test_clone3(0, 0, -EINVAL, CLONE3_ARGS_ALL_1);
-+
-+=09/* Do a clone3() with exit_signal having highest 32 bits non-zero */
-+=09test_clone3(0, 0, -EINVAL, CLONE3_ARGS_INVAL_EXIT_SIGNAL_BIG);
-+
-+=09/* Do a clone3() with negative 32-bit exit_signal */
-+=09test_clone3(0, 0, -EINVAL, CLONE3_ARGS_INVAL_EXIT_SIGNAL_NEG);
-+
-+=09/* Do a clone3() with exit_signal not fitting into CSIGNAL mask */
-+=09test_clone3(0, 0, -EINVAL, CLONE3_ARGS_INVAL_EXIT_SIGNAL_CSIG);
-+
-+=09/* Do a clone3() with NSIG < exit_signal < CSIG */
-+=09test_clone3(0, 0, -EINVAL, CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG);
-+
-+=09/*
-+=09 * Do a clone3() with sizeof(struct clone_args) + 8
-+=09 * and all members set to 0. This resets exit_signal and wait()
-+=09 * will not get a result.
-+=09 */
-+=09test_clone3(0, sizeof(struct clone_args) + 8, -ECHILD,
-+=09=09=09CLONE3_ARGS_ALL_0);
-+
-+=09/*
-+=09 * Do a clone3() with sizeof(struct clone_args) + 8
-+=09 * and all members set to 0.
-+=09 */
-+=09test_clone3(0, sizeof(struct clone_args) + 8, -EINVAL,
-+=09=09=09CLONE3_ARGS_ALL_1);
-+
-+=09/* Do a clone3() with > page size */
-+=09test_clone3(0, getpagesize() + 8, -E2BIG, CLONE3_ARGS_NO_TEST);
-+
-+=09/* Do a clone3() with CLONE3_ARGS_SIZE_V0 in a new PID NS. */
-+=09if (uid =3D=3D 0)
-+=09=09test_clone3(CLONE_NEWPID, CLONE3_ARGS_SIZE_V0, 0,
-+=09=09=09=09CLONE3_ARGS_NO_TEST);
-+=09else
-+=09=09ksft_test_result_skip("Skipping clone3() with CLONE_NEWPID\n");
-+
-+=09/* Do a clone3() with CLONE3_ARGS_SIZE_V0 - 8 in a new PID NS */
-+=09test_clone3(CLONE_NEWPID, CLONE3_ARGS_SIZE_V0 - 8, -EINVAL,
-+=09=09=09CLONE3_ARGS_NO_TEST);
-+
-+=09/* Do a clone3() with sizeof(struct clone_args) + 8 in a new PID NS */
-+=09if (uid =3D=3D 0)
-+=09=09test_clone3(CLONE_NEWPID, sizeof(struct clone_args) + 8, 0,
-+=09=09=09=09CLONE3_ARGS_NO_TEST);
-+=09else
-+=09=09ksft_test_result_skip("Skipping clone3() with CLONE_NEWPID\n");
-+
-+=09/* Do a clone3() with > page size in a new PID NS */
-+=09test_clone3(CLONE_NEWPID, getpagesize() + 8, -E2BIG,
-+=09=09=09CLONE3_ARGS_NO_TEST);
-+
-+=09return !ksft_get_fail_cnt() ? ksft_exit_pass() : ksft_exit_fail();
-+}
---=20
-2.23.0
-
+Takashi
