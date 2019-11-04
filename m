@@ -2,112 +2,133 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA603CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7612CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF0D2089C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tPmK3Wwd"
+	by mail.kernel.org (Postfix) with ESMTP id 88EEF218BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572904941;
+	bh=Wsb1jpNxG9ivDzj5wFIaJ9ACM3AStFRA5b98HAahpBk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ux9wjAbDG5R1X+tbBqWrQyXZSxZk0l2pgGTJntmu38/eSP8biiDfSS7OsKYnfcTht
+	 JgraDK+MgSKzjgWjhxSdMticWU7jK10CKT0MiCcOF76uoOvPdgKwrwXcEowG660VTX
+	 VyYuWWDXObXzrEl4BeNi3EAXxQcEBz49puMYa8fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388441AbfKDWCJ (ORCPT
+        id S2389270AbfKDWCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:02:09 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44170 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389013AbfKDWBT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:19 -0500
-Received: by mail-lj1-f195.google.com with SMTP id g3so13275924ljl.11;
-        Mon, 04 Nov 2019 14:01:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mEkd1uvkkWbvfMLb/tdCjEiVi+fwjLHzsak9MQmCC0U=;
-        b=tPmK3WwdAIzZseaX/DBHUkRlYdAmHh1JRCDYGXZNGDn4wBYutuDkWNRBUS9BhKkN7n
-         MnNfGlxJnLxYZsKsAok/igXZC6NuVTQIQBXGTrSSWPbkwnTtO0Su9bTVpJlKHOXlt1l1
-         30xjp4ZWV4Dhb5UicCjknuJHch1Ym9E6PtchvS7rRmRAp8B9+UGk3wVuK/0QA/4pB+f5
-         4+mXWav6FRCwjliXuTPIFfmEoxD1gJoPvY9uLI1LFxPlP4cTkf30C6ma7LIFMzOEsugq
-         2QGzfcF4i+zg8ktcU/rxrhp3lLswrj0nDOOuojuuUVIb2JlfxevHfugA+H3LfgR/w5nD
-         3QXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mEkd1uvkkWbvfMLb/tdCjEiVi+fwjLHzsak9MQmCC0U=;
-        b=cSXQWn+EV5bngPAJa2RVa8eOukg8BEnfEEmrhM6pth3IZ5VCpALlsy2l15UTJEeZQg
-         5iYOojCTtns2UcYbb+AnosviaVXz/gyd24ZaGyW1iweB/mzx3fGvrs1C/4y7mIDq9gTL
-         ulJpfxCcuxzNTVVUGXZMSwCyMvuxTPJo8B9x4FrLLdzw/JbBagQGNR6OXmYl/Q0Aocgs
-         yayBuYHQB251VUYGtuYK6XSFiQtYIp0YnlC/HP5ZhoaW5RQnNe3O3hSddffk3hadDzpt
-         Wx9n07hx+PD7eqxLY4J9eDk7nt5I6L2pnmaPLVj3D2MQAWUnSDPy0ch9ubN5z3UmdsLU
-         peDA==
-X-Gm-Message-State: APjAAAUDGAZHVaB32/J4QJzlBfIQD3AFinPdVVkENIQ1gTGjXDKt0N88
-        TcVEACpoiokys1QXOTmm9xo=
-X-Google-Smtp-Source: APXvYqyxCGCqD24misPX/q6DQpFN9t3rDI+tPGV7qA2M4uDJW9MLxVgQo5Iv87hvkxmR/KaoGV2DSg==
-X-Received: by 2002:a2e:7310:: with SMTP id o16mr18017588ljc.210.1572904876742;
-        Mon, 04 Nov 2019 14:01:16 -0800 (PST)
-Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id g3sm7454669ljj.59.2019.11.04.14.01.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 14:01:16 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v9 18/19] PM / devfreq: tegra30: Tune up MCCPU boost-down coefficient
-Date:   Tue,  5 Nov 2019 00:56:16 +0300
-Message-Id: <20191104215617.25544-19-digetx@gmail.com>
+        Mon, 4 Nov 2019 17:02:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389061AbfKDWBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:01:32 -0500
+Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E7EF21744;
+        Mon,  4 Nov 2019 22:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572904891;
+        bh=Wsb1jpNxG9ivDzj5wFIaJ9ACM3AStFRA5b98HAahpBk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=y85INT4+dxh8YLY+C+k5BWoW0YIMl90pss/V4gtRn4TN3Xvg5zBxDH+GJMuvFr1mE
+         v0QyN7nUuAP2P8YVFuG9lzGgcYuqw//1tM+5zNyvG5rCYyEi/BLhZKFPQKrMJTVZVc
+         llAvKdyuhElr5SZoq9C/+7HDI/KbEkkottK784ks=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 107/149] thunderbolt: Use 32-bit writes when writing ring producer/consumer
+Date:   Mon,  4 Nov 2019 22:45:00 +0100
+Message-Id: <20191104212143.931334324@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104215617.25544-1-digetx@gmail.com>
-References: <20191104215617.25544-1-digetx@gmail.com>
+In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
+References: <20191104212126.090054740@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MCCPU boosts up very aggressively by 800% and boosts down very mildly by
-10%. This doesn't work well when system is idling because the very slow
-de-boosting results in lots of consecutive-down interrupts, in result
-memory stays clocked high and CPU doesn't enter deepest idling state
-instead of keeping memory at lowest freq and having CPU cluster turned
-off. A more faster de-boosting fixes the case of idling system and doesn't
-affect the case of an active system.
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+[ Upstream commit 943795219d3cb9f8ce6ce51cad3ffe1f61e95c6b ]
+
+The register access should be using 32-bit reads/writes according to the
+datasheet. With the previous generation hardware 16-bit writes have been
+working but starting with ICL this is not the case anymore so fix
+producer/consumer register update to use correct width register address.
+
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Yehezkel Bernat <YehezkelShB@gmail.com>
+Tested-by: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/tegra30-devfreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/thunderbolt/nhi.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index e44f1a48f838..0b65f89d74d5 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -124,7 +124,7 @@ static const struct tegra_devfreq_device_config actmon_device_configs[] = {
- 		.offset = 0x200,
- 		.irq_mask = 1 << 25,
- 		.boost_up_coeff = 800,
--		.boost_down_coeff = 90,
-+		.boost_down_coeff = 40,
- 		.boost_up_threshold = 27,
- 		.boost_down_threshold = 10,
- 		.avg_dependency_threshold = 16000, /* 16MHz in kHz units */
+diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
+index 5cd6bdfa068f9..d436a1534fc2b 100644
+--- a/drivers/thunderbolt/nhi.c
++++ b/drivers/thunderbolt/nhi.c
+@@ -142,9 +142,20 @@ static void __iomem *ring_options_base(struct tb_ring *ring)
+ 	return io;
+ }
+ 
+-static void ring_iowrite16desc(struct tb_ring *ring, u32 value, u32 offset)
++static void ring_iowrite_cons(struct tb_ring *ring, u16 cons)
+ {
+-	iowrite16(value, ring_desc_base(ring) + offset);
++	/*
++	 * The other 16-bits in the register is read-only and writes to it
++	 * are ignored by the hardware so we can save one ioread32() by
++	 * filling the read-only bits with zeroes.
++	 */
++	iowrite32(cons, ring_desc_base(ring) + 8);
++}
++
++static void ring_iowrite_prod(struct tb_ring *ring, u16 prod)
++{
++	/* See ring_iowrite_cons() above for explanation */
++	iowrite32(prod << 16, ring_desc_base(ring) + 8);
+ }
+ 
+ static void ring_iowrite32desc(struct tb_ring *ring, u32 value, u32 offset)
+@@ -196,7 +207,10 @@ static void ring_write_descriptors(struct tb_ring *ring)
+ 			descriptor->sof = frame->sof;
+ 		}
+ 		ring->head = (ring->head + 1) % ring->size;
+-		ring_iowrite16desc(ring, ring->head, ring->is_tx ? 10 : 8);
++		if (ring->is_tx)
++			ring_iowrite_prod(ring, ring->head);
++		else
++			ring_iowrite_cons(ring, ring->head);
+ 	}
+ }
+ 
+@@ -660,7 +674,7 @@ void tb_ring_stop(struct tb_ring *ring)
+ 
+ 	ring_iowrite32options(ring, 0, 0);
+ 	ring_iowrite64desc(ring, 0, 0);
+-	ring_iowrite16desc(ring, 0, ring->is_tx ? 10 : 8);
++	ring_iowrite32desc(ring, 0, 8);
+ 	ring_iowrite32desc(ring, 0, 12);
+ 	ring->head = 0;
+ 	ring->tail = 0;
 -- 
-2.23.0
+2.20.1
+
+
 
