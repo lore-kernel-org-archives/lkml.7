@@ -2,141 +2,87 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD36FCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE23CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B060C21E6F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B094A21D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:57:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qMMI6qAG"
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="NO/Bwf7W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728952AbfKDO4A (ORCPT
+        id S1728972AbfKDO47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 09:56:00 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34822 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728287AbfKDOz5 (ORCPT
+        Mon, 4 Nov 2019 09:56:59 -0500
+Received: from zimbra2.kalray.eu ([92.103.151.219]:43646 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727788AbfKDO47 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 09:55:57 -0500
-Received: by mail-wr1-f66.google.com with SMTP id l10so17440608wrb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 06:55:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=YfzrifobDwqmPupmbBTkgex3i/62L95dETxEsNhCitc=;
-        b=qMMI6qAGmWeIwjwHlDY7ackZJkBPQhNiRo5UG68ciwDpDnSN+MFctcz4FzCtFXv6qf
-         KtbOPa0SrHG1RrQAtOOag07iyq9b08ZKs2hlVm8IUk76jFUylm6/Hu63QYkXS/Es0kdJ
-         9AmMzxZjM4QK6YU2rAuOaY6OF1pUPZ2C/FxXFRjuHvYg2rvFkjlYDNb+JfexYSSE4rwB
-         4kZoSqgPa3ITNfzn9VaMUNOAnDAf9oNi9zFS3fg4G4yIah1ZgW/9jLZsLQL3gQ6lotTz
-         BsF+hBnxXwgPDbroNQ+Jxyp3f+2vD0/5PwLv+Y6a107c9HwNs8DjKlxllWDK7XjP8V3T
-         CVAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=YfzrifobDwqmPupmbBTkgex3i/62L95dETxEsNhCitc=;
-        b=mHB4P8zFlmms6M4TQSUqzDtP5no6dJyXpDzzheS75tmlP7CCUOlqTjb74NURvcfuSm
-         7NmQAK8/o8GMwXS8WMAB/ruoBUmgHvf+BitZd49cuxNXWp05/0/ArHJU0ObM46WHTSMA
-         73OYFLQNsx00ENlIjUHaqdVcXT0xMKu+bMflPUI1dvNQ/teC6s2lDpvfnSzeCodP8wL/
-         pEwGelv8nn4GX2n6W1//osNxILf1KPk5MTdoa5eQ+MbBcq32WI4/VUFxLAKNTiOXzuuw
-         B0BiwPbWUwcsYLExzLOWh9FTCnRHEkFbCHrW87m0wnz+LOVEaGZuPoHH9GEdtOJlIGbJ
-         PzZg==
-X-Gm-Message-State: APjAAAWY+ZAcD4CcbsIMVeNrVzuF6jrxYJYuXmYGU4qaXks3EgdPerER
-        EMGsmQEUqZb0oNe4omEzMTBi8g==
-X-Google-Smtp-Source: APXvYqwj83y3LHmKoOV2IanV7AkKgXzfK497Q/9GfVIrWkApB8LDhUeSZumVmJPLvYVbD/bOnsDj3A==
-X-Received: by 2002:a5d:6947:: with SMTP id r7mr18393045wrw.129.1572879354640;
-        Mon, 04 Nov 2019 06:55:54 -0800 (PST)
-Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:58da:b044:f184:d281])
-        by smtp.gmail.com with ESMTPSA id f143sm18490907wme.40.2019.11.04.06.55.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 06:55:53 -0800 (PST)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/2] clocksource/drivers/sh_mtu2: Do not loop using platform_get_irq_by_name()
-Date:   Mon,  4 Nov 2019 15:55:43 +0100
-Message-Id: <20191104145543.2523-2-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191104145543.2523-1-daniel.lezcano@linaro.org>
-References: <2210d602-bdab-5256-57b4-6e499c4b7644@linaro.org>
- <20191104145543.2523-1-daniel.lezcano@linaro.org>
+        Mon, 4 Nov 2019 09:56:59 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 8424D27E03F9;
+        Mon,  4 Nov 2019 15:56:57 +0100 (CET)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id FBasB0e2P1LE; Mon,  4 Nov 2019 15:56:57 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 439EB27E064D;
+        Mon,  4 Nov 2019 15:56:57 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 439EB27E064D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1572879417;
+        bh=zTdMY1D+/EaaQogl6Eug21gFV2VVh60wfcDGJ5Yqj6I=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=NO/Bwf7WEpyIAZilQE02nBufJrADGZiT/7YdlYFMmu3EHF6L6sJ0bULUkOBew1RcW
+         VvDG0HOgOlJuX9609IV+kdtwM7JVOnp06GmNCYEcrmGJzbtjOg610l3p6QrcPlTJMy
+         cE0rqYZJ2BMS0Bzz/JI0UgPfArZVTqpdBk16k5o4=
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id O9ucltNPY_jE; Mon,  4 Nov 2019 15:56:57 +0100 (CET)
+Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 2B9B227E03F9;
+        Mon,  4 Nov 2019 15:56:57 +0100 (CET)
+Date:   Mon, 4 Nov 2019 15:56:57 +0100 (CET)
+From:   Marta Rybczynska <mrybczyn@kalray.eu>
+To:     Charles Machalow <csm10495@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        kbusch <kbusch@kernel.org>, axboe <axboe@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <871357470.90297451.1572879417091.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <CANSCoS-2k08Si3a4b+h-4QTR86EfZHZx_oaGAHWorsYkdp35Bg@mail.gmail.com>
+References: <20191031050338.12700-1-csm10495@gmail.com> <20191031133921.GA4763@lst.de> <1977598237.90293761.1572878080625.JavaMail.zimbra@kalray.eu> <CANSCoS-2k08Si3a4b+h-4QTR86EfZHZx_oaGAHWorsYkdp35Bg@mail.gmail.com>
+Subject: Re: [PATCH] nvme: change nvme_passthru_cmd64's result field.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.168.40.202]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF57 (Linux)/8.8.12_GA_3794)
+Thread-Topic: nvme: change nvme_passthru_cmd64's result field.
+Thread-Index: NUQ6qFaX8J30rCk1l2+etdD7aEChkA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-As platform_get_irq_by_name() now prints an error when the interrupt
-does not exist, looping over possibly non-existing interrupts causes the
-printing of scary messages like:
 
-    sh_mtu2 fcff0000.timer: IRQ tgi1a not found
-    sh_mtu2 fcff0000.timer: IRQ tgi2a not found
+----- On 4 Nov, 2019, at 15:51, Charles Machalow csm10495@gmail.com wrote:
 
-Fix this by using the platform_irq_count() helper, to avoid touching
-non-existent interrupts.  Limit the returned number of interrupts to the
-maximum number of channels currently supported by the driver in a
-future-proof way, i.e. using ARRAY_SIZE() instead of a hardcoded number.
+> For this one yes, UAPI size changes. Though I believe this IOCTL
+> hasn't been in a released Kernel yet (just RC). Technically it may be
+> changeable as a fix until the next Kernel is released. I do think its
+> a useful enough
+> change to warrant a late fix.
 
-Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20191016143003.28561-1-geert+renesas@glider.be
----
- drivers/clocksource/sh_mtu2.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+The old one is in UAPI for years. The new one is not yet, right. I'm OK
+to change the new structure. To have compatibility you would have to use
+the new structure (at least its size) in the user space code. This is
+what you'd liek to do?
 
-diff --git a/drivers/clocksource/sh_mtu2.c b/drivers/clocksource/sh_mtu2.c
-index 354b27d14a19..62812f80b5cc 100644
---- a/drivers/clocksource/sh_mtu2.c
-+++ b/drivers/clocksource/sh_mtu2.c
-@@ -328,12 +328,13 @@ static int sh_mtu2_register(struct sh_mtu2_channel *ch, const char *name)
- 	return 0;
- }
- 
-+static const unsigned int sh_mtu2_channel_offsets[] = {
-+	0x300, 0x380, 0x000,
-+};
-+
- static int sh_mtu2_setup_channel(struct sh_mtu2_channel *ch, unsigned int index,
- 				 struct sh_mtu2_device *mtu)
- {
--	static const unsigned int channel_offsets[] = {
--		0x300, 0x380, 0x000,
--	};
- 	char name[6];
- 	int irq;
- 	int ret;
-@@ -356,7 +357,7 @@ static int sh_mtu2_setup_channel(struct sh_mtu2_channel *ch, unsigned int index,
- 		return ret;
- 	}
- 
--	ch->base = mtu->mapbase + channel_offsets[index];
-+	ch->base = mtu->mapbase + sh_mtu2_channel_offsets[index];
- 	ch->index = index;
- 
- 	return sh_mtu2_register(ch, dev_name(&mtu->pdev->dev));
-@@ -408,7 +409,12 @@ static int sh_mtu2_setup(struct sh_mtu2_device *mtu,
- 	}
- 
- 	/* Allocate and setup the channels. */
--	mtu->num_channels = 3;
-+	ret = platform_irq_count(pdev);
-+	if (ret < 0)
-+		goto err_unmap;
-+
-+	mtu->num_channels = min_t(unsigned int, ret,
-+				  ARRAY_SIZE(sh_mtu2_channel_offsets));
- 
- 	mtu->channels = kcalloc(mtu->num_channels, sizeof(*mtu->channels),
- 				GFP_KERNEL);
--- 
-2.17.1
-
+Marta
