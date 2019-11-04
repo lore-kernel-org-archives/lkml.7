@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF9ACA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D357CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB234222C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ED13217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904686;
-	bh=E1aoj9R79rabJbJBVwCZX4iH1w2YJ9tDbCCLe60+T58=;
+	s=default; t=1572904690;
+	bh=lcRJMau4MilgjA1G5AsVvBldze0ky+F5z1BAy1+tpLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LsApe6RY4K0x1jWxKYuzVzG+aq15hlx+8R7U/dJMoFFirMBL+zkbkabnZyywRkkN4
-	 Z4gW0w+LXrw9i9meXoJWfAAy8ek1OvwHP/vtZUH4f6DYm4D39NpwEVDL1uE009ulPj
-	 xt+FeJJzrwV0ERz4Oz/54xp0iWHqOspILkqeRCHw=
+	b=mGi5Snamg2i5R2Xf7b26mhUGf9vODB0LOVkhVR/ZyChaiT/ix3LN+/KqU0RbqxhIF
+	 RXWXpqHXZw/jFLB6bcpwcjtTFC8u8Wbb0775oRFJXdBsZaqu6UiFj31tjohXEuCprg
+	 CgduNGqBvD/l/vlPl88xVzu30g6Bp3+Ppat3kUWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388714AbfKDV6D (ORCPT
+        id S1730264AbfKDV6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:58:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54672 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:58:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388703AbfKDV6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:58:00 -0500
+        id S2388715AbfKDV6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:58:04 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE6E7214D9;
-        Mon,  4 Nov 2019 21:57:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA1C720650;
+        Mon,  4 Nov 2019 21:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904679;
-        bh=E1aoj9R79rabJbJBVwCZX4iH1w2YJ9tDbCCLe60+T58=;
+        s=default; t=1572904682;
+        bh=lcRJMau4MilgjA1G5AsVvBldze0ky+F5z1BAy1+tpLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1ZiWStwP88jLaDE5sbHQKP3Wd000Xn/N0/T6Hs8ZTgg5f6uBk2Co5BHU1AYQjE3Aa
-         9FwO7J9vHgFDKfSeiip4NuphYM13TbI/dztG/mtiIThw23amu/u8Sn8vJxhyphQQeb
-         pi0ktZVP+5P1yC5RhvkDwvptH27us45cEwF/FvfQ=
+        b=Zg1UH2YWhqmAcrzyXUxC1UfLSLnWUcMCiOJqlvmRMlVSY8HdXhVGaAOUo50CzTaxE
+         VMAzeNB+CuFZwTE2URuBxp16pqxFUoqNsIuumKxT71su6AlXCHMI+VyCxtXc91f2Ta
+         P0dY4ubXpXpKhyp9x1+L2DIgcDjlOIzN9Uzm/jig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yi Wang <wang.yi59@zte.com.cn>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Christian Kujau <lists@nerdbynature.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Genki Sky <sky@genki.is>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 030/149] clk: boston: unregister clks on failure in clk_boston_setup()
-Date:   Mon,  4 Nov 2019 22:43:43 +0100
-Message-Id: <20191104212137.879569413@linuxfoundation.org>
+Subject: [PATCH 4.19 031/149] scripts/setlocalversion: Improve -dirty check with git-status --no-optional-locks
+Date:   Mon,  4 Nov 2019 22:43:44 +0100
+Message-Id: <20191104212137.936035680@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -60,68 +64,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yi Wang <wang.yi59@zte.com.cn>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit 8b627f616ed63dcaf922369fc14a5daf8ad03038 ]
+[ Upstream commit ff64dd4857303dd5550faed9fd598ac90f0f2238 ]
 
-The registered clks should unregister when something wrong happens
-before going out in function clk_boston_setup().
+git-diff-index does not refresh the index for you, so using it for a
+"-dirty" check can give misleading results. Commit 6147b1cf19651
+("scripts/setlocalversion: git: Make -dirty check more robust") tried to
+fix this by switching to git-status, but it overlooked the fact that
+git-status also writes to the .git directory of the source tree, which
+is definitely not kosher for an out-of-tree (O=) build. That is getting
+reverted.
 
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fortunately, git-status now supports avoiding writing to the index via
+the --no-optional-locks flag, as of git 2.14. It still calculates an
+up-to-date index, but it avoids writing it out to the .git directory.
+
+So, let's retry the solution from commit 6147b1cf19651 using this new
+flag first, and if it fails, we assume this is an older version of git
+and just use the old git-diff-index method.
+
+It's hairy to get the 'grep -vq' (inverted matching) correct by stashing
+the output of git-status (you have to be careful about the difference
+betwen "empty stdin" and "blank line on stdin"), so just pipe the output
+directly to grep and use a regex that's good enough for both the
+git-status and git-diff-index version.
+
+Cc: Christian Kujau <lists@nerdbynature.de>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Suggested-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Tested-by: Genki Sky <sky@genki.is>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/imgtec/clk-boston.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ scripts/setlocalversion | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/imgtec/clk-boston.c b/drivers/clk/imgtec/clk-boston.c
-index f5d54a64d33c5..dddda45127a80 100644
---- a/drivers/clk/imgtec/clk-boston.c
-+++ b/drivers/clk/imgtec/clk-boston.c
-@@ -73,31 +73,39 @@ static void __init clk_boston_setup(struct device_node *np)
- 	hw = clk_hw_register_fixed_rate(NULL, "input", NULL, 0, in_freq);
- 	if (IS_ERR(hw)) {
- 		pr_err("failed to register input clock: %ld\n", PTR_ERR(hw));
--		goto error;
-+		goto fail_input;
- 	}
- 	onecell->hws[BOSTON_CLK_INPUT] = hw;
+diff --git a/scripts/setlocalversion b/scripts/setlocalversion
+index 71f39410691b6..365b3c2b8f431 100755
+--- a/scripts/setlocalversion
++++ b/scripts/setlocalversion
+@@ -73,8 +73,16 @@ scm_version()
+ 			printf -- '-svn%s' "`git svn find-rev $head`"
+ 		fi
  
- 	hw = clk_hw_register_fixed_rate(NULL, "sys", "input", 0, sys_freq);
- 	if (IS_ERR(hw)) {
- 		pr_err("failed to register sys clock: %ld\n", PTR_ERR(hw));
--		goto error;
-+		goto fail_sys;
- 	}
- 	onecell->hws[BOSTON_CLK_SYS] = hw;
- 
- 	hw = clk_hw_register_fixed_rate(NULL, "cpu", "input", 0, cpu_freq);
- 	if (IS_ERR(hw)) {
- 		pr_err("failed to register cpu clock: %ld\n", PTR_ERR(hw));
--		goto error;
-+		goto fail_cpu;
- 	}
- 	onecell->hws[BOSTON_CLK_CPU] = hw;
- 
- 	err = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, onecell);
--	if (err)
-+	if (err) {
- 		pr_err("failed to add DT provider: %d\n", err);
-+		goto fail_clk_add;
-+	}
- 
- 	return;
- 
--error:
-+fail_clk_add:
-+	clk_hw_unregister_fixed_rate(onecell->hws[BOSTON_CLK_CPU]);
-+fail_cpu:
-+	clk_hw_unregister_fixed_rate(onecell->hws[BOSTON_CLK_SYS]);
-+fail_sys:
-+	clk_hw_unregister_fixed_rate(onecell->hws[BOSTON_CLK_INPUT]);
-+fail_input:
- 	kfree(onecell);
- }
+-		# Check for uncommitted changes
+-		if git diff-index --name-only HEAD | grep -qv "^scripts/package"; then
++		# Check for uncommitted changes.
++		# First, with git-status, but --no-optional-locks is only
++		# supported in git >= 2.14, so fall back to git-diff-index if
++		# it fails. Note that git-diff-index does not refresh the
++		# index, so it may give misleading results. See
++		# git-update-index(1), git-diff-index(1), and git-status(1).
++		if {
++			git --no-optional-locks status -uno --porcelain 2>/dev/null ||
++			git diff-index --name-only HEAD
++		} | grep -qvE '^(.. )?scripts/package'; then
+ 			printf '%s' -dirty
+ 		fi
  
 -- 
 2.20.1
