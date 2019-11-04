@@ -2,105 +2,112 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5B0CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 01:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7211ACA9EBB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 01:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60753217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 01:52:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="IYMvvM7i"
+	by mail.kernel.org (Postfix) with ESMTP id 4E08B217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 01:52:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbfKDBwU (ORCPT
+        id S1729093AbfKDBw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 20:52:20 -0500
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:19777 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728288AbfKDBwU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 20:52:20 -0500
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id xA41qFbd025581;
-        Mon, 4 Nov 2019 10:52:16 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com xA41qFbd025581
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1572832336;
-        bh=1jJG3p1GAqefzP7l/Yb2jRBhI70WeehHAYn/NfnOFW0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IYMvvM7iG9qRgx96sB+hOdQSgcO/lL30NssppM9FcKFoohOvFCTJwErvE9Y1GEud3
-         mohYLK0FBl+fkDwvG83/IjDk+d0u25OW8YZBI6e2NoViWPLAf/UEJFR6l3VZB37KRk
-         0sCDuKDJXHNC/q9Qau6NMBYmz/dbCtloCsChUCRtjzlgeMr60V38vS46CRMNgVHwmV
-         x7BUgpA845elOlvasVTalz0QvaGXU1FNKV0+v6CZ5MZ0hINE+MgXYD/z8ZMhZyzbfs
-         pEouanb6zUDxGMyDaB2qfmXTTpTvyZFekQ/VHfB/iSA/Ywg3wDy8/SQwF28e6rlhM2
-         GFwYeuuqCHY+A==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id q21so10025455vsg.3;
-        Sun, 03 Nov 2019 17:52:15 -0800 (PST)
-X-Gm-Message-State: APjAAAVnLs/LhZU80Xn5BPQSJMVMSiMiDyCuoLWp3sI8b+FMyklXfRdO
-        6KZrHurwUSnAr8Tm8EvqumtFi7H7YMCJZJSgYoc=
-X-Google-Smtp-Source: APXvYqzL+zYVO+qZDl9B4V+c7urxIIvKSV3ZlpAzaGNC3fgXsVnpo2mkuBJpFCRucpzZuKMnxZa4JsEHJ5DXdl3Eobg=
-X-Received: by 2002:a05:6102:3204:: with SMTP id r4mr11385023vsf.181.1572832334912;
- Sun, 03 Nov 2019 17:52:14 -0800 (PST)
+        Sun, 3 Nov 2019 20:52:28 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57922 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728288AbfKDBw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 20:52:27 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B1D9AAB89;
+        Mon,  4 Nov 2019 01:52:25 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Stephan <stephanwib@googlemail.com>, linux-kernel@vger.kernel.org
+Date:   Mon, 04 Nov 2019 12:52:18 +1100
+Subject: Re: Process waiting on NFS transitions to uninterruptable sleep when receiving a signal with custom signal handler
+In-Reply-To: <CABZpUSVC3id65o_gDxc9mzgSux_qb6NHBzU+3=yBy5yqyjTmFw@mail.gmail.com>
+References: <CABZpUSVC3id65o_gDxc9mzgSux_qb6NHBzU+3=yBy5yqyjTmFw@mail.gmail.com>
+Message-ID: <875zk0e7cd.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-References: <20191009151019.13488-1-mcroce@redhat.com> <CAGnkfhzj-X-R_4toZdJ2eBfhpq1t0dHYq=P+0w-VD30ZAh59qQ@mail.gmail.com>
-In-Reply-To: <CAGnkfhzj-X-R_4toZdJ2eBfhpq1t0dHYq=P+0w-VD30ZAh59qQ@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 4 Nov 2019 10:51:39 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATcaJeBvzACMW-OxB1D24cYQYdQQwJca-OMe9sb4Q2KWw@mail.gmail.com>
-Message-ID: <CAK7LNATcaJeBvzACMW-OxB1D24cYQYdQQwJca-OMe9sb4Q2KWw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Add make dir-pkg build option
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 12:11 AM Matteo Croce <mcroce@redhat.com> wrote:
+--=-=-=
+Content-Type: text/plain
+
+On Mon, Oct 28 2019, Stephan wrote:
+
+> Hello everyone,
 >
-> On Wed, Oct 9, 2019 at 5:10 PM Matteo Croce <mcroce@redhat.com> wrote:
-> >
-> > Add a 'dir-pkg' target which just creates the same directory structures
-> > as in tar-pkg, but doesn't package anything.
-> > Useful when the user wants to copy the kernel tree on a machine using
-> > ssh, rsync or whatever.
-> >
-> > Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> I have asked this question on Stackoverflow a while ago but
+> unfortunately nobody had an idea on this.
 >
-> Hi,
+> I am currently doing some research on how we can extend the monitoring
+> solution for Linux in our datacenter in order to detect inaccessible
+> NFS mounts. My idea was to look for NFS mounts in /proc/self/mountinfo
+> and then for each mount, call alarm(), issue a syncronous
+> interruptible call via stat()/fsstat() or similar, and in case of an
+> alarm, return an error in the signal handler. However, I experienced
+> the following behaviour which I am not sure how to explain or debug.
 >
-> any comment on this?
+> It turned out that when a process waiting in the stat system call on a
+> mountpoint of a diconnected NFS server, it responds to signals as
+> expected. For example, one can exit it pressing Strc+C, or it displays
+> "Alarm clock" and ends when the alarm timer fires. The same applies
+> e.g. to SIGUSR1/2, leading the program to display "User defined signal
+> 1" (or "2") and end. I suspect these messages come from a general
+> signal dispatcher inside glibc, but it would be nice to hear some
+> details on how this works.
+
+The messages come from your shell (e.g. bash).  The process exits with a
+status that means "I was killed by signal XX", and bash reports that.
+
 >
+> In all cases in which a custom signal handler was registered, the
+> process transitions to an uninterruptible sleep state when a signal
+> for this custom handler is scheduled; leading to no other signal being
+> processed anymore. Of course this applies to SIGALRM as well when the
+> alarm() timer sends the signal. All signals show up in
+> /proc/PID/status as below:
 
+In these cases, NFS does a 'killable' wait.  That means that only way to
+interrupt the wait is to kill the process (so that it dies).
+One justification for this is that there is no error that POSIX allows
+stat (or other calls) to return if it takes "too long".  So the
+systemcall cannot just fail - instead the whole process needs to die.
 
-Sorry for the late reply.
-One nit.
+So you want your monitoring process to fork, and then access the
+filesystem from the child.  If that takes too long, kill the child from
+the parent - or set an alarm in the child and let it kill itself.
 
+The parent can then respond to th fact that the child didn't exit
+cleanly.
 
-> @@ -133,6 +133,11 @@ if tar --owner=root --group=root --help >/dev/null 2>&1; then
->         opts="$opts --owner=root --group=root"
->  fi
->
-> +if [ "${1}" = dir-pkg ]; then
-> +       echo "Kernel tree successfully created in $tmpdir"
-> +       exit 0
-> +fi
-> +
+NeilBrown
 
-The 'opts' assignment is unneeded for dir-pkg.
-You can exit before the "# Create the tarball" comment line.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl2/hFMACgkQOeye3VZi
+gbkDdBAAmCTQ84spYhoER+QDGJ9Xdr3bx5O7mJXJP7w+M68xt0LscdKMmsYXQD0Z
+i0Ue6cpZnIrndSlF5uzZeq1Xa5uWON3L1GzPNdyojiYQb9kFl81TxZaIRWjOVhLb
+kk7QipDij5zma3qmjAoyEyQjk3M4/QHxnbUo8yZCTO2uHgUdQFn0iT7IIxyhkBBb
+ONZikz30Wr7ZuUzEEeTPLNFzHxt0JTaa3ViWaAT6/+z5tLsQK4ZevK47n6P993Ry
+xwD5Y7lfKAB59O7KBAeRpIhxvAnrOi44T9NG1VfKj3TYxMcid6SXJpw2o39t8P0t
+QKTewsUiR+TaOziHemBZOI4cd2Xll3FC0IEAinNzAMqwXpSm0x+VGhMpqcw7nlnn
+vT8uKVLghZe2tFc58gM+ajvIKHq8U3Kd4ZAfVf3o/mOpLZDcaVwv1fEKDudTRe0b
+Fgk6w4KU1asjM6U9iDy4PjMPWiKv1UJWt9/O6cBvng2qgS9XYiAWQHb/kF6WaOkd
+OW2UxW+PISq+QdCN8RM80Q9BBlTehlGSKJJqAPKX6BVKBNX76u/B8RoCtlfIFViK
+ikxJieL3QN757W4XHwSHjktAbsY9drZhwUYCTgFogI/K70V5kINbqHFFlwlHsTBM
+0rVGL/cglfTZdGwvsS06JbmesUPKEfCk8RufZWVHQ5fTxiaBuvI=
+=FQaN
+-----END PGP SIGNATURE-----
+--=-=-=--
