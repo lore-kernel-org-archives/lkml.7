@@ -2,181 +2,96 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D259CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C633CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB7B21D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:49:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="DzPbsaQ0"
+	by mail.kernel.org (Postfix) with ESMTP id DBA02222C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:50:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728521AbfKDKtl (ORCPT
+        id S1728581AbfKDKuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:49:41 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:6428 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726071AbfKDKtl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 05:49:41 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA4AgRhm026656;
-        Mon, 4 Nov 2019 11:49:35 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=Xxv6hexlHyBK0lKPtSxLBgui2G4ceCRUWdaxJuKarqI=;
- b=DzPbsaQ02gKbFthT2ckIKDv0QcE4iwmaT42C1t4vvzjm5h44klp7iqWadNTIdx8ZN5c/
- kXE+AGwJAQiWGGV+HzILldy1tk5tJF15fjHxQ/q/4Fd0IDLEttpFGqX3/hI3QLfVqXus
- oFeo/OFW7BWPojfwqUfw9X7EnqFs+z5GKfsryAKclMnzam3Ea5cIQ/sQzj8uWhlUDlU4
- RflfAFH9hYO1/QDCxoqQLyQa07HNq6g9qkE9gjGb7zOGWdtn929lPoRYwH98qn0454O0
- C7BTdIb26+jg8Vv+PydPj0gfGhHJLXs78DFpuEgvnIpRuAwQ2nZeuHvmSX+T8MrBRLnv 5Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2w0ytchma3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 Nov 2019 11:49:35 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CFA0210002A;
-        Mon,  4 Nov 2019 11:49:34 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BF0E62BDA87;
-        Mon,  4 Nov 2019 11:49:34 +0100 (CET)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.46) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019
- 11:49:34 +0100
-Received: from localhost (10.201.28.45) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019 11:49:32
- +0100
-From:   Loic Pallardy <loic.pallardy@st.com>
-To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>
-CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <arnaud.pouliquen@st.com>, <benjamin.gaignard@linaro.org>,
-        <fabien.dessenne@st.com>, <s-anna@ti.com>,
-        Loic Pallardy <loic.pallardy@st.com>
-Subject: [PATCH v2 1/1] remoteproc: add support for co-processor booted before kernel
-Date:   Mon, 4 Nov 2019 11:49:30 +0100
-Message-ID: <1572864570-10131-1-git-send-email-loic.pallardy@st.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 4 Nov 2019 05:50:13 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5257 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726071AbfKDKuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 05:50:13 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DE46E2099A79968604F1;
+        Mon,  4 Nov 2019 18:50:10 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 4 Nov 2019
+ 18:50:07 +0800
+Subject: Re: [PATCH -next] usb: gadget: Add dependency for USB_TEGRA_XUDC
+To:     Thierry Reding <treding@nvidia.com>
+CC:     <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>,
+        <nkristam@nvidia.com>, <arnd@arndb.de>, <johan@kernel.org>,
+        <krzk@kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+References: <20191104025945.172620-1-maowenan@huawei.com>
+ <20191104100410.GB996639@ulmo>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <51315499-99d0-eca3-a7df-b8dd84628bbd@huawei.com>
+Date:   Mon, 4 Nov 2019 18:50:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.28.45]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-11-04_06:2019-11-01,2019-11-04 signatures=0
+In-Reply-To: <20191104100410.GB996639@ulmo>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remote processor could boot independently or be started before Linux
-kernel by bootloader or any firmware.
-This patch introduces a new property in rproc core, named preloaded,
-to be able to allocate resources and sub-devices like vdev and to
-synchronize with current state without loading firmware from file system.
-It is platform driver responsibility to implement the right firmware
-load ops according to HW specificities.
 
-Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
 
----
-Change from v1:
-- Keep bool in struct rproc
----
- drivers/remoteproc/remoteproc_core.c | 37 +++++++++++++++++++++++++++---------
- include/linux/remoteproc.h           |  2 ++
- 2 files changed, 30 insertions(+), 9 deletions(-)
+On 2019/11/4 18:04, Thierry Reding wrote:
+> On Mon, Nov 04, 2019 at 10:59:45AM +0800, Mao Wenan wrote:
+>> If CONFIG_USB_TEGRA_XUDC=y and CONFIG_USB_ROLE_SWITCH=m,
+>> below erros can be seen:
+>> drivers/usb/gadget/udc/tegra-xudc.o: In function `tegra_xudc_remove':
+>> tegra-xudc.c:(.text+0x6b0): undefined reference to `usb_role_switch_unregister'
+>> drivers/usb/gadget/udc/tegra-xudc.o: In function `tegra_xudc_probe':
+>> tegra-xudc.c:(.text+0x1b88): undefined reference to `usb_role_switch_register'
+>> drivers/usb/gadget/udc/tegra-xudc.o: In function `tegra_xudc_usb_role_sw_work':
+>> tegra-xudc.c:(.text+0x5ecc): undefined reference to `usb_role_switch_get_role'
+>>
+>> This patch add dependency USB_ROLE_SWITCH for UDC driver.
+>>
+>> Fixes: 49db427232fe ("usb: gadget: Add UDC driver for tegra XUSB device mode controller")
+>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+>> ---
+>>  drivers/usb/gadget/udc/Kconfig | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kconfig
+>> index acaec3a..d103154 100644
+>> --- a/drivers/usb/gadget/udc/Kconfig
+>> +++ b/drivers/usb/gadget/udc/Kconfig
+>> @@ -445,6 +445,7 @@ config USB_TEGRA_XUDC
+>>  	tristate "NVIDIA Tegra Superspeed USB 3.0 Device Controller"
+>>  	depends on ARCH_TEGRA || COMPILE_TEST
+>>  	depends on PHY_TEGRA_XUSB
+>> +	depends on USB_ROLE_SWITCH
+> 
+> It looks like most other drivers that use the USB role switch class do
+> "select" here. Now, that's suboptimal because USB_ROLE_SWITCH is a user-
+> visible symbol, which can lead to conflicts, so it should be avoided. I
+> think that in this case it might make sense to hide USB_ROLE_SWITCH and
+> then convert all "depends on USB_ROLE_SWITCH" occurrences to "select
+> USB_ROLE_SWITCH". The USB role switch class is, after all, not useful by
+> itself. It always needs a host and/or gadget driver to make use of it.
+> 
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 3c5fbbbfb0f1..7eaf0f949afa 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1372,7 +1372,11 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
- 	if (ret)
- 		return ret;
- 
--	dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
-+	if (fw)
-+		dev_info(dev, "Booting fw image %s, size %zd\n", name,
-+			 fw->size);
-+	else
-+		dev_info(dev, "Synchronizing with preloaded co-processor\n");
- 
- 	/*
- 	 * if enabling an IOMMU isn't relevant for this rproc, this is
-@@ -1728,7 +1732,7 @@ static void rproc_crash_handler_work(struct work_struct *work)
-  */
- int rproc_boot(struct rproc *rproc)
- {
--	const struct firmware *firmware_p;
-+	const struct firmware *firmware_p = NULL;
- 	struct device *dev;
- 	int ret;
- 
-@@ -1759,11 +1763,17 @@ int rproc_boot(struct rproc *rproc)
- 
- 	dev_info(dev, "powering up %s\n", rproc->name);
- 
--	/* load firmware */
--	ret = request_firmware(&firmware_p, rproc->firmware, dev);
--	if (ret < 0) {
--		dev_err(dev, "request_firmware failed: %d\n", ret);
--		goto downref_rproc;
-+	if (!rproc->preloaded) {
-+		/* load firmware */
-+		ret = request_firmware(&firmware_p, rproc->firmware, dev);
-+		if (ret < 0) {
-+			dev_err(dev, "request_firmware failed: %d\n", ret);
-+			goto downref_rproc;
-+		}
-+	} else {
-+		/* set firmware name to null as unknown */
-+		kfree(rproc->firmware);
-+		rproc->firmware = NULL;
- 	}
- 
- 	ret = rproc_fw_boot(rproc, firmware_p);
-@@ -1917,8 +1927,17 @@ int rproc_add(struct rproc *rproc)
- 	/* create debugfs entries */
- 	rproc_create_debug_dir(rproc);
- 
--	/* if rproc is marked always-on, request it to boot */
--	if (rproc->auto_boot) {
-+	if (rproc->preloaded) {
-+		/*
-+		 * If rproc is marked already booted, no need to wait
-+		 * for firmware.
-+		 * Just handle associated resources and start sub devices
-+		 */
-+		ret = rproc_boot(rproc);
-+		if (ret < 0)
-+			return ret;
-+	} else if (rproc->auto_boot) {
-+		/* if rproc is marked always-on, request it to boot */
- 		ret = rproc_trigger_auto_boot(rproc);
- 		if (ret < 0)
- 			return ret;
-diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-index 16ad66683ad0..b68fbd576a77 100644
---- a/include/linux/remoteproc.h
-+++ b/include/linux/remoteproc.h
-@@ -479,6 +479,7 @@ struct rproc_dump_segment {
-  * @table_sz: size of @cached_table
-  * @has_iommu: flag to indicate if remote processor is behind an MMU
-  * @auto_boot: flag to indicate if remote processor should be auto-started
-+ * @preloaded: remote processor has been preloaded before start sequence
-  * @dump_segments: list of segments in the firmware
-  * @nb_vdev: number of vdev currently handled by rproc
-  */
-@@ -512,6 +513,7 @@ struct rproc {
- 	size_t table_sz;
- 	bool has_iommu;
- 	bool auto_boot;
-+	bool preloaded;
- 	struct list_head dump_segments;
- 	int nb_vdev;
- };
--- 
-2.7.4
+Thanks, I send v2 and change 'depends on' to 'select' for this patch.
+
+> Thierry
+> 
 
