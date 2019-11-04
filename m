@@ -2,52 +2,51 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4DACA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E24DFCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E47212190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B59F92184C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904212;
-	bh=5p8OVfnFcBszbZl/65GzMwIS2WYbazKg8XcG7P8B1gs=;
+	s=default; t=1572904214;
+	bh=YnOH5UOiRqAiRkkA15Hq10x2syJJp4e27ylZz2Jyqhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lQlSiEnp8krdWYd2hiRl4J7CCKprYS2ZvJw9acd6SpQCz3iD0EENZqc417AGA6amd
-	 +NSubmev9haCjjoJqUkXMR2I5HCxa/PcO2rJdqBUb8nNIzwBo68QBKBYzd1CLs/d+X
-	 XN6jd5PeI0429byByul3NFrCNrDytX86yFsxibbk=
+	b=knh0e9dxNPVe7gy/1cJg4sHW/PMwpmL8QbVDSuAHg6/05YfbsQxJbLhIVAcvFdahi
+	 6EIKjnOYoT5B7vWKb0orRRUFK2WktOEemK1Fs6pOr7bxIcvSj0IPjpUv/AqKMu5NcQ
+	 OPreCWqLefIBT4To8SUs3emv6uHXSpz9wnWL4yI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387624AbfKDVuK (ORCPT
+        id S2387637AbfKDVuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:50:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41928 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:50:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387599AbfKDVuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:50:06 -0500
+        id S2387612AbfKDVuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:50:08 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24ED320B7C;
-        Mon,  4 Nov 2019 21:50:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 949AB20B7C;
+        Mon,  4 Nov 2019 21:50:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904204;
-        bh=5p8OVfnFcBszbZl/65GzMwIS2WYbazKg8XcG7P8B1gs=;
+        s=default; t=1572904207;
+        bh=YnOH5UOiRqAiRkkA15Hq10x2syJJp4e27ylZz2Jyqhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VUN3IOKpBpmWPUleVibSZ/jzMGYLnWaA3q5tBwIsY1g/69/Jrd3WUyADCxoBqSFoD
-         /xjI/umbansKBin+ffBk/hY0kXAhhjcS9mJIq3LV8lS5EaJ62UjsfsQMG2EH+/0ibu
-         vPb/MD4lDWPfU8oo+QPSONXFRDyNbjGEvRWg36EY=
+        b=DpOnQJnbCGVvllSaWUg31E/Yw2XGrPx8kyTSn/2ieBZkMvUkKRp/TEpTeT/m1fse8
+         fWij/HWvInZnh5wKxsp/P+0skPTh55HX9Dpgs0FZ7nokzm4EcWi3e2JarxOTVgh7tX
+         8BwTls+bYn1MkpAJgHjzunT31VgPpxpdsATLNdaE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 04/62] dm: Use kzalloc for all structs with embedded biosets/mempools
-Date:   Mon,  4 Nov 2019 22:44:26 +0100
-Message-Id: <20191104211906.868583856@linuxfoundation.org>
+        stable@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 05/62] sc16is7xx: Fix for "Unexpected interrupt: 8"
+Date:   Mon,  4 Nov 2019 22:44:27 +0100
+Message-Id: <20191104211906.994783878@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -60,107 +59,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kent Overstreet <kent.overstreet@gmail.com>
+From: Phil Elwell <phil@raspberrypi.org>
 
-[ Upstream commit d377535405686f735b90a8ad4ba269484cd7c96e ]
+[ Upstream commit 30ec514d440cf2c472c8e4b0079af2c731f71a3e ]
 
-mempool_init()/bioset_init() require that the mempools/biosets be zeroed
-first; they probably should not _require_ this, but not allocating those
-structs with kzalloc is a fairly nonsensical thing to do (calling
-mempool_exit()/bioset_exit() on an uninitialized mempool/bioset is legal
-and safe, but only works if said memory was zeroed.)
+The SC16IS752 has an Enhanced Feature Register which is aliased at the
+same address as the Interrupt Identification Register; accessing it
+requires that a magic value is written to the Line Configuration
+Register. If an interrupt is raised while the EFR is mapped in then
+the ISR won't be able to access the IIR, leading to the "Unexpected
+interrupt" error messages.
 
-Acked-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Avoid the problem by claiming a mutex around accesses to the EFR
+register, also claiming the mutex in the interrupt handler work
+item (this is equivalent to disabling interrupts to interlock against
+a non-threaded interrupt handler).
+
+See: https://github.com/raspberrypi/linux/issues/2529
+
+Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-bio-prison.c  | 2 +-
- drivers/md/dm-io.c          | 2 +-
- drivers/md/dm-kcopyd.c      | 2 +-
- drivers/md/dm-region-hash.c | 2 +-
- drivers/md/dm-snap.c        | 2 +-
- drivers/md/dm-thin.c        | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/tty/serial/sc16is7xx.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/md/dm-bio-prison.c b/drivers/md/dm-bio-prison.c
-index 03af174485d30..fa2432a89bace 100644
---- a/drivers/md/dm-bio-prison.c
-+++ b/drivers/md/dm-bio-prison.c
-@@ -32,7 +32,7 @@ static struct kmem_cache *_cell_cache;
-  */
- struct dm_bio_prison *dm_bio_prison_create(void)
+diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+index 82451bb6622bd..f80a88d107d7f 100644
+--- a/drivers/tty/serial/sc16is7xx.c
++++ b/drivers/tty/serial/sc16is7xx.c
+@@ -332,6 +332,7 @@ struct sc16is7xx_port {
+ 	struct kthread_worker		kworker;
+ 	struct task_struct		*kworker_task;
+ 	struct kthread_work		irq_work;
++	struct mutex			efr_lock;
+ 	struct sc16is7xx_one		p[0];
+ };
+ 
+@@ -503,6 +504,21 @@ static int sc16is7xx_set_baud(struct uart_port *port, int baud)
+ 		div /= 4;
+ 	}
+ 
++	/* In an amazing feat of design, the Enhanced Features Register shares
++	 * the address of the Interrupt Identification Register, and is
++	 * switched in by writing a magic value (0xbf) to the Line Control
++	 * Register. Any interrupt firing during this time will see the EFR
++	 * where it expects the IIR to be, leading to "Unexpected interrupt"
++	 * messages.
++	 *
++	 * Prevent this possibility by claiming a mutex while accessing the
++	 * EFR, and claiming the same mutex from within the interrupt handler.
++	 * This is similar to disabling the interrupt, but that doesn't work
++	 * because the bulk of the interrupt processing is run as a workqueue
++	 * job in thread context.
++	 */
++	mutex_lock(&s->efr_lock);
++
+ 	lcr = sc16is7xx_port_read(port, SC16IS7XX_LCR_REG);
+ 
+ 	/* Open the LCR divisors for configuration */
+@@ -518,6 +534,8 @@ static int sc16is7xx_set_baud(struct uart_port *port, int baud)
+ 	/* Put LCR back to the normal mode */
+ 	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, lcr);
+ 
++	mutex_unlock(&s->efr_lock);
++
+ 	sc16is7xx_port_update(port, SC16IS7XX_MCR_REG,
+ 			      SC16IS7XX_MCR_CLKSEL_BIT,
+ 			      prescaler);
+@@ -700,6 +718,8 @@ static void sc16is7xx_ist(struct kthread_work *ws)
  {
--	struct dm_bio_prison *prison = kmalloc(sizeof(*prison), GFP_KERNEL);
-+	struct dm_bio_prison *prison = kzalloc(sizeof(*prison), GFP_KERNEL);
+ 	struct sc16is7xx_port *s = to_sc16is7xx_port(ws, irq_work);
  
- 	if (!prison)
- 		return NULL;
-diff --git a/drivers/md/dm-io.c b/drivers/md/dm-io.c
-index ee6045d6c0bb3..201d90f5d1b3b 100644
---- a/drivers/md/dm-io.c
-+++ b/drivers/md/dm-io.c
-@@ -50,7 +50,7 @@ struct dm_io_client *dm_io_client_create(void)
- 	struct dm_io_client *client;
- 	unsigned min_ios = dm_get_reserved_bio_based_ios();
- 
--	client = kmalloc(sizeof(*client), GFP_KERNEL);
-+	client = kzalloc(sizeof(*client), GFP_KERNEL);
- 	if (!client)
- 		return ERR_PTR(-ENOMEM);
- 
-diff --git a/drivers/md/dm-kcopyd.c b/drivers/md/dm-kcopyd.c
-index e0cfde3501e0d..4609c5b481e23 100644
---- a/drivers/md/dm-kcopyd.c
-+++ b/drivers/md/dm-kcopyd.c
-@@ -828,7 +828,7 @@ struct dm_kcopyd_client *dm_kcopyd_client_create(struct dm_kcopyd_throttle *thro
- 	int r = -ENOMEM;
- 	struct dm_kcopyd_client *kc;
- 
--	kc = kmalloc(sizeof(*kc), GFP_KERNEL);
-+	kc = kzalloc(sizeof(*kc), GFP_KERNEL);
- 	if (!kc)
- 		return ERR_PTR(-ENOMEM);
- 
-diff --git a/drivers/md/dm-region-hash.c b/drivers/md/dm-region-hash.c
-index 85c32b22a420a..91c6f6d72eeec 100644
---- a/drivers/md/dm-region-hash.c
-+++ b/drivers/md/dm-region-hash.c
-@@ -179,7 +179,7 @@ struct dm_region_hash *dm_region_hash_create(
- 		;
- 	nr_buckets >>= 1;
- 
--	rh = kmalloc(sizeof(*rh), GFP_KERNEL);
-+	rh = kzalloc(sizeof(*rh), GFP_KERNEL);
- 	if (!rh) {
- 		DMERR("unable to allocate region hash memory");
- 		return ERR_PTR(-ENOMEM);
-diff --git a/drivers/md/dm-snap.c b/drivers/md/dm-snap.c
-index cf2f44e500e24..c04d9f22d1607 100644
---- a/drivers/md/dm-snap.c
-+++ b/drivers/md/dm-snap.c
-@@ -1136,7 +1136,7 @@ static int snapshot_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 		origin_mode = FMODE_WRITE;
++	mutex_lock(&s->efr_lock);
++
+ 	while (1) {
+ 		bool keep_polling = false;
+ 		int i;
+@@ -709,6 +729,8 @@ static void sc16is7xx_ist(struct kthread_work *ws)
+ 		if (!keep_polling)
+ 			break;
  	}
++
++	mutex_unlock(&s->efr_lock);
+ }
  
--	s = kmalloc(sizeof(*s), GFP_KERNEL);
-+	s = kzalloc(sizeof(*s), GFP_KERNEL);
- 	if (!s) {
- 		ti->error = "Cannot allocate private snapshot structure";
- 		r = -ENOMEM;
-diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
-index 23a7e108352aa..dcb753dbf86e2 100644
---- a/drivers/md/dm-thin.c
-+++ b/drivers/md/dm-thin.c
-@@ -2965,7 +2965,7 @@ static struct pool *pool_create(struct mapped_device *pool_md,
- 		return (struct pool *)pmd;
- 	}
+ static irqreturn_t sc16is7xx_irq(int irq, void *dev_id)
+@@ -903,6 +925,9 @@ static void sc16is7xx_set_termios(struct uart_port *port,
+ 	if (!(termios->c_cflag & CREAD))
+ 		port->ignore_status_mask |= SC16IS7XX_LSR_BRK_ERROR_MASK;
  
--	pool = kmalloc(sizeof(*pool), GFP_KERNEL);
-+	pool = kzalloc(sizeof(*pool), GFP_KERNEL);
- 	if (!pool) {
- 		*error = "Error allocating memory for pool";
- 		err_p = ERR_PTR(-ENOMEM);
++	/* As above, claim the mutex while accessing the EFR. */
++	mutex_lock(&s->efr_lock);
++
+ 	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG,
+ 			     SC16IS7XX_LCR_CONF_MODE_B);
+ 
+@@ -924,6 +949,8 @@ static void sc16is7xx_set_termios(struct uart_port *port,
+ 	/* Update LCR register */
+ 	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, lcr);
+ 
++	mutex_unlock(&s->efr_lock);
++
+ 	/* Get baud rate generator configuration */
+ 	baud = uart_get_baud_rate(port, termios, old,
+ 				  port->uartclk / 16 / 4 / 0xffff,
+@@ -1186,6 +1213,7 @@ static int sc16is7xx_probe(struct device *dev,
+ 	s->regmap = regmap;
+ 	s->devtype = devtype;
+ 	dev_set_drvdata(dev, s);
++	mutex_init(&s->efr_lock);
+ 
+ 	kthread_init_worker(&s->kworker);
+ 	kthread_init_work(&s->irq_work, sc16is7xx_ist);
 -- 
 2.20.1
 
