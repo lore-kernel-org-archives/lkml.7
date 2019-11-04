@@ -6,78 +6,65 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26B4CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89172CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C072C20848
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E5520848
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:45:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbfKDPou (ORCPT
+        id S1729163AbfKDPpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:44:50 -0500
-Received: from mga02.intel.com ([134.134.136.20]:9811 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728843AbfKDPou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:44:50 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 07:44:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,267,1569308400"; 
-   d="scan'208";a="212336897"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 04 Nov 2019 07:44:46 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 04 Nov 2019 17:44:46 +0200
-Date:   Mon, 4 Nov 2019 17:44:46 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Christian Kellner <ck@xatom.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mario Limonciello <mario.limonciello@dell.com>
-Subject: Re: USB devices on Dell TB16 dock stop working after resuming
-Message-ID: <20191104154446.GH2552@lahna.fi.intel.com>
-References: <5d2b39bc-5952-c2b6-63b3-bce28122ffd5@molgen.mpg.de>
- <20191104142459.GC2552@lahna.fi.intel.com>
- <20191104144436.GD2552@lahna.fi.intel.com>
+        Mon, 4 Nov 2019 10:45:33 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:47185 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727891AbfKDPpc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 10:45:32 -0500
+Received: from callcc.thunk.org (ip-12-2-52-196.nyc.us.northamericancoax.com [196.52.2.12])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xA4FjPF3032066
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 4 Nov 2019 10:45:26 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 33FD0420311; Mon,  4 Nov 2019 10:45:23 -0500 (EST)
+Date:   Mon, 4 Nov 2019 10:45:23 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Tom Cook <tom.k.cook@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Power management - HP 15-ds0502na
+Message-ID: <20191104154523.GH28764@mit.edu>
+References: <CAFSh4UxSx7SYT=Ja6TbwFwCJm_yn6VtMapXGv3B=+g2rQcALSA@mail.gmail.com>
+ <20191104135111.GF28764@mit.edu>
+ <CAFSh4UxquUDSbw+JA1t=VBpe1yn+ar3MjsFbJP9bRo5a3BWAnw@mail.gmail.com>
+ <20191104150648.GG28764@mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191104144436.GD2552@lahna.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191104150648.GG28764@mit.edu>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 04:44:40PM +0200, Mika Westerberg wrote:
-> On Mon, Nov 04, 2019 at 04:25:03PM +0200, Mika Westerberg wrote:
-> > Hi,
-> > 
-> > On Mon, Nov 04, 2019 at 02:13:13PM +0100, Paul Menzel wrote:
-> > > Dear Linux folks,
-> > > 
-> > > On the Dell XPS 13 9380 with Debian Sid/unstable with Linux 5.3.7
-> > > suspending the system, and resuming with Dell’s Thunderbolt TB16
-> > > dock connected, the USB input devices, keyboard and mouse,
-> > > connected to the TB16 stop working. They work for a few seconds
-> > > (mouse cursor can be moved), but then stop working. The laptop
-> > > keyboard and touchpad still works fine. All firmware is up-to-date
-> > > according to `fwupdmgr`.
-> > 
-> > What are the exact steps to reproduce? Just "echo mem >
-> > /sys/power/state" and then resume by pressing power button?
-> 
-> I tried v5.4-rc6 on my 9380 with TB16 dock connected and did a couple of
-> suspend/resume cycles (to s2idle) but I don't see any issues.
-> 
-> I may have older/different firmware than you, though.
+On Mon, Nov 04, 2019 at 10:06:48AM -0500, Theodore Y. Ts'o wrote:
+> Actually, it's probably because one of the device drives isn't
+> properly putting that particular device into a low power state.  When
+> I was trying to make s2idle work on the XPS 13, there was needed patch
+> to make the SATA AHCI controller go into a lower power state.  This
+> was a patch which the Dell folks had gotten into their special
+> "Optimized for Dell laptops" Ubuntu kernel that was running into
+> resistance upstream.  I *think* that patch finally made it upstream,
+> but to be honest, I haven't been keeping track since I decided "life
+> was too short to fight and make s2idle work".
 
-Upgraded BIOS to 1.8.0 and TBT NVM to v44 but still can't reproduce this
-on my system :/
+Oh, and I forgot; the other thing I had to do to get s2idle's power
+consumption down to suspend-2-ram was to unload the SD card reader;
+apparently that device driver didn't know how to do the low power
+saving thing under OS control.  So I ultimately was able to get the
+power while suspended of s2idle down to that of s2ram.  What I wasn't
+able to solve for my laptop was the reliability of resuming after the
+suspend....
+
+						- Ted
