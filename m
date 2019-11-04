@@ -2,106 +2,144 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E925CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B186DCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB87B20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:46:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572900400;
-	bh=iId+7Mf9N878uMPp7QnhpaRhi2VZhgetrbRgL8S6wjc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OxHYy/3K1vohphOkXiZ7NsReZ2sQN5VVp2qaa7x9J5EjAGENkm6o2t8iEPDocSzmW
-	 wRyzVON1itMaC6B8O19W66NpsPHj4wQ/tB/P23ATEOyB9KR4SbFqvdKYSbkbJR/vtl
-	 NfhNJtjwL8wLAsHRNKbPn4VSh671ilwMdkYzq4rE=
+	by mail.kernel.org (Postfix) with ESMTP id 8770D20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:47:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b="RCT4Y9Ka";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Utbmnlpl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbfKDUqj (ORCPT
+        id S1729240AbfKDUrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 15:46:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728392AbfKDUqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 15:46:39 -0500
-Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E88F020679;
-        Mon,  4 Nov 2019 20:46:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572900398;
-        bh=iId+7Mf9N878uMPp7QnhpaRhi2VZhgetrbRgL8S6wjc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0c3pb4MjyGgppSaUthsGGhz/HsDyOvxejGnjxLh0lmfgJKM8F4B1RDWenlNBmL01V
-         c2jOzeb3e/ko2ZLd59fGrzNyXO7IsZWYJWHD9lPQfXjmHZSA5yzmGf+K5pWe2g+TDP
-         jy3intsVPe2j9DXqSZTKPZg96odIi8vtrnaExJXU=
-Date:   Mon, 4 Nov 2019 21:46:36 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Ian Abbott <abbotti@mev.co.uk>
-Cc:     Jules Irenge <jbi.octave@gmail.com>,
-        outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: comedi: rewrite macro function with GNU
- extension typeof
-Message-ID: <20191104204636.GA2359379@kroah.com>
-References: <20191104163331.68173-1-jbi.octave@gmail.com>
- <84a2d50f-a1ac-bdc5-989c-b0294e9dea22@mev.co.uk>
+        Mon, 4 Nov 2019 15:47:42 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:47545 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728392AbfKDUrm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 15:47:42 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 81A4A21B4C;
+        Mon,  4 Nov 2019 15:47:40 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Mon, 04 Nov 2019 15:47:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alyssa.is; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=XmRwftF81yg852f+UvjXfdQjfz
+        O1tQWIo/qB1nRcCIM=; b=RCT4Y9KaK7JUgkB0GJjZKwT63HfUP8OSbRYq0dhFrB
+        XkJErq8NyARygfMeYWy3KGL3X176f6aps41+M2opU7N9DRgsnLDIg4RCeaF+av53
+        3F+sAxki+oRjbbQo9W/uDxR+QaRmU3V7y/g3gzXPyb6bLHeBONCv4Dd+KdzvO8ne
+        eaal/GNltBJJKI8yHImoNcSiPos5e7G+sl/2brX+rzyJJhD93UXT9icBAvcHL7aX
+        wxBjBGEcYOjofIrn2eX+wANDD4v3U67p81gphGS2eAWbap+0LF/SUp9fCwnCE8Hx
+        JfcxqFEqVwtylBuL0aFIbJqD8ibXxs8vROq35kWhADtg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=XmRwftF81yg852f+U
+        vjXfdQjfzO1tQWIo/qB1nRcCIM=; b=UtbmnlplIaNObTZGtWoQCXfoAFA0vDkQu
+        pVK8J94JkNfA0gZ5wnGWIBzLoNz9Yy4AVdhOzUwRjrYI5sZtnnkI/km31g+UpYV3
+        11nP1TaPgr63m1PjrSGUs/T0wI7Ll/3RjAXzAHRTo+oSoiCpGSLXn/i7qmXZpalE
+        E/q2hLZZSsBcd5Taf4o6pVeumxwNu32O2rSmD5DVoBF5fTadBjShRDCBoqm8mt0X
+        p1W0wDXwh44PULFz4ujtd6PrrL0WvW4GokJyRi3Mh2XMl+EBCqlXq6NbGT9gCAUO
+        xfqkQD8nPlxA/ukockdrGiQXQvN5NeLXqslwdtqWbfvoneEE82t2Q==
+X-ME-Sender: <xms:a47AXeT4srDBpkPPaBG_APvd0RZ58LMryC6fHhkiyISLqqk2vMwTvw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedruddufedgudegudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomheptehlhihsshgr
+    ucftohhsshcuoehhihesrghlhihsshgrrdhisheqnecukfhppeekgedrudekgedrvdefje
+    druddufeenucfrrghrrghmpehmrghilhhfrhhomhepqhihlhhishhsseigvddvtddrqhih
+    lhhishhsrdhnvghtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:a47AXeFN2yHZt7auarc7NqlOxcsb_xwyP_cf-bRJDjYWCReypLRZJw>
+    <xmx:a47AXWE5JBnJC8Ax7DkDHXcMXu1yQbAJqeFygfZCWZt-mnQIskK17Q>
+    <xmx:a47AXQSJFynteyOeVPSOLd9wZECsDmfgHHcBHRE5XAf2qfqBpNRXhw>
+    <xmx:bI7AXQ2JYH0docpGusjS_K-wPBKnSOtjrjveueewWgCqTf6i68QkLw>
+Received: from x220.qyliss.net (p54b8ed71.dip0.t-ipconnect.de [84.184.237.113])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 013E63060060;
+        Mon,  4 Nov 2019 15:47:39 -0500 (EST)
+Received: by x220.qyliss.net (Postfix, from userid 1000)
+        id 24E841400EA; Mon,  4 Nov 2019 20:47:36 +0000 (UTC)
+From:   Alyssa Ross <hi@alyssa.is>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org, Alyssa Ross <hi@alyssa.is>
+Subject: [PATCH] kconfig: be more helpful if pkg-config is missing
+Date:   Mon,  4 Nov 2019 20:44:54 +0000
+Message-Id: <20191104204453.20115-1-hi@alyssa.is>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84a2d50f-a1ac-bdc5-989c-b0294e9dea22@mev.co.uk>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 05:03:04PM +0000, Ian Abbott wrote:
-> On 04/11/2019 16:33, Jules Irenge wrote:
-> > Rewrite macro function with the GNU extension typeof
-> > to remove a possible side-effects of MACRO argument reuse "x".
-> >   - Problem could rise if arguments have different types
-> > and different use though.
-> > 
-> > Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> > ---
-> > v1 - had no full commit log message, with changes not intended to be in the patch
-> > v2 - remove some changes not intended to be in this driver
-> >       include note of a potential problem
-> >   drivers/staging/comedi/comedi.h | 6 ++++--
-> >   1 file changed, 4 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/staging/comedi/comedi.h b/drivers/staging/comedi/comedi.h
-> > index 09a940066c0e..a57691a2e8d8 100644
-> > --- a/drivers/staging/comedi/comedi.h
-> > +++ b/drivers/staging/comedi/comedi.h
-> > @@ -1103,8 +1103,10 @@ enum ni_common_signal_names {
-> >   /* *** END GLOBALLY-NAMED NI TERMINALS/SIGNALS *** */
-> > -#define NI_USUAL_PFI_SELECT(x)	(((x) < 10) ? (0x1 + (x)) : (0xb + (x)))
-> > -#define NI_USUAL_RTSI_SELECT(x)	(((x) < 7) ? (0xb + (x)) : 0x1b)
-> > +#define NI_USUAL_PFI_SELECT(x)\
-> > +	({typeof(x) x_ = (x); (x_ < 10) ? (0x1 + x_) : (0xb + x_); })
-> > +#define NI_USUAL_RTSI_SELECT(x)\
-> > +	({typeof(x) x_ = (x); (x_ < 7) ? (0xb + x_) : 0x1b; })
-> >   /*
-> >    * mode bits for NI general-purpose counters, set with
-> > 
-> 
-> I wasn't sure about this the first time around due to the use of GNU
-> extensions in uapi header files, but I see there are a few, rare instances
-> of this GNU extension elsewhere in other uapi headers (mainly in netfilter
-> stuff), so I guess it's OK.  However, it  does mean that user code that uses
-> these macros will no longer compile unless GNU extensions are enabled.
-> 
-> Does anyone know any "best practices" regarding use of GNU extensions in
-> user header files under Linux?
+If ncurses is installed, but at a non-default location, the previous
+error message was not helpful in resolving the situation.  Now, if
+ncurses can't be found, and pkg-config is not installed, it will
+suggest that pkg-config might need to be installed in addition to
+ncurses.
 
-We try to never do it if at all possible :)
+Signed-off-by: Alyssa Ross <hi@alyssa.is>
+---
+ scripts/kconfig/mconf-cfg.sh | 14 ++++++++++++--
+ scripts/kconfig/nconf-cfg.sh | 14 ++++++++++++--
+ 2 files changed, 24 insertions(+), 4 deletions(-)
 
-thanks,
+diff --git a/scripts/kconfig/mconf-cfg.sh b/scripts/kconfig/mconf-cfg.sh
+index c812872d7f9d..f547b13f77f6 100755
+--- a/scripts/kconfig/mconf-cfg.sh
++++ b/scripts/kconfig/mconf-cfg.sh
+@@ -41,7 +41,17 @@ fi
+ 
+ echo >&2 "*"
+ echo >&2 "* Unable to find the ncurses package."
+-echo >&2 "* Install ncurses (ncurses-devel or libncurses-dev"
+-echo >&2 "* depending on your distribution)."
++echo >&2 "*"
++if [ -n "$(command -v pkg-config)" ]; then
++	echo >&2 "* Install ncurses (ncurses-devel or libncurses-dev"
++	echo >&2 "* depending on your distribution)."
++else
++	echo >&2 "* You may need to install ncurses"
++	echo >&2 "* (ncurses-devel or libncurses-dev"
++	echo >&2 "* depending on your distribution)."
++	echo >&2 "*"
++	echo >&2 "* If you have ncurses installed,"
++	echo >&2 "* you may also need to install pkg-config."
++fi
+ echo >&2 "*"
+ exit 1
+diff --git a/scripts/kconfig/nconf-cfg.sh b/scripts/kconfig/nconf-cfg.sh
+index 001559ef0a60..569226f1b497 100755
+--- a/scripts/kconfig/nconf-cfg.sh
++++ b/scripts/kconfig/nconf-cfg.sh
+@@ -41,7 +41,17 @@ fi
+ 
+ echo >&2 "*"
+ echo >&2 "* Unable to find the ncurses package."
+-echo >&2 "* Install ncurses (ncurses-devel or libncurses-dev"
+-echo >&2 "* depending on your distribution)."
++echo >&2 "*"
++if [ -n "$(command -v pkg-config)" ]; then
++	echo >&2 "* Install ncurses (ncurses-devel or libncurses-dev"
++	echo >&2 "* depending on your distribution)."
++else
++	echo >&2 "* You may need to install ncurses"
++	echo >&2 "* (ncurses-devel or libncurses-dev"
++	echo >&2 "* depending on your distribution)."
++	echo >&2 "*"
++	echo >&2 "* If you have ncurses installed,"
++	echo >&2 "* you may also need to install pkg-config."
++fi
+ echo >&2 "*"
+ exit 1
+-- 
+2.23.0
 
-greg k-h
