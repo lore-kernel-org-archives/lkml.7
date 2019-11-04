@@ -2,148 +2,128 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23909CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38395CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1056214E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:33:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Syo1tAT9"
+	by mail.kernel.org (Postfix) with ESMTP id 19D29206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729650AbfKDUdt (ORCPT
+        id S1729664AbfKDUdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 15:33:49 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41886 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729607AbfKDUdt (ORCPT
+        Mon, 4 Nov 2019 15:33:52 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48417 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729607AbfKDUdu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 15:33:49 -0500
-Received: by mail-qt1-f196.google.com with SMTP id o3so25971221qtj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 12:33:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hy6S1CxSVssj2bkIKuMTAq97xRRQuAGtFwjKjIDSs4I=;
-        b=Syo1tAT9HuH4VB5wWMiltn4K6pnLe9wn5bqONEck4zS9JKeiP8TJVYPKQw5ntGO0lO
-         Y3jt4UCMH5h1noX1i5QYvgSRGj2xtl4EWsxMUf0qc20g0RvT8UUUzWn0HVswCZXk3AHb
-         ewnZ/jON7bJM2qzwTcb9I0s/fHzYB6OUc+9nqxJXF9HS/7VFw2laSQrNtFyVopG8WtQX
-         NCFlYEO6FvcqM9dRvuDJLZvUtP9rNpuSVWBBYCT6gAhsX9aZcpDHsP7ohxZiroP0M4+r
-         rETOvZb7k+FSw/5xszaImrvpA4a1gkAgGfJ7YkwSD/5z7jV4eZZYF2MBQy/fzICGGpXU
-         8Q/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hy6S1CxSVssj2bkIKuMTAq97xRRQuAGtFwjKjIDSs4I=;
-        b=Ys+eYMqp+2wH/qMIqZsouMnK4C9DE+idfK/rzjXne2Kau6gN4aBlP2uzi1nebyDpCB
-         oHQBz8mJ6bAtLkcMdqeSaYuzmK9ijERzQiasf51VNNQ7Juhv68drKbZRmz7KPEgS4yU/
-         1IuQ6uUjBRnYmWq75qI9vvTlGtTiumrQdYGyYNYspPHuytIPkBnxcI31fN9Pmwk18WWV
-         IoJMHHLYKrlIKPLDYsrycsYqD2He4DjcASBSLMAKYz35fA0O8WIAQ4lK3r4prUxv1Mhu
-         5hMN0kACn8jBsvUOjFVF/nmJ4Af2d2YSDmpuaq99ErDfFf46EvP539TShnKPhvMawyKv
-         shQw==
-X-Gm-Message-State: APjAAAXD78+iYW/h4uUijafvEmx+pYc+SqemJhVs8REAwONe2EAw9YX0
-        JPH3VqelpNMsSKCtE56K1CZQpA==
-X-Google-Smtp-Source: APXvYqzVc13GhfjjgDTIcNfG7UlfIQ4Qj6KKRSXLf1fyFAffIYvvpHXLmVL3LHiF/HBtv2PsaaOkHw==
-X-Received: by 2002:ac8:2432:: with SMTP id c47mr14284906qtc.74.1572899627734;
-        Mon, 04 Nov 2019 12:33:47 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id h185sm9953104qkc.7.2019.11.04.12.33.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 Nov 2019 12:33:47 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iRj2o-0005Hx-QL; Mon, 04 Nov 2019 16:33:46 -0400
-Date:   Mon, 4 Nov 2019 16:33:46 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 07/18] infiniband: set FOLL_PIN, FOLL_LONGTERM via
- pin_longterm_pages*()
-Message-ID: <20191104203346.GF30938@ziepe.ca>
-References: <20191103211813.213227-1-jhubbard@nvidia.com>
- <20191103211813.213227-8-jhubbard@nvidia.com>
+        Mon, 4 Nov 2019 15:33:50 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iRj2p-00051i-3m; Mon, 04 Nov 2019 21:33:47 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iRj2o-00070j-61; Mon, 04 Nov 2019 21:33:46 +0100
+Date:   Mon, 4 Nov 2019 21:33:46 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20191104203346.epdbzflnynh2gf3z@pengutronix.de>
+References: <20191014124803.13661-1-miquel.raynal@bootlin.com>
+ <CAHp75Vc4vnNVKc+Q_TY8DpwV4rLZYGm2MvGBC7r67XjmtNoskQ@mail.gmail.com>
+ <20191015163055.0d8f44e5@xps13>
+ <CAHp75VemkA7kap0O7=iACX4cD5_r6QXaLF6nS8R94ErStK0DwA@mail.gmail.com>
+ <20191104161103.64995b8a@xps13>
+ <CAMpxmJVjyUXSNFEiTxMC1bdzXTex74DqeiHPqLBPdnb2_LYRnQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191103211813.213227-8-jhubbard@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpxmJVjyUXSNFEiTxMC1bdzXTex74DqeiHPqLBPdnb2_LYRnQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 03, 2019 at 01:18:02PM -0800, John Hubbard wrote:
-> Convert infiniband to use the new wrapper calls, and stop
-> explicitly setting FOLL_LONGTERM at the call sites.
-> 
-> The new pin_longterm_*() calls replace get_user_pages*()
-> calls, and set both FOLL_LONGTERM and a new FOLL_PIN
-> flag. The FOLL_PIN flag requires that the caller must
-> return the pages via put_user_page*() calls, but
-> infiniband was already doing that as part of an earlier
-> commit.
-> 
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
->  drivers/infiniband/core/umem.c              |  5 ++---
->  drivers/infiniband/core/umem_odp.c          | 10 +++++-----
->  drivers/infiniband/hw/hfi1/user_pages.c     |  4 ++--
->  drivers/infiniband/hw/mthca/mthca_memfree.c |  3 +--
->  drivers/infiniband/hw/qib/qib_user_pages.c  |  8 ++++----
->  drivers/infiniband/hw/qib/qib_user_sdma.c   |  2 +-
->  drivers/infiniband/hw/usnic/usnic_uiom.c    |  9 ++++-----
->  drivers/infiniband/sw/siw/siw_mem.c         |  5 ++---
->  8 files changed, 21 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/infiniband/core/umem.c b/drivers/infiniband/core/umem.c
-> index 24244a2f68cc..c5a78d3e674b 100644
-> +++ b/drivers/infiniband/core/umem.c
-> @@ -272,11 +272,10 @@ struct ib_umem *ib_umem_get(struct ib_udata *udata, unsigned long addr,
->  
->  	while (npages) {
->  		down_read(&mm->mmap_sem);
-> -		ret = get_user_pages(cur_base,
-> +		ret = pin_longterm_pages(cur_base,
->  				     min_t(unsigned long, npages,
->  					   PAGE_SIZE / sizeof (struct page *)),
-> -				     gup_flags | FOLL_LONGTERM,
-> -				     page_list, NULL);
-> +				     gup_flags, page_list, NULL);
+Hello,
 
-FWIW, this one should be converted to fast as well, I think we finally
-got rid of all the blockers for that?
+On Mon, Nov 04, 2019 at 04:32:23PM +0100, Bartosz Golaszewski wrote:
+> pon., 4 lis 2019 o 16:11 Miquel Raynal <miquel.raynal@bootlin.com> napisał(a):
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Tue, 15 Oct 2019
+> > 17:55:33 +0300:
+> >
+> > > Or other way around. PWM registers GPIO (which actually I prefer since
+> > > we have PCA9685 case where PWM provides GPIO functionality, though via
+> > > different means)
+> > >
+> >
+> > Can I have your input on this proposal?
+> >
+> > On one hand I agree that the GPIO driver is already quite big due to
+> > its genericity and the amount of controllers it supports, on the other
+> > hand:
+> > 1/ Registering a PWM driver from the GPIO core seems strange. Maybe
+> > registering a platform device could do the trick but I am not convinced
+> > it is worth the trouble.
+> > 2/ Putting the PWM logic in the drivers/pwm/ directory is not very
+> > convenient as the object file will have to be embedded within the GPIO
+> > one; this line in drivers/gpio/Makefile would be horrible:
+> > ... += gpio-pca953x.o ../pwm/pwm-max7313.o (not even sure it works)
+> > 3/ In any cases, the regmap's ->readable_reg(), ->writable_reg()
+> > callbacks shall be tweaked to turn the PWM registers accessible, so we
+> > would still have PWM related code in the PCA953x GPIO driver.
+> >
+> > In the end, I wonder if keeping everything in one file is not better?
+> > Eventually I can create a separate file and fill it with just the PWM
+> > helpers/hooks. Please advise on the better solution for you, I'll wait
+> > your feedback before addressing Thierry Reding's other review and
+> > resubmit.
+> >
+> 
+> I'm not sure if this has been discussed, but is it possible to create
+> an MFD driver for this chip and conditionally plug in the GPIO part
+> from pca953x? I don't like the idea of having PWM functionality in a
+> GPIO driver either.
 
-Jason
+I didn't check the manual or driver in depth, but I guess it doesn't
+match the MFD abstraction well. (That is, the PWM and GPIO parts live in
+different address areas of the chip and can be used independently of
+each other.)
+
+While it's not nice to have a driver that provides two different devices
+(here: gpio controller and pwm controller) similar things are not
+unseen. And for example the splitting of watchdog
+(drivers/watchdog/stmp3xxx_rtc_wdt.c) and rtc
+(drivers/rtc/rtc-stmp3xxx.c) of the device in the mx28 is more trouble
+than worth.
+
+So I'd vote for putting it in a single file that lives where the
+bigger/more complex part fits to. So assuming that's the GPIO part (as
+the driver supports several variants and not all of them have a PWM
+function if I'm not mistaken) having it in drivers/gpio is fine for me.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
