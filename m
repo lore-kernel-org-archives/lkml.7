@@ -2,229 +2,200 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC60CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B74C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D9A20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5574220B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:11:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572883917;
+	bh=AdXH3UW6riQIZduQjDUVYklKjXKMy5GOQXOq8LGxTC4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=ulWLj1Lx+7h82+znHjxN2hIVh557rvpUz7CkuCH4fprzWeLsCV3k3T6e7yX6P0tDH
+	 c4JBqd8YEYrQp5SDNRZBEEZIjpsHD/FaBsQbXV1iesJh3DAwEo8OTlbG2AmGpW0qJ8
+	 BxljIiKsUL4g7VL42kuaEfn+yfGGanb9aZLMiGzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbfKDQLQ (ORCPT
+        id S1729277AbfKDQL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 11:11:16 -0500
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:44431 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727838AbfKDQLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 11:11:16 -0500
-Received: from rabammel.molgen.mpg.de (rabammel.molgen.mpg.de [141.14.30.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 4 Nov 2019 11:11:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727838AbfKDQL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 11:11:56 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [109.144.216.141])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 8C69020225AE2;
-        Mon,  4 Nov 2019 17:11:11 +0100 (CET)
-Subject: Re: USB devices on Dell TB16 dock stop working after resuming
-To:     Mario Limonciello <mario.limonciello@dell.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Christian Kellner <ck@xatom.net>, linux-kernel@vger.kernel.org,
-        Anthony Wong <anthony.wong@canonical.com>
-References: <5d2b39bc-5952-c2b6-63b3-bce28122ffd5@molgen.mpg.de>
- <20191104142459.GC2552@lahna.fi.intel.com>
- <20191104144436.GD2552@lahna.fi.intel.com>
- <20191104154446.GH2552@lahna.fi.intel.com>
- <ea829adedf0445c0845e25d6e4b47905@AUSX13MPC105.AMER.DELL.COM>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <d8cb6bc6-8145-eaed-5ba4-d7291478bdd7@molgen.mpg.de>
-Date:   Mon, 4 Nov 2019 17:11:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F755206BA;
+        Mon,  4 Nov 2019 16:11:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572883914;
+        bh=AdXH3UW6riQIZduQjDUVYklKjXKMy5GOQXOq8LGxTC4=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Ly6SoOaFq32bKvAK4o9oX1Knf7PLc5YIezOP5LlQr6qBKur6c9FzpGZ4Rr38AlM/O
+         KlM6w0dQlRbjhMUPSTNxm4vyqxAygZDgKlTM2GC6D4WEvAAgVCBtqoo29d7ArmtDKz
+         j0KO/JwAsmi0TaJwrWskn2eaekYi4W5yXpvkuwBA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 3D8023520B56; Mon,  4 Nov 2019 08:11:52 -0800 (PST)
+Date:   Mon, 4 Nov 2019 08:11:52 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     syzbot <syzbot+08f3e9d26e5541e1ecf2@syzkaller.appspotmail.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>, axboe@kernel.dk,
+        justin@coraid.com, linux-block@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: KCSAN: data-race in process_srcu / synchronize_srcu
+Message-ID: <20191104161152.GB20975@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <000000000000b587670596839fab@google.com>
+ <CANpmjNPpvyxZv9N042Uz1gQb7R0B1MOmCa255-czqWsc7SiOxg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <ea829adedf0445c0845e25d6e4b47905@AUSX13MPC105.AMER.DELL.COM>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms000701090708010009000403"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNPpvyxZv9N042Uz1gQb7R0B1MOmCa255-czqWsc7SiOxg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a cryptographically signed message in MIME format.
+On Mon, Nov 04, 2019 at 12:31:56PM +0100, Marco Elver wrote:
+> +RCU folks, since this is probably a data race in RCU.
+> 
+> On Mon, 4 Nov 2019 at 12:29, syzbot
+> <syzbot+08f3e9d26e5541e1ecf2@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    05f22368 x86, kcsan: Enable KCSAN for x86
+> > git tree:       https://github.com/google/ktsan.git kcsan
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=17ade7ef600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=87d111955f40591f
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=08f3e9d26e5541e1ecf2
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+08f3e9d26e5541e1ecf2@syzkaller.appspotmail.com
+> >
+> > ==================================================================
+> > BUG: KCSAN: data-race in process_srcu / synchronize_srcu
+> >
+> > write to 0xffffffff8604e8a0 of 8 bytes by task 17 on cpu 1:
+> >   srcu_gp_end kernel/rcu/srcutree.c:533 [inline]
+> >   srcu_advance_state kernel/rcu/srcutree.c:1146 [inline]
+> >   process_srcu+0x207/0x780 kernel/rcu/srcutree.c:1237
+> >   process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
+> >   worker_thread+0xa0/0x800 kernel/workqueue.c:2415
+> >   kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+> >   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+> >
+> > read to 0xffffffff8604e8a0 of 8 bytes by task 12515 on cpu 0:
+> >   srcu_might_be_idle kernel/rcu/srcutree.c:784 [inline]
+> >   synchronize_srcu+0x107/0x214 kernel/rcu/srcutree.c:996
+> >   fsnotify_connector_destroy_workfn+0x63/0xb0 fs/notify/mark.c:164
+> >   process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
+> >   worker_thread+0xa0/0x800 kernel/workqueue.c:2415
+> >   kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+> >   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+> >
+> > Reported by Kernel Concurrency Sanitizer on:
+> > CPU: 0 PID: 12515 Comm: kworker/u4:8 Not tainted 5.4.0-rc3+ #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Workqueue: events_unbound fsnotify_connector_destroy_workfn
+> > ==================================================================
+> > Kernel panic - not syncing: panic_on_warn set ...
+> > CPU: 0 PID: 12515 Comm: kworker/u4:8 Not tainted 5.4.0-rc3+ #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Workqueue: events_unbound fsnotify_connector_destroy_workfn
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0xf5/0x159 lib/dump_stack.c:113
+> >   panic+0x210/0x640 kernel/panic.c:221
+> >   kcsan_report.cold+0xc/0x10 kernel/kcsan/report.c:302
+> >   __kcsan_setup_watchpoint+0x32e/0x4a0 kernel/kcsan/core.c:411
+> >   __tsan_read8 kernel/kcsan/kcsan.c:36 [inline]
+> >   __tsan_read8+0x2c/0x30 kernel/kcsan/kcsan.c:36
+> >   srcu_might_be_idle kernel/rcu/srcutree.c:784 [inline]
+> >   synchronize_srcu+0x107/0x214 kernel/rcu/srcutree.c:996
+> >   fsnotify_connector_destroy_workfn+0x63/0xb0 fs/notify/mark.c:164
+> >   process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
+> >   worker_thread+0xa0/0x800 kernel/workqueue.c:2415
+> >   kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+> >   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+> > Kernel Offset: disabled
+> > Rebooting in 86400 seconds..
+> >
+> >
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
---------------ms000701090708010009000403
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Good catch!  Does the patch below help?
 
-Dear Mika, dear Mario,
+							Thanx, Paul
 
+------------------------------------------------------------------------
 
-On 2019-11-04 16:49, Mario.Limonciello@dell.com wrote:
+commit d2ab457602a59353b8853352735dfd094d223480
+Author: Paul E. McKenney <paulmck@kernel.org>
+Date:   Mon Nov 4 08:08:30 2019 -0800
 
->> From: Mika Westerberg <mika.westerberg@linux.intel.com>
->> Sent: Monday, November 4, 2019 9:45 AM
+    srcu: Apply *_ONCE() to ->srcu_last_gp_end
+    
+    The ->srcu_last_gp_end field is accessed from any CPU at any time
+    by synchronize_srcu(), so non-initialization references need to use
+    READ_ONCE() and WRITE_ONCE().  This commit therefore makes that change.
+    
+    Reported-by: syzbot+08f3e9d26e5541e1ecf2@syzkaller.appspotmail.com
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 
->> On Mon, Nov 04, 2019 at 04:44:40PM +0200, Mika Westerberg wrote:
->>> On Mon, Nov 04, 2019 at 04:25:03PM +0200, Mika Westerberg wrote:
-
->>>> On Mon, Nov 04, 2019 at 02:13:13PM +0100, Paul Menzel wrote:
-
->>>>> On the Dell XPS 13 9380 with Debian Sid/unstable with Linux 5.3.7
->>>>> suspending the system, and resuming with Dell=E2=80=99s Thunderbolt=
- TB16
->>>>> dock connected, the USB input devices, keyboard and mouse,
->>>>> connected to the TB16 stop working. They work for a few seconds
->>>>> (mouse cursor can be moved), but then stop working. The laptop
->>>>> keyboard and touchpad still works fine. All firmware is up-to-date
->>>>> according to `fwupdmgr`.
->>>>
->>>> What are the exact steps to reproduce? Just "echo mem >
->>>> /sys/power/state" and then resume by pressing power button?
-
-GNOME Shell 3.34.1+git20191024-1 is used, and the user just closes the
-display. So more than `echo mem > /sys/power/state` is done. What
-distribution do you use?
-
->>> I tried v5.4-rc6 on my 9380 with TB16 dock connected and did a couple=
- of
->>> suspend/resume cycles (to s2idle) but I don't see any issues.
->>>
->>> I may have older/different firmware than you, though.
->>
->> Upgraded BIOS to 1.8.0 and TBT NVM to v44 but still can't reproduce th=
-is
->> on my system :/
-
-The user reported the issue with the previous firmwares 1.x and TBT NVM v=
-40.
-Updating to the recent version (I got the logs with) did not fix the issu=
-e.
-
-> Loop Anthony.  Anthony can you see if you guys repro this at all too?
->=20
-> As a potential point of comparison and sometimes pain area, I'm wonderi=
-ng if
-> something in userland is poking power states for Paul leading to this.
->=20
-> Paul what sort of power management policies are you using on your machi=
-ne?=20
-> Anything like:
-> * powertop  --auto-tune,=20
-> * TLP
-> * systemd > 243 (contains some stuff for automatic suspend)
-
-I=E2=80=99ll check with the user again, but to my knowledge nothing from =
-the list is
-used on the device.
-
-
-Kind regards,
-
-Paul
-
-
---------------ms000701090708010009000403
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-EFowggUSMIID+qADAgECAgkA4wvV+K8l2YEwDQYJKoZIhvcNAQELBQAwgYIxCzAJBgNVBAYT
-AkRFMSswKQYDVQQKDCJULVN5c3RlbXMgRW50ZXJwcmlzZSBTZXJ2aWNlcyBHbWJIMR8wHQYD
-VQQLDBZULVN5c3RlbXMgVHJ1c3QgQ2VudGVyMSUwIwYDVQQDDBxULVRlbGVTZWMgR2xvYmFs
-Um9vdCBDbGFzcyAyMB4XDTE2MDIyMjEzMzgyMloXDTMxMDIyMjIzNTk1OVowgZUxCzAJBgNV
-BAYTAkRFMUUwQwYDVQQKEzxWZXJlaW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1dHNjaGVu
-IEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4xEDAOBgNVBAsTB0RGTi1QS0kxLTArBgNVBAMTJERG
-Ti1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgMjCCASIwDQYJKoZIhvcNAQEBBQAD
-ggEPADCCAQoCggEBAMtg1/9moUHN0vqHl4pzq5lN6mc5WqFggEcVToyVsuXPztNXS43O+FZs
-FVV2B+pG/cgDRWM+cNSrVICxI5y+NyipCf8FXRgPxJiZN7Mg9mZ4F4fCnQ7MSjLnFp2uDo0p
-eQcAIFTcFV9Kltd4tjTTwXS1nem/wHdN6r1ZB+BaL2w8pQDcNb1lDY9/Mm3yWmpLYgHurDg0
-WUU2SQXaeMpqbVvAgWsRzNI8qIv4cRrKO+KA3Ra0Z3qLNupOkSk9s1FcragMvp0049ENF4N1
-xDkesJQLEvHVaY4l9Lg9K7/AjsMeO6W/VRCrKq4Xl14zzsjz9AkH4wKGMUZrAcUQDBHHWekC
-AwEAAaOCAXQwggFwMA4GA1UdDwEB/wQEAwIBBjAdBgNVHQ4EFgQUk+PYMiba1fFKpZFK4OpL
-4qIMz+EwHwYDVR0jBBgwFoAUv1kgNgB5oKAia4zV8mHSuCzLgkowEgYDVR0TAQH/BAgwBgEB
-/wIBAjAzBgNVHSAELDAqMA8GDSsGAQQBga0hgiwBAQQwDQYLKwYBBAGBrSGCLB4wCAYGZ4EM
-AQICMEwGA1UdHwRFMEMwQaA/oD2GO2h0dHA6Ly9wa2kwMzM2LnRlbGVzZWMuZGUvcmwvVGVs
-ZVNlY19HbG9iYWxSb290X0NsYXNzXzIuY3JsMIGGBggrBgEFBQcBAQR6MHgwLAYIKwYBBQUH
-MAGGIGh0dHA6Ly9vY3NwMDMzNi50ZWxlc2VjLmRlL29jc3ByMEgGCCsGAQUFBzAChjxodHRw
-Oi8vcGtpMDMzNi50ZWxlc2VjLmRlL2NydC9UZWxlU2VjX0dsb2JhbFJvb3RfQ2xhc3NfMi5j
-ZXIwDQYJKoZIhvcNAQELBQADggEBAIcL/z4Cm2XIVi3WO5qYi3FP2ropqiH5Ri71sqQPrhE4
-eTizDnS6dl2e6BiClmLbTDPo3flq3zK9LExHYFV/53RrtCyD2HlrtrdNUAtmB7Xts5et6u5/
-MOaZ/SLick0+hFvu+c+Z6n/XUjkurJgARH5pO7917tALOxrN5fcPImxHhPalR6D90Bo0fa3S
-PXez7vTXTf/D6OWST1k+kEcQSrCFWMBvf/iu7QhCnh7U3xQuTY+8npTD5+32GPg8SecmqKc2
-2CzeIs2LgtjZeOJVEqM7h0S2EQvVDFKvaYwPBt/QolOLV5h7z/0HJPT8vcP9SpIClxvyt7bP
-ZYoaorVyGTkwggWNMIIEdaADAgECAgwcOtRQhH7u81j4jncwDQYJKoZIhvcNAQELBQAwgZUx
-CzAJBgNVBAYTAkRFMUUwQwYDVQQKEzxWZXJlaW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1
-dHNjaGVuIEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4xEDAOBgNVBAsTB0RGTi1QS0kxLTArBgNV
-BAMTJERGTi1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgMjAeFw0xNjExMDMxNTI0
-NDhaFw0zMTAyMjIyMzU5NTlaMGoxCzAJBgNVBAYTAkRFMQ8wDQYDVQQIDAZCYXllcm4xETAP
-BgNVBAcMCE11ZW5jaGVuMSAwHgYDVQQKDBdNYXgtUGxhbmNrLUdlc2VsbHNjaGFmdDEVMBMG
-A1UEAwwMTVBHIENBIC0gRzAyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnhx4
-59Lh4WqgOs/Md04XxU2yFtfM15ZuJV0PZP7BmqSJKLLPyqmOrADfNdJ5PIGBto2JBhtRRBHd
-G0GROOvTRHjzOga95WOTeura79T21FWwwAwa29OFnD3ZplQs6HgdwQrZWNi1WHNJxn/4mA19
-rNEBUc5urSIpZPvZi5XmlF3v3JHOlx3KWV7mUteB4pwEEfGTg4npPAJbp2o7arxQdoIq+Pu2
-OsvqhD7Rk4QeaX+EM1QS4lqd1otW4hE70h/ODPy1xffgbZiuotWQLC6nIwa65Qv6byqlIX0q
-Zuu99Vsu+r3sWYsL5SBkgecNI7fMJ5tfHrjoxfrKl/ErTAt8GQIDAQABo4ICBTCCAgEwEgYD
-VR0TAQH/BAgwBgEB/wIBATAOBgNVHQ8BAf8EBAMCAQYwKQYDVR0gBCIwIDANBgsrBgEEAYGt
-IYIsHjAPBg0rBgEEAYGtIYIsAQEEMB0GA1UdDgQWBBTEiKUH7rh7qgwTv9opdGNSG0lwFjAf
-BgNVHSMEGDAWgBST49gyJtrV8UqlkUrg6kviogzP4TCBjwYDVR0fBIGHMIGEMECgPqA8hjpo
-dHRwOi8vY2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jcmwvY2Fjcmwu
-Y3JsMECgPqA8hjpodHRwOi8vY2RwMi5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1
-Yi9jcmwvY2FjcmwuY3JsMIHdBggrBgEFBQcBAQSB0DCBzTAzBggrBgEFBQcwAYYnaHR0cDov
-L29jc3AucGNhLmRmbi5kZS9PQ1NQLVNlcnZlci9PQ1NQMEoGCCsGAQUFBzAChj5odHRwOi8v
-Y2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNy
-dDBKBggrBgEFBQcwAoY+aHR0cDovL2NkcDIucGNhLmRmbi5kZS9nbG9iYWwtcm9vdC1nMi1j
-YS9wdWIvY2FjZXJ0L2NhY2VydC5jcnQwDQYJKoZIhvcNAQELBQADggEBABLpeD5FygzqOjj+
-/lAOy20UQOGWlx0RMuPcI4nuyFT8SGmK9lD7QCg/HoaJlfU/r78ex+SEide326evlFAoJXIF
-jVyzNltDhpMKrPIDuh2N12zyn1EtagqPL6hu4pVRzcBpl/F2HCvtmMx5K4WN1L1fmHWLcSap
-dhXLvAZ9RG/B3rqyULLSNN8xHXYXpmtvG0VGJAndZ+lj+BH7uvd3nHWnXEHC2q7iQlDUqg0a
-wIqWJgdLlx1Q8Dg/sodv0m+LN0kOzGvVDRCmowBdWGhhusD+duKV66pBl+qhC+4LipariWaM
-qK5ppMQROATjYeNRvwI+nDcEXr2vDaKmdbxgDVwwggWvMIIEl6ADAgECAgweKlJIhfynPMVG
-/KIwDQYJKoZIhvcNAQELBQAwajELMAkGA1UEBhMCREUxDzANBgNVBAgMBkJheWVybjERMA8G
-A1UEBwwITXVlbmNoZW4xIDAeBgNVBAoMF01heC1QbGFuY2stR2VzZWxsc2NoYWZ0MRUwEwYD
-VQQDDAxNUEcgQ0EgLSBHMDIwHhcNMTcxMTE0MTEzNDE2WhcNMjAxMTEzMTEzNDE2WjCBizEL
-MAkGA1UEBhMCREUxIDAeBgNVBAoMF01heC1QbGFuY2stR2VzZWxsc2NoYWZ0MTQwMgYDVQQL
-DCtNYXgtUGxhbmNrLUluc3RpdHV0IGZ1ZXIgbW9sZWt1bGFyZSBHZW5ldGlrMQ4wDAYDVQQL
-DAVNUElNRzEUMBIGA1UEAwwLUGF1bCBNZW56ZWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
-ggEKAoIBAQDIh/UR/AX/YQ48VWWDMLTYtXjYJyhRHMc81ZHMMoaoG66lWB9MtKRTnB5lovLZ
-enTIUyPsCrMhTqV9CWzDf6v9gOTWVxHEYqrUwK5H1gx4XoK81nfV8oGV4EKuVmmikTXiztGz
-peyDmOY8o/EFNWP7YuRkY/lPQJQBeBHYq9AYIgX4StuXu83nusq4MDydygVOeZC15ts0tv3/
-6WmibmZd1OZRqxDOkoBbY3Djx6lERohs3IKS6RKiI7e90rCSy9rtidJBOvaQS9wvtOSKPx0a
-+2pAgJEVzZFjOAfBcXydXtqXhcpOi2VCyl+7+LnnTz016JJLsCBuWEcB3kP9nJYNAgMBAAGj
-ggIxMIICLTAJBgNVHRMEAjAAMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcD
-AgYIKwYBBQUHAwQwHQYDVR0OBBYEFHM0Mc3XjMLlhWpp4JufRELL4A/qMB8GA1UdIwQYMBaA
-FMSIpQfuuHuqDBO/2il0Y1IbSXAWMCAGA1UdEQQZMBeBFXBtZW56ZWxAbW9sZ2VuLm1wZy5k
-ZTB9BgNVHR8EdjB0MDigNqA0hjJodHRwOi8vY2RwMS5wY2EuZGZuLmRlL21wZy1nMi1jYS9w
-dWIvY3JsL2NhY3JsLmNybDA4oDagNIYyaHR0cDovL2NkcDIucGNhLmRmbi5kZS9tcGctZzIt
-Y2EvcHViL2NybC9jYWNybC5jcmwwgc0GCCsGAQUFBwEBBIHAMIG9MDMGCCsGAQUFBzABhido
-dHRwOi8vb2NzcC5wY2EuZGZuLmRlL09DU1AtU2VydmVyL09DU1AwQgYIKwYBBQUHMAKGNmh0
-dHA6Ly9jZHAxLnBjYS5kZm4uZGUvbXBnLWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNydDBC
-BggrBgEFBQcwAoY2aHR0cDovL2NkcDIucGNhLmRmbi5kZS9tcGctZzItY2EvcHViL2NhY2Vy
-dC9jYWNlcnQuY3J0MEAGA1UdIAQ5MDcwDwYNKwYBBAGBrSGCLAEBBDARBg8rBgEEAYGtIYIs
-AQEEAwYwEQYPKwYBBAGBrSGCLAIBBAMGMA0GCSqGSIb3DQEBCwUAA4IBAQCQs6bUDROpFO2F
-Qz2FMgrdb39VEo8P3DhmpqkaIMC5ZurGbbAL/tAR6lpe4af682nEOJ7VW86ilsIJgm1j0ueY
-aOuL8jrN4X7IF/8KdZnnNnImW3QVni6TCcc+7+ggci9JHtt0IDCj5vPJBpP/dKXLCN4M+exl
-GXYpfHgxh8gclJPY1rquhQrihCzHfKB01w9h9tWZDVMtSoy9EUJFhCXw7mYUsvBeJwZesN2B
-fndPkrXx6XWDdU3S1LyKgHlLIFtarLFm2Hb5zAUR33h+26cN6ohcGqGEEzgIG8tXS8gztEaj
-1s2RyzmKd4SXTkKR3GhkZNVWy+gM68J7jP6zzN+cMYIDmjCCA5YCAQEwejBqMQswCQYDVQQG
-EwJERTEPMA0GA1UECAwGQmF5ZXJuMREwDwYDVQQHDAhNdWVuY2hlbjEgMB4GA1UECgwXTWF4
-LVBsYW5jay1HZXNlbGxzY2hhZnQxFTATBgNVBAMMDE1QRyBDQSAtIEcwMgIMHipSSIX8pzzF
-RvyiMA0GCWCGSAFlAwQCAQUAoIIB8TAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqG
-SIb3DQEJBTEPFw0xOTExMDQxNjExMTFaMC8GCSqGSIb3DQEJBDEiBCCX4hYxo0bzFFXXmQAF
-BMq63N7SRbKi2Enuss0PzLYRzjBsBgkqhkiG9w0BCQ8xXzBdMAsGCWCGSAFlAwQBKjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcG
-BSsOAwIHMA0GCCqGSIb3DQMCAgEoMIGJBgkrBgEEAYI3EAQxfDB6MGoxCzAJBgNVBAYTAkRF
-MQ8wDQYDVQQIDAZCYXllcm4xETAPBgNVBAcMCE11ZW5jaGVuMSAwHgYDVQQKDBdNYXgtUGxh
-bmNrLUdlc2VsbHNjaGFmdDEVMBMGA1UEAwwMTVBHIENBIC0gRzAyAgweKlJIhfynPMVG/KIw
-gYsGCyqGSIb3DQEJEAILMXygejBqMQswCQYDVQQGEwJERTEPMA0GA1UECAwGQmF5ZXJuMREw
-DwYDVQQHDAhNdWVuY2hlbjEgMB4GA1UECgwXTWF4LVBsYW5jay1HZXNlbGxzY2hhZnQxFTAT
-BgNVBAMMDE1QRyBDQSAtIEcwMgIMHipSSIX8pzzFRvyiMA0GCSqGSIb3DQEBAQUABIIBABpW
-DaiQHOAByGe715rx+mKm0by/Nq4hPWEym8jSjtvzl1A7Uy9iQhBjec6jeOaBngKMdd7WjbG4
-pRXrViy+MuD+rI21ZPXcdoyMCkDTXrSKHo72STv4KT8Tz70qtVsoyhvDj10yPi08ZYHiEmDP
-Cmvf5WtahQWyNdQrDGGcawQo1UfS4yC0XWmrBfSERFj2elX0EULwqZ1yEXgIX76YuND+TDyl
-itJLAeLO879kMIxrdjmx6YtxbLmgRxoIlcrHEwse/Ygw0/t2Q2r3nf2afDQHd+J1oHfos47S
-JYIM8Jjkwm2mZ4rlmNWZ1iEJSqNFMB1MsKV2heVBhZU15uikAqYAAAAAAAA=
---------------ms000701090708010009000403--
+diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+index d0a9d5b..657e6a7 100644
+--- a/kernel/rcu/srcutree.c
++++ b/kernel/rcu/srcutree.c
+@@ -530,7 +530,7 @@ static void srcu_gp_end(struct srcu_struct *ssp)
+ 	idx = rcu_seq_state(ssp->srcu_gp_seq);
+ 	WARN_ON_ONCE(idx != SRCU_STATE_SCAN2);
+ 	cbdelay = srcu_get_delay(ssp);
+-	ssp->srcu_last_gp_end = ktime_get_mono_fast_ns();
++	WRITE_ONCE(ssp->srcu_last_gp_end, ktime_get_mono_fast_ns());
+ 	rcu_seq_end(&ssp->srcu_gp_seq);
+ 	gpseq = rcu_seq_current(&ssp->srcu_gp_seq);
+ 	if (ULONG_CMP_LT(ssp->srcu_gp_seq_needed_exp, gpseq))
+@@ -762,6 +762,7 @@ static bool srcu_might_be_idle(struct srcu_struct *ssp)
+ 	unsigned long flags;
+ 	struct srcu_data *sdp;
+ 	unsigned long t;
++	unsigned long tlast;
+ 
+ 	/* If the local srcu_data structure has callbacks, not idle.  */
+ 	local_irq_save(flags);
+@@ -780,9 +781,9 @@ static bool srcu_might_be_idle(struct srcu_struct *ssp)
+ 
+ 	/* First, see if enough time has passed since the last GP. */
+ 	t = ktime_get_mono_fast_ns();
++	tlast = READ_ONCE(ssp->srcu_last_gp_end);
+ 	if (exp_holdoff == 0 ||
+-	    time_in_range_open(t, ssp->srcu_last_gp_end,
+-			       ssp->srcu_last_gp_end + exp_holdoff))
++	    time_in_range_open(t, tlast, tlast + exp_holdoff))
+ 		return false; /* Too soon after last GP. */
+ 
+ 	/* Next, check for probable idleness. */
