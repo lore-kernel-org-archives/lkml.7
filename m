@@ -2,143 +2,137 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D9DCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9DFCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A92820578
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9028B21744
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:43:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="HAFK9ZBN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfKDGlJ (ORCPT
+        id S1728076AbfKDGnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 01:41:09 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:52750 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727368AbfKDGlI (ORCPT
+        Mon, 4 Nov 2019 01:43:43 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33534 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727947AbfKDGnn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 01:41:08 -0500
-Received: by mail-il1-f197.google.com with SMTP id t23so14879865ila.19
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 22:41:08 -0800 (PST)
+        Mon, 4 Nov 2019 01:43:43 -0500
+Received: by mail-oi1-f195.google.com with SMTP id m193so13188493oig.0
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 22:43:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RVi5iAn9z9FIX4+R36z5iyM84YAlie4p4vOr8JLkA9Q=;
+        b=HAFK9ZBNpKvG2W2+y1NYoDvTHPz0Ih82Jqp011X6KSmbJ1OgFdZTIc4d0/6vIbvxKL
+         gs/6jFk8EYz5eDiKziCqdb7/8/dAzil45O7dvO+dDXp1z5/y2wIH43iLURPE4+F9d1Ka
+         mztxNJCXNFIRQQLB4EtiifXijLtOJUcrUf3I7WhhP2AW4eD5w9B3bk0JQ3llROT4jdoA
+         K3QGqKi6NCewRfVYH9qcFMvofHFLFTzqhx4DdXaDWK7X6EFm6mycQxkpgjQor9zzncoS
+         Sb1Brgwghyca3G1DkJhJE3T9uHRx0/LMuWdW1Al8/QtDZSxZrlahzzw4tkVhcjvNCEfH
+         ObHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=zjUEm4n2QGZiAjQ0l6i1nAlpzkEMT32Bo7zHdLCO1XU=;
-        b=tg8JnUy9N+A/Hmkr6SgHR5H1vAm/+plfYtU9cVlynscQG462a0kGEonMYhwY9DMnIo
-         SIIttD7zjSOSG0Df+hjUMEB0Fvvno/b/y7XEIjrKG74iczsrHGNHvwwXhqMLs6MhUYg0
-         sRluq8ZX1BJwipYJqatcqAbyjns1XYBhHNFMRfZ79wcmcazq8/sSx4PcRrA1apGPGakD
-         fHqNAHGxMKaHBHVeiFJ/oXWCq9wmGWHtH8w9VRyMna3+jkkxE70O2tKo7diw1/5Vt3Ds
-         iljneiYjtJ/u5Crh+ympFUwe2gbOU7uGOyp/HS269LyK16t1RuSwijAE8uMgXjEmbNKE
-         r+DA==
-X-Gm-Message-State: APjAAAWATIYfTn9pafT3rnBUgYeYXSz/OI5KVu221TyiCS8aRnaTzeDv
-        xy//4Qo4eqNG+F6Sd5o6dvUov00TnAepIa2vHMStTQ/p2eTI
-X-Google-Smtp-Source: APXvYqw+nreieLrPYdIUFcEgEIU44O5Aj8bhewrX26iSFPuIizX+8N8mif2nt3olFQIV1G+LODV1ZggdSh1NHF3G1yy+tzwEuBRx
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RVi5iAn9z9FIX4+R36z5iyM84YAlie4p4vOr8JLkA9Q=;
+        b=J+/IRlhjTGkWaIzdPTxoj9T7p2nYx1oTHHHs5+JxrT4/M7NovKOzHsKwuzyUjBwWSw
+         1RW8EXoa6PZ/yyNGJ8sFq4FG9piei1+CU2f6ktonXtJYy6YgoiDIaCWsjAos0tiyrUKJ
+         fx5sz5iLnqtysocsmcDuAI8iqz4JjAkAKn9i3NmYnrR+CxX9u11RZcjMPdQxccn8JoW+
+         TihD0RN0391A0ucVCIHRz6FVo8z15MQYUJWmOvDKezJiviXlhE9iKXovUizFpe7PljWV
+         TJpmZr7XhoX8/drqvR8pKK7i+k5kTB38/rwipt3vp5V/81MCeFrfL1bEtMPesPAT6MOB
+         0UpQ==
+X-Gm-Message-State: APjAAAU3OqD8gitV1ivBT8iy8Fq9ptVnbq1oh5z09O5RXtUXgJ1DMn9x
+        aSZHUh8EcCk4+r8VeeDQQSmFulNfzL3DfDGiYWKZ/A==
+X-Google-Smtp-Source: APXvYqzYYiSRCLzgJDin99LR5fIfz6VmH9pke67vQaykCEY2cIpBFhjcU9jQxFNcNlHYIOGijfZuC9W/totY10rVFTU=
+X-Received: by 2002:aca:ead7:: with SMTP id i206mr2880755oih.0.1572849822071;
+ Sun, 03 Nov 2019 22:43:42 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a5e:d716:: with SMTP id v22mr21059204iom.152.1572849667938;
- Sun, 03 Nov 2019 22:41:07 -0800 (PST)
-Date:   Sun, 03 Nov 2019 22:41:07 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000be219705967f9963@google.com>
-Subject: general protection fault in kvm_coalesced_mmio_init
-From:   syzbot <syzbot+e27e7027eb2b80e44225@syzkaller.appspotmail.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, rkrcmar@redhat.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20191003102915.28301-1-yamada.masahiro@socionext.com>
+ <20191003102915.28301-4-yamada.masahiro@socionext.com> <x497e4kluxq.fsf@segfault.boston.devel.redhat.com>
+ <CAK7LNASmpO6Dn2M1DtoCDs=RM+jwW7_tRhq7nqDU1YZWdRafuw@mail.gmail.com>
+ <x494kznctuc.fsf@segfault.boston.devel.redhat.com> <CAK7LNAQnaBCkRCsRPjK9m6wLaDvTsgkiFgMEiObnfuncxOHZOg@mail.gmail.com>
+In-Reply-To: <CAK7LNAQnaBCkRCsRPjK9m6wLaDvTsgkiFgMEiObnfuncxOHZOg@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sun, 3 Nov 2019 22:43:31 -0800
+Message-ID: <CAPcyv4gFO=4EmObucuYyPNCS91y1H7d-M=0LebBK72YuD=ekNQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] modpost: do not set ->preloaded for symbols from Module.symvers
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Jeff Moyer <jmoyer@redhat.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sun, Nov 3, 2019 at 7:12 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> On Sat, Nov 2, 2019 at 3:52 AM Jeff Moyer <jmoyer@redhat.com> wrote:
+> >
+> > Masahiro Yamada <yamada.masahiro@socionext.com> writes:
+> >
+> > > On Fri, Nov 1, 2019 at 1:51 AM Jeff Moyer <jmoyer@redhat.com> wrote:
+> > >>
+> > >> Masahiro Yamada <yamada.masahiro@socionext.com> writes:
+> > >>
+> > >> > Now that there is no overwrap between symbols from ELF files and
+> > >> > ones from Module.symvers.
+> > >> >
+> > >> > So, the 'exported twice' warning should be reported irrespective
+> > >> > of where the symbol in question came from. Only the exceptional case
+> > >> > is when __crc_<sym> symbol appears before __ksymtab_<sym>. This
+> > >> > typically occurs for EXPORT_SYMBOL in .S files.
+> > >>
+> > >> Hi, Masahiro,
+> > >>
+> > >> After apply this patch, I get the following modpost warnings when doing:
+> > >>
+> > >> $ make M=tools/tesing/nvdimm
+> > >> ...
+> > >>   Building modules, stage 2.
+> > >>   MODPOST 12 modules
+> > >> WARNING: tools/testing/nvdimm/libnvdimm: 'nvdimm_bus_lock' exported
+> > >> twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+> > >> WARNING: tools/testing/nvdimm/libnvdimm: 'nvdimm_bus_unlock'
+> > >> exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+> > >> WARNING: tools/testing/nvdimm/libnvdimm: 'is_nvdimm_bus_locked'
+> > >> exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+> > >> WARNING: tools/testing/nvdimm/libnvdimm: 'devm_nvdimm_memremap'
+> > >> exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+> > >> WARNING: tools/testing/nvdimm/libnvdimm: 'nd_fletcher64' exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+> > >> WARNING: tools/testing/nvdimm/libnvdimm: 'to_nd_desc' exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+> > >> WARNING: tools/testing/nvdimm/libnvdimm: 'to_nvdimm_bus_dev'
+> > >> exported twice. Previous export was in drivers/nvdimm/libnvdimm.ko
+> > >> ...
+> > >>
+> > >> There are a lot of these warnings.  :)
+> > >
+> > > These warnings are correct since
+> > > drivers/nvdimm/Makefile and
+> > > tools/testing/nvdimm/Kbuild
+> > > compile the same files.
+> >
+> > Yeah, but that's by design.  Is there a way to silence these warnings?
+> >
+> > -Jeff
+> >
+>
+> "rm -f Module.symvers; make M=tools/testing/nvdimm" ?
+>
+> I'd like the _design_ fixed though.
 
-syzbot found the following crash on:
-
-HEAD commit:    9d234505 Merge tag 'hwmon-for-v5.4-rc6' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1780f6a4e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cbbed3e8d4eb64bf
-dashboard link: https://syzkaller.appspot.com/bug?extid=e27e7027eb2b80e44225
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e27e7027eb2b80e44225@syzkaller.appspotmail.com
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 19030 Comm: syz-executor.1 Not tainted 5.4.0-rc5+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:kvm_coalesced_mmio_init+0x67/0x120  
-arch/x86/kvm/../../../virt/kvm/coalesced_mmio.c:121
-Code: 00 48 01 c3 48 89 fa 48 b8 00 00 00 00 80 88 ff ff 48 c1 fb 06 48 c1  
-ea 03 48 c1 e3 0c 48 01 c3 48 b8 00 00 00 00 00 fc ff df <80> 3c 02 00 0f  
-85 9a 00 00 00 49 89 9c 24 d8 96 00 00 48 c7 c2 60
-RSP: 0018:ffff88808e5cfc08 EFLAGS: 00010286
-RAX: dffffc0000000000 RBX: ffff88809a815000 RCX: ffffc90008156000
-RDX: 00000000000012db RSI: ffffffff8108569c RDI: 00000000000096d8
-RBP: ffff88808e5cfc18 R08: 0000000000000000 R09: ffffed1015d06b75
-R10: ffffed1015d06b74 R11: ffff8880ae835ba3 R12: 0000000000000000
-R13: dffffc0000000000 R14: ffffc90001921000 R15: ffff88805bf80000
-FS:  00007f1e8b8a5700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020800000 CR3: 0000000097aee000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  kvm_dev_ioctl_create_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:3448  
-[inline]
-  kvm_dev_ioctl+0x81e/0x1610 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3496
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459f49
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f1e8b8a4c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459f49
-RDX: 0000000000000000 RSI: 000000000000ae01 RDI: 0000000000000003
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f1e8b8a56d4
-R13: 00000000004c30a8 R14: 00000000004d7018 R15: 00000000ffffffff
-Modules linked in:
----[ end trace bc86b75fc185a9a9 ]---
-RIP: 0010:kvm_coalesced_mmio_init+0x67/0x120  
-arch/x86/kvm/../../../virt/kvm/coalesced_mmio.c:121
-Code: 00 48 01 c3 48 89 fa 48 b8 00 00 00 00 80 88 ff ff 48 c1 fb 06 48 c1  
-ea 03 48 c1 e3 0c 48 01 c3 48 b8 00 00 00 00 00 fc ff df <80> 3c 02 00 0f  
-85 9a 00 00 00 49 89 9c 24 d8 96 00 00 48 c7 c2 60
-RSP: 0018:ffff88808e5cfc08 EFLAGS: 00010286
-RAX: dffffc0000000000 RBX: ffff88809a815000 RCX: ffffc90008156000
-RDX: 00000000000012db RSI: ffffffff8108569c RDI: 00000000000096d8
-RBP: ffff88808e5cfc18 R08: 0000000000000000 R09: ffffed1015d06b75
-R10: ffffed1015d06b74 R11: ffff8880ae835ba3 R12: 0000000000000000
-R13: dffffc0000000000 R14: ffffc90001921000 R15: ffff88805bf80000
-FS:  00007f1e8b8a5700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fbe165b8330 CR3: 0000000097aee000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+This design is deliberate. The goal is to re-build the typical nvdimm
+modules, but link them against mocked version of core kernel symbols.
+This enables the nvdimm unit tests which have been there for years and
+pre-date Kunit. That said, deleting Module.symvers seems a simple
+enough workaround.
