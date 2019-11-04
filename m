@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D35DCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66584CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58742204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36D6F204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUvXLO2e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WlvVqbk/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390037AbfKDWT3 (ORCPT
+        id S2390374AbfKDWTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:19:29 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42076 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388940AbfKDWBD (ORCPT
+        Mon, 4 Nov 2019 17:19:39 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34811 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388612AbfKDWBC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:03 -0500
-Received: by mail-lf1-f66.google.com with SMTP id z12so13447331lfj.9;
-        Mon, 04 Nov 2019 14:01:01 -0800 (PST)
+        Mon, 4 Nov 2019 17:01:02 -0500
+Received: by mail-lj1-f196.google.com with SMTP id 139so19446965ljf.1;
+        Mon, 04 Nov 2019 14:01:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1E19zvKxqtuRF5nZpIuuGaKt1sQQwAAlPwmfDp5qZb0=;
-        b=hUvXLO2en2ir1OJvEzvTaj11+D9mFnkU+iL1cyFm9s/5Mf7pKmALKVeZLbJL6k9ks0
-         9FvwYFTOtJi64qbJCGt49QLaTDUAqnrTs41lfTX8XaCWVVOoDaiti6awh7Ku4GF3VhFc
-         IImnYIQwbcU+dlox+9zulkKOy9dXulv2RoK6NUUqlmUKXj0OLFRMd52GM1cxxTQTXb5E
-         3DDc0O0zfaOyMeY0MhyNeJ5xlfrJvKT/9IxrXqg74PFKXxbkKU2m1ZjiYmZxMfNBPXw4
-         JGjje8RpqZnhLuvwpk8NOPUqSBTceh/afDJze738AIzR0NXW0laZQmX0fsytncxPanaB
-         PNBw==
+        bh=ppdzoc/V97ChcXO7v2Rn6eiJN21LngJ2PFR09uQ6kL0=;
+        b=WlvVqbk/liqG+K0UazXBD82hDz7hN4WqmsdFdZrNXEqvEEqYJQBRhIPdnXeBM1bgas
+         kGInSmGqK/nzGxfsyHmJ1SE0m5t+xOCcaORqijgtWAVPx9f9AqLqoXY5K0rqPN/QrS69
+         ScLGhO9Xs6XMldR0q9HYnUnIjQQYNWSyt+qfWC33su0WeNtcW9SXx03TdgPEoQhKSTa5
+         AmTqTcLdP+hphVixw3WcX+XAqBqBbYUuao3Jc+sBPvGBudULEdcVlAdERoybkGmlhl4F
+         SmVBMjP5cvoc6io0dLsEmXRNYmdEW9sQLUsr46CkHAmLT3sLDr4kLEwU9yXIrM9r7AUo
+         mGQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1E19zvKxqtuRF5nZpIuuGaKt1sQQwAAlPwmfDp5qZb0=;
-        b=EH3XBFg1lfy//4VISm1VE0n98FCtoxTeG81V0K14Mot2P+lYA9fLTt3iSzOimEl+YC
-         CONsaORHGmKFQrsngrtAi8MvofLSFBfnL/xvW2Duk8UFDd48LoLgz3bpqjaXBKFjjG1U
-         ScjxbQH1j7KJzahbes3UIuzUeoEFJ+LSl3VvnT0/Fo4wANqnFuSgjtUvUrzG+Y2hWvdW
-         sXSxrdiVxMtD2E1WxRFou5FyoT5alNRXIgVjHViwZQO/rs2pvyeLDcWUy9r5BHZG+mI+
-         8oyhkMWXpBQZiKzuXOH+djVC9IzwtSJPkYIWoV5/wlLwb45NL+s75Wa2q7oZ8iAlGSMx
-         Z21w==
-X-Gm-Message-State: APjAAAXQiKZKlvZVeC07106z9mPH6jxht4ckmIjL0oNYPT8zPOPhJVoJ
-        +w5Vk1qZhC0e5Kpkhp3kRnw=
-X-Google-Smtp-Source: APXvYqwCbJB4zr4XOec3vtnnq33ivcluW8B/Mejq2uuMJszRbNpWFQAsnfhlCDn2J0RB2IL1R4zpZQ==
-X-Received: by 2002:ac2:48b5:: with SMTP id u21mr18489251lfg.75.1572904861102;
-        Mon, 04 Nov 2019 14:01:01 -0800 (PST)
-Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id g3sm7454669ljj.59.2019.11.04.14.01.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=ppdzoc/V97ChcXO7v2Rn6eiJN21LngJ2PFR09uQ6kL0=;
+        b=lvWASNYL9iM59Ce9LFBF768udf0g8x5g5VLMQMdcdQleBsNTSSlllj0Hc/hedu5jVd
+         9cRcSQvstjasDwM7zzc+/xe5vWGc1FZGbd0EHyCr552dQ+KJqhQO7fFDFHGSZMtEqbOX
+         akAKFou/5KeJ3Pd41YQo22RQnsc3EvenDfbdHlpWpwQJg0kDXHRz0EdPL8UtKnZ52tCP
+         3WCdVOPLcqt0TwdBsfYmg5xM9xHikQL0Wj8GPtDVIGGIYAxkSyPjQUizwcytRdKomJ2V
+         DL01cV2Ki0sm9mNj6hnVfK1ToatiGwFr8fwB35UC9pvIKAx2Cj+dFMdwVszRPuB/5dYX
+         BAlQ==
+X-Gm-Message-State: APjAAAVlVU4pSM8JdDMLTdNHf3S3REvXlcIwj+f3CEpinrnTw/qLkv6f
+        gWT1+Gj3yrALR4NPc2F5X9g=
+X-Google-Smtp-Source: APXvYqw2UgPu4ftgWC6oZd3FfT5EoMsGb1gPhZoPlY9vWUQao96k5UnzkdIvGn459OLOyUQ5LxBgmw==
+X-Received: by 2002:a2e:85c3:: with SMTP id h3mr7393258ljj.122.1572904860068;
         Mon, 04 Nov 2019 14:01:00 -0800 (PST)
+Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.gmail.com with ESMTPSA id g3sm7454669ljj.59.2019.11.04.14.00.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 14:00:59 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
@@ -68,9 +68,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v9 02/19] PM / devfreq: tegra30: Keep interrupt disabled while governor is stopped
-Date:   Tue,  5 Nov 2019 00:56:00 +0300
-Message-Id: <20191104215617.25544-3-digetx@gmail.com>
+Subject: [PATCH v9 01/19] PM / devfreq: tegra30: Change irq type to unsigned int
+Date:   Tue,  5 Nov 2019 00:55:59 +0300
+Message-Id: <20191104215617.25544-2-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104215617.25544-1-digetx@gmail.com>
 References: <20191104215617.25544-1-digetx@gmail.com>
@@ -81,123 +81,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no real need to keep interrupt always-enabled, will be nicer
-to keep it disabled while governor is inactive.
+IRQ numbers are always positive, hence the corresponding variable should
+be unsigned to keep types consistent. This is a minor change that cleans
+up code a tad more.
 
 Suggested-by: Thierry Reding <thierry.reding@gmail.com>
+Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 Tested-by: Peter Geis <pgwipeout@gmail.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra30-devfreq.c | 47 ++++++++++++++++---------------
- 1 file changed, 24 insertions(+), 23 deletions(-)
+ drivers/devfreq/tegra30-devfreq.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index a27300f40b0b..a0a5f3f7b789 100644
+index a6ba75f4106d..a27300f40b0b 100644
 --- a/drivers/devfreq/tegra30-devfreq.c
 +++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -11,6 +11,7 @@
- #include <linux/devfreq.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-+#include <linux/irq.h>
- #include <linux/module.h>
- #include <linux/mod_devicetable.h>
- #include <linux/platform_device.h>
-@@ -416,8 +417,6 @@ static void tegra_actmon_start(struct tegra_devfreq *tegra)
- {
- 	unsigned int i;
+@@ -160,7 +160,7 @@ struct tegra_devfreq {
  
--	disable_irq(tegra->irq);
--
- 	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
- 		      ACTMON_GLB_PERIOD_CTRL);
+ 	struct tegra_devfreq_device devices[ARRAY_SIZE(actmon_device_configs)];
  
-@@ -442,8 +441,6 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
+-	int irq;
++	unsigned int		irq;
+ };
+ 
+ struct tegra_actmon_emc_ratio {
+@@ -618,12 +618,12 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+ 		return PTR_ERR(tegra->emc_clock);
  	}
  
- 	actmon_write_barrier(tegra);
--
--	enable_irq(tegra->irq);
- }
- 
- static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
-@@ -552,6 +549,12 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
- {
- 	struct tegra_devfreq *tegra = dev_get_drvdata(devfreq->dev.parent);
- 
-+	/*
-+	 * Couple devfreq-device with the governor early because it is
-+	 * needed at the moment of governor's start (used by ISR).
-+	 */
-+	tegra->devfreq = devfreq;
-+
- 	switch (event) {
- 	case DEVFREQ_GOV_START:
- 		devfreq_monitor_start(devfreq);
-@@ -586,10 +589,11 @@ static struct devfreq_governor tegra_devfreq_governor = {
- 
- static int tegra_devfreq_probe(struct platform_device *pdev)
- {
--	struct tegra_devfreq *tegra;
- 	struct tegra_devfreq_device *dev;
--	unsigned int i;
-+	struct tegra_devfreq *tegra;
-+	struct devfreq *devfreq;
- 	unsigned long rate;
-+	unsigned int i;
- 	int err;
- 
- 	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
-@@ -625,6 +629,16 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+-	tegra->irq = platform_get_irq(pdev, 0);
+-	if (tegra->irq < 0) {
+-		err = tegra->irq;
++	err = platform_get_irq(pdev, 0);
++	if (err < 0) {
+ 		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
+ 		return err;
  	}
- 	tegra->irq = err;
++	tegra->irq = err;
  
-+	irq_set_status_flags(tegra->irq, IRQ_NOAUTOEN);
-+
-+	err = devm_request_threaded_irq(&pdev->dev, tegra->irq, NULL,
-+					actmon_thread_isr, IRQF_ONESHOT,
-+					"tegra-devfreq", tegra);
-+	if (err) {
-+		dev_err(&pdev->dev, "Interrupt request failed: %d\n", err);
-+		return err;
-+	}
-+
  	reset_control_assert(tegra->reset);
- 
- 	err = clk_prepare_enable(tegra->clock);
-@@ -672,28 +686,15 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 	}
- 
- 	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
--	tegra->devfreq = devfreq_add_device(&pdev->dev,
--					    &tegra_devfreq_profile,
--					    "tegra_actmon",
--					    NULL);
--	if (IS_ERR(tegra->devfreq)) {
--		err = PTR_ERR(tegra->devfreq);
-+	devfreq = devfreq_add_device(&pdev->dev, &tegra_devfreq_profile,
-+				     "tegra_actmon", NULL);
-+	if (IS_ERR(devfreq)) {
-+		err = PTR_ERR(devfreq);
- 		goto remove_governor;
- 	}
- 
--	err = devm_request_threaded_irq(&pdev->dev, tegra->irq, NULL,
--					actmon_thread_isr, IRQF_ONESHOT,
--					"tegra-devfreq", tegra);
--	if (err) {
--		dev_err(&pdev->dev, "Interrupt request failed: %d\n", err);
--		goto remove_devfreq;
--	}
--
- 	return 0;
- 
--remove_devfreq:
--	devfreq_remove_device(tegra->devfreq);
--
- remove_governor:
- 	devfreq_remove_governor(&tegra_devfreq_governor);
  
 -- 
 2.23.0
