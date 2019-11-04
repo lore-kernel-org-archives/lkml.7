@@ -2,155 +2,236 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93749CA9ED2
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD92DCA9ED2
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C4D21929
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:51:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="afi/KD7I"
+	by mail.kernel.org (Postfix) with ESMTP id A193121929
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:53:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbfKDIvD (ORCPT
+        id S1727811AbfKDIxr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 03:51:03 -0500
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:28386 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727138AbfKDIvD (ORCPT
+        Mon, 4 Nov 2019 03:53:47 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38732 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbfKDIxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 03:51:03 -0500
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA48lpeO032095;
-        Mon, 4 Nov 2019 03:50:48 -0500
-Received: from nam03-co1-obe.outbound.protection.outlook.com (mail-co1nam03lp2050.outbound.protection.outlook.com [104.47.40.50])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2w2a75h28a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 04 Nov 2019 03:50:48 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SPGFJjAsKp4/nxFFXpagPnrjVjCUKsE1VvXgamHHpbAXajHedX9ixXzZPG6maADzclUerxIWuTTPsnYrlLtSvyLN8Y3g/3cRWRUYKPVdNKjwHUJ2Hia2Kp94+nheZPwplLdPEHyAGPWsp3F9hnA6VNiwMZ92kHfvylWhy2eJxS+NLhOu+9BGAhLgLhUBNWlXCVPrUpHIIy7HCw/HfLV9zD9hddVeD3lgnyaPnTwtImm/NcS0KhFQydSO9Fdn7nwH5TWp1FisFY13mmiiCJR5dW8W/tJHxbEspdyOI9B1PZ43QpuHD/dXmNu5oCSRUjI5wG1jyb8BjX0mDAYgct41yg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JG/RCsVGfS7NFPBqV8kcG5FdSB+Bo0adt3GwdZO/Gew=;
- b=n+w8VjsEmqkGCbV919dFnNLKSxeNYvxCfMEiYKFBkWoCqe+2BXfiyTierSx4qbyvaOnO+vTmVZIO3QWGUQR6XuCOkZJizgdtCW5AgtPefxfofiJxurfYM0R1LjlPF9/lifELd82xJ3G48TRe1dfUlXdv7Gn6aTEyNCsNrctDpus1WV9iZdBxIEkrNExZQHLGs0oNUtvMZRAnm9slrBitoZgoYP0kK/c96PubGeEXoh3e6cYQmNaJNt7laYzOc5xwNy9GwnBNXB72Ago3+vg9irTI4XFGa6O4nPD8TPOGqTnqvj/C0CV5IttTfD6t29JnNYfU3K1fyuHgnaGGqL/Qmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JG/RCsVGfS7NFPBqV8kcG5FdSB+Bo0adt3GwdZO/Gew=;
- b=afi/KD7IcJiiGf/k3SFtict2BIRpVQfxvlAI7mrDC3p1ZrsNzFH1hWYAr7dU8SRTLXuuXivYK7pXggUcBtYWgygIpVbm8R83GkqzDNwMr3+NQ4ugTBBkXVv3TIBYzd6u3AkIudi4cZ4KZkv2hwJyEbtZ+NMN4Jw1wlpmARANXhM=
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
- CH2PR03MB5237.namprd03.prod.outlook.com (20.180.15.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Mon, 4 Nov 2019 08:50:33 +0000
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::99:71f2:a588:977c]) by CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::99:71f2:a588:977c%3]) with mapi id 15.20.2408.024; Mon, 4 Nov 2019
- 08:50:33 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "jic23@kernel.org" <jic23@kernel.org>
-CC:     "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH 08/10] iio: imu: adis16480: assign bias value only if
- operation succeeded
-Thread-Topic: [PATCH 08/10] iio: imu: adis16480: assign bias value only if
- operation succeeded
-Thread-Index: AQHVkJe9TGQUKVQpW0iIlUn6yNxtq6d5RVKAgAFzhQA=
-Date:   Mon, 4 Nov 2019 08:50:33 +0000
-Message-ID: <20f60284065ae720b8d7c6f5188910264a42c419.camel@analog.com>
-References: <20191101093505.9408-1-alexandru.ardelean@analog.com>
-         <20191101093505.9408-9-alexandru.ardelean@analog.com>
-         <20191103104131.4f4782e2@archlinux>
-In-Reply-To: <20191103104131.4f4782e2@archlinux>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c49283ef-db3c-4390-280e-08d761040dab
-x-ms-traffictypediagnostic: CH2PR03MB5237:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR03MB5237D48EE52DD4C2B3E97B81F97F0@CH2PR03MB5237.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0211965D06
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39850400004)(366004)(396003)(376002)(346002)(136003)(189003)(199004)(25786009)(2906002)(99286004)(66066001)(478600001)(6916009)(6116002)(3846002)(7736002)(6486002)(2501003)(6246003)(256004)(6512007)(229853002)(4326008)(118296001)(5660300002)(2351001)(86362001)(81166006)(71190400001)(71200400001)(446003)(11346002)(2616005)(476003)(66556008)(66476007)(66446008)(64756008)(66946007)(76116006)(5640700003)(14454004)(8676002)(81156014)(305945005)(8936002)(186003)(6436002)(26005)(102836004)(76176011)(6506007)(316002)(54906003)(36756003)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5237;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ao3M1mLimCHX5XUFvrUh+SP5hw7cyyYLq5lO624qe2CwzSbnXekChbmx+Isfkvs4n/YtyRzIKQZO+8cBEu7qbmQpqLgzxml63MJjyyqrW6++DpI/xslAId8YH2QpgFuhiF8TbhylVumya9i07+UOp+3DAWTqqzm+m0q/sX42Vi2Q3Cy8rWG7uWx28TQdkT5hDe0MJIf6myurUWTDNGdi+mw4bJrZvhhNhOiiNFSpWaLtFO7imZOPo/YpqMkQMef99KmR6pBV6BZFLsMTs0l1e35lMcbGogAaYpL6ZLz50pIuTv3rk7ER/c5cPrGHUCRc/ywBR16gExe0Ln21+PgYICmnnFXWQpp72Rhp7y+noohVQA9C2+tfLrIZdPWR76MrbHP206MeH3vU+OuSBKiWrASZUMnBP8ZmvUNIbmd5RiCv3WkuiMjqCuSyUBEkA12u
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2DC2E2AEC396FD4EBE75BFFDD35260A1@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 4 Nov 2019 03:53:47 -0500
+Received: by mail-oi1-f193.google.com with SMTP id v186so13415641oie.5;
+        Mon, 04 Nov 2019 00:53:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ftGbwwjNOfRweFmtue9SSD86OxwGEsa99D0pa3CKj2k=;
+        b=HpbztpII/svDnq10yz1drtIH+d4+R+GSoswoV9RyteMMcorLbbVYVxWjQKvryyilng
+         PoC3cCpQ3LIRwjtw5/qrbJPNq+lCcz6tY8h+9DAKhqO+UTUfCklqmQRKSpgN9xMgJyNe
+         b/IlplB6H5c5F0bMjpxsZAY7PXm+6nwEJqqVf3z71/NIf2GU9a3Luo3lAbfhglE1By6X
+         ZV7/6j410o5ECiXg5/dO71WRU4Z06pA4WPIToC7UeeWtwnYLNSxLIEpax+U4fuVUNfcP
+         lBbLRYHonW26kqi348Js3ptBp7MmFpGdTTfiLB/mp63I0e8/rbsO2wwf+4ni46Bpk2HY
+         V95Q==
+X-Gm-Message-State: APjAAAWzcvVjKRZhoJMS+TTmMiqZGm9qUcpU7pOjuIx4R+Yuaxkbljty
+        84gA9Vvo0uaWic3edABUtm1cf7wIdXEULxGIv+8=
+X-Google-Smtp-Source: APXvYqwHBlxWvX9baD3gMlRXyGYNGxo8XeR6zpTu9ocP235D46KuJQHptAVE+pdBySSjAAujVU5GG1b4JqAjn27tERM=
+X-Received: by 2002:aca:882:: with SMTP id 124mr32125oii.54.1572857625673;
+ Mon, 04 Nov 2019 00:53:45 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c49283ef-db3c-4390-280e-08d761040dab
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Nov 2019 08:50:33.1586
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8XmcCFY2BFN28Pk5SW24CzWwDPBsGHHfj5hwOi6QwVFdMjgM4Oj5gX9RiXbJBOAgRzJ5h3rybzMsq+cjZjbebm4HNSKsoMzoBvwf0J7ggAc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5237
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-11-04_06:2019-11-01,2019-11-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 impostorscore=0 adultscore=0 spamscore=0 suspectscore=0
- clxscore=1015 phishscore=0 lowpriorityscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1911040087
+References: <1572850587-20314-1-git-send-email-rppt@kernel.org> <1572850587-20314-6-git-send-email-rppt@kernel.org>
+In-Reply-To: <1572850587-20314-6-git-send-email-rppt@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 Nov 2019 09:53:34 +0100
+Message-ID: <CAMuHMdUG3V7uxzhbetw75vVeobeP0-bQySb3r=0V5XujUF123g@mail.gmail.com>
+Subject: Re: [PATCH v3 05/13] m68k: mm: use pgtable-nopXd instead of 4level-fixup
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greentime Hu <green.hu@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Salter <msalter@redhat.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
+        Richard Weinberger <richard@nod.at>,
+        Rolf Eike Beer <eike-kernel@sf-tec.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-c6x-dev@linux-c6x.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-um@lists.infradead.org,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU3VuLCAyMDE5LTExLTAzIGF0IDEwOjQxICswMDAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
-Og0KPiBPbiBGcmksIDEgTm92IDIwMTkgMTE6MzU6MDMgKzAyMDANCj4gQWxleGFuZHJ1IEFyZGVs
-ZWFuIDxhbGV4YW5kcnUuYXJkZWxlYW5AYW5hbG9nLmNvbT4gd3JvdGU6DQo+IA0KPiA+IFRoaXMg
-d2FzIGZvdW5kIG9ubHkgYWZ0ZXIgdGhlIHdob2xlIHRoaW5nIHdpdGggdGhlIGlubGluZSBmdW5j
-dGlvbnMsDQo+ID4gYnV0DQo+ID4gdGhlIGNvbXBpbGVyIGFjdHVhbGx5IGZvdW5kIHNvbWV0aGlu
-Zy4gVGhlIHZhbHVlIG9mIHRoZSBgYmlhc2AgKGluDQo+ID4gYWRpczE2NDgwX2dldF9jYWxpYmJp
-YXMoKSkgc2hvdWxkIG9ubHkgYmUgc2V0IGlmIHRoZSByZWFkIG9wZXJhdGlvbiB3YXMNCj4gPiBz
-dWNjZXNzZnVsLg0KPiA+IA0KPiA+IEZpeGVzOiAyZjNhYmU2Y2JiNmM5ICgiaWlvOmltdTogQWRk
-IHN1cHBvcnQgZm9yIHRoZSBBRElTMTY0ODAgYW5kDQo+ID4gc2ltaWxhciBJTVVzIikNCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFs
-b2cuY29tPg0KPiANCj4gSG1tLiBJdCdzIG5vdCByZWFsbHkgYSBmaXggYXMgc3VjaCB1bmxlc3Mg
-dGhlcmUgaXMgYW4gaW4ga2VybmVsIGNvbnN1bWVyDQo+IHRoYXQgaXMgdXNpbmcgdGhpcyBhbmQg
-bm90IGNoZWNraW5nIHRoZSByZXR1cm4gdmFsdWUuICAgSSB0aG91Z2h0IGFib3V0DQo+IGRyb3Bw
-aW5nDQo+IHRoZSBmaXhlcyB0YWcsIGJ1dCBpdCBpcyBhdm9pZGluZyBjb25mdXNpbmcgdGhlIGNv
-bXBpbGVyIHNvIEkgc3VwcG9zZSB3ZQ0KPiBtaWdodA0KPiBhcyB3ZWxsIGxlYXZlIGl0IG1hcmtl
-ZCBhcyBhIGZpeC4gIEkgd2lsbCBhZGQgYSBub3RlIHRoYXQgdGhpcyBkb2Vzbid0DQo+IGNhdXNl
-DQo+IGFueSBrbm93biByZWFsIHByb2JsZW1zIGFuZCBzbyBwcm9iYWJseSBpc24ndCBzdGFibGUg
-bWF0ZXJpYWwuDQoNClRoYW5rcy4NCk5vIGlkZWEgaWYgaXQncyB3b3J0aCBoYXZpbmcgYSBGaXhl
-cyB0YWcgb3Igbm90Lg0KSSB0aG91Z2h0IGFib3V0IGFkZGluZyBpdCwgc2luY2UgaXQgc2VlbWVk
-IGxpa2UgYS1iaXQtb2YtYS1maXgsIGFuZCB3YXNuJ3QNCnN1cmUsIHNvIEkgYWRkZWQuIEkgZ3Vl
-c3MgYWZ0ZXIgdXBzdHJlYW1pbmcgdGhpbmdzIGEgYml0LCBJIHN0YXJ0ZWQNCndvbmRlcmluZyBh
-Ym91dCB0aGVzZSB0YWdzIGEgYml0IG1vcmUuDQoNCkFsZXgNCg0KPiANCj4gQXBwbGllZC4NCj4g
-DQo+IFRoYW5rcywNCj4gDQo+IEpvbmF0aGFuDQo+IA0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2lp
-by9pbXUvYWRpczE2NDgwLmMgfCA2ICsrKystLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNl
-cnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2lpby9pbXUvYWRpczE2NDgwLmMgYi9kcml2ZXJzL2lpby9pbXUvYWRpczE2NDgwLmMNCj4gPiBp
-bmRleCBiOWUyNjk1YmNmYWQuLmMwZTdlNzY4YmU0MSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJz
-L2lpby9pbXUvYWRpczE2NDgwLmMNCj4gPiArKysgYi9kcml2ZXJzL2lpby9pbXUvYWRpczE2NDgw
-LmMNCj4gPiBAQCAtNDUxLDEyICs0NTEsMTQgQEAgc3RhdGljIGludCBhZGlzMTY0ODBfZ2V0X2Nh
-bGliYmlhcyhzdHJ1Y3QgaWlvX2Rldg0KPiA+ICppbmRpb19kZXYsDQo+ID4gIAljYXNlIElJT19N
-QUdOOg0KPiA+ICAJY2FzZSBJSU9fUFJFU1NVUkU6DQo+ID4gIAkJcmV0ID0gYWRpc19yZWFkX3Jl
-Z18xNigmc3QtPmFkaXMsIHJlZywgJnZhbDE2KTsNCj4gPiAtCQkqYmlhcyA9IHNpZ25fZXh0ZW5k
-MzIodmFsMTYsIDE1KTsNCj4gPiArCQlpZiAocmV0ID09IDApDQo+ID4gKwkJCSpiaWFzID0gc2ln
-bl9leHRlbmQzMih2YWwxNiwgMTUpOw0KPiA+ICAJCWJyZWFrOw0KPiA+ICAJY2FzZSBJSU9fQU5H
-TF9WRUw6DQo+ID4gIAljYXNlIElJT19BQ0NFTDoNCj4gPiAgCQlyZXQgPSBhZGlzX3JlYWRfcmVn
-XzMyKCZzdC0+YWRpcywgcmVnLCAmdmFsMzIpOw0KPiA+IC0JCSpiaWFzID0gc2lnbl9leHRlbmQz
-Mih2YWwzMiwgMzEpOw0KPiA+ICsJCWlmIChyZXQgPT0gMCkNCj4gPiArCQkJKmJpYXMgPSBzaWdu
-X2V4dGVuZDMyKHZhbDMyLCAzMSk7DQo+ID4gIAkJYnJlYWs7DQo+ID4gIAlkZWZhdWx0Og0KPiA+
-ICAJCXJldCA9IC1FSU5WQUw7DQo=
+Hi Mike,
+
+On Mon, Nov 4, 2019 at 7:57 AM Mike Rapoport <rppt@kernel.org> wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> m68k has two or three levels of page tables and can use appropriate
+> pgtable-nopXd and folding of the upper layers.
+>
+> Replace usage of include/asm-generic/4level-fixup.h and explicit
+> definitions of __PAGETABLE_PxD_FOLDED in m68k with
+> include/asm-generic/pgtable-nopmd.h for two-level configurations and with
+> include/asm-generic/pgtable-nopud.h for three-lelve configurations and
+> adjust page table manipulation macros and functions accordingly.
+>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> Acked-by: Greg Ungerer <gerg@linux-m68k.org>
+
+Thanks for your patch!
+
+The build error reported for v1 by kbuild test robot when building for
+sun3x is still there (m68k defconfig or sun3x_defconfig):
+
+    arch/m68k/sun3x/dvma.c: In function ‘dvma_map_cpu’:
+    arch/m68k/sun3x/dvma.c:98:33: error: passing argument 2 of
+‘pmd_alloc’ from incompatible pointer type
+[-Werror=incompatible-pointer-types]
+       if((pmd = pmd_alloc(&init_mm, pgd, vaddr)) == NULL) {
+                                     ^~~
+    In file included from arch/m68k/sun3x/dvma.c:17:
+    include/linux/mm.h:1875:61: note: expected ‘pud_t *’ {aka ‘struct
+<anonymous> *’} but argument is of type ‘pgd_t *’ {aka ‘struct
+<anonymous> *’}
+     static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud,
+unsigned long address)
+                                                          ~~~~~~~^~~
+
+This indeed boots fine on ARAnyM, which emulates on 68040.
+It would be good to have some boot testing on '020/030, too.
+
+> --- a/arch/m68k/mm/kmap.c
+> +++ b/arch/m68k/mm/kmap.c
+
+> @@ -196,17 +198,21 @@ void __iomem *__ioremap(unsigned long physaddr, unsigned long size, int cachefla
+>                         printk ("\npa=%#lx va=%#lx ", physaddr, virtaddr);
+>  #endif
+>                 pgd_dir = pgd_offset_k(virtaddr);
+> -               pmd_dir = pmd_alloc(&init_mm, pgd_dir, virtaddr);
+> +               p4d_dir = p4d_offset(pgd_dir, virtaddr);
+> +               pud_dir = pud_offset(p4d_dir, virtaddr);
+> +               pmd_dir = pmd_alloc(&init_mm, pud_dir, virtaddr);
+>                 if (!pmd_dir) {
+>                         printk("ioremap: no mem for pmd_dir\n");
+>                         return NULL;
+>                 }
+>
+>                 if (CPU_IS_020_OR_030) {
+> +#if CONFIG_PGTABLE_LEVELS == 3
+
+This check puzzled me a bit: when we get here, CONFIG_PGTABLE_LEVELS is
+always true.
+However, the check cannot be removed, as the code it protects fails to compile
+when building for Coldfire.
+
+Perhaps this can be made more clear by reverting the order?
+I.e.
+
+    #if CONFIG_PGTABLE_LEVELS == 3
+            if (CPU_IS_020_OR_030) {
+                    ...
+            } else
+    #endif
+            {
+
+Or is there some better way?
+
+>                         pmd_dir->pmd[(virtaddr/PTRTREESIZE) & 15] = physaddr;
+>                         physaddr += PTRTREESIZE;
+>                         virtaddr += PTRTREESIZE;
+>                         size -= PTRTREESIZE;
+> +#endif
+>                 } else {
+>                         pte_dir = pte_alloc_kernel(pmd_dir, virtaddr);
+>                         if (!pte_dir) {
+> @@ -258,19 +264,24 @@ void __iounmap(void *addr, unsigned long size)
+>  {
+>         unsigned long virtaddr = (unsigned long)addr;
+>         pgd_t *pgd_dir;
+> +       p4d_t *p4d_dir;
+> +       pud_t *pud_dir;
+>         pmd_t *pmd_dir;
+>         pte_t *pte_dir;
+>
+>         while ((long)size > 0) {
+>                 pgd_dir = pgd_offset_k(virtaddr);
+> -               if (pgd_bad(*pgd_dir)) {
+> -                       printk("iounmap: bad pgd(%08lx)\n", pgd_val(*pgd_dir));
+> -                       pgd_clear(pgd_dir);
+> +               p4d_dir = p4d_offset(pgd_dir, virtaddr);
+> +               pud_dir = pud_offset(p4d_dir, virtaddr);
+> +               if (pud_bad(*pud_dir)) {
+> +                       printk("iounmap: bad pgd(%08lx)\n", pud_val(*pud_dir));
+> +                       pud_clear(pud_dir);
+>                         return;
+>                 }
+> -               pmd_dir = pmd_offset(pgd_dir, virtaddr);
+> +               pmd_dir = pmd_offset(pud_dir, virtaddr);
+>
+>                 if (CPU_IS_020_OR_030) {
+> +#if CONFIG_PGTABLE_LEVELS == 3
+
+Likewise.
+
+>                         int pmd_off = (virtaddr/PTRTREESIZE) & 15;
+>                         int pmd_type = pmd_dir->pmd[pmd_off] & _DESCTYPE_MASK;
+>
+
+> @@ -341,14 +355,17 @@ void kernel_set_cachemode(void *addr, unsigned long size, int cmode)
+>
+>         while ((long)size > 0) {
+>                 pgd_dir = pgd_offset_k(virtaddr);
+> -               if (pgd_bad(*pgd_dir)) {
+> -                       printk("iocachemode: bad pgd(%08lx)\n", pgd_val(*pgd_dir));
+> -                       pgd_clear(pgd_dir);
+> +               p4d_dir = p4d_offset(pgd_dir, virtaddr);
+> +               pud_dir = pud_offset(p4d_dir, virtaddr);
+> +               if (pud_bad(*pud_dir)) {
+> +                       printk("iocachemode: bad pud(%08lx)\n", pud_val(*pud_dir));
+> +                       pud_clear(pud_dir);
+>                         return;
+>                 }
+> -               pmd_dir = pmd_offset(pgd_dir, virtaddr);
+> +               pmd_dir = pmd_offset(pud_dir, virtaddr);
+>
+>                 if (CPU_IS_020_OR_030) {
+> +#if CONFIG_PGTABLE_LEVELS == 3
+
+Likewise
+
+>                         int pmd_off = (virtaddr/PTRTREESIZE) & 15;
+>
+>                         if ((pmd_dir->pmd[pmd_off] & _DESCTYPE_MASK) == _PAGE_PRESENT) {
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
