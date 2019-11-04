@@ -4,51 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5F0CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6E8CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 296BF2080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA6A2080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906444;
-	bh=JRJyAaXRNWqpl26dWw+2me9hgFmc8J7yvtbT0XQ5nbo=;
+	s=default; t=1572906452;
+	bh=y3wtbxY+uvAwQ0KK4Tls1a7pGqoMqit5OFV/k9GBELE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OzXfuSECp87Vxkf63ww8jyF74/h/A4MTY9Q3U4wGoVpU5d3I5KI3HOouUxKVkL2HM
-	 wv3NUi8LrSoCppPjr8I6rkpNx4WcghBHXNpRiYDrWhEG/qFkFOkGuxTi3mST3hSQvg
-	 rYz3fLR/gSeSrvl9j9t6z55jgmGB2HMMfDHwFCIY=
+	b=kXZaLge1087sO696+N5MA5xvSKxrJ0JYhWVsTJ9fGUgXlGPwaNYFyPgV88iZb6HlT
+	 l+EGHxYzKMQDfRWgMLmlIhLpBlUzDIMXwcRyRKNl33yhye//RqUO+ca4kOLRjzbyXp
+	 SlRwkiSxFajfJbyN0tUJ/k46fDIBjfajLgPIshA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388426AbfKDW1W (ORCPT
+        id S2387657AbfKDVuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:27:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42668 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:50:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387712AbfKDVu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:50:29 -0500
+        id S2387629AbfKDVuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:50:12 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02B0A2190F;
-        Mon,  4 Nov 2019 21:50:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D79720B7C;
+        Mon,  4 Nov 2019 21:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904228;
-        bh=JRJyAaXRNWqpl26dWw+2me9hgFmc8J7yvtbT0XQ5nbo=;
+        s=default; t=1572904211;
+        bh=y3wtbxY+uvAwQ0KK4Tls1a7pGqoMqit5OFV/k9GBELE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UyrK2ote6XD/KLy/ayxC+cSt6XRVZjSr5xg1BzyxMhOMxwtqLKkNK1jRYNu1LFpM9
-         CQNs3M5DE+n4B6k+KQWPbGGPkLcAMMjI6iuB6T0LWK3Zlhm68lWTGBoXS6SGwM3SEZ
-         XanGWlitc2PbQAkRa9n6Umc7IkO/eXRCO9Z2g5oc=
+        b=XTblZ4yIoN9YRFfaeGbF4fJzoqQdNHZld0TLb67vx7f8fvF2O9lVDpJEIriPygjMZ
+         veZ7MrhgZQ/i+AkfVY1J9hwrtPd59uRVlr2a6GWwin4I0tBTuIiIdZvQcywyZlfW0H
+         zQ2F3KzkLks9DpsZGKtP+aPIZ0BSvDzlWNazdPgU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Megha Dey <megha.dey@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 29/62] s390/uaccess: avoid (false positive) compiler warnings
-Date:   Mon,  4 Nov 2019 22:44:51 +0100
-Message-Id: <20191104211928.509792270@linuxfoundation.org>
+Subject: [PATCH 4.9 07/62] x86/cpu: Add Atom Tremont (Jacobsville)
+Date:   Mon,  4 Nov 2019 22:44:29 +0100
+Message-Id: <20191104211908.947180808@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -61,55 +70,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-[ Upstream commit 062795fcdcb2d22822fb42644b1d76a8ad8439b3 ]
+[ Upstream commit 00ae831dfe4474ef6029558f5eb3ef0332d80043 ]
 
-Depending on inlining decisions by the compiler, __get/put_user_fn
-might become out of line. Then the compiler is no longer able to tell
-that size can only be 1,2,4 or 8 due to the check in __get/put_user
-resulting in false positives like
+Add the Atom Tremont model number to the Intel family list.
 
-./arch/s390/include/asm/uaccess.h: In function ‘__put_user_fn’:
-./arch/s390/include/asm/uaccess.h:113:9: warning: ‘rc’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-  113 |  return rc;
-      |         ^~
-./arch/s390/include/asm/uaccess.h: In function ‘__get_user_fn’:
-./arch/s390/include/asm/uaccess.h:143:9: warning: ‘rc’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-  143 |  return rc;
-      |         ^~
+[ Tony: Also update comment at head of file to say "_X" suffix is
+  also used for microserver parts. ]
 
-These functions are supposed to be always inlined. Mark it as such.
-
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Aristeu Rozanski <aris@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: Megha Dey <megha.dey@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190125195902.17109-4-tony.luck@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/uaccess.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/intel-family.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
-index a7ef702201260..31b2913372b56 100644
---- a/arch/s390/include/asm/uaccess.h
-+++ b/arch/s390/include/asm/uaccess.h
-@@ -151,7 +151,7 @@ unsigned long __must_check __copy_to_user(void __user *to, const void *from,
- 	__rc;							\
- })
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index ba7b6f7364149..74ee597beb3e4 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -5,7 +5,7 @@
+  * "Big Core" Processors (Branded as Core, Xeon, etc...)
+  *
+  * The "_X" parts are generally the EP and EX Xeons, or the
+- * "Extreme" ones, like Broadwell-E.
++ * "Extreme" ones, like Broadwell-E, or Atom microserver.
+  *
+  * Things ending in "2" are usually because we have no better
+  * name for them.  There's no processor called "SILVERMONT2".
+@@ -67,6 +67,7 @@
+ #define INTEL_FAM6_ATOM_GOLDMONT	0x5C /* Apollo Lake */
+ #define INTEL_FAM6_ATOM_GOLDMONT_X	0x5F /* Denverton */
+ #define INTEL_FAM6_ATOM_GOLDMONT_PLUS	0x7A /* Gemini Lake */
++#define INTEL_FAM6_ATOM_TREMONT_X	0x86 /* Jacobsville */
  
--static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
-+static __always_inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
- {
- 	unsigned long spec = 0x810000UL;
- 	int rc;
-@@ -181,7 +181,7 @@ static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
- 	return rc;
- }
+ /* Xeon Phi */
  
--static inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
-+static __always_inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
- {
- 	unsigned long spec = 0x81UL;
- 	int rc;
 -- 
 2.20.1
 
