@@ -2,104 +2,124 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B79CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE95CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CCE3217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E4DC217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:09:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nCHWhTEn"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dOYmOnFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbfKDKEb (ORCPT
+        id S1727954AbfKDKJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:04:31 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:56622 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfKDKEa (ORCPT
+        Mon, 4 Nov 2019 05:09:22 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:40668 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726526AbfKDKJW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 05:04:30 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA49x22J160715;
-        Mon, 4 Nov 2019 10:04:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=HQhP7w0962d2EwU0YsVAYVNgV4Qa8mIpU5WMSsu7f5o=;
- b=nCHWhTEnRB2yHGzxU56GxQKrJAYencv3dDWOVRAxA3TpZwqqxE5PGEHrSWlbN68VCnFF
- jR1mY5L8AxXfj+WwrcU2wxsJlznPK1X516a9aN73J4i3v6ssmNmXBsZHxr+W9U0gC0vQ
- TA0V61RMP6B1UqoQv6gDhcCNTcdxf42SfdRWlyMa+AHiYMfz5wVl6eMkpRQIDKrw3d4J
- 0D1GqtL5fquwxDODgsjdMjERa98XDSIJcGMoPbG6+veIJnRlvpFKzrdYTzdjx2X1E4Kg
- DlKLHBnibRmCdR49MUAqevnYezuEArZjqIQajlRMROUzJZ3QwzbjZxJujIAJ9TxBPKAu VA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2w11rpp77u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 10:04:26 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA49x5dt155183;
-        Mon, 4 Nov 2019 10:04:25 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2w1k8ufw9u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 10:04:25 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA4A4K6X003678;
-        Mon, 4 Nov 2019 10:04:22 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 Nov 2019 02:04:20 -0800
-Date:   Mon, 4 Nov 2019 13:04:14 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Cc:     linux-fsdevel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 07/10] staging: exfat: Clean up return codes -
- FFS_SUCCESS
-Message-ID: <20191104100413.GC10409@kadam>
-References: <20191104014510.102356-1-Valdis.Kletnieks@vt.edu>
- <20191104014510.102356-8-Valdis.Kletnieks@vt.edu>
+        Mon, 4 Nov 2019 05:09:22 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA49v3Rs000518;
+        Mon, 4 Nov 2019 11:09:10 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=U9KCydVK6sJdJRHNSjl7mEURKAb4YJru4EdsVNMkITQ=;
+ b=dOYmOnFANYCPUzeQaGiW+FvY8wehFx+hNgUF+fUTevgw9/BnWaZL8tOJD7gr1UtjVPqA
+ Bh9kp/YVV9AKIZpRLpv/nZ2EWTsYuwMGeRwZz2kgFUGBJ27G7bpJfwjE+DtO9ID7SoLl
+ 5t6VPD7wHC4oWVvW3QBfpipTDgKiiqWAv1J1VelefuUczOLVmx+Xued0h30O06P7mokI
+ DMgN4sNPoQ26GRNUxh5eB1NKHuHm3yT2RO2PNIQAy9B98qAW24TSqp0qdlBtkxnLMJKj
+ kvyM7Un/rysfr/BQ7tRzFh0vnQGnAtLbcmtt4w4PTG/zWgJwac4G9HWMYqvaty8HxZH9 aA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2w11jn12g1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 Nov 2019 11:09:10 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D547010002A;
+        Mon,  4 Nov 2019 11:09:09 +0100 (CET)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C65EA2BB05D;
+        Mon,  4 Nov 2019 11:09:09 +0100 (CET)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019
+ 11:09:09 +0100
+Received: from localhost (10.201.22.141) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019 11:09:09
+ +0100
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH 1/1] pinctrl: stmfx: fix valid_mask init sequence
+Date:   Mon, 4 Nov 2019 11:09:08 +0100
+Message-ID: <20191104100908.10880-1-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191104014510.102356-8-Valdis.Kletnieks@vt.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911040100
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911040100
+Content-Type: text/plain
+X-Originating-IP: [10.201.22.141]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-11-04_06:2019-11-01,2019-11-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 03, 2019 at 08:45:03PM -0500, Valdis Kletnieks wrote:
-> diff --git a/drivers/staging/exfat/exfat_cache.c b/drivers/staging/exfat/exfat_cache.c
-> index 467b93630d86..28a67f8139ea 100644
-> --- a/drivers/staging/exfat/exfat_cache.c
-> +++ b/drivers/staging/exfat/exfat_cache.c
-> @@ -462,7 +462,7 @@ u8 *FAT_getblk(struct super_block *sb, sector_t sec)
->  
->  	FAT_cache_insert_hash(sb, bp);
->  
-> -	if (sector_read(sb, sec, &bp->buf_bh, 1) != FFS_SUCCESS) {
-> +	if (sector_read(sb, sec, &bp->buf_bh, 1) != 0) {
+With stmfx_pinctrl_gpio_init_valid_mask callback, gpio_valid_mask was used
+to initialize gpiochip valid_mask for gpiolib. But gpio_valid_mask was not
+yet initialized. gpio_valid_mask required gpio-ranges to be registered,
+this is the case after gpiochip_add_data call. But init_valid_mask
+callback is also called under gpiochip_add_data. gpio_valid_mask
+initialization cannot be moved before gpiochip_add_data because
+gpio-ranges are not registered.
+So, it is not possible to use init_valid_mask callback.
+To avoid this issue, get rid of valid_mask and rely on ranges.
 
-It's better to just remove the "!= 0" double negative.  != 0 should be
-used when we are talking about the number zero as in "cnt != 0" and for
-"strcmp(foo, bar) != 0" where it means that "foo != bar".
+Fixes: da9b142ab2c5 ("pinctrl: stmfx: Use the callback to populate valid_mask")
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ drivers/pinctrl/pinctrl-stmfx.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-regards,
-dan carpenter
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index 564660028fcc..ccdf0bb21414 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -585,19 +585,6 @@ static int stmfx_pinctrl_gpio_function_enable(struct stmfx_pinctrl *pctl)
+ 	return stmfx_function_enable(pctl->stmfx, func);
+ }
+ 
+-static int stmfx_pinctrl_gpio_init_valid_mask(struct gpio_chip *gc,
+-					      unsigned long *valid_mask,
+-					      unsigned int ngpios)
+-{
+-	struct stmfx_pinctrl *pctl = gpiochip_get_data(gc);
+-	u32 n;
+-
+-	for_each_clear_bit(n, &pctl->gpio_valid_mask, ngpios)
+-		clear_bit(n, valid_mask);
+-
+-	return 0;
+-}
+-
+ static int stmfx_pinctrl_probe(struct platform_device *pdev)
+ {
+ 	struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);
+@@ -660,7 +647,6 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
+ 	pctl->gpio_chip.ngpio = pctl->pctl_desc.npins;
+ 	pctl->gpio_chip.can_sleep = true;
+ 	pctl->gpio_chip.of_node = np;
+-	pctl->gpio_chip.init_valid_mask = stmfx_pinctrl_gpio_init_valid_mask;
+ 
+ 	ret = devm_gpiochip_add_data(pctl->dev, &pctl->gpio_chip, pctl);
+ 	if (ret) {
+-- 
+2.17.1
 
