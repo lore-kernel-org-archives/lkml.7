@@ -2,103 +2,231 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3AFCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4DCCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 217102080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40FE02080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:07:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="No5ZiOcm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gg9RZglh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbfKDSG0 (ORCPT
+        id S1729433AbfKDSHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 13:06:26 -0500
-Received: from mout.gmx.net ([212.227.15.19]:56523 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728012AbfKDSGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 13:06:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1572890760;
-        bh=i/YVkRXw1W5UTTmqjVB4l15sajoU6ZqsE7IG48uUlI0=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=No5ZiOcmUg9BEwYx9x8oiEFNqyBFm9TBXUP0/dK52Fo0dJgffnQrVEaj8op2OfdG9
-         AFhfyNz2rj7NcW0dbwGtPRf75Qircu9uSi3hyinCh1EwFYrj4PPnf/hUNQjErw7HtW
-         jOfIMpwyer2meTEmPK+5XpUfZXpCx6M/B6HB7qAs=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.164] ([37.4.249.112]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MSKyI-1iKyf227UO-00Sb5o; Mon, 04
- Nov 2019 19:06:00 +0100
-Subject: Re: [PATCH] net: usb: lan78xx: Disable interrupts before calling
- generic_handle_irq()
-To:     Daniel Wagner <dwagner@suse.de>, netdev@vger.kernel.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Marc Zyngier <maz@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Miller <davem@davemloft.net>
-References: <20191025080413.22665-1-dwagner@suse.de>
- <20191104085703.diajpzpxo6dchuhs@beryllium.lan>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <793b1cfa-dc45-c01c-ef0f-72db6df3ecd1@gmx.net>
-Date:   Mon, 4 Nov 2019 19:05:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 4 Nov 2019 13:07:15 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53624 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728012AbfKDSHP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 13:07:15 -0500
+Received: by mail-wm1-f67.google.com with SMTP id x4so6595186wmi.3;
+        Mon, 04 Nov 2019 10:07:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=D72jRVZqmBfC7+Kb0tuNNuuY7Rbqh0u4ZcubYxJiVEw=;
+        b=gg9RZglh3dQ4I9+Zrbd1c//TX0x8bXkbzTd7d9zunTP8ch+dDb4GuNaR8AxJbaDO4c
+         gMzwKdy0JWl8EtwbGmeZ0f5nux/vtpAGkzSuPORs8AmbWG9FpekLb+jivIWLgha5NMgB
+         s9MAaYyn/7ZheraWZiRQjs0d0MQLB88RCjv82Skmh3/0Fm4oXhzXXa/7J2wML4wuDVes
+         P64tXVOd2Jy8BEbF5Mnzr6Q2nnVaWxs3zKkOQlmIzW1vUhqhrxyVIyvJCR6YQl7yqxJi
+         /ta4JBzY6klYitSHVeFATcHL878nhxbkfevLByjfHmWcgKKfPyxBr+sqESD2oVWEWcj8
+         ZYdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=D72jRVZqmBfC7+Kb0tuNNuuY7Rbqh0u4ZcubYxJiVEw=;
+        b=hW4HU1wEqU/nNySx9eKQeCWwwWqiqfA9fm05w0aSHdwtEm7UZgLN61ViBrYLLZ5yey
+         d2sUFLgaLJmNbQVAVhoxH1laZfDbiFS+hzUeKak5r0Uok766bgyDmfX0M1bXZ/4bqrET
+         +EPNz/6jmgqWppr6esMq1IJJqbqhP9pJY+NmtQqABFW26R6mut6n68kepZDzRmxyPx69
+         vNR+DIFg2HB7hHkga48l6rD13qdpPSt3+/Ph0VVCDeJOkzUsK1Ta8cj9vBvWfSggkg2e
+         qkIh9fM3OuLGpBenI/RUwG/HPH11mNjpFmkkonU6NfJh/6+2QoWb+TgZePbTa/h1NOqd
+         PafA==
+X-Gm-Message-State: APjAAAW5zXPv3+Xzk9i69Li3UJ7h2we/FHHNXKzdr7FovHmrzl7peY+M
+        RV54WNFXGE3tzmq6UflDR8OvEmMYu80BI98Bvec=
+X-Google-Smtp-Source: APXvYqxE/svCT32/l15YGFj4OySpY2sp1btqvHGxgQbUQ4gig2jWXLFKgpgss9RjBjRgyjDvqnAyDZbUF5kA36KzIRQ=
+X-Received: by 2002:a1c:480a:: with SMTP id v10mr360011wma.138.1572890831792;
+ Mon, 04 Nov 2019 10:07:11 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191104085703.diajpzpxo6dchuhs@beryllium.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:+2FOEEptqMf+RzO7I8AY6R0vpsaB7v7bFwPTF71L/23k22IwCw8
- JYzhXR2mv4+1F9xloVqtO6TxHLtLWwDofr60ce0pyYbvQGD91CoH01M0w398CU0s5zkm0UA
- HV8sM98GCy2yCQXLsDLVeClndDPTCxEXiIatoBnzHTKMAX7hkLg6EE1gT7o/OmCIFnByawW
- BwLi3SOFN1N1onxX7AsRQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aRrNqB+ccsI=:fwsVjTKA065NF6oEatWVFt
- LLQaPUpcoN3YYYhJvGCnARQ34rkirIrhihqUq4x7nwFYcySgj3fAHmECpw3sHq+asJTHoGVT5
- RXIEZLQKwKMQmhGVoBJ3jqrxpXSpgL8zejKUzO+Y8v1gPl1z+hwNLPxmwP/1CBE1au5vRAmKJ
- JLl+cCYQ0Jl7PORbzEO6bTv8yyDD33HynvhGug9yKotPgA/74ibojqbx4NeHMRBJuRKKg+m7x
- f87GtfbBEsjam3dw/banZkdIzgFWpURSC8Ve8jCJ84+XdmSz+eYo3hSY1NzIJNpLiUB4LbsMB
- fsjv4ocbiNK8ww72fAJGWPsZYjPUMepdykMWywXTNCu3nm+e03KeF45gu8SPq31GUzbQgU0V9
- +05mkx3TSHkwTq7deg/OZ2INSfOxm1lXDZARVjNd79kB4gDMHnO+BRdn8Vr3GDmvwJ0wvUAw6
- zItAOi2Csonx6WlcI8CC2cNmOOalm9OMuPTqE+m8QbXLMhHBWut/TE1B/YSBSK2Q/zudEajwB
- uQxDHsxTpZMFDjMGTP4yqgHm7mAkiWrt1C9LHUvDyscD24lWTLakAiXuPebf0J4xsuECPW5iV
- 7aM/V+ZRqB1WLhrpJYmg7oFJJLza9ezeX6hPnQoL669A6QZGiKzTUqgDhTh+Lx+Duj/ovNd6c
- nortiecFni0Lf7CA/y8wG/xoyZ+bluCsSiHIR+a3CuDW/RXb5IRNqQcFsRhL4ae4mhLIyjG54
- dfyyu6WQneFQNyVUYOIbvvh714Gt0UZfOUozq/cobvd2SDFdLG/edUQoqupKOXQS4vBPSXRbK
- LDFGjatAuC1FwYyNLXUHSuyz1vU6N4rmiGJRU4bafAIhUbQCFD0xBLRbJAeT0XqbDlvwzJLXZ
- 2c+xMccDQ4UXXoDzY+afRjZEasP5d1xi9tNQFj+qL3je0b8FwCIHtJwsPQ02SmEXlEdU0LflQ
- Eezn/RVaz08l491qXhBEJhOGZ+GyuBnoWLq8Y2O37GtiipAy8k7CRTplBGPuE7VPtAxTxcTbf
- oq547618PQXIc3PvdgeSUDGwcStDMsc3fhEC6/KEkVRT7OiR8OOgT86FM8kK4PkTMOq1rr2up
- UvjP3lHjIRBVdYDY6Wmk1du5vW3H8p9CZrC0P0OAaq/MJ1h4K4vfQLgOFKyRhtPa+Ag5t4Vu0
- z+TyoCu2Bm7Pq0q4uu6Acl+p1nKtUls2ZXzpL/Czu1PmsPWwKqTYuiTVNydW57IVKjiJ4b/O4
- w5DYfRboVkDmnJ+pxrcflIGXohbvQzy7TsikLs67/iUMHlq5K6+L1LZ0+cs0=
+References: <20191103203334.10539-1-peron.clem@gmail.com> <20191103203334.10539-4-peron.clem@gmail.com>
+ <20191104082410.qdgcnphkamlzaipf@pengutronix.de>
+In-Reply-To: <20191104082410.qdgcnphkamlzaipf@pengutronix.de>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 4 Nov 2019 19:07:00 +0100
+Message-ID: <CAJiuCcdxHDwoQYBsrjK5dcOtMDie62DzJ84NH+bZzYHHv49fEQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/7] pwm: sun4i: Add an optional probe for bus clock
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+Hi,
 
-Am 04.11.19 um 09:57 schrieb Daniel Wagner:
-> On Fri, Oct 25, 2019 at 10:04:13AM +0200, Daniel Wagner wrote:
->> This patch just fixes the warning. There are still problems left (the
->> unstable NFS report from me) but I suggest to look at this
->> separately. The initial patch to revert all the irqdomain code might
->> just hide the problem. At this point I don't know what's going on so I
->> rather go baby steps. The revert is still possible if nothing else
->> works.
-> I replaced my power supply with the official RPi one and the NFS
-> timeouts problems are gone. Also a long test session with different
-> network loads didn't show any problems. I feel so stupid...
-did you never saw a warning about under voltage from the Raspberry Pi
-hwmon driver?
+On Mon, 4 Nov 2019 at 09:24, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 >
-> Thanks,
-> Daniel
+> Hello,
 >
+> On Sun, Nov 03, 2019 at 09:33:30PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > H6 PWM core needs bus clock to be enabled in order to work.
+> >
+> > Add an optional probe for it and a fallback for previous
+> > bindings without name on module clock.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  drivers/pwm/pwm-sun4i.c | 36 ++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 36 insertions(+)
+> >
+> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > index d194b8ebdb00..b5e7ac364f59 100644
+> > --- a/drivers/pwm/pwm-sun4i.c
+> > +++ b/drivers/pwm/pwm-sun4i.c
+> > @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
+> >
+> >  struct sun4i_pwm_chip {
+> >       struct pwm_chip chip;
+> > +     struct clk *bus_clk;
+> >       struct clk *clk;
+> >       struct reset_control *rst;
+> >       void __iomem *base;
+> > @@ -367,6 +368,31 @@ static int sun4i_pwm_probe(struct platform_device =
+*pdev)
+>
+> Adding more context here:
+>
+> |       pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
+> >       if (IS_ERR(pwm->clk))
+> >               return PTR_ERR(pwm->clk);
+> >
+> > +     /* Get all clocks and reset line */
+> > +     pwm->clk =3D devm_clk_get_optional(&pdev->dev, "mod");
+> > +     if (IS_ERR(pwm->clk)) {
+> > +             dev_err(&pdev->dev, "get clock failed %ld\n",
+> > +                     PTR_ERR(pwm->clk));
+> > +             return PTR_ERR(pwm->clk);
+> > +     }
+>
+> I guess you want to drop the first assignment to pwm->clk.
+
+devm_clk_get_optional will return NULL if there is no entry, I don't
+get where I need to drop it assignment.
+
+>
+> > +     /* Fallback for old dtbs with a single clock and no name */
+> > +     if (!pwm->clk) {
+> > +             pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
+> > +             if (IS_ERR(pwm->clk)) {
+> > +                     dev_err(&pdev->dev, "get clock failed %ld\n",
+> > +                             PTR_ERR(pwm->clk));
+> > +                     return PTR_ERR(pwm->clk);
+> > +             }
+> > +     }
+>
+> There is a slight change of behaviour if I'm not mistaken. If you have
+> this:
+>
+>         clocks =3D <&clk1>;
+>         clock-names =3D "mod";
+>
+>         pwm {
+>                 compatible =3D "allwinner,sun4i-a10-pwm"
+>                 clocks =3D <&clk2>;
+>         }
+>
+> you now use clk1 instead of clk2 before.
+>
+> Assuming this is only a theoretical problem, at least pointing this out
+> in the commit log would be good I think.
+
+Yes it's correct and as you said the driver don't check for a correct
+device tree,
+that why it's now optional probe.
+Let's assume that's the device-tree is correct, I will add a comment
+in the commit log.
+
+>
+> > +     pwm->bus_clk =3D devm_clk_get_optional(&pdev->dev, "bus");
+> > +     if (IS_ERR(pwm->bus_clk)) {
+> > +             dev_err(&pdev->dev, "get bus_clock failed %ld\n",
+> > +                     PTR_ERR(pwm->bus_clk));
+> > +             return PTR_ERR(pwm->bus_clk);
+> > +     }
+> > +
+> >       pwm->rst =3D devm_reset_control_get_optional(&pdev->dev, NULL);
+> >       if (IS_ERR(pwm->rst)) {
+> >               if (PTR_ERR(pwm->rst) =3D=3D -EPROBE_DEFER)
+> > @@ -381,6 +407,13 @@ static int sun4i_pwm_probe(struct platform_device =
+*pdev)
+> >               return ret;
+> >       }
+> >
+> > +     /* Enable bus clock */
+> > +     ret =3D clk_prepare_enable(pwm->bus_clk);
+> > +     if (ret) {
+> > +             dev_err(&pdev->dev, "Cannot prepare_enable bus_clk\n");
+>
+> I'd do s/prepare_enable/prepare and enable/ here.
+Ok
+
+>
+> > +             goto err_bus;
+> > +     }
+> > +
+> >       pwm->chip.dev =3D &pdev->dev;
+> >       pwm->chip.ops =3D &sun4i_pwm_ops;
+> >       pwm->chip.base =3D -1;
+> > @@ -401,6 +434,8 @@ static int sun4i_pwm_probe(struct platform_device *=
+pdev)
+> >       return 0;
+> >
+> >  err_pwm_add:
+> > +     clk_disable_unprepare(pwm->bus_clk);
+> > +err_bus:
+> >       reset_control_assert(pwm->rst);
+> >
+> >       return ret;
+>
+> What is that clock used for? Is it required to access the hardware
+> registers? Or is it only required while the PWM is enabled? If so you
+> could enable the clock more finegrainded.
+
+Regarding the datasheet it's required to access the hardware.
+page 261 : https://linux-sunxi.org/File:Allwinner_H6_V200_User_Manual_V1.1.=
+pdf
+
+Regards,
+Cl=C3=A9ment
+
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
