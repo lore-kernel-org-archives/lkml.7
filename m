@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B228CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B0CCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E217222C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D957621D81
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572872979;
-	bh=xPjTpdC1jm5gHOvOzgzz8OGDALqFZAuZcu4rCtV1hYA=;
+	s=default; t=1572872984;
+	bh=CNn1QMIMMKoxVbb00UzcVmYoCmWNy+sRB6kkJrpIRlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gfy2Xb8Xmn3YH7db7dKbAVmImGy4ZdLp9OnA8zAdsbl8ADLJNBfSMdBR3ui1Z/Z25
-	 1etSel9lSFgi6AJuDJBON5oTD7PMPSsJTHIvXsY/jIVqbcXnbqQYVIwYyM800B97mB
-	 9ZEohlptoSkAkYAVMOfNKPaOVWsyCUXZ8L9CraBs=
+	b=hK9aKYQSZhTocS+aVzXy+s1cNBuuNLrmdGk9yGQ5ciIuemaLVza4dQmCgt466/77A
+	 47dmF59iY0yAYjyHZz9VYWjONnK51YfVpfMysb7N99vdAKUE+zbFT4sK7Lck3gZfD2
+	 P/xnoVm6RNczwBdoUJYZtQY7RPE+23opm1PkDNzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbfKDNJh (ORCPT
+        id S1729208AbfKDNJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:09:37 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36245 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729090AbfKDNJe (ORCPT
+        Mon, 4 Nov 2019 08:09:43 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45007 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729090AbfKDNJk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:09:34 -0500
-Received: by mail-lf1-f67.google.com with SMTP id a6so8794970lfo.3;
-        Mon, 04 Nov 2019 05:09:33 -0800 (PST)
+        Mon, 4 Nov 2019 08:09:40 -0500
+Received: by mail-lf1-f68.google.com with SMTP id v4so12190788lfd.11;
+        Mon, 04 Nov 2019 05:09:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=D+ffK2Zkjlt7h/8BLS2fe/6Xm65ngdwZAR8g1pMusNs=;
-        b=S9ae7lFpIdpFW6KBKJ1OAK2M7JrCNDt7cIl+mQnZ0CmR2u1YoJCsk0WB1JA9CUvHnm
-         CeSvR0c8h4+SjuuUYniuQfY55wb740n3vQj1Ho/oeVYfEZ6FR6MjhCJzNH2zZ+PMZHqQ
-         YGJjZZzVqeC9thZ/LoK8Hd1Sz7JLBB9WYacaM6qwHGX7+jF+hzcZeHw+HNEVhlAu3pSv
-         J3ad1aTG+BuqkXafP6ACMfMRQNdl50dZMRZTkQkNx/vrdMSMR7u7XdfviqLWhOqkXfbD
-         lBQoZoSlSnv2qWX7UjvjsJ34UipCzZURo608SjkJmOPjYIbPcdaD9yp3wr/7HJ9rzJKh
-         hnJg==
-X-Gm-Message-State: APjAAAUYww7oY19Mj+bfVLlxZTsSuLfFOqErEceGMBSmaQAZkjqPxCMv
-        kfQ/h84++Sbw/0HbrOFXsuk=
-X-Google-Smtp-Source: APXvYqwAPna3HlCtgfd+U1N3gbBMdK0foxIWoaCXbVaah9Ui2/Nu1dGdcFLg4ascmDU4/ORvXPfkKw==
-X-Received: by 2002:a19:d7:: with SMTP id 206mr16680328lfa.22.1572872972409;
-        Mon, 04 Nov 2019 05:09:32 -0800 (PST)
+        bh=xyLLjGx5ZrVCZEiXYSVVcb3hHEr+G7AeV53GCDjOTy0=;
+        b=VVw+7A3kpVe+rJlt79+B39uTcMCEtRFb58bnYTmeLe30Xg8ihB8/SA64rAfC8um3Jk
+         GZ74tf4oAQHYzSYf8vviHyeYxW8lfeJNeslVm2FBB+RYMu3vBfG3ZxVjKkFSqYgvG+fA
+         WghaXvSOrXWPI1TsM3t3Z3mdQao3BaTsMi3qL26lYEM/uUq7iFKwKHNp99ocXb8xreFS
+         3QHfWAnxnwo5djENUN6i66riusRWUe/2N01dwzK+ivXe/LEp3LjXeJ9ZTVQaT6SobC8a
+         jLcjaYVmM8wVSnovtquUTPQlzm5nM1MB9wS1Xk8iyOthVtGRWG3NAnMXyhjvmszctCX4
+         EcbA==
+X-Gm-Message-State: APjAAAVlnzsbC5MCIKvzohwz8kX9ofBDgw8l8rdBcKOMhpo35Dn02EZb
+        +50Xj52EHattt3ZRK2HTLpo=
+X-Google-Smtp-Source: APXvYqwvoqeUb29ZDHdgJFMuRgN/S//zAH64o/UdmhfHQknXt8Um5U9YmzrpFsDcmP+LsBJHPTcqeA==
+X-Received: by 2002:a19:746:: with SMTP id 67mr16747604lfh.42.1572872978354;
+        Mon, 04 Nov 2019 05:09:38 -0800 (PST)
 Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
-        by smtp.gmail.com with ESMTPSA id q124sm985414ljq.93.2019.11.04.05.09.30
+        by smtp.gmail.com with ESMTPSA id q124sm985414ljq.93.2019.11.04.05.09.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 05:09:31 -0800 (PST)
+        Mon, 04 Nov 2019 05:09:37 -0800 (PST)
 From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
 To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
-Subject: [PATCH v4 3/6] media: vivid: Add an area control
-Date:   Mon,  4 Nov 2019 14:09:20 +0100
-Message-Id: <20191104130923.22184-3-ribalda@kernel.org>
+Subject: [PATCH v4 6/6] media: v4l2-ctrl: Use p_const when possible
+Date:   Mon,  4 Nov 2019 14:09:23 +0100
+Message-Id: <20191104130923.22184-6-ribalda@kernel.org>
 X-Mailer: git-send-email 2.24.0.rc1
 In-Reply-To: <20191104130923.22184-1-ribalda@kernel.org>
 References: <20191104130923.22184-1-ribalda@kernel.org>
@@ -67,53 +67,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This control represents a generic read/write area.
+After adding a const pointer to ctrl_ptr, lets use it where it make
+sense.
 
 Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
 ---
- drivers/media/platform/vivid/vivid-ctrls.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/media/v4l2-core/v4l2-ctrls.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/media/platform/vivid/vivid-ctrls.c b/drivers/media/platform/vivid/vivid-ctrls.c
-index b250fc3764e2..68e8124c7973 100644
---- a/drivers/media/platform/vivid/vivid-ctrls.c
-+++ b/drivers/media/platform/vivid/vivid-ctrls.c
-@@ -32,6 +32,7 @@
- #define VIVID_CID_U32_ARRAY		(VIVID_CID_CUSTOM_BASE + 8)
- #define VIVID_CID_U16_MATRIX		(VIVID_CID_CUSTOM_BASE + 9)
- #define VIVID_CID_U8_4D_ARRAY		(VIVID_CID_CUSTOM_BASE + 10)
-+#define VIVID_CID_AREA			(VIVID_CID_CUSTOM_BASE + 11)
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 73d99c3561ce..a565ae3ba7e4 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -1556,7 +1556,8 @@ static bool std_equal(const struct v4l2_ctrl *ctrl, u32 idx,
+ 		if (ctrl->is_int)
+ 			return ptr1.p_s32[idx] == ptr2.p_s32[idx];
+ 		idx *= ctrl->elem_size;
+-		return !memcmp(ptr1.p + idx, ptr2.p + idx, ctrl->elem_size);
++		return !memcmp(ptr1.p_const + idx, ptr2.p_const + idx,
++			       ctrl->elem_size);
+ 	}
+ }
  
- #define VIVID_CID_VIVID_BASE		(0x00f00000 | 0xf000)
- #define VIVID_CID_VIVID_CLASS		(0x00f00000 | 1)
-@@ -266,6 +267,18 @@ static const struct v4l2_ctrl_config vivid_ctrl_disconnect = {
- 	.type = V4L2_CTRL_TYPE_BUTTON,
- };
+@@ -1566,8 +1567,8 @@ static void std_init_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+ 	struct v4l2_ctrl_mpeg2_slice_params *p_mpeg2_slice_params;
+ 	void *p = ptr.p + idx * ctrl->elem_size;
  
-+static const struct v4l2_area area = {
-+	.width = 1000,
-+	.height = 2000,
-+};
-+
-+static const struct v4l2_ctrl_config vivid_ctrl_area = {
-+	.ops = &vivid_user_gen_ctrl_ops,
-+	.id = VIVID_CID_AREA,
-+	.name = "Area",
-+	.type = V4L2_CTRL_TYPE_AREA,
-+	.p_def.p_const = &area,
-+};
+-	if (ctrl->p_def.p)
+-		memcpy(p, ctrl->p_def.p, ctrl->elem_size);
++	if (ctrl->p_def.p_const)
++		memcpy(p, ctrl->p_def.p_const, ctrl->elem_size);
+ 	else
+ 		memset(p, 0, ctrl->elem_size);
  
- /* Framebuffer Controls */
+@@ -1954,7 +1955,7 @@ static int ptr_to_user(struct v4l2_ext_control *c,
+ 	u32 len;
  
-@@ -1574,6 +1587,7 @@ int vivid_create_controls(struct vivid_dev *dev, bool show_ccs_cap,
- 	dev->string = v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_string, NULL);
- 	dev->bitmask = v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_bitmask, NULL);
- 	dev->int_menu = v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_int_menu, NULL);
-+	v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_area, NULL);
- 	v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_u32_array, NULL);
- 	v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_u16_matrix, NULL);
- 	v4l2_ctrl_new_custom(hdl_user_gen, &vivid_ctrl_u8_4d_array, NULL);
+ 	if (ctrl->is_ptr && !ctrl->is_string)
+-		return copy_to_user(c->ptr, ptr.p, c->size) ?
++		return copy_to_user(c->ptr, ptr.p_const, c->size) ?
+ 		       -EFAULT : 0;
+ 
+ 	switch (ctrl->type) {
+@@ -2069,7 +2070,7 @@ static void ptr_to_ptr(struct v4l2_ctrl *ctrl,
+ {
+ 	if (ctrl == NULL)
+ 		return;
+-	memcpy(to.p, from.p, ctrl->elems * ctrl->elem_size);
++	memcpy(to.p, from.p_const, ctrl->elems * ctrl->elem_size);
+ }
+ 
+ /* Copy the new value to the current value. */
+@@ -2587,7 +2588,7 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+ 		 is_array)
+ 		sz_extra += 2 * tot_ctrl_size;
+ 
+-	if (type >= V4L2_CTRL_COMPOUND_TYPES && p_def.p)
++	if (type >= V4L2_CTRL_COMPOUND_TYPES && p_def.p_const)
+ 		sz_extra += elem_size;
+ 
+ 	ctrl = kvzalloc(sizeof(*ctrl) + sz_extra, GFP_KERNEL);
+@@ -2634,9 +2635,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+ 		ctrl->p_cur.p = &ctrl->cur.val;
+ 	}
+ 
+-	if (type >= V4L2_CTRL_COMPOUND_TYPES && p_def.p) {
++	if (type >= V4L2_CTRL_COMPOUND_TYPES && p_def.p_const) {
+ 		ctrl->p_def.p = ctrl->p_cur.p + tot_ctrl_size;
+-		memcpy(ctrl->p_def.p, p_def.p, elem_size);
++		memcpy(ctrl->p_def.p, p_def.p_const, elem_size);
+ 	}
+ 
+ 	for (idx = 0; idx < elems; idx++) {
 -- 
 2.24.0.rc1
 
