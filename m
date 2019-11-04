@@ -2,55 +2,52 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B078CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D8FCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F4E21929
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839AE204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905560;
-	bh=wII4zYAKW2AB6MRY98IU+2NzS/8tIMNJ99+GiVVGI70=;
+	s=default; t=1572905569;
+	bh=k9jy+lx+shuuvnVRszCf8uaiSUPr42VBGyRwNfbn6ak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=etmBUopMXqexxbSiNlXV25S+bAu4r5ohUO57UKPE1kqkogvmiRTFESgAUX71zrNTb
-	 Bgbt51HhjLSXkz+0mM227lF3mdaZVXQd+TfnpliGzYHWgAU/zj8iSEiQQ6oHglEJtw
-	 JSgswLe0dh9hHJUqT6yNcsahqBF5ZRXVxby//xRc=
+	b=0aP8Yu4xdct6zGh6JkT5+hlC+qKcztFxDGavODMQNqgXW/Ivw0eW4EO4jWlSxmwjr
+	 MDiqSA5+F4JM1TYevnedb7HbRP966v3jsAfwZ/dixvHOUTVjNo1eYaVdJl5ogFR7cY
+	 b64wWGb9nUzNf7Gal8ik8gYdz9gwAbFWupMHGlSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390610AbfKDWLD (ORCPT
+        id S2389886AbfKDWMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:11:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44222 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:12:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390255AbfKDWK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:10:58 -0500
+        id S2390142AbfKDWKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:10:43 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 314F3205C9;
-        Mon,  4 Nov 2019 22:10:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87F8F205C9;
+        Mon,  4 Nov 2019 22:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905456;
-        bh=wII4zYAKW2AB6MRY98IU+2NzS/8tIMNJ99+GiVVGI70=;
+        s=default; t=1572905442;
+        bh=k9jy+lx+shuuvnVRszCf8uaiSUPr42VBGyRwNfbn6ak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HE1ijT9iqJHTvkTHbYD0d2IT33XezH8LewweK/Pv1pocMA66y4j4CfadCrtYog6Sa
-         HS27E8m6SjUqSl/KF2WlpSLpGcCMjSbmLxmmM55EWfykqETTzyZQD4DCaB6SklpFRp
-         3ZbJN+Ju42EuJJJKpHAOuvLmXEhiv+RsKzrrNMu4=
+        b=NMiqffWCyelQNQ9SDa0IJ8+jbwFl3dqPGbXoXEfJUQ9oHAJrcZMnB65DHWg4g/TAF
+         NKsHiFQQmL16H2+O9a9PMNZtvRIkbdgaCdmLmaBtIvcBn0FnJOZ3TWYmZi0cvH1n/C
+         EFSHppZLImI9IkN9NS6LfQoPVVLYBIjVpvOf/eyI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 5.3 153/163] netfilter: conntrack: avoid possible false sharing
-Date:   Mon,  4 Nov 2019 22:45:43 +0100
-Message-Id: <20191104212151.368336381@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com,
+        David Howells <dhowells@redhat.com>
+Subject: [PATCH 5.3 148/163] rxrpc: Fix call ref leak
+Date:   Mon,  4 Nov 2019 22:45:38 +0100
+Message-Id: <20191104212151.036425778@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -63,91 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: David Howells <dhowells@redhat.com>
 
-commit e37542ba111f3974dc622ae0a21c1787318de500 upstream.
+commit c48fc11b69e95007109206311b0187a3090591f3 upstream.
 
-As hinted by KCSAN, we need at least one READ_ONCE()
-to prevent a compiler optimization.
+When sendmsg() finds a call to continue on with, if the call is in an
+inappropriate state, it doesn't release the ref it just got on that call
+before returning an error.
 
-More details on :
-https://github.com/google/ktsan/wiki/READ_ONCE-and-WRITE_ONCE#it-may-improve-performance
+This causes the following symptom to show up with kasan:
 
-sysbot report :
-BUG: KCSAN: data-race in __nf_ct_refresh_acct / __nf_ct_refresh_acct
+	BUG: KASAN: use-after-free in rxrpc_send_keepalive+0x8a2/0x940
+	net/rxrpc/output.c:635
+	Read of size 8 at addr ffff888064219698 by task kworker/0:3/11077
 
-read to 0xffff888123eb4f08 of 4 bytes by interrupt on cpu 0:
- __nf_ct_refresh_acct+0xd4/0x1b0 net/netfilter/nf_conntrack_core.c:1796
- nf_ct_refresh_acct include/net/netfilter/nf_conntrack.h:201 [inline]
- nf_conntrack_tcp_packet+0xd40/0x3390 net/netfilter/nf_conntrack_proto_tcp.c:1161
- nf_conntrack_handle_packet net/netfilter/nf_conntrack_core.c:1633 [inline]
- nf_conntrack_in+0x410/0xaa0 net/netfilter/nf_conntrack_core.c:1727
- ipv4_conntrack_in+0x27/0x40 net/netfilter/nf_conntrack_proto.c:178
- nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
- nf_hook_slow+0x83/0x160 net/netfilter/core.c:512
- nf_hook include/linux/netfilter.h:260 [inline]
- NF_HOOK include/linux/netfilter.h:303 [inline]
- ip_rcv+0x12f/0x1a0 net/ipv4/ip_input.c:523
- __netif_receive_skb_one_core+0xa7/0xe0 net/core/dev.c:5004
- __netif_receive_skb+0x37/0xf0 net/core/dev.c:5118
- netif_receive_skb_internal+0x59/0x190 net/core/dev.c:5208
- napi_skb_finish net/core/dev.c:5671 [inline]
- napi_gro_receive+0x28f/0x330 net/core/dev.c:5704
- receive_buf+0x284/0x30b0 drivers/net/virtio_net.c:1061
- virtnet_receive drivers/net/virtio_net.c:1323 [inline]
- virtnet_poll+0x436/0x7d0 drivers/net/virtio_net.c:1428
- napi_poll net/core/dev.c:6352 [inline]
- net_rx_action+0x3ae/0xa50 net/core/dev.c:6418
- __do_softirq+0x115/0x33f kernel/softirq.c:292
+where line 635 is:
 
-write to 0xffff888123eb4f08 of 4 bytes by task 7191 on cpu 1:
- __nf_ct_refresh_acct+0xfb/0x1b0 net/netfilter/nf_conntrack_core.c:1797
- nf_ct_refresh_acct include/net/netfilter/nf_conntrack.h:201 [inline]
- nf_conntrack_tcp_packet+0xd40/0x3390 net/netfilter/nf_conntrack_proto_tcp.c:1161
- nf_conntrack_handle_packet net/netfilter/nf_conntrack_core.c:1633 [inline]
- nf_conntrack_in+0x410/0xaa0 net/netfilter/nf_conntrack_core.c:1727
- ipv4_conntrack_local+0xbe/0x130 net/netfilter/nf_conntrack_proto.c:200
- nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
- nf_hook_slow+0x83/0x160 net/netfilter/core.c:512
- nf_hook include/linux/netfilter.h:260 [inline]
- __ip_local_out+0x1f7/0x2b0 net/ipv4/ip_output.c:114
- ip_local_out+0x31/0x90 net/ipv4/ip_output.c:123
- __ip_queue_xmit+0x3a8/0xa40 net/ipv4/ip_output.c:532
- ip_queue_xmit+0x45/0x60 include/net/ip.h:236
- __tcp_transmit_skb+0xdeb/0x1cd0 net/ipv4/tcp_output.c:1158
- __tcp_send_ack+0x246/0x300 net/ipv4/tcp_output.c:3685
- tcp_send_ack+0x34/0x40 net/ipv4/tcp_output.c:3691
- tcp_cleanup_rbuf+0x130/0x360 net/ipv4/tcp.c:1575
+	whdr.epoch	= htonl(peer->local->rxnet->epoch);
 
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 7191 Comm: syz-fuzzer Not tainted 5.3.0+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+The local endpoint (which cannot be pinned by the call) has been released,
+but not the peer (which is pinned by the call).
 
-Fixes: cc16921351d8 ("netfilter: conntrack: avoid same-timeout update")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Jozsef Kadlecsik <kadlec@netfilter.org>
-Cc: Florian Westphal <fw@strlen.de>
-Acked-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fix this by releasing the call in the error path.
+
+Fixes: 37411cad633f ("rxrpc: Fix potential NULL-pointer exception")
+Reported-by: syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_conntrack_core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/rxrpc/sendmsg.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -1793,8 +1793,8 @@ void __nf_ct_refresh_acct(struct nf_conn
- 	if (nf_ct_is_confirmed(ct))
- 		extra_jiffies += nfct_time_stamp;
- 
--	if (ct->timeout != extra_jiffies)
--		ct->timeout = extra_jiffies;
-+	if (READ_ONCE(ct->timeout) != extra_jiffies)
-+		WRITE_ONCE(ct->timeout, extra_jiffies);
- acct:
- 	if (do_acct)
- 		nf_ct_acct_update(ct, ctinfo, skb->len);
+--- a/net/rxrpc/sendmsg.c
++++ b/net/rxrpc/sendmsg.c
+@@ -661,6 +661,7 @@ int rxrpc_do_sendmsg(struct rxrpc_sock *
+ 		case RXRPC_CALL_SERVER_PREALLOC:
+ 		case RXRPC_CALL_SERVER_SECURING:
+ 		case RXRPC_CALL_SERVER_ACCEPTING:
++			rxrpc_put_call(call, rxrpc_call_put);
+ 			ret = -EBUSY;
+ 			goto error_release_sock;
+ 		default:
 
 
