@@ -2,109 +2,140 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E4DCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1E9CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C8320650
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:01:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kF91mmE5"
+	by mail.kernel.org (Postfix) with ESMTP id A05EA20650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:01:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572904917;
+	bh=pTNpI8krUYYgmHKAFknIIvE6NqLq8p5eAggBhfZj+Vw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tmTplY3AdPTtb9tHPMd0QXuG79wXsae26JPi9iHlaN9fA+Fc96xaNKj+L4QeENXBu
+	 +wKbDORGp5/ZcV0japto0U5SS/nUZ3cnM87Wq2LG2C7K2bMCojNw7LXfrnyHtMrae3
+	 KkwjqLX//CaOze0qt9B4NC/vaIbgCJwyiSKiDWb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389189AbfKDWBw (ORCPT
+        id S2389103AbfKDWBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:01:52 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40497 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388971AbfKDWBL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:11 -0500
-Received: by mail-lf1-f66.google.com with SMTP id f4so13449229lfk.7;
-        Mon, 04 Nov 2019 14:01:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=g9RKaIiF4lILXf0g5OU6lPR/hR2F0oEkesL+dfO7WO0=;
-        b=kF91mmE5TuLuwd7+S7smRA9aWsyfAuon99V7V0nSBZXIr2Cv4ZwPTgi+3dhkQ/lJEH
-         DJWhdFN4m0liQDYEhzPLLIIHJ42afCEd2M1YAr71X9mdv7zGlyJbnLnjBXySTx8lO3LV
-         7wvZG5d7GReX2dv4KDCBSStkmro7YgYUYWqdvTVpGF4Mof4B9lxp+7exlkx4G37Ufplm
-         7X7ey8oEyNjujp0eDQrROQNCWLUoSYTKHpkTlfdavllTbQK19GfkywaGj0J3df2bHt0y
-         2S6wUsQ9rHgLDhZyjd91ds5tFzAphGv76yI6ZqBqwR7nm8d1TN05eIEwaiDUYN+5NFKr
-         2TPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=g9RKaIiF4lILXf0g5OU6lPR/hR2F0oEkesL+dfO7WO0=;
-        b=bcc0M+jNZh57n11HvjPZ1ZZk21Am7Km0jemGijI6TEO7Qs9GS3AkoJYAFQG3di51P+
-         ZxMXFzJYxlSI2Xhq2xkjFBmjy5yxTvicmWUV6RxGXlUScheC6BOLrTIk1wNS3EJ+cm5P
-         Pum6FIONjzfQj29mk9tLV8e1UmXXQa8PLPVhyz+i52o0ZUDAYOeGkLIILmsMMNXi4P7u
-         Ufw5wsZHepi+MkusDboZHKgexstTpQCskap77313eyGNeT+oBa8Wll4EsOk4ecs2hLH+
-         BTtjaMxRmc695eq/uS3fOvVTLTL6RboN4bT1ZOnWpHP1Z0sPt21RqbFXNtanLlAkwP7Z
-         df7Q==
-X-Gm-Message-State: APjAAAUIcwHUBOLuoeAfTsomOrwr61jn1hcrzCFPtn7ndENN+yZtdW3y
-        F8YuQbWTRa4KNxqR4vPnYFY=
-X-Google-Smtp-Source: APXvYqxfGdHoTMAi8ly9Z3bdC4cKcK5I4Mau7VYctsO6RcexwC8hSJXox0rdAwLH02Aj50U5aL7udg==
-X-Received: by 2002:a19:7511:: with SMTP id y17mr18721120lfe.19.1572904869080;
-        Mon, 04 Nov 2019 14:01:09 -0800 (PST)
-Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id g3sm7454669ljj.59.2019.11.04.14.01.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 14:01:08 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v9 10/19] PM / devfreq: tegra30: Don't enable consecutive-down interrupt on startup
-Date:   Tue,  5 Nov 2019 00:56:08 +0300
-Message-Id: <20191104215617.25544-11-digetx@gmail.com>
+        Mon, 4 Nov 2019 17:01:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59308 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388997AbfKDWBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:01:15 -0500
+Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4CF72084D;
+        Mon,  4 Nov 2019 22:01:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572904874;
+        bh=pTNpI8krUYYgmHKAFknIIvE6NqLq8p5eAggBhfZj+Vw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QjLcbp/uzpNM70jrUXP7xEJIFnAgWo/F0sSoIZpePPGnBmSkARfEh6GbaNAuh1Inu
+         KnB/6e5EmekgyK6Kj2rwfzlBZvl3YNDNEV9oo6puIuL8vu42F4eqSH94oD3gFJ2oMR
+         QCuZiB40UH6imoakEvG/yh2xB3UIjVb7r5Jnn8pQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 101/149] tracing: Initialize iter->seq after zeroing in tracing_read_pipe()
+Date:   Mon,  4 Nov 2019 22:44:54 +0100
+Message-Id: <20191104212143.566999230@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104215617.25544-1-digetx@gmail.com>
-References: <20191104215617.25544-1-digetx@gmail.com>
+In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
+References: <20191104212126.090054740@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The consecutive-down event tells that we should perform frequency
-de-boosting, but boosting is in a reset state on start and hence the
-event won't do anything useful for us and it will be just a dummy
-interrupt request.
+From: Petr Mladek <pmladek@suse.com>
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Tested-by: Peter Geis <pgwipeout@gmail.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+[ Upstream commit d303de1fcf344ff7c15ed64c3f48a991c9958775 ]
+
+A customer reported the following softlockup:
+
+[899688.160002] NMI watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [test.sh:16464]
+[899688.160002] CPU: 0 PID: 16464 Comm: test.sh Not tainted 4.12.14-6.23-azure #1 SLE12-SP4
+[899688.160002] RIP: 0010:up_write+0x1a/0x30
+[899688.160002] Kernel panic - not syncing: softlockup: hung tasks
+[899688.160002] RIP: 0010:up_write+0x1a/0x30
+[899688.160002] RSP: 0018:ffffa86784d4fde8 EFLAGS: 00000257 ORIG_RAX: ffffffffffffff12
+[899688.160002] RAX: ffffffff970fea00 RBX: 0000000000000001 RCX: 0000000000000000
+[899688.160002] RDX: ffffffff00000001 RSI: 0000000000000080 RDI: ffffffff970fea00
+[899688.160002] RBP: ffffffffffffffff R08: ffffffffffffffff R09: 0000000000000000
+[899688.160002] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8b59014720d8
+[899688.160002] R13: ffff8b59014720c0 R14: ffff8b5901471090 R15: ffff8b5901470000
+[899688.160002]  tracing_read_pipe+0x336/0x3c0
+[899688.160002]  __vfs_read+0x26/0x140
+[899688.160002]  vfs_read+0x87/0x130
+[899688.160002]  SyS_read+0x42/0x90
+[899688.160002]  do_syscall_64+0x74/0x160
+
+It caught the process in the middle of trace_access_unlock(). There is
+no loop. So, it must be looping in the caller tracing_read_pipe()
+via the "waitagain" label.
+
+Crashdump analyze uncovered that iter->seq was completely zeroed
+at this point, including iter->seq.seq.size. It means that
+print_trace_line() was never able to print anything and
+there was no forward progress.
+
+The culprit seems to be in the code:
+
+	/* reset all but tr, trace, and overruns */
+	memset(&iter->seq, 0,
+	       sizeof(struct trace_iterator) -
+	       offsetof(struct trace_iterator, seq));
+
+It was added by the commit 53d0aa773053ab182877 ("ftrace:
+add logic to record overruns"). It was v2.6.27-rc1.
+It was the time when iter->seq looked like:
+
+     struct trace_seq {
+	unsigned char		buffer[PAGE_SIZE];
+	unsigned int		len;
+     };
+
+There was no "size" variable and zeroing was perfectly fine.
+
+The solution is to reinitialize the structure after or without
+zeroing.
+
+Link: http://lkml.kernel.org/r/20191011142134.11997-1-pmladek@suse.com
+
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/tegra30-devfreq.c | 1 -
- 1 file changed, 1 deletion(-)
+ kernel/trace/trace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 9cb2d6468175..bc46af155b99 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -490,7 +490,6 @@ static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
- 		<< ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_NUM_SHIFT;
- 	val |= ACTMON_DEV_CTRL_AVG_ABOVE_WMARK_EN;
- 	val |= ACTMON_DEV_CTRL_AVG_BELOW_WMARK_EN;
--	val |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
- 	val |= ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
- 	val |= ACTMON_DEV_CTRL_ENB;
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 27b17ea44f745..bdd7f3d78724e 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5766,6 +5766,7 @@ waitagain:
+ 	       sizeof(struct trace_iterator) -
+ 	       offsetof(struct trace_iterator, seq));
+ 	cpumask_clear(iter->started);
++	trace_seq_init(&iter->seq);
+ 	iter->pos = -1;
  
+ 	trace_event_read_lock();
 -- 
-2.23.0
+2.20.1
+
+
 
