@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19921CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABABDCA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D658020650
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765C8205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905505;
-	bh=T+LjWKOQ8tdarN2nS0pC/yJIt6hkP6gQJLvHeZuI8gw=;
+	s=default; t=1572905507;
+	bh=guiaCEQRulnqPPe4LKaYat2ZR/CL0oCOT0xWw2Mknns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PGdpPvFF3jlcjdY3fOFZz2TJSjOsjhYcbVIWm9RACLn8b6DfLPbYBQqqs7Zson/W+
-	 Ko6bVZKw4KetwQMg0SW7r0WC1Cj3/Dci6epnSafIQOwHOkurQ8dXGJLJ/xGWLp1U1N
-	 N7FzamSeOCL4SD8uBgelPnweaJk3sRNwT4xp0hgA=
+	b=eU24XhDBCP9vnFL+jD5sGxJzIb7lS0q3poidif70A8IhTpzql6J9l+qn/jeMyJDm5
+	 qBzMJBDzYn92jZ9hhYZWdQgARWR4DNYtDwk6G9CLSo3ixdtzQXTjL1OhZwjKpK+qiq
+	 sI7bPG3YSnbw+zdfCU4rh1yZ5AXYMtyfQpfJYk2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390428AbfKDWLn (ORCPT
+        id S2390048AbfKDWLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:11:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45040 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:11:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389690AbfKDWLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:11:38 -0500
+        id S2390713AbfKDWLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:11:40 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D524C214D8;
-        Mon,  4 Nov 2019 22:11:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E106E214D8;
+        Mon,  4 Nov 2019 22:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905497;
-        bh=T+LjWKOQ8tdarN2nS0pC/yJIt6hkP6gQJLvHeZuI8gw=;
+        s=default; t=1572905500;
+        bh=guiaCEQRulnqPPe4LKaYat2ZR/CL0oCOT0xWw2Mknns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cfiiVU+rulsvydgdKpGt945IaeV2QFi0GJiglZz/sXAgeLy1IBJ5fVxQriCCcpbin
-         bwV217xmqQmMARxvTvc6OG+l3UC0fxwVTXUaYLU3fUwvrQwCHortMhhHbgdI37CoC9
-         6B1e0YEpTHsqhZgK1g8EgtXuOFUWkFHm4bCd8br0=
+        b=p5h0Y2pL3T6ta/CVvdsNVP6KE+hZgwjs6zyxJixxmV/3i9VUTXIbLevIzonEqCGj5
+         FB6H+gDB5N/nHEMyT8Ul3X/mUyzZPcAKKXnuFnywbGkW1Bgsd42/ZTHHzFeYWb4On4
+         XgBI+tNZXFK4rT1Q/t4GYi5BWjaMb2l2xwEfBwQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.3 142/163] NFS: Fix an RCU lock leak in nfs4_refresh_delegation_stateid()
-Date:   Mon,  4 Nov 2019 22:45:32 +0100
-Message-Id: <20191104212150.614033643@linuxfoundation.org>
+        Bijan Mottahedeh <bijan.mottahedeh@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.3 143/163] io_uring: ensure we clear io_kiocb->result before each issue
+Date:   Mon,  4 Nov 2019 22:45:33 +0100
+Message-Id: <20191104212150.683214210@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -60,35 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit 79cc55422ce99be5964bde208ba8557174720893 upstream.
+commit 6873e0bd6a9cb14ecfadd89d9ed9698ff1761902 upstream.
 
-A typo in nfs4_refresh_delegation_stateid() means we're leaking an
-RCU lock, and always returning a value of 'false'. As the function
-description states, we were always supposed to return 'true' if a
-matching delegation was found.
+We use io_kiocb->result == -EAGAIN as a way to know if we need to
+re-submit a polled request, as -EAGAIN reporting happens out-of-line
+for IO submission failures. This field is cleared when we originally
+allocate the request, but it isn't reset when we retry the submission
+from async context. This can cause issues where we think something
+needs a re-issue, but we're really just reading stale data.
 
-Fixes: 12f275cdd163 ("NFSv4: Retry CLOSE and DELEGRETURN on NFS4ERR_OLD_STATEID.")
-Cc: stable@vger.kernel.org # v4.15+
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Reset ->result whenever we re-prep a request for polled submission.
+
+Cc: stable@vger.kernel.org
+Fixes: 9e645e1105ca ("io_uring: add support for sqe links")
+Reported-by: Bijan Mottahedeh <bijan.mottahedeh@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/delegation.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/io_uring.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -1181,7 +1181,7 @@ bool nfs4_refresh_delegation_stateid(nfs
- 	if (delegation != NULL &&
- 	    nfs4_stateid_match_other(dst, &delegation->stateid)) {
- 		dst->seqid = delegation->stateid.seqid;
--		return ret;
-+		ret = true;
- 	}
- 	rcu_read_unlock();
- out:
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1078,6 +1078,7 @@ static int io_prep_rw(struct io_kiocb *r
+ 
+ 		kiocb->ki_flags |= IOCB_HIPRI;
+ 		kiocb->ki_complete = io_complete_rw_iopoll;
++		req->result = 0;
+ 	} else {
+ 		if (kiocb->ki_flags & IOCB_HIPRI)
+ 			return -EINVAL;
 
 
