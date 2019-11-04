@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D357CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68601CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED13217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39656214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904690;
-	bh=lcRJMau4MilgjA1G5AsVvBldze0ky+F5z1BAy1+tpLc=;
+	s=default; t=1572904696;
+	bh=MoM63U9fIL/AW03fDiyVHX9B4WUl0OJn03LJfTOOcXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mGi5Snamg2i5R2Xf7b26mhUGf9vODB0LOVkhVR/ZyChaiT/ix3LN+/KqU0RbqxhIF
-	 RXWXpqHXZw/jFLB6bcpwcjtTFC8u8Wbb0775oRFJXdBsZaqu6UiFj31tjohXEuCprg
-	 CgduNGqBvD/l/vlPl88xVzu30g6Bp3+Ppat3kUWQ=
+	b=weZ+6oXFImbQnbfyXTZKnk/f9g+q7uhEFwodyeWPhgi7LCV9HqJoenUBo13N8c8AT
+	 Jffw1T3+55Wiry+YnN0QHERHqvG4iBNidibdUHzAk438Rs0bTSSfM3qqQPJN/h0cZp
+	 F8yPYY014TaKViqYK0UfWNO7gXHzsgVPtFjFfHf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730264AbfKDV6I (ORCPT
+        id S1730407AbfKDV6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:58:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54720 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:58:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388715AbfKDV6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:58:04 -0500
+        id S1730348AbfKDV6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:58:11 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA1C720650;
-        Mon,  4 Nov 2019 21:58:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DB6C214D8;
+        Mon,  4 Nov 2019 21:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904682;
-        bh=lcRJMau4MilgjA1G5AsVvBldze0ky+F5z1BAy1+tpLc=;
+        s=default; t=1572904690;
+        bh=MoM63U9fIL/AW03fDiyVHX9B4WUl0OJn03LJfTOOcXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zg1UH2YWhqmAcrzyXUxC1UfLSLnWUcMCiOJqlvmRMlVSY8HdXhVGaAOUo50CzTaxE
-         VMAzeNB+CuFZwTE2URuBxp16pqxFUoqNsIuumKxT71su6AlXCHMI+VyCxtXc91f2Ta
-         P0dY4ubXpXpKhyp9x1+L2DIgcDjlOIzN9Uzm/jig=
+        b=GLkgeCCuPnjOrBOMD5MIXJaVNmXuQ1Knqk5kcosPGnYVnZzJKFDiIa8ZVy42mpC9n
+         8r9+wqe8QagPfl+ElQmGKGXcsd9NkXQ3k3Q/JqpmagmJBqE9fijf5+MHSGwcyPFT62
+         kfoqZBblWuAbRaTBVmp8RULgT0NllvpT+BPKw9vM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Kujau <lists@nerdbynature.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Genki Sky <sky@genki.is>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 031/149] scripts/setlocalversion: Improve -dirty check with git-status --no-optional-locks
-Date:   Mon,  4 Nov 2019 22:43:44 +0100
-Message-Id: <20191104212137.936035680@linuxfoundation.org>
+Subject: [PATCH 4.19 034/149] NFSv4: Ensure that the state manager exits the loop on SIGKILL
+Date:   Mon,  4 Nov 2019 22:43:47 +0100
+Message-Id: <20191104212138.173839330@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -64,66 +60,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit ff64dd4857303dd5550faed9fd598ac90f0f2238 ]
+[ Upstream commit a1aa09be21fa344d1f5585aab8164bfae55f57e3 ]
 
-git-diff-index does not refresh the index for you, so using it for a
-"-dirty" check can give misleading results. Commit 6147b1cf19651
-("scripts/setlocalversion: git: Make -dirty check more robust") tried to
-fix this by switching to git-status, but it overlooked the fact that
-git-status also writes to the .git directory of the source tree, which
-is definitely not kosher for an out-of-tree (O=) build. That is getting
-reverted.
-
-Fortunately, git-status now supports avoiding writing to the index via
-the --no-optional-locks flag, as of git 2.14. It still calculates an
-up-to-date index, but it avoids writing it out to the .git directory.
-
-So, let's retry the solution from commit 6147b1cf19651 using this new
-flag first, and if it fails, we assume this is an older version of git
-and just use the old git-diff-index method.
-
-It's hairy to get the 'grep -vq' (inverted matching) correct by stashing
-the output of git-status (you have to be careful about the difference
-betwen "empty stdin" and "blank line on stdin"), so just pipe the output
-directly to grep and use a regex that's good enough for both the
-git-status and git-diff-index version.
-
-Cc: Christian Kujau <lists@nerdbynature.de>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Suggested-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Tested-by: Genki Sky <sky@genki.is>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/setlocalversion | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ fs/nfs/nfs4state.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/setlocalversion b/scripts/setlocalversion
-index 71f39410691b6..365b3c2b8f431 100755
---- a/scripts/setlocalversion
-+++ b/scripts/setlocalversion
-@@ -73,8 +73,16 @@ scm_version()
- 			printf -- '-svn%s' "`git svn find-rev $head`"
- 		fi
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index c36ef75f2054b..b3086e99420c7 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -2613,7 +2613,7 @@ static void nfs4_state_manager(struct nfs_client *clp)
+ 			return;
+ 		if (test_and_set_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state) != 0)
+ 			return;
+-	} while (refcount_read(&clp->cl_count) > 1);
++	} while (refcount_read(&clp->cl_count) > 1 && !signalled());
+ 	goto out_drain;
  
--		# Check for uncommitted changes
--		if git diff-index --name-only HEAD | grep -qv "^scripts/package"; then
-+		# Check for uncommitted changes.
-+		# First, with git-status, but --no-optional-locks is only
-+		# supported in git >= 2.14, so fall back to git-diff-index if
-+		# it fails. Note that git-diff-index does not refresh the
-+		# index, so it may give misleading results. See
-+		# git-update-index(1), git-diff-index(1), and git-status(1).
-+		if {
-+			git --no-optional-locks status -uno --porcelain 2>/dev/null ||
-+			git diff-index --name-only HEAD
-+		} | grep -qvE '^(.. )?scripts/package'; then
- 			printf '%s' -dirty
- 		fi
- 
+ out_error:
 -- 
 2.20.1
 
