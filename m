@@ -7,41 +7,43 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C00CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5284DCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C2E214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 344C1214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729531AbfKDRy2 (ORCPT
+        id S1729395AbfKDRyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:54:28 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:38036 "EHLO
+        Mon, 4 Nov 2019 12:54:19 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38025 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728766AbfKDRyV (ORCPT
+        with ESMTP id S1728216AbfKDRyT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:54:21 -0500
+        Mon, 4 Nov 2019 12:54:19 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iRgYQ-0002ZH-Ap; Mon, 04 Nov 2019 18:54:14 +0100
+        id 1iRgYR-0002Zs-Hx; Mon, 04 Nov 2019 18:54:15 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E2BD51C0017;
-        Mon,  4 Nov 2019 18:54:13 +0100 (CET)
-Date:   Mon, 04 Nov 2019 17:54:13 -0000
-From:   "tip-bot2 for Chuhong Yuan" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 344561C0426;
+        Mon,  4 Nov 2019 18:54:15 +0100 (CET)
+Date:   Mon, 04 Nov 2019 17:54:14 -0000
+From:   "tip-bot2 for Geert Uytterhoeven" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/asm9260: Add a check for of_clk_get
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
+Subject: [tip: timers/core] clocksource/drivers/timer-of: Use unique device
+ name instead of timer
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh@kernel.org>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191016124330.22211-1-hslester96@gmail.com>
-References: <20191016124330.22211-1-hslester96@gmail.com>
+In-Reply-To: <20191016144747.29538-3-geert+renesas@glider.be>
+References: <20191016144747.29538-3-geert+renesas@glider.be>
 MIME-Version: 1.0
-Message-ID: <157289005359.29376.7826557448523708212.tip-bot2@tip-bot2>
+Message-ID: <157289005492.29376.132373533001357963.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,37 +59,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     6e001f6a4cc73cd06fc7b8c633bc4906c33dd8ad
-Gitweb:        https://git.kernel.org/tip/6e001f6a4cc73cd06fc7b8c633bc4906c33dd8ad
-Author:        Chuhong Yuan <hslester96@gmail.com>
-AuthorDate:    Wed, 16 Oct 2019 20:43:30 +08:00
+Commit-ID:     4411464d6f8b5e5759637235a6f2b2a85c2be0f1
+Gitweb:        https://git.kernel.org/tip/4411464d6f8b5e5759637235a6f2b2a85c2be0f1
+Author:        Geert Uytterhoeven <geert+renesas@glider.be>
+AuthorDate:    Wed, 16 Oct 2019 16:47:45 +02:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Mon, 04 Nov 2019 10:40:10 +01:00
+CommitterDate: Mon, 04 Nov 2019 10:38:46 +01:00
 
-clocksource/drivers/asm9260: Add a check for of_clk_get
+clocksource/drivers/timer-of: Use unique device name instead of timer
 
-asm9260_timer_init misses a check for of_clk_get.
-Add a check for it and print errors like other clocksource drivers.
+If a hardware-specific driver does not provide a name, the timer-of core
+falls back to device_node.name.  Due to generic DT node naming policies,
+that name is almost always "timer", and thus doesn't identify the actual
+timer used.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Fix this by using device_node.full_name instead, which includes the unit
+addrees.
+
+Example impact on /proc/timer_list:
+
+    -Clock Event Device: timer
+    +Clock Event Device: timer@fcfec400
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20191016124330.22211-1-hslester96@gmail.com
+Link: https://lore.kernel.org/r/20191016144747.29538-3-geert+renesas@glider.be
 ---
- drivers/clocksource/asm9260_timer.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/clocksource/timer-of.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/asm9260_timer.c b/drivers/clocksource/asm9260_timer.c
-index 9f09a59..5b39d37 100644
---- a/drivers/clocksource/asm9260_timer.c
-+++ b/drivers/clocksource/asm9260_timer.c
-@@ -194,6 +194,10 @@ static int __init asm9260_timer_init(struct device_node *np)
+diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
+index 3843942..8c11bd7 100644
+--- a/drivers/clocksource/timer-of.c
++++ b/drivers/clocksource/timer-of.c
+@@ -190,7 +190,7 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
  	}
  
- 	clk = of_clk_get(np, 0);
-+	if (IS_ERR(clk)) {
-+		pr_err("Failed to get clk!\n");
-+		return PTR_ERR(clk);
-+	}
+ 	if (!to->clkevt.name)
+-		to->clkevt.name = np->name;
++		to->clkevt.name = np->full_name;
  
- 	ret = clk_prepare_enable(clk);
- 	if (ret) {
+ 	to->np = np;
+ 
