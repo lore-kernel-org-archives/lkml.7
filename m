@@ -2,223 +2,235 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F04CCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35321CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECF6C206BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:37:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I0S/Z4qe"
+	by mail.kernel.org (Postfix) with ESMTP id 0D220206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729546AbfKDUhr (ORCPT
+        id S1729565AbfKDUih convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 15:37:47 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35052 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728940AbfKDUhq (ORCPT
+        Mon, 4 Nov 2019 15:38:37 -0500
+Received: from mailoutvs62.siol.net ([185.57.226.253]:47541 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728377AbfKDUig (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 15:37:46 -0500
-Received: by mail-wr1-f67.google.com with SMTP id l10so18686753wrb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 12:37:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GpUcO+HZZVMYH5LohMRACc2HKfc/rPPQs8QWFr3WsFY=;
-        b=I0S/Z4qeXLlzlpInn0r6wrn4yYGFnBbAUHJuvtz9P7UnQGXWztk7GfcomiToo+tkQP
-         /INoCTtr4Jp+spQGlHTAwVpbQcxFAAl/xqCrNXOfTwxCZkSWSuez5yboYvN8ISr/fbP/
-         PMTaqPvZAVF1vbvA0+ScQGTsxFVE7lvW6fxV3OgykduNbr7akvtEzUMjo/Sw6ZDj9lEY
-         8boJG6GSfiv2PTHk+4d9iN6WX4uSvKqNMYTT9Gk+8rsWR6rOuZvuYDGiLvOe7NWZmhgb
-         QM4OvMCUDClvBAzSbn75f59Vue/piRxqKcClSWNKbESUz1Tn0K/o3N+HsKuxTZknLnXs
-         7iXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GpUcO+HZZVMYH5LohMRACc2HKfc/rPPQs8QWFr3WsFY=;
-        b=Fitk7MHrv9MUyHsX3wcprBD3B5bAhDg6Z9ApyMGl2EeBEDT1blZzHLu9GYqq9UoCib
-         5sfP25bM8WQMpZzfB1qTZgEC0uUijy5a59Bd60/kq3ZJk3bRKBEGMd0pDISWK/aV6lv8
-         NBHio8htpTWWL/EN2v9SicXWq/UwCLTwxdYCuW73TET/onAcEuryaJJONX4stofUTUUM
-         6+p47b/XWBGEnosQAG4zPqkKFU0Uyzh2yqlpEHkp24arIoiyE1xefKaWFnA3NaCiZpAB
-         P65eTJfPGYw9HfnOuAbD6QgLN27TWs4PmEda7aF6r7cAPFoQIk6KsJg9/Gn967T3y9Ju
-         IWsw==
-X-Gm-Message-State: APjAAAWCBtuBL7cwS3mfe5WTW6o71NdVaYYq+GH/nic1fz21KFK+uekt
-        MNemBn3q3zphIpiYKmrLsCFsuuB0j9snZHaDKyOUgQ==
-X-Google-Smtp-Source: APXvYqx4QaDjbk9TE4AXn4sz9diPVtFGTVnImVqyUCHrXqlcLDEk5DVsC8uoUQmrOr6lXPukZxr+bKG1AUi6guLN6+Q=
-X-Received: by 2002:adf:fd4b:: with SMTP id h11mr6821093wrs.191.1572899862821;
- Mon, 04 Nov 2019 12:37:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20191023005337.196160-1-irogers@google.com> <20191024190202.109403-1-irogers@google.com>
- <20191024190202.109403-2-irogers@google.com> <20191025075820.GE31679@krava>
- <CAP-5=fV3yruuFagTz4=8b9t6Y1tzZpFU=VhVcOmrSMiV+h2fQA@mail.gmail.com>
- <20191028193224.GB28772@krava> <CAP-5=fWqzT24JwuYYdH=4auB0EB2P4MMw4bvqGd02fTShXnJfg@mail.gmail.com>
- <20191028213630.GE28772@krava>
-In-Reply-To: <20191028213630.GE28772@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 4 Nov 2019 12:37:31 -0800
-Message-ID: <CAP-5=fVmw1xT+PuuV+C4Ma_PYPt_jWKB6DyCscd7FWui39L_Rg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/9] perf tools: add parse events append error
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mon, 4 Nov 2019 15:38:36 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 99859524703;
+        Mon,  4 Nov 2019 21:38:32 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Xas64fhSD14G; Mon,  4 Nov 2019 21:38:32 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id F320B5250A1;
+        Mon,  4 Nov 2019 21:38:31 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-86-58-102-7.static.triera.net [86.58.102.7])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 72C21524703;
+        Mon,  4 Nov 2019 21:38:31 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     =?ISO-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Stephane Eranian <eranian@google.com>
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH v2 3/7] pwm: sun4i: Add an optional probe for bus clock
+Date:   Mon, 04 Nov 2019 21:38:31 +0100
+Message-ID: <2257359.GL6loUrO9r@jernej-laptop>
+In-Reply-To: <CAJiuCcfCo2QiKEvaRphcBkdTtFui3ympU9aikJTmXDa4OoiXZQ@mail.gmail.com>
+References: <20191103203334.10539-1-peron.clem@gmail.com> <524459750.Kvg9uK5Sr7@jernej-laptop> <CAJiuCcfCo2QiKEvaRphcBkdTtFui3ympU9aikJTmXDa4OoiXZQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks! This is part of the v5 patch set, specifically:
-https://lkml.org/lkml/2019/10/30/1001
+Dne ponedeljek, 04. november 2019 ob 21:27:04 CET je Clément Péron napisal(a):
+> Hi,
+> 
+> On Mon, 4 Nov 2019 at 21:19, Jernej Škrabec <jernej.skrabec@siol.net> wrote:
+> > Dne ponedeljek, 04. november 2019 ob 21:10:52 CET je Uwe Kleine-König
+> > 
+> > napisal(a):
+> > > Hello Clément,
+> > > 
+> > > On Mon, Nov 04, 2019 at 07:07:00PM +0100, Clément Péron wrote:
+> > > > On Mon, 4 Nov 2019 at 09:24, Uwe Kleine-König
+> > > > 
+> > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > > On Sun, Nov 03, 2019 at 09:33:30PM +0100, Clément Péron wrote:
+> > > > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > > > 
+> > > > > > H6 PWM core needs bus clock to be enabled in order to work.
+> > > > > > 
+> > > > > > Add an optional probe for it and a fallback for previous
+> > > > > > bindings without name on module clock.
+> > > > > > 
+> > > > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> > > > > > ---
+> > > > > > 
+> > > > > >  drivers/pwm/pwm-sun4i.c | 36 ++++++++++++++++++++++++++++++++++++
+> > > > > >  1 file changed, 36 insertions(+)
+> > > > > > 
+> > > > > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > > > > > index d194b8ebdb00..b5e7ac364f59 100644
+> > > > > > --- a/drivers/pwm/pwm-sun4i.c
+> > > > > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > > > > @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
+> > > > > > 
+> > > > > >  struct sun4i_pwm_chip {
+> > > > > >  
+> > > > > >       struct pwm_chip chip;
+> > > > > > 
+> > > > > > +     struct clk *bus_clk;
+> > > > > > 
+> > > > > >       struct clk *clk;
+> > > > > >       struct reset_control *rst;
+> > > > > >       void __iomem *base;
+> > > > > > 
+> > > > > > @@ -367,6 +368,31 @@ static int sun4i_pwm_probe(struct
+> > > > > > platform_device
+> > > > > > *pdev)> >
+> > > > > 
+> > > > > Adding more context here:
+> > > > > |       pwm->clk = devm_clk_get(&pdev->dev, NULL);
+> > > > > |       
+> > > > > >       if (IS_ERR(pwm->clk))
+> > > > > >       
+> > > > > >               return PTR_ERR(pwm->clk);
+> > > > > > 
+> > > > > > +     /* Get all clocks and reset line */
+> > > > > > +     pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
+> > > > > > +     if (IS_ERR(pwm->clk)) {
+> > > > > > +             dev_err(&pdev->dev, "get clock failed %ld\n",
+> > > > > > +                     PTR_ERR(pwm->clk));
+> > > > > > +             return PTR_ERR(pwm->clk);
+> > > > > > +     }
+> > > > > 
+> > > > > I guess you want to drop the first assignment to pwm->clk.
+> > > > 
+> > > > devm_clk_get_optional will return NULL if there is no entry, I don't
+> > > > get where I need to drop it assignment.
+> > > 
+> > > With your patch the code looks as follows:
+> > >       pwm->clk = devm_clk_get(&pdev->dev, NULL);
+> > >       if (IS_ERR(pwm->clk))
+> > >       
+> > >               return PTR_ERR(pwm->clk);
+> > >       
+> > >       /* Get all clocks and reset line */
+> > >       pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
+> > 
+> > Actually, it's the other way around, e.g. "mod" clock is checked first.
+> 
+> The first devm_clk_get is indeed wrong, I will remove it!
 
-Let me know if there's anything else blocking this. Thanks,
-Ian
+Sorry, I missed that too. Yeah, it should be removed.
 
-On Mon, Oct 28, 2019 at 2:36 PM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Mon, Oct 28, 2019 at 02:06:24PM -0700, Ian Rogers wrote:
-> > On Mon, Oct 28, 2019 at 12:32 PM Jiri Olsa <jolsa@redhat.com> wrote:
-> > >
-> > > On Fri, Oct 25, 2019 at 08:14:36AM -0700, Ian Rogers wrote:
-> > > > On Fri, Oct 25, 2019 at 12:58 AM Jiri Olsa <jolsa@redhat.com> wrote=
-:
-> > > > >
-> > > > > On Thu, Oct 24, 2019 at 12:01:54PM -0700, Ian Rogers wrote:
-> > > > > > Parse event error handling may overwrite one error string with =
-another
-> > > > > > creating memory leaks and masking errors. Introduce a helper ro=
-utine
-> > > > > > that appends error messages and avoids the memory leak.
-> > > > > >
-> > > > > > A reproduction of this problem can be seen with:
-> > > > > >   perf stat -e c/c/
-> > > > > > After this change this produces:
-> > > > > > event syntax error: 'c/c/'
-> > > > > >                        \___ unknown term (previous error: unkno=
-wn term (previous error: unknown term (previous error: unknown term (previo=
-us error: unknown term (previous error: unknown term (previous error: unkno=
-wn term (previous error: unknown term (previous error: unknown term (previo=
-us error: unknown term (previous error: unknown term (previous error: unkno=
-wn term (previous error: unknown term (previous error: unknown term (previo=
-us error: unknown term (previous error: unknown term (previous error: unkno=
-wn term (previous error: unknown term (previous error: unknown term (previo=
-us error: unknown term (previous error: unknown term (previous error: Canno=
-t find PMU `c'. Missing kernel support?)(help: valid terms: event,filter_re=
-m,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,umask,fi=
-lter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,filter_nm,=
-config,config1,config2,name,period,percore))(help: valid terms: event,filte=
-r_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,umas=
-k,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,filter=
-_nm,config,config1,config2,name,period,percore))(help: valid terms: event,f=
-ilter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,=
-umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,fi=
-lter_nm,config,config1,config2,name,period,percore))(help: valid terms: eve=
-nt,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,=
-inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_stat=
-e,filter_nm,config,config1,config2,name,period,percore))(help: valid terms:=
- event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter=
-_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_=
-state,filter_nm,config,config1,config2,name,period,percore))(help: valid te=
-rms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,fi=
-lter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,fil=
-ter_state,filter_nm,config,config1,config2,name,period,percore))(help: vali=
-d terms: event,pc,in_tx,edge,any,offcore_rsp,in_tx_cp,ldlat,inv,umask,front=
-end,cmask,config,config1,config2,name,period,percore))(help: valid terms: e=
-vent,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_n=
-c,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_st=
-ate,filter_nm,config,config1,config2,name,period,percore))(help: valid term=
-s: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filt=
-er_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filte=
-r_state,filter_nm,config,config1,config2,name,period,percore))(help: valid =
-terms: event,config,config1,config2,name,period,percore))(help: valid terms=
-: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filte=
-r_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter=
-_state,filter_nm,config,config1,config2,name,period,percore))(help: valid t=
-erms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,f=
-ilter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,fi=
-lter_state,filter_nm,config,config1,config2,name,period,percore))(help: val=
-id terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_l=
-oc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_n=
-m,filter_state,filter_nm,config,config1,config2,name,period,percore))(help:=
- valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filt=
-er_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_n=
-ot_nm,filter_state,filter_nm,config,config1,config2,name,period,percore))(h=
-elp: valid terms: event,config,config1,config2,name,period,percore))(help: =
-valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filte=
-r_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_no=
-t_nm,filter_state,filter_nm,config,config1,config2,name,period,percore))(he=
-lp: valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,f=
-ilter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filte=
-r_not_nm,filter_state,filter_nm,config,config1,config2,name,period,percore)=
-)(help: valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_t=
-id,filter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,f=
-ilter_not_nm,filter_state,filter_nm,config,config1,config2,name,period,perc=
-ore))(help: valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filt=
-er_tid,filter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_=
-op,filter_not_nm,filter_state,filter_nm,config,config1,config2,name,period,=
-percore))(help: valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,=
-filter_tid,filter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_=
-all_op,filter_not_nm,filter_state,filter_nm,config,config1,config2,name,per=
-iod,percore))
-> > > > >
-> > > > >
-> > > > > hum... I'd argue that the previous state was better:
-> > > > >
-> > > > > [jolsa@krava perf]$ ./perf stat -e c/c/
-> > > > > event syntax error: 'c/c/'
-> > > > >                        \___ unknown term
-> > > > >
-> > > > >
-> > > > > jirka
-> > > >
-> > > > I am agnostic. We can either have the previous state or the new sta=
-te,
-> > > > I'm keen to resolve the memory leak. Another alternative is to warn
-> > > > that multiple errors have occurred before dropping or printing the
-> > > > previous error. As the code is shared in memory places the approach
-> > > > taken here was to try to not conceal anything that could potentiall=
-y
-> > > > be useful. Given this, is the preference to keep the status quo
-> > > > without any warning?
-> > >
-> > > if the other alternative is string above, yes.. but perhaps
-> > > keeping just the first error would be the best way?
-> > >
-> > > here it seems to be the:
-> > >    "Cannot find PMU `c'. Missing kernel support?)(help: valid..."
-> >
-> > I think this is a reasonable idea. I'd propose doing it as an
-> > additional patch, the purpose of this patch is to avoid a possible
-> > memory leak. I can write the patch and base it on this series.
-> > To resolve the issue, I'd add an extra first error to the struct
-> > parse_events_error. All callers would need to be responsible for
-> > cleaning this up when present, which is why I'd rather not make it
-> > part of this patch.
-> > Does this sound reasonable?
->
-> yep, sounds good
->
-> jirka
->
+Best regards,
+Jernej
+
+> 
+> > >       ...
+> > > 
+> > > The assignment to pwm->clk above the comment is the one I suggested to
+> > > drop.
+> > 
+> > Neither can be dropped. DT files for other SoCs don't have clock-names
+> > property, so search for "mod" clock will fail and then fallback option
+> > without name is used.
+> > 
+> > Best regards,
+> > Jernej
+> > 
+> > > > > > +     /* Fallback for old dtbs with a single clock and no name */
+> > > > > > +     if (!pwm->clk) {
+> > > > > > +             pwm->clk = devm_clk_get(&pdev->dev, NULL);
+> > > > > > +             if (IS_ERR(pwm->clk)) {
+> > > > > > +                     dev_err(&pdev->dev, "get clock failed
+> > > > > > %ld\n",
+> > > > > > +                             PTR_ERR(pwm->clk));
+> > > > > > +                     return PTR_ERR(pwm->clk);
+> > > > > > +             }
+> > > > > > +     }
+> > > > > 
+> > > > > There is a slight change of behaviour if I'm not mistaken. If you
+> > > > > have
+> > > > > 
+> > > > > this:
+> > > > >         clocks = <&clk1>;
+> > > > >         clock-names = "mod";
+> > > > >         
+> > > > >         pwm {
+> > > > >         
+> > > > >                 compatible = "allwinner,sun4i-a10-pwm"
+> > > > >                 clocks = <&clk2>;
+> > > > >         
+> > > > >         }
+> > > > > 
+> > > > > you now use clk1 instead of clk2 before.
+> > > > > 
+> > > > > Assuming this is only a theoretical problem, at least pointing this
+> > > > > out
+> > > > > in the commit log would be good I think.
+> > > > 
+> > > > Yes it's correct and as you said the driver don't check for a correct
+> > > > device tree, that why it's now optional probe.
+> > > > Let's assume that's the device-tree is correct, I will add a comment
+> > > > in the commit log.
+> > > 
+> > > If the mod clock was shared by all peripherals on the bus this would be
+> > > IMHO quite elegant. Probably it depends on what you mean by saying
+> > > "incorrect" if this snippet is incorrect. (It can be part of a valid dtb
+> > > that even complies to the binding documentation. However that's not how
+> > > any existing allwinner hardware looks like.) But let's stop arguing as
+> > > we agree it's a corner case and if you mention it in the commit log
+> > > we're both happy.
+> > > 
+> > > > > What is that clock used for? Is it required to access the hardware
+> > > > > registers? Or is it only required while the PWM is enabled? If so
+> > > > > you
+> > > > > could enable the clock more finegrainded.
+> > > > 
+> > > > Regarding the datasheet it's required to access the hardware.
+> > > > page 261 :
+> > > > https://linux-sunxi.org/File:Allwinner_H6_V200_User_Manual_V1.1.pdf
+> > > 
+> > > So enabling the bus clock is called "open APB1 Bus gating" in that
+> > > manual? If I understand that correctly the bus clock then only need to
+> > > be on while accessing the registers and could be disabled once the
+> > > hardware is programmed and running.
+> > > 
+> > > Can you please describe that in a comment. Something like:
+> > >       /*
+> > >       
+> > >        * We're keeping the bus clock on for the sake of simplicity.
+> > >        * Actually it only needs to be on for hardware register
+> > >        * accesses.
+> > >        */
+> > > 
+> > > should be fine. This way it's at least obvious that the handling could
+> > > be improved.
+> > > 
+> > > Best regards
+> > > Uwe
+
+
+
+
