@@ -2,93 +2,118 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFCBCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1AACA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D72621655
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6EF421655
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:59:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbfKDN6h (ORCPT
+        id S1729186AbfKDN7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:58:37 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36854 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727891AbfKDN6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:58:36 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 56D91B417;
-        Mon,  4 Nov 2019 13:58:35 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-Subject: [PATCH] xen/events: remove event handling recursion detection
-Date:   Mon,  4 Nov 2019 14:58:12 +0100
-Message-Id: <20191104135812.2314-1-jgross@suse.com>
-X-Mailer: git-send-email 2.16.4
+        Mon, 4 Nov 2019 08:59:11 -0500
+Received: from smtprelay0034.hostedemail.com ([216.40.44.34]:50073 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727891AbfKDN7L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 08:59:11 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id A5FAF18223251;
+        Mon,  4 Nov 2019 13:59:09 +0000 (UTC)
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-HE-Tag: pot84_899e0f45ebd55
+X-Filterd-Recvd-Size: 3574
+Received: from grimm.local.home (unknown [146.247.46.6])
+        (Authenticated sender: rostedt@goodmis.org)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  4 Nov 2019 13:59:05 +0000 (UTC)
+Date:   Mon, 4 Nov 2019 08:59:01 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Song Liu <liu.song.a23@gmail.com>, cgroups@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-block@vger.kernel.org, bpf@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] kernfs: Convert to u64 id
+Message-ID: <20191104085901.06035a26@grimm.local.home>
+In-Reply-To: <20191104084520.398584-2-namhyung@kernel.org>
+References: <20191104084520.398584-1-namhyung@kernel.org>
+        <20191104084520.398584-2-namhyung@kernel.org>
+X-Mailer: Claws Mail 3.17.4git49 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__xen_evtchn_do_upcall() contains guards against being called
-recursively. This mechanism was introduced in the early pvops times
-(kernel 2.6.26) when there were still Xen versions around not honoring
-disabled interrupts for sending events to pv guests.
+On Mon,  4 Nov 2019 17:45:19 +0900
+Namhyung Kim <namhyung@kernel.org> wrote:
 
-This was changed in Xen 3.0, which is much older than any Xen version
-supported by the kernel, so the recursion detection can be removed.
+> From: Tejun Heo <tj@kernel.org>
+> 
+> The kernfs_id was an union type sharing a 64bit id with 32bit ino +
+> gen.  But it resulted in using 32bit inode even on 64bit systems.
+> Also dealing with an union is annoying especially if you just want to
+> use a single id.
+> 
+> Thus let's get rid of the kernfs_node_id type and use u64 directly.
+> The upper 32bit is used for gen and lower is for ino on 32bit systems.
+> The kernfs_id_ino() and kernfs_id_gen() helpers will take care of the
+> bit handling depends on the system word size.
+> 
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: Martin KaFai Lau <kafai@fb.com>
+> Cc: Song Liu <songliubraving@fb.com>
+> Cc: Yonghong Song <yhs@fb.com>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: linux-block@vger.kernel.org
+> Cc: bpf@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> [namhyung: fix build error in bpf_get_current_cgroup_id()]
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  fs/kernfs/dir.c                  | 36 ++++++++-----
+>  fs/kernfs/file.c                 |  4 +-
+>  fs/kernfs/inode.c                |  4 +-
+>  fs/kernfs/kernfs-internal.h      |  2 -
+>  fs/kernfs/mount.c                | 92 +++++++++++++++++++-------------
+>  include/linux/cgroup.h           | 17 +++---
+>  include/linux/exportfs.h         |  5 ++
+>  include/linux/kernfs.h           | 47 +++++++++-------
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- drivers/xen/events/events_base.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+>  include/trace/events/writeback.h | 92 ++++++++++++++++----------------
 
-diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
-index 6c8843968a52..33212c494afd 100644
---- a/drivers/xen/events/events_base.c
-+++ b/drivers/xen/events/events_base.c
-@@ -1213,31 +1213,21 @@ void xen_send_IPI_one(unsigned int cpu, enum ipi_vector vector)
- 	notify_remote_via_irq(irq);
- }
- 
--static DEFINE_PER_CPU(unsigned, xed_nesting_count);
--
- static void __xen_evtchn_do_upcall(void)
- {
- 	struct vcpu_info *vcpu_info = __this_cpu_read(xen_vcpu);
--	int cpu = get_cpu();
--	unsigned count;
-+	int cpu = smp_processor_id();
- 
- 	do {
- 		vcpu_info->evtchn_upcall_pending = 0;
- 
--		if (__this_cpu_inc_return(xed_nesting_count) - 1)
--			goto out;
--
- 		xen_evtchn_handle_events(cpu);
- 
- 		BUG_ON(!irqs_disabled());
- 
--		count = __this_cpu_read(xed_nesting_count);
--		__this_cpu_write(xed_nesting_count, 0);
--	} while (count != 1 || vcpu_info->evtchn_upcall_pending);
--
--out:
-+		rmb(); /* Hypervisor can set upcall pending. */
- 
--	put_cpu();
-+	} while (vcpu_info->evtchn_upcall_pending);
- }
- 
- void xen_evtchn_do_upcall(struct pt_regs *regs)
--- 
-2.16.4
+I only looked at the above file, and didn't see anything bad about it.
+
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
+
+
+>  kernel/bpf/helpers.c             |  2 +-
+>  kernel/cgroup/cgroup.c           |  5 +-
+>  kernel/trace/blktrace.c          | 66 +++++++++++------------
+>  net/core/filter.c                |  4 +-
+>  13 files changed, 207 insertions(+), 169 deletions(-)
 
