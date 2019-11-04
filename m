@@ -2,90 +2,88 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E01C2CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1173CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54AC2217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:27:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="tf3LktKE"
+	by mail.kernel.org (Postfix) with ESMTP id C340F217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbfKDL1z (ORCPT
+        id S1728614AbfKDL2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:27:55 -0500
-Received: from mx1.cock.li ([185.10.68.5]:54733 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726526AbfKDL1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 06:27:54 -0500
+        Mon, 4 Nov 2019 06:28:54 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:63005 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbfKDL2y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 06:28:54 -0500
+Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 0f4bedc1c9d8da7c; Mon, 4 Nov 2019 12:28:51 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cai@lca.pw
+Subject: Re: [PATCH] cpufreq: intel_pstate: Fix Invalid EPB setting
+Date:   Mon, 04 Nov 2019 12:28:51 +0100
+Message-ID: <5038220.5Ruqr03OBg@kreacher>
+In-Reply-To: <20191031192620.23482-1-srinivas.pandruvada@linux.intel.com>
+References: <20191031192620.23482-1-srinivas.pandruvada@linux.intel.com>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
-        t=1572866871; bh=IFGvj7D+NPiz5qMDunjarvwZge9dYgx2KY5Ynk4oYTI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=tf3LktKEN70ByE4Q2m4q1kbMFWSiC3LwnoIeYkvb4yEiC9HP/toMoZRtGxFqAAKGk
-         pYcnNM8+XccDXdibJLuCg39HFx1uQNW2TQhBBb/HuFOS6VJmscMH11o6qB8VOhZQDv
-         JrAyFLsCdBblN6FTEZeApIZOtx64C3WpTUHoInpb+kEphh4l1ZvUuuHNgEF1h9JfE3
-         3JlOI3XJeFgYz0v0lfJO2e+fwJog/e6pfOhudWOXqP70IHFjXgXb2DjH+ZXwG/sV5G
-         TQO6ea/whVflcfQnsuP7yFQc65QMGlRpeJvfzOt40XNABpiyd3SYzoInE31cwNVLNd
-         o3u/virbVUsXQ==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 04 Nov 2019 11:27:47 +0000
-From:   gameonlinux@redchan.it
-To:     gnu-misc-discuss@gnu.org
-Cc:     legal@fsf.org, linux-kernel@vger.kernel.org
-Subject: Why will no-one sue GrSecurity for their blatant GPL violation (of
- GCC and the linux kernel)?
-Message-ID: <3a9f8c7d2a01114bbf80de212e5f7275@redchan.it>
-X-Sender: gameonlinux@redchan.it
-User-Agent: Roundcube Webmail/1.3.6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Note: Sending here now as this the other list was for tech discussions 
-instead)
+On Thursday, October 31, 2019 8:26:20 PM CET Srinivas Pandruvada wrote:
+> The max value of EPB can be only be 0x0F. Setting more than that results
+> in "unchecked MSR access error". During CPU offline via cpufreq stop_cpu()
+> callback, this error condition is triggered in the function
+> intel_pstate_hwp_force_min_perf().
+> 
+> Instead, EPB corresponding to preference to maximize energy saving (0x0F),
+> can be set. But this will conflict with the save/restore done in
+> arch/x86/kernel/cpu/intel_epb.c. Based on the test, if 0x0F is set in the
+> function intel_pstate_hwp_force_min_perf(), this gets restored during next
+> CPU online operation. This is not desired.
+> 
+> Hence don't set EPB in the offline path in this driver and let the
+> processing in intel_epb.c handle EPB.
+> 
+> Fixes: af3b7379e2d70 ("cpufreq: intel_pstate: Force HWP min perf before offline")
+> Reported-by: Qian Cai <cai@lca.pw>
+> Cc: 5.0+ <stable@vger.kernel.org> # 5.0+
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+>  drivers/cpufreq/intel_pstate.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+> index 53a51c169451..8ab31702cf6a 100644
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -847,11 +847,9 @@ static void intel_pstate_hwp_force_min_perf(int cpu)
+>  	value |= HWP_MAX_PERF(min_perf);
+>  	value |= HWP_MIN_PERF(min_perf);
+>  
+> -	/* Set EPP/EPB to min */
+> +	/* Set EPP to min */
+>  	if (boot_cpu_has(X86_FEATURE_HWP_EPP))
+>  		value |= HWP_ENERGY_PERF_PREFERENCE(HWP_EPP_POWERSAVE);
+> -	else
+> -		intel_pstate_set_epb(cpu, HWP_EPP_BALANCE_POWERSAVE);
+>  
+>  	wrmsrl_on_cpu(cpu, MSR_HWP_REQUEST, value);
+>  }
+> 
 
-RMS:
-Could you share your thoughts, if any, of why no one will sue GrSecurity 
-("Open Source Security" (a Pennsylvania company)) for their blatant 
-violation of section 6 of version 2 of the GNU General Public License?
+Applying as a fix for 5.4, thanks!
 
-Both regarding their GCC plugins and their Linux-Kernel patch which is a 
-non-separable derivative work?
 
-They distribute such under a no-redistribution agreement to paying 
-customers (the is the only distribution they do). If the customer 
-redistributes the derivative works they are punished.
 
-That is: GrSecurity (OSS) has created a contract to /Defeat/ the GPL and 
-has done so successfully so far. Very successfully. The GPL is basically 
-the BSD license now, since such as been allowed to stand.
-
-This is how businesses see the GPL. They are no longer afraid: They will 
-simply do what GrSecurity has done. Something that was supposed to stay 
-liberated: a security patch that helped users maintain their privacy by 
-not being immediately rooted when using a linux kernel on a GNU system; 
-is now non-free.
-
-With this the GPL _fails_.
-
-NO ONE has sued GrSecurity. Thus they are seen as "having it right" 
-"correct" "we can do this".
-
-Wouldn't the FSF have standing regarding the GCC plugins atleast?
-Couldn't you all rally linux-kernel copyright holders to bring a joint 
-action?
-
-References:
-perens.com/2017/06/28/warning-grsecurity-potential-contributory-infringement-risk-for-customers/
-
-perens.com/static/OSS_Spenger_v_Perens/0_2018cv15189/docs1/pdf/18.pdf
-(Page 10 onward of this brief gives a good recitation of the facts and 
-issues
 
