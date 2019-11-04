@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AD5CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED27CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2029B217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DC4621744
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904823;
-	bh=PJ5hXRwrgYrYHaEEGmsGB+1AUSpUsi2UyKzb8WBrn5g=;
+	s=default; t=1572904827;
+	bh=w72zSyvqC/ZsLccUu1t1p4GzejqibTaKWFcIEuyG+0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rb2eeB2xiuZF8oqqi/8MCD+TXHe5tabEDTWGzxug+N/mTbiiO9dtcuhGH96m/x9Ab
-	 +7r+X8AlUdAjJoOgSPon11HsqyamXeIT9TwnOTfChI/DIEUUiZLo8ZXwI4XI9yIT0l
-	 DC2b8dKZT/t22GQc5xJW7fxALQdwS/WCPTZh5sIo=
+	b=UVzWqIDygm7BJ2rGaR77zux64V6kX82Ioyb0kTELYhb9+2yxuRjxAz4yg+BYSLIT4
+	 CxWta+KK/KvF6EOYdP9zOajdJyvXtQ8ScDOSLgiwzGWz5SKUL2nIt2EeIJTLXLHbmJ
+	 Za3IElIV9YwgK95Gn3xqtx+oXWhJftN7VXRyWSb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388845AbfKDWAW (ORCPT
+        id S2388853AbfKDWA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:00:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57958 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:00:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388834AbfKDWAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:00:21 -0500
+        id S2388512AbfKDWAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:00:24 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 210F221744;
-        Mon,  4 Nov 2019 22:00:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF80521744;
+        Mon,  4 Nov 2019 22:00:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904820;
-        bh=PJ5hXRwrgYrYHaEEGmsGB+1AUSpUsi2UyKzb8WBrn5g=;
+        s=default; t=1572904823;
+        bh=w72zSyvqC/ZsLccUu1t1p4GzejqibTaKWFcIEuyG+0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MK5Dr4Vx+DGkx6o8GjC1aHt/8JFnMqDcijLZL/e0C3qAQwYm5Q1c6KGzLjGVbj567
-         kaGVyDW1Y1rVlJdkVaeFlqHhKMCO82bGWjCwIOV7RWlYLpFOHHhvUz0te+V5Rg0o/o
-         4XZHyITCWMmh7dW0EnvVdX7WDaGtMgfbXsq0I3Ak=
+        b=YZICde0UucqwUzKQWl0NVEMFTd1R0nfYuEHz98fKA9llhu0HV1cRM5nA2uGq/XL+t
+         5uOt9+EYMpLnmeTDu5GodrLz+B8NKttuUp25B5ATtfs23wVKsOnzT1BCWpp3e/q+ne
+         HzG3RYXfBbSIbHxCkxW8dDklgvhbesuahVupWtEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Yegor Yefremov <yegorslists@googlemail.com>,
+        stable@vger.kernel.org, Jan-Marek Glogowski <glogow@fbihome.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 080/149] serial: mctrl_gpio: Check for NULL pointer
-Date:   Mon,  4 Nov 2019 22:44:33 +0100
-Message-Id: <20191104212142.216438050@linuxfoundation.org>
+Subject: [PATCH 4.19 041/149] usb: handle warm-reset port requests on hub resume
+Date:   Mon,  4 Nov 2019 22:43:54 +0100
+Message-Id: <20191104212138.698719675@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -60,38 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Jan-Marek Glogowski <glogow@fbihome.de>
 
-[ Upstream commit 37e3ab00e4734acc15d96b2926aab55c894f4d9c ]
+[ Upstream commit 4fdc1790e6a9ef22399c6bc6e63b80f4609f3b7e ]
 
-When using mctrl_gpio_to_gpiod, it dereferences gpios into a single
-requested GPIO.  This dereferencing can break if gpios is NULL,
-so this patch adds a NULL check before dereferencing it.  If
-gpios is NULL, this function will also return NULL.
+On plug-in of my USB-C device, its USB_SS_PORT_LS_SS_INACTIVE
+link state bit is set. Greping all the kernel for this bit shows
+that the port status requests a warm-reset this way.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Reviewed-by: Yegor Yefremov <yegorslists@googlemail.com>
-Link: https://lore.kernel.org/r/20191006163314.23191-1-aford173@gmail.com
+This just happens, if its the only device on the root hub, the hub
+therefore resumes and the HCDs status_urb isn't yet available.
+If a warm-reset request is detected, this sets the hubs event_bits,
+which will prevent any auto-suspend and allows the hubs workqueue
+to warm-reset the port later in port_event.
+
+Signed-off-by: Jan-Marek Glogowski <glogow@fbihome.de>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/serial_mctrl_gpio.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/core/hub.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
-index 07f318603e740..af0412a784d27 100644
---- a/drivers/tty/serial/serial_mctrl_gpio.c
-+++ b/drivers/tty/serial/serial_mctrl_gpio.c
-@@ -60,6 +60,9 @@ EXPORT_SYMBOL_GPL(mctrl_gpio_set);
- struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
- 				      enum mctrl_gpio_idx gidx)
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 8018f813972e0..d5fbd36cf4624 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -107,6 +107,8 @@ EXPORT_SYMBOL_GPL(ehci_cf_port_reset_rwsem);
+ static void hub_release(struct kref *kref);
+ static int usb_reset_and_verify_device(struct usb_device *udev);
+ static int hub_port_disable(struct usb_hub *hub, int port1, int set_state);
++static bool hub_port_warm_reset_required(struct usb_hub *hub, int port1,
++		u16 portstatus);
+ 
+ static inline char *portspeed(struct usb_hub *hub, int portstatus)
  {
-+	if (gpios == NULL)
-+		return NULL;
+@@ -1111,6 +1113,11 @@ static void hub_activate(struct usb_hub *hub, enum hub_activation_type type)
+ 						   USB_PORT_FEAT_ENABLE);
+ 		}
+ 
++		/* Make sure a warm-reset request is handled by port_event */
++		if (type == HUB_RESUME &&
++		    hub_port_warm_reset_required(hub, port1, portstatus))
++			set_bit(port1, hub->event_bits);
 +
- 	return gpios->gpio[gidx];
- }
- EXPORT_SYMBOL_GPL(mctrl_gpio_to_gpiod);
+ 		/*
+ 		 * Add debounce if USB3 link is in polling/link training state.
+ 		 * Link will automatically transition to Enabled state after
 -- 
 2.20.1
 
