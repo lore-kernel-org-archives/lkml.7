@@ -2,110 +2,131 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.4 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 425C1CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992FBCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A59B20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:30:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572874245;
-	bh=L0CpSJJDD0EuaMfa/75UHM2+CFtxIfgkeT9QHWr3jp8=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=RX57474oFFco6OBpeLyf/ylHXfNq9GtLUjmHAejlQm9AGukLkH/HS29OuZKVDjtkb
-	 Skq/e7v/U2D8qnTBZjsZX6li8Or//s+cxwnmEJqrSama5Illcd1snVg5HSM7PkBrfA
-	 Yv/C/cxTKK0pYoSwK80SGps+7NlGp+1XFjADeErI=
+	by mail.kernel.org (Postfix) with ESMTP id 6FF8620B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:30:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GB/THL6v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbfKDNan (ORCPT
+        id S1729129AbfKDNau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:30:43 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:45383 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727236AbfKDNan (ORCPT
+        Mon, 4 Nov 2019 08:30:50 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:52634 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727236AbfKDNat (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:30:43 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iRcQv-0005Lj-UU; Mon, 04 Nov 2019 14:30:13 +0100
-To:     Sami Tolvanen <samitolvanen@google.com>
-Subject: Re: [PATCH v4 03/17] arm64: kvm: stop treating register x18 as  caller save
-X-PHP-Originating-Script: 0:main.inc
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 04 Nov 2019 14:39:34 +0109
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <dave.martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        <clang-built-linux@googlegroups.com>,
-        <kernel-hardening@lists.openwall.com>,
+        Mon, 4 Nov 2019 08:30:49 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA4DNFwM017939;
+        Mon, 4 Nov 2019 14:30:26 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=dWUyjMPm0hw98cUZjpf/Lk4hXPmA04Wmo+g+mY9iROc=;
+ b=GB/THL6vjsrigPm2k3hF4aQolDYn1XCBydGXqGpiIypoA3lfv34OEJJkVpqYs37pta0P
+ DqkbXy7haJMkb4DdOKHKQNAI+S1wKfQzTrLO9CqS/yh4ycMUOjw+X1iYUB12TgEv9ASY
+ 8Cw5NzwAObFWPPrh9d3xipb4E7XavU7ZhW/Z6RCLN1hp/ud7F+DAS3X6kyWdTg5TOzx/
+ v1/61WbkjtWwC5PyFQM7w9GaCdvBTk/HTgoORv9yI0zSJBw5R+Z/4sIy8oHKzOSgjFFI
+ Vpn76/WAVcsMJxs0dzM68gf+7dFP1+Jbc+i3ldaBeEi3ZcjDj0CCo4ciumXSJ4zpnBGO Kg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2w11jn1vxc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 Nov 2019 14:30:26 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 62BF3100034;
+        Mon,  4 Nov 2019 14:30:24 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5279B2D379D;
+        Mon,  4 Nov 2019 14:30:24 +0100 (CET)
+Received: from localhost (10.75.127.51) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 4 Nov 2019 14:30:23
+ +0100
+From:   Pascal Paillet <p.paillet@st.com>
+To:     <rui.zhang@intel.com>, <edubezval@gmail.com>,
+        <daniel.lezcano@linaro.org>, <amit.kucheria@verdurent.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <p.paillet@st.com>, <david.hernandezsanchez@st.com>,
+        <horms+renesas@verge.net.au>, <wsa+renesas@sang-engineering.com>,
+        <linux-pm@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>
-In-Reply-To: <79e8f958cbde52a3d90aec24dd4638d9@www.loen.fr>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191101221150.116536-1-samitolvanen@google.com>
- <20191101221150.116536-4-samitolvanen@google.com>
- <79e8f958cbde52a3d90aec24dd4638d9@www.loen.fr>
-Message-ID: <63921b46250e2eb8eb9fcf0f8ec93b0c@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: samitolvanen@google.com, will@kernel.org, catalin.marinas@arm.com, rostedt@goodmis.org, mhiramat@kernel.org, ard.biesheuvel@linaro.org, dave.martin@arm.com, keescook@chromium.org, labbott@redhat.com, mark.rutland@arm.com, ndesaulniers@google.com, jannh@google.com, miguel.ojeda.sandonis@gmail.com, yamada.masahiro@socionext.com, clang-built-linux@googlegroups.com, kernel-hardening@lists.openwall.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Subject: [PATCH v2 2/5] thermal: stm32: fix icifr register name
+Date:   Mon, 4 Nov 2019 14:30:17 +0100
+Message-ID: <20191104133020.8820-3-p.paillet@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191104133020.8820-1-p.paillet@st.com>
+References: <20191104133020.8820-1-p.paillet@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-11-04_08:2019-11-04,2019-11-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-04 12:13, Marc Zyngier wrote:
-> Hi Sami,
->
-> On 2019-11-01 23:20, Sami Tolvanen wrote:
->> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->>
->> In preparation of reserving x18, stop treating it as caller save in
->> the KVM guest entry/exit code. Currently, the code assumes there is
->> no need to preserve it for the host, given that it would have been
->> assumed clobbered anyway by the function call to __guest_enter().
->> Instead, preserve its value and restore it upon return.
->>
->> Link: https://patchwork.kernel.org/patch/9836891/
->> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->> [Sami: updated commit message, switched from x18 to x29 for the 
->> guest
->> context]
->> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
->> Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> If you intend for this to be merged via the arm64 tree, please add my
->
-> Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+Fix a mistake with the ICIFR register name.
 
-Erm... Muscle memory strikes again. Please ignore the above and use the
-following instead:
+Signed-off-by: Pascal Paillet <p.paillet@st.com>
+---
+ drivers/thermal/st/stm_thermal.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-
-Thanks,
-
-         M.
+diff --git a/drivers/thermal/st/stm_thermal.c b/drivers/thermal/st/stm_thermal.c
+index 31aa63fb3db1..7577242dadb4 100644
+--- a/drivers/thermal/st/stm_thermal.c
++++ b/drivers/thermal/st/stm_thermal.c
+@@ -30,7 +30,7 @@
+ #define DTS_DR_OFFSET		0x1C
+ #define DTS_SR_OFFSET		0x20
+ #define DTS_ITENR_OFFSET	0x24
+-#define DTS_CIFR_OFFSET		0x28
++#define DTS_ICIFR_OFFSET		0x28
+ 
+ /* DTS_CFGR1 register mask definitions */
+ #define HSREF_CLK_DIV_MASK	GENMASK(30, 24)
+@@ -111,10 +111,10 @@ static irqreturn_t stm_thermal_alarm_irq_thread(int irq, void *sdata)
+ 	value = readl_relaxed(sensor->base + DTS_SR_OFFSET);
+ 
+ 	if ((value & LOW_THRESHOLD) == LOW_THRESHOLD)
+-		writel_relaxed(LOW_THRESHOLD, sensor->base + DTS_CIFR_OFFSET);
++		writel_relaxed(LOW_THRESHOLD, sensor->base + DTS_ICIFR_OFFSET);
+ 
+ 	if ((value & HIGH_THRESHOLD) == HIGH_THRESHOLD)
+-		writel_relaxed(HIGH_THRESHOLD, sensor->base + DTS_CIFR_OFFSET);
++		writel_relaxed(HIGH_THRESHOLD, sensor->base + DTS_ICIFR_OFFSET);
+ 
+ 	thermal_zone_device_update(sensor->th_dev, THERMAL_EVENT_UNSPECIFIED);
+ 
+@@ -336,7 +336,7 @@ static int stm_enable_irq(struct stm_thermal_sensor *sensor)
+ 	 */
+ 
+ 	/* Make sure LOW_THRESHOLD IT is clear before enabling */
+-	writel_relaxed(LOW_THRESHOLD, sensor->base + DTS_CIFR_OFFSET);
++	writel_relaxed(LOW_THRESHOLD, sensor->base + DTS_ICIFR_OFFSET);
+ 
+ 	/* Enable IT generation for low threshold */
+ 	value = readl_relaxed(sensor->base + DTS_ITENR_OFFSET);
+@@ -345,7 +345,7 @@ static int stm_enable_irq(struct stm_thermal_sensor *sensor)
+ 	/* Enable the low temperature threshold if needed */
+ 	if (sensor->low_temp_enabled) {
+ 		/* Make sure HIGH_THRESHOLD IT is clear before enabling */
+-		writel_relaxed(HIGH_THRESHOLD, sensor->base + DTS_CIFR_OFFSET);
++		writel_relaxed(HIGH_THRESHOLD, sensor->base + DTS_ICIFR_OFFSET);
+ 
+ 		/* Enable IT generation for high threshold */
+ 		value |= HIGH_THRESHOLD;
 -- 
-Jazz is not dead. It just smells funny...
+2.17.1
+
