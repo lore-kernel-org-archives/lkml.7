@@ -2,110 +2,114 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8C1CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F166CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D52204FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905923;
-	bh=+RXZgY1pNTGvQ+1526ck6j6FRsdHz9lJ0dRvajUZKyc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vX3SWEIUrCILgoik7j4nvquAIHKbObmBODWRDERUAOlNFQgsv6X17vewgyD2URmK/
-	 wMuc74tr/WTRIe7eemQkzRXJw3iMHeB7f818vvwdFn4RZ8trgQPbS0PnExCwas0wiW
-	 gCqps/8xNXhIG3GgR0JK2KorE3Vdx96geFUkx4jc=
+	by mail.kernel.org (Postfix) with ESMTP id 513FD20650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bmQHksK9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390090AbfKDWSl (ORCPT
+        id S2388917AbfKDWSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:18:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59492 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389040AbfKDWBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:24 -0500
-Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B779E20650;
-        Mon,  4 Nov 2019 22:01:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904883;
-        bh=+RXZgY1pNTGvQ+1526ck6j6FRsdHz9lJ0dRvajUZKyc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1JGx/ZJh2uRWpTWn8xoRchMQ1jJnQ7l40mhwUCRgtjMyk7In55fTGBYzadBk9hsLe
-         fUrz0rYVTci9RlrDYzaN0YQ1W1odfKoQ7j35PY5WIEzTGxMHJX+vqKWjlXetZXCr2L
-         3VXPvQOp3mU3CoDnDUNMGCnKKjH7rLEYkvCH17DQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 104/149] iwlwifi: exclude GEO SAR support for 3168
-Date:   Mon,  4 Nov 2019 22:44:57 +0100
-Message-Id: <20191104212143.753643439@linuxfoundation.org>
+        Mon, 4 Nov 2019 17:18:50 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41710 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388656AbfKDWBT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:01:19 -0500
+Received: by mail-lj1-f193.google.com with SMTP id m9so19370475ljh.8;
+        Mon, 04 Nov 2019 14:01:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=dCIWMfP1VPP4Mlo+oAntsMXZNvH354k2VUOlKxxlyNs=;
+        b=bmQHksK9yY/V7YYJfquoSqTBqSgpAi//o6+WDsa3ucjYlxs+iNJWJ7OHB0XXaR0cEa
+         dhXpt53x/EYthqGDGcO3lR2zGgETSrXqagLvoaIhT0rYSVO258GU1iax/zlXdOqQtySP
+         yhJ+AA8NOD35r/1pb718wVQFHiZZd2fkmzuO9WPC5KE92kDdeFJ8EWSC48mLCncLHfXr
+         gQ4b4UPO2zlWujKmHtSv/gZW86CNGBGSRsVBHtmwDq4/8QXhVeM4e/4dx7pOwOvVdK0D
+         7L1bD0W0beAiufHgC7bmg+2WXhBe9Hw8mEcIX0KjSHx2C+QT/cDb0letMEDREZ/hxecJ
+         Du/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=dCIWMfP1VPP4Mlo+oAntsMXZNvH354k2VUOlKxxlyNs=;
+        b=BYoTb3ampLmdy8Hg/O27KEm0jCjT0qpW0wPDB+Pg0GHZLTYJ63vR4e9vUGsHnufeCv
+         frHKn9ib6XcoeYTLz6oYtgjOz5Dka9064opb/7OiSLaK3re/yY6PmC69GgZ/o68XQNS4
+         a7gnYjEDAJWHr6861J/HmutnSRGxUivF1azffFBcvHPze/GbhUaD1JMndZ9TFXJHrQuk
+         YusylAAACRxJLzzt/tVPpfg5tEqnsUKgpulvSmNDUvJnaxAdfhkPHX0Pygf74HENDwxv
+         ux/0FNauKy3zkVa3D0/IDryX1skdp3x0es4F/cV0jCMtPyRcRib3Ogith5JoYBjSjwDk
+         6a6g==
+X-Gm-Message-State: APjAAAUjvocm2zm5kf6tdeETNLdDVp/TcpQs2PHV2g6l9lrQTFRLCipQ
+        stOti6zvSctAjOe33HyrhHwts6J6
+X-Google-Smtp-Source: APXvYqxU61urBbJtIU7aswhY0D++VEJxl14uOim843ou0VrRJtc9pL22FdchXaHRBq4EWetYaQqeFw==
+X-Received: by 2002:a2e:6a10:: with SMTP id f16mr302864ljc.100.1572904877652;
+        Mon, 04 Nov 2019 14:01:17 -0800 (PST)
+Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.gmail.com with ESMTPSA id g3sm7454669ljj.59.2019.11.04.14.01.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 14:01:17 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v9 19/19] PM / devfreq: tegra20/30: Add Dmitry as a maintainer
+Date:   Tue,  5 Nov 2019 00:56:17 +0300
+Message-Id: <20191104215617.25544-20-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
-References: <20191104212126.090054740@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20191104215617.25544-1-digetx@gmail.com>
+References: <20191104215617.25544-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Coelho <luciano.coelho@intel.com>
+I was contributing to the NVIDIA Tegra20+ devfreq drivers recently and
+want to help keep them working and evolving in the future.
 
-[ Upstream commit 12e36d98d3e5acf5fc57774e0a15906d55f30cb9 ]
-
-We currently support two NICs in FW version 29, namely 7265D and 3168.
-Out of these, only 7265D supports GEO SAR, so adjust the function that
-checks for it accordingly.
-
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Fixes: f5a47fae6aa3 ("iwlwifi: mvm: fix version check for GEO_TX_POWER_LIMIT support")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-index 9cb9f0544c9b1..2eba6d6f367f8 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-@@ -843,15 +843,17 @@ static bool iwl_mvm_sar_geo_support(struct iwl_mvm *mvm)
- 	 * firmware versions.  Unfortunately, we don't have a TLV API
- 	 * flag to rely on, so rely on the major version which is in
- 	 * the first byte of ucode_ver.  This was implemented
--	 * initially on version 38 and then backported to29 and 17.
--	 * The intention was to have it in 36 as well, but not all
--	 * 8000 family got this feature enabled.  The 8000 family is
--	 * the only one using version 36, so skip this version
--	 * entirely.
-+	 * initially on version 38 and then backported to 17.  It was
-+	 * also backported to 29, but only for 7265D devices.  The
-+	 * intention was to have it in 36 as well, but not all 8000
-+	 * family got this feature enabled.  The 8000 family is the
-+	 * only one using version 36, so skip this version entirely.
- 	 */
- 	return IWL_UCODE_SERIAL(mvm->fw->ucode_ver) >= 38 ||
--	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 ||
--	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17;
-+	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17 ||
-+	       (IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 &&
-+		((mvm->trans->hw_rev & CSR_HW_REV_TYPE_MSK) ==
-+		 CSR_HW_REV_TYPE_7265D));
- }
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9f69d01da3a6..4b9679988514 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10632,6 +10632,15 @@ F:	include/linux/memblock.h
+ F:	mm/memblock.c
+ F:	Documentation/core-api/boot-time-mm.rst
  
- int iwl_mvm_get_sar_geo_profile(struct iwl_mvm *mvm)
++MEMORY FREQUENCY SCALING DRIVERS FOR NVIDIA TEGRA
++M:	Dmitry Osipenko <digetx@gmail.com>
++L:	linux-pm@vger.kernel.org
++L:	linux-tegra@vger.kernel.org
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git
++S:	Maintained
++F:	drivers/devfreq/tegra20-devfreq.c
++F:	drivers/devfreq/tegra30-devfreq.c
++
+ MEMORY MANAGEMENT
+ L:	linux-mm@kvack.org
+ W:	http://www.linux-mm.org
 -- 
-2.20.1
-
-
+2.23.0
 
