@@ -2,96 +2,115 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C633CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D10E6CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBA02222C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E4E217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:51:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="MDi01Usa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbfKDKuN (ORCPT
+        id S1728667AbfKDKv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:50:13 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5257 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726071AbfKDKuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 05:50:13 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DE46E2099A79968604F1;
-        Mon,  4 Nov 2019 18:50:10 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 4 Nov 2019
- 18:50:07 +0800
-Subject: Re: [PATCH -next] usb: gadget: Add dependency for USB_TEGRA_XUDC
-To:     Thierry Reding <treding@nvidia.com>
-CC:     <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>,
-        <nkristam@nvidia.com>, <arnd@arndb.de>, <johan@kernel.org>,
-        <krzk@kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-References: <20191104025945.172620-1-maowenan@huawei.com>
- <20191104100410.GB996639@ulmo>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <51315499-99d0-eca3-a7df-b8dd84628bbd@huawei.com>
-Date:   Mon, 4 Nov 2019 18:50:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Mon, 4 Nov 2019 05:51:27 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:7980 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726364AbfKDKv1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 05:51:27 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA4AonqB008086;
+        Mon, 4 Nov 2019 11:51:05 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=Qaurhduesnw25w0jh3pIp/yKxoZ09ZwN/xuDw+l7BNo=;
+ b=MDi01UsaPAO8xz8ft6zNnwdNE5PplDfS44Pz4LtEZhurX/UMtGwpBALwoTVtceYbxtZB
+ fuJWU5XfdN5fn0JvoZTdL5hipFgSWtcXh3Hn8ZsldHmNZ8Ebhlbs2kVJ9R89oVSjkJy6
+ oNF5gppFiaNOieDmc4Lwo2OPoBWBgab5lNiWeL4qL9W5lVtKY0vJMKF5JQkjgUMvd1sQ
+ i/3ie0JVmeygrKmHufnYpqE530wbY/p5nMIcID4yiCIH/pA/MKUnC5DE0HEZmbaK8BQ0
+ b2LDp4twHDFT0C4FZHEMFlaAxE5w10/IhV5PXsy3Ylm8S2Mr9imz/VFbE+rius8Werdv Ew== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2w0ytchmh6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 Nov 2019 11:51:05 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B21BC100034;
+        Mon,  4 Nov 2019 11:51:04 +0100 (CET)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 954D62BDA87;
+        Mon,  4 Nov 2019 11:51:04 +0100 (CET)
+Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019
+ 11:51:04 +0100
+Received: from localhost (10.201.22.222) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019 11:51:03
+ +0100
+From:   Christophe Roullier <christophe.roullier@st.com>
+To:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
+        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <peppe.cavallaro@st.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <christophe.roullier@st.com>, <andrew@lunn.ch>
+Subject: [PATCH V2 1/1] net: ethernet: stmmac: drop unused variable in stm32mp1_set_mode()
+Date:   Mon, 4 Nov 2019 11:51:00 +0100
+Message-ID: <20191104105100.4288-1-christophe.roullier@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191104100410.GB996639@ulmo>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.22.222]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-11-04_07:2019-11-04,2019-11-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Building with W=1 (cf.scripts/Makefile.extrawarn) outputs:
+warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
 
+Drop the unused 'ret' variable.
 
-On 2019/11/4 18:04, Thierry Reding wrote:
-> On Mon, Nov 04, 2019 at 10:59:45AM +0800, Mao Wenan wrote:
->> If CONFIG_USB_TEGRA_XUDC=y and CONFIG_USB_ROLE_SWITCH=m,
->> below erros can be seen:
->> drivers/usb/gadget/udc/tegra-xudc.o: In function `tegra_xudc_remove':
->> tegra-xudc.c:(.text+0x6b0): undefined reference to `usb_role_switch_unregister'
->> drivers/usb/gadget/udc/tegra-xudc.o: In function `tegra_xudc_probe':
->> tegra-xudc.c:(.text+0x1b88): undefined reference to `usb_role_switch_register'
->> drivers/usb/gadget/udc/tegra-xudc.o: In function `tegra_xudc_usb_role_sw_work':
->> tegra-xudc.c:(.text+0x5ecc): undefined reference to `usb_role_switch_get_role'
->>
->> This patch add dependency USB_ROLE_SWITCH for UDC driver.
->>
->> Fixes: 49db427232fe ("usb: gadget: Add UDC driver for tegra XUSB device mode controller")
->> Signed-off-by: Mao Wenan <maowenan@huawei.com>
->> ---
->>  drivers/usb/gadget/udc/Kconfig | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kconfig
->> index acaec3a..d103154 100644
->> --- a/drivers/usb/gadget/udc/Kconfig
->> +++ b/drivers/usb/gadget/udc/Kconfig
->> @@ -445,6 +445,7 @@ config USB_TEGRA_XUDC
->>  	tristate "NVIDIA Tegra Superspeed USB 3.0 Device Controller"
->>  	depends on ARCH_TEGRA || COMPILE_TEST
->>  	depends on PHY_TEGRA_XUSB
->> +	depends on USB_ROLE_SWITCH
-> 
-> It looks like most other drivers that use the USB role switch class do
-> "select" here. Now, that's suboptimal because USB_ROLE_SWITCH is a user-
-> visible symbol, which can lead to conflicts, so it should be avoided. I
-> think that in this case it might make sense to hide USB_ROLE_SWITCH and
-> then convert all "depends on USB_ROLE_SWITCH" occurrences to "select
-> USB_ROLE_SWITCH". The USB role switch class is, after all, not useful by
-> itself. It always needs a host and/or gadget driver to make use of it.
-> 
+Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
 
-Thanks, I send v2 and change 'depends on' to 'select' for this patch.
+---
+V2: update commit message with Marc Gonzalez recommendation
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> Thierry
-> 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+index 4ef041bdf6a1..595af2ec89fb 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+@@ -175,7 +175,7 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+ {
+ 	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
+ 	u32 reg = dwmac->mode_reg;
+-	int val, ret;
++	int val;
+ 
+ 	switch (plat_dat->interface) {
+ 	case PHY_INTERFACE_MODE_MII:
+@@ -211,8 +211,8 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+ 	}
+ 
+ 	/* Need to update PMCCLRR (clear register) */
+-	ret = regmap_write(dwmac->regmap, reg + SYSCFG_PMCCLRR_OFFSET,
+-			   dwmac->ops->syscfg_eth_mask);
++	regmap_write(dwmac->regmap, reg + SYSCFG_PMCCLRR_OFFSET,
++		     dwmac->ops->syscfg_eth_mask);
+ 
+ 	/* Update PMCSETR (set register) */
+ 	return regmap_update_bits(dwmac->regmap, reg,
+-- 
+2.17.1
 
