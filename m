@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E11CCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EEDCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44352217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE0B2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904553;
-	bh=UB+jO0kUGFhi/BiijCjP0OhH5lnY2+/ZkICHS8zuWLk=;
+	s=default; t=1572904556;
+	bh=3bV3DEaz/uJkFBictvzAfD7nh/T5TXDGZpPRx0Nw44g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YHeyS8Bizb/Y/6xuAows7xHJgMRSrTX0H0vUlTQ4u9iKZHTCXicCqAEAVnBChkGWX
-	 IKPlSC3aydylfP1lfN2Cb/6NzFYcuzr+rqKQ1G+I5SkBfHYjO2fj3ANTCZk81hM+7j
-	 7bPNMLHHY7GN/6VpB2yrnop9mMmhYKH61LY6Tsek=
+	b=LD+Rzm+HxBl9QXsN8KMRK5FcwNp5ByzDecghSZ881tnzlRqxfxTojs4qaWwE7oWOa
+	 VmOXKDuYakI7HjSVEuN+CwPaYKoD613yS3Qxfrxb0BfRrI1KemmSEKRaRe+1Mb1Oa/
+	 rzRNT/NBOcBA1OFLk8LyGG2UDRmH+6ntW+bTpc7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388239AbfKDVzv (ORCPT
+        id S2388251AbfKDVzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:55:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51202 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:55:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388215AbfKDVzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:55:49 -0500
+        id S2388234AbfKDVzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:55:51 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B9902053B;
-        Mon,  4 Nov 2019 21:55:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44BDD217F4;
+        Mon,  4 Nov 2019 21:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904548;
-        bh=UB+jO0kUGFhi/BiijCjP0OhH5lnY2+/ZkICHS8zuWLk=;
+        s=default; t=1572904550;
+        bh=3bV3DEaz/uJkFBictvzAfD7nh/T5TXDGZpPRx0Nw44g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I/qXQlQVf/RbvpktYeytJvUNzFzFXTS67XcRLp3vH/8LlyKy1JVLQ5Z2ww8h/SRYo
-         3sZZf5pGG2lk7G75ghWSUDWbjeo0lTtlAM+S9piXJFQFAjaDTm46KmTa6FZdCs+aO8
-         7XafasSY0bBgO855gP4Ohzj36TWDB6z1Rn8RFVqk=
+        b=TLP0X6jpRQB8JSyx2a7PRMENp2P1wNJws+niyR60gNo+6wWzB8WixEP7gGd2gfsIv
+         ++qEeINNZJGCAjl3MD3Y9IEfX5V1/6Eyi6ohSMDZy79n2UNVvaHJ1v/Namfcrp2Lm0
+         iN9vHkXTsBW+C4mMVjpzldfCCpChI0rjym/+ABBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yegor Yefremov <yegorslists@googlemail.com>,
-        Tony Lindgren <tony@atomide.com>, Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.14 83/95] dmaengine: cppi41: Fix cppi41_dma_prep_slave_sg() when idle
-Date:   Mon,  4 Nov 2019 22:45:21 +0100
-Message-Id: <20191104212122.242388361@linuxfoundation.org>
+        syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com,
+        syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 4.14 84/95] llc: fix sk_buff leak in llc_sap_state_process()
+Date:   Mon,  4 Nov 2019 22:45:22 +0100
+Message-Id: <20191104212122.927653214@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -60,74 +62,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit bacdcb6675e170bb2e8d3824da220e10274f42a7 upstream.
+commit c6ee11c39fcc1fb55130748990a8f199e76263b4 upstream.
 
-Yegor Yefremov <yegorslists@googlemail.com> reported that musb and ftdi
-uart can fail for the first open of the uart unless connected using
-a hub.
+syzbot reported:
 
-This is because the first dma call done by musb_ep_program() must wait
-if cppi41 is PM runtime suspended. Otherwise musb_ep_program() continues
-with other non-dma packets before the DMA transfer is started causing at
-least ftdi uarts to fail to receive data.
+    BUG: memory leak
+    unreferenced object 0xffff888116270800 (size 224):
+       comm "syz-executor641", pid 7047, jiffies 4294947360 (age 13.860s)
+       hex dump (first 32 bytes):
+         00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+         00 20 e1 2a 81 88 ff ff 00 40 3d 2a 81 88 ff ff  . .*.....@=*....
+       backtrace:
+         [<000000004d41b4cc>] kmemleak_alloc_recursive  include/linux/kmemleak.h:55 [inline]
+         [<000000004d41b4cc>] slab_post_alloc_hook mm/slab.h:439 [inline]
+         [<000000004d41b4cc>] slab_alloc_node mm/slab.c:3269 [inline]
+         [<000000004d41b4cc>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
+         [<00000000506a5965>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
+         [<000000001ba5a161>] alloc_skb include/linux/skbuff.h:1058 [inline]
+         [<000000001ba5a161>] alloc_skb_with_frags+0x5f/0x250  net/core/skbuff.c:5327
+         [<0000000047d9c78b>] sock_alloc_send_pskb+0x269/0x2a0  net/core/sock.c:2225
+         [<000000003828fe54>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
+         [<00000000e34d94f9>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
+         [<00000000de2de3fb>] sock_sendmsg_nosec net/socket.c:652 [inline]
+         [<00000000de2de3fb>] sock_sendmsg+0x54/0x70 net/socket.c:671
+         [<000000008fe16e7a>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
+	 [...]
 
-Let's fix the issue by waking up cppi41 with PM runtime calls added to
-cppi41_dma_prep_slave_sg() and return NULL if still idled. This way we
-have musb_ep_program() continue with PIO until cppi41 is awake.
+The bug is that llc_sap_state_process() always takes an extra reference
+to the skb, but sometimes neither llc_sap_next_state() nor
+llc_sap_state_process() itself drops this reference.
 
-Fixes: fdea2d09b997 ("dmaengine: cppi41: Add basic PM runtime support")
-Reported-by: Yegor Yefremov <yegorslists@googlemail.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Cc: stable@vger.kernel.org # v4.9+
-Link: https://lore.kernel.org/r/20191023153138.23442-1-tony@atomide.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fix it by changing llc_sap_next_state() to never consume a reference to
+the skb, rather than sometimes do so and sometimes not.  Then remove the
+extra skb_get() and kfree_skb() from llc_sap_state_process().
+
+Reported-by: syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com
+Reported-by: syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/cppi41.c |   21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ net/llc/llc_s_ac.c |   12 +++++++++---
+ net/llc/llc_sap.c  |   23 ++++++++---------------
+ 2 files changed, 17 insertions(+), 18 deletions(-)
 
---- a/drivers/dma/cppi41.c
-+++ b/drivers/dma/cppi41.c
-@@ -585,9 +585,22 @@ static struct dma_async_tx_descriptor *c
- 	enum dma_transfer_direction dir, unsigned long tx_flags, void *context)
- {
- 	struct cppi41_channel *c = to_cpp41_chan(chan);
-+	struct dma_async_tx_descriptor *txd = NULL;
-+	struct cppi41_dd *cdd = c->cdd;
- 	struct cppi41_desc *d;
- 	struct scatterlist *sg;
- 	unsigned int i;
-+	int error;
-+
-+	error = pm_runtime_get(cdd->ddev.dev);
-+	if (error < 0) {
-+		pm_runtime_put_noidle(cdd->ddev.dev);
-+
-+		return NULL;
+--- a/net/llc/llc_s_ac.c
++++ b/net/llc/llc_s_ac.c
+@@ -58,8 +58,10 @@ int llc_sap_action_send_ui(struct llc_sa
+ 			    ev->daddr.lsap, LLC_PDU_CMD);
+ 	llc_pdu_init_as_ui_cmd(skb);
+ 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
+-	if (likely(!rc))
++	if (likely(!rc)) {
++		skb_get(skb);
+ 		rc = dev_queue_xmit(skb);
 +	}
-+
-+	if (cdd->is_suspended)
-+		goto err_out_not_ready;
- 
- 	d = c->desc;
- 	for_each_sg(sgl, sg, sg_len, i) {
-@@ -610,7 +623,13 @@ static struct dma_async_tx_descriptor *c
- 		d++;
- 	}
- 
--	return &c->txd;
-+	txd = &c->txd;
-+
-+err_out_not_ready:
-+	pm_runtime_mark_last_busy(cdd->ddev.dev);
-+	pm_runtime_put_autosuspend(cdd->ddev.dev);
-+
-+	return txd;
+ 	return rc;
  }
  
- static void cppi41_compute_td_desc(struct cppi41_desc *d)
+@@ -81,8 +83,10 @@ int llc_sap_action_send_xid_c(struct llc
+ 			    ev->daddr.lsap, LLC_PDU_CMD);
+ 	llc_pdu_init_as_xid_cmd(skb, LLC_XID_NULL_CLASS_2, 0);
+ 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
+-	if (likely(!rc))
++	if (likely(!rc)) {
++		skb_get(skb);
+ 		rc = dev_queue_xmit(skb);
++	}
+ 	return rc;
+ }
+ 
+@@ -135,8 +139,10 @@ int llc_sap_action_send_test_c(struct ll
+ 			    ev->daddr.lsap, LLC_PDU_CMD);
+ 	llc_pdu_init_as_test_cmd(skb);
+ 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
+-	if (likely(!rc))
++	if (likely(!rc)) {
++		skb_get(skb);
+ 		rc = dev_queue_xmit(skb);
++	}
+ 	return rc;
+ }
+ 
+--- a/net/llc/llc_sap.c
++++ b/net/llc/llc_sap.c
+@@ -197,29 +197,22 @@ out:
+  *	After executing actions of the event, upper layer will be indicated
+  *	if needed(on receiving an UI frame). sk can be null for the
+  *	datalink_proto case.
++ *
++ *	This function always consumes a reference to the skb.
+  */
+ static void llc_sap_state_process(struct llc_sap *sap, struct sk_buff *skb)
+ {
+ 	struct llc_sap_state_ev *ev = llc_sap_ev(skb);
+ 
+-	/*
+-	 * We have to hold the skb, because llc_sap_next_state
+-	 * will kfree it in the sending path and we need to
+-	 * look at the skb->cb, where we encode llc_sap_state_ev.
+-	 */
+-	skb_get(skb);
+ 	ev->ind_cfm_flag = 0;
+ 	llc_sap_next_state(sap, skb);
+-	if (ev->ind_cfm_flag == LLC_IND) {
+-		if (skb->sk->sk_state == TCP_LISTEN)
+-			kfree_skb(skb);
+-		else {
+-			llc_save_primitive(skb->sk, skb, ev->prim);
+ 
+-			/* queue skb to the user. */
+-			if (sock_queue_rcv_skb(skb->sk, skb))
+-				kfree_skb(skb);
+-		}
++	if (ev->ind_cfm_flag == LLC_IND && skb->sk->sk_state != TCP_LISTEN) {
++		llc_save_primitive(skb->sk, skb, ev->prim);
++
++		/* queue skb to the user. */
++		if (sock_queue_rcv_skb(skb->sk, skb) == 0)
++			return;
+ 	}
+ 	kfree_skb(skb);
+ }
 
 
