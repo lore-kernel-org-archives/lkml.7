@@ -2,144 +2,181 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9E6CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4EEC47E49
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFC8222C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 315F1222C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:15:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LDs+Eg5q"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SnrXjtuZ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KVtOtif7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728141AbfKDGLc (ORCPT
+        id S1728087AbfKDGPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 01:11:32 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:16496 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbfKDGLb (ORCPT
+        Mon, 4 Nov 2019 01:15:17 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:40780 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfKDGPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 01:11:31 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dbfc1190000>; Sun, 03 Nov 2019 22:11:37 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 03 Nov 2019 22:11:31 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 03 Nov 2019 22:11:31 -0800
-Received: from [10.2.168.52] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 Nov
- 2019 06:11:30 +0000
-Subject: Re: [RFC] mm: gup: add helper page_try_gup_pin(page)
-To:     Hillf Danton <hdanton@sina.com>
-CC:     linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, Jan Kara <jack@suse.cz>,
-        Mel Gorman <mgorman@suse.de>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <20191103112113.8256-1-hdanton@sina.com>
- <20191104043420.15648-1-hdanton@sina.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <8df14660-2ce3-eda8-dc33-c4d092915656@nvidia.com>
-Date:   Sun, 3 Nov 2019 22:09:03 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 4 Nov 2019 01:15:17 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 726CF60BEB; Mon,  4 Nov 2019 06:15:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572848115;
+        bh=IngdpgbVfDPnfZTPd9bwcaDfxGrvP+SmgkF3GE3+okE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=SnrXjtuZV1HakawUCz7dfRW2G/rxyOpBwXxD9z7FCENFvoAKgSyoHV3bXtdVUt5fm
+         Kg1t4taOvI3GHK/gvyxkGbuY9PCkJqsVu9FtPpLYp5MW/8+5Tr7F//ThaGmYgK/fNZ
+         xr0SM2K5uFkHD8Wb2L/gUvSO/Q/XjYEuCjh4lWus=
+Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EC7B260BEB;
+        Mon,  4 Nov 2019 06:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572848114;
+        bh=IngdpgbVfDPnfZTPd9bwcaDfxGrvP+SmgkF3GE3+okE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=KVtOtif7CeG8m0sLowqxVO1SbkUuS035ZNAodXOs5shIVPyE9F5SyWzMmyeFWV/Vs
+         adDFJqiiZiOn4yWNYHAeFGSBuOcC6kURxnQ+QpdP1IqvSoqlG7YufHrU+xl9dgKjxI
+         bMlZACgJxZ+Qcy1V25qlwvdRI5Ot/xlBUxSKZlXQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EC7B260BEB
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v3 02/11] arm64: dts: sc7180: Add minimal dts/dtsi files
+ for SC7180 soc
+To:     Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Taniya Das <tdas@codeaurora.org>
+References: <20191023090219.15603-1-rnayak@codeaurora.org>
+ <20191023090219.15603-3-rnayak@codeaurora.org>
+ <5db86d8c.1c69fb81.7b0b8.e331@mx.google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <410902ad-7b4b-a0ae-d5f1-1dceb88bdc5f@codeaurora.org>
+Date:   Mon, 4 Nov 2019 11:45:09 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191104043420.15648-1-hdanton@sina.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <5db86d8c.1c69fb81.7b0b8.e331@mx.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572847897; bh=zbw7Y554hllJtnv1eRsmfK6TOZZDrBBKwtgxjnu5HG4=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=LDs+Eg5qBfLCCAS7p6r+hey7cbtxeqn05DwLQxeYdAJSXzCqVcMi82fHuKzbnRBgK
-         z5ttg8ao83mNBKR2DouQ+cKzShskuNLr2hYFNvxIpUd00QzOSZtjfz3f97BrP3wqHM
-         Z1R4Qz+5kl1sxo1QeRqz5aRYaFXSifqtCkYoRA0rM3uc6O8Gr9hlbbkleJHgtAWemU
-         svjyebwumdZ+XVprOEUbtAL1ofj8LEp63cP1IxHxpMRZAL1ohSF/j8tJCaLQrxg4uE
-         O9+8+A6nXqDhOifCtMnCJx1xn7uYeJqCz1+F/9QEKr4KShlY4B18f9XD1+cE1iG2oC
-         1cnzxaBkEAL7Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/3/19 8:34 PM, Hillf Danton wrote:
-...
->>
->> Well, as long as we're counting bits, I've taken 21 bits (!) to track
->> "gupers". :)  More accurately, I'm sharing 31 bits with get_page()...please
+
+
+On 10/29/2019 10:19 PM, Stephen Boyd wrote:
+> Quoting Rajendra Nayak (2019-10-23 02:02:10)
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> new file mode 100644
+>> index 000000000000..084854341ddd
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> @@ -0,0 +1,300 @@
+>> +// SPDX-License-Identifier: BSD-3-Clause
+>> +/*
+>> + * SC7180 SoC device tree source
+>> + *
+>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#include <dt-bindings/clock/qcom,gcc-sc7180.h>
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +/ {
+>> +       interrupt-parent = <&intc>;
+>> +
+>> +       #address-cells = <2>;
+>> +       #size-cells = <2>;
+>> +
+>> +       chosen { };
+>> +
+>> +       clocks {
+>> +               xo_board: xo-board {
+>> +                       compatible = "fixed-clock";
+>> +                       clock-frequency = <38400000>;
+>> +                       clock-output-names = "xo_board";
 > 
-> Would you please specify the reasoning of tracking multiple gupers
-> for a dirty page? Do you mean that it is all fine for guper-A to add
-> changes to guper-B's data without warning and vice versa?
+> Can you drop the output names property? I think we don't care that the
+> name is "xo-board" instead of "xo_board" now.
 
-It's generally OK to call get_user_pages() on a page more than once.
-And even though we are seeing some work to reduce the number of places
-in the kernel that call get_user_pages(), there are still lots of call sites.
-That means lots of combinations and situations that could result in more
-than one gup call per page.
+sure, will do.
 
-Furthermore, there is no mechanism, convention, documentation, nor anything
-at all that attempts to enforce "for each page, get_user_pages() may only
-be called once."
-
-
-...
->>
->> I think you must have missed the many contentious debates about the
->> tension between gup-pinned pages, and writeback. File systems can't
->> just ignore writeback in all cases. This patch leads to either
->> system hangs or filesystem corruption, in the presence of long-lasting
->> gup pins.
 > 
-> The current risk of data corruption due to writeback with long-lived
-> gup references all ignored is zeroed out by detecting gup-pinned dirty
-> pages and skipping them; that may lead to problems you mention above.
+>> +                       #clock-cells = <0>;
+>> +               };
+>> +
+>> +               sleep_clk: sleep-clk {
+>> +                       compatible = "fixed-clock";
+>> +                       clock-frequency = <32764>;
+>> +                       clock-output-names = "sleep_clk";
+>> +                       #clock-cells = <0>;
+>> +               };
+>> +       };
+>> +
+> [...]
+>> +
+>> +       soc: soc {
+>> +               #address-cells = <2>;
+>> +               #size-cells = <2>;
+>> +               ranges = <0 0 0 0 0x10 0>;
+>> +               dma-ranges = <0 0 0 0  0x10 0>;
 > 
+> Why the extra space here               ^ ?
 
-Here, I believe you're pointing out that the current situation in the
-kernel is already broken, with respect to fs interactions (especially
-writeback) with gup. Yes, you are correct, there is a problem.
+typo, will fix.
 
-> Though I doubt anything helpful about it can be expected from fs in near
-
-Actually, fs and mm folks are working together to solve this.
-
-> future, we have options for instance that gupers periodically release
-> their references and re-pin pages after data sync the same way as the
-> current flusher does.
 > 
+>> +               compatible = "simple-bus";
+>> +
+>> +               gcc: clock-controller@100000 {
+>> +                       compatible = "qcom,gcc-sc7180";
+>> +                       reg = <0 0x00100000 0 0x1f0000>;
+>> +                       #clock-cells = <1>;
+>> +                       #reset-cells = <1>;
+>> +                       #power-domain-cells = <1>;
+>> +               };
+>> +
+>> +               qupv3_id_1: geniqup@ac0000 {
+>> +                       compatible = "qcom,geni-se-qup";
+>> +                       reg = <0 0x00ac0000 0 0x6000>;
+>> +                       clock-names = "m-ahb", "s-ahb";
+>> +                       clocks = <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
+>> +                                <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
+>> +                       #address-cells = <2>;
+>> +                       #size-cells = <2>;
+>> +                       ranges;
+>> +                       status = "disabled";
+>> +
+>> +                       uart10: serial@a88000 {
+>> +                               compatible = "qcom,geni-debug-uart";
+>> +                               reg = <0 0x00a88000 0 0x4000>;
+>> +                               clock-names = "se";
+>> +                               clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
+>> +                               pinctrl-names = "default";
+>> +                               pinctrl-0 = <&qup_uart10_default>;
+>> +                               interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
+>> +                               status = "disabled";
+>> +                       };
+> 
+> Can we not add all the i2c/spi/uart cores here?
 
-That's one idea. I don't see it as viable, given the behavior of, say,
-a compute process running OpenCL jobs on a GPU that is connected via
-a network or Infiniband card--the idea of "pause" really looks more like
-"tear down the complicated multi-driver connection, writeback, then set it
-all up again", I suspect. (And if we could easily interrupt the job, we'd
-probably really be running with a page-fault-capable GPU plus and IB card
-that does ODP, plus HMM, and we wouldn't need to gup-pin anyway...)
+I see that these nodes are posted now [1].
+Will pull it in as part of this series so it can be reviewed together.
 
-Anyway, this is not amenable to quick fixes, because the problem is
-a couple of missing design pieces. Which we're working on putting in.
-But meanwhile, smaller changes such as this one are just going to move
-the problems to different places, rather than solving them. So it's best
-not to do that.
+[1] https://lkml.org/lkml/2019/10/31/63
 
-thanks,
 -- 
-John Hubbard
-NVIDIA
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
