@@ -2,51 +2,127 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04AB9CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 063E2CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2D9A20842
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD31720650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:30:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="imFyFb/C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729349AbfKDPaa (ORCPT
+        id S1729353AbfKDPa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:30:30 -0500
-Received: from verein.lst.de ([213.95.11.211]:39597 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729051AbfKDPaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:30:30 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id BA19A68BE1; Mon,  4 Nov 2019 16:30:27 +0100 (CET)
-Date:   Mon, 4 Nov 2019 16:30:27 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Charles Machalow <csm10495@gmail.com>
-Cc:     Marta Rybczynska <mrybczyn@kalray.eu>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        kbusch <kbusch@kernel.org>, axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] nvme: change nvme_passthru_cmd64's result field.
-Message-ID: <20191104153027.GC17050@lst.de>
-References: <20191031050338.12700-1-csm10495@gmail.com> <20191031133921.GA4763@lst.de> <1977598237.90293761.1572878080625.JavaMail.zimbra@kalray.eu> <CANSCoS-2k08Si3a4b+h-4QTR86EfZHZx_oaGAHWorsYkdp35Bg@mail.gmail.com> <871357470.90297451.1572879417091.JavaMail.zimbra@kalray.eu> <CANSCoS_MX97_JyLkKrZ7YjTS9L+JsZcPsHpoZ-keA8t3W394Dg@mail.gmail.com> <266047531.90300507.1572880575232.JavaMail.zimbra@kalray.eu> <CANSCoS9A1XY4DzdBwGU4+oT-uKvpohxhyWxdJ1ySJ6QKv6moKw@mail.gmail.com>
+        Mon, 4 Nov 2019 10:30:56 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29890 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727838AbfKDPa4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 10:30:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572881455;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Mbwo60yuhf9zn/no1y4eRlxn1KfPxIVdxOh+1RcQBXI=;
+        b=imFyFb/Cn7rrHUwy/7VxmDqLZYXoXd4e0FA4Jl4SbniSU+lMWC0HEbr4iHadSOp9EDqJcu
+        PxBamGTAUOZcu1sjYwxmTumERModM3HAIcn6PQU/CzedY89jKfC96CmSl6PJvA1KeT+002
+        ncTrMRK5l2rjMNfk5hbf5a1hrSTUEj4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-293-V26_gtMDPGyIgQsEcz9NSg-1; Mon, 04 Nov 2019 10:30:53 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D800107ACC2;
+        Mon,  4 Nov 2019 15:30:52 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B00265D6C5;
+        Mon,  4 Nov 2019 15:30:51 +0000 (UTC)
+Date:   Mon, 4 Nov 2019 10:30:49 -0500
+From:   Brian Foster <bfoster@redhat.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/28] shrinker: clean up variable types and tracepoints
+Message-ID: <20191104153049.GD10665@bfoster>
+References: <20191031234618.15403-1-david@fromorbit.com>
+ <20191031234618.15403-14-david@fromorbit.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20191031234618.15403-14-david@fromorbit.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: V26_gtMDPGyIgQsEcz9NSg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <CANSCoS9A1XY4DzdBwGU4+oT-uKvpohxhyWxdJ1ySJ6QKv6moKw@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 07:20:43AM -0800, Charles Machalow wrote:
-> The thing with that structure is if you use it with the old IOCTL, the
-> result will go into rsvd2 instead of the first 32 bits of result.
+On Fri, Nov 01, 2019 at 10:46:03AM +1100, Dave Chinner wrote:
+> From: Dave Chinner <dchinner@redhat.com>
+>=20
+> The tracepoint information in the shrinker code don't make a lot of
 
-But if you use the old ioctls on the new structure you can at least
-expect that.  And with the added explicit padding it will at least
-do the right thing on 32-bit x86 as well.
+Nit:=09=09=09=09=09=09  doesn't
+
+> sense anymore and contain redundant information as a result of the
+> changes in the patchset. Refine the information passed to the
+> tracepoints so they expose the operation of the shrinkers more
+> precisely and clean up the remaining code and varibles in the
+
+Nit:=09=09=09=09=09=09variables
+
+> shrinker code so it all makes sense.
+>=20
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> ---
+>  include/trace/events/vmscan.h | 69 ++++++++++++++++-------------------
+>  mm/vmscan.c                   | 24 +++++-------
+>  2 files changed, 41 insertions(+), 52 deletions(-)
+>=20
+...
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index c0e2bf656e3f..7a8256322150 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+...
+> @@ -624,23 +622,21 @@ static unsigned long do_shrink_slab(struct shrink_c=
+ontrol *shrinkctl,
+>  =09=09cond_resched();
+>  =09}
+>  done:
+...
+>  =09if (next_deferred > 0)
+> -=09=09new_nr =3D atomic64_add_return(next_deferred,
+> -=09=09=09=09=09=09&shrinker->nr_deferred[nid]);
+> -=09else
+> -=09=09new_nr =3D atomic64_read(&shrinker->nr_deferred[nid]);
+> +=09=09atomic64_add(next_deferred, &shrinker->nr_deferred[nid]);
+> =20
+> -=09trace_mm_shrink_slab_end(shrinker, nid, freed, deferred_count, new_nr=
+,
+> -=09=09=09=09=09scan_count);
+> +=09trace_mm_shrink_slab_end(shrinker, nid, freed, scanned_objects,
+> +=09=09=09=09 next_deferred);
+
+I guess this invalidates my comment on the previous patch around new_nr.
+Looks Ok to me:
+
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+
+>  =09return freed;
+>  }
+> =20
+> --=20
+> 2.24.0.rc0
+>=20
+
