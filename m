@@ -2,52 +2,54 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82078CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CE3CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B42521655
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81C8021744
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904122;
-	bh=r7I7Ejrdfpo/PUppM//zRRCS8J4yVK7fBNePuGo0bGo=;
+	s=default; t=1572904125;
+	bh=5dePFhU5ZmFTL+cjgxQZGR8VaZyg7D0eB8kV/tGQmo4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lXeY4vQmhFsvNxcWL9hygLBs6s30ihYb2ObTGz91rc8xMDNKTXDsTm+hQE1xX0S19
-	 KYThcWf0jGdkfX/uK20HcPUI+do8Vn2VI1sKAc6bUjbCnc90HuQrlvBs5iJT/azSfD
-	 7beFrYHMG4mtYI62WKUuHFJlbTyukmTLVOIEtab8=
+	b=hw9gyWKWMxeI+WC8HECaooTPZIb5z8mwM72TvxKknmKHBbQUx6wAIgDJBfRRN9xfF
+	 Z/o81tvOj6Uph9+MF5vMtdn2r1HAAzp0nJi2fhWbhrpwPQ38GX4Qdz8RiS6FJbsofO
+	 qmxIUb+qUL9rsiDTqMWl6NG1cTVmu0URCFvcAiuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730101AbfKDVsl (ORCPT
+        id S1730085AbfKDVso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:48:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39244 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:48:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730085AbfKDVsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:48:38 -0500
+        id S1730100AbfKDVsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:48:42 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFF8C20B7C;
-        Mon,  4 Nov 2019 21:48:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39E48214D9;
+        Mon,  4 Nov 2019 21:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904118;
-        bh=r7I7Ejrdfpo/PUppM//zRRCS8J4yVK7fBNePuGo0bGo=;
+        s=default; t=1572904120;
+        bh=5dePFhU5ZmFTL+cjgxQZGR8VaZyg7D0eB8kV/tGQmo4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hVEZ0C3u2a39N2Bj9OcS99eEfUfhnXGgCG6EglaEP2OxXgd1LIgEryEBx/aRVUwnb
-         WMzyqNoO26f5pUMf6DyYh0pK0AChz+RVtcxHqQwywljVBIFV0iLUh3jrWiQvPV/quX
-         T/J7qOju5AcqApDLJRCKKWvJ3s70SoXp9L3rBVlU=
+        b=S9IuDOpwHGtgi+/xsAhyjRPxJbK/LbLu2ykCKg4Vvvdufg9KkdY+8V+ZdUMrFKlqW
+         N/lOuka6nyuVS5+xEct6rLV1Im5x6QhhlDVnSybithJgXKhLHjDJonIBKbHXwVSOed
+         qdWikHJCjZd85qzI9hBaMaYj/43H9H+M5H1txWJQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Felipe Balbi <balbi@kernel.org>,
-        syzbot+8ab8bf161038a8768553@syzkaller.appspotmail.com
-Subject: [PATCH 4.4 29/46] USB: gadget: Reject endpoints with 0 maxpacket value
-Date:   Mon,  4 Nov 2019 22:45:00 +0100
-Message-Id: <20191104211902.213280126@linuxfoundation.org>
+        stable@vger.kernel.org, Guruswamy Basavaiah <guru2018@gmail.com>,
+        Nikos Tsironis <ntsironis@arrikto.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 03/46] dm snapshot: rework COW throttling to fix deadlock
+Date:   Mon,  4 Nov 2019 22:44:34 +0100
+Message-Id: <20191104211834.118507087@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211830.912265604@linuxfoundation.org>
 References: <20191104211830.912265604@linuxfoundation.org>
@@ -60,55 +62,246 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 54f83b8c8ea9b22082a496deadf90447a326954e upstream.
+[ Upstream commit b21555786f18cd77f2311ad89074533109ae3ffa ]
 
-Endpoints with a maxpacket length of 0 are probably useless.  They
-can't transfer any data, and it's not at all unlikely that a UDC will
-crash or hang when trying to handle a non-zero-length usb_request for
-such an endpoint.  Indeed, dummy-hcd gets a divide error when trying
-to calculate the remainder of a transfer length by the maxpacket
-value, as discovered by the syzbot fuzzer.
+Commit 721b1d98fb517a ("dm snapshot: Fix excessive memory usage and
+workqueue stalls") introduced a semaphore to limit the maximum number of
+in-flight kcopyd (COW) jobs.
 
-Currently the gadget core does not check for endpoints having a
-maxpacket value of 0.  This patch adds a check to usb_ep_enable(),
-preventing such endpoints from being used.
+The implementation of this throttling mechanism is prone to a deadlock:
 
-As far as I know, none of the gadget drivers in the kernel tries to
-create an endpoint with maxpacket = 0, but until now there has been
-nothing to prevent userspace programs under gadgetfs or configfs from
-doing it.
+1. One or more threads write to the origin device causing COW, which is
+   performed by kcopyd.
 
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+8ab8bf161038a8768553@syzkaller.appspotmail.com
-CC: <stable@vger.kernel.org>
-Acked-by: Felipe Balbi <balbi@kernel.org>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910281052370.1485-100000@iolanthe.rowland.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+2. At some point some of these threads might reach the s->cow_count
+   semaphore limit and block in down(&s->cow_count), holding a read lock
+   on _origins_lock.
 
+3. Someone tries to acquire a write lock on _origins_lock, e.g.,
+   snapshot_ctr(), which blocks because the threads at step (2) already
+   hold a read lock on it.
+
+4. A COW operation completes and kcopyd runs dm-snapshot's completion
+   callback, which ends up calling pending_complete().
+   pending_complete() tries to resubmit any deferred origin bios. This
+   requires acquiring a read lock on _origins_lock, which blocks.
+
+   This happens because the read-write semaphore implementation gives
+   priority to writers, meaning that as soon as a writer tries to enter
+   the critical section, no readers will be allowed in, until all
+   writers have completed their work.
+
+   So, pending_complete() waits for the writer at step (3) to acquire
+   and release the lock. This writer waits for the readers at step (2)
+   to release the read lock and those readers wait for
+   pending_complete() (the kcopyd thread) to signal the s->cow_count
+   semaphore: DEADLOCK.
+
+The above was thoroughly analyzed and documented by Nikos Tsironis as
+part of his initial proposal for fixing this deadlock, see:
+https://www.redhat.com/archives/dm-devel/2019-October/msg00001.html
+
+Fix this deadlock by reworking COW throttling so that it waits without
+holding any locks. Add a variable 'in_progress' that counts how many
+kcopyd jobs are running. A function wait_for_in_progress() will sleep if
+'in_progress' is over the limit. It drops _origins_lock in order to
+avoid the deadlock.
+
+Reported-by: Guruswamy Basavaiah <guru2018@gmail.com>
+Reported-by: Nikos Tsironis <ntsironis@arrikto.com>
+Reviewed-by: Nikos Tsironis <ntsironis@arrikto.com>
+Tested-by: Nikos Tsironis <ntsironis@arrikto.com>
+Fixes: 721b1d98fb51 ("dm snapshot: Fix excessive memory usage and workqueue stalls")
+Cc: stable@vger.kernel.org # v5.0+
+Depends-on: 4a3f111a73a8c ("dm snapshot: introduce account_start_copy() and account_end_copy()")
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/usb/gadget.h |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/md/dm-snap.c | 80 +++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 64 insertions(+), 16 deletions(-)
 
---- a/include/linux/usb/gadget.h
-+++ b/include/linux/usb/gadget.h
-@@ -270,6 +270,16 @@ static inline int usb_ep_enable(struct u
- 	if (ep->enabled)
- 		return 0;
+diff --git a/drivers/md/dm-snap.c b/drivers/md/dm-snap.c
+index 2437ca7e43687..98950c4bf939a 100644
+--- a/drivers/md/dm-snap.c
++++ b/drivers/md/dm-snap.c
+@@ -19,7 +19,6 @@
+ #include <linux/vmalloc.h>
+ #include <linux/log2.h>
+ #include <linux/dm-kcopyd.h>
+-#include <linux/semaphore.h>
  
-+	/* UDC drivers can't handle endpoints with maxpacket size 0 */
-+	if (usb_endpoint_maxp(ep->desc) == 0) {
-+		/*
-+		 * We should log an error message here, but we can't call
-+		 * dev_err() because there's no way to find the gadget
-+		 * given only ep.
-+		 */
-+		return -EINVAL;
+ #include "dm.h"
+ 
+@@ -106,8 +105,8 @@ struct dm_snapshot {
+ 	/* The on disk metadata handler */
+ 	struct dm_exception_store *store;
+ 
+-	/* Maximum number of in-flight COW jobs. */
+-	struct semaphore cow_count;
++	unsigned in_progress;
++	wait_queue_head_t in_progress_wait;
+ 
+ 	struct dm_kcopyd_client *kcopyd_client;
+ 
+@@ -158,8 +157,8 @@ struct dm_snapshot {
+  */
+ #define DEFAULT_COW_THRESHOLD 2048
+ 
+-static int cow_threshold = DEFAULT_COW_THRESHOLD;
+-module_param_named(snapshot_cow_threshold, cow_threshold, int, 0644);
++static unsigned cow_threshold = DEFAULT_COW_THRESHOLD;
++module_param_named(snapshot_cow_threshold, cow_threshold, uint, 0644);
+ MODULE_PARM_DESC(snapshot_cow_threshold, "Maximum number of chunks being copied on write");
+ 
+ DECLARE_DM_KCOPYD_THROTTLE_WITH_MODULE_PARM(snapshot_copy_throttle,
+@@ -1207,7 +1206,7 @@ static int snapshot_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+ 		goto bad_hash_tables;
+ 	}
+ 
+-	sema_init(&s->cow_count, (cow_threshold > 0) ? cow_threshold : INT_MAX);
++	init_waitqueue_head(&s->in_progress_wait);
+ 
+ 	s->kcopyd_client = dm_kcopyd_client_create(&dm_kcopyd_throttle);
+ 	if (IS_ERR(s->kcopyd_client)) {
+@@ -1397,17 +1396,54 @@ static void snapshot_dtr(struct dm_target *ti)
+ 
+ 	dm_put_device(ti, s->origin);
+ 
++	WARN_ON(s->in_progress);
++
+ 	kfree(s);
+ }
+ 
+ static void account_start_copy(struct dm_snapshot *s)
+ {
+-	down(&s->cow_count);
++	spin_lock(&s->in_progress_wait.lock);
++	s->in_progress++;
++	spin_unlock(&s->in_progress_wait.lock);
+ }
+ 
+ static void account_end_copy(struct dm_snapshot *s)
+ {
+-	up(&s->cow_count);
++	spin_lock(&s->in_progress_wait.lock);
++	BUG_ON(!s->in_progress);
++	s->in_progress--;
++	if (likely(s->in_progress <= cow_threshold) &&
++	    unlikely(waitqueue_active(&s->in_progress_wait)))
++		wake_up_locked(&s->in_progress_wait);
++	spin_unlock(&s->in_progress_wait.lock);
++}
++
++static bool wait_for_in_progress(struct dm_snapshot *s, bool unlock_origins)
++{
++	if (unlikely(s->in_progress > cow_threshold)) {
++		spin_lock(&s->in_progress_wait.lock);
++		if (likely(s->in_progress > cow_threshold)) {
++			/*
++			 * NOTE: this throttle doesn't account for whether
++			 * the caller is servicing an IO that will trigger a COW
++			 * so excess throttling may result for chunks not required
++			 * to be COW'd.  But if cow_threshold was reached, extra
++			 * throttling is unlikely to negatively impact performance.
++			 */
++			DECLARE_WAITQUEUE(wait, current);
++			__add_wait_queue(&s->in_progress_wait, &wait);
++			__set_current_state(TASK_UNINTERRUPTIBLE);
++			spin_unlock(&s->in_progress_wait.lock);
++			if (unlock_origins)
++				up_read(&_origins_lock);
++			io_schedule();
++			remove_wait_queue(&s->in_progress_wait, &wait);
++			return false;
++		}
++		spin_unlock(&s->in_progress_wait.lock);
++	}
++	return true;
+ }
+ 
+ /*
+@@ -1425,7 +1461,7 @@ static void flush_bios(struct bio *bio)
+ 	}
+ }
+ 
+-static int do_origin(struct dm_dev *origin, struct bio *bio);
++static int do_origin(struct dm_dev *origin, struct bio *bio, bool limit);
+ 
+ /*
+  * Flush a list of buffers.
+@@ -1438,7 +1474,7 @@ static void retry_origin_bios(struct dm_snapshot *s, struct bio *bio)
+ 	while (bio) {
+ 		n = bio->bi_next;
+ 		bio->bi_next = NULL;
+-		r = do_origin(s->origin, bio);
++		r = do_origin(s->origin, bio, false);
+ 		if (r == DM_MAPIO_REMAPPED)
+ 			generic_make_request(bio);
+ 		bio = n;
+@@ -1730,8 +1766,11 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
+ 	if (!s->valid)
+ 		return -EIO;
+ 
+-	/* FIXME: should only take write lock if we need
+-	 * to copy an exception */
++	if (bio_data_dir(bio) == WRITE) {
++		while (unlikely(!wait_for_in_progress(s, false)))
++			; /* wait_for_in_progress() has slept */
 +	}
 +
- 	ret = ep->ops->enable(ep, ep->desc);
- 	if (ret)
- 		return ret;
+ 	mutex_lock(&s->lock);
+ 
+ 	if (!s->valid || (unlikely(s->snapshot_overflowed) && bio_rw(bio) == WRITE)) {
+@@ -1879,7 +1918,7 @@ redirect_to_origin:
+ 
+ 	if (bio_rw(bio) == WRITE) {
+ 		mutex_unlock(&s->lock);
+-		return do_origin(s->origin, bio);
++		return do_origin(s->origin, bio, false);
+ 	}
+ 
+ out_unlock:
+@@ -2215,15 +2254,24 @@ next_snapshot:
+ /*
+  * Called on a write from the origin driver.
+  */
+-static int do_origin(struct dm_dev *origin, struct bio *bio)
++static int do_origin(struct dm_dev *origin, struct bio *bio, bool limit)
+ {
+ 	struct origin *o;
+ 	int r = DM_MAPIO_REMAPPED;
+ 
++again:
+ 	down_read(&_origins_lock);
+ 	o = __lookup_origin(origin->bdev);
+-	if (o)
++	if (o) {
++		if (limit) {
++			struct dm_snapshot *s;
++			list_for_each_entry(s, &o->snapshots, list)
++				if (unlikely(!wait_for_in_progress(s, true)))
++					goto again;
++		}
++
+ 		r = __origin_write(&o->snapshots, bio->bi_iter.bi_sector, bio);
++	}
+ 	up_read(&_origins_lock);
+ 
+ 	return r;
+@@ -2336,7 +2384,7 @@ static int origin_map(struct dm_target *ti, struct bio *bio)
+ 		dm_accept_partial_bio(bio, available_sectors);
+ 
+ 	/* Only tell snapshots if this is a write */
+-	return do_origin(o->dev, bio);
++	return do_origin(o->dev, bio, true);
+ }
+ 
+ /*
+-- 
+2.20.1
+
 
 
