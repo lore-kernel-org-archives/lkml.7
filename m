@@ -5,50 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9201ECA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE99CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6813420650
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CC72084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905691;
-	bh=M2HzMP+l+Weo8FPbty/bQt2z8x2v4tAHox0FIemkwwE=;
+	s=default; t=1572905696;
+	bh=ya2/v1F9e7IBR+AORpHDSRdqid85XSliECmCR3JLtHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MMOL6azt1CLzOTBvp3SRm/coxsQ0Z3Mtx49MdF+dT43l5TaDxehXU1ttVcPJFS2gx
-	 qrhK5PXkEMcrAiKNKPAc3QPlcP+ik7M8U2nR94RmM7cA/O9mkIjzn/Fr2H/OC53tlX
-	 zY0QtvZUkeaifcrh9oj6sJ9M7CPy69lwKSmXPScg=
+	b=u+7V8Nm4zS5NjbjJ68hiFqVZZaU5Xbp20DodJX1xSc+OjG0bzOVYp24sPLMBnXGXt
+	 fc7lrl01Vpmq42M+cFtQB5Wq/PW+i5rRG7TSERyrdG5Av3wlCrcddVON5Z5va5wmQ4
+	 MJHzUQyYEqCwbYHpKEPhFdtmoM25li79rTgxZTHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390078AbfKDWHH (ORCPT
+        id S2390195AbfKDWOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:07:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39266 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:14:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390046AbfKDWHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:07:01 -0500
+        id S2389606AbfKDWG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:06:58 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01152214D8;
-        Mon,  4 Nov 2019 22:06:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1345214D9;
+        Mon,  4 Nov 2019 22:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905220;
-        bh=M2HzMP+l+Weo8FPbty/bQt2z8x2v4tAHox0FIemkwwE=;
+        s=default; t=1572905217;
+        bh=ya2/v1F9e7IBR+AORpHDSRdqid85XSliECmCR3JLtHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p9TIXF9a8Y28hMDVnVsvvOwNp1Gtne2+pPEIEYEROGWu6dyVMGYHDFDENzWbNMPyp
-         eoN0k5ainfVDdkl+G2wPhwWJda1rXoLDQi/vdqOx+vR5W6DXG6hV3/OlWfOO2+Wm29
-         cOackZTvjhkRwDR0EIi1njfZ29I/ETohj06YKgqk=
+        b=u1Vs5LpR87uBfoqLVvdMIlN7r9z7CyqnlteaERENeD8/FpR64V6BJRWQ+9Cw6LJu5
+         b4mBmpIFJ5ggqfzDmhnk3nVMNt0GttVJTh6oDBrtk2ht9jwQh0u9kqUKjVEYIy+5RV
+         IkUtZtBtnzHTRLFsCHKJdQgiqdI3sz8U4n1Lxs3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nirmoy Das <nirmoy.das@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 070/163] drm/amdgpu: fix memory leak
-Date:   Mon,  4 Nov 2019 22:44:20 +0100
-Message-Id: <20191104212144.991122922@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 069/163] perf/x86/amd: Change/fix NMI latency mitigation to use a timestamp
+Date:   Mon,  4 Nov 2019 22:44:19 +0100
+Message-Id: <20191104212144.927000128@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -61,69 +68,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nirmoy Das <nirmoy.das@amd.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-[ Upstream commit 083164dbdb17c5ea4ad92c1782b59c9d75567790 ]
+[ Upstream commit df4d29732fdad43a51284f826bec3e6ded177540 ]
 
-cleanup error handling code and make sure temporary info array
-with the handles are freed by amdgpu_bo_list_put() on
-idr_replace()'s failure.
+It turns out that the NMI latency workaround from commit:
 
-Signed-off-by: Nirmoy Das <nirmoy.das@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+  6d3edaae16c6 ("x86/perf/amd: Resolve NMI latency issues for active PMCs")
+
+ends up being too conservative and results in the perf NMI handler claiming
+NMIs too easily on AMD hardware when the NMI watchdog is active.
+
+This has an impact, for example, on the hpwdt (HPE watchdog timer) module.
+This module can produce an NMI that is used to reset the system. It
+registers an NMI handler for the NMI_UNKNOWN type and relies on the fact
+that nothing has claimed an NMI so that its handler will be invoked when
+the watchdog device produces an NMI. After the referenced commit, the
+hpwdt module is unable to process its generated NMI if the NMI watchdog is
+active, because the current NMI latency mitigation results in the NMI
+being claimed by the perf NMI handler.
+
+Update the AMD perf NMI latency mitigation workaround to, instead, use a
+window of time. Whenever a PMC is handled in the perf NMI handler, set a
+timestamp which will act as a perf NMI window. Any NMIs arriving within
+that window will be claimed by perf. Anything outside that window will
+not be claimed by perf. The value for the NMI window is set to 100 msecs.
+This is a conservative value that easily covers any NMI latency in the
+hardware. While this still results in a window in which the hpwdt module
+will not receive its NMI, the window is now much, much smaller.
+
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Jerry Hoemann <jerry.hoemann@hpe.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 6d3edaae16c6 ("x86/perf/amd: Resolve NMI latency issues for active PMCs")
+Link: https://lkml.kernel.org/r/Message-ID:
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/x86/events/amd/core.c | 30 +++++++++++++++++-------------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-index 7bcf86c619995..61e38e43ad1d5 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-@@ -270,7 +270,7 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index e7d35f60d53fc..64c3e70b0556b 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -5,12 +5,14 @@
+ #include <linux/init.h>
+ #include <linux/slab.h>
+ #include <linux/delay.h>
++#include <linux/jiffies.h>
+ #include <asm/apicdef.h>
+ #include <asm/nmi.h>
  
- 	r = amdgpu_bo_create_list_entry_array(&args->in, &info);
- 	if (r)
--		goto error_free;
-+		return r;
+ #include "../perf_event.h"
  
- 	switch (args->in.operation) {
- 	case AMDGPU_BO_LIST_OP_CREATE:
-@@ -283,8 +283,7 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
- 		r = idr_alloc(&fpriv->bo_list_handles, list, 1, 0, GFP_KERNEL);
- 		mutex_unlock(&fpriv->bo_list_lock);
- 		if (r < 0) {
--			amdgpu_bo_list_put(list);
--			return r;
-+			goto error_put_list;
- 		}
+-static DEFINE_PER_CPU(unsigned int, perf_nmi_counter);
++static DEFINE_PER_CPU(unsigned long, perf_nmi_tstamp);
++static unsigned long perf_nmi_window;
  
- 		handle = r;
-@@ -306,9 +305,8 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
- 		mutex_unlock(&fpriv->bo_list_lock);
+ static __initconst const u64 amd_hw_cache_event_ids
+ 				[PERF_COUNT_HW_CACHE_MAX]
+@@ -641,11 +643,12 @@ static void amd_pmu_disable_event(struct perf_event *event)
+  * handler when multiple PMCs are active or PMC overflow while handling some
+  * other source of an NMI.
+  *
+- * Attempt to mitigate this by using the number of active PMCs to determine
+- * whether to return NMI_HANDLED if the perf NMI handler did not handle/reset
+- * any PMCs. The per-CPU perf_nmi_counter variable is set to a minimum of the
+- * number of active PMCs or 2. The value of 2 is used in case an NMI does not
+- * arrive at the LAPIC in time to be collapsed into an already pending NMI.
++ * Attempt to mitigate this by creating an NMI window in which un-handled NMIs
++ * received during this window will be claimed. This prevents extending the
++ * window past when it is possible that latent NMIs should be received. The
++ * per-CPU perf_nmi_tstamp will be set to the window end time whenever perf has
++ * handled a counter. When an un-handled NMI is received, it will be claimed
++ * only if arriving within that window.
+  */
+ static int amd_pmu_handle_irq(struct pt_regs *regs)
+ {
+@@ -663,21 +666,19 @@ static int amd_pmu_handle_irq(struct pt_regs *regs)
+ 	handled = x86_pmu_handle_irq(regs);
  
- 		if (IS_ERR(old)) {
--			amdgpu_bo_list_put(list);
- 			r = PTR_ERR(old);
--			goto error_free;
-+			goto error_put_list;
- 		}
+ 	/*
+-	 * If a counter was handled, record the number of possible remaining
+-	 * NMIs that can occur.
++	 * If a counter was handled, record a timestamp such that un-handled
++	 * NMIs will be claimed if arriving within that window.
+ 	 */
+ 	if (handled) {
+-		this_cpu_write(perf_nmi_counter,
+-			       min_t(unsigned int, 2, active));
++		this_cpu_write(perf_nmi_tstamp,
++			       jiffies + perf_nmi_window);
  
- 		amdgpu_bo_list_put(old);
-@@ -325,8 +323,10 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
+ 		return handled;
+ 	}
  
- 	return 0;
+-	if (!this_cpu_read(perf_nmi_counter))
++	if (time_after(jiffies, this_cpu_read(perf_nmi_tstamp)))
+ 		return NMI_DONE;
  
-+error_put_list:
-+	amdgpu_bo_list_put(list);
-+
- error_free:
--	if (info)
--		kvfree(info);
-+	kvfree(info);
- 	return r;
+-	this_cpu_dec(perf_nmi_counter);
+-
+ 	return NMI_HANDLED;
  }
+ 
+@@ -909,6 +910,9 @@ static int __init amd_core_pmu_init(void)
+ 	if (!boot_cpu_has(X86_FEATURE_PERFCTR_CORE))
+ 		return 0;
+ 
++	/* Avoid calulating the value each time in the NMI handler */
++	perf_nmi_window = msecs_to_jiffies(100);
++
+ 	switch (boot_cpu_data.x86) {
+ 	case 0x15:
+ 		pr_cont("Fam15h ");
 -- 
 2.20.1
 
