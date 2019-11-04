@@ -2,91 +2,114 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C67CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD27CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8984D21D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:58:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qCo2LsiF"
+	by mail.kernel.org (Postfix) with ESMTP id 4706521D81
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728557AbfKDO6E (ORCPT
+        id S1728745AbfKDO6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 09:58:04 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41627 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727788AbfKDO6E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 09:58:04 -0500
-Received: by mail-lj1-f195.google.com with SMTP id m9so17931734ljh.8
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 06:58:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uQT3fS5S41/nDc9PxWx6AfzSE0EBcmwMovDDeO7/F0o=;
-        b=qCo2LsiFG4nolA/iR7fmRONVtZ56CRD0DEtH4z3fn3kFPR54PXNXhdNtoSpdtI/BC3
-         Pxnf3UnZm6bAhBy5937xGDhmpVia5IMJnzyuiIqlA9iWIqhUUGQpOiK6qAXWtoNvXsKu
-         CFw5vciS3yqoxC5XbBHlzIYv2dypYYKD5PF0HIZAYeslHRDyICRooHTY87mxRE/rQ1oR
-         kTpFGFVW6Ec+guHV8sudEaMF2iqMviMGBwEmrWmGGlRjthRP3Lt3zFZ4ZMWfqaeaWhkY
-         RgIash3fp6ZWU0z1tzcxbJdZ7KRweEIJT5AyvVEcXf98ZYOukhveYalznLsBqjD0uCoI
-         qLkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uQT3fS5S41/nDc9PxWx6AfzSE0EBcmwMovDDeO7/F0o=;
-        b=kJ1pxmV5h0xnr/lHlSMkjzbwOTVFSfLUKRcHM2CbuIysaOhgvzi+MdHxzjYGizMvhL
-         sJXYIiJajqHvr8memu4zcInX/0sT4Juz01qRgmsP7rZHVfndnOUYO045Nff8Tow+pfZ2
-         umdU4Y0IxzI5CUzA/Pp5EKYbtkKeE9i3JWRTcXBTrAdcG25qnG/keZH7n0hRp2V0RyS1
-         HabjEsOWrnwJW+pCpsHKlgZPthbC0ut3RvtXiBOG0jABptvj+2fomXpXTRV2nWdsQVde
-         ALMgyiBdVwnsic8JTrSmJQcjvqQ4w8hHoS4Y9Eh9dgKQ0geRpBE0DiuruDcF13yS+N2a
-         bCqQ==
-X-Gm-Message-State: APjAAAX/Pj7UhjmnQRM7jMbnWkZqKx873KdhfLradveRaGITnBTMT2s0
-        1YKkeN4ybK2cXH5mp3uYpUEFuGILkrhwRXeIrIUdPiP/ZFg=
-X-Google-Smtp-Source: APXvYqwqzFe/WynJv7uysnlQKS5aaNgXiv3b6dRiA+EEVT7ttVdXg9c0o8gOsCY+vJ9sFd16TD8qcWvJsKTk5BCaIUQ=
-X-Received: by 2002:a05:651c:1202:: with SMTP id i2mr19180665lja.218.1572879482204;
- Mon, 04 Nov 2019 06:58:02 -0800 (PST)
+        Mon, 4 Nov 2019 09:58:30 -0500
+Received: from mga17.intel.com ([192.55.52.151]:21717 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727788AbfKDO63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 09:58:29 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 06:58:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,267,1569308400"; 
+   d="scan'208";a="212329826"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 04 Nov 2019 06:58:26 -0800
+Received: by lahna (sSMTP sendmail emulation); Mon, 04 Nov 2019 16:58:25 +0200
+Date:   Mon, 4 Nov 2019 16:58:25 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Christian Kellner <ck@xatom.net>,
+        intel-gfx@lists.freedesktop.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mario Limonciello <mario.limonciello@dell.com>
+Subject: Re: snd_hda_intel 0000:00:1f.3: No response from codec, resetting
+ bus: last cmd=
+Message-ID: <20191104145825.GE2552@lahna.fi.intel.com>
+References: <b31b8649-cb2d-890b-2d4d-881e47895ee6@molgen.mpg.de>
+ <20191104131024.GB2552@lahna.fi.intel.com>
+ <s5heeynwzhi.wl-tiwai@suse.de>
 MIME-Version: 1.0
-References: <20191018163047.1284736-1-arnd@arndb.de>
-In-Reply-To: <20191018163047.1284736-1-arnd@arndb.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 4 Nov 2019 15:57:50 +0100
-Message-ID: <CACRpkdbb=kazUgwx5nJyv7rOvtuDXQ_1mpz=U8tio8Om4j5pHg@mail.gmail.com>
-Subject: Re: [PATCH 1/6] ARM: versatile: move integrator/realview/vexpress to versatile
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Russell King <linux@armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <s5heeynwzhi.wl-tiwai@suse.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 18, 2019 at 6:30 PM Arnd Bergmann <arnd@arndb.de> wrote:
+On Mon, Nov 04, 2019 at 02:19:21PM +0100, Takashi Iwai wrote:
+> On Mon, 04 Nov 2019 14:10:24 +0100,
+> Mika Westerberg wrote:
+> > 
+> > Hi,
+> > 
+> > On Mon, Nov 04, 2019 at 01:57:54PM +0100, Paul Menzel wrote:
+> > > Dear Linux folks,
+> > > 
+> > > 
+> > > On the Dell XPS 13 9380 with Debian Sid/unstable with Linux 5.3.7
+> > > resuming0with Dell’s Thunderbolt TB16 dock connected, Linux spews
+> > > the errors below.
+> > 
+> > I have this machine here so can try to reproduce it as well.
+> > 
+> > > ```
+> > > [    0.000000] Linux version 5.3.0-1-amd64 (debian-kernel@lists.debian.org) (gcc version 9.2.1 20191008 (Debian 9.2.1-9)) #1 SMP Debian 5.3.7-1 (2019-10-19)
+> > > […]
+> > > [    1.596619] pci 0000:00:1f.3: Adding to iommu group 12
+> > > [   14.536274] snd_hda_intel 0000:00:1f.3: enabling device (0000 -> 0002)
+> > > [   14.544100] snd_hda_intel 0000:00:1f.3: bound 0000:00:02.0 (ops i915_audio_component_bind_ops [i915])
+> > > [   14.760751] input: HDA Intel PCH Headphone Mic as /devices/pci0000:00/0000:00:1f.3/sound/card0/input16
+> > > [   14.760790] input: HDA Intel PCH HDMI as /devices/pci0000:00/0000:00:1f.3/sound/card0/input17
+> > > [  156.614284] snd_hda_intel 0000:00:1f.3: No response from codec, disabling MSI: last cmd=0x20270503
+> > > [  157.622232] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20270503
+> > > [  158.626371] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20370503
+> > > [  159.634102] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x201f0500
+> > > [  161.678121] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20270503
+> > > [  162.682272] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20370503
+> > > [  163.694234] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x201f0500
+> > > [  165.730142] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20270503
+> > > […]
+> > > ```
+> > > 
+> > > In the bug report *[Intel Ice Lake, snd-hda-intel, HDMI] "No
+> > > response from codec" (after display hotplug?)* [1], note it’s a
+> > > different model, Takashi comments that this is a Thunderbolt or
+> > > i915 issue.
+> > 
+> > 0000:00:1f.3 is on PCH so not sure how it could be related to
+> > Thunderbolt, well or i915 for that matter.
+> 
+> It's the HD-audio controller PCI device and both HDMI and onboard
+> codecs are on that bus.  HDMI codec a shadow device of GPU, so it has
+> a strong dependency on i915 GPU driver.  The power of HD-audio bus and
+> codec is controlled over DRM audio component ops, so the power-on must
+> have been notified to GPU side, but still something seems missing.
+> ANd, with the dock, the other parties come to play into the game, so
+> it becomes more complex...
 
-> These are all fairly small platforms by now, and they are
-> closely related. Just move them all into a single directory.
->
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Liviu Dudau <liviu.dudau@arm.com>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-Hi Arnd, it looks OK but is this one of those patches that are
-only formatted for review because I just can't seem to apply it :(
-
-Do you have it on some branch I can pull in?
-
-Yours,
-Linus Walleij
+OK, thanks for explaining. Then I guess i915 may be related. However,
+that traffic for sure does not go over Thunderbolt fabric (PCIe and DP
+does).
