@@ -2,202 +2,91 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CABCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED933CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F6C20869
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C7D20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:58:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="iGUsSBTp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbfKDPvl (ORCPT
+        id S1728946AbfKDP6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:51:41 -0500
-Received: from foss.arm.com ([217.140.110.172]:45972 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727998AbfKDPvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:51:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15BE41FB;
-        Mon,  4 Nov 2019 07:51:40 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA20A3F71A;
-        Mon,  4 Nov 2019 07:51:37 -0800 (PST)
-Date:   Mon, 4 Nov 2019 15:51:33 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, Jessica Yu <jeyu@kernel.org>,
-        Helge Deller <deller@gmx.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc:     linux-kernel@vger.kernel.org, amit.kachhap@arm.com,
-        catalin.marinas@arm.com, duwe@suse.de, james.morse@arm.com,
-        jpoimboe@redhat.com, jthierry@redhat.com,
-        linux-parisc@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, rostedt@goodmis.org, svens@stackframe.org,
-        takahiro.akashi@linaro.org, will@kernel.org
-Subject: Re: [PATCHv2 2/8] module/ftrace: handle patchable-function-entry
-Message-ID: <20191104155132.GA1643@lakrids.cambridge.arm.com>
-References: <20191029165832.33606-1-mark.rutland@arm.com>
- <20191029165832.33606-3-mark.rutland@arm.com>
+        Mon, 4 Nov 2019 10:58:14 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34112 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727838AbfKDP6O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 10:58:14 -0500
+Received: by mail-qt1-f193.google.com with SMTP id h2so11386947qto.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 07:58:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=M4TV8XP9ZZ97Wbi4gj4llnMeNx475KkWsZHdhSFWxIE=;
+        b=iGUsSBTpGvkivt9PDVojmkWewQz7Pu/J1a4QhzT9FChTaJd3swuJL+Sf5RpDO1DDZn
+         eoNucuj06i6aDncmCzBLRCMj+0rJ4fEC7wcb/EVBakWup+3XeiWCqgRfv9S5wMwddmmX
+         Gga5SZle9j6s8VYxFzB/NvdBft4GTKwg4VByJyHOw8BPl7c+Myd4WslCT37apB/NMza+
+         UbEgLuZDXZIrkO+9x6ZGkkFmRIAjsUTP/myOzvz5A71XH2OLFk6fhjxOkUDzDUL+mQaI
+         BdHL5Z1CEpdNjo3X8G7kIIrfJcFP2Lnq3CNxFV2hMOtXPIi5Q2GEuzTerCiXWZGYCGaS
+         86JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=M4TV8XP9ZZ97Wbi4gj4llnMeNx475KkWsZHdhSFWxIE=;
+        b=fcbm6HMxhb67RP65K7cjrHEOtqH9L/m+MjnmmbJdjX/QYgEFusyLfj98aTEjHbOEwD
+         NZKa0ETmrZsnicyx4N9+TRenGff2eiXXUGo2ORwGvk/qGBfEbihoUeLCFOMetAPvw/Gs
+         EZuKF/acvWyS+dMJvLChucE1mCwEAK8PTp2NyXckrO8d69jz+dVS3eP5Pj9FEn2WsvqW
+         WZTYTEjnNJedWg7Al/e+dh1ULKi0ItpOWAdPIe07rhWzGMEL7FaXYIpS6kypHt1fiaOW
+         y/RQBBzHq/IRhqjzluJLg/xzpWNXuZVpL03xFxuBIkGEWWoGl53nDFAcOZ4cs+YouPfO
+         RFWA==
+X-Gm-Message-State: APjAAAXnBgeTctFlCDg9lplZK6WIe7p6pBGIW+7oZViq4tTkf2CDhOeX
+        1UCulRFSs9Z/7KMEJuJrPjH7Fg==
+X-Google-Smtp-Source: APXvYqzARc/wvDZ4K3G01oo+xpGMtDzlU8QV6cdh/5YfhniLyh+6ycbMhKVOkhys4ocq0wipTbqpQw==
+X-Received: by 2002:aed:2392:: with SMTP id j18mr13011818qtc.296.1572883088283;
+        Mon, 04 Nov 2019 07:58:08 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::1:2362])
+        by smtp.gmail.com with ESMTPSA id w23sm1477775qtw.87.2019.11.04.07.58.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 07:58:06 -0800 (PST)
+Date:   Mon, 4 Nov 2019 10:58:05 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, kernel-team@fb.com,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] MAINTAINERS: update information for "MEMORY MANAGEMENT"
+Message-ID: <20191104155805.GB24011@cmpxchg.org>
+References: <20191030202217.3498133-1-songliubraving@fb.com>
+ <4e4ff9c9-064c-7515-41ea-9f20b9889e51@suse.cz>
+ <20191104154721.GA24011@cmpxchg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191029165832.33606-3-mark.rutland@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20191104154721.GA24011@cmpxchg.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jessica, Helge,
-
-Are you ok with the module and parisc changes, repectively?
-
-The kbuild test robot is happy building this for multiple architectures,
-Sven has tested that this works correctly on parisc, and others have
-tested other architectures.
-
-I'd like to queue this in the arm64 tree soon if possible.
-
-Thanks,
-Mark.
-
-On Tue, Oct 29, 2019 at 04:58:26PM +0000, Mark Rutland wrote:
-> When using patchable-function-entry, the compiler will record the
-> callsites into a section named "__patchable_function_entries" rather
-> than "__mcount_loc". Let's abstract this difference behind a new
-> FTRACE_CALLSITE_SECTION, so that architectures don't have to handle this
-> explicitly (e.g. with custom module linker scripts).
+On Mon, Nov 04, 2019 at 10:47:23AM -0500, Johannes Weiner wrote:
+> On Mon, Nov 04, 2019 at 03:53:18PM +0100, Vlastimil Babka wrote:
+> > Also right now it seems there's just mainline master stuck at
+> > 5.4-rc5 and nothing else?
 > 
-> As parisc currently handles this explicitly, it is fixed up accordingly,
-> with its custom linker script removed. Since FTRACE_CALLSITE_SECTION is
-> only defined when DYNAMIC_FTRACE is selected, the parisc module loading
-> code is updated to only use the definition in that case. When
-> DYNAMIC_FTRACE is not selected, modules shouldn't have this section, so
-> this removes some redundant work in that case.
-> 
-> I built parisc generic-{32,64}bit_defconfig with DYNAMIC_FTRACE enabled,
-> and verified that the section made it into the .ko files for modules.
-> 
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
-> Cc: Jessica Yu <jeyu@kernel.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Sven Schnelle <svens@stackframe.org>
-> Cc: linux-parisc@vger.kernel.org
-> ---
->  arch/parisc/Makefile          |  1 -
->  arch/parisc/kernel/module.c   | 10 +++++++---
->  arch/parisc/kernel/module.lds |  7 -------
->  include/linux/ftrace.h        |  5 +++++
->  kernel/module.c               |  2 +-
->  5 files changed, 13 insertions(+), 12 deletions(-)
->  delete mode 100644 arch/parisc/kernel/module.lds
-> 
-> diff --git a/arch/parisc/Makefile b/arch/parisc/Makefile
-> index 36b834f1c933..dca8f2de8cf5 100644
-> --- a/arch/parisc/Makefile
-> +++ b/arch/parisc/Makefile
-> @@ -60,7 +60,6 @@ KBUILD_CFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY=1 \
->  		 -DFTRACE_PATCHABLE_FUNCTION_SIZE=$(NOP_COUNT)
->  
->  CC_FLAGS_FTRACE := -fpatchable-function-entry=$(NOP_COUNT),$(shell echo $$(($(NOP_COUNT)-1)))
-> -KBUILD_LDS_MODULE += $(srctree)/arch/parisc/kernel/module.lds
->  endif
->  
->  OBJCOPY_FLAGS =-O binary -R .note -R .comment -S
-> diff --git a/arch/parisc/kernel/module.c b/arch/parisc/kernel/module.c
-> index ac5f34993b53..1c50093e2ebe 100644
-> --- a/arch/parisc/kernel/module.c
-> +++ b/arch/parisc/kernel/module.c
-> @@ -43,6 +43,7 @@
->  #include <linux/elf.h>
->  #include <linux/vmalloc.h>
->  #include <linux/fs.h>
-> +#include <linux/ftrace.h>
->  #include <linux/string.h>
->  #include <linux/kernel.h>
->  #include <linux/bug.h>
-> @@ -862,7 +863,7 @@ int module_finalize(const Elf_Ehdr *hdr,
->  	const char *strtab = NULL;
->  	const Elf_Shdr *s;
->  	char *secstrings;
-> -	int err, symindex = -1;
-> +	int symindex = -1;
->  	Elf_Sym *newptr, *oldptr;
->  	Elf_Shdr *symhdr = NULL;
->  #ifdef DEBUG
-> @@ -946,11 +947,13 @@ int module_finalize(const Elf_Ehdr *hdr,
->  			/* patch .altinstructions */
->  			apply_alternatives(aseg, aseg + s->sh_size, me->name);
->  
-> +#ifdef CONFIG_DYNAMIC_FTRACE
->  		/* For 32 bit kernels we're compiling modules with
->  		 * -ffunction-sections so we must relocate the addresses in the
-> -		 *__mcount_loc section.
-> +		 *  ftrace callsite section.
->  		 */
-> -		if (symindex != -1 && !strcmp(secname, "__mcount_loc")) {
-> +		if (symindex != -1 && !strcmp(secname, FTRACE_CALLSITE_SECTION)) {
-> +			int err;
->  			if (s->sh_type == SHT_REL)
->  				err = apply_relocate((Elf_Shdr *)sechdrs,
->  							strtab, symindex,
-> @@ -962,6 +965,7 @@ int module_finalize(const Elf_Ehdr *hdr,
->  			if (err)
->  				return err;
->  		}
-> +#endif
->  	}
->  	return 0;
->  }
-> diff --git a/arch/parisc/kernel/module.lds b/arch/parisc/kernel/module.lds
-> deleted file mode 100644
-> index 1a9a92aca5c8..000000000000
-> --- a/arch/parisc/kernel/module.lds
-> +++ /dev/null
-> @@ -1,7 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> -
-> -SECTIONS {
-> -	__mcount_loc : {
-> -		*(__patchable_function_entries)
-> -	}
-> -}
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index 9867d90d635e..9141f2263286 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
-> @@ -738,6 +738,11 @@ static inline unsigned long get_lock_parent_ip(void)
->  
->  #ifdef CONFIG_FTRACE_MCOUNT_RECORD
->  extern void ftrace_init(void);
-> +#ifdef CC_USING_PATCHABLE_FUNCTION_ENTRY
-> +#define FTRACE_CALLSITE_SECTION	"__patchable_function_entries"
-> +#else
-> +#define FTRACE_CALLSITE_SECTION	"__mcount_loc"
-> +#endif
->  #else
->  static inline void ftrace_init(void) { }
->  #endif
-> diff --git a/kernel/module.c b/kernel/module.c
-> index ff2d7359a418..acf7962936c4 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -3222,7 +3222,7 @@ static int find_module_sections(struct module *mod, struct load_info *info)
->  #endif
->  #ifdef CONFIG_FTRACE_MCOUNT_RECORD
->  	/* sechdrs[0].sh_size is always zero */
-> -	mod->ftrace_callsites = section_objs(info, "__mcount_loc",
-> +	mod->ftrace_callsites = section_objs(info, FTRACE_CALLSITE_SECTION,
->  					     sizeof(*mod->ftrace_callsites),
->  					     &mod->num_ftrace_callsites);
->  #endif
-> -- 
-> 2.11.0
-> 
+> Re: master branch, it looks like git quiltimport broke :( I'll
+> investigate.
+
+git quiltimport was choking up on \r\n newlines in the series
+file. Not sure if something changed on my end or on Andrew's.
+
+Anyway, I fixed it with dos2unix. The tree is uptodate again.
+
+Thanks for pointing it out, Vlastimil.
