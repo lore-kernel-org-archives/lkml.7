@@ -2,51 +2,54 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAD_ENC_HEADER,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3B0CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C96CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 227E42053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3592184C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904360;
-	bh=jBRD/+1zElxgqwOGIvSiuWSvuOrjlam6KwlDf5mfZdo=;
+	s=default; t=1572904363;
+	bh=TQNB6+YYrNI4qrmWcNwpXm8lQBVbYfOD1DIc59zaRi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RcWIXaie7s5eGdQEUgXGdgRJoRgymwsDovlql6Kz4UNGy3ihQ0fl22frWdqwtH0oj
-	 Ircvz7qqxwXtOQzuc//Of0fjeGpYP/wWx9BGEKmy8C6Qk2bVnaCQgIbWCB96sLFanr
-	 07GSTTO2ISZCrfBTVxXpz3mhLIhj47G7my+1G/ic=
+	b=ieqNcRPoU71Fyo0IY9ZwDvuzA+DKZVaYl6ukusqyx1z6Mdzh48q5xjUQlxvTsltHa
+	 TgeIIs/3w47P1h2BCP6BnxzcGTQdUZHxWflO6zgEa74s2bfG+vcG1wq9bQyQn37rL/
+	 nAaDZUnxWpopWMng6F2c2KniYVBxfAUhiaEo8REM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730800AbfKDVwi (ORCPT
+        id S1730814AbfKDVwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:52:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46152 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:52:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729730AbfKDVwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:52:36 -0500
+        id S1730796AbfKDVwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:52:39 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FFB121929;
-        Mon,  4 Nov 2019 21:52:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCD252184C;
+        Mon,  4 Nov 2019 21:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904355;
-        bh=jBRD/+1zElxgqwOGIvSiuWSvuOrjlam6KwlDf5mfZdo=;
+        s=default; t=1572904358;
+        bh=TQNB6+YYrNI4qrmWcNwpXm8lQBVbYfOD1DIc59zaRi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0VVrwPP1Dq4ptGGCP8MuiF4fQ7f8ZEeV0AA6N3NW8og+YSixMjQuwZUJn1ENEzTjp
-         GbTjW3g3Lb+l04fpwCyxBj6aJ1pqx/ovURjEynnoD/c5sf8QXQOIOOQ9PAbnqU4hyS
-         fI2moy56qNiWeim/ug5IH/mIkyVNT+vpnDLPRdHY=
+        b=jiFKqr3C+/wEox/j4vWd3Su1G2hqCjnRR3oMRj1h5pWfLmIUF+sURhN2rYniNQ+zd
+         JeYy1/5e95kfAfb+9rpOz6pKNZOHME3Ud2hkVqRP4hPdR1YAAlyKPas4i0dZ/2sctB
+         G+8kcOGFFaIS8fT1/7IOkLaFsoVlQ6XS+EzaSYH0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org,
+        "=?UTF-8?q?Lucas=20A . =20M . =20Magalh=C3=A3es?=" 
+        <lucmaga@gmail.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 19/95] ALSA: hda/realtek - Apply ALC294 hp init also for S4 resume
-Date:   Mon,  4 Nov 2019 22:44:17 +0100
-Message-Id: <20191104212047.985825786@linuxfoundation.org>
+Subject: [PATCH 4.14 20/95] media: vimc: Remove unused but set variables
+Date:   Mon,  4 Nov 2019 22:44:18 +0100
+Message-Id: <20191104212049.023506026@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -59,38 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Lucas A. M. Magalhães <lucmaga@gmail.com>
 
-[ Upstream commit f6ef4e0e284251ff795c541db1129c84515ed044 ]
+[ Upstream commit 5515e414f42bf2769caae15b634004d456658284 ]
 
-The init sequence for ALC294 headphone stuff is needed not only for
-the boot up time but also for the resume from hibernation, where the
-device is switched from the boot kernel without sound driver to the
-suspended image.  Since we record the PM event in the device
-power_state field, we can now recognize the call pattern and apply the
-sequence conditionally.
+Remove unused but set variables to clean up the code and avoid
+warning.
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Lucas A. M. Magalhães <lucmaga@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/platform/vimc/vimc-sensor.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 5412952557f7a..8d6c5be387362 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -3246,7 +3246,9 @@ static void alc294_init(struct hda_codec *codec)
+diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
+index 70cee5c0c89a5..29a16f8a4123c 100644
+--- a/drivers/media/platform/vimc/vimc-sensor.c
++++ b/drivers/media/platform/vimc/vimc-sensor.c
+@@ -200,13 +200,6 @@ static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
  {
- 	struct alc_spec *spec = codec->spec;
+ 	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
+ 						    ved);
+-	const struct vimc_pix_map *vpix;
+-	unsigned int frame_size;
+-
+-	/* Calculate the frame size */
+-	vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+-	frame_size = vsen->mbus_format.width * vpix->bpp *
+-		     vsen->mbus_format.height;
  
--	if (!spec->done_hp_init) {
-+	/* required only at boot or S4 resume time */
-+	if (!spec->done_hp_init ||
-+	    codec->core.dev.power.power_state.event == PM_EVENT_RESTORE) {
- 		alc294_hp_init(codec);
- 		spec->done_hp_init = true;
- 	}
+ 	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
+ 	return vsen->frame;
 -- 
 2.20.1
 
