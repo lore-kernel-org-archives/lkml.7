@@ -4,60 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20188CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9C0CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7EA8214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 640E7214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905710;
-	bh=jn36PS6JD/UCan94jV0PXlMdlJkaCs61c+4OM1G1KZo=;
+	s=default; t=1572905715;
+	bh=rRwePNsI59KK4BLYIYjRoGLaieBH2kehmZF/8DC2UNM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sF103BfdOt9lRVcSDB99ykTN0wYzn4oF/0xQkbjEYaPxG3GuWeJiIuKqMLXujuv3q
-	 tzVhRuy1HfE4rfE+0CqgniiZxxlgRr19ZlO6WQmtX8HboNgyvRWVDUF0eyMoRF/0nj
-	 7hGyRg0DjL7KgtE+JpVCyyqaYPvUM6sTMWRYASzM=
+	b=0MvDnSXAyuPZgqx80yD/SszvCgWo7cL9C6Zt5LiS2Q5mSBvwUr+qKWKwpiIlZ39sp
+	 kHQzSl8BHgpoccdSNlY90qb3NiUdiDOn5r7h5h44GGHQh1Ks8iFj4QPsNVH1Wm7DwG
+	 IbPJEYQcXHsdljsd1lhNzL86V/4BOzB+FHOJfH10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390424AbfKDWPI (ORCPT
+        id S2389953AbfKDWGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:15:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38776 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:06:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388851AbfKDWGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:06:44 -0500
+        id S2389924AbfKDWGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:06:18 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EF71217F4;
-        Mon,  4 Nov 2019 22:06:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC23620650;
+        Mon,  4 Nov 2019 22:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905203;
-        bh=jn36PS6JD/UCan94jV0PXlMdlJkaCs61c+4OM1G1KZo=;
+        s=default; t=1572905178;
+        bh=rRwePNsI59KK4BLYIYjRoGLaieBH2kehmZF/8DC2UNM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iHORfobpQSOBnICn5WOowlXS6OseSUT38JZv4LxOSNpDYK6tF8KrpDy8JlQUMs2+E
-         hoNSFI01iWz5IYGMQ0W+EqDrBhEZ26QMe5XHKczK7gVFnsKa588Cv01MbSISFJ3ACM
-         9eAEtjzpcbCrOK1gb0OTV00Gpq+ud0XRtTttyc4A=
+        b=RwxgJ9TYiEUwjCkkmNMcCSnUkGX9BMs0WZbsvkD23qvkZAzaos4PNd+t/KsGG2BIV
+         NsgJLboC0G5AdxufLBzXXH4XpBvUm2cWXNs3/2RRhOZ7+9MF1QjzvDI87ncwQRMMPL
+         mLmsAVGZU45vLgXONiT/DsaIvRgbtFYGgQ2BxSUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Auld <pauld@redhat.com>,
-        Xuewei Zhang <xueweiz@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Ben Segall <bsegall@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 065/163] sched/fair: Scale bandwidth quota and period without losing quota/period ratio precision
-Date:   Mon,  4 Nov 2019 22:44:15 +0100
-Message-Id: <20191104212144.712060978@linuxfoundation.org>
+        stable@vger.kernel.org, Vincent Chen <vincent.chen@sifive.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 056/163] riscv: Correct the handling of unexpected ebreak in do_trap_break()
+Date:   Mon,  4 Nov 2019 22:44:06 +0100
+Message-Id: <20191104212144.176069663@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -70,109 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xuewei Zhang <xueweiz@google.com>
+From: Vincent Chen <vincent.chen@sifive.com>
 
-[ Upstream commit 4929a4e6faa0f13289a67cae98139e727f0d4a97 ]
+[ Upstream commit 8bb0daef64e5a92db63ad1d3bbf9e280a7b3612a ]
 
-The quota/period ratio is used to ensure a child task group won't get
-more bandwidth than the parent task group, and is calculated as:
+For the kernel space, all ebreak instructions are determined at compile
+time because the kernel space debugging module is currently unsupported.
+Hence, it should be treated as a bug if an ebreak instruction which does
+not belong to BUG_TRAP_TYPE_WARN or BUG_TRAP_TYPE_BUG is executed in
+kernel space. For the userspace, debugging module or user problem may
+intentionally insert an ebreak instruction to trigger a SIGTRAP signal.
+To approach the above two situations, the do_trap_break() will direct
+the BUG_TRAP_TYPE_NONE ebreak exception issued in kernel space to die()
+and will send a SIGTRAP to the trapped process only when the ebreak is
+in userspace.
 
-  normalized_cfs_quota() = [(quota_us << 20) / period_us]
-
-If the quota/period ratio was changed during this scaling due to
-precision loss, it will cause inconsistency between parent and child
-task groups.
-
-See below example:
-
-A userspace container manager (kubelet) does three operations:
-
- 1) Create a parent cgroup, set quota to 1,000us and period to 10,000us.
- 2) Create a few children cgroups.
- 3) Set quota to 1,000us and period to 10,000us on a child cgroup.
-
-These operations are expected to succeed. However, if the scaling of
-147/128 happens before step 3, quota and period of the parent cgroup
-will be changed:
-
-  new_quota: 1148437ns,   1148us
- new_period: 11484375ns, 11484us
-
-And when step 3 comes in, the ratio of the child cgroup will be
-104857, which will be larger than the parent cgroup ratio (104821),
-and will fail.
-
-Scaling them by a factor of 2 will fix the problem.
-
-Tested-by: Phil Auld <pauld@redhat.com>
-Signed-off-by: Xuewei Zhang <xueweiz@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Phil Auld <pauld@redhat.com>
-Cc: Anton Blanchard <anton@ozlabs.org>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Fixes: 2e8e19226398 ("sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup")
-Link: https://lkml.kernel.org/r/20191004001243.140897-1-xueweiz@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+[paul.walmsley@sifive.com: fixed checkpatch issue]
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 36 ++++++++++++++++++++++--------------
- 1 file changed, 22 insertions(+), 14 deletions(-)
+ arch/riscv/kernel/traps.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 86cfc5d5129ce..16b5d29bd7300 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4995,20 +4995,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- 		if (++count > 3) {
- 			u64 new, old = ktime_to_ns(cfs_b->period);
+diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+index 82f42a55451eb..93742df9067fb 100644
+--- a/arch/riscv/kernel/traps.c
++++ b/arch/riscv/kernel/traps.c
+@@ -130,8 +130,6 @@ asmlinkage void do_trap_break(struct pt_regs *regs)
+ 		type = report_bug(regs->sepc, regs);
+ 		switch (type) {
+ #ifdef CONFIG_GENERIC_BUG
+-		case BUG_TRAP_TYPE_NONE:
+-			break;
+ 		case BUG_TRAP_TYPE_WARN:
+ 			regs->sepc += get_break_insn_length(regs->sepc);
+ 			return;
+@@ -140,8 +138,10 @@ asmlinkage void do_trap_break(struct pt_regs *regs)
+ 		default:
+ 			die(regs, "Kernel BUG");
+ 		}
++	} else {
++		force_sig_fault(SIGTRAP, TRAP_BRKPT,
++				(void __user *)(regs->sepc));
+ 	}
+-	force_sig_fault(SIGTRAP, TRAP_BRKPT, (void __user *)(regs->sepc));
+ }
  
--			new = (old * 147) / 128; /* ~115% */
--			new = min(new, max_cfs_quota_period);
--
--			cfs_b->period = ns_to_ktime(new);
--
--			/* since max is 1s, this is limited to 1e9^2, which fits in u64 */
--			cfs_b->quota *= new;
--			cfs_b->quota = div64_u64(cfs_b->quota, old);
--
--			pr_warn_ratelimited(
--	"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
--				smp_processor_id(),
--				div_u64(new, NSEC_PER_USEC),
--				div_u64(cfs_b->quota, NSEC_PER_USEC));
-+			/*
-+			 * Grow period by a factor of 2 to avoid losing precision.
-+			 * Precision loss in the quota/period ratio can cause __cfs_schedulable
-+			 * to fail.
-+			 */
-+			new = old * 2;
-+			if (new < max_cfs_quota_period) {
-+				cfs_b->period = ns_to_ktime(new);
-+				cfs_b->quota *= 2;
-+
-+				pr_warn_ratelimited(
-+	"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us = %lld, cfs_quota_us = %lld)\n",
-+					smp_processor_id(),
-+					div_u64(new, NSEC_PER_USEC),
-+					div_u64(cfs_b->quota, NSEC_PER_USEC));
-+			} else {
-+				pr_warn_ratelimited(
-+	"cfs_period_timer[cpu%d]: period too short, but cannot scale up without losing precision (cfs_period_us = %lld, cfs_quota_us = %lld)\n",
-+					smp_processor_id(),
-+					div_u64(old, NSEC_PER_USEC),
-+					div_u64(cfs_b->quota, NSEC_PER_USEC));
-+			}
- 
- 			/* reset count so we don't come right back in here */
- 			count = 0;
+ #ifdef CONFIG_GENERIC_BUG
 -- 
 2.20.1
 
