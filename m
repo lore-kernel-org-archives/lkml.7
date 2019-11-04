@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D2FCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B264CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5034D205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E00802190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904950;
-	bh=vWTVDALXfSb8OlxqgO4QbpSm+6M4srS+UggdwZfZEgc=;
+	s=default; t=1572904957;
+	bh=d11sopKfzpOkYe5kN+ObEO6qxaUWsS4eeR8/fg6kiik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eSTZBVmxtaYIduRKXujUXK9oc+q+MEpVAJacqscauwfIcPXJDfrgY2UJW2IVx3RBU
-	 CXMYFnDkoHuK2GOUygPFx23Eg3ZODILOi7Lgocs4VqqQ5+nGDlamWqsX2otSHzdZNf
-	 Ax8ej5h2u3GKo6iBxWekA3KLDI1132Q2tYIVG8L8=
+	b=bAM80PT+z1J1zs4L9VJNWpRGId4oFV9COI+UHKcAgWLMQIwzyWtvD58BQ5sRGA3Ut
+	 dwgvApTAHPrq4MQ3XxUyan9tiHgRTi1aTf5ythl1jdNshYxNNVfBcpnxNaRKvO85YL
+	 ixYfTQpcEYlgkCsx/l5DGbdxUHCZiMb0RUcdvCMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389312AbfKDWC3 (ORCPT
+        id S2389351AbfKDWCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:02:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60254 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:02:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389119AbfKDWB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:59 -0500
+        id S2389296AbfKDWC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:02:26 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95B6620659;
-        Mon,  4 Nov 2019 22:01:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE19120650;
+        Mon,  4 Nov 2019 22:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904918;
-        bh=vWTVDALXfSb8OlxqgO4QbpSm+6M4srS+UggdwZfZEgc=;
+        s=default; t=1572904945;
+        bh=d11sopKfzpOkYe5kN+ObEO6qxaUWsS4eeR8/fg6kiik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NlpsufixtQNH4NhvuB5voOaBAYl7o5KmHmdKaBH95mOcpakjuVCMZ9rzshDrpW0FO
-         CGA/bV6rl32i8HO1H3i2eTSyWPXeWLKnr7excpux3hr+VvuIMm+SqivyP8E8yM+5xk
-         0fSBDlNu16ZgZzit+AgQZOnk4sB2b352nFNkUSjg=
+        b=rS37i45rcFAkU8pDtzFhr1YP/DTJWgBZioBm5IArTau5vzOFpn0tUntrZsHRxXQCZ
+         kmnfArEx9sEpbwCCqSVEEdVFY7AZb9geOVI83+6vXyGon/zzqqJSDI9cFKSGrUSszv
+         o533qgnITLOzZzGvXXI/7GFoLZslyln9HZx/1U5s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Felipe Balbi <balbi@kernel.org>,
-        syzbot+8ab8bf161038a8768553@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 115/149] USB: gadget: Reject endpoints with 0 maxpacket value
-Date:   Mon,  4 Nov 2019 22:45:08 +0100
-Message-Id: <20191104212144.404743327@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH 4.19 123/149] HID: i2c-hid: add Trekstor Primebook C11B to descriptor override
+Date:   Mon,  4 Nov 2019 22:45:16 +0100
+Message-Id: <20191104212144.899533587@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -60,56 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 54f83b8c8ea9b22082a496deadf90447a326954e upstream.
+commit 09f3dbe474735df13dd8a66d3d1231048d9b373f upstream.
 
-Endpoints with a maxpacket length of 0 are probably useless.  They
-can't transfer any data, and it's not at all unlikely that a UDC will
-crash or hang when trying to handle a non-zero-length usb_request for
-such an endpoint.  Indeed, dummy-hcd gets a divide error when trying
-to calculate the remainder of a transfer length by the maxpacket
-value, as discovered by the syzbot fuzzer.
+The Primebook C11B uses the SIPODEV SP1064 touchpad. There are 2 versions
+of this 2-in-1 and the touchpad in the older version does not supply
+descriptors, so it has to be added to the override list.
 
-Currently the gadget core does not check for endpoints having a
-maxpacket value of 0.  This patch adds a check to usb_ep_enable(),
-preventing such endpoints from being used.
-
-As far as I know, none of the gadget drivers in the kernel tries to
-create an endpoint with maxpacket = 0, but until now there has been
-nothing to prevent userspace programs under gadgetfs or configfs from
-doing it.
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+8ab8bf161038a8768553@syzkaller.appspotmail.com
-CC: <stable@vger.kernel.org>
-Acked-by: Felipe Balbi <balbi@kernel.org>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910281052370.1485-100000@iolanthe.rowland.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/udc/core.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
---- a/drivers/usb/gadget/udc/core.c
-+++ b/drivers/usb/gadget/udc/core.c
-@@ -98,6 +98,17 @@ int usb_ep_enable(struct usb_ep *ep)
- 	if (ep->enabled)
- 		goto out;
- 
-+	/* UDC drivers can't handle endpoints with maxpacket size 0 */
-+	if (usb_endpoint_maxp(ep->desc) == 0) {
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -323,6 +323,25 @@ static const struct dmi_system_id i2c_hi
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
+ 	{
 +		/*
-+		 * We should log an error message here, but we can't call
-+		 * dev_err() because there's no way to find the gadget
-+		 * given only ep.
++		 * There are at least 2 Primebook C11B versions, the older
++		 * version has a product-name of "Primebook C11B", and a
++		 * bios version / release / firmware revision of:
++		 * V2.1.2 / 05/03/2018 / 18.2
++		 * The new version has "PRIMEBOOK C11B" as product-name and a
++		 * bios version / release / firmware revision of:
++		 * CFALKSW05_BIOS_V1.1.2 / 11/19/2018 / 19.2
++		 * Only the older version needs this quirk, note the newer
++		 * version will not match as it has a different product-name.
 +		 */
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
- 	ret = ep->ops->enable(ep, ep->desc);
- 	if (ret)
- 		goto out;
++		.ident = "Trekstor Primebook C11B",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Primebook C11B"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
++	{
+ 		.ident = "Direkt-Tek DTLAPY116-2",
+ 		.matches = {
+ 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Direkt-Tek"),
 
 
