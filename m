@@ -2,108 +2,180 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DF1CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DA6CA9ED2
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 918AF21A4A
+	by mail.kernel.org (Postfix) with ESMTP id D6EC62067D
 	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:07:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbfKDCFt (ORCPT
+        id S1728949AbfKDCHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 21:05:49 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:49967 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728234AbfKDCFt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 21:05:49 -0500
-X-UUID: 04af6f70713449ee9a2bbe13afb6df6a-20191104
-X-UUID: 04af6f70713449ee9a2bbe13afb6df6a-20191104
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2092748576; Mon, 04 Nov 2019 10:05:42 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 4 Nov 2019 10:05:39 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 4 Nov 2019 10:05:39 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH v3 2/2] kasan: add test for invalid size in memmove
-Date:   Mon, 4 Nov 2019 10:05:39 +0800
-Message-ID: <20191104020539.28039-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Sun, 3 Nov 2019 21:07:17 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2503 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728234AbfKDCHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 21:07:16 -0500
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 285DD3B9D186940F5AF8;
+        Mon,  4 Nov 2019 10:07:14 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 4 Nov 2019 10:07:13 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Mon, 4 Nov 2019 10:07:13 +0800
+Date:   Mon, 4 Nov 2019 10:09:53 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
+CC:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, <linux-xfs@vger.kernel.org>,
+        Jan Kara <jack@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH 10/10] errno.h: Provide EFSCORRUPTED for everybody
+Message-ID: <20191104020950.GA207519@architecture4>
+References: <20191104014510.102356-1-Valdis.Kletnieks@vt.edu>
+ <20191104014510.102356-11-Valdis.Kletnieks@vt.edu>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: C7718962B9A4B5E4228DBC919FD5E100E8BDABB44BCDF8ABD45A72F8B85F7A0D2000:8
-X-MTK:  N
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191104014510.102356-11-Valdis.Kletnieks@vt.edu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme702-chm.china.huawei.com (10.1.199.98) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test negative size in memmove in order to verify whether it correctly
-get KASAN report.
+On Sun, Nov 03, 2019 at 08:45:06PM -0500, Valdis Kletnieks wrote:
+> There's currently 6 filesystems that have the same #define. Move it
+> into errno.h so it's defined in just one place.
+> 
+> Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
+> Acked-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Acked-by: Theodore Ts'o <tytso@mit.edu>
 
-Casting negative numbers to size_t would indeed turn up as a large
-size_t, so it will have out-of-bounds bug and be detected by KASAN.
+For EROFS part,
 
-Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
----
- lib/test_kasan.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Acked-by: Gao Xiang <gaoxiang25@huawei.com>
 
-diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-index 49cc4d570a40..06942cf585cc 100644
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -283,6 +283,23 @@ static noinline void __init kmalloc_oob_in_memset(void)
- 	kfree(ptr);
- }
- 
-+static noinline void __init kmalloc_memmove_invalid_size(void)
-+{
-+	char *ptr;
-+	size_t size = 64;
-+
-+	pr_info("invalid size in memmove\n");
-+	ptr = kmalloc(size, GFP_KERNEL);
-+	if (!ptr) {
-+		pr_err("Allocation failed\n");
-+		return;
-+	}
-+
-+	memset((char *)ptr, 0, 64);
-+	memmove((char *)ptr, (char *)ptr + 4, -2);
-+	kfree(ptr);
-+}
-+
- static noinline void __init kmalloc_uaf(void)
- {
- 	char *ptr;
-@@ -773,6 +790,7 @@ static int __init kmalloc_tests_init(void)
- 	kmalloc_oob_memset_4();
- 	kmalloc_oob_memset_8();
- 	kmalloc_oob_memset_16();
-+	kmalloc_memmove_invalid_size();
- 	kmalloc_uaf();
- 	kmalloc_uaf_memset();
- 	kmalloc_uaf2();
--- 
-2.18.0
+> ---
+>  drivers/staging/exfat/exfat.h    | 2 --
+>  fs/erofs/internal.h              | 2 --
+>  fs/ext4/ext4.h                   | 1 -
+>  fs/f2fs/f2fs.h                   | 1 -
+>  fs/xfs/xfs_linux.h               | 1 -
+>  include/linux/jbd2.h             | 1 -
+>  include/uapi/asm-generic/errno.h | 1 +
+>  7 files changed, 1 insertion(+), 8 deletions(-)
+> 
+> diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
+> index 72cf40e123de..58b091a077e8 100644
+> --- a/drivers/staging/exfat/exfat.h
+> +++ b/drivers/staging/exfat/exfat.h
+> @@ -30,8 +30,6 @@
+>  #undef DEBUG
+>  #endif
+>  
+> -#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+> -
+>  #define DENTRY_SIZE		32	/* dir entry size */
+>  #define DENTRY_SIZE_BITS	5
+>  
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 544a453f3076..3980026a8882 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -425,7 +425,5 @@ static inline int z_erofs_init_zip_subsystem(void) { return 0; }
+>  static inline void z_erofs_exit_zip_subsystem(void) {}
+>  #endif	/* !CONFIG_EROFS_FS_ZIP */
+>  
+> -#define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
+> -
+>  #endif	/* __EROFS_INTERNAL_H */
+>  
+> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> index 03db3e71676c..a86c2585457d 100644
+> --- a/fs/ext4/ext4.h
+> +++ b/fs/ext4/ext4.h
+> @@ -3396,6 +3396,5 @@ static inline int ext4_buffer_uptodate(struct buffer_head *bh)
+>  #endif	/* __KERNEL__ */
+>  
+>  #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
+> -#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+>  
+>  #endif	/* _EXT4_H */
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 4024790028aa..04ebe77569a3 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -3752,6 +3752,5 @@ static inline bool is_journalled_quota(struct f2fs_sb_info *sbi)
+>  }
+>  
+>  #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
+> -#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+>  
+>  #endif /* _LINUX_F2FS_H */
+> diff --git a/fs/xfs/xfs_linux.h b/fs/xfs/xfs_linux.h
+> index ca15105681ca..3409d02a7d21 100644
+> --- a/fs/xfs/xfs_linux.h
+> +++ b/fs/xfs/xfs_linux.h
+> @@ -123,7 +123,6 @@ typedef __u32			xfs_nlink_t;
+>  
+>  #define ENOATTR		ENODATA		/* Attribute not found */
+>  #define EWRONGFS	EINVAL		/* Mount with wrong filesystem type */
+> -#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+>  #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
+>  
+>  #define SYNCHRONIZE()	barrier()
+> diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
+> index 603fbc4e2f70..69411d7e0431 100644
+> --- a/include/linux/jbd2.h
+> +++ b/include/linux/jbd2.h
+> @@ -1657,6 +1657,5 @@ static inline tid_t  jbd2_get_latest_transaction(journal_t *journal)
+>  #endif	/* __KERNEL__ */
+>  
+>  #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
+> -#define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+>  
+>  #endif	/* _LINUX_JBD2_H */
+> diff --git a/include/uapi/asm-generic/errno.h b/include/uapi/asm-generic/errno.h
+> index cf9c51ac49f9..1d5ffdf54cb0 100644
+> --- a/include/uapi/asm-generic/errno.h
+> +++ b/include/uapi/asm-generic/errno.h
+> @@ -98,6 +98,7 @@
+>  #define	EINPROGRESS	115	/* Operation now in progress */
+>  #define	ESTALE		116	/* Stale file handle */
+>  #define	EUCLEAN		117	/* Structure needs cleaning */
+> +#define	EFSCORRUPTED	EUCLEAN
 
+BTW, minor, how about adding some comments right after EFSCORRUPTED
+like the other error codes although it's now an alias...
+Just my personal thought.
+
+Thanks,
+Gao Xiang
+
+>  #define	ENOTNAM		118	/* Not a XENIX named type file */
+>  #define	ENAVAIL		119	/* No XENIX semaphores available */
+>  #define	EISNAM		120	/* Is a named type file */
+> -- 
+> 2.24.0.rc1
+> 
