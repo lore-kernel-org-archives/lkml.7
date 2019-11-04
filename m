@@ -2,127 +2,117 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B598ECA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8292CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 885B220848
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E35C20848
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:43:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7oKkHMo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rKoYLnzq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbfKDVjV (ORCPT
+        id S1729415AbfKDVnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:39:21 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46765 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728766AbfKDVjV (ORCPT
+        Mon, 4 Nov 2019 16:43:45 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44119 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728409AbfKDVno (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:39:21 -0500
-Received: by mail-lf1-f66.google.com with SMTP id 19so8252819lft.13;
-        Mon, 04 Nov 2019 13:39:19 -0800 (PST)
+        Mon, 4 Nov 2019 16:43:44 -0500
+Received: by mail-ot1-f66.google.com with SMTP id n48so15763699ota.11;
+        Mon, 04 Nov 2019 13:43:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iurp4sakzOCEdz++tzDZDRAOZsuv2t30XmhXJuaXI1U=;
-        b=V7oKkHMo48znnhlUeslmupwVBtoFfTzrKpmJKOZ7+GR8cB5HkK5v7gRCY8oOU98ePO
-         n6e4wnKhJBsl5lq/L2WafrwV1Dfir0Ya8UxYui1wSenHVF4Wvswm5YvfENhtwu+RUtWQ
-         IKTFQquTERbrqyqDxEkhSPnQJDtG/ZhOPAfy/xTDPIVJO+pnoSSc8E8JSkUqij7J6aHy
-         KDnRObG46BIz9gmsa3NS94PECc7oiZLEW2u/yjVNceqnymlaxu2m9iUX4eWU/yXg+iJg
-         ZUKfDwzmbftjmPSBipp9q3rs5GU7ZVEF7HNQZ9c/0mwove38GXBDwXQA7AC7GYDm+I31
-         BcXA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HqgsGp53OtlR6neqVOzYFTFQROyiEWTcquDxocb9OCI=;
+        b=rKoYLnzq0DyJN6YnznKHfWTUnH5xlWLMgunCpjXOUAPQKbi1s6hW12cgqc3z997Wix
+         hWVHKAy61sZDse7QZAV+1H38ZXD9uNumjjaRBfocXsAIpbbY71tB4DwG0VUItBdm20A8
+         fqKmjl4B4Ut0f/MNYMe+B5xxZff7P1mTrGJWNUmJSj0uPUESmoLEwYehsRFqXXec1QTH
+         NsC5T3xvpLWeFfsyJXkeogzBN3mwhMy4liDUO3iHmEQtwndgYAw/I7Td4fQEuvdatGQU
+         4v/u2ZsxDfX2T+xZHmxLMLCFicFRRog6ueCEX1IX2Sie1oblMnoxMrpqtIcvFgw8MTWc
+         l80A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iurp4sakzOCEdz++tzDZDRAOZsuv2t30XmhXJuaXI1U=;
-        b=IfR9TniLPVV9KEFpGGTeRWBAuY85XG1u3R4CzKQO3Je1r+rRqwc5Pn+sGK1SsJ93Hk
-         RsPVK5O6bywVBLDbVD6lBzmMx/aiqR5h92pzasqndqbcsZpeJrLtJqVwOpd3eh/xrxvE
-         lUpDxtp4hFxv4AwXho/d4bZ+WfTkuI+Sugf0bfD6sI/jnbN5jjNqAE3AcnTZKhQLUbd+
-         g5f0c2KjeyD13ndl/VVsZnInNOi1bPhSGmX/1RjOBpbMcWWOVCXZLwTC6e5aJ1xez2KA
-         uMe9Koql8qT0BLAvcCVXThMzCw6mI8SAVq/WT738ICPE55JLe4tcLYcAu7qewxyKgnBn
-         7h7g==
-X-Gm-Message-State: APjAAAUkNY2Gbf++x3UyilkR2h5aMcBFB9n8eUJe2d8TvAM9mldyNG9a
-        D4Dbg3/tmDx7YPSPPmnDc61ySEiCgX4=
-X-Google-Smtp-Source: APXvYqxy28+hFisUWybxv0Nvg95SfKtpcWfQve3kAeZQRS4e79YxeloNW8IjF2DPFEAtpBsPzPETvg==
-X-Received: by 2002:ac2:48af:: with SMTP id u15mr17754498lfg.151.1572903558796;
-        Mon, 04 Nov 2019 13:39:18 -0800 (PST)
-Received: from localhost.localdomain ([91.237.107.85])
-        by smtp.googlemail.com with ESMTPSA id v21sm5708728ljh.53.2019.11.04.13.39.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 13:39:18 -0800 (PST)
-From:   Leonid Maksymchuk <leonmaxx@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, chiu@endlessm.com,
-        yurii.pavlovskyi@gmail.com, kristian@klausen.dk,
-        andy@infradead.org, dvhart@infradead.org, corentin.chary@gmail.com,
-        Leonid Maksymchuk <leonmaxx@gmail.com>
-Subject: [PATCH v2 3/3] platform/x86: asus_wmi: Set default fan boost mode to normal
-Date:   Mon,  4 Nov 2019 23:39:07 +0200
-Message-Id: <20191104213907.18413-1-leonmaxx@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104213417.18036-1-leonmaxx@gmail.com>
-References: <20191104213417.18036-1-leonmaxx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HqgsGp53OtlR6neqVOzYFTFQROyiEWTcquDxocb9OCI=;
+        b=NNeWiqtv+IhnrjF1Us3fB9aRz1UwPROjn8qIiVnVkMIudGNjqnm3GvkES+89goGYv0
+         JU/T14ML3OAse+vVlzrvve7+/VYKpYDSdpTHrPQQEYaOPtvcKaUnV8Pw4P6CKpldfmZ0
+         vIXGg0c8GzKUBcvvr+jthSFICYzWL5t2sHu0ILOvL9kRd265DNJ33qquUW4Nf548jiiL
+         HVI+n65DsmdZWNfGTCL/y8lo3fFxzVau5V1kQMX2vexHBqllWglWVvz3tW/hKgPMpY33
+         LDEX/Zyuk+yzKuJ3rGfQUakY3SBXRhRNmjJqlvgc0M6NQbA+6poSeZ5vb1ySYKs35VJO
+         xt+A==
+X-Gm-Message-State: APjAAAXg0aLBDmAbr2XOzKWVBfiADBmSbd0QwS0CtC7Popc1unHtvN52
+        zXJl4YCkUzDE06kNE4NWRW0+oHSvk7uN9+Cz0AKkkGp9
+X-Google-Smtp-Source: APXvYqyBkkUvqZgxzUUjvR+AW6uTCN7bzCA6HUt9VFBPvsLnErJvmzyH79ZRpGqofhHq5x2faMIpi0D+Zn+saszXe90=
+X-Received: by 2002:a05:6830:11d2:: with SMTP id v18mr15278490otq.116.1572903823498;
+ Mon, 04 Nov 2019 13:43:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191104070116.GM57214@dtor-ws> <20191104183702.8894-1-TheSven73@gmail.com>
+ <CAHCN7xJc6DeyQV27OVjD14a8hZT+_Fo9qo-iHgLO414t3y6hVQ@mail.gmail.com>
+In-Reply-To: <CAHCN7xJc6DeyQV27OVjD14a8hZT+_Fo9qo-iHgLO414t3y6hVQ@mail.gmail.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Mon, 4 Nov 2019 16:43:32 -0500
+Message-ID: <CAGngYiXp52g7X=KLVqxTAhK0AJ9mpgGyaptbkYvhwWfRkQCaXQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] Input: ili210x - add ILI2117 support
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Marek Vasut <marex@denx.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set default fan boost mode to normal for multiple reasons:
+Hi Adam,
 
-1) existing code assumes that laptop started in normal mode and that is
-   not always correct.
-2) FX705DY/FX505DY starts in silent mode and under heavy CPU load it
-   overheats and drops CPU frequency to 399MHz [1]. Setting fan mode to
-   normal avoids overheating.
+On Mon, Nov 4, 2019 at 4:28 PM Adam Ford <aford173@gmail.com> wrote:
+>
+> I am using IRQ_TYPE_EDGE_RISING for the 2117A.  Is that correct?  For
+> my touchscreen, the IRQ line is low until a touch is detected, so I
+> assume we want to capure on the rising edge.
 
-[1] Link: https://bugzilla.kernel.org/show_bug.cgi?id=203733
+That is correct for the 2117A, as far as I know. I am using the same
+setting.
 
-Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+>
+> Regarding Dmitry's patch,
+> Is it a good idea to use msleep in an IRQ?  It seems like using the
+> schedule_delayed_work() call seems like it will get in and get out of
+> the ISR faster.
+>
+> If we use msleep and scan again, isn't it possible to starve other processes?
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index f4e5840..70c5fbb 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1674,6 +1674,18 @@ static int fan_boost_mode_write(struct asus_wmi *asus)
- 	return 0;
- }
- 
-+static int fan_boost_mode_set_default(struct asus_wmi *asus)
-+{
-+	int result = 0;
-+
-+	if (asus->fan_boost_mode_available) {
-+		asus->fan_boost_mode = ASUS_FAN_BOOST_MODE_NORMAL;
-+		result = fan_boost_mode_write(asus);
-+	}
-+
-+	return result;
-+}
-+
- static int fan_boost_mode_switch_next(struct asus_wmi *asus)
- {
- 	u8 mask = asus->fan_boost_mode_mask;
-@@ -2450,6 +2462,7 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	err = fan_boost_mode_check_present(asus);
- 	if (err)
- 		goto fail_fan_boost_mode;
-+	fan_boost_mode_set_default(asus);
- 
- 	err = asus_wmi_sysfs_init(asus->platform_device);
- 	if (err)
--- 
-1.8.3.1
+I believe using msleep() is ok because this is not a "real" interrupt handler,
+but a threaded one. It runs in a regular kernel thread, with its interrupt
+turned off (but all other interrupts remain enabled). Its interrupt is
+re-enabled automatically after the threaded handler returns.
 
+See
+https://elixir.bootlin.com/linux/latest/source/include/linux/interrupt.h#L50
+
+> > @@ -268,7 +278,7 @@ static irqreturn_t ili210x_irq(int irq, void *irq_data)
+> >                 }
+> >
+> >                 touch = ili210x_report_events(priv, touchdata);
+> > -               keep_polling = touch || chip->continue_polling(touchdata);
+> > +               keep_polling = chip->continue_polling(touchdata, touch);
+> >                 if (keep_polling)
+>
+> Why not just check the value of touch instead of invoking the function
+> pointer which takes the value of touch in as a parameter?
+>
+
+The value of touch must be checked inside the callback, because
+some variants use it to decide if they should poll again, and
+some do not, such as the ili211x.
+
+If I have misinterpreted your suggestion, could you perhaps
+express it in C, so I can understand better?
