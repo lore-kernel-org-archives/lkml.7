@@ -2,137 +2,90 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7156ACA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9058BCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E50121929
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6478B222CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:44:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QT+iriO4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbfKDIoC (ORCPT
+        id S1727907AbfKDIoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 03:44:02 -0500
-Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:61672 "EHLO
-        ironport.ite.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfKDIoC (ORCPT
+        Mon, 4 Nov 2019 03:44:14 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56746 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727553AbfKDIoN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 03:44:02 -0500
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 04 Nov 2019 16:43:58 +0800
-Received: from csbcas.internal.ite.com.tw (csbcas1.internal.ite.com.tw [192.168.65.46])
-        by mse.ite.com.tw with ESMTP id xA48hpip026781;
-        Mon, 4 Nov 2019 16:43:51 +0800 (GMT-8)
-        (envelope-from allen.chen@ite.com.tw)
-Received: from allen-VirtualBox.internal.ite.com.tw (192.168.70.14) by
- csbcas1.internal.ite.com.tw (192.168.65.45) with Microsoft SMTP Server (TLS)
- id 14.3.352.0; Mon, 4 Nov 2019 16:43:52 +0800
-From:   allen <allen.chen@ite.com.tw>
-CC:     Allen Chen <allen.chen@ite.com.tw>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] drm/edid: fixup EDID 1.3 and 1.4 judge reduced-blanking timings logic
-Date:   Mon, 4 Nov 2019 16:42:49 +0800
-Message-ID: <1572856969-12115-1-git-send-email-allen.chen@ite.com.tw>
-X-Mailer: git-send-email 1.9.1
+        Mon, 4 Nov 2019 03:44:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lnIuRdr4CYsrlQgJxc+GH9Enm/uWxg114yr6D6OF8ic=; b=QT+iriO4E/1wFUY4RwRYBB4Tw
+        OdaMGxiHmM2NCSCiewk4iESvBle369Lj7ru7q69JoMWgR32C8a3bmeHxx49KVYKFKzqOeF3G0b4N/
+        G+OYnywEroYsP69gMOd/n0+iVc0X57r0P9NGjFomM6WUgjYxzbX3jly/93JjmvyEGsM56NYLQQaHx
+        0bCrCZCbDXVH41Rhn12ISQEwYsCjI9K+hAyXjkGmgkvPtIPh9imMdfkXUYSDthrwoIpAXsVeK0ZKK
+        uV5nZpdRPE6/bDcDlGDIDYc5y2AYC6KPcZ6YQpHKz25rDLk2pOJv6V1hIiMfY2tOGPCkMwNyGgFiW
+        mIBNQiQhQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iRXy3-0000nv-16; Mon, 04 Nov 2019 08:44:07 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B0C0C305EF2;
+        Mon,  4 Nov 2019 09:43:01 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D9AEC23CEFEAF; Mon,  4 Nov 2019 09:44:04 +0100 (CET)
+Date:   Mon, 4 Nov 2019 09:44:04 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Ingo Molnar <mingo@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>
+Subject: Re: [RFC 08/10] autonuma, memory tiering: Select hotter pages to
+ promote to fast memory node
+Message-ID: <20191104084404.GA4131@hirez.programming.kicks-ass.net>
+References: <20191101075727.26683-1-ying.huang@intel.com>
+ <20191101075727.26683-9-ying.huang@intel.com>
+ <20191101092404.GS4131@hirez.programming.kicks-ass.net>
+ <87k18gcqih.fsf@yhuang-dev.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [192.168.70.14]
-X-MAIL: mse.ite.com.tw xA48hpip026781
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87k18gcqih.fsf@yhuang-dev.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to VESA ENHANCED EXTENDED DISPLAY IDENTIFICATION DATA STANDARD
-(Defines EDID Structure Version 1, Revision 4) page: 39
-How to determine whether the monitor support RB timing or not?
-EDID 1.4
-First:  read detailed timing descriptor and make sure byte0 = 0,
-	byte1 = 0, byte2 = 0 and byte3 = 0xFD
-Second: read detailed timing descriptor byte10 = 0x04 and
-	EDID byte18h bit0 = 1
-Third:  if EDID byte18h bit0 == 1 && byte10 == 0x04,
-	then we can check byte15, if byte15 bit4 =1 is support RB
-        if EDID byte18h bit0 != 1 || byte10 != 0x04,
-	then byte15 can not be used
+On Mon, Nov 04, 2019 at 10:41:10AM +0800, Huang, Ying wrote:
 
-The linux code is_rb function not follow the VESA's rule
+> >> +#define NUMA_SCAN_NR_HIST	16
+> >> +		int numa_scan_idx;
+> >> +		unsigned long numa_scan_jiffies[NUMA_SCAN_NR_HIST];
+> >> +		unsigned long numa_scan_starts[NUMA_SCAN_NR_HIST];
+> >
+> > Why 16? This is 4 cachelines.
+> 
+> We want to keep the NUMA scanning history reasonably long.  From
+> task_scan_min(), the minimal interval between task_numa_work() running
+> is about 100 ms by default.  So we can keep 1600 ms history by default
+> if NUMA_SCAN_NR_HIST is 16.  If user choose to use smaller
+> sysctl_numa_balancing_scan_size, then we can only keep shorter history.
+> In general, we want to keep no less than 1000 ms history.  So 16 appears
+> like a reasonable choice for us.  Any other suggestion?
 
-EDID 1.3
-LCD flat panels do not require long blanking intervals as a retrace
-period so default support reduced-blanking timings.
-
-Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
-Reported-by: kbuild test robot <lkp@intel.com>
----
- drivers/gpu/drm/drm_edid.c | 28 +++++++++++++++++++++-------
- 1 file changed, 21 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index e5e7e65..9b67b80 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -93,6 +93,11 @@ struct detailed_mode_closure {
- 	int modes;
- };
- 
-+struct edid_support_rb_closure {
-+	struct edid *edid;
-+	s8 support_rb;
-+};
-+
- #define LEVEL_DMT	0
- #define LEVEL_GTF	1
- #define LEVEL_GTF2	2
-@@ -2018,22 +2023,31 @@ struct drm_display_mode *drm_mode_find_dmt(struct drm_device *dev,
- is_rb(struct detailed_timing *t, void *data)
- {
- 	u8 *r = (u8 *)t;
--	if (r[3] == EDID_DETAIL_MONITOR_RANGE)
--		if (r[15] & 0x10)
--			*(bool *)data = true;
-+	struct edid_support_rb_closure *closure = data;
-+	struct edid *edid = closure->edid;
-+
-+	if (!r[0] && !r[1] && !r[2] && r[3] == EDID_DETAIL_MONITOR_RANGE) {
-+		if (edid->features & BIT(0) && r[10] == BIT(2))
-+			closure->support_rb = (r[15] & 0x10) ? 1 : 0;
-+	}
- }
- 
- /* EDID 1.4 defines this explicitly.  For EDID 1.3, we guess, badly. */
- static bool
- drm_monitor_supports_rb(struct edid *edid)
- {
-+	struct edid_support_rb_closure closure = {
-+		.edid = edid,
-+		.support_rb = -1,
-+	};
-+
- 	if (edid->revision >= 4) {
--		bool ret = false;
--		drm_for_each_detailed_block((u8 *)edid, is_rb, &ret);
--		return ret;
-+		drm_for_each_detailed_block((u8 *)edid, is_rb, &closure);
-+		if (closure.support_rb >= 0)
-+			return closure.support_rb;
- 	}
- 
--	return ((edid->input & DRM_EDID_INPUT_DIGITAL) != 0);
-+	return true;
- }
- 
- static void
--- 
-1.9.1
-
+This is very good information for Changelogs and comments :-)
