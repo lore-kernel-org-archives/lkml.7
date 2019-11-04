@@ -2,120 +2,147 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A59ECA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AF3CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ADD620659
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B070204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:11:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbfKDPKm (ORCPT
+        id S1729252AbfKDPLH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:10:42 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:5403 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728955AbfKDPKl (ORCPT
+        Mon, 4 Nov 2019 10:11:07 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:56735 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727998AbfKDPLG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:10:41 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: D2HUH/WJuuYjGhJihYzCYYxMHpzl5Liz525GSPPeLttmySP6QiZgo92lYn0CvjufvtuuzSorTS
- 3V7pEW+GilL97puxXRQzMOGcWg4e93ZCLmQarOqJ78O/u2rYPrx+URt6b1cO9AE9KgQGIqcPrc
- gJyxRQYe8xJEMT9usajxPeuxyle4K+tj3VKEkgrT3vPL0Nfa1/JhnP0IZFL2KFkpstgagvWkrs
- 9BEBMg2181B2wQFNBIwrFobSasOXnVjfhxPoF3XFdfx7/aWpk1BCGpby5hMHGyXwuq3UBucmv8
- Opc=
-X-IronPort-AV: E=Sophos;i="5.68,267,1569308400"; 
-   d="scan'208";a="55584277"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Nov 2019 08:10:20 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 4 Nov 2019 08:10:21 -0700
-Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Mon, 4 Nov 2019 08:10:18 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <daniel.lezcano@linaro.org>,
-        <tglx@linutronix.de>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 0/2] add Microchip PIT64B timer
-Date:   Mon, 4 Nov 2019 17:10:02 +0200
-Message-ID: <1572880204-4514-1-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 4 Nov 2019 10:11:06 -0500
+X-Originating-IP: 86.250.200.211
+Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 63294240015;
+        Mon,  4 Nov 2019 15:11:04 +0000 (UTC)
+Date:   Mon, 4 Nov 2019 16:11:03 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20191104161103.64995b8a@xps13>
+In-Reply-To: <CAHp75VemkA7kap0O7=iACX4cD5_r6QXaLF6nS8R94ErStK0DwA@mail.gmail.com>
+References: <20191014124803.13661-1-miquel.raynal@bootlin.com>
+        <CAHp75Vc4vnNVKc+Q_TY8DpwV4rLZYGm2MvGBC7r67XjmtNoskQ@mail.gmail.com>
+        <20191015163055.0d8f44e5@xps13>
+        <CAHp75VemkA7kap0O7=iACX4cD5_r6QXaLF6nS8R94ErStK0DwA@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Linus,
 
-This series adds driver for Microchip PIT64B timer.
-Timer could be used in continuous or oneshot mode. It has 2x32 bit registers
-to emulate a 64 bit timer. The timer's period could be configured via LSB_PR
-and MSB_PR registers. The current timer's value could be checked via TLSB and
-TMSB registers. When (TMSB << 32) | TLSB value reach the (MSB_PR << 32) | LSB_PR
-interrupt is raised. If in contiuous mode the TLSB and TMSB resets and restart
-counting.
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Tue, 15 Oct 2019
+17:55:33 +0300:
 
-This drivers uses PIT64B capabilities for clocksource and clockevent.
-The first requested PIT64B timer is used for clockevent. The second one is used
-for clocksource. Individual PIT64B hardware resources were used for clocksource
-and clockevent to be able to support high resolution timers with this PIT64B
-implementation.
+> On Tue, Oct 15, 2019 at 5:30 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> >
+> > Hi Andy,
+> >
+> > Thanks for the feedback.
+> >
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Mon, 14 Oct 2019
+> > 20:59:01 +0300:
+> >  
+> > > On Mon, Oct 14, 2019 at 4:09 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:  
+> > > >
+> > > > The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> > > > functions but can also manage the intensity on each of its ports with
+> > > > PWM. Each output is independent and may be tuned with 16 values (4
+> > > > bits per output). The period is always 32kHz, only the duty-cycle may
+> > > > be changed. One can use any output as GPIO or PWM.  
+> > >
+> > > Can we rather not contaminate driver with this?
+> > >
+> > > Just register a separate PWM driver and export its functionality to
+> > > GPIO, or other way around (in the latter case we actually have PCA8685
+> > > which provides a GPIO fgunctionality).
+> > >  
+> >
+> > I understand your concern but I am not sure to understand which
+> > solution you have in mind. In the former case, could you explain a bit
+> > more what you are thinking about? Would linking the PWM support with
+> > the GPIO driver (code would be located in another .c file) work for
+> > you? Or maybe you would prefer an MFD on top of the GPIO driver?
+> >
+> > As for the later case, I am not willing to re-implement GPIO support in
+> > an alternate driver for an already supported chip, it is too much work
+> > for the time I can spend on it.  
+> 
+> 
+> drivers/pwm/pwm-max7313.c:
+> 
+> probe(platform_device)
+> {
+>   struct regmap = pdata;
+>   ...
+> }
+> 
+> --- 8< --- 8< ---
+> drivers/gpio/gpio-pca953x.c:
+> 
+> probe()
+> {
+>   struct regmap rm;
+> ...
+>   if (dev_has_pwm)
+>    pca953x_register_pwm_driver(rm);
+> ...
+> }
+> 
+> In the above regmap may be replaced with some (shared) container.
+> 
+> Or other way around. PWM registers GPIO (which actually I prefer since
+> we have PCA9685 case where PWM provides GPIO functionality, though via
+> different means)
+> 
 
-Thank you,
-Claudiu Beznea
+Can I have your input on this proposal?
 
-Changes in v2:
-- remove clock-frequency DT binding and hardcoded it in the driver
-- initialize best_pres variable in mchp_pit64b_pres_prepare()
-- remove MCHP_PIT64B_DEF_FREQ 
-- get rid of patches 3-5 from v1 [1] since there is no entry in MAINTAINERS file
-  for this entry. It was removed in commit
-  44015a8181a5 ("MAINTAINERS: at91: remove the TC entry")
+On one hand I agree that the GPIO driver is already quite big due to
+its genericity and the amount of controllers it supports, on the other
+hand:
+1/ Registering a PWM driver from the GPIO core seems strange. Maybe
+registering a platform device could do the trick but I am not convinced
+it is worth the trouble.
+2/ Putting the PWM logic in the drivers/pwm/ directory is not very
+convenient as the object file will have to be embedded within the GPIO
+one; this line in drivers/gpio/Makefile would be horrible:
+... += gpio-pca953x.o ../pwm/pwm-max7313.o (not even sure it works)
+3/ In any cases, the regmap's ->readable_reg(), ->writable_reg()
+callbacks shall be tweaked to turn the PWM registers accessible, so we
+would still have PWM related code in the PCA953x GPIO driver.
 
-[1] https://lore.kernel.org/lkml/1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com/
+In the end, I wonder if keeping everything in one file is not better?
+Eventually I can create a separate file and fill it with just the PWM
+helpers/hooks. Please advise on the better solution for you, I'll wait
+your feedback before addressing Thierry Reding's other review and
+resubmit.
 
-Claudiu Beznea (2):
-  dt-bindings: arm: atmel: add bindings for PIT64B
-  clocksource/drivers/timer-microchip-pit64b: add Microchip PIT64B
-    support
 
- .../devicetree/bindings/arm/atmel-sysregs.txt      |   6 +
- drivers/clocksource/Kconfig                        |   6 +
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/timer-microchip-pit64b.c       | 462 +++++++++++++++++++++
- 4 files changed, 475 insertions(+)
- create mode 100644 drivers/clocksource/timer-microchip-pit64b.c
-
--- 
-2.7.4
-
+Thanks,
+Miquèl
