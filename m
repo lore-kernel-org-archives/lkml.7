@@ -2,114 +2,132 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E54CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C548CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0F521929
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D66D721D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:22:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ACMDSvzQ"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="j00ZwEYh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbfKDKSa (ORCPT
+        id S1727993AbfKDKWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:18:30 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:58830 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfKDKSa (ORCPT
+        Mon, 4 Nov 2019 05:22:18 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37222 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726441AbfKDKWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 05:18:30 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4A8Geg180234;
-        Mon, 4 Nov 2019 10:18:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2019-08-05; bh=n4z6yY3cjmuea5DEJWf/55zw6urF7hHTqiKHjMTvZmI=;
- b=ACMDSvzQ7F42D+/QznGerfRA5g/qmKY/Ss2aYWGsxNzcgk7Bw6A4ryooByiHaXCtRqW9
- QndKOQGQ3k3+nR4Ac31PFa1QPXDuaD7q0FvSVsZ/sXHP4LEDX6Veq+3KZ5jCg+qojghv
- XT3oxjiKkTnCv86ShKARfAOhlBvfj8IQXdDeBBJPmGabm4qZfvRWcLamWudKluTlS7QB
- acVMcACAgilO+uNML5R63guKok2XVidOH5b91uHqkKW27JUlBUD9qlY07d4Am9ecPG3C
- wCcF99SYNp5TV+qlAnjmnA8Kl+HpnMGq93xAzVtU1BSF7CLswk7cGr/Ep2dr26KefLc+ TQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2w117tpamk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 10:18:21 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4A7cMO177113;
-        Mon, 4 Nov 2019 10:18:21 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2w1k8ughp9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 10:18:20 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA4AIIo3015795;
-        Mon, 4 Nov 2019 10:18:18 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 Nov 2019 02:18:18 -0800
-Date:   Mon, 4 Nov 2019 13:18:11 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jens Axboe <axboe@kernel.dk>, Jeff Moyer <jmoyer@redhat.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] iocost: add a comment about locking in ioc_weight_write()
-Message-ID: <20191104101811.GA20821@mwanda>
+        Mon, 4 Nov 2019 05:22:18 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA49utVG002166;
+        Mon, 4 Nov 2019 11:22:08 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=eU6eABG4qyDAE1xkwrnneHH0ZTGv0XqpzXiOHf/PvB4=;
+ b=j00ZwEYhJTDKLSQNtp6gi01FWnzPPaXXE6fU0NQE/41OO2OdjYgNDhaersyBnVi4duq5
+ 8i9WfYiqi0JJpFvASDIS95l7yFBoxP/5TnlCAb26vvjeO4E9cNTMxQXYmSwhZEFZ9wsW
+ XiTzu9wgffgYBNJjicJsb3LRqyzl4Y0V2LUzP+/SPXOJhpRDEVPlcZBKIFp4cKzNi7cx
+ w+rdIvThGJU65NnXoLTTy4ZTMPAwMeB73KdGtC3kk7Z1GqZbARXGhMRYpQENcKdvO4f6
+ LLFzdtDvaz/5VDOizprNJOEeQBDGJ1xdQOdoyac5aBLNa6VBZZAZjSeEPmRMGNO0PfH6 NA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2w1054gw6p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 Nov 2019 11:22:08 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 283CF10002A;
+        Mon,  4 Nov 2019 11:22:08 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1AB272BC5C3;
+        Mon,  4 Nov 2019 11:22:08 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 4 Nov
+ 2019 11:22:07 +0100
+Subject: Re: [PATCH 1/1] pinctrl: stmfx: fix valid_mask init sequence
+To:     Amelie Delaunay <amelie.delaunay@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20191104100908.10880-1-amelie.delaunay@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <3767f869-7454-c230-5e6c-487b436cb58f@st.com>
+Date:   Mon, 4 Nov 2019 11:22:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <x49d0ebd2sl.fsf@segfault.boston.devel.redhat.com>
-X-Mailer: git-send-email haha only kidding
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911040101
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911040101
+In-Reply-To: <20191104100908.10880-1-amelie.delaunay@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-11-04_06:2019-11-01,2019-11-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It wasn't very clear that blkg_conf_prep() disables IRQ and that they
-are enabled in blkg_conf_finish() so this patch adds a comment about it.
+Hi Amélie,
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-I don't know if it's too late to fold this in with the previous patch?
+On 11/4/19 11:09 AM, Amelie Delaunay wrote:
+> With stmfx_pinctrl_gpio_init_valid_mask callback, gpio_valid_mask was used
+> to initialize gpiochip valid_mask for gpiolib. But gpio_valid_mask was not
+> yet initialized. gpio_valid_mask required gpio-ranges to be registered,
+> this is the case after gpiochip_add_data call. But init_valid_mask
+> callback is also called under gpiochip_add_data. gpio_valid_mask
+> initialization cannot be moved before gpiochip_add_data because
+> gpio-ranges are not registered.
+> So, it is not possible to use init_valid_mask callback.
+> To avoid this issue, get rid of valid_mask and rely on ranges.
+> 
+> Fixes: da9b142ab2c5 ("pinctrl: stmfx: Use the callback to populate valid_mask")
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 
- block/blk-iocost.c | 2 ++
- 1 file changed, 2 insertions(+)
+Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index a7ed434eae03..c5a8703ca6aa 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -2095,6 +2095,7 @@ static ssize_t ioc_weight_write(struct kernfs_open_file *of, char *buf,
- 		return nbytes;
- 	}
- 
-+	/* blkg_conf_prep() takes the q->queue_lock and disables IRQs */
- 	ret = blkg_conf_prep(blkcg, &blkcg_policy_iocost, buf, &ctx);
- 	if (ret)
- 		return ret;
-@@ -2115,6 +2116,7 @@ static ssize_t ioc_weight_write(struct kernfs_open_file *of, char *buf,
- 	weight_updated(iocg);
- 	spin_unlock(&iocg->ioc->lock);
- 
-+	/* blkg_conf_finish() unlocks the q->queue_lock and enables IRQs */
- 	blkg_conf_finish(&ctx);
- 	return nbytes;
- 
--- 
-2.20.1
-
+> ---
+>   drivers/pinctrl/pinctrl-stmfx.c | 14 --------------
+>   1 file changed, 14 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+> index 564660028fcc..ccdf0bb21414 100644
+> --- a/drivers/pinctrl/pinctrl-stmfx.c
+> +++ b/drivers/pinctrl/pinctrl-stmfx.c
+> @@ -585,19 +585,6 @@ static int stmfx_pinctrl_gpio_function_enable(struct stmfx_pinctrl *pctl)
+>   	return stmfx_function_enable(pctl->stmfx, func);
+>   }
+>   
+> -static int stmfx_pinctrl_gpio_init_valid_mask(struct gpio_chip *gc,
+> -					      unsigned long *valid_mask,
+> -					      unsigned int ngpios)
+> -{
+> -	struct stmfx_pinctrl *pctl = gpiochip_get_data(gc);
+> -	u32 n;
+> -
+> -	for_each_clear_bit(n, &pctl->gpio_valid_mask, ngpios)
+> -		clear_bit(n, valid_mask);
+> -
+> -	return 0;
+> -}
+> -
+>   static int stmfx_pinctrl_probe(struct platform_device *pdev)
+>   {
+>   	struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);
+> @@ -660,7 +647,6 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
+>   	pctl->gpio_chip.ngpio = pctl->pctl_desc.npins;
+>   	pctl->gpio_chip.can_sleep = true;
+>   	pctl->gpio_chip.of_node = np;
+> -	pctl->gpio_chip.init_valid_mask = stmfx_pinctrl_gpio_init_valid_mask;
+>   
+>   	ret = devm_gpiochip_add_data(pctl->dev, &pctl->gpio_chip, pctl);
+>   	if (ret) {
+> 
