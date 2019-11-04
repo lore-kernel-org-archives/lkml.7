@@ -2,159 +2,131 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE2ECA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FBACA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9F7F2084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954772084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:14:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lk3pSZUe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbfKDQMR (ORCPT
+        id S1728996AbfKDQOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 11:12:17 -0500
-Received: from foss.arm.com ([217.140.110.172]:46260 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728287AbfKDQMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 11:12:17 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A41E91FB;
-        Mon,  4 Nov 2019 08:12:16 -0800 (PST)
-Received: from localhost (e108754-lin.cambridge.arm.com [10.1.199.68])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 449153F71A;
-        Mon,  4 Nov 2019 08:12:16 -0800 (PST)
-Date:   Mon, 4 Nov 2019 16:12:14 +0000
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
-        rui.zhang@intel.com, edubezval@gmail.com, qperret@google.com,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org, daniel.lezcano@linaro.org
-Subject: Re: [Patch v4 6/6] sched: thermal: Enable tuning of decay period
-Message-ID: <20191104161035.GA6680@e108754-lin>
-References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
- <1571776465-29763-7-git-send-email-thara.gopinath@linaro.org>
+        Mon, 4 Nov 2019 11:14:35 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38172 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727838AbfKDQOe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 11:14:34 -0500
+Received: by mail-qt1-f193.google.com with SMTP id p20so6445362qtq.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 08:14:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YuYmhVgbA+Fo02o2Xskyfo4EJXaoEt0MjkOscYAQ/Uo=;
+        b=lk3pSZUeGzM6eLoD0AFnbQccwwlgtIKUkLeSdLj3GhQupKaxo6Id4ox0PyEy3wCDLr
+         4ByyYWvGBZnwKdeIC5Kw+orC0Nd/kvDnlGA88gdx89Jpzf5NNdmS6Q9f+6QiYkCbkA36
+         J5pOGly8HGnGdiproFp6tMWg8flyHzkDsTU2alek36m+MrplTzYfebhQOIYPQUa40IoG
+         RcPWOoWKKGeoN5NlpybTy8lQ5aKt48pzS/APUf59A2uYApLauBAbLH6PzCa8uHnfNWTf
+         mRvPBwxJGXOnwCTg/CT15c19mz94l00yu3DGS6MH9KlaM/FNJ4W5r5BS9cGAnKgcCJzt
+         i9Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YuYmhVgbA+Fo02o2Xskyfo4EJXaoEt0MjkOscYAQ/Uo=;
+        b=DpRF9/Cd18407w4iP0sPk3m2gaELnh3Axu6iljelOehUdLHz9LJLPY01Jz+dPjalpt
+         6hYMKxm7EHYEiesSoKJtXlGskMjh3JvFFZMmsZRjDRWXDREfcd4RGBSdY48LHHumWzyw
+         kp4l1mES7Ryh4ATw4RF/j7Z5uZ4504lcQJ75b1ms1/uglFr8qKfSMq1+x7CVD5U7f3KX
+         UEgAC52DXCFX2uiquigUdzyBdVdyFEJBKOoH9wK909pBC1FTZQ+ClHIewZKnX7b3i4fD
+         TdQA9uJbrf7LcoSlmDQRcr1lR4CFSdfS4iCvg2r2DwuO49Eol+UcCLRNN2esqnifS2ev
+         IMtQ==
+X-Gm-Message-State: APjAAAWSlq6/zojK47NHNAa052uuX9Z5cIScRt3hdNa/ZrB23ZJ4z1GQ
+        GUkJ700i9xY4zek7XeDktT4=
+X-Google-Smtp-Source: APXvYqyC4InZzB7PWnIa0uKyq5kaRUwDOfqSGs+aND0mj4RP874zaM9/bIQsy+BQ6rn7DzPAtWXh7Q==
+X-Received: by 2002:ac8:d6:: with SMTP id d22mr13033168qtg.290.1572884072383;
+        Mon, 04 Nov 2019 08:14:32 -0800 (PST)
+Received: from localhost.localdomain ([187.106.44.83])
+        by smtp.gmail.com with ESMTPSA id d76sm8515020qkb.57.2019.11.04.08.14.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 08:14:31 -0800 (PST)
+From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+To:     outreachy-kernel@googlegroups.com, manasi.d.navare@intel.com,
+        rodrigosiqueiramelo@gmail.com, hamohammed.sa@gmail.com,
+        daniel@ffwll.ch, airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Subject: [PATCH VKMS v3] drm/vkms: Fix typo and preposion in function documentation
+Date:   Mon,  4 Nov 2019 13:14:24 -0300
+Message-Id: <20191104161424.18105-1-gabrielabittencourt00@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571776465-29763-7-git-send-email-thara.gopinath@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thara,
+Fix typo in word 'blend' and in the word 'destination' and change
+preposition 'at' to 'of' in function 'blend' documentation.
+And change the task introduction word 'Todo' for the word all in uppercase
+- 'TODO'. With the TODO word all in uppercase (as it's the standard) it's
+easier to find the tasks that have to be done throughout the code.
 
-On Tuesday 22 Oct 2019 at 16:34:25 (-0400), Thara Gopinath wrote:
-> Thermal pressure follows pelt signas which means the
-> decay period for thermal pressure is the default pelt
-> decay period. Depending on soc charecteristics and thermal
-> activity, it might be beneficial to decay thermal pressure
-> slower, but still in-tune with the pelt signals.
+Changes since V3:
+ Rodrigo:
+ - Merge the patch series into a single patch since it contains one single
+ logical change
 
-I wonder if it can be beneficial to decay thermal pressure faster as
-well.
+Changes since V2:
+ - Add fix typo in  word 'destination'
+ - Add change of the preposition
+ - Fix the name of the function in log message
+ - Add the change in word 'Todo'
 
-This implementation makes 32 (LOAD_AVG_PERIOD) the minimum half-life
-of the thermal pressure samples. This results in more than 100ms for a
-sample to decay significantly and therefore let's say it can take more
-than 100ms for capacity to return to (close to) max when the CPU is no
-longer capped. This value seems high to me considering that a minimum
-value should result in close to 'instantaneous' behaviour, when there
-are thermal capping mechanisms that can react in ~20ms (hikey960 has a
-polling delay of 25ms, if I'm remembering correctly).
+Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
 
-I agree 32ms seems like a good default but given that you've made this
-configurable as to give users options, I'm wondering if it would be
-better to cover a wider range.
+---
 
-> One way to achieve this is to provide a command line parameter
-> to set the decay coefficient to an integer between 0 and 10.
-> 
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> ---
-> v3->v4:
-> 	- Removed the sysctl setting to tune decay period and instead
-> 	  introduced a command line parameter to control it. The rationale
-> 	  here being changing decay period of a PELT signal runtime can
-> 	  result in a skewed average value for atleast some cycles.
-> 
->  Documentation/admin-guide/kernel-parameters.txt |  5 +++++
->  kernel/sched/thermal.c                          | 25 ++++++++++++++++++++++++-
->  2 files changed, 29 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index a84a83f..61d7baa 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -4273,6 +4273,11 @@
->  			incurs a small amount of overhead in the scheduler
->  			but is useful for debugging and performance tuning.
->  
-> +	sched_thermal_decay_coeff=
-> +			[KNL, SMP] Set decay coefficient for thermal pressure signal.
-> +			Format: integer betweer 0 and 10
-> +			Default is 0.
-> +
->  	skew_tick=	[KNL] Offset the periodic timer tick per cpu to mitigate
->  			xtime_lock contention on larger systems, and/or RCU lock
->  			contention on all systems with CONFIG_MAXSMP set.
-> diff --git a/kernel/sched/thermal.c b/kernel/sched/thermal.c
-> index 0c84960..0da31e1 100644
-> --- a/kernel/sched/thermal.c
-> +++ b/kernel/sched/thermal.c
-> @@ -10,6 +10,28 @@
->  #include "pelt.h"
->  #include "thermal.h"
->  
-> +/**
-> + * By default the decay is the default pelt decay period.
-> + * The decay coefficient can change is decay period in
-> + * multiples of 32.
+I've tested the patch using kernel-doc
+---
+ drivers/gpu/drm/vkms/vkms_composer.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-This description has to be corrected as well, as per Peter's comment.
+diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+index d5585695c64d..4af2f19480f4 100644
+--- a/drivers/gpu/drm/vkms/vkms_composer.c
++++ b/drivers/gpu/drm/vkms/vkms_composer.c
+@@ -43,18 +43,18 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
+ }
+ 
+ /**
+- * blend - belnd value at vaddr_src with value at vaddr_dst
++ * blend - blend value at vaddr_src with value at vaddr_dst
+  * @vaddr_dst: destination address
+  * @vaddr_src: source address
+  * @dest_composer: destination framebuffer's metadata
+  * @src_composer: source framebuffer's metadata
+  *
+  * Blend value at vaddr_src with value at vaddr_dst.
+- * Currently, this function write value at vaddr_src on value
++ * Currently, this function write value of vaddr_src on value
+  * at vaddr_dst using buffer's metadata to locate the new values
+- * from vaddr_src and their distenation at vaddr_dst.
++ * from vaddr_src and their destination at vaddr_dst.
+  *
+- * Todo: Use the alpha value to blend vaddr_src with vaddr_dst
++ * TODO: Use the alpha value to blend vaddr_src with vaddr_dst
+  *	 instead of overwriting it.
+  */
+ static void blend(void *vaddr_dst, void *vaddr_src,
+-- 
+2.20.1
 
-Also, it might be good not to use the value 32 directly but to mention
-that the decay period is a shift of LOAD_AVG_PERIOD. If that changes,
-the translation from decay shift to decay period below will change as
-well.
-
-Thank you,
-Ionela.
-
-> + *   Decay coefficient    Decay period(ms)
-> + *	0			32
-> + *	1			64
-> + *	2			128
-> + *	3			256
-> + *	4			512
-> + */
-> +static int sched_thermal_decay_coeff;
-> +
-> +static int __init setup_sched_thermal_decay_coeff(char *str)
-> +{
-> +	if (kstrtoint(str, 0, &sched_thermal_decay_coeff))
-> +		pr_warn("Unable to set scheduler thermal pressure decay coefficient\n");
-> +
-> +	return 1;
-> +}
-> +__setup("sched_thermal_decay_coeff=", setup_sched_thermal_decay_coeff);
-> +
->  static DEFINE_PER_CPU(unsigned long, delta_capacity);
->  
->  /**
-> @@ -40,6 +62,7 @@ void update_thermal_pressure(int cpu, u64 capped_freq_ratio)
->   */
->  void trigger_thermal_pressure_average(struct rq *rq)
->  {
-> -	update_thermal_load_avg(rq_clock_task(rq), rq,
-> +	update_thermal_load_avg(rq_clock_task(rq) >>
-> +				sched_thermal_decay_coeff, rq,
->  				per_cpu(delta_capacity, cpu_of(rq)));
->  }
-> -- 
-> 2.1.4
-> 
