@@ -2,137 +2,150 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83227CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD92BCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6D6222D2
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:29:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="pIs+r8BG"
+	by mail.kernel.org (Postfix) with ESMTP id AD2AC22467
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:29:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbfKDJ3f (ORCPT
+        id S1728316AbfKDJ3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 04:29:35 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40639 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbfKDJ3f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 04:29:35 -0500
-Received: by mail-io1-f65.google.com with SMTP id p6so17616289iod.7
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 01:29:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7LA3aPxO7flmHbs1Fp65T1MxGgeqEVjRl7gRB0nIklg=;
-        b=pIs+r8BGTrZcFZ6o2F9aOev8qXPFSl5BzVzuK8uXfPkmFJ5u78WHAgn7yWhZRgcRF2
-         TQ/fmRIthC7HH1oKRPL+rsIY0xayE+DEbHqMYT/+zihcmnMjln1lQzQBPFD2FkN0gO/R
-         4HhWzrpt1w/0TzsiJgb7btUET/PM7PlsdezH2ASb9obFcGp5X0gZk6uMEwODYssD9ndO
-         EYQFYyql2atk36OPSGopZnAzTs9D12s8ZFpQDSQVqqmYAE3KT9QtIxIc7PjjNvtUIn0I
-         tmEld6xM7W3U54vrFxxBUKCK7vOk3TguwljwVy7KB1EDh9+/aKgSTzCeUR8CWUSEYWZd
-         InJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7LA3aPxO7flmHbs1Fp65T1MxGgeqEVjRl7gRB0nIklg=;
-        b=WGH8kI/hG4dNJEm7vOQANupX/jtrn3/K6sYQuffFTiyNWGpYwZoqA1cdrG9OuMkANv
-         l/JifdZ0iSdDU6mkDIUr8l/822wNXevgI4QRM33iYG6QrzpaHyKlNE6Mhx3EUClUK7AJ
-         h00Ga3F8I2qj373zWg8OuNUqNbXpKZuYR0QiUfvB1jj0JjtzrNVk783XzuQbk4uJ1wwk
-         9WPIlqsw11WvwN0m/fhXwUV86HFPuUZObMXopROusSrsmmcUX5EGYvs9qC3A02ThF9Ev
-         eapgZI4JQtWvYhP83/ZUR9XcMFdOorcFCFWTIrUhqMrURIdamC4oqoVahVjf1sLPyRRP
-         GItQ==
-X-Gm-Message-State: APjAAAVJ1Wvu6pHSrq/qKEs5Ipyma1TMgb9fWCQ+TriW3C9U+yDSLSg0
-        i7fUGHfqbrmJnG+hSnFngN5BP61j8imNUJ1qQgmXEQ==
-X-Google-Smtp-Source: APXvYqyGh8w7aoaD8Ly+KkL+MHjewrNRjU9gjfaUC4B+HarLQYhFCDkzx2C/y4W4+ApkqrVUgvpjDgWLY+BUbVoDQq4=
-X-Received: by 2002:a6b:c705:: with SMTP id x5mr199971iof.189.1572859774524;
- Mon, 04 Nov 2019 01:29:34 -0800 (PST)
+        Mon, 4 Nov 2019 04:29:40 -0500
+Received: from mga07.intel.com ([134.134.136.100]:50239 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727138AbfKDJ3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 04:29:40 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 01:29:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,266,1569308400"; 
+   d="scan'208";a="401550886"
+Received: from savicrad-mobl.ger.corp.intel.com (HELO [10.249.40.217]) ([10.249.40.217])
+  by fmsmga005.fm.intel.com with ESMTP; 04 Nov 2019 01:29:36 -0800
+Subject: Re: [PATCH 1/2] drm/atomic: fix self-refresh helpers crtc state
+ dereference
+To:     Sean Paul <sean@poorly.run>, Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191101180713.5470-1-robdclark@gmail.com>
+ <CAMavQKKMjge6MwH=-DS5Ngs8ZE5G_x_Vncy+YoqYrC0s0AfX=Q@mail.gmail.com>
+From:   Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Message-ID: <3a67eed5-8be7-df5b-84fa-61b133e1fea2@linux.intel.com>
+Date:   Mon, 4 Nov 2019 10:29:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191022084318.22256-1-brgl@bgdev.pl>
-In-Reply-To: <20191022084318.22256-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 4 Nov 2019 10:29:23 +0100
-Message-ID: <CAMRc=MdqDv7FYCEKoK52G5zacNfLTDErrOGZAG5KDOsKh2pfUw@mail.gmail.com>
-Subject: Re: [RESEND PATCH v3 0/8] drivers: add new variants of devm_platform_ioremap_resource()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-doc <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAMavQKKMjge6MwH=-DS5Ngs8ZE5G_x_Vncy+YoqYrC0s0AfX=Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 22 pa=C5=BA 2019 o 10:43 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=
-=82(a):
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Note: resending with Arnd's review tags and rebased on top of char-misc-n=
-ext
->
-> The new devm_platform_ioremap_resource() helper has now been widely
-> adopted and used in many drivers. Users of the write-combined ioremap()
-> variants could benefit from the same code shrinkage. This series provides
-> a write-combined version of devm_platform_ioremap_resource() and uses it =
-in a
-> relevant driver with the assumption that - just like was the case
-> previously - a coccinelle script will be developed to ease the transition
-> for others.
->
-> There are also users of platform_get_resource_byname() who call
-> devm_ioremap_resource() next, so provide another variant that they can us=
-e
-> together with two examples.
->
-> v1 -> v2:
-> - dropped everything related to nocache ioremap as this is going away
->
-> v2 -> v3:
-> - don't call platform_get_resource() as an argument of devm_ioremap_resou=
-rce(),
->   it actually decreases readability
-> - add devm_platform_ioremap_resource_byname() as another variant
->
-> Bartosz Golaszewski (8):
->   Documentation: devres: add missing entry for
->     devm_platform_ioremap_resource()
->   lib: devres: prepare devm_ioremap_resource() for more variants
->   lib: devres: provide devm_ioremap_resource_wc()
->   drivers: platform: provide devm_platform_ioremap_resource_wc()
->   misc: sram: use devm_platform_ioremap_resource_wc()
->   drivers: provide devm_platform_ioremap_resource_byname()
->   gpio: mvebu: use devm_platform_ioremap_resource_byname()
->   gpio: tegra186: use devm_platform_ioremap_resource_byname()
->
->  .../driver-api/driver-model/devres.rst        |  4 ++
->  drivers/base/platform.c                       | 39 +++++++++++-
->  drivers/gpio/gpio-mvebu.c                     | 19 +++---
->  drivers/gpio/gpio-tegra186.c                  |  4 +-
->  drivers/misc/sram.c                           | 28 +++------
->  include/linux/device.h                        |  2 +
->  include/linux/platform_device.h               |  6 ++
->  lib/devres.c                                  | 62 +++++++++++++------
->  8 files changed, 108 insertions(+), 56 deletions(-)
->
-> --
-> 2.23.0
->
+Op 01-11-2019 om 21:06 schreef Sean Paul:
+> On Fri, Nov 1, 2019 at 2:09 PM Rob Clark <robdclark@gmail.com> wrote:
+>> From: Rob Clark <robdclark@chromium.org>
+>>
+>> drm_self_refresh_helper_update_avg_times() was incorrectly accessing the
+>> new incoming state after drm_atomic_helper_commit_hw_done().  But this
+>> state might have already been superceeded by an !nonblock atomic update
+>> resulting in dereferencing an already free'd crtc_state.
+>>
+>> Fixes: d4da4e33341c ("drm: Measure Self Refresh Entry/Exit times to avoid thrashing")
+>> Cc: Sean Paul <seanpaul@chromium.org>
+>> Signed-off-by: Rob Clark <robdclark@chromium.org>
+>> ---
+>> TODO I *think* this will more or less do the right thing.. althought I'm
+>> not 100% sure if, for example, we enter psr in a nonblock commit, and
+>> then leave psr in a !nonblock commit that overtakes the completion of
+>> the nonblock commit.  Not sure if this sort of scenario can happen in
+>> practice.  But not crashing is better than crashing, so I guess we
+>> should either take this patch or rever the self-refresh helpers until
+>> Sean can figure out a better solution.
+>>
+>>  drivers/gpu/drm/drm_atomic_helper.c       |  2 ++
+>>  drivers/gpu/drm/drm_self_refresh_helper.c | 11 ++++++-----
+>>  include/drm/drm_atomic.h                  |  8 ++++++++
+>>  3 files changed, 16 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+>> index 3ef2ac52ce94..732bd0ce9241 100644
+>> --- a/drivers/gpu/drm/drm_atomic_helper.c
+>> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+>> @@ -2240,6 +2240,8 @@ void drm_atomic_helper_commit_hw_done(struct drm_atomic_state *old_state)
+>>         int i;
+>>
+>>         for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
+>> +               old_state->crtcs[i].new_self_refresh_active = new_crtc_state->self_refresh_active;
+>> +
+>>                 commit = new_crtc_state->commit;
+>>                 if (!commit)
+>>                         continue;
+>> diff --git a/drivers/gpu/drm/drm_self_refresh_helper.c b/drivers/gpu/drm/drm_self_refresh_helper.c
+>> index 68f4765a5896..77b9079fa578 100644
+>> --- a/drivers/gpu/drm/drm_self_refresh_helper.c
+>> +++ b/drivers/gpu/drm/drm_self_refresh_helper.c
+>> @@ -143,19 +143,20 @@ void drm_self_refresh_helper_update_avg_times(struct drm_atomic_state *state,
+>>                                               unsigned int commit_time_ms)
+>>  {
+>>         struct drm_crtc *crtc;
+>> -       struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+>> +       struct drm_crtc_state *old_crtc_state;
+>>         int i;
+>>
+>> -       for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state,
+>> -                                     new_crtc_state, i) {
+>> +       for_each_old_crtc_in_state(state, crtc, old_crtc_state, i) {
+>> +               bool new_self_refresh_active =
+>> +                               state->crtcs[i].new_self_refresh_active;
+>>                 struct drm_self_refresh_data *sr_data = crtc->self_refresh_data;
+>>                 struct ewma_psr_time *time;
+>>
+>>                 if (old_crtc_state->self_refresh_active ==
+>> -                   new_crtc_state->self_refresh_active)
+>> +                   new_self_refresh_active)
+>>                         continue;
+>>
+>> -               if (new_crtc_state->self_refresh_active)
+>> +               if (new_self_refresh_active)
+>>                         time = &sr_data->entry_avg_ms;
+>>                 else
+>>                         time = &sr_data->exit_avg_ms;
+>> diff --git a/include/drm/drm_atomic.h b/include/drm/drm_atomic.h
+>> index 927e1205d7aa..86baf2b38bb3 100644
+>> --- a/include/drm/drm_atomic.h
+>> +++ b/include/drm/drm_atomic.h
+>> @@ -155,6 +155,14 @@ struct __drm_crtcs_state {
+>>         struct drm_crtc *ptr;
+>>         struct drm_crtc_state *state, *old_state, *new_state;
+>>
+>> +       /**
+>> +        * @new_self_refresh_active:
+>> +        *
+>> +        * drm_atomic_helper_commit_hw_done() stashes new_crtc_state->self_refresh_active
+>> +        * so that it can be accessed late in drm_self_refresh_helper_update_avg_times().
+>> +        */
+>> +       bool new_self_refresh_active;
+>> +
+> Instead of stashing this in crtc, we could generate a bitmask local to
+> commit_tail and pass that to calc_avg_times? That way we don't have to
+> worry about someone using this when they shouldn't
 
-Hi Greg,
+Yeah would make sense to have a bitmask, instead of making the property special. :)
 
-can you pick it up for char-misc for v5.5? This was reviewed by Arnd.
+Current solution seems a bit ugly.
 
-Best regards,
-Bartosz Golaszewski
+
