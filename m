@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4323BCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A92CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 144A12190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44CC0217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904353;
-	bh=E1aoj9R79rabJbJBVwCZX4iH1w2YJ9tDbCCLe60+T58=;
+	s=default; t=1572904356;
+	bh=Z4Vr1KaooQILrkTf+O1jZFGQD7EZq+zGisiVEVxIL2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h87j/tACK/v5AeDciMtEcT5/0nFc1FYaqtbFSDAh2DkGX8zmjT3EDasxGxeuZbJ7p
-	 BppS2TiceDG3omtlHgpG4rXb+mhKJy7XW70iYJmV8RJ0XsHgrL9VNP9jInfNoE+VH2
-	 xNBzUlORx2MXfWJ8toeZEO1HwNFKE30CYhxNUL44=
+	b=2JKSv4s8GfIgRogpO86Up+nKH0SdcyShMD9tvqOQSV7JiLGqj+WK161FFJ+Q94oAf
+	 nNw+L5qOW/GB54/bcU0WtCJonx5LrFl4AvBgW4ugEhcwLgU1V+kpFdCMeyYFgUiwgt
+	 QUC3dVntQbc24odQr+cgp3bKyO8Ulyhxe/7r6+Kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbfKDVwb (ORCPT
+        id S1730786AbfKDVwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:52:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45768 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:52:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730364AbfKDVwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:52:21 -0500
+        id S1730771AbfKDVwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:52:31 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA423217F4;
-        Mon,  4 Nov 2019 21:52:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73F4E218BA;
+        Mon,  4 Nov 2019 21:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904341;
-        bh=E1aoj9R79rabJbJBVwCZX4iH1w2YJ9tDbCCLe60+T58=;
+        s=default; t=1572904350;
+        bh=Z4Vr1KaooQILrkTf+O1jZFGQD7EZq+zGisiVEVxIL2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RQpEPQYz+eJ4dBxjqfXmruGAHKah6qPdxYwzeA9r1qcg3DmprMpzoObAgGIr5DAuN
-         RqisivGBCO6sSaqiu8OGzf72XLKqG4tpsnby2DZ8+tPZaNrFXbKPnTQ1tbMP3nPONI
-         9OwqOTytw14JNmIz94hNPbEWye+HsCac47tRQXUU=
+        b=nfB1vDcsopMcnSEDP3TNy0wgJDepEBY51QVs8qvj1S4cd4jS+1l/HfpxC2UFuCnzd
+         Afc21Hs2MzSq5Sy/fzmSBtEE25ZeEooJyjbIzm/7pPbtGX0dAyTQayq0t04/aalDMV
+         e8oYMEH3aJ8QXc6kQ46cUZpU5lDKS/XZ++wRN56c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yi Wang <wang.yi59@zte.com.cn>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 13/95] clk: boston: unregister clks on failure in clk_boston_setup()
-Date:   Mon,  4 Nov 2019 22:44:11 +0100
-Message-Id: <20191104212044.207446608@linuxfoundation.org>
+Subject: [PATCH 4.14 17/95] rtc: pcf8523: set xtal load capacitance from DT
+Date:   Mon,  4 Nov 2019 22:44:15 +0100
+Message-Id: <20191104212046.218667777@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -60,69 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yi Wang <wang.yi59@zte.com.cn>
+From: Sam Ravnborg <sam@ravnborg.org>
 
-[ Upstream commit 8b627f616ed63dcaf922369fc14a5daf8ad03038 ]
+[ Upstream commit 189927e719e36ceefbb8037f23d3849e47833aef ]
 
-The registered clks should unregister when something wrong happens
-before going out in function clk_boston_setup().
+Add support for specifying the xtal load capacitance in the DT node.
+The pcf8523 supports xtal load capacitance of 7pF or 12.5pF.
+If the rtc has the wrong configuration the time will
+drift several hours/week.
 
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+The driver use the default value 12.5pF.
+
+The DT may specify either 7000fF or 12500fF.
+(The DT uses femto Farad to avoid decimal numbers).
+Other values are warned and the driver uses the default value.
+
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/imgtec/clk-boston.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ drivers/rtc/rtc-pcf8523.c | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/clk/imgtec/clk-boston.c b/drivers/clk/imgtec/clk-boston.c
-index f5d54a64d33c5..dddda45127a80 100644
---- a/drivers/clk/imgtec/clk-boston.c
-+++ b/drivers/clk/imgtec/clk-boston.c
-@@ -73,31 +73,39 @@ static void __init clk_boston_setup(struct device_node *np)
- 	hw = clk_hw_register_fixed_rate(NULL, "input", NULL, 0, in_freq);
- 	if (IS_ERR(hw)) {
- 		pr_err("failed to register input clock: %ld\n", PTR_ERR(hw));
--		goto error;
-+		goto fail_input;
- 	}
- 	onecell->hws[BOSTON_CLK_INPUT] = hw;
- 
- 	hw = clk_hw_register_fixed_rate(NULL, "sys", "input", 0, sys_freq);
- 	if (IS_ERR(hw)) {
- 		pr_err("failed to register sys clock: %ld\n", PTR_ERR(hw));
--		goto error;
-+		goto fail_sys;
- 	}
- 	onecell->hws[BOSTON_CLK_SYS] = hw;
- 
- 	hw = clk_hw_register_fixed_rate(NULL, "cpu", "input", 0, cpu_freq);
- 	if (IS_ERR(hw)) {
- 		pr_err("failed to register cpu clock: %ld\n", PTR_ERR(hw));
--		goto error;
-+		goto fail_cpu;
- 	}
- 	onecell->hws[BOSTON_CLK_CPU] = hw;
- 
- 	err = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, onecell);
--	if (err)
-+	if (err) {
- 		pr_err("failed to add DT provider: %d\n", err);
-+		goto fail_clk_add;
-+	}
- 
- 	return;
- 
--error:
-+fail_clk_add:
-+	clk_hw_unregister_fixed_rate(onecell->hws[BOSTON_CLK_CPU]);
-+fail_cpu:
-+	clk_hw_unregister_fixed_rate(onecell->hws[BOSTON_CLK_SYS]);
-+fail_sys:
-+	clk_hw_unregister_fixed_rate(onecell->hws[BOSTON_CLK_INPUT]);
-+fail_input:
- 	kfree(onecell);
+diff --git a/drivers/rtc/rtc-pcf8523.c b/drivers/rtc/rtc-pcf8523.c
+index 3c8c6f942e67f..a06792966ea90 100644
+--- a/drivers/rtc/rtc-pcf8523.c
++++ b/drivers/rtc/rtc-pcf8523.c
+@@ -94,8 +94,9 @@ static int pcf8523_voltage_low(struct i2c_client *client)
+ 	return !!(value & REG_CONTROL3_BLF);
  }
  
+-static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
++static int pcf8523_load_capacitance(struct i2c_client *client)
+ {
++	u32 load;
+ 	u8 value;
+ 	int err;
+ 
+@@ -103,14 +104,24 @@ static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
+ 	if (err < 0)
+ 		return err;
+ 
+-	if (!high)
+-		value &= ~REG_CONTROL1_CAP_SEL;
+-	else
++	load = 12500;
++	of_property_read_u32(client->dev.of_node, "quartz-load-femtofarads",
++			     &load);
++
++	switch (load) {
++	default:
++		dev_warn(&client->dev, "Unknown quartz-load-femtofarads value: %d. Assuming 12500",
++			 load);
++		/* fall through */
++	case 12500:
+ 		value |= REG_CONTROL1_CAP_SEL;
++		break;
++	case 7000:
++		value &= ~REG_CONTROL1_CAP_SEL;
++		break;
++	}
+ 
+ 	err = pcf8523_write(client, REG_CONTROL1, value);
+-	if (err < 0)
+-		return err;
+ 
+ 	return err;
+ }
+@@ -307,9 +318,10 @@ static int pcf8523_probe(struct i2c_client *client,
+ 	if (!pcf)
+ 		return -ENOMEM;
+ 
+-	err = pcf8523_select_capacitance(client, true);
++	err = pcf8523_load_capacitance(client);
+ 	if (err < 0)
+-		return err;
++		dev_warn(&client->dev, "failed to set xtal load capacitance: %d",
++			 err);
+ 
+ 	err = pcf8523_set_pm(client, 0);
+ 	if (err < 0)
 -- 
 2.20.1
 
