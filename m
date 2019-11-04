@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E10CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2D0CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAF1820659
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08AF20650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904810;
-	bh=3RwQde0ZzNB68eHexpuzGLHkQGp/ERq16XNQj1ekhA8=;
+	s=default; t=1572904808;
+	bh=g01Pj0tf7hlnryPghFku7R8JDx+a9JzwcwCkVwtqZnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v/9ZZAehB/6Jvus9duuSOqMSUjfVdBlh5uyYvlTrx5uCyO2DAEA4oYWUGk1H3yhJx
-	 DAm7hTFwG6INmDHeoqpWeYmtyiLPPioCpBivp6aRigLvxYrw/CD9LHZ5mGX9fP/5Lo
-	 JEnt9wjG+LHLeZHC1GveYsDMTMnKLH7CQBkyKlM4=
+	b=soGTZRufSBgJVinOWLHzrH4XCkqXM2t0EsVwy3RPq3ui3c16A/EK0jC2/TsBQ3Os5
+	 b1rQYNAo3+re6tSPs0PI8X8/rN18OPoLyIccP2/vbDk6lkfLdgSRbHSu/23Ojyja2H
+	 Q+h6Sd75WfXt9czI2n7sDuZYcCgoeU7fHYpydAkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388812AbfKDWAI (ORCPT
+        id S2388801AbfKDWAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:00:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388794AbfKDWAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 Nov 2019 17:00:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388796AbfKDWAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:00:05 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26740217F4;
-        Mon,  4 Nov 2019 22:00:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FCF721744;
+        Mon,  4 Nov 2019 22:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904806;
-        bh=3RwQde0ZzNB68eHexpuzGLHkQGp/ERq16XNQj1ekhA8=;
+        s=default; t=1572904804;
+        bh=g01Pj0tf7hlnryPghFku7R8JDx+a9JzwcwCkVwtqZnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aobAEGSOsxAs+q+ziWyVnaDBPO5vQ2BisajyYdAAixmkJhFOxv0dWrrEdB7m7fTXo
-         raPhMbmDJShzLV3ssAJKHheB30lprEdZbT2h54nLNwJGQtQ5r8xIfv/OZYHwV9OS9f
-         +KodnX43sUIK2GvCK0D2KkaOXBcqEGsl5DXFXJLo=
+        b=LOFyOKeutuuY5aD39Uf6yu3b0OQX5fNWVG8sPpq217b9DlyVPPmcHW0va24n3dg2A
+         1wgmE/sBP5I6wgj6UhomNtkVwjYkXXE4TwpoVIoVpNOC4lf85AC2e7MOw8j+tXBNZ1
+         Dle4JidSuwX4Q925DcTQUDwMa83Bslqgd0SwV7uw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jussi Laako <jussi@sonarnerd.net>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 040/149] ALSA: usb-audio: Cleanup DSD whitelist
-Date:   Mon,  4 Nov 2019 22:43:53 +0100
-Message-Id: <20191104212138.618410374@linuxfoundation.org>
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 075/149] arm64: ftrace: Ensure synchronisation in PLT setup for Neoverse-N1 #1542419
+Date:   Mon,  4 Nov 2019 22:44:28 +0100
+Message-Id: <20191104212141.913474570@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -59,73 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jussi Laako <jussi@sonarnerd.net>
+From: James Morse <james.morse@arm.com>
 
-[ Upstream commit 202e69e645545e8dcec5e239658125276a7a315a ]
+[ Upstream commit dd8a1f13488438c6c220b7cafa500baaf21a6e53 ]
 
-XMOS/Thesycon family of USB Audio Class firmware flags DSD altsetting
-separate from the PCM ones. Thus the DSD altsetting can be auto-detected
-based on the flag and doesn't need maintaining specific altsetting
-whitelist.
+CPUs affected by Neoverse-N1 #1542419 may execute a stale instruction if
+it was recently modified. The affected sequence requires freshly written
+instructions to be executable before a branch to them is updated.
 
-In addition, static VID:PID-to-altsetting whitelisting causes problems
-when firmware update changes the altsetting, or same VID:PID is reused
-for another device that has different kind of firmware.
+There are very few places in the kernel that modify executable text,
+all but one come with sufficient synchronisation:
+ * The module loader's flush_module_icache() calls flush_icache_range(),
+   which does a kick_all_cpus_sync()
+ * bpf_int_jit_compile() calls flush_icache_range().
+ * Kprobes calls aarch64_insn_patch_text(), which does its work in
+   stop_machine().
+ * static keys and ftrace both patch between nops and branches to
+   existing kernel code (not generated code).
 
-This patch removes existing explicit whitelist mappings for XMOS VID
-(0x20b1) and Thesycon VID (0x152a).
+The affected sequence is the interaction between ftrace and modules.
+The module PLT is cleaned using __flush_icache_range() as the trampoline
+shouldn't be executable until we update the branch to it.
 
-Also corrects placement of Hegel HD12 and NuPrime DAC-10 to keep list
-sorted based on VID.
+Drop the double-underscore so that this path runs kick_all_cpus_sync()
+too.
 
-Signed-off-by: Jussi Laako <jussi@sonarnerd.net>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/quirks.c | 18 ++----------------
- 1 file changed, 2 insertions(+), 16 deletions(-)
+ arch/arm64/kernel/ftrace.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 60d00091f64b2..e5dde06c31a6f 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1360,10 +1360,6 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
- 	/* XMOS based USB DACs */
- 	switch (chip->usb_id) {
- 	case USB_ID(0x1511, 0x0037): /* AURALiC VEGA */
--	case USB_ID(0x20b1, 0x0002): /* Wyred 4 Sound DAC-2 DSD */
--	case USB_ID(0x20b1, 0x2004): /* Matrix Audio X-SPDIF 2 */
--	case USB_ID(0x20b1, 0x2008): /* Matrix Audio X-Sabre */
--	case USB_ID(0x20b1, 0x300a): /* Matrix Audio Mini-i Pro */
- 	case USB_ID(0x22d9, 0x0416): /* OPPO HA-1 */
- 	case USB_ID(0x22d9, 0x0436): /* OPPO Sonica */
- 	case USB_ID(0x22d9, 0x0461): /* OPPO UDP-205 */
-@@ -1373,23 +1369,13 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
- 			return SNDRV_PCM_FMTBIT_DSD_U32_BE;
- 		break;
+diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
+index 7eff8afa035fd..b6618391be8c6 100644
+--- a/arch/arm64/kernel/ftrace.c
++++ b/arch/arm64/kernel/ftrace.c
+@@ -119,10 +119,16 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
  
--	case USB_ID(0x10cb, 0x0103): /* The Bit Opus #3; with fp->dsd_raw */
--	case USB_ID(0x152a, 0x85de): /* SMSL D1 DAC */
--	case USB_ID(0x16d0, 0x09dd): /* Encore mDSD */
- 	case USB_ID(0x0d8c, 0x0316): /* Hegel HD12 DSD */
-+	case USB_ID(0x10cb, 0x0103): /* The Bit Opus #3; with fp->dsd_raw */
- 	case USB_ID(0x16b0, 0x06b2): /* NuPrime DAC-10 */
-+	case USB_ID(0x16d0, 0x09dd): /* Encore mDSD */
- 	case USB_ID(0x16d0, 0x0733): /* Furutech ADL Stratos */
- 	case USB_ID(0x16d0, 0x09db): /* NuPrime Audio DAC-9 */
- 	case USB_ID(0x1db5, 0x0003): /* Bryston BDA3 */
--	case USB_ID(0x20b1, 0x000a): /* Gustard DAC-X20U */
--	case USB_ID(0x20b1, 0x2005): /* Denafrips Ares DAC */
--	case USB_ID(0x20b1, 0x2009): /* DIYINHK DSD DXD 384kHz USB to I2S/DSD */
--	case USB_ID(0x20b1, 0x2023): /* JLsounds I2SoverUSB */
--	case USB_ID(0x20b1, 0x3021): /* Eastern El. MiniMax Tube DAC Supreme */
--	case USB_ID(0x20b1, 0x3023): /* Aune X1S 32BIT/384 DSD DAC */
--	case USB_ID(0x20b1, 0x302d): /* Unison Research Unico CD Due */
--	case USB_ID(0x20b1, 0x307b): /* CH Precision C1 DAC */
--	case USB_ID(0x20b1, 0x3086): /* Singxer F-1 converter board */
- 	case USB_ID(0x22d9, 0x0426): /* OPPO HA-2 */
- 	case USB_ID(0x22e1, 0xca01): /* HDTA Serenade DSD */
- 	case USB_ID(0x249c, 0x9326): /* M2Tech Young MkIII */
+ 			/*
+ 			 * Ensure updated trampoline is visible to instruction
+-			 * fetch before we patch in the branch.
++			 * fetch before we patch in the branch. Although the
++			 * architecture doesn't require an IPI in this case,
++			 * Neoverse-N1 erratum #1542419 does require one
++			 * if the TLB maintenance in module_enable_ro() is
++			 * skipped due to rodata_enabled. It doesn't seem worth
++			 * it to make it conditional given that this is
++			 * certainly not a fast-path.
+ 			 */
+-			__flush_icache_range((unsigned long)&dst[0],
+-					     (unsigned long)&dst[1]);
++			flush_icache_range((unsigned long)&dst[0],
++					   (unsigned long)&dst[1]);
+ 		}
+ 		addr = (unsigned long)dst;
+ #else /* CONFIG_ARM64_MODULE_PLTS */
 -- 
 2.20.1
 
