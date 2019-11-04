@@ -2,58 +2,55 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E9BCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1A4CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4722021744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E673021744
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905124;
-	bh=zR7PEpWo1SHxfPoogzU2Cy0kOuipPdgvp9JuFhSZZqo=;
+	s=default; t=1572905130;
+	bh=eAV/jO+TLQ0C4hnh/l6aSCSrwb/gp7mDLddYD/SJ/m4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F6XFC2S93eWjyvgAMI6Ah4cU1QxBindk3TaK7Pj04IWeoIaClcUCUt9NG2BV7cDBa
-	 GNncMikaubNO7tWhihCuY45klIgj4kbI6K7getkC6VTefix7JZO+p0j77bT4AUnwTm
-	 eG0r8ZRJrIh2xv7jkScLrTsYg5xxRw6IjPT+7xa8=
+	b=reiHCD/gKEpwKcIwZOi9A3IveuiRnpRrog3/TA+mB8OWp3H56JolH6+xcSlQfXDm6
+	 //AU8Q9iEIA2wlSwQYhFQSKLJGWUpTKtFc0mpPJYYggfFdrvEjIk5EC4CBXR/vtDPw
+	 SRIlqy3exFaiMEgZciABiFVbuDnLFTKexmK2H9+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389833AbfKDWFW (ORCPT
+        id S2389838AbfKDWF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:05:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36618 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:05:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389256AbfKDWFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:05:20 -0500
+        id S2389256AbfKDWFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:05:23 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B821217F4;
-        Mon,  4 Nov 2019 22:05:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7425A2084D;
+        Mon,  4 Nov 2019 22:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905120;
-        bh=zR7PEpWo1SHxfPoogzU2Cy0kOuipPdgvp9JuFhSZZqo=;
+        s=default; t=1572905123;
+        bh=eAV/jO+TLQ0C4hnh/l6aSCSrwb/gp7mDLddYD/SJ/m4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O0Y4FLpAC/j2vPgF0dWi4NFegPMfVhoL+Cek/SUzrGBoJyNqQ5UYXw5YG2zYdZqWq
-         0gbIsPI64pMlvMOO6jjtQVOR1mckfzY7pQbehmuEg8MmjKLRWSibAsrj0Os5+JrTgq
-         4WZ0j7HO8xg7RRqkn1DTNuZtWkzddFEufVhdfPco=
+        b=EFVxHpp7ILxlqXt3aFPXbwRII9Z9i3o8++D6dMfw+V5/UvT9b3YnMbFbppKTRPzGP
+         dQsUd3h3QULLXxMSRT514nbOS771cxQntjttlUL7MjnD/wSTDPUuxlpBX5iVbD+BHC
+         LMBwcs3OzT7KqKz+za9yYM1M/rJ/NUJYl4YE3Caw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 008/163] libsubcmd: Make _FORTIFY_SOURCE defines dependent on the feature
-Date:   Mon,  4 Nov 2019 22:43:18 +0100
-Message-Id: <20191104212141.113908107@linuxfoundation.org>
+Subject: [PATCH 5.3 035/163] tty: n_hdlc: fix build on SPARC
+Date:   Mon,  4 Nov 2019 22:43:45 +0100
+Message-Id: <20191104212142.781021204@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -66,50 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 4b0b2b096da9d296e0e5668cdfba8613bd6f5bc8 ]
+[ Upstream commit 47a7e5e97d4edd7b14974d34f0e5a5560fad2915 ]
 
-Unconditionally defining _FORTIFY_SOURCE can break tools that don't work
-with it, such as memory sanitizers:
+Fix tty driver build on SPARC by not using __exitdata.
+It appears that SPARC does not support section .exit.data.
 
-  https://github.com/google/sanitizers/wiki/AddressSanitizer#faq
+Fixes these build errors:
 
-Fixes: 4b6ab94eabe4 ("perf subcmd: Create subcmd library")
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20190925195924.152834-1-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+`.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
+`.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
+`.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
+`.exit.data' referenced in section `.exit.text' of drivers/tty/n_hdlc.o: defined in discarded section `.exit.data' of drivers/tty/n_hdlc.o
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Fixes: 063246641d4a ("format-security: move static strings to const")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Link: https://lore.kernel.org/r/675e7bd9-955b-3ff3-1101-a973b58b5b75@infradead.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/subcmd/Makefile | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/tty/n_hdlc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
-index ed61fb3a46c08..5b2cd5e58df09 100644
---- a/tools/lib/subcmd/Makefile
-+++ b/tools/lib/subcmd/Makefile
-@@ -20,7 +20,13 @@ MAKEFLAGS += --no-print-directory
- LIBFILE = $(OUTPUT)libsubcmd.a
+diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
+index e55c79eb64309..98361acd3053f 100644
+--- a/drivers/tty/n_hdlc.c
++++ b/drivers/tty/n_hdlc.c
+@@ -968,6 +968,11 @@ static int __init n_hdlc_init(void)
+ 	
+ }	/* end of init_module() */
  
- CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
--CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -fPIC
-+CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
++#ifdef CONFIG_SPARC
++#undef __exitdata
++#define __exitdata
++#endif
 +
-+ifeq ($(DEBUG),0)
-+  ifeq ($(feature-fortify-source), 1)
-+    CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
-+  endif
-+endif
- 
- ifeq ($(CC_NO_CLANG), 0)
-   CFLAGS += -O3
+ static const char hdlc_unregister_ok[] __exitdata =
+ 	KERN_INFO "N_HDLC: line discipline unregistered\n";
+ static const char hdlc_unregister_fail[] __exitdata =
 -- 
 2.20.1
 
