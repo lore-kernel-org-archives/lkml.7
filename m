@@ -2,341 +2,218 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08586CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 04:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49452CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 04:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0A272190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 04:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 111B2222C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 04:47:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eFq6chB+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfKDEnv (ORCPT
+        id S1727687AbfKDErI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 23:43:51 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:54548 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727267AbfKDEnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 23:43:51 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ED69E200183;
-        Mon,  4 Nov 2019 05:43:47 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 853C620010B;
-        Mon,  4 Nov 2019 05:43:40 +0100 (CET)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3FCE5402AD;
-        Mon,  4 Nov 2019 12:43:31 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, wsa@the-dreams.de,
-        leoyang.li@nxp.com, aisheng.dong@nxp.com, xiaoning.wang@nxp.com,
-        o.rempel@pengutronix.de
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, laurentiu.tudor@nxp.com,
-        jiafei.pan@nxp.com, xiaobo.xie@nxp.com, Biwen Li <biwen.li@nxp.com>
-Subject: [v4] i2c: imx: support slave mode for imx I2C driver
-Date:   Mon,  4 Nov 2019 12:32:11 +0800
-Message-Id: <20191104043211.6084-1-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 3 Nov 2019 23:47:08 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39893 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727267AbfKDErH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 23:47:07 -0500
+Received: by mail-pl1-f195.google.com with SMTP id o9so371472plk.6
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 20:47:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sI8SdyDQlg9PptexVD4FINeW/bRt7Aqgu7Py4pibvoI=;
+        b=eFq6chB+gXLpAY+mYAbZbDbJQb9ZE7Vlh57ve/G8w/VOOU6NqFKVMf+FzIBnv3Ry9S
+         YrgkE1MLRUd572nOPSh7FD8qMc/g7/9hMP+NBUHfI4NcEJdb4gOmVIbMUJ04IiEcZ4Zc
+         Hi7YWwFXJg7Uv0drDmfOonbg9+1xtbf7Sa/L9F5kHhP81/YkA9ww1k2nU6IrfD2FA+zy
+         +wXraksfhSIa/SIWBSuF2oo2tUT1on4Z+LJz1Ea6Wy3XiCM32UnlC/f+oxoeqM8ku9TY
+         GjUryJUyHzBVTrsTXTg1/PNUIN5p9fpE6pjUUyockXxJSjqVI5kcNVceosUokq5EUFTY
+         5/YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sI8SdyDQlg9PptexVD4FINeW/bRt7Aqgu7Py4pibvoI=;
+        b=ltiPiUjjOobkRCl43HTrt+dLyS5+DCaRch3CpZ04oDuz2U+5sbmwzZJYIMaMnzMzCt
+         VX5DloR6Ahqo4qT1YWenDxqPy+xglZSR691Azvi8ZS3tC6P9Xlk6l92jrNn1+1XCZiD1
+         evlOKgTVoMvekVxquzOmfZ2jIZUmczgUZdypgyRcpUFvSJgGlsEy4JdGRu+sJV1fCFJN
+         sb9aBTRgNLViFIOv4uw87cU3VeoBAXiAWLpZ/suIpPzhvFW+WUOfZmUcjI/8m609cIjZ
+         7eEkTw+g4tXBHTt4jMFYE8CBTWi/gEQRLiTx5AUnPMwrpnTd+eEUbgiyoi96MHjHsgOr
+         toyQ==
+X-Gm-Message-State: APjAAAUNYDjm5e24tvBN6F7/KypCvCeSooNyLfqoliV+49HI81bKL0+W
+        VL1JQ/cVnkM7HqdphKdG9TDU8Q==
+X-Google-Smtp-Source: APXvYqx13e72R6oJZBfFP6N2KVZXH2P+1oWapalahijz52zzjzDPZpajzSI9ywU2qThoxeVPP3Q44Q==
+X-Received: by 2002:a17:902:322:: with SMTP id 31mr24604389pld.293.1572842826478;
+        Sun, 03 Nov 2019 20:47:06 -0800 (PST)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i71sm15994359pfe.103.2019.11.03.20.47.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Nov 2019 20:47:05 -0800 (PST)
+Date:   Sun, 3 Nov 2019 20:47:03 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] phy: qcom: qmp: Add SDM845 QHP PCIe PHY
+Message-ID: <20191104044703.GQ1929@tuxbook-pro>
+References: <20191102001628.4090861-1-bjorn.andersson@linaro.org>
+ <20191102001628.4090861-6-bjorn.andersson@linaro.org>
+ <20191103082147.GO2695@vkoul-mobl.Dlink>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191103082147.GO2695@vkoul-mobl.Dlink>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch supports slave mode for imx I2C driver
+On Sun 03 Nov 01:21 PDT 2019, Vinod Koul wrote:
+> On 01-11-19, 17:16, Bjorn Andersson wrote:
+[..]
+> > +/* PCIE GEN3 COM registers */
+> > +#define PCIE_GEN3_QHP_COM_SYSCLK_EN_SEL			0xdc
+> 
+> No QPHY_ tag with these?
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
-Reported-by: kbuild test robot <lkp@intel.com>
+These are the actual register names from the hardware specification, do
+you foresee any issues with naming them like this?
 
----
-Change in v4:
-	- add MACRO CONFIG_I2C_SLAVE to fix compilation issue
+> > +#define PCIE_GEN3_QHP_COM_SSC_EN_CENTER			0x14
+> 
+> Can we sort these please!
+> 
 
-Change in v3:
-	- support layerscape and i.mx platform
+Yes, that sounds reasonable. I'll respin with these sorted by address.
 
-Change in v2:
-	- remove MACRO CONFIG_I2C_SLAVE
+Regards,
+Bjorn
 
- drivers/i2c/busses/i2c-imx.c | 219 ++++++++++++++++++++++++++++++++---
- 1 file changed, 201 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index a3b61336fe55..fb783856c8e2 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -203,6 +203,9 @@ struct imx_i2c_struct {
- 	struct pinctrl_state *pinctrl_pins_gpio;
- 
- 	struct imx_i2c_dma	*dma;
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	struct i2c_client	*slave;
-+#endif
- };
- 
- static const struct imx_i2c_hwdata imx1_i2c_hwdata = {
-@@ -279,6 +282,14 @@ static inline unsigned char imx_i2c_read_reg(struct imx_i2c_struct *i2c_imx,
- 	return readb(i2c_imx->base + (reg << i2c_imx->hwdata->regshift));
- }
- 
-+/* Set up i2c controller register and i2c status register to default value. */
-+static void i2c_imx_reset_regs(struct imx_i2c_struct *i2c_imx)
-+{
-+	imx_i2c_write_reg(i2c_imx->hwdata->i2cr_ien_opcode ^ I2CR_IEN,
-+			i2c_imx, IMX_I2C_I2CR);
-+	imx_i2c_write_reg(i2c_imx->hwdata->i2sr_clr_opcode, i2c_imx, IMX_I2C_I2SR);
-+}
-+
- /* Functions for DMA support */
- static void i2c_imx_dma_request(struct imx_i2c_struct *i2c_imx,
- 						dma_addr_t phy_addr)
-@@ -588,23 +599,33 @@ static void i2c_imx_stop(struct imx_i2c_struct *i2c_imx)
- 	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
- }
- 
--static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
-+/* Clear interrupt flag bit */
-+static void i2c_imx_clr_if_bit(unsigned int status, struct imx_i2c_struct *i2c_imx)
- {
--	struct imx_i2c_struct *i2c_imx = dev_id;
--	unsigned int temp;
-+	status &= ~I2SR_IIF;
-+	status |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
-+	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
-+}
- 
--	temp = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
--	if (temp & I2SR_IIF) {
--		/* save status register */
--		i2c_imx->i2csr = temp;
--		temp &= ~I2SR_IIF;
--		temp |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
--		imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2SR);
--		wake_up(&i2c_imx->queue);
--		return IRQ_HANDLED;
--	}
-+/* Clear arbitration lost bit */
-+static void i2c_imx_clr_al_bit(unsigned int status, struct imx_i2c_struct *i2c_imx)
-+{
-+	status &= ~I2SR_IAL;
-+	status |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IAL);
-+	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
-+}
-+
-+static irqreturn_t i2c_imx_master_isr(struct imx_i2c_struct *i2c_imx)
-+{
-+	unsigned int status;
-+
-+	/* Save status register */
-+	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
-+	i2c_imx->i2csr = status | I2SR_IIF;
- 
--	return IRQ_NONE;
-+	wake_up(&i2c_imx->queue);
-+
-+	return IRQ_HANDLED;
- }
- 
- static int i2c_imx_dma_write(struct imx_i2c_struct *i2c_imx,
-@@ -900,6 +921,13 @@ static int i2c_imx_xfer(struct i2c_adapter *adapter,
- 
- 	dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
- 
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	if (i2c_imx->slave) {
-+		dev_err(&i2c_imx->adapter.dev, "Please not do operations of master mode in slave mode");
-+		return -EBUSY;
-+	}
-+#endif
-+
- 	result = pm_runtime_get_sync(i2c_imx->adapter.dev.parent);
- 	if (result < 0)
- 		goto out;
-@@ -1048,11 +1076,169 @@ static u32 i2c_imx_func(struct i2c_adapter *adapter)
- 		| I2C_FUNC_SMBUS_READ_BLOCK_DATA;
- }
- 
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+static int i2c_imx_slave_init(struct imx_i2c_struct *i2c_imx)
-+{
-+	int temp;
-+
-+	/* Resume */
-+	temp = pm_runtime_get_sync(i2c_imx->adapter.dev.parent);
-+	if (temp < 0) {
-+		dev_err(&i2c_imx->adapter.dev, "failed to resume i2c controller");
-+		return temp;
-+	}
-+
-+	/* Set slave addr. */
-+	imx_i2c_write_reg((i2c_imx->slave->addr << 1), i2c_imx, IMX_I2C_IADR);
-+
-+	i2c_imx_reset_regs(i2c_imx);
-+
-+	/* Enable module */
-+	temp = i2c_imx->hwdata->i2cr_ien_opcode;
-+	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
-+
-+	/* Enable interrupt from i2c module */
-+	temp |= I2CR_IIEN;
-+	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
-+
-+	/* Wait controller to be stable */
-+	usleep_range(50, 150);
-+	return 0;
-+}
-+
-+static irqreturn_t i2c_imx_slave_isr(struct imx_i2c_struct *i2c_imx)
-+{
-+	unsigned int status, ctl;
-+	u8 value;
-+
-+	if (!i2c_imx->slave) {
-+		dev_err(&i2c_imx->adapter.dev, "cannot deal with slave irq,i2c_imx->slave is null");
-+		return IRQ_NONE;
-+	}
-+
-+	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
-+	ctl = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
-+	if (status & I2SR_IAL) { /* Arbitration lost */
-+		i2c_imx_clr_al_bit(status, i2c_imx);
-+	} else if (status & I2SR_IAAS) { /* Addressed as a slave */
-+		if (status & I2SR_SRW) { /* Master wants to read from us*/
-+			dev_dbg(&i2c_imx->adapter.dev, "read requested");
-+			i2c_slave_event(i2c_imx->slave, I2C_SLAVE_READ_REQUESTED, &value);
-+
-+			/* Slave transmit */
-+			ctl |= I2CR_MTX;
-+			imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
-+
-+			/* Send data */
-+			imx_i2c_write_reg(value, i2c_imx, IMX_I2C_I2DR);
-+		} else { /* Master wants to write to us */
-+			dev_dbg(&i2c_imx->adapter.dev, "write requested");
-+			i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_WRITE_REQUESTED, &value);
-+
-+			/* Slave receive */
-+			ctl &= ~I2CR_MTX;
-+			imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
-+			/* Dummy read */
-+			imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
-+		}
-+	} else if (!(ctl & I2CR_MTX)) { /* Receive mode */
-+			if (status & I2SR_IBB) { /* No STOP signal detected */
-+				ctl &= ~I2CR_MTX;
-+				imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
-+
-+				value = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
-+				i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_WRITE_RECEIVED, &value);
-+			} else { /* STOP signal is detected */
-+				dev_dbg(&i2c_imx->adapter.dev,
-+					"STOP signal detected");
-+				i2c_slave_event(i2c_imx->slave, I2C_SLAVE_STOP, &value);
-+			}
-+	} else if (!(status & I2SR_RXAK)) {	/* Transmit mode received ACK */
-+		ctl |= I2CR_MTX;
-+		imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
-+
-+		i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_READ_PROCESSED, &value);
-+
-+		imx_i2c_write_reg(value, i2c_imx, IMX_I2C_I2DR);
-+	} else { /* Transmit mode received NAK */
-+		ctl &= ~I2CR_MTX;
-+		imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
-+		imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
-+	}
-+	return IRQ_HANDLED;
-+}
-+
-+static int i2c_imx_reg_slave(struct i2c_client *client)
-+{
-+	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
-+	int ret;
-+	if (i2c_imx->slave)
-+		return -EBUSY;
-+
-+	i2c_imx->slave = client;
-+
-+	ret = i2c_imx_slave_init(i2c_imx);
-+	if (ret < 0)
-+		dev_err(&i2c_imx->adapter.dev, "failed to switch to slave mode");
-+
-+	return ret;
-+}
-+
-+static int i2c_imx_unreg_slave(struct i2c_client *client)
-+{
-+	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
-+	int ret;
-+
-+	if (!i2c_imx->slave)
-+		return -EINVAL;
-+
-+	/* Reset slave address. */
-+	imx_i2c_write_reg(0, i2c_imx, IMX_I2C_IADR);
-+
-+	i2c_imx_reset_regs(i2c_imx);
-+
-+	i2c_imx->slave = NULL;
-+
-+	/* Suspend */
-+	ret = pm_runtime_put_sync(i2c_imx->adapter.dev.parent);
-+	if (ret < 0)
-+		dev_err(&i2c_imx->adapter.dev, "failed to suspend i2c controller");
-+
-+	return ret;
-+}
-+#endif
-+
- static const struct i2c_algorithm i2c_imx_algo = {
- 	.master_xfer	= i2c_imx_xfer,
- 	.functionality	= i2c_imx_func,
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	.reg_slave	= i2c_imx_reg_slave,
-+	.unreg_slave	= i2c_imx_unreg_slave,
-+#endif
- };
- 
-+static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
-+{
-+	struct imx_i2c_struct *i2c_imx = dev_id;
-+	unsigned int status, ctl;
-+	irqreturn_t irq_status = IRQ_NONE;
-+
-+	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
-+	ctl = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
-+
-+	if (status & I2SR_IIF) {
-+		i2c_imx_clr_if_bit(status, i2c_imx);
-+		if (ctl & I2CR_MSTA)
-+			irq_status = i2c_imx_master_isr(i2c_imx);
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+		else
-+			irq_status = i2c_imx_slave_isr(i2c_imx);
-+#endif
-+	}
-+
-+	return irq_status;
-+}
-+
- static int i2c_imx_probe(struct platform_device *pdev)
- {
- 	struct imx_i2c_struct *i2c_imx;
-@@ -1148,10 +1334,7 @@ static int i2c_imx_probe(struct platform_device *pdev)
- 	clk_notifier_register(i2c_imx->clk, &i2c_imx->clk_change_nb);
- 	i2c_imx_set_clk(i2c_imx, clk_get_rate(i2c_imx->clk));
- 
--	/* Set up chip registers to defaults */
--	imx_i2c_write_reg(i2c_imx->hwdata->i2cr_ien_opcode ^ I2CR_IEN,
--			i2c_imx, IMX_I2C_I2CR);
--	imx_i2c_write_reg(i2c_imx->hwdata->i2sr_clr_opcode, i2c_imx, IMX_I2C_I2SR);
-+	i2c_imx_reset_regs(i2c_imx);
- 
- 	/* Init optional bus recovery function */
- 	ret = i2c_imx_init_recovery_info(i2c_imx, pdev);
--- 
-2.17.1
-
+> > +#define PCIE_GEN3_QHP_COM_SSC_PER1			0x20
+> > +#define PCIE_GEN3_QHP_COM_SSC_PER2			0x24
+> > +#define PCIE_GEN3_QHP_COM_SSC_STEP_SIZE1		0x28
+> > +#define PCIE_GEN3_QHP_COM_SSC_STEP_SIZE2		0x2c
+> > +#define PCIE_GEN3_QHP_COM_SSC_STEP_SIZE1_MODE1		0x34
+> > +#define PCIE_GEN3_QHP_COM_SSC_STEP_SIZE2_MODE1		0x38
+> > +#define PCIE_GEN3_QHP_COM_BIAS_EN_CKBUFLR_EN		0x54
+> > +#define PCIE_GEN3_QHP_COM_CLK_ENABLE1			0x58
+> > +#define PCIE_GEN3_QHP_COM_LOCK_CMP1_MODE0		0x6c
+> > +#define PCIE_GEN3_QHP_COM_LOCK_CMP2_MODE0		0x70
+> > +#define PCIE_GEN3_QHP_COM_LOCK_CMP1_MODE1		0x78
+> > +#define PCIE_GEN3_QHP_COM_LOCK_CMP2_MODE1		0x7c
+> > +#define PCIE_GEN3_QHP_COM_CP_CTRL_MODE0			0xb4
+> > +#define PCIE_GEN3_QHP_COM_CP_CTRL_MODE1			0xb8
+> > +#define PCIE_GEN3_QHP_COM_PLL_RCTRL_MODE0		0xc0
+> > +#define PCIE_GEN3_QHP_COM_PLL_RCTRL_MODE1		0xc4
+> > +#define PCIE_GEN3_QHP_COM_PLL_CCTRL_MODE0		0xcc
+> > +#define PCIE_GEN3_QHP_COM_PLL_CCTRL_MODE1		0xd0
+> > +#define PCIE_GEN3_QHP_COM_RESTRIM_CTRL2			0xf0
+> > +#define PCIE_GEN3_QHP_COM_LOCK_CMP_EN			0xf8
+> > +#define PCIE_GEN3_QHP_COM_DEC_START_MODE0		0x100
+> > +#define PCIE_GEN3_QHP_COM_DEC_START_MODE1		0x108
+> > +#define PCIE_GEN3_QHP_COM_DIV_FRAC_START1_MODE0		0x11c
+> > +#define PCIE_GEN3_QHP_COM_DIV_FRAC_START2_MODE0		0x120
+> > +#define PCIE_GEN3_QHP_COM_DIV_FRAC_START3_MODE0		0x124
+> > +#define PCIE_GEN3_QHP_COM_DIV_FRAC_START1_MODE1		0x128
+> > +#define PCIE_GEN3_QHP_COM_DIV_FRAC_START2_MODE1		0x12c
+> > +#define PCIE_GEN3_QHP_COM_DIV_FRAC_START3_MODE1		0x130
+> > +#define PCIE_GEN3_QHP_COM_INTEGLOOP_GAIN0_MODE0		0x150
+> > +#define PCIE_GEN3_QHP_COM_INTEGLOOP_GAIN0_MODE1		0x158
+> > +#define PCIE_GEN3_QHP_COM_VCO_TUNE_MAP			0x178
+> > +#define PCIE_GEN3_QHP_COM_CLK_SELECT			0x1cc
+> > +#define PCIE_GEN3_QHP_COM_HSCLK_SEL1			0x1d0
+> > +#define PCIE_GEN3_QHP_COM_CORECLK_DIV			0x1e0
+> > +#define PCIE_GEN3_QHP_COM_CORE_CLK_EN			0x1e8
+> > +#define PCIE_GEN3_QHP_COM_CMN_CONFIG			0x1f0
+> > +#define PCIE_GEN3_QHP_COM_SVS_MODE_CLK_SEL		0x1fc
+> > +#define PCIE_GEN3_QHP_COM_CORECLK_DIV_MODE1		0x21c
+> > +#define PCIE_GEN3_QHP_COM_CMN_MODE			0x224
+> > +#define PCIE_GEN3_QHP_COM_VREGCLK_DIV1			0x228
+> > +#define PCIE_GEN3_QHP_COM_VREGCLK_DIV2			0x22c
+> > +#define PCIE_GEN3_QHP_COM_BGV_TRIM			0x98
+> > +#define PCIE_GEN3_QHP_COM_BG_CTRL			0x1c8
+> > +
+> > +/* PCIE GEN3 QHP Lane registers */
+> > +#define PCIE_GEN3_QHP_L0_DRVR_CTRL0			0xc
+> > +#define PCIE_GEN3_QHP_L0_DRVR_TAP_EN			0x18
+> > +#define PCIE_GEN3_QHP_L0_TX_BAND_MODE			0x60
+> > +#define PCIE_GEN3_QHP_L0_LANE_MODE			0x64
+> > +#define PCIE_GEN3_QHP_L0_PARALLEL_RATE			0x7c
+> > +#define PCIE_GEN3_QHP_L0_CML_CTRL_MODE0			0xc0
+> > +#define PCIE_GEN3_QHP_L0_CML_CTRL_MODE1			0xc4
+> > +#define PCIE_GEN3_QHP_L0_CML_CTRL_MODE2			0xc8
+> > +#define PCIE_GEN3_QHP_L0_PREAMP_CTRL_MODE1		0xd0
+> > +#define PCIE_GEN3_QHP_L0_PREAMP_CTRL_MODE2		0xd4
+> > +#define PCIE_GEN3_QHP_L0_MIXER_CTRL_MODE0		0xd8
+> > +#define PCIE_GEN3_QHP_L0_MIXER_CTRL_MODE1		0xdc
+> > +#define PCIE_GEN3_QHP_L0_MIXER_CTRL_MODE2		0xe0
+> > +#define PCIE_GEN3_QHP_L0_CTLE_THRESH_DFE		0xfc
+> > +#define PCIE_GEN3_QHP_L0_CGA_THRESH_DFE			0x100
+> > +#define PCIE_GEN3_QHP_L0_RXENGINE_EN0			0x108
+> > +#define PCIE_GEN3_QHP_L0_CTLE_TRAIN_TIME		0x114
+> > +#define PCIE_GEN3_QHP_L0_CTLE_DFE_OVRLP_TIME		0x118
+> > +#define PCIE_GEN3_QHP_L0_DFE_REFRESH_TIME		0x11c
+> > +#define PCIE_GEN3_QHP_L0_DFE_ENABLE_TIME		0x120
+> > +#define PCIE_GEN3_QHP_L0_VGA_GAIN			0x124
+> > +#define PCIE_GEN3_QHP_L0_DFE_GAIN			0x128
+> > +#define PCIE_GEN3_QHP_L0_EQ_GAIN			0x130
+> > +#define PCIE_GEN3_QHP_L0_OFFSET_GAIN			0x134
+> > +#define PCIE_GEN3_QHP_L0_PRE_GAIN			0x138
+> > +#define PCIE_GEN3_QHP_L0_EQ_INTVAL			0x154
+> > +#define PCIE_GEN3_QHP_L0_EDAC_INITVAL			0x160
+> > +#define PCIE_GEN3_QHP_L0_RXEQ_INITB0			0x168
+> > +#define PCIE_GEN3_QHP_L0_RXEQ_INITB1			0x16c
+> > +#define PCIE_GEN3_QHP_L0_RCVRDONE_THRESH1		0x178
+> > +#define PCIE_GEN3_QHP_L0_RXEQ_CTRL			0x180
+> > +#define PCIE_GEN3_QHP_L0_UCDR_FO_GAIN_MODE0		0x184
+> > +#define PCIE_GEN3_QHP_L0_UCDR_FO_GAIN_MODE1		0x188
+> > +#define PCIE_GEN3_QHP_L0_UCDR_FO_GAIN_MODE2		0x18c
+> > +#define PCIE_GEN3_QHP_L0_UCDR_SO_GAIN_MODE0		0x190
+> > +#define PCIE_GEN3_QHP_L0_UCDR_SO_GAIN_MODE1		0x194
+> > +#define PCIE_GEN3_QHP_L0_UCDR_SO_GAIN_MODE2		0x198
+> > +#define PCIE_GEN3_QHP_L0_UCDR_SO_CONFIG			0x19c
+> > +#define PCIE_GEN3_QHP_L0_RX_BAND			0x1a4
+> > +#define PCIE_GEN3_QHP_L0_RX_RCVR_PATH1_MODE0		0x1c0
+> > +#define PCIE_GEN3_QHP_L0_RX_RCVR_PATH1_MODE1		0x1c4
+> > +#define PCIE_GEN3_QHP_L0_RX_RCVR_PATH1_MODE2		0x1c8
+> > +#define PCIE_GEN3_QHP_L0_SIGDET_ENABLES			0x230
+> > +#define PCIE_GEN3_QHP_L0_SIGDET_CNTRL			0x234
+> > +#define PCIE_GEN3_QHP_L0_SIGDET_DEGLITCH_CNTRL		0x238
+> > +#define PCIE_GEN3_QHP_L0_DCC_GAIN			0x2a4
+> > +#define PCIE_GEN3_QHP_L0_RX_EN_SIGNAL			0x2ac
+> > +#define PCIE_GEN3_QHP_L0_PSM_RX_EN_CAL			0x2b0
+> > +#define PCIE_GEN3_QHP_L0_RX_MISC_CNTRL0			0x2b8
+> > +#define PCIE_GEN3_QHP_L0_TS0_TIMER			0x2c0
+> > +#define PCIE_GEN3_QHP_L0_DLL_HIGHDATARATE		0x2c4
+> > +#define PCIE_GEN3_QHP_L0_DRVR_CTRL1			0x10
+> > +#define PCIE_GEN3_QHP_L0_DRVR_CTRL2			0x14
+> > +#define PCIE_GEN3_QHP_L0_RX_RESETCODE_OFFSET		0x2cc
+> > +#define PCIE_GEN3_QHP_L0_VGA_INITVAL			0x13c
+> > +#define PCIE_GEN3_QHP_L0_RSM_START			0x2a8
+> > +
+> > +/* PCIE GEN3 PCS registers */
+> > +#define PCIE_GEN3_QHP_PHY_POWER_STATE_CONFIG		0x15c
+> > +#define PCIE_GEN3_QHP_PHY_PCS_TX_RX_CONFIG		0x174
+> > +#define PCIE_GEN3_QHP_PHY_TXMGN_MAIN_V0_M3P5DB		0x2c
+> > +#define PCIE_GEN3_QHP_PHY_TXMGN_POST_V0_M3P5DB		0x40
+> > +#define PCIE_GEN3_QHP_PHY_TXMGN_MAIN_V0_M6DB		0x54
+> > +#define PCIE_GEN3_QHP_PHY_TXMGN_POST_V0_M6DB		0x68
+> > +#define PCIE_GEN3_QHP_PHY_POWER_STATE_CONFIG5		0x16c
+> > +
+> >  #endif
+> > -- 
+> > 2.23.0
+> 
+> -- 
+> ~Vinod
