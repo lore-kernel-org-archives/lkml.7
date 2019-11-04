@@ -2,113 +2,169 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D37CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0128CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1D8920578
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BC1D20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:19:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rCPl+46h"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="fn+K0Jeb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbfKDSTX (ORCPT
+        id S1729566AbfKDSTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 13:19:23 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35342 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729496AbfKDSTV (ORCPT
+        Mon, 4 Nov 2019 13:19:39 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43408 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728336AbfKDSTj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 13:19:21 -0500
-Received: by mail-wm1-f66.google.com with SMTP id 8so10116591wmo.0;
-        Mon, 04 Nov 2019 10:19:20 -0800 (PST)
+        Mon, 4 Nov 2019 13:19:39 -0500
+Received: by mail-wr1-f68.google.com with SMTP id n1so18248139wra.10
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 10:19:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=crl/sUJTIYngi8fCHSniOxSSni3lgNa7iQh3Jutt6vc=;
-        b=rCPl+46hCB8Mnj8qi6TYtxjg6Ezu+S1u9FI7m3WICddeN51CJeVMntsykKw9XxBwcp
-         9IUdFhOkA2la4PN3vJv9GrNi7JET4iS5y265fGNnb8SHwd0GlRiqnexA6tLXX5JGwKeV
-         /K1ASK6k89Obg7/lasOFryB+BWSwTgROvyS1s0aO1nPzd9LHq7NGxdLpw/ygTa/62Tpe
-         9tpZ8uXwtmBQ3KKnVIDG8vANv9F6XwRO12Pw4JgIyQ/XNpy4PrPUhrQxIegc71nrMGkV
-         Y3YkNNOnbDpPRDz+4OEJg0deyP0bWWL+W2iYgURBBYgFggTWefElTHO8G6qX6xdpDRzf
-         +NaQ==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Qfg3/OhENOhgHzvHvbxDHTYQ7dgyHpgpR3Q3h/hLkOE=;
+        b=fn+K0JebeyPggpWIrakbcYMmMywkz8WCAdLPRUAUoAtqIBUspiPN7tD3QProjEFSDP
+         nLRQVnCWYlJKioXnZylDFjZ9CvozxWOKgd65NLtZqd17WmgPpSzRe+AzdbWMQMwiKEAh
+         Qm0FkocWIVWPD+J6wOxMRhwzLkNS66oy4IFOE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=crl/sUJTIYngi8fCHSniOxSSni3lgNa7iQh3Jutt6vc=;
-        b=jCri6EdDleWfsHSfFZwtHAz091bQWTx6Dp+lwz6pDuP510GUEGWUkM6B5rbMFBHLxC
-         Xz7rTJAq3+MMuyLW/QMmJKPfNsviukcGYz8zXwvEhj5wnhHAu6w9Nsq/TR6Cvx64ifj+
-         owhSG2iwnIrQw0VqscJ2JaFtJQDMLit+fTcYfhRzQe5JEHJ4142TMoZk01QSVyEkewH5
-         SJnzOB4cwoT+RyURwHhrJYODRJCcUAZmy2VFaC5guBR3B7efciKFZl0anEnvAEXGhNHx
-         hRTyRUyVpai3E7oDBOysKcouD3rf2qOi1qKwpBLC3G3qmZkLsTQYGaJVh/Ikuuk+FVPl
-         TF1Q==
-X-Gm-Message-State: APjAAAWi79Om+QJWZ1r57/tu6HWygJzqqiYCrRQfyyx/8eW6LN3ZTTu3
-        iv+dpfJtmr97g/Z8ipXzZww=
-X-Google-Smtp-Source: APXvYqyi85IXeYNlKiRU9CfS3VUsHIeGRvcoN3KGVKyN/8gCemDLZxmG2aberbhL23uSfab6ZAZFnA==
-X-Received: by 2002:a1c:6a14:: with SMTP id f20mr375073wmc.110.1572891559775;
-        Mon, 04 Nov 2019 10:19:19 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id w8sm23127580wrr.44.2019.11.04.10.19.17
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=Qfg3/OhENOhgHzvHvbxDHTYQ7dgyHpgpR3Q3h/hLkOE=;
+        b=i3xalsiqDZAeRcuV+lsGuGz1qBNAjO4TK+3MX60GIrMzPr62Y7m/bxSzsgU72yxvbZ
+         jYrrtqzMSZLvyTKTR6WModuAuJz5B8JnxAQB6dbVmYRtMvPzis014Y52b5aiQnYQAsxq
+         B0xBUc2RFJetGZoXZKGUPt4mRHP8NmACVz6Jun6CJpm55EGGF5/rUMKJqKwvEQ4g/fOd
+         FcLJagohgRT/Y6UXsl2PC0EGFL3GREGTbKK2V0DeIeAMRYSbAAy/k6KsDrwATovrP6Hk
+         JvTOYKvrR44JRlb3WE7ViDlAqJwoQ9fQwVlz5O26i0DxluRLLLlRh5tYo7/aeMFLOIEd
+         ydvw==
+X-Gm-Message-State: APjAAAX0DwkvG3SH9Virlf7ppcgbseSywrGWAmu4nypg19LU+vTGQfHV
+        F+gmv8TGqhBcv4rK3sr1qMl+mQ==
+X-Google-Smtp-Source: APXvYqzyNg3sXHFnQDm+gajzHEmP+Sqmi0HVIhd7GKvcRWFfi/tYWvfUdKRE7PACl7E/z0xmll/zhg==
+X-Received: by 2002:adf:f70f:: with SMTP id r15mr25585980wrp.262.1572891576303;
+        Mon, 04 Nov 2019 10:19:36 -0800 (PST)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id p12sm19639397wrm.62.2019.11.04.10.19.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 10:19:18 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
-        ARCHITECTURE),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] reset: brcmstb: Remove resource checks
-Date:   Mon,  4 Nov 2019 10:15:02 -0800
-Message-Id: <20191104181502.15679-3-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191104181502.15679-1-f.fainelli@gmail.com>
-References: <20191104181502.15679-1-f.fainelli@gmail.com>
+        Mon, 04 Nov 2019 10:19:35 -0800 (PST)
+Date:   Mon, 4 Nov 2019 19:19:33 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com, manasi.d.navare@intel.com,
+        rodrigosiqueiramelo@gmail.com, maarten.lankhorst@linux.intel.com,
+        mripard@kernel.org, sean@poorly.run, airlied@linux.ie,
+        daniel@ffwll.ch, corbet@lwn.net, dri-devel@lists.freedesktop.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+Subject: Re: [PATCH] drm/doc: Adding VKMS module description and use to
+ "Testing and Validation"
+Message-ID: <20191104181933.GR10326@phenom.ffwll.local>
+Mail-Followup-To: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
+        outreachy-kernel@googlegroups.com, manasi.d.navare@intel.com,
+        rodrigosiqueiramelo@gmail.com, maarten.lankhorst@linux.intel.com,
+        mripard@kernel.org, sean@poorly.run, airlied@linux.ie,
+        corbet@lwn.net, dri-devel@lists.freedesktop.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+References: <20191101042706.2602-1-gabrielabittencourt00@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191101042706.2602-1-gabrielabittencourt00@gmail.com>
+X-Operating-System: Linux phenom 5.2.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The use of IS_ALIGNED() is incorrect, the typical resource we pass looks
-like this: start: 0x8404318, size: 0x30. When using IS_ALIGNED() we will
-get the following 0x8404318 & (0x18 - 1) = 0x10 which is definitively
-not equal to 0, same goes with the size. These two checks would make the
-driver fail probing.
+On Fri, Nov 01, 2019 at 01:27:06AM -0300, Gabriela Bittencourt wrote:
+> Add a description on VKMS module and the cases in which it should be used.
+> There's a brief explanation on how to set it and use it in a VM, along with
+> an example of running an igt-test.
+> 
+> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+> 
+> ---
+> 
+> Hi DRM-community,
+> this is my first (of many, I hope)  patch in this subsystem. I hope to have
+> a lot of learning (and fun :)) working with you guys.
+> I'm starting by documenting the VKMS driver in "Userland interfaces", if I
+> have been inaccurate in my description or if I misunderstood some concept,
+> please let me know.
 
-Remove the resource checks, since there should be no constraint on the
-base addresse or size.
+Oh awesome, this sounds great, really looking for more people hacking on
+vkms. Docs lgtm, but I'll let Siqueira have a look and merge it. Pls ping
+in case this patch gets lost.
+-Daniel
 
-Fixes: 77750bc089e4 ("reset: Add Broadcom STB SW_INIT reset controller driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/reset/reset-brcmstb.c | 6 ------
- 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/reset/reset-brcmstb.c b/drivers/reset/reset-brcmstb.c
-index a608f445dad6..f213264c8567 100644
---- a/drivers/reset/reset-brcmstb.c
-+++ b/drivers/reset/reset-brcmstb.c
-@@ -91,12 +91,6 @@ static int brcmstb_reset_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!IS_ALIGNED(res->start, SW_INIT_BANK_SIZE) ||
--	    !IS_ALIGNED(resource_size(res), SW_INIT_BANK_SIZE)) {
--		dev_err(kdev, "incorrect register range\n");
--		return -EINVAL;
--	}
--
- 	priv->base = devm_ioremap_resource(kdev, res);
- 	if (IS_ERR(priv->base))
- 		return PTR_ERR(priv->base);
+> ---
+>  Documentation/gpu/drm-uapi.rst | 38 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
+> index 94f90521f58c..7d6c86b7af76 100644
+> --- a/Documentation/gpu/drm-uapi.rst
+> +++ b/Documentation/gpu/drm-uapi.rst
+> @@ -285,6 +285,44 @@ run-tests.sh is a wrapper around piglit that will execute the tests matching
+>  the -t options. A report in HTML format will be available in
+>  ./results/html/index.html. Results can be compared with piglit.
+>  
+> +Using VKMS to test DRM API
+> +--------------------------
+> +
+> +VKMS is a software-only model of a KMS driver that is useful for testing
+> +and for running compositors. VKMS aims to enable a virtual display without
+> +the need for a hardware display capability. These characteristics made VKMS
+> +a perfect tool for validating the DRM core behavior and also support the
+> +compositor developer. VKMS helps us to test DRM core function in a virtual
+> +machine, which makes it easy to test some of the core changes.
+> +
+> +To Validate changes in DRM API with VKMS, start setting the kernel. The
+> +VKMS module is not enabled by defaut, so enable it in the menuconfig::
+> +
+> +	$ make menuconfig
+> +
+> +Compile the kernel with the VKMS enabled and install it in the target
+> +machine. VKMS can be run in a Virtual Machine (QEMU, virtme or similar).
+> +It's recommended the use of KVM with the minimum of 1GB of RAM and four
+> +cores.
+> +
+> +It's possible to run the IGT-tests in a VM in two ways:
+> +1. Use IGT inside a VM
+> +2. Use IGT from the host machine and write the results in a shared directory.
+> +
+> +As follow, there is an example of using a VM with a shared directory with
+> +the host machine to run igt-tests. As example it's used virtme::
+> +
+> +	$ virtme-run --rwdir /path/for/shared_dir --kdir=path/for/kernel/directory --mods=auto
+> +
+> +Run the igt-tests, as example it's ran the 'kms_flip' tests::
+> +
+> +	$ /path/for/igt-gpu-tools/scripts/run-tests.sh -p -s -t "kms_flip.*" -v
+> +
+> +In this example instead of build the igt_runner it's used Piglit
+> +(-p option); it's created html summary of the tests results and it's saved
+> +in the folder "igt-gpu-tools/results"; it's executed only the igt-tests
+> +matching the -t option.
+> +
+>  Display CRC Support
+>  -------------------
+>  
+> -- 
+> 2.20.1
+> 
+
 -- 
-2.17.1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
