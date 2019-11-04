@@ -2,118 +2,165 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E0ACA9EBB
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99397CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5855217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76ED3217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:41:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729127AbfKDCew (ORCPT
+        id S1728841AbfKDClO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 21:34:52 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16964 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728227AbfKDCew (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 21:34:52 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA42Wf37092231
-        for <linux-kernel@vger.kernel.org>; Sun, 3 Nov 2019 21:34:51 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w28q1kw6x-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 21:34:51 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Mon, 4 Nov 2019 02:34:49 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 4 Nov 2019 02:34:45 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA42Y9qL41026004
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 4 Nov 2019 02:34:09 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 469475204E;
-        Mon,  4 Nov 2019 02:34:44 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id E8BF352050;
-        Mon,  4 Nov 2019 02:34:43 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 3CC68A01D6;
-        Mon,  4 Nov 2019 13:34:42 +1100 (AEDT)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>, Qian Cai <cai@lca.pw>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sun, 3 Nov 2019 21:41:14 -0500
+Received: from mga07.intel.com ([134.134.136.100]:8537 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728227AbfKDClO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 21:41:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Nov 2019 18:41:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,265,1569308400"; 
+   d="scan'208";a="199889282"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
+  by fmsmga008.fm.intel.com with ESMTP; 03 Nov 2019 18:41:11 -0800
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 6/6] powerpc: Don't flush caches when adding memory
-Date:   Mon,  4 Nov 2019 13:32:58 +1100
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191104023305.9581-1-alastair@au1.ibm.com>
-References: <20191104023305.9581-1-alastair@au1.ibm.com>
+        Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Ingo Molnar <mingo@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>
+Subject: Re: [RFC 08/10] autonuma, memory tiering: Select hotter pages to promote to fast memory node
+References: <20191101075727.26683-1-ying.huang@intel.com>
+        <20191101075727.26683-9-ying.huang@intel.com>
+        <20191101092404.GS4131@hirez.programming.kicks-ass.net>
+Date:   Mon, 04 Nov 2019 10:41:10 +0800
+In-Reply-To: <20191101092404.GS4131@hirez.programming.kicks-ass.net> (Peter
+        Zijlstra's message of "Fri, 1 Nov 2019 10:24:04 +0100")
+Message-ID: <87k18gcqih.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110402-0008-0000-0000-0000032A5D48
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110402-0009-0000-0000-00004A49B0CE
-Message-Id: <20191104023305.9581-7-alastair@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-04_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=662 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1911040026
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
+Hi, Peter,
 
-This operation takes a significant amount of time when hotplugging
-large amounts of memory (~50 seconds with 890GB of persistent memory).
+Peter Zijlstra <peterz@infradead.org> writes:
 
-This was orignally in commit fb5924fddf9e
-("powerpc/mm: Flush cache on memory hot(un)plug") to support memtrace,
-but the flush on add is not needed as it is flushed on remove.
+> On Fri, Nov 01, 2019 at 03:57:25PM +0800, Huang, Ying wrote:
+>> index 8ec38b11b361..59e2151734ab 100644
+>> --- a/include/linux/mm_types.h
+>> +++ b/include/linux/mm_types.h
+>> @@ -484,6 +484,11 @@ struct mm_struct {
+>>  
+>>  		/* numa_scan_seq prevents two threads setting pte_numa */
+>>  		int numa_scan_seq;
+>> +
+>> +#define NUMA_SCAN_NR_HIST	16
+>> +		int numa_scan_idx;
+>> +		unsigned long numa_scan_jiffies[NUMA_SCAN_NR_HIST];
+>> +		unsigned long numa_scan_starts[NUMA_SCAN_NR_HIST];
+>
+> Why 16? This is 4 cachelines.
 
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
----
- arch/powerpc/mm/mem.c | 2 --
- 1 file changed, 2 deletions(-)
+We want to keep the NUMA scanning history reasonably long.  From
+task_scan_min(), the minimal interval between task_numa_work() running
+is about 100 ms by default.  So we can keep 1600 ms history by default
+if NUMA_SCAN_NR_HIST is 16.  If user choose to use smaller
+sysctl_numa_balancing_scan_size, then we can only keep shorter history.
+In general, we want to keep no less than 1000 ms history.  So 16 appears
+like a reasonable choice for us.  Any other suggestion?
 
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index a7b662fc02c8..4a424b514772 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -142,8 +142,6 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
- 		return -EFAULT;
- 	}
- 
--	flush_dcache_range_chunked(start, start + size, FLUSH_CHUNK_SIZE);
--
- 	return __add_pages(nid, start_pfn, nr_pages, restrictions);
- }
- 
--- 
-2.21.0
+>>  #endif
+>>  		/*
+>>  		 * An operation with batched TLB flushing is going on. Anything
+>
+>> +static long numa_hint_fault_latency(struct task_struct *p, unsigned long addr)
+>> +{
+>> +	struct mm_struct *mm = p->mm;
+>> +	unsigned long now = jiffies;
+>> +	unsigned long start, end;
+>> +	int i, j;
+>> +	long latency = 0;
+>> +
+>> +	i = READ_ONCE(mm->numa_scan_idx);
+>> +	i = i ? i - 1 : NUMA_SCAN_NR_HIST - 1;
+>> +	/*
+>> +	 * Paired with smp_wmb() in task_numa_work() to check
+>> +	 * scan range buffer after get current index
+>> +	 */
+>> +	smp_rmb();
+>
+> That wants to be:
+>
+> 	i = smp_load_acquire(&mm->numa_scan_idx)
+> 	i = (i - 1) % NUMA_SCAN_NR_HIST;
+>
+> (and because NUMA_SCAN_NR_HIST is a power of 2, the compiler will
+> conveniently make that a bitwise and operation)
+>
+> And: "DEC %0; AND $15, %0" is so much faster than a branch.
 
+This looks much better.  Thanks!  I will use it in the next version.
+
+>> +	end = READ_ONCE(mm->numa_scan_offset);
+>> +	start = READ_ONCE(mm->numa_scan_starts[i]);
+>> +	if (start == end)
+>> +		end = start + MAX_SCAN_WINDOW * (1UL << 22);
+>> +	for (j = 0; j < NUMA_SCAN_NR_HIST; j++) {
+>> +		latency = now - READ_ONCE(mm->numa_scan_jiffies[i]);
+>> +		start = READ_ONCE(mm->numa_scan_starts[i]);
+>> +		/* Scan pass the end of address space */
+>> +		if (end < start)
+>> +			end = TASK_SIZE;
+>> +		if (addr >= start && addr < end)
+>> +			return latency;
+>> +		end = start;
+>> +		i = i ? i - 1 : NUMA_SCAN_NR_HIST - 1;
+>
+> 		i = (i - 1) % NUMA_SCAN_NR_HIST;
+
+Will use this in the next version.
+
+>> +	}
+>> +	/*
+>> +	 * The tracking window isn't large enough, approximate to the
+>> +	 * max latency in the tracking window.
+>> +	 */
+>> +	return latency;
+>> +}
+>
+>> @@ -2583,6 +2640,19 @@ void task_numa_work(struct callback_head *work)
+>>  		start = 0;
+>>  		vma = mm->mmap;
+>>  	}
+>> +	idx = mm->numa_scan_idx;
+>> +	WRITE_ONCE(mm->numa_scan_starts[idx], start);
+>> +	WRITE_ONCE(mm->numa_scan_jiffies[idx], jiffies);
+>> +	/*
+>> +	 * Paired with smp_rmb() in should_numa_migrate_memory() to
+>> +	 * update scan range buffer index after update the buffer
+>> +	 * contents.
+>> +	 */
+>> +	smp_wmb();
+>> +	if (idx + 1 >= NUMA_SCAN_NR_HIST)
+>> +		WRITE_ONCE(mm->numa_scan_idx, 0);
+>> +	else
+>> +		WRITE_ONCE(mm->numa_scan_idx, idx + 1);
+>
+> 	smp_store_release(&mm->nums_scan_idx, idx % NUMA_SCAN_NR_HIST);
+
+Will use this in the next version.
+
+Best Regards,
+Huang, Ying
