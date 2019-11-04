@@ -2,56 +2,52 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B55B8CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3BCCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88608205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BF19205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905496;
-	bh=3QAZop3R1QovG2h91P6pO+vj40enEfMY+gb0f6zrkTg=;
+	s=default; t=1572905499;
+	bh=82Iwy/4pR8jTM/KNiRL/8URn/tQlaOBlPsmrF1+kfTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pbvRoGXO5p4ae+ZCFcgu5/Oc1LSmS1Tk25LcNVScN/rbbd2x0d3QayF6y0mIHzG0/
-	 xR2FbJ5s6tHfbQ1j/bR04gdTA5b8JDPH3ACdvLs6PSIU5j8F91ouejE57Qi5feAo1m
-	 XJEaQeKQwZQGww/UJq68QB26P9qbQ+zvus6o2fkk=
+	b=W2F+m8jmvFjXElMFNwNfCJv0kpr0V/gmtm1vmSFgUoHwhFx1mIae8T2/mtqq2o0Qc
+	 xRBpEWC8JtnE3U49BYTrV4s99QUtEGC2d4u54uzjlVTZZJPeEh8Lv2cFtQIVzjaMZQ
+	 COvTNuA1uEK0nZkNPpZsU9XZQn0bvdzwkSxfNZpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389978AbfKDWLe (ORCPT
+        id S2390708AbfKDWLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:11:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44890 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:11:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389550AbfKDWLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:11:30 -0500
+        id S2390697AbfKDWLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:11:35 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44027214D9;
-        Mon,  4 Nov 2019 22:11:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F1BC205C9;
+        Mon,  4 Nov 2019 22:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905488;
-        bh=3QAZop3R1QovG2h91P6pO+vj40enEfMY+gb0f6zrkTg=;
+        s=default; t=1572905494;
+        bh=82Iwy/4pR8jTM/KNiRL/8URn/tQlaOBlPsmrF1+kfTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UJCo2woOhU75kwY6YlNNRwBytcklrEoXZKtMM8yMAk2ldpJrLtXQiuHqJJl3V5ouL
-         2enp/5gfcSMYCW7PN3OYZvCSCxb7PQVDM6gB793jDf0ZwvKUUEcIHZw9qVFWbr5ypL
-         IL0+r7Q2Si1wDpRSvRP71/hEXQyi4yNOAujtdDQU=
+        b=WBwB63waYH3nr25XWx/eSS/fttDaTpRv9TAJnzuj4NCWVl3cbTfs+foEGzNj85vQz
+         z5EcerIp5/85psBBydQHrWhzJQyLuVFDJ4/Vhlwcf3shbEzS08ZwQ1IlGZpAPBqlWw
+         SmtwN+TJd9DuW3uVjPL0aYxtPfDWUVNWT9wl8Jlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ben Segall <bsegall@google.com>,
-        Dave Chiluk <chiluk+linux@indeed.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, pauld@redhat.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 163/163] sched/fair: Fix -Wunused-but-set-variable warnings
-Date:   Mon,  4 Nov 2019 22:45:53 +0100
-Message-Id: <20191104212152.121299339@linuxfoundation.org>
+        stable@vger.kernel.org, chen gong <curry.gong@amd.com>,
+        Aaron Liu <aaron.liu@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.3 141/163] drm/amdgpu: Fix SDMA hang when performing VKexample test
+Date:   Mon,  4 Nov 2019 22:45:31 +0100
+Message-Id: <20191104212150.546790069@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -64,90 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: chen gong <curry.gong@amd.com>
 
-[ Upstream commit 763a9ec06c409dcde2a761aac4bb83ff3938e0b3 ]
+commit e5574f61e9d8274c49e9a5d943abde8e938d57e1 upstream.
 
-Commit:
+VKexample test hang during Occlusion/SDMA/Varia runs.
+Clear XNACK_WATERMK in reg SDMA0_UTCL1_WATERMK to fix this issue.
 
-   de53fd7aedb1 ("sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices")
+Signed-off-by: chen gong <curry.gong@amd.com>
+Reviewed-by: Aaron Liu <aaron.liu@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-introduced a few compilation warnings:
-
-  kernel/sched/fair.c: In function '__refill_cfs_bandwidth_runtime':
-  kernel/sched/fair.c:4365:6: warning: variable 'now' set but not used [-Wunused-but-set-variable]
-  kernel/sched/fair.c: In function 'start_cfs_bandwidth':
-  kernel/sched/fair.c:4992:6: warning: variable 'overrun' set but not used [-Wunused-but-set-variable]
-
-Also, __refill_cfs_bandwidth_runtime() does no longer update the
-expiration time, so fix the comments accordingly.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Ben Segall <bsegall@google.com>
-Reviewed-by: Dave Chiluk <chiluk+linux@indeed.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: pauld@redhat.com
-Fixes: de53fd7aedb1 ("sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices")
-Link: https://lkml.kernel.org/r/1566326455-8038-1-git-send-email-cai@lca.pw
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index a11a9c2d7793e..649c6b60929e2 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4355,21 +4355,16 @@ static inline u64 sched_cfs_bandwidth_slice(void)
- }
+--- a/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c
+@@ -159,6 +159,7 @@ static const struct soc15_reg_golden gol
+ 	SOC15_REG_GOLDEN_VALUE(SDMA0, 0, mmSDMA0_RLC7_RB_RPTR_ADDR_LO, 0xfffffffd, 0x00000001),
+ 	SOC15_REG_GOLDEN_VALUE(SDMA0, 0, mmSDMA0_RLC7_RB_WPTR_POLL_CNTL, 0xfffffff7, 0x00403000),
+ 	SOC15_REG_GOLDEN_VALUE(SDMA0, 0, mmSDMA0_UTCL1_PAGE, 0x000003ff, 0x000003c0),
++	SOC15_REG_GOLDEN_VALUE(SDMA0, 0, mmSDMA0_UTCL1_WATERMK, 0xfc000000, 0x00000000)
+ };
  
- /*
-- * Replenish runtime according to assigned quota and update expiration time.
-- * We use sched_clock_cpu directly instead of rq->clock to avoid adding
-- * additional synchronization around rq->lock.
-+ * Replenish runtime according to assigned quota. We use sched_clock_cpu
-+ * directly instead of rq->clock to avoid adding additional synchronization
-+ * around rq->lock.
-  *
-  * requires cfs_b->lock
-  */
- void __refill_cfs_bandwidth_runtime(struct cfs_bandwidth *cfs_b)
- {
--	u64 now;
--
--	if (cfs_b->quota == RUNTIME_INF)
--		return;
--
--	now = sched_clock_cpu(smp_processor_id());
--	cfs_b->runtime = cfs_b->quota;
-+	if (cfs_b->quota != RUNTIME_INF)
-+		cfs_b->runtime = cfs_b->quota;
- }
- 
- static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
-@@ -4999,15 +4994,13 @@ static void init_cfs_rq_runtime(struct cfs_rq *cfs_rq)
- 
- void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
- {
--	u64 overrun;
--
- 	lockdep_assert_held(&cfs_b->lock);
- 
- 	if (cfs_b->period_active)
- 		return;
- 
- 	cfs_b->period_active = 1;
--	overrun = hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
-+	hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
- 	hrtimer_start_expires(&cfs_b->period_timer, HRTIMER_MODE_ABS_PINNED);
- }
- 
--- 
-2.20.1
-
+ static const struct soc15_reg_golden golden_settings_sdma1_4_2[] = {
 
 
